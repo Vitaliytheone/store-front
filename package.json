@@ -1,0 +1,30 @@
+{
+  "name": "sommerce_v1",
+  "version": "1.0.0",
+  "description": "Yii 2 Advanced Project Template ===============================",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "bower": "^1.8.2",
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-notify": "^3.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "node-bourbon": "^4.2.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "vitaliysh@37.1.200.183:/opt/git/sommerce_v1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -203,6 +203,9 @@ function setExecutable($root, $paths)
 function setCookieValidationKey($root, $paths)
 {
     foreach ($paths as $file) {
+        if (!file_exists($root . '/' . $file)) {
+            return;
+        }
         echo "   generate cookie validation key in $file\n";
         $file = $root . '/' . $file;
         $length = 32;
