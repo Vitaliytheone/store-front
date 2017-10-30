@@ -206,7 +206,7 @@ var mLayout = function() {
             initStickyHeader();
             initHorMenu();
             initTopbar();
-            initScrollTop();
+            // initScrollTop();
         },
 
         initAside: function() {
