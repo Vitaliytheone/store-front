@@ -1,8 +1,10 @@
 <?php
     /* @var $this \yii\web\View */
+
+    use frontend\modules\admin\components\Url;
 ?>
 <!-- begin::Header -->
-<header class="m-grid__item		m-header "  data-minimize="minimize" data-minimize-offset="200" data-minimize-mobile-offset="200" >
+<header class="m-grid__item	m-header"  data-minimize="minimize" data-minimize-offset="200" data-minimize-mobile-offset="200" >
 
     <div class="m-header__top">
         <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
@@ -11,7 +13,7 @@
                 <div class="m-stack__item m-brand">
                     <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                         <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                            <a href="order.html" class="m-brand__logo-wrapper">
+                            <a href="<?= Url::toRoute('/orders')?>" class="m-brand__logo-wrapper">
                                 Name panel
                             </a>
                         </div>
@@ -40,30 +42,30 @@
                     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light "  >
                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
                             <li class="m-menu__item m-menu__logo"  aria-haspopup="true">
-                                <a  href="order.html" class="m-menu__link ">
-                                        <span class="m-menu__link-text ">
-    													Panel theme
-    												</span>
+                                <a  href="<?= Url::toRoute('/orders')?>" class="m-menu__link ">
+                                    <span class="m-menu__link-text ">
+                                        Panel theme
+                                    </span>
                                 </a>
                             </li>
                             <li class="m-menu__item"  aria-haspopup="true">
-                                <a  href="order.html" class="m-menu__link ">
+                                <a  href="<?= Url::toRoute('/orders')?>" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">
-    													Orders
-    												</span>
+                                                Orders
+                                            </span>
                                 </a>
                             </li>
                             <li class="m-menu__item"  aria-haspopup="true">
-                                <a  href="payments.html" class="m-menu__link ">
+                                <a  href="<?= Url::toRoute('/payments')?>" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">
-    													Payments
-    												</span>
+                                        Payments
+                                    </span>
                                 </a>
                             </li>
                             <li class="m-menu__item"  aria-haspopup="true">
-                                <a  href="products.html" class="m-menu__link ">
+                                <a  href="<?= Url::toRoute('/products')?>" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">
     													Products
@@ -71,7 +73,7 @@
                                 </a>
                             </li>
                             <li class="m-menu__item mobile-hidden"  aria-haspopup="true">
-                                <a  href="settings.html" class="m-menu__link ">
+                                <a  href="<?= Url::toRoute('/settings')?>" class="m-menu__link ">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text">
     													Settings
@@ -79,7 +81,7 @@
                                 </a>
                             </li>
                             <li class="m-menu__item m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--icon-only mobile-show" data-menu-submenu-toggle="hover" data-redirect="true" aria-haspopup="true">
-                                <a href="settings.html" class="m-menu__link m-menu__toggle">
+                                <a href="<?= Url::toRoute('/settings')?>" class="m-menu__link m-menu__toggle">
                                     <span class="m-menu__item-here"></span>
                                     <span class="m-menu__link-text"> Settings</span>
                                     <i class="m-menu__ver-arrow la la-angle-right"></i>
@@ -88,7 +90,7 @@
                                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                     <ul class="m-menu__subnav">
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/orders')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-settings"></i>
                                                 <span class="m-menu__link-text">
     																General
@@ -96,7 +98,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/payments')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-wallet"></i>
                                                 <span class="m-menu__link-text">
     																Payments
@@ -104,7 +106,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/providers')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-share"></i>
                                                 <span class="m-menu__link-text">
     																Providers
@@ -112,7 +114,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/navigations')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-list-1"></i>
                                                 <span class="m-menu__link-text">
     																Navigation
@@ -120,7 +122,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/pages')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-docs"></i>
                                                 <span class="m-menu__link-text">
     																Pages
@@ -128,7 +130,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/themes')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-puzzle"></i>
                                                 <span class="m-menu__link-text">
     																Themes
@@ -136,7 +138,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="inner.html" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/blocks')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-layers"></i>
                                                 <span class="m-menu__link-text">
     																Blocks
@@ -156,7 +158,7 @@
                     <form class="m-header-search__form">
                         <ul class="m-menu--right">
                             <li>
-                                <a href="account.html">Username</a>
+                                <a href="<?= Url::toRoute('/account')?>">Username</a>
                             </li>
                             <li>
                                 <a href="#">Exit</a>
