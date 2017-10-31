@@ -90,7 +90,7 @@
                                     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                     <ul class="m-menu__subnav">
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/orders')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-settings"></i>
                                                 <span class="m-menu__link-text">
     																General
@@ -98,7 +98,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/payments')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings/payments')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-wallet"></i>
                                                 <span class="m-menu__link-text">
     																Payments
@@ -106,7 +106,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/providers')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings/providers')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-share"></i>
                                                 <span class="m-menu__link-text">
     																Providers
@@ -114,7 +114,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/navigations')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings/navigations')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-list-1"></i>
                                                 <span class="m-menu__link-text">
     																Navigation
@@ -122,7 +122,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/pages')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings/pages')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-docs"></i>
                                                 <span class="m-menu__link-text">
     																Pages
@@ -130,7 +130,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/themes')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings/themes')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-puzzle"></i>
                                                 <span class="m-menu__link-text">
     																Themes
@@ -138,7 +138,7 @@
                                             </a>
                                         </li>
                                         <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="<?= Url::toRoute('/blocks')?>" class="m-menu__link ">
+                                            <a href="<?= Url::toRoute('/settings/blocks')?>" class="m-menu__link ">
                                                 <i class="m-menu__link-icon icon-layers"></i>
                                                 <span class="m-menu__link-text">
     																Blocks
