@@ -40,8 +40,6 @@ class OrdersController extends CustomController
         $searchModel = new OrderSearch();
         $ordersDataProvider = $searchModel->search(Yii::$app->request->get());
 
-        error_log(print_r($ordersDataProvider->getOrdersSuborders(),1),0);
-
         return $this->render('index', [
             'ordersDataProvider' => $ordersDataProvider,
             'orderSearchModel' => $searchModel

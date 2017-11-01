@@ -309,7 +309,7 @@ class OrderSearch extends \yii\base\Model
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id id')
                 ->from("$db.suborders")
-                ->where([  'or', ['id' => $searchQuery], ['like', 'link', $searchQuery]])
+                ->where([  'or', ['order_id' => $searchQuery], ['like', 'link', $searchQuery]])
                 ->groupBy('order_id');
             $searchFilter = ['so.order_id' => $searchOrderIdsSubquery];
         } elseif ($emailValidator->validate($searchQuery)) {
@@ -331,7 +331,7 @@ class OrderSearch extends \yii\base\Model
         if ($searchFilter) {
             $query->andFilterWhere($searchFilter);
         }
-
+        error_log(print_r($query->createCommand()->query(),1),0);
         return $dataProvider;
     }
 
