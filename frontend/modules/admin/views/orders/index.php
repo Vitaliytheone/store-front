@@ -2,19 +2,24 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 use yii\widgets\LinkPager;
+use frontend\helpers\Ui;
 
 /* @var $this yii\web\View */
-/* @var $foundOrdersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
+/* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
+/* @var $orderSearchModel frontend\modules\admin\models\OrderSearch */
 
 $this->title = 'Orders';
 
 $formater = Yii::$app->formatter;
-$orders = $foundOrdersDataProvider->getOrdersSuborders();
-$pagination = $foundOrdersDataProvider->getPagination();
+$orders = $ordersDataProvider->getOrdersSuborders();
+$pagination = $ordersDataProvider->getPagination();
 
+$statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
 
 ?>
+
 <div class="row">
 
     <div class="col">
@@ -22,24 +27,19 @@ $pagination = $foundOrdersDataProvider->getPagination();
         <div class="row sommerce-block">
             <div class="col-lg-10 col-sm-12">
                 <nav class="nav nav-tabs sommerce-tabs__nav" role="tablist">
-                    <a class="nav-item nav-link active" id="all-orders-tab" data-toggle="tab" href="#all-orders"
-                       role="tab" aria-controls="nav-home" aria-expanded="true">All orders</a>
-                    <a class="nav-item nav-link" id="awating-tab" data-toggle="tab" href="#awating" role="tab"
-                       aria-controls="nav-profile">Awating <span class="m-badge m-badge--metal m-badge--wide">11</span></a>
-                    <a class="nav-item nav-link" id="pending-tab" data-toggle="tab" href="#pending" role="tab"
-                       aria-controls="nav-profile">Pending</a>
-                    <a class="nav-item nav-link" id="in-progress-tab" data-toggle="tab" href="#in-progress" role="tab"
-                       aria-controls="nav-profile">In progress</a>
-                    <a class="nav-item nav-link" id="complated-tab" data-toggle="tab" href="#complated" role="tab"
-                       aria-controls="nav-profile">Completed</a>
-                    <a class="nav-item nav-link" id="canceled-tab" data-toggle="tab" href="#canceled" role="tab"
-                       aria-controls="nav-profile">Canceled</a>
-                    <a class="nav-item nav-link" id="fail-tab" data-toggle="tab" href="#fail" role="tab"
-                       aria-controls="nav-profile">Fail </a>
-                    <a class="nav-item nav-link" id="error-tab" data-toggle="tab" href="#error" role="tab"
-                       aria-controls="nav-profile">Error <span class="m-badge m-badge--danger">1321</span></a>
+                    <?php foreach ($statusFilterButtons as $button): ?>
+                        <a class="<?= Ui::isFilterActive('status', $button['filter']); ?> nav-item nav-link"
+                           id="<?= $button['id'] ?>"
+                           href="<?= $button['url'] ?>">
+                            <?= $button['caption'] ?>
+                            <?php if($button['stat'] && $button['stat']['count'] > 0): ?>
+                                <span class="<?= $button['stat']['stat-class'] ?>">
+                                    <?= ArrayHelper::getValue($button, ['stat', 'count'], null) ?>
+                                </span>
+                            <?php endif; ?>
+                        </a>
+                    <?php endforeach; ?>
                 </nav>
-
             </div>
             <div class="col-lg-2 col-sm-12">
                 <div class="input-group m-input-group--air">
@@ -277,92 +277,6 @@ $pagination = $foundOrdersDataProvider->getPagination();
                     ?>
 
                 </div>
-
-            </div>
-            <div class="tab-pane fade" id="awating" role="tabpanel" aria-labelledby="awating-tab">
-
-                <div class="m_datatable m-datatable m-datatable--default">
-
-                    <table class="table table-sommerce m-portlet m-portlet--bordered m-portlet--bordered-semi m-portlet--rounded">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th class="max-width-100">Customer</th>
-                            <th>Amount</th>
-                            <th>Link</th>
-                            <th class="sommerce-th__action">
-                                <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-left"
-                                     data-dropdown-toggle="click" aria-expanded="true">
-                                    <a href="#" class="m-dropdown__toggle">
-                                        Product
-                                    </a>
-                                    <div class="m-dropdown__wrapper">
-                                        <span class="m-dropdown__arrow m-dropdown__arrow--left"></span>
-                                        <div class="m-dropdown__inner">
-                                            <div class="m-dropdown__body">
-                                                <div class="m-dropdown__content">
-                                                    <ul class="m-nav">
-                                                        <li class="m-nav__item">
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							All (0)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </th>
-                            <th>Quantity</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th class="sommerce-th__action">
-                                <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-left"
-                                     data-dropdown-toggle="click" aria-expanded="true">
-                                    <a href="#" class="m-dropdown__toggle">
-                                        Mode
-                                    </a>
-                                    <div class="m-dropdown__wrapper">
-                                        <span class="m-dropdown__arrow m-dropdown__arrow--left"></span>
-                                        <div class="m-dropdown__inner">
-                                            <div class="m-dropdown__body">
-                                                <div class="m-dropdown__content">
-                                                    <ul class="m-nav">
-                                                        <li class="m-nav__item">
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							All (0)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </th>
-                            <th class="sommerce-th__action-buttons"></th>
-                        </tr>
-                        </thead>
-
-                        <tbody class="m-datatable__body">
-                        <tr>
-                            <th colspan="100" class="text-center">
-                                No orders
-                            </th>
-                        </tr>
-                        </tbody>
-                    </table>
-
-
-                </div>
-
 
             </div>
         </div>

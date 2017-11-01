@@ -38,12 +38,13 @@ class OrdersController extends CustomController
     public function actionIndex()
     {
         $searchModel = new OrderSearch();
-        $foundOrdersDataProvider = $searchModel->search(Yii::$app->request->get());
+        $ordersDataProvider = $searchModel->search(Yii::$app->request->get());
 
-        error_log(print_r($foundOrdersDataProvider->getOrdersSuborders(),1),0);
+        error_log(print_r($ordersDataProvider->getOrdersSuborders(),1),0);
 
         return $this->render('index', [
-            'foundOrdersDataProvider' => $foundOrdersDataProvider,
+            'ordersDataProvider' => $ordersDataProvider,
+            'orderSearchModel' => $searchModel
         ]);
     }
 

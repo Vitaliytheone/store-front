@@ -6,6 +6,7 @@ use Yii;
 use yii\db\Query;
 use yii\validators\EmailValidator;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use frontend\modules\admin\data\OrdersActiveDataProvider;
 
 /**
@@ -41,6 +42,8 @@ class OrderSearch extends \yii\base\Model
     public static $statusFilters = [
         self::FILTER_STATUS_AWAITING => [
             'caption' => 'Awaiting',
+            'stat' => true,
+            'stat-class' => 'm-badge m-badge--metal m-badge--wide',
         ],
         self::FILTER_STATUS_PENDING => [
             'caption' => 'Pending',
@@ -56,9 +59,13 @@ class OrderSearch extends \yii\base\Model
         ],
         self::FILTER_STATUS_FAILED => [
             'caption' => 'Failed',
+            'stat' => true,
+            'stat-class' => 'm-badge m-badge--danger',
         ],
         self::FILTER_STATUS_ERROR => [
             'caption' => 'Error',
+            'stat' => true,
+            'stat-class' => 'm-badge m-badge--danger',
         ],
     ];
 
@@ -326,5 +333,81 @@ class OrderSearch extends \yii\base\Model
         return array_filter(self::$statusFilters, function($filterKey) {
             return in_array($filterKey, self::$actionAllowedStatuses);
         }, ARRAY_FILTER_USE_KEY );
+    }
+
+
+    /**
+     * Return Orders count by status filter
+     * @param $statusFilter
+     * @return integer $ordersCount
+     */
+    public static function getOrdersCountByStatus($statusFilter)
+    {
+        $ordersCount = Yii::$app->db
+            ->createCommand('
+                SELECT COUNT(*) FROM
+                  (SELECT order_id
+                  FROM suborders
+                  WHERE status = :filter GROUP BY order_id) counter
+            ')
+            ->bindValue(':filter', $statusFilter)
+            ->queryScalar();
+        return $ordersCount;
+    }
+
+    /**
+     * Return Suborders count by status filter
+     * @param $statusFilter
+     * @return false|null|string
+     */
+    public static function getSubordersCountByStatus($statusFilter)
+    {
+        $subordersCount = Yii::$app->db
+            ->createCommand('
+              SELECT COUNT(*)
+              FROM suborders so
+              WHERE status = :filter;
+            ')
+            ->bindValue(':filter', $statusFilter)
+            ->queryScalar();
+        return $subordersCount;
+    }
+
+    /**
+     * Return Status Filter buttons data
+     * @return array
+     */
+    public function getStatusFilterButtons()
+    {
+        $buttons = [];
+        // Show all button
+        $buttons[] = [
+            'id' => 'all_orders',
+            'filter' => '',
+            'caption' => 'All orders',
+            'url' => Url::to('/admin/orders'),
+            'stat' => false,
+        ];
+        foreach (self::$statusFilters as $filter => $filterData){
+            $buttonId = implode('_', explode(' ', strtolower($filterData['caption'])));
+            $isStat = ArrayHelper::getValue($filterData,'stat',false);
+            $button = [
+                'id' => $buttonId,
+                'filter' => $filter,
+                'caption' => $filterData['caption'],
+                'url' => Url::current(['status' => $filter]),
+            ];
+            // Filter statistic
+            if ($isStat) {
+                $button['stat'] = [
+                    'stat-class' => $filterData['stat-class'],
+                    'count' => self::getSubordersCountByStatus($filter),
+                ];
+            } else {
+                $button['stat'] = $isStat;
+            }
+            $buttons[] = $button;
+        }
+        return $buttons;
     }
 }
