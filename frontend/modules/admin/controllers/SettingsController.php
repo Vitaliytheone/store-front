@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\controllers;
 
+use frontend\modules\admin\models\search\ProvidersSearch;
 use Yii;
 use yii\filters\AccessControl;
 
@@ -44,7 +45,11 @@ class SettingsController extends CustomController
      */
     public function actionProviders()
     {
-        return $this->render('providers');
+        $search = new ProvidersSearch();
+
+        return $this->render('providers', [
+            'providers' => $search->search()
+        ]);
     }
 
     /**
@@ -81,5 +86,14 @@ class SettingsController extends CustomController
     public function actionBlocks()
     {
         return $this->render('blocks');
+    }
+
+    /**
+     * Settings navigations
+     * @return string
+     */
+    public function actionNavigations()
+    {
+        return $this->render('navigations');
     }
 }

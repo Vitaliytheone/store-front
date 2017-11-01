@@ -1,5 +1,6 @@
 <?php
     /* @var $this \yii\web\View */
+    /* @var $providers \frontend\modules\admin\models\search\ProvidersSearch */
 ?>
 
 <!-- begin::Body -->
@@ -33,16 +34,9 @@
             </div>
             <!-- END: Subheader -->
             <div class="m-content">
-                <div class="form-group">
-                    <label for="privder_api-1">site.com API</label>
-                    <input type="text" class="form-control" id="privder_api-1" placeholder="">
-                </div>
-                <div class="form-group">
-                    <label for="privder_api-2">perfectpanel.com API</label>
-                    <input type="text" class="form-control" id="privder_api-2" placeholder="" value="AJDK2231daKKJDjhajk22121dsa">
-                </div>
-                <hr>
-                <button class="btn btn-success m-btn--air">Save changes</button>
+                <?= $this->render('layouts/_providers_list', [
+                    'providers' => $providers
+                ]); ?>
             </div>
 
         </div>
