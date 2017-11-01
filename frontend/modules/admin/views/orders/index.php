@@ -42,12 +42,22 @@ $statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
                 </nav>
             </div>
             <div class="col-lg-2 col-sm-12">
-                <div class="input-group m-input-group--air">
-                    <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
-                      </span>
-                </div>
+                <form class="form-inline" action="<?= Url::to('/admin/orders') ?>">
+                    <div class="input-group m-input-group--air">
+                        <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..."
+                               name="query"
+                               value="<?= Html::encode(yii::$app->getRequest()->get('query')) ?>"
+                        >
+                        <?php foreach (yii::$app->getRequest()->get() as $param => $value): ?>
+                            <?php if ($param !== 'query'): ?>
+                                <input type="hidden" name="<?= Html::encode($param); ?>" value="<?= Html::encode($value); ?>">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
+                          </span>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -167,7 +177,15 @@ $statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
                             <?= $this->render('order-item', ['order' => $order]); ?>
                             <!--/ Order item -->
                         <?php endforeach; ?>
-
+                        <?php if(!$orders): ?>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="alert alert-warning text-center" role="alert">
+                                        <strong class="text-primary">No orders were found!</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                         </tbody>
                     </table>
 
