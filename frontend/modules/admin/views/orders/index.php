@@ -17,6 +17,7 @@ $orders = $ordersDataProvider->getOrdersSuborders();
 $pagination = $ordersDataProvider->getPagination();
 
 $statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
+$productFilterStat = $orderSearchModel->productFilterStat();
 
 ?>
 
@@ -85,37 +86,15 @@ $statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
                                         <div class="m-dropdown__inner">
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
-                                                    <ul class="m-nav">
-                                                        <li class="m-nav__item">
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							All (3)
-																						</span>
+                                                    <!-- Product filter -->
+                                                    <?php foreach ($productFilterStat as $productItem): ?>
+                                                        <li class="<?= Ui::isFilterActive('product', $productItem['product']); ?>">
+                                                            <a href="<?= $productItem['product'] === -1 ? Url::current(['product' => null]) : Url::current(['product' => $productItem['product']]); ?>">
+                                                                <?= $productItem['name'].' ('.$productItem['cnt'].')' ?>
                                                             </a>
                                                         </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Likes (1)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Followers (0)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Subscribers (2)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
+                                                    <?php endforeach; ?>
+                                                    <!--/ Product filter -->
                                                 </div>
                                             </div>
                                         </div>
@@ -181,7 +160,7 @@ $statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
                             <tr>
                                 <td colspan="10">
                                     <div class="alert alert-warning text-center" role="alert">
-                                        <strong class="text-primary">No orders were found!</strong>
+                                        <strong>No orders were found!</strong>
                                     </div>
                                 </td>
                             </tr>

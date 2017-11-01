@@ -138,51 +138,56 @@ class OrderSearch extends \yii\base\Model
     }
 
     /**
-     * Statistic for Package filter
-     * @param array $qParams
+     * Statistic for Product filter
      * @param bool $total
      * @return array
      */
-    public function packagesFilterStat($qParams = [], $total = true)
+    public function productFilterStat($total = true)
     {
-        // Get all packages
-        $packagesList = (new \yii\db\Query())
+        $db = yii::$app->store->getInstance()->db_name;
+
+        // Get all products
+        $productsList = (new \yii\db\Query())
             ->select(['id','name'])
-            ->from('packages')
+            ->from("$db.products")
             ->indexBy('id')
             ->all();
 
-        // Get count orders for packages
-        $ordersByPackagesQuery = (new \yii\db\Query())
-            ->select(['package_id, COUNT(package_id) cnt'])
-            ->from('orders o')
+        // Get count suborders for product
+        $subordersByProductsQuery = (new \yii\db\Query())
+            ->select(['pr.id, COUNT(pr.id) cnt'])
+            ->from("$db.suborders so")
+            ->leftJoin("$db.packages pk", 'pk.id = so.package_id')
+            ->leftJoin("$db.products pr", 'pk.product_id = pr.id')
             ->orderBy([
-                'package_id' => SORT_ASC,
+                'pr.id' => SORT_ASC,
             ])
-            ->groupBy('package_id')
-            ->indexBy('package_id');
+            ->groupBy('pr.id')
+            ->indexBy('id');
 
-        $this->_applyFilters($ordersByPackagesQuery, $this->_queryActiveFilters, ['package']);
-        $ordersByPackages = $ordersByPackagesQuery->all();
+        $this->_applyFilters($subordersByProductsQuery, $this->_queryActiveFilters, ['product']);
+
+        $subordersByProductsCnt = $subordersByProductsQuery->all();
 
         $filterStat = [];
-        foreach ($packagesList as $packageId => $package) {
-            $ordersPackage = ArrayHelper::getValue($ordersByPackages, $packageId, 0);
-            $packageCount = $ordersPackage ? $ordersPackage['cnt'] : 0;
+        foreach ($productsList as $productId => $product) {
+            $suborderPackage = ArrayHelper::getValue($subordersByProductsCnt, $productId, 0);
+            $packageCount = $suborderPackage ? $suborderPackage['cnt'] : 0;
             $filterStat[] = [
-                'package' => $packageId,
-                'name' => $package['name'],
+                'product' => $productId,
+                'name' => $product['name'],
                 'cnt' => $packageCount,
             ];
         }
         if ($total) {
             $sum = array_sum(ArrayHelper::getColumn($filterStat, 'cnt'));
             array_unshift($filterStat, [
-                'package' => -1,
+                'product' => -1,
                 'name' => 'All',
                 'cnt' => $sum,
             ]);
         }
+
         return $filterStat;
     }
 
@@ -194,9 +199,11 @@ class OrderSearch extends \yii\base\Model
      */
     public function modeFilterStat($qParam = [], $total = true)
     {
+        $db = yii::$app->store->getInstance()->db_name;
+
         $query = (new \yii\db\Query())
             ->select (['mode', 'COUNT(mode) cnt'])
-            ->from ('orders o')
+            ->from ("$db.orders o")
             ->groupBy('mode' );
 
         $this->_applyFilters($query, $this->_queryActiveFilters, ['mode']);
@@ -226,6 +233,8 @@ class OrderSearch extends \yii\base\Model
      */
     public function search($params = [])
     {
+        $db = yii::$app->store->getInstance()->db_name;
+
         $query = (new \yii\db\Query())
             ->select([
                 'o.id order_id', 'so.id suborder_id', 'so.package_id', 'pk.product_id',
@@ -233,10 +242,10 @@ class OrderSearch extends \yii\base\Model
                 'so.amount', 'so.link', 'so.quantity', 'so.status', 'so.mode',
                 'pr.name product_name'
             ])
-            ->from('orders o')
-            ->leftJoin('suborders so','so.order_id = o.id')
-            ->leftJoin('packages pk','pk.id = so.package_id')
-            ->leftJoin('products pr','pk.product_id = pr.id')
+            ->from("$db.orders o")
+            ->leftJoin("$db.suborders so",'so.order_id = o.id')
+            ->leftJoin("$db.packages pk",'pk.id = so.package_id')
+            ->leftJoin("$db.products pr",'pk.product_id = pr.id')
             ->orderBy([
                 'order_id' => SORT_DESC,
             ]);
@@ -256,32 +265,34 @@ class OrderSearch extends \yii\base\Model
         if(isset($this->status)) {
             $statusOrderIdsSubquery = (new \yii\db\Query())
                 ->select('order_id id')
-                ->from('suborders')
+                ->from("$db.suborders")
                 ->where(['status' => $this->status ])
                 ->groupBy('order_id');
-            $filter = ['o.id' => $statusOrderIdsSubquery];
+            $filter = ['so.order_id' => $statusOrderIdsSubquery];
             $this->_queryActiveFilters['status']['where'] = $filter;
         }
         if (isset($this->mode)) {
             $modeOrderIdsSubquery = (new \yii\db\Query())
-                ->select('order_id id')
-                ->from('suborders')
+                ->select("$db.order_id id")
+                ->from("$db.suborders")
                 ->where(['mode' => $this->mode ])
                 ->groupBy('order_id');
-            $filter = ['o.id' => $modeOrderIdsSubquery];
+            $filter = ['so.order_id' => $modeOrderIdsSubquery];
             $this->_queryActiveFilters['mode']['where'] = $filter;
         }
         if (isset($this->product)) {
             $productOrderIdsSubquery = (new \yii\db\Query())
-                ->select('order_id id')
-                ->from('suborders')
-                ->where(['product_id' => $this->product ])
-                ->groupBy('order_id');
-            $filter = ['o.id' => $productOrderIdsSubquery];
-            $this->_queryActiveFilters['mode']['where'] = $filter;
+                ->select("$db._so.order_id id")
+                ->from("$db.suborders _so")
+                ->leftJoin("$db.packages _pk", '_pk.id = _so.package_id')
+                ->where(['_pk.product_id' => $this->product])
+                ->groupBy('_so.order_id');
+            $filter = ['so.order_id' => $productOrderIdsSubquery];
+            $this->_queryActiveFilters['product']['where'] = $filter;
         }
 
         $this->_applyFilters($query, $this->_queryActiveFilters);
+
 
         $searchQuery = trim($this->query);
         if (!isset($searchQuery)) {
@@ -297,24 +308,24 @@ class OrderSearch extends \yii\base\Model
         if (ctype_digit($searchQuery)) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id id')
-                ->from('suborders')
+                ->from("$db.suborders")
                 ->where([  'or', ['id' => $searchQuery], ['like', 'link', $searchQuery]])
                 ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
+            $searchFilter = ['so.order_id' => $searchOrderIdsSubquery];
         } elseif ($emailValidator->validate($searchQuery)) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id id')
-                ->from('suborders')
+                ->from("$db.suborders")
                 ->where(['customer' => $searchQuery])
                 ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
+            $searchFilter = ['so.order_id' => $searchOrderIdsSubquery];
         } else {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id id')
-                ->from('suborders')
+                ->from("$db.suborders")
                 ->where(['like', 'link', $searchQuery])
                 ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
+            $searchFilter = ['so.order_id' => $searchOrderIdsSubquery];
         }
         // Apply query filter
         if ($searchFilter) {
@@ -343,13 +354,15 @@ class OrderSearch extends \yii\base\Model
      */
     public static function getOrdersCountByStatus($statusFilter)
     {
+        $db = yii::$app->store->getInstance()->db_name;
+
         $ordersCount = Yii::$app->db
-            ->createCommand('
+            ->createCommand("
                 SELECT COUNT(*) FROM
-                  (SELECT order_id
+                  (SELECT $db.order_id
                   FROM suborders
                   WHERE status = :filter GROUP BY order_id) counter
-            ')
+            ")
             ->bindValue(':filter', $statusFilter)
             ->queryScalar();
         return $ordersCount;
@@ -362,12 +375,14 @@ class OrderSearch extends \yii\base\Model
      */
     public static function getSubordersCountByStatus($statusFilter)
     {
+        $db = yii::$app->store->getInstance()->db_name;
+        
         $subordersCount = Yii::$app->db
-            ->createCommand('
+            ->createCommand("
               SELECT COUNT(*)
-              FROM suborders so
+              FROM $db.suborders so
               WHERE status = :filter;
-            ')
+            ")
             ->bindValue(':filter', $statusFilter)
             ->queryScalar();
         return $subordersCount;
