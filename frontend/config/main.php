@@ -11,7 +11,7 @@ $routers = require(__DIR__ . '/routers.php');
 $config = [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'store'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
@@ -55,6 +55,9 @@ $config = [
                     ]
                 ],
             ],
+        ],
+        'store' => [
+            'class' => 'common\components\stores\StoreComponent'
         ],
     ],
     'params' => $params,

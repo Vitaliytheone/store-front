@@ -19,5 +19,8 @@ return [
             'password' => 'X3X8HseMomCWgHv3',
             'charset' => 'utf8mb4',
         ],
+        'store' => [
+            'class' => 'common\components\stores\StoreComponent'
+        ],
     ],
 ];
