@@ -33,7 +33,7 @@
                     <div class="row align-items-center">
                         <div class="col-2">
                             <div class="payment-cart__preview">
-                                <img src="img/paypal.png" alt="" class="img-fluid">
+                                <img src="/img/paypal.png" alt="" class="img-fluid">
                             </div>
                         </div>
                         <div class="col-10">
@@ -67,7 +67,7 @@
                     <div class="row align-items-center">
                         <div class="col-2">
                             <div class="payment-cart__preview">
-                                <img src="img/2checkout.png" alt="" class="img-fluid">
+                                <img src="/img/2checkout.png" alt="" class="img-fluid">
                             </div>
                         </div>
                         <div class="col-10">
@@ -101,7 +101,7 @@
                     <div class="row align-items-center">
                         <div class="col-2">
                             <div class="payment-cart__preview">
-                                <img src="img/bitcoin.png" alt="" class="img-fluid">
+                                <img src="/img/bitcoin.png" alt="" class="img-fluid">
                             </div>
                         </div>
                         <div class="col-10">
