@@ -18,6 +18,7 @@ $pagination = $ordersDataProvider->getPagination();
 
 $statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
 $productFilterStat = $orderSearchModel->productFilterStat();
+$modeFilterStat = $orderSearchModel->modeFilterStat();
 
 ?>
 
@@ -86,6 +87,7 @@ $productFilterStat = $orderSearchModel->productFilterStat();
                                         <div class="m-dropdown__inner">
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
+                                                    <ul class="m-nav">
                                                     <!-- Product filter -->
                                                     <?php foreach ($productFilterStat as $productItem): ?>
                                                         <li class="<?= Ui::isFilterActive('product', $productItem['product']); ?>">
@@ -95,6 +97,7 @@ $productFilterStat = $orderSearchModel->productFilterStat();
                                                         </li>
                                                     <?php endforeach; ?>
                                                     <!--/ Product filter -->
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -116,28 +119,15 @@ $productFilterStat = $orderSearchModel->productFilterStat();
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
                                                     <ul class="m-nav">
-                                                        <li class="m-nav__item">
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							All (3)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Auto (1)
-																						</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Manual (0)
-																						</span>
-                                                            </a>
-                                                        </li>
+                                                        <!-- Mode filter -->
+                                                        <?php foreach ($modeFilterStat as $modeItem): ?>
+                                                            <li class="<?= Ui::isFilterActive('mode', $modeItem['mode']); ?>">
+                                                                <a href="<?= $modeItem['mode'] === -1 ? Url::current(['mode' => null]) : Url::current(['mode' => $modeItem['mode']]); ?>">
+                                                                    <?= $modeItem['name'].' ('.$modeItem['cnt'].')' ?>
+                                                                </a>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                        <!--/ Mode filter -->
                                                     </ul>
                                                 </div>
                                             </div>

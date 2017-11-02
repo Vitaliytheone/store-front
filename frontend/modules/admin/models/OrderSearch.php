@@ -14,7 +14,7 @@ use frontend\modules\admin\data\OrdersActiveDataProvider;
  * @property integer $status
  * @property integer $mode
  * @property integer $product
- * @property integer $search
+ * @property integer $query
  * @property array $_queryActiveFilters Uses for current query filters storing. Format: [$filterName => [$filter => [....]]]
  */
 class OrderSearch extends \yii\base\Model
@@ -193,17 +193,15 @@ class OrderSearch extends \yii\base\Model
 
     /**
      * Statistic for Mode filter
-     * @param array $qParam
      * @param bool $total
      * @return array
      */
-    public function modeFilterStat($qParam = [], $total = true)
+    public function modeFilterStat($total = true)
     {
         $db = yii::$app->store->getInstance()->db_name;
-
         $query = (new \yii\db\Query())
             ->select (['mode', 'COUNT(mode) cnt'])
-            ->from ("$db.orders o")
+            ->from ("$db.suborders so")
             ->groupBy('mode' );
 
         $this->_applyFilters($query, $this->_queryActiveFilters, ['mode']);
@@ -211,7 +209,7 @@ class OrderSearch extends \yii\base\Model
 
         //Populate filters array by filter name (caption) values
         $modeFilters = static::$modeFilters;
-        array_walk($modeFilterStat, function(&$filter, $key) use ($modeFilters) {
+        array_walk($modeFilterStat, function(&$filter) use ($modeFilters) {
             $filter['name'] = $modeFilters[$filter['mode']]['caption'];
         });
 
@@ -273,7 +271,7 @@ class OrderSearch extends \yii\base\Model
         }
         if (isset($this->mode)) {
             $modeOrderIdsSubquery = (new \yii\db\Query())
-                ->select("$db.order_id id")
+                ->select("order_id id")
                 ->from("$db.suborders")
                 ->where(['mode' => $this->mode ])
                 ->groupBy('order_id');
@@ -295,7 +293,7 @@ class OrderSearch extends \yii\base\Model
 
 
         $searchQuery = trim($this->query);
-        if (!isset($searchQuery)) {
+        if ($searchQuery === '') {
             return $dataProvider;
         }
 
@@ -331,7 +329,7 @@ class OrderSearch extends \yii\base\Model
         if ($searchFilter) {
             $query->andFilterWhere($searchFilter);
         }
-        error_log(print_r($query->createCommand()->query(),1),0);
+
         return $dataProvider;
     }
 
@@ -376,7 +374,7 @@ class OrderSearch extends \yii\base\Model
     public static function getSubordersCountByStatus($statusFilter)
     {
         $db = yii::$app->store->getInstance()->db_name;
-        
+
         $subordersCount = Yii::$app->db
             ->createCommand("
               SELECT COUNT(*)
@@ -389,11 +387,39 @@ class OrderSearch extends \yii\base\Model
     }
 
     /**
+     * Return suborders counts for each status
+     * Statuses are: self::$statusFilters
+     * @return array
+     */
+    public static function geSubordersCountsByStatus()
+    {
+        $db = yii::$app->store->getInstance()->db_name;
+        $presentSubordersCounts = (new Query())
+            ->select(['status', 'COUNT(*) cnt'])
+            ->from("$db.suborders")
+            ->groupBy('status')
+            ->indexBy('status')
+            ->all();
+
+        $subordersCounts = [];
+        foreach (self::$statusFilters as $status => $filterData) {
+            $currentStatusCount = ArrayHelper::getValue($presentSubordersCounts, [$status,'cnt'], 0);
+            $subordersCounts[$status] = [
+                'status' => $status,
+                'cnt' => $currentStatusCount,
+            ];
+        }
+        return $subordersCounts;
+    }
+
+    /**
      * Return Status Filter buttons data
      * @return array
      */
     public function getStatusFilterButtons()
     {
+        $subordersByStatusCounts = static::geSubordersCountsByStatus();
+
         $buttons = [];
         // Show all button
         $buttons[] = [
@@ -406,6 +432,7 @@ class OrderSearch extends \yii\base\Model
         foreach (self::$statusFilters as $filter => $filterData){
             $buttonId = implode('_', explode(' ', strtolower($filterData['caption'])));
             $isStat = ArrayHelper::getValue($filterData,'stat',false);
+
             $button = [
                 'id' => $buttonId,
                 'filter' => $filter,
@@ -416,7 +443,7 @@ class OrderSearch extends \yii\base\Model
             if ($isStat) {
                 $button['stat'] = [
                     'stat-class' => $filterData['stat-class'],
-                    'count' => self::getSubordersCountByStatus($filter),
+                    'count' => $subordersByStatusCounts[$filter]['cnt'],
                 ];
             } else {
                 $button['stat'] = $isStat;
