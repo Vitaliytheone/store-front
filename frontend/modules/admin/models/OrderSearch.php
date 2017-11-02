@@ -414,6 +414,7 @@ class OrderSearch extends \yii\base\Model
 
     /**
      * Return Status Filter buttons data
+     * Returned array is filter-indexed
      * @return array
      */
     public function getStatusFilterButtons()
@@ -448,7 +449,7 @@ class OrderSearch extends \yii\base\Model
             } else {
                 $button['stat'] = $isStat;
             }
-            $buttons[] = $button;
+            $buttons[$filter] = $button;
         }
         return $buttons;
     }
