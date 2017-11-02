@@ -65,7 +65,7 @@ $isFirstSuborder = function($suborder) use ($suborders) {
                         <div class="m-dropdown__content">
                             <ul class="m-nav">
                                 <li class="m-nav__item">
-                                    <a href="#" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link">
+                                    <a href="#" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link">
                                                                     <span class="m-nav__link-text">
 																							Details
 																						</span>

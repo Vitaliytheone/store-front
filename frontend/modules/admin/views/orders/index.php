@@ -272,3 +272,95 @@ $modeFilterStat = $orderSearchModel->modeFilterStat();
     </div>
 
 </div>
+
+<!-- Order Details modal -->
+<div id="suborder-details-modal" class="modal fade order-detail" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="order-detail-provider">Provider</label>
+                    <input type="text" class="form-control readonly" id="order-detail-provider" value=""
+                           readonly>
+                </div>
+                <div class="form-group">
+                    <label for="order-detail-provider-id">Provider's order ID</label>
+                    <input type="text" class="form-control readonly" id="order-detail-provider-order-id" value="" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="order-detail-provider-response">Provider's response</label>
+                    <pre class="sommerce-pre readonly" id="order-detail-provider-response"></pre>
+                </div>
+                <div class="form-group">
+                    <label for="order-detail-lastupdate">Last update</label>
+                    <input type="text" class="form-control readonly" id="order-detail-lastupdate" value="" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Order Details modal -->
+
+
+<!-- TODO:: Delete scripts after the main script developing is finished  -->
+<script src="/js/libs/jquery.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/libs/popper.js"></script>
+<script src="/js/libs/bootstrap.js"></script>
+
+<!-- TODO:: Move scripts to the module after checking -->
+<script>
+(function (window, alert) {
+    var ajaxEndpoint = '<?= Url::to(['/admin/orders/get-order-details']) ?>';
+    var $detailsModal = $('#suborder-details-modal'),
+    $modatTitle = $detailsModal.find('.modal-title'),
+    $provider = $detailsModal.find('#order-detail-provider'),
+    $providerOrderId = $detailsModal.find('#order-detail-provider-order-id'),
+    $providerResponce = $detailsModal.find('#order-detail-provider-response'),
+    $providerUpdate = $detailsModal.find('#order-detail-lastupdate');
+
+        $detailsModal.on('show.bs.modal', function(e) {
+            var suborderId = $(e.relatedTarget).data('suborder-id');
+            if (suborderId === undefined || isNaN(suborderId)) {
+                return;
+            }
+            $.ajax({
+                url: ajaxEndpoint,
+                type: "GET",
+                data: {
+                    'suborder_id': suborderId
+                },
+                success: function (data) {
+                    if (data.details === undefined) {
+                        return;
+                    }
+                    renderLogs(data.details);
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log('Something is wrong!');
+                    console.log(jqXHR, textStatus, errorThrown);
+                }
+            });
+
+            function renderLogs(details){
+                $modatTitle.html('Order ' + suborderId + ' details');
+                $provider.val(details.provider);
+                $providerOrderId.val(details.provider_order_id);
+                $providerResponce.html(details.provider_response);
+                $providerUpdate.val(details.updated_at);
+            }
+        });
+
+        $detailsModal.on('hidden.bs.modal',function(e) {
+            var $currentTarget = $(e.currentTarget);
+            $currentTarget.find('input').val('');
+            $providerResponce.html('');
+        });
+})({}, function (){})
+</script>
