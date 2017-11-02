@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\admin\models;
+namespace frontend\modules\admin\models\search;
 
 use Yii;
 use yii\db\Query;
@@ -17,7 +17,7 @@ use frontend\modules\admin\data\OrdersActiveDataProvider;
  * @property integer $query
  * @property array $_queryActiveFilters Uses for current query filters storing. Format: [$filterName => [$filter => [....]]]
  */
-class OrderSearch extends \yii\base\Model
+class OrdersSearch extends \yii\base\Model
 {
     public $status;
     public $mode;

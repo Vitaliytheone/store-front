@@ -5,7 +5,7 @@ namespace frontend\modules\admin\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use frontend\modules\admin\models\OrderSearch;
+use frontend\modules\admin\models\search\OrdersSearch;
 
 /**
  * Class OrdersController
@@ -37,7 +37,7 @@ class OrdersController extends CustomController
      */
     public function actionIndex()
     {
-        $searchModel = new OrderSearch();
+        $searchModel = new OrdersSearch();
         $ordersDataProvider = $searchModel->search(Yii::$app->request->get());
 
         return $this->render('index', [

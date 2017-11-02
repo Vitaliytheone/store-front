@@ -8,7 +8,7 @@ use frontend\helpers\Ui;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
-/* @var $orderSearchModel frontend\modules\admin\models\OrderSearch */
+/* @var $orderSearchModel frontend\modules\admin\models\search\OrdersSearch */
 
 $this->title = 'Orders';
 

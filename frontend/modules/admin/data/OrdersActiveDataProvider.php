@@ -3,7 +3,7 @@
 namespace frontend\modules\admin\data;
 
 use yii\helpers\ArrayHelper;
-use frontend\modules\admin\models\OrderSearch;
+use frontend\modules\admin\models\search\OrdersSearch;
 
 
 /**
@@ -33,8 +33,8 @@ class OrdersActiveDataProvider extends \yii\data\ActiveDataProvider
             array_walk($suborders, function(&$suborder, $key){
                 $status = $suborder['status'];
                 $mode = $suborder['mode'];
-                $suborder['status_caption'] = ArrayHelper::getValue(OrderSearch::$statusFilters, [$status,'caption'], $status);
-                $suborder['mode_caption'] = ArrayHelper::getValue(OrderSearch::$modeFilters, [$mode, 'caption'], $mode);
+                $suborder['status_caption'] = ArrayHelper::getValue(OrdersSearch::$statusFilters, [$status,'caption'], $status);
+                $suborder['mode_caption'] = ArrayHelper::getValue(OrdersSearch::$modeFilters, [$mode, 'caption'], $mode);
             });
 
             $ordersSuborders[$orderId] = [
