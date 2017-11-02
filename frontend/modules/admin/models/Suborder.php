@@ -140,7 +140,7 @@ class Suborder extends \yii\db\ActiveRecord
     /**
      * Return Suborder Details for UI purpose
      *
-     * Defined is returned provider response
+     * Defines is returned provider response
      * plain Json string or print_r formatted string
      * @param bool $printR
      * @return array|null
