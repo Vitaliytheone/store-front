@@ -9,6 +9,8 @@ use frontend\helpers\Ui;
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
 /* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
+/* @var $pagination yii\data\Pagination */
+
 
 $this->title = 'Orders';
 
@@ -158,109 +160,14 @@ $modeFilterStat = $ordersSearchModel->modeFilterStat();
 
                     <!-- Pagination -->
                     <div class="m-datatable__pager m-datatable--paging-loaded clearfix mb-3">
-                        <ul class="m-datatable__pager-nav">
-                            <li><a title="Primero"
-                                   class="m-datatable__pager-link m-datatable__pager-link--first m-datatable__pager-link--disabled"
-                                   data-page="1" disabled="disabled"><i class="la la-angle-double-left"></i></a></li>
-                            <li><a title="Anterior"
-                                   class="m-datatable__pager-link m-datatable__pager-link--prev m-datatable__pager-link--disabled"
-                                   data-page="1" disabled="disabled"><i class="la la-angle-left"></i></a></li>
-                            <li style="display: none;"><a title="Más páginas"
-                                                          class="m-datatable__pager-link m-datatable__pager-link--more-prev"
-                                                          data-page="1"><i class="la la-ellipsis-h"></i></a></li>
-                            <li style="display: none;"><input type="text" class="m-pager-input form-control"
-                                                              title="Número de página"></li>
-                            <li style=""><a
-                                        class="m-datatable__pager-link m-datatable__pager-link-number m-datatable__pager-link--active"
-                                        data-page="1">1</a></li>
-                            <li style=""><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                            data-page="2">2</a></li>
-                            <li style=""><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                            data-page="3">3</a></li>
-                            <li style=""><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                            data-page="4">4</a></li>
-                            <li style=""><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                            data-page="5">5</a></li>
-                            <li style=""><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                            data-page="6">6</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="7">7</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="8">8</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="9">9</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="10">10</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="11">11</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="12">12</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="13">13</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="14">14</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="15">15</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="16">16</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="17">17</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="18">18</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="19">19</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="20">20</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="21">21</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="22">22</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="23">23</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="24">24</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="25">25</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="26">26</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="27">27</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="28">28</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="29">29</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="30">30</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="31">31</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="32">32</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="33">33</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="34">34</a></li>
-                            <li style="display: none;"><a class="m-datatable__pager-link m-datatable__pager-link-number"
-                                                          data-page="35">35</a></li>
-                            <li><a title="Más páginas"
-                                   class="m-datatable__pager-link m-datatable__pager-link--more-next" data-page="7"><i
-                                            class="la la-ellipsis-h"></i></a></li>
-                            <li><a title="Siguiente" class="m-datatable__pager-link m-datatable__pager-link--next"
-                                   data-page="2"><i class="la la-angle-right"></i></a></li>
-                            <li><a title="Último" class="m-datatable__pager-link m-datatable__pager-link--last"
-                                   data-page="35"><i class="la la-angle-double-right"></i></a></li>
-                        </ul>
-                        <div class="m-datatable__pager-info">
-                            <span class="m-datatable__pager-detail">1 to 100 of 577</span>
-                        </div>
-                    </div>
-                    <!--/ Pagination -->
-
-                    <?=
+                        <?=
                         LinkPager::widget([
                             'pagination' => $pagination,
+                            'maxButtonCount' => 10,
                         ])
-                    ?>
-
+                        ?>
+                    </div>
+                    <!--/ Pagination -->
                 </div>
 
             </div>
