@@ -334,7 +334,7 @@ class OrdersSearch extends \yii\base\Model
     }
 
     /**
-     * Return array of allowed statuses for Order admin actions
+     * Return array of allowed statuses object for Order admin actions
      * @return array
      */
     public static function allowedActionStatuses()

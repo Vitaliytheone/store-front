@@ -6,13 +6,14 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $order array */
+/* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
+
 
 $formatter = Yii::$app->formatter;
 $suborders = $order['suborders'];
 $subordersCnt = count($suborders);
 
-// Get first suborder and remove it from suborders array
-//$firstSuborder = array_shift($order['suborders']);
+$allowedActions = $ordersSearchModel::allowedActionStatuses();
 
 /**
  * Check if $suborder is a first element in $suborders array
@@ -21,7 +22,62 @@ $subordersCnt = count($suborders);
  */
 $isFirstSuborder = function($suborder) use ($suborders) {
     return (count($suborders) > 1) && ($suborder == $suborders[0]);
-}
+};
+
+
+/**
+ * Return only allowed for action statuses.
+ * Current model status excluded from action menu.
+ * @param $currentStatus
+ * @return array
+ */
+$actionAllowedStatuses = function($currentStatus) use ($allowedActions) {
+    if (!isset($allowedActions[$currentStatus])) {
+        return $allowedActions;
+    }
+    unset($allowedActions[$currentStatus]);
+    return $allowedActions;
+};
+
+/**
+ * Show or not model`s change status menu.
+ * @param $currentStatus
+ * @return bool
+ */
+$isStatusMenuShow = function($currentStatus) use ($ordersSearchModel) {
+    $forbiddenStatuses = [$ordersSearchModel::FILTER_STATUS_CANCELED, $ordersSearchModel::FILTER_STATUS_COMPLETED];
+    return !in_array($currentStatus, $forbiddenStatuses);
+};
+
+/**
+ * Collecting current filters values for redirecting
+ * @param array $paramNames
+ * @return array
+ */
+$paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query']) {
+    if (!is_array($paramNames)) {
+        $paramNames = [$paramNames];
+    }
+
+    $res = [];
+    foreach ($paramNames AS $paramName) {
+        $param = yii::$app->getRequest()->get($paramName);
+        if ($param) {
+            $res[$paramName] = $param;
+        }
+    }
+    return $res;
+};
+
+/**
+ * Show or hide Cancel suborder button
+ * @param $currentStatus
+ * @return string
+ */
+$isCancelShow = function($currentStatus) use ($ordersSearchModel) {
+    $forbidden = [$ordersSearchModel::FILTER_STATUS_CANCELED, $ordersSearchModel::FILTER_STATUS_COMPLETED];
+    return $currentStatus != in_array($currentStatus, $forbidden);
+};
 
 ?>
 
@@ -71,24 +127,29 @@ $isFirstSuborder = function($suborder) use ($suborders) {
 																						</span>
                                     </a>
                                 </li>
+                                <!-- Change Status Menu -->
+                                <?php if($isStatusMenuShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
-                                    <a class="m-nav__link dropdown-collapse dropdown-toggle" data-toggle="collapse" href="#action-1">
+                                    <a class="m-nav__link dropdown-collapse dropdown-toggle" data-toggle="collapse" href="#action-<?= $suborder['suborder_id'] ?>">
                                         <span class="m-nav__link-text">Change status</span>
                                     </a>
-                                    <div class="collapse sommerce-dropdwon__actions_collapse" id="action-1">
+                                    <div class="collapse sommerce-dropdwon__actions_collapse" id="action-<?= $suborder['suborder_id'] ?>">
                                         <ul>
-                                            <li><a href="#">In progress</a></li>
-                                            <li><a href="#">Completed</a></li>
+                                            <?php foreach ($actionAllowedStatuses($suborder['status']) as $status => $statusData): ?>
+                                                <li><a href="<?= Url::to(['/admin/orders/change-status', 'suborder_id'=>$suborder['suborder_id'], 'status'=>$status, 'filters' => $paramsForRedirect()]) ?>" class="change-status"><?= $statusData['caption'] ?></a></li>
+                                            <?php endforeach; ?>
                                         </ul>
                                     </div>
                                 </li>
+                                <?php endif; ?>
+                                <!--/ Change Status Menu -->
+                                <?php if ($isCancelShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
-                                    <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Cancel
-																						</span>
+                                    <a href="<?= Url::to(['/admin/orders/cancel', 'suborder_id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
+                                        <span class="m-nav__link-text">Cancel</span>
                                     </a>
                                 </li>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>

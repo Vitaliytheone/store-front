@@ -5,6 +5,7 @@ namespace frontend\modules\admin\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use frontend\modules\admin\models\search\OrdersSearch;
 use frontend\modules\admin\models\Suborder;
 
@@ -43,7 +44,7 @@ class OrdersController extends CustomController
 
         return $this->render('index', [
             'ordersDataProvider' => $ordersDataProvider,
-            'orderSearchModel' => $searchModel
+            'ordersSearchModel' => $searchModel
         ]);
     }
 
@@ -76,4 +77,58 @@ class OrdersController extends CustomController
         return $response->data = ['details' => $orderDetails];
     }
 
+    /**
+     * Suborder `change status`  action
+     * Accepted only allowed new statuses.
+     * @throws Yii\web\NotFoundHttpException
+     */
+    public function actionChangeStatus()
+    {
+        $suborderId = yii::$app->getRequest()->get('suborder_id');
+        $orderStatus = yii::$app->getRequest()->get('status');
+        $currentFilters = yii::$app->getRequest()->get('filters');
+        if (!$suborderId || !$orderStatus) {
+            throw new yii\web\BadRequestHttpException();
+        }
+
+        $isStatusAllowed = in_array($orderStatus, Suborder::$acceptedStatuses);
+        if (!$isStatusAllowed || !$suborderId || !$orderStatus) {
+            $this->redirect(Url::to(["/admin/orders"]));
+        }
+        $suborderModel = Suborder::findOne($suborderId);
+        if (!$suborderModel) {
+            throw new yii\web\NotFoundHttpException();
+        }
+        // $suborderModel->scenario = Suborder::SCENARIO_UPDATE;
+        $suborderModel->setAttribute('status', $orderStatus);
+        $suborderModel->save();
+
+        $queryParams = is_array($currentFilters) ? http_build_query($currentFilters) : null;
+        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+    }
+
+    /**
+     * Suborder `cancel` action
+     * @throws Yii\web\NotFoundHttpException
+     */
+    public function actionCancel()
+    {
+        $suborderId = yii::$app->getRequest()->get('suborder_id');
+        $currentFilters = yii::$app->getRequest()->get('filters');
+
+        if (!$suborderId) {
+            $this->redirect(Url::to(["/admin/orders"]));
+        }
+
+        $suborderModel = Suborder::findOne($suborderId);
+        if (!$suborderModel) {
+            throw new yii\web\NotFoundHttpException();
+        }
+        //$suborderModel->scenario = Suborder::SCENARIO_UPDATE;
+        $suborderModel->setAttribute('status', Suborder::STATUS_CANCELED);
+        $suborderModel->save();
+
+        $queryParams = is_array($currentFilters) ? http_build_query($currentFilters) : null;
+        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+    }
 }

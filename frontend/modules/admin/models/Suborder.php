@@ -61,6 +61,13 @@ class Suborder extends \yii\db\ActiveRecord
         self::STATUS_ERROR         =>  [ self::PROVIDER_ORDER_STATUS_PARTIAL, self::PROVIDER_ORDER_STATUS_PROCESSING ],
     ];
 
+    // Allowed model new statuses for manual changes
+    public static $acceptedStatuses = [
+        self::STATUS_PENDING,
+        self::STATUS_IN_PROGRESS,
+        self::STATUS_COMPLETED,
+    ];
+
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
     

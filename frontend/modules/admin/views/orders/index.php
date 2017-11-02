@@ -8,7 +8,7 @@ use frontend\helpers\Ui;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
-/* @var $orderSearchModel frontend\modules\admin\models\search\OrdersSearch */
+/* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
 
 $this->title = 'Orders';
 
@@ -16,9 +16,9 @@ $formater = Yii::$app->formatter;
 $orders = $ordersDataProvider->getOrdersSuborders();
 $pagination = $ordersDataProvider->getPagination();
 
-$statusFilterButtons = $orderSearchModel->getStatusFilterButtons();
-$productFilterStat = $orderSearchModel->productFilterStat();
-$modeFilterStat = $orderSearchModel->modeFilterStat();
+$statusFilterButtons = $ordersSearchModel->getStatusFilterButtons();
+$productFilterStat = $ordersSearchModel->productFilterStat();
+$modeFilterStat = $ordersSearchModel->modeFilterStat();
 
 ?>
 
@@ -138,12 +138,10 @@ $modeFilterStat = $orderSearchModel->modeFilterStat();
                             <th class="sommerce-th__action-buttons"></th>
                         </tr>
                         </thead>
-
                         <tbody class="m-datatable__body">
-
                         <?php foreach ($orders as $orderId => $order): ?>
                             <!-- Order item -->
-                            <?= $this->render('order-item', ['order' => $order]); ?>
+                            <?= $this->render('order-item', ['order' => $order, 'ordersSearchModel' => $ordersSearchModel]); ?>
                             <!--/ Order item -->
                         <?php endforeach; ?>
                         <?php if(!$orders): ?>
