@@ -143,7 +143,7 @@ $modeFilterStat = $ordersSearchModel->modeFilterStat();
                         <tbody class="m-datatable__body">
                         <?php foreach ($orders as $orderId => $order): ?>
                             <!-- Order item -->
-                            <?= $this->render('order-item', ['order' => $order, 'ordersSearchModel' => $ordersSearchModel]); ?>
+                            <?= $this->render('order_item', ['order' => $order, 'ordersSearchModel' => $ordersSearchModel]); ?>
                             <!--/ Order item -->
                         <?php endforeach; ?>
                         <?php if(!$orders): ?>
@@ -168,6 +168,7 @@ $modeFilterStat = $ordersSearchModel->modeFilterStat();
                         ?>
                     </div>
                     <!--/ Pagination -->
+
                 </div>
 
             </div>

@@ -7,6 +7,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $order array */
 /* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
+/* @var $formatter yii\i18n\Formatter */
 
 
 $formatter = Yii::$app->formatter;

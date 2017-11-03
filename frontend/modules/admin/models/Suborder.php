@@ -3,6 +3,7 @@
 namespace frontend\modules\admin\models;
 
 use Yii;
+use yii\i18n\Formatter;
 
 /**
  * Class Suborder
@@ -166,11 +167,12 @@ class Suborder extends \yii\db\ActiveRecord
         if ($responseFormatPrintR) {
             $providerResponse = print_r(json_decode($providerResponse),1);
         }
+        $formatter = Yii::$app->formatter;
         $orderDetails = [
             'provider' => $provider['site'],
             'provider_order_id' => $this->provider_order_id,
             'provider_response' => $providerResponse,
-            'updated_at' => $this->updated_at,
+            'updated_at' => $formatter->asDatetime($this->updated_at,'yyyy-MM-dd HH:mm:ss'),
         ];
         return $orderDetails;
     }
