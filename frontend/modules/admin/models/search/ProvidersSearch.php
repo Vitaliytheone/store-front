@@ -7,7 +7,7 @@ use Yii;
 use yii\db\Query;
 
 /**
- * Class OrdersSearch
+ * Class ProvidersSearch
  * @package app\models\search
  */
 class ProvidersSearch extends BaseSearch

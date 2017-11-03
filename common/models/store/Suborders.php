@@ -72,13 +72,7 @@ class Suborders extends \yii\db\ActiveRecord
             'amount' => Yii::t('app', 'Amount'),
             'package_id' => Yii::t('app', 'Package ID'),
             'quantity' => Yii::t('app', 'Quantity'),
-            'status' => Yii::t('app', '1 - Awaiting
-2 - Pending
-3 - In progress
-4 - Completed
-5 - Canceled
-6 - Failed
-7 - Error'),
+            'status' => Yii::t('app', 'Status'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'mode' => Yii::t('app', '0 - manual, 1 - auto'),
             'provider_id' => Yii::t('app', 'Provider ID'),
