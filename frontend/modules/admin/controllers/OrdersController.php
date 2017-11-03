@@ -70,7 +70,7 @@ class OrdersController extends CustomController
         if (!$suborderModel) {
             throw new yii\web\NotFoundHttpException();
         }
-        $orderDetails = $suborderModel->getDetails();
+        $orderDetails = $suborderModel->getDetails(false);
         if (!$orderDetails) {
             throw new yii\web\NotFoundHttpException();
         }

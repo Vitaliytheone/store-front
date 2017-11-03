@@ -149,10 +149,10 @@ class Suborder extends \yii\db\ActiveRecord
      *
      * Defines is returned provider response
      * plain Json string or print_r formatted string
-     * @param bool $printR
+     * @param bool $responseFormatPrintR
      * @return array|null
      */
-    public function getDetails(bool $printR = true)
+    public function getDetails(bool $responseFormatPrintR = true)
     {
         $provider = (new \yii\db\Query())
             ->select(['site'])
@@ -163,7 +163,7 @@ class Suborder extends \yii\db\ActiveRecord
             return null;
         }
         $providerResponse = $this->provider_response;
-        if ($printR) {
+        if ($responseFormatPrintR) {
             $providerResponse = print_r(json_decode($providerResponse),1);
         }
         $orderDetails = [
