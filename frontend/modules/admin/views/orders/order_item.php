@@ -22,7 +22,7 @@ $allowedActions = $ordersSearchModel::allowedActionStatuses();
  * @return bool
  */
 $isFirstSuborder = function($suborder) use ($suborders) {
-    return (count($suborders) > 1) && ($suborder == $suborders[0]);
+    return (count($suborders) > 1) && ($suborder == array_values($suborders)[0]);
 };
 
 

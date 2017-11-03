@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\data;
 
+use yii;
 use yii\helpers\ArrayHelper;
 use frontend\modules\admin\models\search\OrdersSearch;
 
@@ -12,39 +13,44 @@ use frontend\modules\admin\models\search\OrdersSearch;
  */
 class OrdersActiveDataProvider extends \yii\data\ActiveDataProvider
 {
-    public function getOrdersSuborders()
+    /**
+     * Make and return Orders with Suborders array
+     * @return array
+     */
+    public function getOrdersWithSuborders()
     {
         $ordersRows = $this->getModels();
-        $ordersSuborders = [];
-        $orderIds = array_unique(array_column($ordersRows, 'order_id'));
+        $orderIds = array_keys($ordersRows);
 
-        foreach ($orderIds as $orderId) {
-            $currentOrderRowsKey = array_search($orderId, array_column($ordersRows, 'order_id'));
-            $firstOrderRaw = $ordersRows[$currentOrderRowsKey];
-            $customer = $firstOrderRaw['customer'];
-            $createdAt = $firstOrderRaw['created_at'];
+        $db = yii::$app->store->getInstance()->db_name;
+        $suborders = (new \yii\db\Query())
+            ->select([
+                'so.id suborder_id', 'so.order_id', 'so.package_id', 'pk.product_id',
+                'so.amount', 'so.link', 'so.quantity', 'so.status', 'so.mode',
+                'pr.name product_name',
+            ])
+            ->from("$db.suborders so")
+            ->leftJoin("$db.packages pk",'so.package_id = pk.id')
+            ->leftJoin("$db.products pr",'pk.product_id = pr.id')
+            ->where(['so.order_id' => $orderIds])
+            ->indexBy('suborder_id')
+            ->all();
 
-            // Get all raw Suborders for current Order. Reset all first-level keys.
-            $suborders = array_values(array_filter($ordersRows, function($orderRowItem) use ($orderId){
-                return $orderId == ArrayHelper::getValue($orderRowItem, 'order_id', null);
-            }));
+        // Populate each suborder by additional data
+        array_walk($suborders, function(&$suborder){
+            $status = $suborder['status'];
+            $mode = $suborder['mode'];
+            $suborder['status_caption'] = ArrayHelper::getValue(OrdersSearch::$statusFilters, [$status, 'caption'], $status);
+            $suborder['mode_caption'] = ArrayHelper::getValue(OrdersSearch::$modeFilters, [$mode, 'caption'], $mode);
+        });
 
-            // Set additional suborders data
-            array_walk($suborders, function(&$suborder, $key){
-                $status = $suborder['status'];
-                $mode = $suborder['mode'];
-                $suborder['status_caption'] = ArrayHelper::getValue(OrdersSearch::$statusFilters, [$status,'caption'], $status);
-                $suborder['mode_caption'] = ArrayHelper::getValue(OrdersSearch::$modeFilters, [$mode, 'caption'], $mode);
-            });
+        // Populate each order by additional data
+        array_walk($ordersRows, function(&$order, $orderId) use ($suborders){
+            $order['suborders'] =  array_filter($suborders, function($suborder) use ($orderId){
+                return $suborder['order_id'] == $orderId;
+            },ARRAY_FILTER_USE_BOTH);
+        });
 
-            $ordersSuborders[$orderId] = [
-                'id' => $orderId,
-                'customer' => $customer,
-                'created_at' => $createdAt,
-                'suborders' => $suborders,
-            ];
-        }
-
-        return $ordersSuborders;
+        return $ordersRows;
     }
 }

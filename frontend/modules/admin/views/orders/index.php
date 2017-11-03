@@ -15,7 +15,7 @@ use frontend\helpers\Ui;
 $this->title = 'Orders';
 
 $formater = Yii::$app->formatter;
-$orders = $ordersDataProvider->getOrdersSuborders();
+$orders = $ordersDataProvider->getOrdersWithSuborders();
 $pagination = $ordersDataProvider->getPagination();
 
 $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons();
