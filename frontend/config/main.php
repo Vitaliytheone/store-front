@@ -67,9 +67,6 @@ $config = [
             'defaultRoute' => 'site'
         ],
     ],
-    'aliases' => [
-        '@admin' => '@frontend/modules/admin/',
-    ],
 ];
 
 
