@@ -33,6 +33,13 @@ class OrdersController extends CustomController
         ];
     }
 
+    public function beforeAction($action)
+    {
+        $this->addModule('ordersDetails');
+
+        return parent::beforeAction($action);
+    }
+
     /**
      * Render found & filtered orders list
      * @return string
