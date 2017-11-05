@@ -22,6 +22,8 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons();
 $productFilterStat = $ordersSearchModel->productFilterStat();
 $modeFilterStat = $ordersSearchModel->modeFilterStat();
 
+$summary = Ui::listSummary($ordersDataProvider);
+
 ?>
 
 <div class="row">
@@ -191,7 +193,7 @@ $modeFilterStat = $ordersSearchModel->modeFilterStat();
                         ?>
 
                         <div class="m-datatable__pager-info">
-                            <span class="m-datatable__pager-detail">1 to 100 of 577</span>
+                            <span class="m-datatable__pager-detail"><?= $summary ?></span>
                         </div>
 
                     </div>
@@ -201,8 +203,7 @@ $modeFilterStat = $ordersSearchModel->modeFilterStat();
 
             </div>
         </div>
-
-
+        
     </div>
 
 </div>
