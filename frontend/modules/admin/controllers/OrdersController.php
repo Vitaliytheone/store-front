@@ -23,11 +23,12 @@ class OrdersController extends CustomController
         return [
             'access' => [
                 'class' => AccessControl::className(),
+                'only' => ['logout'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['?'],
-                    ],
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];

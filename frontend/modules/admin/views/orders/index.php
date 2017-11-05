@@ -3,8 +3,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use yii\widgets\LinkPager;
 use frontend\helpers\Ui;
+use frontend\modules\admin\widgets\CustomLinkPager;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
@@ -161,11 +161,39 @@ $modeFilterStat = $ordersSearchModel->modeFilterStat();
                     <!-- Pagination -->
                     <div class="m-datatable__pager m-datatable--paging-loaded clearfix mb-3">
                         <?=
-                        LinkPager::widget([
+                        CustomLinkPager::widget([
                             'pagination' => $pagination,
                             'maxButtonCount' => 10,
+                            'disableCurrentPageButton' => false,
+                            'hideOnSinglePage' => true,
+
+                            'activePageCssClass' => 'm-datatable__pager-link-number m-datatable__pager-link--active',
+                            'disabledPageCssClass' => 'm-datatable__pager-link--disabled',
+
+                            'firstPageCssClass' => 'm-datatable__pager-link--first',
+                            'firstPageLabel' => '<i class="la la-angle-double-left"></i>',
+
+                            'lastPageCssClass' => 'm-datatable__pager-link--last',
+                            'lastPageLabel' => '<i class="la la-angle-double-right"></i>',
+
+                            'prevPageCssClass' => 'm-datatable__pager-link--prev',
+                            'prevPageLabel' => '<i class="la la-angle-left"></i>',
+
+                            'nextPageCssClass' => 'm-datatable__pager-link--next',
+                            'nextPageLabel' => '<i class="la la-angle-right"></i>',
+
+                            'pageCssClass' => 'm-datatable__pager-link-number',
+
+                            'options' => ['class' => 'm-datatable__pager-nav'],
+                            'linkOptions' => ['class' => 'm-datatable__pager-link'],
+
                         ])
                         ?>
+
+                        <div class="m-datatable__pager-info">
+                            <span class="m-datatable__pager-detail">1 to 100 of 577</span>
+                        </div>
+
                     </div>
                     <!--/ Pagination -->
 
