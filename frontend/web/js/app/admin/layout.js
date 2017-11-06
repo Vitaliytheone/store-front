@@ -87,17 +87,5 @@ customModule.adminLayout = {
             });
         });
 
-        $(document).ready(function () {
-            $(document).on('click', '.delete-properies', function () {
-                $(this).parent().remove();
-            });
-            $(document).on('click', '.add-properies', function () {
-                var inputProperties = $('.input-properties').val();
-                if (inputProperties.length) {
-                    $('.list-preperties').append('<li class="list-group-item">' + inputProperties + ' <span class="fa fa-times delete-properies"></span></li>');
-                    $('.input-properties').val('');
-                }
-            });
-        });
     }
 };

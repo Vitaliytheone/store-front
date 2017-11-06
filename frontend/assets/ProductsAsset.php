@@ -16,16 +16,14 @@ class ProductsAsset extends AssetBundle
     public $css = [];
 
     public $js = [
-        'js/libs/summernote/summernote-bs4.js',
-        'js/libs/summernote/summernote.init.js',
         'js/libs/jquery-ui.js',
         'js/libs/nestable/nestable.lib.js',
         'js/libs/nestable/nestable-script.js',
         'js/libs/notification/toastr.js',
-        'js/libs/notification/toastr.init.js',
+        'js/libs/summernote/summernote-bs4.js',
     ];
 
     public $depends = [
-        'frontend\assets\AdminAsset'
+        'frontend\assets\AdminAsset',
     ];
 }

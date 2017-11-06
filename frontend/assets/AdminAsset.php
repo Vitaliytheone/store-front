@@ -19,6 +19,7 @@ class AdminAsset extends AssetBundle
     ];
 
     public $js = [
+        'js/libs/underscore.js',
         'js/libs/popper.js',
         'js/libs/bootstrap.js',
         'js/main.js',
