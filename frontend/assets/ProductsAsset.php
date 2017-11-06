@@ -25,5 +25,7 @@ class ProductsAsset extends AssetBundle
         'js/libs/notification/toastr.init.js',
     ];
 
-    public $depends = [];
+    public $depends = [
+        'frontend\assets\AdminAsset'
+    ];
 }
