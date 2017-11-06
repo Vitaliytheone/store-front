@@ -26,7 +26,7 @@ class OrdersSearch extends \yii\base\Model
 
     private $_queryActiveFilters;
 
-    const PAGE_SIZE = 2;
+    const PAGE_SIZE = 100;
 
     const FILTER_STATUS_AWAITING    = 1;
     const FILTER_STATUS_PENDING     = 2;
