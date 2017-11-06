@@ -107,7 +107,6 @@ class OrdersController extends CustomController
         if (!$suborderModel) {
             throw new yii\web\NotFoundHttpException();
         }
-        // $suborderModel->scenario = Suborder::SCENARIO_UPDATE;
         $suborderModel->setAttribute('status', $orderStatus);
         $suborderModel->save();
 
@@ -132,7 +131,6 @@ class OrdersController extends CustomController
         if (!$suborderModel) {
             throw new yii\web\NotFoundHttpException();
         }
-        //$suborderModel->scenario = Suborder::SCENARIO_UPDATE;
         $suborderModel->setAttribute('status', Suborder::STATUS_CANCELED);
         $suborderModel->save();
 
