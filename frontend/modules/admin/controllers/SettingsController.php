@@ -2,9 +2,13 @@
 
 namespace frontend\modules\admin\controllers;
 
+use common\components\ActiveForm;
+use frontend\modules\admin\models\forms\CreateProviderForm;
+use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * Settings controller for the `admin` module
@@ -45,7 +49,18 @@ class SettingsController extends CustomController
      */
     public function actionProviders()
     {
+        $this->view->title = 'Settings providers';
+        
         $search = new ProvidersSearch();
+
+        $this->addModule('adminProviders');
+
+        $model = new ProvidersListForm();
+        $model->setStore(Yii::$app->store->getInstance());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $this->refresh();
+        }
 
         return $this->render('providers', [
             'providers' => $search->search()
@@ -95,5 +110,30 @@ class SettingsController extends CustomController
     public function actionNavigations()
     {
         return $this->render('navigations');
+    }
+
+    /**
+     * Create provider
+     *
+     * @access public
+     * @return mixed
+     */
+    public function actionCreateProvider()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new CreateProviderForm();
+        $model->setStore(Yii::$app->store->getInstance());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 }

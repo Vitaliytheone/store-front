@@ -27,7 +27,7 @@
                     </div>
                     <div>
                         <div class="m-dropdown--align-right">
-                            <button class="btn btn-primary  m-btn--air btn-brand cursor-pointer" data-toggle="modal" data-target=".add_provider" data-backdrop="static">Add provider</button>
+                            <a class="btn btn-primary  m-btn--air btn-brand cursor-pointer" id="showCreateProviderModal" data-backdrop="static" href="#">Add provider</a>
                         </div>
                     </div>
                 </div>
