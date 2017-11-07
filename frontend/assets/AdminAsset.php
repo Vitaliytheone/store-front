@@ -17,6 +17,7 @@ class AdminAsset extends AssetBundle
         'css/admin/fonts.css',
         'css/admin/main.css',
         'css/admin/styles.css',
+        'css/admin/modal-loader.css',
     ];
 
     public $js = [

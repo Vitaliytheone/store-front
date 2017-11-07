@@ -21,6 +21,9 @@ class ProductsAsset extends AssetBundle
         'js/libs/nestable/nestable-script.js',
         'js/libs/notification/toastr.js',
         'js/libs/summernote/summernote-bs4.js',
+
+        'js/app/admin/products.js', // TODO:: Delete scripts after the main script developing is finished
+
     ];
 
     public $depends = [
