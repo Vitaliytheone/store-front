@@ -3,6 +3,9 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\stores\queries\ProvidersQuery;
 
 /**
  * This is the model class for table "{{%providers}}".
@@ -14,8 +17,11 @@ use Yii;
  *
  * @property StoreProviders[] $storeProviders
  */
-class Providers extends \yii\db\ActiveRecord
+class Providers extends ActiveRecord
 {
+    const TYPE_INTERNAL = 0;
+    const TYPE_EXTERNAL = 1;
+
     /**
      * @inheritdoc
      */
@@ -43,7 +49,7 @@ class Providers extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'site' => Yii::t('app', 'Site'),
-            'type' => Yii::t('app', '0 - internal, 1 - external'),
+            'type' => Yii::t('app', 'Type'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
     }
@@ -58,10 +64,25 @@ class Providers extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\ProvidersQuery the active query used by this AR class.
+     * @return ProvidersQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\ProvidersQuery(get_called_class());
+        return new ProvidersQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }

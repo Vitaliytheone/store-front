@@ -1,17 +1,33 @@
 <?php
     /* @var $this \yii\web\View */
     /* @var $providers \frontend\modules\admin\models\search\ProvidersSearch */
+
+    use common\components\ActiveForm;
+    use yii\bootstrap\Html;
+
+    $model = new \frontend\modules\admin\models\forms\ProvidersListForm();
 ?>
+<?php $form = ActiveForm::begin([
+    'id' => 'providersListForm',
+]); ?>
 
 <?php if (!empty($providers['models'])) : ?>
-    <?php foreach ($providers['models'] as $provider) : ?>
+    <?php foreach ($providers['models'] as $key => $provider) : ?>
         <div class="form-group">
-            <label for="privder_api-1"><?= $provider['site'] ?> API</label>
-            <input type="text" class="form-control" id="privder_api-1" value="<?= $provider['apikey'] ?>">
+            <?= $form->field($model, 'id')->hiddenInput([
+                'value' => $provider['id'],
+                'name' => 'ProvidersListForm[providers][' . $key . '][key]'
+            ])->label(false) ?>
+
+            <?= $form->field($model, 'api_key')->textInput([
+                'value' => $provider['apikey'],
+                'name' => 'ProvidersListForm[providers][' . $key . '][api_key]'
+            ])->label($provider['site'] . ' API key') ?>
         </div>
     <?php endforeach; ?>
 <?php else : ?>
     <p>No providers</p>
 <?php endif; ?>
 <hr>
-<button class="btn btn-success m-btn--air">Save changes</button>
+<?= Html::submitButton('Save changes', ['class' => 'btn btn-success m-btn--air', 'name' => 'save-button']) ?>
+<?php ActiveForm::end(); ?>

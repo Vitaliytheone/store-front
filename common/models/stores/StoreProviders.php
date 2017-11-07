@@ -3,6 +3,8 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\db\ActiveRecord;
+use common\models\stores\queries\StoreProvidersQuery;
 
 /**
  * This is the model class for table "{{%store_providers}}".
@@ -15,7 +17,7 @@ use Yii;
  * @property Providers $provider
  * @property Stores $store
  */
-class StoreProviders extends \yii\db\ActiveRecord
+class StoreProviders extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -69,10 +71,10 @@ class StoreProviders extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\StoreProvidersQuery the active query used by this AR class.
+     * @return StoreProvidersQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\StoreProvidersQuery(get_called_class());
+        return new StoreProvidersQuery(get_called_class());
     }
 }

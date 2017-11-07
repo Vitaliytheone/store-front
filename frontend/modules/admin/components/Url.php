@@ -3,6 +3,10 @@ namespace frontend\modules\admin\components;
 
 use Yii;
 
+/**
+ * Class Url
+ * @package frontend\modules\admin\components
+ */
 class Url extends \yii\helpers\Url {
 
     /**

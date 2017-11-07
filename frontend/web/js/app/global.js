@@ -154,7 +154,7 @@ var custom = new function() {
             btn.addClass('active');
 
             if (errorSummary.length) {
-                errorSummary.hide();
+                errorSummary.addClass('hidden');
                 errorSummary.html('');
             }
         };
@@ -172,7 +172,7 @@ var custom = new function() {
 
                     if (errorSummary.length) {
                         errorSummary.html(response.message);
-                        errorSummary.show();
+                        errorSummary.removeClass('hidden');
                     } else {
                         self.notify({0: {
                             type : 'danger',
