@@ -5,7 +5,8 @@ namespace frontend\modules\admin\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
-use common\models\store\Products;
+use frontend\helpers\Ui;
+use frontend\modules\admin\forms\ProductForm;
 
 /**
  * Class ProductsController
@@ -46,6 +47,40 @@ class ProductsController extends CustomController
     public function actionIndex()
     {
         return $this->render('index', []);
+    }
+
+    /**
+     * Create new Product AJAX action
+     * @return array
+     * @throws yii\web\NotAcceptableHttpException
+     */
+    public function actionCreateProduct()
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $formData = $request->post();
+        $productModel = new ProductForm();
+        if (!$productModel->load($formData)) {
+            throw new yii\web\NotAcceptableHttpException();
+        }
+        if (!$productModel->validate()) {
+            return $response->data = ['error' => [
+                'message' => 'Model validation error',
+                'html' => Ui::errorSummary($productModel, ['class' => 'alert-danger alert']),
+            ]];
+        }
+        if (!$productModel->save()) {
+            throw new yii\web\NotAcceptableHttpException();
+        }
+
+        return $response->data = [
+            'product' => $productModel,
+        ];
     }
 
 }
