@@ -1,0 +1,5 @@
+# More char limits for table `product` fields `seo_title`, `seo_title` added.
+
+USE `store`;
+ALTER TABLE `products` CHANGE `seo_title` `seo_title` VARCHAR(300)  CHARACTER SET utf8  COLLATE utf8_general_ci  NULL  DEFAULT NULL;
+ALTER TABLE `products` CHANGE `seo_description` `seo_description` VARCHAR(1000)  CHARACTER SET utf8  COLLATE utf8_general_ci  NULL  DEFAULT NULL;
