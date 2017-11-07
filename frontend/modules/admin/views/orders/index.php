@@ -48,7 +48,7 @@ $summary = Ui::listSummary($ordersDataProvider);
                 </nav>
             </div>
             <div class="col-lg-2 col-sm-12">
-                <form class="form-inline" action="<?= Url::to('/admin/orders') ?>">
+                <form class="" action="<?= Url::to('/admin/orders') ?>">
                     <div class="input-group m-input-group--air">
                         <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for..."
                                name="query"
