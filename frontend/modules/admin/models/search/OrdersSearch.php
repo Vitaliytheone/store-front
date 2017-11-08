@@ -7,6 +7,7 @@ use yii\db\Query;
 use yii\validators\EmailValidator;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use common\models\store\Suborders;
 use frontend\modules\admin\data\OrdersActiveDataProvider;
 
 /**
@@ -38,6 +39,13 @@ class OrdersSearch extends \yii\base\Model
 
     const FILTER_MODE_MANUAL        = 0;
     const FILTER_MODE_AUTO          = 1;
+
+    /* Suborder accepted statuses for changes from admin panel */
+    public static $acceptedStatuses = [
+        Suborders::STATUS_PENDING,
+        Suborders::STATUS_IN_PROGRESS,
+        Suborders::STATUS_COMPLETED,
+    ];
 
     public static $statusFilters = [
         self::FILTER_STATUS_AWAITING => [

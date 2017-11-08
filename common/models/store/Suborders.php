@@ -3,6 +3,7 @@
 namespace common\models\store;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
 
 /**
  * This is the model class for table "{{%suborders}}".
@@ -29,6 +30,40 @@ use Yii;
  */
 class Suborders extends \yii\db\ActiveRecord
 {
+    /* Suborder status constants */
+    const STATUS_AWAITING       = 1;
+    const STATUS_PENDING        = 2;
+    const STATUS_IN_PROGRESS    = 3;
+    const STATUS_COMPLETED      = 4;
+    const STATUS_CANCELED       = 5;
+    const STATUS_FAILED         = 6;
+    const STATUS_ERROR          = 7;
+
+    /* Suborder mode constants */
+    const MODE_MANUAL           = 0;
+    const MODE_AUTO             = 1;
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => 'updated_at',
+                    self::EVENT_BEFORE_UPDATE => 'updated_at',
+
+                ],
+                'value' => function ($event) {
+                    return time();
+                },
+            ],
+        ];
+    }
+
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -105,6 +140,37 @@ class Suborders extends \yii\db\ActiveRecord
     public function getPackage()
     {
         return $this->hasOne(Packages::className(), ['id' => 'package_id']);
+    }
+
+    /**
+     * Return Suborder Details data
+     * Defines is returned provider response
+     * plain Json string or print_r formatted string
+     * @param bool $responseFormatPrintR
+     * @return array|null
+     */
+    public function getDetails(bool $responseFormatPrintR = true)
+    {
+        $provider = (new \yii\db\Query())
+            ->select(['site'])
+            ->from("providers")
+            ->where(['id' => $this->provider_id])
+            ->one();
+        if (!$provider) {
+            return null;
+        }
+        $providerResponse = $this->provider_response;
+        if ($responseFormatPrintR) {
+            $providerResponse = print_r(json_decode($providerResponse),1);
+        }
+        $formatter = Yii::$app->formatter;
+        $orderDetails = [
+            'provider' => $provider['site'],
+            'provider_order_id' => $this->provider_order_id,
+            'provider_response' => $providerResponse,
+            'updated_at' => $formatter->asDatetime($this->updated_at,'yyyy-MM-dd HH:mm:ss'),
+        ];
+        return $orderDetails;
     }
 
     /**

@@ -4,10 +4,10 @@ namespace frontend\modules\admin\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use common\models\store\Suborders;
 use frontend\modules\admin\models\search\OrdersSearch;
-use frontend\modules\admin\models\Suborder;
+//use frontend\modules\admin\models\Suborder;
 
 /**
  * Class OrdersController
@@ -74,7 +74,7 @@ class OrdersController extends CustomController
         if (!$request->isAjax || !$suborderId) {
             throw new yii\web\BadRequestHttpException();
         }
-        $suborderModel = Suborder::findOne($suborderId);
+        $suborderModel = Suborders::findOne($suborderId);
         if (!$suborderModel) {
             throw new yii\web\NotFoundHttpException();
         }
@@ -99,11 +99,11 @@ class OrdersController extends CustomController
             throw new yii\web\BadRequestHttpException();
         }
 
-        $isStatusAllowed = in_array($orderStatus, Suborder::$acceptedStatuses);
+        $isStatusAllowed = in_array($orderStatus, OrdersSearch::$acceptedStatuses);
         if (!$isStatusAllowed || !$suborderId || !$orderStatus) {
             $this->redirect(Url::to(["/admin/orders"]));
         }
-        $suborderModel = Suborder::findOne($suborderId);
+        $suborderModel = Suborders::findOne($suborderId);
         if (!$suborderModel) {
             throw new yii\web\NotFoundHttpException();
         }
@@ -127,11 +127,11 @@ class OrdersController extends CustomController
             $this->redirect(Url::to(["/admin/orders"]));
         }
 
-        $suborderModel = Suborder::findOne($suborderId);
+        $suborderModel = Suborders::findOne($suborderId);
         if (!$suborderModel) {
             throw new yii\web\NotFoundHttpException();
         }
-        $suborderModel->setAttribute('status', Suborder::STATUS_CANCELED);
+        $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
         $suborderModel->save();
 
         $queryParams = is_array($currentFilters) ? http_build_query($currentFilters) : null;
