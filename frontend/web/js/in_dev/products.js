@@ -22,9 +22,6 @@
         $errorContainer = $('#product-form-error'),
         $modalLoader = $modal.find('.modal-loader'),
 
-        $fieldName = $productForm.find('[name = "ProductForm[name]"]'),
-        $filedDescription = $productForm.find('[name = "ProductForm[description]"]'),
-
         currentProductId,
         actionCreateUrl = '/admin/products/create-product',     // POST /admin/products/create-product
         actionUpdateUrl = '/admin/products/update-product',     // POST /admin/products/update-product/{:id}
@@ -43,7 +40,6 @@
         var saveActionUrl = currentProductId ? actionUpdateUrl + '/' + currentProductId : actionCreateUrl;
 
         e.preventDefault();
-
         $modalLoader.removeClass('hidden');
         $.ajax({
             url: saveActionUrl,
@@ -104,6 +100,48 @@
         });
     }
 
+    function fillFormFields(data){
+        console.log('fill form fields');
+        var defaultData = {
+            name : '',
+            description : '',
+            properties : [],
+            url : '',
+            seo_title : '',
+            seo_description : ''
+        },
+        formData = _.defaults(data, defaultData);
+
+        var $formFields = {
+            name            : $productForm.find('[name = "ProductForm[name]"]'),
+            description     : $productForm.find('[name = "ProductForm[description]"]'),
+            properties      : $productForm.find('[name = "ProductForm[properties]"]'),
+            url             : $productForm.find('[name = "ProductForm[url]"]'),
+            seo_title       : $productForm.find('[name = "ProductForm[seo_title]"]'),
+            seo_description : $productForm.find('[name = "ProductForm[seo_description]"]')
+        };
+
+        // Fill form data
+        $formFields.name.val(formData.name);
+        $formFields.description.val(formData.description);
+        $formFields.url.val(formData.url);
+        $formFields.seo_title.val(formData.seo_title);
+        $formFields.seo_description.val(formData.seo_description);
+
+        $formFields.description.val(formData.description);
+
+
+
+        _.each($formFields, function($field, key, list){
+            $field.val(formData[key]);
+        });
+
+        var $name = $productForm.find('[name = "ProductForm[name]"]'),
+            $filedDescription = $productForm.find('[name = "ProductForm[description]"]');
+
+
+    }
+
     /**
      * Init properties list
      */
@@ -124,8 +162,15 @@
      * Create new product routine
      *******************************************************************************************/
     function createProduct(){
-
-        $('#edit-seo__url').val($('#edit-page-title').val()).trigger('input')
+        // fillFormFields({
+        //     name : 'Default',
+        //     description : '',
+        //     properties : ['4321312','4321', '4321', '312312'],
+        //     url : '',
+        //     seo_title : '',
+        //     seo_description : ''
+        // });
+        // $('#edit-seo__url').val($('#edit-page-title').val()).trigger('input')
     }
 
     /*******************************************************************************************
