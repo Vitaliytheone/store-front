@@ -21,8 +21,7 @@ $navbarItems = [
         'url' => '/admin/settings',
         'label' => 'Settings',
         'class' => 'mobile-hidden',
-
-'submenuItems' => [
+        'submenuItems' => [
             'settings-general' => [
                 'url' => '/admin/settings',
                 'label' => 'General',
