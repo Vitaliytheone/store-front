@@ -212,6 +212,7 @@ $summary = Ui::listSummary($ordersDataProvider);
 <div id="suborder-details-modal" class="modal fade order-detail" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
+            <div class="modal-loader hidden"></div>
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -7,13 +7,15 @@ customModule.ordersDetails = {
                 $provider = $detailsModal.find('#order-detail-provider'),
                 $providerOrderId = $detailsModal.find('#order-detail-provider-order-id'),
                 $providerResponce = $detailsModal.find('#order-detail-provider-response'),
-                $providerUpdate = $detailsModal.find('#order-detail-lastupdate');
+                $providerUpdate = $detailsModal.find('#order-detail-lastupdate'),
+                $modalLoader = $detailsModal.find('.modal-loader');
 
             $detailsModal.on('show.bs.modal', function(e) {
                 var suborderId = $(e.relatedTarget).data('suborder-id');
                 if (suborderId === undefined || isNaN(suborderId)) {
                     return;
                 }
+                $modalLoader.removeClass('hidden');
                 $.ajax({
                     url: ajaxEndpoint,
                     type: "GET",
@@ -21,6 +23,7 @@ customModule.ordersDetails = {
                         'suborder_id': suborderId
                     },
                     success: function (data) {
+                        $modalLoader.addClass('hidden');
                         if (data.details === undefined) {
                             return;
                         }
@@ -29,6 +32,7 @@ customModule.ordersDetails = {
                     error: function(jqXHR, textStatus, errorThrown){
                         console.log('Something is wrong!');
                         console.log(jqXHR, textStatus, errorThrown);
+                        $modalLoader.addClass('hidden');
                     }
                 });
 
