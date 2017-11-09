@@ -148,15 +148,6 @@ $summary = Ui::listSummary($ordersDataProvider);
                             <?= $this->render('order_item', ['order' => $order, 'ordersSearchModel' => $ordersSearchModel]); ?>
                             <!--/ Order item -->
                         <?php endforeach; ?>
-                        <?php if(!$orders): ?>
-                            <tr>
-                                <td colspan="10">
-                                    <div class="alert alert-warning text-center" role="alert">
-                                        <strong>No orders were found!</strong>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
                         </tbody>
                     </table>
 
