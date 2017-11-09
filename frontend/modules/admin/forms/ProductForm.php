@@ -2,7 +2,6 @@
 
 namespace frontend\modules\admin\forms;
 
-use function MongoDB\BSON\toJSON;
 use yii;
 use yii\behaviors\AttributeBehavior;
 use common\models\store\Pages;
@@ -88,18 +87,19 @@ class ProductForm extends \common\models\store\Products
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name', 'url', 'visibility'], 'required'],
             [['id', 'visibility'], 'integer'],
             [['seo_title', 'seo_description', 'url',], 'trim'],
             [['name', 'url'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['seo_title', ], 'string', 'max' => 300],
             [['seo_description', ], 'string', 'max' => 1000],
+            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             [['properties', 'position'], 'safe'],
-            ['name', 'validateNoConflictUrl',
+            ['url', 'validateNoConflictUrl',
                 'message' => 'Product with same url already exist in the database! Please use another url.',
             ],
-            ['name', 'validateNoConflictProductPage',
+            ['url', 'validateNoConflictProductPage',
                 'message' => 'Page with same url already exist in the database! Please use another url.',
             ],
         ];

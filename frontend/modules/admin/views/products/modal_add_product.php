@@ -30,11 +30,19 @@ $formatter = Yii::$app->formatter;
 
                     <div class="form-group">
                         <label for="edit-page-title">Product name</label>
-                        <input type="text" class="form-control" id="edit-page-title" name="ProductForm[name]" value="">
+                        <input type="text" class="form_field__name form-control" id="edit-page-title" name="ProductForm[name]" value="">
+                    </div>
+
+                    <div class="form-group m-form__group">
+                        <label for="edit-page-visibility">Visibility</label>
+                        <select class="form_field__visibility form-control m-input" id="edit-page-visibility" name="ProductForm[visibility]">
+                            <option name="ProductForm[visibility]" value="1">Enabled</option>
+                            <option name="ProductForm[visibility]" value="0">Disabled</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <textarea id="summernote" title="Description" name="ProductForm[description]"></textarea>
+                        <textarea class="form_field__description summernote" id="description" title="Description" name="ProductForm[description]"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -46,7 +54,7 @@ $formatter = Yii::$app->formatter;
                               </span>
                         </div>
 
-                        <ul class="list-group list-properties">
+                        <ul class="form_field__properties list-group list-properties">
                         </ul>
                     </div>
 
@@ -73,14 +81,14 @@ $formatter = Yii::$app->formatter;
                             <div class="collapse" id="seo-block">
                                 <div class="form-group">
                                     <label for="edit-seo__title">Page title</label>
-                                    <input class="form-control" id="edit-seo__title" name="ProductForm[seo_title]" value="Product">
+                                    <input class="form_field__seo_title form-control" id="edit-seo__title" name="ProductForm[seo_title]" value="Product">
                                     <small class="form-text text-muted"><span class="edit-seo__title-muted"></span> of
                                         70 characters used
                                     </small>
                                 </div>
                                 <div class="form-group">
                                     <label for="edit-seo__meta">Meta description</label>
-                                    <textarea class="form-control" id="edit-seo__meta" rows="3" name="ProductForm[seo_description]">A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text</textarea>
+                                    <textarea class="form_field__seo_description form-control" id="edit-seo__meta" rows="3" name="ProductForm[seo_description]">A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text</textarea>
                                     <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span> of
                                         160 characters used
                                     </small>
@@ -90,7 +98,7 @@ $formatter = Yii::$app->formatter;
                                     <div class="input-group">
                                         <span class="input-group-addon"
                                               id="basic-addon3">http://<?= $storeUrl; ?>/</span>
-                                        <input type="text" class="form-control" id="edit-seo__url" name="ProductForm[url]" value="about-us">
+                                        <input type="text" class="form_field__url form-control" id="edit-seo__url" name="ProductForm[url]" value="about-us">
                                     </div>
                                 </div>
                             </div>

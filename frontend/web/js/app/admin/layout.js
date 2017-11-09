@@ -52,32 +52,33 @@ customModule.adminLayout = {
             });
         });
 
-        /* Edit page */
-        $(document).ready(function () {
-
-            if ($('.edit-seo__title').length > 0) {
-                (function () {
-
-                    var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
-
-                    var _loop = function _loop(i) {
-                        $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
-                        $("#" + seoEdit[i]).on('input', function (e) {
-                            if (i == 2) {
-                                $('.' + seoEdit[i]).text($(e.target).val().replace(/\s+/g, '-'));
-                            } else {
-                                $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
-                                $('.' + seoEdit[i]).text($(e.target).val());
-                            }
-                        });
-                    };
-
-                    for (var i = 0; i < seoEdit.length; i++) {
-                        _loop(i);
-                    }
-                })();
-            }
-        });
+        // TODO:: Commented because conflicted with products page DOM objects. Must be rewrite.
+        // /* Edit page */
+        // $(document).ready(function () {
+        //
+        //     if ($('.edit-seo__title').length > 0) {
+        //         (function () {
+        //
+        //             var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
+        //
+        //             var _loop = function _loop(i) {
+        //                 $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
+        //                 $("#" + seoEdit[i]).on('input', function (e) {
+        //                     if (i == 2) {
+        //                         $('.' + seoEdit[i]).text($(e.target).val().replace(/\s+/g, '-'));
+        //                     } else {
+        //                         $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
+        //                         $('.' + seoEdit[i]).text($(e.target).val());
+        //                     }
+        //                 });
+        //             };
+        //
+        //             for (var i = 0; i < seoEdit.length; i++) {
+        //                 _loop(i);
+        //             }
+        //         })();
+        //     }
+        // });
 
         $(document).ready(function () {
             $('#select-menu-link').change(function () {

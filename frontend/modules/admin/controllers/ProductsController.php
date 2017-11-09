@@ -5,6 +5,10 @@ namespace frontend\modules\admin\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use yii\web\Response;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
+use yii\web\NotAcceptableHttpException;
 use frontend\helpers\Ui;
 use frontend\modules\admin\forms\ProductForm;
 
@@ -58,7 +62,7 @@ class ProductsController extends CustomController
     {
         $request = Yii::$app->getRequest();
         $response = Yii::$app->getResponse();
-        $response->format = \yii\web\Response::FORMAT_JSON;
+        $response->format = Response::FORMAT_JSON;
         if (!$request->isAjax) {
             exit;
         }
@@ -66,7 +70,7 @@ class ProductsController extends CustomController
         $formData = $request->post();
         $productModel = new ProductForm();
         if (!$productModel->load($formData)) {
-            throw new yii\web\NotAcceptableHttpException();
+            throw new NotAcceptableHttpException();
         }
         if (!$productModel->validate()) {
             return $response->data = ['error' => [
@@ -75,12 +79,74 @@ class ProductsController extends CustomController
             ]];
         }
         if (!$productModel->save()) {
-            throw new yii\web\NotAcceptableHttpException();
+            throw new NotAcceptableHttpException();
         }
 
-        return $response->data = [
+        return [
             'product' => $productModel,
         ];
     }
+
+    /**
+     * Get Product AJAX action
+     * @param $id
+     * @return array
+     * @throws Yii\web\NotFoundHttpException
+     */
+    public function actionGetProduct($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $productModel = ProductForm::findOne($id);
+        if (!$productModel) {
+            throw new NotFoundHttpException();
+        }
+        return [
+            'product' => $productModel->getAttributes(),
+        ];
+    }
+
+
+    /**
+     * Update Product AJAX action
+     * @param $id
+     * @return array
+     * @throws Yii\web\NotAcceptableHttpException
+     * @throws Yii\web\NotFoundHttpException
+     */
+    public function actionUpdateProduct($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        error_log(print_r($request->post(),1),0);
+
+        $productModel = ProductForm::findOne($id);
+        if (!$productModel) {
+            throw new NotFoundHttpException();
+        }
+        if (!$productModel->load($request->post()) || !$productModel->validate()) {
+            return ['error' => [
+                'message' => 'Model validation error',
+                'html' => Ui::errorSummary($productModel, ['class' => 'alert-danger alert']),
+            ]];
+        }
+        if (!$productModel->save(false)) {
+            throw new NotAcceptableHttpException();
+        }
+        return [
+            'product' => $productModel,
+        ];
+    }
+
 
 }

@@ -65,10 +65,10 @@ class Ui
 
         if (empty($firstError)) {
             // still render the placeholder for client-side validation use
-            $content = '<ul></ul>';
+            $content = '<div></div>';
             $options['style'] = isset($options['style']) ? rtrim($options['style'], ';') . '; display:none' : 'display:none';
         } else {
-            $content = '<ul><li>' . $firstError . '</li></ul>';
+            $content = '<div>' . $firstError . '</div>';
         }
         return Html::tag('div',  $content , $options);
     }
