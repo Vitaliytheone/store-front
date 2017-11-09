@@ -5,9 +5,11 @@ namespace frontend\modules\admin\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
+use yii\web\NotAcceptableHttpException;
 use common\models\store\Suborders;
 use frontend\modules\admin\models\search\OrdersSearch;
-//use frontend\modules\admin\models\Suborder;
 
 /**
  * Class OrdersController
@@ -62,7 +64,7 @@ class OrdersController extends CustomController
      *
      * @throws Yii\web\BadRequestHttpException
      * @throws Yii\web\NotFoundHttpException
-     * @return $this|array
+     * @return array
      */
     public function actionGetOrderDetails()
     {
@@ -72,17 +74,17 @@ class OrdersController extends CustomController
 
         $suborderId = $request->get('suborder_id');
         if (!$request->isAjax || !$suborderId) {
-            throw new yii\web\BadRequestHttpException();
+            throw new BadRequestHttpException();
         }
         $suborderModel = Suborders::findOne($suborderId);
         if (!$suborderModel) {
-            throw new yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException();
         }
         $orderDetails = $suborderModel->getDetails(false);
         if (!$orderDetails) {
-            throw new yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException();
         }
-        return $response->data = ['details' => $orderDetails];
+        return ['details' => $orderDetails];
     }
 
     /**
@@ -96,17 +98,22 @@ class OrdersController extends CustomController
         $orderStatus = yii::$app->getRequest()->get('status');
         $currentFilters = yii::$app->getRequest()->get('filters');
         if (!$suborderId || !$orderStatus) {
-            throw new yii\web\BadRequestHttpException();
+            throw new BadRequestHttpException();
         }
 
         $isStatusAllowed = in_array($orderStatus, OrdersSearch::$acceptedStatuses);
         if (!$isStatusAllowed || !$suborderId || !$orderStatus) {
-            $this->redirect(Url::to(["/admin/orders"]));
+            throw new NotAcceptableHttpException();
         }
         $suborderModel = Suborders::findOne($suborderId);
         if (!$suborderModel) {
-            throw new yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException();
         }
+        $isChangeActionDisallowed = in_array($suborderModel->status, OrdersSearch::$disallowedChangeStatusStatuses);
+        if ($isChangeActionDisallowed) {
+            throw new NotAcceptableHttpException();
+        }
+
         $suborderModel->setAttribute('status', $orderStatus);
         $suborderModel->save();
 
@@ -124,12 +131,16 @@ class OrdersController extends CustomController
         $currentFilters = yii::$app->getRequest()->get('filters');
 
         if (!$suborderId) {
-            $this->redirect(Url::to(["/admin/orders"]));
+            throw new NotAcceptableHttpException();
         }
 
         $suborderModel = Suborders::findOne($suborderId);
         if (!$suborderModel) {
-            throw new yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException();
+        }
+        $isCancelDisallowed = in_array($suborderModel->status, OrdersSearch::$disallowedCancelStatuses);
+        if ($isCancelDisallowed) {
+            throw new NotAcceptableHttpException();
         }
         $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
         $suborderModel->save();

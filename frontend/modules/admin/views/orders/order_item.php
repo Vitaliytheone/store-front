@@ -15,6 +15,9 @@ $suborders = $order['suborders'];
 $subordersCnt = count($suborders);
 
 $allowedActions = $ordersSearchModel::allowedActionStatuses();
+$disallowedCancelAction = $ordersSearchModel::$disallowedCancelStatuses;
+$disallowedChangeStatusAction = $ordersSearchModel::$disallowedChangeStatusStatuses;
+
 
 /**
  * Check if $suborder is a first element in $suborders array
@@ -45,9 +48,8 @@ $actionAllowedStatuses = function($currentStatus) use ($allowedActions) {
  * @param $currentStatus
  * @return bool
  */
-$isStatusMenuShow = function($currentStatus) use ($ordersSearchModel) {
-    $forbiddenStatuses = [$ordersSearchModel::FILTER_STATUS_CANCELED, $ordersSearchModel::FILTER_STATUS_COMPLETED];
-    return !in_array($currentStatus, $forbiddenStatuses);
+$isStatusMenuShow = function($currentStatus) use ($disallowedChangeStatusAction) {
+    return !in_array($currentStatus, $disallowedChangeStatusAction);
 };
 
 /**
@@ -75,9 +77,8 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
  * @param $currentStatus
  * @return string
  */
-$isCancelShow = function($currentStatus) use ($ordersSearchModel) {
-    $forbidden = [$ordersSearchModel::FILTER_STATUS_CANCELED, $ordersSearchModel::FILTER_STATUS_COMPLETED];
-    return $currentStatus != in_array($currentStatus, $forbidden);
+$isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
+    return $currentStatus != in_array($currentStatus, $disallowedCancelAction);
 };
 
 ?>

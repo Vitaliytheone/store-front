@@ -25,20 +25,10 @@ class OrdersSearch extends \yii\base\Model
     public $product;
     public $query;
 
+    private $_db;
     private $_queryActiveFilters;
 
     const PAGE_SIZE = 100;
-
-    const FILTER_STATUS_AWAITING    = 1;
-    const FILTER_STATUS_PENDING     = 2;
-    const FILTER_STATUS_IN_PROGRESS = 3;
-    const FILTER_STATUS_COMPLETED   = 4;
-    const FILTER_STATUS_CANCELED    = 5;
-    const FILTER_STATUS_FAILED      = 6;
-    const FILTER_STATUS_ERROR       = 7;
-
-    const FILTER_MODE_MANUAL        = 0;
-    const FILTER_MODE_AUTO          = 1;
 
     /* Suborder accepted statuses for changes from admin panel */
     public static $acceptedStatuses = [
@@ -47,30 +37,42 @@ class OrdersSearch extends \yii\base\Model
         Suborders::STATUS_COMPLETED,
     ];
 
+    /* Suborder statuses when `Cancel suborder` action is disallowed */
+    public static $disallowedCancelStatuses = [
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `Change status` action is disallowed */
+    public static $disallowedChangeStatusStatuses = [
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
+
     public static $statusFilters = [
-        self::FILTER_STATUS_AWAITING => [
+        Suborders::STATUS_AWAITING => [
             'caption' => 'Awaiting',
             'stat' => true,
             'stat-class' => 'm-badge m-badge--metal m-badge--wide',
         ],
-        self::FILTER_STATUS_PENDING => [
+        Suborders::STATUS_PENDING => [
             'caption' => 'Pending',
         ],
-        self::FILTER_STATUS_IN_PROGRESS => [
+        Suborders::STATUS_IN_PROGRESS => [
             'caption' => 'In progress',
         ],
-        self::FILTER_STATUS_COMPLETED => [
+        Suborders::STATUS_COMPLETED => [
             'caption' => 'Completed',
         ],
-        self::FILTER_STATUS_CANCELED => [
+        Suborders::STATUS_CANCELED => [
             'caption' => 'Canceled',
         ],
-        self::FILTER_STATUS_FAILED => [
+        Suborders::STATUS_FAILED => [
             'caption' => 'Failed',
             'stat' => true,
             'stat-class' => 'm-badge m-badge--danger',
         ],
-        self::FILTER_STATUS_ERROR => [
+        Suborders::STATUS_ERROR => [
             'caption' => 'Error',
             'stat' => true,
             'stat-class' => 'm-badge m-badge--danger',
@@ -78,20 +80,19 @@ class OrdersSearch extends \yii\base\Model
     ];
 
     public static $modeFilters = [
-        self::FILTER_MODE_MANUAL => [
+        Suborders::MODE_MANUAL => [
             'caption' => 'Manual',
         ],
-        self::FILTER_MODE_AUTO => [
+        Suborders::MODE_AUTO => [
             'caption' => 'Auto',
         ],
     ];
 
-    // Allowed statuses in action admin menu at Orders page
-    public static $actionAllowedStatuses = [
-        self::FILTER_STATUS_PENDING,
-        self::FILTER_STATUS_IN_PROGRESS,
-        self::FILTER_STATUS_COMPLETED,
-    ];
+    public function init()
+    {
+        $this->_db = yii::$app->store->getInstance()->db_name;
+        parent::init();
+    }
 
     /**
      * Apply query filters to specified query object
@@ -152,22 +153,20 @@ class OrdersSearch extends \yii\base\Model
      */
     public function productFilterStat($total = true)
     {
-        $db = yii::$app->store->getInstance()->db_name;
-
         // Get all products
         $productsList = (new \yii\db\Query())
             ->select(['id','name'])
-            ->from("$db.products")
+            ->from("$this->_db.products")
             ->indexBy('id')
             ->all();
 
         // Get count suborders for product
         $subordersByProductsQuery = (new \yii\db\Query())
             ->select(['pr.id, COUNT(pr.id) cnt'])
-            ->from("$db.suborders so")
-            ->leftJoin("$db.packages pk", 'pk.id = so.package_id')
-            ->leftJoin("$db.products pr", 'pk.product_id = pr.id')
-            ->leftJoin("$db.orders o", 'o.id = so.order_id')
+            ->from("$this->_db.suborders so")
+            ->leftJoin("$this->_db.packages pk", 'pk.id = so.package_id')
+            ->leftJoin("$this->_db.products pr", 'pk.product_id = pr.id')
+            ->leftJoin("$this->_db.orders o", 'o.id = so.order_id')
             ->groupBy('pr.id')
             ->orderBy([
                 'pr.id' => SORT_ASC,
@@ -207,11 +206,10 @@ class OrdersSearch extends \yii\base\Model
      */
     public function modeFilterStat($total = true)
     {
-        $db = yii::$app->store->getInstance()->db_name;
         $query = (new \yii\db\Query())
             ->select (['mode', 'COUNT(mode) cnt'])
-            ->from ("$db.suborders so")
-            ->leftJoin("$db.orders o", 'o.id = so.order_id')
+            ->from ("$this->_db.suborders so")
+            ->leftJoin("$this->_db.orders o", 'o.id = so.order_id')
             ->groupBy('mode' );
 
         $this->_applyFilters($query, $this->_queryActiveFilters, ['mode']);
@@ -241,12 +239,11 @@ class OrdersSearch extends \yii\base\Model
      */
     public function search($params = [])
     {
-        $db = yii::$app->store->getInstance()->db_name;
         $query = (new \yii\db\Query())
             ->select([
                 'o.id', 'checkout_id', 'customer', 'created_at',
             ])
-            ->from("$db.orders o")
+            ->from("$this->_db.orders o")
             ->indexBy('id')
             ->orderBy([
                 'id' => SORT_DESC,
@@ -267,7 +264,7 @@ class OrdersSearch extends \yii\base\Model
         if(isset($this->status)) {
             $statusOrderIdsSubquery = (new \yii\db\Query())
                 ->select('order_id')
-                ->from("$db.suborders")
+                ->from("$this->_db.suborders")
                 ->where(['status' => $this->status ])
                 ->groupBy('order_id');
             $filter = ['o.id' => $statusOrderIdsSubquery];
@@ -276,7 +273,7 @@ class OrdersSearch extends \yii\base\Model
         if (isset($this->mode)) {
             $modeOrderIdsSubquery = (new \yii\db\Query())
                 ->select("order_id")
-                ->from("$db.suborders")
+                ->from("$this->_db.suborders")
                 ->where(['mode' => $this->mode ])
                 ->groupBy('order_id');
             $filter = ['o.id' => $modeOrderIdsSubquery];
@@ -285,9 +282,9 @@ class OrdersSearch extends \yii\base\Model
         if (isset($this->product)) {
             $productOrderIdsSubquery = (new \yii\db\Query())
                 ->select("so.order_id")
-                ->from("$db.suborders so")
-                ->leftJoin("$db.packages pk", 'pk.id = so.package_id')
-                ->leftJoin("$db.products pr",'pr.id = pk.product_id')
+                ->from("$this->_db.suborders so")
+                ->leftJoin("$this->_db.packages pk", 'pk.id = so.package_id')
+                ->leftJoin("$this->_db.products pr",'pr.id = pk.product_id')
                 ->where(['pk.product_id' => $this->product])
                 ->groupBy('so.order_id');
             $filter = ['o.id' => $productOrderIdsSubquery];
@@ -311,21 +308,21 @@ class OrdersSearch extends \yii\base\Model
         if (ctype_digit($searchQuery)) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
-                ->from("$db.suborders")
+                ->from("$this->_db.suborders")
                 ->where([  'or', ['order_id' => $searchQuery], ['like', 'link', $searchQuery]])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
         } elseif ($emailValidator->validate($searchQuery)) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('id order_id')
-                ->from("$db.orders")
+                ->from("$this->_db.orders")
                 ->where(['customer' => $searchQuery])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
         } else {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
-                ->from("$db.suborders")
+                ->from("$this->_db.suborders")
                 ->where(['like', 'link', $searchQuery])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
@@ -344,25 +341,23 @@ class OrdersSearch extends \yii\base\Model
      */
     public static function allowedActionStatuses()
     {
-        return array_filter(self::$statusFilters, function($filterKey) {
-            return in_array($filterKey, self::$actionAllowedStatuses);
+        return array_filter(static::$statusFilters, function($filterKey) {
+            return in_array($filterKey, static::$acceptedStatuses);
         }, ARRAY_FILTER_USE_KEY );
     }
-
 
     /**
      * Return Orders count by status filter
      * @param $statusFilter
      * @return integer $ordersCount
      */
-    public static function getOrdersCountByStatus($statusFilter)
+    public function getOrdersCountByStatus($statusFilter)
     {
-        $db = yii::$app->store->getInstance()->db_name;
 
         $ordersCount = Yii::$app->db
             ->createCommand("
                 SELECT COUNT(*) FROM
-                  (SELECT $db.order_id
+                  (SELECT $this->_db.order_id
                   FROM suborders
                   WHERE status = :filter GROUP BY order_id) counter
             ")
@@ -376,14 +371,14 @@ class OrdersSearch extends \yii\base\Model
      * @param $statusFilter
      * @return false|null|string
      */
-    public static function getSubordersCountByStatus($statusFilter)
+    public function getSubordersCountByStatus($statusFilter)
     {
         $db = yii::$app->store->getInstance()->db_name;
 
         $subordersCount = Yii::$app->db
             ->createCommand("
               SELECT COUNT(*)
-              FROM $db.suborders so
+              FROM $this->_db.suborders so
               WHERE status = :filter;
             ")
             ->bindValue(':filter', $statusFilter)
@@ -396,12 +391,11 @@ class OrdersSearch extends \yii\base\Model
      * Statuses are: self::$statusFilters
      * @return array
      */
-    public static function geSubordersCountsByStatus()
+    public function geSubordersCountsByStatus()
     {
-        $db = yii::$app->store->getInstance()->db_name;
         $presentSubordersCounts = (new Query())
             ->select(['status', 'COUNT(*) cnt'])
-            ->from("$db.suborders")
+            ->from("$this->_db.suborders")
             ->groupBy('status')
             ->indexBy('status')
             ->all();
@@ -424,7 +418,7 @@ class OrdersSearch extends \yii\base\Model
      */
     public function getStatusFilterButtons()
     {
-        $subordersByStatusCounts = static::geSubordersCountsByStatus();
+        $subordersByStatusCounts = $this->geSubordersCountsByStatus();
 
         $buttons = [];
         // Show all button
@@ -435,7 +429,7 @@ class OrdersSearch extends \yii\base\Model
             'url' => Url::to('/admin/orders'),
             'stat' => false,
         ];
-        foreach (self::$statusFilters as $filter => $filterData){
+        foreach (static::$statusFilters as $filter => $filterData){
             $buttonId = implode('_', explode(' ', strtolower($filterData['caption'])));
             $isStat = ArrayHelper::getValue($filterData,'stat',false);
 
