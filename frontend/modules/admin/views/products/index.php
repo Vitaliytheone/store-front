@@ -49,8 +49,8 @@ ProductsAsset::register($this);
         <div class="input-group m-input-group--air">
             <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
             <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
-                      </span>
+                <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
+            </span>
         </div>
     </div>
 </div>
