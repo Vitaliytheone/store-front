@@ -1,0 +1,3 @@
+# Add `deleted` field to `packages` table. Uses for mark package as deleted.
+USE `store`;
+ALTER TABLE `packages` ADD `deleted` TINYINT(1)  UNSIGNED  NULL  DEFAULT 0  AFTER `provider_service`;
