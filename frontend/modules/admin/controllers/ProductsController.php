@@ -109,7 +109,6 @@ class ProductsController extends CustomController
         ];
     }
 
-
     /**
      * Update Product AJAX action
      * @param $id

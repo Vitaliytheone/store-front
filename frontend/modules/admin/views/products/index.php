@@ -12,33 +12,37 @@ use frontend\assets\ProductsAsset;
 $this->title = 'Products';
 $formatter = Yii::$app->formatter;
 $products = [
-        '1' => [
-           'id' => 1,
+        [
+           'id' => 103,
            'packages' => [
-                   ['id' => 1, ],
-                   ['id' => 2, ],
-                   ['id' => 3, ],
+               ['id' => 1, ],
+               ['id' => 2, ],
+               ['id' => 3, ],
            ]
         ],
-        '2' => [
-           'id' => 2,
+        [
+           'id' => 104,
            'packages' => [
-                   ['id' => 4, ],
-                   ['id' => 5, ],
+               ['id' => 4, ],
            ]
-        ]
+        ],
 ];
 
 ProductsAsset::register($this);
 ?>
 
-<!-- Product Search -->
+<!-- Product add/search -->
 <div class="row sommerce-products__actions">
 
     <div class="col-lg-10 col-sm-12">
         <div class="page-content">
-            <button class="btn btn-primary m-btn--air" data-toggle="modal" data-target=".add_product" data-backdrop="static">Add product</button>
-            <button class="btn btn-primary m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+            <button class="btn btn-primary m-btn--air"
+                    data-toggle="modal"
+                    data-target=".add_product"
+                    data-backdrop="static"
+                    data-action-url="<?= Url::to(['products/create-product']) ?>">
+                Add product
+            </button>
         </div>
     </div>
     <div class="col-lg-2 col-sm-12 d-flex align-items-center">
@@ -50,7 +54,7 @@ ProductsAsset::register($this);
         </div>
     </div>
 </div>
-<!--/ Product Search -->
+<!--/ Product add/search -->
 
 <!-- Products-Packages list -->
 <div class="row">

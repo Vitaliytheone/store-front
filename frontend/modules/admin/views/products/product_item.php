@@ -26,7 +26,14 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                         </svg>
                     </div>
                     Buy Pinterest Followers
-                    <a href="#" class="btn btn-outline-primary btn-sm 	m-btn m-btn--icon m-btn--pill"  data-toggle="modal" data-target=".add_product">Edit</a>
+                    <a href="#" class="btn btn-outline-primary btn-sm 	m-btn m-btn--icon m-btn--pill"
+                       data-toggle="modal"
+                       data-target=".add_product"
+                       data-id="<?= $product['id'] ?>"
+                       data-get-url="<?= Url::to(['products/get-product', 'id' => $product['id']]) ?>"
+                       data-action-url="<?= Url::to(['products/update-product', 'id' => $product['id']]) ?>">
+                        Edit
+                    </a>
                 </div>
             </div>
         </div>
@@ -54,13 +61,23 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                     Enabled
                 </div>
                 <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
-                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".add_package">
+                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
                         Edit
                     </button>
+                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                        <i class="la la-trash"></i>
+                    </a>
                 </div>
             </div>
             <!--/ Package Item-->
         <?php endforeach; ?>
+
+        <!-- Button Add Package -->
+        <div class="mt-2 mb-3">
+            <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+        </div>
+        <!--/ Button Add Package -->
+
     </div>
 </div>
 

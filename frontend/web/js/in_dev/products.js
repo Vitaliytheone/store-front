@@ -18,15 +18,11 @@
         $modalLoader = $modal.find('.modal-loader'),
 
         $addPropertyInput = $modal.find('.input-properties'),
-        // $addPropertyButton = $modal.find('.add-properies'),
-        // $deletePropertyButton = $modal.find('.add-properies'),
 
         defaultFormData,
 
         currentProductId,
-        actionCreateUrl = '/admin/products/create-product',     // POST /admin/products/create-product
-        actionUpdateUrl = '/admin/products/update-product',     // POST /admin/products/update-product/{:id}
-        actionGetUrl = '/admin/products/get-product';           // GET  /admin/products/get-product/{:id}
+        currentActionUrl;
 
     var $formFields = {
         name            : $productForm.find('.form_field__name'),
@@ -56,13 +52,10 @@
      * Save Product form data
      *******************************************************************************************/
     $productForm.submit(function (e){
-        // Define action Url depends on Create new product or Save exiting
-        var saveActionUrl = currentProductId ? actionUpdateUrl + '?id=' + currentProductId : actionCreateUrl;
-
         e.preventDefault();
         $modalLoader.removeClass('hidden');
         $.ajax({
-            url: saveActionUrl,
+            url: currentActionUrl,
             type: "POST",
             data: $(this).serialize(),
             success: function (data, textStatus, jqXHR){
@@ -294,13 +287,13 @@
     /*******************************************************************************************
      * Update exiting product routine
      *******************************************************************************************/
-    function updateProduct(){
+    function updateProduct(productUrl){
         bindEditProductEvents();
 
         $modalLoader.removeClass('hidden');
         // Get exiting product
         $.ajax({
-            url: actionGetUrl + '?id=' + currentProductId,
+            url: productUrl,
             type: "GET",
             success: function (data, textStatus, jqXHR){
                 if (data.product){
@@ -354,7 +347,10 @@
 
         // Define if pressed "Add Service" or "Edit" exiting
         var button = $(event.relatedTarget);
-        currentProductId = button.data('id') || undefined; // id or undefined
+        var productUrl;
+
+        currentProductId = button.data('id') || undefined;
+        currentActionUrl = button.data('action-url');
 
         // Define UI elements captions depends on mode save|update
         var modalTitle = currentProductId ? 'Update product' : 'Add product',
@@ -366,7 +362,8 @@
         if (currentProductId === undefined){
             createProduct();
         } else {
-            updateProduct();
+            productUrl = button.data('get-url');
+            updateProduct(productUrl);
         }
     });
 
