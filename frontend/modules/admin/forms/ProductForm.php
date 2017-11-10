@@ -4,14 +4,12 @@ namespace frontend\modules\admin\forms;
 
 use yii;
 use yii\behaviors\AttributeBehavior;
+use yii\db\Query;
 use common\models\store\Pages;
 
 
 class ProductForm extends \common\models\store\Products
 {
-    const SCENARIO_CREATE = 'create';
-    const SCENARIO_UPDATE = 'update';
-
     /**
      * @inheritdoc
      */
@@ -21,8 +19,8 @@ class ProductForm extends \common\models\store\Products
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ProductForm::EVENT_BEFORE_INSERT => 'properties',
-                    ProductForm::EVENT_BEFORE_UPDATE => 'properties',
+                    self::EVENT_BEFORE_INSERT => 'properties',
+                    self::EVENT_BEFORE_UPDATE => 'properties',
                 ],
                 'value' => function ($event) {
                     /* @var $event yii\base\Event */
@@ -35,7 +33,7 @@ class ProductForm extends \common\models\store\Products
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ProductForm::EVENT_AFTER_FIND => 'properties',
+                    self::EVENT_AFTER_FIND => 'properties',
                 ],
                 'value' => function ($event) {
                     /* @var $event yii\base\Event */
@@ -47,7 +45,7 @@ class ProductForm extends \common\models\store\Products
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ProductForm::EVENT_BEFORE_INSERT => 'position',
+                    self::EVENT_BEFORE_INSERT => 'position',
                 ],
                 'value' => function ($event) {
                     return $this->getNewProductPosition();
@@ -55,22 +53,6 @@ class ProductForm extends \common\models\store\Products
             ],
 
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeSave($insert)
-    {
-        if (!parent::beforeSave($insert)) {
-            return true;
-        }
-        if ($insert) {
-            // INSERT
-        } else {
-            // UPDATE
-        }
-        return true;
     }
 
     /**
@@ -141,7 +123,7 @@ class ProductForm extends \common\models\store\Products
      */
     public function getNewProductPosition()
     {
-        $maxPosition = self::getMaxPosition();
+        $maxPosition = static::getMaxPosition();
         $position = is_null($maxPosition) ? 0 : $maxPosition + 1;
         return $position;
     }
@@ -153,7 +135,7 @@ class ProductForm extends \common\models\store\Products
     public static function getMaxPosition()
     {
         $db = yii::$app->store->getInstance()->db_name;
-        $query = (new \yii\db\Query())
+        $query = (new Query())
             ->select(['MAX(position) position'])
             ->from("$db.products")
             ->one();
