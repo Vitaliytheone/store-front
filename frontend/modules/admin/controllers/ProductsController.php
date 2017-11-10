@@ -239,4 +239,32 @@ class ProductsController extends CustomController
         ];
     }
 
+    /**
+     * Delete Package AJAX action
+     * Mark package as deleted
+     * @param $id
+     * @return array
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeletePackage($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+        $packageModel = PackageForm::findOne($id);
+        if (!$packageModel) {
+            throw new NotFoundHttpException();
+        }
+        $packageModel->setAttribute('deleted', $packageModel::DELETED);
+        if (!$packageModel->save(false)) {
+            throw new NotAcceptableHttpException();
+        }
+        return [
+            'package' => $packageModel,
+        ];
+    }
 }

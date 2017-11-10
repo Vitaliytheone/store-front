@@ -1,8 +1,8 @@
 // TODO:: Convert scripts to Custom module after developing is finished
 
-/**
- * Create/Update Service form script
- */
+/*****************************************************************************************************
+ *                      Create/Update Products form script
+ *****************************************************************************************************/
 (function (window, alert){
     'use strict';
     var formName = 'ProductForm';
@@ -18,7 +18,6 @@
         $modalLoader = $modal.find('.modal-loader'),
 
         $addPropertyInput = $modal.find('.input-properties'),
-
         defaultFormData,
 
         currentProductId,
@@ -365,6 +364,249 @@
             productUrl = button.data('get-url');
             updateProduct(productUrl);
         }
+    });
+
+})({}, function (){});
+
+
+
+/*****************************************************************************************************
+ *                      Create/Update Package form script
+ *****************************************************************************************************/
+(function (window, alert){
+    'use strict';
+
+    var $modal = $('.add_package'),
+
+        $packageForm = $('#packageForm'),
+        $submitPackageForm = $('#submitPackageForm'),
+        $cancelPackageForm = $('#cancelPackageForm'),
+
+        $modalTitle = $modal.find('.modal-title'),
+        $errorContainer = $('#package-form-error'),
+        $modalLoader = $modal.find('.modal-loader'),
+
+        currentPackageId,
+        currentActionUrl;
+
+    var $formFields = {
+        name            : $packageForm.find('.form_field__name'),
+        price           : $packageForm.find('.form_field__price'),
+        quantity        : $packageForm.find('.form_field__quantity'),
+        link_type       : $packageForm.find('.form_field__link_type'),
+        visibility      : $packageForm.find('.form_field__visibility'),
+        best            : $packageForm.find('.form_field__best'),
+        mode            : $packageForm.find('.form_field__mode'),
+        product_id      : $packageForm.find('.form_field__product_id')
+    };
+
+    var defaultFormData = {
+        name            : $formFields.name.val(),
+        price           : $formFields.price.val(),
+        quantity        : $formFields.quantity.val(),
+        link_type       : $formFields.link_type.val(),
+        visibility      : $formFields.visibility.val(),
+        best            : $formFields.best.val(),
+        mode            : $formFields.mode.val(),
+        product_id      : $formFields.product_id.val()
+    };
+
+    /*******************************************************************************************
+     * Save Package form data
+     *******************************************************************************************/
+    $packageForm.submit(function (e){
+        e.preventDefault();
+        $modalLoader.removeClass('hidden');
+        $.ajax({
+            url: currentActionUrl,
+            type: "POST",
+            data: $(this).serialize(),
+            success: function (data, textStatus, jqXHR){
+                $modalLoader.addClass('hidden');
+                if (data.error){
+                    $errorContainer.append(data.error.html);
+                    $modal.animate({ scrollTop: 0 }, 'slow');
+                    return;
+                }
+                //Success
+                $modal.modal('hide');
+                _.delay(function (){
+                    $(location).attr('href', '/admin/products');
+                }, 1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                $modalLoader.addClass('hidden');
+                $modal.modal('hide');
+                console.log('Error on service save', jqXHR, textStatus, errorThrown);
+            }
+        });
+
+        $errorContainer.empty();
+    });
+
+    /*******************************************************************************************
+     * Common functions
+     *******************************************************************************************/
+    /**
+     *  Fill form fields by data
+     * @param formData
+     */
+    function fillFormFields(formData){
+        if (formData === undefined || !_.isObject(formData)){
+            return;
+        }
+        _.each(formData, function(fieldValue, formField, list){
+            if (!_.has($formFields, formField)) {
+                return;
+            }
+            $formFields[formField].val(fieldValue);
+        });
+    }
+
+    /**
+     * Reset form fields to init values
+     */
+    function resetForm(){
+        $errorContainer.empty();
+        fillFormFields(defaultFormData);
+    }
+
+    /*******************************************************************************************
+     * Create new package for product routine
+     *******************************************************************************************/
+    function createPackage(productId){
+        bindCreatePackageEvents();
+        $formFields.product_id.val(productId);
+        $formFields.name.focus();
+    }
+
+    function bindCreatePackageEvents(){
+    }
+
+    function unbindCreatePackageEvents(){
+    }
+
+    /*******************************************************************************************
+     * Update exiting package routine
+     *******************************************************************************************/
+    function updatePackage(packageUrl){
+        bindEditPackageEvents();
+        $modalLoader.removeClass('hidden');
+        // Get exiting package
+        $.ajax({
+            url: packageUrl,
+            type: "GET",
+            success: function (data, textStatus, jqXHR){
+                if (data.package){
+                    fillFormFields(data.package);
+                }
+                $modalLoader.addClass('hidden');
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+                $modalLoader.addClass('hidden');
+            }
+        });
+    }
+
+    function bindEditPackageEvents(){
+    }
+
+    function unbindEditProductEvents(){
+    }
+
+
+    /*******************************************************************************************
+     * Modal Events
+     *******************************************************************************************/
+    /**
+     * Modal Hide Events
+     */
+    $modal.on('hidden.bs.modal', function (){
+        /* Unbind events */
+        unbindCreatePackageEvents();
+        unbindEditProductEvents();
+
+        resetForm();
+    });
+
+    /**
+     * Modal Show Events
+     */
+    $modal.on('show.bs.modal', function (event){
+        $modalLoader.removeClass('hidden');
+    });
+
+    $modal.on('shown.bs.modal', function (event){
+        $modalLoader.addClass('hidden');
+
+        // Define if pressed "Add Service" or "Edit" exiting
+        var button = $(event.relatedTarget);
+        var packageUrl, productId;
+
+        currentPackageId = button.data('id') || undefined;
+        currentActionUrl = button.data('action-url');
+
+        // Define UI elements captions depends on mode save|update
+        var modalTitle = currentPackageId ? 'Edit package' : 'Add package',
+            submitTitle = currentPackageId ? 'Save package' : 'Add package';
+
+        $modalTitle.html(modalTitle);
+        $submitPackageForm.html(submitTitle);
+
+        if (currentPackageId === undefined){
+            productId = button.data('product_id');
+            createPackage(productId);
+        } else {
+            packageUrl = button.data('get-url');
+            updatePackage(packageUrl);
+        }
+    });
+
+})({}, function (){});
+
+
+/*****************************************************************************************************
+ *                      Delete (mark as deleted) Package
+ *****************************************************************************************************/
+(function (window, alert){
+    'use strict';
+    var $modal = $('#delete-modal'),
+        $modalLoader = $modal.find('.modal-loader'),
+        buttonDelete = $modal.find('#feature-delete'),
+        actionUrl;
+
+    buttonDelete.on('click', function(){
+        $modalLoader.removeClass('hidden');
+        $.ajax({
+            url: actionUrl,
+            type: "DELETE",
+            success: function (data, textStatus, jqXHR){
+                $modalLoader.addClass('hidden');
+                if (data.error){
+                    return;
+                }
+                //Success
+                $modal.modal('hide');
+                _.delay(function (){
+                    $(location).attr('href', '/admin/products');
+                }, 1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                $modalLoader.addClass('hidden');
+                $modal.modal('hide');
+                console.log('Error on service save', jqXHR, textStatus, errorThrown);
+            }
+        });
+    });
+
+    $modal.on('show.bs.modal', function (event){
+        var button = $(event.relatedTarget);
+        actionUrl = button.data('action-url');
+    });
+
+    $modal.on('hidden.bs.modal', function (){
+        actionUrl = null;
     });
 
 })({}, function (){});

@@ -15,15 +15,15 @@ $products = [
         [
            'id' => 103,
            'packages' => [
-               ['id' => 1, ],
-               ['id' => 2, ],
-               ['id' => 3, ],
+               ['id' => 7, 'product_id' => 103],
+               ['id' => 8, 'product_id' => 103],
+               ['id' => 9, 'product_id' => 103],
            ]
         ],
         [
            'id' => 104,
            'packages' => [
-               ['id' => 4, ],
+               ['id' => 6, 'product_id' => 104],
            ]
         ],
 ];
@@ -43,14 +43,6 @@ ProductsAsset::register($this);
                     data-action-url="<?= Url::to(['products/create-product']) ?>">
                 Add product
             </button>
-        </div>
-    </div>
-    <div class="col-lg-2 col-sm-12 d-flex align-items-center">
-        <div class="input-group m-input-group--air">
-            <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
-            <span class="input-group-btn">
-                <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
-            </span>
         </div>
     </div>
 </div>
@@ -85,7 +77,10 @@ ProductsAsset::register($this);
 <?= $this->render('modal_add_product', []); ?>
 <!--/ Modal `Add/Edit Product` -->
 
-
 <!-- Modal Add/Edit Package -->
 <?= $this->render('modal_add_package', []); ?>
 <!--/ Modal Add/Edit Package -->
+
+<!-- Modal Delete Package -->
+<?= $this->render('modal_delete_package', []); ?>
+<!--/ Modal Delete Package -->

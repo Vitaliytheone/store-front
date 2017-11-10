@@ -18,6 +18,7 @@ use Yii;
  * @property integer $mode
  * @property integer $provider_id
  * @property string $provider_service
+ * @property integer $deleted
  * @property integer $position
  *
  * @property Products $product
@@ -25,6 +26,8 @@ use Yii;
  */
 class Packages extends \yii\db\ActiveRecord
 {
+    const DELETED = 1;
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -45,7 +48,7 @@ class Packages extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'position'], 'integer'],
+            [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'id']],
@@ -69,6 +72,7 @@ class Packages extends \yii\db\ActiveRecord
             'mode' => Yii::t('app', 'Mode'),
             'provider_id' => Yii::t('app', 'Provider ID'),
             'provider_service' => Yii::t('app', 'Provider Service'),
+            'deleted' => Yii::t('app', 'Deleted'),
             'position' => Yii::t('app', 'Position'),
         ];
     }
