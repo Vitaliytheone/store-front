@@ -66,10 +66,9 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-
-        $formData = $request->post();
         $productModel = new ProductForm();
-        if (!$productModel->load($formData)) {
+        $postData = $productModel->checkPropertiesField($request->post());
+        if (!$productModel->load($postData)) {
             throw new NotAcceptableHttpException();
         }
         if (!$productModel->validate()) {
@@ -81,7 +80,6 @@ class ProductsController extends CustomController
         if (!$productModel->save()) {
             throw new NotAcceptableHttpException();
         }
-
         return [
             'product' => $productModel,
         ];
@@ -127,14 +125,15 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-
-        error_log(print_r($request->post(),1),0);
-
         $productModel = ProductForm::findOne($id);
         if (!$productModel) {
             throw new NotFoundHttpException();
         }
-        if (!$productModel->load($request->post()) || !$productModel->validate()) {
+        $postData = $productModel->checkPropertiesField($request->post());
+        if (!$productModel->load($postData)) {
+            throw new NotAcceptableHttpException();
+        }
+        if (!$productModel->validate()) {
             return ['error' => [
                 'message' => 'Model validation error',
                 'html' => Ui::errorSummary($productModel, ['class' => 'alert-danger alert']),

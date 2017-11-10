@@ -160,4 +160,17 @@ class ProductForm extends \common\models\store\Products
 
         return $query['position'];
     }
+
+    /**
+     * Check if exist `properties` array in post data on `create` or `update` action.
+     * Populate postData by empty `properties` array if `properties` array does not exist.
+     * @param array $postData
+     * @return array
+     */
+    public function checkPropertiesField($postData) {
+        if (!isset($postData[$this->formName()]['properties'])) {
+            $postData[$this->formName()]['properties'] = [];
+        }
+        return $postData;
+    }
 }
