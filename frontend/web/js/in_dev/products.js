@@ -114,7 +114,7 @@
             $formFields.seo_description.val(formData.seo_description).trigger('input');
 
             // Fill summernote
-            $formFields.description.summernote('insertText', formData.description);
+            $formFields.description.summernote('code', formData.description);
 
             // Fill properties array
             _.each(formData.properties, function (value, key, list){
@@ -122,7 +122,6 @@
             });
         }
     }
-
 
     /**
      * Reset form fields to init values
@@ -169,7 +168,6 @@
             }
         });
     }
-
 
     /**
      * Return vallid address path by passed string
