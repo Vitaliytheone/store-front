@@ -7,7 +7,10 @@ use yii\behaviors\AttributeBehavior;
 use yii\db\Query;
 use common\models\store\Pages;
 
-
+/**
+ * Class ProductForm
+ * @package frontend\modules\admin\forms
+ */
 class ProductForm extends \common\models\store\Products
 {
     /**

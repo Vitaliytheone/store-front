@@ -11,6 +11,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
 use frontend\helpers\Ui;
 use frontend\modules\admin\forms\ProductForm;
+use frontend\modules\admin\forms\PackageForm;
 
 /**
  * Class ProductsController
@@ -146,5 +147,96 @@ class ProductsController extends CustomController
         ];
     }
 
+    /**
+     * Create new Package AJAX action
+     * @return array
+     * @throws NotAcceptableHttpException
+     */
+    public function actionCreatePackage()
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $packageModel = new PackageForm();
+        if (!$packageModel->load($request->post())) {
+            throw new NotAcceptableHttpException();
+        }
+        if (!$packageModel->validate()) {
+            return $response->data = ['error' => [
+                'message' => 'Model validation error',
+                'html' => Ui::errorSummary($packageModel, ['class' => 'alert-danger alert']),
+            ]];
+        }
+        if (!$packageModel->save()) {
+            throw new NotAcceptableHttpException();
+        }
+        return [
+            'package' => $packageModel,
+        ];
+    }
+
+    /**
+     * Get Package AJAX action
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetPackage($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $packageModel = PackageForm::findOne($id);
+        if (!$packageModel) {
+            throw new NotFoundHttpException();
+        }
+        return [
+            'package' => $packageModel->getAttributes(),
+        ];
+    }
+
+    /**
+     * Update Package AJAX action
+     * @param $id
+     * @return array
+     * @throws Yii\web\NotAcceptableHttpException
+     * @throws Yii\web\NotFoundHttpException
+     */
+    public function actionUpdatePackage($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+        $packageModel = PackageForm::findOne($id);
+        if (!$packageModel) {
+            throw new NotFoundHttpException();
+        }
+        if (!$packageModel->load($request->post())) {
+            throw new NotAcceptableHttpException();
+        }
+        if (!$packageModel->validate()) {
+            return ['error' => [
+                'message' => 'Model validation error',
+                'html' => Ui::errorSummary($packageModel, ['class' => 'alert-danger alert']),
+            ]];
+        }
+        if (!$packageModel->save(false)) {
+            throw new NotAcceptableHttpException();
+        }
+        return [
+            'package' => $packageModel,
+        ];
+    }
 
 }

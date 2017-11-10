@@ -50,6 +50,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                     data-toggle="modal"
                     data-target=".add_package"
                     data-backdrop="static"
+                    data-product_id="<?= $product['id'] ?>"
                     data-action-url="<?= Url::to(['products/create-package']) ?>">
                 Add package
             </button>
