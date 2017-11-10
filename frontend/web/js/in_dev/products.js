@@ -17,6 +17,10 @@
         $errorContainer = $('#product-form-error'),
         $modalLoader = $modal.find('.modal-loader'),
 
+        $addPropertyInput = $modal.find('.input-properties'),
+        // $addPropertyButton = $modal.find('.add-properies'),
+        // $deletePropertyButton = $modal.find('.add-properies'),
+
         defaultFormData,
 
         currentProductId,
@@ -161,12 +165,22 @@
             $(this).parent().remove();
         });
         $(document).on('click', '.add-properies', function (){
-            var inputProperties = $('.input-properties').val();
+            addProperty();
+        });
+        $addPropertyInput.on('keyup', function (e) {
+            if (e.keyCode !== 13) {
+                return;
+            }
+            addProperty();
+        });
+
+        function addProperty(){
+            var inputProperties = $addPropertyInput.val();
             if (inputProperties.length){
                 $formFields.properties.append(getPropertyField(inputProperties, 'properties', formName));
-                $('.input-properties').val('');
+                $addPropertyInput.val('').focus();
             }
-        });
+        }
     }
 
     /**
@@ -316,7 +330,7 @@
      * Modal Events
      *******************************************************************************************/
     /**
-     * Modal Hide Event
+     * Modal Hide Events
      */
     $modal.on('hidden.bs.modal', function (){
         /* Unbind events */
@@ -328,15 +342,19 @@
     });
 
     /**
-     * Modal Show Event
+     * Modal Show Events
      */
-    $modal.on('shown.bs.modal', function (event){
+    $modal.on('show.bs.modal', function (event){
+        $modalLoader.removeClass('hidden');
         resetForm();
+    });
+
+    $modal.on('shown.bs.modal', function (event){
+        $modalLoader.addClass('hidden');
+
         // Define if pressed "Add Service" or "Edit" exiting
         var button = $(event.relatedTarget);
-
         currentProductId = button.data('id') || undefined; // id or undefined
-
 
         // Define UI elements captions depends on mode save|update
         var modalTitle = currentProductId ? 'Update product' : 'Add product',
