@@ -41,16 +41,6 @@ class SiteController extends CustomController
     }
 
     /**
-     * Displays cart page.
-     *
-     * @return string
-     */
-    public function actionCart()
-    {
-        return $this->render('cart');
-    }
-
-    /**
      * Displays checkout page.
      *
      * @return string
@@ -78,15 +68,5 @@ class SiteController extends CustomController
     public function actionContent()
     {
         return $this->render('content');
-    }
-
-    /**
-     * Displays cart page.
-     *
-     * @return string
-     */
-    public function actionAddToCart()
-    {
-        return $this->render('add_to_cart');
     }
 }

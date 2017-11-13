@@ -2,17 +2,22 @@
 
 namespace common\models\store\queries;
 
+use yii\db\ActiveQuery;
+use common\models\store\Packages;
+
 /**
  * This is the ActiveQuery class for [[\common\models\store\Packages]].
  *
  * @see \common\models\store\Packages
  */
-class PackagesQuery extends \yii\db\ActiveQuery
+class PackagesQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'deleted' => Packages::DELETED_NO
+        ]);
+    }
 
     /**
      * @inheritdoc

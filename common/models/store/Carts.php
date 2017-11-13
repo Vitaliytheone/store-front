@@ -3,6 +3,9 @@
 namespace common\models\store;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\store\queries\CartsQuery;
 
 /**
  * This is the model class for table "{{%carts}}".
@@ -13,7 +16,7 @@ use Yii;
  * @property string $link
  * @property integer $created_at
  */
-class Carts extends \yii\db\ActiveRecord
+class Carts extends ActiveRecord
 {
     public static function getDb()
     {
@@ -55,11 +58,41 @@ class Carts extends \yii\db\ActiveRecord
     }
 
     /**
+     * Generate random key
+     */
+    public function generateKey()
+    {
+        do {
+            $key = md5(rand() . uniqid() . rand() . time()) . md5(rand() . uniqid() . time() . rand());
+
+        } while (static::find()->andWhere([
+            'key' => $key
+        ])->exists());
+
+        $this->key = $key;
+    }
+
+    /**
      * @inheritdoc
-     * @return \common\models\store\queries\CartsQuery the active query used by this AR class.
+     * @return CartsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\CartsQuery(get_called_class());
+        return new CartsQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }

@@ -3,6 +3,9 @@
 namespace common\models\store;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\store\queries\CheckoutsQuery;
 
 /**
  * This is the model class for table "{{%checkouts}}".
@@ -24,8 +27,11 @@ use Yii;
  * @property PaymentsLog[] $paymentsLogs
  * @property Suborders[] $suborders
  */
-class Checkouts extends \yii\db\ActiveRecord
+class Checkouts extends ActiveRecord
 {
+    const STATUS_PENDING = 0;
+    const STATUS_PAID = 1;
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -45,11 +51,11 @@ class Checkouts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'status', 'method_id', 'created_at', 'updated_at'], 'integer'],
             [['price'], 'number'],
             [['details'], 'string'],
             [['customer', 'method_status', 'ip'], 'string', 'max' => 255],
+            [['status'], 'default', 'value' => static::STATUS_PENDING],
             [['currency'], 'string', 'max' => 10],
         ];
     }
@@ -63,16 +69,11 @@ class Checkouts extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'customer' => Yii::t('app', 'Customer'),
             'price' => Yii::t('app', 'Price'),
-            'status' => Yii::t('app', '0 - pending
-1 - paid
-'),
+            'status' => Yii::t('app', 'Status'),
             'method_status' => Yii::t('app', 'Method Status'),
             'method_id' => Yii::t('app', 'Method ID'),
             'ip' => Yii::t('app', 'Ip'),
-            'details' => Yii::t('app', 'json
-link
-quantity
-package_id'),
+            'details' => Yii::t('app', 'Details'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'currency' => Yii::t('app', 'Currency'),
@@ -113,10 +114,26 @@ package_id'),
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\CheckoutsQuery the active query used by this AR class.
+     * @return CheckoutsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\CheckoutsQuery(get_called_class());
+        return new CheckoutsQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }

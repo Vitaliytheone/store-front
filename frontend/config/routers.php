@@ -3,8 +3,9 @@
 return [
     '/' => 'site/index',
     '/product' => 'site/product',
-    '/cart' => 'site/cart',
-    '/add-to-cart' => 'site/add-to-cart',
+    '/cart' => 'cart/index',
+    '/add-to-cart/<id:\d+>' => 'cart/add-to-cart',
+    '/cart/remove/<id:[\w\d-]+>' => 'cart/remove',
     '/checkout' => 'site/checkout',
     '/contact' => 'site/contact',
     '/content' => 'site/content',
