@@ -259,6 +259,9 @@ class ProductsController extends CustomController
         if (!$packageModel) {
             throw new NotFoundHttpException();
         }
+        if ($packageModel->getAttribute('deleted') == $packageModel::DELETED) {
+            throw new NotAcceptableHttpException();
+        }
         $packageModel->setAttribute('deleted', $packageModel::DELETED);
         if (!$packageModel->save(false)) {
             throw new NotAcceptableHttpException();
