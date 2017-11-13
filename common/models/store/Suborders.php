@@ -161,7 +161,7 @@ class Suborders extends \yii\db\ActiveRecord
         }
         $providerResponse = $this->provider_response;
         if ($responseFormatPrintR) {
-            $providerResponse = print_r(json_decode($providerResponse),1);
+            $providerResponse = print_r(json_decode($providerResponse), 1);
         }
         $formatter = Yii::$app->formatter;
         $orderDetails = [

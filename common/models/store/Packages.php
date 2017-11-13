@@ -3,6 +3,8 @@
 namespace common\models\store;
 
 use Yii;
+use yii\db\ActiveRecord;
+use common\models\store\queries\PackagesQuery;
 
 /**
  * This is the model class for table "{{%packages}}".
@@ -24,9 +26,13 @@ use Yii;
  * @property Products $product
  * @property Suborders[] $suborders
  */
-class Packages extends \yii\db\ActiveRecord
+class Packages extends ActiveRecord
 {
+    const VISIBILITY_YES = 1;
+    const VISIBILITY_NO = 0;
+
     const DELETED = 1;
+    const DELETED_NO = 0;
 
     public static function getDb()
     {
@@ -95,10 +101,10 @@ class Packages extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\PackagesQuery the active query used by this AR class.
+     * @return PackagesQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\PackagesQuery(get_called_class());
+        return new PackagesQuery(get_called_class());
     }
 }

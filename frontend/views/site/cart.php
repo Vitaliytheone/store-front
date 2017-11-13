@@ -19,63 +19,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                5000 Youtube followers
-                            </td>
-                            <td>
-                                http://facebook.com/dsad221/31231
-                            </td>
-                            <td>
-                                $200
-                            </td>
-                            <td class="text-right">
-                                <a href="#" class="btn btn-xs btn-default">
-                                    Remove
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                100 Youtube followers
-                            </td>
-                            <td>
-                                http://facebook.com/dsad221/31231
-                            </td>
-                            <td>
-                                $100
-                            </td>
-                            <td class="text-right">
-                                <a href="#" class="btn btn-xs btn-default">
-                                    Remove
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                3
-                            </td>
-                            <td>
-                                500 Youtube followers
-                            </td>
-                            <td>
-                                UserNoName1
-                            </td>
-                            <td>
-                                $100
-                            </td>
-                            <td class="text-right">
-                                <a href="#" class="btn btn-xs btn-default">
-                                    Remove
-                                </a>
-                            </td>
-                        </tr>
+                            <?php foreach ($items as $item) : ?>
+                                <tr>
+                                    <td>
+                                        <?= $item['id'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['package_name'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['link'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['price'] ?>
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="/cart/remove/<?= $item['key'] ?>" class="btn btn-xs btn-default">
+                                            Remove
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -86,49 +50,54 @@
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">
                 <div class="cart bg-white cart-total">
-                    <strong>Total price </strong><div class="cart-total__price pull-right">$150</div>
+                    <strong>Total price </strong><div class="cart-total__price pull-right"><?= $total ?></div>
                 </div>
             </div>
         </div>
 
+        <form id="orderForm" class="form" method="POST" action="/cart">
+            <div class="row">
+                <div class="col-lg-offset-8 col-lg-4">
+                    <div class="cart bg-white">
+                        <?php if (!empty($error)) : ?>
+                            <div class="error-summary alert alert-danger"><?= $errorText ?></div>
+                        <?php endif; ?>
+                        <div class="form-group">
+                            <label>Payment method</label>
 
-        <div class="row">
-            <div class="col-lg-offset-8 col-lg-4">
-                <div class="cart bg-white">
-                    <div class="form-group">
-                        <label>Payment method</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> PayPal
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2Checkout
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Bitcoin
+                                </label>
+                            </div>
 
-                        <div>
-                            <label class="radio-inline">
-                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> PayPal
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2Checkout
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Bitcoin
-                            </label>
                         </div>
 
+                        <div class="form-group">
+                            <label class="control-label" for="orderform-email">Email address</label>
+                            <input id="orderform-email" class="form-control" name="OrderForm[email]" value="<?= $data['email'] ?>" placeholder="mail@gmail.com" aria-required="true" aria-invalid="true" type="text">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="mail@gmail.com">
-                    </div>
-
                 </div>
             </div>
-        </div>
 
 
-        <div class="row">
-            <div class="col-lg-6">
-                <a href="/product" class="btn btn-default">Continue shopping</a>
+            <div class="row">
+                <div class="col-lg-6">
+                    <a href="/" class="btn btn-default">Continue shopping</a>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <button type="submit" id="orderButton" class="btn btn-primary" name="order-button">Proceed to Checkout</button>
+                </div>
             </div>
-            <div class="col-lg-6 text-right">
-                <a href="#" class="btn btn-primary">Proceed to Checkout</a>
-            </div>
-        </div>
 
+            <input type="hidden" name="<?= $csrfname ?>" value="<?= $csrftoken ?>">
+        </form>
     </div>
 </section>
