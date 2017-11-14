@@ -43,6 +43,27 @@ class Ui
 
 
     /**
+     * Toggle string
+     * @param $toggle boolean
+     * @param $string string
+     * @return string
+     */
+    public static function toggleString($toggle, $string) {
+        return $toggle|0 ? $string : '';
+    }
+
+    /**
+     * Switch between two strings
+     * @param $switch boolean
+     * @param $string1 string
+     * @param $string2 string
+     * @return string
+     */
+    public static function switchString($switch, $string1, $string2) {
+        return $switch|0 ? $string1 : $string2;
+    }
+
+    /**
      * Generates first of the validation error for the model.
      * If there is no validation error, an empty error summary markup will still be generated, but it will be hidden.
      * @param $model
