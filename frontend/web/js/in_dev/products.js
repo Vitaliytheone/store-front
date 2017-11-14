@@ -1,6 +1,83 @@
 // TODO:: Convert scripts to Custom module after developing is finished
 
 /*****************************************************************************************************
+ *                     Sortable Products-Packages
+ *****************************************************************************************************/
+(function (window, alert){
+    var $productsSortable = $('.sortable'),
+        $packagesSortable = $(".group-items");
+
+    // Init sortable
+    if ($productsSortable.length > 0) {
+        // Sort the parents
+        $productsSortable.sortable({
+            containment: "document",
+            items: "> div.product-item",
+            handle: ".move",
+            tolerance: "pointer",
+            cursor: "move",
+            opacity: 0.7,
+            revert: false,
+            delay: false,
+            placeholder: "movable-placeholder"
+        });
+
+        // Sort the children
+        $packagesSortable.sortable({
+            items: "> div.package-item",
+            handle: ".move",
+            tolerance: "pointer",
+            containment: "parent"
+        });
+    }
+
+    $productsSortable.sortable({
+        update: function(event, ui) {
+            var currentItem = ui.item,
+                newPosition = currentItem.index(),
+                actionUrl = currentItem.data('action-url') + newPosition;
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                success: function (data, textStatus, jqXHR){
+                    if (data.error){
+                        return;
+                    }
+                    //Success
+                },
+                error: function (jqXHR, textStatus, errorThrown){
+                    console.log('Error on save', jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+    });
+
+    $packagesSortable.sortable({
+        update: function (event, ui) {
+            var currentItem = ui.item,
+                newPosition = currentItem.index(),
+                actionUrl = currentItem.data('action-url') + newPosition;
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                success: function (data, textStatus, jqXHR) {
+                    if (data.error) {
+                        return;
+                    }
+                    //Success
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error on save', jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+    });
+
+})({}, function (){});
+
+/*****************************************************************************************************
  *                      Create/Update Products form script
  *****************************************************************************************************/
 (function (window, alert){

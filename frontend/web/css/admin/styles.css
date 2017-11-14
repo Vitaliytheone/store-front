@@ -1,3 +1,7 @@
 .hidden {
     display: none;
 }
+
+.sommerce_dragtable .disabled-product-item {
+    color: #b3b3b3;
+}

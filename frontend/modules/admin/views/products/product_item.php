@@ -15,8 +15,8 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
 
 ?>
 
-<div class="row group-caption">
-    <div class="col-12 sommerce_dragtable__category <?= Ui::toggleString(!$product['visibility'], 'disabled-product') ?>">
+<div class="row group-caption product-item" data-action-url="<?= Url::to(['products/move-product', 'id' => $product['id'], 'position' => ""]) ?>">
+    <div class="col-12 sommerce_dragtable__category <?= Ui::toggleString(!$product['visibility'], 'disabled-product-item') ?>">
         <div class="sommerce_dragtable__category-title">
             <div class="row align-items-center">
                 <div class="col-12">
@@ -27,7 +27,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                         </svg>
                     </div>
                     <?= Html::encode($product['name']) ?>
-                    <a href="#" class="btn btn-outline-primary btn-sm 	m-btn m-btn--icon m-btn--pill"
+                    <a href="#" class="btn btn-outline-primary btn-sm m-btn m-btn--icon m-btn--pill edit-button"
                        data-toggle="modal"
                        data-target=".add_product"
                        data-id="<?= $product['id'] ?>"

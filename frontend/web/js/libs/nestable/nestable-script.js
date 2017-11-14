@@ -19,29 +19,3 @@ $(document).ready(function () {
         updateOutput($('#nestable').data('output', $('#nestable-output')));
     }
 });
-
-$(document).ready(function () {
-
-    if ($('.sortable').length > 0) {
-        // Sort the parents
-        $(".sortable").sortable({
-            containment: "document",
-            items: "> div",
-            handle: ".move",
-            tolerance: "pointer",
-            cursor: "move",
-            opacity: 0.7,
-            revert: false,
-            delay: false,
-            placeholder: "movable-placeholder"
-        });
-
-        // Sort the children
-        $(".group-items").sortable({
-            items: "> div",
-            handle: ".move",
-            tolerance: "pointer",
-            containment: "parent"
-        });
-    }
-});

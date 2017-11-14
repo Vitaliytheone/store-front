@@ -15,7 +15,7 @@ $formatter = Yii::$app->formatter;
 ?>
 
 <!-- Package Item-->
-<div class="group-item sommerce_dragtable__tr align-items-center <?= Ui::toggleString(!$package['visibility'],'disabled-product')?>">
+<div class="group-item sommerce_dragtable__tr align-items-center package-item <?= Ui::toggleString(!$package['visibility'],'disabled-product')?>" data-action-url="<?= Url::to(['products/move-package', 'id' => $package['id'], 'position' => ""])?>">
     <div class="col-lg-5 padding-null-left">
         <div class="sommerce_dragtable__category-move move">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

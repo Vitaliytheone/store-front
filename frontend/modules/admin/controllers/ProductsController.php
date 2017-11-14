@@ -157,6 +157,33 @@ class ProductsController extends CustomController
     }
 
     /**
+     * Move product AJAX action
+     * @param $id
+     * @param $position
+     * @return array
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionMoveProduct($id, $position)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+        $productModel = CreateProductForm::findOne($id);
+        if (!$productModel) {
+            throw new NotFoundHttpException();
+        }
+        $newPosition = $productModel->changePosition($position);
+        if ($newPosition === false) {
+            throw new NotAcceptableHttpException();
+        }
+        return ['position' => $newPosition];
+    }
+
+    /**
      * Create new Package AJAX action
      * @return array
      * @throws NotAcceptableHttpException
@@ -308,13 +335,40 @@ class ProductsController extends CustomController
         if ($packageModel->getAttribute('deleted') == $packageModel::DELETED) {
             throw new NotAcceptableHttpException();
         }
-        $packageModel->setAttribute('deleted', $packageModel::DELETED);
-        if (!$packageModel->save(false)) {
+        if (!$packageModel->deleteVirtual()) {
             throw new NotAcceptableHttpException();
-        }
+        };
         return [
             'package' => $packageModel,
         ];
     }
+
+    /**
+     * Move package AJAX action
+     * @param $id
+     * @param $position
+     * @return array
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionMovePackage($id, $position)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+        $packageModel = CreatePackageForm::findOne($id);
+        if (!$packageModel) {
+            throw new NotFoundHttpException();
+        }
+        $newPosition = $packageModel->changePosition($position);
+        if ($newPosition === false) {
+            throw new NotAcceptableHttpException();
+        }
+        return ['position' => $newPosition];
+    }
+
 
 }

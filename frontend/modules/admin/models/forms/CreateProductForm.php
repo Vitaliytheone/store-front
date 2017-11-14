@@ -10,7 +10,6 @@ use common\helpers\DbHelper;
 use common\models\store\Pages;
 use common\models\store\Packages;
 
-
 /**
  * Class CreateProductForm
  * @package frontend\modules\admin\forms
@@ -125,6 +124,20 @@ class CreateProductForm extends \common\models\store\Products
     }
 
     /**
+     * Check if exist `properties` array in post data on `create` or `update` action.
+     * Populate postData by empty `properties` array if `properties` array does not exist.
+     * @param array $postData
+     * @return array
+     */
+    public function checkPropertiesField($postData)
+    {
+        if (!isset($postData[$this->formName()]['properties'])) {
+            $postData[$this->formName()]['properties'] = [];
+        }
+        return $postData;
+    }
+
+    /**
      * Calculate `position` for new product record
      * @return array|bool|int
      */
@@ -151,17 +164,40 @@ class CreateProductForm extends \common\models\store\Products
     }
 
     /**
-     * Check if exist `properties` array in post data on `create` or `update` action.
-     * Populate postData by empty `properties` array if `properties` array does not exist.
-     * @param array $postData
-     * @return array
+     * Move product to new position
+     * @param $newPosition
+     * @return bool|int
      */
-    public function checkPropertiesField($postData)
+    public function changePosition($newPosition)
     {
-        if (!isset($postData[$this->formName()]['properties'])) {
-            $postData[$this->formName()]['properties'] = [];
+        $maxPosition = static::getMaxPosition();
+        $currentPosition = $this->getAttribute('position');
+
+        if ($newPosition < 0 || $newPosition > $maxPosition) {
+            return false;
         }
-        return $postData;
+        $db = $this->getDb();
+        $query = $db->createCommand('
+                  UPDATE `products` SET
+                      `position` = CASE
+                          WHEN (`position` = :curPos) THEN 
+                                :newPos                       -- replace new within old
+                          WHEN (`position` > :curPos and `position` <= :newPos) THEN 
+                                `position`- 1                 -- moving up
+                          WHEN (`position` < :curPos and `position` >= :newPos) THEN 
+                                `position`+ 1                 -- moving down
+                          ELSE 
+                                `position`                    -- otherwise lets keep same value.
+                      END
+            ')
+            ->bindValue(':newPos', $newPosition)
+            ->bindValue(':curPos', $currentPosition)
+            ->execute();
+
+        if ($query) {
+            $this->setAttribute('position', $newPosition);
+        }
+        return $this->getAttribute('position');
     }
 
     /**
