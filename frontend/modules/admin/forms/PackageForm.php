@@ -28,6 +28,26 @@ class PackageForm extends \common\models\store\Packages
                     return $this->getNewPosition();
                 },
             ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => 'provider_id',
+                    self::EVENT_BEFORE_UPDATE => 'provider_id',
+                ],
+                'value' => function ($event) {
+                    return $this->mode == self::MODE_MANUAL ? NULL : $this->provider_id;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => 'provider_service',
+                    self::EVENT_BEFORE_UPDATE => 'provider_service',
+                ],
+                'value' => function ($event) {
+                    return $this->mode == self::MODE_MANUAL ? NULL : $this->provider_service;
+                },
+            ],
 
         ];
     }

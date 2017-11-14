@@ -6,6 +6,7 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $formatter yii\i18n\Formatter */
+/* @var common\models\stores\StoreProviders[] $storeProviders  */
 
 $formatter = Yii::$app->formatter;
 
@@ -78,6 +79,22 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                         <select id="package-mode" class="form-control form_field__mode" name="PackageForm[mode]">
                             <option value="0">Manual</option>
                             <option value="1">Auto</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="form-group d-none">
+                        <label for="package-provider_id">Provider</label>
+                        <select id="package-provider_id" class="form-control form_field__provider_id" name="PackageForm[provider_id]">
+                            <?php foreach ($storeProviders as $storeProvider): ?>
+                            <option value="<?= $storeProvider->provider->id ?>" data-action-url="<?= Url::to(['products/get-provider-services', 'provider_id' => $storeProvider->provider->id ]) ?>">
+                                <?= Html::encode($storeProvider->provider->site) ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="package-provider_service">Provider</label>
+                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]">
                         </select>
                     </div>
                 </div>

@@ -31,6 +31,9 @@ class Packages extends ActiveRecord
     const VISIBILITY_YES = 1;
     const VISIBILITY_NO = 0;
 
+    const MODE_MANUAL = 0;
+    const MODE_AUTO = 1;
+
     const DELETED = 1;
     const DELETED_NO = 0;
 

@@ -8,6 +8,7 @@ use frontend\assets\ProductsAsset;
 
 /* @var $this yii\web\View */
 /* @var $formatter yii\i18n\Formatter */
+/* @var common\models\stores\StoreProviders[] $storeProviders  */
 
 $this->title = 'Products';
 $formatter = Yii::$app->formatter;
@@ -78,7 +79,7 @@ ProductsAsset::register($this);
 <!--/ Modal `Add/Edit Product` -->
 
 <!-- Modal Add/Edit Package -->
-<?= $this->render('modal_add_package', []); ?>
+<?= $this->render('modal_add_package', ['storeProviders' => $storeProviders,]); ?>
 <!--/ Modal Add/Edit Package -->
 
 <!-- Modal Delete Package -->

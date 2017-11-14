@@ -12,6 +12,10 @@ use yii\web\NotAcceptableHttpException;
 use frontend\helpers\Ui;
 use frontend\modules\admin\forms\ProductForm;
 use frontend\modules\admin\forms\PackageForm;
+use common\models\stores\Stores;
+use common\models\stores\StoreProviders;
+use common\models\stores\Providers;
+use common\helpers\ApiProviders;
 
 /**
  * Class ProductsController
@@ -51,7 +55,11 @@ class ProductsController extends CustomController
      */
     public function actionIndex()
     {
-        return $this->render('index', []);
+        /** @var $store Stores */
+        $store = yii::$app->store->getInstance();
+        return $this->render('index', [
+            'storeProviders' => $store->storeProviders,
+        ]);
     }
 
     /**
@@ -236,6 +244,43 @@ class ProductsController extends CustomController
         }
         return [
             'package' => $packageModel,
+        ];
+    }
+
+    /**
+     * Get provider`s services list AJAX action
+     * @param $provider_id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetProviderServices($provider_id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        /* @var $store Stores */
+        /* @var $storeProviders \common\models\stores\StoreProviders[] */
+        $store = yii::$app->store->getInstance();
+        $storeProvider = StoreProviders::findOne([
+            'provider_id' => $provider_id,
+            'store_id' => $store->id
+        ]);
+        if (!$storeProvider) {
+            throw new NotFoundHttpException();
+        }
+        $provider = $storeProvider->provider;
+        if (!$provider) {
+            throw new NotFoundHttpException();
+        }
+        $providerApi = new ApiProviders($provider->site, $storeProvider->apikey);
+        $providerServices = $providerApi->services(['Default']);
+
+        return [
+            'services' => $providerServices
         ];
     }
 

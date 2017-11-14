@@ -386,29 +386,34 @@
         $errorContainer = $('#package-form-error'),
         $modalLoader = $modal.find('.modal-loader'),
 
+        packageModel,
         currentPackageId,
         currentActionUrl;
 
     var $formFields = {
-        name            : $packageForm.find('.form_field__name'),
-        price           : $packageForm.find('.form_field__price'),
-        quantity        : $packageForm.find('.form_field__quantity'),
-        link_type       : $packageForm.find('.form_field__link_type'),
-        visibility      : $packageForm.find('.form_field__visibility'),
-        best            : $packageForm.find('.form_field__best'),
-        mode            : $packageForm.find('.form_field__mode'),
-        product_id      : $packageForm.find('.form_field__product_id')
+        name                : $packageForm.find('.form_field__name'),
+        price               : $packageForm.find('.form_field__price'),
+        quantity            : $packageForm.find('.form_field__quantity'),
+        link_type           : $packageForm.find('.form_field__link_type'),
+        visibility          : $packageForm.find('.form_field__visibility'),
+        best                : $packageForm.find('.form_field__best'),
+        mode                : $packageForm.find('.form_field__mode'),
+        provider_id         : $packageForm.find('.form_field__provider_id'),
+        provider_service    : $packageForm.find('.form_field__provider_service'),
+        product_id          : $packageForm.find('.form_field__product_id')
     };
 
     var defaultFormData = {
-        name            : $formFields.name.val(),
-        price           : $formFields.price.val(),
-        quantity        : $formFields.quantity.val(),
-        link_type       : $formFields.link_type.val(),
-        visibility      : $formFields.visibility.val(),
-        best            : $formFields.best.val(),
-        mode            : $formFields.mode.val(),
-        product_id      : $formFields.product_id.val()
+        name                : $formFields.name.val(),
+        price               : $formFields.price.val(),
+        quantity            : $formFields.quantity.val(),
+        link_type           : $formFields.link_type.val(),
+        visibility          : $formFields.visibility.val(),
+        best                : $formFields.best.val(),
+        mode                : $formFields.mode.val(),
+        provider_id         : 0,
+        provider_service    : 0,
+        product_id          : $formFields.product_id.val()
     };
 
     /*******************************************************************************************
@@ -447,6 +452,46 @@
     /*******************************************************************************************
      * Common functions
      *******************************************************************************************/
+
+    function bindCommonPackageEvents(){
+
+        $formFields.mode.on('change', function(e) {
+            var mode = parseInt($(this).val());
+            $formFields.provider_id.closest('.form-group').toggleClass('d-none', !mode);
+            $formFields.provider_service.closest('.form-group').toggleClass('d-none', !mode);
+        });
+
+        // Change `provider_id` => fetch provider`s services
+        $formFields.provider_id.on('change', function(e, selectedServiceId){
+            $formFields.provider_service.empty();
+            var $optionSelected = $("option:selected", this),
+                actionUrl = $optionSelected.data('action-url');
+            if (actionUrl === undefined) {
+                return;
+            }
+            $modalLoader.removeClass('hidden');
+            $.ajax({
+                url: actionUrl,
+                type: "GET",
+                success: function(data, textStatus, jqXHR) {
+                    if (data.services) {
+                        renderProviderServices(data.services, selectedServiceId);
+                    }
+                    $modalLoader.addClass('hidden');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+                    $modalLoader.addClass('hidden');
+                }
+            });
+        });
+    }
+
+    function unbindCommonPackageEvents(){
+        $formFields.mode.off('change');
+        $formFields.provider_id.off('change');
+    }
+
     /**
      *  Fill form fields by data
      * @param formData
@@ -471,36 +516,69 @@
         fillFormFields(defaultFormData);
     }
 
+    /* Render array of Provider Services */
+    /**
+     *
+     * @param services
+     * @param selectedServiceId service_id | undefined if new package
+     */
+    function renderProviderServices(services, selectedServiceId){
+        var selected,
+            $container = $('<div></div>');
+        _.each(services, function (s) {
+            if (selectedServiceId) {
+                selected = s.service.toString() === selectedServiceId.toString() ? 'selected' : '';
+            }
+            $container.append('<option value="' + s.service + '"'+ selected + '>' + s.name + '</option>');
+        });
+        $formFields.provider_service.empty().html($container.html());
+    }
+
     /*******************************************************************************************
      * Create new package for product routine
      *******************************************************************************************/
     function createPackage(productId){
+        bindCommonPackageEvents();
         bindCreatePackageEvents();
         $formFields.product_id.val(productId);
         $formFields.name.focus();
+        $formFields.mode.trigger('change');
     }
 
     function bindCreatePackageEvents(){
+        // Change `mode`
+        $formFields.mode.on('change', function(e){
+            var mode = parseInt($(this).val());
+            // Activate first provider in list
+            if (mode === 1) {
+                $formFields.provider_id.find('option:eq(0)').prop('selected', true).trigger("change");
+            }
+        });
     }
 
     function unbindCreatePackageEvents(){
+        $formFields.mode.off('change');
     }
 
     /*******************************************************************************************
      * Update exiting package routine
      *******************************************************************************************/
     function updatePackage(packageUrl){
+        bindCommonPackageEvents();
         bindEditPackageEvents();
         $modalLoader.removeClass('hidden');
         // Get exiting package
+        packageModel = null;
         $.ajax({
             url: packageUrl,
             type: "GET",
             success: function (data, textStatus, jqXHR){
-                if (data.package){
-                    fillFormFields(data.package);
+                packageModel = data.package;
+                if (packageModel){
+                    fillFormFields(packageModel);
+                    $modalLoader.addClass('hidden');
+                    $formFields.mode.trigger('change');
                 }
-                $modalLoader.addClass('hidden');
             },
             error: function (jqXHR, textStatus, errorThrown){
                 console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
@@ -510,9 +588,24 @@
     }
 
     function bindEditPackageEvents(){
+        // Change `mode`
+        $formFields.mode.on('change', function(e){
+            var mode = parseInt($(this).val()),
+            providerId;
+            if (mode === 1) {
+                providerId = packageModel.provider_id;
+                // Activate first provider in list
+                if (providerId === undefined || providerId === null) {
+                    $formFields.provider_id.find('option:eq(0)').prop('selected', true).trigger('change');
+                    return;
+                }
+                $formFields.provider_id.trigger('change', [packageModel.provider_service]);
+            }
+        });
     }
 
-    function unbindEditProductEvents(){
+    function unbindEditPackageEvents(){
+        $formFields.mode.off('change');
     }
 
 
@@ -525,8 +618,8 @@
     $modal.on('hidden.bs.modal', function (){
         /* Unbind events */
         unbindCreatePackageEvents();
-        unbindEditProductEvents();
-
+        unbindEditPackageEvents();
+        unbindCommonPackageEvents();
         resetForm();
     });
 
