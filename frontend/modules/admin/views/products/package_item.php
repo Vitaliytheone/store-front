@@ -3,6 +3,7 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use frontend\helpers\Ui;
 
 /* @var $this yii\web\View */
 /* @var $product array */
@@ -14,7 +15,7 @@ $formatter = Yii::$app->formatter;
 ?>
 
 <!-- Package Item-->
-<div class="group-item sommerce_dragtable__tr align-items-center">
+<div class="group-item sommerce_dragtable__tr align-items-center <?= Ui::toggleString(!$package['visibility'],'disabled-product')?>">
     <div class="col-lg-5 padding-null-left">
         <div class="sommerce_dragtable__category-move move">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -22,16 +23,16 @@ $formatter = Yii::$app->formatter;
                 <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
             </svg>
         </div>
-        <strong>100</strong> Easy
+        <strong><?= $package['quantity']?></strong> <?= Html::encode($package['name']) ?>
     </div>
     <div class="col-lg-2">
-        $0.30
+        <?= $package['price']?>
     </div>
     <div class="col-lg-2">
-        provider1.com
+        <?= Ui::switchString($package['mode'], $package['provider'],'Manual') ?>
     </div>
     <div class="col-lg-2 text-lg-center">
-        Enabled
+        <?= Ui::switchString($package['visibility'], 'Enabled','Disabled') ?>
     </div>
     <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
         <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"

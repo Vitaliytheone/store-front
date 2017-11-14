@@ -59,6 +59,7 @@ class ProductsController extends CustomController
         $store = yii::$app->store->getInstance();
         return $this->render('index', [
             'storeProviders' => $store->storeProviders,
+            'products' => CreateProductForm::getProductsPackages(),
         ]);
     }
 

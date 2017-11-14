@@ -8,26 +8,11 @@ use frontend\assets\ProductsAsset;
 
 /* @var $this yii\web\View */
 /* @var $formatter yii\i18n\Formatter */
-/* @var common\models\stores\StoreProviders[] $storeProviders  */
+/* @var $storeProviders common\models\stores\StoreProviders[] */
+/** @var $products array  Products with packages array */
 
 $this->title = 'Products';
 $formatter = Yii::$app->formatter;
-$products = [
-        [
-           'id' => 103,
-           'packages' => [
-               ['id' => 7, 'product_id' => 103],
-               ['id' => 8, 'product_id' => 103],
-               ['id' => 9, 'product_id' => 103],
-           ]
-        ],
-        [
-           'id' => 104,
-           'packages' => [
-               ['id' => 6, 'product_id' => 104],
-           ]
-        ],
-];
 
 ProductsAsset::register($this);
 ?>

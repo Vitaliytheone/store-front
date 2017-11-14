@@ -3,6 +3,7 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use frontend\helpers\Ui;
 
 /* @var $this yii\web\View */
 /* @var $product array */
@@ -10,12 +11,12 @@ use yii\helpers\Url;
 /* @var $formatter yii\i18n\Formatter */
 
 $formatter = Yii::$app->formatter;
-
 $packages = ArrayHelper::getValue($product, 'packages', []);
+
 ?>
 
 <div class="row group-caption">
-    <div class="col-12 sommerce_dragtable__category">
+    <div class="col-12 sommerce_dragtable__category <?= Ui::toggleString(!$product['visibility'], 'disabled-product') ?>">
         <div class="sommerce_dragtable__category-title">
             <div class="row align-items-center">
                 <div class="col-12">
@@ -25,7 +26,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                             <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
                         </svg>
                     </div>
-                    Buy Pinterest Followers
+                    <?= Html::encode($product['name']) ?>
                     <a href="#" class="btn btn-outline-primary btn-sm 	m-btn m-btn--icon m-btn--pill"
                        data-toggle="modal"
                        data-target=".add_product"
