@@ -10,8 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
 use frontend\helpers\Ui;
-use frontend\modules\admin\forms\ProductForm;
-use frontend\modules\admin\forms\PackageForm;
+use frontend\modules\admin\models\forms\CreateProductForm;
+use frontend\modules\admin\models\forms\CreatePackageForm;
 use common\models\stores\Stores;
 use common\models\stores\StoreProviders;
 use common\models\stores\Providers;
@@ -75,7 +75,7 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-        $productModel = new ProductForm();
+        $productModel = new CreateProductForm();
         $postData = $productModel->checkPropertiesField($request->post());
         if (!$productModel->load($postData)) {
             throw new NotAcceptableHttpException();
@@ -109,7 +109,7 @@ class ProductsController extends CustomController
             exit;
         }
 
-        $productModel = ProductForm::findOne($id);
+        $productModel = CreateProductForm::findOne($id);
         if (!$productModel) {
             throw new NotFoundHttpException();
         }
@@ -133,7 +133,7 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-        $productModel = ProductForm::findOne($id);
+        $productModel = CreateProductForm::findOne($id);
         if (!$productModel) {
             throw new NotFoundHttpException();
         }
@@ -169,7 +169,7 @@ class ProductsController extends CustomController
             exit;
         }
 
-        $packageModel = new PackageForm();
+        $packageModel = new CreatePackageForm();
         if (!$packageModel->load($request->post())) {
             throw new NotAcceptableHttpException();
         }
@@ -202,7 +202,7 @@ class ProductsController extends CustomController
             exit;
         }
 
-        $packageModel = PackageForm::findOne($id);
+        $packageModel = CreatePackageForm::findOne($id);
         if (!$packageModel) {
             throw new NotFoundHttpException();
         }
@@ -226,7 +226,7 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-        $packageModel = PackageForm::findOne($id);
+        $packageModel = CreatePackageForm::findOne($id);
         if (!$packageModel) {
             throw new NotFoundHttpException();
         }
@@ -300,7 +300,7 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-        $packageModel = PackageForm::findOne($id);
+        $packageModel = CreatePackageForm::findOne($id);
         if (!$packageModel) {
             throw new NotFoundHttpException();
         }
@@ -315,4 +315,5 @@ class ProductsController extends CustomController
             'package' => $packageModel,
         ];
     }
+
 }

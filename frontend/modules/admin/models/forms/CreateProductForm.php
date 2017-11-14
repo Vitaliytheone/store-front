@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\admin\forms;
+namespace frontend\modules\admin\models\forms;
 
 use yii;
 use yii\behaviors\AttributeBehavior;
@@ -8,10 +8,10 @@ use yii\db\Query;
 use common\models\store\Pages;
 
 /**
- * Class ProductForm
+ * Class CreateProductForm
  * @package frontend\modules\admin\forms
  */
-class ProductForm extends \common\models\store\Products
+class CreateProductForm extends \common\models\store\Products
 {
     /**
      * @inheritdoc
