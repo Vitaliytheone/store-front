@@ -1,5 +1,30 @@
 // TODO:: Convert scripts to Custom module after developing is finished
 
+
+/*****************************************************************************************************
+ *                     Notifications init
+ *****************************************************************************************************/
+(function (window, alert){
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "5000",
+        "timeOut": "5000",
+        "extendedTimeOut": "5000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+})({}, function (){});
+
 /*****************************************************************************************************
  *                     Sortable Products-Packages
  *****************************************************************************************************/
@@ -559,6 +584,7 @@
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
                     $modalLoader.addClass('hidden');
+                    toastr.error(jqXHR.responseJSON.message);
                 }
             });
         });

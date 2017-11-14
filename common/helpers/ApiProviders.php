@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 
 /**
@@ -10,7 +11,9 @@ use yii\web\BadRequestHttpException;
  */
 class ApiProviders
 {
+
     const COMMON_API_URL_TPL = 'https://{{api_host}}/api/v2';
+    const API_RESPONSE_ERROR_FIELD = 'error';
 
     public $api_url;
     public $api_key;
@@ -63,11 +66,10 @@ class ApiProviders
          //Filtering results by service type
         if (is_array($services) && is_array($serviceTypeFilter)) {
             $filteredServices = array_filter($services, function($service, $index) use ($serviceTypeFilter){
-                return in_array($service['type'], $serviceTypeFilter);
+                return in_array(ArrayHelper::getValue($service, 'type', null), $serviceTypeFilter);
             }, ARRAY_FILTER_USE_BOTH);
             return  $filteredServices;
         }
-
         // Or return all services
         return $services;
     }
@@ -86,10 +88,11 @@ class ApiProviders
     /**
      * Connection
      * @param $post
+     * @param $json
      * @return bool|mixed
      * @throws BadRequestHttpException
      */
-    private function connect($post) {
+    private function connect($post, $json = false) {
         $ch = curl_init($this->api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -105,12 +108,25 @@ class ApiProviders
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
         $result = curl_exec($ch);
 
+        // System errors
         if (curl_errno($ch) != 0 && empty($result)) {
             curl_close($ch);
-            throw new BadRequestHttpException;
+            throw new BadRequestHttpException();
         }
         curl_close($ch);
 
+        // Api errors
+        $jsonResult = json_decode($result,true);
+        if(json_last_error()){
+            throw new BadRequestHttpException('API response JSON decode errors!');
+        }
+        if (isset($jsonResult[self::API_RESPONSE_ERROR_FIELD])) {
+            throw new BadRequestHttpException('API response errors: '.$jsonResult[self::API_RESPONSE_ERROR_FIELD]);
+        }
+
+        if ($json) {
+            return $jsonResult;
+        }
         return $result;
     }
 }

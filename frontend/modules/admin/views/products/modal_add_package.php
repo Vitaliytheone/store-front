@@ -93,7 +93,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                         </select>
                     </div>
                     <div class="form-group d-none">
-                        <label for="package-provider_service">Provider</label>
+                        <label for="package-provider_service">Provider service</label>
                         <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]">
                         </select>
                     </div>
