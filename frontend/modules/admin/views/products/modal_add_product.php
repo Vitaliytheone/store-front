@@ -48,11 +48,12 @@ $formatter = Yii::$app->formatter;
                     <div class="form-group">
                         <label for="package-product">Properties</label>
                         <div class="input-group">
-                            <input type="text" class="form-control input-properties" placeholder="Add properties">
+                            <input type="text" class="form-control input-properties" placeholder="Add property">
                             <span class="input-group-btn">
                                 <button class="btn btn-primary add-properies" type="button">Add</button>
                               </span>
                         </div>
+                        <span class="empty-property-error m--font-danger d-none">Property can't be empty!</span>
 
                         <ul class="form_field__properties list-group list-properties">
                         </ul>

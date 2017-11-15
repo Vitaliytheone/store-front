@@ -120,6 +120,7 @@
         $modalLoader = $modal.find('.modal-loader'),
 
         $addPropertyInput = $modal.find('.input-properties'),
+        $inputPropertyError = $modal.find('.empty-property-error'),
         defaultFormData,
 
         currentProductId,
@@ -259,21 +260,28 @@
             $(this).parent().remove();
         });
         $(document).on('click', '.add-properies', function (){
-            addProperty();
+            checkInput();
         });
         $addPropertyInput.on('keyup', function (e) {
             if (e.keyCode !== 13) {
                 return;
             }
-            addProperty();
+            checkInput();
         });
 
-        function addProperty(){
-            var inputProperties = $addPropertyInput.val();
-            if (inputProperties.length){
-                $formFields.properties.append(getPropertyField(inputProperties, 'properties', formName));
-                $addPropertyInput.val('').focus();
+        function checkInput(){
+            var inputProperty = $addPropertyInput.val(),
+                length = inputProperty.length;
+
+            if (!!length) {
+                addProperty(inputProperty);
             }
+            $inputPropertyError.toggleClass('d-none', !!length);
+        }
+
+        function addProperty(property){
+            $formFields.properties.append(getPropertyField(property, 'properties', formName));
+            $addPropertyInput.val('').focus();
         }
     }
 
@@ -433,6 +441,7 @@
 
         resetForm();
         $errorContainer.empty();
+        $inputPropertyError.addClass('d-none');
     });
 
     /**
