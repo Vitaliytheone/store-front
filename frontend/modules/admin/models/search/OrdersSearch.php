@@ -39,14 +39,22 @@ class OrdersSearch extends \yii\base\Model
 
     /* Suborder statuses when `Cancel suborder` action is disallowed */
     public static $disallowedCancelStatuses = [
+        Suborders::STATUS_AWAITING,
         Suborders::STATUS_CANCELED,
         Suborders::STATUS_COMPLETED,
     ];
 
     /* Suborder statuses when `Change status` action is disallowed */
     public static $disallowedChangeStatusStatuses = [
+        Suborders::STATUS_AWAITING,
         Suborders::STATUS_CANCELED,
         Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `View details` action disallowed */
+    public static $disallowedDetailsStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
     ];
 
     public static $statusFilters = [

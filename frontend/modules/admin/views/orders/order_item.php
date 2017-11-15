@@ -18,6 +18,7 @@ $subordersCnt = count($suborders);
 $allowedActions = $ordersSearchModel::allowedActionStatuses();
 $disallowedCancelAction = $ordersSearchModel::$disallowedCancelStatuses;
 $disallowedChangeStatusAction = $ordersSearchModel::$disallowedChangeStatusStatuses;
+$disallowedDetailsStatusesAction = $ordersSearchModel::$disallowedDetailsStatuses;
 
 
 /**
@@ -45,7 +46,7 @@ $actionAllowedStatuses = function($currentStatus) use ($allowedActions) {
 };
 
 /**
- * Show or not model`s `change status` menu
+ * Show or not model`s `Change status` menu
  * @param $currentStatus
  * @return bool
  */
@@ -54,12 +55,43 @@ $isStatusMenuShow = function($currentStatus) use ($disallowedChangeStatusAction)
 };
 
 /**
- * Show or not model`s `resend order` menu
- * @param $suborderStatus int
+ * Show or not model`s `Resend order` menu
+ * @param $currentStatus int
  * @return int
  */
-$isResendOrderMenuShow = function($suborderStatus){
-    return $suborderStatus == Suborders::STATUS_FAILED;
+$isResendOrderMenuShow = function($currentStatus) {
+    return $currentStatus == Suborders::STATUS_FAILED;
+};
+
+/**
+ * Show or not model`s `Details` menu
+ * @param $currentStatus
+ * @param $currentMode
+ * @return bool
+ */
+$isDetailsMenuShow = function($currentStatus, $currentMode) use ($disallowedDetailsStatusesAction) {
+    return $currentMode == Suborders::MODE_AUTO && !in_array($currentStatus, $disallowedDetailsStatusesAction);
+};
+
+/**
+ * Show or hide Cancel suborder button
+ * @param $currentStatus
+ * @return string
+ */
+$isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
+    return $currentStatus != in_array($currentStatus, $disallowedCancelAction);
+};
+
+/**
+ * Show or not models 'Action' button exactly
+ * @param $suborder
+ * @return bool
+ */
+$isActionButtonShow = function($suborder) use ($isStatusMenuShow, $isResendOrderMenuShow, $isDetailsMenuShow, $isCancelShow) {
+    $status = $suborder['status'];
+    $mode = $suborder['mode'];
+    
+    return $isStatusMenuShow($status) || $isResendOrderMenuShow($status) || $isDetailsMenuShow($status, $mode) || $isCancelShow($status);
 };
 
 /**
@@ -79,18 +111,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
             $res[$paramName] = $param;
         }
     }
-
-    error_log(print_r($res, 1),0);
     return $res;
-};
-
-/**
- * Show or hide Cancel suborder button
- * @param $currentStatus
- * @return string
- */
-$isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
-    return $currentStatus != in_array($currentStatus, $disallowedCancelAction);
 };
 
 ?>
@@ -124,6 +145,8 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
 
     <td><?= $suborder['mode_caption'] ?></td>
     <td class="text-right">
+
+        <?php if($isActionButtonShow($suborder)): ?>
         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-right" data-dropdown-toggle="click" aria-expanded="true">
             <a href="#" class="m-dropdown__toggle btn btn-primary btn-sm">
                 Actions <span class="fa fa-cog"></span>
@@ -134,11 +157,15 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                     <div class="m-dropdown__body">
                         <div class="m-dropdown__content">
                             <ul class="m-nav">
+
+                                <?php if($isDetailsMenuShow($suborder['status'], $suborder['mode'])): ?>
                                 <li class="m-nav__item">
                                     <a href="#" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link">
                                         <span class="m-nav__link-text">Details</span>
                                     </a>
                                 </li>
+                                <?php endif; ?>
+
                                 <?php if($isResendOrderMenuShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
                                     <a href="<?= Url::to(['/admin/orders/resend', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
@@ -146,6 +173,7 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                                     </a>
                                 </li>
                                 <?php endif; ?>
+
                                 <!-- Change Status Menu -->
                                 <?php if($isStatusMenuShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
@@ -161,6 +189,7 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                                     </div>
                                 </li>
                                 <?php endif; ?>
+
                                 <!--/ Change Status Menu -->
                                 <?php if ($isCancelShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
@@ -169,12 +198,15 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                                     </a>
                                 </li>
                                 <?php endif; ?>
+
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <?php endif; ?>
+
     </td>
 </tr>
 <?php endforeach; ?>
