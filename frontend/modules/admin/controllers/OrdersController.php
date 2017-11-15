@@ -39,6 +39,7 @@ class OrdersController extends CustomController
     public function beforeAction($action)
     {
         $this->addModule('ordersDetails');
+        $this->addModule('ordersClipboard');
 
         return parent::beforeAction($action);
     }

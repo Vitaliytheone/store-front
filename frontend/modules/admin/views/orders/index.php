@@ -5,12 +5,14 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use frontend\helpers\Ui;
 use frontend\modules\admin\widgets\CustomLinkPager;
+use frontend\assets\OrdersAsset;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
 /* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
 /* @var $pagination yii\data\Pagination */
 
+OrdersAsset::register($this);
 
 $this->title = 'Orders';
 

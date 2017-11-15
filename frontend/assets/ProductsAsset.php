@@ -5,7 +5,7 @@ namespace frontend\assets;
 use yii\web\AssetBundle;
 
 /**
- * Admin-Products page asset bundle.
+ * /admin/products page asset bundle.
  */
 class ProductsAsset extends AssetBundle
 {

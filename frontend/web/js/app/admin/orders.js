@@ -1,3 +1,7 @@
+/**
+ * Order details custom js module
+ * @type {{run: customModule.ordersDetails.run}}
+ */
 customModule.ordersDetails = {
     run : function(params) {
         $(document).ready(function () {
@@ -49,6 +53,28 @@ customModule.ordersDetails = {
                 var $currentTarget = $(e.currentTarget);
                 $currentTarget.find('input').val('');
                 $providerResponce.html('');
+            });
+        });
+    }
+};
+
+/**
+ * Order clipboard custom js module
+ * @type {{run: customModule.ordersClipboard.run}}
+ */
+customModule.ordersClipboard = {
+    run : function(params) {
+        $(document).ready(function () {
+            var ClipboardDemo = function () {
+                var n = function n() {
+                    new Clipboard("[data-clipboard=true]").on("success", function (n) {
+                        n.clearSelection(), alert("Copied!");
+                    });
+                };return { init: function init() {
+                    n();
+                } };
+            }();jQuery(document).ready(function () {
+                ClipboardDemo.init();
             });
         });
     }
