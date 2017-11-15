@@ -8,7 +8,10 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
+
 use common\models\store\Suborders;
+use frontend\modules\admin\models\forms\SubordersListForm;
+
 use frontend\modules\admin\models\search\OrdersSearch;
 
 /**
@@ -77,11 +80,11 @@ class OrdersController extends CustomController
         if (!$request->isAjax || !$suborderId) {
             throw new BadRequestHttpException();
         }
-        $suborderModel = Suborders::findOne($suborderId);
+        $suborderModel = SubordersListForm::findOne($suborderId);
         if (!$suborderModel) {
             throw new NotFoundHttpException();
         }
-        $orderDetails = $suborderModel->getDetails(false);
+        $orderDetails = $suborderModel->getDetails();
         if (!$orderDetails) {
             throw new NotFoundHttpException();
         }
@@ -106,7 +109,7 @@ class OrdersController extends CustomController
         if (!$isStatusAllowed || !$suborderId || !$orderStatus) {
             throw new NotAcceptableHttpException();
         }
-        $suborderModel = Suborders::findOne($suborderId);
+        $suborderModel = SubordersListForm::findOne($suborderId);
         if (!$suborderModel) {
             throw new NotFoundHttpException();
         }
@@ -135,7 +138,7 @@ class OrdersController extends CustomController
             throw new NotAcceptableHttpException();
         }
 
-        $suborderModel = Suborders::findOne($suborderId);
+        $suborderModel = SubordersListForm::findOne($suborderId);
         if (!$suborderModel) {
             throw new NotFoundHttpException();
         }
