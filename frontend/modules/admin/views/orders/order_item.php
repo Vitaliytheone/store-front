@@ -3,6 +3,7 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use \common\models\store\Suborders;
 
 /* @var $this yii\web\View */
 /* @var $order array */
@@ -30,7 +31,7 @@ $isFirstSuborder = function($suborder) use ($suborders) {
 
 
 /**
- * Return only allowed for action statuses.
+ * Return only allowed for action statuses
  * Current model status excluded from action menu.
  * @param $currentStatus
  * @return array
@@ -44,12 +45,21 @@ $actionAllowedStatuses = function($currentStatus) use ($allowedActions) {
 };
 
 /**
- * Show or not model`s change status menu.
+ * Show or not model`s `change status` menu
  * @param $currentStatus
  * @return bool
  */
 $isStatusMenuShow = function($currentStatus) use ($disallowedChangeStatusAction) {
     return !in_array($currentStatus, $disallowedChangeStatusAction);
+};
+
+/**
+ * Show or not model`s `resend order` menu
+ * @param $suborderStatus int
+ * @return int
+ */
+$isResendOrderMenuShow = function($suborderStatus){
+    return $suborderStatus == Suborders::STATUS_FAILED;
 };
 
 /**
@@ -69,6 +79,8 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
             $res[$paramName] = $param;
         }
     }
+
+    error_log(print_r($res, 1),0);
     return $res;
 };
 
@@ -124,11 +136,16 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                             <ul class="m-nav">
                                 <li class="m-nav__item">
                                     <a href="#" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Details
-																						</span>
+                                        <span class="m-nav__link-text">Details</span>
                                     </a>
                                 </li>
+                                <?php if($isResendOrderMenuShow($suborder['status'])): ?>
+                                <li class="m-nav__item">
+                                    <a href="<?= Url::to(['/admin/orders/resend', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
+                                        <span class="m-nav__link-text">Resend order</span>
+                                    </a>
+                                </li>
+                                <?php endif; ?>
                                 <!-- Change Status Menu -->
                                 <?php if($isStatusMenuShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
@@ -138,7 +155,7 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                                     <div class="collapse sommerce-dropdwon__actions_collapse" id="action-<?= $suborder['suborder_id'] ?>">
                                         <ul>
                                             <?php foreach ($actionAllowedStatuses($suborder['status']) as $status => $statusData): ?>
-                                                <li><a href="<?= Url::to(['/admin/orders/change-status', 'suborder_id'=>$suborder['suborder_id'], 'status'=>$status, 'filters' => $paramsForRedirect()]) ?>" class="change-status"><?= $statusData['caption'] ?></a></li>
+                                                <li><a href="<?= Url::to(['/admin/orders/change-status', 'id' => $suborder['suborder_id'], 'status' => $status, 'filters' => $paramsForRedirect()]) ?>" class="change-status"><?= $statusData['caption'] ?></a></li>
                                             <?php endforeach; ?>
                                         </ul>
                                     </div>
@@ -147,7 +164,7 @@ $isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
                                 <!--/ Change Status Menu -->
                                 <?php if ($isCancelShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
-                                    <a href="<?= Url::to(['/admin/orders/cancel', 'suborder_id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
+                                    <a href="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
                                         <span class="m-nav__link-text">Cancel</span>
                                     </a>
                                 </li>

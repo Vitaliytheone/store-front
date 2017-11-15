@@ -6,6 +6,7 @@ use yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use frontend\modules\admin\models\search\OrdersSearch;
 
 /**
  * Class SubordersListForm
@@ -13,24 +14,33 @@ use yii\helpers\ArrayHelper;
  */
 class SubordersListForm extends \common\models\store\Suborders
 {
+
+    const SCENARIO_CHANGE_STATUS_ACTION = 'change_status_action';
+    const SCENARIO_CHANGE_STATUS_ACTION_ATTR = 'change_status_action_attr';
+
+    const SCENARIO_CANCEL_ACTION = 'allowed_cancel';
+    const SCENARIO_RESEND_ACTION = 'allowed_resend';
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function rules()
     {
         return [
-            /** Change `mode` to manual when `status` changes from admin panel */
-            [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    self::EVENT_BEFORE_INSERT => 'mode',
-                    self::EVENT_BEFORE_UPDATE => 'mode',
-                ],
-                'value' => function ($event) {
-                    $isStatusChanged = $this->isAttributeChanged('status');
-                    return $isStatusChanged ? self::MODE_MANUAL : $this->mode;
-                },
-            ],
+            ['status', 'in', 'not' => true, 'range' => OrdersSearch::$disallowedChangeStatusStatuses,
+                'on' => self::SCENARIO_CHANGE_STATUS_ACTION],
+
+            ['status', 'in', 'range' => OrdersSearch::$acceptedStatuses,
+                'on' => self::SCENARIO_CHANGE_STATUS_ACTION_ATTR],
+            ['mode', 'safe',
+                'on' => self::SCENARIO_CHANGE_STATUS_ACTION_ATTR],
+
+
+            ['status', 'in', 'not' => true, 'range' => OrdersSearch::$disallowedCancelStatuses,
+                'on' => self::SCENARIO_CANCEL_ACTION],
+
+            ['status', 'compare', 'compareValue' => self::STATUS_FAILED, 'operator' => '===', 'type' => 'number',
+                'on' => self::SCENARIO_RESEND_ACTION],
         ];
     }
 

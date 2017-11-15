@@ -94,62 +94,88 @@ class OrdersController extends CustomController
     /**
      * Suborder `change status`  action
      * Accepted only allowed new statuses.
+     * @param $id
+     * @param $status
+     * @throws Yii\web\BadRequestHttpException
      * @throws Yii\web\NotFoundHttpException
+     * @throws Yii\web\NotAcceptableHttpException
      */
-    public function actionChangeStatus()
+    public function actionChangeStatus($id, $status)
     {
-        $suborderId = yii::$app->getRequest()->get('suborder_id');
-        $orderStatus = yii::$app->getRequest()->get('status');
-        $currentFilters = yii::$app->getRequest()->get('filters');
-        if (!$suborderId || !$orderStatus) {
-            throw new BadRequestHttpException();
-        }
+        $filters = yii::$app->getRequest()->get('filters');
 
-        $isStatusAllowed = in_array($orderStatus, OrdersSearch::$acceptedStatuses);
-        if (!$isStatusAllowed || !$suborderId || !$orderStatus) {
-            throw new NotAcceptableHttpException();
-        }
-        $suborderModel = SubordersListForm::findOne($suborderId);
+        $suborderModel = SubordersListForm::findOne($id);
         if (!$suborderModel) {
             throw new NotFoundHttpException();
         }
-        $isChangeActionDisallowed = in_array($suborderModel->status, OrdersSearch::$disallowedChangeStatusStatuses);
-        if ($isChangeActionDisallowed) {
+        $suborderModel->setScenario(SubordersListForm::SCENARIO_CHANGE_STATUS_ACTION);
+        if (!$suborderModel->validate()) {
             throw new NotAcceptableHttpException();
         }
-
-        $suborderModel->setAttribute('status', $orderStatus);
-        $suborderModel->save();
-
-        $queryParams = is_array($currentFilters) ? http_build_query($currentFilters) : null;
+        $suborderModel->setScenario(SubordersListForm::SCENARIO_CHANGE_STATUS_ACTION_ATTR);
+        $suborderModel->setAttributes([
+            'status' => $status,
+            'mode' => Suborders::MODE_MANUAL,
+        ]);
+        if (!$suborderModel->save()) {
+            throw new NotAcceptableHttpException();
+        }
+        $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
     }
 
     /**
      * Suborder `cancel` action
+     * @param $id
      * @throws Yii\web\NotFoundHttpException
+     * @throws Yii\web\NotAcceptableHttpException
      */
-    public function actionCancel()
+    public function actionCancel($id)
     {
-        $suborderId = yii::$app->getRequest()->get('suborder_id');
-        $currentFilters = yii::$app->getRequest()->get('filters');
+        $filters = yii::$app->getRequest()->get('filters');
 
-        if (!$suborderId) {
-            throw new NotAcceptableHttpException();
-        }
-
-        $suborderModel = SubordersListForm::findOne($suborderId);
+        $suborderModel = SubordersListForm::findOne($id);
         if (!$suborderModel) {
             throw new NotFoundHttpException();
         }
-        $isCancelDisallowed = in_array($suborderModel->status, OrdersSearch::$disallowedCancelStatuses);
-        if ($isCancelDisallowed) {
+        $suborderModel->setScenario(SubordersListForm::SCENARIO_CANCEL_ACTION);
+        if (!$suborderModel->validate()) {
             throw new NotAcceptableHttpException();
-        }
-        $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
-        $suborderModel->save();
+        };
 
-        $queryParams = is_array($currentFilters) ? http_build_query($currentFilters) : null;
+        $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
+        $suborderModel->save(false);
+
+        $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
     }
+
+    /**
+     * Suborder `resend` action
+     * @param $id
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionResend($id)
+    {
+        $filters = yii::$app->getRequest()->get('filters');
+
+        $suborderModel = SubordersListForm::findOne($id);
+        if (!$suborderModel) {
+            throw new NotFoundHttpException();
+        }
+        $suborderModel->setScenario(SubordersListForm::SCENARIO_RESEND_ACTION);
+        if (!$suborderModel->validate()) {
+            throw new NotAcceptableHttpException();
+        }
+        $suborderModel->setAttributes([
+            'status' => Suborders::STATUS_AWAITING,
+            'send' => Suborders::RESEND_NO,
+        ]);
+        $suborderModel->save(false);
+
+        $queryParams = is_array($filters) ? http_build_query($filters) : null;
+        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+    }
+
 }

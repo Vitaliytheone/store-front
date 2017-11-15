@@ -43,6 +43,10 @@ class Suborders extends \yii\db\ActiveRecord
     const MODE_MANUAL           = 0;
     const MODE_AUTO             = 1;
 
+    /* Suborder resend status */
+    const RESEND_NO = 0;
+    const RESEND_YES = 1;
+
     /**
      * @inheritdoc
      */
@@ -83,7 +87,7 @@ class Suborders extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'checkout_id', 'package_id', 'quantity', 'status', 'updated_at', 'mode', 'provider_id'], 'integer'],
+            [['order_id', 'checkout_id', 'package_id', 'quantity', 'status', 'updated_at', 'mode', 'send', 'provider_id'], 'integer'],
             [['amount', 'provider_charge'], 'number'],
             [['provider_response'], 'string'],
             [['link'], 'string', 'max' => 1000],
