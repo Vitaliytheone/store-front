@@ -88,5 +88,49 @@ customModule.adminLayout = {
             });
         });
 
+        /*****************************************************************************************************
+         *                     Popup notifications init
+         *****************************************************************************************************/
+        $(document).ready(function () {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "5000",
+                "timeOut": "5000",
+                "extendedTimeOut": "5000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+        });
+
+        /*****************************************************************************************************
+         *                     Page notifications init
+         *****************************************************************************************************/
+        $(document).ready(function () {
+        /* Check if page have messages */
+            var messages = window.app__messages || null;
+            if (!messages){
+                return;
+            }
+            _.forEach(messages, function(message){
+                if (message.success) {
+                    toastr.success(message.success);
+                }
+                if (message.warning) {
+                    toastr.warning(message.warning);
+                }
+                if (message.error) {
+                    toastr.error(message.error);
+                }
+            });
+        });
     }
 };

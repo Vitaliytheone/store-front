@@ -90,6 +90,7 @@ class ProductsController extends CustomController
         if (!$productModel->save()) {
             throw new NotAcceptableHttpException();
         }
+        Yii::$app->session->addFlash('messages', ['success' => 'Product was successfully created!']);
         return [
             'product' => $productModel,
         ];
@@ -151,6 +152,7 @@ class ProductsController extends CustomController
         if (!$productModel->save(false)) {
             throw new NotAcceptableHttpException();
         }
+        Yii::$app->session->addFlash('messages', ['success' => 'Product was successfully updated!']);
         return [
             'product' => $productModel,
         ];
@@ -210,6 +212,7 @@ class ProductsController extends CustomController
         if (!$packageModel->save()) {
             throw new NotAcceptableHttpException();
         }
+        Yii::$app->session->addFlash('messages', ['success' => 'Package was successfully created!']);
         return [
             'package' => $packageModel,
         ];
@@ -270,6 +273,7 @@ class ProductsController extends CustomController
         if (!$packageModel->save(false)) {
             throw new NotAcceptableHttpException();
         }
+        Yii::$app->session->addFlash('messages', ['success' => 'Package was successfully updated!']);
         return [
             'package' => $packageModel,
         ];
@@ -338,6 +342,7 @@ class ProductsController extends CustomController
         if (!$packageModel->deleteVirtual()) {
             throw new NotAcceptableHttpException();
         };
+        Yii::$app->session->addFlash('messages', ['success' => 'Package was successfully deleted!']);
         return [
             'package' => $packageModel,
         ];

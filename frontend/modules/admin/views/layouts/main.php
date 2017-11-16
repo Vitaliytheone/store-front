@@ -35,3 +35,9 @@
 </body>
 </html>
 <?php $this->endPage() ?>
+
+<!-- App messages script -->
+<script>
+    var jsonMessages = '<?= json_encode(Yii::$app->session->getFlash('messages')) ?>';
+    window.app__messages = JSON.parse(jsonMessages);
+</script>
