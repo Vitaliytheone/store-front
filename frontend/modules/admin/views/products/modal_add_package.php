@@ -92,11 +92,12 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="provider-service-group form-group d-none">
                         <label for="package-provider_service">Provider service</label>
                         <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]">
                         </select>
                     </div>
+                    <span class="api-error m--font-danger d-none">Blah blah blah!</span>
                 </div>
                 <div class="modal-footer justify-content-start">
                     <button type="submit" id="submitPackageForm" class="btn btn-primary">Add package</button>

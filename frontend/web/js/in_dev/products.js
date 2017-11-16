@@ -514,6 +514,7 @@
         $modalTitle = $modal.find('.modal-title'),
         $errorContainer = $('#package-form-error'),
         $modalLoader = $modal.find('.modal-loader'),
+        $apiError = $modal.find('.api-error'),
 
         packageModel,
         currentPackageId,
@@ -611,12 +612,13 @@
                     if (data.services) {
                         renderProviderServices(data.services, selectedServiceId);
                     }
+                    hideApiError();
                     $modalLoader.addClass('hidden');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
                     $modalLoader.addClass('hidden');
-                    toastr.error(jqXHR.responseJSON.message);
+                    showApiError(jqXHR.responseJSON.message);
                 }
             });
         });
@@ -625,6 +627,23 @@
     function unbindCommonPackageEvents(){
         $formFields.mode.off('change');
         $formFields.provider_id.off('change');
+    }
+
+    /**
+     * Show provider Api error message
+     * @param errorMessage
+     */
+    function showApiError(errorMessage){
+        $apiError.removeClass('d-none').html(errorMessage);
+        $formFields.provider_service.closest('.provider-service-group').addClass('d-none');
+    }
+
+    /**
+     * Hide provider Api error message
+     */
+    function hideApiError(){
+        $apiError.addClass('d-none').html('');
+        $formFields.provider_service.closest('.provider-service-group').removeClass('d-none');
     }
 
     /**
@@ -648,6 +667,7 @@
      */
     function resetForm(){
         $errorContainer.empty();
+        hideApiError();
         fillFormFields(defaultFormData);
     }
 
