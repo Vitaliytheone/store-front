@@ -278,6 +278,9 @@
             e.preventDefault();
             checkInput();
         });
+        $addPropertyInput.focusout(function (e) {
+            $inputPropertyError.addClass('d-none');
+        });
 
         function checkInput(){
             var inputProperty = $addPropertyInput.val(),
