@@ -24,7 +24,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="packageForm" action="/" method="post" role="form">
+            <form id="packageForm" action="/" method="post" role="form" data-success_redirect="<?= Url::to(['/admin/products'])?>">
 
                 <!--  Field for store package`s product_id value  -->
                 <input type="hidden" class="form_field__product_id" name="PackageForm[product_id]" value="">

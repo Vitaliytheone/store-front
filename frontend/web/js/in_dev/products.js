@@ -124,7 +124,8 @@
         defaultFormData,
 
         currentProductId,
-        currentActionUrl;
+        currentActionUrl,
+        successRedirectUrl;
 
     var $formFields = {
         name            : $productForm.find('.form_field__name'),
@@ -160,19 +161,22 @@
             url: currentActionUrl,
             type: "POST",
             data: $(this).serialize(),
+
             success: function (data, textStatus, jqXHR){
-                $modalLoader.addClass('hidden');
                 if (data.error){
+                    $modalLoader.addClass('hidden');
                     $errorContainer.append(data.error.html);
                     $modal.animate({ scrollTop: 0 }, 'slow');
                     return;
                 }
                 //Success
-                $modal.modal('hide');
-                _.delay(function (){
-                    $(location).attr('href', '/admin/products');
-                }, 1000);
+                _.delay(function(){
+                    $(location).attr('href', successRedirectUrl);
+                    // $modalLoader.addClass('hidden');
+                    // $modal.modal('hide');
+                }, 500);
             },
+
             error: function (jqXHR, textStatus, errorThrown){
                 $modalLoader.addClass('hidden');
                 $modal.modal('hide');
@@ -474,6 +478,7 @@
 
         currentProductId = button.data('id') || undefined;
         currentActionUrl = button.data('action-url');
+        successRedirectUrl = $productForm.data('success_redirect');
 
         // Define UI elements captions depends on mode save|update
         var modalTitle = currentProductId ? 'Update product' : 'Add product',
@@ -512,7 +517,9 @@
 
         packageModel,
         currentPackageId,
-        currentActionUrl;
+        currentActionUrl,
+        successRedirectUrl;
+    ;
 
     var $formFields = {
         name                : $packageForm.find('.form_field__name'),
@@ -550,19 +557,22 @@
             url: currentActionUrl,
             type: "POST",
             data: $(this).serialize(),
+
             success: function (data, textStatus, jqXHR){
-                $modalLoader.addClass('hidden');
                 if (data.error){
+                    $modalLoader.addClass('hidden');
                     $errorContainer.append(data.error.html);
                     $modal.animate({ scrollTop: 0 }, 'slow');
                     return;
                 }
                 //Success
-                $modal.modal('hide');
-                _.delay(function (){
-                    $(location).attr('href', '/admin/products');
+                _.delay(function(){
+                    $(location).attr('href', successRedirectUrl);
+                    // $modalLoader.addClass('hidden');
+                    // $modal.modal('hide');
                 }, 1000);
             },
+
             error: function (jqXHR, textStatus, errorThrown){
                 $modalLoader.addClass('hidden');
                 $modal.modal('hide');
@@ -764,6 +774,7 @@
 
         currentPackageId = button.data('id') || undefined;
         currentActionUrl = button.data('action-url');
+        successRedirectUrl = $packageForm.data('success_redirect')
 
         // Define UI elements captions depends on mode save|update
         var modalTitle = currentPackageId ? 'Edit package' : 'Add package',

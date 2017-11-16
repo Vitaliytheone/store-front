@@ -24,7 +24,7 @@ $formatter = Yii::$app->formatter;
                 </button>
             </div>
 
-            <form id="productForm" class="form-horizontal" action="/" method="post" role="form">
+            <form id="productForm" class="form-horizontal" action="/" method="post" role="form" data-success_redirect="<?= Url::to(['/admin/products'])?>">
 
                 <div class="modal-body">
                     <div id="product-form-error"></div>
