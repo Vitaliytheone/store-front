@@ -579,12 +579,14 @@
                 actionUrl = $optionSelected.data('action-url');
             clearProviderServisesList();
             if (actionUrl === undefined) {
+                hideApiError();
                 return;
             }
             $modalLoader.removeClass('hidden');
             $.ajax({
                 url: actionUrl,
                 type: "GET",
+                timeout: 15000,
                 success: function(data, textStatus, jqXHR) {
                     if (data.services) {
                         renderProviderServices(data.services, selectedServiceId);
@@ -593,9 +595,17 @@
                     $modalLoader.addClass('hidden');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    var errorMessage = '';
+                    // Timeout error
+                    if (textStatus === "timeout") {
+                        errorMessage = window.getUiText('ajax_timeout_offset');
+                    }  else {
+                        errorMessage = jqXHR.responseJSON.message;
+                    }
+
                     console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
                     $modalLoader.addClass('hidden');
-                    showApiError(jqXHR.responseJSON.message);
+                    showApiError(errorMessage);
                 }
             });
         });
@@ -794,7 +804,7 @@
         }
     });
 
-})({}, function (){});
+})(window);
 
 
 /*****************************************************************************************************

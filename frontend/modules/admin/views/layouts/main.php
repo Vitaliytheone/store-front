@@ -41,3 +41,25 @@
     var jsonMessages = '<?= json_encode(Yii::$app->session->getFlash('messages')) ?>';
     window.app__messages = JSON.parse(jsonMessages);
 </script>
+
+<!-- App current language strings for JS interface purpose -->
+<script>
+
+    window.app__ui_strings = {
+        'ajax_timeout_offset' : 'Loading error, try again later',
+    };
+
+    /**
+     * Return language string by string key or key if string not present
+     * @param key
+     * @returns {*}
+     */
+    window.getUiText = function (key) {
+        textContainer = window.app__ui_strings || null;
+        if (!textContainer || !(typeof textContainer === 'object') || !textContainer.hasOwnProperty(key)) {
+            return key;
+        }
+        return textContainer[key];
+    }
+
+</script>
