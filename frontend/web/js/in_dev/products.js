@@ -547,7 +547,7 @@
                     $(location).attr('href', successRedirectUrl);
                     // $modalLoader.addClass('hidden');
                     // $modal.modal('hide');
-                }, 1000);
+                }, 500);
             },
 
             error: function (jqXHR, textStatus, errorThrown){
@@ -570,6 +570,7 @@
             var mode = parseInt($(this).val());
             $formFields.provider_id.closest('.form-group').toggleClass('d-none', !mode);
             $formFields.provider_service.closest('.form-group').toggleClass('d-none', !mode);
+            $apiError.addClass('d-none');
         });
 
         // Change `provider_id` => fetch provider`s services
@@ -770,7 +771,7 @@
 
         currentPackageId = button.data('id') || undefined;
         currentActionUrl = button.data('action-url');
-        successRedirectUrl = $packageForm.data('success_redirect')
+        successRedirectUrl = $packageForm.data('success_redirect');
 
         // Define UI elements captions depends on mode save|update
         var modalTitle = currentPackageId ? 'Edit package' : 'Add package',
@@ -799,7 +800,8 @@
     var $modal = $('#delete-modal'),
         $modalLoader = $modal.find('.modal-loader'),
         buttonDelete = $modal.find('#feature-delete'),
-        actionUrl;
+        actionUrl,
+        successRedirectUrl;
 
     buttonDelete.on('click', function(){
         $modalLoader.removeClass('hidden');
@@ -807,15 +809,16 @@
             url: actionUrl,
             type: "DELETE",
             success: function (data, textStatus, jqXHR){
-                $modalLoader.addClass('hidden');
                 if (data.error){
+                    $modalLoader.addClass('hidden');
                     return;
                 }
                 //Success
-                $modal.modal('hide');
-                _.delay(function (){
-                    $(location).attr('href', '/admin/products');
-                }, 1000);
+                _.delay(function(){
+                    $(location).attr('href', successRedirectUrl);
+                    // $modalLoader.addClass('hidden');
+                    // $modal.modal('hide');
+                }, 500);
             },
             error: function (jqXHR, textStatus, errorThrown){
                 $modalLoader.addClass('hidden');
@@ -828,6 +831,7 @@
     $modal.on('show.bs.modal', function (event){
         var button = $(event.relatedTarget);
         actionUrl = button.data('action-url');
+        successRedirectUrl = $modal.data('success_redirect');
     });
 
     $modal.on('hidden.bs.modal', function (){
