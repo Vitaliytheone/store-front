@@ -24,6 +24,7 @@ class AdminAsset extends AssetBundle
         'js/libs/underscore.js',
         'js/libs/popper.js',
         'js/libs/bootstrap.js',
+        'js/libs/notification/toastr.js',
         'js/main.js',
     ];
 

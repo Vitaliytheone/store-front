@@ -19,7 +19,6 @@ class ProductsAsset extends AssetBundle
         'js/libs/jquery-ui.js',
         'js/libs/nestable/nestable.lib.js',
         'js/libs/nestable/nestable-script.js',
-        'js/libs/notification/toastr.js',
         'js/libs/summernote/summernote-bs4.js',
 
         'js/in_dev/products.js', // TODO:: Delete scripts after the main script developing is finished

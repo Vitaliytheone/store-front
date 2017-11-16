@@ -120,6 +120,7 @@ class OrdersController extends CustomController
         if (!$suborderModel->save()) {
             throw new NotAcceptableHttpException();
         }
+        Yii::$app->session->addFlash('messages', ['success' => 'Status was successfully changed!']);
         $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
     }
@@ -146,6 +147,7 @@ class OrdersController extends CustomController
         $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
         $suborderModel->save(false);
 
+        Yii::$app->session->addFlash('messages', ['success' => 'Order was successfully cancelled!']);
         $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
     }
@@ -174,6 +176,7 @@ class OrdersController extends CustomController
         ]);
         $suborderModel->save(false);
 
+        Yii::$app->session->addFlash('messages', ['success' => 'Order was successfully resent!']);
         $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
     }
