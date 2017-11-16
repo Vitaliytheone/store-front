@@ -81,8 +81,8 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                             <option value="1">Auto</option>
                         </select>
                     </div>
-                    <hr>
                     <div class="form-group d-none">
+                        <hr>
                         <label for="package-provider_id">Provider</label>
                         <select id="package-provider_id" class="form-control form_field__provider_id" name="PackageForm[provider_id]">
                             <?php foreach ($storeProviders as $storeProvider): ?>
