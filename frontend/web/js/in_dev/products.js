@@ -519,8 +519,8 @@
         visibility          : $formFields.visibility.val(),
         best                : $formFields.best.val(),
         mode                : $formFields.mode.val(),
-        provider_id         : 0,
-        provider_service    : 0,
+        provider_id         : $formFields.provider_id.val(),
+        provider_service    : $formFields.provider_service.val(),
         product_id          : $formFields.product_id.val()
     };
 
@@ -575,9 +575,9 @@
 
         // Change `provider_id` => fetch provider`s services
         $formFields.provider_id.on('change', function(e, selectedServiceId){
-            $formFields.provider_service.empty();
             var $optionSelected = $("option:selected", this),
                 actionUrl = $optionSelected.data('action-url');
+            clearProviderServisesList();
             if (actionUrl === undefined) {
                 return;
             }
@@ -648,9 +648,7 @@
         fillFormFields(defaultFormData);
     }
 
-    /* Render array of Provider Services */
-    /**
-     *
+    /** Render array of Provider Services
      * @param services
      * @param selectedServiceId service_id | undefined if new package
      */
@@ -663,7 +661,13 @@
             }
             $container.append('<option value="' + s.service + '"'+ selected + '>' + s.name + '</option>');
         });
-        $formFields.provider_service.empty().html($container.html());
+        clearProviderServisesList();
+        $formFields.provider_service.append($container.html());
+    }
+
+    function clearProviderServisesList() {
+        $formFields.provider_service.find("option:not(:eq(0))").remove();
+        $formFields.provider_service.find('option:eq(0)').prop('selected', true);
     }
 
     /*******************************************************************************************
@@ -678,14 +682,15 @@
     }
 
     function bindCreatePackageEvents(){
-        // Change `mode`
-        $formFields.mode.on('change', function(e){
-            var mode = parseInt($(this).val());
-            // Activate first provider in list
-            if (mode === 1) {
-                $formFields.provider_id.find('option:eq(0)').prop('selected', true).trigger("change");
-            }
-        });
+        // // Change `mode`
+        // $formFields.mode.on('change', function(e){
+        //     var mode = parseInt($(this).val());
+        //     // Activate default provider & default in list
+        //     if (mode === 1) {
+        //         $formFields.provider_id.find('option:eq(0)').prop('selected', true);
+        //         $formFields.provider_service.find('option:eq(0)').prop('selected', true);
+        //     }
+        // });
     }
 
     function unbindCreatePackageEvents(){

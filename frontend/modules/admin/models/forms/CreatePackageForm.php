@@ -65,7 +65,7 @@ class CreatePackageForm extends \common\models\store\Packages
     public function rules()
     {
         return [
-            [['product_id', 'name', 'price', 'quantity'], 'required'],
+            [['product_id', 'name', 'price', 'quantity', 'provider_id', 'provider_service'], 'required'],
             [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],

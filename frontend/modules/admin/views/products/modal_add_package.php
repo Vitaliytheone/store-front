@@ -85,6 +85,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                         <hr>
                         <label for="package-provider_id">Provider</label>
                         <select id="package-provider_id" class="form-control form_field__provider_id" name="PackageForm[provider_id]">
+                            <option value="" selected>Choose provider</option>
                             <?php foreach ($storeProviders as $storeProvider): ?>
                             <option value="<?= $storeProvider->provider->id ?>" data-action-url="<?= Url::to(['products/get-provider-services', 'provider_id' => $storeProvider->provider->id ]) ?>">
                                 <?= Html::encode($storeProvider->provider->site) ?>
@@ -95,6 +96,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                     <div class="provider-service-group form-group d-none">
                         <label for="package-provider_service">Provider service</label>
                         <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]">
+                            <option value="" selected>Choose service</option>
                         </select>
                     </div>
                     <span class="api-error m--font-danger d-none">Blah blah blah!</span>
