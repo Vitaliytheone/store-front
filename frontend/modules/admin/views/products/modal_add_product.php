@@ -12,6 +12,7 @@ $storeUrl = $currentStore->domain;
 $formatter = Yii::$app->formatter;
 ?>
 
+
 <div class="modal fade add_product" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -22,8 +23,8 @@ $formatter = Yii::$app->formatter;
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="productForm" class="form-horizontal" action="<?= Url::to(['products/create-product']) ?>" method="post" role="form">
 
+            <form id="productForm" class="form-horizontal" action="/" method="post" role="form">
 
                 <div class="modal-body">
                     <div id="product-form-error"></div>
@@ -67,9 +68,9 @@ $formatter = Yii::$app->formatter;
                                     Search engine listing preview
                                 </div>
                                 <div class="col-sm-4 text-sm-right">
-                                    <button class="btn btn-sm btn-link" data-toggle="collapse" href="#seo-block">Edit
+                                    <a class="btn btn-sm btn-link" data-toggle="collapse" href="#seo-block">Edit
                                         website SEO
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
 

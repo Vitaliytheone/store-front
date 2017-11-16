@@ -250,6 +250,14 @@
             },
             dialogsFade: true
         });
+
+        /* fix summernote submit form on Enter bug */
+        $productForm.keypress(function (e) {
+            if (e.which === 13) {
+                $productForm.submit();
+                return false;
+            }
+        });
     }
 
     /**
@@ -262,10 +270,12 @@
         $(document).on('click', '.add-properies', function (){
             checkInput();
         });
-        $addPropertyInput.on('keyup', function (e) {
-            if (e.keyCode !== 13) {
+        $addPropertyInput.keypress(function (e) {
+            if (e.which !== 13) {
                 return;
             }
+            e.stopImmediatePropagation();
+            e.preventDefault();
             checkInput();
         });
 
@@ -362,7 +372,7 @@
         // Stop cleanup url
         $formFields.url.off('input.create_product');
     }
-    
+
     /**
      * Autofilling `url` by `product name`
      */
