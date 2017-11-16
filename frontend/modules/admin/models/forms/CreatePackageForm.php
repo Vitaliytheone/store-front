@@ -65,11 +65,14 @@ class CreatePackageForm extends \common\models\store\Packages
     public function rules()
     {
         return [
-            [['product_id', 'name', 'price', 'quantity', 'provider_id', 'provider_service'], 'required'],
+            [['product_id', 'name', 'price', 'quantity',], 'required'],
             [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'id']],
+            [['provider_id', 'provider_service'], 'required', 'when' => function($model){
+                return $model->getAttribute('mode') == self::MODE_AUTO;
+            }],
         ];
     }
 
