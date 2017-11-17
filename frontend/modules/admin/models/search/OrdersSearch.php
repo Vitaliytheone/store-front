@@ -162,14 +162,14 @@ class OrdersSearch extends \yii\base\Model
     public function productFilterStat($total = true)
     {
         // Get all products
-        $productsList = (new \yii\db\Query())
+        $productsList = (new Query())
             ->select(['id','name'])
             ->from("$this->_db.products")
             ->indexBy('id')
             ->all();
 
         // Get count suborders for product
-        $subordersByProductsQuery = (new \yii\db\Query())
+        $subordersByProductsQuery = (new Query())
             ->select(['pr.id, COUNT(pr.id) cnt'])
             ->from("$this->_db.suborders so")
             ->leftJoin("$this->_db.packages pk", 'pk.id = so.package_id')
@@ -199,7 +199,7 @@ class OrdersSearch extends \yii\base\Model
             $sum = array_sum(ArrayHelper::getColumn($filterStat, 'cnt'));
             array_unshift($filterStat, [
                 'product' => -1,
-                'name' => 'All',
+                'name' => \Yii::t('admin', 'orders.filter_product_all'),
                 'cnt' => $sum,
             ]);
         }
@@ -214,7 +214,7 @@ class OrdersSearch extends \yii\base\Model
      */
     public function modeFilterStat($total = true)
     {
-        $query = (new \yii\db\Query())
+        $query = (new Query())
             ->select (['mode', 'COUNT(mode) cnt'])
             ->from ("$this->_db.suborders so")
             ->leftJoin("$this->_db.orders o", 'o.id = so.order_id')
@@ -233,7 +233,7 @@ class OrdersSearch extends \yii\base\Model
             $sum = array_sum(ArrayHelper::getColumn($modeFilterStat, 'cnt'));
             array_unshift($modeFilterStat, [
                 'mode' => -1,
-                'name' => 'All',
+                'name' =>  \Yii::t('admin', 'orders.filter_mode_all'),
                 'cnt' => $sum,
             ]);
         }
@@ -247,7 +247,7 @@ class OrdersSearch extends \yii\base\Model
      */
     public function search($params = [])
     {
-        $query = (new \yii\db\Query())
+        $query = (new Query())
             ->select([
                 'o.id', 'checkout_id', 'customer', 'created_at',
             ])
@@ -270,7 +270,7 @@ class OrdersSearch extends \yii\base\Model
 
         // Query filters
         if(isset($this->status)) {
-            $statusOrderIdsSubquery = (new \yii\db\Query())
+            $statusOrderIdsSubquery = (new Query())
                 ->select('order_id')
                 ->from("$this->_db.suborders")
                 ->where(['status' => $this->status ])
@@ -279,7 +279,7 @@ class OrdersSearch extends \yii\base\Model
             $this->_queryActiveFilters['status']['where'] = $filter;
         }
         if (isset($this->mode)) {
-            $modeOrderIdsSubquery = (new \yii\db\Query())
+            $modeOrderIdsSubquery = (new Query())
                 ->select("order_id")
                 ->from("$this->_db.suborders")
                 ->where(['mode' => $this->mode ])
@@ -288,7 +288,7 @@ class OrdersSearch extends \yii\base\Model
             $this->_queryActiveFilters['mode']['where'] = $filter;
         }
         if (isset($this->product)) {
-            $productOrderIdsSubquery = (new \yii\db\Query())
+            $productOrderIdsSubquery = (new Query())
                 ->select("so.order_id")
                 ->from("$this->_db.suborders so")
                 ->leftJoin("$this->_db.packages pk", 'pk.id = so.package_id')
@@ -433,7 +433,7 @@ class OrdersSearch extends \yii\base\Model
         $buttons[] = [
             'id' => 'all_orders',
             'filter' => '',
-            'caption' => 'All orders',
+            'caption' => \Yii::t('admin', 'orders.filter_all'),
             'url' => Url::to('/admin/orders'),
             'stat' => false,
         ];

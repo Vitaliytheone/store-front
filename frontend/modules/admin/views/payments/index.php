@@ -1,3 +1,9 @@
+<?php
+
+$this->title = \Yii::t('admin', 'payments.page_title');
+?>
+
+
 <div class="row">
 
     <div class="col">
@@ -5,17 +11,29 @@
         <div class="row sommerce-block">
             <div class="col-lg-10 col-sm-12">
                 <nav class="nav nav-tabs sommerce-tabs__nav" role="tablist">
-                    <a class="nav-item nav-link active" id="all-orders-tab" data-toggle="tab" href="#all-orders" role="tab" aria-controls="nav-home" aria-expanded="true">All orders</a>
-                    <a class="nav-item nav-link" id="awating-tab" data-toggle="tab" href="#awating" role="tab" aria-controls="nav-profile">Awating <span class="m-badge m-badge--metal">2</span></a>
-                    <a class="nav-item nav-link" id="completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="nav-profile">Completed</a>
-                    <a class="nav-item nav-link" id="failed-tab" data-toggle="tab" href="#failed" role="tab" aria-controls="nav-failed">Failed  <span class="m-badge m-badge--danger">2</span></a>
-                    <a class="nav-item nav-link" id="refunded-tab" data-toggle="tab" href="#refunded" role="tab" aria-controls="nav-refunded">Refunded</a>
+                    <a class="nav-item nav-link active" id="all-orders-tab" data-toggle="tab" href="#all-orders" role="tab" aria-controls="nav-home" aria-expanded="true">
+                        <?= \Yii::t('admin', 'payments.filter_all') ?>
+                    </a>
+                    <a class="nav-item nav-link" id="awating-tab" data-toggle="tab" href="#awating" role="tab" aria-controls="nav-profile">
+                        <?= \Yii::t('admin', 'payments.filter_status_awaiting') ?>
+                        <span class="m-badge m-badge--metal">2</span>
+                    </a>
+                    <a class="nav-item nav-link" id="completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="nav-profile">
+                        <?= \Yii::t('admin', 'payments.filter_status_completed') ?>
+                    </a>
+                    <a class="nav-item nav-link" id="failed-tab" data-toggle="tab" href="#failed" role="tab" aria-controls="nav-failed">
+                        <?= \Yii::t('admin', 'payments.filter_status_failed') ?>
+                        <span class="m-badge m-badge--danger">2</span>
+                    </a>
+                    <a class="nav-item nav-link" id="refunded-tab" data-toggle="tab" href="#refunded" role="tab" aria-controls="nav-refunded">
+                        <?= \Yii::t('admin', 'payments.filter_status_refunded') ?>
+                    </a>
                 </nav>
 
             </div>
             <div class="col-lg-2 col-sm-12">
                 <div class="input-group m-input-group--air">
-                    <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
+                    <input type="text" class="form-control" placeholder="<?= \Yii::t('admin', 'payments.search_placeholder') ?>" aria-label="<?= \Yii::t('admin', 'payments.search_placeholder') ?>">
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
                       </span>
@@ -49,25 +67,26 @@
                                                     <ul class="m-nav">
                                                         <li class="m-nav__item">
                                                             <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							All (2)
-																						</span>
+                                                                <span class="m-nav__link-text">
+                                                                    <?= \Yii::t('admin', 'payments.filter_method_all') ?>
+                                                                    (2)
+                                                                </span>
                                                             </a>
                                                         </li>
                                                         <li class="m-nav__item">
                                                             <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							PayPal (1)
-																						</span>
-                                                            </a>
-                                                        </li>                                                            <li class="m-nav__item">
+                                                                <span class="m-nav__link-text">
+                                                                    PayPal (1)
+                                                                </span>
+                                                           </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
                                                             <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							2Checkout (1)
-																						</span>
+                                                                <span class="m-nav__link-text">
+                                                                    2Checkout (1)
+                                                                </span>
                                                             </a>
                                                         </li>
-
                                                     </ul>
                                                 </div>
                                             </div>
@@ -98,7 +117,8 @@
                             <td class="text-right">
                                 <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-right" data-dropdown-toggle="click" aria-expanded="true">
                                     <a href="#" class="m-dropdown__toggle btn btn-primary btn-sm">
-                                        Actions <span class="fa fa-cog"></span>
+                                        <?= \Yii::t('admin', 'payments.action_title') ?>
+                                        <span class="fa fa-cog"></span>
                                     </a>
                                     <div class="m-dropdown__wrapper">
                                         <span class="m-dropdown__arrow m-dropdown__arrow--right"></span>
@@ -108,9 +128,9 @@
                                                     <ul class="m-nav">
                                                         <li class="m-nav__item">
                                                             <a href="#" data-toggle="modal" data-target=".payments_detail" data-backdrop="static" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							Details
-																						</span>
+                                                                <span class="m-nav__link-text">
+                                                                    <?= \Yii::t('admin', 'payments.action_details') ?>
+                                                                </span>
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -202,25 +222,25 @@
                                                     <ul class="m-nav">
                                                         <li class="m-nav__item">
                                                             <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							All (2)
-																						</span>
+                                                                <span class="m-nav__link-text">
+                                                                    <?= \Yii::t('admin', 'payments.filter_method_all') ?> (2)
+                                                                </span>
                                                             </a>
                                                         </li>
                                                         <li class="m-nav__item">
                                                             <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							PayPal (1)
-																						</span>
-                                                            </a>
-                                                        </li>                                                            <li class="m-nav__item">
-                                                            <a href="#" class="m-nav__link">
-                                                                    <span class="m-nav__link-text">
-																							2Checkout (1)
-																						</span>
+                                                                <span class="m-nav__link-text">
+                                                                        PayPal (1)
+                                                                </span>
                                                             </a>
                                                         </li>
-
+                                                        <li class="m-nav__item">
+                                                            <a href="#" class="m-nav__link">
+                                                                <span class="m-nav__link-text">
+                                                                    2Checkout (1)
+                                                                </span>
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -263,7 +283,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Payment 1 details</h5>
+                <h5 class="modal-title">
+                    Payment 1 details
+                    <?= \Yii::t('admin', 'payments.window_details_title') ?>
+
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

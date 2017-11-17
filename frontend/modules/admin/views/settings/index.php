@@ -1,5 +1,7 @@
 <?php
     /* @var $this \yii\web\View */
+
+$this->title = \Yii::t('admin', 'payments.page_title');
 ?>
 <!-- begin::Body -->
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
@@ -11,7 +13,7 @@
         <div id="m_aside_left" class="m-grid__item m-aside-left ">
             <?= $this->render('layouts/_left_menu', [
                 'active' => 'general'
-            ])?>
+            ]) ?>
         </div>
         <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
@@ -20,7 +22,7 @@
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title">
-                            General
+                            <?= \Yii::t('admin', 'settings.section_general_title') ?>
                         </h3>
                     </div>
                 </div>
@@ -33,12 +35,18 @@
                     <div class="row">
                         <div class="col-lg-7 order-2 order-lg-1">
                             <div class="form-group">
-                                <div>Logo</div>
+                                <div>
+                                    <?= \Yii::t('admin', 'settings.section_general_logo_title') ?>
+                                </div>
                                 <label for="setting-logo">
-                                    <a class="btn btn-primary btn-sm m-btn--air btn-file__white">Upload logo</a>
+                                    <a class="btn btn-primary btn-sm m-btn--air btn-file__white">
+                                        <?= \Yii::t('admin', 'settings.section_general_logo_button_upload_title') ?>
+                                    </a>
                                     <input id="setting-logo" type="file" class="settings-file">
                                 </label>
-                                <small class="form-text text-muted">Image available types: jpg, png or gif. Maximum image size 3 Mb.</small>
+                                <small class="form-text text-muted">
+                                    <?= \Yii::t('admin', 'settings.section_general_logo_text_limits') ?>
+                                </small>
                             </div>
                         </div>
                         <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2">
@@ -50,12 +58,18 @@
 
                         <div class="col-lg-7 order-4 order-lg-4">
                             <div class="form-group">
-                                <div>Faivcon</div>
+                                <div>
+                                    <?= \Yii::t('admin', 'settings.section_general_favicon_title') ?>
+                                </div>
                                 <label for="setting-favicon">
-                                    <a class="btn btn-primary btn-sm m-btn--air btn-file__white">Upload favicon</a>
+                                    <a class="btn btn-primary btn-sm m-btn--air btn-file__white">
+                                        <?= \Yii::t('admin', 'settings.section_general_favicon_button_upload_title') ?>
+                                    </a>
                                     <input id="setting-favicon" type="file" class="settings-file">
                                 </label>
-                                <small class="form-text text-muted">Image available types: jpg, png, gif or ico. Maximum image size 0.5 Mb</small>
+                                <small class="form-text text-muted">
+                                    <?= \Yii::t('admin', 'settings.section_general_favicon_text_limits') ?>
+                                </small>
                             </div>
                         </div>
                         <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4">
@@ -67,12 +81,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="settingsgeneralform-name">Store name</label>
-                        <input type="text" id="settingsgeneralform-name" class="form-control" name="SettingsGeneralForm[name]" value="FastInstaFollowers" autofocus="" aria-required="true">
+                        <label class="control-label" for="settingsgeneralform-name">
+                            <?= \Yii::t('admin', 'settings.section_general_store_name_title') ?>
+                        </label>
+                        <input type="text" id="settingsgeneralform-name" class="form-control" name="SettingsGeneralForm[name]" value="FastInstaFollowers" autofocus="" aria-required="true"
+                               placeholder="<?= \Yii::t('admin', 'settings.section_general_store_input_placeholder') ?>">
 
                     </div>
                     <div class="form-group field-settingsgeneralform-timezone required">
-                        <label class="control-label" for="settingsgeneralform-timezone">Timezone</label>
+                        <label class="control-label" for="settingsgeneralform-timezone">
+                            <?= \Yii::t('admin', 'settings.section_general_timezone_title') ?>
+                        </label>
                         <select id="settingsgeneralform-timezone" class="form-control" name="SettingsGeneralForm[timezone]" aria-required="true">
                             <option value="-12:00">(UTC -12:00) Baker/Howland Island</option>
                             <option value="-11:00">(UTC -11:00) Niue</option>
@@ -123,31 +142,46 @@
 
                             <div class="row seo-header align-items-center">
                                 <div class="col-sm-8">
-                                    Search engine listing preview
+                                    <?= \Yii::t('admin', 'settings.section_general_seo_title') ?>
                                 </div>
                                 <div class="col-sm-4 text-sm-right">
-                                    <button class="btn btn-sm btn-link" data-toggle="collapse" href="#seo-block">Edit website SEO</button>
+                                    <button class="btn btn-sm btn-link" data-toggle="collapse" href="#seo-block">
+                                        <?= \Yii::t('admin', 'settings.section_general_seo_button_edit_title') ?>
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="seo-preview">
-                                <div class="seo-preview__title edit-seo__title">Title index</div>
+                                <div class="seo-preview__title edit-seo__title">
+                                    <?= \Yii::t('admin', 'settings.section_general_seo_index_title') ?>
+                                </div>
                                 <div class="seo-preview__url">http://fastinsta.sommerce.net</div>
                                 <div class="seo-preview__description edit-seo__meta">
-                                    A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people wil...
+                                    <?= \Yii::t('admin', 'settings.section_general_seo_meta_title_text_default') ?>
                                 </div>
                             </div>
 
                             <div class="collapse" id="seo-block">
                                 <div class="form-group">
-                                    <label for="edit-seo__title">Title index</label>
-                                    <input class="form-control" id="edit-seo__title" value="About Us">
-                                    <small class="form-text text-muted"><span class="edit-seo__title-muted"></span> of 70 characters used</small>
+                                    <label for="edit-seo__title">
+                                        <?= \Yii::t('admin', 'settings.section_general_seo_index_title') ?>
+                                    </label>
+                                    <input class="form-control" id="edit-seo__title"
+                                           value="<?= \Yii::t('admin', 'settings.section_general_seo_index_title_input_default') ?>">
+                                    <small class="form-text text-muted"><span class="edit-seo__title-muted"></span>
+                                        <?= \Yii::t('admin', 'settings.section_general_seo_index_title_input_limits') ?>
+                                         </small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit-seo__meta">Meta description</label>
-                                    <textarea class="form-control" id="edit-seo__meta" rows="3">A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text</textarea>
-                                    <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span> of 160 characters used</small>
+                                    <label for="edit-seo__meta">
+                                        <?= \Yii::t('admin', 'settings.section_general_seo_meta_title') ?>
+                                    </label>
+                                    <textarea class="form-control" id="edit-seo__meta" rows="3">
+                                        <?= \Yii::t('admin', 'settings.section_general_seo_meta_title_text_default') ?>
+                                    </textarea>
+                                    <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span>
+                                        <?= \Yii::t('admin', 'settings.section_general_seo_meta_title_input_limits') ?>
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +193,9 @@
 
                 <hr>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success m-btn--air" name="save-button">Save changes</button>
+                    <button type="submit" class="btn btn-success m-btn--air" name="save-button">
+                        <?= \Yii::t('admin', 'settings.button_save_title') ?>
+                    </button>
                 </div>
             </div>
         </div>

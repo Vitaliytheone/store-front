@@ -59,6 +59,18 @@ $config = [
         'store' => [
             'class' => 'common\components\stores\StoreComponent'
         ],
+        'i18n' => [
+            'translations' => [
+                'admin*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => dirname(__DIR__) . '/../messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap' => [
+                        'admin' => 'admin.php',
+                    ],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
     'modules' => [

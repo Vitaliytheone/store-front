@@ -149,7 +149,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
         <?php if($isActionButtonShow($suborder)): ?>
         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-right" data-dropdown-toggle="click" aria-expanded="true">
             <a href="#" class="m-dropdown__toggle btn btn-primary btn-sm">
-                Actions <span class="fa fa-cog"></span>
+                <?= \Yii::t('admin', 'orders.action_title') ?> <span class="fa fa-cog"></span>
             </a>
             <div class="m-dropdown__wrapper">
                 <span class="m-dropdown__arrow m-dropdown__arrow--right"></span>
@@ -161,7 +161,9 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <?php if($isDetailsMenuShow($suborder['status'], $suborder['mode'])): ?>
                                 <li class="m-nav__item">
                                     <a href="#" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link">
-                                        <span class="m-nav__link-text">Details</span>
+                                        <span class="m-nav__link-text">
+                                            <?= \Yii::t('admin', 'orders.action_details') ?>
+                                        </span>
                                     </a>
                                 </li>
                                 <?php endif; ?>
@@ -169,7 +171,9 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <?php if($isResendOrderMenuShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
                                     <a href="<?= Url::to(['/admin/orders/resend', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
-                                        <span class="m-nav__link-text">Resend order</span>
+                                        <span class="m-nav__link-text">
+                                            <?= \Yii::t('admin', 'orders.action_resend') ?>
+                                        </span>
                                     </a>
                                 </li>
                                 <?php endif; ?>
@@ -178,7 +182,9 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <?php if($isStatusMenuShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
                                     <a class="m-nav__link dropdown-collapse dropdown-toggle" data-toggle="collapse" href="#action-<?= $suborder['suborder_id'] ?>">
-                                        <span class="m-nav__link-text">Change status</span>
+                                        <span class="m-nav__link-text">
+                                            <?= \Yii::t('admin', 'orders.action_change_status') ?>
+                                        </span>
                                     </a>
                                     <div class="collapse sommerce-dropdwon__actions_collapse" id="action-<?= $suborder['suborder_id'] ?>">
                                         <ul>
@@ -194,7 +200,9 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <?php if ($isCancelShow($suborder['status'])): ?>
                                 <li class="m-nav__item">
                                     <a href="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
-                                        <span class="m-nav__link-text">Cancel</span>
+                                        <span class="m-nav__link-text">
+                                            <?= \Yii::t('admin', 'orders.action_cancel') ?>
+                                        </span>
                                     </a>
                                 </li>
                                 <?php endif; ?>

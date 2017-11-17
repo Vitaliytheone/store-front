@@ -33,7 +33,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                        data-id="<?= $product['id'] ?>"
                        data-get-url="<?= Url::to(['products/get-product', 'id' => $product['id']]) ?>"
                        data-action-url="<?= Url::to(['products/update-product', 'id' => $product['id']]) ?>">
-                        Edit
+                        <?= \Yii::t('admin', 'products.button_edit_product_title') ?>
                     </a>
                 </div>
             </div>
@@ -53,7 +53,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                     data-backdrop="static"
                     data-product_id="<?= $product['id'] ?>"
                     data-action-url="<?= Url::to(['products/create-package']) ?>">
-                Add package
+                <?= \Yii::t('admin', 'products.button_add_package_title') ?>
             </button>
         </div>
         <!--/ Button Add Package -->

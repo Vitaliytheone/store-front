@@ -42,10 +42,10 @@ $formatter = Yii::$app->formatter;
                 data-id="<?= $package['id'] ?>"
                 data-get-url="<?= Url::to(['products/get-package', 'id' => $package['id']]) ?>"
                 data-action-url="<?= Url::to(['products/update-package', 'id' => $package['id']]) ?>">
-            Edit
+            <?= \Yii::t('admin', 'products.button_edit_package_title') ?>
         </button>
         <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-           title="Delete"
+           title="<?= \Yii::t('admin', 'products.button_delete_package_title') ?>"
            data-toggle="modal"
            data-target="#delete-modal"
            data-backdrop="static"
