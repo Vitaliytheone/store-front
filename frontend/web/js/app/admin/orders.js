@@ -7,15 +7,18 @@ customModule.ordersDetails = {
         $(document).ready(function () {
             var ajaxEndpoint = '/admin/orders/get-order-details';
             var $detailsModal = $('#suborder-details-modal'),
-                $modatTitle = $detailsModal.find('.modal-title'),
+                $modalTitle = $detailsModal.find('.modal-title'),
                 $provider = $detailsModal.find('#order-detail-provider'),
                 $providerOrderId = $detailsModal.find('#order-detail-provider-order-id'),
-                $providerResponce = $detailsModal.find('#order-detail-provider-response'),
+                $providerResponse = $detailsModal.find('#order-detail-provider-response'),
                 $providerUpdate = $detailsModal.find('#order-detail-lastupdate'),
                 $modalLoader = $detailsModal.find('.modal-loader');
 
             $detailsModal.on('show.bs.modal', function(e) {
-                var suborderId = $(e.relatedTarget).data('suborder-id');
+                var $target = $(e.relatedTarget),
+                    suborderId = $target.data('suborder-id'),
+                    modalTitle = $target.data('modal_title');
+
                 if (suborderId === undefined || isNaN(suborderId)) {
                     return;
                 }
@@ -41,10 +44,10 @@ customModule.ordersDetails = {
                 });
 
                 function renderLogs(details){
-                    $modatTitle.html('Order ' + suborderId + ' details');
+                    $modalTitle.html(modalTitle);
                     $provider.val(details.provider);
                     $providerOrderId.val(details.provider_order_id);
-                    $providerResponce.html(details.provider_response);
+                    $providerResponse.html(details.provider_response);
                     $providerUpdate.val(details.updated_at);
                 }
             });
@@ -52,7 +55,7 @@ customModule.ordersDetails = {
             $detailsModal.on('hidden.bs.modal',function(e) {
                 var $currentTarget = $(e.currentTarget);
                 $currentTarget.find('input').val('');
-                $providerResponce.html('');
+                $providerResponse.html('');
             });
         });
     }

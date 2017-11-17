@@ -456,9 +456,10 @@
         currentActionUrl = button.data('action-url');
         successRedirectUrl = $productForm.data('success_redirect');
 
-        // Define UI elements captions depends on mode save|update
-        var modalTitle = currentProductId ? 'Update product' : 'Add product',
-            submitTitle = currentProductId ? 'Save product' : 'Add product';
+        // Define UI elements captions depends on mode create|edit
+        var $dataTitle = $modal.find('.modal-header'),
+            modalTitle = currentProductId ? $dataTitle.data('title_edit') : $dataTitle.data('title_create'),
+            submitTitle = currentProductId ? $submitProductForm.data('title_save') : $submitProductForm.data('title_create');
 
         $modalTitle.html(modalTitle);
         $submitProductForm.html(submitTitle);
@@ -495,7 +496,8 @@
         packageModel,
         currentPackageId,
         currentActionUrl,
-        successRedirectUrl;
+        successRedirectUrl,
+        ajaxTimeoutMessage;
     ;
 
     var $formFields = {
@@ -576,7 +578,9 @@
         // Change `provider_id` => fetch provider`s services
         $formFields.provider_id.on('change', function(e, selectedServiceId){
             var $optionSelected = $("option:selected", this),
-                actionUrl = $optionSelected.data('action-url');
+                actionUrl = $optionSelected.data('action-url'),
+                ajaxTimeoutMessage = $formFields.provider_service.data('ajax_timeout_message');
+
             clearProviderServisesList();
             if (actionUrl === undefined) {
                 hideApiError();
@@ -598,7 +602,7 @@
                     var errorMessage = '';
                     // Timeout error
                     if (textStatus === "timeout") {
-                        errorMessage = window.getUiText('ajax_timeout_offset');
+                        errorMessage = ajaxTimeoutMessage;
                     }  else {
                         errorMessage = jqXHR.responseJSON.message;
                     }
@@ -789,8 +793,13 @@
         successRedirectUrl = $packageForm.data('success_redirect');
 
         // Define UI elements captions depends on mode save|update
-        var modalTitle = currentPackageId ? 'Edit package' : 'Add package',
-            submitTitle = currentPackageId ? 'Save package' : 'Add package';
+        // var modalTitle = currentPackageId ? 'Edit package' : 'Add package',
+        //     submitTitle = currentPackageId ? 'Save package' : 'Add package';
+
+        var $dataTitle = $modal.find('.modal-header'),
+            modalTitle = currentPackageId ? $dataTitle.data('title_edit') : $dataTitle.data('title_create'),
+            submitTitle = currentPackageId ? $submitPackageForm.data('title_save') : $submitPackageForm.data('title_create');
+
 
         $modalTitle.html(modalTitle);
         $submitPackageForm.html(submitTitle);

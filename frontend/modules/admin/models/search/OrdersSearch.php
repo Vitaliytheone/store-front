@@ -433,7 +433,7 @@ class OrdersSearch extends \yii\base\Model
         $buttons[] = [
             'id' => 'all_orders',
             'filter' => '',
-            'caption' => \Yii::t('admin', 'orders.filter_all'),
+            'caption' => 'All orders',
             'url' => Url::to('/admin/orders'),
             'stat' => false,
         ];

@@ -160,7 +160,14 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
 
                                 <?php if($isDetailsMenuShow($suborder['status'], $suborder['mode'])): ?>
                                 <li class="m-nav__item">
-                                    <a href="#" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link">
+                                    <a href="#"
+                                       data-toggle="modal"
+                                       data-target=".order-detail"
+                                       data-backdrop="static"
+                                       class="m-nav__link"
+                                       data-suborder-id="<?= $suborder['suborder_id'] ?>"
+                                       data-modal_title="<?= \Yii::t('admin', 'orders.window_details_title', ['suborder_id' => $suborder['suborder_id']]) ?>"
+                                    >
                                         <span class="m-nav__link-text">
                                             <?= \Yii::t('admin', 'orders.action_details') ?>
                                         </span>

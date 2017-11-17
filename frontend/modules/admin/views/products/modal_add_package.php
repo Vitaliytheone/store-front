@@ -18,7 +18,10 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-loader hidden"></div>
-            <div class="modal-header">
+            <div class="modal-header"
+                 data-title_create="<?= \Yii::t('admin', 'products.window_package_title_create') ?>"
+                 data-title_edit="<?= \Yii::t('admin', 'products.window_package_title_edit') ?>"
+            >
                 <h5 class="modal-title">Add package</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -129,7 +132,9 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                         <label for="package-provider_service">
                             <?= \Yii::t('admin', 'products.window_package_p_service') ?>
                         </label>
-                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]">
+                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]"
+                                data-ajax_timeout_message="<?= \Yii::t('admin', 'products.window_package_ajax_timeout_message') ?>"
+                        >
                             <option value="" selected>
                                 <?= \Yii::t('admin', 'products.window_package_p_service_option_default') ?>
                             </option>
@@ -138,7 +143,12 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                     <span class="api-error m--font-danger d-none"></span>
                 </div>
                 <div class="modal-footer justify-content-start">
-                    <button type="submit" id="submitPackageForm" class="btn btn-primary">Add package</button>
+                    <button type="submit" id="submitPackageForm" class="btn btn-primary"
+                            data-title_create="<?= \Yii::t('admin', 'products.window_package_button_save_title_create') ?>"
+                            data-title_save="<?= \Yii::t('admin', 'products.window_package_button_save_title_save') ?>"
+                    >
+                        Add package
+                    </button>
                     <button type="button" id="cancelPackageForm" class="btn btn-secondary" data-dismiss="modal">
                         <?= \Yii::t('admin', 'products.window_package_button_cancel_title') ?>
                     </button>

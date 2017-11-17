@@ -17,8 +17,13 @@ $formatter = Yii::$app->formatter;
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-loader hidden"></div>
-            <div class="modal-header">
-                <h5 class="modal-title">Add product</h5>
+            <div class="modal-header"
+                 data-title_create="<?= \Yii::t('admin', 'products.window_product_title_create') ?>"
+                 data-title_edit="<?= \Yii::t('admin', 'products.window_product_title_edit') ?>"
+            >
+                <h5 class="modal-title">
+                    Add product
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -135,7 +140,13 @@ $formatter = Yii::$app->formatter;
                 </div>
 
                 <div class="modal-footer justify-content-start">
-                    <button type="submit" id="submitProductForm" class="btn btn-primary">Add product</button>
+                    <button type="submit" id="submitProductForm" class="btn btn-primary"
+                            data-title_create="<?= \Yii::t('admin', 'products.window_product_button_save_title_create') ?>"
+                            data-title_save="<?= \Yii::t('admin', 'products.window_product_button_save_title_save') ?>"
+                    >
+                        Add product
+                    </button>
+
                     <button type="button" id="cancelProductForm" class="btn btn-secondary" data-dismiss="modal">
                         <?= \Yii::t('admin', 'products.window_product_button_cancel_title') ?>
                     </button>

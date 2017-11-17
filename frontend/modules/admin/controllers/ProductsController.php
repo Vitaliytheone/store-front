@@ -90,7 +90,10 @@ class ProductsController extends CustomController
         if (!$productModel->save()) {
             throw new NotAcceptableHttpException();
         }
-        Yii::$app->session->addFlash('messages', ['success' => 'Product was successfully created!']);
+        Yii::$app->session->addFlash('messages', [
+            'success' => \Yii::t('admin', 'products.message_product_created')
+
+        ]);
         return [
             'product' => $productModel,
         ];
@@ -152,7 +155,9 @@ class ProductsController extends CustomController
         if (!$productModel->save(false)) {
             throw new NotAcceptableHttpException();
         }
-        Yii::$app->session->addFlash('messages', ['success' => 'Product was successfully updated!']);
+        Yii::$app->session->addFlash('messages', [
+            'success' => \Yii::t('admin', 'products.message_product_updated')
+        ]);
         return [
             'product' => $productModel,
         ];
@@ -212,7 +217,9 @@ class ProductsController extends CustomController
         if (!$packageModel->save()) {
             throw new NotAcceptableHttpException();
         }
-        Yii::$app->session->addFlash('messages', ['success' => 'Package was successfully created!']);
+        Yii::$app->session->addFlash('messages', [
+            'success' => \Yii::t('admin', 'products.message_package_created')
+        ]);
         return [
             'package' => $packageModel,
         ];
@@ -273,7 +280,9 @@ class ProductsController extends CustomController
         if (!$packageModel->save(false)) {
             throw new NotAcceptableHttpException();
         }
-        Yii::$app->session->addFlash('messages', ['success' => 'Package was successfully updated!']);
+        Yii::$app->session->addFlash('messages', [
+            'success' => \Yii::t('admin', 'products.message_package_updated')
+        ]);
         return [
             'package' => $packageModel,
         ];
@@ -342,7 +351,9 @@ class ProductsController extends CustomController
         if (!$packageModel->deleteVirtual()) {
             throw new NotAcceptableHttpException();
         };
-        Yii::$app->session->addFlash('messages', ['success' => 'Package was successfully deleted!']);
+        Yii::$app->session->addFlash('messages', [
+            'success' => \Yii::t('admin', 'products.message_package_deleted')
+        ]);
         return [
             'package' => $packageModel,
         ];
