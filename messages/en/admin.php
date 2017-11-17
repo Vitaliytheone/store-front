@@ -105,7 +105,6 @@ return [
     'products.message_package_created' => 'Package was successfully created!',
     'products.message_package_updated' => 'Package was successfully updated!',
     'products.message_package_deleted' => 'Package was successfully deleted!',
-
     'products.window_package_ajax_timeout_message' => 'Loading error, try again later',
 
     'settings.page_title' => 'Settings',

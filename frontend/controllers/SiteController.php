@@ -2,6 +2,10 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
+use yii\web\NotAcceptableHttpException;
+use frontend\models\forms\ProductViewForm;
 
 /**
  * Site controller
@@ -32,12 +36,22 @@ class SiteController extends CustomController
 
     /**
      * Displays product page.
-     *
+     * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
-    public function actionProduct()
+    public function actionProduct($id)
     {
-        return $this->render('product');
+        $product = ProductViewForm::findOne([
+            'id' => $id,
+            'visibility' => ProductViewForm::VISIBILITY_YES,
+        ]);
+        if (!$product) {
+            throw new NotFoundHttpException();
+        }
+        return $this->render('product', [
+            'product' => $product,
+        ]);
     }
 
     /**

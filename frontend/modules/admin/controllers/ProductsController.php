@@ -92,7 +92,6 @@ class ProductsController extends CustomController
         }
         Yii::$app->session->addFlash('messages', [
             'success' => \Yii::t('admin', 'products.message_product_created')
-
         ]);
         return [
             'product' => $productModel,

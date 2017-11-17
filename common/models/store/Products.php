@@ -21,6 +21,9 @@ use Yii;
  */
 class Products extends \yii\db\ActiveRecord
 {
+    const VISIBILITY_YES = 1;
+    const VISIBILITY_NO = 0;
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
