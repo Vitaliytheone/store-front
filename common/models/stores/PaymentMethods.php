@@ -17,6 +17,11 @@ use Yii;
  */
 class PaymentMethods extends \yii\db\ActiveRecord
 {
+    /* Payment methods names */
+    const METHOD_PAYPAL = 'paypal';
+    const METHOD_2CHECKOUT = '2checkout';
+    const METHOD_BITCOIN = 'bitcoin';
+
     /**
      * @inheritdoc
      */

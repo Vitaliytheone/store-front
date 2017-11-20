@@ -1,5 +1,17 @@
 <?php
-    /* @var $this \yii\web\View */
+
+use yii\helpers\Url;
+use common\models\stores\PaymentMethods;
+
+/* @var $this \yii\web\View */
+/* @var $method string Current `settings payments` method */
+/* @var $submitUrl string */
+/* @var $cancelUrl string */
+/* @var $paymentModel \frontend\modules\admin\models\forms\EditPaymentMethodForm */
+/* @var $paymentMethods[] \frontend\modules\admin\models\forms\EditPaymentMethodForm */
+
+
+
 ?>
 <!-- begin::Body -->
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
@@ -15,10 +27,43 @@
         </div>
         <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <?= $this->render('layouts/payments/_methods_list', []); ?>
-            <?= $this->render('layouts/payments/_edit_2checkout', []); ?>
-            <?= $this->render('layouts/payments/_edit_bitcoin', []); ?>
-            <?= $this->render('layouts/payments/_edit_paypal', []); ?>
+            <?php
+                /* Render methods list */
+                if (!isset($method)) {
+                    echo $this->render('layouts/payments/_methods_list', [
+                        'paymentMethods' => $paymentMethods,
+                    ]);
+                    return;
+                }
+
+                /* Render method settings */
+                $submitUrl = Url::to(['settings/payments-settings', 'method' => $method]);
+                $cancelUrl = Url::to(['settings/payments']);
+
+                switch ($method) {
+                    case PaymentMethods::METHOD_PAYPAL:
+                        echo $this->render('layouts/payments/_edit_paypal', [
+                            'paymentModel' => $paymentModel,
+                            'submitUrl' => $submitUrl,
+                            'cancelUrl' => $cancelUrl,
+                        ]);
+                        break;
+                    case PaymentMethods::METHOD_2CHECKOUT:
+                        echo $this->render('layouts/payments/_edit_2checkout', [
+                            'paymentModel' => $paymentModel,
+                            'submitUrl' => $submitUrl,
+                            'cancelUrl' => $cancelUrl,
+                        ]);
+                        break;
+                    case PaymentMethods::METHOD_BITCOIN:
+                        echo $this->render('layouts/payments/_edit_bitcoin', [
+                            'paymentModel' => $paymentModel,
+                            'submitUrl' => $submitUrl,
+                            'cancelUrl' => $cancelUrl,
+                        ]);
+                        break;
+                }
+            ?>
         </div>
     </div>
 </div>

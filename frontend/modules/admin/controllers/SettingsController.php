@@ -6,9 +6,14 @@ use common\components\ActiveForm;
 use frontend\modules\admin\models\forms\CreateProviderForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\search\ProvidersSearch;
+use frontend\modules\admin\models\forms\EditPaymentMethodForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
+use yii\helpers\Url;
+
 
 /**
  * Settings controller for the `admin` module
@@ -32,6 +37,16 @@ class SettingsController extends CustomController
                 ],
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeAction($action)
+    {
+        // Add custom JS modules
+        $this->addModule('settingsPayments');
+        return parent::beforeAction($action);
     }
 
     /**
@@ -68,12 +83,92 @@ class SettingsController extends CustomController
     }
 
     /**
-     * Settings payments
+     * Settings payments. Payment methods list
      * @return string
      */
     public function actionPayments()
     {
-        return $this->render('payments');
+        $paymentMethods = EditPaymentMethodForm::findAll([
+            'store_id' => yii::$app->store->getId(),
+        ]);
+
+        return $this->render('payments', [
+            'paymentMethods' => $paymentMethods,
+        ]);
+    }
+
+    /**
+     * Settings payments. Payment method settings
+     * @param $method
+     * @return string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionPaymentsSettings($method)
+    {
+        $request = yii::$app->getRequest();
+        $storeId = yii::$app->store->getId();
+
+        $paymentModel = EditPaymentMethodForm::findOne([
+            'store_id' => $storeId,
+            'method' => $method,
+        ]);
+
+        if (!$paymentModel) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($paymentModel->load($request->post()) && $paymentModel->validate()) {
+            $paymentModel->save(false);
+            Yii::$app->session->addFlash('messages', [
+                'success' => Yii::t('admin', 'settings.section_payments_message_settings_saved')
+            ]);
+            return $this->redirect(Url::to(['settings/payments']));
+        }
+
+        return $this->render('payments', [
+            'method' => $method,
+            'paymentModel' => $paymentModel,
+        ]);
+    }
+
+    /**
+     * Settings payments. Toggle payment method active AJAX action.
+     * @param $method
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionPaymentsToggleActive($method)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+        $storeId = yii::$app->store->getId();
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $active = $request->post('active', null);
+        if (is_null($active)) {
+            throw new BadRequestHttpException();
+        }
+
+        $paymentModel = EditPaymentMethodForm::findOne([
+            'store_id' => $storeId,
+            'method' => $method,
+        ]);
+
+        if (!$paymentModel) {
+            throw new NotFoundHttpException();
+        }
+
+        $paymentModel->setAttribute('active', $active|0);
+        $paymentModel->save();
+
+        return [
+            'method' => $paymentModel,
+        ];
     }
 
     /**

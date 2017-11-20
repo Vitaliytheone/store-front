@@ -1,6 +1,42 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use frontend\modules\admin\components\Url;
+use common\models\stores\PaymentMethods;
+use frontend\helpers\Ui;
+
+
+/* @var $paymentMethods[] \frontend\modules\admin\models\forms\EditPaymentMethodForm */
+
+$imgPath = '/img/';
+
+$methodItemsData = [
+    PaymentMethods::METHOD_PAYPAL => [
+        'icon' => $imgPath . 'paypal.png',
+        'title' => Yii::t('admin', 'settings.section_payments_method_list_paypal_title'),
+        'edit_button_title' => Yii::t('admin', 'settings.section_payments_method_list_button_edit_title'),
+    ],
+    PaymentMethods::METHOD_2CHECKOUT => [
+        'icon' => $imgPath . '2checkout.png',
+        'title' => Yii::t('admin', 'settings.section_payments_method_list_2checkout_title'),
+        'edit_button_title' => Yii::t('admin', 'settings.section_payments_method_list_button_edit_title'),
+    ],
+    PaymentMethods::METHOD_BITCOIN => [
+        'icon' => $imgPath . 'bitcoin.png',
+        'title' => Yii::t('admin', 'settings.section_payments_method_list_bitcoin_title'),
+        'edit_button_title' => Yii::t('admin', 'settings.section_payments_method_list_button_edit_title'),
+    ],
+];
+
+/**
+ * Return additional data like `icon`, `caption` for `payment method`
+ * @param $method
+ * @param $field
+ * @return string
+ */
+$getMethodData = function($method, $field) use ($methodItemsData) {
+    return ArrayHelper::getValue($methodItemsData, "$method.$field", $field);
+};
 
 ?>
 
@@ -9,7 +45,7 @@ use frontend\modules\admin\components\Url;
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title">
-                Payments
+                <?= Yii::t('admin', 'settings.section_payments_method_list_title') ?>
             </h3>
         </div>
     </div>
@@ -17,108 +53,48 @@ use frontend\modules\admin\components\Url;
 <!-- END: Subheader -->
 <div class="m-content">
 
-    <div class="sommerce-settings__payment-cart m-portlet">
-        <div class="row align-items-center">
-            <div class="col-2">
-                <div class="payment-cart__preview">
-                    <img src="/img/paypal.png" alt="" class="img-fluid">
-                </div>
-            </div>
-            <div class="col-10">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="payment-cart__title">
-                            PayPal
-                        </div>
+    <?php foreach ($paymentMethods as $method): ?>
+        <div class="sommerce-settings__payment-cart m-portlet">
+            <div class="row align-items-center">
+                <div class="col-2">
+                    <div class="payment-cart__preview">
+                        <img src="<?= $getMethodData($method->method, 'icon') ?>" alt="" class="img-fluid">
                     </div>
-                    <div>
-                        <div class="payment-cart__active">
-                               <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" checked name="">
-																			<span></span>
-																		</label>
-																	</span>
+                </div>
+                <div class="col-10">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="payment-cart__title">
+                                <?= $getMethodData($method->method, 'title') ?>
+                            </div>
                         </div>
-                        <div class="payment-cart__actions">
-                            <a href="<?= Url::toRoute('/settings/payments') ?>"
-                               class="btn m-btn--pill m-btn--air btn-primary">
-                                Edit
-                            </a>
+                        <div>
+                            <div class="payment-cart__active">
+                           <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
+                                <label>
+                                    <input class="toggle-active" type="checkbox" name="toggle-active"
+                                        <?= Ui::toggleString($method->active, 'checked') ?>
+                                            data-payment_method="<?= $method->method ?>"
+                                            data-action_url="<?= Url::to([
+                                                'settings/payments-toggle-active',
+                                                'method' => $method->method,
+                                            ])?>"
+                                    >
+                                    <span></span>
+                                </label>
+                            </span>
+                            </div>
+                            <div class="payment-cart__actions">
+                                <a href="<?= Url::toRoute(['/settings/payments-settings', 'method'=> $method->method]) ?>"
+                                   class="btn m-btn--pill m-btn--air btn-primary">
+                                    <?= $getMethodData($method->method, 'edit_button_title') ?>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endforeach; ?>
 
-    <div class="sommerce-settings__payment-cart m-portlet">
-        <div class="row align-items-center">
-            <div class="col-2">
-                <div class="payment-cart__preview">
-                    <img src="/img/2checkout.png" alt="" class="img-fluid">
-                </div>
-            </div>
-            <div class="col-10">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="payment-cart__title">
-                            2Checkout
-                        </div>
-                    </div>
-                    <div>
-                        <div class="payment-cart__active">
-                               <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" name="">
-																			<span></span>
-																		</label>
-																	</span>
-                        </div>
-                        <div class="payment-cart__actions">
-                            <a href="<?= Url::toRoute('/settings/payments') ?>"
-                               class="btn m-btn--pill m-btn--air btn-primary">
-                                Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="sommerce-settings__payment-cart m-portlet">
-        <div class="row align-items-center">
-            <div class="col-2">
-                <div class="payment-cart__preview">
-                    <img src="/img/bitcoin.png" alt="" class="img-fluid">
-                </div>
-            </div>
-            <div class="col-10">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="payment-cart__title">
-                            Bitcoiit
-                        </div>
-                    </div>
-                    <div>
-                        <div class="payment-cart__active">
-                               <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" name="">
-																			<span></span>
-																		</label>
-																	</span>
-                        </div>
-                        <div class="payment-cart__actions">
-                            <a href="<?= Url::toRoute('/settings/payments') ?>"
-                               class="btn m-btn--pill m-btn--air btn-primary">
-                                Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
