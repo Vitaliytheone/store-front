@@ -12,45 +12,40 @@ customModule.adminLayout = {
             }
         });
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+        var inputs = document.querySelectorAll('.inputfile');
+        Array.prototype.forEach.call(inputs, function (input) {
+            var label = input.nextElementSibling,
+                labelVal = label.innerHTML;
 
-        $(document).ready(function () {
-            var inputs = document.querySelectorAll('.inputfile');
-            Array.prototype.forEach.call(inputs, function (input) {
-                var label = input.nextElementSibling,
-                    labelVal = label.innerHTML;
+            input.addEventListener('change', function (e) {
+                var fileName = '';
+                if (this.files && this.files.length > 1) {
+                    fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+                } else {
+                    fileName = e.target.value.split('\\').pop();
+                }
+                if (fileName) {
+                    //label.querySelector('span').innerHTML = fileName;
+                    if (this.files && this.files[0]) {
 
-                input.addEventListener('change', function (e) {
-                    var fileName = '';
-                    if (this.files && this.files.length > 1) {
-                        fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
-                    } else {
-                        fileName = e.target.value.split('\\').pop();
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            var template = '<div class="sommerce-settings__theme-imagepreview">\n                              <a href="#" class="sommerce-settings__delete-image"><span class="fa fa-times-circle-o"></span></a>\n                              <img src="' + e.target.result + '" alt="...">\n                          </div>';
+                            $('#image-preview').html(template);
+                        };
+                        reader.readAsDataURL(this.files[0]);
                     }
-                    if (fileName) {
-                        //label.querySelector('span').innerHTML = fileName;
-                        if (this.files && this.files[0]) {
-
-                            var reader = new FileReader();
-
-                            reader.onload = function (e) {
-                                var template = '<div class="sommerce-settings__theme-imagepreview">\n                              <a href="#" class="sommerce-settings__delete-image"><span class="fa fa-times-circle-o"></span></a>\n                              <img src="' + e.target.result + '" alt="...">\n                          </div>';
-                                $('#image-preview').html(template);
-                            };
-                            reader.readAsDataURL(this.files[0]);
-                        }
-                    } else {
-                        //label.innerHTML = labelVal;
-                    }
-                });
-                $(document).on('click', '.sommerce_v1.0-settings__delete-image', function (e) {
-                    $('#image-preview').html('<span></span>');
-                    input.value = '';
-                });
+                } else {
+                    //label.innerHTML = labelVal;
+                }
+            });
+            $(document).on('click', '.sommerce_v1.0-settings__delete-image', function (e) {
+                $('#image-preview').html('<span></span>');
+                input.value = '';
             });
         });
+
 
         // TODO:: Commented because conflicted with products page DOM objects. Must be rewrite.
         // /* Edit page */
@@ -80,12 +75,13 @@ customModule.adminLayout = {
         //     }
         // });
 
-        $(document).ready(function () {
-            $('#select-menu-link').change(function () {
-                $('.hide-link').hide();
-                var val = $("#select-menu-link option:selected").val();
-                $('.link-' + val).fadeIn();
-            });
+
+        $('#select-menu-link').change(function () {
+            $('.hide-link').hide();
+            var val = $("#select-menu-link option:selected").val();
+            $('.link-' + val).fadeIn();
         });
+
+        $('[data-toggle="tooltip"]').tooltip();
     }
 };
