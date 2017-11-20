@@ -3,6 +3,9 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\db\ActiveRecord;
+use common\models\stores\queries\PaymentMethodsQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%payment_methods}}".
@@ -15,12 +18,15 @@ use Yii;
  *
  * @property Stores $store
  */
-class PaymentMethods extends \yii\db\ActiveRecord
+class PaymentMethods extends ActiveRecord
 {
     /* Payment methods names */
     const METHOD_PAYPAL = 'paypal';
     const METHOD_2CHECKOUT = '2checkout';
     const METHOD_BITCOIN = 'bitcoin';
+
+    const ACTIVE_DISABLED = 0;
+    const ACTIVE_ENABLED = 1;
 
     /**
      * @inheritdoc
@@ -53,7 +59,7 @@ class PaymentMethods extends \yii\db\ActiveRecord
             'store_id' => Yii::t('app', 'Store ID'),
             'method' => Yii::t('app', 'Method'),
             'details' => Yii::t('app', 'Details'),
-            'active' => Yii::t('app', '0 - disabled, 1 - enabled'),
+            'active' => Yii::t('app', 'Active'),
         ];
     }
 
@@ -67,10 +73,32 @@ class PaymentMethods extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\PaymentMethodsQuery the active query used by this AR class.
+     * @return PaymentMethodsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\PaymentMethodsQuery(get_called_class());
+        return new PaymentMethodsQuery(get_called_class());
+    }
+
+    /**
+     * Get available payment method names
+     * @return array
+     */
+    public static function getNames()
+    {
+        return [
+            static::METHOD_PAYPAL => 'PayPal',
+            static::METHOD_2CHECKOUT => '2Checkout',
+            static::METHOD_BITCOIN => 'Bitcoin',
+        ];
+    }
+
+    /**
+     * Get payment method name
+     * @return string
+     */
+    public function getName()
+    {
+        return ArrayHelper::getValue(static::getNames(), $this->method, '');
     }
 }

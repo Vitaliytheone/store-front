@@ -62,22 +62,19 @@
                         <?php if (!empty($error)) : ?>
                             <div class="error-summary alert alert-danger"><?= $errorText ?></div>
                         <?php endif; ?>
-                        <div class="form-group">
-                            <label>Payment method</label>
+                        <?php if (1 < count($methods)) : ?>
+                            <div class="form-group">
+                                <label>Payment method</label>
 
-                            <div>
-                                <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> PayPal
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2Checkout
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Bitcoin
-                                </label>
+                                <div>
+                                    <?php foreach ($methods as $methodId => $methodName) : ?>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="OrderForm[method]" id="inlineRadio1" value="<?= $methodId?>"> <?= $methodName ?>
+                                        </label>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-
-                        </div>
+                        <?php endif; ?>
 
                         <div class="form-group">
                             <label class="control-label" for="orderform-email">Email address</label>

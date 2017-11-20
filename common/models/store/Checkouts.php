@@ -136,4 +136,21 @@ class Checkouts extends ActiveRecord
             ],
         ];
     }
+
+    /**
+     * Set details
+     * @param array $details
+     */
+    public function setDetails(array $details)
+    {
+        $this->details = json_encode($details);
+    }
+
+    /**
+     * Get details
+     */
+    public function getDetails()
+    {
+        return empty($this->details) ? [] : json_decode($this->details, true);
+    }
 }

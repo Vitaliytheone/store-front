@@ -50,7 +50,7 @@ class CartController extends CustomController
 
         $model = new OrderForm();
         $model->setStore($store);
-        $model->setItems($items);
+        $model->setSearchItems($searchModel);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->redirect('/checkout');
@@ -58,6 +58,7 @@ class CartController extends CustomController
 
         return $this->render('cart', [
             'items' => $items['models'],
+            'methods' => $model->getPaymentMethods(),
             'total' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
             'data' => $model->attributes,
             'error' => $model->hasErrors(),

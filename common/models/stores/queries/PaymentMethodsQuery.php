@@ -1,6 +1,8 @@
 <?php
 
 namespace common\models\stores\queries;
+use common\models\stores\PaymentMethods;
+use common\models\stores\Stores;
 
 /**
  * This is the ActiveQuery class for [[\common\models\stores\PaymentMethods]].
@@ -9,10 +11,24 @@ namespace common\models\stores\queries;
  */
 class PaymentMethodsQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'active' => PaymentMethods::ACTIVE_ENABLED
+        ]);
+    }
+
+    /**
+     * @param Stores $store
+     * @return $this
+     */
+    public function store(Stores $store)
+    {
+        return $this->andWhere([
+            'store_id' => $store->id
+        ]);
+    }
+
 
     /**
      * @inheritdoc
