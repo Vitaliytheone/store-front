@@ -33,7 +33,12 @@ class CartSearch {
     /**
      * @var int - total price
      */
-    protected $_total = 0;
+    protected static $_total = 0;
+
+    /**
+     * @var array - items
+     */
+    protected static $_items;
 
     /**
      * Set store
@@ -59,7 +64,28 @@ class CartSearch {
      */
     public function getTotal()
     {
-        return $this->_total;
+        if (static::$_total) {
+            return static::$_total;
+        }
+
+        $this->search();
+
+        return static::$_total;
+    }
+
+    /**
+     * Get cart count items
+     * @return integer
+     */
+    public function getCount()
+    {
+        if (null === static::$_items) {
+            return count(static::$_items);
+        }
+
+        $this->search();
+
+        return count(static::$_items);
     }
 
     /**
@@ -86,6 +112,12 @@ class CartSearch {
 
     public function search()
     {
+        if (null !== static::$_items) {
+            return static::$_items;
+        }
+
+        static::$_items = [];
+
         $query = clone $this->buildQuery();
 
         $items = $query
@@ -136,7 +168,6 @@ class CartSearch {
      */
     public function prepareItems($items)
     {
-        $returnItems = [];
         $packages = $this->getPackages();
 
         foreach ($items as $item) {
@@ -146,9 +177,9 @@ class CartSearch {
                 continue;
             }
 
-            $this->_total += $package['price'];
+            static::$_total += $package['price'];
 
-            $returnItems[] = [
+            static::$_items[] = [
                 'id' => $item['id'],
                 'key' => $item['key'],
                 'link' => $item['link'],
@@ -158,6 +189,6 @@ class CartSearch {
             ];
         }
 
-        return $returnItems;
+        return static::$_items;
     }
 }

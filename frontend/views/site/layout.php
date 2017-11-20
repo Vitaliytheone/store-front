@@ -62,7 +62,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="/cart" class="bold">(2) Cart</a></li>
+                <li><a href="/cart" class="bold">(<?= $cart_count ?>) Cart</a></li>
             </ul>
         </div>
     </div>
