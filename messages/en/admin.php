@@ -177,4 +177,6 @@ return [
     'settings.section_payments_edit_paypal_button_save_title' => 'Save changes',
     'settings.section_payments_edit_paypal_button_cancel_title' => 'Cancel',
 
+    'settings.section_providers.update_success_message' => 'Providers successfully updated',
+    'settings.section_providers.create_success_message' => 'Provider successfully created',
 ];

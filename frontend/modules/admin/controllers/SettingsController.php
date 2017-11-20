@@ -3,6 +3,7 @@
 namespace frontend\modules\admin\controllers;
 
 use common\components\ActiveForm;
+use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\CreateProviderForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\search\ProvidersSearch;
@@ -12,7 +13,6 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
-use yii\helpers\Url;
 
 
 /**
@@ -74,7 +74,10 @@ class SettingsController extends CustomController
         $model->setStore(Yii::$app->store->getInstance());
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->refresh();
+            Yii::$app->session->addFlash('messages', [
+                'success' => Yii::t('admin', 'settings.section_providers.update_success_message')
+            ]);
+            return $this->refresh();
         }
 
         return $this->render('providers', [
@@ -221,6 +224,9 @@ class SettingsController extends CustomController
         $model->setStore(Yii::$app->store->getInstance());
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->addFlash('messages', [
+                'success' => Yii::t('admin', 'settings.section_providers.create_success_message')
+            ]);
             return [
                 'status' => 'success',
             ];
