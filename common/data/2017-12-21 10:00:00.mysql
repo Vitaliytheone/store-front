@@ -1,0 +1,4 @@
+USE `store`;
+ALTER TABLE `payments` CHANGE `method_id` `method` VARCHAR(255)  NULL  DEFAULT NULL;
+ALTER TABLE `payments` ADD `memo` VARCHAR(255)  NULL  DEFAULT NULL  AFTER `transaction_id`;
+ALTER TABLE `payments` ADD `response_status` VARCHAR(255)  NULL  DEFAULT NULL  AFTER `memo`;

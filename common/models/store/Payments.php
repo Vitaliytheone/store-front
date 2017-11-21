@@ -9,12 +9,14 @@ use Yii;
  *
  * @property integer $id
  * @property integer $checkout_id
- * @property integer $method_id
+ * @property string $method
  * @property string $customer
  * @property string $amount
  * @property integer $status
  * @property string $fee
  * @property string $transaction_id
+ * @property string $memo
+ * @property string $response_status
  * @property string $name
  * @property string $email
  * @property string $country
@@ -26,6 +28,11 @@ use Yii;
  */
 class Payments extends \yii\db\ActiveRecord
 {
+    const STATUS_AWAITING = 1;
+    const STATUS_COMPLETED = 2;
+    const STATUS_FAILED = 3;
+    const STATUS_REFUNDED = 4;
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -46,9 +53,9 @@ class Payments extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'checkout_id', 'method_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'checkout_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['amount', 'fee'], 'number'],
-            [['customer', 'transaction_id', 'name', 'email', 'country'], 'string', 'max' => 255],
+            [['method', 'customer', 'transaction_id', 'memo', 'response_status', 'name', 'email', 'country'], 'string', 'max' => 255],
             [['currency'], 'string', 'max' => 10],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::className(), 'targetAttribute' => ['checkout_id' => 'id']],
         ];
@@ -62,15 +69,17 @@ class Payments extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'checkout_id' => Yii::t('app', 'Checkout ID'),
-            'method_id' => Yii::t('app', 'Method ID'),
+            'method' => Yii::t('app', 'Payment method'),
             'customer' => Yii::t('app', 'Customer'),
             'amount' => Yii::t('app', 'Amount'),
             'status' => Yii::t('app', '1 - Completed
-2 - Awating
-3 - Failed
-4 - Refunded'),
+            2 - Awating
+            3 - Failed
+            4 - Refunded'),
             'fee' => Yii::t('app', 'Fee'),
             'transaction_id' => Yii::t('app', 'Transaction ID'),
+            'memo' => Yii::t('app', 'Memo'),
+            'response_status' => Yii::t('app', 'Response status'),
             'name' => Yii::t('app', 'Name'),
             'email' => Yii::t('app', 'Email'),
             'country' => Yii::t('app', 'Country'),
