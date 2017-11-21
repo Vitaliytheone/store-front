@@ -1,5 +1,6 @@
 <?php
 namespace common\helpers;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class CurrencyHelper
@@ -14,6 +15,55 @@ class CurrencyHelper {
             'name' => 'United States Dollars',
             'symbol' => '$',
             'symbol_aligment' => '1',
+            'gateway' => [
+                'paypal' => [
+                    'method_name' => 'PayPal',
+                    'url' => [
+                        'paypalexpress',
+                        'paypalstandart',
+                    ],
+                    'mode' => 'standart',
+                    'name' => 'PayPal',
+                    'minimal' => '1.00',
+                    'maximal' => 0,
+                    'active' => 0,
+                    'fee' => 0,
+                    'options' => [
+                        'email' => '',
+                        'username' => '',
+                        'password' => '',
+                        'signature' => '',
+                    ],
+                    'type' => 0,
+                    'position' => 1,
+                ],
+                '2checkout' => [
+                    'method_name' => '2Checkout',
+                    'url' => 'twocheckout',
+                    'mode' => 'standart',
+                    'name' => '2Checkout',
+                    'minimal' => '1.00',
+                    'maximal' => 0,
+                    'active' => 0,
+                    'fee' => 0,
+                    'options' => [],
+                    'type' => 0,
+                    'position' => 2,
+                ],
+                'bitcoin' => [
+                    'method_name' => 'Bitcoin',
+                    'url' => 'bitcoin',
+                    'mode' => 'standart',
+                    'name' => 'Bitcoin',
+                    'minimal' => '1.00',
+                    'maximal' => 0,
+                    'active' => 0,
+                    'fee' => 0,
+                    'options' => [],
+                    'type' => 0,
+                    'position' => 3,
+                ],
+            ]
         ]
     ];
 
@@ -50,5 +100,24 @@ class CurrencyHelper {
             }
         }
         return $template;
+    }
+
+    /**
+     * Get payments config data by code
+     * @param string $code
+     * @return array
+     */
+    public static function getPaymentsByCurrency($code)
+    {
+        $currencyPayments = ArrayHelper::getValue(static::$currencies, $code, []);
+        $currencyPayments = ArrayHelper::getValue($currencyPayments, 'gateway', []);
+
+        $currencyPaymentsList = [];
+        foreach ($currencyPayments as $code => $currencyPayment) {
+            $currencyPaymentsList[$code] = $currencyPayment;
+            $currencyPaymentsList[$code]['code'] = $code;
+        }
+
+        return $currencyPaymentsList;
     }
 }

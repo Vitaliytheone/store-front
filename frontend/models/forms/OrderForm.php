@@ -1,10 +1,12 @@
 <?php
 namespace frontend\models\forms;
 
+use common\helpers\CurrencyHelper;
 use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
+use frontend\components\payments\Payment;
 use frontend\helpers\UserHelper;
 use frontend\models\search\CartSearch;
 use Yii;
@@ -41,6 +43,21 @@ class OrderForm extends Model {
     protected $_searchItems;
 
     /**
+     * @var string
+     */
+    public $redirect;
+
+    /**
+     * @var array
+     */
+    public $formData;
+
+    /**
+     * @var array
+     */
+    protected $_currencyPayments;
+
+    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -49,10 +66,11 @@ class OrderForm extends Model {
 
         $methods = $this->getPaymentMethods();
 
-        if (1 < count($methods)) {
-            $rules[] = [['method'], 'required'];
-        } else if (1 == count($methods)) {
+        if (1 == count($methods)) {
             $this->method = array_shift($methods);
+        } else {
+            $rules[] = [['method'], 'required'];
+            $rules[] = [['method'], 'in', 'range' => array_keys($methods)];
         }
 
         $rules = array_merge($rules, [
@@ -93,7 +111,11 @@ class OrderForm extends Model {
         $returnItems = [];
 
         foreach ($this->_items as $item) {
-            var_dump($item); exit();
+            $returnItems[] = [
+                'link' => $item['link'],
+                'package_id' => $item['package_id'],
+                'quantity' => $item['package_quantity'],
+            ];
         }
 
         return $returnItems;
@@ -106,7 +128,20 @@ class OrderForm extends Model {
     public function getPaymentMethods()
     {
         if (null === $this->_methods) {
-            $this->_methods = ArrayHelper::map(PaymentMethods::find()->store($this->_store)->active()->all(), 'id', 'name');
+
+            $currencyPayments = $this->getCurrencyPayments();
+
+            foreach (PaymentMethods::find()
+                 ->store($this->_store)
+                 ->active()
+                 ->all() as $method) {
+
+                if (empty($currencyPayments[$method->method])) {
+                    continue;
+                }
+
+                $this->_methods[$method->id] = $method->getName();
+            }
         }
 
         return $this->_methods;
@@ -125,11 +160,59 @@ class OrderForm extends Model {
         }
 
         $checkout = new Checkouts();
+        $checkout->customer = $this->email;
         $checkout->method_id = $this->method;
         $checkout->price = $this->_searchItems->getTotal();
+        $checkout->currency = $this->_store->currency;
         $checkout->setDetails($this->getItems());
 
-        return true;
+        if (!$checkout->save()) {
+            $this->addError('email', 'Can not create order.');
+            return false;
+        }
+
+        $paymentMethod = PaymentMethods::find()->andWhere([
+            'id' => $this->method
+        ])->store($this->_store)->active()->one();
+
+
+        $result = Payment::getPayment($paymentMethod->method)->checkout($checkout, $this->_store, $this->email, $paymentMethod);
+
+        if (2 == $result['result']) {
+            $this->redirect = $result['redirect'];
+            $this->clearCart();
+            return true;
+        } else if (1 == $result['result']) {
+            $this->formData = $result['formData'];
+            $this->clearCart();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get currency payments
+     * @return array
+     */
+    public function getCurrencyPayments()
+    {
+        if ($this->_currencyPayments) {
+            return $this->_currencyPayments;
+        }
+
+        $this->_currencyPayments = CurrencyHelper::getPaymentsByCurrency($this->_store->currency);
+
+        return $this->_currencyPayments;
+    }
+
+    /**
+     * Get payment config
+     * @return mixed
+     */
+    public function getPaymentConfig()
+    {
+        return ArrayHelper::getValue($this->getCurrencyPayments(), $this->method, []);
     }
 
     /**
@@ -158,5 +241,13 @@ class OrderForm extends Model {
             $this->addError($attribute, 'Cart can not be empty.');
             return false;
         }
+    }
+
+    /**
+     * Clear user cart items
+     */
+    public function clearCart()
+    {
+        UserHelper::flushCart();
     }
 }

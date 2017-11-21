@@ -1,6 +1,10 @@
 <?php
 namespace common\helpers;
 
+/**
+ * Class PriceHelper
+ * @package common\helpers
+ */
 class PriceHelper {
 
     /**

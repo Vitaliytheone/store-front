@@ -2,7 +2,11 @@
 
 namespace common\models\store;
 
+use common\components\behaviors\IpBehavior;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\store\queries\PaymentsLogQuery;
 
 /**
  * This is the model class for table "{{%payments_log}}".
@@ -15,7 +19,7 @@ use Yii;
  *
  * @property Checkouts $checkout
  */
-class PaymentsLog extends \yii\db\ActiveRecord
+class PaymentsLog extends ActiveRecord
 {
     public static function getDb()
     {
@@ -68,10 +72,63 @@ class PaymentsLog extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\PaymentsLogQuery the active query used by this AR class.
+     * @return PaymentsLogQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\PaymentsLogQuery(get_called_class());
+        return new PaymentsLogQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+            'ip' => [
+                'class' => IpBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
+                ],
+                'defaultValue' => ' '
+            ],
+        ];
+    }
+
+    /**
+     * Set result
+     * @param array $result
+     */
+    public function setResult($result)
+    {
+        $this->result = @json_encode($result);
+    }
+
+    /**
+     * Get response
+     * @return array $response
+     */
+    public function getResult()
+    {
+        return @json_decode($this->result, true);
+    }
+
+    /**
+     * Log payment
+     * @param $checkoutId
+     * @param $result
+     */
+    public static function log($checkoutId, $result)
+    {
+        $log = new static();
+        $log->checkout_id = $checkoutId;
+        $log->setResult($result);
+        $log->save(false);
     }
 }

@@ -112,24 +112,18 @@ class CartSearch {
 
     public function search()
     {
-        if (null !== static::$_items) {
-            return static::$_items;
+        if (null === static::$_items) {
+            $items = $this->buildQuery()
+                ->orderBy([
+                    'id' => SORT_DESC
+                ])
+                ->all();
+
+            $this->prepareItems($items);
         }
 
-        static::$_items = [];
-
-        $query = clone $this->buildQuery();
-
-        $items = $query
-            ->orderBy([
-                'id' => SORT_DESC
-            ])
-            ->all();
-
-        $items = $this->prepareItems($items);
-
         return [
-            'models' => $items,
+            'models' => static::$_items,
         ];
     }
 
@@ -147,7 +141,8 @@ class CartSearch {
             ->select([
                 'id',
                 'name',
-                'price'
+                'price',
+                'quantity'
             ])
             ->from($this->_store->db_name . '.packages')
             ->andWhere([
@@ -170,6 +165,9 @@ class CartSearch {
     {
         $packages = $this->getPackages();
 
+        static::$_items = [];
+        static::$_total = 0;
+
         foreach ($items as $item) {
             $package = ArrayHelper::getValue($packages, $item['package_id']);
 
@@ -184,7 +182,9 @@ class CartSearch {
                 'key' => $item['key'],
                 'link' => $item['link'],
                 'price' => PriceHelper::prepare($package['price'], $this->_store->currency),
+                'package_id' => $item['package_id'],
                 'package_name' => $package['name'],
+                'package_quantity' => $package['quantity'],
                 'created' => $item['created_at'],
             ];
         }

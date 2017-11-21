@@ -3,7 +3,9 @@
 namespace common\models\store;
 
 use Yii;
+use yii\db\ActiveRecord;
 use yii\behaviors\AttributeBehavior;
+use common\models\store\queries\SubordersQuery;
 
 /**
  * This is the model class for table "{{%suborders}}".
@@ -28,7 +30,7 @@ use yii\behaviors\AttributeBehavior;
  * @property Orders $order
  * @property Packages $package
  */
-class Suborders extends \yii\db\ActiveRecord
+class Suborders extends ActiveRecord
 {
     /* Suborder status constants */
     const STATUS_AWAITING       = 1;
@@ -92,6 +94,7 @@ class Suborders extends \yii\db\ActiveRecord
             [['provider_response'], 'string'],
             [['link'], 'string', 'max' => 1000],
             [['provider_service', 'provider_order_id'], 'string', 'max' => 300],
+            [['status'], 'default', 'value' => static::STATUS_AWAITING],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::className(), 'targetAttribute' => ['checkout_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packages::className(), 'targetAttribute' => ['package_id' => 'id']],
@@ -113,7 +116,7 @@ class Suborders extends \yii\db\ActiveRecord
             'quantity' => Yii::t('app', 'Quantity'),
             'status' => Yii::t('app', 'Status'),
             'updated_at' => Yii::t('app', 'Updated At'),
-            'mode' => Yii::t('app', '0 - manual, 1 - auto'),
+            'mode' => Yii::t('app', 'Mode'),
             'provider_id' => Yii::t('app', 'Provider ID'),
             'provider_service' => Yii::t('app', 'Provider Service'),
             'provider_order_id' => Yii::t('app', 'Provider Order ID'),
@@ -148,10 +151,10 @@ class Suborders extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\SubordersQuery the active query used by this AR class.
+     * @return SubordersQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\SubordersQuery(get_called_class());
+        return new SubordersQuery(get_called_class());
     }
 }

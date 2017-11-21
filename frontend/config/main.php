@@ -17,6 +17,7 @@ $config = [
         'request' => [
             'csrfParam' => '_csrf-frontend',
             'cookieValidationKey' => 'uKJVjhPVYpKcAirTEKcgVrcau5ZVPV0d',
+            'class'	=> 'frontend\components\MyRequest',
         ],
         'user' => [
             'identityClass' => 'common\models\User',

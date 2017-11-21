@@ -3,6 +3,9 @@
 namespace common\models\store;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\store\queries\PaymentsQuery;
 
 /**
  * This is the model class for table "{{%payments}}".
@@ -26,7 +29,7 @@ use Yii;
  *
  * @property Checkouts $checkout
  */
-class Payments extends \yii\db\ActiveRecord
+class Payments extends ActiveRecord
 {
     const STATUS_AWAITING = 1;
     const STATUS_COMPLETED = 2;
@@ -52,7 +55,6 @@ class Payments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'checkout_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['amount', 'fee'], 'number'],
             [['method', 'customer', 'transaction_id', 'memo', 'response_status', 'name', 'email', 'country'], 'string', 'max' => 255],
@@ -72,10 +74,7 @@ class Payments extends \yii\db\ActiveRecord
             'method' => Yii::t('app', 'Payment method'),
             'customer' => Yii::t('app', 'Customer'),
             'amount' => Yii::t('app', 'Amount'),
-            'status' => Yii::t('app', '1 - Completed
-            2 - Awating
-            3 - Failed
-            4 - Refunded'),
+            'status' => Yii::t('app', 'Status'),
             'fee' => Yii::t('app', 'Fee'),
             'transaction_id' => Yii::t('app', 'Transaction ID'),
             'memo' => Yii::t('app', 'Memo'),
@@ -99,10 +98,26 @@ class Payments extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\PaymentsQuery the active query used by this AR class.
+     * @return PaymentsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\PaymentsQuery(get_called_class());
+        return new PaymentsQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }

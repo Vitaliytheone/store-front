@@ -66,4 +66,16 @@ class UserHelper {
 
         return [];
     }
+
+    /**
+     * Flush user cart
+     */
+    public static function flushCart()
+    {
+        $keys = static::getCartKeys();
+
+        foreach ($keys as $key) {
+            static::removeCartKey($key);
+        }
+    }
 }

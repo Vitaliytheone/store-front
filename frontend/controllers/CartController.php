@@ -53,7 +53,10 @@ class CartController extends CustomController
         $model->setSearchItems($searchModel);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->redirect('/checkout');
+            if ($model->redirect) {
+                return $this->redirect($model->redirect);
+            }
+            return $this->render('checkout', $model->formData);
         }
 
         return $this->render('cart', [

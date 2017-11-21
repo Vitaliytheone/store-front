@@ -2,7 +2,11 @@
 
 namespace common\models\store;
 
+use common\components\behaviors\IpBehavior;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\store\queries\OrdersQuery;
 
 /**
  * This is the model class for table "{{%orders}}".
@@ -15,7 +19,7 @@ use Yii;
  * @property Checkouts $checkout
  * @property Suborders[] $suborders
  */
-class Orders extends \yii\db\ActiveRecord
+class Orders extends ActiveRecord
 {
     public static function getDb()
     {
@@ -36,7 +40,6 @@ class Orders extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'checkout_id', 'created_at'], 'integer'],
             [['customer'], 'string', 'max' => 255],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::className(), 'targetAttribute' => ['checkout_id' => 'id']],
@@ -74,10 +77,25 @@ class Orders extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\OrdersQuery the active query used by this AR class.
+     * @return OrdersQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\OrdersQuery(get_called_class());
+        return new OrdersQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ]
+        ];
     }
 }

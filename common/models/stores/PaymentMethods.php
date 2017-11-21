@@ -101,4 +101,13 @@ class PaymentMethods extends ActiveRecord
     {
         return ArrayHelper::getValue(static::getNames(), $this->method, '');
     }
+
+    /**
+     * Get payment method details
+     * @return array|mixed
+     */
+    public function getDetails()
+    {
+        return !empty($this->details) ? json_decode($this->details, true) : [];
+    }
 }

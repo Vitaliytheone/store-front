@@ -2,6 +2,7 @@
 
 namespace common\models\store;
 
+use common\components\behaviors\IpBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -133,6 +134,13 @@ class Checkouts extends ActiveRecord
                 'value' => function() {
                     return time();
                 },
+            ],
+            'ip' => [
+                'class' => IpBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
+                ],
+                'defaultValue' => ' '
             ],
         ];
     }
