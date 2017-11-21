@@ -72,10 +72,12 @@ class UserHelper {
      */
     public static function flushCart()
     {
-        $keys = static::getCartKeys();
+        $cookies = Yii::$app->response->cookies;
 
-        foreach ($keys as $key) {
-            static::removeCartKey($key);
-        }
+        $cookies->add(new Cookie([
+            'name' => static::CART_KEY,
+            'value' => [],
+            'expire' => time() + static::CART_DURATION
+        ]));
     }
 }
