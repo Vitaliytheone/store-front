@@ -120,10 +120,9 @@ class CartController extends CustomController
     {
         $package = null;
 
-        if (empty($id) || !($package = Packages::findOne([
+        if (empty($id) || !($package = Packages::find()->andWhere([
             'id' => $id,
-            'visibility' => Packages::VISIBILITY_YES
-        ]))) {
+        ])->active()->one())) {
             throw new NotFoundHttpException();
         }
 

@@ -15,7 +15,8 @@ class PackagesQuery extends ActiveQuery
     public function active()
     {
         return $this->andWhere([
-            'deleted' => Packages::DELETED_NO
+            'deleted' => Packages::DELETED_NO,
+            'visibility' => Packages::VISIBILITY_YES
         ]);
     }
 
