@@ -68,6 +68,7 @@ class CustomController extends MainController
         }
 
         $cartItems = new CartSearch();
+        $cartItems->setStore(Yii::$app->store->getInstance());
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
