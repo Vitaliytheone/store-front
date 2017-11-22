@@ -3,6 +3,9 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\stores\queries\StoreAdminsQuery;
 
 /**
  * This is the model class for table "{{%store_admins}}".
@@ -23,7 +26,7 @@ use Yii;
  *
  * @property Stores $store
  */
-class StoreAdmins extends \yii\db\ActiveRecord
+class StoreAdmins extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -60,8 +63,7 @@ class StoreAdmins extends \yii\db\ActiveRecord
             'auth_hash' => Yii::t('app', 'Auth Hash'),
             'first_name' => Yii::t('app', 'First Name'),
             'last_name' => Yii::t('app', 'Last Name'),
-            'status' => Yii::t('app', '1 - active
-2 - suspended'),
+            'status' => Yii::t('app', 'Status'),
             'ip' => Yii::t('app', 'Ip'),
             'last_login' => Yii::t('app', 'Last Login'),
             'rules' => Yii::t('app', 'Rules'),
@@ -80,10 +82,29 @@ class StoreAdmins extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\StoreAdminsQuery the active query used by this AR class.
+     * @return StoreAdminsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\StoreAdminsQuery(get_called_class());
+        return new StoreAdminsQuery(get_called_class());
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }

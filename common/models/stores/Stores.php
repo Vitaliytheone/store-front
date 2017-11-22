@@ -3,6 +3,9 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use common\models\stores\queries\StoresQuery;
 
 /**
  * This is the model class for table "{{%stores}}".
@@ -31,7 +34,7 @@ use Yii;
  * @property StoreProviders[] $storeProviders
  * @property Customers $customer
  */
-class Stores extends \yii\db\ActiveRecord
+class Stores extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -130,10 +133,32 @@ class Stores extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\StoresQuery the active query used by this AR class.
+     * @return StoresQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\StoresQuery(get_called_class());
+        return new StoresQuery(get_called_class());
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }
