@@ -1,10 +1,14 @@
 /**
- * Settings payments custom js module
- * Toggle `active` attribute of payment method
- * @type {{run: customModule.settingsPayments.run}}
+ * Settings custom js module
+ * @type {{run: customModule.settings.run}}
  */
-customModule.settingsPayments = {
+customModule.settings = {
     run: function (params) {
+
+        /******************************************************************
+         *            Toggle `payment method` active status
+         ******************************************************************/
+
         $(document).on('change', '.toggle-active', function (e) {
             var $checkbox = $(e.currentTarget),
                 actionUrl = $checkbox.data('action_url'),

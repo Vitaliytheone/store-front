@@ -14,7 +14,7 @@ use frontend\assets\OrdersAsset;
 
 OrdersAsset::register($this);
 
-$this->title = \Yii::t('admin', 'orders.page_title');
+$this->title = Yii::t('admin', 'orders.page_title');
 
 $formater = Yii::$app->formatter;
 $orders = $ordersDataProvider->getOrdersWithSuborders();
@@ -52,7 +52,7 @@ $summary = Ui::listSummary($ordersDataProvider);
             <div class="col-lg-2 col-sm-12">
                 <form class="" action="<?= Url::to('/admin/orders') ?>">
                     <div class="input-group m-input-group--air">
-                        <input type="text" class="form-control" placeholder="<?= \Yii::t('admin', 'orders.search_placeholder') ?>" aria-label="<?= \Yii::t('admin', 'orders.search_placeholder') ?>"
+                        <input type="text" class="form-control" placeholder="<?= Yii::t('admin', 'orders.search_placeholder') ?>" aria-label="<?= Yii::t('admin', 'orders.search_placeholder') ?>"
                                name="query"
                                value="<?= Html::encode(yii::$app->getRequest()->get('query')) ?>"
                         >
@@ -62,7 +62,7 @@ $summary = Ui::listSummary($ordersDataProvider);
                             <?php endif; ?>
                         <?php endforeach; ?>
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
+                            <button class="btn btn-primary" type="submit"><span class="fa fa-search"></span></button>
                           </span>
                     </div>
                 </form>
@@ -215,26 +215,26 @@ $summary = Ui::listSummary($ordersDataProvider);
             <div class="modal-body">
                 <div class="form-group">
                     <label for="order-detail-provider">
-                        <?= \Yii::t('admin', 'orders.window_details_provider') ?>
+                        <?= Yii::t('admin', 'orders.window_details_provider') ?>
                     </label>
                     <input type="text" class="form-control readonly" id="order-detail-provider" value=""
                            readonly>
                 </div>
                 <div class="form-group">
                     <label for="order-detail-provider-id">
-                        <?= \Yii::t('admin', 'orders.window_details_provider_order_id') ?>
+                        <?= Yii::t('admin', 'orders.window_details_provider_order_id') ?>
                     </label>
                     <input type="text" class="form-control readonly" id="order-detail-provider-order-id" value="" readonly>
                 </div>
                 <div class="form-group">
                     <label for="order-detail-provider-response">
-                        <?= \Yii::t('admin', 'orders.window_details_response') ?>
+                        <?= Yii::t('admin', 'orders.window_details_response') ?>
                     </label>
                     <pre class="sommerce-pre readonly" id="order-detail-provider-response"></pre>
                 </div>
                 <div class="form-group">
                     <label for="order-detail-lastupdate">
-                        <?= \Yii::t('admin', 'orders.window_details_last_update') ?>
+                        <?= Yii::t('admin', 'orders.window_details_last_update') ?>
                     </label>
                     <input type="text" class="form-control readonly" id="order-detail-lastupdate" value="" readonly>
                 </div>

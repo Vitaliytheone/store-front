@@ -145,6 +145,7 @@ return [
     'settings.section_general_seo_meta_title_input_limits' => ' of 160 characters used',
     'settings.button_save_title' => 'Save changes',
 
+    'settings.section_payments_page_title' => 'Settings payments',
     'settings.section_payments_method_list_title' => 'Payments',
     'settings.section_payments_method_list_paypal_title' => 'PayPal',
     'settings.section_payments_method_list_2checkout_title' => '2Checkout',

@@ -10,7 +10,7 @@ use common\models\stores\PaymentMethods;
 /* @var $paymentModel \frontend\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $paymentMethods[] \frontend\modules\admin\models\forms\EditPaymentMethodForm */
 
-
+$this->title = Yii::t('admin', 'settings.section_payments_page_title');
 
 ?>
 <!-- begin::Body -->

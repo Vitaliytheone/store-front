@@ -34,31 +34,31 @@ array_walk($payments, function(&$payment) use ($formatter){
 
 $statusFilterButtons = [
     -1 => [
-        'title' => $this->title = Yii::t('admin', 'payments.filter_all'),
+        'title' => Yii::t('admin', 'payments.filter_all'),
         'stat' => false,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
 
     Payments::STATUS_AWAITING => [
-        'title' => $this->title = Yii::t('admin', 'payments.filter_status_awaiting'),
+        'title' => Yii::t('admin', 'payments.filter_status_awaiting'),
         'stat' => true,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
 
     Payments::STATUS_COMPLETED => [
-        'title' => $this->title = Yii::t('admin', 'payments.filter_status_completed'),
+        'title' => Yii::t('admin', 'payments.filter_status_completed'),
         'stat' => false,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
 
     Payments::STATUS_FAILED => [
-        'title' => $this->title = Yii::t('admin', 'payments.filter_status_failed'),
+        'title' => Yii::t('admin', 'payments.filter_status_failed'),
         'stat' => true,
         'stat-class' => 'm-badge m-badge--danger',
     ],
 
     Payments::STATUS_REFUNDED => [
-        'title' => $this->title = Yii::t('admin', 'payments.filter_status_refunded'),
+        'title' => Yii::t('admin', 'payments.filter_status_refunded'),
         'stat' => false,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
@@ -188,7 +188,7 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
                                                 <!--  Method filter  -->
                                                     <ul class="m-nav">
                                                     <?php foreach($methodsFilterMenuItems as $item): ?>
-                                                        <li class="m-nav__item">
+                                                        <li class="m-nav__item <?= $item['active'] ?>">
                                                             <a href="<?= $item['url'] ?>" class="m-nav__link">
                                                                 <span class="m-nav__link-text">
                                                                     <?= $item['method_title'] ?>

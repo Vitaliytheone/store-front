@@ -11,7 +11,7 @@ use frontend\assets\ProductsAsset;
 /* @var $storeProviders common\models\stores\StoreProviders[] */
 /** @var $products array  Products with packages array */
 
-$this->title = \Yii::t('admin', 'orders.filter_all');
+$this->title = Yii::t('admin', 'products.page_title');
 $formatter = Yii::$app->formatter;
 
 ProductsAsset::register($this);
@@ -27,7 +27,7 @@ ProductsAsset::register($this);
                     data-target=".add_product"
                     data-backdrop="static"
                     data-action-url="<?= Url::to(['products/create-product']) ?>">
-                <?= \Yii::t('admin', 'products.button_add_product_title') ?>
+                <?= Yii::t('admin', 'products.button_add_product_title') ?>
             </button>
         </div>
     </div>
@@ -41,7 +41,7 @@ ProductsAsset::register($this);
             <div class="sortable">
                 <?php foreach ($products as $product): ?>
                     <!-- Product item -->
-                    <?= $this->render('product_item', ['product' => $product]); ?>
+                    <?= $this->render('_product_item', ['product' => $product]); ?>
                     <!--/ Product item -->
                 <?php endforeach; ?>
             </div>
@@ -51,7 +51,7 @@ ProductsAsset::register($this);
                 <td colspan="10">
                     <div class="alert alert-warning text-center" role="alert">
                         <strong>
-                            <?= \Yii::t('admin', 'products.no_products_message') ?>
+                            <?= Yii::t('admin', 'products.no_products_message') ?>
                         </strong>
                     </div>
                 </td>
@@ -62,13 +62,13 @@ ProductsAsset::register($this);
 <!-- Products-Packages list -->
 
 <!-- Modal `Add/Edit Product` -->
-<?= $this->render('modal_add_product', []); ?>
+<?= $this->render('_modal_add_product', []); ?>
 <!--/ Modal `Add/Edit Product` -->
 
 <!-- Modal Add/Edit Package -->
-<?= $this->render('modal_add_package', ['storeProviders' => $storeProviders,]); ?>
+<?= $this->render('_modal_add_package', ['storeProviders' => $storeProviders,]); ?>
 <!--/ Modal Add/Edit Package -->
 
 <!-- Modal Delete Package -->
-<?= $this->render('modal_delete_package', []); ?>
+<?= $this->render('_modal_delete_package', []); ?>
 <!--/ Modal Delete Package -->

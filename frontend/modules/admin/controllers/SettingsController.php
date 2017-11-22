@@ -45,7 +45,7 @@ class SettingsController extends CustomController
     public function beforeAction($action)
     {
         // Add custom JS modules
-        $this->addModule('settingsPayments');
+        $this->addModule('settings');
         return parent::beforeAction($action);
     }
 
