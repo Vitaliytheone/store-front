@@ -27,7 +27,9 @@ class Payment {
             return static::$methods[$method];
         }
 
-        $className = '\frontend\components\payments\methods\\' . (ucfirst($method));
+        $cleanedMethod = preg_replace('/^[^A-Za-z]+/', '', $method);
+
+        $className = '\frontend\components\payments\methods\\' . (ucfirst($cleanedMethod));
 
         if (!class_exists($className)) {
             throw new UnknownClassException();

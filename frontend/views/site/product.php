@@ -42,7 +42,7 @@ $this->title = $product->name;
                             </ul>
                         </div>
                         <div class="product-actions">
-                            <a href="<?= Url::to(['/add-to-cart', 'id' => $package->id]) ?>" class="btn btn-block btn-default">Buy now</a>
+                            <a href="<?= Url::to(['/cart/add-to-cart', 'id' => $package->id]) ?>" class="btn btn-block btn-default">Buy now</a>
                         </div>
                     </div>
                 </div>
