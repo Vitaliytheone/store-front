@@ -4,6 +4,7 @@ namespace frontend\models\search;
 use common\helpers\PriceHelper;
 use common\models\store\Packages;
 use common\models\stores\Stores;
+use frontend\helpers\UserHelper;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -39,6 +40,11 @@ class CartSearch {
      * @var array - items
      */
     protected static $_items;
+
+    public function __construct()
+    {
+        $this->_keys = UserHelper::getCartKeys();
+    }
 
     /**
      * Set store
@@ -79,7 +85,7 @@ class CartSearch {
      */
     public function getCount()
     {
-        if (null === static::$_items) {
+        if (null !== static::$_items) {
             return count(static::$_items);
         }
 

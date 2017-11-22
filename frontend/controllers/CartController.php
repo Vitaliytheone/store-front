@@ -44,7 +44,6 @@ class CartController extends CustomController
 
         $searchModel = new CartSearch();
         $searchModel->setStore($store);
-        $searchModel->setKeys(UserHelper::getCartKeys());
 
         $items = $searchModel->search();
 
