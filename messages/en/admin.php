@@ -45,6 +45,15 @@ return [
     'payments.action_title' => 'Actions',
     'payments.action_details' => 'Details',
     'payments.window_details_title' => 'Payment {payment_id} details',
+    'payments.payment_status_1' => 'Awaiting',
+    'payments.payment_status_2' => 'Completed',
+    'payments.payment_status_3' => 'Failed',
+    'payments.payment_status_4' => 'Refunded',
+    'payments.payment_method_title_all' => 'All',
+    'payments.payment_method_title_paypal' => 'Paypal',
+    'payments.payment_method_title_2checkout' => '2Checkout',
+    'payments.payment_method_title_bitcoin' => 'Bitcoin',
+
 
     'products.page_title' => 'Products',
 //    'products.page_name' => 'Products',
