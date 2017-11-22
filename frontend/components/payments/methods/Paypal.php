@@ -81,9 +81,9 @@ class Paypal extends BasePayment {
                 'cmd' => '_xclick',
                 'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
                 'currency_code' => $store->currency,
-                'return' => SiteHelper::hostUrl() . '/addfunds',
+                'return' => SiteHelper::hostUrl() . '/cart',
                 'notify_url' => SiteHelper::hostUrl() . '/paypalstandart/' . $checkout->id,
-                'cancel_return' => SiteHelper::hostUrl() . '/addfunds',
+                'cancel_return' => SiteHelper::hostUrl() . '/cart',
                 'item_name' => static::getDescription($email),
                 'amount' => $amount,
             ]);
@@ -262,6 +262,9 @@ class Paypal extends BasePayment {
         $this->_payment->transaction_id = $transactionId;
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->response_status = $getTransactionDetailsStatus;
+        $this->_payment->name = trim(ArrayHelper::getValue($GetTransactionDetails, 'FIRSTNAME') . ' ' . ArrayHelper::getValue($GetTransactionDetails, 'LASTNAME'));
+        $this->_payment->email = ArrayHelper::getValue($GetTransactionDetails, 'EMAIL');
+        $this->_payment->country = ArrayHelper::getValue($GetTransactionDetails, 'COUNTRYCODE');
 
         if ($getTransactionDetailsStatus != 'completed' || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
             if ('pending' == $getTransactionDetailsStatus || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
@@ -335,9 +338,6 @@ class Paypal extends BasePayment {
                 'content' => 'no invoice'
             ];
         }
-
-        $this->_payment->response = 1;
-        $this->_payment->date_update = time();
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
@@ -437,6 +437,7 @@ class Paypal extends BasePayment {
         $this->_payment->transaction_id = $txnId;
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->response_status = $paymentStatus;
+        $this->_payment->email = $payerEmail;
 
         if (strtolower($paymentStatus) != 'completed') {
             return [
