@@ -131,6 +131,8 @@ class OrderForm extends Model {
 
             $currencyPayments = $this->getCurrencyPayments();
 
+            $this->_methods = [];
+            
             foreach (PaymentMethods::find()
                  ->store($this->_store)
                  ->active()
