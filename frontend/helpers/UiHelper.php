@@ -5,29 +5,25 @@ namespace frontend\helpers;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use yii\base\InvalidParamException;
 
-class Ui
+class UiHelper
 {
     /**
      * Check if filter is active
-     * Allowed `-1` value for dummy `All` filter
      * @param $filterName
      * @param null $filterValue
-     * @param string $activeValue Value returned when filter is active
-     * @param string $inactiveValue Value returned when filter
      * @return string
      */
-    public static function isFilterActive($filterName, $filterValue = null, $activeValue = 'active', $inactiveValue = '')
+    public static function isFilterActive($filterName, $filterValue)
     {
         $filter = yii::$app->getRequest()->get($filterName, null);
-
         // Dummy `All` filter
-        if ($filterValue === -1) {
-            return is_null($filter) ? $activeValue : $inactiveValue;
+        if ($filterValue === 'all') {
+            return is_null($filter);
         }
-        return $filter == $filterValue ? $activeValue : $inactiveValue;
+        return $filter == (string)$filterValue;
     }
+
 
     /**
      * Check if filter is present

@@ -55,6 +55,8 @@ class SettingsController extends CustomController
      */
     public function actionIndex()
     {
+        $this->view->title = Yii::t('admin', 'settings.page_title');
+
         return $this->render('index');
     }
 
@@ -75,7 +77,7 @@ class SettingsController extends CustomController
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->addFlash('messages', [
-                'success' => Yii::t('admin', 'settings.section_providers.update_success_message')
+                'success' => Yii::t('admin', 'settings.message_provider_updated')
             ]);
             return $this->refresh();
         }
@@ -91,6 +93,8 @@ class SettingsController extends CustomController
      */
     public function actionPayments()
     {
+        $this->view->title = Yii::t('admin', 'settings.payments_page_title');
+
         $paymentMethods = EditPaymentMethodForm::findAll([
             'store_id' => yii::$app->store->getId(),
         ]);
@@ -123,7 +127,7 @@ class SettingsController extends CustomController
         if ($paymentModel->load($request->post()) && $paymentModel->validate()) {
             $paymentModel->save(false);
             Yii::$app->session->addFlash('messages', [
-                'success' => Yii::t('admin', 'settings.section_payments_message_settings_saved')
+                'success' => Yii::t('admin', 'settings.message_settings_saved')
             ]);
             return $this->redirect(Url::to(['settings/payments']));
         }
@@ -225,7 +229,7 @@ class SettingsController extends CustomController
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->addFlash('messages', [
-                'success' => Yii::t('admin', 'settings.section_providers.create_success_message')
+                'success' => Yii::t('admin', 'settings.message_provider_created')
             ]);
             return [
                 'status' => 'success',

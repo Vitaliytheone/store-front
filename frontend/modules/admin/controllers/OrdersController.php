@@ -53,6 +53,8 @@ class OrdersController extends CustomController
      */
     public function actionIndex()
     {
+        $this->view->title = Yii::t('admin', 'orders.page_title');
+
         $searchModel = new OrdersSearch();
         $ordersDataProvider = $searchModel->search(Yii::$app->request->get());
 
@@ -121,7 +123,7 @@ class OrdersController extends CustomController
             throw new NotAcceptableHttpException();
         }
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'orders.message_status_changed')
+            'success' => Yii::t('admin', 'orders.message_status_changed')
         ]);
         $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
@@ -150,7 +152,7 @@ class OrdersController extends CustomController
         $suborderModel->save(false);
 
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'orders.message_canceled')
+            'success' => Yii::t('admin', 'orders.message_canceled')
         ]);
         $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));
@@ -181,7 +183,7 @@ class OrdersController extends CustomController
         $suborderModel->save(false);
 
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'orders.message_resend')
+            'success' => Yii::t('admin', 'orders.message_resend')
         ]);
         $queryParams = is_array($filters) ? http_build_query($filters) : null;
         $this->redirect(Url::to(["/admin/orders?$queryParams"]));

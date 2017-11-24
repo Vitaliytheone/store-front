@@ -9,7 +9,7 @@ use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
-use frontend\helpers\Ui;
+use frontend\helpers\UiHelper;
 use frontend\modules\admin\models\forms\CreateProductForm;
 use frontend\modules\admin\models\forms\CreatePackageForm;
 use common\models\stores\Stores;
@@ -55,6 +55,8 @@ class ProductsController extends CustomController
      */
     public function actionIndex()
     {
+        $this->view->title = Yii::t('admin', 'products.page_title');
+
         /** @var $store Stores */
         $store = yii::$app->store->getInstance();
         return $this->render('index', [
@@ -84,14 +86,14 @@ class ProductsController extends CustomController
         if (!$productModel->validate()) {
             return $response->data = ['error' => [
                 'message' => 'Model validation error',
-                'html' => Ui::errorSummary($productModel, ['class' => 'alert-danger alert']),
+                'html' => UiHelper::errorSummary($productModel, ['class' => 'alert-danger alert']),
             ]];
         }
         if (!$productModel->save()) {
             throw new NotAcceptableHttpException();
         }
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'products.message_product_created')
+            'success' => Yii::t('admin', 'products.message_product_created')
         ]);
         return [
             'product' => $productModel,
@@ -148,14 +150,14 @@ class ProductsController extends CustomController
         if (!$productModel->validate()) {
             return ['error' => [
                 'message' => 'Model validation error',
-                'html' => Ui::errorSummary($productModel, ['class' => 'alert-danger alert']),
+                'html' => UiHelper::errorSummary($productModel, ['class' => 'alert-danger alert']),
             ]];
         }
         if (!$productModel->save(false)) {
             throw new NotAcceptableHttpException();
         }
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'products.message_product_updated')
+            'success' => Yii::t('admin', 'products.message_product_updated')
         ]);
         return [
             'product' => $productModel,
@@ -210,14 +212,14 @@ class ProductsController extends CustomController
         if (!$packageModel->validate()) {
             return $response->data = ['error' => [
                 'message' => 'Model validation error',
-                'html' => Ui::errorSummary($packageModel, ['class' => 'alert-danger alert']),
+                'html' => UiHelper::errorSummary($packageModel, ['class' => 'alert-danger alert']),
             ]];
         }
         if (!$packageModel->save()) {
             throw new NotAcceptableHttpException();
         }
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'products.message_package_created')
+            'success' => Yii::t('admin', 'products.message_package_created')
         ]);
         return [
             'package' => $packageModel,
@@ -273,14 +275,14 @@ class ProductsController extends CustomController
         if (!$packageModel->validate()) {
             return ['error' => [
                 'message' => 'Model validation error',
-                'html' => Ui::errorSummary($packageModel, ['class' => 'alert-danger alert']),
+                'html' => UiHelper::errorSummary($packageModel, ['class' => 'alert-danger alert']),
             ]];
         }
         if (!$packageModel->save(false)) {
             throw new NotAcceptableHttpException();
         }
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'products.message_package_updated')
+            'success' => Yii::t('admin', 'products.message_package_updated')
         ]);
         return [
             'package' => $packageModel,
@@ -351,7 +353,7 @@ class ProductsController extends CustomController
             throw new NotAcceptableHttpException();
         };
         Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'products.message_package_deleted')
+            'success' => Yii::t('admin', 'products.message_package_deleted')
         ]);
         return [
             'package' => $packageModel,

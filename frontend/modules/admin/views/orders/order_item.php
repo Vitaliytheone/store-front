@@ -10,7 +10,6 @@ use \common\models\store\Suborders;
 /* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
 /* @var $formatter yii\i18n\Formatter */
 
-
 $formatter = Yii::$app->formatter;
 $suborders = $order['suborders'];
 $subordersCnt = count($suborders);
@@ -149,7 +148,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
         <?php if($isActionButtonShow($suborder)): ?>
         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-right" data-dropdown-toggle="click" aria-expanded="true">
             <a href="#" class="m-dropdown__toggle btn btn-primary btn-sm">
-                <?= \Yii::t('admin', 'orders.action_title') ?> <span class="fa fa-cog"></span>
+                <?= Yii::t('admin', 'orders.action_title') ?> <span class="fa fa-cog"></span>
             </a>
             <div class="m-dropdown__wrapper">
                 <span class="m-dropdown__arrow m-dropdown__arrow--right"></span>
@@ -166,10 +165,10 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                        data-backdrop="static"
                                        class="m-nav__link"
                                        data-suborder-id="<?= $suborder['suborder_id'] ?>"
-                                       data-modal_title="<?= \Yii::t('admin', 'orders.window_details_title', ['suborder_id' => $suborder['suborder_id']]) ?>"
+                                       data-modal_title="<?= Yii::t('admin', 'orders.details_title', ['suborder_id' => $suborder['suborder_id']]) ?>"
                                     >
                                         <span class="m-nav__link-text">
-                                            <?= \Yii::t('admin', 'orders.action_details') ?>
+                                            <?= Yii::t('admin', 'orders.action_details') ?>
                                         </span>
                                     </a>
                                 </li>
@@ -179,7 +178,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <li class="m-nav__item">
                                     <a href="<?= Url::to(['/admin/orders/resend', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
                                         <span class="m-nav__link-text">
-                                            <?= \Yii::t('admin', 'orders.action_resend') ?>
+                                            <?= Yii::t('admin', 'orders.action_resend') ?>
                                         </span>
                                     </a>
                                 </li>
@@ -190,7 +189,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <li class="m-nav__item">
                                     <a class="m-nav__link dropdown-collapse dropdown-toggle" data-toggle="collapse" href="#action-<?= $suborder['suborder_id'] ?>">
                                         <span class="m-nav__link-text">
-                                            <?= \Yii::t('admin', 'orders.action_change_status') ?>
+                                            <?= Yii::t('admin', 'orders.action_change_status') ?>
                                         </span>
                                     </a>
                                     <div class="collapse sommerce-dropdwon__actions_collapse" id="action-<?= $suborder['suborder_id'] ?>">
@@ -208,7 +207,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 <li class="m-nav__item">
                                     <a href="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
                                         <span class="m-nav__link-text">
-                                            <?= \Yii::t('admin', 'orders.action_cancel') ?>
+                                            <?= Yii::t('admin', 'orders.action_cancel') ?>
                                         </span>
                                     </a>
                                 </li>

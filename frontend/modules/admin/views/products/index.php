@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use frontend\helpers\Ui;
+use frontend\helpers\UiHelper;
 use frontend\assets\ProductsAsset;
 
 /* @var $this yii\web\View */
@@ -11,7 +11,7 @@ use frontend\assets\ProductsAsset;
 /* @var $storeProviders common\models\stores\StoreProviders[] */
 /** @var $products array  Products with packages array */
 
-$this->title = Yii::t('admin', 'products.page_title');
+
 $formatter = Yii::$app->formatter;
 
 ProductsAsset::register($this);
@@ -27,7 +27,7 @@ ProductsAsset::register($this);
                     data-target=".add_product"
                     data-backdrop="static"
                     data-action-url="<?= Url::to(['products/create-product']) ?>">
-                <?= Yii::t('admin', 'products.button_add_product_title') ?>
+                <?= Yii::t('admin', 'products.add_product') ?>
             </button>
         </div>
     </div>
@@ -62,11 +62,11 @@ ProductsAsset::register($this);
 <!-- Products-Packages list -->
 
 <!-- Modal `Add/Edit Product` -->
-<?= $this->render('_modal_add_product', []); ?>
+<?= $this->render('_modal_product_form', []); ?>
 <!--/ Modal `Add/Edit Product` -->
 
 <!-- Modal Add/Edit Package -->
-<?= $this->render('_modal_add_package', ['storeProviders' => $storeProviders,]); ?>
+<?= $this->render('_modal_package_form', ['storeProviders' => $storeProviders,]); ?>
 <!--/ Modal Add/Edit Package -->
 
 <!-- Modal Delete Package -->

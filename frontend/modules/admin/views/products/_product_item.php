@@ -3,7 +3,7 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use frontend\helpers\Ui;
+use frontend\helpers\UiHelper;
 
 /* @var $this yii\web\View */
 /* @var $product array */
@@ -16,7 +16,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
 ?>
 
 <div class="row group-caption product-item" data-action-url="<?= Url::to(['products/move-product', 'id' => $product['id'], 'position' => ""]) ?>">
-    <div class="col-12 sommerce_dragtable__category <?= Ui::toggleString(!$product['visibility'], 'disabled-product-item') ?>">
+    <div class="col-12 sommerce_dragtable__category <?= UiHelper::toggleString(!$product['visibility'], 'disabled-product-item') ?>">
         <div class="sommerce_dragtable__category-title">
             <div class="row align-items-center">
                 <div class="col-12">
@@ -33,7 +33,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                        data-id="<?= $product['id'] ?>"
                        data-get-url="<?= Url::to(['products/get-product', 'id' => $product['id']]) ?>"
                        data-action-url="<?= Url::to(['products/update-product', 'id' => $product['id']]) ?>">
-                        <?= Yii::t('admin', 'products.button_edit_product_title') ?>
+                        <?= Yii::t('admin', 'products.edit_product') ?>
                     </a>
                 </div>
             </div>
@@ -53,7 +53,7 @@ $packages = ArrayHelper::getValue($product, 'packages', []);
                     data-backdrop="static"
                     data-product_id="<?= $product['id'] ?>"
                     data-action-url="<?= Url::to(['products/create-package']) ?>">
-                <?= Yii::t('admin', 'products.button_add_package_title') ?>
+                <?= Yii::t('admin', 'products.add_package') ?>
             </button>
         </div>
         <!--/ Button Add Package -->

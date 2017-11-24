@@ -2,7 +2,7 @@
 
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use frontend\helpers\Ui;
+use frontend\helpers\UiHelper;
 
 /* @var $submitUrl string */
 /* @var $cancelUrl string */
@@ -17,7 +17,7 @@ $imgPath = '/img/';
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title">
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_title') ?>
+                <?= Yii::t('admin', 'settings.payments_edit_paypal') ?>
             </h3>
         </div>
     </div>
@@ -32,15 +32,15 @@ $imgPath = '/img/';
             <div class="col-md-9">
                 <ol>
                     <li>
-                        <?= Yii::t('admin', 'settings.section_payments_edit_paypal_guide_text_1') ?>
+                        <?= Yii::t('admin', 'settings.payments_paypal_guide_1') ?>
                     </li>
                     <li>
-                        <?= Yii::t('admin', 'settings.section_payments_edit_paypal_guide_text_2',[
+                        <?= Yii::t('admin', 'settings.payments_paypal_guide_2',[
                             'api_credentials_url' => '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true" target="_blank">API Credentials</a>'
                         ]) ?>
                     </li>
                     <li>
-                        <?= Yii::t('admin', 'settings.section_payments_edit_paypal_guide_text_3') ?>
+                        <?= Yii::t('admin', 'settings.payments_paypal_guide_3') ?>
                     </li>
                 </ol>
             </div>
@@ -54,21 +54,21 @@ $imgPath = '/img/';
         <?= Html::beginForm(); ?>
         <div class="form-group">
             <label for="paypal_api_username">
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_username_label') ?>
+                <?= Yii::t('admin', 'settings.payments_paypal_username') ?>
             </label>
             <input type="text" class="form-control" id="paypal_api_username" placeholder="" name="PaymentsForm[details][api_username]"
                    value="<?= ArrayHelper::getValue($paymentModel, 'details.api_username', '') ?>">
         </div>
         <div class="form-group">
             <label for="paypal_api_password">
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_password_label') ?>
+                <?= Yii::t('admin', 'settings.payments_paypal_password') ?>
             </label>
             <input type="password" class="form-control" id="paypal_api_password" placeholder="" name="PaymentsForm[details][api_password]"
                    value="<?= ArrayHelper::getValue($paymentModel, 'details.api_password', '') ?>">
         </div>
         <div class="form-group">
             <label for="paypal_api_signature">
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_signature_label') ?>
+                <?= Yii::t('admin', 'settings.payments_paypal_signature') ?>
             </label>
             <input type="text" class="form-control" id="paypal_api_signature" placeholder="" name="PaymentsForm[details][api_signature]"
                    value="<?= ArrayHelper::getValue($paymentModel, 'details.api_signature', '') ?>">
@@ -78,17 +78,17 @@ $imgPath = '/img/';
             <label class="form-check-label">
                 <input type="hidden" name="PaymentsForm[details][test_mode]" value="0">
                 <input type="checkbox" class="form-check-input" name="PaymentsForm[details][test_mode]" value="1"
-                <?= Ui::toggleString(ArrayHelper::getValue($paymentModel, 'details.test_mode', 1), 'checked') ?>>
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_test_mode_label') ?>
+                <?= UiHelper::toggleString(ArrayHelper::getValue($paymentModel, 'details.test_mode', 1), 'checked') ?>>
+                <?= Yii::t('admin', 'settings.payments_paypal_test_mode') ?>
             </label>
         </div>
 
         <hr>
         <button type="submit" class="btn btn-success">
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_button_save_title') ?>
+                <?= Yii::t('admin', 'settings.payments_save_method') ?>
         </button>
         <a href="<?= $cancelUrl ?>" class="btn btn-secondary">
-                <?= Yii::t('admin', 'settings.section_payments_edit_paypal_button_cancel_title') ?>
+                <?= Yii::t('admin', 'settings.payments_cancel_method') ?>
         </a>
         <?= Html::endForm(); ?>
     </form>

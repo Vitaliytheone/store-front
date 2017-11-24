@@ -5,6 +5,7 @@ namespace common\models\store;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\AttributeBehavior;
+use yii\helpers\ArrayHelper;
 use common\models\store\queries\SubordersQuery;
 
 /**
@@ -157,4 +158,40 @@ class Suborders extends ActiveRecord
     {
         return new SubordersQuery(get_called_class());
     }
+
+    /**
+     * Return status title by status value
+     * @param $status
+     * @return mixed
+     */
+    public static function getStatusTitle($status)
+    {
+        $titles = [
+            self::STATUS_AWAITING => Yii::t('admin', 'orders.filter_status_awaiting'),
+            self::STATUS_PENDING => Yii::t('admin', 'orders.filter_status_pending'),
+            self::STATUS_IN_PROGRESS => Yii::t('admin', 'orders.filter_status_in_progress'),
+            self::STATUS_COMPLETED => Yii::t('admin', 'orders.filter_status_completed'),
+            self::STATUS_CANCELED => Yii::t('admin', 'orders.filter_status_canceled'),
+            self::STATUS_FAILED => Yii::t('admin', 'orders.filter_status_failed'),
+            self::STATUS_ERROR => Yii::t('admin', 'orders.filter_status_error'),
+        ];
+
+        return ArrayHelper::getValue($titles, $status, $status);
+    }
+
+    /**
+     * Return mode title by mode value
+     * @param $mode
+     * @return mixed
+     */
+    public static function getModeTitle($mode)
+    {
+        $titles = [
+            self::MODE_MANUAL => Yii::t('admin', 'orders.filter_mode_manual'),
+            self::MODE_AUTO => Yii::t('admin', 'orders.filter_mode_auto'),
+        ];
+
+        return ArrayHelper::getValue($titles, $mode, $mode);
+    }
+
 }

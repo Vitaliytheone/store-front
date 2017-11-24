@@ -35,7 +35,7 @@ use frontend\modules\admin\components\Url;
                                        data-target=".payments_detail"
                                        data-backdrop="static"
                                        data-id="<?= $payment['id'] ?>"
-                                       data-modal_title="<?= Yii::t('admin', 'payments.window_details_title', ['payment_id' => $payment['id']] ) ?>"                                      data-action_url="<?= Url::toRoute(['/payments/get-details', 'id' => $payment['id']]) ?>"
+                                       data-modal_title="<?= Yii::t('admin', 'payments.details_title', ['payment_id' => $payment['id']] ) ?>"                                      data-action_url="<?= Url::toRoute(['/payments/get-details', 'id' => $payment['id']]) ?>"
                                     >
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'payments.action_details') ?>

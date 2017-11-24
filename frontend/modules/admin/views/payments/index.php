@@ -3,15 +3,13 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use frontend\modules\admin\components\Url;
-use frontend\helpers\Ui;
+use frontend\helpers\UiHelper;
 use frontend\modules\admin\widgets\CustomLinkPager;
 use common\models\store\Payments;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $searchModel frontend\modules\admin\models\search\PaymentsSearch */
-
-$this->title = Yii::t('admin', 'payments.page_title');
 
 $formatter = Yii::$app->formatter;
 
@@ -25,7 +23,7 @@ array_walk($payments, function(&$payment) use ($formatter){
     $method = $payment['method'];
     $status = $payment['status'];
 
-    $payment['method_title'] = Yii::t('admin', "payments.payment_method_title_$method");
+    $payment['method_title'] = Yii::t('admin', "payments.payment_method_$method");
     $payment['status_title'] = Yii::t('admin', "payments.payment_status_$status");
     $payment['updated_at_formatted'] = $formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
 });
@@ -34,31 +32,31 @@ array_walk($payments, function(&$payment) use ($formatter){
 
 $statusFilterButtons = [
     -1 => [
-        'title' => Yii::t('admin', 'payments.filter_all'),
+        'title' => Yii::t('admin', 'payments.orders_all'),
         'stat' => false,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
 
     Payments::STATUS_AWAITING => [
-        'title' => Yii::t('admin', 'payments.filter_status_awaiting'),
+        'title' => Yii::t('admin', 'payments.status_awaiting'),
         'stat' => true,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
 
     Payments::STATUS_COMPLETED => [
-        'title' => Yii::t('admin', 'payments.filter_status_completed'),
+        'title' => Yii::t('admin', 'payments.status_completed'),
         'stat' => false,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
 
     Payments::STATUS_FAILED => [
-        'title' => Yii::t('admin', 'payments.filter_status_failed'),
+        'title' => Yii::t('admin', 'payments.status_failed'),
         'stat' => true,
         'stat-class' => 'm-badge m-badge--danger',
     ],
 
     Payments::STATUS_REFUNDED => [
-        'title' => Yii::t('admin', 'payments.filter_status_refunded'),
+        'title' => Yii::t('admin', 'payments.status_refunded'),
         'stat' => false,
         'stat-class' => 'm-badge m-badge--metal m-badge--wide',
     ],
@@ -86,7 +84,7 @@ array_walk($statusFilterButtons, function(&$button, $status) use ($countsPayment
     $button['url'] = $buttonUrl;
 
     /* Populate by active class */
-    $button['active'] = Ui::isFilterActive('status', $status);
+    $button['active'] = UiHelper::isFilterActive('status', $status);
 });
 
 
@@ -99,14 +97,14 @@ array_walk($methodsFilterMenuItems, function(&$menuItem){
     $method = $menuItem['method'];
 
     $menuItem['url'] = Url::current(['method' => $method]);
-    $menuItem['active'] = Ui::isFilterActive('method', $method);
-    $menuItem['method_title'] = Yii::t('admin', "payments.payment_method_title_$method");
+    $menuItem['active'] = UiHelper::isFilterActive('method', $method);
+    $menuItem['method_title'] = Yii::t('admin', "payments.payment_method_$method");
 });
 
 $allMethodsMenuItem = [
     'method' => -1,
-    'method_title' => Yii::t('admin', "payments.payment_method_title_all"),
-    'active' =>  Ui::isFilterActive('method', -1),
+    'method_title' => Yii::t('admin', "payments.payment_method_all"),
+    'active' =>  UiHelper::isFilterActive('method', -1),
     'count' => array_sum(array_column($methodsFilterMenuItems,'count')),
     'url' => Url::current(['method' => null]),
 ];
@@ -222,36 +220,9 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
 
                     <!-- Pagination -->
                     <div class="m-datatable__pager m-datatable--paging-loaded clearfix mb-3">
-                        <?=
-                        CustomLinkPager::widget([
-                            'pagination' => $pagination,
-                            'maxButtonCount' => 10,
-                            'disableCurrentPageButton' => false,
-                            'hideOnSinglePage' => true,
-
-                            'activePageCssClass' => 'm-datatable__pager-link-number m-datatable__pager-link--active',
-                            'disabledPageCssClass' => 'm-datatable__pager-link--disabled',
-
-                            'firstPageCssClass' => 'm-datatable__pager-link--first',
-                            'firstPageLabel' => '<i class="la la-angle-double-left"></i>',
-
-                            'lastPageCssClass' => 'm-datatable__pager-link--last',
-                            'lastPageLabel' => '<i class="la la-angle-double-right"></i>',
-
-                            'prevPageCssClass' => 'm-datatable__pager-link--prev',
-                            'prevPageLabel' => '<i class="la la-angle-left"></i>',
-
-                            'nextPageCssClass' => 'm-datatable__pager-link--next',
-                            'nextPageLabel' => '<i class="la la-angle-right"></i>',
-
-                            'pageCssClass' => 'm-datatable__pager-link-number',
-
-                            'options' => ['class' => 'm-datatable__pager-nav'],
-                            'linkOptions' => ['class' => 'm-datatable__pager-link'],
-                        ])
-                        ?>
+                        <?= CustomLinkPager::widget(['pagination' => $pagination]) ?>
                         <div class="m-datatable__pager-info">
-                            <span class="m-datatable__pager-detail"><?= Ui::listSummary($dataProvider) ?></span>
+                            <span class="m-datatable__pager-detail"><?= UiHelper::listSummary($dataProvider) ?></span>
                         </div>
                     </div>
                     <!--/ Pagination -->

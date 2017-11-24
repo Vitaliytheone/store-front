@@ -10,8 +10,6 @@ use common\models\stores\PaymentMethods;
 /* @var $paymentModel \frontend\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $paymentMethods[] \frontend\modules\admin\models\forms\EditPaymentMethodForm */
 
-$this->title = Yii::t('admin', 'settings.section_payments_page_title');
-
 ?>
 <!-- begin::Body -->
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">

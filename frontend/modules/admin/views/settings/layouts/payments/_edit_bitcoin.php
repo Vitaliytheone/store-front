@@ -16,7 +16,7 @@ $imgPath = '/img/';
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title">
-                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_title') ?>
+                <?= Yii::t('admin', 'settings.payments_edit_bitcoin') ?>
             </h3>
         </div>
     </div>
@@ -32,38 +32,38 @@ $imgPath = '/img/';
             <div class="col-md-9">
                 <ol>
                     <li>
-                        <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_1', [
+                        <?= Yii::t('admin', 'settings.payments_bitcoin_guide_1', [
                                 'myselium_url' => '<a href="https://gear.mycelium.com/" target="_blank">Mycelium Gear</a>'
                         ]) ?>
 
                     </li>
                     <li>
-                        <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_2', [
+                        <?= Yii::t('admin', 'settings.payments_bitcoin_guide_2', [
                                 'mycelium_gateway_url' => '<a href="https://admin.gear.mycelium.com/gateways/new" target="_blank">https://admin.gear.mycelium.com/gateways/new</a>'
                         ]) ?>
                         <ul>
                             <li>
-                                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_2_1', [
+                                <?= Yii::t('admin', 'settings.payments_bitcoin_guide_2_1', [
                                         'callback_url' => '<code>http://twig.perfectpanel.net/bitcoin</code>',
                                 ]) ?>
                             </li>
                             <li>
-                                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_2_2', [
+                                <?= Yii::t('admin', 'settings.payments_bitcoin_guide_2_2', [
                                     'redirect_url' => '<code>http://twig.perfectpanel.net/addfunds</code>',
                                 ]) ?>
                             </li>
                             <li>
-                                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_2_3', [
+                                <?= Yii::t('admin', 'settings.payments_bitcoin_guide_2_3', [
                                     'back_url' => '<code>http://twig.perfectpanel.net/addfunds</code>',
                                 ]) ?>
                             </li>
                             <li>
-                                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_2_4') ?>
+                                <i><?= Yii::t('admin', 'settings.payments_bitcoin_guide_2_4') ?></i>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_guide_text_3') ?>
+                        <?= Yii::t('admin', 'settings.payments_bitcoin_guide_3') ?>
                     </li>
                 </ol>
             </div>
@@ -74,24 +74,24 @@ $imgPath = '/img/';
         <?= Html::beginForm(); ?>
         <div class="form-group">
             <label for="bitcoin_api_gateway_id">
-                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_gateway_id_label') ?>
+                <?= Yii::t('admin', 'settings.payments_bitcoin_gateway_id') ?>
             </label>
             <input type="text" class="form-control" id="bitcoin_api_gateway_id" placeholder="" name="PaymentsForm[details][api_gateway_id]"
                    value="<?= ArrayHelper::getValue($paymentModel, 'details.api_gateway_id', '') ?>">
         </div>
         <div class="form-group">
             <label for="bitcoin_geteway_secret">
-                <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_gateway_secret_label') ?>
+                <?= Yii::t('admin', 'settings.payments_bitcoin_gateway_secret') ?>
             </label>
             <input type="text" class="form-control" id="bitcoin_geteway_secret" placeholder="" name="PaymentsForm[details][api_gateway_secret]"
                    value="<?= ArrayHelper::getValue($paymentModel, 'details.api_gateway_secret', '') ?>">
         </div>
         <hr>
         <button type="submit" class="btn btn-success m-btn--air">
-            <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_button_save_title') ?>
+            <?= Yii::t('admin', 'settings.payments_save_method') ?>
         </button>
         <a href="<?= $cancelUrl ?>" class="btn btn-secondary">
-            <?= Yii::t('admin', 'settings.section_payments_edit_bitcoin_button_cancel_title') ?>
+            <?= Yii::t('admin', 'settings.payments_cancel_method') ?>
         </a>
         <?= Html::endForm(); ?>
     </form>
