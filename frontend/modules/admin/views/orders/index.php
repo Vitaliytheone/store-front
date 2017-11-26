@@ -6,23 +6,24 @@ use yii\helpers\ArrayHelper;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\widgets\CustomLinkPager;
 use frontend\assets\OrdersAsset;
+use common\models\store\Suborders;
 
 /* @var $this yii\web\View */
-/* @var $ordersDataProvider frontend\modules\admin\data\OrdersActiveDataProvider */
+/* @var $ordersDataProvider yii\data\ActiveDataProvider */
 /* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
 
 OrdersAsset::register($this);
 
 $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
-    1 => [
+    Suborders::STATUS_AWAITING => [
         'show_count' => true,
         'badge-class' => 'm-badge--metal'
     ],
-    6 => [
+    Suborders::STATUS_FAILED => [
         'show_count' => true,
         'badge-class' => 'm-badge--danger'
     ],
-    7 => [
+    Suborders::STATUS_ERROR => [
         'show_count' => true,
         'badge-class' => 'm-badge--danger'
     ],
@@ -35,6 +36,7 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
     <div class="col">
 
         <div class="row sommerce-block">
+
             <div class="col-lg-10 col-sm-12">
                 <nav class="nav nav-tabs sommerce-tabs__nav">
                     <?php foreach ($statusFilterButtons as $button): ?>
@@ -49,6 +51,7 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                     <?php endforeach; ?>
                 </nav>
             </div>
+
             <div class="col-lg-2 col-sm-12">
                 <form action="<?= Url::toRoute('/orders') ?>">
                     <div class="input-group m-input-group--air">
@@ -66,8 +69,8 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                     </div>
                 </form>
             </div>
-        </div>
 
+        </div>
 
         <div class="tab-content">
             <div class="tab-pane fade show active" id="all-orders" role="tabpanel" aria-labelledby="all-orders-tab">
@@ -143,7 +146,7 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                         </tr>
                         </thead>
                         <tbody class="m-datatable__body">
-                        <?php foreach ($ordersDataProvider->getOrdersWithSuborders() as $order): ?>
+                        <?php foreach ($ordersSearchModel->getOrders() as $order): ?>
                             <!-- Order item -->
                             <?=
                                 $this->render('order_item', [
@@ -159,9 +162,7 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                     <!-- Pagination -->
                     <div class="m-datatable__pager m-datatable--paging-loaded clearfix mb-3">
 
-                        <?= CustomLinkPager::widget([
-                                'pagination' => $ordersDataProvider->getPagination(),
-                        ]) ?>
+                        <?= CustomLinkPager::widget(['pagination' => $ordersDataProvider->getPagination()]) ?>
 
                         <div class="m-datatable__pager-info">
                             <span class="m-datatable__pager-detail"><?=  UiHelper::listSummary($ordersDataProvider) ?></span>

@@ -3,13 +3,14 @@
 namespace frontend\modules\admin\models\search;
 
 use Yii;
+use yii\base\Exception;
 use yii\db\Query;
 use yii\validators\EmailValidator;
 use yii\helpers\ArrayHelper;
 use frontend\modules\admin\components\Url;
 use frontend\helpers\UiHelper;
 use common\models\store\Suborders;
-use frontend\modules\admin\data\OrdersActiveDataProvider;
+use yii\data\ActiveDataProvider;
 
 /**
  * Orders Search model
@@ -17,6 +18,7 @@ use frontend\modules\admin\data\OrdersActiveDataProvider;
  * @property integer $mode
  * @property integer $product
  * @property integer $query
+ * @property ActiveDataProvider $_dataProvider
  * @property array $_queryActiveFilters Uses for current query filters storing. Format: [$filterName => [$filter => [....]]]
  */
 class OrdersSearch extends \yii\base\Model
@@ -28,6 +30,8 @@ class OrdersSearch extends \yii\base\Model
 
     private $_db;
     private $_queryActiveFilters;
+
+    private $_dataProvider;
 
     const PAGE_SIZE = 100;
 
@@ -138,7 +142,7 @@ class OrdersSearch extends \yii\base\Model
     /**
      * Search in Orders collection
      * @param array $params Filters params
-     * @return \frontend\modules\admin\data\OrdersActiveDataProvider
+     * @return ActiveDataProvider
      */
     public function search($params = [])
     {
@@ -151,7 +155,8 @@ class OrdersSearch extends \yii\base\Model
             ->orderBy([
                 'id' => SORT_DESC,
             ]);
-        $dataProvider = new OrdersActiveDataProvider([
+
+        $this->_dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSize' => static::PAGE_SIZE,
@@ -160,7 +165,7 @@ class OrdersSearch extends \yii\base\Model
 
         $this->attributes = $params;
         if (!$this->validate()) {
-            return $dataProvider;
+            return $this->_dataProvider;
         }
 
         // Query filters
@@ -173,6 +178,7 @@ class OrdersSearch extends \yii\base\Model
             $filter = ['o.id' => $statusOrderIdsSubquery];
             $this->_queryActiveFilters['status']['where'] = $filter;
         }
+
         if (isset($this->mode)) {
             $modeOrderIdsSubquery = (new Query())
                 ->select("order_id")
@@ -182,6 +188,7 @@ class OrdersSearch extends \yii\base\Model
             $filter = ['o.id' => $modeOrderIdsSubquery];
             $this->_queryActiveFilters['mode']['where'] = $filter;
         }
+
         if (isset($this->product)) {
             $productOrderIdsSubquery = (new Query())
                 ->select("so.order_id")
@@ -199,7 +206,7 @@ class OrdersSearch extends \yii\base\Model
 
         $searchQuery = trim($this->query);
         if ($searchQuery === '') {
-            return $dataProvider;
+            return $this->_dataProvider;
         }
 
         // Searches:
@@ -230,12 +237,13 @@ class OrdersSearch extends \yii\base\Model
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
         }
+
         // Apply query filter
         if ($searchFilter) {
             $query->andFilterWhere($searchFilter);
         }
 
-        return $dataProvider;
+        return $this->_dataProvider;
     }
 
     /**
@@ -441,4 +449,100 @@ class OrdersSearch extends \yii\base\Model
 
         return $filterItems;
     }
+
+    /**
+     * Return found Orders with Suborders array
+     * @return array
+     * @throws Exception
+     */
+    public function getOrders()
+    {
+        if (!$this->_dataProvider) {
+            throw new Exception('First do a search!');
+        }
+
+        $orders = $this->_dataProvider->getModels();
+        $orderIds = array_keys($orders);
+
+        $suborders = (new Query())
+            ->select([
+                'so.id suborder_id', 'so.order_id', 'so.package_id', 'pk.product_id',
+                'so.amount', 'so.link', 'so.quantity', 'so.status', 'so.mode',
+                'pr.name product_name',
+            ])
+            ->from("$this->_db.suborders so")
+            ->leftJoin("$this->_db.packages pk",'so.package_id = pk.id')
+            ->leftJoin("$this->_db.products pr",'pk.product_id = pr.id')
+            ->where(['so.order_id' => $orderIds])
+            ->indexBy('suborder_id')
+            ->all();
+
+        $formatter = Yii::$app->formatter;
+
+        // Populate each order by additional data
+        array_walk($orders, function(&$order, $orderId) use ($suborders, $formatter){
+            // Get order suborders
+            $suborders =  array_filter($suborders, function($suborder) use ($orderId){
+                return $suborder['order_id'] == $orderId;
+            },ARRAY_FILTER_USE_BOTH);
+
+            // Populate each suborder by additional data
+            array_walk($suborders, function(&$suborder) use ($suborders) {
+                $span =  $this->_getRowSpan($suborder, $suborders);
+                $actionMenu = $this->_getActionMenu($suborder);
+                if ($span) {
+                    $suborder['row_span'] = $span;
+                }
+
+                if ($actionMenu) {
+                    $suborder['action'] = $actionMenu;
+                }
+
+                $suborder['status_title'] = Suborders::getStatusTitle($suborder['status']);
+                $suborder['mode_title'] = Suborders::getModeTitle($suborder['mode']);
+            });
+
+            $order['created_at'] = $formatter->asDatetime($order['created_at'], 'yyyy-MM-dd HH:mm:ss');
+            $order['suborders'] = $suborders;
+        });
+
+        return $orders;
+    }
+
+    /**
+     * Return row span count for suborders row or null
+     * @param $suborder
+     * @param $suborders
+     * @return int|null
+     */
+    private function _getRowSpan($suborder, $suborders)
+    {
+        $subordersCount = count($suborders);
+        $firstSuborder = array_values($suborders)[0];
+        $isFirst = (ArrayHelper::getValue($suborder, 'suborder_id') === ArrayHelper::getValue($firstSuborder, 'suborder_id'));
+        return (($subordersCount > 1) && $isFirst) ? $subordersCount : null;
+    }
+
+    /**
+     * Return action menu or null
+     * @param $suborder
+     * @return array|null
+     */
+    private function _getActionMenu($suborder)
+    {
+        $details = [];
+        $resend =  [];
+        $changeStatus = [];
+        $cancel = [];
+
+        $actionMenu = ($details || $resend || $changeStatus || $cancel) ? [
+            'details' => $details,
+            'resend' => $resend,
+            'changeStatus' => $changeStatus,
+            'cancel' => $cancel,
+        ] : null;
+
+        return $actionMenu;
+    }
+
 }

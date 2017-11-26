@@ -8,9 +8,7 @@ use \common\models\store\Suborders;
 /* @var $this yii\web\View */
 /* @var $order array */
 /* @var $ordersSearchModel frontend\modules\admin\models\search\OrdersSearch */
-/* @var $formatter yii\i18n\Formatter */
 
-$formatter = Yii::$app->formatter;
 $suborders = $order['suborders'];
 $subordersCnt = count($suborders);
 
@@ -18,16 +16,6 @@ $allowedActions = $ordersSearchModel::allowedActionStatuses();
 $disallowedCancelAction = $ordersSearchModel::$disallowedCancelStatuses;
 $disallowedChangeStatusAction = $ordersSearchModel::$disallowedChangeStatusStatuses;
 $disallowedDetailsStatusesAction = $ordersSearchModel::$disallowedDetailsStatuses;
-
-
-/**
- * Check if $suborder is a first element in $suborders array
- * @param $suborder
- * @return bool
- */
-$isFirstSuborder = function($suborder) use ($suborders) {
-    return (count($suborders) > 1) && ($suborder == array_values($suborders)[0]);
-};
 
 
 /**
@@ -117,10 +105,10 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
 
 <?php foreach ($suborders as $suborder): ?>
 <tr>
-    <?php if($isFirstSuborder($suborder)): ?>
-        <td rowspan="<?= $subordersCnt ?>"><?= $order['id'] ?></td>
-        <td rowspan="<?= $subordersCnt ?>"><?= Html::encode($order['customer']) ?></td>
-    <?php elseif ($subordersCnt == 1): ?>
+    <?php if(ArrayHelper::getValue($suborder, 'row_span')): ?>
+        <td rowspan="<?= $suborder['row_span'] ?>"><?= $order['id'] ?></td>
+        <td rowspan="<?= $suborder['row_span'] ?>"><?= Html::encode($order['customer']) ?></td>
+    <?php elseif (count($suborders) == 1): ?>
         <td><?= $order['id'] ?></td>
         <td><?= Html::encode($order['customer']) ?></td>
     <?php endif; ?>
@@ -134,15 +122,15 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
     </td>
     <td><?= $suborder['product_name'] ?></td>
     <td><?= $suborder['quantity'] ?></td>
-    <td><?= $suborder['status_caption'] ?></td>
+    <td><?= $suborder['status_title'] ?></td>
 
-    <?php if($isFirstSuborder($suborder)): ?>
-        <td rowspan="<?= $subordersCnt ?>" nowrap="" class="sommerce-table__no-wrap"><?= $formatter->asDatetime($order['created_at'],'yyyy-MM-dd HH:mm:ss'); ?></td>
-    <?php elseif ($subordersCnt == 1): ?>
-        <td nowrap="" class="sommerce-table__no-wrap"><?= $formatter->asDatetime($order['created_at'],'yyyy-MM-dd HH:mm:ss'); ?></td>
+    <?php if (ArrayHelper::getValue($suborder, 'row_span')): ?>
+        <td rowspan="<?= $suborder['row_span'] ?>" nowrap="" class="sommerce-table__no-wrap"><?= $order['created_at'] ?></td>
+    <?php elseif (count($suborders) == 1): ?>
+        <td nowrap="" class="sommerce-table__no-wrap"><?= $order['created_at'] ?></td>
     <?php endif; ?>
 
-    <td><?= $suborder['mode_caption'] ?></td>
+    <td><?= $suborder['mode_title'] ?></td>
     <td class="text-right">
 
         <?php if($isActionButtonShow($suborder)): ?>
@@ -159,14 +147,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
 
                                 <?php if($isDetailsMenuShow($suborder['status'], $suborder['mode'])): ?>
                                 <li class="m-nav__item">
-                                    <a href="#"
-                                       data-toggle="modal"
-                                       data-target=".order-detail"
-                                       data-backdrop="static"
-                                       class="m-nav__link"
-                                       data-suborder-id="<?= $suborder['suborder_id'] ?>"
-                                       data-modal_title="<?= Yii::t('admin', 'orders.details_title', ['suborder_id' => $suborder['suborder_id']]) ?>"
-                                    >
+                                    <a href="#" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-modal_title="<?= Yii::t('admin', 'orders.details_title', ['suborder_id' => $suborder['suborder_id']]) ?>">
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'orders.action_details') ?>
                                         </span>
