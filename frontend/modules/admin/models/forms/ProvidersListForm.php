@@ -48,6 +48,7 @@ class ProvidersListForm extends Model {
      */
     public function save()
     {
+        var_dump((array)$this->providers); exit();
         foreach ((array)$this->providers as $provider) {
             $key = ArrayHelper::getValue($provider, 'key');
             $apiKey = ArrayHelper::getValue($provider, 'api_key');
