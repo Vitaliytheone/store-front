@@ -44,7 +44,5 @@ ProductsAsset::register($this);
 </div>
 
 <?= $this->render('_modal_product_form', []); ?>
-
 <?= $this->render('_modal_package_form', ['storeProviders' => $storeProviders,]); ?>
-
 <?= $this->render('_modal_delete_package', []); ?>
