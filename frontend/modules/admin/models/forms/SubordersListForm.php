@@ -3,16 +3,14 @@
 namespace frontend\modules\admin\models\forms;
 
 use yii;
-use yii\behaviors\AttributeBehavior;
 use yii\db\Query;
-use yii\helpers\ArrayHelper;
-use frontend\modules\admin\models\search\OrdersSearch;
+use common\models\store\Suborders;
 
 /**
  * Class SubordersListForm
  * @package frontend\modules\admin\models\forms
  */
-class SubordersListForm extends \common\models\store\Suborders
+class SubordersListForm extends Suborders
 {
 
     const SCENARIO_CHANGE_STATUS_ACTION = 'change_status_action';
@@ -20,6 +18,34 @@ class SubordersListForm extends \common\models\store\Suborders
 
     const SCENARIO_CANCEL_ACTION = 'allowed_cancel';
     const SCENARIO_RESEND_ACTION = 'allowed_resend';
+    const SCENARIO_DETAILS_ACTION = 'allowed_details';
+
+    /* Suborder accepted statuses for changes from admin panel */
+    public static $acceptedStatuses = [
+        Suborders::STATUS_PENDING,
+        Suborders::STATUS_IN_PROGRESS,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `Change status` action is disallowed */
+    public static $disallowedChangeStatusStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `Cancel suborder` action is disallowed */
+    public static $disallowedCancelStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `View details` action disallowed */
+    public static $disallowedDetailsStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+    ];
 
     /**
      * @inheritdoc
@@ -27,22 +53,29 @@ class SubordersListForm extends \common\models\store\Suborders
     public function rules()
     {
         return [
-            ['status', 'in', 'not' => true, 'range' => OrdersSearch::$disallowedChangeStatusStatuses,
+            ['status', 'in', 'not' => true, 'range' => self::$disallowedChangeStatusStatuses,
                 'on' => self::SCENARIO_CHANGE_STATUS_ACTION],
 
-            ['status', 'in', 'range' => OrdersSearch::$acceptedStatuses,
+            ['status', 'in', 'range' => self::$acceptedStatuses,
                 'on' => self::SCENARIO_CHANGE_STATUS_ACTION_ATTR],
+
             ['mode', 'safe',
                 'on' => self::SCENARIO_CHANGE_STATUS_ACTION_ATTR],
 
-
-            ['status', 'in', 'not' => true, 'range' => OrdersSearch::$disallowedCancelStatuses,
+            ['status', 'in', 'not' => true, 'range' => self::$disallowedCancelStatuses,
                 'on' => self::SCENARIO_CANCEL_ACTION],
 
-            ['status', 'compare', 'compareValue' => self::STATUS_FAILED, 'operator' => '===', 'type' => 'number',
+            ['status', 'compare', 'compareValue' => Suborders::STATUS_FAILED, 'operator' => '===', 'type' => 'number',
                 'on' => self::SCENARIO_RESEND_ACTION],
+
+            ['mode', 'compare', 'compareValue' => Suborders::MODE_AUTO, 'operator' => '===', 'type' => 'number',
+                'on' => self::SCENARIO_DETAILS_ACTION],
+            ['status', 'in', 'not' => true, 'range' => static::$disallowedDetailsStatuses,
+                'on' => self::SCENARIO_DETAILS_ACTION]
         ];
     }
+
+
 
     /**
      * Return Suborder Details data
@@ -75,4 +108,50 @@ class SubordersListForm extends \common\models\store\Suborders
 
         return $orderDetails;
     }
+
+    /**
+     * Return action menu or null
+     * @return array|null
+     */
+    public function getActionMenu()
+    {
+        // Create `change status` menu
+        $changeStatus = false;
+
+        $this->setScenario(self::SCENARIO_CHANGE_STATUS_ACTION);
+        if ($this->validate()) {
+            foreach (static::$acceptedStatuses as $acceptedStatus) {
+                if ($this->status == $acceptedStatus) {
+                    continue;
+                }
+
+                $changeStatus[] = [
+                    'status' => $acceptedStatus,
+                    'status_title' => static::getStatusTitle($acceptedStatus),
+                ];
+            }
+        }
+
+        // `details` menu
+        $this->setScenario(static::SCENARIO_DETAILS_ACTION);
+        $details = $this->validate();
+
+        // `resend` menu
+        $this->setScenario(static::SCENARIO_RESEND_ACTION);
+        $resend = $this->validate();
+
+        // `cancel`
+        $this->setScenario(static::SCENARIO_CANCEL_ACTION);
+        $cancel = $this->validate();
+
+        $actionMenu = ($details || $resend || $changeStatus || $cancel) ? [
+            'details' => $details,
+            'resend' => $resend,
+            'status' => $changeStatus,
+            'cancel' => $cancel,
+        ] : null;
+
+        return $actionMenu;
+    }
+
 }

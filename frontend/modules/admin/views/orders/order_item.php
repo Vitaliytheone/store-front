@@ -3,7 +3,6 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use \common\models\store\Suborders;
 
 /* @var $this yii\web\View */
 /* @var $order array */
@@ -12,102 +11,24 @@ use \common\models\store\Suborders;
 $suborders = $order['suborders'];
 $subordersCnt = count($suborders);
 
-$allowedActions = $ordersSearchModel::allowedActionStatuses();
-$disallowedCancelAction = $ordersSearchModel::$disallowedCancelStatuses;
-$disallowedChangeStatusAction = $ordersSearchModel::$disallowedChangeStatusStatuses;
-$disallowedDetailsStatusesAction = $ordersSearchModel::$disallowedDetailsStatuses;
+// Collecting current filters values for redirecting
+$currentFilters = yii::$app->getRequest()->get();
 
-
-/**
- * Return only allowed for action statuses
- * Current model status excluded from action menu.
- * @param $currentStatus
- * @return array
- */
-$actionAllowedStatuses = function($currentStatus) use ($allowedActions) {
-    if (!isset($allowedActions[$currentStatus])) {
-        return $allowedActions;
-    }
-    unset($allowedActions[$currentStatus]);
-    return $allowedActions;
-};
-
-/**
- * Show or not model`s `Change status` menu
- * @param $currentStatus
- * @return bool
- */
-$isStatusMenuShow = function($currentStatus) use ($disallowedChangeStatusAction) {
-    return !in_array($currentStatus, $disallowedChangeStatusAction);
-};
-
-/**
- * Show or not model`s `Resend order` menu
- * @param $currentStatus int
- * @return int
- */
-$isResendOrderMenuShow = function($currentStatus) {
-    return $currentStatus == Suborders::STATUS_FAILED;
-};
-
-/**
- * Show or not model`s `Details` menu
- * @param $currentStatus
- * @param $currentMode
- * @return bool
- */
-$isDetailsMenuShow = function($currentStatus, $currentMode) use ($disallowedDetailsStatusesAction) {
-    return $currentMode == Suborders::MODE_AUTO && !in_array($currentStatus, $disallowedDetailsStatusesAction);
-};
-
-/**
- * Show or hide Cancel suborder button
- * @param $currentStatus
- * @return string
- */
-$isCancelShow = function($currentStatus) use ($disallowedCancelAction) {
-    return $currentStatus != in_array($currentStatus, $disallowedCancelAction);
-};
-
-/**
- * Show or not models 'Action' button exactly
- * @param $suborder
- * @return bool
- */
-$isActionButtonShow = function($suborder) use ($isStatusMenuShow, $isResendOrderMenuShow, $isDetailsMenuShow, $isCancelShow) {
-    $status = $suborder['status'];
-    $mode = $suborder['mode'];
-    
-    return $isStatusMenuShow($status) || $isResendOrderMenuShow($status) || $isDetailsMenuShow($status, $mode) || $isCancelShow($status);
-};
-
-/**
- * Collecting current filters values for redirecting
- * @param array $paramNames
- * @return array
- */
-$paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query']) {
-    if (!is_array($paramNames)) {
-        $paramNames = [$paramNames];
-    }
-
-    $res = [];
-    foreach ($paramNames AS $paramName) {
-        $param = yii::$app->getRequest()->get($paramName);
-        if ($param) {
-            $res[$paramName] = $param;
-        }
-    }
-    return $res;
-};
-
+// Check requires rowspan for multiple suborders order
+$checkRowSpan = function($suborder) use ($suborders) {
+    $subordersCount = count($suborders);
+    $firstSuborder = array_values($suborders)[0];
+    $isFirst = (ArrayHelper::getValue($suborder, 'suborder_id') === ArrayHelper::getValue($firstSuborder, 'suborder_id'));
+    return (($subordersCount > 1) && $isFirst) ? $subordersCount : null;
+}
 ?>
 
 <?php foreach ($suborders as $suborder): ?>
 <tr>
-    <?php if(ArrayHelper::getValue($suborder, 'row_span')): ?>
-        <td rowspan="<?= $suborder['row_span'] ?>"><?= $order['id'] ?></td>
-        <td rowspan="<?= $suborder['row_span'] ?>"><?= Html::encode($order['customer']) ?></td>
+    <?php $rowSpan = $checkRowSpan($suborder) ?>
+    <?php if($rowSpan): ?>
+        <td rowspan="<?= $rowSpan ?>"><?= $order['id'] ?></td>
+        <td rowspan="<?= $rowSpan ?>"><?= Html::encode($order['customer']) ?></td>
     <?php elseif (count($suborders) == 1): ?>
         <td><?= $order['id'] ?></td>
         <td><?= Html::encode($order['customer']) ?></td>
@@ -124,8 +45,8 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
     <td><?= $suborder['quantity'] ?></td>
     <td><?= $suborder['status_title'] ?></td>
 
-    <?php if (ArrayHelper::getValue($suborder, 'row_span')): ?>
-        <td rowspan="<?= $suborder['row_span'] ?>" nowrap="" class="sommerce-table__no-wrap"><?= $order['created_at'] ?></td>
+    <?php if ($rowSpan): ?>
+        <td rowspan="<?= $rowSpan ?>" nowrap="" class="sommerce-table__no-wrap"><?= $order['created_at'] ?></td>
     <?php elseif (count($suborders) == 1): ?>
         <td nowrap="" class="sommerce-table__no-wrap"><?= $order['created_at'] ?></td>
     <?php endif; ?>
@@ -133,7 +54,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
     <td><?= $suborder['mode_title'] ?></td>
     <td class="text-right">
 
-        <?php if($isActionButtonShow($suborder)): ?>
+        <?php if(ArrayHelper::getValue($suborder, 'action_menu')): ?>
         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-right" data-dropdown-toggle="click" aria-expanded="true">
             <a href="#" class="m-dropdown__toggle btn btn-primary btn-sm">
                 <?= Yii::t('admin', 'orders.action_title') ?> <span class="fa fa-cog"></span>
@@ -145,7 +66,7 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                         <div class="m-dropdown__content">
                             <ul class="m-nav">
 
-                                <?php if($isDetailsMenuShow($suborder['status'], $suborder['mode'])): ?>
+                                <?php if(ArrayHelper::getValue($suborder,'action_menu.details')): ?>
                                 <li class="m-nav__item">
                                     <a href="#" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-modal_title="<?= Yii::t('admin', 'orders.details_title', ['suborder_id' => $suborder['suborder_id']]) ?>">
                                         <span class="m-nav__link-text">
@@ -155,9 +76,9 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 </li>
                                 <?php endif; ?>
 
-                                <?php if($isResendOrderMenuShow($suborder['status'])): ?>
+                                <?php if(ArrayHelper::getValue($suborder, 'action_menu.resend')): ?>
                                 <li class="m-nav__item">
-                                    <a href="<?= Url::to(['/admin/orders/resend', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
+                                    <a href="<?= Url::to(['/admin/orders/resend', 'id'=>$suborder['suborder_id'], 'filters' => $currentFilters]); ?>" class="m-nav__link">
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'orders.action_resend') ?>
                                         </span>
@@ -165,8 +86,8 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                 </li>
                                 <?php endif; ?>
 
-                                <!-- Change Status Menu -->
-                                <?php if($isStatusMenuShow($suborder['status'])): ?>
+                                <?php $statusItems = ArrayHelper::getValue($suborder, 'action_menu.status') ?>
+                                <?php if(ArrayHelper::getValue($suborder, 'action_menu.status')): ?>
                                 <li class="m-nav__item">
                                     <a class="m-nav__link dropdown-collapse dropdown-toggle" data-toggle="collapse" href="#action-<?= $suborder['suborder_id'] ?>">
                                         <span class="m-nav__link-text">
@@ -175,18 +96,17 @@ $paramsForRedirect = function($paramNames = ['status', 'mode', 'product', 'query
                                     </a>
                                     <div class="collapse sommerce-dropdwon__actions_collapse" id="action-<?= $suborder['suborder_id'] ?>">
                                         <ul>
-                                            <?php foreach ($actionAllowedStatuses($suborder['status']) as $status => $statusData): ?>
-                                                <li><a href="<?= Url::to(['/admin/orders/change-status', 'id' => $suborder['suborder_id'], 'status' => $status, 'filters' => $paramsForRedirect()]) ?>" class="change-status"><?= $statusData['caption'] ?></a></li>
+                                            <?php foreach ($statusItems as $status): ?>
+                                                <li><a href="<?= Url::to(['/admin/orders/change-status', 'id' => $suborder['suborder_id'], 'status' => $status['status'], 'filters' => $currentFilters]) ?>" class="change-status"><?= $status['status_title'] ?></a></li>
                                             <?php endforeach; ?>
                                         </ul>
                                     </div>
                                 </li>
                                 <?php endif; ?>
 
-                                <!--/ Change Status Menu -->
-                                <?php if ($isCancelShow($suborder['status'])): ?>
+                                <?php if (ArrayHelper::getValue($suborder, 'action_menu.cancel')): ?>
                                 <li class="m-nav__item">
-                                    <a href="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $paramsForRedirect()]); ?>" class="m-nav__link">
+                                    <a href="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $currentFilters]); ?>" class="m-nav__link">
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'orders.action_cancel') ?>
                                         </span>

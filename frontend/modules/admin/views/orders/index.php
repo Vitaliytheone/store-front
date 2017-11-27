@@ -96,15 +96,13 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
                                                     <ul class="m-nav">
-                                                    <!-- Product filter -->
-                                                    <?php foreach ($ordersSearchModel->productFilterItems() as $item): ?>
-                                                        <li class="<?= $item['active'] ? 'active' : '' ?>">
-                                                            <a href="<?= $item['url'] ?>">
-                                                                <?= $item['name'] ?> (<?= $item['count'] ?>)
-                                                            </a>
-                                                        </li>
-                                                    <?php endforeach; ?>
-                                                    <!--/ Product filter -->
+                                                        <?php foreach ($ordersSearchModel->productFilterItems() as $item): ?>
+                                                            <li class="<?= $item['active'] ? 'active' : '' ?>">
+                                                                <a href="<?= $item['url'] ?>">
+                                                                    <?= $item['name'] ?> (<?= $item['count'] ?>)
+                                                                </a>
+                                                            </li>
+                                                        <?php endforeach; ?>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -126,7 +124,6 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
                                                     <ul class="m-nav">
-                                                        <!-- Mode filter -->
                                                         <?php foreach ($ordersSearchModel->modeFilterItems() as $modeItem): ?>
                                                             <li class="<?= $modeItem['active'] ? 'active' : '' ?>">
                                                                 <a href="<?= $modeItem['url'] ?>">
@@ -134,7 +131,6 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                                                 </a>
                                                             </li>
                                                         <?php endforeach; ?>
-                                                        <!--/ Mode filter -->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -147,19 +143,16 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                         </thead>
                         <tbody class="m-datatable__body">
                         <?php foreach ($ordersSearchModel->getOrders() as $order): ?>
-                            <!-- Order item -->
                             <?=
                                 $this->render('order_item', [
                                     'order' => $order,
                                     'ordersSearchModel' => $ordersSearchModel,
                                 ]);
                             ?>
-                            <!--/ Order item -->
                         <?php endforeach; ?>
                         </tbody>
                     </table>
 
-                    <!-- Pagination -->
                     <div class="m-datatable__pager m-datatable--paging-loaded clearfix mb-3">
 
                         <?= CustomLinkPager::widget(['pagination' => $ordersDataProvider->getPagination()]) ?>
@@ -169,7 +162,6 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                         </div>
 
                     </div>
-                    <!--/ Pagination -->
 
                 </div>
 
@@ -180,7 +172,6 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
 
 </div>
 
-<!-- Order Details modal -->
 <div id="suborder-details-modal" class="modal fade order-detail" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -221,4 +212,3 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
         </div>
     </div>
 </div>
-<!--/ Order Details modal -->

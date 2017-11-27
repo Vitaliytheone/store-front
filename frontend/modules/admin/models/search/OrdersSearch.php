@@ -11,6 +11,7 @@ use frontend\modules\admin\components\Url;
 use frontend\helpers\UiHelper;
 use common\models\store\Suborders;
 use yii\data\ActiveDataProvider;
+use frontend\modules\admin\models\forms\SubordersListForm;
 
 /**
  * Orders Search model
@@ -35,33 +36,6 @@ class OrdersSearch extends \yii\base\Model
 
     const PAGE_SIZE = 100;
 
-    /* Suborder accepted statuses for changes from admin panel */
-    public static $acceptedStatuses = [
-        Suborders::STATUS_PENDING,
-        Suborders::STATUS_IN_PROGRESS,
-        Suborders::STATUS_COMPLETED,
-    ];
-
-    /* Suborder statuses when `Cancel suborder` action is disallowed */
-    public static $disallowedCancelStatuses = [
-        Suborders::STATUS_AWAITING,
-        Suborders::STATUS_CANCELED,
-        Suborders::STATUS_COMPLETED,
-    ];
-
-    /* Suborder statuses when `Change status` action is disallowed */
-    public static $disallowedChangeStatusStatuses = [
-        Suborders::STATUS_AWAITING,
-        Suborders::STATUS_CANCELED,
-        Suborders::STATUS_COMPLETED,
-    ];
-
-    /* Suborder statuses when `View details` action disallowed */
-    public static $disallowedDetailsStatuses = [
-        Suborders::STATUS_AWAITING,
-        Suborders::STATUS_CANCELED,
-    ];
-
     public static $statusFilters = [
         Suborders::STATUS_AWAITING,
         Suborders::STATUS_PENDING,
@@ -70,15 +44,6 @@ class OrdersSearch extends \yii\base\Model
         Suborders::STATUS_CANCELED,
         Suborders::STATUS_FAILED,
         Suborders::STATUS_ERROR,
-    ];
-
-    public static $modeFilters = [
-        Suborders::MODE_MANUAL => [
-            'caption' => 'Manual',
-        ],
-        Suborders::MODE_AUTO => [
-            'caption' => 'Auto',
-        ],
     ];
 
     public function init()
@@ -244,17 +209,6 @@ class OrdersSearch extends \yii\base\Model
         }
 
         return $this->_dataProvider;
-    }
-
-    /**
-     * Return array of allowed statuses object for Order admin actions
-     * @return array
-     */
-    public static function allowedActionStatuses()
-    {
-        return array_filter(static::$statusFilters, function($filterKey) {
-            return in_array($filterKey, static::$acceptedStatuses);
-        }, ARRAY_FILTER_USE_KEY );
     }
 
     /**
@@ -481,6 +435,7 @@ class OrdersSearch extends \yii\base\Model
 
         // Populate each order by additional data
         array_walk($orders, function(&$order, $orderId) use ($suborders, $formatter){
+
             // Get order suborders
             $suborders =  array_filter($suborders, function($suborder) use ($orderId){
                 return $suborder['order_id'] == $orderId;
@@ -488,18 +443,13 @@ class OrdersSearch extends \yii\base\Model
 
             // Populate each suborder by additional data
             array_walk($suborders, function(&$suborder) use ($suborders) {
-                $span =  $this->_getRowSpan($suborder, $suborders);
-                $actionMenu = $this->_getActionMenu($suborder);
-                if ($span) {
-                    $suborder['row_span'] = $span;
-                }
 
-                if ($actionMenu) {
-                    $suborder['action'] = $actionMenu;
-                }
+                $suborderListForm = new SubordersListForm();
+                $suborderListForm->setAttributes($suborder, false);
 
                 $suborder['status_title'] = Suborders::getStatusTitle($suborder['status']);
                 $suborder['mode_title'] = Suborders::getModeTitle($suborder['mode']);
+                $suborder['action_menu'] = $suborderListForm->getActionMenu();
             });
 
             $order['created_at'] = $formatter->asDatetime($order['created_at'], 'yyyy-MM-dd HH:mm:ss');
@@ -507,42 +457,6 @@ class OrdersSearch extends \yii\base\Model
         });
 
         return $orders;
-    }
-
-    /**
-     * Return row span count for suborders row or null
-     * @param $suborder
-     * @param $suborders
-     * @return int|null
-     */
-    private function _getRowSpan($suborder, $suborders)
-    {
-        $subordersCount = count($suborders);
-        $firstSuborder = array_values($suborders)[0];
-        $isFirst = (ArrayHelper::getValue($suborder, 'suborder_id') === ArrayHelper::getValue($firstSuborder, 'suborder_id'));
-        return (($subordersCount > 1) && $isFirst) ? $subordersCount : null;
-    }
-
-    /**
-     * Return action menu or null
-     * @param $suborder
-     * @return array|null
-     */
-    private function _getActionMenu($suborder)
-    {
-        $details = [];
-        $resend =  [];
-        $changeStatus = [];
-        $cancel = [];
-
-        $actionMenu = ($details || $resend || $changeStatus || $cancel) ? [
-            'details' => $details,
-            'resend' => $resend,
-            'changeStatus' => $changeStatus,
-            'cancel' => $cancel,
-        ] : null;
-
-        return $actionMenu;
     }
 
 }
