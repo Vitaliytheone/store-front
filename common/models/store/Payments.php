@@ -5,6 +5,7 @@ namespace common\models\store;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use common\models\store\queries\PaymentsQuery;
 
 /**
@@ -105,6 +106,9 @@ class Payments extends ActiveRecord
         return new PaymentsQuery(get_called_class());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -122,5 +126,22 @@ class Payments extends ActiveRecord
                 },
             ],
         ];
+    }
+
+    /**
+     * Return status title by status value
+     * @param $status
+     * @return mixed
+     */
+    public static function getStatusTitle($status)
+    {
+        $titles = [
+            self::STATUS_AWAITING => Yii::t('admin', 'payments.status_awaiting'),
+            self::STATUS_COMPLETED => Yii::t('admin', 'payments.status_completed'),
+            self::STATUS_FAILED => Yii::t('admin', 'payments.status_failed'),
+            self::STATUS_REFUNDED => Yii::t('admin', 'payments.status_refunded'),
+        ];
+
+        return ArrayHelper::getValue($titles, $status, $status);
     }
 }

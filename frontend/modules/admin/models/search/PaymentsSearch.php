@@ -8,9 +8,19 @@ use yii\db\Query;
 use yii\validators\EmailValidator;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
+use yii\base\Exception;
+use frontend\modules\admin\components\Url;
+use frontend\helpers\UiHelper;
+use common\models\store\Payments;
+use common\models\stores\PaymentMethods;
+
 
 /**
  * Class PaymentsSearch
+ * @property integer $status
+ * @property integer $method
+ * @property integer $query
+ * @property ActiveDataProvider $_dataProvider
  * @package frontend\modules\admin\models\search
  */
 class PaymentsSearch extends Model
@@ -21,6 +31,7 @@ class PaymentsSearch extends Model
 
     private $_db;
     private $_queryActiveFilters;
+    private $_dataProvider;
 
     const PAGE_SIZE = 100;
 
@@ -88,7 +99,7 @@ class PaymentsSearch extends Model
                 'id' => SORT_DESC,
             ]);
 
-        $dataProvider = new ActiveDataProvider([
+        $this->_dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSize' => static::PAGE_SIZE,
@@ -97,7 +108,7 @@ class PaymentsSearch extends Model
 
         $this->setAttributes($params);
         if (!$this->validate()) {
-            return $dataProvider;
+            return $this->_dataProvider;
         }
 
         // Query filters
@@ -115,7 +126,7 @@ class PaymentsSearch extends Model
 
         $searchQuery = trim($this->query);
         if ($searchQuery === '') {
-            return $dataProvider;
+            return $this->_dataProvider;
         }
 
         // Searches:
@@ -130,7 +141,7 @@ class PaymentsSearch extends Model
             $query->andFilterWhere(['like', 'memo', $searchQuery]);
         }
 
-        return $dataProvider;
+        return $this->_dataProvider;
     }
 
     /**
@@ -180,4 +191,113 @@ class PaymentsSearch extends Model
 
         return $methodsList;
     }
+
+    /**
+     * Return status filter menu buttons data
+     * @param array $options
+     * @return array
+     */
+    public function getStatusFilterButtons($options = [])
+    {
+        $buttons = [
+            'all' => [
+                'title' => Yii::t('admin', 'payments.orders_all'),
+                'filter' => null,
+                'url' => null,
+                'count' => null,
+            ],
+            Payments::STATUS_AWAITING => [
+                'title' => Payments::getStatusTitle(Payments::STATUS_AWAITING),
+            ],
+            Payments::STATUS_COMPLETED => [
+                'title' => Payments::getStatusTitle(Payments::STATUS_COMPLETED),
+            ],
+            Payments::STATUS_FAILED => [
+                'title' => Payments::getStatusTitle(Payments::STATUS_FAILED),
+            ],
+            Payments::STATUS_REFUNDED => [
+                'title' => Payments::getStatusTitle(Payments::STATUS_REFUNDED),
+            ],
+        ];
+
+        $countsPaymentsByStatus = $this->countsByStatus();
+
+        array_walk($buttons, function (&$button, $filter) use ($countsPaymentsByStatus, $options) {
+            if ($filter === 'all') {
+                $count = array_sum(array_column($countsPaymentsByStatus, 'count'));
+                $url = Url::toRoute('/orders');
+            } else {
+                $count = ArrayHelper::getValue($countsPaymentsByStatus, "$filter.count" );
+                $url = Url::current(['status' => $filter]);
+            }
+
+            if ($options) {
+                $buttonOptions = ArrayHelper::getValue($options, $filter, null);
+                if ($buttonOptions) {
+                    $button['options'] = $buttonOptions;
+                }
+            }
+
+            $button['id'] = "status_button_$filter";
+            $button['filter'] = $filter;
+            $button['url'] = $url;
+            $button['active'] = UiHelper::isFilterActive('status', $filter);
+            $button['count'] = $count;
+        });
+
+        return $buttons;
+    }
+
+    /**
+     * Return methods filter menu items
+     * @return array
+     */
+    public function getMethodFilterItems()
+    {
+        $methodsFilterMenuItems = $this->countsByMethods();
+
+        /* Populate methods filter by additional data */
+        array_walk($methodsFilterMenuItems, function(&$menuItem){
+            $method = $menuItem['method'];
+            $menuItem['url'] = Url::current(['method' => $method]);
+            $menuItem['active'] = UiHelper::isFilterActive('method', $method);
+            $menuItem['method_title'] = PaymentMethods::getMethodTitle($method);
+        });
+
+        $allMethodsMenuItem = [
+            'method' => 'all',
+            'method_title' => Yii::t('admin', "payments.payment_method_all"),
+            'active' =>  UiHelper::isFilterActive('method', 'all'),
+            'count' => array_sum(array_column($methodsFilterMenuItems,'count')),
+            'url' => Url::current(['method' => null]),
+        ];
+
+        array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
+
+        return $methodsFilterMenuItems;
+    }
+
+    /**
+     * Return found suborders formatted for view
+     * @return array
+     * @throws Exception
+     */
+    public function getPayments()
+    {
+        if (!$this->_dataProvider) {
+            throw new Exception('First do a search!');
+        }
+
+        $payments = $this->_dataProvider->getModels();
+
+        /* Populate payments list by additional formats and data */
+        array_walk($payments, function(&$payment) {
+            $payment['method_title'] = PaymentMethods::getMethodTitle($payment['method']);
+            $payment['status_title'] = Payments::getStatusTitle($payment['status']);
+            $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
+        });
+
+        return $payments;
+    }
+
 }

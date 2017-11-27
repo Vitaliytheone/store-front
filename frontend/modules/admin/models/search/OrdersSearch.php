@@ -31,7 +31,6 @@ class OrdersSearch extends \yii\base\Model
 
     private $_db;
     private $_queryActiveFilters;
-
     private $_dataProvider;
 
     const PAGE_SIZE = 100;
@@ -405,7 +404,7 @@ class OrdersSearch extends \yii\base\Model
     }
 
     /**
-     * Return found Orders with Suborders array
+     * Return found Orders with Suborders array formatted for view
      * @return array
      * @throws Exception
      */

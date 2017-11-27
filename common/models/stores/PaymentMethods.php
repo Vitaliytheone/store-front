@@ -110,4 +110,21 @@ class PaymentMethods extends ActiveRecord
     {
         return !empty($this->details) ? json_decode($this->details, true) : [];
     }
+
+    /**
+     * Return payment method title by method
+     * @param $method
+     * @return mixed
+     */
+    public static function getMethodTitle($method)
+    {
+        $titles = [
+            self::METHOD_PAYPAL => Yii::t('admin', 'payments.payment_method_paypal'),
+            self::METHOD_2CHECKOUT => Yii::t('admin', 'payments.payment_method_2checkout'),
+            self::METHOD_BITCOIN => Yii::t('admin', 'payments.payment_method_bitcoin'),
+        ];
+
+        return ArrayHelper::getValue($titles, $method, $method);
+    }
+
 }

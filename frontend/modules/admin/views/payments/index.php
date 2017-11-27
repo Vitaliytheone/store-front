@@ -11,105 +11,16 @@ use common\models\store\Payments;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $searchModel frontend\modules\admin\models\search\PaymentsSearch */
 
-$formatter = Yii::$app->formatter;
-
-$payments = $dataProvider->getModels();
-$pagination = $dataProvider->getPagination();
-
-/** Payments items data */
-
-/* Populate payments list by additional formats and data */
-array_walk($payments, function(&$payment) use ($formatter){
-    $method = $payment['method'];
-    $status = $payment['status'];
-
-    $payment['method_title'] = Yii::t('admin', "payments.payment_method_$method");
-    $payment['status_title'] = Yii::t('admin', "payments.payment_status_$status");
-    $payment['updated_at_formatted'] = $formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
-});
-
-/** Status filter buttons */
-
-$statusFilterButtons = [
-    -1 => [
-        'title' => Yii::t('admin', 'payments.orders_all'),
-        'stat' => false,
-        'stat-class' => 'm-badge m-badge--metal m-badge--wide',
-    ],
-
+$statusFilterButtons = $searchModel->getStatusFilterButtons([
     Payments::STATUS_AWAITING => [
-        'title' => Yii::t('admin', 'payments.status_awaiting'),
-        'stat' => true,
-        'stat-class' => 'm-badge m-badge--metal m-badge--wide',
+        'show_count' => true,
+        'badge-class' => 'm-badge--metal'
     ],
-
-    Payments::STATUS_COMPLETED => [
-        'title' => Yii::t('admin', 'payments.status_completed'),
-        'stat' => false,
-        'stat-class' => 'm-badge m-badge--metal m-badge--wide',
-    ],
-
     Payments::STATUS_FAILED => [
-        'title' => Yii::t('admin', 'payments.status_failed'),
-        'stat' => true,
-        'stat-class' => 'm-badge m-badge--danger',
+        'show_count' => true,
+        'badge-class' => 'm-badge--danger'
     ],
-
-    Payments::STATUS_REFUNDED => [
-        'title' => Yii::t('admin', 'payments.status_refunded'),
-        'stat' => false,
-        'stat-class' => 'm-badge m-badge--metal m-badge--wide',
-    ],
-];
-
-$countsPaymentsByStatus = $searchModel->countsByStatus();
-
-/* Populate status filter buttons by additional data */
-array_walk($statusFilterButtons, function(&$button, $status) use ($countsPaymentsByStatus){
-    /* populate by payments counter */
-    $stat = ArrayHelper::getValue($button,'stat', null);
-
-    if ($stat) {
-        // All
-        if ($status === -1) {
-            $counter = array_sum(array_column($countsPaymentsByStatus,'count'));
-        } else {
-            $counter = ArrayHelper::getValue($countsPaymentsByStatus, "$status.count", 0);
-        }
-        $button['count'] = $counter;
-    }
-
-    /* Populate by action url */
-    $buttonUrl = $status === -1 ? Url::toRoute('/payments') : Url::current(['status' => $status], false);
-    $button['url'] = $buttonUrl;
-
-    /* Populate by active class */
-    $button['active'] = UiHelper::isFilterActive('status', $status);
-});
-
-
-/** Methods filter menu */
-
-$methodsFilterMenuItems = $searchModel->countsByMethods();
-
-/* Populate methods filter by additional data */
-array_walk($methodsFilterMenuItems, function(&$menuItem){
-    $method = $menuItem['method'];
-
-    $menuItem['url'] = Url::current(['method' => $method]);
-    $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-    $menuItem['method_title'] = Yii::t('admin', "payments.payment_method_$method");
-});
-
-$allMethodsMenuItem = [
-    'method' => -1,
-    'method_title' => Yii::t('admin', "payments.payment_method_all"),
-    'active' =>  UiHelper::isFilterActive('method', -1),
-    'count' => array_sum(array_column($methodsFilterMenuItems,'count')),
-    'url' => Url::current(['method' => null]),
-];
-
-array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
+]);
 
 ?>
 
@@ -122,13 +33,13 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
 
                 <nav class="nav nav-tabs sommerce-tabs__nav">
 
-                    <?php foreach ($statusFilterButtons as $status => $button): ?>
-                        <a class="<?= $button['active'] ?> nav-item nav-link" id="all-orders-tab" aria-controls="nav-home" aria-expanded="true"
-                           href="<?= $button['url'] ?>"
-                        >
+                    <?php foreach ($statusFilterButtons as $button): ?>
+                        <a class="<?= $button['active'] ? 'active' : '' ?> nav-item nav-link"  href="<?= $button['url'] ?>" id="<?= $button['id'] ?>" aria-controls="nav-home" aria-expanded="true">
                             <?= $button['title']?>
-                            <?php if ($button['stat']): ?>
-                                <span class="<?= $button['stat-class']?>"><?= $button['count'] ?></span>
+                            <?php if(ArrayHelper::getValue($button, 'options.show_count') && $button['count'] > 0): ?>
+                                <span class="<?= $button['options']['badge-class'] ?> m-badge m-badge--wide">
+                                    <?= $button['count'] ?>
+                                </span>
                             <?php endif; ?>
                         </a>
                     <?php endforeach; ?>
@@ -137,16 +48,10 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
 
             </div>
 
-            <!-- Search -->
             <div class="col-lg-2 col-sm-12">
                 <form action="<?= Url::toRoute('/payments') ?>">
                     <div class="input-group m-input-group--air">
-                        <input type="text" class="form-control"
-                               name="query"
-                               value="<?= Html::encode(yii::$app->getRequest()->get('query')) ?>"
-                               placeholder="<?= Yii::t('admin', 'payments.search_placeholder') ?>"
-                               aria-label="<?= Yii::t('admin', 'payments.search_placeholder') ?>"
-                        >
+                        <input type="text" class="form-control" name="query" value="<?= Html::encode(yii::$app->getRequest()->get('query')) ?>" placeholder="<?= Yii::t('admin', 'payments.search_placeholder') ?>" aria-label="<?= Yii::t('admin', 'payments.search_placeholder') ?>">
                         <?php foreach (yii::$app->getRequest()->get() as $param => $value): ?>
                             <?php if ($param !== 'query'): ?>
                                 <input type="hidden" name="<?= Html::encode($param); ?>" value="<?= Html::encode($value); ?>">
@@ -158,7 +63,6 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
                     </div>
                 </form>
             </div>
-            <!--/ Search -->
 
         </div>
 
@@ -168,6 +72,7 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
                 <div class="m_datatable m-datatable m-datatable--default">
 
                     <table class="table table-sommerce m-portlet m-portlet--bordered m-portlet--bordered-semi m-portlet--rounded">
+
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -183,20 +88,15 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
                                         <div class="m-dropdown__inner">
                                             <div class="m-dropdown__body">
                                                 <div class="m-dropdown__content">
-                                                <!--  Method filter  -->
                                                     <ul class="m-nav">
-                                                    <?php foreach($methodsFilterMenuItems as $item): ?>
-                                                        <li class="m-nav__item <?= $item['active'] ?>">
+                                                    <?php foreach($searchModel->getMethodFilterItems() as $item): ?>
+                                                        <li class="m-nav__item <?= $item['active'] ? 'active' : '' ?>">
                                                             <a href="<?= $item['url'] ?>" class="m-nav__link">
-                                                                <span class="m-nav__link-text">
-                                                                    <?= $item['method_title'] ?>
-                                                                    (<?= $item['count'] ?>)
-                                                                </span>
+                                                                <span class="m-nav__link-text"><?= $item['method_title'] ?>(<?= $item['count'] ?>)</span>
                                                             </a>
                                                         </li>
                                                     <?php endforeach; ?>
                                                     </ul>
-                                                <!--/ Method filter  -->
                                                 </div>
                                             </div>
                                         </div>
@@ -212,20 +112,19 @@ array_unshift($methodsFilterMenuItems, $allMethodsMenuItem);
                         </thead>
 
                         <tbody class="m-datatable__body">
-                        <?php foreach ($payments as $payment): ?>
+                        <?php foreach ($searchModel->getPayments() as $payment): ?>
                             <?= $this->render('_payment_item', ['payment' => $payment]); ?>
                         <?php endforeach; ?>
                         </tbody>
+
                     </table>
 
-                    <!-- Pagination -->
                     <div class="m-datatable__pager m-datatable--paging-loaded clearfix mb-3">
-                        <?= CustomLinkPager::widget(['pagination' => $pagination]) ?>
+                        <?= CustomLinkPager::widget(['pagination' => $dataProvider->getPagination()]) ?>
                         <div class="m-datatable__pager-info">
                             <span class="m-datatable__pager-detail"><?= UiHelper::listSummary($dataProvider) ?></span>
                         </div>
                     </div>
-                    <!--/ Pagination -->
 
                 </div>
             </div>
