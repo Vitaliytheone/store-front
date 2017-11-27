@@ -1,16 +1,13 @@
 <?php
 
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $formatter yii\i18n\Formatter */
 /* @var common\models\stores\StoreProviders[] $storeProviders  */
 
-$formatter = Yii::$app->formatter;
-
 $linkTypes = Yii::$app->params['packageLinkTypes'];
+
 ?>
 
 
@@ -18,21 +15,14 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-loader hidden"></div>
-            <div class="modal-header"
-                 data-title_create="<?= Yii::t('admin', 'products.package_create') ?>"
-                 data-title_edit="<?= Yii::t('admin', 'products.package_edit') ?>"
-            >
+            <div class="modal-header" data-title_create="<?= Yii::t('admin', 'products.package_create') ?>" data-title_edit="<?= Yii::t('admin', 'products.package_edit') ?>">
                 <h5 class="modal-title">Add package</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form id="packageForm" action="/" method="post" role="form" data-success_redirect="<?= Url::to(['/admin/products'])?>">
-
-                <!--  Field for store package`s product_id value  -->
                 <input type="hidden" class="form_field__product_id" name="PackageForm[product_id]" value="">
-                <!--  Field for store package`s product_id value  -->
-
                 <div class="modal-body">
                     <div id="package-form-error"></div>
                     <div class="form-group">
@@ -134,9 +124,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                         <label for="package-provider_service">
                             <?= Yii::t('admin', 'products.package_service') ?>
                         </label>
-                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]"
-                                data-ajax_timeout_message="<?= Yii::t('admin', 'products.message_ajax_timeout') ?>"
-                        >
+                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]" data-ajax_timeout_message="<?= Yii::t('admin', 'products.message_ajax_timeout') ?>">
                             <option value="" selected>
                                 <?= Yii::t('admin', 'products.package_service_default') ?>
                             </option>
@@ -145,10 +133,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                     <span class="api-error m--font-danger d-none"></span>
                 </div>
                 <div class="modal-footer justify-content-start">
-                    <button type="submit" id="submitPackageForm" class="btn btn-primary"
-                            data-title_create="<?= Yii::t('admin', 'products.package_save_create') ?>"
-                            data-title_save="<?= Yii::t('admin', 'products.package_save_save') ?>"
-                    >
+                    <button type="submit" id="submitPackageForm" class="btn btn-primary" data-title_create="<?= Yii::t('admin', 'products.package_save_create') ?>" data-title_save="<?= Yii::t('admin', 'products.package_save_save') ?>">
                         Add package
                     </button>
                     <button type="button" id="cancelPackageForm" class="btn btn-secondary" data-dismiss="modal">

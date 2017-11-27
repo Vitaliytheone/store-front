@@ -14,7 +14,6 @@ $formatter = Yii::$app->formatter;
 
 ?>
 
-<!-- Package Item-->
 <div class="group-item sommerce_dragtable__tr align-items-center package-item <?= UiHelper::toggleString(!$package['visibility'],'disabled-product')?>" data-action-url="<?= Url::to(['products/move-package', 'id' => $package['id'], 'position' => ""])?>">
     <div class="col-lg-5 padding-null-left">
         <div class="sommerce_dragtable__category-move move">
@@ -35,26 +34,14 @@ $formatter = Yii::$app->formatter;
         <?= UiHelper::switchString($package['visibility'], 'Enabled','Disabled') ?>
     </div>
     <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
-        <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"
-                data-toggle="modal"
-                data-target=".add_package"
-                data-backdrop="static"
-                data-id="<?= $package['id'] ?>"
-                data-get-url="<?= Url::to(['products/get-package', 'id' => $package['id']]) ?>"
-                data-action-url="<?= Url::to(['products/update-package', 'id' => $package['id']]) ?>">
+        <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".add_package" data-backdrop="static" data-id="<?= $package['id'] ?>" data-get-url="<?= Url::to(['products/get-package', 'id' => $package['id']]) ?>" data-action-url="<?= Url::to(['products/update-package', 'id' => $package['id']]) ?>">
             <?= \Yii::t('admin', 'products.edit_package') ?>
         </button>
-        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-           title="<?= \Yii::t('admin', 'products.delete_package') ?>"
-           data-toggle="modal"
-           data-target="#delete-modal"
-           data-backdrop="static"
-           data-action-url="<?= Url::to(['products/delete-package', 'id' => $package['id']]) ?>">
+        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="<?= \Yii::t('admin', 'products.delete_package') ?>" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" data-action-url="<?= Url::to(['products/delete-package', 'id' => $package['id']]) ?>">
             <i class="la la-trash"></i>
         </a>
     </div>
 </div>
-<!--/ Package Item-->
 
 
 
