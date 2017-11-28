@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use frontend\modules\admin\models\search\PaymentsSearch;
-use frontend\modules\admin\models\forms\GetPaymentDetailsForm;
+use frontend\modules\admin\models\PaymentDetails;
 
 /**
  * Class PaymentsController
@@ -40,6 +40,7 @@ class PaymentsController extends CustomController
     public function beforeAction($action)
     {
         $this->addModule('payments');
+
         return parent::beforeAction($action);
     }
 
@@ -76,7 +77,7 @@ class PaymentsController extends CustomController
            exit;
         }
 
-        $model = GetPaymentDetailsForm::findOne($id);
+        $model = PaymentDetails::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();

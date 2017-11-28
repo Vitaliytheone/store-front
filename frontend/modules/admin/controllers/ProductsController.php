@@ -48,6 +48,7 @@ class ProductsController extends CustomController
     {
         // Add custom JS modules
         $this->addModule('ordersDetails');
+
         return parent::beforeAction($action);
     }
 

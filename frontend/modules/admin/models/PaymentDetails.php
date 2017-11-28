@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\admin\models\forms;
+namespace frontend\modules\admin\models;
 
 use Yii;
 use yii\db\Query;
@@ -8,10 +8,10 @@ use yii\helpers\ArrayHelper;
 use common\models\store\Payments;
 
 /**
- * Class GetSuborderDetailsForm
- * @package frontend\modules\admin\models\forms
+ * Class Payment
+ * @package frontend\modules\admin\forms
  */
-class GetPaymentDetailsForm extends Payments
+class PaymentDetails extends Payments
 {
     private $_db;
 
@@ -26,12 +26,9 @@ class GetPaymentDetailsForm extends Payments
 
     /**
      * Return Payment Details data
-     * Defines is returned provider response
-     * plain Json string or print_r formatted string
-     * @param bool $responseFormatPrintR
      * @return array|null
      */
-    public function details(bool $responseFormatPrintR = true)
+    public function details()
     {
         $paymentLogs = (new Query())
             ->select(['id', 'checkout_id', 'result', 'ip', 'created_at'])

@@ -3,11 +3,13 @@
 namespace frontend\modules\admin\controllers;
 
 use common\components\ActiveForm;
+use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\CreateProviderForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
+use frontend\modules\admin\models\search\PaymentMethodsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -76,9 +78,7 @@ class SettingsController extends CustomController
         $model->setStore(Yii::$app->store->getInstance());
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->addFlash('messages', [
-                'success' => Yii::t('admin', 'settings.message_provider_updated')
-            ]);
+            UiHelper::message(Yii::t('admin', 'settings.message_provider_updated'));
             return $this->refresh();
         }
 
@@ -95,7 +95,7 @@ class SettingsController extends CustomController
     {
         $this->view->title = Yii::t('admin', 'settings.payments_page_title');
 
-        $paymentMethods = EditPaymentMethodForm::findAll([
+        $paymentMethods = PaymentMethodsSearch::findAll([
             'store_id' => yii::$app->store->getId(),
         ]);
 
@@ -124,12 +124,9 @@ class SettingsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        if ($paymentModel->load($request->post()) && $paymentModel->validate()) {
-            $paymentModel->save(false);
-            Yii::$app->session->addFlash('messages', [
-                'success' => Yii::t('admin', 'settings.message_settings_saved')
-            ]);
-            return $this->redirect(Url::to(['settings/payments']));
+        if ($paymentModel->load($request->post()) && $paymentModel->save()) {
+            UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
+            return $this->redirect(Url::toRoute(['/settings/payments']));
         }
 
         return $this->render('payments', [
@@ -228,9 +225,7 @@ class SettingsController extends CustomController
         $model->setStore(Yii::$app->store->getInstance());
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->addFlash('messages', [
-                'success' => Yii::t('admin', 'settings.message_provider_created')
-            ]);
+            UiHelper::message(Yii::t('admin', 'settings.message_provider_created'));
             return [
                 'status' => 'success',
             ];

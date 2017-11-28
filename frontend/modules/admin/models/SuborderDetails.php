@@ -1,25 +1,22 @@
 <?php
 
-namespace frontend\modules\admin\models\forms;
+namespace frontend\modules\admin\models;
 
 use Yii;
 use yii\db\Query;
 use common\models\store\Suborders;
 
 /**
- * Class GetSuborderDetailsForm
- * @package frontend\modules\admin\models\forms
+ * Class Suborder
+ * @package frontend\modules\admin\models
  */
-class GetSuborderDetailsForm extends Suborders
+class SuborderDetails extends Suborders
 {
     /**
      * Return Suborder Details data
-     * Defines is returned provider response
-     * plain Json string or print_r formatted string
-     * @param bool $responseFormatPrintR
      * @return array|null
      */
-    public function details(bool $responseFormatPrintR = true)
+    public function details()
     {
         $provider = (new Query())
             ->select(['site'])
@@ -29,10 +26,9 @@ class GetSuborderDetailsForm extends Suborders
         if (!$provider) {
             return null;
         }
-        $providerResponse = $this->provider_response;
-        if ($responseFormatPrintR) {
-            $providerResponse = print_r(json_decode($providerResponse), 1);
-        }
+
+        $providerResponse = print_r(json_decode($this->provider_response), 1);
+
         $formatter = Yii::$app->formatter;
         $orderDetails = [
             'provider' => $provider['site'],

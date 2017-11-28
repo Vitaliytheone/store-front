@@ -45,6 +45,33 @@ class OrdersSearch extends \yii\base\Model
         Suborders::STATUS_ERROR,
     ];
 
+    /* Suborder accepted statuses for changes from admin panel */
+    public static $acceptedStatuses = [
+        Suborders::STATUS_PENDING,
+        Suborders::STATUS_IN_PROGRESS,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `Change status` action is disallowed */
+    public static $disallowedChangeStatusStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `Cancel suborder` action is disallowed */
+    public static $disallowedCancelStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
+
+    /* Suborder statuses when `View details` action disallowed */
+    public static $disallowedDetailsStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+    ];
+
     public function init()
     {
         $this->_db = yii::$app->store->getInstance()->db_name;
@@ -448,7 +475,7 @@ class OrdersSearch extends \yii\base\Model
 
                 $suborder['status_title'] = Suborders::getStatusName($suborder['status']);
                 $suborder['mode_title'] = Suborders::getModeName($suborder['mode']);
-                $suborder['action_menu'] = $suborderListForm->getActionMenu();
+                $suborder['action_menu'] = $this->getActionMenu($suborder['mode'], $suborder['status']);
             });
 
             $order['created_at'] = $formatter->asDatetime($order['created_at'], 'yyyy-MM-dd HH:mm:ss');
@@ -456,6 +483,51 @@ class OrdersSearch extends \yii\base\Model
         });
 
         return $orders;
+    }
+
+    /**
+     * Return action menu or null
+     * @param $mode
+     * @param $status
+     * @return array|null
+     */
+    public function getActionMenu($mode, $status)
+    {
+        // Create `change status` menu
+        $changeStatus = false;
+
+        $status = (int)$status;
+        $mode = (int)$mode;
+
+        if (!in_array($status, static::$disallowedChangeStatusStatuses)) {
+            foreach (static::$acceptedStatuses as $acceptedStatus) {
+                if ($status == $acceptedStatus) {
+                    continue;
+                }
+                $changeStatus[] = [
+                    'status' => $acceptedStatus,
+                    'status_title' => Suborders::getStatusName($acceptedStatus),
+                ];
+            }
+        }
+
+        // `details` menu show
+        $details = ($mode === Suborders::MODE_AUTO) && !in_array($status, static::$disallowedDetailsStatuses);
+
+        // `resend` menu show
+        $resend = $status === Suborders::STATUS_FAILED;
+
+        // `cancel` menu show
+        $cancel = !in_array($status, static::$disallowedCancelStatuses);
+
+        $actionMenu = ($details || $resend || $changeStatus || $cancel) ? [
+            'details' => $details,
+            'resend' => $resend,
+            'status' => $changeStatus,
+            'cancel' => $cancel,
+        ] : null;
+
+        return $actionMenu;
     }
 
 }

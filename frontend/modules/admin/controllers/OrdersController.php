@@ -11,9 +11,9 @@ use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
 use frontend\modules\admin\models\search\OrdersSearch;
+use frontend\modules\admin\models\SuborderDetails;
 use frontend\modules\admin\models\forms\CancelSuborderForm;
 use frontend\modules\admin\models\forms\ChangeSuborderStatusForm;
-use frontend\modules\admin\models\forms\GetSuborderDetailsForm;
 use frontend\modules\admin\models\forms\ResendSuborderForm;
 
 /**
@@ -84,7 +84,7 @@ class OrdersController extends CustomController
             throw new BadRequestHttpException();
         }
 
-        $model = GetSuborderDetailsForm::findOne($suborder_id);
+        $model = SuborderDetails::findOne($suborder_id);
 
         if (!$model) {
             throw new NotFoundHttpException();
@@ -181,6 +181,7 @@ class OrdersController extends CustomController
     private static function _queryParams()
     {
         $filters = yii::$app->getRequest()->get('filters');
+
         return is_array($filters) ? ( '?' . http_build_query($filters)) : null;
     }
 
