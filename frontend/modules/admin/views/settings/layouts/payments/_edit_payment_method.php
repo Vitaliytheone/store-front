@@ -38,21 +38,27 @@ $formData = $paymentModel->getMethodFormData();
         <?= Html::beginForm(); ?>
 
         <?php foreach (ArrayHelper::getValue($formData, 'form_fields') as $formField): ?>
-            <div class="form-group">
-                <label for="<?= $formField['id'] ?>">
-                    <?= $formField['label'] ?>
-                </label>
-                <input type="text" class="form-control" id="<?= $formField['id'] ?>" placeholder="<?= $formField['placeholder'] ?>" name="<?= $formField['name'] ?>" value="<?= $formField['value'] ?>">
-            </div>
-        <?php endforeach; ?>
 
-        <div class="form-check">
-            <label class="form-check-label">
-                <input type="hidden" name="PaymentsForm[details][test_mode]" value="0">
-                <input type="checkbox" class="form-check-input" name="PaymentsForm[details][test_mode]" value="1" <?= ArrayHelper::getValue($paymentModel, 'details.test_mode',1) ? 'checked' : '' ?>>
-                <?= Yii::t('admin', 'settings.payments_paypal_test_mode') ?>
-            </label>
-        </div>
+            <?php if($formField['type'] == 'text'): ?>
+                <div class="form-group">
+                    <label for="<?= $formField['id'] ?>">
+                        <?= $formField['label'] ?>
+                    </label>
+                    <input type="text" class="form-control" id="<?= $formField['id'] ?>" placeholder="<?= $formField['placeholder'] ?>" name="<?= $formField['name'] ?>" value="<?= $formField['value'] ?>">
+                </div>
+            <?php endif; ?>
+
+            <?php if($formField['type'] == 'checkbox'): ?>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="hidden" name="<?= $formField['name'] ?>" value="0">
+                        <input type="checkbox" class="form-check-input" name="<?= $formField['name'] ?>" value="1" <?= $formField['checked'] ?> >
+                        <?= $formField['label'] ?>
+                    </label>
+                </div>
+            <?php endif; ?>
+
+        <?php endforeach; ?>
         <hr>
 
         <button type="submit" class="btn btn-success">

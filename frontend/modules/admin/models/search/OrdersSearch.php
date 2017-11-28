@@ -256,25 +256,25 @@ class OrdersSearch extends \yii\base\Model
                 'count' => null,
             ],
             Suborders::STATUS_AWAITING => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_AWAITING),
+                'title' => Suborders::getStatusName(Suborders::STATUS_AWAITING),
             ],
             Suborders::STATUS_PENDING => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_PENDING),
+                'title' => Suborders::getStatusName(Suborders::STATUS_PENDING),
             ],
             Suborders::STATUS_IN_PROGRESS => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_IN_PROGRESS),
+                'title' => Suborders::getStatusName(Suborders::STATUS_IN_PROGRESS),
             ],
             Suborders::STATUS_COMPLETED => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_COMPLETED),
+                'title' => Suborders::getStatusName(Suborders::STATUS_COMPLETED),
             ],
             Suborders::STATUS_CANCELED => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_CANCELED),
+                'title' => Suborders::getStatusName(Suborders::STATUS_CANCELED),
             ],
             Suborders::STATUS_FAILED => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_FAILED),
+                'title' => Suborders::getStatusName(Suborders::STATUS_FAILED),
             ],
             Suborders::STATUS_ERROR => [
-                'title' => Suborders::getStatusTitle(Suborders::STATUS_ERROR),
+                'title' => Suborders::getStatusName(Suborders::STATUS_ERROR),
             ],
         ];
 
@@ -378,10 +378,10 @@ class OrdersSearch extends \yii\base\Model
                 'title' => Yii::t('admin', 'orders.filter_status_all'),
             ],
             Suborders::MODE_MANUAL => [
-                'title' => Suborders::getModeTitle(Suborders::MODE_MANUAL),
+                'title' => Suborders::getModeName(Suborders::MODE_MANUAL),
             ],
             Suborders::MODE_AUTO => [
-                'title' => Suborders::getModeTitle(Suborders::MODE_AUTO),
+                'title' => Suborders::getModeName(Suborders::MODE_AUTO),
             ],
         ];
 
@@ -446,8 +446,8 @@ class OrdersSearch extends \yii\base\Model
                 $suborderListForm = new SubordersListForm();
                 $suborderListForm->setAttributes($suborder, false);
 
-                $suborder['status_title'] = Suborders::getStatusTitle($suborder['status']);
-                $suborder['mode_title'] = Suborders::getModeTitle($suborder['mode']);
+                $suborder['status_title'] = Suborders::getStatusName($suborder['status']);
+                $suborder['mode_title'] = Suborders::getModeName($suborder['mode']);
                 $suborder['action_menu'] = $suborderListForm->getActionMenu();
             });
 

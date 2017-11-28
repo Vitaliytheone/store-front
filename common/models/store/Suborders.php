@@ -160,13 +160,12 @@ class Suborders extends ActiveRecord
     }
 
     /**
-     * Return status title by status value
-     * @param $status
-     * @return mixed
+     * Return status names list
+     * @return array
      */
-    public static function getStatusTitle($status)
+    public static function getStatusNames()
     {
-        $titles = [
+        $names = [
             self::STATUS_AWAITING => Yii::t('admin', 'orders.filter_status_awaiting'),
             self::STATUS_PENDING => Yii::t('admin', 'orders.filter_status_pending'),
             self::STATUS_IN_PROGRESS => Yii::t('admin', 'orders.filter_status_in_progress'),
@@ -176,22 +175,40 @@ class Suborders extends ActiveRecord
             self::STATUS_ERROR => Yii::t('admin', 'orders.filter_status_error'),
         ];
 
-        return ArrayHelper::getValue($titles, $status, $status);
+        return $names;
     }
 
     /**
-     * Return mode title by mode value
-     * @param $mode
+     * Return status name by status value
+     * @param $status
      * @return mixed
      */
-    public static function getModeTitle($mode)
+    public static function getStatusName($status)
     {
-        $titles = [
+        return ArrayHelper::getValue(static::getStatusNames(), $status, $status);
+    }
+
+    /**
+     * Return mode names list
+     * @return array
+     */
+    public static function getModeNames()
+    {
+        $names = [
             self::MODE_MANUAL => Yii::t('admin', 'orders.filter_mode_manual'),
             self::MODE_AUTO => Yii::t('admin', 'orders.filter_mode_auto'),
         ];
 
-        return ArrayHelper::getValue($titles, $mode, $mode);
+        return $names;
     }
 
+    /**
+     * Return mode name by mode value
+     * @param $mode
+     * @return mixed
+     */
+    public static function getModeName($mode)
+    {
+        return ArrayHelper::getValue(static::getModeNames(), $mode, $mode);
+    }
 }

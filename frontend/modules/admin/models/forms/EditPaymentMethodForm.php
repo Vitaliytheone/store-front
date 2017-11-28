@@ -119,6 +119,7 @@ class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_username]', 'value' => $this->_getDetailsField('api_username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_password]', 'value' => $this->_getDetailsField('api_password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_signature]', 'value' => $this->_getDetailsField('api_signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $this->_getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
 
@@ -127,6 +128,7 @@ class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'credit_card_number', 'placeholder' => '', 'name' => 'PaymentsForm[details][account_number]', 'value' => $this->_getDetailsField('account_number'), 'label' => Yii::t('admin', 'settings.payments_2checkout_account_number')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'credit_card_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $this->_getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_2checkout_secret_word')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'id' => '', 'name' => 'PaymentsForm[details][test_mode]', 'value' => 1, 'checked' => $this->_getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
 
@@ -139,8 +141,6 @@ class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
             ],
         ];
 
-        $return = ArrayHelper::getValue($paymentsFormData, $method);
-
-        return $return;
+        return ArrayHelper::getValue($paymentsFormData, $method);
     }
 }

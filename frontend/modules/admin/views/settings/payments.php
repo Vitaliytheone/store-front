@@ -34,7 +34,7 @@ use frontend\modules\admin\components\Url;
                     ]);
 
                 } else {
-                    echo $this->render('layouts/payments/_methods_list_', [
+                    echo $this->render('layouts/payments/_methods_list', [
                         'paymentMethods' => $paymentMethods,
                     ]);
                 }

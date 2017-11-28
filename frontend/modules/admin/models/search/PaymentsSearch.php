@@ -207,16 +207,16 @@ class PaymentsSearch extends Model
                 'count' => null,
             ],
             Payments::STATUS_AWAITING => [
-                'title' => Payments::getStatusTitle(Payments::STATUS_AWAITING),
+                'title' => Payments::getStatusName(Payments::STATUS_AWAITING),
             ],
             Payments::STATUS_COMPLETED => [
-                'title' => Payments::getStatusTitle(Payments::STATUS_COMPLETED),
+                'title' => Payments::getStatusName(Payments::STATUS_COMPLETED),
             ],
             Payments::STATUS_FAILED => [
-                'title' => Payments::getStatusTitle(Payments::STATUS_FAILED),
+                'title' => Payments::getStatusName(Payments::STATUS_FAILED),
             ],
             Payments::STATUS_REFUNDED => [
-                'title' => Payments::getStatusTitle(Payments::STATUS_REFUNDED),
+                'title' => Payments::getStatusName(Payments::STATUS_REFUNDED),
             ],
         ];
 
@@ -261,7 +261,7 @@ class PaymentsSearch extends Model
             $method = $menuItem['method'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = PaymentMethods::getMethodTitle($method);
+            $menuItem['method_title'] = PaymentMethods::getMethodName($method);
         });
 
         $allMethodsMenuItem = [
@@ -292,8 +292,8 @@ class PaymentsSearch extends Model
 
         /* Populate payments list by additional formats and data */
         array_walk($payments, function(&$payment) {
-            $payment['method_title'] = PaymentMethods::getMethodTitle($payment['method']);
-            $payment['status_title'] = Payments::getStatusTitle($payment['status']);
+            $payment['method_title'] = PaymentMethods::getMethodName($payment['method']);
+            $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });
 

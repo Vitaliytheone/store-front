@@ -127,7 +127,7 @@ class SubordersListForm extends Suborders
 
                 $changeStatus[] = [
                     'status' => $acceptedStatus,
-                    'status_title' => static::getStatusTitle($acceptedStatus),
+                    'status_title' => static::getStatusName($acceptedStatus),
                 ];
             }
         }

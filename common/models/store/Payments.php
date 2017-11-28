@@ -133,7 +133,7 @@ class Payments extends ActiveRecord
      * @param $status
      * @return mixed
      */
-    public static function getStatusTitle($status)
+    public static function getStatusName($status)
     {
         $titles = [
             self::STATUS_AWAITING => Yii::t('admin', 'payments.status_awaiting'),
