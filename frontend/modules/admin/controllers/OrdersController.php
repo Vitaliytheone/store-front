@@ -2,17 +2,16 @@
 
 namespace frontend\modules\admin\controllers;
 
+use frontend\helpers\UiHelper;
 use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
+use frontend\modules\admin\components\Url;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
 
-use common\models\store\Suborders;
 use frontend\modules\admin\models\forms\SubordersListForm;
-
 use frontend\modules\admin\models\search\OrdersSearch;
 
 /**
@@ -68,33 +67,28 @@ class OrdersController extends CustomController
     /**
      * Return Order details data AJAX action
      * GET /admin/orders/get-order-details?suborder_id={{suborderId}}
-     *
+     * @param $suborder_id
      * @throws Yii\web\BadRequestHttpException
      * @throws Yii\web\NotFoundHttpException
      * @return array
      */
-    public function actionGetOrderDetails()
+    public function actionGetOrderDetails($suborder_id)
     {
         $request = Yii::$app->getRequest();
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_JSON;
 
-        $suborderId = $request->get('suborder_id');
-        if (!$request->isAjax || !$suborderId) {
+        if (!$request->isAjax) {
             throw new BadRequestHttpException();
         }
-        
-        $suborderModel = SubordersListForm::findOne($suborderId);
-        if (!$suborderModel) {
+
+        $details = SubordersListForm::getDetailsById($suborder_id);
+
+        if (!$details) {
             throw new NotFoundHttpException();
         }
-        
-        $orderDetails = $suborderModel->getDetails();
-        if (!$orderDetails) {
-            throw new NotFoundHttpException();
-        }
-        
-        return ['details' => $orderDetails];
+
+        return ['details' => $details];
     }
 
     /**
@@ -108,35 +102,16 @@ class OrdersController extends CustomController
      */
     public function actionChangeStatus($id, $status)
     {
-        $filters = yii::$app->getRequest()->get('filters');
+        $result = SubordersListForm::changeStatusById($id, $status);
 
-        $suborderModel = SubordersListForm::findOne($id);
-        if (!$suborderModel) {
-            throw new NotFoundHttpException();
-        }
-
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_CHANGE_STATUS_ACTION);
-        if (!$suborderModel->validate()) {
+        if (!$result || isset($result['errors'])) {
             throw new NotAcceptableHttpException();
         }
 
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_CHANGE_STATUS_ACTION_ATTR);
-        $suborderModel->setAttributes([
-            'status' => $status,
-            'mode' => Suborders::MODE_MANUAL,
-        ]);
+        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 
-        if (!$suborderModel->save()) {
-            throw new NotAcceptableHttpException();
-        }
-
-        Yii::$app->session->addFlash('messages', [
-            'success' => Yii::t('admin', 'orders.message_status_changed')
-        ]);
-
-        $queryParams = is_array($filters) ? http_build_query($filters) : null;
-
-        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+        $filters = static::_queryParams();
+        $this->redirect(Url::toRoute(["/orders$filters"]));
     }
 
     /**
@@ -147,28 +122,16 @@ class OrdersController extends CustomController
      */
     public function actionCancel($id)
     {
-        $filters = yii::$app->getRequest()->get('filters');
+        $result = SubordersListForm::cancelById($id);
 
-        $suborderModel = SubordersListForm::findOne($id);
-        if (!$suborderModel) {
-            throw new NotFoundHttpException();
+        if (!$result || isset($result['errors'])) {
+            throw new NotAcceptableHttpException();
         }
 
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_CANCEL_ACTION);
-        if (!$suborderModel->validate()) {
-            throw new NotAcceptableHttpException();
-        };
+        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 
-        $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
-        $suborderModel->save(false);
-
-        Yii::$app->session->addFlash('messages', [
-            'success' => Yii::t('admin', 'orders.message_canceled')
-        ]);
-
-        $queryParams = is_array($filters) ? http_build_query($filters) : null;
-
-        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+        $filters = static::_queryParams();
+        $this->redirect(Url::toRoute(["/orders$filters"]));
     }
 
     /**
@@ -179,32 +142,26 @@ class OrdersController extends CustomController
      */
     public function actionResend($id)
     {
-        $filters = yii::$app->getRequest()->get('filters');
+        $result = SubordersListForm::resendById($id);
 
-        $suborderModel = SubordersListForm::findOne($id);
-        if (!$suborderModel) {
-            throw new NotFoundHttpException();
-        }
-
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_RESEND_ACTION);
-        if (!$suborderModel->validate()) {
+        if (!$result || isset($result['errors'])) {
             throw new NotAcceptableHttpException();
         }
 
-        $suborderModel->setAttributes([
-            'status' => Suborders::STATUS_AWAITING,
-            'send' => Suborders::RESEND_NO,
-        ]);
+        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 
-        $suborderModel->save(false);
+        $filters = static::_queryParams();
+        $this->redirect(Url::toRoute(["/orders$filters"]));
+    }
 
-        Yii::$app->session->addFlash('messages', [
-            'success' => Yii::t('admin', 'orders.message_resend')
-        ]);
-
-        $queryParams = is_array($filters) ? http_build_query($filters) : null;
-
-        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+    /**
+     * Return current filters array as redirect query params
+     * @return null|string
+     */
+    private static function _queryParams()
+    {
+        $filters = yii::$app->getRequest()->get('filters');
+        return is_array($filters) ? ( '?' . http_build_query($filters)) : null;
     }
 
 }

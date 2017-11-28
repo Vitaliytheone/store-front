@@ -129,19 +129,28 @@ class Payments extends ActiveRecord
     }
 
     /**
-     * Return status title by status value
-     * @param $status
-     * @return mixed
+     * Return status names list
+     * @return array
      */
-    public static function getStatusName($status)
+    public static function getStatusNames()
     {
-        $titles = [
+        $names = [
             self::STATUS_AWAITING => Yii::t('admin', 'payments.status_awaiting'),
             self::STATUS_COMPLETED => Yii::t('admin', 'payments.status_completed'),
             self::STATUS_FAILED => Yii::t('admin', 'payments.status_failed'),
             self::STATUS_REFUNDED => Yii::t('admin', 'payments.status_refunded'),
         ];
 
-        return ArrayHelper::getValue($titles, $status, $status);
+        return $names;
+    }
+
+    /**
+     * Return status name by status value
+     * @param $status
+     * @return mixed
+     */
+    public static function getStatusName($status)
+    {
+        return ArrayHelper::getValue(static::getStatusNames(), $status, $status);
     }
 }

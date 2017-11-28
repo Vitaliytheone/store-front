@@ -4,6 +4,7 @@ namespace frontend\modules\admin\models\forms;
 
 use yii;
 use yii\db\Query;
+use yii\base\Exception;
 use common\models\store\Suborders;
 
 /**
@@ -110,6 +111,22 @@ class SubordersListForm extends Suborders
     }
 
     /**
+     * Return Suborder details by suborder id
+     * @param $id
+     * @return array|bool|null
+     */
+    public static function getDetailsById($id)
+    {
+        $model = static::findOne($id);
+
+        if (!$model) {
+            return false;
+        }
+
+        return $model->getDetails();
+    }
+
+    /**
      * Return action menu or null
      * @return array|null
      */
@@ -133,15 +150,15 @@ class SubordersListForm extends Suborders
         }
 
         // `details` menu
-        $this->setScenario(static::SCENARIO_DETAILS_ACTION);
+        $this->setScenario(self::SCENARIO_DETAILS_ACTION);
         $details = $this->validate();
 
         // `resend` menu
-        $this->setScenario(static::SCENARIO_RESEND_ACTION);
+        $this->setScenario(self::SCENARIO_RESEND_ACTION);
         $resend = $this->validate();
 
         // `cancel`
-        $this->setScenario(static::SCENARIO_CANCEL_ACTION);
+        $this->setScenario(self::SCENARIO_CANCEL_ACTION);
         $cancel = $this->validate();
 
         $actionMenu = ($details || $resend || $changeStatus || $cancel) ? [
@@ -152,6 +169,115 @@ class SubordersListForm extends Suborders
         ] : null;
 
         return $actionMenu;
+    }
+
+    /**
+     * Change suborder status if allowed
+     * @param $status
+     * @return array|mixed
+     */
+    public function changeStatus($status)
+    {
+        // Check if model ready for changes
+        $this->setScenario(self::SCENARIO_CHANGE_STATUS_ACTION);
+        if (!$this->validate()) {
+            return ['errors' => $this->getErrors()];
+        };
+
+        // Check if new status allowed
+        $this->setScenario(self::SCENARIO_CHANGE_STATUS_ACTION_ATTR);
+        $this->setAttributes([
+            'status' => $status,
+            'mode' => Suborders::MODE_MANUAL,
+        ]);
+
+        if (!$this->save()) {
+            return ['errors' => $this->getErrors()];
+        }
+
+        return $this->getAttribute('status');
+    }
+
+
+    /**
+     * Change suborder status by suborder id
+     * @param $id
+     * @param $status
+     * @return array|mixed
+     * @throws Exception
+     */
+    public static function changeStatusById($id, $status)
+    {
+        $model = static::findOne($id);
+        if (!$model) {
+            false;
+        }
+
+        return $model->changeStatus($status);
+    }
+
+    /**
+     * Cancel suborder
+     * @return array|bool
+     */
+    public function cancel()
+    {
+        $this->setScenario(self::SCENARIO_CANCEL_ACTION);
+        if (!$this->validate()) {
+            return ['errors' => $this->getErrors()];
+        };
+
+        $this->setAttribute('status', self::STATUS_CANCELED);
+        $this->save(false);
+
+        return true;
+    }
+
+    /**
+     * Cancel suborder by id
+     * @param $id
+     * @return array|bool
+     */
+    public static function cancelById($id)
+    {
+        $model = static::findOne($id);
+        if (!$model) {
+            return false;
+        }
+
+        return $model->cancel();
+    }
+
+    /**
+     * Resend suborder
+     * @return array|bool
+     */
+    public function resend()
+    {
+        $this->setScenario(self::SCENARIO_RESEND_ACTION);
+        if (!$this->validate()) {
+            return ['errors' => $this->getErrors()];
+        }
+
+        $this->setAttributes(['status' => self::STATUS_AWAITING, 'send' => self::RESEND_NO,]);
+        $this->save(false);
+
+        return true;
+    }
+
+    /**
+     * Resend suborder by id
+     * @param $id
+     * @return array|bool
+     */
+    public static function resendById($id)
+    {
+        $model = self::findOne($id);
+        if (!$model) {
+            return false;
+        }
+
+        return $model->resend();
     }
 
 }
