@@ -10,9 +10,11 @@ use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
-
-use frontend\modules\admin\models\forms\SubordersListForm;
 use frontend\modules\admin\models\search\OrdersSearch;
+use frontend\modules\admin\models\forms\CancelSuborderForm;
+use frontend\modules\admin\models\forms\ChangeSuborderStatusForm;
+use frontend\modules\admin\models\forms\GetSuborderDetailsForm;
+use frontend\modules\admin\models\forms\ResendSuborderForm;
 
 /**
  * Class OrdersController
@@ -82,7 +84,13 @@ class OrdersController extends CustomController
             throw new BadRequestHttpException();
         }
 
-        $details = SubordersListForm::getDetailsById($suborder_id);
+        $model = GetSuborderDetailsForm::findOne($suborder_id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        $details = $model->details();
 
         if (!$details) {
             throw new NotFoundHttpException();
@@ -102,9 +110,13 @@ class OrdersController extends CustomController
      */
     public function actionChangeStatus($id, $status)
     {
-        $result = SubordersListForm::changeStatusById($id, $status);
+        $model = ChangeSuborderStatusForm::findOne($id);
 
-        if (!$result || isset($result['errors'])) {
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$model->changeStatus($status)) {
             throw new NotAcceptableHttpException();
         }
 
@@ -122,9 +134,13 @@ class OrdersController extends CustomController
      */
     public function actionCancel($id)
     {
-        $result = SubordersListForm::cancelById($id);
+        $model = CancelSuborderForm::findOne($id);
 
-        if (!$result || isset($result['errors'])) {
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$model->cancel()) {
             throw new NotAcceptableHttpException();
         }
 
@@ -142,9 +158,13 @@ class OrdersController extends CustomController
      */
     public function actionResend($id)
     {
-        $result = SubordersListForm::resendById($id);
+        $model = ResendSuborderForm::findOne($id);
 
-        if (!$result || isset($result['errors'])) {
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$model->resend()) {
             throw new NotAcceptableHttpException();
         }
 

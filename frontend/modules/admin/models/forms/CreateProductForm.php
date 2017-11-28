@@ -4,11 +4,7 @@ namespace frontend\modules\admin\models\forms;
 
 use yii;
 use yii\behaviors\AttributeBehavior;
-use yii\db\Query;
-use yii\helpers\ArrayHelper;
-use common\helpers\DbHelper;
 use common\models\store\Pages;
-use common\models\store\Packages;
 
 /**
  * Class CreateProductForm
@@ -149,114 +145,34 @@ class CreateProductForm extends \common\models\store\Products
     }
 
     /**
-     * Get Max position for new inserts
-     * @return array|bool
+     * Create new product
+     * @param $postData
+     * @return $this|bool
      */
-    public static function getMaxPosition()
+    public function create($postData)
     {
-        $db = yii::$app->store->getInstance()->db_name;
-        $query = (new Query())
-            ->select(['MAX(position) position'])
-            ->from("$db.products")
-            ->one();
+        $postData = $this->checkPropertiesField($postData);
 
-        return $query['position'];
-    }
-
-    /**
-     * Move product to new position
-     * @param $newPosition
-     * @return bool|int
-     */
-    public function changePosition($newPosition)
-    {
-        $maxPosition = static::getMaxPosition();
-        $currentPosition = $this->getAttribute('position');
-
-        if ($newPosition < 0 || $newPosition > $maxPosition) {
+        if (!$this->load($postData) || !$this->save()) {
             return false;
         }
-        $db = $this->getDb();
-        $query = $db->createCommand('
-                  UPDATE `products` SET
-                      `position` = CASE
-                          WHEN (`position` = :curPos) THEN 
-                                :newPos                       -- replace new within old
-                          WHEN (`position` > :curPos and `position` <= :newPos) THEN 
-                                `position`- 1                 -- moving up
-                          WHEN (`position` < :curPos and `position` >= :newPos) THEN 
-                                `position`+ 1                 -- moving down
-                          ELSE 
-                                `position`                    -- otherwise lets keep same value.
-                      END
-            ')
-            ->bindValue(':newPos', $newPosition)
-            ->bindValue(':curPos', $currentPosition)
-            ->execute();
 
-        if ($query) {
-            $this->setAttribute('position', $newPosition);
-        }
-        return $this->getAttribute('position');
+        return $this;
     }
 
     /**
-     * Return Products - Packages
-     * @return array
+     * Edit exiting product form
+     * @param $postData
+     * @return $this|bool
      */
-    public static function getProductsPackages()
+    public function edit($postData)
     {
-        $storeDb = yii::$app->store->getInstance()->db_name;
-        $storesDb = DbHelper::getDsnAttribute('name', yii::$app->getDb());
+        $postData = $this->checkPropertiesField($postData);
 
-        $productsRows = (new Query())
-            ->select([
-                'pr.id pr_id', 'pr.name pr_name', 'pr.position pr_position', 'pr.visibility pr_visibility',
-                'pk.id pk_id', 'pk.product_id pk_pr_id', 'pk.name pk_name', 'pk.position pk_position', 'pk.visibility pk_visibility', 'pk.mode pk_mode', 'pk.price pk_price', 'pk.quantity pk_quantity', 'pk.deleted pk_deleted',
-                'prv.site'
-            ])
-            ->from("$storeDb.products pr")
-            ->leftJoin("$storeDb.packages pk", 'pk.product_id = pr.id AND pk.deleted = :deleted', [':deleted' => Packages::DELETED_NO])
-            ->leftJoin("$storesDb.providers prv", 'prv.id = pk.provider_id')
-            ->orderBy(['pr.position' => SORT_ASC, 'pk.position' => SORT_ASC])
-            ->all();
-
-        // Make products packages
-        $productIds = array_unique(array_column($productsRows, 'pr_id'));
-        $productsPackages = [];
-        foreach ($productIds as $productId) {
-
-            // Make product`s packages
-            $productPackages = array_filter($productsRows, function($productRow) use ($productId){
-                return $productId == $productRow['pk_pr_id'];
-            });
-            array_walk($productPackages, function (&$package, $key) {
-                $package = [
-                    'id' => $package['pk_id'],
-                    'product_id' => $package['pr_id'],
-                    'name' => $package['pk_name'],
-                    'position' => $package['pk_position'],
-                    'visibility' => $package['pk_visibility'],
-                    'mode' => $package['pk_mode'],
-                    'price' => $package['pk_price'],
-                    'quantity' => $package['pk_quantity'],
-                    'provider' => $package['site'],
-                    'deleted' => $package['pk_deleted'],
-                ];
-            });
-
-            // Make product
-            $currentProductKey = array_search($productId, array_column($productsRows, 'pr_id'));
-            $currentRow = $productsRows[$currentProductKey];
-            $productsPackages[$productId] = [
-                'id' => $productId,
-                'name' => $currentRow['pr_name'],
-                'position' => $currentRow['pr_position'],
-                'visibility' => $currentRow['pr_visibility'],
-                'packages' => $productPackages,
-            ];
+        if (!$this->load($postData) || !$this->save()) {
+            return false;
         }
 
-        return $productsPackages;
+        return $this;
     }
 }

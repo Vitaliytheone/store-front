@@ -2,16 +2,16 @@
 
 namespace frontend\modules\admin\models\forms;
 
-use yii;
-use yii\helpers\ArrayHelper;
+use Yii;
 use yii\db\Query;
-use \common\models\store\Payments;
+use yii\helpers\ArrayHelper;
+use common\models\store\Payments;
 
 /**
- * Class PaymentsListForm
+ * Class GetSuborderDetailsForm
  * @package frontend\modules\admin\models\forms
  */
-class PaymentsListForm extends Payments
+class GetPaymentDetailsForm extends Payments
 {
     private $_db;
 
@@ -25,10 +25,13 @@ class PaymentsListForm extends Payments
     }
 
     /**
-     * Return Payment formatted Details data & time
-     * @return array
+     * Return Payment Details data
+     * Defines is returned provider response
+     * plain Json string or print_r formatted string
+     * @param bool $responseFormatPrintR
+     * @return array|null
      */
-    public function getDetails()
+    public function details(bool $responseFormatPrintR = true)
     {
         $paymentLogs = (new Query())
             ->select(['id', 'checkout_id', 'result', 'ip', 'created_at'])

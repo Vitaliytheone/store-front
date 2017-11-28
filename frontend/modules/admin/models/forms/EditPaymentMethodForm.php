@@ -5,7 +5,6 @@ namespace frontend\modules\admin\models\forms;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\helpers\ArrayHelper;
-use frontend\modules\admin\components\Url;
 
 /**
  * Class EditPaymentMethodForm
