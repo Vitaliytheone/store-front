@@ -5,12 +5,13 @@ namespace frontend\modules\admin\models\forms;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\helpers\ArrayHelper;
+use common\models\stores\PaymentMethods;
 
 /**
  * Class EditPaymentMethodForm
  * @package frontend\modules\admin\models\forms
  */
-class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
+class EditPaymentMethodForm extends PaymentMethods
 {
 
     /**

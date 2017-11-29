@@ -3,6 +3,7 @@
 namespace frontend\modules\admin\models\search;
 
 use Yii;
+use yii\base\Model;
 use yii\base\Exception;
 use yii\db\Query;
 use yii\validators\EmailValidator;
@@ -11,7 +12,6 @@ use frontend\modules\admin\components\Url;
 use frontend\helpers\UiHelper;
 use common\models\store\Suborders;
 use yii\data\ActiveDataProvider;
-use frontend\modules\admin\models\forms\SubordersListForm;
 
 /**
  * Orders Search model
@@ -22,7 +22,7 @@ use frontend\modules\admin\models\forms\SubordersListForm;
  * @property ActiveDataProvider $_dataProvider
  * @property array $_queryActiveFilters Uses for current query filters storing. Format: [$filterName => [$filter => [....]]]
  */
-class OrdersSearch extends \yii\base\Model
+class OrdersSearch extends Model
 {
     public $status;
     public $mode;
@@ -469,10 +469,6 @@ class OrdersSearch extends \yii\base\Model
 
             // Populate each suborder by additional data
             array_walk($suborders, function(&$suborder) use ($suborders) {
-
-                $suborderListForm = new SubordersListForm();
-                $suborderListForm->setAttributes($suborder, false);
-
                 $suborder['status_title'] = Suborders::getStatusName($suborder['status']);
                 $suborder['mode_title'] = Suborders::getModeName($suborder['mode']);
                 $suborder['action_menu'] = $this->getActionMenu($suborder['mode'], $suborder['status']);

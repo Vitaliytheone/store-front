@@ -2,11 +2,13 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\Products;
+
 /**
  * Class MoveProductForm
  * @package frontend\modules\admin\models\forms
  */
-class MoveProductForm extends \common\models\store\Products
+class MoveProductForm extends Products
 {
     /**
      * Move product to new position

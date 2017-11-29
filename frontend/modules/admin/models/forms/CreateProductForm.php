@@ -5,12 +5,13 @@ namespace frontend\modules\admin\models\forms;
 use yii;
 use yii\behaviors\AttributeBehavior;
 use common\models\store\Pages;
+use common\models\store\Products;
 
 /**
  * Class CreateProductForm
  * @package frontend\modules\admin\forms
  */
-class CreateProductForm extends \common\models\store\Products
+class CreateProductForm extends Products
 {
     /**
      * @inheritdoc
