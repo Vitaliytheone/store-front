@@ -1,12 +1,8 @@
 <?php
 
-use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $formatter yii\i18n\Formatter */
-$formatter = Yii::$app->formatter;
 
 ?>
 
@@ -18,9 +14,9 @@ $formatter = Yii::$app->formatter;
                 <div class="row">
                     <div class="col modal-delete-block text-center">
                         <span class="fa fa-trash-o"></span>
-                        <p>Are your sure that your want to delete this Package?</p>
-                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-danger m-btn--air" id="feature-delete">Yes, delete it!</button>
+                        <p><?= Yii::t('admin', 'products.package_delete_agree') ?></p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'products.package_delete_cancel') ?></button>
+                        <button class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'products.package_delete_submit') ?></button>
                     </div>
                 </div>
             </div>

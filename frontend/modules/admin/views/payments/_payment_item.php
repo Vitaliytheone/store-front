@@ -16,7 +16,6 @@ use frontend\modules\admin\components\Url;
     <td><?= $payment['memo'] ?></td>
     <td><?= $payment['status_title'] ?></td>
     <td nowrap=""><?= $payment['updated_at_formatted'] ?></td>
-
     <td class="text-right">
         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-right" data-dropdown-toggle="click" aria-expanded="true">
             <a href="#" class="m-dropdown__toggle btn btn-primary btn-sm">
@@ -30,13 +29,7 @@ use frontend\modules\admin\components\Url;
                         <div class="m-dropdown__content">
                             <ul class="m-nav">
                                 <li class="m-nav__item">
-                                    <a href="#" class="m-nav__link"
-                                       data-toggle="modal"
-                                       data-target=".payments_detail"
-                                       data-backdrop="static"
-                                       data-id="<?= $payment['id'] ?>"
-                                       data-modal_title="<?= Yii::t('admin', 'payments.window_details_title', ['payment_id' => $payment['id']] ) ?>"                                      data-action_url="<?= Url::toRoute(['/payments/get-details', 'id' => $payment['id']]) ?>"
-                                    >
+                                    <a href="#" class="m-nav__link" data-toggle="modal" data-target=".payments_detail" data-backdrop="static" data-id="<?= $payment['id'] ?>" data-modal_title="<?= Yii::t('admin', 'payments.details_title', ['payment_id' => $payment['id']] ) ?>" data-action_url="<?= Url::toRoute(['/payments/get-details', 'id' => $payment['id']]) ?>">
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'payments.action_details') ?>
                                         </span>

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use frontend\helpers\Ui;
+use frontend\helpers\UiHelper;
 
 /* @var $product frontend\models\forms\ProductViewForm */
 
@@ -30,7 +30,7 @@ $this->title = $product->name;
             <?php foreach ($product->packages as $package): ?>
                 <!--  Package item  -->
                 <div class="col-lg-3">
-                    <div class="product-card text-center <?=  Ui::toggleString($package->best, 'best-product') ?>">
+                    <div class="product-card text-center <?= UiHelper::toggleString($package->best, 'best-product') ?>">
                         <div class="product-quantity"><?= $package->quantity ?></div>
                         <h3 class="product-title"><?= Html::encode($package->name) ?></h3>
                         <div class="product-price">$<?= $package->price ?></div>

@@ -16,7 +16,7 @@
             <a href="<?= Url::toRoute('/settings')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-settings"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_general_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_general') ?>
                 </span>
             </a>
         </li>
@@ -24,7 +24,7 @@
             <a href="<?= Url::toRoute('/settings/payments')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-wallet"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_payments_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_payments') ?>
                 </span>
             </a>
         </li>
@@ -32,7 +32,7 @@
             <a href="<?= Url::toRoute('/settings/providers')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-share"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_providers_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_providers') ?>
                 </span>
             </a>
         </li>
@@ -40,7 +40,7 @@
             <a href="<?= Url::toRoute('/settings/navigations')?>" class="m-nav__link">
                 <i class="m-nav__link-icon flaticon-list-1"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_navigation_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_navigation') ?>
                 </span>
             </a>
         </li>
@@ -48,7 +48,7 @@
             <a href="<?= Url::toRoute('/settings/pages')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-docs"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_pages_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_pages') ?>
                 </span>
             </a>
         </li>
@@ -56,7 +56,7 @@
             <a href="<?= Url::toRoute('/settings/themes')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-puzzle"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_themes_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_themes') ?>
                 </span>
             </a>
         </li>
@@ -64,7 +64,7 @@
             <a href="<?= Url::toRoute('/settings/blocks')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-layers"></i>
                 <span class="m-nav__link-text">
-                    <?= \Yii::t('admin', 'settings.left_menu_blocks_title') ?>
+                    <?= Yii::t('admin', 'settings.left_menu_blocks') ?>
                 </span>
             </a>
         </li>

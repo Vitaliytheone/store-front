@@ -1,17 +1,17 @@
 <?php
 
-namespace frontend\modules\admin\models\forms;
+namespace frontend\modules\admin\models;
 
-use yii;
-use yii\helpers\ArrayHelper;
+use Yii;
 use yii\db\Query;
-use \common\models\store\Payments;
+use yii\helpers\ArrayHelper;
+use common\models\store\Payments;
 
 /**
- * Class PaymentsListForm
- * @package frontend\modules\admin\models\forms
+ * Class Payment
+ * @package frontend\modules\admin\forms
  */
-class PaymentsListForm extends Payments
+class PaymentDetails extends Payments
 {
     private $_db;
 
@@ -25,10 +25,10 @@ class PaymentsListForm extends Payments
     }
 
     /**
-     * Return Payment formatted Details data & time
-     * @return array
+     * Return Payment Details data
+     * @return array|null
      */
-    public function getDetails()
+    public function details()
     {
         $paymentLogs = (new Query())
             ->select(['id', 'checkout_id', 'result', 'ip', 'created_at'])

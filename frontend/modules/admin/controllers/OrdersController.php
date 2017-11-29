@@ -2,17 +2,19 @@
 
 namespace frontend\modules\admin\controllers;
 
+use frontend\helpers\UiHelper;
 use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
+use frontend\modules\admin\components\Url;
+use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
-
-use common\models\store\Suborders;
-use frontend\modules\admin\models\forms\SubordersListForm;
-
 use frontend\modules\admin\models\search\OrdersSearch;
+use frontend\modules\admin\models\SuborderDetails;
+use frontend\modules\admin\models\forms\CancelSuborderForm;
+use frontend\modules\admin\models\forms\ChangeSuborderStatusForm;
+use frontend\modules\admin\models\forms\ResendSuborderForm;
 
 /**
  * Class OrdersController
@@ -53,6 +55,8 @@ class OrdersController extends CustomController
      */
     public function actionIndex()
     {
+        $this->view->title = Yii::t('admin', 'orders.page_title');
+
         $searchModel = new OrdersSearch();
         $ordersDataProvider = $searchModel->search(Yii::$app->request->get());
 
@@ -65,30 +69,34 @@ class OrdersController extends CustomController
     /**
      * Return Order details data AJAX action
      * GET /admin/orders/get-order-details?suborder_id={{suborderId}}
-     *
+     * @param $suborder_id
      * @throws Yii\web\BadRequestHttpException
      * @throws Yii\web\NotFoundHttpException
      * @return array
      */
-    public function actionGetOrderDetails()
+    public function actionGetOrderDetails($suborder_id)
     {
         $request = Yii::$app->getRequest();
         $response = Yii::$app->getResponse();
-        $response->format = \yii\web\Response::FORMAT_JSON;
+        $response->format = Response::FORMAT_JSON;
 
-        $suborderId = $request->get('suborder_id');
-        if (!$request->isAjax || !$suborderId) {
+        if (!$request->isAjax) {
             throw new BadRequestHttpException();
         }
-        $suborderModel = SubordersListForm::findOne($suborderId);
-        if (!$suborderModel) {
+
+        $model = SuborderDetails::findOne($suborder_id);
+
+        if (!$model) {
             throw new NotFoundHttpException();
         }
-        $orderDetails = $suborderModel->getDetails();
-        if (!$orderDetails) {
+
+        $details = $model->details();
+
+        if (!$details) {
             throw new NotFoundHttpException();
         }
-        return ['details' => $orderDetails];
+
+        return ['details' => $details];
     }
 
     /**
@@ -102,29 +110,20 @@ class OrdersController extends CustomController
      */
     public function actionChangeStatus($id, $status)
     {
-        $filters = yii::$app->getRequest()->get('filters');
+        $model = ChangeSuborderStatusForm::findOne($id);
 
-        $suborderModel = SubordersListForm::findOne($id);
-        if (!$suborderModel) {
+        if (!$model) {
             throw new NotFoundHttpException();
         }
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_CHANGE_STATUS_ACTION);
-        if (!$suborderModel->validate()) {
+
+        if (!$model->changeStatus($status)) {
             throw new NotAcceptableHttpException();
         }
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_CHANGE_STATUS_ACTION_ATTR);
-        $suborderModel->setAttributes([
-            'status' => $status,
-            'mode' => Suborders::MODE_MANUAL,
-        ]);
-        if (!$suborderModel->save()) {
-            throw new NotAcceptableHttpException();
-        }
-        Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'orders.message_status_changed')
-        ]);
-        $queryParams = is_array($filters) ? http_build_query($filters) : null;
-        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+
+        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
+
+        $filters = static::_queryParams();
+        $this->redirect(Url::toRoute(["/orders$filters"]));
     }
 
     /**
@@ -135,25 +134,20 @@ class OrdersController extends CustomController
      */
     public function actionCancel($id)
     {
-        $filters = yii::$app->getRequest()->get('filters');
+        $model = CancelSuborderForm::findOne($id);
 
-        $suborderModel = SubordersListForm::findOne($id);
-        if (!$suborderModel) {
+        if (!$model) {
             throw new NotFoundHttpException();
         }
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_CANCEL_ACTION);
-        if (!$suborderModel->validate()) {
+
+        if (!$model->cancel()) {
             throw new NotAcceptableHttpException();
-        };
+        }
 
-        $suborderModel->setAttribute('status', Suborders::STATUS_CANCELED);
-        $suborderModel->save(false);
+        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 
-        Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'orders.message_canceled')
-        ]);
-        $queryParams = is_array($filters) ? http_build_query($filters) : null;
-        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+        $filters = static::_queryParams();
+        $this->redirect(Url::toRoute(["/orders$filters"]));
     }
 
     /**
@@ -164,27 +158,31 @@ class OrdersController extends CustomController
      */
     public function actionResend($id)
     {
-        $filters = yii::$app->getRequest()->get('filters');
+        $model = ResendSuborderForm::findOne($id);
 
-        $suborderModel = SubordersListForm::findOne($id);
-        if (!$suborderModel) {
+        if (!$model) {
             throw new NotFoundHttpException();
         }
-        $suborderModel->setScenario(SubordersListForm::SCENARIO_RESEND_ACTION);
-        if (!$suborderModel->validate()) {
+
+        if (!$model->resend()) {
             throw new NotAcceptableHttpException();
         }
-        $suborderModel->setAttributes([
-            'status' => Suborders::STATUS_AWAITING,
-            'send' => Suborders::RESEND_NO,
-        ]);
-        $suborderModel->save(false);
 
-        Yii::$app->session->addFlash('messages', [
-            'success' => \Yii::t('admin', 'orders.message_resend')
-        ]);
-        $queryParams = is_array($filters) ? http_build_query($filters) : null;
-        $this->redirect(Url::to(["/admin/orders?$queryParams"]));
+        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
+
+        $filters = static::_queryParams();
+        $this->redirect(Url::toRoute(["/orders$filters"]));
+    }
+
+    /**
+     * Return current filters array as redirect query params
+     * @return null|string
+     */
+    private static function _queryParams()
+    {
+        $filters = yii::$app->getRequest()->get('filters');
+
+        return is_array($filters) ? ( '?' . http_build_query($filters)) : null;
     }
 
 }

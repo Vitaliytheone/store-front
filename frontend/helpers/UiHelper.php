@@ -5,29 +5,31 @@ namespace frontend\helpers;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use yii\base\InvalidParamException;
 
-class Ui
+class UiHelper
 {
+    /** Flash messages types */
+    const MESSAGE_SUCCESS = 'success';
+    const MESSAGE_WARNING = 'warning';
+    const MESSAGE_ERROR = 'error';
+    const MESSAGE_INFO = 'info';
+
     /**
      * Check if filter is active
-     * Allowed `-1` value for dummy `All` filter
      * @param $filterName
      * @param null $filterValue
-     * @param string $activeValue Value returned when filter is active
-     * @param string $inactiveValue Value returned when filter
      * @return string
      */
-    public static function isFilterActive($filterName, $filterValue = null, $activeValue = 'active', $inactiveValue = '')
+    public static function isFilterActive($filterName, $filterValue)
     {
         $filter = yii::$app->getRequest()->get($filterName, null);
-
         // Dummy `All` filter
-        if ($filterValue === -1) {
-            return is_null($filter) ? $activeValue : $inactiveValue;
+        if ($filterValue === 'all') {
+            return is_null($filter);
         }
-        return $filter == $filterValue ? $activeValue : $inactiveValue;
+        return $filter == (string)$filterValue;
     }
+
 
     /**
      * Check if filter is present
@@ -117,53 +119,66 @@ class Ui
      * @return string
      */
     public static function listSummary($dataProvider, $options = ['class' => 'summary'], $summary = null) {
-    $count = $dataProvider->getCount();
-    if ($count <= 0) {
-        return '';
-    }
-    $tag = ArrayHelper::remove($options, 'tag', 'div');
-    if (($pagination = $dataProvider->getPagination()) !== false) {
-        $totalCount = $dataProvider->getTotalCount();
-        $begin = $pagination->getPage() * $pagination->pageSize + 1;
-        $end = $begin + $count - 1;
-        if ($begin > $end) {
-            $begin = $end;
+        $count = $dataProvider->getCount();
+        if ($count <= 0) {
+            return '';
         }
-        $page = $pagination->getPage() + 1;
-        $pageCount = $pagination->pageCount;
-        if (($summaryContent = $summary) === null) {
-            return Html::tag($tag, Yii::t('yii', '{begin, number} to {end, number} of {totalCount, number}', [
-                'begin' => $begin,
-                'end' => $end,
-                'count' => $count,
-                'totalCount' => $totalCount,
-                'page' => $page,
-                'pageCount' => $pageCount,
-            ]), $options);
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
+        if (($pagination = $dataProvider->getPagination()) !== false) {
+            $totalCount = $dataProvider->getTotalCount();
+            $begin = $pagination->getPage() * $pagination->pageSize + 1;
+            $end = $begin + $count - 1;
+            if ($begin > $end) {
+                $begin = $end;
+            }
+            $page = $pagination->getPage() + 1;
+            $pageCount = $pagination->pageCount;
+            if (($summaryContent = $summary) === null) {
+                return Html::tag($tag, Yii::t('yii', '{begin, number} to {end, number} of {totalCount, number}', [
+                    'begin' => $begin,
+                    'end' => $end,
+                    'count' => $count,
+                    'totalCount' => $totalCount,
+                    'page' => $page,
+                    'pageCount' => $pageCount,
+                ]), $options);
+            }
+        } else {
+            $begin = $page = $pageCount = 1;
+            $end = $totalCount = $count;
+            if (($summaryContent = $summary) === null) {
+                return Html::tag($tag, Yii::t('yii', 'Total <b>{count, number}</b> {count, plural, one{item} other{items}}.', [
+                    'begin' => $begin,
+                    'end' => $end,
+                    'count' => $count,
+                    'totalCount' => $totalCount,
+                    'page' => $page,
+                    'pageCount' => $pageCount,
+                ]), $options);
+            }
         }
-    } else {
-        $begin = $page = $pageCount = 1;
-        $end = $totalCount = $count;
-        if (($summaryContent = $summary) === null) {
-            return Html::tag($tag, Yii::t('yii', 'Total <b>{count, number}</b> {count, plural, one{item} other{items}}.', [
-                'begin' => $begin,
-                'end' => $end,
-                'count' => $count,
-                'totalCount' => $totalCount,
-                'page' => $page,
-                'pageCount' => $pageCount,
-            ]), $options);
-        }
+
+        return Yii::$app->getI18n()->format($summaryContent, [
+            'begin' => $begin,
+            'end' => $end,
+            'count' => $count,
+            'totalCount' => $totalCount,
+            'page' => $page,
+            'pageCount' => $pageCount,
+        ], Yii::$app->language);
     }
 
-    return Yii::$app->getI18n()->format($summaryContent, [
-        'begin' => $begin,
-        'end' => $end,
-        'count' => $count,
-        'totalCount' => $totalCount,
-        'page' => $page,
-        'pageCount' => $pageCount,
-    ], Yii::$app->language);
-}
+
+    /**
+     * Show new pop-up message after redirect
+     * @param $message
+     * @param string $messageType
+     */
+    public static function message($message, $messageType = self::MESSAGE_SUCCESS)
+    {
+        Yii::$app->session->addFlash('messages', [
+            $messageType => $message
+        ]);
+    }
 
 }

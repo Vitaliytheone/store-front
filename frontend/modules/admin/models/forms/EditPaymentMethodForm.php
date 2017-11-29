@@ -2,14 +2,18 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use Yii;
 use yii\behaviors\AttributeBehavior;
+use yii\helpers\ArrayHelper;
+use common\models\stores\PaymentMethods;
 
 /**
  * Class EditPaymentMethodForm
  * @package frontend\modules\admin\models\forms
  */
-class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
+class EditPaymentMethodForm extends PaymentMethods
 {
+
     /**
      * @inheritdoc
      */
@@ -25,7 +29,15 @@ class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
                     /* @var $event \yii\base\Event */
                     /* @var $model $this */
                     $model = $event->sender;
-                    return json_encode($model->getAttribute('details'));
+                    $details = $model->getAttribute('details');
+
+                    // Prepare PayPal details
+                    if ($model->method == $model::METHOD_PAYPAL) {
+                        $apiUsername = ArrayHelper::getValue($details, 'api_username');
+                        $details['api_username'] = trim($apiUsername);
+                    }
+
+                    return json_encode($details);
                 },
             ],
             [
@@ -49,5 +61,81 @@ class EditPaymentMethodForm extends \common\models\stores\PaymentMethods
     public function formName()
     {
         return 'PaymentsForm';
+    }
+
+    /**
+     * Return payments methods list item data
+     * @param $field
+     * @return mixed
+     */
+    public function getMethodsListItemData($field)
+    {
+        $method = $this->method;
+
+        $methodItemsData = [
+            self::METHOD_PAYPAL => [
+                'icon' => '/img/paypal.png',
+                'title' => Yii::t('admin', 'settings.payments_method_paypal'),
+                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            ],
+            self::METHOD_2CHECKOUT => [
+                'icon' => '/img/2checkout.png',
+                'title' => Yii::t('admin', 'settings.payments_method_2checkout'),
+                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            ],
+            self::METHOD_BITCOIN => [
+                'icon' => '/img/bitcoin.png',
+                'title' => Yii::t('admin', 'settings.payments_method_bitcoin'),
+                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            ],
+        ];
+
+        return ArrayHelper::getValue($methodItemsData, "$method.$field", $field);
+    }
+
+    /**
+     * Return payments method edit form data
+     * @return mixed
+     */
+    public function getMethodFormData()
+    {
+        $method = $this->method;
+        $details = $this->details;
+        
+        $getDetailsField = function ($field) use ($details){
+            return ArrayHelper::getValue($details, $field);
+        };
+        
+        $paymentsFormData = [
+
+            self::METHOD_PAYPAL => [
+                'icon' => '/img/paypal.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_username]', 'value' => $getDetailsField('api_username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_password]', 'value' => $getDetailsField('api_password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_signature]', 'value' => $getDetailsField('api_signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
+                ]
+            ],
+
+            self::METHOD_2CHECKOUT => [
+                'icon' => '/img/2checkout.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'credit_card_number', 'placeholder' => '', 'name' => 'PaymentsForm[details][account_number]', 'value' => $getDetailsField('account_number'), 'label' => Yii::t('admin', 'settings.payments_2checkout_account_number')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'credit_card_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_2checkout_secret_word')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'id' => '', 'name' => 'PaymentsForm[details][test_mode]', 'value' => 1, 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
+                ]
+            ],
+
+            self::METHOD_BITCOIN => [
+                'icon' => '/img/bitcoin.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_api_gateway_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_gateway_id]', 'value' => $getDetailsField('api_gateway_id'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_geteway_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_gateway_secret]', 'value' => $getDetailsField('api_gateway_secret'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_secret')],
+                ]
+            ],
+        ];
+
+        return ArrayHelper::getValue($paymentsFormData, $method);
     }
 }

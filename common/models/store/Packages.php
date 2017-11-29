@@ -4,6 +4,7 @@ namespace common\models\store;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use common\models\store\queries\PackagesQuery;
 
 /**
@@ -110,4 +111,22 @@ class Packages extends ActiveRecord
     {
         return new PackagesQuery(get_called_class());
     }
+
+    /**
+     * Get Max position of current packages
+     * @return array|bool
+     */
+    public function getMaxPosition()
+    {
+        $productId = $this->getAttribute('product_id');
+        $db = yii::$app->store->getInstance()->db_name;
+        $query = (new Query())
+            ->select(['MAX(position) position'])
+            ->from("$db.packages")
+            ->where(['product_id' => $productId])
+            ->one();
+
+        return $query['position'];
+    }
+
 }

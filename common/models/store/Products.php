@@ -3,6 +3,7 @@
 namespace common\models\store;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%products}}".
@@ -85,5 +86,20 @@ class Products extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \common\models\store\queries\ProductsQuery(get_called_class());
+    }
+
+    /**
+     * Get Max position for new inserts
+     * @return array|bool
+     */
+    public static function getMaxPosition()
+    {
+        $db = yii::$app->store->getInstance()->db_name;
+        $query = (new Query())
+            ->select(['MAX(position) position'])
+            ->from("$db.products")
+            ->one();
+
+        return $query['position'];
     }
 }
