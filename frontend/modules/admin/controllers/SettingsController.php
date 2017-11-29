@@ -115,6 +115,8 @@ class SettingsController extends CustomController
         $request = yii::$app->getRequest();
         $storeId = yii::$app->store->getId();
 
+        $this->view->title = Yii::t('admin', "settings.payments_edit_$method");
+
         $paymentModel = EditPaymentMethodForm::findOne([
             'store_id' => $storeId,
             'method' => $method,
@@ -171,7 +173,7 @@ class SettingsController extends CustomController
         $paymentModel->save();
 
         return [
-            'method' => $paymentModel,
+            'active' => $paymentModel->active,
         ];
     }
 

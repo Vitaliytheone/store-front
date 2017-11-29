@@ -8,6 +8,7 @@ use yii\helpers\Html;
 /* @var $paymentModel \frontend\modules\admin\models\forms\EditPaymentMethodForm; */
 
 $formData = $paymentModel->getMethodFormData();
+$method = $paymentModel->method;
 
 ?>
 
@@ -15,7 +16,7 @@ $formData = $paymentModel->getMethodFormData();
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title">
-                <?= Yii::t('admin', 'settings.payments_edit_paypal') ?>
+                <?= Yii::t('admin', "settings.payments_edit_$method") ?>
             </h3>
         </div>
     </div>
