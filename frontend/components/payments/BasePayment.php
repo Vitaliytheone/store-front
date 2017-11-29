@@ -12,6 +12,7 @@ use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
 use Yii;
 use yii\base\Component;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -70,10 +71,22 @@ abstract class BasePayment extends Component {
      */
     public $showErrors = false;
 
+    /**
+     * BasePayment constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->_method = ArrayHelper::getValue($config, 'method');
+
+        parent::__construct($config);
+    }
+
     public function init()
     {
         $this->_token = bin2hex(random_bytes(32));
-        $this->_method = strtolower((new \ReflectionClass($this))->getShortName());
+
+//        $this->_method = strtolower((new \ReflectionClass($this))->getShortName()); TODO:: _method declaration is moved to constructor
 
         $this->_payment = new Payments();
         $this->_payment->method = $this->_method;
@@ -143,6 +156,7 @@ abstract class BasePayment extends Component {
      * After success payment
      * @param Payments $payment
      * @param array $result
+     * @return bool|void
      */
     public static function success($payment, $result)
     {

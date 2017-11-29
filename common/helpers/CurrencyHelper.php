@@ -18,6 +18,7 @@ class CurrencyHelper {
             'gateway' => [
                 'paypal' => [
                     'method_name' => 'PayPal',
+                    'class_name' => "Paypal",
                     'url' => [
                         'paypalexpress',
                         'paypalstandart',
@@ -39,6 +40,7 @@ class CurrencyHelper {
                 ],
                 '2checkout' => [
                     'method_name' => '2Checkout',
+                    'class_name' => "Twocheckout",
                     'url' => 'twocheckout',
                     'mode' => 'standart',
                     'name' => '2Checkout',
@@ -52,6 +54,7 @@ class CurrencyHelper {
                 ],
                 'bitcoin' => [
                     'method_name' => 'Bitcoin',
+                    'class_name' => "Bitcoin",
                     'url' => 'bitcoin',
                     'mode' => 'standart',
                     'name' => 'Bitcoin',
@@ -119,5 +122,16 @@ class CurrencyHelper {
         }
 
         return $currencyPaymentsList;
+    }
+
+    /**
+     * Get payment system class name by payment method
+     * @param $paymentMethod
+     * @param $code
+     * @return mixed
+     */
+    public static function getPaymentClass($paymentMethod, $code = 'USD')
+    {
+        return ArrayHelper::getValue(static::$currencies, "$code.gateway.$paymentMethod.class_name");
     }
 }

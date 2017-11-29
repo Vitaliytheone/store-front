@@ -1,6 +1,9 @@
 <?php
 namespace frontend\components\payments;
 
+use common\helpers\CurrencyHelper;
+use common\models\store\Payments;
+use common\models\stores\PaymentMethods;
 use Yii;
 use yii\base\UnknownClassException;
 
@@ -19,6 +22,7 @@ class Payment {
      * Get payment component by payment method name
      *
      * @param string $method
+     * @throws UnknownClassException
      * @return BasePayment
      */
     public static function getPayment($method)
@@ -27,15 +31,15 @@ class Payment {
             return static::$methods[$method];
         }
 
-        $cleanedMethod = preg_replace('/^[^A-Za-z]+/', '', $method);
+        $className = CurrencyHelper::getPaymentClass($method);
 
-        $className = '\frontend\components\payments\methods\\' . (ucfirst($cleanedMethod));
+        $className = '\frontend\components\payments\methods\\' . $className;
 
         if (!class_exists($className)) {
             throw new UnknownClassException();
         }
 
-        static::$methods[$method] = new $className();
+        static::$methods[$method] = new $className(['method' => $method]);
 
         return static::$methods[$method];
     }
