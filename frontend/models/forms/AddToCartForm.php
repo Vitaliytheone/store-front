@@ -4,6 +4,7 @@ namespace frontend\models\forms;
 use common\models\store\Carts;
 use common\models\store\Packages;
 use common\models\stores\Stores;
+use frontend\components\validators\LinkValidator;
 use frontend\helpers\UserHelper;
 use Yii;
 use yii\base\Model;
@@ -33,6 +34,7 @@ class AddToCartForm extends Model {
     {
         return [
             [['link'], 'required'],
+            ['link', LinkValidator::className()],
         ];
     }
 
@@ -43,6 +45,15 @@ class AddToCartForm extends Model {
     public function setPackage($package)
     {
         $this->_package = $package;
+    }
+
+    /**
+     * Get package
+     * @return Packages
+     */
+    public function getPackage()
+    {
+        return $this->_package;
     }
 
     /**
