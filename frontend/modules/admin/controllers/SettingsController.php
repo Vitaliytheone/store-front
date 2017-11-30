@@ -6,6 +6,7 @@ use common\components\ActiveForm;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\CreateProviderForm;
+use frontend\modules\admin\models\forms\EditStoreSettingsForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
@@ -57,9 +58,23 @@ class SettingsController extends CustomController
      */
     public function actionIndex()
     {
+        $request = Yii::$app->getRequest();
+
         $this->view->title = Yii::t('admin', 'settings.page_title');
 
-        return $this->render('index');
+        /** @var \common\models\stores\Stores $store */
+        $store = Yii::$app->store->getInstance();
+        $storeForm = EditStoreSettingsForm::findOne($store->id);
+
+        if ($storeForm->updateSettings($request->post())) {
+            UiHelper::message(Yii::t('admin', 'settings.message_settings_updated'));
+            return $this->refresh();
+        }
+
+        return $this->render('index', [
+            'store' => $storeForm,
+            'timezones' => Yii::$app->params['timezone'],
+        ]);
     }
 
     /**

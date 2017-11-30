@@ -99,7 +99,9 @@ class Twocheckout extends BasePayment {
 
         $checkoutId = ArrayHelper::getValue($paymentParams, 'merchant_order_id');
 
+        // Logging PS request
         PaymentsLog::log($checkoutId, json_encode($paymentParams, JSON_PRETTY_PRINT));
+        $this->log(json_encode($paymentParams, JSON_PRETTY_PRINT));
 
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_2CHECKOUT,

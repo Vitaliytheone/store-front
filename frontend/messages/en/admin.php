@@ -141,6 +141,7 @@ return [
     'settings.general_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
     'settings.general_seo_meta_limits' => ' of 160 characters used',
     'settings.general_save' => 'Save changes',
+    'settings.message_settings_updated' => 'Settings successfully updated!',
 
     'settings.payments_page_title' => 'Settings payments',
     'settings.payments_title' => 'Payments',

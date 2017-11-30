@@ -49,6 +49,9 @@ class SiteController extends CustomController
         if (!$product) {
             throw new NotFoundHttpException();
         }
+
+        $this->view->title = $product->name;
+
         return $this->render('product', [
             'product' => $product,
         ]);

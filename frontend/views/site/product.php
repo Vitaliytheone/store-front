@@ -2,12 +2,10 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
 use frontend\helpers\UiHelper;
 
 /* @var $product frontend\models\forms\ProductViewForm */
 
-$this->title = $product->name;
 ?>
 
 <section class="min-height">
