@@ -2,10 +2,12 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use Yii;
 use common\models\stores\Stores;
+use yii\validators\FileValidator;
 use yii\web\UploadedFile;
-use Uploadcare;
-
+use common\components\cdn\Cdn;
+use common\components\cdn\BaseCdn;
 
 
 /**
@@ -18,6 +20,12 @@ class EditStoreSettingsForm extends Stores
 {
     public $faviconFile;
     public $logoFile;
+
+
+    private static $_files = [
+        'logoFile' => ['extensions' => 'png, jpg, gif', 'maxSize' => 3000000, 'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif']],
+        'faviconFile' => ['extensions' => 'png, jpg, gif, ico', 'maxSize' => 500000, 'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']],
+    ];
 
     /**
      * @inheritdoc
@@ -33,12 +41,11 @@ class EditStoreSettingsForm extends Stores
     public function rules()
     {
         return [
-            [['timezone',], 'integer'],
-            [['name', 'seo_title',], 'string', 'max' => 255],
-            [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
-
-            ['logoFile',    'file', 'extensions' => 'png, jpg, gif', 'maxSize' => 3000000, 'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif']],
-            ['faviconFile', 'file', 'extensions' => 'png, jpg, gif', 'maxSize' => 500000, 'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif']],
+            [['timezone'], 'integer'],
+            [['seo_description', 'seo_title'], 'trim'],
+            [['name', 'seo_title'], 'string', 'max' => 255],
+            [['seo_description'], 'string', 'max' => 2000],
+            [['logo', 'favicon'], 'string', 'max' => 255],
         ];
     }
 
@@ -53,40 +60,90 @@ class EditStoreSettingsForm extends Stores
             return false;
         }
 
-        $this->faviconFile = UploadedFile::getInstance($this, 'faviconFile');
-        $this->logoFile = UploadedFile::getInstance($this, 'logoFile');
-
         if (!$this->validate()) {
             return false;
         }
 
-        if ($this->logoFile) {
+        // Processing files
+        foreach (static::$_files as $formField => $validationRules) {
+            $attribute = str_replace('File', '', $formField);
 
-            $tempFilePath = $this->logoFile->tempName;
-            $name = $this->logoFile->name;
-            $extention =  $this->logoFile->extension;
-            $mime = $this->logoFile->type;
+            // Delete deleted files
+            $isDeleted  = $this->isAttributeChanged($attribute) && !$this->getAttribute($attribute);
+            if ($isDeleted) {
+                $urlToDelete = $this->getOldAttribute($attribute);
+                $this->_deleteFromCdn($urlToDelete);
+                continue;
+            }
 
-            $api = new Uploadcare\Api('2b57ca4e85ca588704a4', '15b9d150192983929861');
-            $file = $api->uploader->fromPath($tempFilePath, $mime);
-            $file->store();
-            $url = $file->getUrl();
+            // Processing new files
+            $fileInstance = UploadedFile::getInstance($this, $formField);
 
-            error_log(print_r($this->logoFile, 1), 0);
-            error_log(print_r($url, 1), 0);
+            if (!($fileInstance instanceof UploadedFile)) {
+                continue;
+            }
 
-            $this->logo = $url;
+            $fileValidator = new FileValidator($validationRules);
+
+            if (!$fileValidator->validate($fileInstance, $message)) {
+                $this->addError($attribute, $message);
+                return false;
+            };
+
+            $tmpFilePath = $fileInstance->tempName;
+            $mime = $fileInstance->type;
+
+            $url = $this->_uploadToCdn($tmpFilePath, $mime);
+
+            if (!$url) {
+                $this->addError($attribute, Yii::t('admin', 'settings.message_cdn_upload_error'));
+                return false;
+            }
+
+            $this->setAttribute($attribute, $url);
         }
 
-
-        $this->save(false);
-
-        return true;
+        return $this->save(false);
     }
 
-    private function _uploadToCdn($pathToFile)
+    /**
+     * Upload file to CDN
+     * @param $pathToFile
+     * @param $mime
+     * @return bool|string
+     */
+    private function _uploadToCdn($pathToFile, $mime)
     {
+        /** @var BaseCdn $cdn */
+        $cdn = Cdn::getCdn();
 
+        try {
+            $id = $cdn->uploadFromPath($pathToFile, $mime);
+            $url = $cdn->getUrl($id);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Delete file from CDN
+     * @param $cdnUrl
+     * @return bool
+     */
+    private function _deleteFromCdn($cdnUrl)
+    {
+        /** @var BaseCdn $cdn */
+        $cdn = Cdn::getCdn();
+
+        try {
+            $cdn->deleteByUrl($cdnUrl);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
 

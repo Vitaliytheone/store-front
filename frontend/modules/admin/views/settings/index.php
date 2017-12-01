@@ -55,18 +55,23 @@ use common\components\ActiveForm;
                                     </a>
 
                                     <input id="setting-logo" type="file" class="settings-file" name="SettingsGeneralForm[logoFile]">
+                                    <input id="settings-logo-field" type="hidden" name="SettingsGeneralForm[logo]" value="<?= $store->logo ?>">
+
                                 </label>
                                 <small class="form-text text-muted">
                                     <?= Yii::t('admin', 'settings.general_logo_limits') ?>
                                 </small>
                             </div>
                         </div>
-                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2">
+
+                        <?php if ($store->logo): ?>
+                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
-                                <a href="#" class="sommerce-settings__delete-image" data-toggle="modal" data-target="#delete-modal"><span class="flaticon-cancel"></span></a>
-                                <img src="http://fastinsta.sommerce.net/upload/logo/14954621475922f103a72fe3.74873262.png" alt="...">
+                                <a href="#" class="sommerce-settings__delete-image delete-uploaded-images" data-field="settings-logo-field"><span class="flaticon-cancel"></span></a>
+                                <img src="<?= $store->logo ?>" alt="...">
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <div class="col-lg-7 order-4 order-lg-4">
                             <div class="form-group">
@@ -79,6 +84,7 @@ use common\components\ActiveForm;
                                     </a>
 
                                     <input id="setting-favicon" type="file" class="settings-file" name="SettingsGeneralForm[faviconFile]">
+                                    <input id="settings-favicon-field" type="hidden" name="SettingsGeneralForm[favicon]" value="<?= $store->favicon ?>">
 
                                 </label>
                                 <small class="form-text text-muted">
@@ -86,12 +92,16 @@ use common\components\ActiveForm;
                                 </small>
                             </div>
                         </div>
-                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4">
+
+                        <?php if ($store->favicon): ?>
+                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
-                                <a href="#" class="sommerce-settings__delete-image" data-toggle="modal" data-target="#delete-modal"><span class="flaticon-cancel"></span></a>
-                                <img src="http://d30fl32nd2baj9.cloudfront.net/media/2017/04/15/1492274418_google-plus.png/BINARY/1492274418_google-plus.png" alt="...">
+                                <a href="#" class="sommerce-settings__delete-image delete-uploaded-images" data-field="settings-favicon-field"><span class="flaticon-cancel"></span></a>
+                                <img src="<?= $store->favicon ?>" alt="...">
                             </div>
                         </div>
+                        <?php endif; ?>
+
                     </div>
 
                     <div class="form-group">

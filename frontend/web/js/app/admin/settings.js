@@ -37,7 +37,7 @@ customModule.settings = {
             if ($('.edit-seo__title').length > 0) {
                 (function () {
 
-                    var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
+                    var seoEdit = ['edit-seo__title', 'edit-seo__meta'];
 
                     var _loop = function _loop(i) {
                         $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
@@ -56,6 +56,26 @@ customModule.settings = {
                     }
                 })();
             }
+        })({}, function (){});
+
+        /******************************************************************
+         *            General settings delete logo & favicon
+         ******************************************************************/
+        (function (){
+            var $deleteImageBtns = $('.delete-uploaded-images');
+
+            $deleteImageBtns.click('click', function(e){
+                var $currentTarget = $(e.currentTarget),
+                    field = $currentTarget.data('field');
+
+                if (!field) {
+                    return;
+                }
+                $(document).find('#' + field).attr('value', null);
+                $currentTarget.closest('.uploaded-image').empty();
+
+            });
+
         })({}, function (){});
 
     }

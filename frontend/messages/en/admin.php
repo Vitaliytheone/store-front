@@ -142,6 +142,7 @@ return [
     'settings.general_seo_meta_limits' => ' of 160 characters used',
     'settings.general_save' => 'Save changes',
     'settings.message_settings_updated' => 'Settings successfully updated!',
+    'settings.message_cdn_upload_error' => 'Error uploading file to CDN!',
 
     'settings.payments_page_title' => 'Settings payments',
     'settings.payments_title' => 'Payments',
