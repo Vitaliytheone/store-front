@@ -3,6 +3,7 @@
 namespace common\models\store;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%pages}}".
@@ -14,12 +15,46 @@ use Yii;
  * @property string $seo_title
  * @property string $seo_description
  * @property string $url
+ * @property bool $deleted
+ * @property integer $created_at
+ * @property integer $updated_at
  */
 class Pages extends \yii\db\ActiveRecord
 {
+    const VISIBILITY_YES = 1;
+    const VISIBILITY_NO = 0;
+
+    const DELETED_YES = 1;
+    const DELETED_NO = 0;
+
+    /**
+     * @return mixed
+     */
     public static function getDb()
     {
         return Yii::$app->storeDb;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    self::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 
     /**
@@ -36,7 +71,7 @@ class Pages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['visibility'], 'integer'],
+            [['visibility', 'deleted', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['name', 'seo_title', 'url'], 'string', 'max' => 255],
             [['seo_description'], 'string', 'max' => 2000],
@@ -56,6 +91,7 @@ class Pages extends \yii\db\ActiveRecord
             'seo_title' => Yii::t('app', 'Seo Title'),
             'seo_description' => Yii::t('app', 'Seo Description'),
             'url' => Yii::t('app', 'Url'),
+            'deleted' => Yii::t('app', 'Deleted'),
         ];
     }
 

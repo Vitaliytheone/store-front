@@ -1,0 +1,7 @@
+# Populate Pages table by additional data
+
+USE `store`;
+ALTER TABLE `pages` ADD `deleted` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `url`;
+
+ALTER TABLE `pages` ADD `created_at` INT(11)  NULL  DEFAULT NULL  AFTER `deleted`;
+ALTER TABLE `pages` ADD `updated_at` INT(11)  NULL  DEFAULT NULL  AFTER `created_at`;

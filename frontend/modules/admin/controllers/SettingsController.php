@@ -6,8 +6,11 @@ use common\components\ActiveForm;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\CreateProviderForm;
+use frontend\modules\admin\models\forms\DeletePageForm;
+use frontend\modules\admin\models\forms\EditPageForm;
 use frontend\modules\admin\models\forms\EditStoreSettingsForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
+use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
 use frontend\modules\admin\models\search\PaymentMethodsSearch;
@@ -207,7 +210,92 @@ class SettingsController extends CustomController
      */
     public function actionPages()
     {
-        return $this->render('pages');
+        $this->view->title = Yii::t('admin', "settings.pages_page_title");
+        $pages = (new PagesSearch())->searchPages();
+
+        return $this->render('pages', [
+            'pages' => $pages,
+        ]);
+    }
+
+    /**
+     * Create page
+     * @return string|Response
+     */
+    public function actionCreatePage()
+    {
+        $this->view->title = Yii::t('admin', "settings.pages_create_page");
+
+        $request = Yii::$app->getRequest();
+
+        $pageModel = new EditPageForm();
+
+        if ($pageModel->create($request->post())) {
+            UiHelper::message(Yii::t('admin', 'settings.pages_message_created'));
+            return $this->redirect(Url::toRoute('/settings/pages'));
+        }
+
+        return $this->render('edit_page', [
+            'page' => $pageModel,
+            'storeUrl' => Yii::$app->store->getInstance()->domain,
+        ]);
+    }
+
+    /**
+     * Edit page
+     * @param $id
+     * @return string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionEditPage($id)
+    {
+        $this->view->title = Yii::t('admin', "settings.pages_edit_page");
+
+        $request = Yii::$app->getRequest();
+
+        $pageModel = EditPageForm::findOne($id);
+        if (!$pageModel) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($pageModel->edit($request->post())) {
+            UiHelper::message(Yii::t('admin', 'settings.pages_message_updated'));
+            return $this->redirect(Url::toRoute('/settings/pages'));
+        }
+
+        return $this->render('edit_page', [
+            'page' => $pageModel,
+            'storeUrl' => Yii::$app->store->getInstance()->domain,
+        ]);
+    }
+
+    /**
+     * Virtual deleting `page`
+     * @param $id
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeletePage($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $pageModel = DeletePageForm::findOne($id);
+        if (!$pageModel) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$pageModel->deleteVirtual()) {
+            throw new BadRequestHttpException();
+        }
+
+        return [true];
     }
 
     /**

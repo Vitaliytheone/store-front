@@ -181,4 +181,40 @@ return [
 
     'settings.message_provider_updated' => 'Provider successfully updated',
     'settings.message_provider_created' => 'Provider successfully created',
+
+    'settings.pages_page_title' => 'Pages',
+    'settings.pages_add' => 'Add page',
+
+    'settings.pages_edit' => 'Edit',
+    'settings.pages_delete' => 'Delete',
+
+    'settings.pages_create_page' => 'Create page',
+    'settings.pages_edit_page' => 'Edit page',
+
+    'settings.pages_title' => 'Title',
+    'settings.pages_visibility' => 'Visibility',
+    'settings.pages_visibility_visible' => 'Visible',
+    'settings.pages_visibility_hidden' => 'Hidden',
+    'settings.pages_seo_edit' => 'Edit website SEO',
+    'settings.pages_seo_preview' => 'Search engine listing preview',
+    'settings.pages_seo_page' => 'Page title',
+    'settings.pages_seo_page_default' => 'Page title',
+    'settings.pages_seo_page_chars_used' => ' of 70 characters used',
+    'settings.pages_seo_meta' => 'Meta description',
+    'settings.pages_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
+    'settings.pages_seo_meta_chars_used' => ' of 160 characters used',
+    'settings.pages_seo_url' => 'URL',
+    'settings.pages_seo_url_default' => 'about-us',
+    'settings.pages_save' => 'Save changes',
+    'settings.pages_cancel' => 'Cancel',
+
+    'settings.page_delete_agree' => 'Are your sure that your want to delete this Page?',
+    'settings.package_delete_cancel' => 'Cancel',
+    'settings.package_delete_submit' => 'Yes, delete it',
+
+    'settings.pages_message_created' => 'Page successfully created!',
+    'settings.pages_message_updated' => 'Page successfully updated!',
+
+
+
 ];
