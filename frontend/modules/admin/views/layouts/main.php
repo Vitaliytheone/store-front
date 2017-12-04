@@ -22,14 +22,11 @@
     <?php $this->head() ?>
 </head>
 
-<body style="background: #f2f3f8;">
+<body class="m-page m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-aside--offcanvas-default">
 <?php $this->beginBody() ?>
 
-<div class="m-grid m-grid--hor m-grid--root m-page">
     <?= $this->render('_header')?>
-    <div class="container-fluid">
-        <?= $content ?>
-    </div>
+    <?= $content ?>
 
 <?php $this->endBody() ?>
 </body>
