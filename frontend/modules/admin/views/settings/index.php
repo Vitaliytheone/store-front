@@ -153,7 +153,7 @@ use common\components\ActiveForm;
                                         <?= Yii::t('admin', 'settings.general_seo_index') ?>
                                     </label>
                                     <input class="form-control" id="edit-seo__title" name="SettingsGeneralForm[seo_title]"
-                                           value="<?= $store->seo_title ? $store->seo_title : Yii::t('admin', 'settings.general_seo_index_default') ?>">
+                                           value="<?= $store->seo_title ? Html::encode($store->seo_title) : Yii::t('admin', 'settings.general_seo_index_default') ?>">
                                     <small class="form-text text-muted"><span class="edit-seo__title-muted"></span>
                                         <?= Yii::t('admin', 'settings.general_seo_index_limits') ?>
                                          </small>
@@ -162,9 +162,7 @@ use common\components\ActiveForm;
                                     <label for="edit-seo__meta">
                                         <?= Yii::t('admin', 'settings.general_seo_meta') ?>
                                     </label>
-                                    <textarea class="form-control" id="edit-seo__meta" rows="3" name="SettingsGeneralForm[seo_description]">
-                                        <?= $store->seo_description ? $store->seo_description : Yii::t('admin', 'settings.general_seo_meta_default') ?>
-                                    </textarea>
+                                    <textarea class="form-control" id="edit-seo__meta" rows="3" name="SettingsGeneralForm[seo_description]"><?= $store->seo_description ? Html::encode($store->seo_description) : Yii::t('admin', 'settings.general_seo_meta_default') ?></textarea>
                                     <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span>
                                         <?= Yii::t('admin', 'settings.general_seo_meta_limits') ?>
                                     </small>

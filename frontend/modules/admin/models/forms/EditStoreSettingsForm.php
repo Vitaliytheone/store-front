@@ -23,8 +23,23 @@ class EditStoreSettingsForm extends Stores
 
 
     private static $_files = [
-        'logoFile' => ['extensions' => 'png, jpg, gif', 'maxSize' => 3000000, 'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif']],
-        'faviconFile' => ['extensions' => 'png, jpg, gif, ico', 'maxSize' => 500000, 'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']],
+        'logoFile' => ['extensions' => 'png, jpg, gif',
+            'maxSize' => 3000000,
+            'mimeTypes' => [
+                BaseCdn::MIME_JPEG,
+                BaseCdn::MIME_PNG,
+                BaseCdn::MIME_GIF
+            ]
+        ],
+        'faviconFile' => ['extensions' => 'png, jpg, gif, ico',
+            'maxSize' => 500000,
+            'mimeTypes' => [
+                BaseCdn::MIME_JPEG,
+                BaseCdn::MIME_PNG,
+                BaseCdn::MIME_GIF,
+                BaseCdn::MIME_ICO
+            ]
+        ],
     ];
 
     /**

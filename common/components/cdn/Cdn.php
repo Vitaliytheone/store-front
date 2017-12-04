@@ -7,8 +7,19 @@ use yii\base\Exception;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class Cdn
+ * @package common\components\cdn
+ */
 class Cdn
 {
+    /**
+     * Return CDN instance
+     * @param null $cdnProvider
+     * @return mixed
+     * @throws Exception
+     * @throws UnknownClassException
+     */
     public static function getCdn($cdnProvider = null)
     {
         // Get Cdn providers configurations
