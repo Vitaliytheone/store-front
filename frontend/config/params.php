@@ -1,5 +1,6 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
-    'testPayPal' => true
+    'testPayPal' => true,
+    'debugIps' => ['*']
 ];
