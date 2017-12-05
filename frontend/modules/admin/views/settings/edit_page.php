@@ -9,14 +9,11 @@ use common\components\ActiveForm;
 
 $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::toRoute(['/settings/edit-page', 'id' => $page->id]);
 
-\frontend\assets\PagesAsset::register($this); //TODO:: DELETE THIS!!!
-
 ?>
 
-<!-- begin::Body -->
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">
-        <!-- BEGIN: Left Aside -->
+
         <button class="m-aside-left-close m-aside-left-close--skin-light" id="m_aside_left_close_btn">
             <i class="la la-close"></i>
         </button>
@@ -25,9 +22,9 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
                 'active' => 'pages'
             ]) ?>
         </div>
-        <!-- END: Left Aside -->
+
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <!-- BEGIN: Subheader -->
+
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
@@ -37,9 +34,8 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
                     </div>
                 </div>
             </div>
-            <!-- END: Subheader -->
 
-            <form id="pageForm" class="form-horizontal" action="<?= $actionUrl ?>" method="post" role="form">
+            <form id="pageForm" class="form-horizontal" action="<?= $actionUrl ?>" method="post" role="form" data-new_page="<?= $page->isNewRecord ?>">
             <?= Html::beginForm() ?>
                 <div class="m-content">
 
@@ -84,7 +80,7 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
 
                             <div class="seo-preview">
                                 <div class="seo-preview__title edit-seo__title"></div>
-                                <div class="seo-preview__url edit-seo__url"></div>
+                                <div class="seo-preview__url">http://<?= $storeUrl; ?>/<span class="edit-seo__url"></span></div>
                                 <div class="seo-preview__description edit-seo__meta"></div>
                             </div>
 
@@ -126,4 +122,3 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
 
     </div>
 </div>
-<!-- end::Body -->

@@ -1,7 +1,6 @@
 <?php
 
 use frontend\modules\admin\components\Url;
-use yii\helpers\Html;
 
 /* @var $pages array */
 /* @var $this \yii\web\View */
@@ -9,7 +8,7 @@ use yii\helpers\Html;
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">
-        <!-- BEGIN: Left Aside -->
+
         <button class="m-aside-left-close m-aside-left-close--skin-light" id="m_aside_left_close_btn">
             <i class="la la-close"></i>
         </button>
@@ -18,9 +17,9 @@ use yii\helpers\Html;
                 'active' => 'pages'
             ]) ?>
         </div>
-        <!-- END: Left Aside -->
+
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <!-- BEGIN: Subheader -->
+
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
@@ -39,7 +38,6 @@ use yii\helpers\Html;
                 </div>
             </div>
 
-            <!-- END: Subheader -->
             <div class="m-content">
                 <table class="table-sommerce table m-table m-table--head-no-border">
                     <thead>

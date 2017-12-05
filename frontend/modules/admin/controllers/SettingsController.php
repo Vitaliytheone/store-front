@@ -51,7 +51,7 @@ class SettingsController extends CustomController
     public function beforeAction($action)
     {
         // Add custom JS modules
-        $this->addModule('settings');
+//        $this->addModule('settings');
         return parent::beforeAction($action);
     }
 
@@ -64,6 +64,7 @@ class SettingsController extends CustomController
         $request = Yii::$app->getRequest();
 
         $this->view->title = Yii::t('admin', 'settings.page_title');
+        $this->addModule('adminGeneral');
 
         /** @var \common\models\stores\Stores $store */
         $store = Yii::$app->store->getInstance();
@@ -112,6 +113,7 @@ class SettingsController extends CustomController
     public function actionPayments()
     {
         $this->view->title = Yii::t('admin', 'settings.payments_page_title');
+        $this->addModule('adminPayments');
 
         $paymentMethods = PaymentMethodsSearch::findAll([
             'store_id' => yii::$app->store->getId(),
@@ -130,6 +132,7 @@ class SettingsController extends CustomController
      */
     public function actionPaymentsSettings($method)
     {
+
         $request = yii::$app->getRequest();
         $storeId = yii::$app->store->getId();
 
@@ -211,6 +214,8 @@ class SettingsController extends CustomController
     public function actionPages()
     {
         $this->view->title = Yii::t('admin', "settings.pages_page_title");
+        $this->addModule('adminPages');
+
         $pages = (new PagesSearch())->searchPages();
 
         return $this->render('pages', [
@@ -225,6 +230,7 @@ class SettingsController extends CustomController
     public function actionCreatePage()
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
+        $this->addModule('adminPageEdit');
 
         $request = Yii::$app->getRequest();
 
@@ -250,6 +256,7 @@ class SettingsController extends CustomController
     public function actionEditPage($id)
     {
         $this->view->title = Yii::t('admin', "settings.pages_edit_page");
+        $this->addModule('adminPageEdit');
 
         $request = Yii::$app->getRequest();
 

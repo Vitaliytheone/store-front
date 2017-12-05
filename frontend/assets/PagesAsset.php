@@ -17,7 +17,6 @@ class PagesAsset extends AssetBundle
 
     public $js = [
         'js/libs/summernote/summernote-bs4.js',
-        'js/in_dev/pages.js', // TODO:: Delete scripts after the main script developing is finished
     ];
 
     public $depends = [
