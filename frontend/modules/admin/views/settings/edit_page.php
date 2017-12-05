@@ -1,11 +1,15 @@
 <?php
+
 use yii\helpers\Html;
 use frontend\modules\admin\components\Url;
 use common\components\ActiveForm;
+use \frontend\assets\PagesAsset;
 
 /* @var $page \frontend\modules\admin\models\forms\EditPageForm */
 /* @var $storeUrl string */
 /* @var $this \yii\web\View */
+
+PagesAsset::register($this);
 
 $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::toRoute(['/settings/edit-page', 'id' => $page->id]);
 
@@ -61,7 +65,7 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
                     </div>
 
                     <div class="form-group">
-                        <textarea class="form_field__description summernote form_field__description d-none" id="description" title="Description" name="PageForm[content]"><?= $page->content ?></textarea>
+                        <textarea class="summernote form_field__content d-none" id="description" title="Description" name="PageForm[content]"><?= $page->content ?></textarea>
                     </div>
 
                     <div class="card card-white">
@@ -122,3 +126,4 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
 
     </div>
 </div>
+<!-- end::Body -->

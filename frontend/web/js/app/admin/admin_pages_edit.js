@@ -4,17 +4,15 @@
  */
 customModule.adminPageEdit = {
     run: function (params) {
+
         /*****************************************************************************************************
          *              Create/Edit Page autofill SEO & URL routine
          *****************************************************************************************************/
-        var $pageForm = $('#pageForm'),
-            $summernote = $('.summernote');
-
+        var $pageForm = $('#pageForm');
         var isNewPage = $pageForm.data('new_page');
-
         var $formFields = {
             name            : $pageForm.find('.form_field__name'),
-            description     : $pageForm.find('.form_field__description'),
+            content         : $pageForm.find('.form_field__content'),
             url             : $pageForm.find('.form_field__url'),
             visibility      : $pageForm.find('.form_field__visibility'),
             seo_title       : $pageForm.find('.form_field__seo_title'),
@@ -22,7 +20,7 @@ customModule.adminPageEdit = {
         };
 
         initSeoParts();
-        initSummernote($summernote);
+        initSummernote($formFields.content);
 
         if (isNewPage) {
             $formFields.name.focus();
@@ -40,7 +38,7 @@ customModule.adminPageEdit = {
          * @param $element
          */
         function initSummernote($element){
-            $element.summernote({
+            $formFields.content.summernote({
                 minHeight: 300,
                 focus: true,
                 toolbar: [['style', ['style', 'bold', 'italic']], ['lists', ['ul', 'ol']], ['para', ['paragraph']], ['color', ['color']], ['insert', ['link', 'picture', 'video']], ['codeview', ['codeview']]],
