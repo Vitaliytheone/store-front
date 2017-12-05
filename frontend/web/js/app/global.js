@@ -195,5 +195,45 @@ var custom = new function() {
         };
 
         self.ajax(options);
-    }
+    };
+
+    /**
+     * Generate Url path from string
+     * a-z, -_ ,0-9
+     * @param string
+     */
+    self.generateUrlFromString = function(string)
+    {
+        return string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-').toLowerCase();
+    };
+
+    /**
+     * Generate unique url
+     * @param url
+     * @param exitingUrls
+     * @returns {*}
+     */
+    self.generateUniqueUrl = function(url, exitingUrls)
+    {
+        var generatedUrl = url,
+            exiting,
+            prefixCounter;
+
+        prefixCounter = 1;
+
+        do {
+            exiting = _.find(exitingUrls, function(exitingUrl){
+                return exitingUrl === generatedUrl;
+            });
+
+            if (exiting) {
+                generatedUrl = url + '-' + prefixCounter;
+                prefixCounter ++;
+            }
+        }
+        while (exiting);
+
+        return generatedUrl;
+    };
+
 };

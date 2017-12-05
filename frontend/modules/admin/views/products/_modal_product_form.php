@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Url;
+use frontend\modules\admin\components\Url;
 
 /* @var $this yii\web\View */
 
@@ -23,7 +23,7 @@ $storeUrl = $currentStore->domain;
                 </button>
             </div>
 
-            <form id="productForm" class="form-horizontal" action="/" method="post" role="form" data-success_redirect="<?= Url::to(['/admin/products'])?>">
+            <form id="productForm" class="form-horizontal" action="/" method="post" role="form" data-success_redirect="<?= Url::toRoute(['/products'])?>" data-get_urls_url="<?= Url::toRoute('/api/get-url-list') ?>">
 
                 <div class="modal-body">
                     <div id="product-form-error"></div>
@@ -117,9 +117,7 @@ $storeUrl = $currentStore->domain;
                                     <label for="edit-seo__meta">
                                         <?= Yii::t('admin', 'products.product_seo_meta') ?>
                                     </label>
-                                    <textarea class="form_field__seo_description form-control" id="edit-seo__meta" rows="3" name="ProductForm[seo_description]">
-                                        <?= Yii::t('admin', 'products.product_seo_meta_default') ?>
-                                    </textarea>
+                                    <textarea class="form_field__seo_description form-control" id="edit-seo__meta" rows="3" name="ProductForm[seo_description]"><?= Yii::t('admin', 'products.product_seo_meta_default') ?></textarea>
                                     <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span>
                                         <?= Yii::t('admin', 'products.product_seo_meta_chars_used') ?>
                                     </small>

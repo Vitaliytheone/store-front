@@ -8,7 +8,9 @@ customModule.adminPageEdit = {
         /*****************************************************************************************************
          *              Create/Edit Page autofill SEO & URL routine
          *****************************************************************************************************/
-        var $pageForm = $('#pageForm');
+        var $pageForm = $('#pageForm'),
+            $seoCollapse = $pageForm.find('.collapse');
+
         var isNewPage = $pageForm.data('new_page');
         var $formFields = {
             name            : $pageForm.find('.form_field__name'),
@@ -19,15 +21,25 @@ customModule.adminPageEdit = {
             seo_description : $pageForm.find('.form_field__seo_description')
         };
 
+        var exitingUrls = params.urls || [];
+        var isValidationUrlError = params.url_error || false;
+
         initSeoParts();
         initSummernote($formFields.content);
+
+        // Expand collapse if error
+        if (isValidationUrlError) {
+            $seoCollapse.collapse("show");
+        }
 
         if (isNewPage) {
             $formFields.name.focus();
             // Start autofilling URL
-            $formFields.name.on('input', autofillUrl);
+            $formFields.name.on('input', autoFillFields);
+
             // Stop autofill on first user's touch
-            $formFields.url.on('focus', autofillUrlOff);
+            $formFields.url.on('focus', autoFillFieldsOff);
+            $formFields.seo_title.on('focus', autoFillFieldsOff);
         }
 
         // Start cleanup url
@@ -71,7 +83,7 @@ customModule.adminPageEdit = {
                         $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
                         $("#" + seoEdit[i]).on('input', function (e){
                             if (i === 2){
-                                $('.' + seoEdit[i]).text(getValidAddressByString($(e.target).val()));
+                                $('.' + seoEdit[i]).text($(e.target).val());
                             } else {
                                 $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
                                 $('.' + seoEdit[i]).text($(e.target).val());
@@ -98,16 +110,25 @@ customModule.adminPageEdit = {
         /**
          * Autofilling `url` by `product name`
          */
-        function autofillUrl(e){
-            var inputName = $(e.target).val();
-            $formFields.url.val(inputName).trigger('input');
+        function autoFillFields(e){
+            var inputName = $(e.target).val(),
+                generatedUrl;
+
+            generatedUrl = custom.generateUrlFromString(inputName);
+            generatedUrl = custom.generateUniqueUrl(generatedUrl, exitingUrls);
+
+            // Autofill Url
+            $formFields.url.val(generatedUrl).trigger('input');
+            // Autofill Title
+            $formFields.seo_title.val(inputName).trigger('input');
         }
 
         /**
          * Stop autofilling `url` by `product name`
          */
-        function autofillUrlOff(){
-            $formFields.name.off('input', autofillUrl);
+        function autoFillFieldsOff(){
+            $formFields.name.off('input', autoFillFields);
+            $formFields.seo_title.off('input', autoFillFields);
         }
 
         /**
@@ -115,14 +136,16 @@ customModule.adminPageEdit = {
          */
         function cleanupUrl(e){
             var urlMaxLenght = 200,
-                urlByName ,
+                urlByName,
                 inputedName = $(e.target).val();
 
-            urlByName = getValidAddressByString(inputedName);
+            urlByName = custom.generateUrlFromString(inputedName);
+
             if (urlByName.length >= urlMaxLenght){
                 urlByName = urlByName.substring(0, (urlMaxLenght-1));
             }
-            $formFields.url.val(urlByName.toLowerCase());
+
+            $formFields.url.val(urlByName);
         }
     }
 };

@@ -83,6 +83,9 @@
  *****************************************************************************************************/
 (function (window, alert){
     'use strict';
+
+    var _self = this;
+
     var formName = 'ProductForm';
 
     var $modal = $('.add_product'),
@@ -94,14 +97,17 @@
         $modalTitle = $modal.find('.modal-title'),
         $errorContainer = $('#product-form-error'),
         $modalLoader = $modal.find('.modal-loader'),
+        $seoCollapse = $modal.find('.collapse'),
 
         $addPropertyInput = $modal.find('.input-properties'),
         $inputPropertyError = $modal.find('.empty-property-error'),
-        defaultFormData,
 
         currentProductId,
         currentActionUrl,
-        successRedirectUrl;
+        successRedirectUrl,
+        getExitingUrlsUrl;
+
+    var exitingUrls;
 
     var $formFields = {
         name            : $productForm.find('.form_field__name'),
@@ -113,7 +119,7 @@
         seo_description : $productForm.find('.form_field__seo_description')
     };
 
-    defaultFormData = {
+    var defaultFormData = {
         name            : $formFields.name.val(),
         description     : $formFields.description.val(),
         properties      : [],
@@ -143,6 +149,7 @@
                     $modalLoader.addClass('hidden');
                     $errorContainer.append(data.error.html);
                     $modal.animate({ scrollTop: 0 }, 'slow');
+                    $seoCollapse.collapse("show");
                     return;
                 }
                 //Success
@@ -279,15 +286,6 @@
     }
 
     /**
-     * Return vallid address path by passed string
-     * a-z, -_ ,0-9
-     * @param string
-     */
-    function getValidAddressByString(string){
-        return string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-');
-    }
-
-    /**
      * Init auto-fill SEO-edit part
      */
     function initSeoParts(){
@@ -300,7 +298,7 @@
                     $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
                     $("#" + seoEdit[i]).on('input', function (e){
                         if (i == 2){
-                            $('.' + seoEdit[i]).text(getValidAddressByString($(e.target).val()));
+                            $('.' + seoEdit[i]).text($(e.target).val());
                         } else {
                             $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
                             $('.' + seoEdit[i]).text($(e.target).val());
@@ -331,18 +329,30 @@
      * Create new product routine
      *******************************************************************************************/
     function createProduct(){
-        fillFormFields(defaultFormData);
-        /* Events subscriptions */
-        bindCreateProductEvents();
 
-        $formFields.name.focus();
+        fetchExitingUrls();
+
+        $(document).on('urls-fetched', function(e, urls){
+
+            exitingUrls = urls;
+
+            fillFormFields(defaultFormData);
+
+            /* Events subscriptions */
+            bindCreateProductEvents();
+
+            $formFields.name.focus();
+        });
     }
 
     function bindCreateProductEvents(){
         // Start autofilling URL
-        $formFields.name.on('input.create_product', autofillUrl);
+        $formFields.name.on('input.create_product', autoFillFields);
+
         // Stop autofill on first user's touch
-        $formFields.url.on('focus.create_product', autofillUrlOff);
+        $formFields.url.on('focus.create_product', autoFillFieldsOff);
+        $formFields.seo_title.on('focus.create_product', autoFillFieldsOff);
+
         // Start cleanup url
         $formFields.url.on('input.create_product', cleanupUrl);
     }
@@ -357,18 +367,45 @@
     }
 
     /**
+     * Fetch exiting url
+     */
+    function fetchExitingUrls(){
+        $.ajax({
+            url: getExitingUrlsUrl,
+            type: "GET",
+            success: function ($urls, textStatus, jqXHR){
+                $(document).trigger('urls-fetched', [$urls]);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                $modalLoader.addClass('hidden');
+                $modal.modal('hide');
+                console.log('Error on service save', jqXHR, textStatus, errorThrown);
+            }
+        });
+    }
+
+    /**
      * Autofilling `url` by `product name`
      */
-    function autofillUrl(e){
-        var inputName = $(e.target).val();
-        $formFields.url.val(inputName).trigger('input');
+    function autoFillFields(e){
+        var inputName = $(e.target).val(),
+            generatedUrl;
+
+        generatedUrl = custom.generateUrlFromString(inputName);
+        generatedUrl = custom.generateUniqueUrl(generatedUrl, exitingUrls);
+
+        // Autofill Url
+        $formFields.url.val(generatedUrl).trigger('input');
+        // Autofill Title
+        $formFields.seo_title.val(inputName).trigger('input');
     }
 
     /**
      * Stop autofilling `url` by `product name`
      */
-    function autofillUrlOff(){
-        $formFields.name.off('input', autofillUrl);
+    function autoFillFieldsOff(){
+        $formFields.name.off('input', autoFillFields);
+        $formFields.seo_title.off('input', autoFillFields);
     }
 
     /**
@@ -376,14 +413,16 @@
      */
     function cleanupUrl(e){
         var urlMaxLenght = 200,
-            urlByName = '',
+            urlByName,
             inputedName = $(e.target).val();
 
-        urlByName = getValidAddressByString(inputedName);
+        urlByName = custom.generateUrlFromString(inputedName);
+
         if (urlByName.length >= urlMaxLenght){
             urlByName = urlByName.substring(0, (urlMaxLenght-1));
         }
-        $formFields.url.val(urlByName.toLowerCase());
+
+        $formFields.url.val(urlByName);
     }
 
     /*******************************************************************************************
@@ -455,6 +494,7 @@
         currentProductId = button.data('id') || undefined;
         currentActionUrl = button.data('action-url');
         successRedirectUrl = $productForm.data('success_redirect');
+        getExitingUrlsUrl = $productForm.data('get_urls_url');
 
         // Define UI elements captions depends on mode create|edit
         var $dataTitle = $modal.find('.modal-header'),

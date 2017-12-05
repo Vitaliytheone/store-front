@@ -14,6 +14,7 @@ use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
 use frontend\modules\admin\models\search\PaymentMethodsSearch;
+use frontend\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -230,7 +231,6 @@ class SettingsController extends CustomController
     public function actionCreatePage()
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
-        $this->addModule('adminPageEdit');
 
         $request = Yii::$app->getRequest();
 
@@ -240,6 +240,14 @@ class SettingsController extends CustomController
             UiHelper::message(Yii::t('admin', 'settings.pages_message_created'));
             return $this->redirect(Url::toRoute('/settings/pages'));
         }
+
+        $urlsModel = new UrlsSearch();
+        $exitingUrls = $urlsModel->searchUrls();
+
+        $this->addModule('adminPageEdit', [
+            'urls' => $exitingUrls,
+            'url_error' => $pageModel->getFirstError('url'),
+        ]);
 
         return $this->render('edit_page', [
             'page' => $pageModel,
@@ -256,7 +264,6 @@ class SettingsController extends CustomController
     public function actionEditPage($id)
     {
         $this->view->title = Yii::t('admin', "settings.pages_edit_page");
-        $this->addModule('adminPageEdit');
 
         $request = Yii::$app->getRequest();
 
@@ -269,6 +276,10 @@ class SettingsController extends CustomController
             UiHelper::message(Yii::t('admin', 'settings.pages_message_updated'));
             return $this->redirect(Url::toRoute('/settings/pages'));
         }
+
+        $this->addModule('adminPageEdit', [
+            'url_error' => $pageModel->getFirstError('url'),
+        ]);
 
         return $this->render('edit_page', [
             'page' => $pageModel,
