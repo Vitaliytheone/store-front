@@ -90,6 +90,7 @@
             </div>
         </div>
     </div>
+    <?= $custom_footer ?>
 </footer>
 <!-- Footer block End -->
 

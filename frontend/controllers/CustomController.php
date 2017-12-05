@@ -8,6 +8,7 @@ use frontend\modules\admin\components\Url;
 use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
 use Yii;
+use yii\web\View;
 
 /**
  * Custom controller for the `admin` module
@@ -70,10 +71,20 @@ class CustomController extends MainController
         $cartItems = new CartSearch();
         $cartItems->setStore(Yii::$app->store->getInstance());
 
+        $endContent = '';
+
+        if (YII_ENV_DEV) {
+            ob_start();
+            $this->getView()->trigger(View::EVENT_END_BODY);
+            $endContent = ob_get_contents();
+            ob_end_clean();
+        }
+
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
-            'cart_count' => $cartItems->getCount()
+            'cart_count' => $cartItems->getCount(),
+            'custom_footer' => $endContent
         ];
 
         return $this->_globalParams;
