@@ -15,7 +15,6 @@ use yii\helpers\ArrayHelper;
  */
 class PanelcheckerComponent extends Component
 {
-
     public $db = [
         'name' => 'store',
         'table' => 'test',
@@ -115,7 +114,7 @@ class PanelcheckerComponent extends Component
      */
     public function getPanelNeighbors()
     {
-        $exitingDomains = (new Query())
+            $exitingDomains = (new Query())
             ->select([
                 'id',
                 $this->dbFields['domains_column'],
@@ -278,7 +277,6 @@ class PanelcheckerComponent extends Component
             ];
         }
 
-
         // Parking page
         $matchCountsRule = static::$_parkingPageSign['match_counts'];
         $matchCounts = substr_count(strtolower($panelContent), strtolower($matchCountsRule['needle']));
@@ -296,7 +294,6 @@ class PanelcheckerComponent extends Component
             'info' => $panelInfo,
         ];
     }
-
 
     /**
      * Check all neighbors panels
@@ -350,6 +347,10 @@ class PanelcheckerComponent extends Component
      */
     public function request($params = array())
     {
+        if (!isset($this->apiKey)) {
+            throw new Exception('Bad Api config! Missing required data: apiKey!');
+        }
+
         $baseRequestParams = [
             'apikey' => $this->apiKey,
             'version' => $this->apiVersion,

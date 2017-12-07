@@ -103,9 +103,7 @@ class ApiController extends Controller
 
         /** @var \common\components\panelchecker\PanelcheckerComponent $checker */
         $checker = Yii::createObject($config);
-        $res = $checker->check();
-
-        error_log(print_r($res, 1),0);
+        $checker->check();
 
         return true;
     }
