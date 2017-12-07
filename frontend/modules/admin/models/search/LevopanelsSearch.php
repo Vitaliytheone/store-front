@@ -94,7 +94,6 @@ class LevopanelsSearch extends Model
                 'title' => 'All',
             ],
             PanelcheckerComponent::PANEL_STATUS_ACTIVE => [
-
             ],
             PanelcheckerComponent::PANEL_STATUS_FROZEN => [
             ],
@@ -102,7 +101,6 @@ class LevopanelsSearch extends Model
             ],
             PanelcheckerComponent::PANEL_STATUS_NOT_RESOLVED => [
             ],
-
             self::STATUS_5_6 => [
                 'url' => Url::current(['status' => self::STATUS_5_6]),
                 'title' => 'Moved',
@@ -110,7 +108,6 @@ class LevopanelsSearch extends Model
                     ArrayHelper::getValue($countsByStatus, PanelcheckerComponent::PANEL_STATUS_IP_NOT_LEVOPANEL . ".count", 0) +
                     ArrayHelper::getValue($countsByStatus, PanelcheckerComponent::PANEL_STATUS_PARKING . ".count", 0),
             ],
-
             PanelcheckerComponent::PANEL_STATUS_OTHER => [
             ],
         ];

@@ -9,7 +9,6 @@ use common\models\stores\Stores;
 use Yii;
 use frontend\components\payments\BasePayment;
 use common\helpers\SiteHelper;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -99,15 +98,14 @@ class Twocheckout extends BasePayment {
 
         $checkoutId = ArrayHelper::getValue($paymentParams, 'merchant_order_id');
 
-        // Logging PS request
-        PaymentsLog::log($checkoutId, json_encode($paymentParams, JSON_PRETTY_PRINT));
-        $this->log(json_encode($paymentParams, JSON_PRETTY_PRINT));
-
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_2CHECKOUT,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED
         ]);
+
+        // Logging PS request
+        $this->log(json_encode($paymentParams, JSON_PRETTY_PRINT));
 
         $paymentMethodOptions = $paymentMethod->getDetails();
         $secretWord = ArrayHelper::getValue($paymentMethodOptions, 'secret_word', null);
@@ -134,7 +132,10 @@ class Twocheckout extends BasePayment {
             ];
         }
 
-        // Check payment
+        // Logging PS checkout request
+        PaymentsLog::log($checkoutId, json_encode($paymentParams, JSON_PRETTY_PRINT));
+
+        // Check payment key
         $checkResult = $this->_checkPayment($secretWord, $paymentParams);
         if (!$checkResult) {
             $this->_payment->status = Payments::STATUS_FAILED;
@@ -144,12 +145,29 @@ class Twocheckout extends BasePayment {
             ];
         }
 
-        $transactionId = ArrayHelper::getValue($paymentParams, 'invoice_id');
-        $payerEmail = ArrayHelper::getValue($paymentParams, 'email');
+        // Check payment currency
+        if (strcasecmp($paymentParams['currency_code'], $store->currency) !== 0) {
+            return [
+                'result' => 2,
+                'content' => 'Invalid currency code verification result'
+            ];
+        }
+
+        // Check payment amount
+        $totalCheckout = number_format($this->_checkout->price, 2, '.', '');
+        if ($paymentParams['total'] !== $totalCheckout) {
+            return [
+                'result' => 2,
+                'content' => 'Invalid amount verification result'
+            ];
+        }
 
         // TODO:: this PS does not return payment status at all.
         // $this->_checkout->method_status = $paymentStatus;
         // $this->_payment->response_status = $paymentStatus;
+
+        $transactionId = ArrayHelper::getValue($paymentParams, 'invoice_id');
+        $payerEmail = ArrayHelper::getValue($paymentParams, 'email');
 
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->transaction_id = $transactionId;
@@ -167,12 +185,12 @@ class Twocheckout extends BasePayment {
     /**
      * Check 2Checkout payment
      * @param $secretWord
-     * @return bool
      * @param array $paymentParams
+     * @return bool
      */
     private function _checkPayment($secretWord, $paymentParams)
     {
-        $requiredFields = ['sid', 'total', 'order_number', 'key'];
+        $requiredFields = ['sid', 'total', 'order_number', 'key', 'currency_code'];
         $isRequiredFieldsExist = !array_diff_key(array_flip($requiredFields), $paymentParams);
 
         if (!$isRequiredFieldsExist) {
