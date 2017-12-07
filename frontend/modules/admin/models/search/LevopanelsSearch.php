@@ -22,6 +22,9 @@ class LevopanelsSearch extends Model
     const DB_NAME = 'checker';
     const PANELS_TABLE_NAME = 'levopanel';
 
+    // Combined statuses
+    const STATUS_5_6 = 56;
+
     public function getTable()
     {
         return self::DB_NAME . '.' . self::PANELS_TABLE_NAME;
@@ -42,7 +45,12 @@ class LevopanelsSearch extends Model
             ->orderBy(['id' => SORT_ASC]);
 
         if ($status) {
-            $query->andWhere(['status' => $status]);
+            if ($status == self::STATUS_5_6) {
+                $query->orWhere(['status' => PanelcheckerComponent::PANEL_STATUS_IP_NOT_LEVOPANEL]);
+                $query->orWhere(['status' => PanelcheckerComponent::PANEL_STATUS_PARKING]);
+            } else {
+                $query->andWhere(['status' => $status]);
+            }
         }
 
         $panels = $query->all();
@@ -77,13 +85,16 @@ class LevopanelsSearch extends Model
 
     public function getStatusButtons()
     {
+        $countsByStatus = $this->countsByStatus();
+
         $buttons = [
             'all' => [
-                'title' => null,
-                'url' => null,
-                'count' => null,
+                'url' => Url::toRoute('/levopanel'),
+                'count' => array_sum(array_column($countsByStatus, 'count')),
+                'title' => 'All',
             ],
             PanelcheckerComponent::PANEL_STATUS_ACTIVE => [
+
             ],
             PanelcheckerComponent::PANEL_STATUS_FROZEN => [
             ],
@@ -91,27 +102,27 @@ class LevopanelsSearch extends Model
             ],
             PanelcheckerComponent::PANEL_STATUS_NOT_RESOLVED => [
             ],
-            PanelcheckerComponent::PANEL_STATUS_IP_NOT_LEVOPANEL => [
+
+            self::STATUS_5_6 => [
+                'url' => Url::current(['status' => self::STATUS_5_6]),
+                'title' => 'Moved',
+                'count' =>
+                    ArrayHelper::getValue($countsByStatus, PanelcheckerComponent::PANEL_STATUS_IP_NOT_LEVOPANEL . ".count", 0) +
+                    ArrayHelper::getValue($countsByStatus, PanelcheckerComponent::PANEL_STATUS_PARKING . ".count", 0),
             ],
-            PanelcheckerComponent::PANEL_STATUS_PARKING => [
-            ],
+
             PanelcheckerComponent::PANEL_STATUS_OTHER => [
             ],
         ];
 
-        $countsByStatus = $this->countsByStatus();
-
         array_walk($buttons, function(&$button, $status) use ($countsByStatus){
 
-            if ($status === 'all') {
-                $button['url'] = Url::toRoute('/levopanel');
-                $button['count'] = array_sum(array_column($countsByStatus, 'count'));
-            } else {
+            if ($status != self::STATUS_5_6 && $status != 'all') {
                 $button['url'] = Url::current(['status' => $status]);
                 $button['count'] = ArrayHelper::getValue($countsByStatus, "$status.count", 0);
+                $button['title'] = PanelcheckerComponent::getStatusName($status);
             }
 
-            $button['title'] = PanelcheckerComponent::getStatusName($status);
             $button['active'] = UiHelper::isFilterActive('status', $status);
 
         });
