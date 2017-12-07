@@ -29,6 +29,12 @@ class PanelcheckerComponent extends Component
         'ip_column' => 'server_ip',
         'details_column' => 'details',
     ];
+
+    public $proxy = [
+        'ip',
+        'port',
+        'type' => CURLPROXY_HTTP,
+    ];
  
     public $panelHostName = 'levopanel.com';
     public $panelIp = '147.135.223.128';
@@ -79,8 +85,6 @@ class PanelcheckerComponent extends Component
         return $this->db['name'] . '.' . $this->db['table'];
     }
 
-
-
     /**
      * Return panel neighbors domains list from API
      * @param string $hostName
@@ -105,7 +109,6 @@ class PanelcheckerComponent extends Component
         return ArrayHelper::getValue($response,'data.domains', []);
     }
 
-
     /**
      * Return exiting panel neighbors domains list
      * @return array
@@ -114,7 +117,13 @@ class PanelcheckerComponent extends Component
     {
         $exitingDomains = (new Query())
             ->select([
-                $this->dbFields['domains_column'], $this->dbFields['status_column'], $this->dbFields['updated_column'], $this->dbFields['created_column']
+                'id',
+                $this->dbFields['domains_column'],
+                $this->dbFields['status_column'],
+                $this->dbFields['ip_column'],
+                $this->dbFields['details_column'],
+                $this->dbFields['updated_column'],
+                $this->dbFields['created_column'],
             ])
             ->from($this->table)
             ->all();
@@ -142,7 +151,9 @@ class PanelcheckerComponent extends Component
 
         $newDomainsInsertedCount = Yii::$app->db->createCommand()
             ->batchInsert($this->table, [
-                $this->dbFields['domains_column'], $this->dbFields['updated_column'], $this->dbFields['created_column']
+                $this->dbFields['domains_column'],
+                $this->dbFields['updated_column'],
+                $this->dbFields['created_column']
             ], $newDomainsRows)
             ->execute();
 
@@ -157,6 +168,7 @@ class PanelcheckerComponent extends Component
      */
     public function getPanelInfo($hostName)
     {
+
         $curlOptions = [
             CURLOPT_HTTPHEADER => [
                 "Host: $hostName",
@@ -167,8 +179,17 @@ class PanelcheckerComponent extends Component
             CURLOPT_URL => $hostName,
         ];
 
+        $proxyOptions = [];
+
+        if (isset($this->proxy['ip'])) {
+            $proxyOptions = [
+                CURLOPT_PROXYTYPE => ArrayHelper::getValue($this->proxy, 'type', null),
+                CURLOPT_PROXY => $this->proxy['ip'] . ':' . $this->proxy['port'],
+            ];
+        }
+
         $ch = curl_init();
-        curl_setopt_array($ch, $curlOptions);
+        curl_setopt_array($ch, $curlOptions + $proxyOptions);
 
         $content = curl_exec($ch);
 
@@ -189,7 +210,11 @@ class PanelcheckerComponent extends Component
         ];
     }
 
-
+    /**
+     * Get panel status by panel info data
+     * @param $hostName
+     * @return array
+     */
     public function getPanelStatus($hostName)
     {
         try {
@@ -197,7 +222,7 @@ class PanelcheckerComponent extends Component
         } catch (Exception $e) {
             $status = [
                 'status' => self::PANEL_STATUS_NOT_RESOLVED,
-                'error' => $e,
+                'info' => $e,
             ];
 
             return $status;
@@ -273,8 +298,10 @@ class PanelcheckerComponent extends Component
     }
 
 
-
-
+    /**
+     * Check all neighbors panels
+     * @return array
+     */
     public function check()
     {
         $foundNeighbors = $this->searchPanelNeighbors($this->panelHostName);
@@ -284,16 +311,35 @@ class PanelcheckerComponent extends Component
         }
 
         $panelNeighbors = $this->getPanelNeighbors();
-        
+
+        $panelImploded = null;
         foreach ($panelNeighbors as $panel) {
 
             $panelStatus = $this->getPanelStatus($panel['domain']);
+            $id = $panel['id'];
+            $status = ArrayHelper::getValue($panelStatus, 'status', null);
+            $ip = ArrayHelper::getValue($panelStatus, 'info.primary_ip', '1000');
+            $details = json_encode(ArrayHelper::getValue($panelStatus, 'info', null));
+            $time = time();
 
-            error_log(print_r($panelStatus, 1),0);
-
+            $panelImploded = ($panelImploded ? $panelImploded . ',' : '') . "('$id', '$status', '$ip', '$details', '$time')";
         }
 
-        return true;
+        $statusColumn = $this->dbFields['status_column'];
+        $ipColumn = $this->dbFields['ip_column'];
+        $detailsColumn = $this->dbFields['details_column'];
+        $updatedColumn = $this->dbFields['updated_column'];
+
+        $command = Yii::$app->db
+            ->createCommand("
+                INSERT INTO $this->table (id, $statusColumn, $ipColumn, $detailsColumn, $updatedColumn)
+                VALUES $panelImploded
+                ON DUPLICATE KEY UPDATE
+                $statusColumn = VALUES($statusColumn), $ipColumn = VALUES($ipColumn), $detailsColumn = VALUES($detailsColumn), $updatedColumn = VALUES($updatedColumn)
+                
+        ")->execute();
+
+        return $panelNeighbors;
     }
 
     /**
