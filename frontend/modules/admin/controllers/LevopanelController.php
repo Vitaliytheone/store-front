@@ -40,6 +40,7 @@ class LevopanelController extends CustomController
 
         return $this->render('index', [
             'panels' => $search->searchPanels(),
+            'statusButtons' => $search->getStatusButtons(),
         ]);
     }
 }

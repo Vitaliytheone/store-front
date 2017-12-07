@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\db\Query;
 use console\components\panelchecker\PanelcheckerComponent;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class LevopanelsSearch
@@ -44,4 +45,69 @@ class LevopanelsSearch extends Model
 
         return $panels;
     }
+
+    /**
+     * Counts panels by `status`
+     * @return array
+     */
+    public function countsByStatus()
+    {
+        $counts = (new Query())
+            ->select(['status', 'COUNT(*) count'])
+            ->from($this->table)
+            ->groupBy(['status'])
+            ->indexBy('status')
+            ->all();
+
+        return $counts;
+    }
+
+
+    public function getStatusButtons()
+    {
+        $buttons = [
+            'all' => [
+                'title' => Yii::t('admin', 'payments.orders_all'),
+                'filter' => null,
+                'url' => null,
+                'count' => null,
+            ],
+        ];
+
+        $buttons = [
+            'all' => [
+                'title' => Yii::t('admin', 'payments.orders_all'),
+                'count' => null,
+            ],
+            PanelcheckerComponent::PANEL_STATUS_ACTIVE => [
+            ],
+            PanelcheckerComponent::PANEL_STATUS_FROZEN => [
+            ],
+            PanelcheckerComponent::PANEL_STATUS_PERFECTPANEL => [
+            ],
+            PanelcheckerComponent::PANEL_STATUS_NOT_RESOLVED => [
+            ],
+            PanelcheckerComponent::PANEL_STATUS_IP_NOT_LEVOPANEL => [
+            ],
+            PanelcheckerComponent::PANEL_STATUS_PARKING => [
+            ],
+            PanelcheckerComponent::PANEL_STATUS_OTHER => [
+            ],
+        ];
+
+        $countsByStatus = $this->countsByStatus();
+
+        array_walk($buttons, function(&$button, $status) use ($countsByStatus){
+
+            if ($status === 'all') {
+                $button['count'] = array_sum(array_column($countsByStatus, 'count'));
+                return;
+            }
+            $button['title'] = PanelcheckerComponent::getStatusName($status);
+            $button['count'] = ArrayHelper::getValue($countsByStatus, "$status.count", 0);
+        });
+
+        return $buttons;
+    }
+
 }

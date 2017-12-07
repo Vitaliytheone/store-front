@@ -57,12 +57,12 @@ class PanelcheckerComponent extends Component
 
     public static $statuses = [
         self::PANEL_STATUS_ACTIVE => 'Active',
-        self::PANEL_STATUS_FROZEN => 'Frozen',
-        self::PANEL_STATUS_PERFECTPANEL => 'Perfectpanel',
-        self::PANEL_STATUS_NOT_RESOLVED => 'Not resolved',
-        self::PANEL_STATUS_IP_NOT_LEVOPANEL => 'Not Levopanel',
-        self::PANEL_STATUS_PARKING => 'Parking',
-        self::PANEL_STATUS_OTHER => 'Other',
+        self::PANEL_STATUS_FROZEN => 'Disabled',
+        self::PANEL_STATUS_PERFECTPANEL => 'Perfect',
+        self::PANEL_STATUS_NOT_RESOLVED => 'Fail',
+        self::PANEL_STATUS_IP_NOT_LEVOPANEL => 'Moved',
+        self::PANEL_STATUS_PARKING => 'Moved',
+        self::PANEL_STATUS_OTHER => 'Error',
     ];
 
     /**
