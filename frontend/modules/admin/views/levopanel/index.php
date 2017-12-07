@@ -15,7 +15,7 @@
                     <div class="col-lg-10 col-sm-12">
                         <nav class="nav nav-tabs sommerce-tabs__nav">
                             <?php foreach ($statusButtons as $button): ?>
-                                <a class="nav-item nav-link">
+                                <a class="nav-item nav-link <?= $button['active'] ? 'active' : '' ?>" href="<?= $button['url'] ?>">
                                     <?= $button['title'] ?>
                                     <span class="m-badge m-badge--wide"><?= $button['count'] ?></span>
                                 </a>

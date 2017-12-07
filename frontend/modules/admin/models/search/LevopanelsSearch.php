@@ -6,7 +6,9 @@ use Yii;
 use yii\base\Model;
 use yii\db\Query;
 use console\components\panelchecker\PanelcheckerComponent;
+use frontend\modules\admin\components\Url;
 use yii\helpers\ArrayHelper;
+use frontend\helpers\UiHelper;
 
 /**
  * Class LevopanelsSearch
@@ -15,6 +17,8 @@ use yii\helpers\ArrayHelper;
  */
 class LevopanelsSearch extends Model
 {
+    private $_status;
+
     const DB_NAME = 'checker';
     const PANELS_TABLE_NAME = 'levopanel';
 
@@ -25,15 +29,23 @@ class LevopanelsSearch extends Model
 
     /**
      * Return array of panels data
+     * @param $status
      * @return array
      */
-    public function searchPanels()
+    public function searchPanels($status)
     {
-        $panels = (new Query())
+        $this->_status = $status;
+
+        $query = (new Query())
             ->select(['id','domain', 'server_ip', 'status', 'details', 'created_at', 'updated_at'])
             ->from($this->table)
-            ->orderBy(['id' => SORT_ASC])
-            ->all();
+            ->orderBy(['id' => SORT_ASC]);
+
+        if ($status) {
+            $query->andWhere(['status' => $status]);
+        }
+
+        $panels = $query->all();
 
         $formatter = Yii::$app->formatter;
 
@@ -67,16 +79,8 @@ class LevopanelsSearch extends Model
     {
         $buttons = [
             'all' => [
-                'title' => Yii::t('admin', 'payments.orders_all'),
-                'filter' => null,
+                'title' => null,
                 'url' => null,
-                'count' => null,
-            ],
-        ];
-
-        $buttons = [
-            'all' => [
-                'title' => Yii::t('admin', 'payments.orders_all'),
                 'count' => null,
             ],
             PanelcheckerComponent::PANEL_STATUS_ACTIVE => [
@@ -100,11 +104,16 @@ class LevopanelsSearch extends Model
         array_walk($buttons, function(&$button, $status) use ($countsByStatus){
 
             if ($status === 'all') {
+                $button['url'] = Url::toRoute('/levopanel');
                 $button['count'] = array_sum(array_column($countsByStatus, 'count'));
-                return;
+            } else {
+                $button['url'] = Url::current(['status' => $status]);
+                $button['count'] = ArrayHelper::getValue($countsByStatus, "$status.count", 0);
             }
+
             $button['title'] = PanelcheckerComponent::getStatusName($status);
-            $button['count'] = ArrayHelper::getValue($countsByStatus, "$status.count", 0);
+            $button['active'] = UiHelper::isFilterActive('status', $status);
+
         });
 
         return $buttons;
