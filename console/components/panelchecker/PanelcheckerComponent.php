@@ -55,6 +55,25 @@ class PanelcheckerComponent extends Component
     const PANEL_STATUS_PARKING          = 6;
     const PANEL_STATUS_OTHER            = 7;
 
+    public static $statuses = [
+        self::PANEL_STATUS_ACTIVE => 'Active',
+        self::PANEL_STATUS_FROZEN => 'Frozen',
+        self::PANEL_STATUS_PERFECTPANEL => 'Perfectpanel',
+        self::PANEL_STATUS_NOT_RESOLVED => 'Not resolved',
+        self::PANEL_STATUS_IP_NOT_LEVOPANEL => 'Not Levopanel',
+        self::PANEL_STATUS_PARKING => 'Parking',
+        self::PANEL_STATUS_OTHER => 'Other',
+    ];
+
+    /**
+     * Return Status Name by status value
+     * @param $status
+     * @return mixed
+     */
+    public static function getStatusName($status){
+        return ArrayHelper::getValue(static::$statuses, $status, $status);
+    }
+
     /**
      * @var array
      */

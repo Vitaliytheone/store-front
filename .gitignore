@@ -39,3 +39,6 @@ phpunit.phar
 
 # Templates src
 /frontend/web/src
+
+# Test debug files
+/my_test.php
