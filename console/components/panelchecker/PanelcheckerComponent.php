@@ -1,17 +1,16 @@
 <?php
-namespace common\components\panelchecker;
+namespace console\components\panelchecker;
 
 use Yii;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\db\Query;
-use yii\db\QueryBuilder;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class PanelcheckerComponent
  * @property string table
- * @package common\components\panelchecker
+ * @package console\components\panelchecker
  */
 class PanelcheckerComponent extends Component
 {

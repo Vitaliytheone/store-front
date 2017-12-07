@@ -8,8 +8,6 @@ use yii\filters\AccessControl;
 use yii\web\Response;
 use frontend\modules\admin\models\search\UrlsSearch;
 
-use common\components\panelchecker\PanelcheckerComponent;
-
 class ApiController extends Controller
 {
     /** @var array List of ajax action ids */
@@ -69,43 +67,6 @@ class ApiController extends Controller
         $urls = $urlsModel->searchUrls();
 
         return $urls;
-    }
-
-    /**
-     * TODO:: Only for test purpose
-     * Levochecker test action
-     * @return int
-     */
-    public function actionLevochecker()
-    {
-        $config = [
-            'class' => PanelcheckerComponent::className(),
-            'apiKey' => 'b9f1d6f809b793321c700f45ca382f59ef83bf644c48118e6d3b9902ab0cb86f',
-            'apiVersion' => '1.0',
-            'db' => [
-                'name' => 'store',
-                'table' => 'test',
-            ],
-            'dbFields' => [
-                'domains_column' => 'domain',
-                'status_column' => 'status',
-                'updated_column' => 'updated_at',
-                'created_column' => 'created_at',
-                'ip_column' => 'server_ip',
-                'details_column' => 'details',
-            ],
-            'proxy' => [
-                'ip',
-                'port',
-                'type' => CURLPROXY_HTTP,
-            ],
-        ];
-
-        /** @var \common\components\panelchecker\PanelcheckerComponent $checker */
-        $checker = Yii::createObject($config);
-        $checker->check();
-
-        return true;
     }
 
 }
