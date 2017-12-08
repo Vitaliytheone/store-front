@@ -133,7 +133,7 @@ class Twocheckout extends BasePayment {
         }
 
         // Logging PS checkout request
-        PaymentsLog::log($checkoutId, json_encode($paymentParams, JSON_PRETTY_PRINT));
+        PaymentsLog::log($checkoutId, $paymentParams);
 
         // Check payment key
         $checkResult = $this->_checkPayment($secretWord, $paymentParams);

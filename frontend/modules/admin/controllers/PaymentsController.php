@@ -89,6 +89,6 @@ class PaymentsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        return ['details' => $details];
+        return $details;
     }
 }

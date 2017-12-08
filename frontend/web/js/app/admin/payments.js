@@ -29,10 +29,10 @@ customModule.payments = {
                 type: "GET",
                 success: function (data) {
                     $modalLoader.addClass('hidden');
-                    if (data.details === undefined) {
+                    if (data === undefined) {
                         return;
                     }
-                    renderLogs(data.details);
+                    renderLogs(data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('Something is wrong!');
@@ -45,7 +45,7 @@ customModule.payments = {
             function renderLogs(details) {
                 $modalTitle.html(modalTitle);
                 _.each(details, function(detail){
-                    $detailsContainer.append('<pre class="sommerce-pre details-item">' + detail + '</pre>');
+                    $detailsContainer.append('<pre class="sommerce-pre details-item">' + detail.time  + '<br><br>' + detail.data + '</pre>');
                 });
             }
         });

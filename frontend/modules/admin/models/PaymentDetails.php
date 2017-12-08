@@ -47,14 +47,13 @@ class PaymentDetails extends Payments
         $paymentDetails = [];
 
         foreach ($paymentLogs as $log) {
-            $result = ArrayHelper::getValue($log, 'result', []);
+            $detail = ArrayHelper::getValue($log, 'result', []);
             $created = ArrayHelper::getValue($log, 'created_at');
-            $detail = [
-                $formatter->asDatetime($created,'yyyy-MM-dd HH:mm:ss'),
-                json_decode($result, true),
-            ];
 
-            $paymentDetails[] = print_r($detail,1);
+            $paymentDetails[] = [
+                'time' => $formatter->asDatetime($created,'yyyy-MM-dd HH:mm:ss'),
+                'data' => print_r(json_decode($detail,false),1),
+            ];
         }
 
         return $paymentDetails;
