@@ -107,14 +107,22 @@ class Twocheckout extends BasePayment {
         // Logging PS request
         $this->log(json_encode($paymentParams, JSON_PRETTY_PRINT));
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
-        $secretWord = ArrayHelper::getValue($paymentMethodOptions, 'secret_word', null);
-
         // Check payment method
-        if (empty($paymentMethod) || !isset($secretWord)) {
+        if (empty($paymentMethod)) {
             return [
                 'result' => 2,
                 'content' => 'bad payment method'
+            ];
+        }
+
+        $paymentMethodOptions = $paymentMethod->getDetails();
+        $secretWord = ArrayHelper::getValue($paymentMethodOptions, 'secret_word', null);
+
+        // Check secret word
+        if (!isset($secretWord)) {
+            return [
+                'result' => 2,
+                'content' => 'secret word does not exist.'
             ];
         }
 
