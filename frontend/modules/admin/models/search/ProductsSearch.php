@@ -5,14 +5,33 @@ namespace frontend\modules\admin\models\search;
 use yii;
 use yii\db\Query;
 use common\helpers\DbHelper;
+use yii\base\Model;
+use common\models\store\Products;
 use common\models\store\Packages;
+use common\models\stores\Providers;
 
 /**
  * Class ProductsSearch
  * @package frontend\modules\admin\models\search
  */
-class ProductsSearch
+class ProductsSearch extends Model
 {
+    private $_db;
+    private $_productsTable;
+    private $_packagesTable;
+    private $_providersTable;
+
+    public function init()
+    {
+        $this->_db = yii::$app->store->getInstance()->db_name;
+        $this->_productsTable = $this->_db . "." . Products::tableName();
+        $this->_packagesTable = $this->_db . "." . Packages::tableName();
+        $this->_providersTable = Providers::tableName();
+
+        parent::init();
+    }
+
+
     /**
      * Return Products & Packages
      * @return array
@@ -28,9 +47,9 @@ class ProductsSearch
                 'pk.id pk_id', 'pk.product_id pk_pr_id', 'pk.name pk_name', 'pk.position pk_position', 'pk.visibility pk_visibility', 'pk.mode pk_mode', 'pk.price pk_price', 'pk.quantity pk_quantity', 'pk.deleted pk_deleted',
                 'prv.site'
             ])
-            ->from("$storeDb.products pr")
-            ->leftJoin("$storeDb.packages pk", 'pk.product_id = pr.id AND pk.deleted = :deleted', [':deleted' => Packages::DELETED_NO])
-            ->leftJoin("$storesDb.providers prv", 'prv.id = pk.provider_id')
+            ->from("$this->_productsTable pr")
+            ->leftJoin("$this->_packagesTable pk", 'pk.product_id = pr.id AND pk.deleted = :deleted', [':deleted' => Packages::DELETED_NO])
+            ->leftJoin("$this->_providersTable prv", 'prv.id = pk.provider_id')
             ->orderBy(['pr.position' => SORT_ASC, 'pk.position' => SORT_ASC])
             ->all();
 

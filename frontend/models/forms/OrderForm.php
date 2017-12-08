@@ -132,7 +132,8 @@ class OrderForm extends Model {
             $currencyPayments = $this->getCurrencyPayments();
 
             $this->_methods = [];
-            
+            $methods = [];
+
             foreach (PaymentMethods::find()
                  ->store($this->_store)
                  ->active()
@@ -142,7 +143,17 @@ class OrderForm extends Model {
                     continue;
                 }
 
-                $this->_methods[$method->id] = $method->getName();
+                $methods[] = [
+                    'id' => $method->id,
+                    'name' => $method->getName(),
+                    'position' => ArrayHelper::getValue($currencyPayments, "$method->method.position", 0),
+                ];
+            }
+
+            ArrayHelper::multisort($methods, 'position', SORT_ASC);
+
+            foreach ($methods as $method) {
+                $this->_methods[$method['id']] = $method['name'];
             }
         }
 

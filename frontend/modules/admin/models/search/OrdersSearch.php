@@ -2,6 +2,9 @@
 
 namespace frontend\modules\admin\models\search;
 
+use common\models\store\Orders;
+use common\models\store\Packages;
+use common\models\store\Products;
 use Yii;
 use yii\base\Model;
 use yii\base\Exception;
@@ -28,8 +31,14 @@ class OrdersSearch extends Model
     public $mode;
     public $product;
     public $query;
-
+    
+    // Tables shortcuts
     private $_db;
+    private $_ordersTable;
+    private $_subordersTable;
+    private $_packagesTable;
+    private $_productsTable;
+
     private $_queryActiveFilters;
     private $_dataProvider;
 
@@ -75,6 +84,12 @@ class OrdersSearch extends Model
     public function init()
     {
         $this->_db = yii::$app->store->getInstance()->db_name;
+        
+        $this->_ordersTable = $this->_db . "." . Orders::tableName();
+        $this->_subordersTable = $this->_db . "." . Suborders::tableName();
+        $this->_packagesTable = $this->_db . "." . Packages::tableName();
+        $this->_productsTable = $this->_db . "." . Products::tableName();
+
         parent::init();
     }
 
@@ -141,7 +156,7 @@ class OrdersSearch extends Model
             ->select([
                 'o.id', 'checkout_id', 'customer', 'created_at',
             ])
-            ->from("$this->_db.orders o")
+            ->from("$this->_ordersTable o")
             ->indexBy('id')
             ->orderBy([
                 'id' => SORT_DESC,
@@ -163,7 +178,7 @@ class OrdersSearch extends Model
         if(isset($this->status)) {
             $statusOrderIdsSubquery = (new Query())
                 ->select('order_id')
-                ->from("$this->_db.suborders")
+                ->from($this->_subordersTable)
                 ->where(['status' => $this->status ])
                 ->groupBy('order_id');
             $filter = ['o.id' => $statusOrderIdsSubquery];
@@ -173,7 +188,7 @@ class OrdersSearch extends Model
         if (isset($this->mode)) {
             $modeOrderIdsSubquery = (new Query())
                 ->select("order_id")
-                ->from("$this->_db.suborders")
+                ->from($this->_subordersTable)
                 ->where(['mode' => $this->mode ])
                 ->groupBy('order_id');
             $filter = ['o.id' => $modeOrderIdsSubquery];
@@ -183,9 +198,9 @@ class OrdersSearch extends Model
         if (isset($this->product)) {
             $productOrderIdsSubquery = (new Query())
                 ->select("so.order_id")
-                ->from("$this->_db.suborders so")
-                ->leftJoin("$this->_db.packages pk", 'pk.id = so.package_id')
-                ->leftJoin("$this->_db.products pr",'pr.id = pk.product_id')
+                ->from("$this->_subordersTable so")
+                ->leftJoin("$this->_packagesTable pk", 'pk.id = so.package_id')
+                ->leftJoin("$this->_productsTable pr",'pr.id = pk.product_id')
                 ->where(['pk.product_id' => $this->product])
                 ->groupBy('so.order_id');
             $filter = ['o.id' => $productOrderIdsSubquery];
@@ -209,21 +224,21 @@ class OrdersSearch extends Model
         if (ctype_digit($searchQuery)) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
-                ->from("$this->_db.suborders")
+                ->from($this->_subordersTable)
                 ->where([  'or', ['order_id' => $searchQuery], ['like', 'link', $searchQuery]])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
         } elseif ($emailValidator->validate($searchQuery)) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('id order_id')
-                ->from("$this->_db.orders")
+                ->from($this->_ordersTable)
                 ->where(['customer' => $searchQuery])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
         } else {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
-                ->from("$this->_db.suborders")
+                ->from($this->_subordersTable)
                 ->where(['like', 'link', $searchQuery])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
@@ -246,7 +261,7 @@ class OrdersSearch extends Model
     {
         $presentSubordersCounts = (new Query())
             ->select(['status', 'COUNT(*) count'])
-            ->from("$this->_db.suborders")
+            ->from($this->_subordersTable)
             ->groupBy('status')
             ->indexBy('status')
             ->all();
@@ -340,17 +355,17 @@ class OrdersSearch extends Model
         // Get all products
         $productsList = (new Query())
             ->select(['id','name'])
-            ->from("$this->_db.products")
+            ->from($this->_productsTable)
             ->indexBy('id')
             ->all();
 
         // Get count suborders for product
         $subordersByProductsQuery = (new Query())
             ->select(['pr.id, COUNT(pr.id) count'])
-            ->from("$this->_db.suborders so")
-            ->leftJoin("$this->_db.packages pk", 'pk.id = so.package_id')
-            ->leftJoin("$this->_db.products pr", 'pk.product_id = pr.id')
-            ->leftJoin("$this->_db.orders o", 'o.id = so.order_id')
+            ->from("$this->_subordersTable so")
+            ->leftJoin("$this->_packagesTable pk", 'pk.id = so.package_id')
+            ->leftJoin("$this->_productsTable pr", 'pk.product_id = pr.id')
+            ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
             ->groupBy('pr.id')
             ->orderBy([
                 'pr.id' => SORT_ASC,
@@ -393,8 +408,8 @@ class OrdersSearch extends Model
     {
         $query = (new Query())
             ->select (['mode', 'COUNT(mode) count'])
-            ->from ("$this->_db.suborders so")
-            ->leftJoin("$this->_db.orders o", 'o.id = so.order_id')
+            ->from ("$this->_subordersTable so")
+            ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
             ->groupBy('mode' );
 
         $this->_applyFilters($query, $this->_queryActiveFilters, ['mode']);
@@ -450,9 +465,9 @@ class OrdersSearch extends Model
                 'so.amount', 'so.link', 'so.quantity', 'so.status', 'so.mode',
                 'pr.name product_name',
             ])
-            ->from("$this->_db.suborders so")
-            ->leftJoin("$this->_db.packages pk",'so.package_id = pk.id')
-            ->leftJoin("$this->_db.products pr",'pk.product_id = pr.id')
+            ->from("$this->_subordersTable so")
+            ->leftJoin("$this->_packagesTable pk",'so.package_id = pk.id')
+            ->leftJoin("$this->_productsTable pr",'pk.product_id = pr.id')
             ->where(['so.order_id' => $orderIds])
             ->indexBy('suborder_id')
             ->all();

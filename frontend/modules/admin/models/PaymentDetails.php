@@ -2,6 +2,8 @@
 
 namespace frontend\modules\admin\models;
 
+use common\models\store\Checkouts;
+use common\models\store\PaymentsLog;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -13,14 +15,19 @@ use common\models\store\Payments;
  */
 class PaymentDetails extends Payments
 {
-    private $_db;
+    private $_storeDb;
+    private $_paymentsLogTable;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-        $this->_db = yii::$app->store->getInstance()->db_name;
+        $this->_storeDb = yii::$app->store->getInstance()->db_name;
+        $this->_checkoutTable = $this->_storeDb . "." . Checkouts::tableName();
+
+        $this->_paymentsLogTable = $this->_storeDb . "." . PaymentsLog::tableName();
+
         parent::init();
     }
 
@@ -32,7 +39,7 @@ class PaymentDetails extends Payments
     {
         $paymentLogs = (new Query())
             ->select(['id', 'checkout_id', 'result', 'ip', 'created_at'])
-            ->from("$this->_db.payments_log")
+            ->from($this->_paymentsLogTable)
             ->where(['checkout_id' => $this->checkout_id])
             ->orderBy(['created_at' => SORT_DESC])
             ->all();

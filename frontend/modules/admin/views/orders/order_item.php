@@ -36,9 +36,9 @@ $checkRowSpan = function($suborder) use ($suborders) {
 
     <td><?= $suborder['amount'] ?></td>
     <td>
-        <div class="sommerce-table__link" id="copy-link-1">
+        <div class="sommerce-table__link" id="copy-link-<?= $suborder['suborder_id'] ?>">
             <?= Html::encode($suborder['link']) ?>
-            <span class="la la-copy" data-clipboard="true" data-clipboard-target="#copy-link-1"></span>
+            <span class="la la-copy" data-clipboard="true" data-clipboard-target="#copy-link-<?= $suborder['suborder_id'] ?>"></span>
         </div>
     </td>
     <td><?= $suborder['product_name'] ?></td>

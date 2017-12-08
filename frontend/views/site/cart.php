@@ -69,7 +69,7 @@
                                 <div>
                                     <?php foreach ($methods as $methodId => $methodName) : ?>
                                         <label class="radio-inline">
-                                            <input type="radio" name="OrderForm[method]" id="inlineRadio1" value="<?= $methodId?>"> <?= $methodName ?>
+                                            <input type="radio" name="OrderForm[method]" id="inlineRadio1" <?= ($methodName === reset($methods)) ? 'checked' : '' ?> value="<?= $methodId?>"> <?= $methodName ?>
                                         </label>
                                     <?php endforeach; ?>
                                 </div>

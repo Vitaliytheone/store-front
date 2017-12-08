@@ -71,9 +71,13 @@ class CreatePackageForm extends Packages
             ['price', 'number', 'min' => 0.01],
             [['name', 'provider_service'], 'string', 'max' => 255],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'id']],
-            [['provider_id', 'provider_service'], 'required', 'when' => function($model){
+
+            ['provider_id', 'required', 'when' => function($model){
                 return $model->getAttribute('mode') == self::MODE_AUTO;
-            }],
+            }, 'message' => Yii::t('admin', 'products.message_choose_provider')],
+            ['provider_service', 'required', 'when' => function($model){
+                return $model->getAttribute('mode') == self::MODE_AUTO;
+            }, 'message' => Yii::t('admin', 'products.message_choose_service')],
         ];
     }
 

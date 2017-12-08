@@ -22,8 +22,10 @@ class MovePackageForm extends Packages
         }
 
         $db = $this->getDb();
-        $query = $db->createCommand('
-                  UPDATE `packages` SET
+        $packagesTable = static::tableName();
+
+        $query = $db->createCommand("
+                  UPDATE $packagesTable SET
                       `position` = CASE
                           WHEN (`position` = :curPos) THEN 
                                 :newPos                       -- replace new within old
@@ -35,7 +37,7 @@ class MovePackageForm extends Packages
                                 `position`                    -- otherwise lets keep same value.
                       END
                   WHERE `deleted` = :deleted AND `product_id` = :product
-            ')
+            ")
             ->bindValue(':newPos', $newPosition)
             ->bindValue(':curPos', $currentPosition)
             ->bindValue(':deleted', self::DELETED_NO)

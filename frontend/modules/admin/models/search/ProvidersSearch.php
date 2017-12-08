@@ -2,6 +2,8 @@
 
 namespace frontend\modules\admin\models\search;
 
+use common\models\stores\Providers;
+use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use Yii;
 use yii\db\Query;
@@ -23,14 +25,17 @@ class ProvidersSearch extends BaseSearch
          */
         $store = Yii::$app->store->getInstance();
 
+        $storeProvidersTable = StoreProviders::tableName();
+        $providersTable = Providers::tableName();
+
         $query = (new Query())
             ->select([
                 'p.id',
                 'p.site',
                 'sp.apikey',
             ])
-            ->from('store_providers sp')
-            ->leftJoin('providers p', 'p.id = sp.provider_id')
+            ->from("$storeProvidersTable sp")
+            ->leftJoin("$providersTable p", 'p.id = sp.provider_id')
             ->andWhere([
                 'sp.store_id' => $store->id
             ]);

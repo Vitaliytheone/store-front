@@ -40,9 +40,11 @@ class DeletePackageForm extends Packages
      */
     public function updatePositionsAfterDelete($oldPosition)
     {
-        $productId = $this->getAttribute('product_id');
         $db = $this->getDb();
-        $query = $db->createCommand('UPDATE `packages` SET `position` = `position`-1 WHERE `product_id` = :product AND `position` > :oldPos AND `deleted` = :deleted')
+        $table = static::tableName();
+
+        $productId = $this->getAttribute('product_id');
+        $query = $db->createCommand("UPDATE $table SET `position` = `position`-1 WHERE `product_id` = :product AND `position` > :oldPos AND `deleted` = :deleted")
             ->bindValue(':product', $productId)
             ->bindValue(':oldPos', $oldPosition)
             ->bindValue(':deleted', self::DELETED_NO)

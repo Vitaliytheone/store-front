@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\models;
 
+use common\models\stores\Providers;
 use Yii;
 use yii\db\Query;
 use common\models\store\Suborders;
@@ -18,9 +19,11 @@ class SuborderDetails extends Suborders
      */
     public function details()
     {
+        $providersTable = Providers::tableName();
+
         $provider = (new Query())
             ->select(['site'])
-            ->from("providers")
+            ->from($providersTable)
             ->where(['id' => $this->provider_id])
             ->one();
         if (!$provider) {

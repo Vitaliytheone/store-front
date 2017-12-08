@@ -111,6 +111,8 @@ return [
     'products.message_package_created' => 'Package was successfully created!',
     'products.message_package_updated' => 'Package was successfully updated!',
     'products.message_package_deleted' => 'Package was successfully deleted!',
+    'products.message_choose_provider' => 'Choose provider!',
+    'products.message_choose_service' => 'Choose service!',
     'products.message_ajax_timeout' => 'Loading error, try again later',
 
     'settings.page_title' => 'Settings',

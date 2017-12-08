@@ -155,7 +155,7 @@ class Twocheckout extends BasePayment {
 
         // Check payment amount
         $totalCheckout = number_format($this->_checkout->price, 2, '.', '');
-        if ($paymentParams['total'] !== $totalCheckout) {
+        if ($paymentParams['total'] != $totalCheckout) {
             return [
                 'result' => 2,
                 'content' => 'Invalid amount verification result'

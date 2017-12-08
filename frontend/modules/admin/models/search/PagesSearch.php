@@ -9,14 +9,17 @@ use yii\helpers\ArrayHelper;
 
 class PagesSearch extends Pages
 {
-    private $_storeDb;
+    private $_db;
+    private $_pagesTable;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-        $this->_storeDb = Yii::$app->store->getInstance()->db_name;
+        $this->_db = Yii::$app->store->getInstance()->db_name;
+        $this->_pagesTable = $this->_db . "." . Pages::tableName();
+
         parent::init();
     }
 
@@ -28,7 +31,7 @@ class PagesSearch extends Pages
     {
         $pages = (new Query())
             ->select(['id', 'name', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at'])
-            ->from("$this->_storeDb.pages")
+            ->from($this->_pagesTable)
             ->where(['deleted' => self::DELETED_NO])
             ->indexBy('id')
             ->orderBy(['id' => SORT_DESC])

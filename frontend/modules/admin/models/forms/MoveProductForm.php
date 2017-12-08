@@ -23,9 +23,12 @@ class MoveProductForm extends Products
         if ($newPosition < 0 || $newPosition > $maxPosition) {
             return false;
         }
+
         $db = $this->getDb();
-        $query = $db->createCommand('
-                  UPDATE `products` SET
+        $table = static::tableName();
+
+        $query = $db->createCommand("
+                  UPDATE $table SET
                       `position` = CASE
                           WHEN (`position` = :curPos) THEN 
                                 :newPos                       -- replace new within old
@@ -36,7 +39,7 @@ class MoveProductForm extends Products
                           ELSE 
                                 `position`                    -- otherwise lets keep same value.
                       END
-            ')
+            ")
             ->bindValue(':newPos', $newPosition)
             ->bindValue(':curPos', $currentPosition)
             ->execute();

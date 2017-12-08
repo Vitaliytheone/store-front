@@ -30,6 +30,9 @@ class PaymentsSearch extends Model
     public $query;
 
     private $_db;
+    private $_paymentsTable;
+    private $_paymentMethodsTable;
+
     private $_queryActiveFilters;
     private $_dataProvider;
 
@@ -38,7 +41,10 @@ class PaymentsSearch extends Model
     public function init()
     {
         $this->_db = yii::$app->store->getInstance()->db_name;
-        parent::init();
+        $this->_paymentsTable = $this->_db . "." . Payments::tableName();
+        $this->_paymentMethodsTable = PaymentMethods::tableName();
+
+            parent::init();
     }
 
     /**
@@ -93,7 +99,7 @@ class PaymentsSearch extends Model
             ->select([
                 'id', 'customer', 'amount', 'method', 'fee', 'memo', 'status', 'updated_at',
             ])
-            ->from("$this->_db.payments")
+            ->from($this->_paymentsTable)
             ->indexBy('id')
             ->orderBy([
                 'id' => SORT_DESC,
@@ -152,7 +158,7 @@ class PaymentsSearch extends Model
     {
         $counts = (new Query())
             ->select(['status', 'COUNT(*) count'])
-            ->from("$this->_db.payments")
+            ->from($this->_paymentsTable)
             ->groupBy(['status'])
             ->indexBy('status')
             ->all();
@@ -170,14 +176,14 @@ class PaymentsSearch extends Model
 
         $methodsList = (new Query())
             ->select(['method'])
-            ->from('payment_methods')
+            ->from($this->_paymentMethodsTable)
             ->where(['store_id' => $storeId])
             ->indexBy('method')
             ->all();
 
         $countsByMethodsQuery = (new Query())
             ->select(['method', 'COUNT(*) count'])
-            ->from("$this->_db.payments")
+            ->from($this->_paymentsTable)
             ->groupBy('method')
             ->indexBy('method');
 

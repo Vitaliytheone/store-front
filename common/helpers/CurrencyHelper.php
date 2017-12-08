@@ -41,7 +41,7 @@ class CurrencyHelper {
                 '2checkout' => [
                     'method_name' => '2Checkout',
                     'class_name' => "Twocheckout",
-                    'url' => 'twocheckout',
+                    'url' => '2checkout',
                     'mode' => 'standart',
                     'name' => '2Checkout',
                     'minimal' => '1.00',
