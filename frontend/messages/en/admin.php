@@ -33,7 +33,7 @@ return [
 
     'payments.page_title' => 'Payments',
     'payments.search_placeholder' => 'Search for...',
-    'payments.orders_all' => 'All orders',
+    'payments.payments_all' => 'All payments',
     'payments.status_awaiting' => 'Awaiting',
     'payments.status_completed' => 'Completed',
     'payments.status_failed' => 'Failed',

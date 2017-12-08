@@ -207,7 +207,7 @@ class PaymentsSearch extends Model
     {
         $buttons = [
             'all' => [
-                'title' => Yii::t('admin', 'payments.orders_all'),
+                'title' => Yii::t('admin', 'payments.payments_all'),
                 'filter' => null,
                 'url' => null,
                 'count' => null,
@@ -231,7 +231,7 @@ class PaymentsSearch extends Model
         array_walk($buttons, function (&$button, $filter) use ($countsPaymentsByStatus, $options) {
             if ($filter === 'all') {
                 $count = array_sum(array_column($countsPaymentsByStatus, 'count'));
-                $url = Url::toRoute('/orders');
+                $url = Url::toRoute('/payments');
             } else {
                 $count = ArrayHelper::getValue($countsPaymentsByStatus, "$filter.count" );
                 $url = Url::current(['status' => $filter]);

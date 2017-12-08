@@ -24,8 +24,6 @@ class PaymentDetails extends Payments
     public function init()
     {
         $this->_storeDb = yii::$app->store->getInstance()->db_name;
-        $this->_checkoutTable = $this->_storeDb . "." . Checkouts::tableName();
-
         $this->_paymentsLogTable = $this->_storeDb . "." . PaymentsLog::tableName();
 
         parent::init();
