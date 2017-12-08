@@ -67,7 +67,7 @@ class OrderForm extends Model {
         $methods = $this->getPaymentMethods();
 
         if (1 == count($methods)) {
-            $this->method = array_shift($methods);
+            $this->method = key($methods);
         } else {
             $rules[] = [['method'], 'required'];
             $rules[] = [['method'], 'in', 'range' => array_keys($methods)];
