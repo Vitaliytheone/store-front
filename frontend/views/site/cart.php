@@ -22,7 +22,7 @@
                             <?php foreach ($items as $key => $item) : ?>
                                 <tr>
                                     <td>
-                                        <?= $key ?>
+                                        <?= ($key + 1) ?>
                                     </td>
                                     <td>
                                         <?= $item['package_name'] ?>
