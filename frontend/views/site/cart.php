@@ -19,10 +19,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($items as $item) : ?>
+                            <?php foreach ($items as $key => $item) : ?>
                                 <tr>
                                     <td>
-                                        <?= $item['id'] ?>
+                                        <?= $key ?>
                                     </td>
                                     <td>
                                         <?= $item['package_name'] ?>
