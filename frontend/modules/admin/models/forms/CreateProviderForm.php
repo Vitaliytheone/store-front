@@ -96,6 +96,7 @@ class CreateProviderForm extends Model {
         $value = mb_strtolower($this->{$attribute});
         $value = trim($value);
         $value = preg_replace("/(http(s)?)\:\/\//uis", "", $value);
+        $value = preg_replace("/(www\.)\:\/\//uis", "", $value);
         $value = parse_url('http://' . $value, PHP_URL_HOST);
 
         if (empty($value)) {
