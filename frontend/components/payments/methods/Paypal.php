@@ -89,9 +89,9 @@ class Paypal extends BasePayment {
             ]);
         } else {
             $credentials = [
-                'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
-                'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
-                'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
+                'USER' => ArrayHelper::getValue($paymentMethodOptions, 'api_username'),
+                'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'api_password'),
+                'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'api_signature'),
             ];
 
             $requestParams = [
@@ -176,9 +176,9 @@ class Paypal extends BasePayment {
         }
 
         $credentials = [
-            'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
-            'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
-            'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
+            'USER' => ArrayHelper::getValue($paymentMethodOptions, 'api_username'),
+            'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'api_password'),
+            'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'api_signature'),
         ];
 
         $checkoutDetails = $this->request('GetExpressCheckoutDetails', $credentials + ['TOKEN' => $token]);
