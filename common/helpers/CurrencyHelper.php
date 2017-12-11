@@ -30,7 +30,6 @@ class CurrencyHelper {
                     'active' => 0,
                     'fee' => 0,
                     'options' => [
-                        'email' => '',
                         'username' => '',
                         'password' => '',
                         'signature' => '',
@@ -48,7 +47,10 @@ class CurrencyHelper {
                     'maximal' => 0,
                     'active' => 0,
                     'fee' => 0,
-                    'options' => [],
+                    'options' => [
+                        'account_number' => '',
+                        'secret_word' => '',
+                    ],
                     'type' => 0,
                     'position' => 2,
                 ],
@@ -62,7 +64,10 @@ class CurrencyHelper {
                     'maximal' => 0,
                     'active' => 0,
                     'fee' => 0,
-                    'options' => [],
+                    'options' => [
+                        'gateway_id' => '',
+                        'gateway_secret' => '',
+                    ],
                     'type' => 0,
                     'position' => 3,
                 ],

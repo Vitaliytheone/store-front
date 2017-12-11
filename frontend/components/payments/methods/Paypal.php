@@ -48,17 +48,15 @@ class Paypal extends BasePayment {
 
     public $redirectProcessing = true;
 
-    public function __construct(array $config = [])
+    /**
+     * Init test mode
+     */
+    public function testMode()
     {
-        if (!empty(Yii::$app->params['testPayPal'])) {
-            $this->action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-            $this->endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
-            $this->paymentPoint = 'https://www.sandbox.paypal.com/webscr';
-        }
-
-        return parent::__construct($config);
+        $this->action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+        $this->endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
+        $this->paymentPoint = 'https://www.sandbox.paypal.com/webscr';
     }
-
 
     /**
      * Checkout
@@ -71,6 +69,10 @@ class Paypal extends BasePayment {
     public function checkout($checkout, $store, $email, $details)
     {
         $paymentMethodOptions = $details->getDetails();
+
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
 
         $amount = number_format($checkout->price, 2, '.', '');
 
@@ -89,9 +91,9 @@ class Paypal extends BasePayment {
             ]);
         } else {
             $credentials = [
-                'USER' => ArrayHelper::getValue($paymentMethodOptions, 'api_username'),
-                'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'api_password'),
-                'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'api_signature'),
+                'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
+                'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
+                'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
             ];
 
             $requestParams = [
@@ -145,6 +147,12 @@ class Paypal extends BasePayment {
             ];
         }
 
+        $paymentMethodOptions = $paymentMethod->getDetails();
+
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
+
         // Now only express checkout
         if (0) {
             $this->_method = 'paypalstandart';
@@ -176,9 +184,9 @@ class Paypal extends BasePayment {
         }
 
         $credentials = [
-            'USER' => ArrayHelper::getValue($paymentMethodOptions, 'api_username'),
-            'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'api_password'),
-            'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'api_signature'),
+            'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
+            'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
+            'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
         ];
 
         $checkoutDetails = $this->request('GetExpressCheckoutDetails', $credentials + ['TOKEN' => $token]);

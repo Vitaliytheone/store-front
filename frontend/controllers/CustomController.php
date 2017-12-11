@@ -50,7 +50,7 @@ class CustomController extends MainController
      */
     public function getGoBackUrl()
     {
-        $prev = Yii::$app->request->referrer;
+        $prev = Url::previous();
         return (Url::to('') != $prev) ? $prev : Url::toRoute('/');
     }
 

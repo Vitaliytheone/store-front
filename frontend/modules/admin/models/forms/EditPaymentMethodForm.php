@@ -33,8 +33,8 @@ class EditPaymentMethodForm extends PaymentMethods
 
                     // Prepare PayPal details
                     if ($model->method == $model::METHOD_PAYPAL) {
-                        $apiUsername = ArrayHelper::getValue($details, 'api_username');
-                        $details['api_username'] = trim($apiUsername);
+                        $apiUsername = ArrayHelper::getValue($details, 'username');
+                        $details['username'] = trim($apiUsername);
                     }
 
                     return json_encode($details);
@@ -111,9 +111,9 @@ class EditPaymentMethodForm extends PaymentMethods
             self::METHOD_PAYPAL => [
                 'icon' => '/img/paypal.png',
                 'form_fields' => [
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_username]', 'value' => $getDetailsField('api_username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_password]', 'value' => $getDetailsField('api_password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_api_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_signature]', 'value' => $getDetailsField('api_signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][username]', 'value' => $getDetailsField('username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][password]', 'value' => $getDetailsField('password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][signature]', 'value' => $getDetailsField('signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
@@ -130,8 +130,8 @@ class EditPaymentMethodForm extends PaymentMethods
             self::METHOD_BITCOIN => [
                 'icon' => '/img/bitcoin.png',
                 'form_fields' => [
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_api_gateway_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_gateway_id]', 'value' => $getDetailsField('api_gateway_id'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_id')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_geteway_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][api_gateway_secret]', 'value' => $getDetailsField('api_gateway_secret'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_secret')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_gateway_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][gateway_id]', 'value' => $getDetailsField('gateway_id'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_geteway_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][gateway_secret]', 'value' => $getDetailsField('gateway_secret'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_secret')],
                 ]
             ],
         ];

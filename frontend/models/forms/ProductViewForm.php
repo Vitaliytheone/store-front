@@ -3,13 +3,14 @@ namespace frontend\models\forms;
 
 use yii\behaviors\AttributeBehavior;
 use common\models\store\Packages;
+use common\models\store\Products;
 
 /**
  * Class ProductViewForm
  * @property Packages[] $packages
  * @package frontend\models\forms
  */
-class ProductViewForm extends \common\models\store\Products
+class ProductViewForm extends Products
 {
     /**
      * @inheritdoc
@@ -27,7 +28,7 @@ class ProductViewForm extends \common\models\store\Products
                     /* @var $model $this */
                     $model = $event->sender;
                     $properties = $model->getAttribute('properties');
-                    return $properties ? json_decode($properties,true) : [];
+                    return $properties ? (array)json_decode($properties, true) : [];
                 },
             ],
         ];

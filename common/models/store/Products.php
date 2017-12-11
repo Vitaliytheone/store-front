@@ -4,6 +4,8 @@ namespace common\models\store;
 
 use Yii;
 use yii\db\Query;
+use common\models\store\queries\ProductsQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%products}}".
@@ -20,7 +22,7 @@ use yii\db\Query;
  *
  * @property Packages[] $packages
  */
-class Products extends \yii\db\ActiveRecord
+class Products extends ActiveRecord
 {
     const VISIBILITY_YES = 1;
     const VISIBILITY_NO = 0;
@@ -81,11 +83,11 @@ class Products extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\ProductsQuery the active query used by this AR class.
+     * @return ProductsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\ProductsQuery(get_called_class());
+        return new ProductsQuery(get_called_class());
     }
 
     /**

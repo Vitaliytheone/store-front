@@ -11,6 +11,7 @@ use frontend\models\forms\AddToCartForm;
 use frontend\models\forms\OrderForm;
 use frontend\models\search\CartSearch;
 use Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -37,6 +38,8 @@ class CartController extends CustomController
      */
     public function actionIndex()
     {
+        Url::remember();
+
         /**
          * @var Stores $store
          */
