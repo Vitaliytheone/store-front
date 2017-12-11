@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\controllers;
 
+use frontend\modules\admin\components\Url;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -59,6 +60,8 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
+        return $this->redirect(Url::toRoute('/orders'));
+
         return $this->render('index');
     }
 

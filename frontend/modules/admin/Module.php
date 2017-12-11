@@ -3,17 +3,18 @@
 namespace frontend\modules\admin;
 
 use Yii;
+use yii\base\Module as BaseModule;
 
 /**
  * admin module definition class
  */
-class Module extends \yii\base\Module
+class Module extends BaseModule
 {
     /**
      * @inheritdoc
      */
     public $controllerNamespace = 'frontend\modules\admin\controllers';
-
+    
     /**
      * @inheritdoc
      */
