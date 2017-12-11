@@ -69,4 +69,19 @@ class ApiController extends Controller
         return $urls;
     }
 
+    /**
+     * TODO:: ONLY FOR TEST Twocheckout purpose! Delete after test!!!
+     */
+    public function actionTwocheckoutTest()
+    {
+        $request = Yii::$app->getRequest();
+        $get = $request->get();
+        $post = $request->post();
+
+        error_log(print_r($get, 1),0);
+        error_log(print_r($post, 1),0);
+
+        return true;
+    }
+
 }
