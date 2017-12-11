@@ -29,14 +29,15 @@ class EditPageForm extends Pages
     {
         return [
             [['name', 'url', 'visibility'], 'required'],
+            [['name', 'seo_title', 'url'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
             [['content'], 'string'],
-            [['name', 'url'], 'unique'],
-            ['url', 'unique', 'targetClass' => Products::className(), 'targetAttribute' => ['url' => 'url']],
-            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             [['name', 'seo_title', 'seo_description', 'url',], 'trim'],
-            [['name', 'seo_title', 'url'], 'string', 'max' => 255],
             [['seo_description'], 'string', 'max' => 2000],
+
+            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
+            ['url', 'unique', 'filter' => ['deleted' => Pages::DELETED_NO]],
+            ['url', 'unique', 'targetClass' => Products::className(), 'targetAttribute' => ['url' => 'url']],
         ];
     }
 

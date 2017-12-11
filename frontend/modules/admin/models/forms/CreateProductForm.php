@@ -79,14 +79,11 @@ class CreateProductForm extends Products
             [['description'], 'string'],
             [['seo_title', ], 'string', 'max' => 300],
             [['seo_description', ], 'string', 'max' => 1000],
-            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             [['properties', 'position'], 'safe'],
-            ['url', 'validateNoConflictUrl',
-                'message' => 'Product with same url already exist in the database! Please use another url.',
-            ],
-            ['url', 'validateNoConflictProductPage',
-                'message' => 'Page with same url already exist in the database! Please use another url.',
-            ],
+
+            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
+            ['url', 'unique'],
+            ['url', 'unique', 'targetClass' => Pages::className(), 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => Pages::DELETED_NO]],
         ];
     }
 

@@ -143,7 +143,7 @@ return [
     'settings.general_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
     'settings.general_seo_meta_limits' => ' of 160 characters used',
     'settings.general_save' => 'Save changes',
-    'settings.message_settings_updated' => 'Settings successfully updated!',
+    'settings.message_settings_updated' => 'Settings was successfully updated!',
     'settings.message_cdn_upload_error' => 'Error uploading file to CDN!',
 
     'settings.payments_page_title' => 'Settings payments',
@@ -186,13 +186,10 @@ return [
 
     'settings.pages_page_title' => 'Pages',
     'settings.pages_add' => 'Add page',
-
     'settings.pages_edit' => 'Edit',
     'settings.pages_delete' => 'Delete',
-
     'settings.pages_create_page' => 'Create page',
     'settings.pages_edit_page' => 'Edit page',
-
     'settings.pages_title' => 'Title',
     'settings.pages_visibility' => 'Visibility',
     'settings.pages_visibility_visible' => 'Visible',
@@ -209,14 +206,10 @@ return [
     'settings.pages_seo_url_default' => 'about-us',
     'settings.pages_save' => 'Save changes',
     'settings.pages_cancel' => 'Cancel',
-
     'settings.page_delete_agree' => 'Are your sure that your want to delete this Page?',
     'settings.package_delete_cancel' => 'Cancel',
     'settings.package_delete_submit' => 'Yes, delete it',
-
-    'settings.pages_message_created' => 'Page successfully created!',
-    'settings.pages_message_updated' => 'Page successfully updated!',
-
-
+    'settings.pages_message_created' => 'Page was successfully created!',
+    'settings.pages_message_updated' => 'Page was successfully updated!',
 
 ];
