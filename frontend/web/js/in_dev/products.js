@@ -619,6 +619,7 @@
             $formFields.provider_id.closest('.form-group').toggleClass('d-none', !mode);
             $formFields.provider_service.closest('.form-group').toggleClass('d-none', !mode);
             $apiError.addClass('d-none');
+            $errorContainer.empty();
         });
 
         // Change `provider_id` => fetch provider`s services
