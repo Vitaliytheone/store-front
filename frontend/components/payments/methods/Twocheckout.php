@@ -204,7 +204,7 @@ class Twocheckout extends BasePayment {
            // no checkout
            return [
                'result' => 2,
-               'content' => "Checkout #$messageVendorOrderId does not exist!"
+               'content' => "Checkout #$messageVendorOrderId does not exist or already paid!"
            ];
        }
 
@@ -239,6 +239,7 @@ class Twocheckout extends BasePayment {
            $this->_payment->currency = $this->_checkout->currency;
 
            $this->_payment->transaction_id = $messageInvoiceId;
+           $this->_payment->memo = $messageInvoiceId;
            $this->_payment->email = $messageCustomerEmail;
            $this->_payment->name = trim($messageCustomerName);
            $this->_payment->country = $messageCustomerCountry;
@@ -253,6 +254,10 @@ class Twocheckout extends BasePayment {
                    'content' => "Expected Payment model id$this->_checkout->id. Null given!"
                ];
            }
+       }
+
+       if (in_array($this->_payment->status, [Payments::STATUS_FAILED, Payments::STATUS_COMPLETED])) {
+           exit ('Unexpected 2Checkout status changes!');
        }
 
        $this->_checkout->method_status = $messageFraudStatus;
