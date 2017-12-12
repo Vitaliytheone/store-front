@@ -9,6 +9,7 @@ use common\models\stores\Stores;
 use Yii;
 use frontend\components\payments\BasePayment;
 use common\helpers\SiteHelper;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -114,7 +115,7 @@ class Twocheckout extends BasePayment {
         return static::returnRedirect($queryUrl . '?' . $queryParams);
     }
 
-   public function processing($store)
+    public function processing($store)
    {
        $request = Yii::$app->request;
        $requestParams = $request->post();
@@ -125,10 +126,10 @@ class Twocheckout extends BasePayment {
        $messageFraudStatus = ArrayHelper::getValue($requestParams, 'fraud_status', null);       // Payment fraud status
        $messageVendorOrderId = ArrayHelper::getValue($requestParams, 'vendor_order_id', null);  // Our checkout id
 
-       $messageCustCurrency = ArrayHelper::getValue($requestParams, 'cust_currency', null);     // Customer currency
+       $messageCustomerCurrency = ArrayHelper::getValue($requestParams, 'cust_currency', null);     // Customer currency
        $messageListCurrency = ArrayHelper::getValue($requestParams, 'list_currency', null);     // Our checkout currency
 
-       $messageCustAmount = ArrayHelper::getValue($requestParams, 'invoice_cust_amount', null); // Customer currency amount
+       $messageCustomerAmount = ArrayHelper::getValue($requestParams, 'invoice_cust_amount', null); // Customer currency amount
        $messageListAmount = ArrayHelper::getValue($requestParams, 'invoice_list_amount', null); // Our checkout currency amount
 
        $messageHash = ArrayHelper::getValue($requestParams, 'md5_hash', null);                  // Check sum
@@ -136,6 +137,9 @@ class Twocheckout extends BasePayment {
        $messageVendorId = ArrayHelper::getValue($requestParams, 'vendor_id', null);             // Our 2Checkout merchant id
        $messageInvoiceId = ArrayHelper::getValue($requestParams, 'invoice_id', null);           // 2Checkout invoice id
        $messageCustomerEmail = ArrayHelper::getValue($requestParams, 'customer_email', null);   // Customer email (payment email)
+
+       $messageCustomerName = ArrayHelper::getValue($requestParams, 'customer_name', '');           // Customer full name
+       $messageCustomerCountry = ArrayHelper::getValue($requestParams, 'customer_ip_country', ''); // Customer country by ip
 
        if (!isset($messageType, $messageFraudStatus, $messageVendorOrderId, $messageListCurrency, $messageListAmount, $messageHash, $messageSaleId, $messageVendorId, $messageInvoiceId)) {
            return [
@@ -224,17 +228,36 @@ class Twocheckout extends BasePayment {
            ];
        }
 
-       // Check Fraud statuses and update payment & checkout data
-       $this->_checkout->method_status = $messageFraudStatus;
+       // Use new payment model for new 2CO order
+       if ($messageType == self::MESSAGE_TYPE_ORDER_CREATED) {
 
-       $this->_payment->status = Payments::STATUS_AWAITING;
+           $this->_payment->status = Payments::STATUS_AWAITING;
+           $this->_payment->transaction_id = $messageInvoiceId;
+           $this->_payment->email = $messageCustomerEmail;
+           $this->_payment->name = trim($messageCustomerName);
+           $this->_payment->country = $messageCustomerCountry;
+
+       } else {
+
+           $this->_payment =  Payments::findOne(['checkout_id' => $this->_checkout->id]);
+
+           if (!$this->_payment) {
+               return [
+                   'result' => 2,
+                   'content' => "Expected Payment model id$this->_checkout->id. Null given!"
+               ];
+           }
+
+           $this->_payment->method = $this->_method;
+       }
+
+       $this->_checkout->method_status = $messageFraudStatus;
        $this->_payment->response_status = $messageFraudStatus;
-       $this->_payment->transaction_id = $messageInvoiceId;
-       $this->_payment->email = $messageCustomerEmail;
 
        // Check fraud statuses
        if ($messageFraudStatus == self::FRAUD_STATUS_FAIL) {
            $this->_payment->status = Payments::STATUS_FAILED;
+           $this->_payment->save();
 
            return [
                'result' => 2,
@@ -243,6 +266,8 @@ class Twocheckout extends BasePayment {
        }
 
        if ($messageFraudStatus == self::FRAUD_STATUS_WAIT) {
+           $this->_payment->status = Payments::STATUS_AWAITING;
+           $this->_payment->save();
 
            return [
                'result' => 2,
@@ -265,5 +290,8 @@ class Twocheckout extends BasePayment {
            'content' => 'Unknown error!'
        ];
    }
+
+
+
 
 }
