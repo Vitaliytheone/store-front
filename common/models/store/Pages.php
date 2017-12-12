@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $seo_title
  * @property string $seo_description
  * @property string $url
+ * @property string $template
  * @property bool $deleted
  * @property integer $created_at
  * @property integer $updated_at
@@ -26,6 +27,14 @@ class Pages extends \yii\db\ActiveRecord
 
     const DELETED_YES = 1;
     const DELETED_NO = 0;
+
+    const TEMPLATE_INDEX = 'index';
+    const TEMPLATE_PRODUCT = 'product';
+    const TEMPLATE_ORDER = 'order';
+    const TEMPLATE_PAGE = 'page';
+    const TEMPLATE_CART = 'cart';
+    const TEMPLATE_404 = '404';
+    const TEMPLATE_CONTACT = 'contact';
 
     /**
      * @return mixed
@@ -54,6 +63,18 @@ class Pages extends \yii\db\ActiveRecord
                     return time();
                 },
             ],
+
+            'template' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => [
+                        'template',
+                    ],
+                ],
+                'value' => function() {
+                    return self::TEMPLATE_PAGE;
+                },
+            ],
         ];
     }
 
@@ -72,7 +93,7 @@ class Pages extends \yii\db\ActiveRecord
     {
         return [
             [['visibility', 'deleted', 'created_at', 'updated_at'], 'integer'],
-            [['content'], 'string'],
+            [['content', 'template'], 'string'],
             [['name', 'seo_title', 'url'], 'string', 'max' => 255],
             [['seo_description'], 'string', 'max' => 2000],
         ];

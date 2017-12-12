@@ -114,7 +114,6 @@ class EditStoreSettingsForm extends Stores
 
             $this->setAttribute($attribute, $url);
 
-
             // Delete updated files
             $urlToDelete = $this->getOldAttribute($attribute);
             $this->_deleteFromCdn($urlToDelete);
