@@ -13,6 +13,9 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class Twocheckout
+ * 2Checkout payment Notification processing routine
+ * https://www.2checkout.com/documentation/seller-area-manage-sales-fraud-review#
+ *
  * @package app\components\payments\methods
  */
 class Twocheckout extends BasePayment {
@@ -20,7 +23,7 @@ class Twocheckout extends BasePayment {
     public $action;
     public $method = 'GET';
     public $redirectProcessing = false;
-    public $showErrors = true;
+    public $showErrors = false;
 
     const TEST_MODE_ON = 1;
     const MODE_TEST_OFF = 0;
@@ -56,11 +59,6 @@ class Twocheckout extends BasePayment {
         self::MESSAGE_TYPE_ORDER_CREATED,
         self::MESSAGE_TYPE_FRAUD_STATUS_CHANGED,
     ];
-
-    public function __construct(array $config = [])
-    {
-        return parent::__construct($config);
-    }
 
     /**
      * Checkout
@@ -121,37 +119,39 @@ class Twocheckout extends BasePayment {
        $request = Yii::$app->request;
        $requestParams = $request->post();
 
-       error_log(print_r($requestParams, 1), 0);
-
-       $messageType = ArrayHelper::getValue($requestParams, 'message_type', null);
-       $messageFraudStatus = ArrayHelper::getValue($requestParams, 'fraud_status', null);
-       $messageVendorOrderId = ArrayHelper::getValue($requestParams, 'vendor_order_id', null);
-       $messageCurrency = ArrayHelper::getValue($requestParams, 'cust_currency', null);
-       $messageAmount = ArrayHelper::getValue($requestParams, 'invoice_list_amount', null);
-       $messageHash = ArrayHelper::getValue($requestParams, 'md5_hash', null);
-       $messageSaleId = ArrayHelper::getValue($requestParams, 'sale_id', null);
-       $messageVendorId = ArrayHelper::getValue($requestParams, 'vendor_id', null);
-       $messageInvoiceId = ArrayHelper::getValue($requestParams, 'invoice_id', null);
-       $messageCustomerEmail = ArrayHelper::getValue($requestParams, 'customer_email', null);
-
-
        $this->log(json_encode($requestParams, JSON_PRETTY_PRINT));
 
-       if (!isset($messageType, $messageFraudStatus, $messageVendorOrderId, $messageCurrency, $messageAmount, $messageHash, $messageSaleId, $messageVendorId, $messageInvoiceId)) {
+       $messageType = ArrayHelper::getValue($requestParams, 'message_type', null);              // 2Checkout message type
+       $messageFraudStatus = ArrayHelper::getValue($requestParams, 'fraud_status', null);       // Payment fraud status
+       $messageVendorOrderId = ArrayHelper::getValue($requestParams, 'vendor_order_id', null);  // Our checkout id
+
+       $messageCustCurrency = ArrayHelper::getValue($requestParams, 'cust_currency', null);     // Customer currency
+       $messageListCurrency = ArrayHelper::getValue($requestParams, 'list_currency', null);     // Our checkout currency
+
+       $messageCustAmount = ArrayHelper::getValue($requestParams, 'invoice_cust_amount', null); // Customer currency amount
+       $messageListAmount = ArrayHelper::getValue($requestParams, 'invoice_list_amount', null); // Our checkout currency amount
+
+       $messageHash = ArrayHelper::getValue($requestParams, 'md5_hash', null);                  // Check sum
+       $messageSaleId = ArrayHelper::getValue($requestParams, 'sale_id', null);                 // 2Checkout sale id
+       $messageVendorId = ArrayHelper::getValue($requestParams, 'vendor_id', null);             // Our 2Checkout merchant id
+       $messageInvoiceId = ArrayHelper::getValue($requestParams, 'invoice_id', null);           // 2Checkout invoice id
+       $messageCustomerEmail = ArrayHelper::getValue($requestParams, 'customer_email', null);   // Customer email (payment email)
+
+       if (!isset($messageType, $messageFraudStatus, $messageVendorOrderId, $messageListCurrency, $messageListAmount, $messageHash, $messageSaleId, $messageVendorId, $messageInvoiceId)) {
            return [
                'result' => 2,
-               'content' => "Invalid messages params!"
+               'content' => "Invalid 2Checkout messages params!"
            ];
        }
 
-       if (!$messageType || !in_array($messageType, static::$_allowedMessageTypes)) {
+       if (!in_array($messageType, static::$_allowedMessageTypes)) {
            return [
                'result' => 2,
-               'content' => "Unknown 2Checkout callback message type!"
+               'content' => "Unknown 2Checkout message type!"
            ];
        }
 
-       if (!$messageFraudStatus || !in_array($messageFraudStatus, static::$_allowedFraudStatuses)) {
+       if (!in_array($messageFraudStatus, static::$_allowedFraudStatuses)) {
            return [
                'result' => 2,
                'content' => "Unknown 2Checkout fraud status!"
@@ -167,7 +167,7 @@ class Twocheckout extends BasePayment {
        if (empty($paymentMethod)) {
            return [
                'result' => 2,
-               'content' => 'Bad payment method'
+               'content' => 'Bad payment method!'
            ];
        }
 
@@ -177,7 +177,7 @@ class Twocheckout extends BasePayment {
        if (empty($secretWord)) {
            return [
                'result' => 2,
-               'content' => 'Secret word does not exist.'
+               'content' => 'Invalid payment settings. Secret word does not exist!'
            ];
        }
 
@@ -186,7 +186,7 @@ class Twocheckout extends BasePayment {
        if ($messageHash != $hashForMatch) {
            return [
                'result' => 2,
-               'content' => 'Secret word does not exist.'
+               'content' => 'Invalid 2Checkout message checksum!'
            ];
        }
 
@@ -197,37 +197,37 @@ class Twocheckout extends BasePayment {
                'method_id' => $paymentMethod->id
            ]))
            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
-           // no invoice
+           // no checkout
            return [
                'result' => 2,
-               'content' => 'Invoice does not exist!'
+               'content' => "Checkout #$messageVendorOrderId does not exist!"
            ];
        }
 
        // Logging PS checkout request
-       PaymentsLog::log($messageVendorOrderId, $requestParams);
+       PaymentsLog::log($this->_checkout->id, $requestParams);
 
-       // Check payment currency
-       if (strcasecmp($messageCurrency, $store->currency) !== 0) {
+       // Check invoice currency. Binary safe case-insensitive.
+       if (strcasecmp($messageListCurrency, $store->currency) !== 0) {
            return [
                'result' => 2,
-               'content' => 'Invalid currency code verification result'
+               'content' => "Invalid checkout currency code verification result! Expected: $store->currency, Current: $messageListCurrency"
            ];
        }
 
        // Check payment amount
        $totalCheckout = number_format($this->_checkout->price, 2, '.', '');
-       if ($messageAmount != $totalCheckout) {
+       if ($messageListAmount != $totalCheckout) {
            return [
                'result' => 2,
-               'content' => 'Invalid amount verification result'
+               'content' => "Invalid amount verification result! Expected: $totalCheckout, Current: $messageListAmount"
            ];
        }
 
        // Check Fraud statuses and update payment & checkout data
-
        $this->_checkout->method_status = $messageFraudStatus;
 
+       $this->_payment->status = Payments::STATUS_AWAITING;
        $this->_payment->response_status = $messageFraudStatus;
        $this->_payment->transaction_id = $messageInvoiceId;
        $this->_payment->email = $messageCustomerEmail;
@@ -243,7 +243,6 @@ class Twocheckout extends BasePayment {
        }
 
        if ($messageFraudStatus == self::FRAUD_STATUS_WAIT) {
-           $this->_payment->status = Payments::STATUS_AWAITING;
 
            return [
                'result' => 2,
@@ -252,7 +251,6 @@ class Twocheckout extends BasePayment {
        }
 
        if ($messageFraudStatus == self::FRAUD_STATUS_PASS) {
-           $this->_payment->status = Payments::STATUS_AWAITING;
 
            return [
                'result' => 1,
@@ -267,136 +265,5 @@ class Twocheckout extends BasePayment {
            'content' => 'Unknown error!'
        ];
    }
-
-
-    /**
-     * Processing payments result
-     * @param Stores $store
-     * @return array
-     */
-    public function __old_processing($store)
-    {
-        $request = Yii::$app->request;
-        $mergedRequestParams = array_merge($request->get(), $request->post());
-        $paymentParams = array_change_key_case($mergedRequestParams, CASE_LOWER);
-
-        $checkoutId = ArrayHelper::getValue($paymentParams, 'merchant_order_id');
-
-        error_log(print_r($paymentParams, 1), 0);
-
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_2CHECKOUT,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
-
-        // Logging PS request
-        $this->log(json_encode($paymentParams, JSON_PRETTY_PRINT));
-
-        // Check payment method
-        if (empty($paymentMethod)) {
-            return [
-                'result' => 2,
-                'content' => 'bad payment method'
-            ];
-        }
-
-        $paymentMethodOptions = $paymentMethod->getDetails();
-        $secretWord = ArrayHelper::getValue($paymentMethodOptions, 'secret_word', null);
-
-        // Check secret word
-        if (!isset($secretWord)) {
-            return [
-                'result' => 2,
-                'content' => 'secret word does not exist.'
-            ];
-        }
-
-        // Check checkout
-        if (empty($checkoutId)
-            || !($this->_checkout = Checkouts::findOne([
-                'id' => $checkoutId,
-                'method_id' => $paymentMethod->id
-            ]))
-            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
-            // no invoice
-            return [
-                'result' => 2,
-                'content' => 'no invoice'
-            ];
-        }
-
-        // Logging PS checkout request
-        PaymentsLog::log($checkoutId, $paymentParams);
-
-        // Check payment key
-        $checkResult = $this->_checkPayment($secretWord, $paymentParams);
-        if (!$checkResult) {
-            $this->_payment->status = Payments::STATUS_FAILED;
-            return [
-                'result' => 2,
-                'content' => 'Invalid payment verification result'
-            ];
-        }
-
-        // Check payment currency
-        if (strcasecmp($paymentParams['currency_code'], $store->currency) !== 0) {
-            return [
-                'result' => 2,
-                'content' => 'Invalid currency code verification result'
-            ];
-        }
-
-        // Check payment amount
-        $totalCheckout = number_format($this->_checkout->price, 2, '.', '');
-        if ($paymentParams['total'] != $totalCheckout) {
-            return [
-                'result' => 2,
-                'content' => 'Invalid amount verification result'
-            ];
-        }
-
-        // TODO:: this PS does not return payment status at all.
-        // $this->_checkout->method_status = $paymentStatus;
-        // $this->_payment->response_status = $paymentStatus;
-
-        $transactionId = ArrayHelper::getValue($paymentParams, 'invoice_id');
-        $payerEmail = ArrayHelper::getValue($paymentParams, 'email');
-
-        $this->_payment->status = Payments::STATUS_AWAITING;
-        $this->_payment->transaction_id = $transactionId;
-        $this->_payment->email = $payerEmail;
-
-        return [
-            'result' => 1,
-            'transaction_id' => $transactionId,
-            'amount' => $this->_checkout->price,
-            'checkout_id' => $this->_checkout->id,
-            'content' => 'Ok',
-        ];
-    }
-
-    /**
-     * Check 2Checkout payment
-     * @param $secretWord
-     * @param array $paymentParams
-     * @return bool
-     */
-    private function _checkPayment($secretWord, $paymentParams)
-    {
-        $requiredFields = ['sid', 'total', 'order_number', 'key', 'currency_code'];
-        $isRequiredFieldsExist = !array_diff_key(array_flip($requiredFields), $paymentParams);
-
-        if (!$isRequiredFieldsExist) {
-            return false;
-        }
-
-        $hashSid = $paymentParams['sid'];
-        $hashTotal = $paymentParams['total'];
-        $hashOrder = $paymentParams['order_number'];
-        $stringToHash = strtoupper(md5($secretWord . $hashSid . $hashOrder . $hashTotal));
-
-        return $stringToHash != $paymentParams['key'];
-    }
 
 }
