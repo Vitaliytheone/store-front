@@ -212,4 +212,25 @@ return [
     'settings.pages_message_created' => 'Page was successfully created!',
     'settings.pages_message_updated' => 'Page was successfully updated!',
 
+
+
+    'settings.nav_page_title' => 'Navigation',
+    'settings.nav_bt_add' => 'Add menu item',
+    'settings.nav_bt_edit' => 'Edit',
+    'settings.nav_delete_agree_text' => 'Are your sure that your want to delete this item?',
+    'settings.nav_bt_delete_agree' => 'Yes, delete it!',
+    'settings.nav_bt_delete_cancel' => 'Cancel',
+
+    'settings.nav_add_modal_title' => 'Add menu item',
+    'settings.nav_edit_modal_title' => 'Edit menu item',
+    'settings.nav_edit_name' => 'Name',
+    'settings.nav_edit_link' => 'Link',
+    'settings.nav_edit_bt_add' => 'Add menu item',
+    'settings.nav_edit_bt_cancel' => 'Cancel',
+
+    'settings.nav_link_home_page' => 'Home page',
+    'settings.nav_link_product' => 'Products',
+    'settings.nav_link_page' => 'Page',
+    'settings.nav_link_web_address' => 'Web address',
+
 ];

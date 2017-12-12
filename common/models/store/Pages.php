@@ -4,6 +4,7 @@ namespace common\models\store;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%pages}}".
@@ -20,7 +21,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class Pages extends \yii\db\ActiveRecord
+class Pages extends ActiveRecord
 {
     const VISIBILITY_YES = 1;
     const VISIBILITY_NO = 0;
