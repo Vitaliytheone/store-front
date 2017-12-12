@@ -71,11 +71,8 @@ class EditStoreSettingsForm extends Stores
      */
     public function updateSettings($postData)
     {
-        if (!$this->load($postData)) {
-            return false;
-        }
-
-        if (!$this->validate()) {
+        error_log(print_r($postData,1),0);
+        if (!$this->load($postData) || !$this->validate()) {
             return false;
         }
 
@@ -84,7 +81,7 @@ class EditStoreSettingsForm extends Stores
             $attribute = str_replace('File', '', $formField);
 
             // Delete deleted files
-            $isDeleted  = $this->isAttributeChanged($attribute) && !$this->getAttribute($attribute);
+            $isDeleted  = $this->isAttributeChanged($attribute);
             if ($isDeleted) {
                 $urlToDelete = $this->getOldAttribute($attribute);
                 $this->_deleteFromCdn($urlToDelete);
@@ -116,6 +113,11 @@ class EditStoreSettingsForm extends Stores
             }
 
             $this->setAttribute($attribute, $url);
+
+
+            // Delete updated files
+            $urlToDelete = $this->getOldAttribute($attribute);
+            $this->_deleteFromCdn($urlToDelete);
         }
 
         return $this->save(false);
