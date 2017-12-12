@@ -23,7 +23,7 @@ class Twocheckout extends BasePayment {
     public $action;
     public $method = 'GET';
     public $redirectProcessing = false;
-    public $showErrors = false;
+    public $showErrors = true;
 
     const TEST_MODE_ON = 1;
     const MODE_TEST_OFF = 0;
