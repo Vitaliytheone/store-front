@@ -228,10 +228,16 @@ class Twocheckout extends BasePayment {
            ];
        }
 
-       // Use new payment model for new 2CO order
+       // Use new payment model for new 2CO order or exiting for update status
        if ($messageType == self::MESSAGE_TYPE_ORDER_CREATED) {
 
+           $this->_payment->checkout_id = $this->_checkout->id;
+           $this->_payment->method = $this->_method;
            $this->_payment->status = Payments::STATUS_AWAITING;
+           $this->_payment->amount = $this->_checkout->price;
+           $this->_payment->customer = $this->_checkout->customer;
+           $this->_payment->currency = $this->_checkout->currency;
+
            $this->_payment->transaction_id = $messageInvoiceId;
            $this->_payment->email = $messageCustomerEmail;
            $this->_payment->name = trim($messageCustomerName);
@@ -239,7 +245,7 @@ class Twocheckout extends BasePayment {
 
        } else {
 
-           $this->_payment =  Payments::findOne(['checkout_id' => $this->_checkout->id]);
+           $this->_payment = Payments::findOne(['checkout_id' => $this->_checkout->id]);
 
            if (!$this->_payment) {
                return [
@@ -247,8 +253,6 @@ class Twocheckout extends BasePayment {
                    'content' => "Expected Payment model id$this->_checkout->id. Null given!"
                ];
            }
-
-           $this->_payment->method = $this->_method;
        }
 
        $this->_checkout->method_status = $messageFraudStatus;
@@ -257,7 +261,7 @@ class Twocheckout extends BasePayment {
        // Check fraud statuses
        if ($messageFraudStatus == self::FRAUD_STATUS_FAIL) {
            $this->_payment->status = Payments::STATUS_FAILED;
-           $this->_payment->save();
+           $this->_payment->save(false);
 
            return [
                'result' => 2,
@@ -267,7 +271,7 @@ class Twocheckout extends BasePayment {
 
        if ($messageFraudStatus == self::FRAUD_STATUS_WAIT) {
            $this->_payment->status = Payments::STATUS_AWAITING;
-           $this->_payment->save();
+           $this->_payment->save(false);
 
            return [
                'result' => 2,
@@ -290,8 +294,5 @@ class Twocheckout extends BasePayment {
            'content' => 'Unknown error!'
        ];
    }
-
-
-
 
 }
