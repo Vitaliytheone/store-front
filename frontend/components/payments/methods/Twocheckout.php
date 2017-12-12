@@ -24,7 +24,7 @@ class Twocheckout extends BasePayment {
     public $action;
     public $method = 'GET';
     public $redirectProcessing = false;
-    public $showErrors = true;
+    public $showErrors = false;
 
     const TEST_MODE_ON = 1;
     const MODE_TEST_OFF = 0;
@@ -143,21 +143,21 @@ class Twocheckout extends BasePayment {
 
        if (!isset($messageType, $messageFraudStatus, $messageVendorOrderId, $messageListCurrency, $messageListAmount, $messageHash, $messageSaleId, $messageVendorId, $messageInvoiceId)) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => "Invalid 2Checkout messages params!"
            ];
        }
 
        if (!in_array($messageType, static::$_allowedMessageTypes)) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => "Unknown 2Checkout message type!"
            ];
        }
 
        if (!in_array($messageFraudStatus, static::$_allowedFraudStatuses)) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => "Unknown 2Checkout fraud status!"
            ];
        }
@@ -170,7 +170,7 @@ class Twocheckout extends BasePayment {
 
        if (empty($paymentMethod)) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => 'Bad payment method!'
            ];
        }
@@ -180,7 +180,7 @@ class Twocheckout extends BasePayment {
 
        if (empty($secretWord)) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => 'Invalid payment settings. Secret word does not exist!'
            ];
        }
@@ -189,7 +189,7 @@ class Twocheckout extends BasePayment {
        $hashForMatch = strtoupper(md5($messageSaleId . $messageVendorId . $messageInvoiceId . $secretWord));
        if ($messageHash != $hashForMatch) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => 'Invalid 2Checkout message checksum!'
            ];
        }
@@ -203,7 +203,7 @@ class Twocheckout extends BasePayment {
            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
            // no checkout
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => "Checkout #$messageVendorOrderId does not exist or already paid!"
            ];
        }
@@ -214,7 +214,7 @@ class Twocheckout extends BasePayment {
        // Check invoice currency. Binary safe case-insensitive.
        if (strcasecmp($messageListCurrency, $store->currency) !== 0) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => "Invalid checkout currency code verification result! Expected: $store->currency, Current: $messageListCurrency"
            ];
        }
@@ -223,7 +223,7 @@ class Twocheckout extends BasePayment {
        $totalCheckout = number_format($this->_checkout->price, 2, '.', '');
        if ($messageListAmount != $totalCheckout) {
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => "Invalid amount verification result! Expected: $totalCheckout, Current: $messageListAmount"
            ];
        }
@@ -250,7 +250,7 @@ class Twocheckout extends BasePayment {
 
            if (!$this->_payment) {
                return [
-                   'result' => 2,
+                   'result' => 3,
                    'content' => "Expected Payment model id$this->_checkout->id. Null given!"
                ];
            }
@@ -269,7 +269,7 @@ class Twocheckout extends BasePayment {
            $this->_payment->save(false);
 
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => 'Fraud status Fail!'
            ];
        }
@@ -279,7 +279,7 @@ class Twocheckout extends BasePayment {
            $this->_payment->save(false);
 
            return [
-               'result' => 2,
+               'result' => 3,
                'content' => 'Fraud status Wait!'
            ];
        }
