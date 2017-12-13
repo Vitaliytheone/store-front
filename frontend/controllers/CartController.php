@@ -91,7 +91,7 @@ class CartController extends CustomController
             $this->redirect('/cart');
         }
 
-        return $this->render('add_to_cart', [
+        return $this->render('order', [
             'package' => $package,
             'model' => $model,
             'goBackUrl' => $this->getGoBackUrl(),
