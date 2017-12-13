@@ -2,21 +2,26 @@
 
 namespace common\models\store\queries;
 
+use yii\db\ActiveQuery;
+use common\models\store\Products;
+
 /**
- * This is the ActiveQuery class for [[\common\models\store\Products]].
+ * This is the ActiveQuery class for [[Products]].
  *
- * @see \common\models\store\Products
+ * @see Products
  */
-class ProductsQuery extends \yii\db\ActiveQuery
+class ProductsQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'visibility' => Products::VISIBILITY_YES
+        ]);
+    }
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Products[]|array
+     * @return Products[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +30,7 @@ class ProductsQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Products|array|null
+     * @return Products|array|null
      */
     public function one($db = null)
     {
