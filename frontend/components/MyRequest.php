@@ -3,6 +3,7 @@ namespace frontend\components;
 
 use common\helpers\CurrencyHelper;
 use common\models\stores\Stores;
+use frontend\helpers\RouteHelper;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
@@ -32,24 +33,18 @@ class MyRequest extends Request
         $store = Yii::$app->store->getInstance();
 
         if ($store) {
-            $urls = [];
-            foreach (CurrencyHelper::getPaymentsByCurrency($store->currency) as $method) {
-                $methodUrls = is_array($method['url']) ? $method['url'] : [$method['url']];
-                foreach ($methodUrls as $url) {
-                    $urls[$url] = $method['code'];
-                }
-            }
+            $urls = RouteHelper::getRoutes();
 
-            if (!empty($urls)) {
-                array_multisort(array_map('strlen', array_keys($urls)), SORT_DESC, $urls);
+            foreach ($urls as $url => $options) {
+                if (preg_match($options['rule'], $pathInfo, $match)) {
+                    $pathInfo = $options['url'];
+                    $_GET = ArrayHelper::getValue($options, 'options', []);
 
-                foreach ($urls as $url => $code) {
-                    if (preg_match("/^\/?{$url}(?:\/(?<id>[\d]+))?.*?$/i", $pathInfo, $match)) {
-                        $pathInfo = '/payments/result';
-                        $_GET['method'] = $code;
-                        $_GET['id'] = ArrayHelper::getValue($match, 'id');
-                        break;
+                    foreach ((array)ArrayHelper::getValue($options, 'match', []) as $key) {
+                        $_GET[$key] = ArrayHelper::getValue($match, $key);
                     }
+
+                    break;
                 }
             }
         }

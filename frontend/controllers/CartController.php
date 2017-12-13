@@ -20,18 +20,6 @@ use yii\web\NotFoundHttpException;
 class CartController extends CustomController
 {
     /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
-
-    /**
      * Displays homepage.
      *
      * @return string

@@ -2,17 +2,23 @@
 
 namespace common\models\store\queries;
 
+use common\models\store\Pages;
+use yii\db\ActiveQuery;
+
 /**
- * This is the ActiveQuery class for [[\common\models\store\Pages]].
+ * This is the ActiveQuery class for [[Pages]].
  *
- * @see \common\models\store\Pages
+ * @see Pages
  */
-class PagesQuery extends \yii\db\ActiveQuery
+class PagesQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'deleted' => Pages::DELETED_NO,
+            'visibility' => Pages::VISIBILITY_YES
+        ]);
+    }
 
     /**
      * @inheritdoc
