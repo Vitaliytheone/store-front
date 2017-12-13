@@ -3,6 +3,7 @@
 namespace common\models\store;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -66,7 +67,7 @@ class Pages extends ActiveRecord
             ],
 
             'template' => [
-                'class' => TimestampBehavior::className(),
+                'class' => AttributeBehavior::className(),
                 'attributes' => [
                     self::EVENT_BEFORE_INSERT => [
                         'template',
