@@ -159,7 +159,7 @@ class ProductsController extends CustomController
             ]];
         };
 
-        UiHelper::message(Yii::t('admin', 'products.message_product_created'));
+        UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
 
         return [
             'product' => $model->getAttributes(),

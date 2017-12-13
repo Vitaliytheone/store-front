@@ -38,7 +38,8 @@ class UrlsSearch extends Model
 
         $pageUrls = (new Query())
             ->select("url")
-            ->from($this->_pagesTable);
+            ->from($this->_pagesTable)
+            ->where(['deleted' => Pages::DELETED_NO]);
 
         return $productUrls->union($pageUrls)->column();
     }

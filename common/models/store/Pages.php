@@ -65,6 +65,18 @@ class Pages extends ActiveRecord
                     return time();
                 },
             ],
+
+            'template' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => [
+                        'template',
+                    ],
+                ],
+                'value' => function() {
+                    return self::TEMPLATE_PAGE;
+                },
+            ],
         ];
     }
 

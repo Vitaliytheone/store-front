@@ -83,7 +83,7 @@ customModule.adminPageEdit = {
                         $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
                         $("#" + seoEdit[i]).on('input', function (e){
                             if (i === 2){
-                                $('.' + seoEdit[i]).text($(e.target).val());
+                                $('.' + seoEdit[i]).text($(e.target).val().toLowerCase());
                             } else {
                                 $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
                                 $('.' + seoEdit[i]).text($(e.target).val());
@@ -137,7 +137,11 @@ customModule.adminPageEdit = {
         function cleanupUrl(e){
             var urlMaxLenght = 200,
                 urlByName,
-                inputedName = $(e.target).val();
+                target = e.currentTarget,
+                $target = $(target),
+                inputedName = $target.val();
+
+            var position = target.selectionStart;
 
             urlByName = custom.generateUrlFromString(inputedName);
 
@@ -145,7 +149,9 @@ customModule.adminPageEdit = {
                 urlByName = urlByName.substring(0, (urlMaxLenght-1));
             }
 
-            $formFields.url.val(urlByName);
+            $target.val(urlByName);
+
+            target.selectionEnd = position;
         }
     }
 };

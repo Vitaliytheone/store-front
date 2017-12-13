@@ -99,7 +99,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                             <option value="0">
                                 <?= Yii::t('admin', 'products.package_mode_manual') ?>
                             </option>
-                            <option value="1">
+                            <option value="1" selected>
                                 <?= Yii::t('admin', 'products.package_mode_auto') ?>
                             </option>
                         </select>

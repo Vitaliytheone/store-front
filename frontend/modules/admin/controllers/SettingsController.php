@@ -331,6 +331,8 @@ class SettingsController extends CustomController
      */
     public function actionNavigations()
     {
+        $this->view->title = Yii::t('admin', 'settings.nav_page_title');
+
         return $this->render('navigations');
     }
 

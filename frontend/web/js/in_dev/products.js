@@ -298,7 +298,7 @@
                     $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
                     $("#" + seoEdit[i]).on('input', function (e){
                         if (i == 2){
-                            $('.' + seoEdit[i]).text($(e.target).val());
+                            $('.' + seoEdit[i]).text($(e.target).val().toLowerCase());
                         } else {
                             $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
                             $('.' + seoEdit[i]).text($(e.target).val());
@@ -414,15 +414,21 @@
     function cleanupUrl(e){
         var urlMaxLenght = 200,
             urlByName,
-            inputedName = $(e.target).val();
+            target = e.currentTarget,
+            $target = $(target),
+            inputedName = $target.val();
 
+        var position = target.selectionStart;
+        
         urlByName = custom.generateUrlFromString(inputedName);
 
         if (urlByName.length >= urlMaxLenght){
             urlByName = urlByName.substring(0, (urlMaxLenght-1));
         }
 
-        $formFields.url.val(urlByName);
+        $target.val(urlByName);
+
+        target.selectionEnd = position;
     }
 
     /*******************************************************************************************
@@ -613,6 +619,7 @@
             $formFields.provider_id.closest('.form-group').toggleClass('d-none', !mode);
             $formFields.provider_service.closest('.form-group').toggleClass('d-none', !mode);
             $apiError.addClass('d-none');
+            $errorContainer.empty();
         });
 
         // Change `provider_id` => fetch provider`s services
@@ -620,6 +627,8 @@
             var $optionSelected = $("option:selected", this),
                 actionUrl = $optionSelected.data('action-url'),
                 ajaxTimeoutMessage = $formFields.provider_service.data('ajax_timeout_message');
+
+            $errorContainer.empty();
 
             clearProviderServisesList();
             if (actionUrl === undefined) {

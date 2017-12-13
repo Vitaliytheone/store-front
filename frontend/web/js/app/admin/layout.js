@@ -46,7 +46,6 @@ customModule.adminLayout = {
             });
         });
 
-
         // TODO:: Commented because conflicted with products page DOM objects. Must be rewrite.
         // /* Edit page */
         // $(document).ready(function () {
@@ -76,11 +75,12 @@ customModule.adminLayout = {
         // });
 
 
-        $('#select-menu-link').change(function () {
-            $('.hide-link').hide();
-            var val = $("#select-menu-link option:selected").val();
-            $('.link-' + val).fadeIn();
-        });
+        // $('#select-menu-link').change(function () {
+        //     $('.hide-link').hide();
+        //     var val = $("#select-menu-link option:selected").val();
+        //     $('.link-' + val).fadeIn();
+        // });
+        //
 
         $('[data-toggle="tooltip"]').tooltip();
     }
