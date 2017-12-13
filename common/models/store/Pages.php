@@ -3,7 +3,6 @@
 namespace common\models\store;
 
 use Yii;
-use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\store\queries\PagesQuery;
