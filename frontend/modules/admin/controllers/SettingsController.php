@@ -3,22 +3,28 @@
 namespace frontend\modules\admin\controllers;
 
 use common\components\ActiveForm;
+use common\models\store\Navigations;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\CreateProviderForm;
+use frontend\modules\admin\models\forms\DeleteNavigationForm;
 use frontend\modules\admin\models\forms\DeletePageForm;
+use frontend\modules\admin\models\forms\EditNavigationForm;
 use frontend\modules\admin\models\forms\EditPageForm;
 use frontend\modules\admin\models\forms\EditStoreSettingsForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
+use frontend\modules\admin\models\search\LinksSearch;
 use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
 use frontend\modules\admin\models\search\PaymentMethodsSearch;
 use frontend\modules\admin\models\search\UrlsSearch;
 use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use yii\web\NotAcceptableHttpException;
 use yii\web\BadRequestHttpException;
 
 
@@ -333,7 +339,147 @@ class SettingsController extends CustomController
     {
         $this->view->title = Yii::t('admin', 'settings.nav_page_title');
 
-        return $this->render('navigations');
+        $model = new EditNavigationForm();
+
+        return $this->render('navigations', [
+            'linkTypes' => $model::linkTypes(),
+        ]);
+    }
+
+    /**
+     * Create new Navigation item
+     * @return array
+     */
+    public function actionCreateNav()
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $model = new EditNavigationForm();
+
+        if (!$model->load($request->post()) || !$model->save()) {
+            return ['error' => ActiveForm::firstError($model)];
+        }
+
+        UiHelper::message(Yii::t('admin', 'settings.nav_message_created'));
+
+        return [
+            'product' => $model->getAttributes(),
+        ];
+    }
+
+    /**
+     * Update exiting Navigation item
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdateNav($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $model = EditNavigationForm::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$model->load($request->post()) || !$model->save()) {
+            return ['error' => ActiveForm::firstError($model)];
+        }
+
+        UiHelper::message(Yii::t('admin', 'settings.nav_message_updated'));
+
+        return ['model' => $model->getAttributes()];
+    }
+
+    /**
+     * Return Navigation item AJAX action
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetNav($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $model = Navigations::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        return ['model' => $model->getAttributes()];
+    }
+
+    /**
+     * Delete Navigation item AJAX action
+     * Mark package as deleted
+     * @param $id
+     * @return array
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteNav($id)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $model = DeleteNavigationForm::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$model->deleteVirtual()) {
+            throw new NotAcceptableHttpException();
+        }
+
+        UiHelper::message(Yii::t('admin', 'settings.nav_message_deleted'));
+
+        return [true];
+    }
+
+    /**
+     * Return links list by link type AJAX action
+     * @param $link_type
+     * @return array
+     */
+    public function actionGetLinks($link_type)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $searchModel = new LinksSearch();
+
+        return ['links' => $searchModel->searchLinksByType($link_type|0)];
     }
 
     /**

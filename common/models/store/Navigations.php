@@ -26,6 +26,9 @@ class Navigations extends ActiveRecord
     const LINK_PAGE = 3;
     const LINK_WEB_ADDRESS = 4;
 
+    const DELETED_NO = 0;
+    const DELETED_YES = 1;
+
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */

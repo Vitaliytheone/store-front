@@ -1,6 +1,8 @@
 // TODO:: Convert scripts to Custom module after developing is finished
 
 
+
+
 /*****************************************************************************************************
  *                     Nestable menu items
  *****************************************************************************************************/
@@ -32,10 +34,30 @@
  *****************************************************************************************************/
 (function (window, alert){
 
+    var params = {}; // TODO:: DELETE IT! Prepare for custom modules
+
+    var getLinksUrl         = params.getLinksUrl        || '/admin/settings/get-links', // GET /admin/settings/get-links?link_type = 2|3
+        successRedirectUrl  = params.successRedirectUrl || '/admin/settings/navigations';
+
+    var titles = {
+        modal_title : [
+            params.modalCreate || 'Add menu item',
+            params.modalEdit || 'Edit menu item'
+        ],
+        submit_title : [
+            params.submitCreate || 'Add menu item',
+            params.submitEdit || 'Save menu item'
+        ]
+    };
+
+    var submitModelUrl, getModelUrl;
+
+    var mode; // 0 - Add, 1 - Edit
+
     var $modal = $('.edit_navigation'),
         $navForm = $('#navForm'),
-        $submit = $navForm.find('submit'),
-        $modalTitle = $navForm.find('.modal-title'),
+        $submit = $navForm.find('button:submit'),
+        $modalTitle = $modal.find('.modal-title'),
         $errorContainer = $navForm.find('.form-error'),
         $modalLoader = $modal.find('.modal-loader');
     
@@ -53,6 +75,40 @@
         url          : $formFields.url.val()
     };
 
+    /*******************************************************************************************
+     * Save form data
+     *******************************************************************************************/
+    $navForm.submit(function (e){
+        e.preventDefault();
+        $modalLoader.removeClass('hidden');
+        $.ajax({
+            url: submitModelUrl,
+            type: "POST",
+            data: $(this).serialize(),
+
+            success: function (data, textStatus, jqXHR){
+                if (data.error){
+                    $modalLoader.addClass('hidden');
+                    showError(data.error);
+                    return;
+                }
+                //Success
+                _.delay(function(){
+                    $(location).attr('href', successRedirectUrl);
+                    // $modalLoader.addClass('hidden');
+                    // $modal.modal('hide');
+                }, 500);
+            },
+
+            error: function (jqXHR, textStatus, errorThrown){
+                $modalLoader.addClass('hidden');
+                $modal.modal('hide');
+                console.log('Error on service save', jqXHR, textStatus, errorThrown);
+            }
+        });
+
+        hideError();
+    });
 
     /**
      *  Fill form fields by data
@@ -70,30 +126,151 @@
         });
     }
 
-
+    /**
+     * Reset form data to default values
+     */
     function resetForm() {
-        $errorContainer.empty();
+        hideError();
         fillFormFields(defaultFormData);
+
+        // Select Link type to default
+        $formFields.link.find('option').prop('selected',false);
+        $formFields.link.find('option:eq(0)').prop('selected', true).trigger('change');
     }
-    
 
+    function showError(error) {
+        $errorContainer.append(error);
+        $errorContainer.removeClass('d-none');
+    }
 
-    $('#select-menu-link').change(function () {
-        $('.hide-link').hide();
-
-        var linkType = $("#select-menu-link option:selected").val(),
-            mergedLinkTypes = [2, 3];
-
-        linkType = mergedLinkTypes.indexOf(linkType|0) !== -1 ? mergedLinkTypes.join('') : linkType;
-
-        $('.link-' + linkType).fadeIn();
-    });
+    function hideError() {
+        $errorContainer.empty();
+        $errorContainer.addClass('d-none');
+    }
 
     /**
-     * Modal events
+     * Fetch links by link type from server
+     * @param linkType 2|3
+     * @param selectedLinkId
      */
-    $modal.on('hidden.bs.modal', function (){
+    function fetchLinks(linkType, selectedLinkId)
+    {
+        $modalLoader.removeClass('hidden');
+        $.ajax({
+            url: getLinksUrl,
+            type: "GET",
+            data: {
+                link_type: linkType
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.links) {
+                    renderLinks(data.links, selectedLinkId);
+                }
+                $modalLoader.addClass('hidden');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+                $modalLoader.addClass('hidden');
+            }
+        });
+    }
 
+    /**
+     * Fetch exiting Nav by id
+     * @param id
+     */
+    function fetchModel(id) {
+        $modalLoader.removeClass('hidden');
+        $.ajax({
+            url: getModelUrl,
+            type: "GET",
+            success: function(data, textStatus, jqXHR) {
+                if (data.model) {
+                    fillFormFields(data.model);
+                    $formFields.link.trigger('change', [data.model.link_id]);
+                }
+                $modalLoader.addClass('hidden');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+                $modalLoader.addClass('hidden');
+            }
+        });
+    }
+
+    /**
+     * Render fetched links and set selected
+     * @param links
+     * @param selectedId
+     */
+    function renderLinks(links, selectedId) {
+        var selected,
+            $container = $('<div></div>');
+        _.each(links, function (l) {
+            if (selectedId !== undefined) {
+                selected = l.id.toString() === selectedId.toString() ? 'selected' : '';
+            }
+            $container.append('<option value="' + l.id + '"'+ selected + '>' + l.name + '</option>');
+        });
+
+        $formFields.link_id.empty().append($container.html());
+    }
+
+    /**
+     * Set captions & titles depends on mode
+     * mode = 0 : Created
+     * mode = 1 : Updated
+     * @param mode
+     */
+    function setTitles(mode)
+    {
+        $submit.html(titles.submit_title[mode]);
+        $modalTitle.html(titles.modal_title[mode]);
+    }
+
+    /*******************************************************************************************
+     *                              Create
+     *******************************************************************************************/
+
+    function createNav() {
+        fillFormFields(defaultFormData);
+        $formFields.name.focus();
+    }
+
+    /*******************************************************************************************
+     *                              Update
+     *******************************************************************************************/
+
+    function updateNav() {
+        fetchModel();
+    }
+
+    /*******************************************************************************************
+     *                              Events
+     *******************************************************************************************/
+
+    /**
+     * Link type selection changed
+     */
+    $formFields.link.on('change', function (e, selectedLinkId) {
+        $('.hide-link').hide();
+
+        var $link = $(this).find('option:selected'),
+            linkType = $link.val(),
+            fetched = $link.data('fetched') || false,
+            selectId = $link.data('select_id') || false,
+            labelText = $link.text().trim();
+
+        if (selectId) {
+            // TODO:: add title changes
+            $('.link-' + selectId).fadeIn().find('label').text(labelText);
+        }
+        if (fetched) {
+            fetchLinks(linkType, selectedLinkId);
+        }
+    });
+
+    $modal.on('hidden.bs.modal', function (){
         resetForm();
     });
 
@@ -103,14 +280,83 @@
     });
 
     $modal.on('shown.bs.modal', function (event){
+
+        var $button = $(event.relatedTarget),
+            modelId =  $button.closest('li').data('id') || undefined;
+
+        submitModelUrl = $button.data('submit_url');
+
         $modalLoader.addClass('hidden');
 
+        if (modelId === undefined) {
+            mode = 0;
+            createNav();
+        } else {
+            mode = 1;
+            getModelUrl = $button.data('get_url');
+            updateNav();
+        }
+
+        setTitles(mode);
     });
-
-
 
 })({}, function (){});
 
 
+/*****************************************************************************************************
+ *                      Delete (mark as deleted) Nav
+ *****************************************************************************************************/
+(function (window, alert){
+    'use strict';
+
+    var params = {}; // TODO:: DELETE IT! Prepare for custom modules
+    var successRedirectUrl  = params.successRedirectUrl || '/admin/settings/navigations';
+
+    var modelId;
+
+    var deleteModelUrl;
+
+    var $modal = $('#delete-modal'),
+        $modalLoader = $modal.find('.modal-loader'),
+        $buttonDelete = $modal.find('#feature-delete');
+
+    $buttonDelete.on('click', function(){
+
+        $modalLoader.removeClass('hidden');
+        $.ajax({
+            url: deleteModelUrl,
+            type: "DELETE",
+            success: function (data, textStatus, jqXHR){
+                if (data.error){
+                    $modalLoader.addClass('hidden');
+                    return;
+                }
+                //Success
+                _.delay(function(){
+                    $(location).attr('href', successRedirectUrl);
+                    // $modalLoader.addClass('hidden');
+                    // $modal.modal('hide');
+                }, 500);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                $modalLoader.addClass('hidden');
+                $modal.modal('hide');
+                console.log('Error on service save', jqXHR, textStatus, errorThrown);
+            }
+        });
+    });
+
+    $modal.on('show.bs.modal', function (event){
+        var $button = $(event.relatedTarget);
+        modelId =  $button.closest('li').data('id');
+        deleteModelUrl = $button.data('delete_url');
+    });
+
+    $modal.on('hidden.bs.modal', function (){
+        modelId = null;
+        deleteModelUrl = null;
+    });
+
+})({}, function (){});
 
 

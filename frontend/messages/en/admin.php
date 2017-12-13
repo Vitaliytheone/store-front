@@ -212,8 +212,6 @@ return [
     'settings.pages_message_created' => 'Page was successfully created!',
     'settings.pages_message_updated' => 'Page was successfully updated!',
 
-
-
     'settings.nav_page_title' => 'Navigation',
     'settings.nav_bt_add' => 'Add menu item',
     'settings.nav_bt_edit' => 'Edit',
@@ -229,8 +227,11 @@ return [
     'settings.nav_edit_bt_cancel' => 'Cancel',
 
     'settings.nav_link_home_page' => 'Home page',
-    'settings.nav_link_product' => 'Products',
+    'settings.nav_link_product' => 'Product',
     'settings.nav_link_page' => 'Page',
     'settings.nav_link_web_address' => 'Web address',
 
+    'settings.nav_message_created' => 'Menu item was successfully created!',
+    'settings.nav_message_updated' => 'Menu item was successfully updated!',
+    'settings.nav_message_deleted' => 'Menu item was successfully deleted!',
 ];

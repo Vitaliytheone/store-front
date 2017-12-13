@@ -1,5 +1,7 @@
 <?php
 
+use \yii\helpers\ArrayHelper;
+
 /* @var $linkTypes array */
 
 ?>
@@ -8,6 +10,9 @@
      aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
+
+            <div class="modal-loader hidden"></div>
+
             <div class="modal-header">
                 <h5 class="modal-title">Add menu item</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,11 +20,11 @@
                 </button>
             </div>
 
-            <form id="navForm" method="post" enctype="multipart/form-data" name="NavForm">
+            <form id="navForm" method="post" enctype="multipart/form-data" name="NavForm" data-links_url="">
 
                 <div class="modal-body">
 
-                    <div class="form-error"></div>
+                    <div class="form-error alert-danger alert d-none"></div>
 
                     <div class="form-group">
                         <label for="menu_item_name">Name</label>
@@ -30,17 +35,19 @@
                     <div class="form-group">
                         <label for="select-menu-link">Link</label>
                         <select class="form-control form_field__link" id="select-menu-link" name="NavForm[link]">
-                            <?php foreach ($linkTypes as $linkType => $linkName): ?>
-                                <option value="<?= $linkType ?>"><?= $linkName ?></option>
+
+                            <?php foreach ($linkTypes as $linkType => $link): ?>
+                                <option value="<?= $linkType ?>" <?php if (array_key_exists('select_id', $link)): ?> data-select_id="<?= $link['select_id'] ?>" <?php endif; ?> <?php if (in_array('fetched', $link)): ?> data-fetched="1" <?php endif; ?>>
+                                    <?= $link['name'] ?>
+                                </option>
                             <?php endforeach; ?>
+
                         </select>
                     </div>
 
                     <div class="form-group hide-link link-23">
                         <label for="link_id">Page/Product</label>
-                        <select class="form-control form_field__link_id" id="link_id" name="NavForm[link_id]">
-                            <option value="link_id">Link Name</option>
-                        </select>
+                        <select class="form-control form_field__link_id" id="link_id" name="NavForm[link_id]"></select>
                     </div>
 
                     <div class="form-group hide-link link-4">

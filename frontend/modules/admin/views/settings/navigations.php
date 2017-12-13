@@ -5,8 +5,7 @@ use frontend\modules\admin\components\Url;
 use \common\models\store\Navigations;
 
 /* @var $this \yii\web\View */
-
-$linkTypes = Navigations::getLinkNames();
+/* @var $linkTypes array */
 
 NavigationsAsset::register($this);
 
@@ -37,7 +36,9 @@ NavigationsAsset::register($this);
 
                     <div>
                         <div class="m-dropdown--align-right">
-                            <button class="btn btn-primary  m-btn--air btn-brand cursor-pointer" data-toggle="modal" data-target=".edit_navigation" data-backdrop="static">Add menu item</button>
+                            <button class="btn btn-primary  m-btn--air btn-brand cursor-pointer" data-submit_url="<?= Url::toRoute(['/settings/create-nav'])?>" data-toggle="modal" data-target=".edit_navigation" data-backdrop="static">
+                                Add menu item
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -47,25 +48,13 @@ NavigationsAsset::register($this);
                 <div class="dd" id="nestable">
                     <ol class="dd-list">
 
-                        <li class="dd-item" data-id="1">
-                            <div class="dd-handle">YouTube 1</div>
-                            <div class="dd-edit-button">
-                                <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm"  data-toggle="modal" data-target=".edit_navigation">
-                                    Edit
-                                </a>
-                                <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
-                                    <i class="la la-trash"></i>
-                                </a>
-                            </div>
-                        </li>
-
                         <li class="dd-item" data-id="2">
                             <div class="dd-handle">YouTube 2</div>
                             <div class="dd-edit-button">
-                                <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm"  data-toggle="modal" data-target=".edit_navigation">
+                                <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm" data-submit_url="<?= Url::toRoute(['/settings/update-nav', 'id'=> 2])?>" data-get_url="<?= Url::toRoute(['/settings/get-nav', 'id'=> 2])?>" data-toggle="modal" data-target=".edit_navigation">
                                     Edit
                                 </a>
-                                <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-delete_url="<?= Url::toRoute(['/settings/delete-nav', 'id'=> 2])?>" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
                                     <i class="la la-trash"></i>
                                 </a>
                             </div>
