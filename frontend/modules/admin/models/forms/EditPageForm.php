@@ -31,13 +31,15 @@ class EditPageForm extends Pages
             [['name', 'url', 'visibility'], 'required'],
             [['name', 'seo_title', 'url'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
-            [['content'], 'string'],
+            [['content', 'template'], 'string'],
             [['name', 'seo_title', 'seo_description', 'url',], 'trim'],
             [['seo_description'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique', 'filter' => ['deleted' => Pages::DELETED_NO]],
             ['url', 'unique', 'targetClass' => Products::className(), 'targetAttribute' => ['url' => 'url']],
+
+            ['template', 'default', 'value' => self::TEMPLATE_PAGE],
         ];
     }
 
