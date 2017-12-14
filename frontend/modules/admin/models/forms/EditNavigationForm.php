@@ -19,6 +19,17 @@ class EditNavigationForm extends Navigations
     public function behaviors()
     {
         return [
+
+            'position' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => 'position',
+                ],
+                'value' => function ($event) {
+                    return $this->getNewPosition();
+                },
+            ],
+
             'url' => [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
@@ -65,6 +76,8 @@ class EditNavigationForm extends Navigations
         return [
             [['name', 'url'], 'required'],
             [['parent_id', 'link', 'link_id', 'position', 'deleted'], 'integer'],
+
+            ['parent_id', 'default', 'value' => 0],
 
             [['name', 'url'], 'trim'],
             [['name'], 'string', 'max' => 300],

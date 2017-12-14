@@ -2,38 +2,85 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use Yii;
 use common\models\store\Navigations;
+use yii\helpers\ArrayHelper;
+use RecursiveArrayIterator;
 
 /**
- * Class DeleteNavigation form
+ * Class UpdatePositionsNavigationForm
  * @package frontend\modules\admin\models\forms
  */
-class DeleteNavigationForm extends Navigations
+class UpdatePositionsNavigationForm extends Navigations
 {
     /**
-     * Virtual navigation deleting
-     * @return bool
+     * Batch update Navigation item positions
+     * @param $postData
+     * @return bool|int
      */
-    public function deleteVirtual()
+    public function updatePositions($postData)
     {
-        if ($this->deleted == self::DELETED_YES) {
+        $positionsTree = ArrayHelper::getValue($postData, 'positions', null);
+
+        if (!$positionsTree) {
             return false;
         }
 
-        $this->setAttributes([
-            'deleted' => self::DELETED_YES,
-            'position' => NULL
-        ]);
+        $positions = static::flatten($positionsTree);
 
-        if (!$this->save(false)) {
-            return false;
+        $positionsImploded = null;
+        foreach ($positions as $position) {
+            $id = $position['id']|0;
+            $parentId = $position['parent_id']|0;
+            $position = $position['position']|0;
+            $positionsImploded = ($positionsImploded ? $positionsImploded . ',' : '') . "('$id', '$parentId', '$position')";
         }
 
-        return true;
+        $navigationTable = static::tableName();
+        $command = static::getDb()
+            ->createCommand("
+                INSERT INTO $navigationTable (id, parent_id, position)
+                VALUES $positionsImploded
+                ON DUPLICATE KEY UPDATE
+                parent_id=VALUES(parent_id), position=VALUES(position)
+        ")->execute();
+
+        return $command;
     }
 
-    public function updatePositionsAfterDelete($oldPosition)
+    /**
+     * Flatten position tree array
+     * @param $tree
+     * @param int $parentId
+     * @return array
+     */
+    private static function flatten($tree, $parentId = 0)
     {
+        $flatArray = [];
 
+        foreach ($tree as $position => $node) {
+            if (array_key_exists('children', $node)) {
+
+                $flatArray[] = [
+                    'id' => $node['id'],
+                    'position' => $position,
+                    'parent_id' => $parentId,
+                ];
+
+                $children = static::flatten($node['children'], $node['id']);
+                $flatArray = array_merge($flatArray, $children);
+                unset($node['children']);
+
+            } else {
+                $flatArray[] = [
+                    'id' => $node['id'],
+                    'position' => $position,
+                    'parent_id' => $parentId,
+                ];
+            }
+        }
+
+        return $flatArray;
     }
+
 }

@@ -3,23 +3,14 @@
 namespace frontend\modules\admin\models\search;
 
 use common\models\store\Navigations;
-use common\models\store\Pages;
-use common\models\store\Products;
 use Yii;
-use yii\base\Exception;
 use yii\base\Model;
 use yii\db\Query;
 
-class LinksSearch extends Model
+class NavigationsSearch extends Model
 {
     private $_storeDb;
-    private $_productsTable;
-    private $_pagesTable;
-
-    private static $_allowedLinkTypes = [
-        Navigations::LINK_PAGE,
-        Navigations::LINK_PRODUCT,
-    ];
+    private $_navigationsTable;
 
     /**
      * @inheritdoc
@@ -27,59 +18,46 @@ class LinksSearch extends Model
     public function init()
     {
         $this->_storeDb = Yii::$app->store->getInstance()->db_name;
-        $this->_productsTable = $this->_storeDb . "." . Products::tableName();
-        $this->_pagesTable = $this->_storeDb . "." . Pages::tableName();
+        $this->_navigationsTable = $this->_storeDb . "." . Navigations::tableName();
 
         parent::init();
     }
 
     /**
-     * Return array of `pages` links
+     * Return all non deleted navigation items
      * @return array
      */
-    public function searchPagesLinks()
+    public function search()
     {
         return (new Query())
-            ->select(['id', 'name', 'url'])
-            ->from($this->_pagesTable)
-            ->where(['deleted' => Pages::DELETED_NO])
+            ->select(['id', 'parent_id', 'name', 'link', 'link_id', 'position', 'url'])
+            ->from($this->_navigationsTable)
+            ->where(['deleted' => Navigations::DELETED_NO])
+            ->orderBy(['parent_id' => SORT_ASC, 'position' => SORT_ASC])
+            ->indexBy('id')
             ->all();
     }
 
     /**
-     * Return array of `products` links
+     * Return navigation items tree
      * @return array
      */
-    public function searchProductsLinks()
+    public function getTree()
     {
-        return (new Query())
-            ->select(['id', 'name', 'url'])
-            ->from($this->_productsTable)
-            ->all();
+        $list = $this->search();
+        $tree = [];
+
+        foreach ($list as $id => &$node) {
+            // Is root
+            if (!$node['parent_id']){
+                $tree[$id] = &$node;
+            }else{
+                // Is node
+                $list[$node['parent_id']]['nodes'][$id] = &$node;
+            }
+        }
+
+        return $tree;
     }
 
-    /**
-     * Return links by link type
-     * @param integer $linkType
-     * @return array
-     * @throws Exception
-     */
-    public function searchLinksByType(int $linkType)
-    {
-        if (!in_array($linkType, static::$_allowedLinkTypes)) {
-            throw new Exception("Unexpected link type, $linkType");
-        }
-
-        $links = [];
-
-        if ($linkType === Navigations::LINK_PAGE) {
-            $links =  $this->searchPagesLinks();
-        }
-
-        if ($linkType === Navigations::LINK_PRODUCT) {
-            $links = $this->searchProductsLinks();
-        }
-
-        return $links;
-    }
 }

@@ -8,7 +8,12 @@
  *****************************************************************************************************/
 (function (window, alert){
 
-    var updateOutput = function updateOutput(e) {
+    var params = {}; // TODO:: DELETE IT! Prepare for custom modules
+
+    var updatePositionUrl = params.getLinksUrl  || '/admin/settings/update-positions-nav'; // POST /
+
+    var $neatable = $('#nestable'),
+        updateOutput = function updateOutput(e) {
         var list = e.length ? e : $(e.target),
             output = list.data('output');
         if (window.JSON) {
@@ -17,13 +22,33 @@
             output.html('JSON browser support required for this demo.');
         }
     };
-    if ($('#nestable').length > 0) {
+    if ($neatable.length > 0) {
 
-        $('#nestable').nestable({
+        $neatable.nestable({
             group: 0,
             maxDepth: 3
-        }).on('change', updateOutput);
-        updateOutput($('#nestable').data('output', $('#nestable-output')));
+        }).on('change', updater);
+
+        // updateOutput($('#nestable').data('output', $('#nestable-output')));
+    }
+
+    function updater(e) {
+
+        var positions = $neatable.nestable('serialize');
+
+        $.ajax({
+            url: updatePositionUrl,
+            type: "POST",
+            data: {
+                positions: positions
+            },
+            success: function(data, textStatus, jqXHR) {
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+            }
+        });
+
     }
 
 })({}, function (){});

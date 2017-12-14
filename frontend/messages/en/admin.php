@@ -215,6 +215,7 @@ return [
     'settings.nav_page_title' => 'Navigation',
     'settings.nav_bt_add' => 'Add menu item',
     'settings.nav_bt_edit' => 'Edit',
+    'settings.nav_bt_delete' => 'Delete',
     'settings.nav_delete_agree_text' => 'Are your sure that your want to delete this item?',
     'settings.nav_bt_delete_agree' => 'Yes, delete it!',
     'settings.nav_bt_delete_cancel' => 'Cancel',

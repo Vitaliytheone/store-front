@@ -13,7 +13,9 @@ use frontend\modules\admin\models\forms\EditNavigationForm;
 use frontend\modules\admin\models\forms\EditPageForm;
 use frontend\modules\admin\models\forms\EditStoreSettingsForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
+use frontend\modules\admin\models\forms\UpdatePositionsNavigationForm;
 use frontend\modules\admin\models\search\LinksSearch;
+use frontend\modules\admin\models\search\NavigationsSearch;
 use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
@@ -340,9 +342,13 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.nav_page_title');
 
         $model = new EditNavigationForm();
+        $search = new NavigationsSearch();
+
+        $tree = $search->getTree();
 
         return $this->render('navigations', [
             'linkTypes' => $model::linkTypes(),
+            'navTree' => $tree,
         ]);
     }
 
@@ -458,6 +464,29 @@ class SettingsController extends CustomController
         }
 
         UiHelper::message(Yii::t('admin', 'settings.nav_message_deleted'));
+
+        return [true];
+    }
+
+    /**
+     * Update Navigation items positions after drag&drop AJAX action
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function actionUpdatePositionsNav()
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $model = new UpdatePositionsNavigationForm();
+        if (!$model->updatePositions($request->post())) {
+            throw new BadRequestHttpException();
+        }
 
         return [true];
     }

@@ -1,20 +1,20 @@
 <?php
 
-use \frontend\assets\NavigationsAsset;
+use frontend\assets\NavigationsAsset;
 use frontend\modules\admin\components\Url;
-use \common\models\store\Navigations;
+use frontend\helpers\NavigationHelper;
 
 /* @var $this \yii\web\View */
 /* @var $linkTypes array */
+/* @var $navTree array */
 
 NavigationsAsset::register($this);
 
 ?>
 
-<!-- begin::Body -->
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
-    <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">
-        <!-- BEGIN: Left Aside -->
+    <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver m-container m-container--responsive m-container--xxl m-page__container">
+
         <button class="m-aside-left-close m-aside-left-close--skin-light" id="m_aside_left_close_btn">
             <i class="la la-close"></i>
         </button>
@@ -23,9 +23,8 @@ NavigationsAsset::register($this);
                 'active' => 'navigations'
             ])?>
         </div>
-        <!-- END: Left Aside -->
+
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <!-- BEGIN: Subheader -->
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
@@ -37,36 +36,24 @@ NavigationsAsset::register($this);
                     <div>
                         <div class="m-dropdown--align-right">
                             <button class="btn btn-primary  m-btn--air btn-brand cursor-pointer" data-submit_url="<?= Url::toRoute(['/settings/create-nav'])?>" data-toggle="modal" data-target=".edit_navigation" data-backdrop="static">
-                                Add menu item
+                                <?= Yii::t('admin', 'settings.nav_bt_add')?>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- END: Subheader -->
+
             <div class="m-content">
                 <div class="dd" id="nestable">
                     <ol class="dd-list">
-
-                        <li class="dd-item" data-id="2">
-                            <div class="dd-handle">YouTube 2</div>
-                            <div class="dd-edit-button">
-                                <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm" data-submit_url="<?= Url::toRoute(['/settings/update-nav', 'id'=> 2])?>" data-get_url="<?= Url::toRoute(['/settings/get-nav', 'id'=> 2])?>" data-toggle="modal" data-target=".edit_navigation">
-                                    Edit
-                                </a>
-                                <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-delete_url="<?= Url::toRoute(['/settings/delete-nav', 'id'=> 2])?>" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
-                                    <i class="la la-trash"></i>
-                                </a>
-                            </div>
-                        </li>
-
+                        <?= NavigationHelper::menuTree($navTree) ?>
                     </ol>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
-<!-- end::Body -->
 
 <?= $this->render('layouts/navigations/_modal_delete') ?>
 <?= $this->render('layouts/navigations/_modal_menu_item_form', [

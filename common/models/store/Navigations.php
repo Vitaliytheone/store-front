@@ -5,7 +5,8 @@ namespace common\models\store;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use \common\models\store\queries\NavigationsQuery;
+use common\models\store\queries\NavigationsQuery;
+use yii\db\Query;
 
 /**
  * This is the model class for table "navigation".
@@ -105,6 +106,33 @@ class Navigations extends ActiveRecord
     public static function find()
     {
         return new NavigationsQuery(get_called_class());
+    }
+
+    /**
+     * Get Max position of current navigation items
+     * @return array|bool
+     */
+    public function getMaxPosition()
+    {
+        $db = yii::$app->store->getInstance()->db_name;
+        $query = (new Query())
+            ->select(['MAX(position) position'])
+            ->from($db.'.'.static::tableName())
+            ->where(['parent_id' => $this->parent_id])
+            ->one();
+
+        return $query['position'];
+    }
+
+    /**
+     * Calculate `position` for new navigation record
+     * @return int
+     */
+    public function getNewPosition()
+    {
+        $maxPosition = $this->getMaxPosition();
+        $position = is_null($maxPosition) ? 0 : $maxPosition + 1;
+        return $position;
     }
 
 }
