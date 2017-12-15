@@ -42,7 +42,11 @@ class LinksSearch extends Model
         return (new Query())
             ->select(['id', 'name', 'url'])
             ->from($this->_pagesTable)
-            ->where(['deleted' => Pages::DELETED_NO])
+            ->where([
+                'deleted' => Pages::DELETED_NO,
+                'visibility' => Pages::VISIBILITY_YES,
+            ])
+            ->orderBy(['id' => SORT_DESC])
             ->all();
     }
 
@@ -55,6 +59,10 @@ class LinksSearch extends Model
         return (new Query())
             ->select(['id', 'name', 'url'])
             ->from($this->_productsTable)
+            ->where([
+                'visibility' => Products::VISIBILITY_YES,
+            ])
+            ->orderBy(['id' => SORT_DESC])
             ->all();
     }
 
