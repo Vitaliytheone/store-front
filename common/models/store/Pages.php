@@ -88,8 +88,6 @@ class Pages extends ActiveRecord
         // Update Nav URL if Page URL updated
         if (array_key_exists('url', $changedAttributes)) {
 
-            $oldUrl = $changedAttributes['url'];
-
             $navModel = Navigations::findOne([
                 'link' => Navigations::LINK_PAGE,
                 'link_id' => $this->id

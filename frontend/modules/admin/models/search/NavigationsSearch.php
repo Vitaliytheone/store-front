@@ -32,8 +32,13 @@ class NavigationsSearch extends Model
         return (new Query())
             ->select(['id', 'parent_id', 'name', 'link', 'link_id', 'position', 'url'])
             ->from($this->_navigationsTable)
-            ->where(['deleted' => Navigations::DELETED_NO])
-            ->orderBy(['parent_id' => SORT_ASC, 'position' => SORT_ASC])
+            ->where([
+                'deleted' => Navigations::DELETED_NO
+            ])
+            ->orderBy([
+                'parent_id' => SORT_ASC,
+                'position' => SORT_ASC
+            ])
             ->indexBy('id')
             ->all();
     }
@@ -49,9 +54,9 @@ class NavigationsSearch extends Model
 
         foreach ($list as $id => &$node) {
             // Is root
-            if (!$node['parent_id']){
+            if (!$node['parent_id']) {
                 $tree[$id] = &$node;
-            }else{
+            } else{
                 // Is node
                 $list[$node['parent_id']]['nodes'][$id] = &$node;
             }
@@ -72,13 +77,15 @@ class NavigationsSearch extends Model
 
         /** @var \yii\db\Connection $db */
         $query = $db->createCommand("
-            SELECT GROUP_CONCAT(children_ids SEPARATOR ',')
-            FROM (
-                SELECT @pv:=(SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM $table WHERE `parent_id` IN (@pv)) AS children_ids FROM $table
-                JOIN
-                (SELECT @pv:= :parentId) tmp
-                WHERE `parent_id` IN (@pv)
-            ) v_table;
+            SELECT GROUP_CONCAT(node SEPARATOR ',') ids FROM (
+                SELECT @Ids := (
+                   SELECT GROUP_CONCAT(`id` SEPARATOR ',')
+                   FROM $table
+                   WHERE FIND_IN_SET(`parent_id`, @Ids)
+                ) node
+                FROM $table
+                JOIN (SELECT @Ids := :parentId) temp1
+            ) temp2
         ")
             ->bindValue(':parentId', $parentId)
             ->queryColumn();
