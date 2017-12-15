@@ -40,6 +40,53 @@ class Products extends ActiveRecord
         return '{{%products}}';
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (parent::afterSave($insert, $changedAttributes)) {
+            return true;
+        }
+
+        // Update Nav URL if Product URL updated
+        if (array_key_exists('url', $changedAttributes)) {
+
+            $navModel = Navigations::findOne([
+                'link' => Navigations::LINK_PRODUCT,
+                'link_id' => $this->id
+            ]);
+
+            if ($navModel) {
+                $navModel->setAttribute('url', $this->url);
+                $navModel->save(false);
+            }
+        }
+
+        // Update Nav URL if Product set invisible
+        $setInvisible = array_key_exists('visibility', $changedAttributes) && ($this->visibility == self::VISIBILITY_NO);
+        if ($setInvisible) {
+
+            $navModel = Navigations::findOne([
+                'link' => Navigations::LINK_PRODUCT,
+                'link_id' => $this->id
+            ]);
+
+            if ($navModel) {
+                $navModel->setAttributes([
+                    'url' => $this->url,
+                    'link' => Navigations::LINK_WEB_ADDRESS,
+                    'link_id' => null,
+                ]);
+
+                $navModel->save(false);
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @inheritdoc
      */

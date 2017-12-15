@@ -2,10 +2,8 @@
 
 namespace frontend\modules\admin\models\forms;
 
-use Yii;
 use common\models\store\Navigations;
 use yii\helpers\ArrayHelper;
-use RecursiveArrayIterator;
 
 /**
  * Class UpdatePositionsNavigationForm
@@ -45,7 +43,7 @@ class UpdatePositionsNavigationForm extends Navigations
                 parent_id=VALUES(parent_id), position=VALUES(position)
         ")->execute();
 
-        return $command;
+        return true;
     }
 
     /**

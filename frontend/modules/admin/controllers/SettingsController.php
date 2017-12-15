@@ -22,7 +22,6 @@ use frontend\modules\admin\models\forms\EditPaymentMethodForm;
 use frontend\modules\admin\models\search\PaymentMethodsSearch;
 use frontend\modules\admin\models\search\UrlsSearch;
 use Yii;
-use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
@@ -344,11 +343,9 @@ class SettingsController extends CustomController
         $model = new EditNavigationForm();
         $search = new NavigationsSearch();
 
-        $tree = $search->getTree();
-
         return $this->render('navigations', [
             'linkTypes' => $model::linkTypes(),
-            'navTree' => $tree,
+            'navTree' => $search->getTree(),
         ]);
     }
 

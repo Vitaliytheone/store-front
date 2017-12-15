@@ -82,6 +82,10 @@ class EditNavigationForm extends Navigations
             [['name', 'url'], 'trim'],
             [['name'], 'string', 'max' => 300],
             [['url'], 'string', 'max' => 255],
+
+            ['link_id', 'filter', 'filter' => function($value) {
+                return in_array($this->link, [self::LINK_PRODUCT, self::LINK_PAGE]) ? $value : null;
+            }]
         ];
     }
 

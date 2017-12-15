@@ -1,7 +1,5 @@
 <?php
 
-use \yii\helpers\ArrayHelper;
-
 /* @var $linkTypes array */
 
 ?>
@@ -52,7 +50,7 @@ use \yii\helpers\ArrayHelper;
 
                     <div class="form-group hide-link link-4">
                         <label for="web_address">Web address</label>
-                        <input type="text" class="form-control form_field__url" id="web_address" placeholder="/" name="NavForm[url]">
+                        <input type="text" class="form-control form_field__url" id="web_address" placeholder="http://" name="NavForm[url]">
                     </div>
 
                 </div>

@@ -49,6 +49,14 @@ class Pages extends ActiveRecord
     /**
      * @inheritdoc
      */
+    public static function tableName()
+    {
+        return '{{%pages}}';
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -71,9 +79,50 @@ class Pages extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public function afterSave($insert, $changedAttributes)
     {
-        return '{{%pages}}';
+        if (parent::afterSave($insert, $changedAttributes)) {
+            return true;
+        }
+
+        // Update Nav URL if Page URL updated
+        if (array_key_exists('url', $changedAttributes)) {
+
+            $oldUrl = $changedAttributes['url'];
+
+            $navModel = Navigations::findOne([
+                'link' => Navigations::LINK_PAGE,
+                'link_id' => $this->id
+            ]);
+
+            if ($navModel) {
+                $navModel->setAttribute('url', $this->url);
+                $navModel->save(false);
+            }
+        }
+
+        // Update Nav URL if Page deleted or set invisible
+        $setInvisible = array_key_exists('visibility', $changedAttributes) && ($this->visibility == self::VISIBILITY_NO);
+        $setDeleted = array_key_exists('deleted', $changedAttributes) && ($this->deleted == self::DELETED_YES);
+        if ($setInvisible || $setDeleted) {
+
+            $navModel = Navigations::findOne([
+                'link' => Navigations::LINK_PAGE,
+                'link_id' => $this->id
+            ]);
+
+            if ($navModel) {
+                $navModel->setAttributes([
+                    'url' => $this->url,
+                    'link' => Navigations::LINK_WEB_ADDRESS,
+                    'link_id' => null,
+                ]);
+
+                $navModel->save(false);
+            }
+        }
+
+        return false;
     }
 
     /**

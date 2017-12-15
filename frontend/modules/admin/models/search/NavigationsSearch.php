@@ -60,4 +60,36 @@ class NavigationsSearch extends Model
         return $tree;
     }
 
+    /**
+     * Return all children ids of tree node
+     * @param $parentId
+     * @return array
+     */
+    public static function getChildrenTreeNodeIds($parentId)
+    {
+        $db = Yii::$app->storeDb;
+        $table = Navigations::tableName();
+
+        /** @var \yii\db\Connection $db */
+        $query = $db->createCommand("
+            SELECT GROUP_CONCAT(children_ids SEPARATOR ',')
+            FROM (
+                SELECT @pv:=(SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM $table WHERE `parent_id` IN (@pv)) AS children_ids FROM $table
+                JOIN
+                (SELECT @pv:= :parentId) tmp
+                WHERE `parent_id` IN (@pv)
+            ) v_table;
+        ")
+            ->bindValue(':parentId', $parentId)
+            ->queryColumn();
+
+        $ids = [];
+
+        if ($query[0]) {
+            $ids = explode(',', $query[0]);
+        }
+
+        return $ids;
+    }
+
 }

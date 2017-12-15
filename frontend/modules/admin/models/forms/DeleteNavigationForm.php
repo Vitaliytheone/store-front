@@ -3,6 +3,7 @@
 namespace frontend\modules\admin\models\forms;
 
 use common\models\store\Navigations;
+use frontend\modules\admin\models\search\NavigationsSearch;
 
 /**
  * Class DeleteNavigation form
@@ -12,6 +13,7 @@ class DeleteNavigationForm extends Navigations
 {
     /**
      * Virtual navigation deleting
+     * Deleting item and all subitems
      * @return bool
      */
     public function deleteVirtual()
@@ -20,42 +22,42 @@ class DeleteNavigationForm extends Navigations
             return false;
         }
 
-        $oldPosition = $this->getAttribute('position');
-        $oldParentId = $this->getAttribute('parent_id');
-        $currentId = $this->getAttributes('id');
+        $id = $this->getAttribute('id');
+        $position = $this->getAttribute('position');
+        $parentId = $this->getAttribute('parent_id');
 
-        // TODO:: DELETE CHELDRENS!!!!!!!!!
+        $idsToDelete = NavigationsSearch::getChildrenTreeNodeIds($id);
+        array_push($idsToDelete, $id);
 
-        $this->setAttributes([
-            'deleted' => self::DELETED_YES,
-            'position' => NULL
-        ]);
+        $idsToDeleteImploded = '(' . implode(',', $idsToDelete) . ')';
 
-        if (!$this->save(false)) {
-            return false;
-        }
+        // `Delete` item and all subitems
+        $table = static::tableName();
+        $query = $this->getDb()->createCommand("UPDATE $table SET `position` = :position, `deleted` = :deleted WHERE `id` IN $idsToDeleteImploded")
+            ->bindValue(':position', null)
+            ->bindValue(':deleted', self::DELETED_YES)
+            ->execute();
 
-        $this->updatePositionsAfterDelete($oldPosition, $oldParentId);
+        $this->updatePositionsAfterDelete($position, $parentId);
 
-        return true;
+        return $query;
     }
 
     /**
      * Update Navigation items positions in current nav set
-     * @param $oldPosition
-     * @param $oldParentId
+     * @param int $position Position of deleted item
+     * @param int $parentId Parent ID of deleted item
      * @return int
      */
-    public function updatePositionsAfterDelete($oldPosition, $oldParentId)
+    public function updatePositionsAfterDelete($position, $parentId)
     {
-//        $db = $this->getDb();
-//        $table = static::tableName();
-//
-//        $query = $db->createCommand("UPDATE $table SET `position` = `position`-1 WHERE `parent_id` = :parent_id AND `position` > :oldPos AND `deleted` = :deleted")
-//            ->bindValue(':parent_id', $oldParentId)
-//            ->bindValue(':oldPos', $oldPosition)
-//            ->bindValue(':deleted', self::DELETED_NO)
-//            ->execute();
-//        return $query;
+        $table = static::tableName();
+        $query = $this->getDb()->createCommand("UPDATE $table SET `position` = `position`-1 WHERE `parent_id` = :parentId AND `position` > :oldPosition AND `deleted` = :deleted")
+            ->bindValue(':parentId', $parentId)
+            ->bindValue(':oldPosition', $position)
+            ->bindValue(':deleted', self::DELETED_NO)
+            ->execute();
+
+        return $query;
     }
 }

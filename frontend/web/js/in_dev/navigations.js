@@ -202,9 +202,8 @@
 
     /**
      * Fetch exiting Nav by id
-     * @param id
      */
-    function fetchModel(id) {
+    function fetchModel() {
         $modalLoader.removeClass('hidden');
         $.ajax({
             url: getModelUrl,
@@ -287,7 +286,7 @@
             labelText = $link.text().trim();
 
         if (selectId) {
-            // TODO:: add title changes
+
             $('.link-' + selectId).fadeIn().find('label').text(labelText);
         }
         if (fetched) {
