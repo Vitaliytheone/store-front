@@ -97,11 +97,11 @@ class SettingsController extends CustomController
      */
     public function actionDeleteImage($type)
     {
-        if (!StoreFiles::deleteStoreSettingsFile($type)) {
+        if (StoreFiles::deleteStoreSettingsFile($type)) {
+            UiHelper::message(Yii::t('admin', 'settings.message_image_deleted'));
+        } else {
             UiHelper::message(Yii::t('admin', 'settings.message_image_delete_error'));
         }
-
-        UiHelper::message(Yii::t('admin', 'settings.message_image_deleted'));
 
         return $this->redirect(Url::toRoute('/settings'));
     }
