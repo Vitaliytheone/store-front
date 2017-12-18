@@ -88,35 +88,34 @@ class Pages extends ActiveRecord
         // Update Nav URL if Page URL updated
         if (array_key_exists('url', $changedAttributes)) {
 
-            $navModel = Navigations::findOne([
+            $navModels = Navigations::findAll([
                 'link' => Navigations::LINK_PAGE,
                 'link_id' => $this->id
             ]);
 
-            if ($navModel) {
+            foreach ($navModels as $navModel) {
                 $navModel->setAttribute('url', $this->url);
                 $navModel->save(false);
             }
         }
 
-        // Update Nav URL if Page deleted or set invisible
+        // Update Nav URL if Page Deleted or set Invisible
         $setInvisible = array_key_exists('visibility', $changedAttributes) && ($this->visibility == self::VISIBILITY_NO);
         $setDeleted = array_key_exists('deleted', $changedAttributes) && ($this->deleted == self::DELETED_YES);
         if ($setInvisible || $setDeleted) {
 
-            $navModel = Navigations::findOne([
+            $navModels = Navigations::findAll([
                 'link' => Navigations::LINK_PAGE,
                 'link_id' => $this->id
             ]);
 
-            if ($navModel) {
+            foreach ($navModels as $navModel) {
                 $navModel->setAttributes([
                     'url' => $this->url,
                     'link' => Navigations::LINK_WEB_ADDRESS,
                     'link_id' => null,
                 ]);
-
-                $navModel->save(false);
+                $navModel->save();
             }
         }
 
