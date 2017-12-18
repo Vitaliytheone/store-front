@@ -143,7 +143,14 @@ return [
     'settings.general_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
     'settings.general_seo_meta_limits' => ' of 160 characters used',
     'settings.general_save' => 'Save changes',
+
+    'settings.general_delete_agree' => 'Are your sure that your want to delete this image?',
+    'settings.general_delete_submit' => 'Delete',
+    'settings.general_delete_cancel' => 'Cancel',
+
     'settings.message_settings_updated' => 'Settings was successfully updated!',
+    'settings.message_image_deleted' => 'Image was successfully deleted!',
+    'settings.message_image_delete_error' => 'Error while deleting image!',
     'settings.message_cdn_upload_error' => 'Error uploading file to CDN!',
 
     'settings.payments_page_title' => 'Settings payments',

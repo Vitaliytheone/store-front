@@ -4,6 +4,7 @@ namespace frontend\modules\admin\controllers;
 
 use common\components\ActiveForm;
 use common\models\store\Navigations;
+use common\models\stores\StoreFiles;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\CreateProviderForm;
@@ -87,6 +88,22 @@ class SettingsController extends CustomController
             'store' => $storeForm,
             'timezones' => Yii::$app->params['timezone'],
         ]);
+    }
+
+    /**
+     * Delete Store Favicon or Logo
+     * @param $type
+     * @return Response
+     */
+    public function actionDeleteImage($type)
+    {
+        if (!StoreFiles::deleteStoreSettingsFile($type)) {
+            UiHelper::message(Yii::t('admin', 'settings.message_image_delete_error'));
+        }
+
+        UiHelper::message(Yii::t('admin', 'settings.message_image_deleted'));
+
+        return $this->redirect(Url::toRoute('/settings'));
     }
 
     /**

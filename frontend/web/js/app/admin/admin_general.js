@@ -33,18 +33,17 @@ customModule.adminGeneral = {
         /******************************************************************
          *            General settings delete logo & favicon
          ******************************************************************/
-        var $deleteImageBtns = $('.delete-uploaded-images');
+        var $modal = $('#delete-modal'),
+        $deleteBtn = $modal.find('#delete-image');
 
-        $deleteImageBtns.click('click', function(e){
-            var $currentTarget = $(e.currentTarget),
-                field = $currentTarget.data('field');
+        $modal.on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget),
+            actionUrl = button.attr('href');
+            $deleteBtn.attr('href', actionUrl);
+        });
 
-            if (!field) {
-                return;
-            }
-            $(document).find('#' + field).attr('value', null);
-            $currentTarget.closest('.uploaded-image').empty();
-
+        $modal.on('hidden.bs.modal', function (){
+            $deleteBtn.attr('href', null);
         });
     }
 };

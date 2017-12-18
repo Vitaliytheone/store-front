@@ -3,16 +3,15 @@
 use yii\helpers\Html;
 use frontend\modules\admin\components\Url;
 use common\components\ActiveForm;
+use common\models\stores\StoreFiles;
 
 /* @var $this \yii\web\View */
 /* @var $timezones array */
 /* @var $store \frontend\modules\admin\models\forms\EditStoreSettingsForm */
 
 ?>
-<!-- begin::Body -->
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">
-        <!-- BEGIN: Left Aside -->
         <button class="m-aside-left-close m-aside-left-close--skin-light" id="m_aside_left_close_btn">
             <i class="la la-close"></i>
         </button>
@@ -21,9 +20,7 @@ use common\components\ActiveForm;
                 'active' => 'general'
             ]) ?>
         </div>
-        <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <!-- BEGIN: Subheader -->
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
@@ -33,7 +30,6 @@ use common\components\ActiveForm;
                     </div>
                 </div>
             </div>
-            <!-- END: Subheader -->
             <div class="m-content">
 
                 <?php if($store->hasErrors()): ?>
@@ -55,7 +51,6 @@ use common\components\ActiveForm;
                                     </a>
 
                                     <input id="setting-logo" type="file" class="settings-file" name="SettingsGeneralForm[logoFile]">
-                                    <input id="settings-logo-field" type="hidden" name="SettingsGeneralForm[logo]" value="<?= $store->logo ?>">
 
                                 </label>
                                 <small class="form-text text-muted">
@@ -67,7 +62,7 @@ use common\components\ActiveForm;
                         <?php if ($store->logo): ?>
                         <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
-                                <a href="#" class="sommerce-settings__delete-image delete-uploaded-images" data-field="settings-logo-field"><span class="flaticon-cancel"></span></a>
+                                <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => StoreFiles::FILE_TYPE_LOGO]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-logo-field"><span class="flaticon-cancel"></span></a>
                                 <img src="<?= $store->logo ?>" alt="...">
                             </div>
                         </div>
@@ -84,7 +79,6 @@ use common\components\ActiveForm;
                                     </a>
 
                                     <input id="setting-favicon" type="file" class="settings-file" name="SettingsGeneralForm[faviconFile]">
-                                    <input id="settings-favicon-field" type="hidden" name="SettingsGeneralForm[favicon]" value="<?= $store->favicon ?>">
 
                                 </label>
                                 <small class="form-text text-muted">
@@ -96,7 +90,7 @@ use common\components\ActiveForm;
                         <?php if ($store->favicon): ?>
                         <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
-                                <a href="#" class="sommerce-settings__delete-image delete-uploaded-images" data-field="settings-favicon-field"><span class="flaticon-cancel"></span></a>
+                                <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => StoreFiles::FILE_TYPE_FAVICON]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-favicon-field"><span class="flaticon-cancel"></span></a>
                                 <img src="<?= $store->favicon ?>" alt="...">
                             </div>
                         </div>
@@ -184,4 +178,21 @@ use common\components\ActiveForm;
         </div>
     </div>
 </div>
-<!-- end::Body -->
+
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-loader hidden"></div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col modal-delete-block text-center">
+                        <span class="fa fa-trash-o"></span>
+                        <p><?= Yii::t('admin', 'settings.general_delete_agree') ?></p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.general_delete_cancel') ?></button>
+                        <a href="#" class="btn btn-danger m-btn--air" id="delete-image"><?= Yii::t('admin', 'settings.general_delete_submit') ?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
