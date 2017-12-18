@@ -22,12 +22,11 @@ class EditStoreSettingsForm extends Stores
     public $faviconFile;
     public $logoFile;
 
-
     private static $_files = [
         'logoFile' => [
             'type' => StoreFiles::FILE_TYPE_LOGO,
             'rules' => ['extensions' => 'png, jpg, gif',
-                'maxSize' => 3000000,
+                'maxSize' => 3.146e6,
                 'mimeTypes' => [
                     BaseCdn::MIME_JPEG,
                     BaseCdn::MIME_PNG,
@@ -38,7 +37,7 @@ class EditStoreSettingsForm extends Stores
         'faviconFile' => [
             'type' => StoreFiles::FILE_TYPE_FAVICON,
             'rules' => ['extensions' => 'png, jpg, gif, ico',
-                'maxSize' => 500000,
+                'maxSize' => 0.512e6,
                 'mimeTypes' => [
                     BaseCdn::MIME_JPEG,
                     BaseCdn::MIME_PNG,
