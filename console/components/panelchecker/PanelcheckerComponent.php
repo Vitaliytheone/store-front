@@ -35,7 +35,10 @@ class PanelcheckerComponent extends Component
     ];
  
     public $panelHostName = 'levopanel.com';
-    public $panelIp = '147.135.223.128';
+    public $panelNetworks = [
+        '147.135.223.128',
+        '104.*.*.*',
+    ];
 
     public $apiKey;
     public $apiVersion = '1.0';
@@ -250,7 +253,8 @@ class PanelcheckerComponent extends Component
         $panelIp = $panelInfo['primary_ip'];
 
         // Levopanel active or frozen
-        if ($panelIp === $this->panelIp) {
+
+        if (static::matchNetworks($panelIp, $this->panelNetworks)) {
 
             // If All checks passed => Frozen
             $frozenChecks = [];
@@ -288,7 +292,7 @@ class PanelcheckerComponent extends Component
         }
 
         // Not Levopanel & not Perfectpanel
-        if ($panelIp !== $this->panelIp && $panelIp !== self::PERFECTPANEL_IP) {
+        if ($panelIp !== self::PERFECTPANEL_IP) {
             return [
                 'status' => self::PANEL_STATUS_IP_NOT_LEVOPANEL,
                 'info' => $panelInfo,
@@ -311,6 +315,89 @@ class PanelcheckerComponent extends Component
             'status' => self::PANEL_STATUS_OTHER,
             'info' => $panelInfo,
         ];
+    }
+
+    /**
+     * Match ip address to network by mask
+     *
+     * matchIp('10.168.1.90', '10.168.1.0-10.168.1.100');
+     * matchIp('10.168.1.90', '10.168.*.*');
+     * matchIp('10.168.1.90', '10.168.0.0/16');
+     * matchIp('10.168.1.90', '10.169.1.0/24');
+     * matchIp('10.168.1.90', '10.168.1.90');
+     *
+     * @param $ip
+     * @param $network
+     * @return bool
+     */
+    public static function matchNetwork($ip, $network)
+    {
+            $network=trim($network);
+            $ip = trim($ip);
+            if ($ip == $network) {
+                return true;
+            }
+            $network = str_replace(' ', '', $network);
+            if (strpos($network, '*') !== false) {
+                if (strpos($network, '/') !== false) {
+                    $asParts = explode('/', $network);
+                    $network = @ $asParts[0];
+                }
+                $nCount = substr_count($network, '*');
+                $network = str_replace('*', '0', $network);
+                if ($nCount == 1) {
+                    $network .= '/24';
+                } else if ($nCount == 2) {
+                    $network .= '/16';
+                } else if ($nCount == 3) {
+                    $network .= '/8';
+                } else if ($nCount > 3) {
+                    return true; // if *.*.*.*, then all, so matched
+                }
+            }
+
+            $d = strpos($network, '-');
+            if ($d === false) {
+                $ip_arr = explode('/', $network);
+
+                if (!isset($ip_arr[1])) {
+                    return false;
+                }
+
+                if (!preg_match("@\d*\.\d*\.\d*\.\d*@", $ip_arr[0], $matches)){
+                    $ip_arr[0].=".0";    // Alternate form 194.1.4/24
+                }
+
+                $network_long = ip2long($ip_arr[0]);
+                $x = ip2long($ip_arr[1]);
+                $mask = long2ip($x) == $ip_arr[1] ? $x : (0xffffffff << (32 - $ip_arr[1]));
+                $ip_long = ip2long($ip);
+                return ($ip_long & $mask) == ($network_long & $mask);
+            } else {
+                $from = trim(ip2long(substr($network, 0, $d)));
+                $to = trim(ip2long(substr($network, $d+1)));
+                $ip = ip2long($ip);
+                return ($ip>=$from and $ip<=$to);
+            }
+    }
+
+    /**
+     * Match ip address one of networks
+     * @param $ip
+     * @param array $networks
+     * @return bool
+     */
+    public static function matchNetworks($ip, array $networks){
+
+        echo ($ip) . PHP_EOL;
+
+        foreach ($networks as $network) {
+            if (static::matchNetwork($ip, $network)) {
+                return true;
+                break;
+            }
+        }
+        return false;
     }
 
     /**

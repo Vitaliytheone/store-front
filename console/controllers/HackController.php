@@ -48,4 +48,24 @@ class HackController extends Controller
         return Controller::EXIT_CODE_NORMAL;
     }
 
+    /**
+     * Only for test purpose
+     * @return int
+     */
+    public function actionTest()
+    {
+        $networks = [
+            '147.135.223.128',
+            '104.*.*.*',
+        ];
+
+        $res = PanelcheckerComponent::matchNetwork('104.12.1.0', '244.12.2.2');
+        // $res = PanelcheckerComponent::matchNetworks('104.31.79.202', $networks);
+
+        echo ($res ? "YES" : 'NO') . PHP_EOL;
+
+        return Controller::EXIT_CODE_NORMAL;
+    }
+
+
 }
