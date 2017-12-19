@@ -37,10 +37,15 @@ class PagesSearch extends Pages
             ->orderBy(['id' => SORT_DESC])
             ->all();
 
+
         // Populate by additional data
         array_walk($pages, function(&$page){
+
+            $dtUpdated = ArrayHelper::getValue($page, 'updated_at', null);
+
+
             $page['visibility_title'] = $page['visibility']|0 ? Yii::t('admin', 'settings.pages_visibility_visible') : Yii::t('admin', 'settings.pages_visibility_hidden');
-            $page['updated_at_formatted'] = Yii::$app->formatter->asDatetime(ArrayHelper::getValue($page, 'updated_at'), 'yyyy-MM-dd HH:mm:ss');
+            $page['updated_at_formatted'] = $dtUpdated ? Yii::$app->formatter->asDatetime($dtUpdated, 'yyyy-MM-dd HH:mm:ss') : Yii::t('admin', 'settings.pages_update_never');
         });
 
         return $pages;

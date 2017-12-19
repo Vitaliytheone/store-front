@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use yii\db\mssql\PDO;
 use common\models\store\Navigations;
 use frontend\modules\admin\models\search\NavigationsSearch;
 
@@ -22,42 +23,48 @@ class DeleteNavigationForm extends Navigations
             return false;
         }
 
+        // Delete self
         $id = $this->getAttribute('id');
-        $position = $this->getAttribute('position');
+        $parentPosition = $this->getAttribute('position');
         $parentId = $this->getAttribute('parent_id');
 
-        $idsToDelete = NavigationsSearch::getChildrenTreeNodeIds($id);
-        array_push($idsToDelete, $id);
+        $this->setAttributes([
+            'deleted' => self::DELETED_YES,
+            'position' => null,
+        ]);
+        $this->save();
 
-        $idsToDeleteImploded = '(' . implode(',', $idsToDelete) . ')';
+        $idsToLevelUp = NavigationsSearch::getFirstLevelChildrenIds($id);
+        $countLevelUpItems = count($idsToLevelUp);
 
-        // `Delete` item and all subitems
         $table = static::tableName();
-        $query = $this->getDb()->createCommand("UPDATE $table SET `position` = :position, `deleted` = :deleted WHERE `id` IN $idsToDeleteImploded")
-            ->bindValue(':position', null)
-            ->bindValue(':deleted', self::DELETED_YES)
-            ->execute();
 
-        $this->updatePositionsAfterDelete($position, $parentId);
-
-        return $query;
-    }
-
-    /**
-     * Update Navigation items positions in current nav set
-     * @param int $position Position of deleted item
-     * @param int $parentId Parent ID of deleted item
-     * @return int
-     */
-    public function updatePositionsAfterDelete($position, $parentId)
-    {
-        $table = static::tableName();
-        $query = $this->getDb()->createCommand("UPDATE $table SET `position` = `position`-1 WHERE `parent_id` = :parentId AND `position` > :oldPosition AND `deleted` = :deleted")
-            ->bindValue(':parentId', $parentId)
-            ->bindValue(':oldPosition', $position)
+        // Level up positions of exiting items with same level
+        $this->getDb()->createCommand("
+            UPDATE $table
+            SET `position` = `position` + :numPositionUp
+            WHERE `parent_id` = :deletedId AND `position` > :deletedPosition AND `deleted` = :deleted
+        ")
+            ->bindValue(':deletedId', $parentId)
+            ->bindValue(':deletedPosition', $parentPosition)
+            ->bindValue(':numPositionUp', $countLevelUpItems - 1)
             ->bindValue(':deleted', self::DELETED_NO)
             ->execute();
 
-        return $query;
+        $idsToLevelUpImploded = '(' . implode(',', $idsToLevelUp) . ')';
+
+        // Level up level _all_ children of deleted node
+        $this->getDb()->createCommand("    
+          SET @tempVariable:= :position;     
+          UPDATE $table
+          SET `parent_id` = :parentId, `position` = (@tempVariable := @tempVariable + 1) 
+          WHERE `id` IN $idsToLevelUpImploded;
+        ")
+            ->bindValue(':parentId', $parentId)
+            ->bindValue(':position', $parentPosition - 1)
+            ->execute();
+
+        return true;
     }
+
 }

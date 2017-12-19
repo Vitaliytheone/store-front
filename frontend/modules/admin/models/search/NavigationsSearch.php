@@ -5,6 +5,7 @@ namespace frontend\modules\admin\models\search;
 use common\models\store\Navigations;
 use Yii;
 use yii\base\Model;
+use yii\db\Connection;
 use yii\db\Query;
 
 class NavigationsSearch extends Model
@@ -66,7 +67,7 @@ class NavigationsSearch extends Model
     }
 
     /**
-     * Return all children ids of tree node
+     * Return all children and subchildren ids of tree node
      * @param $parentId
      * @return array
      */
@@ -75,9 +76,11 @@ class NavigationsSearch extends Model
         $db = Yii::$app->storeDb;
         $table = Navigations::tableName();
 
-        /** @var \yii\db\Connection $db */
+        /** @var Connection $db */
         $query = $db->createCommand("
-            SELECT GROUP_CONCAT(node SEPARATOR ',') ids FROM (
+            SELECT GROUP_CONCAT(node SEPARATOR ',') ids 
+            FROM 
+            (
                 SELECT @Ids := (
                    SELECT GROUP_CONCAT(`id` SEPARATOR ',')
                    FROM $table
@@ -97,6 +100,29 @@ class NavigationsSearch extends Model
         }
 
         return $ids;
+    }
+
+    /**
+     * Return first-level children ids of the parent id node
+     * @param $parentId
+     * @return array
+     */
+    public static function getFirstLevelChildrenIds($parentId)
+    {
+        $db = Yii::$app->storeDb;
+        $table = Navigations::tableName();
+
+        /** @var Connection $db */
+        $query = $db->createCommand("
+            SELECT `id`
+            FROM $table
+            WHERE `parent_id` = :parentId
+            ORDER BY `position` ASC
+        ")
+            ->bindValue(':parentId', $parentId)
+            ->queryColumn();
+
+        return $query;
     }
 
 }

@@ -90,7 +90,8 @@ class Pages extends ActiveRecord
 
             $navModels = Navigations::findAll([
                 'link' => Navigations::LINK_PAGE,
-                'link_id' => $this->id
+                'link_id' => $this->id,
+                'deleted' => Navigations::DELETED_NO,
             ]);
 
             foreach ($navModels as $navModel) {
@@ -106,7 +107,8 @@ class Pages extends ActiveRecord
 
             $navModels = Navigations::findAll([
                 'link' => Navigations::LINK_PAGE,
-                'link_id' => $this->id
+                'link_id' => $this->id,
+                'deleted' => Navigations::DELETED_NO,
             ]);
 
             foreach ($navModels as $navModel) {

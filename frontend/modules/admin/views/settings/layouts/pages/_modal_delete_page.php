@@ -14,9 +14,9 @@ use frontend\modules\admin\components\Url;
                 <div class="row">
                     <div class="col modal-delete-block text-center">
                         <span class="fa fa-trash-o"></span>
-                        <p><?= Yii::t('admin', 'settings.page_delete_agree') ?></p>
-                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.package_delete_cancel') ?></button>
-                        <button class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'settings.package_delete_submit') ?></button>
+                        <p><?= Yii::t('admin', 'settings.pages_delete_agree') ?></p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.pages_delete_cancel') ?></button>
+                        <button class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'settings.pages_delete_submit') ?></button>
                     </div>
                 </div>
             </div>
