@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\admin\models\search;
+namespace frontend\models\search;
 
 use common\models\store\Navigations;
 use Yii;

@@ -16,7 +16,7 @@ use frontend\modules\admin\models\forms\EditStoreSettingsForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\forms\UpdatePositionsNavigationForm;
 use frontend\modules\admin\models\search\LinksSearch;
-use frontend\modules\admin\models\search\NavigationsSearch;
+use frontend\models\search\NavigationsSearch;
 use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;

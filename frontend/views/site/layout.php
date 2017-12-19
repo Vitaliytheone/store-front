@@ -28,40 +28,31 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/">Home</a></li>
-                <li><a href="/product">Twitter</a></li>
-                <li class="dropdown">
-                    <a href="/product" class="dropdown-toggle disabled">YouTube <span class="caret"></span></a>
-                    <ul class="dropdown-menu multi-level">
-                        <li><a href="/product">Followers</a></li>
-                        <li><a href="/product">Likes</a></li>
-                        <li class="dropdown-submenu">
-                            <a href="/product" class="dropdown-toggle disabled">Views</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">100 views</a></li>
-                                <li><a href="#">500 views</a></li>
-                                <li><a href="#">1000 views</a></li>
-                                <li><a href="#">500000 views</a></li>
+
+                <?php foreach ($site['user_menu_items'] as $itemL1): ?>
+                    <li class="<?= isset($itemL1['nodes']) ? 'dropdown' : '' ?>">
+                        <a href="<?= $itemL1['url'] ?>" class="<?= isset($itemL1['nodes']) ? 'dropdown-toggle disabled' : '' ?>"> <?= $itemL1['name'] ?> <?php if(isset($itemL1['nodes'])): ?><span class="caret"></span><?php endif; ?></a>
+                        <?php if(isset($itemL1['nodes'])): ?>
+                            <ul class="dropdown-menu multi-level">
+                                <?php foreach ($itemL1['nodes'] as $itemL2): ?>
+                                    <li class="<?= isset($itemL2['nodes']) ? 'dropdown-submenu' : '' ?>">
+                                        <a href="<?= $itemL2['url'] ?>" class="<?= isset($itemL2['nodes']) ? 'dropdown-toggle disabled' : '' ?>"> <?= $itemL2['name'] ?> </a>
+                                        <?php if(isset($itemL2['nodes'])): ?>
+                                            <ul class="dropdown-menu multi-level">
+                                                <?php foreach ($itemL2['nodes'] as $itemL3): ?>
+                                                <li class="<?= isset($itemL3['nodes']) ? 'dropdown' : '' ?>">
+                                                    <a href="<?= $itemL3['url'] ?>" class="<?= isset($itemL3['nodes']) ? 'dropdown-toggle disabled' : '' ?>"> <?= $itemL3['name'] ?> <?php if(isset($itemL3['nodes'])): ?><span class="caret"></span><?php endif; ?></a>
+                                                </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        <?php endif; ?>
+                                    </li>
+                                <?php endforeach;?>
                             </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="/product" class="dropdown-toggle disabled">Facebook <span class="caret"></span></a>
-                    <ul class="dropdown-menu multi-level">
-                        <li><a href="/product">Followers</a></li>
-                        <li><a href="/product">Likes</a></li>
-                        <li class="dropdown-submenu">
-                            <a href="#" class="dropdown-toggle disabled">Views</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">100 views</a></li>
-                                <li><a href="#">500 views</a></li>
-                                <li><a href="#">1000 views</a></li>
-                                <li><a href="#">500000 views</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+
                 <li><a href="/cart" class="bold">(<?= $site['cart_count'] ?>) Cart</a></li>
             </ul>
         </div>

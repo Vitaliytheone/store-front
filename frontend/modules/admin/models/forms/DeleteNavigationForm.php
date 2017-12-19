@@ -2,9 +2,8 @@
 
 namespace frontend\modules\admin\models\forms;
 
-use yii\db\mssql\PDO;
 use common\models\store\Navigations;
-use frontend\modules\admin\models\search\NavigationsSearch;
+use frontend\models\search\NavigationsSearch;
 
 /**
  * Class DeleteNavigation form
