@@ -87,8 +87,6 @@ class CustomController extends MainController
 
         $menuItems = (new NavigationsSearch())->getTree();
 
-        error_log(print_r($menuItems, 1),0);
-
         $endContent = '';
 
         if (YII_ENV_DEV) {
