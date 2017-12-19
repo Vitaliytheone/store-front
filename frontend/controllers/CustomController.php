@@ -19,6 +19,8 @@ class CustomController extends MainController
 
     protected $_globalParams;
 
+    public $customJs = [];
+
     /**
      * @inheritdoc
      */
@@ -36,6 +38,16 @@ class CustomController extends MainController
             ],
         ];
     }*/
+
+    /**
+     * Activate js module
+     * @param string $name
+     * @param array $options
+     */
+    public function addModule($name, $options = [])
+    {
+        $this->customJs[] = 'window.modules.' . $name . ' = ' . json_encode($options) . ';';
+    }
 
     public function beforeAction($action)
     {
@@ -81,11 +93,21 @@ class CustomController extends MainController
             ob_end_clean();
         }
 
+        foreach ($this->customJs as $js) {
+            $scripts[] = [
+                'code' => $js
+            ];
+        }
+
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
-            'cart_count' => $cartItems->getCount(),
-            'custom_footer' => $endContent
+            'site' => [
+                'cart_count' => $cartItems->getCount(),
+                'custom_footer' => $endContent,
+                'scripts' => $scripts
+            ]
+
         ];
 
         return $this->_globalParams;

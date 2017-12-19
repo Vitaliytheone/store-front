@@ -62,7 +62,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="/cart" class="bold">(<?= $cart_count ?>) Cart</a></li>
+                <li><a href="/cart" class="bold">(<?= $site['cart_count'] ?>) Cart</a></li>
             </ul>
         </div>
     </div>
@@ -90,7 +90,7 @@
             </div>
         </div>
     </div>
-    <?= $custom_footer ?>
+    <?= $site['custom_footer'] ?>
 </footer>
 <!-- Footer block End -->
 
@@ -101,4 +101,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
 <script src="/js/main.js"></script>
+
+<?php foreach ($site['scripts'] as $script) : ?>
+<script type="text/javascript" <?php if (!empty($script['src'])) : ?> src="<?= $script['src'] ?>" <?php endif; ?>>
+    <?php if (!empty($script['code'])) : ?>
+        <?= $script['code'] ?>
+    <?php endif; ?>
+</script>
+<?php endforeach; ?>
+
 </html>
