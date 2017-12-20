@@ -134,6 +134,14 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'text', 'id' => 'bitcoin_geteway_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][gateway_secret]', 'value' => $getDetailsField('gateway_secret'), 'label' => Yii::t('admin', 'settings.payments_bitcoin_gateway_secret')],
                 ]
             ],
+
+            self::METHOD_COINPAYMENTS => [
+                'icon' => '/img/coinpayments.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_public_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][public_key]', 'value' => $getDetailsField('public_key'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_public_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_private_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][private_key]', 'value' => $getDetailsField('private_key'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_private_key')],
+                ]
+            ],
         ];
 
         return ArrayHelper::getValue($paymentsFormData, $method);

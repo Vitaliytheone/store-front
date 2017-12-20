@@ -14,10 +14,10 @@ class PaymentMethodsSearch extends PaymentMethods
 {
     /**
      * Return payments methods list item data
-     * @param $field
+     * @param $methodName
      * @return mixed
      */
-    public function getMethodsListItemData($field)
+    public function getMethodsListItemData($methodName)
     {
         $method = $this->method;
 
@@ -37,8 +37,13 @@ class PaymentMethodsSearch extends PaymentMethods
                 'title' => Yii::t('admin', 'settings.payments_method_bitcoin'),
                 'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
             ],
+            self::METHOD_COINPAYMENTS => [
+                'icon' => '/img/coinpayments.png',
+                'title' => Yii::t('admin', 'settings.payments_method_coinpayments'),
+                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            ],
         ];
 
-        return ArrayHelper::getValue($methodItemsData, "$method.$field", $field);
+        return ArrayHelper::getValue($methodItemsData, "$method.$methodName", $methodName);
     }
 }
