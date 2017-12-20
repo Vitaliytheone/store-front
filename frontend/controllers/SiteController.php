@@ -20,6 +20,16 @@ class SiteController extends CustomController
     }
 
     /**
+     * Displays index page.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
+
+    /**
      * Displays checkout page.
      *
      * @return string
