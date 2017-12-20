@@ -138,8 +138,8 @@ class EditPaymentMethodForm extends PaymentMethods
             self::METHOD_COINPAYMENTS => [
                 'icon' => '/img/coinpayments.png',
                 'form_fields' => [
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_public_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][public_key]', 'value' => $getDetailsField('public_key'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_public_key')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_private_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][private_key]', 'value' => $getDetailsField('private_key'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_private_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_merchant_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_id]', 'value' => $getDetailsField('merchant_id'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_merchant_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_ipn_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][ipn_secret]', 'value' => $getDetailsField('ipn_secret'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_ipn_secret')],
                 ]
             ],
         ];

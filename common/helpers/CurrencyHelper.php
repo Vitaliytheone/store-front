@@ -71,6 +71,23 @@ class CurrencyHelper {
                     'type' => 0,
                     'position' => 3,
                 ],
+                'coinpayments' => [
+                    'method_name' => 'Coin Payments',
+                    'class_name' => "Coinpayments",
+                    'url' => 'coinpayments',
+                    'mode' => 'standart',
+                    'name' => 'Coin Payments',
+                    'minimal' => '1.00',
+                    'maximal' => 0,
+                    'active' => 0,
+                    'fee' => 0,
+                    'options' => [
+                        'merchant_id' => '',
+                        'ipn_secret' => '',
+                    ],
+                    'type' => 0,
+                    'position' => 4,
+                ],
             ]
         ]
     ];

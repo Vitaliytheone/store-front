@@ -76,18 +76,20 @@
 <ol>
     <li>
         <?= Yii::t('admin', 'settings.payments_coinpayments_guide_1', [
-            'coinpayments_signup_url' => '<a href="https://www.coinpayments.net/" target="_blank">Coin Payments</a>'
+            'signup_url' => '<a href="https://www.coinpayments.net/" target="_blank">Coin Payments</a>'
         ]) ?>
 
     </li>
     <li>
         <?= Yii::t('admin', 'settings.payments_coinpayments_guide_2', [
-            'coinpayments_api_settings_url' => '<a href="https://www.coinpayments.net/index.php?cmd=acct_api_keys" target="_blank">API Keys settings page</a>'
+            'coin_settings_url' => '<a href="https://www.coinpayments.net/acct-coins" target="_blank">Coin Acceptance Settings</a>'
         ]) ?>
 
     </li>
     <li>
-        <?= Yii::t('admin', 'settings.payments_coinpayments_guide_3') ?>
+    <?= Yii::t('admin', 'settings.payments_coinpayments_guide_3', [
+            'account_settings_url' => '<a href="https://www.coinpayments.net/acct-settings">Account Setting</a>'
+    ]) ?>
         <ul>
             <li><?= Yii::t('admin', 'settings.payments_coinpayments_guide_3_1') ?></li>
             <li><?= Yii::t('admin', 'settings.payments_coinpayments_guide_3_2') ?></li>
@@ -95,9 +97,6 @@
     </li>
     <li>
         <?= Yii::t('admin', 'settings.payments_coinpayments_guide_4') ?>
-    </li>
-    <li>
-        <?= Yii::t('admin', 'settings.payments_coinpayments_guide_5') ?>
     </li>
 </ol>
 <?php endif; ?>
