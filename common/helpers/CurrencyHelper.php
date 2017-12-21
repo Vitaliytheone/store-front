@@ -72,11 +72,11 @@ class CurrencyHelper {
                     'position' => 3,
                 ],
                 'coinpayments' => [
-                    'method_name' => 'Coin Payments',
+                    'method_name' => 'CoinPayments',
                     'class_name' => "Coinpayments",
                     'url' => 'coinpayments',
                     'mode' => 'standart',
-                    'name' => 'Coin Payments',
+                    'name' => 'CoinPayments',
                     'minimal' => '1.00',
                     'maximal' => 0,
                     'active' => 0,

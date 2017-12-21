@@ -42,7 +42,7 @@ class Coinpayments extends BasePayment
     public static $ipnUrl = '/coinpayments';
 
     /**
-     * Coin Payments IPN statuses
+     * CoinPayments IPN statuses
      * according to official documentations
      * https://www.coinpayments.net/merchant-tools-ipn
      */
@@ -127,14 +127,14 @@ class Coinpayments extends BasePayment
         if (in_array('', $ipnData)) {
             return [
                 'result' => 2,
-                'content' => "Missing required Coin Payments IPN params!"
+                'content' => "Missing required CoinPayments IPN params!"
             ];
         }
 
         if (!in_array($ipnData['ipn_status'], static::$_allowedIPNStatuses)) {
             return [
                 'result' => 2,
-                'content' => "Unknown Coin Payments IPN status! Status=" . $ipnData['ipn_status']
+                'content' => "Unknown CoinPayments IPN status! Status=" . $ipnData['ipn_status']
             ];
         }
 
@@ -158,7 +158,7 @@ class Coinpayments extends BasePayment
         if (!isset($methodMerchantId, $methodIPNSecret)) {
             return [
                 'result' => 2,
-                'content' => "Invalid Coin Payments settings!"
+                'content' => "Invalid CoinPayments settings!"
             ];
         }
 
@@ -169,7 +169,7 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        // Validate Coin Payments message
+        // Validate CoinPayments message
         $requestRawBody = file_get_contents('php://input');
         if (empty($requestRawBody)) {
             return [

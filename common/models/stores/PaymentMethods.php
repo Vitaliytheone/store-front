@@ -23,7 +23,6 @@ class PaymentMethods extends ActiveRecord
     /* Payment methods names */
     const METHOD_PAYPAL = 'paypal';
     const METHOD_2CHECKOUT = '2checkout';
-    const METHOD_BITCOIN = 'bitcoin';
     const METHOD_COINPAYMENTS = 'coinpayments';
 
     const ACTIVE_DISABLED = 0;
@@ -90,7 +89,6 @@ class PaymentMethods extends ActiveRecord
         return [
             static::METHOD_PAYPAL => Yii::t('admin', 'payments.payment_method_paypal'),
             static::METHOD_2CHECKOUT => Yii::t('admin', 'payments.payment_method_2checkout'),
-            static::METHOD_BITCOIN => Yii::t('admin', 'payments.payment_method_bitcoin'),
             static::METHOD_COINPAYMENTS => Yii::t('admin', 'payments.payment_method_coinpayments'),
         ];
     }
