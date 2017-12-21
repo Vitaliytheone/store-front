@@ -40,6 +40,11 @@ class CustomController extends MainController
         ];
     }*/
 
+    public function init()
+    {
+        $this->layout = "layout.twig";
+    }
+
     /**
      * Activate js module
      * @param string $name
@@ -180,5 +185,49 @@ class CustomController extends MainController
         }
 
         return $content;
+    }
+
+    /**
+     * Finds the applicable layout file.
+     * @param View $view the view object to render the layout file.
+     * @return string|bool the layout file path, or false if layout is not needed.
+     * Please refer to [[render()]] on how to specify this parameter.
+     * @throws InvalidParamException if an invalid path alias is used to specify the layout.
+     */
+    public function findLayoutFile($view)
+    {
+        $module = $this->module;
+        if (is_string($this->layout)) {
+            $layout = $this->layout;
+        } elseif ($this->layout === null) {
+            while ($module !== null && $module->layout === null) {
+                $module = $module->module;
+            }
+            if ($module !== null && is_string($module->layout)) {
+                $layout = $module->layout;
+            }
+        }
+
+        if (!isset($layout)) {
+            return false;
+        }
+
+        if (strncmp($layout, '@', 1) === 0) {
+            $file = Yii::getAlias($layout);
+        } elseif (strncmp($layout, '/', 1) === 0) {
+            $file = $view->getThemeViewFile(substr($layout, 1));
+        } else {
+            $file = $view->getThemeViewFile($layout);
+        }
+
+        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
+            return $file;
+        }
+        $path = $file . '.' . $view->defaultExtension;
+        if ($view->defaultExtension !== 'php' && !is_file($path)) {
+            $path = $file . '.php';
+        }
+
+        return $path;
     }
 }

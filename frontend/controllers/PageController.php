@@ -17,7 +17,7 @@ class PageController extends CustomController
     {
         $page = $this->_findPage($id);
 
-        return $this->render($page->template, [
+        return $this->render($page->template . '.twig', [
             'page' => $page
         ]);
     }

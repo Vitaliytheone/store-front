@@ -1,5 +1,5 @@
 # Navigation migration
-USE 'store';
+USE `store`;
 CREATE TABLE `navigation` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `parent_id` tinyint(255) unsigned DEFAULT NULL,

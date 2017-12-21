@@ -1,5 +1,6 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
-    'debugIps' => ['*']
+    'debugIps' => ['*'],
+    'twig.cachePath' => '@runtime/twig/cache',
 ];

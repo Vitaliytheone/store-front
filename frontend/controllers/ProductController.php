@@ -1,8 +1,9 @@
 <?php
 namespace frontend\controllers;
 
-use common\models\store\Products;
+use frontend\helpers\UiHelper;
 use Yii;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use frontend\models\forms\ProductViewForm;
@@ -26,15 +27,31 @@ class ProductController extends CustomController
 
         $this->view->title = $product->name;
 
-        return $this->render('product', [
-            'product' => $product,
+        return $this->render('product.twig', [
+            'product' => [
+                'id' => $product->id,
+                'name' => Html::encode($product->name),
+                'description' => $product->description,
+            ],
+            'packages' => array_map(function ($package) {
+                return [
+                    'id' => $package->id,
+                    'best' => UiHelper::toggleString($package->best, 'best-product'),
+                    'quantity' => $package->quantity,
+                    'name' => Html::encode($package->name),
+                    'price' => '$' . $package->price,
+                ];
+            }, $product->packages),
+            'properties' => array_map(function ($property) {
+                return Html::encode($property);
+            }, $product->properties)
         ]);
     }
 
     /**
      * Find product or return exception
      * @param int $id
-     * @return Products
+     * @return ProductViewForm
      * @throws NotFoundHttpException
      */
     protected function _findProduct(int $id)

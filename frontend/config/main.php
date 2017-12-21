@@ -72,6 +72,19 @@ $config = [
                 ],
             ],
         ],
+        'view' => [
+            'class' => 'common\components\View',
+            'renderers' => [
+                'twig' => [
+                    'class' => 'common\components\twig\ViewRenderer',
+                    //'cachePath' => $params['twig.cachePath'],
+                    'cachePath' => null,
+                    'options' => [
+                        'autoescape' => false,
+                    ],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
     'modules' => [

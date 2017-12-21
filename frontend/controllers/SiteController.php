@@ -26,7 +26,7 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('index.twig');
     }
 
     /**

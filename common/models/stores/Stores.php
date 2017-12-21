@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\helpers\StoreHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -26,6 +27,7 @@ use common\models\stores\queries\StoresQuery;
  * @property string $seo_keywords
  * @property string $seo_description
  * @property string $theme_name
+ * @property string $theme_folder
  *
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
@@ -51,7 +53,7 @@ class Stores extends ActiveRecord
     {
         return [
             [['customer_id', 'timezone', 'expired', 'created_at', 'updated_at'], 'integer'],
-            [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name'], 'string', 'max' => 255],
+            [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder'], 'string', 'max' => 255],
             [['currency'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customer_id' => 'id']],
@@ -80,6 +82,7 @@ class Stores extends ActiveRecord
             'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'seo_description' => Yii::t('app', 'Seo Description'),
             'theme_name' => Yii::t('app', 'Theme Name'),
+            'theme_folder' => Yii::t('app', 'Theme Folder'),
         ];
     }
 
@@ -160,5 +163,35 @@ class Stores extends ActiveRecord
                 },
             ],
         ];
+    }
+
+    /**
+     * Generate unique folder name
+     * @return bool
+     */
+    public function generateFolderName()
+    {
+        for ($i = 1; $i < 100; $i++) {
+            $this->theme_folder = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 6);
+            if (!static::findOne([
+                'theme_folder' => $this->theme_folder
+            ])) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Get panel folder
+     * @return string
+     */
+    public function getThemeFolder()
+    {
+        if (empty($this->theme_folder)) {
+            $this->theme_folder = Yii::$app->params['defaultTheme'];
+            $this->save(false);
+        }
+
+        return $this->theme_folder;
     }
 }

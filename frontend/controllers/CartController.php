@@ -11,6 +11,7 @@ use frontend\models\forms\AddToCartForm;
 use frontend\models\forms\OrderForm;
 use frontend\models\search\CartSearch;
 use Yii;
+use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -49,7 +50,7 @@ class CartController extends CustomController
             return $this->render('checkout', $model->formData);
         }
 
-        return $this->render('cart', [
+        return $this->render('cart.twig', [
             'items' => $items['models'],
             'methods' => $model->getPaymentMethods(),
             'total' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
@@ -91,9 +92,13 @@ class CartController extends CustomController
             $this->redirect('/cart');
         }
 
-        return $this->render('order', [
-            'package' => $package,
-            'model' => $model,
+        return $this->render('order.twig', [
+            'package' => [
+                'id' => $package->id,
+                'name' => Html::encode($package->name),
+                'quantity' => $package->quantity,
+                'price' => $package->price,
+            ],
             'goBackUrl' => $this->getGoBackUrl(),
             'data' => $model->attributes,
             'error' => $model->hasErrors(),

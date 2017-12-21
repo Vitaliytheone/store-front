@@ -18,7 +18,8 @@
         "yiisoft/yii2": "~2.0.4",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "uploadcare/uploadcare-php": ">=v2.0,<3.0"
+        "uploadcare/uploadcare-php": ">=v2.0,<3.0",
+        "twig/twig": "^2.4"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

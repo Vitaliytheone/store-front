@@ -8,6 +8,7 @@ use common\models\store\Products;
 /**
  * Class ProductViewForm
  * @property Packages[] $packages
+ * @property array $properties
  * @package frontend\models\forms
  */
 class ProductViewForm extends Products

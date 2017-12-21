@@ -19,27 +19,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($items as $key => $item) : ?>
+												    {% for key,item in items %}
                                 <tr>
                                     <td>
-                                        <?= ($key + 1) ?>
+                                        {{ (key + 1) }}
                                     </td>
                                     <td>
-                                        <?= $item['package_name'] ?>
+																				{{ item['package_name'] }}
                                     </td>
                                     <td>
-                                        <?= $item['link'] ?>
+																				{{ item['link'] }}
                                     </td>
                                     <td>
-                                        <?= $item['price'] ?>
+																				{{ item['price'] }}
                                     </td>
                                     <td class="text-right">
-                                        <a href="/cart/remove/<?= $item['key'] ?>" class="btn btn-xs btn-default">
+                                        <a href="/cart/remove/{{ item['key'] }}" class="btn btn-xs btn-default">
                                             Remove
                                         </a>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+														{% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -50,7 +50,7 @@
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">
                 <div class="cart bg-white cart-total">
-                    <strong>Total price </strong><div class="cart-total__price pull-right"><?= $total ?></div>
+                    <strong>Total price </strong><div class="cart-total__price pull-right">{{ total }}</div>
                 </div>
             </div>
         </div>
@@ -59,26 +59,27 @@
             <div class="row">
                 <div class="col-lg-offset-8 col-lg-4">
                     <div class="cart bg-white">
-                        <?php if (!empty($error)) : ?>
-                            <div class="error-summary alert alert-danger"><?= $errorText ?></div>
-                        <?php endif; ?>
+												{% if error %}
+                            <div class="error-summary alert alert-danger">{{ errorText }}</div>
+												{% endif %}
+												{% if methods|length > 1 %}
                         <?php if (1 < count($methods)) : ?>
                             <div class="form-group">
                                 <label>Payment method</label>
 
                                 <div>
-                                    <?php foreach ($methods as $methodId => $methodName) : ?>
+																		{% for methodId,methodName in methods %}
                                         <label class="radio-inline">
-                                            <input type="radio" name="OrderForm[method]" id="inlineRadio1" <?= ($methodName === reset($methods)) ? 'checked' : '' ?> value="<?= $methodId?>"> <?= $methodName ?>
+                                            <input type="radio" name="OrderForm[method]" id="inlineRadio1" {% if methodName == methodId %} checked {% endif %} value="{{ methodId }}"> {{ methodName }}
                                         </label>
-                                    <?php endforeach; ?>
+																		{% endfor %}
                                 </div>
                             </div>
-                        <?php endif; ?>
+												{% endif %}
 
                         <div class="form-group">
                             <label class="control-label" for="orderform-email">Email address</label>
-                            <input id="orderform-email" class="form-control" name="OrderForm[email]" value="<?= $data['email'] ?>" placeholder="mail@gmail.com" aria-required="true" aria-invalid="true" type="text">
+                            <input id="orderform-email" class="form-control" name="OrderForm[email]" value="{{ data['email'] }}" placeholder="mail@gmail.com" aria-required="true" aria-invalid="true" type="text">
                         </div>
                     </div>
                 </div>
@@ -94,7 +95,7 @@
                 </div>
             </div>
 
-            <input type="hidden" name="<?= $csrfname ?>" value="<?= $csrftoken ?>">
+            <input type="hidden" name="<?= $csrfname ?>" value="{{ csrftoken }}">
         </form>
     </div>
 </section>
