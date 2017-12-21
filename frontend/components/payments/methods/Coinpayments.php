@@ -158,7 +158,7 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        error_log('2',3);
+        error_log('2',0);
 
         $methodDetails = $paymentMethod->getDetails();
         $methodMerchantId = ArrayHelper::getValue($methodDetails, 'merchant_id');
