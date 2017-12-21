@@ -8,5 +8,6 @@ return [
     'packageLinkTypes' => $packageLinkTypes,
     'timezone' => $timezone,
     'cdn' => $cdn,
-    'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb'
+    'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
+    'defaultTheme' => 'classic',
 ];
