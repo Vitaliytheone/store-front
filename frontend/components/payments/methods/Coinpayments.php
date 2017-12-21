@@ -86,53 +86,55 @@ class Coinpayments extends BasePayment
         $amount = number_format($checkout->price, 2, '.', '');
 
         return static::returnForm($this->getFrom(), [
-            'cmd' => '_pay_simple',
-            'reset' => 1,
-            'amountf' => $amount,
-            'currency' => $store->currency,
+            'cmd' => '_pay',
+            'reset' => '1',
+            'want_shipping' => '0',
             'merchant' => $merchantId,
-            'invoice' => $checkout->id,
+            'currency' => $store->currency,
+            'amountf' => $amount,
             'item_name' => static::getDescription($email),
             'success_url' => SiteHelper::hostUrl(),
             'cancel_url' => SiteHelper::hostUrl(),
             'ipn_url' => SiteHelper::hostUrl() . static::$ipnUrl,
+            'invoice' => $checkout->id,
             'email' => $email,
+            'allow_extra' => '1',
         ]);
     }
 
+    /**
+     * Processing CoinPayments IPN requests
+     * @param Stores $store
+     * @return array
+     */
     public function processing($store)
     {
-        $request = Yii::$app->request;
-        $requestRawBody = $request->getRawBody();
-        $requestParams = $request->post();
-        $requestHeaders = $request->getHeaders();
+        $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
 
-        error_log(print_r($requestParams, 1), 0);
-
-        $this->log(json_encode($requestParams, JSON_PRETTY_PRINT));
-
-        $ipnTransactionId = ArrayHelper::getValue($requestParams, 'txn_id');
-        $ipnMode = ArrayHelper::getValue($requestParams, 'ipn_mode');
-        $ipnHmacSignature = ArrayHelper::getValue($requestHeaders, 'HTTP_HMAC');
-        $ipnMerchant = ArrayHelper::getValue($requestParams, 'merchant');
-        $ipnStatus = ArrayHelper::getValue($requestParams, 'status');
-        $ipnCurrency = ArrayHelper::getValue($requestParams, 'currency1');
-        $ipnAmount = ArrayHelper::getValue($requestParams, 'amount1');
-        $ipnEmail = ArrayHelper::getValue($requestParams, 'email');
-        $ipnVendorCheckoutId = ArrayHelper::getValue($requestParams, 'invoice');
+        $ipnData = [
+            'hmac_signature' => ArrayHelper::getValue($_SERVER, 'HTTP_HMAC'),
+            'transaction_id' => ArrayHelper::getValue($_POST, 'txn_id'),
+            'ipn_mode' => ArrayHelper::getValue($_POST, 'ipn_mode'),
+            'merchant_id' => ArrayHelper::getValue($_POST, 'merchant'),
+            'ipn_status' => ArrayHelper::getValue($_POST, 'status'),
+            'payment_currency' => ArrayHelper::getValue($_POST, 'currency1'),
+            'payment_amount' => ArrayHelper::getValue($_POST, 'amount1'),
+            'payment_email' => ArrayHelper::getValue($_POST, 'email'),
+            'sommerce_checkout_id' => ArrayHelper::getValue($_POST, 'invoice'),
+        ];
 
 
-        if (!isset($ipnTransactionId, $ipnMode, $ipnHmacSignature, $ipnMerchant, $ipnStatus, $ipnCurrency, $ipnAmount, $ipnEmail, $ipnVendorCheckoutId)) {
+        if (in_array('', $ipnData)) {
             return [
                 'result' => 2,
-                'content' => "Invalid Coin Payments IPN params!"
+                'content' => "Missing required Coin Payments IPN params!"
             ];
         }
 
-        if (!in_array($ipnMode, static::$_allowedIPNStatuses)) {
+        if (!in_array($ipnData['ipn_status'], static::$_allowedIPNStatuses)) {
             return [
                 'result' => 2,
-                'content' => "Unknown Coin Payments IPN status!"
+                'content' => "Unknown Coin Payments IPN status! Status=" . $ipnData['ipn_status']
             ];
         }
 
@@ -160,17 +162,18 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $hmac = hash_hmac("sha512", $requestRawBody, trim($paymentIPNSecret));
-
-        if (empty($rawRequest)) {
+        // Validate Coin Payments message
+        $requestRawBody = file_get_contents('php://input');
+        if (empty($requestRawBody)) {
             return [
                 'result' => 2,
                 'content' => "Error reading raw request data!"
             ];
         }
 
-        // Validate Coin Payments message
-        if (!hash_equals($hmac, $ipnHmacSignature)) {
+        $hmac = hash_hmac("sha512", $requestRawBody, trim($paymentIPNSecret));
+
+        if (!hash_equals($hmac, $ipnData['hmac_signature'])) {
             return [
                 'result' => 2,
                 'content' => "HMAC signature does not match!"
@@ -178,57 +181,57 @@ class Coinpayments extends BasePayment
         }
 
         // Check checkout
-        if (empty($ipnVendorCheckoutId)
+        if (empty($ipnData['sommerce_checkout_id'])
             || !($this->_checkout = Checkouts::findOne([
-                'id' => $ipnVendorCheckoutId,
+                'id' => $ipnData['sommerce_checkout_id'],
                 'method_id' => $paymentMethod->id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no checkout
             return [
-                'result' => 3,
-                'content' => "Checkout #$ipnVendorCheckoutId does not exist or already paid!"
+                'result' => 2,
+                'content' => "Checkout #" . $ipnData['sommerce_checkout_id'] . " does not exist or already paid!"
             ];
         }
 
         // Logging PS checkout request
-        PaymentsLog::log($this->_checkout->id, $requestParams);
+        PaymentsLog::log($this->_checkout->id, $_POST);
 
         // Check invoice currency. Binary safe case-insensitive.
-        if (strcasecmp($ipnCurrency, $store->currency) !== 0) {
+        if (strcasecmp($ipnData['payment_currency'], $store->currency) !== 0) {
             return [
                 'result' => 2,
-                'content' => "Invalid checkout currency code verification result! Expected: $store->currency, Current: $ipnCurrency"
+                'content' => "Invalid checkout currency code verification result! Expected: $store->currency, given: " . $ipnData['payment_currency'],
             ];
         }
 
         // Check payment amount
-        $ipnAmount = number_format($ipnAmount, 2, '.', '');
+        $paymentAmount = number_format($ipnData['payment_amount'], 2, '.', '');
         $checkoutAmount = number_format($this->_checkout->price, 2, '.', '');
-        if ($ipnAmount != $ipnAmount) {
+        if ($paymentAmount != $checkoutAmount) {
             return [
                 'result' => 2,
-                'content' => "Invalid amount verification result! Expected: $checkoutAmount, Given: $ipnAmount"
+                'content' => "Invalid amount verification result! Expected: $checkoutAmount, Given: $paymentAmount"
             ];
         }
 
-        $this->_checkout->method_status = $ipnStatus;
+        $this->_checkout->method_status = $ipnData['ipn_status'];
 
-        $this->_payment->transaction_id = $ipnTransactionId;
+        $this->_payment->transaction_id = $ipnData['transaction_id'];
         $this->_payment->status = Payments::STATUS_AWAITING;
-        $this->_payment->response_status = $ipnStatus;
-        $this->_payment->email = $ipnEmail;
+        $this->_payment->response_status = $ipnData['ipn_status'];
+        $this->_payment->email = $ipnData['payment_email'];
 
-        if (!in_array($ipnStatus, [self::PAYMENT_STATUS_COMPLETED, self::PAYMENT_STATUS_QUEUED_NIGHTLY_PAYOUT])) {
+        if (!in_array($ipnData['ipn_status'], [self::PAYMENT_STATUS_COMPLETED, self::PAYMENT_STATUS_QUEUED_NIGHTLY_PAYOUT])) {
             return [
                 'result' => 2,
-                'content' => "The payment is not yet completed. Current status: $ipnStatus."
+                'content' => "The payment is not yet completed. Current status: " . $ipnData['ipn_status']
             ];
         }
 
         return [
             'result' => 1,
-            'transaction_id' => $ipnTransactionId,
+            'transaction_id' => $ipnData['transaction_id'],
             'amount' => $this->_checkout->price,
             'checkout_id' => $this->_checkout->id,
             'content' => 'Ok'
