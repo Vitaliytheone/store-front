@@ -134,12 +134,16 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        error_log('1',0);
+
         if (!in_array($ipnData['ipn_status'], static::$_allowedIPNStatuses)) {
             return [
                 'result' => 2,
                 'content' => "Unknown Coin Payments IPN status! Status=" . $ipnData['ipn_status']
             ];
         }
+
+        error_log('2',0);
 
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_COINPAYMENTS,
@@ -154,6 +158,8 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        error_log('2',3);
+
         $methodDetails = $paymentMethod->getDetails();
         $methodMerchantId = ArrayHelper::getValue($methodDetails, 'merchant_id');
         $methodIPNSecret = ArrayHelper::getValue($methodDetails, 'ipn_secret');
@@ -165,12 +171,18 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        error_log('4',0);
+
+
         if ($methodMerchantId !== $ipnData['merchant_id']) {
             return [
                 'result' => 2,
                 'content' => "Unexpected merchant ID!" . "Expected:" . $methodMerchantId . ", given: " . $ipnData['merchant_id']
             ];
         }
+
+        error_log('5',0);
+
 
         // Validate Coin Payments message
         $requestRawBody = file_get_contents('php://input');
@@ -181,7 +193,14 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        error_log('6',0);
+
+
         $hmac = hash_hmac("sha512", $requestRawBody, trim($methodIPNSecret));
+
+        error_log(print_r($methodIPNSecret, 1),0);
+        error_log(print_r($hmac, 1),0);
+        error_log(print_r($ipnData['hmac_signature'], 1),0);
 
         if (!hash_equals($hmac, $ipnData['hmac_signature'])) {
             return [
@@ -189,6 +208,9 @@ class Coinpayments extends BasePayment
                 'content' => "HMAC signature does not match!" . "Expected: " . $hmac . ", given: " . $ipnData['hmac_signature'],
             ];
         }
+
+        error_log('7',0);
+
 
         // Check checkout
         if (empty($ipnData['sommerce_checkout_id'])
@@ -204,6 +226,9 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        error_log('8',0);
+
+
         // Logging PS checkout request
         PaymentsLog::log($this->_checkout->id, $_POST);
 
@@ -215,6 +240,9 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        error_log('9',0);
+
+
         // Check payment amount
         $paymentAmount = number_format($ipnData['payment_amount'], 2, '.', '');
         $checkoutAmount = number_format($this->_checkout->price, 2, '.', '');
@@ -224,6 +252,8 @@ class Coinpayments extends BasePayment
                 'content' => "Invalid amount verification result! Expected: $checkoutAmount, Given: $paymentAmount"
             ];
         }
+
+        error_log('10',0);
 
         $this->_checkout->method_status = $ipnData['ipn_status'];
 
@@ -238,6 +268,8 @@ class Coinpayments extends BasePayment
                 'content' => "The payment is not yet completed. Current status: " . $ipnData['ipn_status']
             ];
         }
+
+        error_log('11',0);
 
         return [
             'result' => 1,
