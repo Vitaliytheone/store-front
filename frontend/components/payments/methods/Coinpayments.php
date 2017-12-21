@@ -151,14 +151,21 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $paymentDetails = $paymentMethod->getDetails();
-        $paymentMerchantId = ArrayHelper::getValue($paymentDetails, 'merchant_id');
-        $paymentIPNSecret = ArrayHelper::getValue($paymentDetails, 'ipn_secret');
+        $methodDetails = $paymentMethod->getDetails();
+        $methodMerchantId = ArrayHelper::getValue($methodDetails, 'merchant_id');
+        $methodIPNSecret = ArrayHelper::getValue($methodDetails, 'ipn_secret');
 
-        if (!isset($paymentMerchantId, $paymentIPNSecret)) {
+        if (!isset($methodMerchantId, $methodIPNSecret)) {
             return [
                 'result' => 2,
                 'content' => "Invalid Coin Payments settings!"
+            ];
+        }
+
+        if ($methodMerchantId !== $ipnData['merchant_id']) {
+            return [
+                'result' => 2,
+                'content' => "Unexpected merchant ID!" . "Expected:" . $methodMerchantId . ", given: " . $ipnData['merchant_id']
             ];
         }
 
@@ -171,12 +178,12 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $hmac = hash_hmac("sha512", $requestRawBody, trim($paymentIPNSecret));
+        $hmac = hash_hmac("sha512", $requestRawBody, trim($methodIPNSecret));
 
         if (!hash_equals($hmac, $ipnData['hmac_signature'])) {
             return [
                 'result' => 2,
-                'content' => "HMAC signature does not match!"
+                'content' => "HMAC signature does not match!" . "Expected: " . $hmac . ", given: " . $ipnData['hmac_signature'],
             ];
         }
 
