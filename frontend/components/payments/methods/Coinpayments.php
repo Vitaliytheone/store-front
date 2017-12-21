@@ -111,6 +111,9 @@ class Coinpayments extends BasePayment
     {
         $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
 
+        error_log(print_r($_SERVER, 1),0);
+        error_log(print_r($_POST, 1),0);
+
         $ipnData = [
             'hmac_signature' => ArrayHelper::getValue($_SERVER, 'HTTP_HMAC'),
             'transaction_id' => ArrayHelper::getValue($_POST, 'txn_id'),
