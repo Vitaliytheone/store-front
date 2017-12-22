@@ -166,32 +166,11 @@ class Stores extends ActiveRecord
     }
 
     /**
-     * Generate unique folder name
-     * @return bool
-     */
-    public function generateFolderName()
-    {
-        for ($i = 1; $i < 100; $i++) {
-            $this->theme_folder = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 6);
-            if (!static::findOne([
-                'theme_folder' => $this->theme_folder
-            ])) {
-                break;
-            }
-        }
-    }
-
-    /**
      * Get panel folder
      * @return string
      */
     public function getThemeFolder()
     {
-        if (empty($this->theme_folder)) {
-            $this->theme_folder = Yii::$app->params['defaultTheme'];
-            $this->save(false);
-        }
-
         return $this->theme_folder;
     }
 }
