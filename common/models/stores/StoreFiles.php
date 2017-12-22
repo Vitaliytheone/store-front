@@ -185,6 +185,12 @@ class StoreFiles extends ActiveRecord
         return $file;
     }
 
+    /**
+     * Delete store Favicon or Logo
+     * @param $fileType
+     * @return bool
+     * @throws Exception
+     */
     public static function deleteStoreSettingsFile($fileType)
     {
         $urlFields = [

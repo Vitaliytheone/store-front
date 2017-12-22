@@ -237,20 +237,34 @@ return [
     'settings.nav_delete_agree_text' => 'Are your sure that your want to delete this item?',
     'settings.nav_bt_delete_agree' => 'Yes, delete it!',
     'settings.nav_bt_delete_cancel' => 'Cancel',
-
     'settings.nav_add_modal_title' => 'Add menu item',
     'settings.nav_edit_modal_title' => 'Edit menu item',
     'settings.nav_edit_name' => 'Name',
     'settings.nav_edit_link' => 'Link',
     'settings.nav_edit_bt_add' => 'Add menu item',
     'settings.nav_edit_bt_cancel' => 'Cancel',
-
     'settings.nav_link_home_page' => 'Home page',
     'settings.nav_link_product' => 'Product',
     'settings.nav_link_page' => 'Page',
     'settings.nav_link_web_address' => 'Web address',
-
     'settings.nav_message_created' => 'Menu item was successfully created!',
     'settings.nav_message_updated' => 'Menu item was successfully updated!',
     'settings.nav_message_deleted' => 'Menu item was successfully deleted!',
+
+    'settings.themes_page_title' => 'Themes',
+    'settings.themes_active' => 'Active:',
+    'settings.themes_add' => 'Add theme',
+    'settings.themes_edit_code' => 'Edit code',
+    'settings.themes_customize' => 'Customize',
+    'settings.themes_activate' => 'Activate',
+    'settings.themes_create_title' => 'Add theme',
+    'settings.themes_theme_name' => 'Theme name',
+    'settings.themes_create_save' => 'Save theme',
+    'settings.themes_create_cancel' => 'Cancel',
+
+    'settings.themes_message_created' => 'Theme was successfully created!',
+    'settings.themes_message_updated' => 'Theme was successfully updated!',
+    'settings.themes_message_theme_not_exist' => 'Theme does not exist or has been deleted!',
+
+
 ];

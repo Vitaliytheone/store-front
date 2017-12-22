@@ -1,0 +1,61 @@
+<?php
+
+namespace frontend\modules\admin\models\search;
+
+use common\models\store\CustomThemes;
+use common\models\stores\DefaultThemes;
+use Yii;
+use yii\base\Model;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
+
+class ThemesSearch extends Model
+{
+
+    private $_store;
+    private $_customThemesTable;
+    private $_defaultThemesTable;
+
+    public function init()
+    {
+        $this->_store = Yii::$app->store->getInstance();
+
+        $storeDb = $this->_store->db_name;
+
+        $this->_defaultThemesTable = DefaultThemes::tableName();
+        $this->_customThemesTable = $storeDb . "." . CustomThemes::tableName();
+
+        parent::init();
+    }
+
+    /**
+     * Return list of Custom and Default themes
+     * @return array
+     */
+    public function search()
+    {
+        $defaultThemes = (new Query())
+            ->select(['id', 'name', 'folder', 'thumbnail'])
+            ->from($this->_defaultThemesTable)
+            ->orderBy(['position' => SORT_ASC])
+            ->all();
+
+        $customThemes = (new Query())
+            ->select(['id', 'name', 'folder'])
+            ->from($this->_customThemesTable)
+            ->orderBy(['id' => SORT_ASC])
+            ->all();
+
+        $themes = array_merge($defaultThemes, $customThemes);
+
+        $currentThemeFolder = $this->_store->theme_folder;
+
+        // Mark active theme
+        array_walk($themes, function(&$theme) use ($currentThemeFolder) {
+            $theme['active'] = $theme['folder'] === $currentThemeFolder;
+            $theme['thumbnail'] = ArrayHelper::getValue($theme, 'thumbnail', CustomThemes::THEME_THUMBNAIL_URL);
+        });
+
+        return $themes;
+    }
+}

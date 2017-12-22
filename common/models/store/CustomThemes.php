@@ -2,6 +2,7 @@
 
 namespace common\models\store;
 
+use common\models\stores\DefaultThemes;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -18,6 +19,10 @@ use common\models\store\queries\CustomThemesQuery;
  */
 class CustomThemes extends ActiveRecord
 {
+    const THEME_PREFIX = 'custom_';
+    const THEME_THUMBNAIL_URL = 'https://sommerce.myjetbrains.com/youtrack/_persistent/no_image.jpg?file=6-8&c=true&rw=622&rh=415&u=1513753769196';
+    const NEW_THEME_TEMPLATE_NAME = 'classic';
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -71,14 +76,40 @@ class CustomThemes extends ActiveRecord
         return [
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
-                ],
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
                 'value' => function() {
                     return time();
                 },
             ],
         ];
     }
+
+    /**
+     * Return custom themes folder path
+     * @return string
+     */
+    public static function getThemesPath()
+    {
+        return Yii::getAlias('@frontend') .  '/views/themes/custom/' . Yii::$app->store->getInstance()->id;
+    }
+
+    /**
+     * Return new custom theme template skeleton path
+     * @return string
+     */
+    public static function getTemplatePath()
+    {
+        return DefaultThemes::getThemesPath() . '/' . self::NEW_THEME_TEMPLATE_NAME;
+    }
+
+    /**
+     * Return theme folder full path
+     * @return string
+     */
+    public function getThemePath()
+    {
+        return $this->folder ? static::getThemesPath() . '/' . $this->folder : null;
+    }
+
 }

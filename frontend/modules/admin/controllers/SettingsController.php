@@ -7,6 +7,7 @@ use common\models\store\Navigations;
 use common\models\stores\StoreFiles;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
+use frontend\modules\admin\models\forms\ActivateThemeForm;
 use frontend\modules\admin\models\forms\CreateProviderForm;
 use frontend\modules\admin\models\forms\DeleteNavigationForm;
 use frontend\modules\admin\models\forms\DeletePageForm;
@@ -21,8 +22,11 @@ use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
 use frontend\modules\admin\models\search\PaymentMethodsSearch;
+use frontend\modules\admin\models\search\ThemesSearch;
 use frontend\modules\admin\models\search\UrlsSearch;
+use frontend\modules\admin\models\forms\CreateThemeForm;
 use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
@@ -157,7 +161,6 @@ class SettingsController extends CustomController
      */
     public function actionPaymentsSettings($method)
     {
-
         $request = yii::$app->getRequest();
         $storeId = yii::$app->store->getId();
 
@@ -229,7 +232,44 @@ class SettingsController extends CustomController
      */
     public function actionThemes()
     {
-        return $this->render('themes');
+        $this->view->title = Yii::t('admin', "settings.themes_page_title");
+
+        return $this->render('themes', [
+            'themes' => (new ThemesSearch())->search(),
+        ]);
+    }
+
+    /**
+     * Create custom theme
+     * @return string|Response
+     */
+    public function actionCreateTheme()
+    {
+        $this->view->title = Yii::t('admin', "settings.themes_create_title");
+        $request = Yii::$app->getRequest();
+
+        $themeModel = new CreateThemeForm();
+        if($themeModel->create($request->post())) {
+            UiHelper::message(Yii::t('admin', 'settings.themes_message_created'));
+            return $this->redirect(Url::toRoute('/settings/themes'));
+        }
+
+        return $this->render('create_theme', ['theme' => $themeModel]);
+    }
+
+    /**
+     * Activate theme
+     * @param $id
+     * @return Response
+     * @throws BadRequestHttpException
+     */
+    public function actionActivateTheme($id)
+    {
+        if (!ActivateThemeForm::activate($id)) {
+            throw new BadRequestHttpException();
+        }
+
+        return $this->redirect(Url::toRoute('/settings/themes'));
     }
 
     /**
