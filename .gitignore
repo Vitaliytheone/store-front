@@ -42,3 +42,6 @@ phpunit.phar
 
 # Test debug files
 /my_test.php
+
+# Custom Themes folder
+/frontend/views/themes/custom
