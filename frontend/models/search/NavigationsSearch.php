@@ -50,14 +50,18 @@ class NavigationsSearch extends Model
      */
     public function getTree()
     {
-        $list = $this->search();
+        $list = array_map(function ($menuItem) {
+            $menuItem['url'] = '/' . rtrim($menuItem['url'], '/');
+            return $menuItem;
+        }, $this->search());
+
         $tree = [];
 
         foreach ($list as $id => &$node) {
             // Is root
             if (!$node['parent_id']) {
                 $tree[$id] = &$node;
-            } else{
+            } else {
                 // Is node
                 $list[$node['parent_id']]['nodes'][$id] = &$node;
             }

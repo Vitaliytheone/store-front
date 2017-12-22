@@ -34,27 +34,27 @@
 								    {% if menu_first_level['nodes'] %}
                         <li class="dropdown">
                             <a href="{{ menu_first_level['url'] }}" class="dropdown-toggle disabled">{{ menu_first_level['name'] }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu multi-level">
+                                {% for menu_second_level in menu_first_level['nodes'] %}
+                                    {% if menu_second_level['nodes'] %}
+                                        <li class="dropdown-submenu">
+                                            <a href="{{ menu_second_level['url'] }}" class="dropdown-toggle disabled">{{ menu_second_level['name'] }}</a>
+                                            <ul class="dropdown-menu multi-level">
+                                                {% for menu_third_level in menu_second_level['nodes'] %}
+                                                    <li>
+                                                        <a href="{{ menu_third_level['url'] }}" >{{ menu_third_level['name'] }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{{ menu_second_level['url'] }}" >{{ menu_second_level['name'] }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
                         </li>
-                        <ul class="dropdown-menu multi-level">
-														{% for menu_second_level in menu_first_level['nodes'] %}
-																{% if menu_second_level['nodes'] %}
-                                    <li class="dropdown-submenu">
-                                        <a href="{{ menu_second_level['url'] }}" class="dropdown-toggle disabled">{{ menu_second_level['name'] }} <span class="caret"></span></a>
-                                    </li>
-                                    <ul class="dropdown-menu multi-level">
-																				{% for menu_third_level in menu_second_level['nodes'] %}
-                                            <li>
-                                                <a href="{{ menu_third_level['url'] }}" >{{ menu_third_level['name'] }}</a>
-                                            </li>
-																				{% endfor %}
-                                    </ul>
-																{% else %}
-                                    <li>
-                                        <a href="{{ menu_second_level['url'] }}" >{{ menu_second_level['name'] }}</a>
-                                    </li>
-																{% endif %}
-														{% endfor %}
-                        </ul>
 										{% else %}
                         <li>
                             <a href="{{ menu_first_level['url'] }}" >{{ menu_first_level['name'] }}</a>
