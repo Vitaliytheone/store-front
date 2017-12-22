@@ -5,6 +5,7 @@ use common\models\stores\Stores;
 use Yii;
 use yii\base\InvalidCallException;
 use yii\base\ViewContextInterface;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class View
@@ -74,16 +75,17 @@ class View extends \yii\web\View {
 
         $themeFolder = $store->getThemeFolder();
 
-        $themes = Yii::getAlias('@app' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR);
-
-        $customPath = $themes . 'custom' . DIRECTORY_SEPARATOR . $store->id . DIRECTORY_SEPARATOR . $themeFolder . DIRECTORY_SEPARATOR . $view;
-        $standardPath = $themes . 'default' . DIRECTORY_SEPARATOR . $themeFolder . DIRECTORY_SEPARATOR . $view;
+        $customPath = Yii::getAlias('@customThemes' . DIRECTORY_SEPARATOR) . $store->id . DIRECTORY_SEPARATOR . $themeFolder . DIRECTORY_SEPARATOR . $view;
+        $standardPath = Yii::getAlias('@defaultThemes' . DIRECTORY_SEPARATOR) . $themeFolder . DIRECTORY_SEPARATOR . $view;
 
         if (is_file($customPath) || is_file($customPath . '.' . $this->defaultExtension) || is_file($customPath . '.php')) {
             return $customPath;
         } else if (is_file($standardPath) || is_file($standardPath . '.' . $this->defaultExtension) || is_file($standardPath . '.php')) {
             return $standardPath;
         } else {
+            if (pathinfo($view, PATHINFO_EXTENSION) == 'twig') {
+                throw new NotFoundHttpException();
+            }
             throw new InvalidCallException("Unable to locate view file for view '$view': no active controller.");
         }
     }

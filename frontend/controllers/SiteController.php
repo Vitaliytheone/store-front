@@ -1,22 +1,22 @@
 <?php
 namespace frontend\controllers;
 
+use Yii;
+
 /**
  * Site controller
  */
 class SiteController extends CustomController
 {
     /**
-     * @inheritdoc
+     * Error action
+     * @return string
      */
-    public function actions()
+    public function actionError()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-                'view' => '@frontend/views/site/404.php'
-            ],
-        ];
+        $this->view->title = Yii::t('app', '404.title');
+
+        return $this->renderPartial('404');
     }
 
     /**
