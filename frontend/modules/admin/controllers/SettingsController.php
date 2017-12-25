@@ -251,6 +251,7 @@ class SettingsController extends CustomController
         $themeModel = new CreateThemeForm();
         if($themeModel->create($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.themes_message_created'));
+
             return $this->redirect(Url::toRoute('/settings/themes'));
         }
 
@@ -259,15 +260,17 @@ class SettingsController extends CustomController
 
     /**
      * Activate theme
-     * @param $id
+     * @param $folder
      * @return Response
      * @throws BadRequestHttpException
      */
-    public function actionActivateTheme($id)
+    public function actionActivateTheme($folder)
     {
-        if (!ActivateThemeForm::activate($id)) {
-            throw new BadRequestHttpException();
-        }
+        $activatedTheme = ActivateThemeForm::activate($folder);
+
+        UiHelper::message(Yii::t('admin', 'settings.themes_message_activated', [
+            'theme_name' => $activatedTheme->name
+        ]));
 
         return $this->redirect(Url::toRoute('/settings/themes'));
     }

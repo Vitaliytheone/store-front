@@ -69,4 +69,13 @@ class DefaultThemes extends ActiveRecord
         return Yii::getAlias('@frontend') .  '/views/themes/default';
     }
 
+    /**
+     * Return theme folder full path
+     * @return string
+     */
+    public function getThemePath()
+    {
+        return $this->folder ? static::getThemesPath() . '/' . $this->folder : null;
+    }
+
 }

@@ -58,4 +58,16 @@ class ThemesSearch extends Model
 
         return $themes;
     }
+
+    /**
+     * Find theme from Custom and Default themes by folder name
+     * @param $folderName
+     * @return CustomThemes | DefaultThemes | false;
+     */
+    public function searchByFolder($folderName)
+    {
+        $isDefaultTheme = false === strpos($folderName, CustomThemes::THEME_PREFIX);
+
+        return $isDefaultTheme ? DefaultThemes::findOne(['folder' => $folderName]) : CustomThemes::findOne(['folder' => $folderName]);
+    }
 }

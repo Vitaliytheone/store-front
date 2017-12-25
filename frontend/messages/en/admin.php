@@ -264,6 +264,7 @@ return [
 
     'settings.themes_message_created' => 'Theme was successfully created!',
     'settings.themes_message_updated' => 'Theme was successfully updated!',
+    'settings.themes_message_activated' => 'Theme "{theme_name}" was successfully activated!',
     'settings.themes_message_theme_not_exist' => 'Theme does not exist or has been deleted!',
 
 
