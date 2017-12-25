@@ -86,7 +86,11 @@ class CreateThemeForm extends CustomThemes
         $srcPath = static::getTemplatePath();
         $dstPath = $this->getThemePath();
 
-        $cmdCp = "cp -a $srcPath/ $dstPath/";
+        if (!file_exists($srcPath)) {
+            throw new Exception('Template source path does not exist!');
+        }
+
+        $cmdCp = "cp -a $srcPath/. $dstPath/";
         exec($cmdCp, $copies, $cpCmdRes);
         if ($cpCmdRes != 0) {
             throw new Exception('Could not copy theme templates!');
