@@ -11,6 +11,13 @@ use Twig_SimpleFunction;
  */
 class Extension extends \Twig_Extension {
 
+    protected $twigOptions;
+
+    public function __construct($twigOptions = [])
+    {
+        $this->twigOptions = $twigOptions;
+    }
+
     /**
      * @inheritdoc
      */
@@ -29,7 +36,7 @@ class Extension extends \Twig_Extension {
     public function getTokenParsers()
     {
         return [
-            new TokenParser_Include()
+            new TokenParser_Include($this->twigOptions)
         ];
     }
 }

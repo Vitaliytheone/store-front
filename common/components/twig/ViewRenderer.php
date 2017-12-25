@@ -83,7 +83,7 @@ class ViewRenderer extends BaseViewRenderer
 
         $this->twig = new Twig_Environment($loader, array_merge($options, $this->options));
 
-        $this->addExtensions([new Extension()]);
+        $this->addExtensions([new Extension($this->options)]);
     }
 
     /**
