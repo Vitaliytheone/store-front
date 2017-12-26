@@ -261,6 +261,10 @@ return [
     'settings.themes_theme_name' => 'Theme name',
     'settings.themes_create_save' => 'Save theme',
     'settings.themes_create_cancel' => 'Cancel',
+    'settings.themes_edit_title' => 'Editing theme',
+    'settings.themes_start_editing' => 'Pick a file from the right sidebar to start editing',
+    'settings.themes_editing_save' => 'Save theme',
+    'settings.themes_editing_cancel' => 'Cancel',
 
     'settings.themes_message_created' => 'Theme was successfully created!',
     'settings.themes_message_updated' => 'Theme was successfully updated!',

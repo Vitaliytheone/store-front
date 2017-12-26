@@ -9,6 +9,10 @@ use frontend\modules\admin\models\search\ThemesSearch;
 use Yii;
 use yii\base\Exception;
 
+/**
+ * Class ActivateThemeForm
+ * @package frontend\modules\admin\models\forms
+ */
 class ActivateThemeForm
 {
     /**

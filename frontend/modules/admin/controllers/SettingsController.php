@@ -14,6 +14,7 @@ use frontend\modules\admin\models\forms\DeletePageForm;
 use frontend\modules\admin\models\forms\EditNavigationForm;
 use frontend\modules\admin\models\forms\EditPageForm;
 use frontend\modules\admin\models\forms\EditStoreSettingsForm;
+use frontend\modules\admin\models\forms\EditThemeForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\forms\UpdatePositionsNavigationForm;
 use frontend\modules\admin\models\search\LinksSearch;
@@ -26,7 +27,6 @@ use frontend\modules\admin\models\search\ThemesSearch;
 use frontend\modules\admin\models\search\UrlsSearch;
 use frontend\modules\admin\models\forms\CreateThemeForm;
 use Yii;
-use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
@@ -273,6 +273,23 @@ class SettingsController extends CustomController
         ]));
 
         return $this->redirect(Url::toRoute('/settings/themes'));
+    }
+
+    public function actionEditTheme($folder, $file = null)
+    {
+        $this->view->title = Yii::t('admin', "settings.themes_edit_title");
+        $this->addModule('adminThemes');
+
+        $editThemeForm = new EditThemeForm([
+            'folder' => $folder,
+            'file' => $file,
+        ]);
+
+        return $this->render('edit_theme', [
+            'theme' => $editThemeForm->getThemeModel(),
+            'filesTree' => $editThemeForm->getFilesTree(),
+            'currentFile' => $file,
+        ]);
     }
 
     /**

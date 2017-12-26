@@ -106,7 +106,6 @@ class CreateThemeForm extends CustomThemes
         return $this->save(false);
     }
 
-
     /**
      * Generate unique theme folder name from theme name
      * @return string

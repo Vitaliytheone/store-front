@@ -77,5 +77,4 @@ class DefaultThemes extends ActiveRecord
     {
         return $this->folder ? static::getThemesPath() . '/' . $this->folder : null;
     }
-
 }
