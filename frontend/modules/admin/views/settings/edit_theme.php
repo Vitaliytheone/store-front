@@ -120,7 +120,7 @@ ThemesAsset::register($this);
                         <span class="fa fa-warning"></span>
                         <p><?= Yii::t('admin', 'settings.themes_editing_modal_message')?></p>
                         <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.themes_editing_modal_no') ?></button>
-                        <button class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'settings.themes_editing_modal_yes')?></button>
+                        <a href="<?= Url::toRoute('/settings/themes') ?>" class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'settings.themes_editing_modal_yes')?></a>
                     </div>
                 </div>
             </div>
