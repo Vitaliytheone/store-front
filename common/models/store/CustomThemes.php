@@ -7,6 +7,8 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\store\queries\CustomThemesQuery;
+use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%custom_themes}}".
@@ -19,9 +21,19 @@ use common\models\store\queries\CustomThemesQuery;
  */
 class CustomThemes extends ActiveRecord
 {
+    const THEME_TYPE = 1; // Custom
+
     const THEME_PREFIX = 'custom_';
-    const THEME_THUMBNAIL_URL = 'https://sommerce.myjetbrains.com/youtrack/_persistent/no_image.jpg?file=6-8&c=true&rw=622&rh=415&u=1513753769196';
-    const NEW_THEME_TEMPLATE_NAME = 'classic';
+    const THEME_THUMBNAIL_URL = '/img/custom_theme_thumbnail.jpg';
+
+    private $_store;
+
+    public function init()
+    {
+        parent::init();
+
+        $this->_store = Yii::$app->store->getInstance();
+    }
 
     public static function getDb()
     {
@@ -95,12 +107,18 @@ class CustomThemes extends ActiveRecord
     }
 
     /**
-     * Return new custom theme template skeleton path
+     * Return default theme path
      * @return string
+     * @throws Exception
      */
-    public static function getTemplatePath()
+    public static function getDefaultThemePath()
     {
-        return DefaultThemes::getThemesPath() . '/' . self::NEW_THEME_TEMPLATE_NAME;
+        $defaultTheme = ArrayHelper::getValue(Yii::$app->params, 'defaultTheme', null);
+        if (!$defaultTheme) {
+            throw new Exception('Default theme does not configured!');
+        }
+
+        return DefaultThemes::getThemesPath() . '/' . $defaultTheme;
     }
 
     /**
@@ -110,6 +128,15 @@ class CustomThemes extends ActiveRecord
     public function getThemePath()
     {
         return $this->folder ? static::getThemesPath() . '/' . $this->folder : null;
+    }
+
+    /**
+     * Return is theme active
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->folder === $this->_store->theme_folder;
     }
 
 }

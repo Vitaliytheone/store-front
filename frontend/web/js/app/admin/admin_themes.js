@@ -35,12 +35,44 @@ customModule.adminThemes = {
         /*****************************************************************************************************
          *                     CodeMirror activation
          *****************************************************************************************************/
-
-        var $codeMirror = $('#codemirror');
+        var $codeMirror = $('#codemirror'),
+            codeMirror;
         if ($codeMirror.length > 0) {
-            CodeMirror.fromTextArea($codeMirror[0], {
+            codeMirror = CodeMirror.fromTextArea($codeMirror[0], {
                 lineNumbers: true
             });
         }
+
+        /*****************************************************************************************************
+         *                     Modal cancel
+         *****************************************************************************************************/
+        (function (){
+            if (codeMirror === undefined) {
+                return false;
+            }
+
+            var contentOnInit = codeMirror.getValue(),
+                currentContent;
+
+            var $modal = $('#cancel-modal');
+
+            $('#cancel-btn').click(function(e) {
+                currentContent = codeMirror.getValue();
+
+                console.log(contentOnInit);
+                console.log(currentContent);
+
+                if (currentContent !== contentOnInit) {
+
+                    $modal.modal('show');
+
+                    return false;
+                }
+
+                return true;
+            });
+
+        })({}, function (){});
+
     }
 };

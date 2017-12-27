@@ -265,11 +265,16 @@ return [
     'settings.themes_start_editing' => 'Pick a file from the right sidebar to start editing',
     'settings.themes_editing_save' => 'Save theme',
     'settings.themes_editing_cancel' => 'Cancel',
+    'settings.themes_editing_reset' => 'Reset file',
+    'settings.themes_editing_modal_' => 'Reset file',
+    'settings.themes_editing_modal_message' => 'All unsaved data will be lost!',
+    'settings.themes_editing_modal_yes' => 'Yes, close!',
+    'settings.themes_editing_modal_no' => 'Cancel',
 
     'settings.themes_message_created' => 'Theme was successfully created!',
     'settings.themes_message_updated' => 'Theme was successfully updated!',
     'settings.themes_message_activated' => 'Theme "{theme_name}" was successfully activated!',
     'settings.themes_message_theme_not_exist' => 'Theme does not exist or has been deleted!',
-
+    'settings.themes_message_reset' => 'Theme file was successfully reset!',
 
 ];

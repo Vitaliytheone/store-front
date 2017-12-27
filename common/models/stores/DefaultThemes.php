@@ -3,8 +3,10 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\base\Exception;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\DefaultThemesQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "default_themes".
@@ -17,6 +19,17 @@ use common\models\stores\queries\DefaultThemesQuery;
  */
 class DefaultThemes extends ActiveRecord
 {
+    const THEME_TYPE = 0; // Default
+
+    private $_store;
+
+    public function init()
+    {
+        parent::init();
+
+        $this->_store = Yii::$app->store->getInstance();
+    }
+
     /**
      * @inheritdoc
      */
@@ -70,6 +83,21 @@ class DefaultThemes extends ActiveRecord
     }
 
     /**
+     * Return default theme path
+     * @return string
+     * @throws Exception
+     */
+    public static function getDefaultThemePath()
+    {
+        $defaultTheme = ArrayHelper::getValue(Yii::$app->params, 'defaultTheme', null);
+        if (!$defaultTheme) {
+            throw new Exception('Default theme does not configured!');
+        }
+
+        return static::getThemesPath() . '/' . $defaultTheme;
+    }
+
+    /**
      * Return theme folder full path
      * @return string
      */
@@ -77,4 +105,14 @@ class DefaultThemes extends ActiveRecord
     {
         return $this->folder ? static::getThemesPath() . '/' . $this->folder : null;
     }
+
+    /**
+     * Return is theme active
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->folder === $this->_store->theme_folder;
+    }
+
 }
