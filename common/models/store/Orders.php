@@ -52,10 +52,10 @@ class Orders extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'checkout_id' => Yii::t('app', 'Checkout ID'),
-            'customer' => Yii::t('app', 'Customer'),
-            'created_at' => Yii::t('app', 'Created At'),
+            'id' => Yii::t('admin', 'orders.f_id'),
+            'checkout_id' => Yii::t('admin', 'orders.f_checkout_id'),
+            'customer' => Yii::t('admin', 'orders.f_customer'),
+            'created_at' => Yii::t('admin', 'orders.f_created_at'),
         ];
     }
 

@@ -7,15 +7,15 @@
 $navbarItems = [
     'orders' =>  [
         'url' => '/admin/orders',
-        'label' => 'Orders'
+        'label' => Yii::t('admin', 'header.menu_orders'),
     ],
     'payments' => [
         'url' => '/admin/payments',
-        'label' => 'Payments'
+        'label' => Yii::t('admin', 'header.menu_payments'),
     ],
     'products' => [
         'url' => '/admin/products',
-        'label' => 'Products'
+        'label' => Yii::t('admin', 'header.menu_products'),
     ],
     'settings' => [
         'url' => '/admin/settings',
@@ -24,38 +24,38 @@ $navbarItems = [
         'submenuItems' => [
             'settings-general' => [
                 'url' => '/admin/settings',
-                'label' => 'General',
                 'icon' => 'icon-settings',
+                'label' => Yii::t('admin', 'header.menu_settings_general'),
             ],
             'settings-payments' => [
                 'url' => '/admin/settings/payments',
-                'label' => 'Payments',
                 'icon' => 'icon-wallet',
+                'label' => Yii::t('admin', 'header.menu_settings_payments'),
             ],
             'settings-providers' => [
                 'url' => '/admin/settings/providers',
-                'label' => 'Providers',
                 'icon' => 'icon-share',
+                'label' => Yii::t('admin', 'header.menu_settings_providers'),
             ],
             'settings-navigations' => [
                 'url' => '/admin/settings/navigations',
-                'label' => 'Navigations',
                 'icon' => 'flaticon-list-1',
+                'label' => Yii::t('admin', 'header.menu_settings_navigation'),
             ],
             'settings-pages' => [
                 'url' => '/admin/settings/pages',
-                'label' => 'Pages',
                 'icon' => 'icon-docs',
+                'label' => Yii::t('admin', 'header.menu_settings_pages'),
             ],
             'settings-themes' => [
                 'url' => '/admin/settings/themes',
-                'label' => 'Themes',
                 'icon' => 'icon-puzzle',
+                'label' => Yii::t('admin', 'header.menu_settings_themes'),
             ],
             'settings-blocks' => [
                 'url' => '/admin/settings/blocks',
-                'label' => 'Blocks',
                 'icon' => 'icon-layers',
+                'label' => Yii::t('admin', 'header.menu_settings_blocks'),
             ],
         ],
     ],

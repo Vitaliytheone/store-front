@@ -86,15 +86,15 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                             <table class="table table-sommerce m-portlet m-portlet--bordered m-portlet--bordered-semi m-portlet--rounded">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th class="max-width-100">Customer</th>
-                                    <th>Amount</th>
-                                    <th>Link</th>
+                                    <th><?= Yii::t('admin', 'orders.t_id') ?></th>
+                                    <th class="max-width-100"><?= Yii::t('admin', 'orders.t_customer') ?></th>
+                                    <th><?= Yii::t('admin', 'orders.t_amount') ?></th>
+                                    <th><?= Yii::t('admin', 'orders.t_link') ?></th>
                                     <th class="sommerce-th__action">
                                         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-center"
                                              data-dropdown-toggle="click" aria-expanded="true">
                                             <a href="#" class="m-dropdown__toggle">
-                                                Product
+                                                <?= Yii::t('admin', 'orders.t_product') ?>
                                             </a>
                                             <div class="m-dropdown__wrapper">
                                                 <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
@@ -116,14 +116,14 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                             </div>
                                         </div>
                                     </th>
-                                    <th>Quantity</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
+                                    <th><?= Yii::t('admin', 'orders.t_quantity') ?></th>
+                                    <th><?= Yii::t('admin', 'orders.t_status') ?></th>
+                                    <th><?= Yii::t('admin', 'orders.t_date') ?></th>
                                     <th class="sommerce-th__action">
                                         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-center"
                                              data-dropdown-toggle="click" aria-expanded="true">
                                             <a href="#" class="m-dropdown__toggle">
-                                                Mode
+                                                <?= Yii::t('admin', 'orders.t_mode') ?>
                                             </a>
                                             <div class="m-dropdown__wrapper">
                                                 <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>

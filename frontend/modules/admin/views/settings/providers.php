@@ -22,12 +22,14 @@
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title">
-                            Providers
+                            <?= Yii::t('admin', 'settings.providers_page_title') ?>
                         </h3>
                     </div>
                     <div>
                         <div class="m-dropdown--align-right">
-                            <a class="btn btn-primary  m-btn--air btn-brand cursor-pointer" id="showCreateProviderModal" data-backdrop="static" href="#">Add provider</a>
+                            <a class="btn btn-primary  m-btn--air btn-brand cursor-pointer" id="showCreateProviderModal" data-backdrop="static" href="#">
+                                <?= Yii::t('admin', 'settings.providers_add') ?>
+                            </a>
                         </div>
                     </div>
                 </div>

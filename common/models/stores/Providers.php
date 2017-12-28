@@ -47,10 +47,10 @@ class Providers extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'site' => Yii::t('app', 'Site'),
-            'type' => Yii::t('app', 'Type'),
-            'created_at' => Yii::t('app', 'Created At'),
+            'id' => Yii::t('admin', 'providers.f_id'),
+            'site' => Yii::t('admin', 'providers.f_site'),
+            'type' => Yii::t('admin', 'providers.f_type'),
+            'created_at' => Yii::t('admin', 'providers.f_created_at'),
         ];
     }
 

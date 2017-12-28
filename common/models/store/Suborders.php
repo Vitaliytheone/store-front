@@ -108,21 +108,21 @@ class Suborders extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'order_id' => Yii::t('app', 'Order ID'),
-            'checkout_id' => Yii::t('app', 'Checkout ID'),
-            'link' => Yii::t('app', 'Link'),
-            'amount' => Yii::t('app', 'Amount'),
-            'package_id' => Yii::t('app', 'Package ID'),
-            'quantity' => Yii::t('app', 'Quantity'),
-            'status' => Yii::t('app', 'Status'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-            'mode' => Yii::t('app', 'Mode'),
-            'provider_id' => Yii::t('app', 'Provider ID'),
-            'provider_service' => Yii::t('app', 'Provider Service'),
-            'provider_order_id' => Yii::t('app', 'Provider Order ID'),
-            'provider_charge' => Yii::t('app', 'Provider Charge'),
-            'provider_response' => Yii::t('app', 'Provider Response'),
+            'id' => Yii::t('admin', 'sorders.f_id'),
+            'order_id' => Yii::t('admin', 'sorders.f_order_id'),
+            'checkout_id' => Yii::t('admin', 'sorders.f_checkout_id'),
+            'link' => Yii::t('admin', 'sorders.f_link'),
+            'amount' => Yii::t('admin', 'sorders.f_amount'),
+            'package_id' => Yii::t('admin', 'sorders.f_package_id'),
+            'quantity' => Yii::t('admin', 'sorders.f_quantity'),
+            'status' => Yii::t('admin', 'sorders.f_status'),
+            'updated_at' => Yii::t('admin', 'sorders.f_updated_at'),
+            'mode' => Yii::t('admin', 'sorders.f_mode'),
+            'provider_id' => Yii::t('admin', 'sorders.f_provider_id'),
+            'provider_service' => Yii::t('admin', 'sorders.f_provider_service'),
+            'provider_order_id' => Yii::t('admin', 'sorders.f_provider_order_id'),
+            'provider_charge' => Yii::t('admin', 'sorders.f_provider_charge'),
+            'provider_response' => Yii::t('admin', 'sorders.f_provider_response'),
         ];
     }
 

@@ -84,14 +84,14 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
 
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
+                                    <th><?= Yii::t('admin', 'payments.t_id') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_customer') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_amount') ?></th>
                                     <th class="sommerce-th__action">
                                         <div class="m-dropdown m-dropdown--small m-dropdown--inline m-dropdown--arrow m-dropdown--align-left"
                                              data-dropdown-toggle="click" aria-expanded="true">
                                             <a href="#" class="m-dropdown__toggle">
-                                                Method
+                                                <?= Yii::t('admin', 'payments.t_method') ?>
                                             </a>
                                             <div class="m-dropdown__wrapper">
                                                 <span class="m-dropdown__arrow m-dropdown__arrow--left"></span>
@@ -115,10 +115,10 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
                                             </div>
                                         </div>
                                     </th>
-                                    <th>Fee</th>
-                                    <th>Memo</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
+                                    <th><?= Yii::t('admin', 'payments.t_fee') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_memo') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_status') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_date') ?></th>
                                     <th class="sommerce-th__action-buttons"></th>
                                 </tr>
                                 </thead>

@@ -109,15 +109,15 @@ class Products extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'position' => Yii::t('app', 'Position'),
-            'url' => Yii::t('app', 'Url'),
-            'properties' => Yii::t('app', 'Properties'),
-            'description' => Yii::t('app', 'Description'),
-            'visibility' => Yii::t('app', 'Visibility'),
-            'seo_title' => Yii::t('app', 'Seo Title'),
-            'seo_description' => Yii::t('app', 'Seo Description'),
+            'id' => Yii::t('admin', 'products.f_id'),
+            'name' => Yii::t('admin', 'products.f_name'),
+            'position' => Yii::t('admin', 'products.f_position'),
+            'url' => Yii::t('admin', 'products.f_url'),
+            'properties' => Yii::t('admin', 'products.f_properties'),
+            'description' => Yii::t('admin', 'products.f_description'),
+            'visibility' => Yii::t('admin', 'products.f_visibility'),
+            'seo_title' => Yii::t('admin', 'products.f_seo_title'),
+            'seo_description' => Yii::t('admin', 'products.f_seo_description'),
         ];
     }
 

@@ -12,7 +12,7 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add provider</h5>
+                <h5 class="modal-title"><?= Yii::t('admin', 'settings.providers_m_title') ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -36,12 +36,14 @@
                 <?= $form->field($model, 'name') ?>
             </div>
             <div class="modal-footer justify-content-start">
-                <?= Html::submitButton('Add provider', [
+                <?= Html::submitButton(Yii::t('admin', 'settings.providers_m_add'), [
                     'class' => 'btn btn-primary m-btn--air',
                     'name' => 'create-provider-button',
                     'id' => 'createProviderButton'
                 ]) ?>
-                <button type="button" class="btn btn-secondary m-btn--air" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary m-btn--air" data-dismiss="modal">
+                    <?= Yii::t('admin', 'settings.providers_m_cancel') ?>
+                </button>
             </div>
 
             <?php ActiveForm::end(); ?>

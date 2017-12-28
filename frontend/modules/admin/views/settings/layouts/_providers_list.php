@@ -29,5 +29,5 @@
     <p>No providers</p>
 <?php endif; ?>
 <hr>
-<?= Html::submitButton('Save changes', ['class' => 'btn btn-success m-btn--air', 'name' => 'save-button']) ?>
+<?= Html::submitButton(Yii::t('admin', 'settings.providers_save'), ['class' => 'btn btn-success m-btn--air', 'name' => 'save-button']) ?>
 <?php ActiveForm::end(); ?>
