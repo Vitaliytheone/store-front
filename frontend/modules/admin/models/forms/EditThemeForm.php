@@ -55,7 +55,7 @@ class EditThemeForm extends Model
 
         $model = new static();
         $model->_theme_model = $themeModel;
-        $model->_file = trim(escapeshellarg($themeEditFileName),'\'');
+        $model->_file = ltrim(str_replace('../', '', $themeEditFileName), '/');
 
         if (!$themeEditFileName) {
             return $model;
