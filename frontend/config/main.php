@@ -13,6 +13,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'store'],
     'controllerNamespace' => 'frontend\controllers',
+    'sourceLanguage' => 'esperanto',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -65,10 +66,13 @@ $config = [
                 'admin*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => dirname(__DIR__) . '/messages',
-                    'sourceLanguage' => 'en',
                     'fileMap' => [
                         'admin' => 'admin.php',
                     ],
+                ],
+                'store*' => [
+                    'class' => 'frontend\components\i18n\CustomMessageSource',
+                    'basePath' => dirname(__DIR__) . '/messages/',
                 ],
             ],
         ],

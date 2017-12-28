@@ -43,6 +43,7 @@ class CustomController extends MainController
     public function init()
     {
         $this->layout = "layout.twig";
+        Yii::$app->language = Yii::$app->store->getInstance()->language;
     }
 
     /**

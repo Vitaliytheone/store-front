@@ -16,6 +16,7 @@ use common\models\stores\queries\StoresQuery;
  * @property string $domain
  * @property string $name
  * @property integer $timezone
+ * @property string $language
  * @property string $db_name
  * @property integer $expired
  * @property integer $created_at
@@ -54,7 +55,7 @@ class Stores extends ActiveRecord
         return [
             [['customer_id', 'timezone', 'expired', 'created_at', 'updated_at'], 'integer'],
             [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder'], 'string', 'max' => 255],
-            [['currency'], 'string', 'max' => 10],
+            [['currency', 'language'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customer_id' => 'id']],
         ];
@@ -71,6 +72,7 @@ class Stores extends ActiveRecord
             'domain' => Yii::t('app', 'Domain'),
             'name' => Yii::t('app', 'Name'),
             'timezone' => Yii::t('app', 'Timezone'),
+            'language' => Yii::t('app', 'Language'),
             'db_name' => Yii::t('app', 'Db Name'),
             'expired' => Yii::t('app', 'Expired'),
             'created_at' => Yii::t('app', 'Created At'),

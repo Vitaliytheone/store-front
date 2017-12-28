@@ -1,6 +1,6 @@
 <?php
 /**
- * Translation map for en-US
+ * Admin Translation map for en
  */
 return [
     'orders.page_title' => 'Orders',

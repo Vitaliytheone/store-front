@@ -10,4 +10,5 @@ return [
     'cdn' => $cdn,
     'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
     'defaultTheme' => 'template',
+    'default_language' => 'en',
 ];
