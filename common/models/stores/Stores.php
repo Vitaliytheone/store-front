@@ -29,6 +29,7 @@ use common\models\stores\queries\StoresQuery;
  * @property string $seo_description
  * @property string $theme_name
  * @property string $theme_folder
+ * @property string $admin_email
  *
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
@@ -57,6 +58,7 @@ class Stores extends ActiveRecord
             [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder'], 'string', 'max' => 255],
             [['currency', 'language'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
+            [['admin_email'], 'string', 'max' => 300],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customer_id' => 'id']],
         ];
     }
@@ -85,6 +87,7 @@ class Stores extends ActiveRecord
             'seo_description' => Yii::t('app', 'Seo Description'),
             'theme_name' => Yii::t('app', 'Theme Name'),
             'theme_folder' => Yii::t('app', 'Theme Folder'),
+            'admin_email' => Yii::t('app', 'Admin e-mail'),
         ];
     }
 
