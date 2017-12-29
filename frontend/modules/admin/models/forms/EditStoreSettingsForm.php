@@ -61,12 +61,10 @@ class EditStoreSettingsForm extends Stores
      */
     public function rules()
     {
-        return [
-            [['timezone'], 'integer'],
-            [['seo_description', 'seo_title'], 'trim'],
-            [['name', 'seo_title'], 'string', 'max' => 255],
-            [['seo_description'], 'string', 'max' => 2000],
-        ];
+        return array_merge(parent::rules(), [
+            [['seo_description', 'seo_title', 'admin_email'], 'trim'],
+            ['admin_email', 'email'],
+        ]);
     }
 
     /**

@@ -106,6 +106,7 @@ use common\models\stores\StoreFiles;
                                placeholder="<?= Yii::t('admin', 'settings.general_store_name_placeholder') ?>">
 
                     </div>
+
                     <div class="form-group field-settingsgeneralform-timezone required">
                         <label class="control-label" for="settingsgeneralform-timezone">
                             <?= Yii::t('admin', 'settings.general_timezone') ?>
@@ -115,6 +116,15 @@ use common\models\stores\StoreFiles;
                                 <option value="<?= $offset ?>"  <?= $store->timezone ? ($store->timezone == $offset ? 'selected' : '') : ($offset == 0 ? 'selected' : 0) ?> > <?= $timezone ?> </option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="admin_email">
+                            <?= Yii::t('admin', 'settings.general_admin_email') ?>
+                        </label>
+                        <input type="email" id="admin_email" class="form-control" name="SettingsGeneralForm[admin_email]" value="<?= $store->admin_email ?>" autofocus="" aria-required="true"
+                               placeholder="<?= Yii::t('admin', 'settings.general_admin_email_placeholder') ?>">
+
                     </div>
 
                     <div class="card card-white ">

@@ -199,6 +199,8 @@ return [
     'settings.general_store_name' => 'Store name',
     'settings.general_store_name_placeholder' => 'Input store name',
     'settings.general_timezone' => 'Timezone',
+    'settings.general_admin_email' => 'Admin email',
+    'settings.general_admin_email_placeholder' => 'Store admin email',
     'settings.general_seo' => 'Search engine listing preview',
     'settings.general_seo_edit' => 'Edit website SEO',
     'settings.general_seo_index' => 'Title index',

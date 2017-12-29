@@ -8,29 +8,33 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="contactUs-form">
-                    <form action="">
+                    <form action="/contact-us" method="post">
+                        {% if error %}
+                            <div class="error-summary alert alert-danger">{{ errorText }}</div>
+                        {% endif %}
                         <div class="form-group">
                             <label for="inputSubject">Subject</label>
-                            <input type="text" class="form-control" id="inputSubject">
+                            <input type="text" class="form-control" id="inputSubject" name="ContactForm[subject]" value="{{ data.subject }}">
                         </div>
                         <div class="form-group">
                             <label for="inputName">Name</label>
-                            <input type="email" class="form-control" id="inputName">
+                            <input type="text" class="form-control" id="inputName" name="ContactForm[name]" value="{{ data.name }}">
                         </div>
                         <div class="form-group">
                             <label for="inputEmail">Email address</label>
-                            <input type="email" class="form-control" id="inputEmail">
+                            <input type="email" class="form-control" id="inputEmail" name="ContactForm[email]" value="{{ data.email }}">
                         </div>
                         <div class="form-group">
                             <label for="inputMessage">Message</label>
-                            <textarea class="form-control" id="inputMessage" rows="3"></textarea>
+                            <textarea class="form-control" id="inputMessage" rows="3" name="ContactForm[message]">{{ data.message }}</textarea>
                         </div>
                         <div class="form-group">
-                            <div class="g-recaptcha" data-sitekey="6Lfz9BwTAAAAAIy0qqlz51yZpJYhsHZzlLcs_hgQ"></div>
+                            <div class="g-recaptcha" data-sitekey="{{ reCaptchaSiteKey }}"></div>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit">Send message</button>
                         </div>
+                        <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
                     </form>
                 </div>
             </div>
