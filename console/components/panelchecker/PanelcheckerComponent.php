@@ -240,9 +240,10 @@ class PanelcheckerComponent extends Component
         try {
             $panelData = $this->getPanelInfo($hostName);
         } catch (Exception $e) {
+
             $status = [
                 'status' => self::PANEL_STATUS_NOT_RESOLVED,
-                'info' => $e,
+                'info' => $e->getMessage(),
             ];
 
             return $status;
@@ -418,11 +419,16 @@ class PanelcheckerComponent extends Component
         foreach ($panelNeighbors as $panel) {
 
             $panelStatus = $this->getPanelStatus($panel['domain']);
+
             $id = $panel['id'];
             $status = ArrayHelper::getValue($panelStatus, 'status', null);
-            $ip = ArrayHelper::getValue($panelStatus, 'info.primary_ip', '1000');
+            $ip = '';
             $details = json_encode(ArrayHelper::getValue($panelStatus, 'info', null));
             $time = time();
+
+            if ($status !== self::PANEL_STATUS_NOT_RESOLVED) {
+                $ip = ArrayHelper::getValue($panelStatus, 'info.primary_ip');
+            }
 
             $panelImploded = ($panelImploded ? $panelImploded . ',' : '') . "('$id', '$status', '$ip', '$details', '$time')";
         }
