@@ -54,23 +54,6 @@ class CurrencyHelper {
                     'type' => 0,
                     'position' => 2,
                 ],
-                'bitcoin' => [
-                    'method_name' => 'Bitcoin',
-                    'class_name' => "Bitcoin",
-                    'url' => 'bitcoin',
-                    'mode' => 'standart',
-                    'name' => 'Bitcoin',
-                    'minimal' => '1.00',
-                    'maximal' => 0,
-                    'active' => 0,
-                    'fee' => 0,
-                    'options' => [
-                        'gateway_id' => '',
-                        'gateway_secret' => '',
-                    ],
-                    'type' => 0,
-                    'position' => 3,
-                ],
                 'coinpayments' => [
                     'method_name' => 'CoinPayments',
                     'class_name' => "Coinpayments",
@@ -86,7 +69,7 @@ class CurrencyHelper {
                         'ipn_secret' => '',
                     ],
                     'type' => 0,
-                    'position' => 4,
+                    'position' => 3,
                 ],
             ]
         ]

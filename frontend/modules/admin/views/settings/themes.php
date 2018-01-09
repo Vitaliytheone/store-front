@@ -53,7 +53,7 @@ use frontend\modules\admin\components\Url;
                                             <?php endif; ?>
                                         </div>
                                     </div>
-                                    <img src="<?= $theme['thumbnail'] ?>" alt="" class="img-fluid">
+                                    <div style="background-image: url(<?= $theme['thumbnail'] ?>)" class="sommerce-settings_theme-preview"></div>
                                 </div>
                                 <div class="sommerce-settings_cards-title">
                                     <?php if ($theme['active']): ?>

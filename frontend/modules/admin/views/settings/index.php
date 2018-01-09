@@ -99,10 +99,10 @@ use common\models\stores\StoreFiles;
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="settingsgeneralform-name">
+                        <label class="control-label" for="store-name">
                             <?= Yii::t('admin', 'settings.general_store_name') ?>
                         </label>
-                        <input type="text" id="settingsgeneralform-name" class="form-control" name="SettingsGeneralForm[name]" value="<?= $store->name ?>" autofocus="" aria-required="true"
+                        <input type="text" id="store-name" class="form-control" name="SettingsGeneralForm[name]" value="<?= $store->name ?>" autofocus="" aria-required="true"
                                placeholder="<?= Yii::t('admin', 'settings.general_store_name_placeholder') ?>">
 
                     </div>
@@ -157,7 +157,7 @@ use common\models\stores\StoreFiles;
                                         <?= Yii::t('admin', 'settings.general_seo_index') ?>
                                     </label>
                                     <input class="form-control" id="edit-seo__title" name="SettingsGeneralForm[seo_title]"
-                                           value="<?= $store->seo_title ? Html::encode($store->seo_title) : Yii::t('admin', 'settings.general_seo_index_default') ?>">
+                                           value="<?= Html::encode($store->seo_title) ?>">
                                     <small class="form-text text-muted"><span class="edit-seo__title-muted"></span>
                                         <?= Yii::t('admin', 'settings.general_seo_index_limits') ?>
                                          </small>

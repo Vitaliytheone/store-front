@@ -19,19 +19,19 @@
                         </tr>
                         </thead>
                         <tbody>
-												    {% for key,item in items %}
+                                {% for key,item in items %}
                                 <tr>
                                     <td>
                                         {{ (key + 1) }}
                                     </td>
                                     <td>
-																				{{ item['package_name'] }}
+                                        {{ item['package_name'] }}
                                     </td>
                                     <td>
-																				{{ item['link'] }}
+                                        {{ item['link'] }}
                                     </td>
                                     <td>
-																				{{ item['price'] }}
+                                        {{ item['price'] }}
                                     </td>
                                     <td class="text-right">
                                         <a href="/cart/remove/{{ item['key'] }}" class="btn btn-xs btn-default">
@@ -39,7 +39,7 @@
                                         </a>
                                     </td>
                                 </tr>
-														{% endfor %}
+                                {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -59,28 +59,33 @@
             <div class="row">
                 <div class="col-lg-offset-8 col-lg-4">
                     <div class="cart bg-white">
-												{% if error %}
+
+                        {% if error %}
                             <div class="error-summary alert alert-danger">{{ errorText }}</div>
-												{% endif %}
-												{% if methods|length > 1 %}
-                        <?php if (1 < count($methods)) : ?>
+                        {% endif %}
+
+                        {% if methods|length > 1 %}
                             <div class="form-group">
                                 <label>Payment method</label>
-
                                 <div>
-																		{% for methodId,methodName in methods %}
+                                    {% for methodId,methodName in methods %}
                                         <label class="radio-inline">
-                                            <input type="radio" name="OrderForm[method]" id="inlineRadio1" {% if methodName == methodId %} checked {% endif %} value="{{ methodId }}"> {{ methodName }}
+                                            {% if selectedMethodId %}
+                                                <input type="radio" name="OrderForm[method]" id="inlineRadio1" {% if selectedMethodId == methodId %} checked {% endif %} value="{{ methodId }}"> {{ methodName }}
+                                            {% else %}
+                                                <input type="radio" name="OrderForm[method]" id="inlineRadio1" {% if loop.first %} checked {% endif %} value="{{ methodId }}"> {{ methodName }}
+                                            {% endif %}
                                         </label>
-																		{% endfor %}
+                                    {% endfor %}
                                 </div>
                             </div>
-												{% endif %}
+                        {% endif %}
 
                         <div class="form-group">
                             <label class="control-label" for="orderform-email">Email address</label>
                             <input id="orderform-email" class="form-control" name="OrderForm[email]" value="{{ data['email'] }}" placeholder="mail@gmail.com" aria-required="true" aria-invalid="true" type="text">
                         </div>
+
                     </div>
                 </div>
             </div>

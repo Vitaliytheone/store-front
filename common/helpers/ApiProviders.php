@@ -2,8 +2,8 @@
 
 namespace common\helpers;
 
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
-use yii\web\BadRequestHttpException;
 
 /**
  * Class ApiProviders
@@ -88,9 +88,9 @@ class ApiProviders
     /**
      * Connection
      * @param $post
-     * @param $json
-     * @return bool|mixed
-     * @throws BadRequestHttpException
+     * @param bool $json
+     * @return mixed
+     * @throws Exception
      */
     private function connect($post, $json = false) {
         $ch = curl_init($this->api_url);
@@ -109,19 +109,20 @@ class ApiProviders
         $result = curl_exec($ch);
 
         // System errors
-        if (curl_errno($ch) != 0 && empty($result)) {
+        if (curl_errno($ch) && empty($result)) {
             curl_close($ch);
-            throw new BadRequestHttpException();
+            throw new Exception();
         }
         curl_close($ch);
 
         // Api errors
         $jsonResult = json_decode($result,true);
+
         if(json_last_error()){
-            throw new BadRequestHttpException('API response JSON decode errors!');
+            throw new Exception('API response JSON decode errors! ' . json_last_error_msg() . '(' . json_last_error() . ')');
         }
         if (isset($jsonResult[self::API_RESPONSE_ERROR_FIELD])) {
-            throw new BadRequestHttpException('API response errors: '.$jsonResult[self::API_RESPONSE_ERROR_FIELD]);
+            throw new Exception('API response errors: '.$jsonResult[self::API_RESPONSE_ERROR_FIELD]);
         }
 
         if ($json) {

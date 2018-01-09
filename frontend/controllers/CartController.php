@@ -53,6 +53,7 @@ class CartController extends CustomController
         return $this->render('cart.twig', [
             'items' => $items['models'],
             'methods' => $model->getPaymentMethods(),
+            'selectedMethodId' => $model->method,
             'total' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
             'data' => $model->attributes,
             'error' => $model->hasErrors(),
@@ -80,7 +81,7 @@ class CartController extends CustomController
      * @param integer $id
      * @return string
      */
-    public function actionAddToCart($id)
+    public function actionOrder($id)
     {
         $package = $this->_findPackage($id);
 
