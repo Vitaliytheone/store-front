@@ -3,7 +3,7 @@
 namespace frontend\modules\admin\controllers;
 
 use common\components\ActiveForm;
-use common\models\store\Navigations;
+use common\models\store\Navigation;
 use common\models\stores\StoreFiles;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
@@ -19,7 +19,7 @@ use frontend\modules\admin\models\forms\ProvidersListForm;
 use frontend\modules\admin\models\forms\ResetThemeForm;
 use frontend\modules\admin\models\forms\UpdatePositionsNavigationForm;
 use frontend\modules\admin\models\search\LinksSearch;
-use frontend\models\search\NavigationsSearch;
+use frontend\models\search\NavigationSearch;
 use frontend\modules\admin\models\search\PagesSearch;
 use frontend\modules\admin\models\search\ProvidersSearch;
 use frontend\modules\admin\models\forms\EditPaymentMethodForm;
@@ -445,17 +445,17 @@ class SettingsController extends CustomController
     }
 
     /**
-     * Settings navigations
+     * Settings navigation
      * @return string
      */
-    public function actionNavigations()
+    public function actionNavigation()
     {
         $this->view->title = Yii::t('admin', 'settings.nav_page_title');
 
         $model = new EditNavigationForm();
-        $search = new NavigationsSearch();
+        $search = new NavigationSearch();
 
-        return $this->render('navigations', [
+        return $this->render('navigation', [
             'linkTypes' => $model::linkTypes(),
             'navTree' => $search->getTree(),
         ]);
@@ -535,7 +535,7 @@ class SettingsController extends CustomController
             exit;
         }
 
-        $model = Navigations::findOne($id);
+        $model = Navigation::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();

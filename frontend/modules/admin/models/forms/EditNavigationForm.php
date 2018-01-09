@@ -5,13 +5,13 @@ namespace frontend\modules\admin\models\forms;
 use common\models\store\Pages;
 use common\models\store\Products;
 use yii\behaviors\AttributeBehavior;
-use common\models\store\Navigations;
+use common\models\store\Navigation;
 
 /**
  * Class EditNavigationForm
  * @package frontend\modules\admin\models\forms
  */
-class EditNavigationForm extends Navigations
+class EditNavigationForm extends Navigation
 {
     /**
      * @inheritdoc

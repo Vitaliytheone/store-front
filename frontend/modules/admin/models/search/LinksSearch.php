@@ -2,7 +2,7 @@
 
 namespace frontend\modules\admin\models\search;
 
-use common\models\store\Navigations;
+use common\models\store\Navigation;
 use common\models\store\Pages;
 use common\models\store\Products;
 use Yii;
@@ -17,8 +17,8 @@ class LinksSearch extends Model
     private $_pagesTable;
 
     private static $_allowedLinkTypes = [
-        Navigations::LINK_PAGE,
-        Navigations::LINK_PRODUCT,
+        Navigation::LINK_PAGE,
+        Navigation::LINK_PRODUCT,
     ];
 
     /**
@@ -80,11 +80,11 @@ class LinksSearch extends Model
 
         $links = [];
 
-        if ($linkType === Navigations::LINK_PAGE) {
+        if ($linkType === Navigation::LINK_PAGE) {
             $links =  $this->searchPagesLinks();
         }
 
-        if ($linkType === Navigations::LINK_PRODUCT) {
+        if ($linkType === Navigation::LINK_PRODUCT) {
             $links = $this->searchProductsLinks();
         }
 

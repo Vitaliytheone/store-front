@@ -5,11 +5,11 @@ namespace common\models\store\queries;
 use \yii\db\ActiveQuery;
 
 /**
- * This is the ActiveQuery class for [[\common\models\store\Navigations]].
+ * This is the ActiveQuery class for [[\common\models\store\Navigation]].
  *
- * @see \common\models\store\Navigations
+ * @see \common\models\store\Navigation
  */
-class NavigationsQuery extends ActiveQuery
+class NavigationQuery extends ActiveQuery
 {
     /*public function active()
     {
@@ -18,7 +18,7 @@ class NavigationsQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Navigations[]|array
+     * @return \common\models\store\Navigation[]|array
      */
     public function all($db = null)
     {
@@ -27,7 +27,7 @@ class NavigationsQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Navigations|array|null
+     * @return \common\models\store\Navigation|array|null
      */
     public function one($db = null)
     {

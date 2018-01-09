@@ -5,9 +5,9 @@ namespace frontend\assets;
 use yii\web\AssetBundle;
 
 /**
- * /admin/settings/navigations page asset bundle.
+ * /admin/settings/navigation page asset bundle.
  */
-class NavigationsAsset extends AssetBundle
+class NavigationAsset extends AssetBundle
 {
     public $basePath = '@webroot';
 
@@ -17,8 +17,7 @@ class NavigationsAsset extends AssetBundle
 
     public $js = [
         'js/libs/nestable/nestable.lib.js',
-
-        'js/in_dev/navigations.js', // TODO:: Delete scripts after the main script developing is finished
+        'js/in_dev/navigation.js', // TODO:: Delete scripts after the main script developing is finished
     ];
 
     public $depends = [

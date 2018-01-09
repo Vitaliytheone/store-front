@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use common\components\MainController;
 use frontend\models\search\CartSearch;
-use frontend\models\search\NavigationsSearch;
+use frontend\models\search\NavigationSearch;
 use frontend\modules\admin\components\Url;
 use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
@@ -91,7 +91,7 @@ class CustomController extends MainController
         $cartItems = new CartSearch();
         $cartItems->setStore(Yii::$app->store->getInstance());
 
-        $menuItems = (new NavigationsSearch())->getTree();
+        $menuItems = (new NavigationSearch())->getTree();
 
         $endContent = '';
 

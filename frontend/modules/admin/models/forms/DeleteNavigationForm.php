@@ -2,14 +2,14 @@
 
 namespace frontend\modules\admin\models\forms;
 
-use common\models\store\Navigations;
-use frontend\models\search\NavigationsSearch;
+use common\models\store\Navigation;
+use frontend\models\search\NavigationSearch;
 
 /**
  * Class DeleteNavigation form
  * @package frontend\modules\admin\models\forms
  */
-class DeleteNavigationForm extends Navigations
+class DeleteNavigationForm extends Navigation
 {
     /**
      * Virtual navigation deleting
@@ -33,7 +33,7 @@ class DeleteNavigationForm extends Navigations
         ]);
         $this->save();
 
-        $idsToLevelUp = NavigationsSearch::getFirstLevelChildrenIds($id);
+        $idsToLevelUp = NavigationSearch::getFirstLevelChildrenIds($id);
         $countLevelUpItems = count($idsToLevelUp);
 
         $table = static::tableName();

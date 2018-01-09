@@ -2,13 +2,13 @@
 
 namespace frontend\models\search;
 
-use common\models\store\Navigations;
+use common\models\store\Navigation;
 use Yii;
 use yii\base\Model;
 use yii\db\Connection;
 use yii\db\Query;
 
-class NavigationsSearch extends Model
+class NavigationSearch extends Model
 {
     private $_storeDb;
     private $_navigationsTable;
@@ -19,7 +19,7 @@ class NavigationsSearch extends Model
     public function init()
     {
         $this->_storeDb = Yii::$app->store->getInstance()->db_name;
-        $this->_navigationsTable = $this->_storeDb . "." . Navigations::tableName();
+        $this->_navigationsTable = $this->_storeDb . "." . Navigation::tableName();
 
         parent::init();
     }
@@ -34,7 +34,7 @@ class NavigationsSearch extends Model
             ->select(['id', 'parent_id', 'name', 'link', 'link_id', 'position', 'url'])
             ->from($this->_navigationsTable)
             ->where([
-                'deleted' => Navigations::DELETED_NO
+                'deleted' => Navigation::DELETED_NO
             ])
             ->orderBy([
                 'parent_id' => SORT_ASC,
@@ -78,7 +78,7 @@ class NavigationsSearch extends Model
     public static function getChildrenTreeNodeIds($parentId)
     {
         $db = Yii::$app->storeDb;
-        $table = Navigations::tableName();
+        $table = Navigation::tableName();
 
         /** @var Connection $db */
         $query = $db->createCommand("
@@ -114,7 +114,7 @@ class NavigationsSearch extends Model
     public static function getFirstLevelChildrenIds($parentId)
     {
         $db = Yii::$app->storeDb;
-        $table = Navigations::tableName();
+        $table = Navigation::tableName();
 
         /** @var Connection $db */
         $query = $db->createCommand("

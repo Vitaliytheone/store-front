@@ -53,10 +53,10 @@ class Products extends ActiveRecord
         // Update Nav URL if Product URL updated
         if (array_key_exists('url', $changedAttributes)) {
 
-            $navModels = Navigations::findAll([
-                'link' => Navigations::LINK_PRODUCT,
+            $navModels = Navigation::findAll([
+                'link' => Navigation::LINK_PRODUCT,
                 'link_id' => $this->id,
-                'deleted' => Navigations::DELETED_NO,
+                'deleted' => Navigation::DELETED_NO,
             ]);
 
             foreach ($navModels as $navModel) {
@@ -69,16 +69,16 @@ class Products extends ActiveRecord
         $setInvisible = array_key_exists('visibility', $changedAttributes) && ($this->visibility == self::VISIBILITY_NO);
         if ($setInvisible) {
 
-            $navModels = Navigations::findAll([
-                'link' => Navigations::LINK_PRODUCT,
+            $navModels = Navigation::findAll([
+                'link' => Navigation::LINK_PRODUCT,
                 'link_id' => $this->id,
-                'deleted' => Navigations::DELETED_NO,
+                'deleted' => Navigation::DELETED_NO,
             ]);
 
             foreach ($navModels as $navModel) {
                 $navModel->setAttributes([
                     'url' => $this->url,
-                    'link' => Navigations::LINK_WEB_ADDRESS,
+                    'link' => Navigation::LINK_WEB_ADDRESS,
                     'link_id' => null,
                 ]);
                 $navModel->save(false);

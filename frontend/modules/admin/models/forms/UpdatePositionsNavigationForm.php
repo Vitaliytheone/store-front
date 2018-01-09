@@ -2,14 +2,14 @@
 
 namespace frontend\modules\admin\models\forms;
 
-use common\models\store\Navigations;
+use common\models\store\Navigation;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class UpdatePositionsNavigationForm
  * @package frontend\modules\admin\models\forms
  */
-class UpdatePositionsNavigationForm extends Navigations
+class UpdatePositionsNavigationForm extends Navigation
 {
     /**
      * Batch update Navigation item positions

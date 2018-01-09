@@ -1,14 +1,13 @@
 <?php
 
-use frontend\assets\NavigationsAsset;
+use frontend\assets\NavigationAsset;
 use frontend\modules\admin\components\Url;
-use frontend\helpers\NavigationHelper;
 
 /* @var $this \yii\web\View */
 /* @var $linkTypes array */
 /* @var $navTree array */
 
-NavigationsAsset::register($this);
+NavigationAsset::register($this);
 
 ?>
 
@@ -20,7 +19,7 @@ NavigationsAsset::register($this);
         </button>
         <div id="m_aside_left" class="m-grid__item m-aside-left ">
             <?= $this->render('layouts/_left_menu', [
-                'active' => 'navigations'
+                'active' => 'navigation'
             ])?>
         </div>
 
@@ -44,18 +43,18 @@ NavigationsAsset::register($this);
             </div>
 
             <div class="m-content">
-                <div class="dd" id="nestable">
-                    <ol class="dd-list">
-                        <?= NavigationHelper::menuTree($navTree) ?>
-                    </ol>
-                </div>
+
+                <?= $this->render('layouts/navigation/_menu_tree', [
+                    'navTree' => $navTree,
+                ]) ?>
+
             </div>
 
         </div>
     </div>
 </div>
 
-<?= $this->render('layouts/navigations/_modal_delete') ?>
-<?= $this->render('layouts/navigations/_modal_menu_item_form', [
+<?= $this->render('layouts/navigation/_modal_delete') ?>
+<?= $this->render('layouts/navigation/_modal_menu_item_form', [
         'linkTypes' => $linkTypes,
 ]) ?>

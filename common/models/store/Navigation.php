@@ -5,7 +5,7 @@ namespace common\models\store;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use common\models\store\queries\NavigationsQuery;
+use common\models\store\queries\NavigationQuery;
 use yii\db\Query;
 
 /**
@@ -20,7 +20,7 @@ use yii\db\Query;
  * @property string $url
  * @property integer $deleted
  */
-class Navigations extends ActiveRecord
+class Navigation extends ActiveRecord
 {
     const LINK_HOME_PAGE = 1;
     const LINK_PRODUCT = 2;
@@ -101,11 +101,11 @@ class Navigations extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\NavigationsQuery the active query used by this AR class.
+     * @return \common\models\store\queries\NavigationQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new NavigationsQuery(get_called_class());
+        return new NavigationQuery(get_called_class());
     }
 
     /**

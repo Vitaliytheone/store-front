@@ -62,7 +62,7 @@
     var params = {}; // TODO:: DELETE IT! Prepare for custom modules
 
     var getLinksUrl         = params.getLinksUrl        || '/admin/settings/get-links', // GET /admin/settings/get-links?link_type = 2|3
-        successRedirectUrl  = params.successRedirectUrl || '/admin/settings/navigations';
+        successRedirectUrl  = params.successRedirectUrl || '/admin/settings/navigation';
 
     var titles = {
         modal_title : [
@@ -334,7 +334,7 @@
     'use strict';
 
     var params = {}; // TODO:: DELETE IT! Prepare for custom modules
-    var successRedirectUrl  = params.successRedirectUrl || '/admin/settings/navigations';
+    var successRedirectUrl  = params.successRedirectUrl || '/admin/settings/navigation';
 
     var modelId;
 

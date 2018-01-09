@@ -37,8 +37,8 @@ $navbarItems = [
                 'icon' => 'icon-share',
                 'label' => Yii::t('admin', 'header.menu_settings_providers'),
             ],
-            'settings-navigations' => [
-                'url' => '/admin/settings/navigations',
+            'settings-navigation' => [
+                'url' => '/admin/settings/navigation',
                 'icon' => 'flaticon-list-1',
                 'label' => Yii::t('admin', 'header.menu_settings_navigation'),
             ],
