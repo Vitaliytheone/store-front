@@ -31,7 +31,6 @@ class FilesTree extends Widget
             'order.twig',
             'page.twig',
             'cart.twig',
-            '404.twig',
         ],
         'Snippets' => [
             'slider.twig',
