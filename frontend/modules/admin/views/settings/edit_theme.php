@@ -26,7 +26,7 @@ ThemesAsset::register($this);
                     <div class="row">
                         <div class="col-12">
 
-                            <form name="ThemeForm" method="post" action="<?= Url::toRoute(['/settings/edit-theme', 'folder' => $theme->folder, 'file' => $currentFile]) ?>">
+                            <form name="ThemeForm" method="post" action="<?= Url::toRoute(['/settings/edit-theme', 'theme' => $theme->folder, 'file' => $currentFile]) ?>">
                                 <?= Html::beginForm() ?>
                                 <div class="m-portlet sommerce-settings__editor">
                                     <div class="m-portlet__head">
@@ -47,7 +47,7 @@ ThemesAsset::register($this);
                                             <div class="m-portlet__head-tools">
                                                 <ul class="m-portlet__nav">
                                                     <li class="m-portlet__nav-item">
-                                                        <a href="<?= Url::toRoute(['/settings/reset-theme-file', 'folder' => $theme->folder, 'file' => $currentFile]) ?>" class="m-portlet__nav-link m-portlet__nav-link--icon reset-file">
+                                                        <a href="<?= Url::toRoute(['/settings/reset-theme-file', 'theme' => $theme->folder, 'file' => $currentFile]) ?>" class="m-portlet__nav-link m-portlet__nav-link--icon reset-file">
                                                             <i class="la la-refresh"></i> <?= Yii::t('admin', 'settings.themes_editing_reset') ?>
                                                         </a>
                                                     </li>
@@ -74,7 +74,6 @@ ThemesAsset::register($this);
                                         <div class="col-lg-2 sommerce-editorPage__list order-1 order-lg-2">
 
                                             <?= FilesTree::widget([
-                                                'filesTree' => $filesTree,
                                                 'currentFile' => $currentFile,
                                                 'themeFolder' => $theme->folder,
                                             ]) ?>

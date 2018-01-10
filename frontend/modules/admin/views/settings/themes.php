@@ -46,10 +46,10 @@ use frontend\modules\admin\components\Url;
                                     <div class="sommerce-settings_theme-live">
                                         <div>
                                             <?php if ($theme['active']): ?>
-                                                <a href="<?= Url::toRoute(['/settings/edit-theme', 'folder' => $theme['folder']]) ?>"><?= Yii::t('admin', 'settings.themes_edit_code') ?></a>
+                                                <a href="<?= Url::toRoute(['/settings/edit-theme', 'theme' => $theme['folder']]) ?>"><?= Yii::t('admin', 'settings.themes_edit_code') ?></a>
                                                 <a href="#"><?= Yii::t('admin', 'settings.themes_customize') ?></a>
                                             <?php else: ?>
-                                                <a href="<?= Url::toRoute(['/settings/activate-theme', 'folder' => $theme['folder']]) ?>"><?= Yii::t('admin', 'settings.themes_activate') ?></a>
+                                                <a href="<?= Url::toRoute(['/settings/activate-theme', 'theme' => $theme['folder']]) ?>"><?= Yii::t('admin', 'settings.themes_activate') ?></a>
                                             <?php endif; ?>
                                         </div>
                                     </div>

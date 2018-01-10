@@ -8,9 +8,6 @@ use yii\helpers\Html;
 
 class FilesTree extends Widget
 {
-    /** @var $filesTree array */
-    public $filesTree = [];
-
     /** @var  string Current real Theme folder name */
     public $themeFolder;
 
@@ -19,6 +16,41 @@ class FilesTree extends Widget
      * @var $currentFile string
      */
     public $currentFile;
+
+    /**
+     * Theme folders/files structure
+     * @var array
+     */
+    public $filesTree = [
+        'Layouts' => [
+            'layout.twig',
+        ],
+        'Templates' => [
+            'index.twig',
+            'product.twig',
+            'order.twig',
+            'page.twig',
+            'cart.twig',
+            '404.twig',
+        ],
+        'Snippets' => [
+            'slider.twig',
+            'features.twig',
+            'reviews.twig',
+            'process.twig',
+        ],
+        'JS' => [
+            'bootstrap.js',
+            'scripts.js',
+        ],
+        'CSS' => [
+            'bootstrap.css',
+            'styles.css',
+        ],
+        'Config' => [
+            'settings.json'
+        ],
+    ];
 
     public function init()
     {
@@ -31,7 +63,7 @@ class FilesTree extends Widget
      */
     public function run()
     {
-        $menuTree = $this->filesTree($this->filesTree);
+        $menuTree = $this->_filesTree($this->filesTree);
 
         $menuTree = Html::tag('ul', $menuTree, []);
         $menuTree = Html::tag('div', $menuTree, [
@@ -43,30 +75,46 @@ class FilesTree extends Widget
     }
 
     /**
+     * Return files tree menu
+     * @param $tree array
+     * @return string
+     */
+    private function _filesTree($tree){
+
+        $menuTree = '';
+
+        foreach ($tree as $key => $item) {
+            $menuTree .= static::_fileTreeItem($key, $item);
+        }
+
+        return $menuTree;
+    }
+
+    /**
      * Return files tree item
-     * @param $itemName
+     * @param $key
      * @param $item
      * @return string
      */
-    private function fileTreeItem($itemName, $item)
+    private function _fileTreeItem($key, $item)
     {
-        $isFolder = isset($item['files']);
 
-        $menuItem = $itemName;
+        $isFolder = is_array($item);
+
+        $menuItem = $isFolder ? $key : $item;
 
         if ($isFolder) {
-            $menuItem .= Html::tag('ul', $this->filesTree($item['files']), ['class' => 'my-ul']);
+            $menuItem .= Html::tag('ul', $this->_filesTree($item), ['class' => 'my-ul']);
         } else {
 
-            $relativeFilePath = $item['path_relative_name'];
-            $selected = $this->currentFile === $relativeFilePath;
+            $selected = $this->currentFile === $item;
 
             $menuItem = Html::tag('a', $menuItem, [
                 'class' => $selected ? 'jstree-clicked' : '',
                 'href' => Url::toRoute([
                     '/settings/edit-theme',
-                    'folder' => $this->themeFolder,
-                    'file' => $relativeFilePath,
+                    'theme' => $this->themeFolder,
+                    'file' => $item,
                 ]),
             ]);
         }
@@ -78,21 +126,4 @@ class FilesTree extends Widget
 
         return $menuItem;
     }
-
-    /**
-     * Return files tree menu
-     * @param $tree array
-     * @return string
-     */
-    private function filesTree($tree){
-
-        $menuTree = '';
-
-        foreach ($tree as $itemKey => $item) {
-            $menuTree .= static::fileTreeItem($itemKey, $item);
-        }
-
-        return $menuTree;
-    }
-
 }

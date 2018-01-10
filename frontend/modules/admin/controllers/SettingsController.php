@@ -261,13 +261,13 @@ class SettingsController extends CustomController
 
     /**
      * Activate theme
-     * @param $folder
+     * @param $theme
      * @return Response
      * @throws BadRequestHttpException
      */
-    public function actionActivateTheme($folder)
+    public function actionActivateTheme($theme)
     {
-        $activatedTheme = ActivateThemeForm::activate($folder);
+        $activatedTheme = ActivateThemeForm::activate($theme);
 
         UiHelper::message(Yii::t('admin', 'settings.themes_message_activated', [
             'theme_name' => $activatedTheme->name
@@ -277,18 +277,18 @@ class SettingsController extends CustomController
     }
 
     /**
-     * @param string $folder Current Theme folder name
+     * @param string $theme Current Theme folder name
      * @param string $file Relative file path to current Theme dir
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionEditTheme($folder, $file = null)
+    public function actionEditTheme($theme, $file = null)
     {
         $request = Yii::$app->getRequest();
         $this->view->title = Yii::t('admin', 'settings.themes_edit_title');
         $this->addModule('adminThemes');
 
-        $editThemeForm = EditThemeForm::make($folder, $file);
+        $editThemeForm = EditThemeForm::make($theme, $file);
 
         if (!$editThemeForm) {
             throw new NotFoundHttpException('Theme not found or theme not active!');
@@ -302,7 +302,6 @@ class SettingsController extends CustomController
 
         return $this->render('edit_theme', [
             'theme' => $editThemeForm->getThemeModel(),
-            'filesTree' => $editThemeForm->getFilesTree(),
             'currentFile' => $file,
             'currentFileContent' => $editThemeForm->fetchFileContent(),
             'reset' => $editThemeForm->isResetAble(),
@@ -311,20 +310,20 @@ class SettingsController extends CustomController
 
     /**
      * Reset default theme file
-     * @param $folder
+     * @param $theme
      * @param $file
      * @return Response
      * @throws BadRequestHttpException
      */
-    public function actionResetThemeFile($folder, $file)
+    public function actionResetThemeFile($theme, $file)
     {
-        if (!$form = ResetThemeForm::reset($folder, $file)) {
+        if (!$form = ResetThemeForm::reset($theme, $file)) {
             throw new BadRequestHttpException();
         }
 
         UiHelper::message(Yii::t('admin', 'settings.themes_message_reset'));
 
-        return $this->redirect(Url::toRoute(['/settings/edit-theme', 'folder' => $folder, 'file' => $file]));
+        return $this->redirect(Url::toRoute(['/settings/edit-theme', 'theme' => $theme, 'file' => $file]));
     }
 
     /**
