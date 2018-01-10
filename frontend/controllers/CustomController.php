@@ -3,12 +3,15 @@
 namespace frontend\controllers;
 
 use common\components\MainController;
+use common\models\stores\Stores;
+use frontend\helpers\AssetsHelper;
 use frontend\models\search\CartSearch;
 use frontend\models\search\NavigationSearch;
 use frontend\modules\admin\components\Url;
 use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\View;
 
 /**
@@ -88,8 +91,14 @@ class CustomController extends MainController
             return $this->_globalParams;
         }
 
+        /**
+         * @var $store Stores
+         */
+        $store = Yii::$app->store->getInstance();
+
+
         $cartItems = new CartSearch();
-        $cartItems->setStore(Yii::$app->store->getInstance());
+        $cartItems->setStore($store);
 
         $menuTree = (new NavigationSearch())->getSiteMenuTree(Yii::$app->request->url);
 
@@ -101,6 +110,10 @@ class CustomController extends MainController
             $endContent = ob_get_contents();
             ob_end_clean();
         }
+        $assets = AssetsHelper::getPanelAssets($store);
+
+        $scripts = ArrayHelper::getValue($assets, 'scripts', []);
+        $styles = ArrayHelper::getValue($assets, 'styles', []);
 
         foreach ($this->customJs as $js) {
             $scripts[] = [
@@ -115,7 +128,14 @@ class CustomController extends MainController
                 'menu' => $menuTree,
                 'cart_count' => $cartItems->getCount(),
                 'custom_footer' => $endContent,
-                'scripts' => $scripts
+                'language' => Yii::$app->language,
+                'pageTitle' => !empty($this->view->title) ? $this->view->title : $store->seo_title,
+                'seo_key' => $store->seo_keywords,
+                'seo_desc' => $store->seo_description,
+                'name' => $store->name,
+                'favicon' => $store->favicon,
+                'scripts' => $scripts,
+                'styles' => $styles,
             ]
 
         ];

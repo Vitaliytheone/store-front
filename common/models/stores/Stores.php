@@ -2,7 +2,7 @@
 
 namespace common\models\stores;
 
-use common\helpers\StoreHelper;
+use frontend\helpers\StoreHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -27,6 +27,8 @@ use common\models\stores\queries\StoresQuery;
  * @property string $seo_title
  * @property string $seo_keywords
  * @property string $seo_description
+ * @property string $folder
+ * @property string $folder_content
  * @property string $theme_name
  * @property string $theme_folder
  * @property string $admin_email
@@ -55,7 +57,7 @@ class Stores extends ActiveRecord
     {
         return [
             [['customer_id', 'timezone', 'expired', 'created_at', 'updated_at'], 'integer'],
-            [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder'], 'string', 'max' => 255],
+            [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder', 'folder', 'folder_content'], 'string', 'max' => 255],
             [['currency', 'language'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['admin_email'], 'string', 'max' => 300],
@@ -85,6 +87,8 @@ class Stores extends ActiveRecord
             'seo_title' => Yii::t('app', 'Seo Title'),
             'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'seo_description' => Yii::t('app', 'Seo Description'),
+            'folder' => Yii::t('app', 'Folder'),
+            'folder_content' => Yii::t('app', 'Folder Content'),
             'theme_name' => Yii::t('app', 'Theme Name'),
             'theme_folder' => Yii::t('app', 'Theme Folder'),
             'admin_email' => Yii::t('app', 'Admin e-mail'),
@@ -171,11 +175,68 @@ class Stores extends ActiveRecord
     }
 
     /**
-     * Get panel folder
+     * Get store folder
      * @return string
      */
     public function getThemeFolder()
     {
         return $this->theme_folder;
+    }
+
+    /**
+     * Get folder content decoded data
+     * @return array|mixed
+     */
+    public function getFolderContentData()
+    {
+        if (empty($this->folder_content)) {
+            return [];
+        }
+
+        return json_decode($this->folder_content, true);
+    }
+
+    /**
+     * Set folder content decoded data
+     * @param mixed $content
+     * @return bool
+     */
+    public function setFolderContentData($content)
+    {
+        $this->folder_content = json_encode($content);
+
+        return $this->save(false);
+    }
+
+    /**
+     * Generate unique folder name
+     * @return bool
+     */
+    public function generateFolderName()
+    {
+        for ($i = 1; $i < 100; $i++) {
+            $this->folder = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 6);
+            if (!static::findOne([
+                'folder' => $this->folder
+            ])) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Get store folder
+     * @return string
+     */
+    public function getFolder()
+    {
+        $assetsPath = StoreHelper::getAssetsPath();
+        if (empty($this->folder) || !is_dir($assetsPath . $this->folder)) {
+            $this->generateFolderName();
+            $this->save(false);
+            StoreHelper::generateAssets($this->id);
+        }
+
+        return $this->folder;
     }
 }
