@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Title</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
     <link rel="stylesheet" href="/css/frontend/main.css">
     <link rel="stylesheet" href="/css/frontend/colors.css">
@@ -15,7 +17,8 @@
 <nav class="navbar navbar-white">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -30,37 +33,39 @@
             <ul class="nav navbar-nav navbar-right">
 
                 <!-- User's menu -->
-								{% for menu_first_level in site['user_menu_items'] %}
-								    {% if menu_first_level['nodes'] %}
-                        <li class="dropdown">
-                            <a href="{{ menu_first_level['url'] }}" class="dropdown-toggle disabled">{{ menu_first_level['name'] }} <span class="caret"></span></a>
+                {% for menu_first_level in site['menu'] %}
+                    {% if menu_first_level['submenu'] %}
+                        <li class="dropdown {% if menu_first_level['active'] %}active{% endif %}">
+
+                            <a href="{{ menu_first_level['link'] }}" class="dropdown-toggle disabled">{{ menu_first_level['name'] }} <span class="caret"></span></a>
                             <ul class="dropdown-menu multi-level">
-                                {% for menu_second_level in menu_first_level['nodes'] %}
-                                    {% if menu_second_level['nodes'] %}
-                                        <li class="dropdown-submenu">
-                                            <a href="{{ menu_second_level['url'] }}" class="dropdown-toggle disabled">{{ menu_second_level['name'] }}</a>
+                                {% for menu_second_level in menu_first_level['submenu'] %}
+                                    {% if menu_second_level['submenu'] %}
+                                        <li class="dropdown-submenu {% if menu_second_level['active'] %}active{% endif %}">
+                                            <a href="{{ menu_second_level['link'] }}"
+                                               class="dropdown-toggle disabled">{{ menu_second_level['name'] }}</a>
                                             <ul class="dropdown-menu multi-level">
-                                                {% for menu_third_level in menu_second_level['nodes'] %}
-                                                    <li>
-                                                        <a href="{{ menu_third_level['url'] }}" >{{ menu_third_level['name'] }}</a>
+                                                {% for menu_third_level in menu_second_level['submenu'] %}
+                                                    <li{% if menu_third_level['active'] %} class="active"{% endif %}>
+                                                        <a href="{{ menu_third_level['link'] }}">{{ menu_third_level['name'] }}</a>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
                                     {% else %}
-                                        <li>
-                                            <a href="{{ menu_second_level['url'] }}" >{{ menu_second_level['name'] }}</a>
+                                        <li{% if menu_second_level['active'] %} class="active"{% endif %}>
+                                            <a href="{{ menu_second_level['link'] }}">{{ menu_second_level['name'] }}</a>
                                         </li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
                         </li>
-										{% else %}
-                        <li>
-                            <a href="{{ menu_first_level['url'] }}" >{{ menu_first_level['name'] }}</a>
+                    {% else %}
+                        <li{% if menu_first_level['active'] %} class="active"{% endif %}>
+                            <a href="{{ menu_first_level['link'] }}">{{ menu_first_level['name'] }}</a>
                         </li>
-										{% endif %}
-								{% endfor %}
+                    {% endif %}
+                {% endfor %}
                 <!--/ User's menu -->
 
                 <li><a href="/cart" class="bold">({{ site['cart_count'] }}) Cart</a></li>
@@ -90,21 +95,25 @@
             </div>
         </div>
     </div>
-		{{ site['custom_footer'] }}
+    {{ site['custom_footer'] }}
 </footer>
 <!-- Footer block End -->
 
 <!-- Google reCaptcha -->
 <script src="https://www.google.com/recaptcha/api.js?hl=en"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
 <script src="/js/main.js"></script>
 
 {% for script in site['scripts'] %}
     <script type="text/javascript" {% if script['src'] %}src="{{ script['src'] }}"{% endif %}>
-				{% if script['code'] %} {{ script['code'] }} {% endif %}
+        {% if script['code'] %} {{ script['code'] }} {% endif %}
     </script>
 {% endfor %}
 

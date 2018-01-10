@@ -70,6 +70,50 @@ class NavigationSearch extends Model
         return $tree;
     }
 
+
+    /**
+     * Return frontend user menu tree
+     * Allowed fields are:
+     *  'active'    0|1,
+     *  'link'      string,
+     *  'name'      string,
+     *  'submenu'   array|false
+     *
+     * @param $currentUrl
+     * @return array
+     */
+    public function getSiteMenuTree($currentUrl = false)
+    {
+        $list = $this->search();
+
+        $tree = [];
+        foreach ($list as $id => &$node) {
+
+            // Additional params
+            $node['link'] = '/' . trim($node['url'], '/');
+            $node['active'] = $node['link'] === $currentUrl ? 1 : 0;
+            $node['submenu'] = false;
+
+            // Make tree
+            // Is root
+            if ($node['parent_id'] == 0) {
+                $tree[$id] = &$node;
+            } else {
+                // Is node
+                $list[$node['parent_id']]['submenu'][$id] = &$node;
+            }
+
+            // Cleanup
+            unset($node['id']);
+            unset($node['parent_id']);
+            unset($node['link_id']);
+            unset($node['position']);
+            unset($node['url']);
+        }
+
+        return $tree;
+    }
+
     /**
      * Return all children and subchildren ids of tree node
      * @param $parentId

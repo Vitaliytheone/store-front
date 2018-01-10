@@ -91,7 +91,7 @@ class CustomController extends MainController
         $cartItems = new CartSearch();
         $cartItems->setStore(Yii::$app->store->getInstance());
 
-        $menuItems = (new NavigationSearch())->getTree();
+        $menuTree = (new NavigationSearch())->getSiteMenuTree(Yii::$app->request->url);
 
         $endContent = '';
 
@@ -112,7 +112,7 @@ class CustomController extends MainController
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
-                'user_menu_items' => $menuItems,
+                'menu' => $menuTree,
                 'cart_count' => $cartItems->getCount(),
                 'custom_footer' => $endContent,
                 'scripts' => $scripts
