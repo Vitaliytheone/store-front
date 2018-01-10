@@ -47,7 +47,7 @@ class CartController extends CustomController
             if ($model->redirect) {
                 return $this->redirect($model->redirect);
             }
-            return $this->render('checkout', $model->formData);
+            return $this->renderPartial('checkout', $model->formData);
         }
 
         return $this->render('cart.twig', [
