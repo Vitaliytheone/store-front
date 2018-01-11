@@ -96,7 +96,6 @@ class CustomController extends MainController
          */
         $store = Yii::$app->store->getInstance();
 
-
         $cartItems = new CartSearch();
         $cartItems->setStore($store);
 

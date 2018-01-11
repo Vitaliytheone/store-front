@@ -89,18 +89,20 @@ class NavigationSearch extends Model
         $tree = [];
         foreach ($list as $id => &$node) {
 
-            // Additional params
-            $node['link'] = '/' . trim($node['url'], '/');
-            $node['active'] = $node['link'] === $currentUrl ? 1 : 0;
-            $node['submenu'] = false;
-
             // Make tree
             // Is root
-            if ($node['parent_id'] == 0) {
+            if (!$node['parent_id']) {
                 $tree[$id] = &$node;
             } else {
                 // Is node
                 $list[$node['parent_id']]['submenu'][$id] = &$node;
+            }
+
+            // Additional params
+            $node['link'] = '/' . trim($node['url'], '/');
+            $node['active'] = $node['link'] === $currentUrl ? 1 : 0;
+            if (!isset($node['submenu'])) {
+                $node['submenu'] = false;
             }
 
             // Cleanup
