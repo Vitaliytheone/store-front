@@ -135,6 +135,16 @@ class PaymentsSearch extends Model
             return $this->_dataProvider;
         }
 
+        // For payment ids lists
+        // Example query string: 23, 432, 33, 42
+        $queryList = array_unique(explode(',', str_replace(' ', '', $searchQuery)));
+        $paymentIds = [];
+        foreach ($queryList as $item) {
+            if (ctype_digit($item)) {
+                $paymentIds[] = $item;
+            }
+        }
+
         // Searches:
         // 1. Strong by `customer` if $searchQuery : valid Email
         // 2. Soft by `memo`
@@ -143,6 +153,8 @@ class PaymentsSearch extends Model
 
         if ($emailValidator->validate($searchQuery)) {
             $query->andFilterWhere(['customer' => $searchQuery]);
+        } elseif ($paymentIds) {
+            $query->andFilterWhere(['in', 'id', $paymentIds]);
         } else {
             $query->andFilterWhere(['like', 'memo', $searchQuery]);
         }
