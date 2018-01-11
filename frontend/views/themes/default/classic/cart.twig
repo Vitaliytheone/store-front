@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-title">Cart</h1>
+                <h1 class="page-title">{{ lang('cart.title') }}</h1>
             </div>
         </div>
         <div class="row">
@@ -12,9 +12,9 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Package name</th>
-                            <th>Details</th>
-                            <th class="col-lg-1">Price</th>
+                            <th>{{ lang('cart.package') }}</th>
+                            <th>{{ lang('cart.details') }}</th>
+                            <th class="col-lg-1">{{ lang('cart.price') }}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -35,7 +35,7 @@
                                     </td>
                                     <td class="text-right">
                                         <a href="/cart/remove/{{ item['key'] }}" class="btn btn-xs btn-default">
-                                            Remove
+                                            {{ lang('cart.remove') }}
                                         </a>
                                     </td>
                                 </tr>
@@ -50,7 +50,7 @@
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">
                 <div class="cart bg-white cart-total">
-                    <strong>Total price </strong><div class="cart-total__price pull-right">{{ total }}</div>
+                    <strong>{{ lang('cart.total_price') }} </strong><div class="cart-total__price pull-right">{{ total }}</div>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
 
                         {% if methods|length > 1 %}
                             <div class="form-group">
-                                <label>Payment method</label>
+                                <label>{{ lang('cart.payment_method') }}</label>
                                 <div>
                                     {% for methodId,methodName in methods %}
                                         <label class="radio-inline">
@@ -82,7 +82,7 @@
                         {% endif %}
 
                         <div class="form-group">
-                            <label class="control-label" for="orderform-email">Email address</label>
+                            <label class="control-label" for="orderform-email">{{ lang('cart.email_title') }}</label>
                             <input id="orderform-email" class="form-control" name="OrderForm[email]" value="{{ data['email'] }}" placeholder="mail@gmail.com" aria-required="true" aria-invalid="true" type="text">
                         </div>
 
@@ -93,10 +93,10 @@
 
             <div class="row">
                 <div class="col-lg-6">
-                    <a href="/" class="btn btn-default">Continue shopping</a>
+                    <a href="/" class="btn btn-default">{{ lang('cart.cancel') }}</a>
                 </div>
                 <div class="col-lg-6 text-right">
-                    <button type="submit" id="orderButton" class="btn btn-primary" name="order-button">Proceed to Checkout</button>
+                    <button type="submit" id="orderButton" class="btn btn-primary" name="order-button">{{ lang('cart.checkout') }}</button>
                 </div>
             </div>
 

@@ -70,7 +70,7 @@ class CustomMessageSource extends PhpMessageSource
      */
     protected function getMessageFilePath($category, $language)
     {
-        $basePath = Yii::getAlias($this->basePath); error_log($this->basePath, 0);
+        $basePath = Yii::getAlias($this->basePath);
 
         $storeFolderName = self::STORE_LANG_FOLDER_PREFIX . $this->_store->id;
 

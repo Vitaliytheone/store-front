@@ -70,7 +70,7 @@
                 {% endfor %}
                 <!--/ User's menu -->
 
-                <li><a href="/cart" class="bold">({{ site['cart_count'] }}) Cart</a></li>
+                <li><a href="/cart" class="bold">({{ site['cart_count'] }}) {{ lang('cart.title') }}</a></li>
             </ul>
         </div>
     </div>
@@ -85,13 +85,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    &copy; 2017 site.ru All Rights Reserved.
+                    {{ lang('footer.copyright') }}
                 </div>
                 <div class="col-md-8">
                     <ul class="footer-links">
-                        <li><a href="/content">Terms of Service</a></li>
-                        <li><a href="/content">Privacy Policy</a></li>
-                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="/content">{{ lang('footer.terms') }}</a></li>
+                        <li><a href="/content">{{ lang('footer.policy') }}</a></li>
+                        <li><a href="/contact-us">{{ lang('footer.contact') }}</a></li>
                     </ul>
                 </div>
             </div>

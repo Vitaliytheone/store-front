@@ -26,7 +26,6 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
-//        error_log(Yii::t('store', 'product.test_string'));
         return $this->render('index.twig');
     }
 

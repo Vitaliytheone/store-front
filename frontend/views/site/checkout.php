@@ -2,13 +2,13 @@
     <div class="row">
         <div class="col-md-12">
 
-            <h1 class="page-title">Checkout</h1>
+            <h1 class="page-title"><?= Yii::t('app', 'checkout.title') ?></h1>
 
             <form action="<?= $form['action'] ?>" method="<?= $form['method'] ?>" id="sendform"  accept-charset="<?= $form['charset'] ?>">
                 <?php foreach ($data as $key => $value) : ?>
                     <input type="hidden" name="<?= $key ?>" value="<?= $value ?>">
                 <?php endforeach; ?>
-                <p>Redirecting... <button type="submit">Go</button></p>
+                <p><?= Yii::t('app', 'checkout.redirect') ?> <button type="submit"><?= Yii::t('app', 'checkout.go') ?></button></p>
             </form>
 
         </div>

@@ -70,9 +70,9 @@ $config = [
                         'admin' => 'admin.php',
                     ],
                 ],
-                'store*' => [
+                'app*' => [
                     'class' => 'frontend\components\i18n\CustomMessageSource',
-                    'basePath' => dirname(__DIR__) . '/messages/',
+                    'basePath' => dirname(__DIR__) . '/messages',
                 ],
             ],
         ],
