@@ -12,21 +12,26 @@
                         {% if error %}
                             <div class="error-summary alert alert-danger">{{ errorText }}</div>
                         {% endif %}
+                        {% if action_result == 'success' %}
+                            <div class="alert alert-success">{{ lang('email.success') }}</div>
+                        {% elseif action_result == 'error' %}
+                            <div class="alert alert-danger">{{ lang('email.error') }}</div>
+                        {% endif %}
                         <div class="form-group">
                             <label for="inputSubject">Subject</label>
-                            <input type="text" class="form-control" id="inputSubject" name="ContactForm[subject]" value="{{ data.subject }}">
+                            <input type="text" class="form-control" id="inputSubject" name="subject" value="{{ data.subject }}">
                         </div>
                         <div class="form-group">
                             <label for="inputName">Name</label>
-                            <input type="text" class="form-control" id="inputName" name="ContactForm[name]" value="{{ data.name }}">
+                            <input type="text" class="form-control" id="inputName" name="name" value="{{ data.name }}">
                         </div>
                         <div class="form-group">
                             <label for="inputEmail">Email address</label>
-                            <input type="email" class="form-control" id="inputEmail" name="ContactForm[email]" value="{{ data.email }}">
+                            <input type="email" class="form-control" id="inputEmail" name="email" value="{{ data.email }}">
                         </div>
                         <div class="form-group">
                             <label for="inputMessage">Message</label>
-                            <textarea class="form-control" id="inputMessage" rows="3" name="ContactForm[message]">{{ data.message }}</textarea>
+                            <textarea class="form-control" id="inputMessage" rows="3" name="message">{{ data.message }}</textarea>
                         </div>
                         <div class="form-group">
                             <div class="g-recaptcha" data-sitekey="{{ reCaptchaSiteKey }}"></div>
