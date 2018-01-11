@@ -15,6 +15,40 @@ use yii\base\Model;
  */
 class EditThemeForm extends Model
 {
+    /**
+     * Theme allowed folders/files structure
+     * @var array
+     */
+    public static $filesTree = [
+        'Layouts' => [
+            'layout.twig',
+        ],
+        'Templates' => [
+            'index.twig',
+            'product.twig',
+            'order.twig',
+            'page.twig',
+            'cart.twig',
+        ],
+        'Snippets' => [
+            'slider.twig',
+            'features.twig',
+            'reviews.twig',
+            'process.twig',
+        ],
+        'JS' => [
+            'bootstrap.js',
+            'scripts.js',
+        ],
+        'CSS' => [
+            'bootstrap.css',
+            'styles.css',
+        ],
+        'Config' => [
+            'settings.json'
+        ],
+    ];
+
     public $file_content;
 
     private $_theme_model;
@@ -48,6 +82,8 @@ class EditThemeForm extends Model
     public static function make($themeFolderName, $themeEditFileName) {
 
         $themeModel = (new ThemesSearch())->searchByFolder($themeFolderName);
+        $fileName = ltrim(str_replace('../', '', $themeEditFileName), '/');
+
 
         if (!$themeModel || !$themeModel->isActive()) {
             return false;
@@ -55,11 +91,17 @@ class EditThemeForm extends Model
 
         $model = new static();
         $model->_theme_model = $themeModel;
-        $model->_file = ltrim(str_replace('../', '', $themeEditFileName), '/');
 
         if (!$themeEditFileName) {
             return $model;
         }
+
+        /** Check is filename is allowed */
+        if (strpos(json_encode(static::$filesTree), $fileName) === false) {
+            return false;
+        }
+
+        $model->_file = $fileName;
 
         /**
          * For Custom theme — save file to theme path
@@ -126,40 +168,36 @@ class EditThemeForm extends Model
      */
     public function fetchFileContent()
     {
-        if (!$this->getFile()) {
-            return null;
+        $fileName = $this->getFile();
+
+        if (!$fileName) {
+            return false;
         }
 
         $themeModel = $this->getThemeModel();
 
         $themeFilePath = $this->getPathToFile();
-        $defaultFilePath = $themeModel::getDefaultThemePath() . '/' . $this->getFile();
-        $themeRealFilePath = $themeModel->getThemePath() . '/' . $this->getFile();
+        $themeRealFilePath = $themeModel->getThemePath() . '/' . $fileName;
 
-        /** Custom Theme: Try to find file (1) in theme path and (2) in default folder  */
-        if (
-            $themeModel::THEME_TYPE === 1 &&
-            !file_exists($filePath = $themeFilePath) &&
-            !file_exists($filePath = $defaultFilePath)
+        $filePath = false;
+
+        /** Custom Theme: Try to find file (1) in theme path */
+        if ($themeModel::THEME_TYPE === 1 &&
+            !file_exists($filePath = $themeFilePath)
         ) {
-            throw new Exception('Requested theme file does not exist!');
+            $filePath = false;
         }
 
-        /** Default Theme: Try to find file (1) in custom folder, (2) in real theme folder, (3) in default folder */
+        /** Default Theme: Try to find file (1) in custom folder, (2) in real theme folder */
         if (
             $themeModel::THEME_TYPE === 0 &&
             !file_exists($filePath = $themeFilePath) &&
-            !file_exists($filePath = $themeRealFilePath) &&
-            !file_exists($filePath = $defaultFilePath)
+            !file_exists($filePath = $themeRealFilePath)
         ) {
-            throw new Exception('Requested theme file does not exist!');
+            $filePath = false;
         }
 
-        $fileContent = file_get_contents($filePath, false);
-
-        if ($fileContent === false) {
-            throw new Exception('Requested file corrupted!');
-        }
+        $fileContent = $filePath ? file_get_contents($filePath, false) : '';
 
         $this->file_content = $fileContent;
 

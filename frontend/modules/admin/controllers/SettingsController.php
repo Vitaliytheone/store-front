@@ -277,6 +277,7 @@ class SettingsController extends CustomController
     }
 
     /**
+     * Edit theme action
      * @param string $theme Current Theme folder name
      * @param string $file Relative file path to current Theme dir
      * @return string
@@ -291,7 +292,7 @@ class SettingsController extends CustomController
         $editThemeForm = EditThemeForm::make($theme, $file);
 
         if (!$editThemeForm) {
-            throw new NotFoundHttpException('Theme not found or theme not active!');
+            throw new NotFoundHttpException('Theme or file not found!');
         }
 
         if ($editThemeForm->load($request->post()) && $editThemeForm->updateThemeFile()) {
@@ -300,11 +301,14 @@ class SettingsController extends CustomController
             return $this->refresh();
         }
 
+        $fileContent = $editThemeForm->fetchFileContent();
+
         return $this->render('edit_theme', [
             'theme' => $editThemeForm->getThemeModel(),
             'currentFile' => $file,
-            'currentFileContent' => $editThemeForm->fetchFileContent(),
+            'currentFileContent' => $fileContent,
             'reset' => $editThemeForm->isResetAble(),
+            'filesTree' => $editThemeForm::$filesTree,
         ]);
     }
 

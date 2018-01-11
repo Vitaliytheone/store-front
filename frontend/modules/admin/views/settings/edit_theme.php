@@ -76,6 +76,7 @@ ThemesAsset::register($this);
                                             <?= FilesTree::widget([
                                                 'currentFile' => $currentFile,
                                                 'themeFolder' => $theme->folder,
+                                                'filesTree' => $filesTree,
                                             ]) ?>
 
                                         </div>
