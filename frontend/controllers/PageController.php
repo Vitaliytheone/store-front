@@ -3,10 +3,8 @@ namespace frontend\controllers;
 use common\models\store\Pages;
 use yii\web\NotFoundHttpException;
 use Yii;
-use yii\helpers\Url;
 use frontend\models\forms\ContactForm;
 use common\components\ActiveForm;
-use frontend\helpers\UiHelper;
 
 
 /**
@@ -30,7 +28,10 @@ class PageController extends CustomController
         }
 
         return $this->render($page->template . '.twig', [
-            'page' => $page
+            'page' => [
+                'title' => $page->name,
+                'content' => $page->content,
+            ]
         ]);
     }
 
@@ -70,14 +71,14 @@ class PageController extends CustomController
      */
     protected function _findPage(int $id)
     {
-        $product = Pages::find()->active()->andWhere([
+        $page = Pages::find()->active()->andWhere([
             'id' => $id,
         ])->one();
 
-        if (!$product) {
+        if (!$page) {
             throw new NotFoundHttpException();
         }
 
-        return $product;
+        return $page;
     }
 }
