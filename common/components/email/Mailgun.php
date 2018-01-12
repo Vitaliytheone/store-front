@@ -91,7 +91,8 @@ class Mailgun extends Model
         if (curl_errno($ch)) {
             $firstError = curl_error($ch);
             curl_close($ch);
-            throw new Exception("Curl initialisation error: $firstError");
+//            throw new Exception("Curl initialisation error: $firstError");
+            return false;
         }
 
         curl_close($ch);

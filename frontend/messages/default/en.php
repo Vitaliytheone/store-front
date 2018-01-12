@@ -45,6 +45,6 @@ return [
     '404.title' => 'Error 404',
     '404.text' => 'The requested page was not found on this server',
 
-    'email.success' => 'Email was successfully sent!',
-    'email.error' => 'An error occurred while sending email!',
+    'contact.form.message.success' => 'Email was successfully sent!',
+    'contact.form.message.error' => 'Internal error. Try again later!',
 ];

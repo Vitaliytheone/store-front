@@ -45,20 +45,18 @@ class PageController extends CustomController
         $request = Yii::$app->getRequest();
         $contactForm = new ContactForm();
 
-        if ($contactForm->load($request->post()) && $contactForm->validate()) {
-            if ($contactForm->contact()) {
-                Yii::$app->session->setFlash('action_result', 'success');
-                return $this->refresh();
-            } else {
-                Yii::$app->session->setFlash('action_result', 'error');
-            }
+        if (
+            $contactForm->load($request->post()) &&
+            $contactForm->validate() &&
+            $contactForm->contact()
+        ) {
+            return $this->refresh();
         }
 
         return $this->render($template . '.twig', [
-            'data' => $request->post(),
+            'data' => $contactForm,
             'error' => $contactForm->hasErrors(),
             'errorText' => ActiveForm::firstError($contactForm),
-            'action_result' => Yii::$app->session->getFlash('action_result'),
             'reCaptchaSiteKey' => Yii::$app->params['reCaptcha.siteKey'],
         ]);
     }
