@@ -37,23 +37,23 @@
                 <!-- User's menu -->
                 {% for menu_first_level in site['menu'] %}
                     {% if menu_first_level['submenu'] %}
-                        <li class="dropdown {% if menu_first_level['active'] %}active{% endif %}">
+                        <li class="dropdown {% if menu_first_level['active'] %}alert-danger{% endif %}">
                             <a href="#" class="dropdown-toggle disabled">{{ menu_first_level['name'] }} <span class="caret"></span></a>
                             <ul class="dropdown-menu multi-level">
                                 {% for menu_second_level in menu_first_level['submenu'] %}
                                     {% if menu_second_level['submenu'] %}
-                                        <li class="dropdown-submenu {% if menu_second_level['active'] %}active{% endif %}">
+                                        <li class="dropdown-submenu">
                                             <a href="#" class="dropdown-toggle disabled">{{ menu_second_level['name'] }}</a>
                                             <ul class="dropdown-menu multi-level">
                                                 {% for menu_third_level in menu_second_level['submenu'] %}
-                                                    <li{% if menu_third_level['active'] %} class="active"{% endif %}>
+                                                    <li>
                                                         <a href="{{ menu_third_level['link'] }}">{{ menu_third_level['name'] }}</a>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
                                     {% else %}
-                                        <li{% if menu_second_level['active'] %} class="active"{% endif %}>
+                                        <li>
                                             <a href="{{ menu_second_level['link'] }}">{{ menu_second_level['name'] }}</a>
                                         </li>
                                     {% endif %}
@@ -61,7 +61,7 @@
                             </ul>
                         </li>
                     {% else %}
-                        <li{% if menu_first_level['active'] %} class="active"{% endif %}>
+                        <li{% if menu_first_level['active'] %} class="alert-danger"{% endif %}>
                             <a href="{{ menu_first_level['link'] }}">{{ menu_first_level['name'] }}</a>
                         </li>
                     {% endif %}

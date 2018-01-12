@@ -8,6 +8,7 @@ use yii\base\Model;
 use yii\db\Connection;
 use yii\db\Query;
 
+
 class NavigationSearch extends Model
 {
     private $_storeDb;
@@ -70,7 +71,6 @@ class NavigationSearch extends Model
         return $tree;
     }
 
-
     /**
      * Return frontend user menu tree
      * Allowed fields are:
@@ -86,26 +86,57 @@ class NavigationSearch extends Model
     {
         $list = $this->search();
 
+        /**
+         * Find root menu item id from flat-tree by children id
+         * @param $activeId
+         * @return mixed
+         */
+        $getRootItemId = function($activeId) use ($list) {
+            $currentId = $activeId;
+            $currentItem = $list[$currentId];
+
+            while ((int)$currentItem['parent_id'] !== 0) {
+                $currentId = $currentItem['parent_id'];
+                $currentItem = $list[$currentId];
+            };
+
+            return $currentId;
+        };
+
+        // Additional params
+        foreach ($list as $id => &$item) {
+
+            $link = array_search($id, array_column($list, 'parent_id')) === false ? '/' . trim($item['url'], '/') : '#';
+            $active = $link === $currentUrl ? 1 : 0;
+
+            $item['link'] = $link;
+            $item['active'] = $active;
+
+            if ($active) {
+                // Set root menu item active
+                $itemRootId = $getRootItemId($id);
+                $list[$itemRootId]['active'] = $active;
+            }
+        }
+
+        // Make menu tree
         $tree = [];
         foreach ($list as $id => &$node) {
 
             // Make tree
-            // Is root
-            if (!$node['parent_id']) {
+            if ((int)$node['parent_id'] === 0) {
                 $tree[$id] = &$node;
             } else {
                 // Is node
                 $list[$node['parent_id']]['submenu'][$id] = &$node;
             }
 
-            // Additional params
-            $node['link'] = '/' . trim($node['url'], '/');
-            $node['active'] = $node['link'] === $currentUrl ? 1 : 0;
+            // Set submenu = false is empty
             if (!isset($node['submenu'])) {
                 $node['submenu'] = false;
             }
 
-            // Cleanup
+            // Cleanup unneeded
             unset($node['id']);
             unset($node['parent_id']);
             unset($node['link_id']);
