@@ -12,8 +12,6 @@ use common\components\ActiveForm;
  */
 class PageController extends CustomController
 {
-    const PAGE_CONTACT_US = 'contact-us';
-
     /**
      * Displays page.
      * @param int $id
@@ -24,7 +22,7 @@ class PageController extends CustomController
         $page = $this->_findPage($id);
 
         switch ($page->url) {
-            case self::PAGE_CONTACT_US : return $this->_actionContactUs($page->template); break;
+            case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page->template); break;
         }
 
         return $this->render($page->template . '.twig', [
