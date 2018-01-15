@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use function GuzzleHttp\Psr7\build_query;
 use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
@@ -13,7 +14,7 @@ use yii\helpers\ArrayHelper;
 class ApiProviders
 {
 
-    const COMMON_API_URL_TPL = 'https://{{api_host}}/api/v2';
+    const COMMON_API_URL_TPL = 'http://{{api_host}}/api/v2';
     const API_RESPONSE_ERROR_FIELD = 'error';
 
     const API_RESPONSE_KEY_ERROR = 'Invalid API key';
@@ -94,24 +95,27 @@ class ApiProviders
 
     /**
      * Connection
-     * @param $post
+     * @param array $getParams
      * @return mixed
      * @throws Exception
      */
-    private function connect($post) {
-        $ch = curl_init($this->api_url);
+    private function connect($getParams) {
+
+        $url = $this->api_url;
+
+        if ($getParams && is_array($getParams)) {
+            $url =  $url . '?' . build_query($getParams);
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-        if (is_array($post)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        }
-
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
         $result = curl_exec($ch);
 
         // System errors
