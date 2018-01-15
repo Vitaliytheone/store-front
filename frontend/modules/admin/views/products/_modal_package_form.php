@@ -124,7 +124,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                         <label for="package-provider_service">
                             <?= Yii::t('admin', 'products.package_service') ?>
                         </label>
-                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]" data-ajax_timeout_message="<?= Yii::t('admin', 'products.message_ajax_timeout') ?>">
+                        <select id="package-provider_service" class="form-control form_field__provider_service" name="PackageForm[provider_service]" data-ajax_timeout_message="<?= Yii::t('admin', 'products.message_api_error') ?>">
                             <option value="" selected>
                                 <?= Yii::t('admin', 'products.package_service_default') ?>
                             </option>

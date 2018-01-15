@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
@@ -14,6 +15,8 @@ class ApiProviders
 
     const COMMON_API_URL_TPL = 'https://{{api_host}}/api/v2';
     const API_RESPONSE_ERROR_FIELD = 'error';
+
+    const API_RESPONSE_KEY_ERROR = 'Invalid API key';
 
     public $api_url;
     public $api_key;
@@ -36,7 +39,7 @@ class ApiProviders
      */
     public function order($data) {
         $post = array_merge(array('key' => $this->api_key, 'action' => 'add'), $data);
-        return json_decode($this->connect($post));
+        return $this->connect($post);
     }
 
     /**
@@ -45,11 +48,11 @@ class ApiProviders
      * @return mixed
      */
     public function status($order_id) {
-        return json_decode($this->connect(array(
+        return $this->connect(array(
             'key' => $this->api_key,
             'action' => 'status',
             'id' => $order_id
-        )));
+        ));
     }
 
     /**
@@ -58,10 +61,14 @@ class ApiProviders
      * @return array|mixed
      */
     public function services($serviceTypeFilter = null) {
-        $services = json_decode($this->connect(array(
+        $services = $this->connect(array(
             'key' => $this->api_key,
             'action' => 'services',
-        )), true);
+        ));
+
+        if (isset($services['error'])) {
+            return $services;
+        }
 
          //Filtering results by service type
         if (is_array($services) && is_array($serviceTypeFilter)) {
@@ -79,20 +86,19 @@ class ApiProviders
      * @return mixed
      */
     public function balance() {
-        return json_decode($this->connect(array(
+        return $this->connect(array(
             'key' => $this->api_key,
             'action' => 'balance',
-        )));
+        ));
     }
 
     /**
      * Connection
      * @param $post
-     * @param bool $json
      * @return mixed
      * @throws Exception
      */
-    private function connect($post, $json = false) {
+    private function connect($post) {
         $ch = curl_init($this->api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -115,19 +121,31 @@ class ApiProviders
         }
         curl_close($ch);
 
-        // Api errors
         $jsonResult = json_decode($result,true);
 
+        // Json decode errors
         if(json_last_error()){
-            throw new Exception('API response JSON decode errors! ' . json_last_error_msg() . '(' . json_last_error() . ')');
-        }
-        if (isset($jsonResult[self::API_RESPONSE_ERROR_FIELD])) {
-            throw new Exception('API response errors: '.$jsonResult[self::API_RESPONSE_ERROR_FIELD]);
+            return [
+                'error' => true,
+                'message' => Yii::t('admin', 'products.message_api_json_decode_error'),
+            ];
         }
 
-        if ($json) {
-            return $jsonResult;
-        }
-        return $result;
+        // Api errors
+        $error = ArrayHelper::getValue($jsonResult, self::API_RESPONSE_ERROR_FIELD, null);
+        if ($error) {
+            if ($error === self::API_RESPONSE_KEY_ERROR) {
+                $message = Yii::t('admin', 'products.message_api_key_error');
+            } else {
+                $message = Yii::t('admin', 'products.message_api_error');
+            }
+
+            return [
+                'error' => true,
+                'message' => $message,
+            ];
+        };
+
+        return $jsonResult;
     }
 }

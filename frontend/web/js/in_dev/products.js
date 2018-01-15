@@ -544,7 +544,6 @@
         currentActionUrl,
         successRedirectUrl,
         ajaxTimeoutMessage;
-    ;
 
     var $formFields = {
         name                : $packageForm.find('.form_field__name'),
@@ -641,10 +640,14 @@
                 type: "GET",
                 timeout: 15000,
                 success: function(data, textStatus, jqXHR) {
-                    if (data.services) {
-                        renderProviderServices(data.services, selectedServiceId);
+
+                    if (data.hasOwnProperty('error')) {
+                        showApiError(data.message);
+                    } else {
+                        hideApiError();
+                        renderProviderServices(data, selectedServiceId);
                     }
-                    hideApiError();
+
                     $modalLoader.addClass('hidden');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -722,7 +725,7 @@
             if (selectedServiceId) {
                 selected = s.service.toString() === selectedServiceId.toString() ? 'selected' : '';
             }
-            $container.append('<option value="' + s.service + '"'+ selected + '>' + s.name + '</option>');
+            $container.append('<option value="' + s.service + '"'+ selected + '>' + s.service + ' - ' + s.name + '</option>');
         });
         clearProviderServisesList();
         $formFields.provider_service.append($container.html());

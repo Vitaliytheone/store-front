@@ -168,7 +168,9 @@ return [
     'products.message_package_deleted' => 'Package was successfully deleted!',
     'products.message_choose_provider' => 'Choose provider!',
     'products.message_choose_service' => 'Choose service!',
-    'products.message_ajax_timeout' => 'Loading error, try again later',
+    'products.message_api_error' => 'Loading error, try again later',
+    'products.message_api_key_error' => 'Incorrect Apikey',
+    'products.message_api_json_decode_error' => 'API response JSON decode errors!',
 
     'products.f_id' => 'ID',
     'products.f_name' => 'Name',
