@@ -95,9 +95,15 @@ class NavigationSearch extends Model
             $currentId = $activeId;
             $currentItem = $list[$currentId];
 
-            while ((int)$currentItem['parent_id'] !== 0) {
+            // Iteration limitation
+            $iterationLimit = 4;
+            $iterationCount = 0;
+
+            while ((int)$currentItem['parent_id'] !== 0 && $iterationCount < $iterationLimit) {
                 $currentId = $currentItem['parent_id'];
                 $currentItem = $list[$currentId];
+
+                $iterationCount++;
             };
 
             return $currentId;
