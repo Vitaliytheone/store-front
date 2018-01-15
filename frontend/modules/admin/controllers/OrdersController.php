@@ -12,9 +12,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotAcceptableHttpException;
 use frontend\modules\admin\models\search\OrdersSearch;
 use frontend\modules\admin\models\SuborderDetails;
-use frontend\modules\admin\models\forms\CancelSuborderForm;
-use frontend\modules\admin\models\forms\ChangeSuborderStatusForm;
-use frontend\modules\admin\models\forms\ResendSuborderForm;
+use frontend\modules\admin\models\forms\SuborderForm;
 
 /**
  * Class OrdersController
@@ -110,14 +108,14 @@ class OrdersController extends CustomController
      */
     public function actionChangeStatus($id, $status)
     {
-        $model = ChangeSuborderStatusForm::findOne($id);
+        $model = SuborderForm::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();
         }
 
         if (!$model->changeStatus($status)) {
-            throw new NotAcceptableHttpException();
+            $this->redirect(Url::toRoute(["/orders"]));
         }
 
         UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
@@ -134,14 +132,14 @@ class OrdersController extends CustomController
      */
     public function actionCancel($id)
     {
-        $model = CancelSuborderForm::findOne($id);
+        $model = SuborderForm::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();
         }
 
         if (!$model->cancel()) {
-            throw new NotAcceptableHttpException();
+            $this->redirect(Url::toRoute(["/orders"]));
         }
 
         UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
@@ -158,14 +156,14 @@ class OrdersController extends CustomController
      */
     public function actionResend($id)
     {
-        $model = ResendSuborderForm::findOne($id);
+        $model = SuborderForm::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();
         }
 
         if (!$model->resend()) {
-            throw new NotAcceptableHttpException();
+            $this->redirect(Url::toRoute(["/orders"]));
         }
 
         UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));

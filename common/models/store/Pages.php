@@ -180,4 +180,20 @@ class Pages extends ActiveRecord
             static::TEMPLATE_PRODUCT,
         ];
     }
+
+    /**
+     * Virtual deleting page
+     * @return bool
+     */
+    public function deleteVirtual()
+    {
+        if ($this->deleted == self::DELETED_YES) {
+            return false;
+        }
+
+        $this->setAttribute('deleted', self::DELETED_YES);
+
+        return $this->save(false);
+    }
+
 }

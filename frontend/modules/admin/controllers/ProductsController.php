@@ -2,7 +2,7 @@
 
 namespace frontend\modules\admin\controllers;
 
-use frontend\modules\admin\models\forms\DeletePackageForm;
+use common\models\store\Packages;
 use frontend\modules\admin\models\forms\MovePackageForm;
 use Yii;
 use yii\filters\AccessControl;
@@ -354,7 +354,7 @@ class ProductsController extends CustomController
             exit;
         }
 
-        $model = DeletePackageForm::findOne($id);
+        $model = Packages::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();

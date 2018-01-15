@@ -129,4 +129,41 @@ class Packages extends ActiveRecord
         return $query['position'];
     }
 
+    /**
+     * Virtual deleting package
+     * Mark deleted items as 'deleted' and
+     * level up items position with same product ID
+     * @return bool
+     */
+    public function deleteVirtual()
+    {
+        if ($this->deleted == self::DELETED) {
+            return false;
+        }
+
+        $oldPosition = $this->getAttribute('position');
+
+        $this->setAttributes([
+            'deleted' => self::DELETED,
+            'position' => NULL
+        ]);
+
+        if (!$this->save(false)) {
+            return false;
+        }
+
+        // Update position after delete
+        $db = $this->getDb();
+        $table = static::tableName();
+
+        $productId = $this->getAttribute('product_id');
+        $query = $db->createCommand("UPDATE $table SET `position` = `position`-1 WHERE `product_id` = :product AND `position` > :oldPos AND `deleted` = :deleted")
+            ->bindValue(':product', $productId)
+            ->bindValue(':oldPos', $oldPosition)
+            ->bindValue(':deleted', self::DELETED_NO)
+            ->execute();
+
+        return true;
+    }
+
 }

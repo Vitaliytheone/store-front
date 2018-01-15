@@ -47,8 +47,9 @@ class Suborders extends ActiveRecord
     const MODE_AUTO             = 1;
 
     /* Suborder resend status */
-    const RESEND_NO = 0;
-    const RESEND_YES = 1;
+    const SEND_STATUS_AWAITING = 1;
+    const SEND_STATUS_SENDING = 2;
+    const SEND_STATUS_SENT = 3;
 
     /**
      * @inheritdoc
@@ -69,7 +70,6 @@ class Suborders extends ActiveRecord
             ],
         ];
     }
-
 
     public static function getDb()
     {
@@ -210,5 +210,47 @@ class Suborders extends ActiveRecord
     public static function getModeName($mode)
     {
         return ArrayHelper::getValue(static::getModeNames(), $mode, $mode);
+    }
+
+
+    /**
+     * Change suborder status
+     * @param $status
+     * @param int $mode
+     * @return bool
+     */
+    public function changeStatus($status, $mode = self::MODE_MANUAL)
+    {
+        $this->setAttributes([
+            'status' => $status,
+            'mode' => $mode,
+        ]);
+
+        return $this->save();
+    }
+
+    /**
+     * Cancel suborder
+     * @return bool
+     */
+    public function cancel()
+    {
+        $this->setAttribute('status', self::STATUS_CANCELED);
+
+        return $this->save();
+    }
+
+    /**
+     * Resend suborder
+     * @return bool
+     */
+    public function resend()
+    {
+        $this->setAttributes([
+            'status' => self::STATUS_AWAITING,
+            'send' => self::SEND_STATUS_AWAITING,
+        ]);
+
+        return $this->save();
     }
 }

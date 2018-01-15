@@ -311,6 +311,7 @@ return [
     'settings.pages_delete_submit' => 'Yes, delete it',
     'settings.pages_message_created' => 'Page was successfully created!',
     'settings.pages_message_updated' => 'Page was successfully updated!',
+    'settings.pages_message_deleted' => 'Page was successfully deleted!',
 
     'settings.nav_page_title' => 'Navigation',
     'settings.nav_bt_add' => 'Add menu item',

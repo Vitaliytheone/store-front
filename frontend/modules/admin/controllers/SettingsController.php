@@ -4,19 +4,18 @@ namespace frontend\modules\admin\controllers;
 
 use common\components\ActiveForm;
 use common\models\store\Navigation;
+use common\models\store\Pages;
+use common\models\stores\DefaultThemes;
 use common\models\stores\StoreFiles;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\ActivateThemeForm;
 use frontend\modules\admin\models\forms\CreateProviderForm;
-use frontend\modules\admin\models\forms\DeleteNavigationForm;
-use frontend\modules\admin\models\forms\DeletePageForm;
 use frontend\modules\admin\models\forms\EditNavigationForm;
 use frontend\modules\admin\models\forms\EditPageForm;
 use frontend\modules\admin\models\forms\EditStoreSettingsForm;
 use frontend\modules\admin\models\forms\EditThemeForm;
 use frontend\modules\admin\models\forms\ProvidersListForm;
-use frontend\modules\admin\models\forms\ResetThemeForm;
 use frontend\modules\admin\models\forms\UpdatePositionsNavigationForm;
 use frontend\modules\admin\models\search\LinksSearch;
 use frontend\models\search\NavigationSearch;
@@ -317,12 +316,18 @@ class SettingsController extends CustomController
      * @param $theme
      * @param $file
      * @return Response
-     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      */
     public function actionResetThemeFile($theme, $file)
     {
-        if (!$form = ResetThemeForm::reset($theme, $file)) {
-            throw new BadRequestHttpException();
+        $themeModel = DefaultThemes::findOne(['folder' => $theme]);
+
+        if (!$themeModel) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$themeModel->reset($file)) {
+            $this->refresh();
         }
 
         UiHelper::message(Yii::t('admin', 'settings.themes_message_reset'));
@@ -426,14 +431,14 @@ class SettingsController extends CustomController
             exit;
         }
 
-        $pageModel = DeletePageForm::findOne($id);
+        $pageModel = Pages::findOne($id);
         if (!$pageModel) {
             throw new NotFoundHttpException();
         }
 
-        if (!$pageModel->deleteVirtual()) {
-            throw new BadRequestHttpException();
-        }
+        $pageModel->deleteVirtual();
+
+        UiHelper::message(Yii::t('admin', 'settings.pages_message_deleted'));
 
         return [true];
     }
@@ -565,15 +570,13 @@ class SettingsController extends CustomController
             exit;
         }
 
-        $model = DeleteNavigationForm::findOne($id);
+        $model = Navigation::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();
         }
 
-        if (!$model->deleteVirtual()) {
-            throw new NotAcceptableHttpException();
-        }
+        $model->deleteVirtual();
 
         UiHelper::message(Yii::t('admin', 'settings.nav_message_deleted'));
 

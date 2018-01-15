@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\models\store\CustomThemes;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
@@ -113,6 +114,28 @@ class DefaultThemes extends ActiveRecord
     public function isActive()
     {
         return $this->folder === $this->_store->theme_folder;
+    }
+
+    /**
+     * Reset theme file
+     * @param $resetFileName
+     * @return bool
+     */
+    public function reset($resetFileName)
+    {
+        $file = trim(escapeshellarg($resetFileName),'\'');
+
+        if (!$this->isActive()) {
+            return false;
+        }
+
+        $pathToFile = CustomThemes::getThemesPath() . '/' . $this->folder . '/' . $file;
+
+        if (!file_exists($pathToFile) || !is_file($pathToFile)) {
+            return false;
+        }
+
+        return unlink($pathToFile);
     }
 
 }
