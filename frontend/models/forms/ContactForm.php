@@ -22,10 +22,7 @@ class ContactForm extends Model
     public $message;
     public $recaptcha;
 
-    public $error;
-    public $success;
-
-    public $errorMessage;
+    public $_sentSuccess;
 
     /** @var  Stores */
     private $_store;
@@ -37,7 +34,7 @@ class ContactForm extends Model
         $this->_store = Yii::$app->store->getInstance();
 
         // Get sent result from session
-        $this->setSentResult(Yii::$app->session->getFlash('sent_result'));
+        $this->_sentSuccess = Yii::$app->session->getFlash('sent_success');
     }
 
     public function formName()
@@ -65,21 +62,12 @@ class ContactForm extends Model
     }
 
     /**
-     * Set sent action result
-     * @param $sentResult bool|null
+     * Return true if message successfully sent
+     * @return mixed
      */
-    public function setSentResult($sentResult)
+    public function getSentSuccess()
     {
-        if (!is_bool($sentResult)) {
-            $this->success = false;
-            $this->error = false;
-            return;
-        }
-
-        $this->success = $sentResult;
-        $this->error = !$sentResult;
-
-        $this->errorMessage = $sentResult ? Yii::t('app', 'contact.form.message.success') : Yii::t('app', 'contact.form.message.error');
+        return $this->_sentSuccess;
     }
 
     /**
@@ -92,11 +80,12 @@ class ContactForm extends Model
 
         $sentResult = (bool)Mailgun::send($this->_store->admin_email, $this->subject, $text);
 
-        if ($sentResult) {
+        if ($sentResult === true) {
             // Store sent result to session
-            Yii::$app->session->setFlash('sent_result', $sentResult);
+            Yii::$app->session->setFlash('sent_success', $sentResult);
         }  else {
-            $this->setSentResult($sentResult);
+            // Set validation error
+            $this->addError(null, Yii::t('app', 'contact.form.message.error'));
         }
 
         return $sentResult;
@@ -163,7 +152,7 @@ class ContactForm extends Model
     {
         // Get cURL resource
         $ch = curl_init();
-        // Set some options - we are passing in a useragent too here
+
         curl_setopt_array($ch, array(
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',

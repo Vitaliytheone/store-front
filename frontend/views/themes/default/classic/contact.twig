@@ -12,11 +12,8 @@
                         {% if error %}
                             <div class="error-summary alert alert-danger">{{ errorText }}</div>
                         {% endif %}
-                        {% if data.success %}
-                            <div class="alert alert-success">{{ data.errorMessage }}</div>
-                        {% endif %}
-                        {% if data.error %}
-                            <div class="alert alert-danger">{{ data.errorMessage }}</div>
+                        {% if success %}
+                            <div class="alert alert-success">{{ lang('contact.form.message.success') }}</div>
                         {% endif %}
                         <div class="form-group">
                             <label for="inputSubject">Subject</label>

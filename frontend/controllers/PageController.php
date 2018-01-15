@@ -55,6 +55,7 @@ class PageController extends CustomController
             'data' => $contactForm,
             'error' => $contactForm->hasErrors(),
             'errorText' => ActiveForm::firstError($contactForm),
+            'success' => $contactForm->getSentSuccess(),
             'reCaptchaSiteKey' => Yii::$app->params['reCaptcha.siteKey'],
         ]);
     }
