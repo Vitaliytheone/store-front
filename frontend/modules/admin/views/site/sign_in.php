@@ -32,8 +32,7 @@
                             <div class="col m--align-left m-login__form-left">
                                 <label class="m-checkbox  m-checkbox--focus">
                                     <input type="hidden" name="remember" value="0">
-                                    <input type="checkbox" name="remember" value="1" <? if ($form->remember): ?> checked <? endif; ?>> <?= Yii::t('admin', 'login.sign_in_remember_me') ?>
-                                    <span></span>
+                                    <input type="checkbox" name="remember" value="1" <? if ($form->remember): ?> checked <? endif; ?> > <?= Yii::t('admin', 'login.sign_in_remember_me') ?><span></span>
                                 </label>
                             </div>
                         </div>
