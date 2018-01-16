@@ -38,7 +38,7 @@ class MyRequest extends Request
             foreach ($urls as $url => $options) {
                 if (preg_match($options['rule'], $pathInfo, $match)) {
                     $pathInfo = $options['url'];
-                    $_GET = ArrayHelper::getValue($options, 'options', []);
+                    $_GET = ArrayHelper::merge($_GET, ArrayHelper::getValue($options, 'options', []));
 
                     foreach ((array)ArrayHelper::getValue($options, 'match', []) as $key) {
                         $_GET[$key] = ArrayHelper::getValue($match, $key);
