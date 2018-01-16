@@ -61,7 +61,7 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
-        $this->layout = 'log_in';
+        $this->layout = 'login';
         $this->view->title = Yii::t('admin', 'login.sign_in_page_title');
 
         $form = new LoginForm();
@@ -76,7 +76,7 @@ class SiteController extends CustomController
             $this->redirect(Url::toRoute('/orders'));
         }
 
-        return $this->render('sign_in', [
+        return $this->render('signin', [
             'form' => $form,
         ]);
     }

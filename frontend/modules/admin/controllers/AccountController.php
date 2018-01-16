@@ -64,17 +64,16 @@ class AccountController extends CustomController
 
     }
 
-
     // TODO:: REMOVE THIS ACTION!!!
-    public function actionAddAdmin()
+    public function actionAddAdmin($username, $password)
     {
-        $user = StoreAdmins::find()->where(['username' => 'admin'])->one();
+        $user = StoreAdmins::find()->where(['username' => $username])->one();
         if (empty($user)) {
             $user = new StoreAdmins();
             $user->store_id = Yii::$app->store->getInstance()->id;
-            $user->username = 'admin';
+            $user->username = $username;
             $user->status = true;
-            $user->setPassword('admin');
+            $user->setPassword($password);
             $user->generateAuthKey();
             if ($user->save()) {
                 error_log(print_r($user->attributes, 1), 0);
