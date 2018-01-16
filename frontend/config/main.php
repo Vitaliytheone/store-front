@@ -21,7 +21,7 @@ $config = [
             'class'	=> 'frontend\components\MyRequest',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\stores\StoreAdmins',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],

@@ -3,6 +3,7 @@
 namespace frontend\modules\admin\controllers;
 
 use frontend\modules\admin\components\Url;
+use frontend\modules\admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -60,9 +61,24 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
-        return $this->redirect(Url::toRoute('/orders'));
+        $this->layout = 'log_in';
+        $this->view->title = Yii::t('admin', 'login.sign_in_page_title');
 
-        return $this->render('index');
+        $form = new LoginForm();
+
+        if (
+            $form->load(Yii::$app->getRequest()->post()) &&
+            $form->validate() &&
+            $form->login()
+        ) {
+            error_log(Yii::$app->user->getIsGuest() ? 'Guest!' : 'Sign in OK!');
+
+            $this->redirect(Url::toRoute('/orders'));
+        }
+
+        return $this->render('sign_in', [
+            'form' => $form,
+        ]);
     }
 
     /**
