@@ -5,10 +5,10 @@ namespace frontend\modules\admin\models\forms;
 use common\models\store\Suborders;
 
 /**
- * Class ChangeSuborderStatusForm
+ * Class StatusForm
  * @package frontend\modules\admin\models\forms
  */
-class ChangeSuborderStatusForm extends Suborders
+class SuborderForm extends Suborders
 {
     /* Current statuses when `Change status` action is disallowed */
     public static $disallowedChangeStatusStatuses = [
@@ -24,38 +24,61 @@ class ChangeSuborderStatusForm extends Suborders
         self::STATUS_COMPLETED,
     ];
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {   return [
-            ['status', 'in', 'range' => self::$acceptedStatuses],
-            ['mode', 'safe'],
-        ];
-    }
+    /* Current statuses when `Cancel` action is disallowed */
+    public static $disallowedCancelStatuses = [
+        Suborders::STATUS_AWAITING,
+        Suborders::STATUS_CANCELED,
+        Suborders::STATUS_COMPLETED,
+    ];
 
     /**
-     * Change suborder status if allowed
+     * Change suborder status
      * @param $status
-     * @return array|mixed
+     * @param int $mode
+     * @return bool
      */
-    public function changeStatus($status)
+    public function changeStatus($status, $mode = self::MODE_MANUAL)
     {
-        // Check if model ready for changes
+
+        // Check if model can accept $status
         $currentStatus = $this->getAttribute('status');
-        if (in_array($currentStatus, static::$disallowedChangeStatusStatuses)) {
+        if (
+            in_array($currentStatus, static::$disallowedChangeStatusStatuses) ||
+            !in_array($status, static::$acceptedStatuses)
+        ) {
             return false;
         }
 
-        $this->setAttributes([
-            'status' => $status,
-            'mode' => self::MODE_MANUAL,
-        ]);
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        return $this->getAttribute('status');
+        return parent::changeStatus($status);
     }
+
+    /**
+     * Cancel suborder
+     * @return bool
+     */
+    public function cancel()
+    {
+        // Check if model ready for cancel
+        $currentStatus = $this->getAttribute('status');
+        if (in_array($currentStatus, static::$disallowedCancelStatuses)) {
+            return false;
+        }
+
+        return parent::cancel();
+    }
+
+    /**
+     * Resend suborder
+     * @return bool
+     */
+    public function resend()
+    {
+        $currentStatus = $this->getAttribute('status');
+        if ($currentStatus !== self::STATUS_FAILED) {
+            return false;
+        }
+
+        return parent::resend();
+    }
+
 }

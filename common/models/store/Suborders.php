@@ -21,6 +21,7 @@ use common\models\store\queries\SubordersQuery;
  * @property integer $status
  * @property integer $updated_at
  * @property integer $mode
+ * @property integer $send
  * @property integer $provider_id
  * @property string $provider_service
  * @property string $provider_order_id
@@ -47,9 +48,9 @@ class Suborders extends ActiveRecord
     const MODE_AUTO             = 1;
 
     /* Suborder resend status */
-    const SEND_STATUS_AWAITING = 1;
-    const SEND_STATUS_SENDING = 2;
-    const SEND_STATUS_SENT = 3;
+    const SEND_STATUS_AWAITING  = 1; // заказ ждет отправки
+    const SEND_STATUS_SENDING   = 2; // заказ отправляется
+    const SEND_STATUS_SENT      = 3; // заказ отправлен
 
     /**
      * @inheritdoc
@@ -211,7 +212,6 @@ class Suborders extends ActiveRecord
     {
         return ArrayHelper::getValue(static::getModeNames(), $mode, $mode);
     }
-
 
     /**
      * Change suborder status

@@ -197,13 +197,15 @@ abstract class BasePayment extends Component {
             $orderItem->quantity = $package->quantity;
             $orderItem->package_id = $package->id;
             $orderItem->amount = $package->price;
-            $orderItem->status = Suborders::STATUS_AWAITING;
             $orderItem->mode = $package->mode;
             $orderItem->provider_id = $package->provider_id;
             $orderItem->provider_service = $package->provider_service;
 
-            if (Packages::MODE_MANUAL == $package->mode) {
-                $orderItem->status = Suborders::STATUS_PENDING;
+            $orderItem->status = Suborders::STATUS_PENDING;
+
+            if (Packages::MODE_AUTO == $package->mode) {
+                $orderItem->status = Suborders::STATUS_AWAITING;
+                $orderItem->send = Suborders::SEND_STATUS_AWAITING;
             }
 
             $orderItem->save(false);
