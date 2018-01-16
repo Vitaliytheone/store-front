@@ -63,7 +63,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Logs in a user using the provided username and password.
+     * Log in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
     public function login()

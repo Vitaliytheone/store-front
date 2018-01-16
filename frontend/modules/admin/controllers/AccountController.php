@@ -24,11 +24,6 @@ class AccountController extends CustomController
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
                         'allow' => true,
                         'roles' => ['@'],
                     ]
@@ -56,15 +51,19 @@ class AccountController extends CustomController
     }
 
     /**
-     * Renders account management page
+     * Logout action.
+     *
      * @return string
      */
-    public function actionIndex()
+    public function actionLogout()
     {
-
+        Yii::$app->user->logout();
+        $this->redirect(Url::toRoute('/'));
     }
 
-    // TODO:: REMOVE THIS ACTION!!!
+    /**
+     *   -----   TODO:: REMOVE THIS ACTION for production !!!
+     */
     public function actionAddAdmin($username, $password)
     {
         $user = StoreAdmins::find()->where(['username' => $username])->one();

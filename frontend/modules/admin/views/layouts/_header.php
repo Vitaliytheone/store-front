@@ -3,6 +3,7 @@
 
     use frontend\modules\admin\components\Url;
     use yii\helpers\ArrayHelper;
+    use yii\helpers\Html;
 
 $navbarItems = [
     'orders' =>  [
@@ -178,20 +179,23 @@ array_walk($navbarItems, function(&$item, $itemKey) use ($currentRoute){
                 <!-- end::Horizontal Menu -->
 
                 <div class="m-stack__item m-stack__item--middle m-dropdown m-dropdown--arrow m-dropdown--large m-dropdown--mobile-full-width m-dropdown--align-right m-dropdown--skin-light m-header-search m-header-search--expandable m-header-search--skin-" id="m_quicksearch" data-search-type="default">
-                    <!--begin::Search Form -->
-                    <form class="m-header-search__form">
+                    <!--begin::Account management -->
+                    <div class="m-header-search__form">
                         <ul class="m-menu--right">
                             <li>
                                 <a href="<?= Url::toRoute('/account')?>">Account</a>
                             </li>
                             <li>
-                                <a href="#">Logout</a>
+                                <form action="<?= Url::toRoute('/logout')?>" method="post">
+                                    <?= Html::beginForm() ?>
+                                    <button class="" type="submit">Logout</button>
+                                    <?= Html::endForm() ?>
+                                </form>
                             </li>
                         </ul>
-                    </form>
-                    <!--end::Search Form -->
+                    </div>
+                    <!--end::Account management -->
                 </div>
-
 
             </div>
         </div>

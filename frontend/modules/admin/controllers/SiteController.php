@@ -8,10 +8,12 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
+use common\components\MainController;
+
 /**
  * Site controller for the `admin` module
  */
-class SiteController extends CustomController
+class SiteController extends MainController
 {
     /**
      * @inheritdoc
@@ -32,12 +34,6 @@ class SiteController extends CustomController
                         'allow' => true,
                         'roles' => ['@'],
                     ]
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -71,23 +67,11 @@ class SiteController extends CustomController
             $form->validate() &&
             $form->login()
         ) {
-            error_log(Yii::$app->user->getIsGuest() ? 'Guest!' : 'Sign in OK!');
-
             $this->redirect(Url::toRoute('/orders'));
         }
 
         return $this->render('signin', [
             'form' => $form,
         ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
     }
 }
