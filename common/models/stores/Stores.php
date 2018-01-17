@@ -31,6 +31,10 @@ use common\models\stores\queries\StoresQuery;
  * @property string $folder_content
  * @property string $theme_name
  * @property string $theme_folder
+ * @property string $block_slider
+ * @property string $block_features
+ * @property string $block_review
+ * @property string $block_process
  * @property string $admin_email
  *
  * @property PaymentMethods[] $paymentMethods
@@ -56,7 +60,13 @@ class Stores extends ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'timezone', 'expired', 'created_at', 'updated_at'], 'integer'],
+            [[
+                'customer_id', 'timezone', 'expired', 'created_at', 'updated_at',
+                'block_slider', 'block_features', 'block_review', 'block_process',
+            ], 'integer'],
+            [[
+                'block_slider', 'block_features', 'block_review', 'block_process',
+            ], 'default', 'value' => 0],
             [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder', 'folder', 'folder_content'], 'string', 'max' => 255],
             [['currency', 'language'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
@@ -91,6 +101,10 @@ class Stores extends ActiveRecord
             'folder_content' => Yii::t('app', 'Folder Content'),
             'theme_name' => Yii::t('app', 'Theme Name'),
             'theme_folder' => Yii::t('app', 'Theme Folder'),
+            'block_slider' => Yii::t('app', 'Block Slider'),
+            'block_features' => Yii::t('app', 'Block Features'),
+            'block_review' => Yii::t('app', 'Block Review'),
+            'block_process' => Yii::t('app', 'Block Process'),
             'admin_email' => Yii::t('app', 'Admin e-mail'),
         ];
     }

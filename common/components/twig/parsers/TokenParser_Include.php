@@ -1,7 +1,7 @@
 <?php
 namespace common\components\twig\parsers;
 
-use Yii;
+use common\helpers\ThemesHelper;
 use Twig_TokenParser;
 use Twig_Token;
 use Twig_Node_Include;
@@ -36,10 +36,6 @@ class TokenParser_Include extends Twig_TokenParser
 
         $node = new Twig_Node_Include($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
 
-        if (empty($this->twigOptions['availableIncludes'])) {
-            return $node;
-        }
-
         $expression = $node->getNode('expr');
         if (empty($expression) || !($expression instanceof Twig_Node_Expression_Constant)) {
             throw new Twig_Error_Syntax('Unknown "include" tag');
@@ -47,9 +43,21 @@ class TokenParser_Include extends Twig_TokenParser
 
         $view = $expression->getAttribute('value');
 
-        if (empty($view) || !in_array($view, $this->twigOptions['availableIncludes'])) {
-            throw new Twig_Error_Syntax('Unknown "include" tag');
+        if (empty($view) || !in_array($view, ThemesHelper::getAvailableIncludes())) {
+            throw new Twig_Error_Syntax($view . ' file is not supported');
         }
+
+        if (!in_array($view, ThemesHelper::getEnabledIncludes())) {
+            return null;
+        }
+
+        $view = ThemesHelper::getView($view);
+
+        if (!$view) {
+            return null;
+        }
+
+        $expression->setAttribute('value', $view);
 
         return $node;
     }

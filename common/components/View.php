@@ -1,7 +1,7 @@
 <?php
 namespace common\components;
 
-use common\models\stores\Stores;
+use common\helpers\ThemesHelper;
 use Yii;
 use yii\base\InvalidCallException;
 use yii\base\ViewContextInterface;
@@ -66,27 +66,17 @@ class View extends \yii\web\View {
      */
     public function getThemeViewFile($view)
     {
-        $view = ltrim($view, '/');
+        $view = ThemesHelper::getView($view);
 
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-
-        $themeFolder = $store->getThemeFolder();
-
-        $customPath = Yii::getAlias('@customThemes' . DIRECTORY_SEPARATOR) . $store->id . DIRECTORY_SEPARATOR . $themeFolder . DIRECTORY_SEPARATOR . $view;
-        $standardPath = Yii::getAlias('@defaultThemes' . DIRECTORY_SEPARATOR) . $themeFolder . DIRECTORY_SEPARATOR . $view;
-
-        if (is_file($customPath) || is_file($customPath . '.' . $this->defaultExtension) || is_file($customPath . '.php')) {
-            return $customPath;
-        } else if (is_file($standardPath) || is_file($standardPath . '.' . $this->defaultExtension) || is_file($standardPath . '.php')) {
-            return $standardPath;
-        } else {
+        if (!$view) {
             if (pathinfo($view, PATHINFO_EXTENSION) == 'twig') {
                 throw new NotFoundHttpException();
             }
             throw new InvalidCallException("Unable to locate view file for view '$view': no active controller.");
         }
+
+        $viewsPath = Yii::getAlias('@frontend' . DIRECTORY_SEPARATOR . 'views');
+
+        return $viewsPath . $view;
     }
 }

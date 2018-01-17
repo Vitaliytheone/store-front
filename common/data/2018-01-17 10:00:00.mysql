@@ -1,0 +1,3 @@
+/* 9:19:28 root@localhost stores */
+USE `stores`;
+ALTER TABLE stores ADD block_slider TINYINT(1) NOT NULL DEFAULT '0' AFTER theme_folder, ADD block_features TINYINT(1) NOT NULL DEFAULT '0' AFTER block_slider, ADD block_review TINYINT(1) NOT NULL DEFAULT '0' AFTER block_features, ADD block_process TINYINT(1) NOT NULL DEFAULT '0' AFTER block_review;
