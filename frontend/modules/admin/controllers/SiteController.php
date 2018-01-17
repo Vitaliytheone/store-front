@@ -6,7 +6,6 @@ use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 
 use common\components\MainController;
 
@@ -16,6 +15,17 @@ use common\components\MainController;
 class SiteController extends MainController
 {
     /**
+     * Redirect order list
+     * @var array
+     */
+    private $_redirectOrderList = [
+        'orders',
+        'payments',
+        'products',
+        'settings',
+    ];
+
+    /**
      * @inheritdoc
      */
     public function behaviors()
@@ -23,7 +33,7 @@ class SiteController extends MainController
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['index'],
                 'rules' => [
                     [
                         'actions' => ['index'],
@@ -31,10 +41,15 @@ class SiteController extends MainController
                         'roles' => ['?'],
                     ],
                     [
-                        'allow' => true,
+                        'actions' => ['index'],
+                        'allow' => false,
                         'roles' => ['@'],
                     ]
                 ],
+                // TODO :: Make redirect order tomorrow!!!
+                'denyCallback' => function($rule, $action){
+                   $this->redirect('/admin/orders');
+                }
             ],
         ];
     }

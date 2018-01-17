@@ -20,25 +20,6 @@ use frontend\modules\admin\models\forms\SuborderForm;
  */
 class OrdersController extends CustomController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
-        ];
-    }
-
     public function beforeAction($action)
     {
         $this->addModule('ordersDetails');

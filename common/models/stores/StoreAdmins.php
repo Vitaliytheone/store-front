@@ -181,14 +181,21 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        return $this->getAuthKey() === $authKey;
+        $storedAuthKey = $this->getAuthKey();
+        $userAuthKey = $this->generateAuthKey(false);
+        $cookieAuthKey = $authKey;
+
+        return ($storedAuthKey === $cookieAuthKey) && ($storedAuthKey === $userAuthKey);
     }
 
     /**
      * Generates "remember me" authentication key
      *
+     * @param bool $set Update model corresponding field if true
+     * @return string
+     * @throws Exception
      */
-    public function generateAuthKey()
+    public function generateAuthKey($set = true)
     {
         $request = Yii::$app->getRequest();
         $salt = ArrayHelper::getValue(Yii::$app->params, 'salt', null);
@@ -198,7 +205,13 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
 
         $string2hash = $this->username . $this->password . $this->getPrimaryKey() . $request->getUserIP() . $request->getHeaders()->get('host') . $salt;
 
-        $this->auth_hash = hash_hmac('sha256', $string2hash, $this->getSiteAuthKey());
+        $auth_key = hash_hmac('sha256', $string2hash, $this->getSiteAuthKey());
+
+        if ($set) {
+            $this->auth_hash = $auth_key;
+        }
+
+        return $auth_key;
     }
 
     /**
@@ -251,5 +264,56 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
         $this->password = hash_hmac('sha256', $password, $this->getSiteAuthKey());
     }
 
+    /**
+     * Return current admin allowed controllers list
+     * [
+     *    'admin/orders,
+     *    'admin/settings',
+     * ]
+     * @return mixed
+     */
+    public function getRules()
+    {
+        $rules = json_decode($this->rules);
+
+        if (!is_array($rules)) {
+            return [];
+        }
+
+        array_walk($rules, function (&$rule){
+            $rule = 'admin/' . $rule;
+        });
+
+        return $rules;
+    }
+
+    /**
+     * Event handler for `on afterLogin` event
+     * @param $event
+     */
+    static function updateLoginData($event)
+    {
+        /** @var StoreAdmins $user */
+        $user = $event->identity;
+
+        $user->ip = Yii::$app->getRequest()->getUserIP();
+        $user->last_login = time();
+        $user->generateAuthKey();
+
+        $user->save();
+    }
+
+    /**
+     * Event handler for `on afterLogout` event
+     * @param $event
+     */
+    static function updateLogoutData($event)
+    {
+        /** @var StoreAdmins $user */
+        $user = $event->identity;
+        $user->auth_hash = null;
+
+        $user->save();
+    }
 
 }

@@ -16,25 +16,6 @@ class ApiController extends Controller
     ];
 
     /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Setup default ajax actions params
      * @param \yii\base\Action $action
      * @return bool

@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\models\forms;
 use common\models\stores\StoreAdmins;
+use frontend\modules\admin\components\CustomUser;
 use Yii;
 use yii\base\Model;
 
@@ -13,6 +14,8 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
+    const COOKIE_LIFETIME = 3600 * 24 * 30;
+
     public $username;
     public $password;
     public $remember;
@@ -63,16 +66,18 @@ class LoginForm extends Model
     }
 
     /**
-     * Log in a user using the provided username and password.
+     * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
     public function login()
     {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->remember ? 3600*24*30 : 0);
+        if (!$this->validate()) {
+            return false;
         }
 
-        return false;
+        $user = $this->getUser();
+
+        return Yii::$app->user->login($user, $this->remember ? static::COOKIE_LIFETIME : 0);
     }
 
     /**

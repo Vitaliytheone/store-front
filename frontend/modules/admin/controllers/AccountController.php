@@ -3,41 +3,13 @@
 namespace frontend\modules\admin\controllers;
 
 use common\models\stores\StoreAdmins;
-use frontend\modules\admin\components\Url;
 use Yii;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 
 /**
  * Site controller for the `admin` module
  */
 class AccountController extends CustomController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -57,8 +29,9 @@ class AccountController extends CustomController
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-        $this->redirect(Url::toRoute('/'));
+        $user = Yii::$app->user;
+        $user->logout();
+        $user->loginRequired();
     }
 
     /**

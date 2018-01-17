@@ -25,25 +25,6 @@ use frontend\modules\admin\models\search\ProductsSearch;
  */
 class ProductsController extends CustomController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
-        ];
-    }
-
     public function beforeAction($action)
     {
         // Add custom JS modules
