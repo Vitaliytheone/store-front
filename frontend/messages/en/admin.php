@@ -280,6 +280,7 @@ return [
 
     'providers.f_id' => 'ID',
     'providers.f_site' => 'Site',
+    'providers.f_protocol' => 'Protocol',
     'providers.f_type' => 'Type',
     'providers.f_created_at' => 'Created At',
 

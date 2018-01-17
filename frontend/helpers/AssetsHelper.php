@@ -97,11 +97,7 @@ class AssetsHelper {
 
         $styles = static::getLibStyles();
 
-        $scripts = array_merge(static::getLibScripts(), [
-            [
-                'src' => static::getFileUrl('/js/main.js')
-            ],
-        ]);
+        $scripts = static::getLibScripts();
 
 
         foreach (ArrayHelper::getValue($folderContent, 'css', []) as $filename) {

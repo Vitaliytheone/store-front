@@ -84,13 +84,7 @@ $config = [
                     //'cachePath' => $params['twig.cachePath'],
                     'cachePath' => null,
                     'options' => [
-                        'autoescape' => false,
-                        'availableIncludes' => [
-                            'slider.twig',
-                            'features.twig',
-                            'reviews.twig',
-                            'process.twig',
-                        ]
+                        'autoescape' => false
                     ],
                 ],
             ],
