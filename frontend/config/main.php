@@ -21,9 +21,14 @@ $config = [
             'class'	=> 'frontend\components\MyRequest',
         ],
         'user' => [
+            'class' => 'yii\web\User',
             'identityClass' => 'common\models\stores\StoreAdmins',
+            'loginUrl' => '/admin',
+            'enableSession' => true,
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'on afterLogin' => ['common\models\stores\StoreAdmins', 'updateLoginData'],
+            'on afterLogout' => ['common\models\stores\StoreAdmins', 'updateLogoutData'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
