@@ -61,8 +61,6 @@ class CustomController extends MainController
 
     public function beforeAction($action)
     {
-        $this->addModule('frontendLayout');
-
         return parent::beforeAction($action);
     }
 
