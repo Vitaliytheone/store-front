@@ -151,6 +151,7 @@ class CreateProviderForm extends Model {
             $this->_provider = new Providers();
             $this->_provider->site = $this->name;
             $this->_provider->type = Providers::TYPE_INTERNAL;
+            $this->_provider->protocol = !empty($result['ssl']) ? Providers::PROTOCOL_HTTPS : Providers::PROTOCOL_HTTP;
 
             if (!$this->_provider->save()) {
                 $this->addError($attribute, 'Incorrect ' . $attribute . ' value.');

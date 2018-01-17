@@ -12,6 +12,7 @@ use common\models\stores\queries\ProvidersQuery;
  *
  * @property integer $id
  * @property string $site
+ * @property string $protocol
  * @property integer $type
  * @property integer $created_at
  *
@@ -21,6 +22,9 @@ class Providers extends ActiveRecord
 {
     const TYPE_INTERNAL = 0;
     const TYPE_EXTERNAL = 1;
+
+    const PROTOCOL_HTTP = 0;
+    const PROTOCOL_HTTPS = 1;
 
     /**
      * @inheritdoc
@@ -36,8 +40,9 @@ class Providers extends ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'created_at'], 'integer'],
+            [['type', 'created_at', 'protocol'], 'integer'],
             [['site'], 'string', 'max' => 45],
+            [['protocol'], 'default', 'value' => static::PROTOCOL_HTTP],
         ];
     }
 
@@ -49,6 +54,7 @@ class Providers extends ActiveRecord
         return [
             'id' => Yii::t('admin', 'providers.f_id'),
             'site' => Yii::t('admin', 'providers.f_site'),
+            'protocol' => Yii::t('admin', 'providers.f_protocol'),
             'type' => Yii::t('admin', 'providers.f_type'),
             'created_at' => Yii::t('admin', 'providers.f_created_at'),
         ];

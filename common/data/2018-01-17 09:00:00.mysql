@@ -1,0 +1,3 @@
+/* 9:19:28 root@localhost stores */
+USE `stores`;
+ALTER TABLE providers ADD protocol TINYINT(1) NOT NULL COMMENT '0 - http, 1 - https' AFTER site;
