@@ -11,18 +11,6 @@ use Yii;
 class AccountController extends CustomController
 {
     /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
-
-    /**
      * Logout action.
      *
      * @return string

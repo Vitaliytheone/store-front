@@ -32,8 +32,22 @@ use yii\web\IdentityInterface;
  */
 class StoreAdmins extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DISABLED = 0;
-    const STATUS_ENABLED = 1;
+    const STATUS_ACTIVE     = 1;
+    const STATUS_SUSPENDED  = 2;
+
+    /**
+     * Default allowed controller
+     * Admin will be redirect to this controller
+     * if other controllers are not allowed
+     */
+    const DEFAULT_CONTROLLER = 'account';
+
+    /**
+     * Prefix of the admin module
+     * will be added to allowed controller rules like:
+     * MODULE_PREFIX/CONTROLLER
+     */
+    const MODULE_PREFIX = 'admin';
 
     /**
      * @inheritdoc
@@ -53,7 +67,7 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
             [['username', 'first_name', 'last_name', 'ip'], 'string', 'max' => 255],
             [['password', 'auth_hash'], 'string', 'max' => 64],
             [['rules'], 'string', 'max' => 1000],
-            ['status', 'in', 'range' => [self::STATUS_DISABLED, self::STATUS_ENABLED]],
+            ['status', 'in', 'range' => [self::STATUS_SUSPENDED, self::STATUS_ACTIVE]],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
@@ -124,7 +138,7 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ENABLED]);
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -238,7 +252,7 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ENABLED]);
+        return static::findOne(['username' => $username]);
     }
 
     /**
@@ -265,26 +279,83 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Return current admin allowed controllers list
-     * [
-     *    'admin/orders,
-     *    'admin/settings',
-     * ]
-     * @return mixed
+     * Return if admin active
+     * @return bool
      */
-    public function getRules()
+    public function isActive()
     {
-        $rules = json_decode($this->rules);
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * Return current admin allowed rules list
+     * Default allowed controller will be present
+     * if $includeDefault is true
+     *
+     * [
+     *      'orders => 1,
+     *      'settings' => 0,
+     *      ...
+     *      default_controller => 1
+     * ]
+     *
+     * @param $includeDefault bool
+     * @return array
+     */
+    public function getRules($includeDefault = true)
+    {
+        $rules = json_decode($this->rules, true);
 
         if (!is_array($rules)) {
-            return [];
+            $rules = [];
         }
 
-        array_walk($rules, function (&$rule){
-            $rule = 'admin/' . $rule;
-        });
+        if ($includeDefault) {
+            // Add default allowed controller to rules array
+            $rules[self::DEFAULT_CONTROLLER] = 1;
+        }
 
         return $rules;
+    }
+
+    /**
+     * Return current admin allowed controllers names list
+     * [
+     *  'orders',
+     *  'settings'..
+     * ]
+     */
+    public function getAllowedControllersNames()
+    {
+        // Return only allowed rules
+        $rules = array_filter($this->getRules(), function($rule){
+            return !!$rule;
+        });
+
+        $controllers = array_keys($rules);
+
+        return $controllers;
+    }
+
+    /**
+     * Return current admin allowed controllers list
+     *
+     * [
+     *      'admin/orders',
+     *      'admin/settings',
+     *      ...
+     * ]
+     * @return array
+     */
+    public function getAllowedControllers()
+    {
+        $controllers =$this->getAllowedControllersNames();
+
+        array_walk($controllers, function (&$controller){
+            $controller = self::MODULE_PREFIX . '/' . $controller;
+        });
+
+        return $controllers;
     }
 
     /**

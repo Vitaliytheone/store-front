@@ -368,5 +368,6 @@ return [
     'login.sign_in_remember_me' => 'Remember me',
     'login.sign_in_submit_title' => 'Sign In',
     'login.message_bad_login' => 'Incorrect username or password!',
+    'login.message_suspended' => 'Account suspended!',
 
 ];

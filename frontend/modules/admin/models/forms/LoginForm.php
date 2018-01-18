@@ -35,12 +35,10 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
             [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
             ['remember', 'boolean'],
-            // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['username', 'validateStatus'],
         ];
     }
 
@@ -59,6 +57,24 @@ class LoginForm extends Model
         if (!$user || !$user->validatePassword($this->password)) {
             $this->addError($attribute, Yii::t('admin', 'login.message_bad_login'));
 
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate admin status: suspended or active
+     * @param $attribute
+     * @param $params
+     * @return bool
+     */
+    public function validateStatus($attribute, $params)
+    {
+        $user = $this->getUser();
+
+        if ($user && !$user->isActive()) {
+            $this->addError($attribute, Yii::t('admin', 'login.message_suspended'));
             return false;
         }
 
