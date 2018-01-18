@@ -48,7 +48,7 @@ $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
                             <!-- Menu items  -->
                             <?php foreach ($navbarItems as $menuKey => $menuItem): ?>
-                                <li class="m-menu__item <?php if ($menuItem['active']): ?> m-menu__item--active <? endif; ?> <?= ArrayHelper::getValue($menuItem, 'class' ,'') ?>"  aria-haspopup="true">
+                                <li class="m-menu__item <?php if ($menuItem['active']): ?> m-menu__item--active <?php endif; ?> <?= ArrayHelper::getValue($menuItem, 'class' ,'') ?>"  aria-haspopup="true">
                                     <a  href="<?= $menuItem['url'] ?>" class="m-menu__link ">
                                         <span class="m-menu__link-text">
                                             <?= $menuItem['label'] ?>
@@ -67,7 +67,7 @@ $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
                                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                         <ul class="m-menu__subnav">
                                         <?php foreach ($menuItem['submenuItems'] as $subKey => $subItem): ?>
-                                            <li class="m-menu__item <?php if ($menuItem['active']): ?> m-menu__item--active <? endif; ?> <?= ArrayHelper::getValue($subItem, 'class' ,'') ?> " data-redirect="true" aria-haspopup="true">
+                                            <li class="m-menu__item <?php if ($menuItem['active']): ?> m-menu__item--active <?php endif; ?> <?= ArrayHelper::getValue($subItem, 'class' ,'') ?> " data-redirect="true" aria-haspopup="true">
                                                 <a href="<?= $subItem['url'] ?>" class="m-menu__link ">
                                                     <?php if (isset($subItem['icon'])): ?>
                                                         <i class="m-menu__link-icon <?= $subItem['icon'] ?>"></i>
