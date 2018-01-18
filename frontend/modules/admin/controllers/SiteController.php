@@ -8,6 +8,7 @@ use frontend\modules\admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use common\components\MainController;
+use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**
@@ -73,17 +74,32 @@ class SiteController extends MainController
 
     /**
      * Make redirect url for logged in user
+     * If exist return Url, and it is allowed, use it.
+     * Else use first allowed controller from _redirectList list
      * @return string
      */
     private function _makeRedirectUrl()
     {
         /** @var StoreAdmins $adminModel */
         $adminModel = $this->_user->getIdentity();
-
         $allowedControllers = $adminModel->getAllowedControllersNames();
-        $firstAllowedController = StoreAdmins::DEFAULT_CONTROLLER;
 
-        // Try to find first allowed action in redirect orders list
+        // Try to redirect by `return url`
+        $returnUrl = $this->_user->getReturnUrl();
+        if ($returnUrl) {
+            $explodedUrl = explode('/', trim($returnUrl, '/'));
+            $returnController = isset($explodedUrl[1]) ? $explodedUrl[1] : '';
+
+            // Check if $returnController allowed
+            if (in_array($returnController, $allowedControllers)) {
+                $this->_loggedInRedirectUrl = '/' . $returnController;
+
+                return $this->_loggedInRedirectUrl;
+            }
+        }
+
+        // Else Try to find first allowed action in redirect orders list
+        $firstAllowedController = StoreAdmins::DEFAULT_CONTROLLER;
         foreach ($this->_redirectList as $redirect) {
             if (false !== array_search($redirect, $allowedControllers)) {
                 $firstAllowedController = $redirect;
