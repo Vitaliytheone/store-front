@@ -3,95 +3,9 @@
 
     use frontend\modules\admin\components\Url;
     use yii\helpers\ArrayHelper;
+    use frontend\modules\admin\helpers\NavbarHelper;
 
-$navbarItems = [
-    'orders' =>  [
-        'url' => '/admin/orders',
-        'label' => Yii::t('admin', 'header.menu_orders'),
-    ],
-    'payments' => [
-        'url' => '/admin/payments',
-        'label' => Yii::t('admin', 'header.menu_payments'),
-    ],
-    'products' => [
-        'url' => '/admin/products',
-        'label' => Yii::t('admin', 'header.menu_products'),
-    ],
-    'settings' => [
-        'url' => '/admin/settings',
-        'label' => 'Settings',
-        'class' => 'mobile-hidden',
-        'submenuItems' => [
-            'settings-general' => [
-                'url' => '/admin/settings',
-                'icon' => 'icon-settings',
-                'label' => Yii::t('admin', 'header.menu_settings_general'),
-            ],
-            'settings-payments' => [
-                'url' => '/admin/settings/payments',
-                'icon' => 'icon-wallet',
-                'label' => Yii::t('admin', 'header.menu_settings_payments'),
-            ],
-            'settings-providers' => [
-                'url' => '/admin/settings/providers',
-                'icon' => 'icon-share',
-                'label' => Yii::t('admin', 'header.menu_settings_providers'),
-            ],
-            'settings-navigation' => [
-                'url' => '/admin/settings/navigation',
-                'icon' => 'flaticon-list-1',
-                'label' => Yii::t('admin', 'header.menu_settings_navigation'),
-            ],
-            'settings-pages' => [
-                'url' => '/admin/settings/pages',
-                'icon' => 'icon-docs',
-                'label' => Yii::t('admin', 'header.menu_settings_pages'),
-            ],
-            'settings-themes' => [
-                'url' => '/admin/settings/themes',
-                'icon' => 'icon-puzzle',
-                'label' => Yii::t('admin', 'header.menu_settings_themes'),
-            ],
-            'settings-blocks' => [
-                'url' => '/admin/settings/blocks',
-                'icon' => 'icon-layers',
-                'label' => Yii::t('admin', 'header.menu_settings_blocks'),
-            ],
-        ],
-    ],
-];
-
-$currentRoute = $this->context->route;
-/**
- * Populate $navbarItems by url and active class is menu item is active
- */
-array_walk($navbarItems, function(&$item, $itemKey) use ($currentRoute){
-    $isItemActive = function ($item) use ($currentRoute){
-        if (isset($item['url'])) {
-            return stripos($currentRoute, ltrim($item['url'],'/')) !== false;
-        }
-        return false;
-    };
-
-    if ($isItemActive($item)) {
-        $item['activeClass'] = 'm-menu__item--active';
-    }
-    if (isset($item['url'])) {
-        $item['url'] = Url::to($item['url']);
-    }
-
-    // Submenu items walk if exist
-    if (isset($item['submenuItems']) && is_array($item['submenuItems'])) {
-        array_walk($item['submenuItems'], function(&$subItem, $subItemKey) use ($item, $isItemActive){
-            if ($isItemActive($subItem)) {
-                $subItem['activeClass'] = 'm-menu__item--active';
-            }
-            if (isset($subItem['url'])) {
-                $subItem['url'] = Url::to($subItem['url']);
-            }
-        });
-    }
-});
+$navbarItems = NavbarHelper::getNavbarItems($this->context->route);
 
 ?>
 <!-- begin::Header -->
@@ -132,10 +46,9 @@ array_walk($navbarItems, function(&$item, $itemKey) use ($currentRoute){
                     </button>
                     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light "  >
                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-
                             <!-- Menu items  -->
                             <?php foreach ($navbarItems as $menuKey => $menuItem): ?>
-                                <li class="m-menu__item <?= ArrayHelper::getValue($menuItem, 'activeClass', '') ?> <?= ArrayHelper::getValue($menuItem, 'class' ,'') ?>"  aria-haspopup="true">
+                                <li class="m-menu__item <?php if ($menuItem['active']): ?> m-menu__item--active <? endif; ?> <?= ArrayHelper::getValue($menuItem, 'class' ,'') ?>"  aria-haspopup="true">
                                     <a  href="<?= $menuItem['url'] ?>" class="m-menu__link ">
                                         <span class="m-menu__link-text">
                                             <?= $menuItem['label'] ?>
@@ -154,7 +67,7 @@ array_walk($navbarItems, function(&$item, $itemKey) use ($currentRoute){
                                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                         <ul class="m-menu__subnav">
                                         <?php foreach ($menuItem['submenuItems'] as $subKey => $subItem): ?>
-                                            <li class="m-menu__item <?= ArrayHelper::getValue($subItem, 'activeClass', '') ?> <?= ArrayHelper::getValue($subItem, 'class' ,'') ?> " data-redirect="true" aria-haspopup="true">
+                                            <li class="m-menu__item <?php if ($menuItem['active']): ?> m-menu__item--active <? endif; ?> <?= ArrayHelper::getValue($subItem, 'class' ,'') ?> " data-redirect="true" aria-haspopup="true">
                                                 <a href="<?= $subItem['url'] ?>" class="m-menu__link ">
                                                     <?php if (isset($subItem['icon'])): ?>
                                                         <i class="m-menu__link-icon <?= $subItem['icon'] ?>"></i>

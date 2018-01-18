@@ -11,8 +11,20 @@ use Yii;
 class AccountController extends CustomController
 {
     /**
+     * Index action
+     * @return string
+     */
+    public function actionIndex()
+    {
+        $this->view->title = Yii::t('admin', 'account.page_title');
+
+        return $this->render('index', [
+            'user' => Yii::$app->user->getIdentity(),
+        ]);
+    }
+
+    /**
      * Logout action.
-     *
      * @return string
      */
     public function actionLogout()

@@ -370,4 +370,6 @@ return [
     'login.message_bad_login' => 'Incorrect username or password!',
     'login.message_suspended' => 'Account suspended!',
 
+    'account.page_title' => 'Account',
+
 ];
