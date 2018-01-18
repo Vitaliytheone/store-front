@@ -84,9 +84,9 @@ class SiteController extends MainController
         $firstAllowedController = StoreAdmins::DEFAULT_CONTROLLER;
 
         // Try to find first allowed action in redirect orders list
-        foreach ($allowedControllers as $action) {
-            if (false !== array_search($action, $this->_redirectList)) {
-                $firstAllowedController = $action;
+        foreach ($this->_redirectList as $redirect) {
+            if (false !== array_search($redirect, $allowedControllers)) {
+                $firstAllowedController = $redirect;
                 break;
             }
         }
