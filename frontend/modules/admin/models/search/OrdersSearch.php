@@ -253,7 +253,7 @@ class OrdersSearch extends Model
                 ->where(['customer' => $searchQuery])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
-        } elseif ($orderIds || $providerOrderIds) {
+        } elseif (count($orderIds) > 1 || count($providerOrderIds) > 1) {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
                 ->from($this->_subordersTable)
@@ -268,7 +268,11 @@ class OrdersSearch extends Model
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
                 ->from($this->_subordersTable)
-                ->where(['or', ['in', 'provider_order_id', $providerOrderIds] , ['like', 'link', $searchQuery]])
+                ->where([
+                    'or',
+                    ['provider_order_id' => $searchQuery],
+                    ['like', 'link', $searchQuery],
+                ])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
         }
