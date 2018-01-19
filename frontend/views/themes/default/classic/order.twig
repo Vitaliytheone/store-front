@@ -6,7 +6,6 @@
                     <h1 class="page-title">{{ lang('order.title') }}</h1>
                 </div>
             </div>
-
             <div class="row order">
                 <div class="col-lg-6">
                     <div class="bg-white">
@@ -31,10 +30,9 @@
                 <div class="col-lg-6">
                     <div class="bg-white">
                         <div class="order-block">
-														{% if error %}
-                                <div class="error-summary alert alert-danger">{{ errorText }}</div>
-														{% endif %}
-
+                            {% if error %}
+                                <div class="error-summary alert alert-danger">{{ errorMessage }}</div>
+                            {% endif %}
                             <div class="form-group field-addtocartform-link required">
                                 <label class="control-label" for="addtocartform-link">Link</label>
                                 <input type="text" id="addtocartform-link" class="form-control" name="AddToCartForm[link]" aria-required="true" value="{{ data['link'] }}">
@@ -43,7 +41,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-lg-6">
                     <a class="btn btn-default" href="{{ goBackUrl }}">{{ lang('order.cancel') }}</a>
@@ -52,7 +49,6 @@
                     <button type="submit" id="addToCartButton" class="btn btn-primary" name="add-to-cart-button">{{ lang('order.submit') }}</button>
                 </div>
             </div>
-
             <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
         </form>
     </div>

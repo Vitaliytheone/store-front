@@ -161,6 +161,28 @@ class OrderForm extends Model {
     }
 
     /**
+     * Return Payments methods list for view
+     * @return array
+     */
+    public function getPaymentsMethodsForView()
+    {
+        $methods = $this->_methods;
+
+        if (null === $this->_methods) {
+            $methods = $this->getPaymentMethods();
+        }
+
+        array_walk($methods, function(&$method, $methodId){
+            $method = [
+                'id' => $methodId,
+                'name' => $method,
+            ];
+        });
+
+        return $methods;
+    }
+
+    /**
      * Save to cart
      * @return bool
      */

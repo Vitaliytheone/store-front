@@ -125,7 +125,7 @@ class CartSearch {
                 ])
                 ->all();
 
-            $this->prepareItems($items);
+                $this->prepareItems($items);
         }
 
         return [
@@ -163,6 +163,32 @@ class CartSearch {
     }
 
     /**
+     * Return Items with renamed fields
+     * @return array
+     */
+    public function getItemsForView()
+    {
+        if (null === static::$_items) {
+            $this->search();
+        }
+
+        $items = static::$_items;
+
+        foreach ($items as &$item) {
+            $item['name'] = $item['package_name'];
+            $item['details'] = $item['link'];
+            $item['quantity'] = $item['package_quantity'];
+
+            unset($item['package_id']);
+            unset($item['package_name']);
+            unset($item['link']);
+            unset($item['package_quantity']);
+        }
+
+        return $items;
+    }
+
+    /**
      * Prepare cart items
      * @param array $items
      * @return array
@@ -170,6 +196,7 @@ class CartSearch {
     public function prepareItems($items)
     {
         $packages = $this->getPackages();
+
 
         static::$_items = [];
         static::$_total = 0;
@@ -186,12 +213,12 @@ class CartSearch {
             static::$_items[] = [
                 'id' => $item['id'],
                 'key' => $item['key'],
-                'link' => $item['link'],
                 'price' => PriceHelper::prepare($package['price'], $this->_store->currency),
                 'package_id' => $item['package_id'],
-                'package_name' => $package['name'],
-                'package_quantity' => $package['quantity'],
                 'created' => $item['created_at'],
+                'package_quantity' => $package['quantity'],
+                'package_name' => $package['name'],
+                'link' => $item['link'],
             ];
         }
 

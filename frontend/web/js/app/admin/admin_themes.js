@@ -12,8 +12,8 @@ customModule.adminThemes = {
             codeMirror,
             contentOnInit;
 
-        var $modal = $('#cancel-modal');
-
+        var $modalSubmitClose = $('#modal_submit_close');
+        var $modalSubmitReset = $('#modal_submit_reset');
 
         if ($codeMirror.length > 0) {
             codeMirror = CodeMirror.fromTextArea($codeMirror[0], {
@@ -57,31 +57,32 @@ customModule.adminThemes = {
             }
         });
 
-
         /*****************************************************************************************************
-         *                     Modal cancel
+         *               Modal submit close
          *****************************************************************************************************/
-        (function (){
-            if (codeMirror === undefined) {
+        $modalSubmitClose.on('show.bs.modal', function(event){
+            var $href = $(event.relatedTarget),
+                href = $href.attr('href');
+
+            // Prevent show process if
+            if (codeMirror === undefined || codeMirror.getValue() === contentOnInit) {
+                event.stopPropagation();
+                window.location.href = href;
                 return false;
             }
+            // Else — show
+            $(this).find('.submit_button').attr('href', href);
+        });
 
-            var currentContent;
+        /*****************************************************************************************************
+         *               Modal submit reset
+         *****************************************************************************************************/
+        $modalSubmitReset.on('show.bs.modal', function(event){
+            var $href = $(event.relatedTarget),
+                href = $href.attr('href');
 
-            $('#cancel-btn').click(function(e) {
-                currentContent = codeMirror.getValue();
-
-                if (currentContent !== contentOnInit) {
-
-                    $modal.modal('show');
-
-                    return false;
-                }
-
-                return true;
-            });
-
-        })({}, function (){});
+            $(this).find('.submit_button').attr('href', href);
+        });
 
     }
 };

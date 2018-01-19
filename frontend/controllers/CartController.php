@@ -37,7 +37,7 @@ class CartController extends CustomController
         $searchModel = new CartSearch();
         $searchModel->setStore($store);
 
-        $items = $searchModel->search();
+        $items = $searchModel->getItemsForView();;
 
         $model = new OrderForm();
         $model->setStore($store);
@@ -51,13 +51,16 @@ class CartController extends CustomController
         }
 
         return $this->render('cart.twig', [
-            'items' => $items['models'],
-            'methods' => $model->getPaymentMethods(),
+            'cart' => [
+                'orders' => $items,
+                'totalPrice' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
+                'payments' => $model->getPaymentsMethodsForView(),
+            ],
+
             'selectedMethodId' => $model->method,
-            'total' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
             'data' => $model->attributes,
             'error' => $model->hasErrors(),
-            'errorText' => ActiveForm::firstError($model)
+            'errorMessage' => ActiveForm::firstError($model)
         ]);
     }
 
@@ -103,7 +106,7 @@ class CartController extends CustomController
             'goBackUrl' => $this->getGoBackUrl(),
             'data' => $model->attributes,
             'error' => $model->hasErrors(),
-            'errorText' => ActiveForm::firstError($model)
+            'errorMessage' => ActiveForm::firstError($model)
         ]);
     }
 

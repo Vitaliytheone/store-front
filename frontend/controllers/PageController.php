@@ -22,7 +22,7 @@ class PageController extends CustomController
         $page = $this->_findPage($id);
 
         switch ($page->url) {
-            case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page->template); break;
+            case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page); break;
         }
 
         return $this->render($page->template . '.twig', [
@@ -35,10 +35,10 @@ class PageController extends CustomController
 
     /**
      * Render `contact form` page
-     * @param $template
+     * @param Pages $page
      * @return string|\yii\web\Response
      */
-    protected function _actionContactUs($template)
+    protected function _actionContactUs($page)
     {
         $request = Yii::$app->getRequest();
         $contactForm = new ContactForm();
@@ -51,12 +51,16 @@ class PageController extends CustomController
             return $this->refresh();
         }
 
-        return $this->render($template . '.twig', [
+        return $this->render($page->template . '.twig', [
+            'page' => [
+                'title' => $page->name,
+                'content' => $page->content,
+            ],
             'data' => $contactForm,
             'error' => $contactForm->hasErrors(),
-            'errorText' => ActiveForm::firstError($contactForm),
+            'errorMessage' => ActiveForm::firstError($contactForm),
             'success' => $contactForm->getSentSuccess(),
-            'reCaptchaSiteKey' => Yii::$app->params['reCaptcha.siteKey'],
+            'captchaKey' => Yii::$app->params['reCaptcha.siteKey'],
         ]);
     }
 

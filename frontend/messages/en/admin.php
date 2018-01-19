@@ -350,10 +350,12 @@ return [
     'settings.themes_editing_save' => 'Save theme',
     'settings.themes_editing_cancel' => 'Cancel',
     'settings.themes_editing_reset' => 'Reset file',
-    'settings.themes_editing_modal_' => 'Reset file',
-    'settings.themes_editing_modal_message' => 'All unsaved data will be lost!',
-    'settings.themes_editing_modal_yes' => 'Yes, close!',
-    'settings.themes_editing_modal_no' => 'Cancel',
+
+    'settings.themes_modal_submit_close_message' => 'All unsaved data will be lost!',
+    'settings.themes_modal_submit_close_submit' => 'Yes, close!',
+    'settings.themes_modal_submit_reset_message' => 'The data will be restored to the init values!',
+    'settings.themes_modal_submit_reset_submit' => 'Yes, reset!',
+    'settings.themes_modal_cancel' => 'Cancel',
 
     'settings.themes_message_created' => 'Theme was successfully created!',
     'settings.themes_message_updated' => 'Theme was successfully updated!',

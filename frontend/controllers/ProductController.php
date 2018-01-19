@@ -30,21 +30,22 @@ class ProductController extends CustomController
         return $this->render('product.twig', [
             'product' => [
                 'id' => $product->id,
-                'name' => Html::encode($product->name),
-                'description' => $product->description,
+                'title' => Html::encode($product->name),
+                'text' => $product->description,
+                'packages' => array_map(function ($package) {
+                    return [
+                        'id' => $package->id,
+                        'best' => UiHelper::toggleString($package->best, 'best-product'),
+                        'quantity' => $package->quantity,
+                        'name' => Html::encode($package->name),
+                        'price' => '$' . $package->price,
+                        'addToCartUrl' => Url::toRoute("/order/$package->id"),
+                    ];
+                }, $product->packages),
+                'properties' => array_map(function ($property) {
+                    return Html::encode($property);
+                }, $product->properties),
             ],
-            'packages' => array_map(function ($package) {
-                return [
-                    'id' => $package->id,
-                    'best' => UiHelper::toggleString($package->best, 'best-product'),
-                    'quantity' => $package->quantity,
-                    'name' => Html::encode($package->name),
-                    'price' => '$' . $package->price,
-                ];
-            }, $product->packages),
-            'properties' => array_map(function ($property) {
-                return Html::encode($property);
-            }, $product->properties)
         ]);
     }
 

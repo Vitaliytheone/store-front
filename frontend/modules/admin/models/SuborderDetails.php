@@ -19,13 +19,8 @@ class SuborderDetails extends Suborders
      */
     public function details()
     {
-        $providersTable = Providers::tableName();
+        $provider = $this->provider;
 
-        $provider = (new Query())
-            ->select(['site'])
-            ->from($providersTable)
-            ->where(['id' => $this->provider_id])
-            ->one();
         if (!$provider) {
             return null;
         }
@@ -34,7 +29,7 @@ class SuborderDetails extends Suborders
 
         $formatter = Yii::$app->formatter;
         $orderDetails = [
-            'provider' => $provider['site'],
+            'provider' => $provider->site,
             'provider_order_id' => $this->provider_order_id,
             'provider_response' => $providerResponse,
             'updated_at' => $formatter->asDatetime($this->updated_at,'yyyy-MM-dd HH:mm:ss'),

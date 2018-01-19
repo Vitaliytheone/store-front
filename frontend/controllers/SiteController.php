@@ -36,6 +36,6 @@ class SiteController extends CustomController
      */
     public function actionCheckout()
     {
-        return $this->render('checkout');
+        return $this->renderPartial('checkout');
     }
 }

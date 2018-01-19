@@ -19,27 +19,29 @@
                         </tr>
                         </thead>
                         <tbody>
-                                {% for key,item in items %}
-                                <tr>
-                                    <td>
-                                        {{ (key + 1) }}
-                                    </td>
-                                    <td>
-                                        {{ item['package_name'] }}
-                                    </td>
-                                    <td>
-                                        {{ item['link'] }}
-                                    </td>
-                                    <td>
-                                        {{ item['price'] }}
-                                    </td>
-                                    <td class="text-right">
-                                        <a href="/cart/remove/{{ item['key'] }}" class="btn btn-xs btn-default">
-                                            {{ lang('cart.remove') }}
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
+
+                        {% for order in cart['orders'] %}
+                        <tr>
+                            <td>
+                                {{ order['id'] }}
+                            </td>
+                            <td>
+                                {{ order['quantity'] }} {{ order['name'] }}
+                            </td>
+                            <td>
+                                {{ order['details'] }}
+                            </td>
+                            <td>
+                                {{ order['price'] }}
+                            </td>
+                            <td class="text-right">
+                                <a href="/delete/{{ order['id'] }}" class="btn btn-xs btn-default">
+                                    {{ lang('cart.remove') }}
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -50,7 +52,7 @@
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">
                 <div class="cart bg-white cart-total">
-                    <strong>{{ lang('cart.total_price') }} </strong><div class="cart-total__price pull-right">{{ total }}</div>
+                    <strong>{{ lang('cart.totalTitle') }} </strong><div class="cart-total__price pull-right">{{ cart['totalPrice'] }}</div>
                 </div>
             </div>
         </div>
@@ -61,19 +63,19 @@
                     <div class="cart bg-white">
 
                         {% if error %}
-                            <div class="error-summary alert alert-danger">{{ errorText }}</div>
+                            <div class="error-summary alert alert-danger">{{ errorMessage }}</div>
                         {% endif %}
 
-                        {% if methods|length > 1 %}
+                        {% if cart['payments']|length > 1 %}
                             <div class="form-group">
-                                <label>{{ lang('cart.payment_method') }}</label>
+                                <label>{{ lang('cart.paymentMethod') }}</label>
                                 <div>
-                                    {% for methodId,methodName in methods %}
+                                    {% for payment in cart['payments'] %}
                                         <label class="radio-inline">
                                             {% if selectedMethodId %}
-                                                <input type="radio" name="OrderForm[method]" id="inlineRadio1" {% if selectedMethodId == methodId %} checked {% endif %} value="{{ methodId }}"> {{ methodName }}
+                                                <input type="radio" name="OrderForm[method]" id="inlineRadio{{ payment['id'] }}" {% if selectedMethodId == payment['id'] %} checked {% endif %} value="{{ payment['id'] }}"> {{ payment['name'] }}
                                             {% else %}
-                                                <input type="radio" name="OrderForm[method]" id="inlineRadio1" {% if loop.first %} checked {% endif %} value="{{ methodId }}"> {{ methodName }}
+                                                <input type="radio" name="OrderForm[method]" id="inlineRadio{{ payment['id'] }}" {% if loop.first %} checked {% endif %} value="{{ payment['id'] }}"> {{ payment['name'] }}
                                             {% endif %}
                                         </label>
                                     {% endfor %}
@@ -82,14 +84,13 @@
                         {% endif %}
 
                         <div class="form-group">
-                            <label class="control-label" for="orderform-email">{{ lang('cart.email_title') }}</label>
+                            <label class="control-label" for="orderform-email">{{ lang('cart.emailTitle') }}</label>
                             <input id="orderform-email" class="form-control" name="OrderForm[email]" value="{{ data['email'] }}" placeholder="mail@gmail.com" aria-required="true" aria-invalid="true" type="text">
                         </div>
 
                     </div>
                 </div>
             </div>
-
 
             <div class="row">
                 <div class="col-lg-6">

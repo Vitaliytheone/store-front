@@ -1,22 +1,19 @@
 <section class="min-height">
     <div class="container">
-
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-title">{{ product['name'] }}</h1>
+                <h1 class="page-title">{{ product['title'] }}</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="content">
-										{{ product['description'] }}
+                    {{ product['text'] }}
                 </div>
             </div>
         </div>
         <div class="row products">
-            <!--  Package items list -->
-						{% for package in packages %}
-                <!--  Package item  -->
+            {% for package in product['packages'] %}
                 <div class="col-lg-3">
                     <div class="product-card text-center {{ package['best'] }}">
                         <div class="product-quantity">{{ package['quantity'] }}</div>
@@ -24,19 +21,17 @@
                         <div class="product-price">{{ package['price'] }}</div>
                         <div class="product-properties">
                             <ul>
-																{% for property in properties %}
+                                {% for property in product['properties'] %}
                                     <li>{{ property }}</li>
-																{% endfor %}
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="product-actions">
-                            <a href="/order/{{ package['id'] }}" class="btn btn-block btn-default">{{  lang('product.submit') }}</a>
+                            <a href="{{ package.addToCartUrl }}" class="btn btn-block btn-default">{{ lang('product.submit') }}</a>
                         </div>
                     </div>
                 </div>
-                <!--/ Package item  -->
-						{% endfor %}
-            <!--/ Package items list -->
+            {% endfor %}
         </div>
     </div>
 </section>

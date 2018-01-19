@@ -8,7 +8,6 @@ use frontend\modules\admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use common\components\MainController;
-use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**

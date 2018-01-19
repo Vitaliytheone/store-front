@@ -47,7 +47,7 @@ ThemesAsset::register($this);
                                             <div class="m-portlet__head-tools">
                                                 <ul class="m-portlet__nav">
                                                     <li class="m-portlet__nav-item">
-                                                        <a href="<?= Url::toRoute(['/settings/reset-theme-file', 'theme' => $theme->folder, 'file' => $currentFile]) ?>" class="m-portlet__nav-link m-portlet__nav-link--icon reset-file">
+                                                        <a href="<?= Url::toRoute(['/settings/reset-theme-file', 'theme' => $theme->folder, 'file' => $currentFile]) ?>" class="m-portlet__nav-link m-portlet__nav-link--icon reset-file" data-toggle="modal" data-target="#modal_submit_reset">
                                                             <i class="la la-refresh"></i> <?= Yii::t('admin', 'settings.themes_editing_reset') ?>
                                                         </a>
                                                     </li>
@@ -92,7 +92,7 @@ ThemesAsset::register($this);
                                                 <button type="submit" class="btn btn-success m-btn--air"><?= Yii::t('admin', 'settings.themes_editing_save') ?></button>
                                             <?php endif; ?>
 
-                                            <a href="<?= Url::toRoute('/settings/themes') ?>" class="btn btn-secondary m-btn--air" id="cancel-btn"><?= Yii::t('admin', 'settings.themes_editing_cancel') ?></a>
+                                            <a href="<?= Url::toRoute('/settings/themes') ?>" class="btn btn-secondary m-btn--air" data-toggle="modal" data-target="#modal_submit_close"><?= Yii::t('admin', 'settings.themes_editing_cancel') ?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@ ThemesAsset::register($this);
     </div>
 </div>
 
-<div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_submit_close" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
 
@@ -118,9 +118,29 @@ ThemesAsset::register($this);
                 <div class="row">
                     <div class="col modal-delete-block text-center">
                         <span class="fa fa-warning"></span>
-                        <p><?= Yii::t('admin', 'settings.themes_editing_modal_message')?></p>
-                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.themes_editing_modal_no') ?></button>
-                        <a href="<?= Url::toRoute('/settings/themes') ?>" class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'settings.themes_editing_modal_yes')?></a>
+                        <p><?= Yii::t('admin', 'settings.themes_modal_submit_close_message')?></p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.themes_modal_cancel') ?></button>
+                        <a href="" class="submit_button btn btn-danger m-btn--air"><?= Yii::t('admin', 'settings.themes_modal_submit_close_submit')?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_submit_reset" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-loader hidden"></div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col modal-delete-block text-center">
+                        <span class="fa fa-warning"></span>
+                        <p><?= Yii::t('admin', 'settings.themes_modal_submit_reset_message')?></p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.themes_modal_cancel') ?></button>
+                        <a href="" class="submit_button btn btn-danger m-btn--air"><?= Yii::t('admin', 'settings.themes_modal_submit_reset_submit')?></a>
                     </div>
                 </div>
             </div>

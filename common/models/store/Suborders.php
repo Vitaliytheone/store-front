@@ -2,6 +2,7 @@
 
 namespace common\models\store;
 
+use common\models\stores\Providers;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\AttributeBehavior;
@@ -31,6 +32,7 @@ use common\models\store\queries\SubordersQuery;
  * @property Checkouts $checkout
  * @property Orders $order
  * @property Packages $package
+ * @property Providers $provider
  */
 class Suborders extends ActiveRecord
 {
@@ -149,6 +151,15 @@ class Suborders extends ActiveRecord
     public function getPackage()
     {
         return $this->hasOne(Packages::className(), ['id' => 'package_id']);
+    }
+
+    /**
+     * Return provider by current suborder provider_id
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvider()
+    {
+        return $this->hasOne(Providers::className(), ['id' => 'provider_id']);
     }
 
     /**

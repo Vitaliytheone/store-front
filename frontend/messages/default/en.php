@@ -11,10 +11,10 @@ return [
     'cart.details' => 'Details',
     'cart.price' => 'Price',
     'cart.remove' => 'Remove',
-    'cart.total_title' => 'Total title',
-    'cart.total_price' => 'Total price',
-    'cart.email_title' => 'Email address',
-    'cart.payment_method' => 'Payment method',
+    'cart.totalTitle' => 'Total',
+    'cart.totalPrice' => 'Total price',
+    'cart.emailTitle' => 'Email address',
+    'cart.paymentMethod' => 'Payment method',
     'cart.cancel' => 'Continue shopping',
     'cart.checkout' => 'Proceed to Checkout',
 
@@ -32,19 +32,18 @@ return [
     'contact.email' => 'Email',
     'contact.message' => 'Message',
     'contact.submit' => 'Send message',
+    'contact.form.message.success' => 'Email was successfully sent!',
+    'contact.form.message.error' => 'Internal error. Try again later!',
 
     'footer.copyright' => '&copy; 2017 site.ru All Rights Reserved.',
     'footer.terms' => 'Terms of Service',
     'footer.policy' => 'Privacy Policy',
     'footer.contact' => 'Contact Us',
 
-    'checkout.title' => 'Checkout',
-    'checkout.redirect' => 'Redirecting...',
-    'checkout.go' => 'Go',
+    'checkout.redirect.title' => 'Checkout',
+    'checkout.redirect.redirect' => 'Redirecting...',
+    'checkout.redirect.go' => 'Go',
 
     '404.title' => 'Error 404',
     '404.text' => 'The requested page was not found on this server',
-
-    'contact.form.message.success' => 'Email was successfully sent!',
-    'contact.form.message.error' => 'Internal error. Try again later!',
 ];
