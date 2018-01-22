@@ -40,7 +40,7 @@ class LinksSearch extends Model
     public function searchPagesLinks()
     {
         return (new Query())
-            ->select(['id', 'name', 'url'])
+            ->select(['id', 'title AS name', 'url'])
             ->from($this->_pagesTable)
             ->where([
                 'deleted' => Pages::DELETED_NO,

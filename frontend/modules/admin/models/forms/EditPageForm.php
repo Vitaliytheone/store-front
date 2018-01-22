@@ -28,11 +28,11 @@ class EditPageForm extends Pages
     public function rules()
     {
         return [
-            [['name', 'url', 'visibility'], 'required'],
-            [['name', 'seo_title', 'url'], 'string', 'max' => 255],
+            [['title', 'url', 'visibility'], 'required'],
+            [['title', 'seo_title', 'url'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
             [['content', 'template'], 'string'],
-            [['name', 'seo_title', 'seo_description', 'url',], 'trim'],
+            [['title', 'seo_title', 'seo_description', 'url',], 'trim'],
             [['seo_description'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
@@ -79,7 +79,7 @@ class EditPageForm extends Pages
     private function _setDefaults()
     {
         $this->setAttributes([
-            'name' => '',
+            'title' => '',
             'visibility' => self::VISIBILITY_YES,
             'content' => '',
             'seo_title' => Yii::t('admin', 'settings.pages_seo_page_default'),

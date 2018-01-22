@@ -49,7 +49,7 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
 
                     <div class="form-group">
                         <label for="edit-page-title"><?= Yii::t('admin', 'settings.pages_title') ?></label>
-                        <input type="text" class="form-control form_field__name" id="edit-page-title" name="PageForm[name]" value="<?= $page->name ?>">
+                        <input type="text" class="form-control form_field__name" id="edit-page-title" name="PageForm[title]" value="<?= $page->title ?>">
                     </div>
 
                     <div class="form-group">

@@ -11,7 +11,7 @@ use common\models\store\queries\PagesQuery;
  * This is the model class for table "{{%pages}}".
  *
  * @property integer $id
- * @property string $name
+ * @property string $title
  * @property string $template
  * @property integer $visibility
  * @property string $content
@@ -132,7 +132,7 @@ class Pages extends ActiveRecord
         return [
             [['visibility', 'deleted', 'created_at', 'updated_at'], 'integer'],
             [['content', 'template'], 'string'],
-            [['name', 'seo_title', 'url'], 'string', 'max' => 255],
+            [['title', 'seo_title', 'url'], 'string', 'max' => 255],
             [['seo_description'], 'string', 'max' => 2000],
         ];
     }
@@ -144,7 +144,7 @@ class Pages extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
+            'title' => Yii::t('app', 'Title'),
             'template' => Yii::t('app', 'Template'),
             'visibility' => Yii::t('app', 'Visibility'),
             'content' => Yii::t('app', 'Content'),

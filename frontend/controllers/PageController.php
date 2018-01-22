@@ -27,7 +27,7 @@ class PageController extends CustomController
 
         return $this->render($page->template . '.twig', [
             'page' => [
-                'title' => $page->name,
+                'title' => $page->title,
                 'content' => $page->content,
             ]
         ]);
@@ -53,7 +53,7 @@ class PageController extends CustomController
 
         return $this->render($page->template . '.twig', [
             'page' => [
-                'title' => $page->name,
+                'title' => $page->title,
                 'content' => $page->content,
             ],
             'data' => $contactForm,
