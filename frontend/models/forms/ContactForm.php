@@ -45,10 +45,10 @@ class ContactForm extends Model
     public function rules()
     {
         return [
+            ['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
             [['subject', 'name', 'email', 'message', 'recaptcha'], 'required'],
             [['subject', 'name', 'message'], 'string'],
             ['email', 'emailValidator'],
-            ['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
         ];
     }
 

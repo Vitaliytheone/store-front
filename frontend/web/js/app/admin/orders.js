@@ -67,11 +67,23 @@ customModule.ordersDetails = {
  */
 customModule.ordersClipboard = {
     run : function(params) {
+
+        var messageCopied = params.messageCopied || 'Copied!';
+
         $(document).ready(function () {
             var ClipboardDemo = function () {
                 var n = function n() {
                     new Clipboard("[data-clipboard=true]").on("success", function (n) {
-                        n.clearSelection(), alert("Copied!");
+                        n.clearSelection();
+                        // Check toastr notification plugin
+                        if (toastr === undefined) {
+                            alert("Copied!");
+                        }   else {
+                            toastr.options = {
+                                "positionClass": "toast-bottom-right"
+                            };
+                            toastr.success(messageCopied);
+                        }
                     });
                 };return { init: function init() {
                     n();

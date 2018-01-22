@@ -111,11 +111,21 @@ class NavigationSearch extends Model
 
         // Additional params
         foreach ($list as $id => &$item) {
+            $url = null;
 
-            $link = array_search($id, array_column($list, 'parent_id')) === false ? '/' . trim($item['url'], '/') : '#';
-            $active = $link === $currentUrl ? 1 : 0;
+            // Make Url for items without children and '#' for items with children
+            if (array_search($id, array_column($list, 'parent_id')) === false) {
+                $url = (int)$item['link'] === Navigation::LINK_WEB_ADDRESS ? $item['url'] : '/' . trim($item['url'], '/');
+            } else {
+                $url = '#';
+            }
 
-            $item['link'] = $link;
+
+            // Make Active
+            $currentUrl = $currentUrl === '/index' ? '/' : $currentUrl;
+            $active = $url === $currentUrl ? 1 : 0;
+
+            $item['link'] = $url;
             $item['active'] = $active;
 
             if ($active) {

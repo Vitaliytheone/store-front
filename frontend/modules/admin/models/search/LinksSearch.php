@@ -62,7 +62,7 @@ class LinksSearch extends Model
             ->where([
                 'visibility' => Products::VISIBILITY_YES,
             ])
-            ->orderBy(['id' => SORT_DESC])
+            ->orderBy(['position' => SORT_ASC])
             ->all();
     }
 

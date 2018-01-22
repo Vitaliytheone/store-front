@@ -1,4 +1,6 @@
 <?php
+use yii\web\UrlNormalizer;
+
 $params = array_merge(
     require(__DIR__ . '/../../common/config/params.php'),
     file_exists(__DIR__ . '/../../common/config/params-local.php') ? require(__DIR__ . '/../../common/config/params-local.php') : [],
@@ -49,6 +51,12 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'normalizer' => [
+                'class' => 'yii\web\UrlNormalizer',
+                'action' => UrlNormalizer::ACTION_REDIRECT_PERMANENT,
+                'normalizeTrailingSlash' => true,
+                'collapseSlashes' => true,
+            ],
             'rules' => $routers,
         ],
         'assetManager' => [

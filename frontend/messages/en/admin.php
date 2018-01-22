@@ -44,6 +44,7 @@ return [
     'orders.message_status_changed' => 'Status was successfully changed!',
     'orders.message_canceled' => 'Order was successfully canceled!',
     'orders.message_resend' => 'Order was successfully resend!',
+    'orders.message_copied' => 'Order data was successfully copied!',
 
     'orders.f_id' => 'ID',
     'orders.f_checkout_id' => 'Checkout ID',
@@ -353,7 +354,7 @@ return [
 
     'settings.themes_modal_submit_close_message' => 'All unsaved data will be lost!',
     'settings.themes_modal_submit_close_submit' => 'Yes, close!',
-    'settings.themes_modal_submit_reset_message' => 'The data will be restored to the init values!',
+    'settings.themes_modal_submit_reset_message' => 'File will be reset to the original values!',
     'settings.themes_modal_submit_reset_submit' => 'Yes, reset!',
     'settings.themes_modal_cancel' => 'Cancel',
 

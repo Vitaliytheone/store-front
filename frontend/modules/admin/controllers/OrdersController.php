@@ -4,7 +4,6 @@ namespace frontend\modules\admin\controllers;
 
 use frontend\helpers\UiHelper;
 use Yii;
-use yii\filters\AccessControl;
 use frontend\modules\admin\components\Url;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
@@ -20,10 +19,15 @@ use frontend\modules\admin\models\forms\SuborderForm;
  */
 class OrdersController extends CustomController
 {
+    /**
+     * @inheritdoc
+     */
     public function beforeAction($action)
     {
         $this->addModule('ordersDetails');
-        $this->addModule('ordersClipboard');
+        $this->addModule('ordersClipboard', [
+            'messageCopied' => Yii::t('admin', 'orders.message_copied'),
+        ]);
 
         return parent::beforeAction($action);
     }

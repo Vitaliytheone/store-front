@@ -272,7 +272,7 @@ class SettingsController extends CustomController
         $editThemeForm = EditThemeForm::make($theme, $file);
 
         if (!$editThemeForm) {
-            throw new NotFoundHttpException('Theme or file not found!');
+            return $this->redirect(Url::toRoute('/settings/themes'));
         }
 
         if ($editThemeForm->load($request->post()) && $editThemeForm->updateThemeFile()) {
