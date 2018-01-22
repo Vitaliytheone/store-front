@@ -358,33 +358,4 @@ class StoreAdmins extends ActiveRecord implements IdentityInterface
         return $controllers;
     }
 
-    /**
-     * Event handler for `on afterLogin` event
-     * @param $event
-     */
-    static function updateLoginData($event)
-    {
-        /** @var StoreAdmins $user */
-        $user = $event->identity;
-
-        $user->ip = Yii::$app->getRequest()->getUserIP();
-        $user->last_login = time();
-        $user->generateAuthKey();
-
-        $user->save();
-    }
-
-    /**
-     * Event handler for `on afterLogout` event
-     * @param $event
-     */
-    static function updateLogoutData($event)
-    {
-        /** @var StoreAdmins $user */
-        $user = $event->identity;
-        $user->auth_hash = null;
-
-        $user->save();
-    }
-
 }

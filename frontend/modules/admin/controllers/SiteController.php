@@ -85,13 +85,14 @@ class SiteController extends MainController
 
         // Try to redirect by `return url`
         $returnUrl = $this->_user->getReturnUrl();
+
         if ($returnUrl) {
             $explodedUrl = explode('/', trim($returnUrl, '/'));
             $returnController = isset($explodedUrl[1]) ? $explodedUrl[1] : '';
 
             // Check if $returnController allowed
             if (in_array($returnController, $allowedControllers)) {
-                $this->_loggedInRedirectUrl = '/' . $returnController;
+                $this->_loggedInRedirectUrl = ltrim($returnUrl, '/admin');
 
                 return $this->_loggedInRedirectUrl;
             }
