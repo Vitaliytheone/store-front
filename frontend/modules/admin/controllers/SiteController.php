@@ -8,6 +8,7 @@ use frontend\modules\admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use common\components\MainController;
+use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**
@@ -85,18 +86,21 @@ class SiteController extends MainController
 
         // Try to redirect by `return url`
         $returnUrl = $this->_user->getReturnUrl();
-
         if ($returnUrl) {
-            $parsedUrl = parse_url($returnUrl);
-            $parsedPath = explode('/', trim($parsedUrl['path'], '/'));
 
-            $returnController = $parsedPath[1];
+            $path = parse_url($returnUrl, PHP_URL_PATH);
+            $parsedPath = explode('/', trim($path, '/'));
 
-            // Check if $returnController allowed
-            if (in_array($returnController, $allowedControllers)) {
-                $this->_loggedInRedirectUrl = ltrim($returnUrl, '/admin');
+            if ($path && isset($parsedPath[1])) {
 
-                return $this->_loggedInRedirectUrl;
+                $returnController = $parsedPath[1];
+
+                // Check if $returnController allowed
+                if (in_array($returnController, $allowedControllers)) {
+                    $this->_loggedInRedirectUrl = ltrim($returnUrl, '/admin');
+
+                    return $this->_loggedInRedirectUrl;
+                }
             }
         }
 
