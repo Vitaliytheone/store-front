@@ -87,8 +87,10 @@ class SiteController extends MainController
         $returnUrl = $this->_user->getReturnUrl();
 
         if ($returnUrl) {
-            $explodedUrl = explode('/', trim($returnUrl, '/'));
-            $returnController = isset($explodedUrl[1]) ? $explodedUrl[1] : '';
+            $parsedUrl = parse_url($returnUrl);
+            $parsedPath = explode('/', trim($parsedUrl['path'], '/'));
+
+            $returnController = $parsedPath[1];
 
             // Check if $returnController allowed
             if (in_array($returnController, $allowedControllers)) {
