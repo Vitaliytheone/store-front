@@ -10,10 +10,13 @@
 		{% if site['favicon'] %}
         <link rel="shortcut icon" type="image/ico" href="{{ site['favicon'] }}" />
 		{% endif %}
-
-		{% for style in site['styles'] %}
-        <link rel="stylesheet" type="text/css" href="{{ style['href'] }}" {% if style['attributes'] %}{{ style['attributes'] }}{% endif %}>
-		{% endfor %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
+    <link rel="stylesheet" href="{{ asset('/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/colors.css') }}">
 </head>
 <body>
 <nav class="navbar navbar-white">
@@ -99,12 +102,15 @@
 </footer>
 <!-- Footer block End -->
 
-<!-- Google reCaptcha -->
-
-{% for script in site['scripts'] %}
-    <script type="text/javascript" {% if script['src'] %}src="{{ script['src'] }}"{% endif %} {% if script['attributes'] %}{{ script['attributes'] }}{% endif %}>
-        {% if script['code'] %} {{ script['code'] }} {% endif %}
-    </script>
-{% endfor %}
+<script src="https://www.google.com/recaptcha/api.js?hl=en"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
+<script src="{{ asset('/js/script.js') }}"></script>
 
 </html>

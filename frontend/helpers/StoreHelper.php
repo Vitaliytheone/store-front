@@ -44,7 +44,10 @@ class StoreHelper {
             return false;
         }
 
-        $css = $js = $customScripts = $customStyles = $standardScripts = $standardStyles = [];
+        $css = $customStyles = $standardStyles = [];
+        $js = $customScripts = $standardScripts = [];
+        $json = $customJson = $standardJson = [];
+
 
         $sp = DIRECTORY_SEPARATOR;
 
@@ -68,6 +71,10 @@ class StoreHelper {
             foreach (FileHelper::findFiles($customThemePath, ['only' => ['*.css']]) as $filePath) {
                 $customStyles[basename($filePath)] = $filePath;
             }
+
+            foreach (FileHelper::findFiles($customThemePath, ['only' => ['*.json']]) as $filePath) {
+                $customJson[basename($filePath)] = $filePath;
+            }
         }
 
         if (is_dir($standardThemePath)) {
@@ -78,6 +85,22 @@ class StoreHelper {
             foreach (FileHelper::findFiles($standardThemePath, ['only' => ['*.css']]) as $filePath) {
                 $standardStyles[basename($filePath)] = $filePath;
             }
+
+            foreach (FileHelper::findFiles($standardThemePath, ['only' => ['*.json']]) as $filePath) {
+                $standardJson[basename($filePath)] = $filePath;
+            }
+        }
+
+        if (!empty($standardStyles)) {
+            FileHelper::createDirectory($assetsPath . 'css' . $sp);
+        }
+
+        if (!empty($standardScripts)) {
+            FileHelper::createDirectory($assetsPath . 'js' . $sp);
+        }
+
+        if (!empty($standardJson)) {
+            FileHelper::createDirectory($assetsPath . 'json' . $sp);
         }
 
         foreach ($standardStyles as $fileName => $filePath) {
@@ -85,7 +108,7 @@ class StoreHelper {
                 $filePath = $customStyles[$fileName];
             }
 
-            if (file_put_contents($assetsPath . $fileName, file_get_contents($filePath))) {
+            if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
                 $css[] = $fileName;
             }
         }
@@ -95,14 +118,25 @@ class StoreHelper {
                 $filePath = $customScripts[$fileName];
             }
 
-            if (file_put_contents($assetsPath . $fileName, file_get_contents($filePath))) {
+            if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
                 $js[] = $fileName;
+            }
+        }
+
+        foreach ($standardJson as $fileName => $filePath) {
+            if (isset($customJson[$fileName])) {
+                $filePath = $customJson[$fileName];
+            }
+
+            if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
+                $json[] = $fileName;
             }
         }
 
         $store->setFolderContentData([
             'css' => $css,
-            'js' => $js
+            'js' => $js,
+            'json' => $json
         ]);
     }
 }

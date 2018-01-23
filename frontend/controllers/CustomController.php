@@ -107,16 +107,6 @@ class CustomController extends MainController
             $endContent = ob_get_contents();
             ob_end_clean();
         }
-        $assets = AssetsHelper::getPanelAssets($store);
-
-        $scripts = ArrayHelper::getValue($assets, 'scripts', []);
-        $styles = ArrayHelper::getValue($assets, 'styles', []);
-
-        foreach ($this->customJs as $js) {
-            $scripts[] = [
-                'code' => $js
-            ];
-        }
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
@@ -130,9 +120,7 @@ class CustomController extends MainController
                 'seo_key' => $store->seo_keywords,
                 'seo_desc' => $store->seo_description,
                 'name' => $store->name,
-                'favicon' => $store->favicon,
-                'scripts' => $scripts,
-                'styles' => $styles,
+                'favicon' => $store->favicon
             ]
 
         ];

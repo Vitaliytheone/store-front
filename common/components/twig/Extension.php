@@ -2,6 +2,7 @@
 namespace common\components\twig;
 
 use common\components\twig\parsers\TokenParser_Include;
+use frontend\helpers\AssetsHelper;
 use Yii;
 use Twig_SimpleFunction;
 
@@ -28,6 +29,9 @@ class Extension extends \Twig_Extension {
                 return Yii::t('app', $value);
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
+            new Twig_SimpleFunction('asset', function($value) {
+                return AssetsHelper::getAssetPath() . $value;
+            }),
         ];
 
         return $functions;
