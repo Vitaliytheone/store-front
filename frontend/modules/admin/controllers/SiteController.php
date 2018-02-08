@@ -53,7 +53,9 @@ class SiteController extends MainController
     {
         return [
             'error' => [
-                'class' => 'yii\web\ErrorAction',
+                'class' => 'frontend\modules\admin\components\CustomErrorAction',
+                'layout' => '@admin/views/layouts/main.php',
+                'view' => '@admin/views/error/404',
             ],
         ];
     }

@@ -46,7 +46,8 @@ class ContactForm extends Model
     {
         return [
             ['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
-            [['subject', 'name', 'email', 'message', 'recaptcha'], 'required'],
+            ['recaptcha', 'required', 'message' => 'Please solve captcha.'],
+            [['subject', 'name', 'email', 'message'], 'required'],
             [['subject', 'name', 'message'], 'string'],
             ['email', 'emailValidator'],
         ];
@@ -76,7 +77,18 @@ class ContactForm extends Model
      */
     public function contact()
     {
-        $text = $this->name . PHP_EOL . $this->email . PHP_EOL . Yii::$app->getRequest()->userIP . PHP_EOL . PHP_EOL . $this->subject . PHP_EOL . PHP_EOL . $this->message . PHP_EOL;
+        $clientIp = Yii::$app->getRequest()->userIP;
+        $clientBrowser = Yii::$app->getRequest()->userAgent;
+
+        $text =
+        "Name: $this->name" .       PHP_EOL .
+        "Subject: $this->subject" . PHP_EOL .
+        "E-mail: $this->email" .    PHP_EOL . PHP_EOL .
+        
+        "Message: $this->message" . PHP_EOL . PHP_EOL .
+        
+        "IP: $clientIp" .           PHP_EOL .
+        "Browser: $clientBrowser" . PHP_EOL;
 
         $sentResult = (bool)Mailgun::send($this->_store->admin_email, $this->subject, $text);
 

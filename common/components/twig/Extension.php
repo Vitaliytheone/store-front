@@ -14,6 +14,19 @@ class Extension extends \Twig_Extension {
 
     protected $twigOptions;
 
+    /**
+     * Return predefined template variables
+     * @return array
+     */
+    public static function getTemplateVariables()
+    {
+        return [
+            'day' => date("d"),
+            'month' => date("m"),
+            'year' => date("Y"),
+        ];
+    }
+
     public function __construct($twigOptions = [])
     {
         $this->twigOptions = $twigOptions;
@@ -26,7 +39,7 @@ class Extension extends \Twig_Extension {
     {
         $functions = [
             new Twig_SimpleFunction('lang', function($value) {
-                return Yii::t('app', $value);
+                return Yii::t('app', $value, static::getTemplateVariables());
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
             new Twig_SimpleFunction('asset', function($value) {

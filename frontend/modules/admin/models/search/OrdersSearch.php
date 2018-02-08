@@ -232,7 +232,7 @@ class OrdersSearch extends Model
         // 1. Search strong by `id` &  soft by `link` if $searchQuery : number
         // 2. Search strong by `customer` if $searchQuery : valid Email
         // 3. Search strong by orderIds list or providerOrderIds list
-        // 4. Search soft by `link` if $searchQuery : some string
+        // 3.1. Search soft by `link` if $searchQuery : some string
         $emailValidator = new EmailValidator();
         $searchFilter = null;
         if (ctype_digit($searchQuery)) {
@@ -253,25 +253,15 @@ class OrdersSearch extends Model
                 ->where(['customer' => $searchQuery])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];
-        } elseif (count($orderIds) > 1 || count($providerOrderIds) > 1) {
+        } else {
             $searchOrderIdsSubquery = (new Query())
                 ->select('order_id')
                 ->from($this->_subordersTable)
                 ->where([
                     'or',
                     ['in', 'order_id', $orderIds],
-                    ['in', 'provider_order_id', $providerOrderIds]
-                ])
-                ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
-        } else  {
-            $searchOrderIdsSubquery = (new Query())
-                ->select('order_id')
-                ->from($this->_subordersTable)
-                ->where([
-                    'or',
-                    ['provider_order_id' => $searchQuery],
-                    ['like', 'link', $searchQuery],
+                    ['in', 'provider_order_id', $providerOrderIds],
+                    ['like', 'link', $searchQuery]
                 ])
                 ->groupBy('order_id');
             $searchFilter = ['o.id' => $searchOrderIdsSubquery];

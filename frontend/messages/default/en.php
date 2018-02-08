@@ -35,7 +35,7 @@ return [
     'contact.form.message.success' => 'Email was successfully sent!',
     'contact.form.message.error' => 'Internal error. Try again later!',
 
-    'footer.copyright' => '&copy; 2017 site.ru All Rights Reserved.',
+    'footer.copyright' => '&copy; {year} site.ru All Rights Reserved.',
     'footer.terms' => 'Terms of Service',
     'footer.policy' => 'Privacy Policy',
     'footer.contact' => 'Contact Us',
