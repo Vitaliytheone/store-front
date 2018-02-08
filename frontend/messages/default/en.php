@@ -46,4 +46,7 @@ return [
 
     '404.title' => 'Error 404',
     '404.text' => 'The requested page was not found on this server',
+
+    'order_title' => 'Order',
+    'cart_title' => 'Cart',
 ];

@@ -25,6 +25,8 @@ class ProductController extends CustomController
 
         $product = $this->_findProduct($id);
 
+        $this->pageTitle = $product->seo_title;
+
         $this->view->title = $product->name;
 
         return $this->render('product.twig', [

@@ -19,6 +19,9 @@ use yii\web\View;
  */
 class CustomController extends MainController
 {
+    /** @var string  */
+    public $pageTitle;
+
     public $layout = '@frontend/views/site/layout.php';
 
     protected $_globalParams;
@@ -116,11 +119,11 @@ class CustomController extends MainController
                 'cart_count' => $cartItems->getCount(),
                 'custom_footer' => $endContent,
                 'language' => Yii::$app->language,
-                'pageTitle' => !empty($this->view->title) ? $this->view->title : $store->seo_title,
+                'pageTitle' => $this->pageTitle ? $this->pageTitle : $store->seo_title,
                 'seo_key' => $store->seo_keywords,
                 'seo_desc' => $store->seo_description,
                 'name' => $store->name,
-                'favicon' => $store->favicon
+                'favicon' => $store->favicon,
             ]
 
         ];
@@ -236,4 +239,5 @@ class CustomController extends MainController
 
         return $path;
     }
+
 }

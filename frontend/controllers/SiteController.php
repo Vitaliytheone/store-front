@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\stores\Stores;
 use Yii;
 
 /**
@@ -26,6 +27,10 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+        $this->pageTitle = $store->seo_title;
+
         return $this->render('index.twig');
     }
 
