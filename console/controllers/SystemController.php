@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers;
 
+use common\models\stores\StoreAdmins;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use frontend\helpers\StoreHelper;
@@ -15,10 +16,12 @@ use yii\helpers\FileHelper;
 class SystemController extends Controller
 {
     public $storeId;
+    public $username;
+    public $password;
 
     public function options($actionID)
     {
-        return ['storeId'];
+        return ['storeId', 'username', 'password'];
     }
 
     /**
@@ -113,5 +116,43 @@ class SystemController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * Add new admin user
+     */
+    public function actionAddAdmin()
+    {
+        if (empty($this->storeId) || empty($this->username) || empty($this->password)) {
+            $this->stderr("--storeId, --username and --password parameters are required" . "\n", Console::FG_RED);
+            return;
+        }
+
+        $rules = [
+            'payments' => 1,
+            'orders' => 1,
+            'products' => 1,
+            'settings' => 1,
+        ];
+
+        $user = StoreAdmins::find()->where(['username' => $this->username])->one();
+
+        if (empty($user)) {
+            $user = new StoreAdmins();
+            $user->store_id = $this->storeId;
+            $user->username = $this->username;
+            $user->status = true;
+            $user->rules = json_encode($rules);
+            $user->setPassword($this->password);
+            $user->generateAuthKey();
+            if ($user->save()) {
+                error_log(print_r($user->attributes, 1), 0);
+            }
+        } else {
+            $this->stderr("User $user->username already exist!" . "\n", Console::FG_RED);
+            return;
+        }
+
+        $this->stderr('User created: ' . $user->id . "\n", Console::FG_GREEN);
     }
 }

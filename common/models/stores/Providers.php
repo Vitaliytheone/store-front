@@ -91,4 +91,12 @@ class Providers extends ActiveRecord
             ],
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getSite()
+    {
+        return ($this->protocol == static::PROTOCOL_HTTPS ? 'https' : 'http') . '://' . $this->site;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use common\models\stores\StoreProviders;
 use function GuzzleHttp\Psr7\build_query;
 use Yii;
 use yii\base\Exception;
@@ -14,7 +15,7 @@ use yii\helpers\ArrayHelper;
 class ApiProviders
 {
 
-    const COMMON_API_URL_TPL = 'http://{{api_host}}/api/v2';
+    const COMMON_API_URL_TPL = '{{api_host}}/api/v2';
     const API_RESPONSE_ERROR_FIELD = 'error';
 
     const API_RESPONSE_KEY_ERROR = 'Invalid API key';
@@ -24,13 +25,13 @@ class ApiProviders
 
     /**
      * ApiProviders constructor.
-     * @param $site
-     * @param $apiKey
+     * @param StoreProviders $storeProvider
      */
-    public function __construct($site, $apiKey)
+    public function __construct(StoreProviders $storeProvider)
     {
-        $this->api_url = str_replace('{{api_host}}', $site, self::COMMON_API_URL_TPL);
-        $this->api_key = $apiKey;
+        $provider = $storeProvider->provider;
+        $this->api_url = str_replace('{{api_host}}', $provider->getSite(), self::COMMON_API_URL_TPL);
+        $this->api_key = $storeProvider->apikey;
     }
 
     /**

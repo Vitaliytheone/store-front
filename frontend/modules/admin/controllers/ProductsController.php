@@ -304,13 +304,7 @@ class ProductsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        $provider = $storeProvider->provider;
-
-        if (!$provider) {
-            throw new NotFoundHttpException();
-        }
-
-        $providerApi = new ApiProviders($provider->site, $storeProvider->apikey);
+        $providerApi = new ApiProviders($storeProvider);
 
         $providerServices = $providerApi->services(['Default']);
 
