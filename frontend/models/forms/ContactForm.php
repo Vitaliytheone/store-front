@@ -2,13 +2,12 @@
 
 namespace frontend\models\forms;
 
-use common\components\email\Mailgun;
 use common\models\stores\Stores;
+use frontend\mail\mailers\ContactFormMailer;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
-use yii\behaviors\AttributeBehavior;
 
 /**
  * Class ContactForm
@@ -77,20 +76,16 @@ class ContactForm extends Model
      */
     public function contact()
     {
-        $clientIp = Yii::$app->getRequest()->userIP;
-        $clientBrowser = Yii::$app->getRequest()->userAgent;
-
-        $text =
-        "Name: $this->name" .       PHP_EOL .
-        "Subject: $this->subject" . PHP_EOL .
-        "E-mail: $this->email" .    PHP_EOL . PHP_EOL .
-        
-        "Message: $this->message" . PHP_EOL . PHP_EOL .
-        
-        "IP: $clientIp" .           PHP_EOL .
-        "Browser: $clientBrowser" . PHP_EOL;
-
-        $sentResult = (bool)Mailgun::send($this->_store->admin_email, $this->subject, $text);
+        $mail = new ContactFormMailer([
+            'store' => $this->_store,
+            'clientIp' => Yii::$app->getRequest()->userIP,
+            'clientBrowser' => Yii::$app->getRequest()->userAgent,
+            'name' => $this->name,
+            'subject' => $this->subject,
+            'email' => $this->email,
+            'message' => $this->message,
+        ]);
+        $sentResult = $mail->send();
 
         if ($sentResult === true) {
             // Store sent result to session
