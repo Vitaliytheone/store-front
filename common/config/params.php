@@ -20,5 +20,5 @@ return [
     'gearmanPrefix' => '',
     'support_email' => 'mailgun@perfectpanel.net',
 
-    'debugEmail' => 'shulyakwork@gmail.com',
+    'debugEmail' => null,
 ];
