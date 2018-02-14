@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use common\models\store\CustomThemes;
+use console\helpers\ConsoleHelper;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
@@ -134,6 +135,8 @@ class DefaultThemes extends ActiveRecord
         if (!file_exists($pathToFile) || !is_file($pathToFile)) {
             return false;
         }
+
+        ConsoleHelper::execGenerateAssets();
 
         return unlink($pathToFile);
     }
