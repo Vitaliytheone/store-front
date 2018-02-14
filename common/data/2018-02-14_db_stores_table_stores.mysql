@@ -1,0 +1,2 @@
+USE `stores`;
+ALTER TABLE `stores` ADD `status` TINYINT(1) NOT NULL COMMENT '1 - active, 2 - frozen, 3 - terminated' AFTER `language`, ADD INDEX (`status`);
