@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\models\store\Carts;
+use console\components\sender\SenderComponent;
 use Yii;
 use yii\console\Controller;
 
@@ -20,5 +21,12 @@ class CronController extends Controller
         Carts::deleteAll('created_at <= :created_at', [
             ':created_at' => time() - 2592000 // 30 days
         ]);
+    }
+
+
+    public function actionSender()
+    {
+       $sender = new SenderComponent();
+       $sender->run();
     }
 }

@@ -17,6 +17,7 @@ use common\models\stores\queries\StoresQuery;
  * @property string $name
  * @property integer $timezone
  * @property string $language
+ * @property integer $status
  * @property string $db_name
  * @property integer $expired
  * @property integer $created_at
@@ -46,6 +47,10 @@ use common\models\stores\queries\StoresQuery;
  */
 class Stores extends ActiveRecord
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_FROZEN = 2;
+    const STATUS_TERMINATED = 3;
+
     /**
      * @inheritdoc
      */
@@ -61,7 +66,7 @@ class Stores extends ActiveRecord
     {
         return [
             [[
-                'customer_id', 'timezone', 'expired', 'created_at', 'updated_at',
+                'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
                 'block_slider', 'block_features', 'block_review', 'block_process',
             ], 'integer'],
             [[
@@ -87,6 +92,7 @@ class Stores extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
+            'status' => Yii::t('app', 'Status'),
             'db_name' => Yii::t('app', 'Db Name'),
             'expired' => Yii::t('app', 'Expired'),
             'created_at' => Yii::t('app', 'Created At'),
