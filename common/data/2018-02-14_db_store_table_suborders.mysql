@@ -1,0 +1,2 @@
+USE `store`;
+ALTER TABLE `suborders` ADD `provider_response_code` INT NOT NULL AFTER `provider_response`;

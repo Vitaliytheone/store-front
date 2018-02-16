@@ -4,6 +4,7 @@ namespace frontend\modules\admin\models\forms;
 
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
+use console\helpers\ConsoleHelper;
 use frontend\helpers\CustomFilesHelper;
 use frontend\modules\admin\models\search\ThemesSearch;
 use yii\base\Exception;
@@ -219,6 +220,8 @@ class EditThemeForm extends Model
         if (!file_put_contents($pathToFile, $this->file_content)) {
             return false;
         }
+
+        ConsoleHelper::execGenerateAssets();
 
         return true;
     }

@@ -2,6 +2,7 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use console\helpers\ConsoleHelper;
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
 use common\models\stores\Stores;
@@ -46,6 +47,8 @@ class ActivateThemeForm
         if (!$storeModel->save()) {
             throw new Exception('Could not update active theme settings!');
         }
+
+        ConsoleHelper::execGenerateAssets();
 
         return $themeModel;
     }
