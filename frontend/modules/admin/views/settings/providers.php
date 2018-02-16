@@ -36,7 +36,7 @@
             </div>
             <!-- END: Subheader -->
             <div class="m-content">
-                <?= $this->render('layouts/_providers_list', [
+                <?= $this->render('layouts/providers/_providers_list', [
                     'providers' => $providers
                 ]); ?>
             </div>
@@ -45,4 +45,4 @@
     </div>
 </div>
 
-<?= $this->render('layouts/_add_provider_modal'); ?>
+<?= $this->render('layouts/providers/_add_provider_modal'); ?>

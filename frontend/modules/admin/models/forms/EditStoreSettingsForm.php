@@ -2,7 +2,7 @@
 
 namespace frontend\modules\admin\models\forms;
 
-use common\models\stores\StoreFiles;
+use common\models\store\Files;
 use Yii;
 use common\models\stores\Stores;
 use yii\validators\FileValidator;
@@ -24,7 +24,7 @@ class EditStoreSettingsForm extends Stores
 
     private static $_files = [
         'logoFile' => [
-            'type' => StoreFiles::FILE_TYPE_LOGO,
+            'type' => Files::FILE_TYPE_LOGO,
             'rules' => ['extensions' => 'png, jpg, gif',
                 'maxSize' => 3.146e6,
                 'mimeTypes' => [
@@ -35,7 +35,7 @@ class EditStoreSettingsForm extends Stores
             ]
         ],
         'faviconFile' => [
-            'type' => StoreFiles::FILE_TYPE_FAVICON,
+            'type' => Files::FILE_TYPE_FAVICON,
             'rules' => ['extensions' => 'png, jpg, gif, ico',
                 'maxSize' => 0.512e6,
                 'mimeTypes' => [
@@ -98,7 +98,7 @@ class EditStoreSettingsForm extends Stores
             $tmpFilePath = $fileInstance->tempName;
             $mime = $fileInstance->type;
 
-            $storeFile = StoreFiles::updateStoreSettingsFile($fileData['type'], $tmpFilePath, $mime);
+            $storeFile = Files::updateStoreSettingsFile($fileData['type'], $tmpFilePath, $mime);
 
             if (!$storeFile) {
                 $this->addError($attribute, Yii::t('admin', 'settings.message_cdn_upload_error'));

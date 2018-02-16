@@ -1,7 +1,6 @@
 <?php
     /* @var $this \yii\web\View */
-
-    use frontend\modules\admin\components\Url;
+    /* @var $blocks \yii\web\View */
 ?>
 
 <!-- begin::Body -->
@@ -23,122 +22,17 @@
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title">
-                            Blocks
+                            <?= Yii::t('admin', 'settings.blocks_page_title') ?>
                         </h3>
                     </div>
                 </div>
             </div>
             <!-- END: Subheader -->
             <div class="m-content">
-                <div class="sommerce-card__block m-portlet">
-                    <div class="row align-items-center">
-                        <div class="col-6">
-                            <div class="card-block__title">
-                                Slider
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex justify-content-end">
-                                <div class="card-block__switch">
-                                        <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" checked name="">
-																			<span></span>
-																		</label>
-																	</span>
-                                </div>
-                                <div class="card-block__actions">
-                                    <a href="<?= Url::toRoute('/settings/edit-block') ?>" class="btn m-btn--pill m-btn--air btn-primary">
-                                        Edit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sommerce-card__block m-portlet">
-                    <div class="row align-items-center">
-                        <div class="col-6">
-                            <div class="card-block__title">
-                                Features
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex justify-content-end">
-                                <div class="card-block__switch">
-                                        <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" checked name="">
-																			<span></span>
-																		</label>
-																	</span>
-                                </div>
-                                <div class="card-block__actions">
-                                    <a href="<?= Url::toRoute('/settings/edit-block') ?>" class="btn m-btn--pill m-btn--air btn-primary">
-                                        Edit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sommerce-card__block m-portlet">
-                    <div class="row align-items-center">
-                        <div class="col-6">
-                            <div class="card-block__title">
-                                Review
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex justify-content-end">
-                                <div class="card-block__switch">
-                                        <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" name="">
-																			<span></span>
-																		</label>
-																	</span>
-                                </div>
-                                <div class="card-block__actions">
-                                    <a href="<?= Url::toRoute('/settings/edit-block') ?>" class="btn m-btn--pill m-btn--air btn-primary">
-                                        Edit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sommerce-card__block m-portlet">
-                    <div class="row align-items-center">
-                        <div class="col-6">
-                            <div class="card-block__title">
-                                Steps
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex justify-content-end">
-                                <div class="card-block__switch">
-                                        <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-																		<label>
-																			<input type="checkbox" name="">
-																			<span></span>
-																		</label>
-																	</span>
-                                </div>
-                                <div class="card-block__actions">
-                                    <a href="<?= Url::toRoute('/settings/edit-block') ?>" class="btn m-btn--pill m-btn--air btn-primary">
-                                        Edit
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?= $this->render('layouts/blocks/_blocks_list', [
+                    'blocks' => $blocks
+                ])?>
             </div>
-
         </div>
     </div>
 </div>

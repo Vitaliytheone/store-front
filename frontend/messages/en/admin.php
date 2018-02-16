@@ -375,4 +375,5 @@ return [
 
     'account.page_title' => 'Account',
 
+    'settings.blocks_page_title' => 'Blocks',
 ];

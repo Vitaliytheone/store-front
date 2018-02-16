@@ -40,7 +40,7 @@ use common\models\stores\queries\StoresQuery;
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
  * @property StoreDomains[] $storeDomains
- * @property StoreFiles[] $storeFiles
+ * @property Files[] $Files
  * @property StoreProviders[] $storeProviders
  * @property Customers $customer
  */
@@ -136,9 +136,9 @@ class Stores extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getStoreFiles()
+    public function getFiles()
     {
-        return $this->hasMany(StoreFiles::className(), ['store_id' => 'id']);
+        return $this->hasMany(Files::className(), ['store_id' => 'id']);
     }
 
     /**
@@ -252,5 +252,18 @@ class Stores extends ActiveRecord
         }
 
         return $this->folder;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBlocks()
+    {
+        return [
+            'slider' => Yii::t('app', 'Slider'),
+            'features' => Yii::t('app', 'Features'),
+            'review' => Yii::t('app', 'Review'),
+            'process' => Yii::t('app', 'Process'),
+        ];
     }
 }

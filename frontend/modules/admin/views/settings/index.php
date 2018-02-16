@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use frontend\modules\admin\components\Url;
 use common\components\ActiveForm;
-use common\models\stores\StoreFiles;
+use common\models\store\Files;
 
 /* @var $this \yii\web\View */
 /* @var $timezones array */
@@ -62,7 +62,7 @@ use common\models\stores\StoreFiles;
                         <?php if ($store->logo): ?>
                         <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
-                                <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => StoreFiles::FILE_TYPE_LOGO]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-logo-field"><span class="flaticon-cancel"></span></a>
+                                <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => Files::FILE_TYPE_LOGO]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-logo-field"><span class="flaticon-cancel"></span></a>
                                 <img src="<?= $store->logo ?>" alt="...">
                             </div>
                         </div>
@@ -90,7 +90,7 @@ use common\models\stores\StoreFiles;
                         <?php if ($store->favicon): ?>
                         <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
-                                <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => StoreFiles::FILE_TYPE_FAVICON]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-favicon-field"><span class="flaticon-cancel"></span></a>
+                                <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => Files::FILE_TYPE_FAVICON]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-favicon-field"><span class="flaticon-cancel"></span></a>
                                 <img src="<?= $store->favicon ?>" alt="...">
                             </div>
                         </div>

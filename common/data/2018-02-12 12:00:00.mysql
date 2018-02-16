@@ -1,0 +1,11 @@
+USE `store`;
+
+DROP TABLE IF EXISTS `blocks`;
+CREATE TABLE `blocks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(300) NOT NULL,
+  `content` text NOT NULL,
+  `updated_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

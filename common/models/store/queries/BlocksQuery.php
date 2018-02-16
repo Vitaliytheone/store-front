@@ -1,13 +1,15 @@
 <?php
-
 namespace common\models\stores\queries;
 
+use yii\db\ActiveQuery;
+use common\models\stores\Blocks;
+
 /**
- * This is the ActiveQuery class for [[\common\models\stores\StoreFiles]].
+ * This is the ActiveQuery class for [[Blocks]].
  *
- * @see \common\models\stores\StoreFiles
+ * @see Blocks
  */
-class StoreFilesQuery extends \yii\db\ActiveQuery
+class BlocksQuery extends ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +18,7 @@ class StoreFilesQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\StoreFiles[]|array
+     * @return Blocks[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +27,7 @@ class StoreFilesQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\StoreFiles|array|null
+     * @return Blocks|array|null
      */
     public function one($db = null)
     {

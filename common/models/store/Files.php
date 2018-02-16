@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models\stores;
+namespace common\models\store;
 
 use Yii;
 use yii\base\Exception;
@@ -8,10 +8,12 @@ use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\components\cdn\Cdn;
 use common\components\cdn\BaseCdn;
+use common\models\stores\queries\FilesQuery;
+use common\models\stores\Stores;
 
 
 /**
- * This is the model class for table "{{%store_files}}".
+ * This is the model class for table "{{%files}}".
  *
  * @property integer $id
  * @property integer $store_id
@@ -21,10 +23,14 @@ use common\components\cdn\BaseCdn;
  *
  * @property Stores $store
  */
-class StoreFiles extends ActiveRecord
+class Files extends ActiveRecord
 {
     const FILE_TYPE_LOGO = 1;
-    const FILE_TYPE_FAVICON = 2;
+    const FILE_TYPE_SLIDER = 2;
+    const FILE_TYPE_FAVICON = 3;
+    const FILE_TYPE_FEATURES = 4;
+    const FILE_TYPE_REVIEW = 5;
+    const FILE_TYPE_STEPS = 6;
 
     /**
      * @inheritdoc
@@ -49,7 +55,7 @@ class StoreFiles extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%store_files}}';
+        return '{{%files}}';
     }
 
     /**
@@ -72,7 +78,7 @@ class StoreFiles extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'store_id' => Yii::t('app', 'Store ID'),
-            'type' => Yii::t('app', '1 - logo, 2 - favicon'),
+            'type' => Yii::t('app', 'Type'),
             'date' => Yii::t('app', 'Date'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
@@ -88,11 +94,11 @@ class StoreFiles extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\StoreFilesQuery the active query used by this AR class.
+     * @return FilesQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\StoreFilesQuery(get_called_class());
+        return new FilesQuery(get_called_class());
     }
 
     /**
