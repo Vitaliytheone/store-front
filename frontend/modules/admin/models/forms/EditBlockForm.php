@@ -47,7 +47,7 @@ class EditBlockForm extends Model {
             return false;
         }
 
-        $this->_block->content = json_encode($this->content, true);
+        $this->_block->setContent($this->content);
 
         if (!$this->_block->save(false)) {
             $this->addErrors($this->_block->getErrors());

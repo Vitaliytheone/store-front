@@ -259,4 +259,16 @@ class Stores extends ActiveRecord
             Blocks::CODE_PROCESS => Yii::t('app', 'Process'),
         ];
     }
+
+    /**
+     * Check is enable blocks by code
+     * @param string $code
+     * @return bool
+     */
+    public function isEnableBlock($code)
+    {
+        $fieldName = 'block_' . $code;
+
+        return $this->hasAttribute($fieldName) && $this->getAttribute($fieldName);
+    }
 }

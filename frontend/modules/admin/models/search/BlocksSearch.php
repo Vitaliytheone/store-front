@@ -37,7 +37,7 @@ class BlocksSearch
             $blocks[] = [
                 'code' => $block,
                 'label' => $label,
-                'active' => $this->_store->getAttribute('block_' . $block)
+                'active' => $this->_store->isEnableBlock($block)
             ];
         }
 

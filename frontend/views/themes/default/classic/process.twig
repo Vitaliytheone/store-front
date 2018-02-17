@@ -1,71 +1,43 @@
-<section>
-		<div class="container">
-				<div class="row section-header">
-						<div class="col-lg-12">
-								<h2 class="text-center">Process</h2>
-								<div class="section-description">
-										We help you to build your social fan base without needing your login credentials, we do this without using any tactics that will get your account banned. Our methods are 100% safe. The followers we bring you are THE VERY BEST QUALITY, with followers of their own and plenty of posts.
-								</div>
-						</div>
-				</div>
-				<div class="row section-content">
-						<div class="col-lg-4">
-								<div class="process">
-										<div class="process-body">
-												<div class="icon">
-														<div class="process-icon text-center">
-																<span class="fa fa-picture-o" style="font-size: 130px;"></span>
-														</div>
-												</div>
-												<div class="title">
-														<h3 class="process-title">Select Package</h3>
-												</div>
-												<div class="description">
-														<div class="process-text">
-																Choose the proper package of likes/fans, views or followers according to your budget and wish. Then choose the amount of desired likes/fans, video views etc.To obtain fans or page likes (same things) – place Facebook page Url in the window "Your Facebook Page Url", for example "facebook.com/mypagename".
-														</div>
-												</div>
-										</div>
-								</div>
-						</div>
-						<div class="col-lg-4">
-								<div class="process">
-										<div class="process-body">
-												<div class="icon">
-														<div class="process-icon text-center">
-																<span class="fa fa-picture-o" style="font-size: 130px;"></span>
-														</div>
-												</div>
-												<div class="title">
-														<h3 class="process-title">Select Package</h3>
-												</div>
-												<div class="description">
-														<div class="process-text">
-																Choose the proper package of likes/fans, views or followers according to your budget and wish. Then choose the amount of desired likes/fans, video views etc.To obtain fans or page likes (same things) – place Facebook page Url in the window "Your Facebook Page Url", for example "facebook.com/mypagename".
-														</div>
-												</div>
-										</div>
-								</div>
-						</div>
-						<div class="col-lg-4">
-								<div class="process">
-										<div class="process-body">
-												<div class="icon">
-														<div class="process-icon text-center">
-																<span class="fa fa-picture-o" style="font-size: 130px;"></span>
-														</div>
-												</div>
-												<div class="title">
-														<h3 class="process-title">Select Package</h3>
-												</div>
-												<div class="description">
-														<div class="process-text">
-																Choose the proper package of likes/fans, views or followers according to your budget and wish. Then choose the amount of desired likes/fans, video views etc.To obtain fans or page likes (same things) – place Facebook page Url in the window "Your Facebook Page Url", for example "facebook.com/mypagename".
-														</div>
-												</div>
-										</div>
-								</div>
-						</div>
-				</div>
-		</div>
-</section>
+{% if block['process'] %}
+    <!-- Process block Start -->
+    <section>
+        <div class="container">
+            <div class="row section-header">
+                <div class="col-lg-12">
+                    <h2 class="text-center">{{ process['title'] }}</h2>
+                    {% if process['description'] %}
+                        <div class="section-description">
+                            {{ process['description'] }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row section-content">
+                {% for process in block['process'] %}
+                    <div class="col-lg-{{ process['column'] }}">
+                        <div class="process">
+                            <div class="process-body">
+                                <div class="icon">
+                                    <div class="process-icon text-center">
+                                        <span class="fa {{ process['icon'] }}" style="font-size: {{ process['iconSize'] }}px;"></span>
+                                    </div>
+                                </div>
+                                <div class="title">
+                                    <h3 class="process-title">{{ process['title'] }}</h3>
+                                </div>
+                                {% if process['text'] %}
+                                    <div class="description">
+                                        <div class="process-text">
+                                            {{  process['text'] }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Process block End -->
+{% endif %}

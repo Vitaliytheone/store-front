@@ -1,8 +1,10 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\store\Blocks;
 use common\models\stores\Stores;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Site controller
@@ -29,9 +31,19 @@ class SiteController extends CustomController
     {
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
+
         $this->pageTitle = $store->seo_title;
 
-        return $this->render('index.twig');
+        $blocks = [];
+        foreach (Blocks::find()->all() as $block) {
+            if ($store->isEnableBlock($block->code)) {
+                $blocks[$block->code] = $block->getContent();
+            }
+        }
+
+        return $this->render('index.twig', [
+            'block' => $blocks
+        ]);
     }
 
     /**

@@ -1,39 +1,31 @@
-<section class="bg-gray-light">
-		<div class="container">
-				<div class="slider">
-						<div class="swiper-container main-slider">
-								<div class="swiper-wrapper">
-										<div class="swiper-slide main-slide">
-												<div class="row">
-														<div class="col-md-6">
-																<div class="swiper-slide__image">
-																		<img src="http://themelooks.us/demo/smm24/html/preview/img/banner-img/slider-img-01@2x.png" alt="">
-																</div>
-														</div>
-														<div class="col-md-6">
-																<h2>Title slider</h2>
-																<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur dolore est molestiae neque pariatur sunt, tempora! Amet, dicta dolor doloribus, esse ipsum itaque iure nobis quos tempora tempore vitae voluptatum!</p>
-																<a href="#" class="btn btn-default">Learn more</a>
-														</div>
-												</div>
-										</div>
-										<div class="swiper-slide main-slide">
-												<div class="row">
-														<div class="col-md-6">
-																<div class="swiper-slide__image">
-																		<img src="http://themelooks.us/demo/smm24/html/preview/img/banner-img/slider-img-01@2x.png" alt="">
-																</div>
-														</div>
-														<div class="col-md-6">
-																<h2>Title slider</h2>
-																<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur dolore est molestiae neque pariatur sunt, tempora! Amet, dicta dolor doloribus, esse ipsum itaque iure nobis quos tempora tempore vitae voluptatum!</p>
-																<a href="#" class="btn btn-default">Learn more</a>
-														</div>
-												</div>
-										</div>
-								</div>
-								<div class="swiper-pagination main-slider-pagination"></div>
-						</div>
-				</div>
-		</div>
-</section>
+{% if block['slider'] %}
+    <!-- Slider Start -->
+    <section class="bg-gray-light">
+        <div class="container">
+            <div class="slider">
+                <div class="swiper-container main-slider">
+                    <div class="swiper-wrapper">
+                        {% for slide in block['slide'] %}
+                            <div class="swiper-slide main-slide">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="swiper-slide__image">
+                                            <img src="{{ slide['img'] }}" alt="{{ slide['title'] }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h2>{{ slide['title'] }}</h2>
+                                        {% if slide['description'] %}<p>{{ slide['description'] }}</p>{% endif %}
+                                        {% if slide['link'] %}<a href="{{ slide['link'] }}" class="btn btn-default">{{ lang('slider.button') }}</a>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pagination main-slider-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Slider End -->
+{% endif %}

@@ -87,4 +87,22 @@ class Blocks extends ActiveRecord
             ],
         ];
     }
+
+    /**
+     * Set content data
+     * @param array|mixed $content
+     */
+    public function setContent($content)
+    {
+        $this->content = json_encode($content);
+    }
+
+    /**
+     * Get content data
+     * @return array|mixed
+     */
+    public function getContent()
+    {
+        return !empty($this->content) ? json_decode($this->content, true) : [];
+    }
 }
