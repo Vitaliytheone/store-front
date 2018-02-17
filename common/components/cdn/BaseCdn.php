@@ -8,6 +8,7 @@ abstract class BaseCdn
     const MIME_PNG  = 'image/png';
     const MIME_GIF  = 'image/gif';
     const MIME_ICO  = 'image/x-icon';
+    const MIME_SVG  = 'image/svg+xml';
 
     const MESSAGE_BAD_CONFIG        = 'Bad CDN-api config!';
     const MESSAGE_FILE_NOT_FOUND    = 'Uploaded file does not found!';

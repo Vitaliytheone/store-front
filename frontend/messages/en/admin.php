@@ -276,6 +276,9 @@ return [
     'settings.providers_m_add' => 'Add provider',
     'settings.providers_m_cancel' => 'Cancel',
 
+    'settings.blocks_page_title' => 'Blocks',
+    'settings.edit_block_page_title' => 'Edit {block} block',
+
     'settings.message_provider_updated' => 'Provider successfully updated',
     'settings.message_provider_created' => 'Provider successfully created',
 

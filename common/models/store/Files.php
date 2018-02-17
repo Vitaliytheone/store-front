@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\components\cdn\Cdn;
 use common\components\cdn\BaseCdn;
-use common\models\stores\queries\FilesQuery;
+use common\models\store\queries\FilesQuery;
 use common\models\stores\Stores;
 
 
@@ -16,7 +16,6 @@ use common\models\stores\Stores;
  * This is the model class for table "{{%files}}".
  *
  * @property integer $id
- * @property integer $store_id
  * @property integer $type
  * @property string $date
  * @property integer $created_at
@@ -31,6 +30,11 @@ class Files extends ActiveRecord
     const FILE_TYPE_FEATURES = 4;
     const FILE_TYPE_REVIEW = 5;
     const FILE_TYPE_STEPS = 6;
+
+    public static function getDb()
+    {
+        return Yii::$app->storeDb;
+    }
 
     /**
      * @inheritdoc
@@ -64,9 +68,8 @@ class Files extends ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'type', 'created_at'], 'integer'],
+            [['type', 'created_at'], 'integer'],
             [['date'], 'string'],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -77,19 +80,10 @@ class Files extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'store_id' => Yii::t('app', 'Store ID'),
             'type' => Yii::t('app', 'Type'),
             'date' => Yii::t('app', 'Date'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Stores::className(), ['id' => 'store_id']);
     }
 
     /**
@@ -110,9 +104,6 @@ class Files extends ActiveRecord
      */
     public function uploadFile($filePath, $storeFileType, $mime = null)
     {
-        /** @var  Stores $store */
-        $store = Yii::$app->store->getInstance();
-
         /** @var BaseCdn $cdn */
         $cdn = Cdn::getCdn();
         $cdnId = null;
@@ -124,7 +115,6 @@ class Files extends ActiveRecord
         }
 
         $this->setAttributes([
-            'store_id' => $store->id,
             'date' => $cdnId,
             'type' => $storeFileType,
         ]);
@@ -159,7 +149,6 @@ class Files extends ActiveRecord
         $store = Yii::$app->store->getInstance();
 
         $file = static::findOne([
-            'store_id' => $store->id,
             'type' => $fileType,
         ]);
 
@@ -212,7 +201,6 @@ class Files extends ActiveRecord
         $store = Yii::$app->store->getInstance();
 
         $file = static::findOne([
-            'store_id' => $store->id,
             'type' => $fileType,
         ]);
 

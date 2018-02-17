@@ -1,18 +1,16 @@
 <?php
-
 namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Class JqueryAsset
- * @package app\assets
+ * Rating assets
  */
-class JqueryAsset extends AssetBundle
+class RatingAsset extends AssetBundle
 {
     public $sourcePath = '@webroot/js/libs/';
 
     public $js = [
-        'jquery.js',
+        'rating.lib.js',
     ];
 }

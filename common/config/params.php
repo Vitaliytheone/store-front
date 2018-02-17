@@ -17,7 +17,7 @@ return [
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
-    'gearmanPrefix' => '',
+    'gearmanPrefix' => 'sommerce_',
     'support_email' => 'mailgun@perfectpanel.net',
 
     'debugEmail' => null,

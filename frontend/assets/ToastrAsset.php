@@ -1,18 +1,16 @@
 <?php
-
 namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Class JqueryAsset
- * @package app\assets
+ * Toastr assets
  */
-class JqueryAsset extends AssetBundle
+class ToastrAsset extends AssetBundle
 {
     public $sourcePath = '@webroot/js/libs/';
 
     public $js = [
-        'jquery.js',
+        'toastr.js',
     ];
 }

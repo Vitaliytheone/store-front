@@ -1,18 +1,16 @@
 <?php
-
 namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Class JqueryAsset
- * @package app\assets
+ * Textarea Autosize assets
  */
-class JqueryAsset extends AssetBundle
+class TextareaAutosizeAsset extends AssetBundle
 {
     public $sourcePath = '@webroot/js/libs/';
 
     public $js = [
-        'jquery.js',
+        'textarea_autosize.js',
     ];
 }

@@ -1,8 +1,8 @@
 <?php
-namespace common\models\stores\queries;
+namespace common\models\store\queries;
 
 use yii\db\ActiveQuery;
-use common\models\stores\Blocks;
+use common\models\store\Blocks;
 
 /**
  * This is the ActiveQuery class for [[Blocks]].

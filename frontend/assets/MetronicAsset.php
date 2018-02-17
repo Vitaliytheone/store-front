@@ -9,22 +9,20 @@ use yii\web\AssetBundle;
  */
 class MetronicAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-
-    public $baseUrl = '@web';
+    public $sourcePath = '@webroot/js/libs/';
 
     public $js = [
-        'js/libs/metronic/app.js',
-        'js/libs/metronic/util.js',
-        'js/libs/metronic/components/general/animate.js',
-        'js/libs/metronic/components/general/datatable.js',
-        'js/libs/metronic/components/general/dropdown.js',
-        'js/libs/metronic/components/general/header.js',
-        'js/libs/metronic/components/general/menu.js',
-        'js/libs/metronic/components/general/offcanvas.js',
-        'js/libs/metronic/components/general/toggle.js',
-        'js/libs/metronic/layout.js',
-        'js/libs/metronic/components/base/blockui.js',
-        'js/libs/metronic/components/base/dropdown.js',
+        'metronic/app.js',
+        'metronic/util.js',
+        'metronic/components/general/animate.js',
+        'metronic/components/general/datatable.js',
+        'metronic/components/general/dropdown.js',
+        'metronic/components/general/header.js',
+        'metronic/components/general/menu.js',
+        'metronic/components/general/offcanvas.js',
+        'metronic/components/general/toggle.js',
+        'metronic/layout.js',
+        'metronic/components/base/blockui.js',
+        'metronic/components/base/dropdown.js',
     ];
 }

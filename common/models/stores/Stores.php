@@ -2,11 +2,13 @@
 
 namespace common\models\stores;
 
+use common\models\store\Blocks;
 use frontend\helpers\StoreHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
+use common\models\store\Files;
 
 /**
  * This is the model class for table "{{%stores}}".
@@ -40,7 +42,6 @@ use common\models\stores\queries\StoresQuery;
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
  * @property StoreDomains[] $storeDomains
- * @property Files[] $Files
  * @property StoreProviders[] $storeProviders
  * @property Customers $customer
  */
@@ -131,14 +132,6 @@ class Stores extends ActiveRecord
     public function getStoreDomains()
     {
         return $this->hasMany(StoreDomains::className(), ['store_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFiles()
-    {
-        return $this->hasMany(Files::className(), ['store_id' => 'id']);
     }
 
     /**
@@ -260,10 +253,10 @@ class Stores extends ActiveRecord
     public function getBlocks()
     {
         return [
-            'slider' => Yii::t('app', 'Slider'),
-            'features' => Yii::t('app', 'Features'),
-            'review' => Yii::t('app', 'Review'),
-            'process' => Yii::t('app', 'Process'),
+            Blocks::CODE_SLIDER => Yii::t('app', 'Slider'),
+            Blocks::CODE_FEATURES => Yii::t('app', 'Features'),
+            Blocks::CODE_REVIEW => Yii::t('app', 'Review'),
+            Blocks::CODE_PROCESS => Yii::t('app', 'Process'),
         ];
     }
 }

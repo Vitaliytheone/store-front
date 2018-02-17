@@ -1,10 +1,10 @@
 <?php
-namespace common\models\stores;
+namespace common\models\store;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\stores\queries\BlocksQuery;
+use common\models\store\queries\BlocksQuery;
 
 /**
  * This is the model class for table "{{%blocks}}".
@@ -16,6 +16,16 @@ use common\models\stores\queries\BlocksQuery;
  */
 class Blocks extends ActiveRecord
 {
+    const CODE_SLIDER = 'slider';
+    const CODE_REVIEW = 'review';
+    const CODE_PROCESS = 'process';
+    const CODE_FEATURES = 'features';
+
+    public static function getDb()
+    {
+        return Yii::$app->storeDb;
+    }
+
     /**
      * @inheritdoc
      */

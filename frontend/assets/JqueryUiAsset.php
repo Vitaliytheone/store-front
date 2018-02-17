@@ -1,18 +1,17 @@
 <?php
-
 namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Class JqueryAsset
+ * Class JqueryUiAsset
  * @package app\assets
  */
-class JqueryAsset extends AssetBundle
+class JqueryUiAsset extends AssetBundle
 {
     public $sourcePath = '@webroot/js/libs/';
 
     public $js = [
-        'jquery.js',
+        'jquery-ui.js',
     ];
 }

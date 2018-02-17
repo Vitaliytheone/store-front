@@ -1,18 +1,16 @@
 <?php
-
 namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
 /**
- * Class JqueryAsset
- * @package app\assets
+ * Dragsort assets
  */
-class JqueryAsset extends AssetBundle
+class DragsortAsset extends AssetBundle
 {
     public $sourcePath = '@webroot/js/libs/';
 
     public $js = [
-        'jquery.js',
+        'dragsort.js',
     ];
 }
