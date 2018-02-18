@@ -1,21 +1,57 @@
 <?php
 namespace console\components\sender;
 
+use common\helpers\DbHelper;
+use Yii;
 use common\models\store\Suborders;
 use common\models\stores\Stores;
 use yii\base\Component;
+use yii\base\Exception;
+use yii\db\Connection;
 use yii\db\Query;
-use yii\helpers\ArrayHelper;
 
 class SenderComponent extends Component
 {
+
+    /**
+     * Api key
+     * @var string
+     */
+    public $apiKey = 'd7cef90695d23ccdaa78546569def436';
+
     /**
      * One-time orders sample limit
      * @var
      */
     public $ordersLimit = 2;
 
+    /**
+     * Current stores orders list limited by $ordersLimit
+     * Can contain orders from different stories
+     * @var array
+     */
     private $_orders = [];
+
+    /**
+     * Return DB connection component by DB name
+     * @param $dbName
+     * @return Connection
+     */
+    public function getStoreDbConnection($dbName)
+    {
+        $storeDbConnection = Yii::$app->storeDb;
+
+        $host = DbHelper::getDsnAttribute('host', $storeDbConnection);
+        $port = DbHelper::getDsnAttribute('port', $storeDbConnection);
+
+        $connection = new Connection([
+            'dsn' => 'mysql:' . 'host=' . $host . ';' . ($port ? 'port=' . $port . ';' : '') . 'dbname=' . $dbName,
+            'username' => $storeDbConnection->username,
+            'password' => $storeDbConnection->password,
+        ]);
+
+        return $connection;
+    }
 
     /**
      * Get stores orders
@@ -68,8 +104,9 @@ class SenderComponent extends Component
             ->all();
 
         foreach ($orders as &$order) {
-            $order['provider_host'] = $providers[$order['provider_id']]['site'];
-            $order['protocol'] = $providers[$order['provider_id']]['protocol'];
+            $providerId = $order['provider_id'];
+            $order['provider_host'] = $providers[$providerId]['site'];
+            $order['protocol'] = $providers[$providerId]['protocol'];
         }
 
         return $orders;
@@ -84,45 +121,58 @@ class SenderComponent extends Component
         $ordersByStores = [];
 
         foreach ($this->_orders as $order) {
-            $ordersByStores[$order['store_id']][] = $order;
+            $storeId = $order['db_name'];
+            $ordersByStores[$storeId][] = $order;
         }
 
         return $ordersByStores;
     }
 
-    private function _beforeSend(&$orders)
+    /**
+     * Updating all current orders `send` status
+     * @param $sendStatus
+     * @throws Exception
+     */
+    private function _updateOrdersSendStatus($sendStatus)
     {
-        // Перед отправкой заказа менять store_db.suborders.send = 2
-        print_r($this->_orders);
-        print_r($this->_getOrdersByStores());
+        if (!in_array($sendStatus, [
+            Suborders::SEND_STATUS_SENDING,
+            Suborders::SEND_STATUS_SENT,
+        ])) {
+            throw new Exception('Unexpected send status!');
+        }
 
         $ordersByStores = $this->_getOrdersByStores();
 
-        // Обновляем статус send для всех заказов каждого магазина
-        
+        foreach ($ordersByStores as $storeDb => $storeOrders) {
 
+            $db = $this->getStoreDbConnection($storeDb);
+            $ordersIds = implode(',', array_column($storeOrders, 'id'));
 
+            $db->createCommand('UPDATE suborders SET send = :send, updated_at = :updated_at WHERE id IN ' . "($ordersIds)")
+                ->bindValue(':send', $sendStatus)
+                ->bindValue(':updated_at', time())
+                ->execute();
+        }
     }
 
-    private function _afterSend(&$orders)
-    {
-        // После отправки менять на send = 3
-    }
-
+    /**
+     * Run Sender
+     */
     public function run()
     {
         $this->_orders = $this->getOrders();
 
+        $this->_updateOrdersSendStatus(Suborders::SEND_STATUS_SENDING);
+
         $this->sendOrders($this->_orders);
 
     }
-
-
+    
 
     private function sendOrders(&$orders)
     {
-        $this->_beforeSend($orders);
-        $this->_afterSend($orders);
+
 
 //        $mh = curl_multi_init();
 //        $connectionArray = [];
