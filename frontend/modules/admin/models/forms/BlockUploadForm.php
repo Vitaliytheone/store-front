@@ -64,8 +64,7 @@ class BlockUploadForm extends Model {
         $fileInstance = UploadedFile::getInstanceByName('file');
 
         if (!($fileInstance instanceof UploadedFile)) {
-            $this->addError('file', 1);
-            //$this->addError('file', Yii::t('admin', 'settings.message_cdn_upload_error'));
+            $this->addError('file', Yii::t('admin', 'settings.message_cdn_upload_error'));
             return false;
         }
 
@@ -78,8 +77,7 @@ class BlockUploadForm extends Model {
         $this->link = $fileModel->getUrl();
 
         if (!$cdnId || !$this->link) {
-            $this->addError('file', 2);
-            //$this->addError('file', Yii::t('admin', 'settings.message_cdn_upload_error'));
+            $this->addError('file', Yii::t('admin', 'settings.message_cdn_upload_error'));
             return false;
         }
 
