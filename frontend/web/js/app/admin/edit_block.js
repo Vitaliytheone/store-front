@@ -340,7 +340,7 @@ customModule.adminEditBlock = {
         var self = this;
         var state = self.state;
 
-        state.features = params.block;
+        state.feature = params.block;
 
         var blockLinks = {
             render: 'http://www.mocky.io/v2/5a4108593200006a18ac345e',
@@ -406,7 +406,7 @@ customModule.adminEditBlock = {
             var iconSize = state.feature.settings.iconSize,
                 column = state.feature.settings.column;
 
-            var featureCardTemplate = '<li class="col-lg-' + column + ' margin-top-bottom feature-id-' + id + '">\n                    <div class="editor-card editor-tooltip__show">\n                        <div class="row">\n                            <div class="editor-tooltip bg-success editor-tooltip__right-top editor-action__drag">move</div>\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete"  data-id="' + id + '" data-type="feature" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n\n                            <div class="editor-card__icon-block col-12">\n                                <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                                    <div class="editor-preview__tooltip">edit</div>\n                                    <span class="fa ' + icon + ' feature-icon" id="feature-icon-' + id + '" style="fonts-size: ' + iconSize + 'px;"></span>\n                                </div>\n                            </div>\n                            <div class="editor-card__title-block col-12">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-card__text-block col-12">\n                                <div class="editor_textarea-block">\n                                    <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" rows="1" spellcheck="false" data-id="' + id + '" data-textarea-title="description" placeholder="Add text...">' + description + '</textarea>\n                                        <div class="editor-textarea__text-edit-action">\n                                            <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                            <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                        </div>\n                    </div>\n                </li>';
+            var featureCardTemplate = '<li class="col-lg-' + column + ' margin-top-bottom feature-id-' + id + '">\n                    <div class="editor-card editor-tooltip__show">\n                        <div class="row">\n                            <div class="editor-tooltip bg-success editor-tooltip__right-top editor-action__drag">move</div>\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete"  data-id="' + id + '" data-type="feature" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n\n                            <div class="editor-card__icon-block col-12">\n                                <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                                    <div class="editor-preview__tooltip">edit</div>\n                                    <span class="fa ' + icon + ' feature-icon" id="feature-icon-' + id + '" style="font-size: ' + iconSize + 'px;"></span>\n                                </div>\n                            </div>\n                            <div class="editor-card__title-block col-12">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-card__text-block col-12">\n                                <div class="editor_textarea-block">\n                                    <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" rows="1" spellcheck="false" data-id="' + id + '" data-textarea-title="description" placeholder="Add text...">' + description + '</textarea>\n                                        <div class="editor-textarea__text-edit-action">\n                                            <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                            <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                        </div>\n                    </div>\n                </li>';
 
             $("#feature-list").append(featureCardTemplate);
         };
@@ -571,6 +571,15 @@ customModule.adminEditBlock = {
         var initData = function(result) {
             $('#preload').remove();
 
+            swiperSlider = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                scrollbarDraggable: false,
+                centeredSlides: false,
+                simulateTouch: false,
+                slidesPerView: parseInt(state.review.settings.column)
+            });
+
             for (var i = 0; i < state.review.data.length; i++) {
                 generateSlide('render', state.review.data[i].id, state.review.data[i].name, state.review.data[i].rating, state.review.data[i].description, state.review.data[i].image);
             }
@@ -670,6 +679,7 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.review-column', function () {
+            state.review.settings.column = $(this).val();
 
             swiperSlider = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
@@ -711,15 +721,15 @@ customModule.adminEditBlock = {
 
                     if ('error' == response.status) {
                         toastr.error(response.error);
+                        $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
                     }
 
                     if ('success' == response.status) {
-                        $(classId).css('background-image', 'url(' + response.link + ')');
 
                         for (var i = 0; i < state.review.data.length; i++) {
                             if (state.review.data[i].id.indexOf(dataID) == 0) {
                                 state.review.data[i].image = response.link;
-                                $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
+                                $(classId).css('background-image', 'url(' + response.link + ')');
                                 return;
                             }
                         }
@@ -732,8 +742,8 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('click', '.review-image-delete', function () {
-            var classId = '.' + this.id,
-                dataID = $(this).attr('data-id');
+            var dataID = $(this).data('id');
+            var classId = '.' + dataID;
 
             for (var i = 0; i < state.review.data.length; i++) {
                 if (state.review.data[i].id.indexOf(dataID) == 0) {
@@ -821,8 +831,8 @@ customModule.adminEditBlock = {
                 generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, column, state.steps.settings.description);
             }
 
-            if (state.steps.settings.description) {
-                $('.steps-description').checked = true;
+            if (state.steps.settings.description && 'false' != state.steps.settings.description) {
+                $('.steps-description').prop('checked', true);
             }
 
             var processCount = $('.process-count');
@@ -838,10 +848,9 @@ customModule.adminEditBlock = {
         }
 
         var generateCards = function generateCards(action, id, title, description, icon, col, cardDescription) {
-
             var showDescription = "";
 
-            if (!cardDescription) {
+            if (!cardDescription || 'false' == cardDescription) {
                 showDescription = 'hide-description';
             }
 
@@ -1011,7 +1020,7 @@ customModule.adminEditBlock = {
 
             $('.editor-textarea__text-edit-save').on('mousedown', function () {
                 self.state.actions.editorText.save = true;
-                $(state.actions.editorText.node).blur();
+                $(self.state.actions.editorText.node).blur();
             });
         });
 

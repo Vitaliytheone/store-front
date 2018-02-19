@@ -44,7 +44,7 @@
             <div class="editor-block__description">
                 <div class="editor_textarea-block">
                     <div class="editor-textarea__text-edit-off">
-                        <textarea class="editor_textarea__text js-auto-size text-center review-description" rows="1" data-textarea-title="header-title" spellcheck="false" placeholder="Add text..."></textarea>
+                        <textarea class="editor_textarea__text js-auto-size text-center review-description" rows="1" data-textarea-title="header-description" spellcheck="false" placeholder="Add text..."></textarea>
                         <div class="editor-textarea__text-edit-action">
                             <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>
                             <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>
