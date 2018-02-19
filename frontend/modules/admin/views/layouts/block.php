@@ -13,13 +13,13 @@ use frontend\assets\TextareaAutosizeAsset;
 use frontend\assets\SwiperAsset;
 use frontend\assets\RatingAsset;
 
+TextareaAutosizeAsset::register($this);
 AdminAsset::register($this);
 MetronicAsset::register($this);
 JqueryUiAsset::register($this);
 RatingAsset::register($this);
 DragsortAsset::register($this);
 SwiperAsset::register($this);
-TextareaAutosizeAsset::register($this);
 ToastrAsset::register($this);
 ?>
 <?php $this->beginPage() ?>

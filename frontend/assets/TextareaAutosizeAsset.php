@@ -13,4 +13,8 @@ class TextareaAutosizeAsset extends AssetBundle
     public $js = [
         'textarea_autosize.js',
     ];
+
+    public $depends = [
+        'yii\web\YiiAsset',
+    ];
 }

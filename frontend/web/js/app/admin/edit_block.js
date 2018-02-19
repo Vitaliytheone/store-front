@@ -52,6 +52,8 @@ customModule.adminEditBlock = {
                 self.process(params);
             break;
         }
+
+        self.initTextareaAutosizer();
     },
     slider: function(params) {
         var self = this;
@@ -74,38 +76,6 @@ customModule.adminEditBlock = {
             paginationClickable: true,
             scrollbarDraggable: false,
             simulateTouch: false
-        });
-
-        var promise = $.ajax({
-            method: 'get',
-            url: blockLinks.render
-        }).then(function (result) {
-            $('#preload').remove();
-
-            state.slider = result;
-
-            for (var i = 0; i < result.data.length; i++) {
-                generateSlide('render', result.data[i].id, result.data[i].title, result.data[i].description, result.data[i].button.title, result.data[i].image);
-            }
-
-            var sliderEffects = $('.slider-effects'),
-                sliderInterval = $('.slider-interval');
-
-            for (var i = 0; i < sliderEffects.length; i++) {
-                if (sliderEffects[i].value.toLocaleLowerCase() == result.settings.effect.toLocaleLowerCase()) {
-                    sliderEffects[i].checked = true;
-                    $(sliderEffects[i].parentNode).addClass('active');
-                }
-            }
-            for (var i = 0; i < sliderInterval.length; i++) {
-                if (sliderInterval[i].value.toLocaleLowerCase() == result.settings.rotationInterval.toLocaleLowerCase()) {
-                    sliderInterval[i].checked = true;
-                    $(sliderInterval[i].parentNode).addClass('active');
-                }
-            }
-        }).catch(function (err) {
-            console.log(err);
-            $('.prealoder-text').text('Server is not available');
         });
 
         var generateSlide = function generateSlide(action, id, title, description, button, image) {
@@ -135,6 +105,30 @@ customModule.adminEditBlock = {
 
             textAreaResizer();
         };
+
+        var initData = function(result) {
+            $('#preload').remove();
+
+            for (var i = 0; i < result.data.length; i++) {
+                generateSlide('render', result.data[i].id, result.data[i].title, result.data[i].description, result.data[i].button.title, result.data[i].image);
+            }
+
+            var sliderEffects = $('.slider-effects'),
+                sliderInterval = $('.slider-interval');
+
+            for (var i = 0; i < sliderEffects.length; i++) {
+                if (sliderEffects[i].value.toLocaleLowerCase() == result.settings.effect.toLocaleLowerCase()) {
+                    sliderEffects[i].checked = true;
+                    $(sliderEffects[i].parentNode).addClass('active');
+                }
+            }
+            for (var i = 0; i < sliderInterval.length; i++) {
+                if (sliderInterval[i].value.toLocaleLowerCase() == result.settings.rotationInterval.toLocaleLowerCase()) {
+                    sliderInterval[i].checked = true;
+                    $(sliderInterval[i].parentNode).addClass('active');
+                }
+            }
+        }
 
         $('.new-preview').on('click', function (e) {
             e.preventDefault();
@@ -325,6 +319,22 @@ customModule.adminEditBlock = {
                 }
             });
         });
+
+        if ('undefined' == typeof state.slider) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+
+                state.slider = result;
+
+                initData(result);
+            }).catch(function (err) {
+                $('.prealoder-text').text('Server is not available');
+            });
+        } else {
+            initData(state.slider);
+        }
     },
     features: function(params) {
         var self = this;
@@ -342,14 +352,8 @@ customModule.adminEditBlock = {
             $('textarea.js-auto-size').textareaAutoSize();
         };
 
-        var promise = $.ajax({
-            method: 'get',
-            url: blockLinks.render
-        }).then(function (result) {
-            console.log(result);
+        var initData = function(result) {
             $('#preload').remove();
-
-            state.feature = result;
 
             var featureColumn = $('.feature-column'),
                 featureAlign = $('.feature-align');
@@ -396,9 +400,7 @@ customModule.adminEditBlock = {
 
             includeContent();
             textAreaResizer();
-        }).catch(function (err) {
-            console.log(err);
-        });
+        }
 
         var generateCards = function generateCards(action, id, title, description, icon) {
             var iconSize = state.feature.settings.iconSize,
@@ -526,6 +528,21 @@ customModule.adminEditBlock = {
             });
             generateCards('add', featureID, '', '', 'fa-picture-o');
         });
+
+        if ('undefined' == typeof state.feature) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+                state.feature = result;
+
+                initData(result);
+            }).catch(function (err) {
+                console.log(err);
+            });
+        } else {
+            initData(state.feature);
+        }
     },
     review: function(params) {
         var self = this;
@@ -551,13 +568,8 @@ customModule.adminEditBlock = {
             centeredSlides: false
         });
 
-        var promise = $.ajax({
-            method: 'get',
-            url: blockLinks.render
-        }).then(function (result) {
-            console.log(result);
+        var initData = function(result) {
             $('#preload').remove();
-            state.review = result;
 
             for (var i = 0; i < state.review.data.length; i++) {
                 generateSlide('render', state.review.data[i].id, state.review.data[i].name, state.review.data[i].rating, state.review.data[i].description, state.review.data[i].image);
@@ -573,10 +585,7 @@ customModule.adminEditBlock = {
             }
 
             includeContent();
-        }).catch(function (err) {
-            console.log(err);
-            $('.prealoder-text').text('Server is not available');
-        });
+        }
 
         var generateSlide = function generateSlide(action, id, name, rating, description, image) {
 
@@ -759,6 +768,21 @@ customModule.adminEditBlock = {
                 error: function error(_error2) {}
             });
         });
+
+        if ('undefined' == typeof state.review) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+                state.review = result;
+                initData(result);
+            }).catch(function (err) {
+                console.log(err);
+                $('.prealoder-text').text('Server is not available');
+            });
+        } else {
+            initData(state.review);
+        }
     },
     process: function(params) {
         var self = this;
@@ -776,13 +800,8 @@ customModule.adminEditBlock = {
             $('textarea.js-auto-size').textareaAutoSize();
         };
 
-        var promise = $.ajax({
-            method: 'get',
-            url: blockLinks.render
-        }).then(function (result) {
-            console.log(result);
+        var initData = function(result) {
             $('#preload').remove();
-            state.steps = result;
 
             var countStep = "";
             if (state.steps.settings.count == "4") {
@@ -816,11 +835,7 @@ customModule.adminEditBlock = {
             }
 
             includeContent();
-        }).catch(function (err) {
-            console.log(err);
-            $('.prealoder-text').text('Server is not available');
-            toastr.error("Error");
-        });
+        }
 
         var generateCards = function generateCards(action, id, title, description, icon, col, cardDescription) {
 
@@ -949,6 +964,70 @@ customModule.adminEditBlock = {
                     toastr.error("Error status " + _error.status);
                 }
             });
+        });
+
+        if ('undefined' == typeof state.steps) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+                state.steps = result;
+                initData(result);
+            }).catch(function (err) {
+                $('.prealoder-text').text('Server is not available');
+                toastr.error("Error");
+            });
+        } else {
+            initData(state.steps);
+        }
+    },
+    initTextareaAutosizer: function() {
+        var self = this;
+        $(document).on('keydown', '.js-auto-size', function (e) {
+            if (e.ctrlKey && e.keyCode == 13) {
+                self.state.actions.editorText.save = true;
+                $(self.state.actions.editorText.node).blur();
+            }
+        });
+
+        $(document).on('focus', '.js-auto-size', function () {
+            self.state.actions.editorText.node = this;
+            self.state.actions.editorText.nodeText = this.value;
+            self.state.actions.editorText.nodeHeight = this.style.height;
+
+            var parentnode = this.parentNode,
+                node = self.state.actions.editorText.node,
+                nodeHeight = self.state.actions.editorText.nodeHeight,
+                nodeText = self.state.actions.editorText.nodeText;
+
+            $(parentnode).removeClass('editor-textarea__text-edit-off').addClass('editor-textarea__text-edit-on');
+
+            $(document).on('click', '.editor-textarea__text-edit-close', function () {
+                node.value = nodeText;
+                node.style.height = nodeHeight;
+                $('.js-auto-size').blur();
+                $(parentnode).removeClass('editor-textarea__text-edit-on').addClass('editor-textarea__text-edit-off');
+            });
+
+            $('.editor-textarea__text-edit-save').on('mousedown', function () {
+                self.state.actions.editorText.save = true;
+                $(state.actions.editorText.node).blur();
+            });
+        });
+
+        $(document).on('focusout', '.js-auto-size', function () {
+
+            var node = self.state.actions.editorText.node,
+                parentnode = node.parentNode;
+
+            if (self.state.actions.editorText.save) {
+                self.state.actions.editorText.save = false;
+            } else {
+                node.value = self.state.actions.editorText.nodeText;
+                node.style.height = self.state.actions.editorText.nodeHeight;
+            }
+
+            $(parentnode).removeClass('editor-textarea__text-edit-on').addClass('editor-textarea__text-edit-off');
         });
     },
     saveCallback: function(response) {

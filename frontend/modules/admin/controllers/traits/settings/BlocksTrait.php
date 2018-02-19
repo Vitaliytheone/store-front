@@ -88,7 +88,7 @@ trait BlocksTrait {
             'code' => $code,
             'saveUrl' => Url::toRoute(['settings/edit-block', 'code' => $code]),
             'uploadUrl' => Url::toRoute(['settings/block-upload', 'code' => $code]),
-            'block' => $block->content
+            'block' => $block->getContent()
         ]);
 
         return $this->render('edit_block', [
