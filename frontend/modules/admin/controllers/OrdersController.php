@@ -147,6 +147,8 @@ class OrdersController extends CustomController
             throw new NotFoundHttpException();
         }
 
+        $model->setStore(Yii::$app->store->getInstance());
+
         if (!$model->resend()) {
             $this->redirect(Url::toRoute(["/orders"]));
         }

@@ -75,7 +75,7 @@ class StoreComponent extends Component
     public function initDb()
     {
         Yii::$app->storeDb->close();
-        Yii::$app->storeDb->dsn = 'mysql:host=localhost;dbname=' . ArrayHelper::getValue($this->getInstance(), 'db_name');
+        Yii::$app->storeDb->dsn .= ';dbname=' . ArrayHelper::getValue($this->getInstance(), 'db_name');
     }
 
     /**
