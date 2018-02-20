@@ -7,7 +7,7 @@ return [
         'password' => 'X3X8HseMomCWgHv3',
     ],
     'store_db' => [
-        'host' => 'sommerce',
+        'host' => 'localhost',
         'username' => 'sommerce',
         'password' => 'X3X8HseMomCWgHv3',
     ],
