@@ -32,9 +32,6 @@ class CronController extends Controller
            'ordersLimit' => Yii::$app->params['senderOrdersLimit'],
        ]);
        $sender->setConnection(Yii::$app->storeDb);
-       $result = $sender->run();
-
-       print_r($result);
-
+       $sender->run();
     }
 }
