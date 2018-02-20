@@ -3,6 +3,8 @@
 namespace frontend\modules\admin\models\forms;
 
 use common\models\store\Suborders;
+use common\models\stores\Stores;
+use common\models\stores\StoresSendOrders;
 
 /**
  * Class StatusForm
@@ -10,6 +12,9 @@ use common\models\store\Suborders;
  */
 class SuborderForm extends Suborders
 {
+    /** @var  Stores */
+    private $_store;
+
     /* Current statuses when `Change status` action is disallowed */
     public static $disallowedChangeStatusStatuses = [
         self::STATUS_AWAITING,
@@ -30,6 +35,15 @@ class SuborderForm extends Suborders
         Suborders::STATUS_CANCELED,
         Suborders::STATUS_COMPLETED,
     ];
+
+    /**
+     * Set Store
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
 
     /**
      * Change suborder status
@@ -76,6 +90,24 @@ class SuborderForm extends Suborders
         $currentStatus = $this->getAttribute('status');
         if ($currentStatus !== self::STATUS_FAILED) {
             return false;
+        }
+
+        // Make queue for sender
+        if (Suborders::MODE_AUTO == $this->mode) {
+
+            $sendOrderExist = StoresSendOrders::findOne([
+                'store_id' => $this->_store->id,
+                'suborder_id' => $this->id,
+            ]);
+
+            if (!$sendOrderExist) {
+                $sendOrder = new StoresSendOrders();
+                $sendOrder->store_id = $this->_store->id;
+                $sendOrder->store_db = $this->_store->db_name;
+                $sendOrder->provider_id = $this->provider_id;
+                $sendOrder->suborder_id = $this->id;
+                $sendOrder->save(false);
+            }
         }
 
         return parent::resend();

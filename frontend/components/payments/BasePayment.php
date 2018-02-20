@@ -10,6 +10,7 @@ use common\models\store\Payments;
 use common\models\store\Suborders;
 use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
+use common\models\stores\StoresSendOrders;
 use Yii;
 use yii\base\Component;
 use yii\base\Exception;
@@ -147,7 +148,7 @@ abstract class BasePayment extends Component {
 
         $this->log(var_export($result, true));
 
-        static::success($this->_payment, $result);
+        static::success($this->_payment, $result, $store);
 
         return $result;
     }
@@ -156,9 +157,10 @@ abstract class BasePayment extends Component {
      * After success payment
      * @param Payments $payment
      * @param array $result
+     * @param Stores $store
      * @return bool|void
      */
-    public static function success($payment, $result)
+    public static function success($payment, $result, $store)
     {
         if (1 != $result['result']) {
             return false;
@@ -209,6 +211,16 @@ abstract class BasePayment extends Component {
             }
 
             $orderItem->save(false);
+
+            // Make queue for sender
+            if (Suborders::MODE_AUTO == $orderItem->mode) {
+                $sendOrder = new StoresSendOrders();
+                $sendOrder->store_id = $store->id;
+                $sendOrder->store_db = $store->db_name;
+                $sendOrder->provider_id = $package->provider_id;
+                $sendOrder->suborder_id = $orderItem->id;
+                $sendOrder->save(false);
+            }
         }
 
         $payment->refresh();

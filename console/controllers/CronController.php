@@ -23,10 +23,15 @@ class CronController extends Controller
         ]);
     }
 
-
+    /**
+     * Orders sender & processor
+     */
     public function actionSender()
     {
-       $sender = new SenderComponent();
+       $sender = new SenderComponent([
+           'ordersLimit' => Yii::$app->params['senderOrdersLimit'],
+       ]);
+       $sender->setConnection(Yii::$app->storeDb);
        $sender->run();
     }
 }

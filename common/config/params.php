@@ -21,4 +21,6 @@ return [
     'support_email' => 'mailgun@perfectpanel.net',
 
     'debugEmail' => null,
+
+    'senderOrdersLimit' => 100,
 ];

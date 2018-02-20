@@ -1,131 +1,85 @@
 <?php
 namespace console\components\sender;
 
-use common\helpers\DbHelper;
+use common\models\stores\Providers;
 use Yii;
 use common\models\store\Suborders;
-use common\models\stores\Stores;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\db\Connection;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 class SenderComponent extends Component
 {
-
-    /**
-     * Api key
-     * @var string
-     */
-    public $apiKey = 'd7cef90695d23ccdaa78546569def436';
-
     /**
      * One-time orders sample limit
-     * @var
+     * @var integer
      */
-    public $ordersLimit = 2;
+    public $ordersLimit;
 
     /**
-     * Current stores orders list limited by $ordersLimit
-     * Can contain orders from different stories
+     * Current Send Orders list limited by $ordersLimit
      * @var array
      */
-    private $_orders = [];
+    private $_sendOrders = [];
 
     /**
-     * Return DB connection component by DB name
-     * @param $dbName
-     * @return Connection
+     * Current DB connection
+     * @var Connection
      */
-    public function getStoreDbConnection($dbName)
+    private $_db;
+
+    /**
+     * Set current DB connection
+     * @param Connection $connection
+     */
+    public function setConnection(Connection $connection)
     {
-        $storeDbConnection = Yii::$app->storeDb;
-
-        $host = DbHelper::getDsnAttribute('host', $storeDbConnection);
-        $port = DbHelper::getDsnAttribute('port', $storeDbConnection);
-
-        $connection = new Connection([
-            'dsn' => 'mysql:' . 'host=' . $host . ';' . ($port ? 'port=' . $port . ';' : '') . 'dbname=' . $dbName,
-            'username' => $storeDbConnection->username,
-            'password' => $storeDbConnection->password,
-        ]);
-
-        return $connection;
+        $this->_db = $connection;
     }
 
     /**
-     * Get stores orders
-     * with additional data about store and provider for each item
+     * Run Sender
      * @return array
      */
-    public function getOrders()
+    public function run()
     {
-        $stores = (new Query())
-            ->select(['id', 'db_name'])
-            ->from('stores')
-            ->andWhere(['status' => Stores::STATUS_ACTIVE])
-            ->andWhere(['not', ['db_name' => null]])
-            ->andWhere(['not', ['db_name' => '']])
-            ->indexBy('id')
-            ->all();
+        $this->_sendOrders = $this->getSendOrders();
 
-        $orders = [];
+        $this->_updateOrdersSendStatus(Suborders::SEND_STATUS_SENDING);
 
-        foreach ($stores as $storeId => $store) {
+        $result = $this->sendOrders();
 
-            $dbName = $store['db_name'];
-
-            $requestLimit = $this->ordersLimit - count($orders);
-
-            $orders += (new Query())
-                ->select([
-                    '*',
-                    'store_id' => "CONCAT('$storeId')",
-                    'db_name' => "CONCAT('$dbName')"
-                ])
-                ->from("$dbName.suborders")
-                ->andWhere([
-                    'status' => Suborders::STATUS_AWAITING,
-                    'send' => Suborders::SEND_STATUS_AWAITING,
-                ])
-                ->orderBy(['id' => SORT_ASC])
-                ->limit($requestLimit)
-                ->all();
-
-            if (count($orders) >= $this->ordersLimit) {
-                break;
-            }
-        }
-
-        $providers = (new Query())
-            ->select(['id', 'site', 'protocol'])
-            ->from('providers')
-            ->indexBy('id')
-            ->all();
-
-        foreach ($orders as &$order) {
-            $providerId = $order['provider_id'];
-            $order['provider_host'] = $providers[$providerId]['site'];
-            $order['protocol'] = $providers[$providerId]['protocol'];
-        }
-
-        return $orders;
+        return $result;
     }
 
     /**
-     * Return orders grouped by stores
+     * Get queue send orders data
      * @return array
      */
-    private function _getOrdersByStores()
+    public function getSendOrders()
     {
-        $ordersByStores = [];
+        $sendOrders = (new Query())
+            ->select([
+                'so.id', 'so.store_id', 'so.provider_id', 'so.suborder_id', 'so.store_db',
+                'pr.site', 'pr.protocol',
+                'sprv.apikey'
+            ])
+            ->from(['so' => 'stores_send_orders'])
+            ->leftJoin(['pr' => 'providers'], 'pr.id = so.provider_id')
+            ->leftJoin(['sprv' => 'store_providers'], 'sprv.provider_id = so.provider_id AND sprv.store_id = so.store_id')
+            ->limit($this->ordersLimit)
+            ->all();
 
-        foreach ($this->_orders as $order) {
-            $storeId = $order['db_name'];
-            $ordersByStores[$storeId][] = $order;
+        // Delete all fetched SendOrders
+        $sendOrdersIds = implode(',', array_column($sendOrders, 'id'));
+
+        if ($sendOrdersIds) {
+            Yii::$app->db->createCommand('DELETE FROM stores_send_orders WHERE id IN ' . "($sendOrdersIds)")->execute();
         }
 
-        return $ordersByStores;
+        return $sendOrders;
     }
 
     /**
@@ -142,14 +96,18 @@ class SenderComponent extends Component
             throw new Exception('Unexpected send status!');
         }
 
-        $ordersByStores = $this->_getOrdersByStores();
+        $sendOrdersByStores = [];
 
-        foreach ($ordersByStores as $storeDb => $storeOrders) {
+        foreach ($this->_sendOrders as $order) {
+            $storeDB = $order['store_db'];
+            $sendOrdersByStores[$storeDB][] = $order;
+        }
 
-            $db = $this->getStoreDbConnection($storeDb);
-            $ordersIds = implode(',', array_column($storeOrders, 'id'));
+        foreach ($sendOrdersByStores as $storeDb => $storeOrders) {
 
-            $db->createCommand('UPDATE suborders SET send = :send, updated_at = :updated_at WHERE id IN ' . "($ordersIds)")
+            $ordersIds = implode(',', array_column($storeOrders, 'suborder_id'));
+
+            $this->_db->createCommand("UPDATE $storeDb.suborders SET send = :send, updated_at = :updated_at WHERE id IN ($ordersIds)")
                 ->bindValue(':send', $sendStatus)
                 ->bindValue(':updated_at', time())
                 ->execute();
@@ -157,56 +115,264 @@ class SenderComponent extends Component
     }
 
     /**
-     * Run Sender
+     * Update suborder by values
+     * @param $orderInfo
+     * @param $values
      */
-    public function run()
+    private function _updateOrder($orderInfo, $values)
     {
-        $this->_orders = $this->getOrders();
+        $orderId = $orderInfo['suborder_id'];
+        $storeDb = $orderInfo['store_db'];
 
-        $this->_updateOrdersSendStatus(Suborders::SEND_STATUS_SENDING);
+        $defaultValues = [
+            ':status' => null,
+            ':send' => null,
+            ':provider_order_id' => null,
+            ':provider_response' => null,
+            ':provider_response_code' => 0,
+            ':updated_at' => time(),
+        ];
 
-        $this->sendOrders($this->_orders);
+        $values = array_intersect_key(array_merge($defaultValues, $values), $defaultValues);
 
+        $this->_db->createCommand("UPDATE $storeDb.suborders SET 
+              `status` = :status,
+              `send` = :send,
+              `provider_order_id` = :provider_order_id,
+              `provider_response` = :provider_response,
+              `provider_response_code` = :provider_response_code,
+              `updated_at` = :updated_at
+              WHERE `id` = :id
+            ")
+            ->bindValues($values)
+            ->bindValue(':id', $orderId)
+            ->execute();
     }
-    
 
-    private function sendOrders(&$orders)
+
+    /**
+     * Resend order errored by protocol
+     * @param $orderInfo
+     */
+    private function _resendOrder($orderInfo)
     {
+        Yii::$app->db
+            ->createCommand('UPDATE `providers` SET `protocol` = :protocol WHERE `id` = :id')
+            ->bindValues([
+                ':protocol' => Providers::PROTOCOL_HTTPS,
+                ':id' => $orderInfo['provider_id'],
+            ])
+            ->execute();
+
+        Yii::$app->db
+            ->createCommand('
+                  INSERT INTO `stores_send_orders` 
+                  (`store_id`, `provider_id`, `suborder_id`, `store_db`) 
+                  VALUES (:store_id, :provider_id, :suborder_id, :store_db);
+             ')
+            ->bindValues([
+                'store_id' => $orderInfo['store_id'],
+                'provider_id' => $orderInfo['provider_id'],
+                'suborder_id' => $orderInfo['suborder_id'],
+                'store_db'=> $orderInfo['store_db'],
+            ])
+            ->execute();
+
+        $this->_updateOrder($orderInfo, [
+            'send' => Suborders::SEND_STATUS_AWAITING,
+        ]);
+    }
+
+    /**
+     * Orders Sender and result processor
+     * @return array
+     */
+    private function sendOrders()
+    {
+        $sendResults = [
+            'total' => count($this->_sendOrders),
+            'success' => 0,
+            'resend' => 0,
+
+            'err_curl' => 0,
+            'err_http' => 0,
+            'err_json' => 0,
+            'err_other' => 0
+        ];
+
+        $mh = curl_multi_init();
+        $connectionHandlers = [];
+
+        /**
+         * Make request pull
+         */
+        foreach($this->_sendOrders as $sendOrderId => $sendOrder) {
+
+            $storeDb = $sendOrder['store_db'];
+
+            $order = $this->_db->createCommand("SELECT * FROM $storeDb.suborders WHERE id = :id")
+                ->bindValue(':id', $sendOrder['suborder_id'])
+                ->queryOne();
+
+            if (empty($order)) {
+                continue;
+            }
+
+            $apiUrl = ($sendOrder['protocol'] == Providers::PROTOCOL_HTTPS ? 'https://' : 'http://') . $sendOrder['site'] . '/api/v2';
+
+            $requestParams = array(
+                'key' => $sendOrder['apikey'],
+                'action' => Providers::API_ACTION_ADD,
+                'service' => $order['provider_service'],
+                'link' => $order['link'],
+                'quantity' => $order['quantity'],
+            );
+
+            $curlOptions = array(
+                CURLOPT_URL => $apiUrl,
+                CURLOPT_VERBOSE => false,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($requestParams),
+
+                CURLOPT_PRIVATE => json_encode([
+                    'store_id' => $sendOrder['store_id'],
+                    'suborder_id' => $sendOrder['suborder_id'],
+                    'provider_id' => $sendOrder['provider_id'],
+                    'store_db' => $sendOrder['store_db'],
+                    'protocol' => $sendOrder['protocol']
+                ]),
+            );
+
+            $ch = curl_init();
+            curl_setopt_array($ch, $curlOptions);
+            curl_multi_add_handle($mh, $ch);
+            $connectionHandlers[$sendOrderId] = $ch;
+        }
+
+        // Do requests
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+        } while ($running > 0);
+
+        /**
+         * Process results
+         */
+        foreach ($connectionHandlers as $ch)
+        {
+            $orderInfo = json_decode(curl_getinfo($ch, CURLINFO_PRIVATE), true);
+            $protocol = $orderInfo['protocol'];
+
+            // System Errors
+            if (curl_errno($ch)) {
+                $error = json_encode(curl_error($ch));
+                $values = [
+                    ':status' => Suborders::STATUS_ERROR,
+                    ':send' => Suborders::SEND_STATUS_SENT,
+                    ':provider_response' => $error,
+                ];
+
+                $this->_updateOrder($orderInfo, $values);
+
+                $sendResults['err_curl']++;
+
+                curl_multi_remove_handle($mh, $ch);
+                continue;
+            }
+
+            $requestInfo = curl_getinfo($ch);
+            $responseRawResult = curl_multi_getcontent($ch);
+            $responseResult = json_decode($responseRawResult, true);
+            $responseCode = $requestInfo['http_code'];
 
 
-//        $mh = curl_multi_init();
-//        $connectionArray = [];
-//
-//        // Make requests pull
-//        foreach($orders as $orderId => $order) {
-//            $requestParams = array(
-//                'order' => $order['provider_orderid'],
-//                'key' => $order['api_key'],
-//                'action' => Provider::API_ACTION_STATUS,
-//            );
-//
-//            $curlOptions = array(
-//                CURLOPT_URL => $order['site'],
-//                CURLOPT_VERBOSE => false,
-//                CURLOPT_RETURNTRANSFER => true,
-//                CURLOPT_POST => true,
-//                CURLOPT_POSTFIELDS => http_build_query($requestParams),
-//            );
-//
-//            $ch = curl_init();
-//            curl_setopt_array($ch, $curlOptions);
-//            curl_multi_add_handle($mh, $ch);
-//            $connectionArray[$orderId] = $ch;
-//        }
-//
-//        // Do requests
-//        $running = null;
-//        do {
-//            curl_multi_exec($mh, $running);
-//        } while ($running > 0);
+            // Non HTTP 200 error
+            if ($responseCode != 200) {
+                $values = [
+                    ':status' => Suborders::STATUS_ERROR,
+                    ':send' => Suborders::SEND_STATUS_SENT,
+                    ':provider_response' => $responseRawResult,
+                    ':provider_response_code' => $responseCode,
+                ];
 
+                $this->_updateOrder($orderInfo, $values);
 
+                $sendResults['err_http']++;
 
+                curl_multi_remove_handle($mh, $ch);
+                continue;
+            }
+
+            // Json decode errors
+            if ((json_last_error() !== JSON_ERROR_NONE)) {
+
+                $error = json_encode(json_last_error());
+                $values = [
+                    ':status' => Suborders::STATUS_ERROR,
+                    ':send' => Suborders::SEND_STATUS_SENT,
+                    ':provider_response' => $error,
+                    ':provider_response_code' => $responseCode,
+                ];
+
+                $this->_updateOrder($orderInfo, $values);
+
+                $sendResults['err_json']++;
+
+                curl_multi_remove_handle($mh, $ch);
+                continue;
+            }
+
+            // Provider service resend
+            if (
+                $protocol == Providers::PROTOCOL_HTTP &&
+                ArrayHelper::getValue($responseResult, 'error') == 'Incorrect request'
+            ) {
+                $this->_resendOrder($orderInfo);
+
+                $sendResults['resend']++;
+
+                curl_multi_remove_handle($mh, $ch);
+                continue;
+            }
+
+            // Success
+            if (isset($responseResult['order'])) {
+                $values = [
+                    ':status' => Suborders::STATUS_COMPLETED,
+                    ':send' => Suborders::SEND_STATUS_SENT,
+                    ':provider_order_id' => $responseResult['order'],
+                    ':provider_response' => $responseRawResult,
+                    ':provider_response_code' => $responseCode,
+                ];
+
+                $this->_updateOrder($orderInfo, $values);
+
+                $sendResults['success']++;
+
+                curl_multi_remove_handle($mh, $ch);
+                continue;
+            }
+
+            // All other situation
+            $values = [
+                ':status' => Suborders::STATUS_ERROR,
+                ':send' => Suborders::SEND_STATUS_SENT,
+                ':provider_response' => $responseRawResult,
+                ':provider_response_code' => $responseCode,
+            ];
+
+            $this->_updateOrder($orderInfo, $values);
+
+            $sendResults['err_other']++;
+
+            curl_multi_remove_handle($mh, $ch);
+        }
+
+        curl_multi_close($mh);
+
+        return $sendResults;
     }
 
 }
