@@ -38,19 +38,19 @@ customModule.adminEditBlock = {
         switch (code) {
             case 'slider':
                 self.slider(params);
-            break;
+                break;
 
             case 'features':
                 self.features(params);
-            break;
+                break;
 
             case 'review':
                 self.review(params);
-            break;
+                break;
 
             case 'process':
                 self.process(params);
-            break;
+                break;
         }
 
         self.initTextareaAutosizer();
@@ -81,13 +81,14 @@ customModule.adminEditBlock = {
         var generateSlide = function generateSlide(action, id, title, description, button, image) {
             var template = '<div class="swiper-slide">\n                    <div class="slider__block-wrap slider__block-' + id + ' d-flex flex-wrap">\n\n                        <div class="editor-tooltip bg-danger editor-tooltip__right-top editor-action__delete-review editor-action__delete"  data-id="' + id + '" data-type="review" data-toggle="modal" data-target="#delete-feature-modal">\n                            <span class="fa fa-times"></span>\n                        </div>\n                        <div class="col-md-4">\n                            <label for="slider-image-' + id + '" class="slider__image slider__image_' + id + ' slider-image-' + id + '" style="background-image: url(' + image + ');">\n                                <input id="slider-image-' + id + '" type="file" name="slider-image-' + id + '" class="editor-slider-image-input" data-id="' + id + '">\n                            </label>\n                        </div>\n                        <div class="col">\n                            <div class="editor-block__reviev_name">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h text-left editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <button class="learn-more learn-more-' + id + '" data-toggle="modal" data-target="#learn-more" data-id="' + id + '">' + button + '</button>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>';
 
+
             switch (action) {
                 case 'render':
-                    swiperSlider.prependSlide(template);
+                    swiperSlider.appendSlide(template);
                     swiperSlider.slideTo(0);
                     break;
                 case 'add':
-                    swiperSlider.prependSlide(template);
+                    swiperSlider.appendSlide(template);
                     swiperSlider.slideTo(0);
                     state.slider.data.push({
                         "id": id.toString(),
@@ -103,7 +104,7 @@ customModule.adminEditBlock = {
                     break;
             }
 
-            textAreaResizer();
+            //textAreaResizer();
         };
 
         var initData = function(result) {
@@ -230,6 +231,7 @@ customModule.adminEditBlock = {
             var classId = '.' + this.id,
                 dataID = $(this).attr('data-id');
 
+            $(classId).addClass('image-loader');
             var data = new FormData();
             data.append('file', $(this)[0].files[0]);
             data.append('type', 'slider');
@@ -241,6 +243,7 @@ customModule.adminEditBlock = {
                 processData: false,
                 type: 'POST',
                 success: function (response) {
+                    $(classId).removeClass('image-loader');
 
                     if ('error' == response.status) {
                         toastr.error(response.error);
@@ -305,6 +308,9 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
             $.ajax({
                 url: blockLinks.save,
                 data: {
@@ -312,9 +318,13 @@ customModule.adminEditBlock = {
                 },
                 type: 'POST',
                 success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
                     self.saveCallback(response);
                 },
                 error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
                     toastr.error("Error status " + _error2.status);
                 }
             });
@@ -395,7 +405,22 @@ customModule.adminEditBlock = {
             $("#feature-list").dragsort({
                 dragBetween: true,
                 dragSelector: ".editor-action__drag",
-                placeHolderTemplate: '<li class="col margin-top-bottom editor-placeholder-move"><div class="editor-card editor-tooltip__show placeholder-template d-flex align-items-lg-center justify-content-center"><span>Insert</span></div></li>'
+                dragEnd: function() {
+                    var elements = $('#feature-list li'),
+                        dataClone = $.extend(true, {}, state.feature.data),
+                        dataNew = [];
+
+                    for (var i = 0; i < elements.length; i++){
+                        for (var j = 0; j<state.feature.data.length; j++){
+                            if ($(elements[i]).data('id') == state.feature.data[j].id) {
+                                dataNew.push(state.feature.data[j])
+                            }
+                        }
+                    }
+                    console.log(state.feature.data, dataNew);
+                    state.feature.data = dataNew;
+                },
+                placeHolderTemplate: '<li class="col margin-top-bottom editor-placeholder-move"><div class="editor-card editor-card__left editor-tooltip__show placeholder-template d-flex align-items-lg-center justify-content-center"><span>Insert</span></div></li>'
             });
 
             includeContent();
@@ -404,9 +429,20 @@ customModule.adminEditBlock = {
 
         var generateCards = function generateCards(action, id, title, description, icon) {
             var iconSize = state.feature.settings.iconSize,
-                column = state.feature.settings.column;
+                column = state.feature.settings.column,
+                align = state.feature.settings.align,
+                colAlignTitle = '',
+                colAlignIcon = '';
 
-            var featureCardTemplate = '<li class="col-lg-' + column + ' margin-top-bottom feature-id-' + id + '">\n                    <div class="editor-card editor-tooltip__show">\n                        <div class="row">\n                            <div class="editor-tooltip bg-success editor-tooltip__right-top editor-action__drag">move</div>\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete"  data-id="' + id + '" data-type="feature" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n\n                            <div class="editor-card__icon-block col-12">\n                                <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                                    <div class="editor-preview__tooltip">edit</div>\n                                    <span class="fa ' + icon + ' feature-icon" id="feature-icon-' + id + '" style="font-size: ' + iconSize + 'px;"></span>\n                                </div>\n                            </div>\n                            <div class="editor-card__title-block col-12">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-card__text-block col-12">\n                                <div class="editor_textarea-block">\n                                    <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" rows="1" spellcheck="false" data-id="' + id + '" data-textarea-title="description" placeholder="Add text...">' + description + '</textarea>\n                                        <div class="editor-textarea__text-edit-action">\n                                            <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                            <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                        </div>\n                    </div>\n                </li>';
+            if(align == 'left'){
+                colAlignTitle = 'col-7';
+                colAlignIcon = 'col-5';
+            }else{
+                colAlignTitle = 'col-12';
+                colAlignIcon = 'col-12';
+            }
+
+            var featureCardTemplate = '<li class="col-lg-' + column + ' margin-top-bottom feature-id-' + id + '" data-id="'+id+'">\n                    <div class="editor-card editor-card__left editor-tooltip__show">\n                        <div class="row">\n                            <div class="editor-tooltip bg-success editor-tooltip__right-top editor-action__drag">move</div>\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete"  data-id="' + id + '" data-type="feature" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n\n                            <div class="editor-card__icon-block '+colAlignIcon+' ">\n                                <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                                    <div class="editor-preview__tooltip">edit</div>\n                                    <span class="fa ' + icon + ' feature-icon" id="feature-icon-' + id + '" style="font-size: ' + iconSize + 'px;"></span>\n                                </div>\n                            </div>\n                            <div class="editor-card__title-block '+colAlignTitle+' ">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-card__text-block col-12">\n                                <div class="editor_textarea-block">\n                                    <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" rows="1" spellcheck="false" data-id="' + id + '" data-textarea-title="description" placeholder="Add text...">' + description + '</textarea>\n                                        <div class="editor-textarea__text-edit-action">\n                                            <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                            <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                        </div>\n                    </div>\n                </li>';
 
             $("#feature-list").append(featureCardTemplate);
         };
@@ -457,7 +493,18 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.feature-align', function () {
-            state.feature.settings.align = $(this).val();
+            var featureAlign = $(this).val();
+            state.feature.settings.align = featureAlign;
+            switch (featureAlign) {
+                case 'left':
+                    $('.editor-card__icon-block').removeClass('col-12').addClass('col-5');
+                    $('.editor-card__title-block').removeClass('col-12').addClass('col-7');
+                    break;
+                case 'center':
+                    $('.editor-card__icon-block').removeClass('col-5').addClass('col-12');
+                    $('.editor-card__title-block').removeClass('col-7').addClass('col-12');
+                    break;
+            }
         });
 
         $(document).on('change', '.feature-column', function () {
@@ -465,7 +512,9 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('click', '#save-changes', function () {
-
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
             $.ajax({
                 url: blockLinks.save,
                 data: {
@@ -473,9 +522,15 @@ customModule.adminEditBlock = {
                 },
                 type: 'POST',
                 success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
                     self.saveCallback(response);
                 },
-                error: function error(_error) {}
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
+                }
             });
         });
 
@@ -615,17 +670,17 @@ customModule.adminEditBlock = {
 
             switch (action) {
                 case 'render':
-                    swiperSlider.prependSlide(template);
+                    swiperSlider.appendSlide(template);
                     swiperSlider.slideTo(0);
                     break;
                 case 'add':
-                    swiperSlider.prependSlide(template);
+                    swiperSlider.appendSlide(template);
                     swiperSlider.slideTo(0);
                     state.review.data.push({
                         "id": id.toString(),
                         "name": name,
                         "description": description,
-                        "image": false,
+                        "image": '0',
                         "rating": false
                     });
                     break;
@@ -704,8 +759,10 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.editor-preview__avatar-input', function () {
-            var classId = '.' + this.id,
-                dataID = $(this).attr('data-id');
+            var dataID = $(this).data('id');
+            var classId = '.review-avatar-' + dataID;
+
+            $(classId).addClass('image-loader');
 
             var data = new FormData();
             data.append('file', $(this)[0].files[0]);
@@ -718,7 +775,7 @@ customModule.adminEditBlock = {
                 processData: false,
                 type: 'POST',
                 success: function (response) {
-
+                    $(classId).removeClass('image-loader');
                     if ('error' == response.status) {
                         toastr.error(response.error);
                         $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
@@ -736,6 +793,7 @@ customModule.adminEditBlock = {
                     }
                 },
                 error: function error(_error) {
+                    $(classId).removeClass('image-loader');
                     $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
                 }
             });
@@ -743,11 +801,11 @@ customModule.adminEditBlock = {
 
         $(document).on('click', '.review-image-delete', function () {
             var dataID = $(this).data('id');
-            var classId = '.' + dataID;
+            var classId = '.review-avatar-' + dataID;
 
             for (var i = 0; i < state.review.data.length; i++) {
                 if (state.review.data[i].id.indexOf(dataID) == 0) {
-                    state.review.data[i].image = false;
+                    state.review.data[i].image = '0';
                     $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
                     return;
                 }
@@ -765,7 +823,11 @@ customModule.adminEditBlock = {
             }
         });
 
+
         $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
             $.ajax({
                 url: blockLinks.save,
                 data: {
@@ -773,9 +835,15 @@ customModule.adminEditBlock = {
                 },
                 type: 'POST',
                 success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
                     self.saveCallback(response);
                 },
-                error: function error(_error2) {}
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
+                }
             });
         });
 
@@ -813,21 +881,18 @@ customModule.adminEditBlock = {
         var initData = function(result) {
             $('#preload').remove();
 
-            var countStep = "";
-            if (state.steps.settings.count == "4") {
-                countStep = state.steps.data.length;
-            } else {
-                countStep = state.steps.data.length - 1;
+            if(state.steps.settings.iconSize == undefined){
+                state.steps.settings.iconSize = 75;
             }
 
-            var column = 0;
-            if (state.steps.settings.count == "3") {
-                column = "4";
-            } else {
-                column = "3";
+            var stepsLength = state.steps.data.length,
+                column = 3;
+
+            if(stepsLength == 2){
+                column = 4;
             }
 
-            for (var i = 0; i < countStep; i++) {
+            for (var i = 0; i < state.steps.data.length; i++) {
                 generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, column, state.steps.settings.description);
             }
 
@@ -838,23 +903,38 @@ customModule.adminEditBlock = {
             var processCount = $('.process-count');
 
             for (var i = 0; i < processCount.length; i++) {
-                if (column == processCount[i].value) {
+                if (column.toString() == processCount[i].value) {
                     processCount[i].checked = true;
                     $(processCount[i].parentNode).addClass('active');
                 }
             }
 
+            $("#steps-fontSize").slider({
+                min: 12,
+                max: 240,
+                step: 12,
+                value: state.steps.settings.iconSize,
+                slide: function slide(event, ui) {
+                    $(".steps-icon-size-show").text(ui.value);
+                    $("#steps-size-icon").val(ui.value);
+                    $('.steps-icon').css({
+                        "fontSize": ui.value + 'px'
+                    });
+                    state.steps.settings.iconSize = ui.value;
+                }
+            });
+            $('.steps-icon-size-show').text(state.steps.settings.iconSize);
             includeContent();
         }
 
         var generateCards = function generateCards(action, id, title, description, icon, col, cardDescription) {
             var showDescription = "";
 
-            if (!cardDescription || 'false' == cardDescription) {
+            if(cardDescription == '0'){
                 showDescription = 'hide-description';
             }
 
-            var cardTemplate = '<li class="col-lg-' + col + ' margin-top-bottom process-column">\n               <div class="editor-card editor-tooltip__show">\n                   <div class="row">\n                       <div class="editor-card__icon-block col-12">\n                           <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                               <div class="editor-preview__tooltip">edit</div>\n                               <span class="fa ' + icon + ' feature-icon" id="process-icon-' + id + '"></span>\n                           </div>\n                       </div>\n                       <div class="editor-card__title-block col-12">\n                           <div class="editor-textarea__text-edit-off">\n                               <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                               <div class="editor-textarea__text-edit-action">\n                                   <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                   <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                               </div>\n                           </div>\n                       </div>\n                       <div class="editor-card__text-block col-12 ' + showDescription + '">\n                           <div class="editor_textarea-block">\n                               <div class="editor-textarea__text-edit-off">\n                                   <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                   <div class="editor-textarea__text-edit-action">\n                                       <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                       <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                   </div>\n                               </div>\n                           </div>\n                       </div>\n                   </div>\n               </div>\n           </li>';
+            var cardTemplate = '<li class="col-lg-' + col + ' margin-top-bottom process-column">\n               <div class="editor-card editor-tooltip__show">\n                   <div class="row">\n                       <div class="editor-card__icon-block col-12">\n                           <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                               <div class="editor-preview__tooltip">edit</div>\n                               <span class="fa ' + icon + ' steps-icon" id="process-icon-' + id + '"></span>\n                           </div>\n                       </div>\n                       <div class="editor-card__title-block col-12">\n                           <div class="editor-textarea__text-edit-off">\n                               <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                               <div class="editor-textarea__text-edit-action">\n                                   <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                   <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                               </div>\n                           </div>\n                       </div>\n                       <div class="editor-card__text-block col-12 ' + showDescription + '">\n                           <div class="editor_textarea-block">\n                               <div class="editor-textarea__text-edit-off">\n                                   <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                   <div class="editor-textarea__text-edit-action">\n                                       <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                       <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                   </div>\n                               </div>\n                           </div>\n                       </div>\n                   </div>\n               </div>\n           </li>';
             $('#process-list').append(cardTemplate);
             textAreaResizer();
         };
@@ -868,41 +948,40 @@ customModule.adminEditBlock = {
         $(document).on('change', '.process-count', function () {
             state.steps.settings.count = $(this).val();
             $('#process-list').empty();
+
             if (parseInt(state.steps.settings.count) == 4) {
-                for (var i = 0; i < 3; i++) {
-                    generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
-                }
-            } else {
-                for (var i = 0; i < state.steps.data.length; i++) {
-                    generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
-                }
+                state.steps.data.pop();
+            }else{
+                state.steps.data.push({
+                    id: "4",
+                    icon: "fa-picture-o",
+                    title: '',
+                    description: ''
+                });
             }
+
+            for (var i = 0; i < state.steps.data.length; i++) {
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
+            }
+
         });
 
         $(document).on('change', '.steps-description', function () {
-            state.steps.settings.description = this.checked;
-            $('#process-list').empty();
+
             if (this.checked) {
-                if (parseInt(state.steps.settings.count) == 4) {
-                    for (var i = 0; i < 3; i++) {
-                        generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
-                    }
-                } else {
-                    for (var i = 0; i < state.steps.data.length; i++) {
-                        generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
-                    }
-                }
-            } else {
-                if (parseInt(state.steps.settings.count) == 4) {
-                    for (var i = 0; i < 3; i++) {
-                        generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
-                    }
-                } else {
-                    for (var i = 0; i < state.steps.data.length; i++) {
-                        generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
-                    }
-                }
+                state.steps.settings.description = '1';
+            }else{
+                state.steps.settings.description = '0';
             }
+            console.log(state.steps.settings.description);
+
+            $('#process-list').empty();
+
+            for (var i = 0; i < state.steps.data.length; i++) {
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
+            }
+
+
         });
 
         $(document).on('change', '.js-auto-size', function () {
@@ -959,7 +1038,12 @@ customModule.adminEditBlock = {
             $(iconClass).addClass(classStroke);
         });
 
+
+
         $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
             $.ajax({
                 url: blockLinks.save,
                 data: {
@@ -967,10 +1051,14 @@ customModule.adminEditBlock = {
                 },
                 type: 'POST',
                 success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
                     self.saveCallback(response);
                 },
-                error: function error(_error) {
-                    toastr.error("Error status " + _error.status);
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
                 }
             });
         });

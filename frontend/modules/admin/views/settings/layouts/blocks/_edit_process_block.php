@@ -6,16 +6,26 @@
     <div class="row editor-block border border-grey align-items-center m-portlet m-portlet--mobile">
         <div class="col-md-4"></div>
         <div class="col-md-8 text-md-right">
+
+            <div class="editor-block__setting-block flex-wrap min-width-200">
+                <div class="editor-block__setting-title">Icon size
+                    <div class="pull-right"><span class="steps-icon-size-show">10</span>px</div>
+                </div>
+                <div class="editor-block__setting-action d-flex flex-wrap align-items-center">
+                    <div id="steps-fontSize"></div>
+                </div>
+            </div>
+
             <div class="editor-block__setting-block flex-wrap">
                 <div class="editor-block__setting-title">Description</div>
                 <div class="editor-block__setting-action d-flex flex-wrap align-items-center">
 
                     <span class="m-switch m-switch--icon editor-block__switch">
-																		<label>
-																			<input type="checkbox" class="steps-description">
-																			<span></span>
-																		</label>
-																	</span>
+                        <label>
+                            <input type="checkbox" class="steps-description">
+                            <span></span>
+                        </label>
+                    </span>
                 </div>
             </div>
             <div class="editor-block__setting-block flex-wrap">

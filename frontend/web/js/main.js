@@ -1,1 +1,2132 @@
-var custom=new function(){var e=this;e.request=null,e.confirm=function(e,t,a,i){var n;return n=(0,templates["modal/confirm"])($.extend({},!0,{confirm_button:"OK",cancel_button:"Cancel",width:"600px"},i,{title:e,confirm_message:t})),$(window.document.body).append(n),$("#confirmModal").modal({}),$("#confirmModal").on("hidden.bs.modal",function(e){$("#confirmModal").remove()}),$("#confirm_yes").on("click",function(e){return $("#confirm_yes").unbind("click"),$("#confirmModal").modal("hide"),a.call()})},e.ajax=function(t){var a=$.extend({},!0,t);"object"==typeof t&&(t.beforeSend=function(){"function"==typeof a.beforeSend&&a.beforeSend()},t.success=function(e){"function"==typeof a.success&&a.success(e)},null!=e.request&&e.request.abort(),e.request=$.ajax(t))},e.notify=function(e){var t,a;if($("body").addClass("bottom-right"),"object"!=typeof e)return!1;for(t in e)void 0!==(a=$.extend({},!0,{type:"success",delay:8e3,text:""},e[t])).text&&null!=a.text&&$.notify({message:a.text.toString()},{type:a.type,placement:{from:"bottom",align:"right"},z_index:2e3,delay:a.delay,animate:{enter:"animated fadeInDown",exit:"animated fadeOutUp"}})},e.sendBtn=function(t,a){if("object"!=typeof a&&(a={}),!t.hasClass("active")){t.addClass("has-spinner");var i=$.extend({},!0,a);i.url=t.attr("href"),$(".spinner",t).remove(),t.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>'),i.beforeSend=function(){t.addClass("active")},i.success=function(i){t.removeClass("active"),$(".spinner",t).remove(),"success"==i.status?"function"==typeof a.callback&&a.callback(i):"error"==i.status&&e.notify({0:{type:"danger",text:i.message}})},e.ajax(i)}},e.sendFrom=function(t,a,i){if("object"!=typeof i&&(i={}),!t.hasClass("active")){t.addClass("has-spinner");var n=$.extend({},!0,i),o=$(".error-summary",a);n.url=a.attr("action"),n.type="POST",$(".spinner",t).remove(),t.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>'),n.beforeSend=function(){t.addClass("active"),o.length&&(o.addClass("hidden"),o.html(""))},n.success=function(n){t.removeClass("active"),$(".spinner",t).remove(),"success"==n.status?"function"==typeof i.callback&&i.callback(n):"error"==n.status&&(n.message&&(o.length?(o.html(n.message),o.removeClass("hidden")):e.notify({0:{type:"danger",text:n.message}})),n.errors&&$.each(n.errors,function(e,t){alert(t),a.yiiActiveForm("updateAttribute",e,t)}),"function"==typeof i.errorCallback&&i.errorCallback(n))},e.ajax(n)}},e.generateUrlFromString=function(e){return e.replace(/[^a-z0-9_\-\s]/gim,"").replace(/\s+/g,"-").toLowerCase()},e.generateUniqueUrl=function(e,t){var a,i,n=e;i=1;do{(a=_.find(t,function(e){return e===n}))&&(n=e+"-"+i,i++)}while(a);return n}},customModule={};window.modules={},$(function(){"object"==typeof window.modules&&$.each(window.modules,function(e,t){void 0!==customModule[e]&&customModule[e].run(t)})}),customModule.adminGeneral={run:function(e){$(".edit-seo__title").length>0&&function(){for(var e=$("#store-name"),t=$("#edit-seo__title"),a=t.val(),i=!1,n=["edit-seo__title","edit-seo__meta"],o=0;o<n.length;o++)!function(e){$("."+n[e]+"-muted").text($("#"+n[e]).val().length),$("#"+n[e]).on("input",function(t){$("."+n[e]+"-muted").text($(t.target).val().length),$("."+n[e]).text($(t.target).val())}).trigger("input")}(o);t.on("focus",function(e){i=!0}),e.on("input",function(e){""!==a||i||t.val($(this).val()).trigger("input")})}();var t=$("#delete-modal"),a=t.find("#delete-image");t.on("show.bs.modal",function(e){var t=$(e.relatedTarget).attr("href");a.attr("href",t)}),t.on("hidden.bs.modal",function(){a.attr("href",null)})}},customModule.adminPages={run:function(e){var t,a,i=$("#delete-modal"),n=i.find(".modal-loader");i.find("#feature-delete").on("click",function(){n.removeClass("hidden"),$.ajax({url:t,type:"DELETE",success:function(e,t,i){_.delay(function(){$(location).attr("href",a)},500)},error:function(e,t,a){n.addClass("hidden"),i.modal("hide"),console.log("Error on service save",e,t,a)}})}),i.on("show.bs.modal",function(e){var n=$(e.relatedTarget);t=n.data("action_url"),a=i.data("success_redirect")}),i.on("hidden.bs.modal",function(){t=null})}},customModule.adminPageEdit={run:function(e){function t(e){var t,a=$(e.target).val();t=custom.generateUrlFromString(a),t=custom.generateUniqueUrl(t,s),r.url.val(t).trigger("input"),r.seo_title.val(a).trigger("input")}function a(){r.name.off("input",t),r.seo_title.off("input",t)}var i=$("#pageForm"),n=i.find(".collapse"),o=i.data("new_page"),r={name:i.find(".form_field__name"),content:i.find(".form_field__content"),url:i.find(".form_field__url"),visibility:i.find(".form_field__visibility"),seo_title:i.find(".form_field__seo_title"),seo_description:i.find(".form_field__seo_description")},s=e.urls||[],d=e.url_error||!1;$(".edit-seo__title").length>0&&function(){for(var e=["edit-seo__title","edit-seo__meta","edit-seo__url"],t=0;t<e.length;t++)!function(t){$("."+e[t]+"-muted").text($("#"+e[t]).val().length),$("#"+e[t]).on("input",function(a){2===t?$("."+e[t]).text($(a.target).val().toLowerCase()):($("."+e[t]+"-muted").text($(a.target).val().length),$("."+e[t]).text($(a.target).val()))}).trigger("input")}(t)}(),r.content,r.content.summernote({minHeight:300,focus:!0,toolbar:[["style",["style","bold","italic"]],["lists",["ul","ol"]],["para",["paragraph"]],["color",["color"]],["insert",["link","picture","video"]],["codeview",["codeview"]]],disableDragAndDrop:!0,styleTags:["p","h1","h2","h3","h4","h5","h6"],popover:{image:[["float",["floatLeft","floatRight","floatNone"]],["remove",["removeMedia"]]]},dialogsFade:!0}),i.keypress(function(e){if(13===e.which)return i.submit(),!1}),d&&n.collapse("show"),o&&(r.name.focus(),r.name.on("input",t),r.url.on("focus",a),r.seo_title.on("focus",a)),r.url.on("input",function(e){var t,a=e.currentTarget,i=$(a),n=i.val(),o=a.selectionStart;(t=custom.generateUrlFromString(n)).length>=200&&(t=t.substring(0,199)),i.val(t),a.selectionEnd=o})}},customModule.adminPayments={run:function(e){$(document).on("change",".toggle-active",function(e){var t=$(e.currentTarget),a=t.data("action_url"),i=(t.data("payment_method"),0|t.prop("checked"));$.ajax({url:a,type:"POST",data:{active:i},success:function(e,t,a){},error:function(e,t,a){console.log("Error on update",e,t,a)}})})}},customModule.adminThemes={run:function(e){var t,a,i=$("#codemirror"),n=$("#modal_submit_close"),o=$("#modal_submit_reset");i.length>0&&(t=CodeMirror.fromTextArea(i[0],{lineNumbers:!0}),a=t.getValue());var r=$("#m_tree_1");r.jstree({core:{themes:{responsive:!1}},types:{default:{icon:"fa fa-folder"},file:{icon:"fa fa-file"}},plugins:["types"]}),r.on("select_node.jstree",function(e,t){var a=t.node;a&&a.hasOwnProperty("a_attr")&&"#"!==a.a_attr.href&&(window.location=a.a_attr.href)}),n.on("show.bs.modal",function(e){var i=$(e.relatedTarget).attr("href");if(void 0===t||t.getValue()===a)return e.stopPropagation(),window.location.href=i,!1;$(this).find(".submit_button").attr("href",i)}),o.on("show.bs.modal",function(e){var t=$(e.relatedTarget).attr("href");$(this).find(".submit_button").attr("href",t)})}},customModule.adminBlocks={run:function(e){$(document).on("change",".change-status",function(e){e.preventDefault();var t=$(this),a=t.data("enable"),i=t.data("disable"),n=void 0;return n=t.prop("checked")?a:i,custom.ajax({url:n}),!1})}},customModule.adminEditBlock={state:{steps:!1,review:!1,slider:!1,feature:!1,actions:{delete:{turn:!1},editorText:{node:!1,nodeText:!1,nodeHeight:!1,save:!1},slider:{link:!1,type:!1},feature:{activeIconId:!1,activeIcon:!1},steps:{activeIconId:!1,activeIcon:!1},dropdown:{id:!1}}},run:function(e){var t=this;switch(void 0!==e.code?e.code:void 0){case"slider":t.slider(e);break;case"features":t.features(e);break;case"review":t.review(e);break;case"process":t.process(e)}t.initTextareaAutosizer()},slider:function(e){var t=this,a=t.state;a.slider=e.block;var i={render:"http://www.mocky.io/v2/5a3d15d8310000471fb593d1",save:e.saveUrl,upload:e.uploadUrl},n=function(){$("textarea.js-auto-size").textareaAutoSize()},o=new Swiper(".block-slider",{pagination:".swiper-pagination",paginationClickable:!0,scrollbarDraggable:!1,simulateTouch:!1}),r=function(e,t,i,r,s,d){var l='<div class="swiper-slide">\n                    <div class="slider__block-wrap slider__block-'+t+' d-flex flex-wrap">\n\n                        <div class="editor-tooltip bg-danger editor-tooltip__right-top editor-action__delete-review editor-action__delete"  data-id="'+t+'" data-type="review" data-toggle="modal" data-target="#delete-feature-modal">\n                            <span class="fa fa-times"></span>\n                        </div>\n                        <div class="col-md-4">\n                            <label for="slider-image-'+t+'" class="slider__image slider__image_'+t+" slider-image-"+t+'" style="background-image: url('+d+');">\n                                <input id="slider-image-'+t+'" type="file" name="slider-image-'+t+'" class="editor-slider-image-input" data-id="'+t+'">\n                            </label>\n                        </div>\n                        <div class="col">\n                            <div class="editor-block__reviev_name">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h text-left editor-textarea__h3 js-auto-size" data-id="'+t+'" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">'+i+'</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" data-id="'+t+'" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">'+r+'</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <button class="learn-more learn-more-'+t+'" data-toggle="modal" data-target="#learn-more" data-id="'+t+'">'+s+"</button>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>";switch(e){case"render":o.prependSlide(l),o.slideTo(0);break;case"add":o.prependSlide(l),o.slideTo(0),a.slider.data.push({id:t.toString(),title:i,description:r,button:{title:s,link:!1,type:!1},image:!1})}n()},s=function(e){$("#preload").remove();for(i=0;i<e.data.length;i++)r("render",e.data[i].id,e.data[i].title,e.data[i].description,e.data[i].button.title,e.data[i].image);for(var t=$(".slider-effects"),a=$(".slider-interval"),i=0;i<t.length;i++)t[i].value.toLocaleLowerCase()==e.settings.effect.toLocaleLowerCase()&&(t[i].checked=!0,$(t[i].parentNode).addClass("active"));for(i=0;i<a.length;i++)a[i].value.toLocaleLowerCase()==e.settings.rotationInterval.toLocaleLowerCase()&&(a[i].checked=!0,$(a[i].parentNode).addClass("active"))};if($(".new-preview").on("click",function(e){e.preventDefault();var t="";t=0==a.slider.data.length?"1":parseInt(a.slider.data[a.slider.data.length-1].id)+1,r("add",t,"","","Learn more",!1)}),$(document).on("click",".learn-more",function(){var e=$(this).attr("data-id");a.actions.slider.link=e,$(".slider-link__type").addClass("hide-link");for(n=0;n<a.slider.data.length;n++)0==a.slider.data[n].id.indexOf(e)&&($(".learn-more__input").val(a.slider.data[n].button.title),a.actions.slider.type=a.slider.data[n].button.type);for(var t=$("#select-menu__link")[0],i="",n=0;n<a.slider.data.length;n++)0==a.slider.data[n].id.indexOf(a.actions.slider.link)&&(i=a.slider.data[n]);if(i.button.type)for(n=0;n<t.length;n++)t[n].value.toLocaleLowerCase()==i.button.type&&(t[n].selected=!0,$(".slider-link__type-"+i.button.type).removeClass("hide-link"));else t[0].selected=!0;var o=".link-input__"+i.button.type;switch(i.button.type){case"web":$(o).val(i.button.link);break;case"products":case"page":for(n=0;n<o.length;n++)o[n].value==o.button.link&&(t[n].selected=!0)}}),$(document).on("click","#learn-more__save",function(){for(var e=$("#select-menu__link option:selected").val(),t=0;t<a.slider.data.length;t++)if(0==a.slider.data[t].id.indexOf(a.actions.slider.link)){switch(""==$(".learn-more__input").val()?(a.slider.data[t].button.title="Learn more",a.slider.data[t].button.type=!1):(a.slider.data[t].button.title=$(".learn-more__input").val(),a.slider.data[t].button.type=e),e){case"web":a.slider.data[t].button.link=$(".link-input__"+e).val();break;case"products":case"page":var i=".slider-link__type-"+e;a.slider.data[t].button.link=$(i+" option:selected").val();break;case"none":a.slider.data[t].button.link=!1;break;case"home":a.slider.data[t].button.link="/";break;default:console.log("default"),a.slider.data[t].button.link=!1}$(".learn-more-"+a.actions.slider.link).text(a.slider.data[t].button.title)}}),$(document).on("change",".editor-slider-image-input",function(){var e="."+this.id,t=$(this).attr("data-id"),n=new FormData;n.append("file",$(this)[0].files[0]),n.append("type","slider"),$.ajax({url:i.upload,data:n,contentType:!1,processData:!1,type:"POST",success:function(i){if("error"==i.status&&toastr.error(i.error),"success"==i.status){$(e).css("background-image","url("+i.link+")");for(var n=0;n<a.slider.data.length;n++)if(0==a.slider.data[n].id.indexOf(t))return void(a.slider.data[n].image=i.link)}},error:function(e){}})}),$(document).on("click",".editor-action__delete",function(){var e=$(this).attr("data-id");a.actions.delete.turn=e}),$(document).on("click","#feature-delete",function(){for(var e=0;e<a.slider.data.length;e++)if(0==a.slider.data[e].id.indexOf(a.actions.delete.turn))return a.slider.data.splice(e,1),void o.removeSlide(o.activeIndex)}),$(document).on("change",".js-auto-size",function(){for(var e=$(this).attr("data-id"),t=$(this).attr("data-textarea-title"),i=$(this).val(),n=0;n<a.slider.data.length;n++)if(0==a.slider.data[n].id.indexOf(e))return void(a.slider.data[n][t]=i)}),$(document).on("change","#select-menu__link",function(){var e=$(this).find("option:selected").val();$(".slider-link__type").addClass("hide-link"),$(".slider-link__type-"+e).removeClass("hide-link")}),$(document).on("change",".slider-effects",function(){a.slider.settings.effect=$(this).val()}),$(document).on("change",".slider-interval",function(){a.slider.settings.rotationInterval=$(this).val()}),$(document).on("click","#save-changes",function(){$.ajax({url:i.save,data:{content:a.slider},type:"POST",success:function(e){t.saveCallback(e)},error:function(e){toastr.error("Error status "+e.status)}})}),void 0===a.slider)$.ajax({method:"get",url:i.render}).then(function(e){a.slider=e,s(e)}).catch(function(e){$(".prealoder-text").text("Server is not available")});else s(a.slider)},features:function(e){var t=this,a=t.state;a.feature=e.block;var i={render:"http://www.mocky.io/v2/5a4108593200006a18ac345e",save:e.saveUrl,upload:e.uploadUrl},n=function(){$("textarea.js-auto-size").textareaAutoSize()},o=function(e){$("#preload").remove();for(var t=$(".feature-column"),i=$(".feature-align"),o=0;o<t.length;o++)a.feature.settings.column==t[o].value&&(t[o].checked=!0,$(t[o].parentNode).addClass("active"));for(o=0;o<i.length;o++)a.feature.settings.align==i[o].value&&(i[o].checked=!0,$(i[o].parentNode).addClass("active"));$("#feature-fontSize").slider({min:12,max:240,step:12,value:a.feature.settings.iconSize,slide:function(e,t){$(".feature-icon-size-show").text(t.value),$("#feature-size-icon").val(t.value),$(".feature-icon").css({fontSize:t.value+"px"}),a.feature.settings.iconSize=t.value}}),$(".feature-icon-size-show").text(a.feature.settings.iconSize);for(o=0;o<a.feature.data.length;o++)r("render",a.feature.data[o].id,a.feature.data[o].title,a.feature.data[o].description,a.feature.data[o].icon);$("#feature-list").dragsort({dragBetween:!0,dragSelector:".editor-action__drag",placeHolderTemplate:'<li class="col margin-top-bottom editor-placeholder-move"><div class="editor-card editor-tooltip__show placeholder-template d-flex align-items-lg-center justify-content-center"><span>Insert</span></div></li>'}),s(),n()},r=function(e,t,i,n,o){var r=a.feature.settings.iconSize,s='<li class="col-lg-'+a.feature.settings.column+" margin-top-bottom feature-id-"+t+'">\n                    <div class="editor-card editor-tooltip__show">\n                        <div class="row">\n                            <div class="editor-tooltip bg-success editor-tooltip__right-top editor-action__drag">move</div>\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete"  data-id="'+t+'" data-type="feature" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n\n                            <div class="editor-card__icon-block col-12">\n                                <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="'+t+'">\n                                    <div class="editor-preview__tooltip">edit</div>\n                                    <span class="fa '+o+' feature-icon" id="feature-icon-'+t+'" style="font-size: '+r+'px;"></span>\n                                </div>\n                            </div>\n                            <div class="editor-card__title-block col-12">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="'+t+'" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">'+i+'</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-card__text-block col-12">\n                                <div class="editor_textarea-block">\n                                    <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" rows="1" spellcheck="false" data-id="'+t+'" data-textarea-title="description" placeholder="Add text...">'+n+'</textarea>\n                                        <div class="editor-textarea__text-edit-action">\n                                            <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                            <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                        </div>\n                    </div>\n                </li>';$("#feature-list").append(s)},s=function(){$(".feature-title").val(a.feature.header.title),$(".feature-description").val(a.feature.header.description)};if($(document).on("click",".editor-action__delete",function(){var e=$(this).attr("data-id");a.actions.delete.turn=e}),$(document).on("click","#feature-delete",function(){for(var e=0;e<a.feature.data.length;e++)0==a.feature.data[e].id.indexOf(a.actions.delete.turn)&&a.feature.data.splice(e,1);var t=".feature-id-"+a.actions.delete.turn;$(t).remove()}),$(document).on("change",".js-auto-size",function(){var e=$(this).attr("data-id"),t=$(this).attr("data-textarea-title"),i=$(this).val();switch(t){case"header-title":console.log(a.feature.header.title),console.log(i),a.feature.header.title=i;break;case"header-description":a.feature.header.description=i;break;default:for(var n=0;n<a.feature.data.length;n++)if(0==a.feature.data[n].id.indexOf(e))return void(a.feature.data[n][t]=i)}}),$(document).on("change",".feature-align",function(){a.feature.settings.align=$(this).val()}),$(document).on("change",".feature-column",function(){a.feature.settings.column=$(this).val()}),$(document).on("click","#save-changes",function(){$.ajax({url:i.save,data:{content:a.feature},type:"POST",success:function(e){t.saveCallback(e)},error:function(e){}})}),$(document).on("click",".edit-modal__icons-action",function(){$(".edit-modal__icons-action").removeClass("active-icon"),$(this).addClass("active-icon"),a.actions.feature.activeIcon=$(this).attr("data-icon-name")}),$(document).on("click",".editor-preview__block",function(){var e=$(this).attr("data-id");a.actions.feature.activeIconId=e}),$(document).on("click","#feature-saveIcon",function(){for(var e=a.actions.feature.activeIconId,t="#feature-icon-"+e,i="fa "+a.actions.feature.activeIcon+" feature-icon",n=0;n<a.feature.data.length;n++)0==a.feature.data[n].id.indexOf(e)&&(a.feature.data[n].icon=a.actions.feature.activeIcon);$(t).removeAttr("class"),$(t).addClass(i)}),$(document).on("change",".feature-column",function(){$("#feature-list li").removeClass("col-lg-3 col-lg-4 col-lg-6"),$("#feature-list li").addClass("col-lg-"+a.feature.settings.column)}),$(document).on("click","#feature-new",function(){for(var e=0,t=0;t<a.feature.data.length;t++)e<parseInt(a.feature.data[t].id)&&(e=parseInt(a.feature.data[t].id));var i=(++e).toString();a.feature.data.push({id:i,title:"",description:"",icon:"fa-picture-o"}),r("add",i,"","","fa-picture-o")}),void 0===a.feature)$.ajax({method:"get",url:i.render}).then(function(e){a.feature=e,o()}).catch(function(e){console.log(e)});else o(a.feature)},review:function(e){var t=this,a=t.state;a.review=e.block;var i={render:"http://www.mocky.io/v2/5a44a9752e00002c03708668",save:e.saveUrl,upload:e.uploadUrl},n=function(){$("textarea.js-auto-size").textareaAutoSize()},o=new Swiper(".block-slider",{pagination:".swiper-pagination",paginationClickable:!0,scrollbarDraggable:!1,simulateTouch:!1,centeredSlides:!1}),r=function(e){$("#preload").remove(),o=new Swiper(".swiper-container",{pagination:".swiper-pagination",paginationClickable:!0,scrollbarDraggable:!1,centeredSlides:!1,simulateTouch:!1,slidesPerView:parseInt(a.review.settings.column)});for(i=0;i<a.review.data.length;i++)s("render",a.review.data[i].id,a.review.data[i].name,a.review.data[i].rating,a.review.data[i].description,a.review.data[i].image);for(var t=$(".review-column"),i=0;i<t.length;i++)a.review.settings.column==t[i].value&&(t[i].checked=!0,$(t[i].parentNode).addClass("active"));d()},s=function(e,t,i,r,s,d){d||(d="http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif");for(var l="",c=1;c<6;c++)c==parseInt(r)?l+='<input type="radio" name="rating" class="rating" value='+c+" checked/>":l+='<input type="radio" name="rating" class="rating" value='+c+" />";var u='<div class="swiper-slide">\n                        <div class="editor-review__block">\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete-review editor-action__delete"  data-id="'+t+'" data-type="review" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n                            <div class="editor-block__review-avatar">\n                                <div class="editor-tooltip bg-danger editor-tooltip__left-top review-image-delete" data-id="'+t+'" data-type="avatar" data-toggle="modal" data-target="#delete-feature-modal">\n                                    <span class="fa fa-times"></span>\n                                </div>\n                                <label for="review-avatar-'+t+'">\n                                    <div class="editor-preview__block-avatar">\n                                        <div style="background-image: url(\''+d+'\');" alt="" title="" class="editor-avatar__image rounded-circle review-avatar-'+t+'"></div>\n                                    </div>\n                                    <input id="review-avatar-'+t+'" type="file" class="editor-preview__avatar-input" data-id="'+t+'">\n                                </label>\n                            </div>\n                            <div class="editor-block__reviev_name">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="'+t+'" data-textarea-title="name" rows="1" spellcheck="false" placeholder="Add name...">'+i+'</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-rating__block">\n                                <div class="editor-rating_block-stars">\n                                    <div class="star-rating-'+t+'" data-id="'+t+'">\n                                        '+l+'\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" data-id="'+t+'" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">'+s+'</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>';switch(e){case"render":o.prependSlide(u),o.slideTo(0);break;case"add":o.prependSlide(u),o.slideTo(0),a.review.data.push({id:t.toString(),name:i,description:s,image:!1,rating:!1})}n(),$(".star-rating-"+t).rating()},d=function(){$(".review-title").val(a.review.header.title),$(".review-description").val(a.review.header.description)};if($(document).on("change",".js-auto-size",function(){var e=$(this).attr("data-id"),t=$(this).attr("data-textarea-title"),i=$(this).val();switch(t){case"header-title":a.review.header.title=i;break;case"header-description":a.review.header.description=i;break;default:for(var n=0;n<a.review.data.length;n++)if(0==a.review.data[n].id.indexOf(e))return void(a.review.data[n][t]=i)}}),$(document).on("click",".editor-action__delete",function(){var e=$(this).attr("data-id");a.actions.delete.turn=e}),$(document).on("click","#feature-delete",function(){for(var e=0;e<a.review.data.length;e++)if(0==a.review.data[e].id.indexOf(a.actions.delete.turn))return a.review.data.splice(e,1),void o.removeSlide(o.activeIndex)}),$(document).on("change",".review-column",function(){a.review.settings.column=$(this).val(),o=new Swiper(".swiper-container",{pagination:".swiper-pagination",paginationClickable:!0,scrollbarDraggable:!1,centeredSlides:!1,simulateTouch:!1,slidesPerView:parseInt($(this).val())}),n()}),$(document).on("click","#new-review",function(e){e.preventDefault();var t="";t=0==a.review.data.length?"1":parseInt(a.review.data[a.review.data.length-1].id)+1,s("add",t,"","","",!1)}),$(document).on("change",".editor-preview__avatar-input",function(){var e="."+this.id,t=$(this).attr("data-id"),n=new FormData;n.append("file",$(this)[0].files[0]),n.append("type","review"),$.ajax({url:i.upload,data:n,contentType:!1,processData:!1,type:"POST",success:function(i){if("error"==i.status&&(toastr.error(i.error),$(e).css("background-image","url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)")),"success"==i.status)for(var n=0;n<a.review.data.length;n++)if(0==a.review.data[n].id.indexOf(t))return a.review.data[n].image=i.link,void $(e).css("background-image","url("+i.link+")")},error:function(t){$(e).css("background-image","url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)")}})}),$(document).on("click",".review-image-delete",function(){for(var e=$(this).data("id"),t="."+e,i=0;i<a.review.data.length;i++)if(0==a.review.data[i].id.indexOf(e))return a.review.data[i].image=!1,void $(t).css("background-image","url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)")}),$(document).on("click",".fullStar",function(){for(var e=$(this).attr("title"),t=$(this.parentNode.parentNode).attr("data-id"),i=0;i<a.review.data.length;i++)0==a.review.data[i].id.indexOf(t)&&(a.review.data[i].rating=e)}),$(document).on("click","#save-changes",function(){$.ajax({url:i.save,data:{content:a.review},type:"POST",success:function(e){t.saveCallback(e)},error:function(e){}})}),void 0===a.review)$.ajax({method:"get",url:i.render}).then(function(e){a.review=e,r()}).catch(function(e){console.log(e),$(".prealoder-text").text("Server is not available")});else r(a.review)},process:function(e){var t=this,a=t.state;a.steps=e.block;var i={render:"http://www.mocky.io/v2/5a4258c43000000f1a709ddf",save:e.saveUrl,upload:e.uploadUrl},n=function(){$("textarea.js-auto-size").textareaAutoSize()},o=function(e){$("#preload").remove();var t="";t="4"==a.steps.settings.count?a.steps.data.length:a.steps.data.length-1;var i=0;i="3"==a.steps.settings.count?"4":"3";for(o=0;o<t;o++)r("add",a.steps.data[o].id,a.steps.data[o].title,a.steps.data[o].description,a.steps.data[o].icon,i,a.steps.settings.description);a.steps.settings.description&&"false"!=a.steps.settings.description&&$(".steps-description").prop("checked",!0);for(var n=$(".process-count"),o=0;o<n.length;o++)i==n[o].value&&(n[o].checked=!0,$(n[o].parentNode).addClass("active"));s()},r=function(e,t,a,i,o,r,s){var d="";s&&"false"!=s||(d="hide-description");var l='<li class="col-lg-'+r+' margin-top-bottom process-column">\n               <div class="editor-card editor-tooltip__show">\n                   <div class="row">\n                       <div class="editor-card__icon-block col-12">\n                           <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="'+t+'">\n                               <div class="editor-preview__tooltip">edit</div>\n                               <span class="fa '+o+' feature-icon" id="process-icon-'+t+'"></span>\n                           </div>\n                       </div>\n                       <div class="editor-card__title-block col-12">\n                           <div class="editor-textarea__text-edit-off">\n                               <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="'+t+'" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">'+a+'</textarea>\n                               <div class="editor-textarea__text-edit-action">\n                                   <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                   <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                               </div>\n                           </div>\n                       </div>\n                       <div class="editor-card__text-block col-12 '+d+'">\n                           <div class="editor_textarea-block">\n                               <div class="editor-textarea__text-edit-off">\n                                   <textarea class="editor_textarea__text js-auto-size" data-id="'+t+'" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">'+i+'</textarea>\n                                   <div class="editor-textarea__text-edit-action">\n                                       <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                       <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                   </div>\n                               </div>\n                           </div>\n                       </div>\n                   </div>\n               </div>\n           </li>';$("#process-list").append(l),n()},s=function(){$(".process-title").val(a.steps.header.title),$(".process-description").val(a.steps.header.description),n()};if($(document).on("change",".process-count",function(){if(a.steps.settings.count=$(this).val(),$("#process-list").empty(),4==parseInt(a.steps.settings.count))for(e=0;e<3;e++)r("add",a.steps.data[e].id,a.steps.data[e].title,a.steps.data[e].description,a.steps.data[e].icon,a.steps.settings.count,a.steps.settings.description);else for(var e=0;e<a.steps.data.length;e++)r("add",a.steps.data[e].id,a.steps.data[e].title,a.steps.data[e].description,a.steps.data[e].icon,a.steps.settings.count,a.steps.settings.description)}),$(document).on("change",".steps-description",function(){if(a.steps.settings.description=this.checked,$("#process-list").empty(),this.checked)if(4==parseInt(a.steps.settings.count))for(e=0;e<3;e++)r("add",a.steps.data[e].id,a.steps.data[e].title,a.steps.data[e].description,a.steps.data[e].icon,a.steps.settings.count,a.steps.settings.description);else for(e=0;e<a.steps.data.length;e++)r("add",a.steps.data[e].id,a.steps.data[e].title,a.steps.data[e].description,a.steps.data[e].icon,a.steps.settings.count,a.steps.settings.description);else if(4==parseInt(a.steps.settings.count))for(e=0;e<3;e++)r("add",a.steps.data[e].id,a.steps.data[e].title,a.steps.data[e].description,a.steps.data[e].icon,a.steps.settings.count,a.steps.settings.description);else for(var e=0;e<a.steps.data.length;e++)r("add",a.steps.data[e].id,a.steps.data[e].title,a.steps.data[e].description,a.steps.data[e].icon,a.steps.settings.count,a.steps.settings.description)}),$(document).on("change",".js-auto-size",function(){var e=$(this).attr("data-id"),t=$(this).attr("data-textarea-title"),i=$(this).val();switch(t){case"header-title":a.steps.header.title=i;break;case"header-description":a.steps.header.description=i;break;default:for(var n=0;n<a.steps.data.length;n++)if(0==a.steps.data[n].id.indexOf(e))return void(a.steps.data[n][t]=i)}}),$(document).on("click",".editor-preview__block",function(){var e=$(this).attr("data-id");a.actions.steps.activeIconId=e}),$(document).on("click",".edit-modal__icons-action",function(){$(".edit-modal__icons-action").removeClass("active-icon"),$(this).addClass("active-icon"),a.actions.steps.activeIcon=$(this).attr("data-icon-name")}),$(document).on("click",".editor-preview__block",function(){var e=$(this).attr("data-id");a.actions.steps.activeIconId=e}),$(document).on("click","#feature-saveIcon",function(){for(var e=a.actions.steps.activeIconId,t="#process-icon-"+e,i="fa "+a.actions.steps.activeIcon+" feature-icon",n=0;n<a.steps.data.length;n++)0==a.steps.data[n].id.indexOf(e)&&(a.steps.data[n].icon=a.actions.steps.activeIcon);$(t).removeAttr("class"),$(t).addClass(i)}),$(document).on("click","#save-changes",function(){$.ajax({url:i.save,data:{content:a.steps},type:"POST",success:function(e){t.saveCallback(e)},error:function(e){toastr.error("Error status "+e.status)}})}),void 0===a.steps)$.ajax({method:"get",url:i.render}).then(function(e){a.steps=e,o()}).catch(function(e){$(".prealoder-text").text("Server is not available"),toastr.error("Error")});else o(a.steps)},initTextareaAutosizer:function(){var e=this;$(document).on("keydown",".js-auto-size",function(t){t.ctrlKey&&13==t.keyCode&&(e.state.actions.editorText.save=!0,$(e.state.actions.editorText.node).blur())}),$(document).on("focus",".js-auto-size",function(){e.state.actions.editorText.node=this,e.state.actions.editorText.nodeText=this.value,e.state.actions.editorText.nodeHeight=this.style.height;var t=this.parentNode,a=e.state.actions.editorText.node,i=e.state.actions.editorText.nodeHeight,n=e.state.actions.editorText.nodeText;$(t).removeClass("editor-textarea__text-edit-off").addClass("editor-textarea__text-edit-on"),$(document).on("click",".editor-textarea__text-edit-close",function(){a.value=n,a.style.height=i,$(".js-auto-size").blur(),$(t).removeClass("editor-textarea__text-edit-on").addClass("editor-textarea__text-edit-off")}),$(".editor-textarea__text-edit-save").on("mousedown",function(){e.state.actions.editorText.save=!0,$(e.state.actions.editorText.node).blur()})}),$(document).on("focusout",".js-auto-size",function(){var t=e.state.actions.editorText.node,a=t.parentNode;e.state.actions.editorText.save?e.state.actions.editorText.save=!1:(t.value=e.state.actions.editorText.nodeText,t.style.height=e.state.actions.editorText.nodeHeight),$(a).removeClass("editor-textarea__text-edit-on").addClass("editor-textarea__text-edit-off")})},saveCallback:function(e){void 0!==e.status&&("success"==e.status&&toastr.success("Success"),"error"==e.status&&toastr.error(e.error))}},customModule.adminLayout={run:function(e){$(".dropdown-collapse").on("click",function(e){e.preventDefault(),e.stopPropagation(),$(this).next().hasClass("show")?$($(this).attr("href")).collapse("hide"):$($(this).attr("href")).collapse("show")});var t=document.querySelectorAll(".inputfile");Array.prototype.forEach.call(t,function(e){e.nextElementSibling.innerHTML;e.addEventListener("change",function(e){if((this.files&&this.files.length>1?(this.getAttribute("data-multiple-caption")||"").replace("{count}",this.files.length):e.target.value.split("\\").pop())&&this.files&&this.files[0]){var t=new FileReader;t.onload=function(e){var t='<div class="sommerce-settings__theme-imagepreview">\n                              <a href="#" class="sommerce-settings__delete-image"><span class="fa fa-times-circle-o"></span></a>\n                              <img src="'+e.target.result+'" alt="...">\n                          </div>';$("#image-preview").html(t)},t.readAsDataURL(this.files[0])}}),$(document).on("click",".sommerce_v1.0-settings__delete-image",function(t){$("#image-preview").html("<span></span>"),e.value=""})}),$('[data-toggle="tooltip"]').tooltip()}},customModule.adminNotifyLayout={run:function(e){toastr.options={closeButton:!1,debug:!1,newestOnTop:!1,progressBar:!1,positionClass:"toast-bottom-right",preventDuplicates:!1,onclick:null,showDuration:"300",hideDuration:"5000",timeOut:"5000",extendedTimeOut:"5000",showEasing:"swing",hideEasing:"linear",showMethod:"fadeIn",hideMethod:"fadeOut"};e.messages;e.messages&&_.forEach(e.messages,function(e){e.success&&toastr.success(e.success),e.warning&&toastr.warning(e.warning),e.error&&toastr.error(e.error)})}},customModule.ordersDetails={run:function(e){$(document).ready(function(){var e=$("#suborder-details-modal"),t=e.find(".modal-title"),a=e.find("#order-detail-provider"),i=e.find("#order-detail-provider-order-id"),n=e.find("#order-detail-provider-response"),o=e.find("#order-detail-lastupdate"),r=e.find(".modal-loader");e.on("show.bs.modal",function(e){function s(e){t.html(c),a.val(e.provider),i.val(e.provider_order_id),n.html(e.provider_response),o.val(e.updated_at)}var d=$(e.relatedTarget),l=d.data("suborder-id"),c=d.data("modal_title");void 0===l||isNaN(l)||(r.removeClass("hidden"),$.ajax({url:"/admin/orders/get-order-details",type:"GET",data:{suborder_id:l},success:function(e){r.addClass("hidden"),void 0!==e.details&&s(e.details)},error:function(e,t,a){console.log("Something is wrong!"),console.log(e,t,a),r.addClass("hidden")}}))}),e.on("hidden.bs.modal",function(e){$(e.currentTarget).find("input").val(""),n.html("")})})}},customModule.ordersClipboard={run:function(e){var t=e.messageCopied||"Copied!";$(document).ready(function(){var e=function(){var e=function(){new Clipboard("[data-clipboard=true]").on("success",function(e){e.clearSelection(),void 0===toastr?alert("Copied!"):(toastr.options={positionClass:"toast-bottom-right"},toastr.success(t))})};return{init:function(){e()}}}();jQuery(document).ready(function(){e.init()})})}},customModule.payments={run:function(e){var t=$(".payments_detail"),a=t.find(".modal-title"),i=t.find(".details-container"),n=t.find(".modal-loader");t.on("show.bs.modal",function(e){function o(e){a.html(d),_.each(e,function(e){i.append('<pre class="sommerce-pre details-item">'+e.time+"<br><br>"+e.data+"</pre>")})}var r=$(e.relatedTarget),s=r.data("id"),d=r.data("modal_title"),l=r.data("action_url");void 0!==s&&void 0!==l&&(n.removeClass("hidden"),$.ajax({url:l,type:"GET",success:function(e){n.addClass("hidden"),void 0!==e&&o(e)},error:function(e,a,i){console.log("Something is wrong!"),console.log(e,a,i),n.addClass("hidden"),t.modal("hide")}}))}),t.on("hidden.bs.modal",function(e){a.html(""),i.empty()})}},customModule.adminProviders={run:function(e){$(document).on("click","#showCreateProviderModal",function(e){e.preventDefault();$(this);var t=$("#createProviderModal"),a=$("#createProviderForm",t),i=$("#createProviderError",a);return i.addClass("hidden"),i.html(""),t.modal("show"),!1}),$(document).on("click","#createProviderButton",function(e){e.preventDefault();var t=$(this),a=$("#createProviderForm");return custom.sendFrom(t,a,{data:a.serialize(),callback:function(e){$("#createProviderModal").modal("hide"),location.reload()}}),!1})}};
+var custom = new function() {
+    var self = this;
+
+    self.request = null;
+
+    self.confirm = function (title, text, callback, options) {
+        var confirmPopupHtml;
+        var compiled = templates['modal/confirm'];
+        confirmPopupHtml = compiled($.extend({}, true, {
+            confirm_button : 'OK',
+            cancel_button : 'Cancel',
+            width: '600px'
+        }, options, {
+            'title': title,
+            'confirm_message': text
+        }));
+
+        $(window.document.body).append(confirmPopupHtml);
+        $('#confirmModal').modal({});
+
+        $('#confirmModal').on('hidden.bs.modal', function (e) {
+            $('#confirmModal').remove();
+        });
+
+        return $('#confirm_yes').on('click', function (e) {
+            $("#confirm_yes").unbind("click");
+            $('#confirmModal').modal('hide');
+            return callback.call();
+        });
+    };
+
+    self.ajax = function(options) {
+        var settings = $.extend({}, true, options);
+        if ("object" === typeof options) {
+            options.beforeSend = function() {
+                if ('function' === typeof settings.beforeSend) {
+                    settings.beforeSend();
+                }
+            };
+            options.success = function(response) {
+                if ('function' === typeof settings.success) {
+                    settings.success(response);
+                }
+            };
+            null         != self.request ? self.request.abort() : '';
+            self.request = $.ajax(options);
+        }
+    }
+
+    self.notify = function(notifyData) {
+        var notifyContainer = $('body'),
+            key, value;
+        notifyContainer.addClass('bottom-right');
+
+        if ('object' != typeof notifyData) {
+            return false;
+        }
+        for (key in notifyData) {
+
+            value = $.extend({}, true, {
+                type	: 'success',
+                delay	: 8000,
+                text	: '',
+            }, notifyData[key]);
+
+            if ('undefined' == typeof value.text || null == value.text) {
+                continue;
+            }
+
+            $.notify({
+                message	: value.text.toString(),
+            }, {
+                type: value.type,
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                z_index : 2000,
+                delay: value.delay,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                }
+            });
+        }
+    }
+
+    self.sendBtn = function(btn, settings)
+    {
+        if ('object' != typeof settings) {
+            settings = {};
+        }
+
+        if (btn.hasClass('active')) {
+            return;
+        }
+
+        btn.addClass('has-spinner');
+
+        var options = $.extend({}, true, settings);
+
+        options.url = btn.attr('href');
+
+        $('.spinner', btn).remove();
+
+        btn.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>');
+
+        options.beforeSend = function() {
+            btn.addClass('active');
+        };
+
+        options.success = function(response) {
+            btn.removeClass('active');
+            $('.spinner', btn).remove();
+
+            if ('success' == response.status) {
+                if ('function' === typeof settings.callback) {
+                    settings.callback(response);
+                }
+            } else if ('error' == response.status) {
+                self.notify({0: {
+                    type : 'danger',
+                    text : response.message
+                }});
+            }
+        };
+
+        self.ajax(options);
+    }
+
+    self.sendFrom = function(btn, form, settings)
+    {
+        if ('object' != typeof settings) {
+            settings = {};
+        }
+
+        if (btn.hasClass('active')) {
+            return;
+        }
+
+        btn.addClass('has-spinner');
+
+        var options = $.extend({}, true, settings);
+        var errorSummary = $('.error-summary', form);
+
+        options.url = form.attr('action');
+        options.type = 'POST';
+
+        $('.spinner', btn).remove();
+
+        btn.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>');
+
+        options.beforeSend = function() {
+            btn.addClass('active');
+
+            if (errorSummary.length) {
+                errorSummary.addClass('hidden');
+                errorSummary.html('');
+            }
+        };
+
+        options.success = function(response) {
+            btn.removeClass('active');
+            $('.spinner', btn).remove();
+
+            if ('success' == response.status) {
+                if ('function' === typeof settings.callback) {
+                    settings.callback(response);
+                }
+            } else if ('error' == response.status) {
+                if (response.message) {
+
+                    if (errorSummary.length) {
+                        errorSummary.html(response.message);
+                        errorSummary.removeClass('hidden');
+                    } else {
+                        self.notify({0: {
+                            type : 'danger',
+                            text : response.message
+                        }});
+                    }
+                }
+
+                if (response.errors) {
+                    $.each(response.errors, function(key, val) {
+                        alert(val);
+                        form.yiiActiveForm('updateAttribute', key, val);
+                    });
+                }
+
+                if ('function' === typeof settings.errorCallback) {
+                    settings.errorCallback(response);
+                }
+            }
+        };
+
+        self.ajax(options);
+    };
+
+    /**
+     * Generate Url path from string
+     * a-z, -_ ,0-9
+     * @param string
+     */
+    self.generateUrlFromString = function(string)
+    {
+        return string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-').toLowerCase();
+    };
+
+    /**
+     * Generate unique url
+     * @param url
+     * @param exitingUrls
+     * @returns {*}
+     */
+    self.generateUniqueUrl = function(url, exitingUrls)
+    {
+        var generatedUrl = url,
+            exiting,
+            prefixCounter;
+
+        prefixCounter = 1;
+
+        do {
+            exiting = _.find(exitingUrls, function(exitingUrl){
+                return exitingUrl === generatedUrl;
+            });
+
+            if (exiting) {
+                generatedUrl = url + '-' + prefixCounter;
+                prefixCounter ++;
+            }
+        }
+        while (exiting);
+
+        return generatedUrl;
+    };
+
+};
+var customModule = {};
+window.modules = {};
+
+$(function() {
+    if ('object' == typeof window.modules) {
+        $.each(window.modules, function(name, options) {
+            if ('undefined' != typeof customModule[name]) {
+                customModule[name].run(options);
+            }
+        });
+    }
+});
+/**
+ * /admin/settings custom js module
+ * @type {{run: customModule.settings.run}}
+ */
+customModule.adminGeneral = {
+    run: function (params) {
+        /******************************************************************
+         *            General settings SEO part interaction
+         *******************************************************************/
+        if ($('.edit-seo__title').length > 0) {
+            (function () {
+
+                var $storeName = $('#store-name'),
+                    $seoTitle = $('#edit-seo__title');
+
+                var seoTitleOnInit = $seoTitle.val(),
+                    seoTitleTouched = false;
+
+                var seoEdit = ['edit-seo__title', 'edit-seo__meta'];
+                var _loop = function _loop(i) {
+                    $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
+
+                    $("#" + seoEdit[i]).on('input', function (e) {
+                        $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
+                        $('.' + seoEdit[i]).text($(e.target).val());
+                    }).trigger('input');
+
+                };
+                for (var i = 0; i < seoEdit.length; i++) {
+                    _loop(i);
+                }
+
+                $seoTitle.on('focus', function (e){
+                   seoTitleTouched = true;
+                });
+
+                $storeName.on('input', function(e){
+                    if (seoTitleOnInit !== '' || seoTitleTouched) {
+                        return;
+                    }
+                    $seoTitle.val($(this).val()).trigger('input');
+                });
+
+            })();
+        }
+
+        /******************************************************************
+         *            General settings delete logo & favicon
+         ******************************************************************/
+        var $modal = $('#delete-modal'),
+        $deleteBtn = $modal.find('#delete-image');
+
+        $modal.on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget),
+            actionUrl = button.attr('href');
+            $deleteBtn.attr('href', actionUrl);
+        });
+
+        $modal.on('hidden.bs.modal', function (){
+            $deleteBtn.attr('href', null);
+        });
+    }
+};
+/**
+ * /admin/settings/pages custom js module
+ * @type {{run: customModule.settings.run}}
+ */
+customModule.adminPages = {
+    run: function (params) {
+        /*****************************************************************************************************
+         *                      Delete (mark as deleted) Page
+         *****************************************************************************************************/
+        var $modal = $('#delete-modal'),
+            $modalLoader = $modal.find('.modal-loader'),
+            $buttonDelete = $modal.find('#feature-delete'),
+            actionUrl,
+            successRedirectUrl;
+
+        $buttonDelete.on('click', function(){
+            $modalLoader.removeClass('hidden');
+            $.ajax({
+                url: actionUrl,
+                type: "DELETE",
+                success: function (data, textStatus, jqXHR){
+                    //Success
+                    _.delay(function(){
+                        $(location).attr('href', successRedirectUrl);
+                    }, 500);
+                },
+                error: function (jqXHR, textStatus, errorThrown){
+                    $modalLoader.addClass('hidden');
+                    $modal.modal('hide');
+                    console.log('Error on service save', jqXHR, textStatus, errorThrown);
+                }
+            });
+        });
+
+        $modal.on('show.bs.modal', function (event){
+            var button = $(event.relatedTarget);
+            actionUrl = button.data('action_url');
+            successRedirectUrl = $modal.data('success_redirect');
+        });
+
+        $modal.on('hidden.bs.modal', function (){
+            actionUrl = null;
+        });
+    }
+};
+/**
+ * /admin/settings/edit-page custom js module
+ * @type {{run: customModule.settings.run}}
+ */
+customModule.adminPageEdit = {
+    run: function (params) {
+
+        /*****************************************************************************************************
+         *              Create/Edit Page autofill SEO & URL routine
+         *****************************************************************************************************/
+        var $pageForm = $('#pageForm'),
+            $seoCollapse = $pageForm.find('.collapse');
+
+        var isNewPage = $pageForm.data('new_page');
+        var $formFields = {
+            name            : $pageForm.find('.form_field__name'),
+            content         : $pageForm.find('.form_field__content'),
+            url             : $pageForm.find('.form_field__url'),
+            visibility      : $pageForm.find('.form_field__visibility'),
+            seo_title       : $pageForm.find('.form_field__seo_title'),
+            seo_description : $pageForm.find('.form_field__seo_description')
+        };
+
+        var exitingUrls = params.urls || [];
+        var isValidationUrlError = params.url_error || false;
+
+        initSeoParts();
+        initSummernote($formFields.content);
+
+        // Expand collapse if error
+        if (isValidationUrlError) {
+            $seoCollapse.collapse("show");
+        }
+
+        if (isNewPage) {
+            $formFields.name.focus();
+            // Start autofilling URL
+            $formFields.name.on('input', autoFillFields);
+
+            // Stop autofill on first user's touch
+            $formFields.url.on('focus', autoFillFieldsOff);
+            $formFields.seo_title.on('focus', autoFillFieldsOff);
+        }
+
+        // Start cleanup url
+        $formFields.url.on('input', cleanupUrl);
+
+        /**
+         * Init summernote
+         * @param $element
+         */
+        function initSummernote($element){
+            $formFields.content.summernote({
+                minHeight: 300,
+                focus: true,
+                toolbar: [['style', ['style', 'bold', 'italic']], ['lists', ['ul', 'ol']], ['para', ['paragraph']], ['color', ['color']], ['insert', ['link', 'picture', 'video']], ['codeview', ['codeview']]],
+                disableDragAndDrop: true,
+                styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+                popover: {
+                    image: [['float', ['floatLeft', 'floatRight', 'floatNone']], ['remove', ['removeMedia']]]
+                },
+                dialogsFade: true
+            });
+
+            /* fix summernote submit form on Enter bug */
+            $pageForm.keypress(function (e) {
+                if (e.which === 13) {
+                    $pageForm.submit();
+                    return false;
+                }
+            });
+        }
+
+        /**
+         * Init autofill SEO part of the page
+         */
+        function initSeoParts(){
+            if ($('.edit-seo__title').length > 0){
+                (function (){
+                    var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
+
+                    var _loop = function _loop(i){
+                        $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
+                        $("#" + seoEdit[i]).on('input', function (e){
+                            if (i === 2){
+                                $('.' + seoEdit[i]).text($(e.target).val().toLowerCase());
+                            } else {
+                                $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
+                                $('.' + seoEdit[i]).text($(e.target).val());
+                            }
+                        }).trigger('input');
+                    };
+
+                    for (var i = 0; i < seoEdit.length; i++){
+                        _loop(i);
+                    }
+                })();
+            }
+        }
+
+        /**
+         * Return vallid address path by passed string
+         * a-z, -_ ,0-9
+         * @param string
+         */
+        function getValidAddressByString(string){
+            return string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-');
+        }
+
+        /**
+         * Autofilling `url` by `product name`
+         */
+        function autoFillFields(e){
+            var inputName = $(e.target).val(),
+                generatedUrl;
+
+            generatedUrl = custom.generateUrlFromString(inputName);
+            generatedUrl = custom.generateUniqueUrl(generatedUrl, exitingUrls);
+
+            // Autofill Url
+            $formFields.url.val(generatedUrl).trigger('input');
+            // Autofill Title
+            $formFields.seo_title.val(inputName).trigger('input');
+        }
+
+        /**
+         * Stop autofilling `url` by `product name`
+         */
+        function autoFillFieldsOff(){
+            $formFields.name.off('input', autoFillFields);
+            $formFields.seo_title.off('input', autoFillFields);
+        }
+
+        /**
+         * Cleanup url
+         */
+        function cleanupUrl(e){
+            var urlMaxLenght = 200,
+                urlByName,
+                target = e.currentTarget,
+                $target = $(target),
+                inputedName = $target.val();
+
+            var position = target.selectionStart;
+
+            urlByName = custom.generateUrlFromString(inputedName);
+
+            if (urlByName.length >= urlMaxLenght){
+                urlByName = urlByName.substring(0, (urlMaxLenght-1));
+            }
+
+            $target.val(urlByName);
+
+            target.selectionEnd = position;
+        }
+    }
+};
+/**
+ * /admin/settings/payments custom js module
+ * @type {{run: customModule.settings.run}}
+ */
+customModule.adminPayments = {
+    run: function (params) {
+        /******************************************************************
+         *            Toggle `payment method` active status
+         ******************************************************************/
+        $(document).on('change', '.toggle-active', function (e) {
+            var $checkbox = $(e.currentTarget),
+                actionUrl = $checkbox.data('action_url'),
+                method = $checkbox.data('payment_method'),
+                active = $checkbox.prop('checked') | 0;
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                data: {
+                    active: active
+                },
+                success: function (data, textStatus, jqXHR) {
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error on update', jqXHR, textStatus, errorThrown);
+                }
+            });
+        });
+    }
+};
+/**
+ * /admin/settings/pages custom js module
+ * @type {{run: customModule.settings.run}}
+ */
+customModule.adminThemes = {
+    run: function (params) {
+
+        /*****************************************************************************************************
+         *                     CodeMirror activation
+         *****************************************************************************************************/
+        var $codeMirror = $('#codemirror'),
+            codeMirror,
+            contentOnInit;
+
+        var $modalSubmitClose = $('#modal_submit_close');
+        var $modalSubmitReset = $('#modal_submit_reset');
+
+        if ($codeMirror.length > 0) {
+            codeMirror = CodeMirror.fromTextArea($codeMirror[0], {
+                lineNumbers: true
+            });
+
+            contentOnInit = codeMirror.getValue();
+        }
+
+        /*****************************************************************************************************
+         *                     JS Tree Files init
+         *****************************************************************************************************/
+        var $filesTree = $('#m_tree_1');
+        $filesTree.jstree({
+            "core" : {
+                "themes" : {
+                    "responsive": false
+                }
+            },
+            "types" : {
+                "default" : {
+                    "icon" : "fa fa-folder"
+                },
+                "file" : {
+                    "icon" : "fa fa-file"
+                }
+            },
+            "plugins": ["types"]
+        });
+
+        $filesTree.on('select_node.jstree', function(e, node) {
+            var _node = node.node;
+            if (_node && _node.hasOwnProperty('a_attr') && (_node.a_attr.href !== '#')) {
+
+                // if (codeMirror && (codeMirror.getValue() !== contentOnInit)) {
+                //     $modal.modal('show');
+                //     return;
+                // }
+
+                window.location = _node.a_attr.href;
+            }
+        });
+
+        /*****************************************************************************************************
+         *               Modal submit close
+         *****************************************************************************************************/
+        $modalSubmitClose.on('show.bs.modal', function(event){
+            var $href = $(event.relatedTarget),
+                href = $href.attr('href');
+
+            // Prevent show process if
+            if (codeMirror === undefined || codeMirror.getValue() === contentOnInit) {
+                event.stopPropagation();
+                window.location.href = href;
+                return false;
+            }
+            // Else — show
+            $(this).find('.submit_button').attr('href', href);
+        });
+
+        /*****************************************************************************************************
+         *               Modal submit reset
+         *****************************************************************************************************/
+        $modalSubmitReset.on('show.bs.modal', function(event){
+            var $href = $(event.relatedTarget),
+                href = $href.attr('href');
+
+            $(this).find('.submit_button').attr('href', href);
+        });
+
+    }
+};
+customModule.adminBlocks = {
+    run : function(params) {
+        var self = this;
+
+        $(document).on('change', '.change-status', function(e) {
+            e.preventDefault();
+
+            var checkbox = $(this);
+            var enableUrl = checkbox.data('enable');
+            var disableUrl = checkbox.data('disable');
+            var url = undefined;
+
+            if (checkbox.prop('checked')) {
+                url = enableUrl;
+            } else {
+                url = disableUrl;
+            }
+
+            custom.ajax({
+                url: url
+            });
+
+            return false;
+        });
+    }
+};
+customModule.adminEditBlock = {
+    state: {
+        steps: false,
+        review: false,
+        slider: false,
+        feature: false,
+        actions: {
+            delete: {
+                turn: false
+            },
+            editorText: {
+                node: false,
+                nodeText: false,
+                nodeHeight: false,
+                save: false
+            },
+            slider: {
+                link: false,
+                type: false
+            },
+            feature: {
+                activeIconId: false,
+                activeIcon: false
+            },
+            steps: {
+                activeIconId: false,
+                activeIcon: false
+            },
+            dropdown: {
+                id: false
+            }
+        }
+    },
+    run : function(params) {
+        var self = this;
+        var code = 'undefined' !== typeof params.code ? params.code : undefined;
+
+        switch (code) {
+            case 'slider':
+                self.slider(params);
+                break;
+
+            case 'features':
+                self.features(params);
+                break;
+
+            case 'review':
+                self.review(params);
+                break;
+
+            case 'process':
+                self.process(params);
+                break;
+        }
+
+        self.initTextareaAutosizer();
+    },
+    slider: function(params) {
+        var self = this;
+        var state = self.state;
+
+        state.slider = params.block;
+
+        var blockLinks = {
+            render: 'http://www.mocky.io/v2/5a3d15d8310000471fb593d1',
+            save: params.saveUrl,
+            upload: params.uploadUrl
+        };
+
+        var textAreaResizer = function textAreaResizer() {
+            $('textarea.js-auto-size').textareaAutoSize();
+        };
+
+        var swiperSlider = new Swiper('.block-slider', {
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            scrollbarDraggable: false,
+            simulateTouch: false
+        });
+
+        var generateSlide = function generateSlide(action, id, title, description, button, image) {
+            var template = '<div class="swiper-slide">\n                    <div class="slider__block-wrap slider__block-' + id + ' d-flex flex-wrap">\n\n                        <div class="editor-tooltip bg-danger editor-tooltip__right-top editor-action__delete-review editor-action__delete"  data-id="' + id + '" data-type="review" data-toggle="modal" data-target="#delete-feature-modal">\n                            <span class="fa fa-times"></span>\n                        </div>\n                        <div class="col-md-4">\n                            <label for="slider-image-' + id + '" class="slider__image slider__image_' + id + ' slider-image-' + id + '" style="background-image: url(' + image + ');">\n                                <input id="slider-image-' + id + '" type="file" name="slider-image-' + id + '" class="editor-slider-image-input" data-id="' + id + '">\n                            </label>\n                        </div>\n                        <div class="col">\n                            <div class="editor-block__reviev_name">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h text-left editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <button class="learn-more learn-more-' + id + '" data-toggle="modal" data-target="#learn-more" data-id="' + id + '">' + button + '</button>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>';
+
+
+            switch (action) {
+                case 'render':
+                    swiperSlider.appendSlide(template);
+                    swiperSlider.slideTo(0);
+                    break;
+                case 'add':
+                    swiperSlider.appendSlide(template);
+                    swiperSlider.slideTo(0);
+                    state.slider.data.push({
+                        "id": id.toString(),
+                        "title": title,
+                        "description": description,
+                        "button": {
+                            "title": button,
+                            "link": false,
+                            "type": false
+                        },
+                        "image": false
+                    });
+                    break;
+            }
+
+            //textAreaResizer();
+        };
+
+        var initData = function(result) {
+            $('#preload').remove();
+
+            for (var i = 0; i < result.data.length; i++) {
+                generateSlide('render', result.data[i].id, result.data[i].title, result.data[i].description, result.data[i].button.title, result.data[i].image);
+            }
+
+            var sliderEffects = $('.slider-effects'),
+                sliderInterval = $('.slider-interval');
+
+            for (var i = 0; i < sliderEffects.length; i++) {
+                if (sliderEffects[i].value.toLocaleLowerCase() == result.settings.effect.toLocaleLowerCase()) {
+                    sliderEffects[i].checked = true;
+                    $(sliderEffects[i].parentNode).addClass('active');
+                }
+            }
+            for (var i = 0; i < sliderInterval.length; i++) {
+                if (sliderInterval[i].value.toLocaleLowerCase() == result.settings.rotationInterval.toLocaleLowerCase()) {
+                    sliderInterval[i].checked = true;
+                    $(sliderInterval[i].parentNode).addClass('active');
+                }
+            }
+        }
+
+        $('.new-preview').on('click', function (e) {
+            e.preventDefault();
+            var lastSlide = '';
+            if (state.slider.data.length == 0) {
+                lastSlide = "1";
+            } else {
+                lastSlide = parseInt(state.slider.data[state.slider.data.length - 1].id) + 1;
+            }
+            generateSlide('add', lastSlide, '', '', 'Learn more', false);
+        });
+
+        $(document).on('click', '.learn-more', function () {
+            var slideID = $(this).attr('data-id');
+            state.actions.slider.link = slideID;
+            $('.slider-link__type').addClass('hide-link');
+            for (var i = 0; i < state.slider.data.length; i++) {
+                if (state.slider.data[i].id.indexOf(slideID) == 0) {
+                    $('.learn-more__input').val(state.slider.data[i].button.title);
+                    state.actions.slider.type = state.slider.data[i].button.type;
+                }
+            }
+
+            var selectedTypes = $('#select-menu__link')[0],
+                dataSlide = '';
+
+            for (var i = 0; i < state.slider.data.length; i++) {
+                if (state.slider.data[i].id.indexOf(state.actions.slider.link) == 0) {
+                    dataSlide = state.slider.data[i];
+                }
+            }
+
+            if (dataSlide.button.type) {
+                for (var i = 0; i < selectedTypes.length; i++) {
+                    if (selectedTypes[i].value.toLocaleLowerCase() == dataSlide.button.type) {
+                        selectedTypes[i].selected = true;
+                        $('.slider-link__type-' + dataSlide.button.type).removeClass('hide-link');
+                    }
+                }
+            } else {
+                selectedTypes[0].selected = true;
+            }
+
+            var selectedNode = ".link-input__" + dataSlide.button.type;
+            switch (dataSlide.button.type) {
+                case "web":
+                    $(selectedNode).val(dataSlide.button.link);
+                    break;
+                case "products":
+                case "page":
+                    for (var i = 0; i < selectedNode.length; i++) {
+                        if (selectedNode[i].value == selectedNode.button.link) {
+                            selectedTypes[i].selected = true;
+                        }
+                    }
+                    break;
+            }
+        });
+
+        $(document).on('click', '#learn-more__save', function () {
+            var selectedMenu = $("#select-menu__link option:selected").val();
+            for (var i = 0; i < state.slider.data.length; i++) {
+                if (state.slider.data[i].id.indexOf(state.actions.slider.link) == 0) {
+                    if ($('.learn-more__input').val() == '') {
+                        state.slider.data[i].button.title = 'Learn more';
+                        state.slider.data[i].button.type = false;
+                    } else {
+                        state.slider.data[i].button.title = $('.learn-more__input').val();
+                        state.slider.data[i].button.type = selectedMenu;
+                    }
+
+                    switch (selectedMenu) {
+                        case "web":
+                            state.slider.data[i].button.link = $('.link-input__' + selectedMenu).val();
+                            break;
+                        case "products":
+                        case "page":
+                            var selectedNode = ".slider-link__type-" + selectedMenu;
+                            state.slider.data[i].button.link = $(selectedNode + " option:selected").val();
+                            break;
+                        case "none":
+                            state.slider.data[i].button.link = false;
+                            break;
+                        case "home":
+                            state.slider.data[i].button.link = '/';
+                            break;
+                        default:
+                            console.log('default');
+                            state.slider.data[i].button.link = false;
+                            break;
+                    }
+
+                    $('.learn-more-' + state.actions.slider.link).text(state.slider.data[i].button.title);
+                }
+            }
+        });
+
+        $(document).on('change', '.editor-slider-image-input', function () {
+            var classId = '.' + this.id,
+                dataID = $(this).attr('data-id');
+
+            $(classId).addClass('image-loader');
+            var data = new FormData();
+            data.append('file', $(this)[0].files[0]);
+            data.append('type', 'slider');
+
+            $.ajax({
+                url: blockLinks.upload,
+                data: data,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (response) {
+                    $(classId).removeClass('image-loader');
+
+                    if ('error' == response.status) {
+                        toastr.error(response.error);
+                    }
+
+                    if ('success' == response.status) {
+                        $(classId).css('background-image', 'url(' + response.link + ')');
+                        for (var i = 0; i < state.slider.data.length; i++) {
+                            if (state.slider.data[i].id.indexOf(dataID) == 0) {
+                                state.slider.data[i].image = response.link;
+                                return;
+                            }
+                        }
+                    }
+                },
+                error: function error(_error) {}
+            });
+        });
+
+        $(document).on('click', '.editor-action__delete', function () {
+            var slideID = $(this).attr('data-id');
+            state.actions.delete.turn = slideID;
+        });
+
+        $(document).on('click', '#feature-delete', function () {
+            for (var i = 0; i < state.slider.data.length; i++) {
+                if (state.slider.data[i].id.indexOf(state.actions.delete.turn) == 0) {
+                    state.slider.data.splice(i, 1);
+                    swiperSlider.removeSlide(swiperSlider.activeIndex);
+                    return;
+                }
+            }
+        });
+
+        $(document).on('change', '.js-auto-size', function () {
+            var slideID = $(this).attr('data-id'),
+                slideType = $(this).attr('data-textarea-title'),
+                content = $(this).val();
+
+            for (var i = 0; i < state.slider.data.length; i++) {
+                if (state.slider.data[i].id.indexOf(slideID) == 0) {
+                    state.slider.data[i][slideType] = content;
+                    return;
+                }
+            }
+        });
+
+        $(document).on('change', '#select-menu__link', function () {
+            var linkType = $(this).find('option:selected').val();
+            $('.slider-link__type').addClass('hide-link');
+            $('.slider-link__type-' + linkType).removeClass('hide-link');
+        });
+
+        /* Settings */
+
+        $(document).on('change', '.slider-effects', function () {
+            state.slider.settings.effect = $(this).val();
+        });
+
+        $(document).on('change', '.slider-interval', function () {
+            state.slider.settings.rotationInterval = $(this).val();
+        });
+
+        $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
+            $.ajax({
+                url: blockLinks.save,
+                data: {
+                    content: state.slider
+                },
+                type: 'POST',
+                success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    self.saveCallback(response);
+                },
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
+                }
+            });
+        });
+
+        if ('undefined' == typeof state.slider) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+
+                state.slider = result;
+
+                initData(result);
+            }).catch(function (err) {
+                $('.prealoder-text').text('Server is not available');
+            });
+        } else {
+            initData(state.slider);
+        }
+    },
+    features: function(params) {
+        var self = this;
+        var state = self.state;
+
+        state.feature = params.block;
+
+        var blockLinks = {
+            render: 'http://www.mocky.io/v2/5a4108593200006a18ac345e',
+            save: params.saveUrl,
+            upload: params.uploadUrl
+        };
+
+        var textAreaResizer = function textAreaResizer() {
+            $('textarea.js-auto-size').textareaAutoSize();
+        };
+
+        var initData = function(result) {
+            $('#preload').remove();
+
+            var featureColumn = $('.feature-column'),
+                featureAlign = $('.feature-align');
+
+            for (var i = 0; i < featureColumn.length; i++) {
+                if (state.feature.settings.column == featureColumn[i].value) {
+                    featureColumn[i].checked = true;
+                    $(featureColumn[i].parentNode).addClass('active');
+                }
+            }
+
+            for (var i = 0; i < featureAlign.length; i++) {
+                if (state.feature.settings.align == featureAlign[i].value) {
+                    featureAlign[i].checked = true;
+                    $(featureAlign[i].parentNode).addClass('active');
+                }
+            }
+
+            $("#feature-fontSize").slider({
+                min: 12,
+                max: 240,
+                step: 12,
+                value: state.feature.settings.iconSize,
+                slide: function slide(event, ui) {
+                    $(".feature-icon-size-show").text(ui.value);
+                    $("#feature-size-icon").val(ui.value);
+                    $('.feature-icon').css({
+                        "fontSize": ui.value + 'px'
+                    });
+                    state.feature.settings.iconSize = ui.value;
+                }
+            });
+            $('.feature-icon-size-show').text(state.feature.settings.iconSize);
+
+            for (var i = 0; i < state.feature.data.length; i++) {
+                generateCards('render', state.feature.data[i].id, state.feature.data[i].title, state.feature.data[i].description, state.feature.data[i].icon);
+            }
+
+            $("#feature-list").dragsort({
+                dragBetween: true,
+                dragSelector: ".editor-action__drag",
+                dragEnd: function() {
+                    var elements = $('#feature-list li'),
+                        dataClone = $.extend(true, {}, state.feature.data),
+                        dataNew = [];
+
+                    for (var i = 0; i < elements.length; i++){
+                        for (var j = 0; j<state.feature.data.length; j++){
+                            if ($(elements[i]).data('id') == state.feature.data[j].id) {
+                                dataNew.push(state.feature.data[j])
+                            }
+                        }
+                    }
+                    console.log(state.feature.data, dataNew);
+                    state.feature.data = dataNew;
+                },
+                placeHolderTemplate: '<li class="col margin-top-bottom editor-placeholder-move"><div class="editor-card editor-card__left editor-tooltip__show placeholder-template d-flex align-items-lg-center justify-content-center"><span>Insert</span></div></li>'
+            });
+
+            includeContent();
+            textAreaResizer();
+        }
+
+        var generateCards = function generateCards(action, id, title, description, icon) {
+            var iconSize = state.feature.settings.iconSize,
+                column = state.feature.settings.column,
+                align = state.feature.settings.align,
+                colAlignTitle = '',
+                colAlignIcon = '';
+
+            if(align == 'left'){
+                colAlignTitle = 'col-7';
+                colAlignIcon = 'col-5';
+            }else{
+                colAlignTitle = 'col-12';
+                colAlignIcon = 'col-12';
+            }
+
+            var featureCardTemplate = '<li class="col-lg-' + column + ' margin-top-bottom feature-id-' + id + '" data-id="'+id+'">\n                    <div class="editor-card editor-card__left editor-tooltip__show">\n                        <div class="row">\n                            <div class="editor-tooltip bg-success editor-tooltip__right-top editor-action__drag">move</div>\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete"  data-id="' + id + '" data-type="feature" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n\n                            <div class="editor-card__icon-block '+colAlignIcon+' ">\n                                <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                                    <div class="editor-preview__tooltip">edit</div>\n                                    <span class="fa ' + icon + ' feature-icon" id="feature-icon-' + id + '" style="font-size: ' + iconSize + 'px;"></span>\n                                </div>\n                            </div>\n                            <div class="editor-card__title-block '+colAlignTitle+' ">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-card__text-block col-12">\n                                <div class="editor_textarea-block">\n                                    <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" rows="1" spellcheck="false" data-id="' + id + '" data-textarea-title="description" placeholder="Add text...">' + description + '</textarea>\n                                        <div class="editor-textarea__text-edit-action">\n                                            <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                            <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                        </div>\n                    </div>\n                </li>';
+
+            $("#feature-list").append(featureCardTemplate);
+        };
+
+        var includeContent = function includeContent() {
+            $('.feature-title').val(state.feature.header.title);
+            $('.feature-description').val(state.feature.header.description);
+        };
+
+        $(document).on('click', '.editor-action__delete', function () {
+            var dataID = $(this).attr('data-id');
+            state.actions.delete.turn = dataID;
+        });
+
+        $(document).on('click', '#feature-delete', function () {
+            for (var i = 0; i < state.feature.data.length; i++) {
+                if (state.feature.data[i].id.indexOf(state.actions.delete.turn) == 0) {
+                    state.feature.data.splice(i, 1);
+                }
+            }
+            var removeClass = '.feature-id-' + state.actions.delete.turn;
+            $(removeClass).remove();
+        });
+
+        $(document).on('change', '.js-auto-size', function () {
+            var featureID = $(this).attr('data-id'),
+                featureType = $(this).attr('data-textarea-title'),
+                content = $(this).val();
+
+            switch (featureType) {
+                case "header-title":
+                    console.log(state.feature.header.title);
+                    console.log(content);
+                    state.feature.header.title = content;
+                    break;
+                case "header-description":
+                    state.feature.header.description = content;
+                    break;
+                default:
+                    for (var i = 0; i < state.feature.data.length; i++) {
+                        if (state.feature.data[i].id.indexOf(featureID) == 0) {
+                            state.feature.data[i][featureType] = content;
+                            return;
+                        }
+                    }
+                    break;
+            }
+        });
+
+        $(document).on('change', '.feature-align', function () {
+            var featureAlign = $(this).val();
+            state.feature.settings.align = featureAlign;
+            switch (featureAlign) {
+                case 'left':
+                    $('.editor-card__icon-block').removeClass('col-12').addClass('col-5');
+                    $('.editor-card__title-block').removeClass('col-12').addClass('col-7');
+                    break;
+                case 'center':
+                    $('.editor-card__icon-block').removeClass('col-5').addClass('col-12');
+                    $('.editor-card__title-block').removeClass('col-7').addClass('col-12');
+                    break;
+            }
+        });
+
+        $(document).on('change', '.feature-column', function () {
+            state.feature.settings.column = $(this).val();
+        });
+
+        $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
+            $.ajax({
+                url: blockLinks.save,
+                data: {
+                    content: state.feature
+                },
+                type: 'POST',
+                success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    self.saveCallback(response);
+                },
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
+                }
+            });
+        });
+
+        $(document).on('click', '.edit-modal__icons-action', function () {
+            $('.edit-modal__icons-action').removeClass('active-icon');
+            $(this).addClass('active-icon');
+            state.actions.feature.activeIcon = $(this).attr('data-icon-name');
+        });
+
+        $(document).on('click', '.editor-preview__block', function () {
+            var dataID = $(this).attr('data-id');
+            state.actions.feature.activeIconId = dataID;
+        });
+
+        $(document).on('click', '#feature-saveIcon', function () {
+            var currentID = state.actions.feature.activeIconId,
+                iconClass = '#feature-icon-' + currentID,
+                classStroke = 'fa ' + state.actions.feature.activeIcon + ' feature-icon';
+
+            for (var i = 0; i < state.feature.data.length; i++) {
+                if (state.feature.data[i].id.indexOf(currentID) == 0) {
+                    state.feature.data[i].icon = state.actions.feature.activeIcon;
+                }
+            }
+
+            $(iconClass).removeAttr('class');
+            $(iconClass).addClass(classStroke);
+        });
+
+        $(document).on('change', '.feature-column', function () {
+            $("#feature-list li").removeClass('col-lg-3 col-lg-4 col-lg-6');
+            $('#feature-list li').addClass('col-lg-' + state.feature.settings.column);
+        });
+
+        $(document).on('click', '#feature-new', function () {
+
+            var maxID = 0;
+            for (var i = 0; i < state.feature.data.length; i++) {
+                if (maxID < parseInt(state.feature.data[i].id)) {
+                    maxID = parseInt(state.feature.data[i].id);
+                }
+            }
+            maxID++;
+            var featureID = maxID.toString();
+            state.feature.data.push({
+                "id": featureID,
+                "title": "",
+                "description": "",
+                "icon": "fa-picture-o"
+            });
+            generateCards('add', featureID, '', '', 'fa-picture-o');
+        });
+
+        if ('undefined' == typeof state.feature) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+                state.feature = result;
+
+                initData(result);
+            }).catch(function (err) {
+                console.log(err);
+            });
+        } else {
+            initData(state.feature);
+        }
+    },
+    review: function(params) {
+        var self = this;
+        var state = self.state;
+
+        state.review = params.block;
+
+        var blockLinks = {
+            render: 'http://www.mocky.io/v2/5a44a9752e00002c03708668',
+            save: params.saveUrl,
+            upload: params.uploadUrl
+        };
+
+        var textAreaResizer = function textAreaResizer() {
+            $('textarea.js-auto-size').textareaAutoSize();
+        };
+
+        var swiperSlider = new Swiper('.block-slider', {
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            scrollbarDraggable: false,
+            simulateTouch: false,
+            centeredSlides: false
+        });
+
+        var initData = function(result) {
+            $('#preload').remove();
+
+            swiperSlider = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                scrollbarDraggable: false,
+                centeredSlides: false,
+                simulateTouch: false,
+                slidesPerView: parseInt(state.review.settings.column)
+            });
+
+            for (var i = 0; i < state.review.data.length; i++) {
+                generateSlide('render', state.review.data[i].id, state.review.data[i].name, state.review.data[i].rating, state.review.data[i].description, state.review.data[i].image);
+            }
+
+            var reviewColumn = $('.review-column');
+
+            for (var i = 0; i < reviewColumn.length; i++) {
+                if (state.review.settings.column == reviewColumn[i].value) {
+                    reviewColumn[i].checked = true;
+                    $(reviewColumn[i].parentNode).addClass('active');
+                }
+            }
+
+            includeContent();
+        }
+
+        var generateSlide = function generateSlide(action, id, name, rating, description, image) {
+
+            if (!image) {
+                image = 'http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif';
+            }
+
+            var templateRating = '';
+            for (var i = 1; i < 6; i++) {
+                if (i == parseInt(rating)) {
+                    templateRating += '<input type="radio" name="rating" class="rating" value=' + i + ' checked/>';
+                } else {
+                    templateRating += '<input type="radio" name="rating" class="rating" value=' + i + ' />';
+                }
+            }
+
+            var template = '<div class="swiper-slide">\n                        <div class="editor-review__block">\n                            <div class="editor-tooltip bg-danger editor-tooltip__left-top editor-action__delete-review editor-action__delete"  data-id="' + id + '" data-type="review" data-toggle="modal" data-target="#delete-feature-modal">\n                                <span class="fa fa-times"></span>\n                            </div>\n                            <div class="editor-block__review-avatar">\n                                <div class="editor-tooltip bg-danger editor-tooltip__left-top review-image-delete" data-id="' + id + '" data-type="avatar" data-toggle="modal" data-target="#delete-feature-modal">\n                                    <span class="fa fa-times"></span>\n                                </div>\n                                <label for="review-avatar-' + id + '">\n                                    <div class="editor-preview__block-avatar">\n                                        <div style="background-image: url(\'' + image + '\');" alt="" title="" class="editor-avatar__image rounded-circle review-avatar-' + id + '"></div>\n                                    </div>\n                                    <input id="review-avatar-' + id + '" type="file" class="editor-preview__avatar-input" data-id="' + id + '">\n                                </label>\n                            </div>\n                            <div class="editor-block__reviev_name">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="name" rows="1" spellcheck="false" placeholder="Add name...">' + name + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-rating__block">\n                                <div class="editor-rating_block-stars">\n                                    <div class="star-rating-' + id + '" data-id="' + id + '">\n                                        ' + templateRating + '\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>';
+
+            switch (action) {
+                case 'render':
+                    swiperSlider.appendSlide(template);
+                    swiperSlider.slideTo(0);
+                    break;
+                case 'add':
+                    swiperSlider.appendSlide(template);
+                    swiperSlider.slideTo(0);
+                    state.review.data.push({
+                        "id": id.toString(),
+                        "name": name,
+                        "description": description,
+                        "image": '0',
+                        "rating": false
+                    });
+                    break;
+            }
+
+            textAreaResizer();
+            $('.star-rating-' + id).rating();
+        };
+
+        var includeContent = function includeContent() {
+            $('.review-title').val(state.review.header.title);
+            $('.review-description').val(state.review.header.description);
+        };
+
+        $(document).on('change', '.js-auto-size', function () {
+            var reviewID = $(this).attr('data-id'),
+                reviewType = $(this).attr('data-textarea-title'),
+                content = $(this).val();
+
+            switch (reviewType) {
+                case "header-title":
+                    state.review.header.title = content;
+                    break;
+                case "header-description":
+                    state.review.header.description = content;
+                    break;
+                default:
+                    for (var i = 0; i < state.review.data.length; i++) {
+                        if (state.review.data[i].id.indexOf(reviewID) == 0) {
+                            state.review.data[i][reviewType] = content;
+                            return;
+                        }
+                    }
+                    break;
+            }
+        });
+
+        $(document).on('click', '.editor-action__delete', function () {
+            var slideID = $(this).attr('data-id');
+            state.actions.delete.turn = slideID;
+        });
+
+        $(document).on('click', '#feature-delete', function () {
+            for (var i = 0; i < state.review.data.length; i++) {
+                if (state.review.data[i].id.indexOf(state.actions.delete.turn) == 0) {
+                    state.review.data.splice(i, 1);
+                    swiperSlider.removeSlide(swiperSlider.activeIndex);
+                    return;
+                }
+            }
+        });
+
+        $(document).on('change', '.review-column', function () {
+            state.review.settings.column = $(this).val();
+
+            swiperSlider = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                scrollbarDraggable: false,
+                centeredSlides: false,
+                simulateTouch: false,
+                slidesPerView: parseInt($(this).val())
+            });
+            textAreaResizer();
+        });
+
+        $(document).on('click', '#new-review', function (e) {
+            e.preventDefault();
+            var lastSlide = '';
+            if (state.review.data.length == 0) {
+                lastSlide = "1";
+            } else {
+                lastSlide = parseInt(state.review.data[state.review.data.length - 1].id) + 1;
+            }
+            generateSlide('add', lastSlide, '', '', '', false);
+        });
+
+        $(document).on('change', '.editor-preview__avatar-input', function () {
+            var dataID = $(this).data('id');
+            var classId = '.review-avatar-' + dataID;
+
+            $(classId).addClass('image-loader');
+
+            var data = new FormData();
+            data.append('file', $(this)[0].files[0]);
+            data.append('type', 'review');
+
+            $.ajax({
+                url: blockLinks.upload,
+                data: data,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (response) {
+                    $(classId).removeClass('image-loader');
+                    if ('error' == response.status) {
+                        toastr.error(response.error);
+                        $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
+                    }
+
+                    if ('success' == response.status) {
+
+                        for (var i = 0; i < state.review.data.length; i++) {
+                            if (state.review.data[i].id.indexOf(dataID) == 0) {
+                                state.review.data[i].image = response.link;
+                                $(classId).css('background-image', 'url(' + response.link + ')');
+                                return;
+                            }
+                        }
+                    }
+                },
+                error: function error(_error) {
+                    $(classId).removeClass('image-loader');
+                    $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
+                }
+            });
+        });
+
+        $(document).on('click', '.review-image-delete', function () {
+            var dataID = $(this).data('id');
+            var classId = '.review-avatar-' + dataID;
+
+            for (var i = 0; i < state.review.data.length; i++) {
+                if (state.review.data[i].id.indexOf(dataID) == 0) {
+                    state.review.data[i].image = '0';
+                    $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
+                    return;
+                }
+            }
+        });
+
+        $(document).on('click', '.fullStar', function () {
+            var ratingValue = $(this).attr('title'),
+                ratingNode = $(this.parentNode.parentNode).attr('data-id');
+
+            for (var i = 0; i < state.review.data.length; i++) {
+                if (state.review.data[i].id.indexOf(ratingNode) == 0) {
+                    state.review.data[i].rating = ratingValue;
+                }
+            }
+        });
+
+
+        $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
+            $.ajax({
+                url: blockLinks.save,
+                data: {
+                    content: state.review
+                },
+                type: 'POST',
+                success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    self.saveCallback(response);
+                },
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
+                }
+            });
+        });
+
+        if ('undefined' == typeof state.review) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+                state.review = result;
+                initData(result);
+            }).catch(function (err) {
+                console.log(err);
+                $('.prealoder-text').text('Server is not available');
+            });
+        } else {
+            initData(state.review);
+        }
+    },
+    process: function(params) {
+        var self = this;
+        var state = self.state;
+
+        state.steps = params.block;
+
+        var blockLinks = {
+            render: 'http://www.mocky.io/v2/5a4258c43000000f1a709ddf',
+            save: params.saveUrl,
+            upload: params.uploadUrl
+        };
+
+        var textAreaResizer = function textAreaResizer() {
+            $('textarea.js-auto-size').textareaAutoSize();
+        };
+
+        var initData = function(result) {
+            $('#preload').remove();
+
+            if(state.steps.settings.iconSize == undefined){
+                state.steps.settings.iconSize = 75;
+            }
+
+            var stepsLength = state.steps.data.length,
+                column = 3;
+
+            if(stepsLength == 2){
+                column = 4;
+            }
+
+            for (var i = 0; i < state.steps.data.length; i++) {
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, column, state.steps.settings.description);
+            }
+
+            if (state.steps.settings.description && 'false' != state.steps.settings.description) {
+                $('.steps-description').prop('checked', true);
+            }
+
+            var processCount = $('.process-count');
+
+            for (var i = 0; i < processCount.length; i++) {
+                if (column.toString() == processCount[i].value) {
+                    processCount[i].checked = true;
+                    $(processCount[i].parentNode).addClass('active');
+                }
+            }
+
+            $("#steps-fontSize").slider({
+                min: 12,
+                max: 240,
+                step: 12,
+                value: state.steps.settings.iconSize,
+                slide: function slide(event, ui) {
+                    $(".steps-icon-size-show").text(ui.value);
+                    $("#steps-size-icon").val(ui.value);
+                    $('.steps-icon').css({
+                        "fontSize": ui.value + 'px'
+                    });
+                    state.steps.settings.iconSize = ui.value;
+                }
+            });
+            $('.steps-icon-size-show').text(state.steps.settings.iconSize);
+            includeContent();
+        }
+
+        var generateCards = function generateCards(action, id, title, description, icon, col, cardDescription) {
+            var showDescription = "";
+
+            if(cardDescription == '0'){
+                showDescription = 'hide-description';
+            }
+
+            var cardTemplate = '<li class="col-lg-' + col + ' margin-top-bottom process-column">\n               <div class="editor-card editor-tooltip__show">\n                   <div class="row">\n                       <div class="editor-card__icon-block col-12">\n                           <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                               <div class="editor-preview__tooltip">edit</div>\n                               <span class="fa ' + icon + ' steps-icon" id="process-icon-' + id + '"></span>\n                           </div>\n                       </div>\n                       <div class="editor-card__title-block col-12">\n                           <div class="editor-textarea__text-edit-off">\n                               <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                               <div class="editor-textarea__text-edit-action">\n                                   <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                   <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                               </div>\n                           </div>\n                       </div>\n                       <div class="editor-card__text-block col-12 ' + showDescription + '">\n                           <div class="editor_textarea-block">\n                               <div class="editor-textarea__text-edit-off">\n                                   <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                   <div class="editor-textarea__text-edit-action">\n                                       <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                       <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                   </div>\n                               </div>\n                           </div>\n                       </div>\n                   </div>\n               </div>\n           </li>';
+            $('#process-list').append(cardTemplate);
+            textAreaResizer();
+        };
+
+        var includeContent = function includeContent() {
+            $('.process-title').val(state.steps.header.title);
+            $('.process-description').val(state.steps.header.description);
+            textAreaResizer();
+        };
+
+        $(document).on('change', '.process-count', function () {
+            state.steps.settings.count = $(this).val();
+            $('#process-list').empty();
+
+            if (parseInt(state.steps.settings.count) == 4) {
+                state.steps.data.pop();
+            }else{
+                state.steps.data.push({
+                    id: "4",
+                    icon: "fa-picture-o",
+                    title: '',
+                    description: ''
+                });
+            }
+
+            for (var i = 0; i < state.steps.data.length; i++) {
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
+            }
+
+        });
+
+        $(document).on('change', '.steps-description', function () {
+
+            if (this.checked) {
+                state.steps.settings.description = '1';
+            }else{
+                state.steps.settings.description = '0';
+            }
+            console.log(state.steps.settings.description);
+
+            $('#process-list').empty();
+
+            for (var i = 0; i < state.steps.data.length; i++) {
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
+            }
+
+
+        });
+
+        $(document).on('change', '.js-auto-size', function () {
+            var stepsID = $(this).attr('data-id'),
+                stepType = $(this).attr('data-textarea-title'),
+                content = $(this).val();
+
+            switch (stepType) {
+                case "header-title":
+                    state.steps.header.title = content;
+                    break;
+                case "header-description":
+                    state.steps.header.description = content;
+                    break;
+                default:
+                    for (var i = 0; i < state.steps.data.length; i++) {
+                        if (state.steps.data[i].id.indexOf(stepsID) == 0) {
+                            state.steps.data[i][stepType] = content;
+                            return;
+                        }
+                    }
+                    break;
+            }
+        });
+
+        $(document).on('click', '.editor-preview__block', function () {
+            var dataID = $(this).attr('data-id');
+            state.actions.steps.activeIconId = dataID;
+        });
+
+        $(document).on('click', '.edit-modal__icons-action', function () {
+            $('.edit-modal__icons-action').removeClass('active-icon');
+            $(this).addClass('active-icon');
+            state.actions.steps.activeIcon = $(this).attr('data-icon-name');
+        });
+
+        $(document).on('click', '.editor-preview__block', function () {
+            var dataID = $(this).attr('data-id');
+            state.actions.steps.activeIconId = dataID;
+        });
+
+        $(document).on('click', '#feature-saveIcon', function () {
+            var currentID = state.actions.steps.activeIconId,
+                iconClass = '#process-icon-' + currentID,
+                classStroke = 'fa ' + state.actions.steps.activeIcon + ' feature-icon';
+
+            for (var i = 0; i < state.steps.data.length; i++) {
+                if (state.steps.data[i].id.indexOf(currentID) == 0) {
+                    state.steps.data[i].icon = state.actions.steps.activeIcon;
+                }
+            }
+
+            $(iconClass).removeAttr('class');
+            $(iconClass).addClass(classStroke);
+        });
+
+
+
+        $(document).on('click', '#save-changes', function () {
+            var that = this;
+            $(that).addClass('m-loader m-loader--light m-loader--right');
+            $(that).prop('disabled', true);
+            $.ajax({
+                url: blockLinks.save,
+                data: {
+                    content: state.steps
+                },
+                type: 'POST',
+                success: function success(response) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    self.saveCallback(response);
+                },
+                error: function error(_error2) {
+                    $(that).removeClass('m-loader m-loader--light m-loader--right');
+                    $(that).prop('disabled', false);
+                    toastr.error("Error status " + _error2.status);
+                }
+            });
+        });
+
+        if ('undefined' == typeof state.steps) {
+            var promise = $.ajax({
+                method: 'get',
+                url: blockLinks.render,
+            }).then(function (result) {
+                state.steps = result;
+                initData(result);
+            }).catch(function (err) {
+                $('.prealoder-text').text('Server is not available');
+                toastr.error("Error");
+            });
+        } else {
+            initData(state.steps);
+        }
+    },
+    initTextareaAutosizer: function() {
+        var self = this;
+        $(document).on('keydown', '.js-auto-size', function (e) {
+            if (e.ctrlKey && e.keyCode == 13) {
+                self.state.actions.editorText.save = true;
+                $(self.state.actions.editorText.node).blur();
+            }
+        });
+
+        $(document).on('focus', '.js-auto-size', function () {
+            self.state.actions.editorText.node = this;
+            self.state.actions.editorText.nodeText = this.value;
+            self.state.actions.editorText.nodeHeight = this.style.height;
+
+            var parentnode = this.parentNode,
+                node = self.state.actions.editorText.node,
+                nodeHeight = self.state.actions.editorText.nodeHeight,
+                nodeText = self.state.actions.editorText.nodeText;
+
+            $(parentnode).removeClass('editor-textarea__text-edit-off').addClass('editor-textarea__text-edit-on');
+
+            $(document).on('click', '.editor-textarea__text-edit-close', function () {
+                node.value = nodeText;
+                node.style.height = nodeHeight;
+                $('.js-auto-size').blur();
+                $(parentnode).removeClass('editor-textarea__text-edit-on').addClass('editor-textarea__text-edit-off');
+            });
+
+            $('.editor-textarea__text-edit-save').on('mousedown', function () {
+                self.state.actions.editorText.save = true;
+                $(self.state.actions.editorText.node).blur();
+            });
+        });
+
+        $(document).on('focusout', '.js-auto-size', function () {
+
+            var node = self.state.actions.editorText.node,
+                parentnode = node.parentNode;
+
+            if (self.state.actions.editorText.save) {
+                self.state.actions.editorText.save = false;
+            } else {
+                node.value = self.state.actions.editorText.nodeText;
+                node.style.height = self.state.actions.editorText.nodeHeight;
+            }
+
+            $(parentnode).removeClass('editor-textarea__text-edit-on').addClass('editor-textarea__text-edit-off');
+        });
+    },
+    saveCallback: function(response) {
+        if ('undefined' == typeof response.status) {
+            return;
+        }
+
+        if ('success' == response.status) {
+            toastr.success("Success");
+        }
+
+        if ('error' == response.status) {
+            toastr.error(response.error);
+        }
+    }
+};
+customModule.adminLayout = {
+    run : function(params) {
+        var self = this;
+
+        $('.dropdown-collapse').on('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if ($(this).next().hasClass('show')) {
+                $($(this).attr('href')).collapse('hide');
+            } else {
+                $($(this).attr('href')).collapse('show');
+            }
+        });
+
+        var inputs = document.querySelectorAll('.inputfile');
+        Array.prototype.forEach.call(inputs, function (input) {
+            var label = input.nextElementSibling,
+                labelVal = label.innerHTML;
+
+            input.addEventListener('change', function (e) {
+                var fileName = '';
+                if (this.files && this.files.length > 1) {
+                    fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+                } else {
+                    fileName = e.target.value.split('\\').pop();
+                }
+                if (fileName) {
+                    //label.querySelector('span').innerHTML = fileName;
+                    if (this.files && this.files[0]) {
+
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            var template = '<div class="sommerce-settings__theme-imagepreview">\n                              <a href="#" class="sommerce-settings__delete-image"><span class="fa fa-times-circle-o"></span></a>\n                              <img src="' + e.target.result + '" alt="...">\n                          </div>';
+                            $('#image-preview').html(template);
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                } else {
+                    //label.innerHTML = labelVal;
+                }
+            });
+            $(document).on('click', '.sommerce_v1.0-settings__delete-image', function (e) {
+                $('#image-preview').html('<span></span>');
+                input.value = '';
+            });
+        });
+
+        // TODO:: Commented because conflicted with products page DOM objects. Must be rewrite.
+        // /* Edit page */
+        // $(document).ready(function () {
+        //
+        //     if ($('.edit-seo__title').length > 0) {
+        //         (function () {
+        //
+        //             var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
+        //
+        //             var _loop = function _loop(i) {
+        //                 $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
+        //                 $("#" + seoEdit[i]).on('input', function (e) {
+        //                     if (i == 2) {
+        //                         $('.' + seoEdit[i]).text($(e.target).val().replace(/\s+/g, '-'));
+        //                     } else {
+        //                         $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
+        //                         $('.' + seoEdit[i]).text($(e.target).val());
+        //                     }
+        //                 });
+        //             };
+        //
+        //             for (var i = 0; i < seoEdit.length; i++) {
+        //                 _loop(i);
+        //             }
+        //         })();
+        //     }
+        // });
+
+
+        // $('#select-menu-link').change(function () {
+        //     $('.hide-link').hide();
+        //     var val = $("#select-menu-link option:selected").val();
+        //     $('.link-' + val).fadeIn();
+        // });
+        //
+
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+};
+customModule.adminNotifyLayout = {
+    run : function(params) {
+        var self = this;
+
+        /*****************************************************************************************************
+         *                     Popup notifications init
+         *****************************************************************************************************/
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "5000",
+            "timeOut": "5000",
+            "extendedTimeOut": "5000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+
+        /*****************************************************************************************************
+         *                     Page notifications init
+         *****************************************************************************************************/
+        /* Check if page have messages */
+        var messages = params.messages || null;
+
+        if (!params.messages) {
+            return;
+        }
+
+        _.forEach(params.messages, function(message){
+            if (message.success) {
+                toastr.success(message.success);
+            }
+            if (message.warning) {
+                toastr.warning(message.warning);
+            }
+            if (message.error) {
+                toastr.error(message.error);
+            }
+        });
+    }
+};
+/**
+ * Order details custom js module
+ * @type {{run: customModule.ordersDetails.run}}
+ */
+customModule.ordersDetails = {
+    run : function(params) {
+        $(document).ready(function () {
+            var ajaxEndpoint = '/admin/orders/get-order-details';
+            var $detailsModal = $('#suborder-details-modal'),
+                $modalTitle = $detailsModal.find('.modal-title'),
+                $provider = $detailsModal.find('#order-detail-provider'),
+                $providerOrderId = $detailsModal.find('#order-detail-provider-order-id'),
+                $providerResponse = $detailsModal.find('#order-detail-provider-response'),
+                $providerUpdate = $detailsModal.find('#order-detail-lastupdate'),
+                $modalLoader = $detailsModal.find('.modal-loader');
+
+            $detailsModal.on('show.bs.modal', function(e) {
+                var $target = $(e.relatedTarget),
+                    suborderId = $target.data('suborder-id'),
+                    modalTitle = $target.data('modal_title');
+
+                if (suborderId === undefined || isNaN(suborderId)) {
+                    return;
+                }
+                $modalLoader.removeClass('hidden');
+                $.ajax({
+                    url: ajaxEndpoint,
+                    type: "GET",
+                    data: {
+                        'suborder_id': suborderId
+                    },
+                    success: function (data) {
+                        $modalLoader.addClass('hidden');
+                        if (data.details === undefined) {
+                            return;
+                        }
+                        renderLogs(data.details);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.log('Something is wrong!');
+                        console.log(jqXHR, textStatus, errorThrown);
+                        $modalLoader.addClass('hidden');
+                    }
+                });
+
+                function renderLogs(details){
+                    $modalTitle.html(modalTitle);
+                    $provider.val(details.provider);
+                    $providerOrderId.val(details.provider_order_id);
+                    $providerResponse.html(details.provider_response);
+                    $providerUpdate.val(details.updated_at);
+                }
+            });
+
+            $detailsModal.on('hidden.bs.modal',function(e) {
+                var $currentTarget = $(e.currentTarget);
+                $currentTarget.find('input').val('');
+                $providerResponse.html('');
+            });
+        });
+    }
+};
+
+/**
+ * Order clipboard custom js module
+ * @type {{run: customModule.ordersClipboard.run}}
+ */
+customModule.ordersClipboard = {
+    run : function(params) {
+
+        var messageCopied = params.messageCopied || 'Copied!';
+
+        $(document).ready(function () {
+            var ClipboardDemo = function () {
+                var n = function n() {
+                    new Clipboard("[data-clipboard=true]").on("success", function (n) {
+                        n.clearSelection();
+                        // Check toastr notification plugin
+                        if (toastr === undefined) {
+                            alert("Copied!");
+                        }   else {
+                            toastr.options = {
+                                "positionClass": "toast-bottom-right"
+                            };
+                            toastr.success(messageCopied);
+                        }
+                    });
+                };return { init: function init() {
+                    n();
+                } };
+            }();jQuery(document).ready(function () {
+                ClipboardDemo.init();
+            });
+        });
+    }
+};
+/**
+ * Payments custom js module
+ */
+customModule.payments = {
+    run: function (params) {
+
+        /******************************************************************
+         *                    Get payment details
+         ******************************************************************/
+
+        var $modal = $('.payments_detail'),
+            $modalTitle = $modal.find('.modal-title'),
+            $detailsContainer = $modal.find('.details-container'),
+            $modalLoader = $modal.find('.modal-loader');
+
+        $modal.on('show.bs.modal', function (e) {
+            var $target = $(e.relatedTarget),
+                paymentId = $target.data('id'),
+                modalTitle = $target.data('modal_title'),
+                actionUrl = $target.data('action_url');
+
+            if (paymentId === undefined || actionUrl === undefined ) {
+                return;
+            }
+
+            $modalLoader.removeClass('hidden');
+            $.ajax({
+                url: actionUrl,
+                type: "GET",
+                success: function (data) {
+                    $modalLoader.addClass('hidden');
+                    if (data === undefined) {
+                        return;
+                    }
+                    renderLogs(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Something is wrong!');
+                    console.log(jqXHR, textStatus, errorThrown);
+                    $modalLoader.addClass('hidden');
+                    $modal.modal('hide');
+                }
+            });
+
+            function renderLogs(details) {
+                $modalTitle.html(modalTitle);
+                _.each(details, function(detail){
+                    $detailsContainer.append('<pre class="sommerce-pre details-item">' + detail.time  + '<br><br>' + detail.data + '</pre>');
+                });
+            }
+        });
+
+        $modal.on('hidden.bs.modal', function (e) {
+            $modalTitle.html('');
+            $detailsContainer.empty();
+        });
+    }
+};
+
+
+customModule.adminProviders = {
+    run : function(params) {
+        var self = this;
+
+        $(document).on('click', '#showCreateProviderModal', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var modal = $('#createProviderModal');
+            var form = $('#createProviderForm', modal);
+            var errorBlock = $('#createProviderError', form);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            modal.modal('show');
+
+            return false;
+        });
+
+        $(document).on('click', '#createProviderButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#createProviderForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#createProviderModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+    }
+};

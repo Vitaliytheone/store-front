@@ -41,7 +41,7 @@ gulp.task('js-frontend', function(done) {
             './frontend/web/js/app/**/*.js',
         ])
         .pipe(concat('main.js'))
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest('./frontend/web/js/'));
 });
 
