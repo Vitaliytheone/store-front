@@ -156,6 +156,17 @@ class SenderComponent extends Component
      */
     private function _resendOrder($orderInfo)
     {
+        $orderExist = Yii::$app->db->createCommand('SELECT COUNT(*) FROM `stores_send_orders` WHERE `store_id` = :store_id AND `suborder_id` = :suborder_id')
+            ->bindValues([
+                ':store_id' => $orderInfo['store_id'],
+                ':suborder_id' => $orderInfo['suborder_id'],
+            ])
+            ->queryScalar();
+
+        if ($orderExist) {
+            return;
+        }
+
         Yii::$app->db
             ->createCommand('UPDATE `providers` SET `protocol` = :protocol WHERE `id` = :id')
             ->bindValues([
@@ -171,15 +182,16 @@ class SenderComponent extends Component
                   VALUES (:store_id, :provider_id, :suborder_id, :store_db);
              ')
             ->bindValues([
-                'store_id' => $orderInfo['store_id'],
-                'provider_id' => $orderInfo['provider_id'],
-                'suborder_id' => $orderInfo['suborder_id'],
-                'store_db'=> $orderInfo['store_db'],
+                ':store_id' => $orderInfo['store_id'],
+                ':provider_id' => $orderInfo['provider_id'],
+                ':suborder_id' => $orderInfo['suborder_id'],
+                ':store_db'=> $orderInfo['store_db'],
             ])
             ->execute();
 
         $this->_updateOrder($orderInfo, [
-            'send' => Suborders::SEND_STATUS_AWAITING,
+            ':status' => Suborders::STATUS_AWAITING,
+            ':send' => Suborders::SEND_STATUS_AWAITING,
         ]);
     }
 
@@ -291,7 +303,7 @@ class SenderComponent extends Component
             // Non HTTP 200 error
             if ($responseCode != 200) {
                 $values = [
-                    ':status' => Suborders::STATUS_ERROR,
+                    ':status' => Suborders::STATUS_FAILED,
                     ':send' => Suborders::SEND_STATUS_SENT,
                     ':provider_response' => $responseRawResult,
                     ':provider_response_code' => $responseCode,
@@ -307,10 +319,9 @@ class SenderComponent extends Component
 
             // Json decode errors
             if ((json_last_error() !== JSON_ERROR_NONE)) {
-
                 $error = json_encode(json_last_error());
                 $values = [
-                    ':status' => Suborders::STATUS_ERROR,
+                    ':status' => Suborders::STATUS_FAILED,
                     ':send' => Suborders::SEND_STATUS_SENT,
                     ':provider_response' => $error,
                     ':provider_response_code' => $responseCode,
@@ -340,7 +351,7 @@ class SenderComponent extends Component
             // Success
             if (isset($responseResult['order'])) {
                 $values = [
-                    ':status' => Suborders::STATUS_COMPLETED,
+                    ':status' => Suborders::STATUS_PENDING,
                     ':send' => Suborders::SEND_STATUS_SENT,
                     ':provider_order_id' => $responseResult['order'],
                     ':provider_response' => $responseRawResult,
@@ -357,7 +368,7 @@ class SenderComponent extends Component
 
             // All other situation
             $values = [
-                ':status' => Suborders::STATUS_ERROR,
+                ':status' => Suborders::STATUS_FAILED,
                 ':send' => Suborders::SEND_STATUS_SENT,
                 ':provider_response' => $responseRawResult,
                 ':provider_response_code' => $responseCode,
