@@ -10,6 +10,10 @@ use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class SenderComponent
+ * @package console\components\sender
+ */
 class SenderComponent extends Component
 {
     /**
