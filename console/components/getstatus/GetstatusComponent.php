@@ -94,7 +94,6 @@ class GetstatusComponent extends Component
      */
     private function _getOrders()
     {
-
         $stores = (new Query())
             ->select(['id', 'db_name'])
             ->from($this->_tableStores)
@@ -106,9 +105,6 @@ class GetstatusComponent extends Component
 
         $fromDate = time() - 30 * 24 * 60 * 60; // 30 Days ago
         $orders = [];
-
-        print_r(PHP_EOL . 'Stores' . PHP_EOL);
-        print_r($stores);
 
         // Get orders from all shops.
         //Total orders count limited by $ordersLimit
@@ -163,9 +159,6 @@ class GetstatusComponent extends Component
                 break;
             }
         }
-
-        print_r(PHP_EOL . 'Orders' . PHP_EOL);
-        print_r($orders);
 
         return $orders;
     }
@@ -410,9 +403,7 @@ class GetstatusComponent extends Component
 
             curl_multi_remove_handle($mh, $ch);
         }
-
-        print_r($sendResults);
-
+        
         curl_multi_close($mh);
         return $sendResults;
     }
