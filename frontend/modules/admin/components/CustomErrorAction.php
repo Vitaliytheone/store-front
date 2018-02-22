@@ -88,7 +88,7 @@ class CustomErrorAction extends ErrorAction
 
         // Redirect guest user to homepage
         if (Yii::$app->user->isGuest) {
-            $this->controller->goHome();
+            Yii::$app->user->loginRequired();
         }
 
         return $this->renderHtmlResponse();

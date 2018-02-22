@@ -64,7 +64,7 @@ abstract class BaseMailer {
         if ($this->now) {
             return static::sendNow($options);
         } else {
-            return Client::addTask('mail', $options);
+            return (bool)Client::addTask('mail', $options);
         }
     }
 
@@ -83,10 +83,6 @@ abstract class BaseMailer {
             $to = Yii::$app->params['debugEmail'];
         }
 
-        if (!(bool)Mailgun::send($to, $subject, $message)) {
-            return false;
-        }
-
-        return true;
+        return (bool)Mailgun::send($to, $subject, $message);
     }
 }
