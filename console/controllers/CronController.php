@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\models\store\Carts;
+use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
 use Yii;
 use yii\console\Controller;
@@ -33,5 +34,17 @@ class CronController extends Controller
        ]);
        $sender->setConnection(Yii::$app->storeDb);
        $sender->run();
+    }
+
+    /**
+     * Get status
+     */
+    public function actionGetstatus()
+    {
+        $getstatus = new GetstatusComponent([
+            'ordersLimit' => Yii::$app->params['getstatusOrdersLimit'],
+        ]);
+        $getstatus->setConnection(Yii::$app->storeDb);
+        $getstatus->run();
     }
 }

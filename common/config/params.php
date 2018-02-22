@@ -23,4 +23,5 @@ return [
     'debugEmail' => null,
 
     'senderOrdersLimit' => 100,
+    'getstatusOrdersLimit' => 100,
 ];

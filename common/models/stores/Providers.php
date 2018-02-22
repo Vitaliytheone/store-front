@@ -27,6 +27,7 @@ class Providers extends ActiveRecord
     const PROTOCOL_HTTPS = 1;
 
     const API_ACTION_ADD = 'add';
+    const API_ACTION_STATUS = 'status';
 
     /**
      * @inheritdoc
