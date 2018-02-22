@@ -107,6 +107,9 @@ class GetstatusComponent extends Component
         $fromDate = time() - 30 * 24 * 60 * 60; // 30 Days ago
         $orders = [];
 
+        print_r(PHP_EOL . 'Stores' . PHP_EOL);
+        print_r($stores);
+
         // Get orders from all shops.
         //Total orders count limited by $ordersLimit
         foreach ($stores as $storeId => $store) {
@@ -160,6 +163,9 @@ class GetstatusComponent extends Component
                 break;
             }
         }
+
+        print_r(PHP_EOL . 'Orders' . PHP_EOL);
+        print_r($orders);
 
         return $orders;
     }
