@@ -3,6 +3,7 @@
 namespace frontend\components\payments;
 
 use common\helpers\SiteHelper;
+use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\store\Orders;
 use common\models\store\Packages;
@@ -13,7 +14,6 @@ use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
 use yii\base\Component;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -221,6 +221,9 @@ abstract class BasePayment extends Component {
                 $sendOrder->suborder_id = $orderItem->id;
                 $sendOrder->save(false);
             }
+
+            // Remove paid items from cart
+            Carts::removeItemByKey($item['cart_key']);
         }
 
         $payment->refresh();

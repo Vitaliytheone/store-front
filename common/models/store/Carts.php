@@ -95,4 +95,22 @@ class Carts extends ActiveRecord
             ],
         ];
     }
+
+    /**
+     * Remove cart item by cart key
+     * @param $key
+     * @return bool|int
+     */
+    public static function removeItemByKey($key)
+    {
+        $item = static::findOne([
+            'key' => $key,
+        ]);
+
+        if (!$item) {
+            return false;
+        }
+
+        return $item->delete();
+    }
 }
