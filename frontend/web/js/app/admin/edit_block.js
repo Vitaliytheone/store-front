@@ -330,7 +330,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.slider) {
+        if ('undefined' == typeof state.slider || !state.slider.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -584,7 +584,7 @@ customModule.adminEditBlock = {
             generateCards('add', featureID, '', '', 'fa-picture-o');
         });
 
-        if ('undefined' == typeof state.feature) {
+        if ('undefined' == typeof state.feature || !state.feature.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -847,7 +847,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.review) {
+        if ('undefined' == typeof state.review || !state.review.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -1063,7 +1063,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.steps) {
+        if ('undefined' == typeof state.steps || !state.steps.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,

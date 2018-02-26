@@ -1,22 +1,22 @@
-{% if block['reviews'] %}
-    <!-- Reviews block Start -->
+{% if block['review'] %}
+<!-- Reviews block Start -->
     <section class="bg-gray-light border-bottom">
         <div class="container">
             <div class="row section-header">
                 <div class="col-lg-12">
-                    <h2 class="text-center">{{ reviews['block']['header']['title'] }}</h2>
-										{% if reviews['block']['header']['description'] %}
+                    <h2 class="text-center">{{ block['review']['block']['header']['title'] }}</h2>
+                    {% if block['review']['block']['header']['description'] %}
                         <div class="section-description">
-														{{ reviews['block']['header']['description'] }}
+                            {{ block['review']['block']['header']['description'] }}
                         </div>
-										{% endif %}
+                    {% endif %}
                 </div>
             </div>
             <div class="row section-content">
                 <div class="col-lg-12">
-                    <div class="swiper-container text-center">
+                    <div class="swiper-container text-center review-swiper-container">
                         <div class="swiper-wrapper">
-														{% for review in block['reviews']['data'] %}
+                            {% for review in block['review']['data'] %}
                                 <div class="swiper-slide">
                                     <div class="review-avatar">
                                         {% if review['image'] %}
@@ -27,8 +27,12 @@
                                     </div>
                                     <div class="review-author">{{ review['name'] }}</div>
                                     <div class="review-rating">
-                                        {% for i in 0..review['rating'] %}
-                                            <span class="fa fa-star"></span>
+                                        {% for i in 0..4 %}
+																				    {% if i < review['rating'] %}
+                                                <span class="fa fa-star"></span>
+                                            {% else %}
+                                                <span class="fa fa-star-o"></span>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                     {% if review['description'] %}
@@ -37,7 +41,7 @@
                                         </div>
                                     {% endif %}
                                 </div>
-                            {% endfor %}
+														{% endfor %}
                         </div>
                         <div class="swiper-pagination swiper-pagination__review"></div>
                     </div>
@@ -46,11 +50,11 @@
         </div>
     </section>
     <script>
-        $(document).ready(function(){
-            var reviewsSlider = new Swiper('.swiper-container', {
-                pagination: '.swiper-pagination__review',
+        document.addEventListener("DOMContentLoaded", function () {
+            var reviewsSlider = new Swiper('.review-swiper-container', {
+                pagination: '.review-swiper-container .swiper-pagination__review',
                 paginationClickable: true,
-                slidesPerView: {{ block['reviews']['settings']['column'] }}
+                slidesPerView: {{ block['review']['settings']['column'] }}
             });
         });
     </script>

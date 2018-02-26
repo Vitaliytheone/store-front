@@ -5,7 +5,7 @@
             <div class="slider">
                 <div class="swiper-container main-slider">
                     <div class="swiper-wrapper">
-												{% for slide in block['slider']['data'] %}
+                        {% for slide in block['slider']['data'] %}
                             <div class="swiper-slide main-slide">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -15,16 +15,16 @@
                                     </div>
                                     <div class="col-md-6">
                                         <h2>{{ slide['title'] }}</h2>
-																				{% if slide['description'] %}
+                                        {% if slide['description'] %}
                                             <p>{{ slide['description'] }}</p>
-																				{% endif %}
-																				{% if slide['button'] %}
+                                        {% endif %}
+                                        {% if slide['button'] %}
                                             <a href="{{ slide['button']['link'] }}" class="btn btn-default">{{ slide['button']['title'] }}</a>
-																				{% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
-												{% endfor %}
+                        {% endfor %}
                     </div>
                     <div class="swiper-pagination main-slider-pagination"></div>
                 </div>
@@ -32,12 +32,13 @@
         </div>
     </section>
     <script>
-        $(document).ready(function(){
+        document.addEventListener("DOMContentLoaded", function () {
             var mainSlider = new Swiper('.main-slider', {
                 paginationClickable: true,
                 autoplay: 3000,
-                pagination: '.main-slider-pagination',
-                effect: {{ block['slider']['settings']['effect'] }}
+                slidesPerView: 1,
+                pagination: '.main-slider .main-slider-pagination',
+                effect: '{{ block['slider']['settings']['effect'] }}'
             });
         });
     </script>

@@ -1723,7 +1723,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.steps) {
+        if ('undefined' == typeof state.steps || !state.steps.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,

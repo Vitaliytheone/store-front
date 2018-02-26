@@ -16,10 +16,10 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-secondary">
-                                <input type="radio" class="slider-effects" name="feature-column" value="Fade" autocomplete="off"> Fade
+                                <input type="radio" class="slider-effects" name="feature-column" value="fade" autocomplete="off"> Fade
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" class="slider-effects" name="feature-column" value="Slide" autocomplete="off"> Slide
+                                <input type="radio" class="slider-effects" name="feature-column" value="slide" autocomplete="off"> Slide
                             </label>
                         </div>
                     </div>
