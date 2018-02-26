@@ -121,7 +121,7 @@ class CartSearch {
         if (null === static::$_items) {
             $items = $this->buildQuery()
                 ->orderBy([
-                    'id' => SORT_DESC
+                    'c.created_at' => SORT_DESC
                 ])
                 ->all();
 
@@ -172,9 +172,13 @@ class CartSearch {
             $this->search();
         }
 
+        $itemNo = 1;
+
         $items = static::$_items;
 
         foreach ($items as &$item) {
+
+            $item['id'] = $itemNo;
             $item['name'] = $item['package_name'];
             $item['details'] = $item['link'];
             $item['quantity'] = $item['package_quantity'];
@@ -183,6 +187,8 @@ class CartSearch {
             unset($item['package_name']);
             unset($item['link']);
             unset($item['package_quantity']);
+
+            $itemNo++;
         }
 
         return $items;
