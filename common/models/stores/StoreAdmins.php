@@ -13,7 +13,6 @@ use common\models\stores\queries\StoreAdminsQuery;
  * @property integer $store_id
  * @property string $username
  * @property string $password
- * @property string $auth_hash
  * @property string $first_name
  * @property string $last_name
  * @property integer $status
@@ -63,7 +62,7 @@ class StoreAdmins extends ActiveRecord
         return [
             [['store_id', 'status', 'last_login', 'created_at', 'updated_at'], 'integer'],
             [['username', 'first_name', 'last_name', 'ip'], 'string', 'max' => 255],
-            [['password', 'auth_hash'], 'string', 'max' => 64],
+            [['password',], 'string', 'max' => 64],
             [['rules'], 'string', 'max' => 1000],
             ['status', 'in', 'range' => [self::STATUS_SUSPENDED, self::STATUS_ACTIVE]],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
@@ -80,7 +79,6 @@ class StoreAdmins extends ActiveRecord
             'store_id' => Yii::t('app', 'Store ID'),
             'username' => Yii::t('app', 'Username'),
             'password' => Yii::t('app', 'Password'),
-            'auth_hash' => Yii::t('app', 'Auth Hash'),
             'first_name' => Yii::t('app', 'First Name'),
             'last_name' => Yii::t('app', 'Last Name'),
             'status' => Yii::t('app', 'Status'),

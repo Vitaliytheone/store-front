@@ -1,3 +1,4 @@
+USE `stores`;
 CREATE TABLE `store_admins_hash` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_id` int(11) NOT NULL,
