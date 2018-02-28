@@ -1,25 +1,21 @@
 <?php
-
 namespace frontend\modules\admin\models\forms;
-use common\models\stores\StoreAdmins;
-use frontend\modules\admin\components\CustomUser;
+
+use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\base\Model;
 
 /**
  * LoginForm is the model behind the login form.
- *
- * @property StoreAdmins|null $user This property is read-only.
- *
+ * @package frontend\modules\admin\models\forms
  */
 class LoginForm extends Model
 {
-    const COOKIE_LIFETIME = 3600 * 24 * 30;
+    const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
 
     public $username;
     public $password;
-    public $remember;
-    private $_user = false;
+    private $_user;
 
     /**
      * @return string
@@ -36,7 +32,6 @@ class LoginForm extends Model
     {
         return [
             [['username', 'password'], 'required'],
-            ['remember', 'boolean'],
             ['password', 'validatePassword'],
             ['username', 'validateStatus'],
         ];
@@ -93,18 +88,17 @@ class LoginForm extends Model
 
         $user = $this->getUser();
 
-        return Yii::$app->user->login($user, $this->remember ? static::COOKIE_LIFETIME : 0);
+        return Yii::$app->user->login($user, static::COOKIE_LIFETIME);
     }
 
     /**
      * Finds user by Username
-     *
-     * @return StoreAdmins|null
+     * @return StoreAdminAuth|null
      */
     public function getUser()
     {
-        if ($this->_user === false) {
-            $this->_user = StoreAdmins::findByUsername($this->username);
+        if (!($this->_user instanceof StoreAdminAuth)) {
+            $this->_user = StoreAdminAuth::findByUsername($this->username);
         }
 
         return $this->_user;

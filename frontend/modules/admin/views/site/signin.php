@@ -28,14 +28,6 @@
                         <div class="form-group m-form__group">
                             <input class="form-control m-input m-login__form-input--last" type="password" placeholder="<?= Yii::t('admin', 'login.sign_in_password_placeholder') ?>" name="password">
                         </div>
-                        <div class="row m-login__form-sub">
-                            <div class="col m--align-left m-login__form-left">
-                                <label class="m-checkbox  m-checkbox--focus">
-                                    <input type="hidden" name="remember" value="0">
-                                    <input type="checkbox" name="remember" value="1" <?php if ($form->remember): ?> checked <?php endif; ?> > <?= Yii::t('admin', 'login.sign_in_remember_me') ?><span></span>
-                                </label>
-                            </div>
-                        </div>
                         <div class="m-login__form-action">
                             <button type="submit" id="m_login_signin_submit" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--primary">
                                 <?= Yii::t('admin', 'login.sign_in_submit_title') ?>

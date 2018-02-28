@@ -1,0 +1,2 @@
+USE `stores`;
+ALTER TABLE `store_admins` DROP `auth_hash`;

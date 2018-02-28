@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use common\models\store\Carts;
+use common\models\stores\StoreAdminsHash;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
 use Yii;
@@ -46,5 +47,13 @@ class CronController extends Controller
         ]);
         $getstatus->setConnection(Yii::$app->storeDb);
         $getstatus->run();
+    }
+
+    /**
+     * Clear old admin's auth hashes
+     */
+    public function actionClearAuth()
+    {
+        StoreAdminsHash::deleteOld();
     }
 }

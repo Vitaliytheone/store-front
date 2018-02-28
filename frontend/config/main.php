@@ -24,7 +24,7 @@ $config = [
         ],
         'user' => [
             'class' => 'frontend\modules\admin\components\CustomUser',
-            'identityClass' => 'common\models\stores\StoreAdmins',
+            'identityClass' => 'common\models\stores\StoreAdminAuth',
             'loginUrl' => '/admin',
             'enableSession' => true,
             'enableAutoLogin' => true,

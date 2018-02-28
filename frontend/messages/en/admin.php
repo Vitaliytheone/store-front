@@ -371,7 +371,6 @@ return [
     'login.sign_in_header' => 'Sign In',
     'login.sign_in_username_placeholder' => 'Username',
     'login.sign_in_password_placeholder' => 'Password',
-    'login.sign_in_remember_me' => 'Remember me',
     'login.sign_in_submit_title' => 'Sign In',
     'login.message_bad_login' => 'Incorrect username or password!',
     'login.message_suspended' => 'Account suspended!',
