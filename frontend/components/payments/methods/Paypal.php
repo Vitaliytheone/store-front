@@ -105,7 +105,8 @@ class Paypal extends BasePayment {
                 'PAYMENTREQUEST_0_AMT' => $amount,
                 'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
                 'PAYMENTREQUEST_0_CURRENCYCODE' => $store->currency,
-                'PAYMENTREQUEST_0_ITEMAMT' => $amount
+                'PAYMENTREQUEST_0_ITEMAMT' => $amount,
+                'NOSHIPPING' => '1'
             ];
 
 
