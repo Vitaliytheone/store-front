@@ -46,6 +46,14 @@ return [
     'orders.message_resend' => 'Order was successfully resend!',
     'orders.message_copied' => 'Order data was successfully copied!',
 
+    'orders.modal_change_status_message' => 'Are your sure that your want change status?',
+    'orders.modal_change_status_submit' => 'Yes',
+    'orders.modal_change_status_cancel' => 'No',
+
+    'orders.modal_cancel_message' => 'Are your sure that your want cancel order?',
+    'orders.modal_cancel_submit' => 'Yes',
+    'orders.modal_cancel_cancel' => 'No',
+
     'orders.f_id' => 'ID',
     'orders.f_checkout_id' => 'Checkout ID',
     'orders.f_customer' => 'Customer',

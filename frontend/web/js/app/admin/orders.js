@@ -94,3 +94,22 @@ customModule.ordersClipboard = {
         });
     }
 };
+
+/**
+ * Order change status custom js module
+ * @type {{run: customModule.ordersModalAlerts.run}}
+ */
+customModule.ordersModalAlerts = {
+    run : function(params) {
+
+        var $modals = $('.order_modal_alert');
+
+        $modals.on('show.bs.modal', function(event){
+            var $modal = $(this),
+                $target = $(event.relatedTarget);
+            var actionUrl = $target.data('action_url');
+
+            $modal.find('.submit_action').attr('href', actionUrl);
+        });
+    }
+};

@@ -97,7 +97,11 @@ $checkRowSpan = function($suborder) use ($suborders) {
                                     <div class="collapse sommerce-dropdwon__actions_collapse" id="action-<?= $suborder['suborder_id'] ?>">
                                         <ul>
                                             <?php foreach ($statusItems as $status): ?>
-                                                <li><a href="<?= Url::to(['/admin/orders/change-status', 'id' => $suborder['suborder_id'], 'status' => $status['status'], 'filters' => $currentFilters]) ?>" class="change-status"><?= $status['status_title'] ?></a></li>
+                                            <li>
+                                                <a href="#" data-toggle="modal" data-target="#modal-alert-status" data-backdrop="static" class="change-status" data-action_url="<?= Url::to(['/admin/orders/change-status', 'id' => $suborder['suborder_id'], 'status' => $status['status'], 'filters' => $currentFilters]) ?>">
+                                                    <?= $status['status_title'] ?>
+                                                </a>
+                                            </li>
                                             <?php endforeach; ?>
                                         </ul>
                                     </div>
@@ -106,10 +110,8 @@ $checkRowSpan = function($suborder) use ($suborders) {
 
                                 <?php if (ArrayHelper::getValue($suborder, 'action_menu.cancel')): ?>
                                 <li class="m-nav__item">
-                                    <a href="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $currentFilters]); ?>" class="m-nav__link">
-                                        <span class="m-nav__link-text">
-                                            <?= Yii::t('admin', 'orders.action_cancel') ?>
-                                        </span>
+                                    <a href="#" data-toggle="modal" data-target="#modal-alert-cancel" data-backdrop="static" class="change-status" data-action_url="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $currentFilters]) ?>">
+                                        <?= Yii::t('admin', 'orders.action_cancel') ?>
                                     </a>
                                 </li>
                                 <?php endif; ?>

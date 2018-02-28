@@ -990,7 +990,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.slider) {
+        if ('undefined' == typeof state.slider || !state.slider.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -1244,7 +1244,7 @@ customModule.adminEditBlock = {
             generateCards('add', featureID, '', '', 'fa-picture-o');
         });
 
-        if ('undefined' == typeof state.feature) {
+        if ('undefined' == typeof state.feature || !state.feature.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -1507,7 +1507,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.review) {
+        if ('undefined' == typeof state.review || !state.review.length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -2030,6 +2030,25 @@ customModule.ordersClipboard = {
             }();jQuery(document).ready(function () {
                 ClipboardDemo.init();
             });
+        });
+    }
+};
+
+/**
+ * Order change status custom js module
+ * @type {{run: customModule.ordersModalAlerts.run}}
+ */
+customModule.ordersModalAlerts = {
+    run : function(params) {
+
+        var $modals = $('.order_modal_alert');
+
+        $modals.on('show.bs.modal', function(event){
+            var $modal = $(this),
+                $target = $(event.relatedTarget);
+            var actionUrl = $target.data('action_url');
+
+            $modal.find('.submit_action').attr('href', actionUrl);
         });
     }
 };
