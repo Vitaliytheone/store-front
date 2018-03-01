@@ -68,7 +68,13 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->_auth_key ? $this->_auth_key : StoreAdminsHash::getHash($this->id);
+        if ($this->_auth_key) {
+            return $this->_auth_key;
+        }
+
+        $this->_auth_key = StoreAdminsHash::getHash($this->id);
+
+        return $this->_auth_key;
     }
 
     /**
@@ -86,6 +92,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function deleteAuthKey()
     {
+        $this->_auth_key = null;
         StoreAdminsHash::deleteByUser($this->id);
     }
 

@@ -120,7 +120,6 @@ class StoreAdminsHash extends ActiveRecord
         return $model ? $model->hash : null;
     }
 
-
     /**
      * Update freshness of the admin hash records
      * @param $adminId
