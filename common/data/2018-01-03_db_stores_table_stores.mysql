@@ -1,0 +1,2 @@
+USE `stores`;
+ALTER TABLE `stores` CHANGE `expired` `expired` INT(11)  UNSIGNED  NOT NULL;
