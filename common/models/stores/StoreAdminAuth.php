@@ -9,6 +9,9 @@ use yii\web\IdentityInterface;
 
 class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 {
+    /** Auth cookie lifetime */
+    const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
+
     /**
      * Cached current auth key
      * @var

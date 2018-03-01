@@ -11,8 +11,6 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
-
     public $username;
     public $password;
     private $_user;
@@ -88,7 +86,7 @@ class LoginForm extends Model
 
         $user = $this->getUser();
 
-        return Yii::$app->user->login($user, static::COOKIE_LIFETIME);
+        return Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME);
     }
 
     /**

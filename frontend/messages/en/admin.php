@@ -384,6 +384,15 @@ return [
     'login.message_suspended' => 'Account suspended!',
 
     'account.page_title' => 'Account',
+    'account.current_password' => 'Current password',
+    'account.new_password' => 'New password',
+    'account.confirm_password' => 'Confirm new password',
+
+    'account.message_wrong_new_password_pair' => '"New password" and "Confirm new password" must be the same!',
+    'account.message_wrong_new_password' => 'The new password must be different from the old one!',
+    'account.message_wrong_current_password' => 'Invalid current password!',
+    'account.message_password_changed' => 'Password successfully updated!',
+
 
     'settings.blocks_page_title' => 'Blocks',
 ];
