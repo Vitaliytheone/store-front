@@ -43,7 +43,7 @@
 <div class="page-row">
     <div class="page-content">
         <div class="page-title">
-            <p>Store admin page temporarily unavailable</p>
+            <p>Store temporarily unavailable</p>
         </div>
     </div>
 </div>

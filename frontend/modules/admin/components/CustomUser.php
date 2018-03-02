@@ -19,7 +19,7 @@ class CustomUser extends User
         /** @var StoreAdminAuth $identity */
         if ($identity && !$cookieBased) {
 
-            StoreAdminsHash::deleteByUser($identity->id);
+            $identity->deleteAuthKey();
 
             $identity->ip = Yii::$app->getRequest()->getUserIP();
             $identity->last_login = time();

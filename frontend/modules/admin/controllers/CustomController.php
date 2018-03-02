@@ -2,9 +2,10 @@
 
 namespace frontend\modules\admin\controllers;
 
-use common\models\stores\StoreAdmins;
+use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\User;
 
 /**
  * Custom controller for the `admin` module
@@ -42,11 +43,14 @@ class CustomController extends AdminController
      */
     public function beforeAction($action)
     {
-        /** @var StoreAdmins $user */
-        $user = Yii::$app->user->getIdentity();
+        /** @var User $user */
+        $user = Yii::$app->user;
 
-        if ($user) {
-            $this->_allowedControllers =$user->getAllowedControllers();
+        /** @var StoreAdminAuth $identity */
+        $identity = $user->getIdentity(false);
+
+        if ($identity) {
+            $this->_allowedControllers =$identity->getAllowedControllers();
         }
 
         $this->addModule('adminLayout');

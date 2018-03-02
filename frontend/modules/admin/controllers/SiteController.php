@@ -118,11 +118,15 @@ class SiteController extends AdminController
 
         $form = new LoginForm();
 
-        if (
-            $form->load(Yii::$app->getRequest()->post()) &&
-            $form->validate() &&
-            $form->login()
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->login()
         ) {
+            /** @var Stores $store */
+            $store = Yii::$app->store->getInstance();
+
+            if ($store->isInactive()) {
+                return $this->redirect(Url::toRoute('/frozen'));
+            }
+
             $this->redirect(Url::toRoute($this->_loggedInRedirectUrl));
         }
 

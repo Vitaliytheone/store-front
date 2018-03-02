@@ -4,7 +4,6 @@ namespace frontend\modules\admin\controllers;
 
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
-use frontend\modules\admin\components\Url;
 use Yii;
 use frontend\controllers\CommonController;
 use yii\web\User;
@@ -25,20 +24,13 @@ class AdminController extends CommonController
         $store = Yii::$app->store->getInstance();
 
         // Frozen/terminated store routine
-        if ($store->isInactive()) {
+        if ($store->isInactive() && !$user->isGuest) {
 
-            if (!$user->isGuest) {
+            /** @var StoreAdminAuth $identity */
+            $identity = $user->getIdentity();
 
-                /** @var StoreAdminAuth $identity */
-                $identity = $user->getIdentity(false);
-
-                if (!$identity->isSuper()) {
-                    $user->logout(true);
-                }
-
-            } elseif (!(Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'frozen')) {
-
-                return $this->redirect(Url::toRoute('/frozen'));
+            if (!$identity->isSuper()) {
+                $user->logout();
             }
         }
 

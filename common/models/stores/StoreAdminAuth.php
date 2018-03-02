@@ -19,6 +19,12 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
 
     /**
+     * Cached hash auth key
+     * @var
+     */
+    private $_auth_key;
+
+    /**
      * Return current auth user hash object
      * @return \yii\db\ActiveQuery
      */
@@ -80,7 +86,13 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->hash ? $this->hash->hash : null;
+        if (!$this->_auth_key) {
+
+            $hashObject = $this->getHash()->one();
+            $this->_auth_key = $hashObject ? $hashObject->hash : null;
+        }
+
+        return $this->_auth_key;
     }
 
     /**
@@ -88,7 +100,8 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function setAuthKey()
     {
-        StoreAdminsHash::setHash($this->id, $this->generateAuthKey());
+        $this->_auth_key = $this->generateAuthKey();
+        StoreAdminsHash::setHash($this->id, $this->_auth_key);
     }
 
     /**
@@ -96,6 +109,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function deleteAuthKey()
     {
+        $this->_auth_key = null;
         StoreAdminsHash::deleteByUser($this->id);
     }
 

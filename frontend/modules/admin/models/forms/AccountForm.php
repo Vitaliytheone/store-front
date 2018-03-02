@@ -97,6 +97,8 @@ class AccountForm extends Model
         $identity->setPassword($this->password);
         $identity->save(false);
 
+        $user->logout(false);
+
         return $user->login($identity, StoreAdminAuth::COOKIE_LIFETIME);
     }
 }
