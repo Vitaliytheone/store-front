@@ -282,7 +282,7 @@ customModule.adminGeneral = {
                 }
 
                 $seoTitle.on('focus', function (e){
-                   seoTitleTouched = true;
+                    seoTitleTouched = true;
                 });
 
                 $storeName.on('input', function(e){
@@ -299,11 +299,11 @@ customModule.adminGeneral = {
          *            General settings delete logo & favicon
          ******************************************************************/
         var $modal = $('#delete-modal'),
-        $deleteBtn = $modal.find('#delete-image');
+            $deleteBtn = $modal.find('#delete-image');
 
         $modal.on('show.bs.modal', function (event){
             var button = $(event.relatedTarget),
-            actionUrl = button.attr('href');
+                actionUrl = button.attr('href');
             $deleteBtn.attr('href', actionUrl);
         });
 
@@ -1401,6 +1401,10 @@ customModule.adminEditBlock = {
                 simulateTouch: false,
                 slidesPerView: parseInt($(this).val())
             });
+
+            swiperSlider.update(true);
+            swiperSlider.updateProgress(true);
+
             textAreaResizer();
         });
 
@@ -2019,25 +2023,6 @@ customModule.ordersClipboard = {
             }();jQuery(document).ready(function () {
                 ClipboardDemo.init();
             });
-        });
-    }
-};
-
-/**
- * Order change status custom js module
- * @type {{run: customModule.ordersModalAlerts.run}}
- */
-customModule.ordersModalAlerts = {
-    run : function(params) {
-
-        var $modals = $('.order_modal_alert');
-
-        $modals.on('show.bs.modal', function(event){
-            var $modal = $(this),
-                $target = $(event.relatedTarget);
-            var actionUrl = $target.data('action_url');
-
-            $modal.find('.submit_action').attr('href', actionUrl);
         });
     }
 };
