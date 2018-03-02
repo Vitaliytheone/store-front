@@ -741,6 +741,10 @@ customModule.adminEditBlock = {
                 simulateTouch: false,
                 slidesPerView: parseInt($(this).val())
             });
+
+            swiperSlider.update(true);
+            swiperSlider.updateProgress(true);
+
             textAreaResizer();
         });
 
