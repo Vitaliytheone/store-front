@@ -144,7 +144,7 @@ class SiteController extends AdminController
             return $this->redirect(Url::toRoute('/'));
         }
 
-        return $this->render('frozen');
+        return $this->renderPartial('frozen');
     }
 
     /**
