@@ -282,7 +282,7 @@ customModule.adminGeneral = {
                 }
 
                 $seoTitle.on('focus', function (e){
-                    seoTitleTouched = true;
+                   seoTitleTouched = true;
                 });
 
                 $storeName.on('input', function(e){
@@ -299,11 +299,11 @@ customModule.adminGeneral = {
          *            General settings delete logo & favicon
          ******************************************************************/
         var $modal = $('#delete-modal'),
-            $deleteBtn = $modal.find('#delete-image');
+        $deleteBtn = $modal.find('#delete-image');
 
         $modal.on('show.bs.modal', function (event){
             var button = $(event.relatedTarget),
-                actionUrl = button.attr('href');
+            actionUrl = button.attr('href');
             $deleteBtn.attr('href', actionUrl);
         });
 
@@ -1005,21 +1005,9 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.slider || !Object.keys(state.slider).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function(result) {
 
-                state.slider = result;
+        initData(state.slider);
 
-                initData(result);
-            }).catch(function (err) {
-                $('.prealoder-text').text('Server is not available');
-            });
-        } else {
-            initData(state.slider);
-        }
     },
     features: function(params) {
         var self = this;
@@ -1259,20 +1247,8 @@ customModule.adminEditBlock = {
             generateCards('add', featureID, '', '', 'fa-picture-o');
         });
 
-        if ('undefined' == typeof state.feature || !Object.keys(state.feature).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function (result) {
-                state.feature = result;
+        initData(state.feature);
 
-                initData(result);
-            }).catch(function (err) {
-                console.log(err);
-            });
-        } else {
-            initData(state.feature);
-        }
     },
     review: function(params) {
         var self = this;
@@ -1415,7 +1391,7 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.review-column', function () {
-            state.review.settings.column = $(this).val();
+            state.review.settings.column = parseInt($(this).val());
 
             swiperSlider = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
@@ -1449,11 +1425,14 @@ customModule.adminEditBlock = {
 
         $(document).on('change', '.editor-preview__avatar-input', function () {
 
+            var that = $(this);
+
             if($(this).val().length) {
                 var dataID = $(this).data('id');
                 var classId = '.review-avatar-' + dataID;
 
                 $(classId).addClass('image-loader');
+                $(that).prop('disabled', true);
 
                 var data = new FormData();
                 data.append('file', $(this)[0].files[0]);
@@ -1467,6 +1446,7 @@ customModule.adminEditBlock = {
                     type: 'POST',
                     success: function (response) {
                         $(classId).removeClass('image-loader');
+                        $(that).prop('disabled', false);
                         if ('error' == response.status) {
                             toastr.error(response.error);
                             $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
@@ -1484,6 +1464,7 @@ customModule.adminEditBlock = {
                         }
                     },
                     error: function error(_error) {
+                        $(that).prop('disabled', false);
                         $(classId).removeClass('image-loader');
                         $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
                     }
@@ -1539,20 +1520,8 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.review || !Object.keys(state.review).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function (result) {
-                state.review = result;
-                initData(result);
-            }).catch(function (err) {
-                console.log(err);
-                $('.prealoder-text').text('Server is not available');
-            });
-        } else {
-            initData(state.review);
-        }
+        initData(state.review);
+
     },
     process: function(params) {
         var self = this;
@@ -1755,20 +1724,8 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.steps || !Object.keys(state.steps).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function (result) {
-                state.steps = result;
-                initData(result);
-            }).catch(function (err) {
-                $('.prealoder-text').text('Server is not available');
-                toastr.error("Error");
-            });
-        } else {
-            initData(state.steps);
-        }
+        initData(state.steps);
+
     },
     initTextareaAutosizer: function() {
         var self = this;
@@ -2062,6 +2019,25 @@ customModule.ordersClipboard = {
             }();jQuery(document).ready(function () {
                 ClipboardDemo.init();
             });
+        });
+    }
+};
+
+/**
+ * Order change status custom js module
+ * @type {{run: customModule.ordersModalAlerts.run}}
+ */
+customModule.ordersModalAlerts = {
+    run : function(params) {
+
+        var $modals = $('.order_modal_alert');
+
+        $modals.on('show.bs.modal', function(event){
+            var $modal = $(this),
+                $target = $(event.relatedTarget);
+            var actionUrl = $target.data('action_url');
+
+            $modal.find('.submit_action').attr('href', actionUrl);
         });
     }
 };

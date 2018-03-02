@@ -1,29 +1,3 @@
-customModule.adminBlocks = {
-    run : function(params) {
-        var self = this;
-
-        $(document).on('change', '.change-status', function(e) {
-            e.preventDefault();
-
-            var checkbox = $(this);
-            var enableUrl = checkbox.data('enable');
-            var disableUrl = checkbox.data('disable');
-            var url = undefined;
-
-            if (checkbox.prop('checked')) {
-                url = enableUrl;
-            } else {
-                url = disableUrl;
-            }
-
-            custom.ajax({
-                url: url
-            });
-
-            return false;
-        });
-    }
-};
 customModule.adminEditBlock = {
     state: {
         steps: false,
@@ -371,21 +345,9 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.slider || !Object.keys(state.slider).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function(result) {
 
-                state.slider = result;
+        initData(state.slider);
 
-                initData(result);
-            }).catch(function (err) {
-                $('.prealoder-text').text('Server is not available');
-            });
-        } else {
-            initData(state.slider);
-        }
     },
     features: function(params) {
         var self = this;
@@ -625,20 +587,8 @@ customModule.adminEditBlock = {
             generateCards('add', featureID, '', '', 'fa-picture-o');
         });
 
-        if ('undefined' == typeof state.feature || !Object.keys(state.feature).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function (result) {
-                state.feature = result;
+        initData(state.feature);
 
-                initData(result);
-            }).catch(function (err) {
-                console.log(err);
-            });
-        } else {
-            initData(state.feature);
-        }
     },
     review: function(params) {
         var self = this;
@@ -781,7 +731,7 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.review-column', function () {
-            state.review.settings.column = $(this).val();
+            state.review.settings.column = parseInt($(this).val());
 
             swiperSlider = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
@@ -815,11 +765,14 @@ customModule.adminEditBlock = {
 
         $(document).on('change', '.editor-preview__avatar-input', function () {
 
+            var that = $(this);
+
             if($(this).val().length) {
                 var dataID = $(this).data('id');
                 var classId = '.review-avatar-' + dataID;
 
                 $(classId).addClass('image-loader');
+                $(that).prop('disabled', true);
 
                 var data = new FormData();
                 data.append('file', $(this)[0].files[0]);
@@ -833,6 +786,7 @@ customModule.adminEditBlock = {
                     type: 'POST',
                     success: function (response) {
                         $(classId).removeClass('image-loader');
+                        $(that).prop('disabled', false);
                         if ('error' == response.status) {
                             toastr.error(response.error);
                             $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
@@ -850,6 +804,7 @@ customModule.adminEditBlock = {
                         }
                     },
                     error: function error(_error) {
+                        $(that).prop('disabled', false);
                         $(classId).removeClass('image-loader');
                         $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
                     }
@@ -905,20 +860,8 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.review || !Object.keys(state.review).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function (result) {
-                state.review = result;
-                initData(result);
-            }).catch(function (err) {
-                console.log(err);
-                $('.prealoder-text').text('Server is not available');
-            });
-        } else {
-            initData(state.review);
-        }
+        initData(state.review);
+
     },
     process: function(params) {
         var self = this;
@@ -1121,20 +1064,8 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.steps || !Object.keys(state.steps).length) {
-            var promise = $.ajax({
-                method: 'get',
-                url: blockLinks.render,
-            }).then(function (result) {
-                state.steps = result;
-                initData(result);
-            }).catch(function (err) {
-                $('.prealoder-text').text('Server is not available');
-                toastr.error("Error");
-            });
-        } else {
-            initData(state.steps);
-        }
+        initData(state.steps);
+
     },
     initTextareaAutosizer: function() {
         var self = this;
