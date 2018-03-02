@@ -82,7 +82,7 @@ class ThemesHelper {
         if ($store->block_features) {
             $enabledList[] = 'features.twig';
         }
-        if ($store->block_review) {
+        if ($store->block_reviews) {
             $enabledList[] = 'reviews.twig';
         }
 

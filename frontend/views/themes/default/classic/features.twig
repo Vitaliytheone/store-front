@@ -1,32 +1,32 @@
-{% if block['features'] %}
+{% if block.features %}
     <!-- Features block Start -->
     <section class="border-bottom">
         <div class="container">
         <div class="row section-header">
             <div class="col-lg-12">
-                <h2 class="text-center">{{ block['features']['header']['title'] }}</h2>
-                {% if block['features']['header']['description'] %}
+                <h2 class="text-center">{{ block.features.header.title }}</h2>
+                {% if block.features.header.description %}
                     <div class="section-description">
-                        {{ block['features']['header']['description'] }}
+                        {{ block.features.header.description }}
                     </div>
                 {% endif %}
             </div>
         </div>
         <div class="row section-content">
-        {% for feature in block['features']['data'] %}
-        <div class="col-lg-{{ block['features']['settings']['column'] }}">
-            <div class="feature {% if block['features']['settings']['align'] == 'left' %} block-left {% endif %}">
-                 <div class="feature-body {% if block['features']['settings']['column'] == 'left' %} text-left {% else %} text-center {% endif %}">
+        {% for feature in block.features.data %}
+        <div class="col-lg-{{ block.features.settings.column }}">
+            <div class="feature {% if block.features.settings.align == 'left' %} block-left {% endif %}">
+                 <div class="feature-body {% if block.features.settings.align == 'left' %} text-left {% else %} text-center {% endif %}">
                         <div class="icon">
                             <div class="feature-icon">
-                                <span class="fa {{ feature['icon'] }}" style="font-size: {{ block['features']['settings']['iconSize'] }}px;"></span>
+                                <span class="fa {{ feature.icon }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
                             </div>
                         </div>
                         <div class="title">
-                            <h3 class="feature-title">{{ feature['title'] }}</h3>
+                            <h3 class="feature-title">{{ feature.title }}</h3>
                         </div>
                         <div class="description">
-                            <div class="feature-text">{{ feature['description'] }}</div>
+                            <div class="feature-text">{{ feature.description }}</div>
                         </div>
                     </div>
                 </div>

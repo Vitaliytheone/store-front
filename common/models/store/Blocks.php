@@ -17,7 +17,7 @@ use common\models\store\queries\BlocksQuery;
 class Blocks extends ActiveRecord
 {
     const CODE_SLIDER = 'slider';
-    const CODE_REVIEW = 'review';
+    const CODE_REVIEW = 'reviews';
     const CODE_PROCESS = 'process';
     const CODE_FEATURES = 'features';
 

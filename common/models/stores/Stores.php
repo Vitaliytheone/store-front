@@ -36,7 +36,7 @@ use common\models\store\Files;
  * @property string $theme_folder
  * @property string $block_slider
  * @property string $block_features
- * @property string $block_review
+ * @property string $block_reviews
  * @property string $block_process
  * @property string $admin_email
  *
@@ -68,10 +68,10 @@ class Stores extends ActiveRecord
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_review', 'block_process',
+                'block_slider', 'block_features', 'block_reviews', 'block_process',
             ], 'integer'],
             [[
-                'block_slider', 'block_features', 'block_review', 'block_process',
+                'block_slider', 'block_features', 'block_reviews', 'block_process',
             ], 'default', 'value' => 0],
             [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder', 'folder', 'folder_content'], 'string', 'max' => 255],
             [['currency', 'language'], 'string', 'max' => 10],
@@ -110,7 +110,7 @@ class Stores extends ActiveRecord
             'theme_folder' => Yii::t('app', 'Theme Folder'),
             'block_slider' => Yii::t('app', 'Block Slider'),
             'block_features' => Yii::t('app', 'Block Features'),
-            'block_review' => Yii::t('app', 'Block Review'),
+            'block_reviews' => Yii::t('app', 'Block Reviews'),
             'block_process' => Yii::t('app', 'Block Process'),
             'admin_email' => Yii::t('app', 'Admin e-mail'),
         ];
@@ -261,7 +261,7 @@ class Stores extends ActiveRecord
         return [
             Blocks::CODE_SLIDER => Yii::t('app', 'Slider'),
             Blocks::CODE_FEATURES => Yii::t('app', 'Features'),
-            Blocks::CODE_REVIEW => Yii::t('app', 'Review'),
+            Blocks::CODE_REVIEW => Yii::t('app', 'Reviews'),
             Blocks::CODE_PROCESS => Yii::t('app', 'Process'),
         ];
     }

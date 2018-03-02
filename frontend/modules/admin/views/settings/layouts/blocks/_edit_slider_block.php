@@ -32,16 +32,16 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-secondary">
-                                <input type="radio" name="feature-align-card" class="slider-interval" value="5" autocomplete="off">  5
+                                <input type="radio" name="feature-align-card" class="slider-interval" value="5000" autocomplete="off">  5
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="feature-align-card" class="slider-interval" value="7" autocomplete="off"> 7
+                                <input type="radio" name="feature-align-card" class="slider-interval" value="7000" autocomplete="off"> 7
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="feature-align-card" class="slider-interval" value="10" autocomplete="off"> 10
+                                <input type="radio" name="feature-align-card" class="slider-interval" value="10000" autocomplete="off"> 10
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="feature-align-card" class="slider-interval" value="15" autocomplete="off"> 15
+                                <input type="radio" name="feature-align-card" class="slider-interval" value="15000" autocomplete="off"> 15
                             </label>
                         </div>
                     </div>

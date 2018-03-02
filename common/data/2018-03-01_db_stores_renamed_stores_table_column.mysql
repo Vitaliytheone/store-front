@@ -1,0 +1,2 @@
+USE `stores`;
+ALTER TABLE `stores` CHANGE `block_review` `block_reviews` tinyint(1) NOT NULL DEFAULT '0' AFTER `block_features`;
