@@ -24,7 +24,7 @@
                                     <div class="review-author">{{ review.name }}</div>
                                     <div class="review-rating">
                                         {% for i in 0..4 %}
-											{% if i < review.rating %}
+											                      {% if i < review.rating %}
                                                 <span class="fa fa-star"></span>
                                             {% else %}
                                                 <span class="fa fa-star-o"></span>
@@ -37,7 +37,7 @@
                                         </div>
                                     {% endif %}
                                 </div>
-							{% endfor %}
+							              {% endfor %}
                         </div>
                         <div class="swiper-pagination swiper-pagination__review"></div>
                     </div>
@@ -50,7 +50,7 @@
             var reviewsSlider = new Swiper('.review-swiper-container', {
                 pagination: '.review-swiper-container .swiper-pagination__review',
                 paginationClickable: true,
-                slidesPerView: {{  block.reviews.settings.columns }}
+                slidesPerView: parseInt({{  block.reviews.settings.column }})
             });
         });
     </script>

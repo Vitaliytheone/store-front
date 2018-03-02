@@ -282,7 +282,7 @@ customModule.adminGeneral = {
                 }
 
                 $seoTitle.on('focus', function (e){
-                   seoTitleTouched = true;
+                    seoTitleTouched = true;
                 });
 
                 $storeName.on('input', function(e){
@@ -299,11 +299,11 @@ customModule.adminGeneral = {
          *            General settings delete logo & favicon
          ******************************************************************/
         var $modal = $('#delete-modal'),
-        $deleteBtn = $modal.find('#delete-image');
+            $deleteBtn = $modal.find('#delete-image');
 
         $modal.on('show.bs.modal', function (event){
             var button = $(event.relatedTarget),
-            actionUrl = button.attr('href');
+                actionUrl = button.attr('href');
             $deleteBtn.attr('href', actionUrl);
         });
 
@@ -704,7 +704,7 @@ customModule.adminEditBlock = {
                 self.features(params);
                 break;
 
-            case 'review':
+            case 'reviews':
                 self.review(params);
                 break;
 
@@ -722,7 +722,7 @@ customModule.adminEditBlock = {
         state.slider = params.block;
 
         var blockLinks = {
-            render: 'http://www.mocky.io/v2/5a3d15d8310000471fb593d1',
+            render: 'http://www.mocky.io/v2/5a98092630000075005c2018',
             save: params.saveUrl,
             upload: params.uploadUrl
         };
@@ -730,8 +730,8 @@ customModule.adminEditBlock = {
         var textAreaResizer = function textAreaResizer() {
             $('textarea.js-auto-size').textareaAutoSize();
         };
-
-        var swiperSlider = new Swiper('.block-slider', {
+        var swiperSlider;
+        swiperSlider = new Swiper('.block-slider', {
             pagination: '.swiper-pagination',
             paginationClickable: true,
             scrollbarDraggable: false,
@@ -784,7 +784,7 @@ customModule.adminEditBlock = {
                 }
             }
             for (var i = 0; i < sliderInterval.length; i++) {
-                if (sliderInterval[i].value.toLocaleLowerCase() == result.settings.rotationInterval.toLocaleLowerCase()) {
+                if (sliderInterval[i].value.toLocaleLowerCase() == result.settings.interval.toLocaleLowerCase()) {
                     sliderInterval[i].checked = true;
                     $(sliderInterval[i].parentNode).addClass('active');
                 }
@@ -795,6 +795,13 @@ customModule.adminEditBlock = {
             e.preventDefault();
             var lastSlide = '';
             if (state.slider.data.length == 0) {
+                $('.no-slide').remove();
+                swiperSlider = new Swiper('.block-slider', {
+                    pagination: '.swiper-pagination',
+                    paginationClickable: true,
+                    scrollbarDraggable: false,
+                    simulateTouch: false
+                });
                 lastSlide = "1";
             } else {
                 lastSlide = parseInt(state.slider.data[state.slider.data.length - 1].id) + 1;
@@ -888,39 +895,42 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.editor-slider-image-input', function () {
-            var classId = '.' + this.id,
-                dataID = $(this).attr('data-id');
+            if($(this).val().length) {
+                var classId = '.' + this.id,
+                    dataID = $(this).attr('data-id');
 
-            $(classId).addClass('image-loader');
-            var data = new FormData();
-            data.append('file', $(this)[0].files[0]);
-            data.append('type', 'slider');
+                $(classId).addClass('image-loader');
+                var data = new FormData();
+                data.append('file', $(this)[0].files[0]);
+                data.append('type', 'slider');
 
-            $.ajax({
-                url: blockLinks.upload,
-                data: data,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function (response) {
-                    $(classId).removeClass('image-loader');
+                $.ajax({
+                    url: blockLinks.upload,
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function (response) {
+                        $(classId).removeClass('image-loader');
 
-                    if ('error' == response.status) {
-                        toastr.error(response.error);
-                    }
+                        if ('error' == response.status) {
+                            toastr.error(response.error);
+                        }
 
-                    if ('success' == response.status) {
-                        $(classId).css('background-image', 'url(' + response.link + ')');
-                        for (var i = 0; i < state.slider.data.length; i++) {
-                            if (state.slider.data[i].id.indexOf(dataID) == 0) {
-                                state.slider.data[i].image = response.link;
-                                return;
+                        if ('success' == response.status) {
+                            $(classId).css('background-image', 'url(' + response.link + ')');
+                            for (var i = 0; i < state.slider.data.length; i++) {
+                                if (state.slider.data[i].id.indexOf(dataID) == 0) {
+                                    state.slider.data[i].image = response.link;
+                                    return;
+                                }
                             }
                         }
+                    },
+                    error: function error(_error) {
                     }
-                },
-                error: function error(_error) {}
-            });
+                });
+            }
         });
 
         $(document).on('click', '.editor-action__delete', function () {
@@ -933,6 +943,11 @@ customModule.adminEditBlock = {
                 if (state.slider.data[i].id.indexOf(state.actions.delete.turn) == 0) {
                     state.slider.data.splice(i, 1);
                     swiperSlider.removeSlide(swiperSlider.activeIndex);
+
+                    if(!state.slider.data.length){
+                        swiperSlider.destroy(true, true);
+                        $('.swiper-wrapper').append('<div class="no-slide">No slides</div>');
+                    }
                     return;
                 }
             }
@@ -964,7 +979,7 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.slider-interval', function () {
-            state.slider.settings.rotationInterval = $(this).val();
+            state.slider.settings.interval = $(this).val();
         });
 
         $(document).on('click', '#save-changes', function () {
@@ -990,11 +1005,11 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.slider || !state.slider.length) {
+        if ('undefined' == typeof state.slider || !Object.keys(state.slider).length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
-            }).then(function (result) {
+            }).then(function(result) {
 
                 state.slider = result;
 
@@ -1013,7 +1028,7 @@ customModule.adminEditBlock = {
         state.feature = params.block;
 
         var blockLinks = {
-            render: 'http://www.mocky.io/v2/5a4108593200006a18ac345e',
+            render: 'http://www.mocky.io/v2/5a9909042e000003265534a8',
             save: params.saveUrl,
             upload: params.uploadUrl
         };
@@ -1046,17 +1061,17 @@ customModule.adminEditBlock = {
                 min: 12,
                 max: 240,
                 step: 12,
-                value: state.feature.settings.iconSize,
+                value: state.feature.settings.icon_size,
                 slide: function slide(event, ui) {
                     $(".feature-icon-size-show").text(ui.value);
                     $("#feature-size-icon").val(ui.value);
                     $('.feature-icon').css({
                         "fontSize": ui.value + 'px'
                     });
-                    state.feature.settings.iconSize = ui.value;
+                    state.feature.settings.icon_size = ui.value;
                 }
             });
-            $('.feature-icon-size-show').text(state.feature.settings.iconSize);
+            $('.feature-icon-size-show').text(state.feature.settings.icon_size);
 
             for (var i = 0; i < state.feature.data.length; i++) {
                 generateCards('render', state.feature.data[i].id, state.feature.data[i].title, state.feature.data[i].description, state.feature.data[i].icon);
@@ -1088,7 +1103,7 @@ customModule.adminEditBlock = {
         }
 
         var generateCards = function generateCards(action, id, title, description, icon) {
-            var iconSize = state.feature.settings.iconSize,
+            var iconSize = state.feature.settings.icon_size,
                 column = state.feature.settings.column,
                 align = state.feature.settings.align,
                 colAlignTitle = '',
@@ -1244,7 +1259,7 @@ customModule.adminEditBlock = {
             generateCards('add', featureID, '', '', 'fa-picture-o');
         });
 
-        if ('undefined' == typeof state.feature || !state.feature.length) {
+        if ('undefined' == typeof state.feature || !Object.keys(state.feature).length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -1266,7 +1281,7 @@ customModule.adminEditBlock = {
         state.review = params.block;
 
         var blockLinks = {
-            render: 'http://www.mocky.io/v2/5a44a9752e00002c03708668',
+            render: 'http://www.mocky.io/v2/5a9907fe2e00004e255534a3',
             save: params.saveUrl,
             upload: params.uploadUrl
         };
@@ -1275,7 +1290,8 @@ customModule.adminEditBlock = {
             $('textarea.js-auto-size').textareaAutoSize();
         };
 
-        var swiperSlider = new Swiper('.block-slider', {
+        var swiperSlider;
+        swiperSlider = new Swiper('.block-slider', {
             pagination: '.swiper-pagination',
             paginationClickable: true,
             scrollbarDraggable: false,
@@ -1314,7 +1330,7 @@ customModule.adminEditBlock = {
         var generateSlide = function generateSlide(action, id, name, rating, description, image) {
 
             if (!image) {
-                image = 'http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif';
+                image = '/img/review_no_avatar.gif';
             }
 
             var templateRating = '';
@@ -1340,7 +1356,7 @@ customModule.adminEditBlock = {
                         "id": id.toString(),
                         "name": name,
                         "description": description,
-                        "image": '0',
+                        "image": '/img/review_no_avatar.gif',
                         "rating": false
                     });
                     break;
@@ -1388,6 +1404,11 @@ customModule.adminEditBlock = {
                 if (state.review.data[i].id.indexOf(state.actions.delete.turn) == 0) {
                     state.review.data.splice(i, 1);
                     swiperSlider.removeSlide(swiperSlider.activeIndex);
+
+                    if(!state.review.data.length){
+                        swiperSlider.destroy(true, true);
+                        $('.swiper-wrapper').append('<div class="no-slide">No reviews</div>');
+                    }
                     return;
                 }
             }
@@ -1411,6 +1432,14 @@ customModule.adminEditBlock = {
             e.preventDefault();
             var lastSlide = '';
             if (state.review.data.length == 0) {
+                swiperSlider = new Swiper('.swiper-container', {
+                    pagination: '.swiper-pagination',
+                    paginationClickable: true,
+                    scrollbarDraggable: false,
+                    centeredSlides: false,
+                    simulateTouch: false,
+                    slidesPerView: parseInt(state.review.settings.column)
+                });
                 lastSlide = "1";
             } else {
                 lastSlide = parseInt(state.review.data[state.review.data.length - 1].id) + 1;
@@ -1419,44 +1448,47 @@ customModule.adminEditBlock = {
         });
 
         $(document).on('change', '.editor-preview__avatar-input', function () {
-            var dataID = $(this).data('id');
-            var classId = '.review-avatar-' + dataID;
 
-            $(classId).addClass('image-loader');
+            if($(this).val().length) {
+                var dataID = $(this).data('id');
+                var classId = '.review-avatar-' + dataID;
 
-            var data = new FormData();
-            data.append('file', $(this)[0].files[0]);
-            data.append('type', 'review');
+                $(classId).addClass('image-loader');
 
-            $.ajax({
-                url: blockLinks.upload,
-                data: data,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function (response) {
-                    $(classId).removeClass('image-loader');
-                    if ('error' == response.status) {
-                        toastr.error(response.error);
-                        $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
-                    }
+                var data = new FormData();
+                data.append('file', $(this)[0].files[0]);
+                data.append('type', 'review');
 
-                    if ('success' == response.status) {
+                $.ajax({
+                    url: blockLinks.upload,
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function (response) {
+                        $(classId).removeClass('image-loader');
+                        if ('error' == response.status) {
+                            toastr.error(response.error);
+                            $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
+                        }
 
-                        for (var i = 0; i < state.review.data.length; i++) {
-                            if (state.review.data[i].id.indexOf(dataID) == 0) {
-                                state.review.data[i].image = response.link;
-                                $(classId).css('background-image', 'url(' + response.link + ')');
-                                return;
+                        if ('success' == response.status) {
+                            console.log(dataID);
+                            for (var i = 0; i < state.review.data.length; i++) {
+                                if (state.review.data[i].id.indexOf(dataID) == 0) {
+                                    state.review.data[i].image = response.link;
+                                    $(classId).css('background-image', 'url(' + response.link + ')');
+                                    return;
+                                }
                             }
                         }
+                    },
+                    error: function error(_error) {
+                        $(classId).removeClass('image-loader');
+                        $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
                     }
-                },
-                error: function error(_error) {
-                    $(classId).removeClass('image-loader');
-                    $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
-                }
-            });
+                });
+            }
         });
 
         $(document).on('click', '.review-image-delete', function () {
@@ -1466,7 +1498,7 @@ customModule.adminEditBlock = {
             for (var i = 0; i < state.review.data.length; i++) {
                 if (state.review.data[i].id.indexOf(dataID) == 0) {
                     state.review.data[i].image = '0';
-                    $(classId).css('background-image', 'url(http://www.breps.be/frontend/core/layout/images/default_author_avatar.gif)');
+                    $(classId).css('background-image', 'url(/img/review_no_avatar.gif)');
                     return;
                 }
             }
@@ -1507,7 +1539,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.review || !state.review.length) {
+        if ('undefined' == typeof state.review || !Object.keys(state.review).length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -1529,7 +1561,7 @@ customModule.adminEditBlock = {
         state.steps = params.block;
 
         var blockLinks = {
-            render: 'http://www.mocky.io/v2/5a4258c43000000f1a709ddf',
+            render: 'http://www.mocky.io/v2/5a9903472e0000d40f55348f',
             save: params.saveUrl,
             upload: params.uploadUrl
         };
@@ -1541,8 +1573,8 @@ customModule.adminEditBlock = {
         var initData = function(result) {
             $('#preload').remove();
 
-            if(state.steps.settings.iconSize == undefined){
-                state.steps.settings.iconSize = 75;
+            if(state.steps.settings.icon_size == undefined){
+                state.steps.settings.icon_size = 75;
             }
 
             var stepsLength = state.steps.data.length,
@@ -1573,17 +1605,18 @@ customModule.adminEditBlock = {
                 min: 12,
                 max: 240,
                 step: 12,
-                value: state.steps.settings.iconSize,
+                value: state.steps.settings.icon_size,
                 slide: function slide(event, ui) {
                     $(".steps-icon-size-show").text(ui.value);
                     $("#steps-size-icon").val(ui.value);
                     $('.steps-icon').css({
                         "fontSize": ui.value + 'px'
                     });
-                    state.steps.settings.iconSize = ui.value;
+                    state.steps.settings.icon_size = ui.value;
+                    console.log(state.steps.settings.icon_size);
                 }
             });
-            $('.steps-icon-size-show').text(state.steps.settings.iconSize);
+            $('.steps-icon-size-show').text(state.steps.settings.icon_size);
             includeContent();
         }
 
@@ -1594,7 +1627,7 @@ customModule.adminEditBlock = {
                 showDescription = 'hide-description';
             }
 
-            var cardTemplate = '<li class="col-lg-' + col + ' margin-top-bottom process-column">\n               <div class="editor-card editor-tooltip__show">\n                   <div class="row">\n                       <div class="editor-card__icon-block col-12">\n                           <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                               <div class="editor-preview__tooltip">edit</div>\n                               <span class="fa ' + icon + ' steps-icon" id="process-icon-' + id + '"></span>\n                           </div>\n                       </div>\n                       <div class="editor-card__title-block col-12">\n                           <div class="editor-textarea__text-edit-off">\n                               <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                               <div class="editor-textarea__text-edit-action">\n                                   <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                   <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                               </div>\n                           </div>\n                       </div>\n                       <div class="editor-card__text-block col-12 ' + showDescription + '">\n                           <div class="editor_textarea-block">\n                               <div class="editor-textarea__text-edit-off">\n                                   <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                   <div class="editor-textarea__text-edit-action">\n                                       <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                       <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                   </div>\n                               </div>\n                           </div>\n                       </div>\n                   </div>\n               </div>\n           </li>';
+            var cardTemplate = '<li class="col-lg-' + col + ' margin-top-bottom process-column">\n               <div class="editor-card editor-tooltip__show">\n                   <div class="row">\n                       <div class="editor-card__icon-block col-12">\n                           <div class="editor-preview__block" data-toggle="modal" data-target="#preview-edit-modal" data-id="' + id + '">\n                               <div class="editor-preview__tooltip">edit</div>\n                               <span class="fa ' + icon + ' steps-icon" id="process-icon-' + id + '" style="font-size: '+state.steps.settings.icon_size+'px"></span>\n                           </div>\n                       </div>\n                       <div class="editor-card__title-block col-12">\n                           <div class="editor-textarea__text-edit-off">\n                               <textarea class="editor-textarea__h editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                               <div class="editor-textarea__text-edit-action">\n                                   <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                   <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                               </div>\n                           </div>\n                       </div>\n                       <div class="editor-card__text-block col-12 ' + showDescription + '">\n                           <div class="editor_textarea-block">\n                               <div class="editor-textarea__text-edit-off">\n                                   <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                   <div class="editor-textarea__text-edit-action">\n                                       <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                       <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                   </div>\n                               </div>\n                           </div>\n                       </div>\n                   </div>\n               </div>\n           </li>';
             $('#process-list').append(cardTemplate);
             textAreaResizer();
         };
@@ -1606,10 +1639,10 @@ customModule.adminEditBlock = {
         };
 
         $(document).on('change', '.process-count', function () {
-            state.steps.settings.count = $(this).val();
+            state.steps.settings.column = $(this).val();
             $('#process-list').empty();
 
-            if (parseInt(state.steps.settings.count) == 4) {
+            if (parseInt(state.steps.settings.column) == 4) {
                 state.steps.data.pop();
             }else{
                 state.steps.data.push({
@@ -1621,7 +1654,7 @@ customModule.adminEditBlock = {
             }
 
             for (var i = 0; i < state.steps.data.length; i++) {
-                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.column, state.steps.settings.description);
             }
 
         });
@@ -1633,12 +1666,11 @@ customModule.adminEditBlock = {
             }else{
                 state.steps.settings.description = '0';
             }
-            console.log(state.steps.settings.description);
 
             $('#process-list').empty();
 
             for (var i = 0; i < state.steps.data.length; i++) {
-                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.count, state.steps.settings.description);
+                generateCards('add', state.steps.data[i].id, state.steps.data[i].title, state.steps.data[i].description, state.steps.data[i].icon, state.steps.settings.column, state.steps.settings.description);
             }
 
 
@@ -1686,7 +1718,7 @@ customModule.adminEditBlock = {
         $(document).on('click', '#feature-saveIcon', function () {
             var currentID = state.actions.steps.activeIconId,
                 iconClass = '#process-icon-' + currentID,
-                classStroke = 'fa ' + state.actions.steps.activeIcon + ' feature-icon';
+                classStroke = 'fa ' + state.actions.steps.activeIcon + ' steps-icon';
 
             for (var i = 0; i < state.steps.data.length; i++) {
                 if (state.steps.data[i].id.indexOf(currentID) == 0) {
@@ -1723,7 +1755,7 @@ customModule.adminEditBlock = {
             });
         });
 
-        if ('undefined' == typeof state.steps || !state.steps.length) {
+        if ('undefined' == typeof state.steps || !Object.keys(state.steps).length) {
             var promise = $.ajax({
                 method: 'get',
                 url: blockLinks.render,
@@ -2030,25 +2062,6 @@ customModule.ordersClipboard = {
             }();jQuery(document).ready(function () {
                 ClipboardDemo.init();
             });
-        });
-    }
-};
-
-/**
- * Order change status custom js module
- * @type {{run: customModule.ordersModalAlerts.run}}
- */
-customModule.ordersModalAlerts = {
-    run : function(params) {
-
-        var $modals = $('.order_modal_alert');
-
-        $modals.on('show.bs.modal', function(event){
-            var $modal = $(this),
-                $target = $(event.relatedTarget);
-            var actionUrl = $target.data('action_url');
-
-            $modal.find('.submit_action').attr('href', actionUrl);
         });
     }
 };
