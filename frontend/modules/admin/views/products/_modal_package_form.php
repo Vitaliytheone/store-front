@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var common\models\stores\StoreProviders[] $storeProviders  */
+/* @var $storeProviders array  */
 
 $linkTypes = Yii::$app->params['packageLinkTypes'];
 
@@ -113,9 +113,9 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                             <option value="" selected>
                                 <?= Yii::t('admin', 'products.package_provider_default') ?>
                             </option>
-                            <?php foreach ($storeProviders as $storeProvider): ?>
-                            <option value="<?= $storeProvider->provider->id ?>" data-action-url="<?= Url::to(['products/get-provider-services', 'provider_id' => $storeProvider->provider->id ]) ?>">
-                                <?= Html::encode($storeProvider->provider->site) ?>
+                            <?php foreach ($storeProviders as $provider): ?>
+                            <option value="<?= $provider['id'] ?>" data-action-url="<?= Url::to(['products/get-provider-services', 'provider_id' => $provider['id'] ]) ?>">
+                                <?= Html::encode($provider['site']) ?>
                             </option>
                             <?php endforeach; ?>
                         </select>

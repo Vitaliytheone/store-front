@@ -43,11 +43,8 @@ class ProductsController extends CustomController
 
         $search = new ProductsSearch();
 
-        /** @var $store Stores */
-        $store = yii::$app->store->getInstance();
-
         return $this->render('index', [
-            'storeProviders' => $store->storeProviders,
+            'storeProviders' => $search->getStoreProviders(),
             'products' => $search->getProductsPackages(),
         ]);
     }
