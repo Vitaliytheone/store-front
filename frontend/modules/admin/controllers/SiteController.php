@@ -1,20 +1,18 @@
 <?php
-
 namespace frontend\modules\admin\controllers;
 
 use common\models\stores\StoreAdmins;
+use frontend\controllers\CommonController;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
-use common\components\MainController;
-use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**
  * Site controller for the `admin` module
  */
-class SiteController extends MainController
+class SiteController extends CommonController
 {
     /**
      * Layout for login pages

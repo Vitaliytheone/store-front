@@ -112,6 +112,7 @@ class OrderForm extends Model {
 
         foreach ($this->_items as $item) {
             $returnItems[] = [
+                'cart_key' => $item['key'],
                 'link' => $item['link'],
                 'package_id' => $item['package_id'],
                 'quantity' => $item['package_quantity'],
@@ -215,11 +216,9 @@ class OrderForm extends Model {
 
         if (2 == $result['result']) {
             $this->redirect = $result['redirect'];
-            $this->clearCart();
             return true;
         } else if (1 == $result['result']) {
             $this->formData = $result['formData'];
-            $this->clearCart();
             return true;
         }
 

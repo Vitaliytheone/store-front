@@ -2,9 +2,9 @@
 
 namespace frontend\modules\admin\controllers;
 
-use common\models\stores\StoreAdmins;
+use frontend\helpers\UiHelper;
+use frontend\modules\admin\models\forms\AccountForm;
 use Yii;
-use yii\web\NotAcceptableHttpException;
 
 /**
  * Site controller for the `admin` module
@@ -19,8 +19,15 @@ class AccountController extends CustomController
     {
         $this->view->title = Yii::t('admin', 'account.page_title');
 
+        $form = new AccountForm();
+        $form->setUser(Yii::$app->user);
+
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->changePassword()) {
+            UiHelper::message(Yii::t('admin', 'account.message_password_changed'));
+        }
+
         return $this->render('index', [
-            'user' => Yii::$app->user->getIdentity(),
+            'form' => $form,
         ]);
     }
 

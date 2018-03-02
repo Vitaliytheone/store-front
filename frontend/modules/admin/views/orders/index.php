@@ -176,3 +176,5 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
     </div>
 </div>
 <?= $this->render('_modal_details', []); ?>
+<?= $this->render('_modal_change_status', []); ?>
+<?= $this->render('_modal_cancel_order', []); ?>

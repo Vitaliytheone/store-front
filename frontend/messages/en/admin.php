@@ -46,6 +46,14 @@ return [
     'orders.message_resend' => 'Order was successfully resend!',
     'orders.message_copied' => 'Order data was successfully copied!',
 
+    'orders.modal_change_status_message' => 'Are your sure that your want change status?',
+    'orders.modal_change_status_submit' => 'Yes',
+    'orders.modal_change_status_cancel' => 'No',
+
+    'orders.modal_cancel_message' => 'Are your sure that your want cancel order?',
+    'orders.modal_cancel_submit' => 'Yes',
+    'orders.modal_cancel_cancel' => 'No',
+
     'orders.f_id' => 'ID',
     'orders.f_checkout_id' => 'Checkout ID',
     'orders.f_customer' => 'Customer',
@@ -371,12 +379,20 @@ return [
     'login.sign_in_header' => 'Sign In',
     'login.sign_in_username_placeholder' => 'Username',
     'login.sign_in_password_placeholder' => 'Password',
-    'login.sign_in_remember_me' => 'Remember me',
     'login.sign_in_submit_title' => 'Sign In',
     'login.message_bad_login' => 'Incorrect username or password!',
     'login.message_suspended' => 'Account suspended!',
 
     'account.page_title' => 'Account',
+    'account.current_password' => 'Current password',
+    'account.new_password' => 'New password',
+    'account.confirm_password' => 'Confirm new password',
+
+    'account.message_wrong_new_password_pair' => '"New password" and "Confirm new password" must be the same!',
+    'account.message_wrong_new_password' => 'The new password must be different from the old one!',
+    'account.message_wrong_current_password' => 'Invalid current password!',
+    'account.message_password_changed' => 'Password successfully updated!',
+
 
     'settings.blocks_page_title' => 'Blocks',
 ];

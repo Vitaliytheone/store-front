@@ -1,6 +1,7 @@
 <?php
 namespace common\components\stores;
 
+use common\models\stores\StoreDomains;
 use Yii;
 use common\models\stores\Stores;
 use yii\base\Component;
@@ -31,27 +32,25 @@ class StoreComponent extends Component
      */
     public function getInstance()
     {
-        if (null == static::$_instance) {
-            if (Yii::$app->params['storeId']) {
-                $attributes = Yii::$app->params['storeId'];
-            } elseif ($this->domain) {
-                $domain = $this->domain;
+        if (null === static::$_instance) {
 
-                $attributes = [
-                    'domain' => $domain
-                ];
+            $store = null;
+
+            if ($this->domain) {
+                $domain = $this->domain;
             } else {
                 $domain = Yii::$app->request->hostName;
                 $domain = preg_replace('/^www\./i', '', $domain);
-
-                $attributes = [
-                    'domain' => $domain
-                ];
             }
 
-            $store = Stores::findOne($attributes);
+            $domainModel = StoreDomains::findOne(['domain' => $domain]);
 
-            if ($store) {
+            if ($domainModel && $domainModel instanceof StoreDomains)
+            {
+                $store = $domainModel->store;
+            }
+
+            if ($store instanceof Stores) {
                 $this->setInstance($store);
             }
         }

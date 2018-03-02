@@ -1,0 +1,12 @@
+USE `stores`;
+CREATE TABLE `store_admins_hash` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) NOT NULL,
+  `hash` varchar(64) NOT NULL,
+  `ip` varchar(255) NOT NULL,
+  `super_user` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - admin, 1 - superadmin',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  `created_at` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `hash` (`hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -25,6 +25,7 @@ class OrdersController extends CustomController
     public function beforeAction($action)
     {
         $this->addModule('ordersDetails');
+        $this->addModule('ordersModalAlerts');
         $this->addModule('ordersClipboard', [
             'messageCopied' => Yii::t('admin', 'orders.message_copied'),
         ]);

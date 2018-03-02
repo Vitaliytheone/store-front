@@ -67,13 +67,13 @@ class CartController extends CustomController
     }
 
     /**
-     * Displays homepage.
-     * @param integer $id
+     * Delete cart item
+     * @param string|integer $key
      * @return string
      */
-    public function actionRemove($id)
+    public function actionDelete($key)
     {
-        $cartItem = $this->_findCartItem($id);
+        $cartItem = $this->_findCartItem($key);
 
         UserHelper::removeCartKey($cartItem->key);
         $cartItem->delete();

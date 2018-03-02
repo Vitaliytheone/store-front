@@ -277,4 +277,29 @@ class Stores extends ActiveRecord
 
         return $this->hasAttribute($fieldName) && $this->getAttribute($fieldName);
     }
+
+    /**
+     * Return if store expired
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return $this->expired ? time() > $this->expired : false;
+    }
+
+    /**
+     * Check if store is expired and update store status
+     * @return bool
+     */
+    public function checkExpired()
+    {
+        if ($this->isExpired()) {
+            $this->status = self::STATUS_FROZEN;
+            $this->save(false);
+
+            return true;
+        }
+
+        return false;
+    }
 }
