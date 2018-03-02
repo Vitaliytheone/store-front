@@ -1,7 +1,6 @@
 <?php
 return [
     'auth_key' => '001100110011001100110011',
-    'salt' => '29299292929929292929292929',
 
     'adminEmail' => 'admin@example.com',
     'debugIps' => ['*'],

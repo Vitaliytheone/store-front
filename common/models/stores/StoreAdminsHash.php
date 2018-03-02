@@ -109,18 +109,6 @@ class StoreAdminsHash extends ActiveRecord
     }
 
     /**
-     * Return store admin hash
-     * @param $adminId
-     * @return null|string
-     */
-    public static function getHash($adminId)
-    {
-        $model = self::findOne(['admin_id' => $adminId]);
-
-        return $model ? $model->hash : null;
-    }
-
-    /**
      * Update freshness of the admin hash records
      * @param $adminId
      */

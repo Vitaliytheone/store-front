@@ -1,0 +1,3 @@
+USE `stores`;
+ALTER TABLE `store_admins_hash` ADD INDEX `__admin_id__hash` (`admin_id`, `hash`);
+

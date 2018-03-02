@@ -3,14 +3,13 @@
 namespace frontend\modules\admin\controllers;
 
 use common\models\stores\StoreAdmins;
-use frontend\controllers\CommonController;
 use Yii;
 use yii\filters\AccessControl;
 
 /**
  * Custom controller for the `admin` module
  */
-class CustomController extends CommonController
+class CustomController extends AdminController
 {
     public $activeTab;
 
