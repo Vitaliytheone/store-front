@@ -7,16 +7,28 @@ use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
+/**
+ * Class StoreAdminAuth
+ * @package common\models\stores
+ *
+ * @property StoreAdminsHash $hash
+ */
 class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 {
     /** Auth cookie lifetime */
     const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
 
     /**
-     * Cached current auth key
-     * @var
+     * Return current auth user hash object
+     * @return \yii\db\ActiveQuery
      */
-    private $_auth_key;
+    public function getHash()
+    {
+        $hash = $this->generateAuthKey();
+
+        return $this->hasOne(StoreAdminsHash::className(), ['admin_id' => 'id'])
+            ->where(['hash' => $hash]);
+    }
 
     /**
      * Finds an identity by the given ID.
@@ -68,7 +80,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->_auth_key ? $this->_auth_key : StoreAdminsHash::getHash($this->id);
+        return $this->hash ? $this->hash->hash : null;
     }
 
     /**
@@ -76,9 +88,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function setAuthKey()
     {
-        $this->_auth_key = $this->generateAuthKey();
-
-        StoreAdminsHash::setHash($this->id, $this->_auth_key);
+        StoreAdminsHash::setHash($this->id, $this->generateAuthKey());
     }
 
     /**
@@ -98,6 +108,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
+
         $storedAuthKey = $this->getAuthKey();
         $userAuthKey = $this->generateAuthKey();
         $cookieAuthKey = $authKey;
@@ -113,12 +124,8 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     public function generateAuthKey()
     {
         $request = Yii::$app->getRequest();
-        $salt = ArrayHelper::getValue(Yii::$app->params, 'salt', null);
-        if (!$salt) {
-            throw new Exception('\'auth_key\' is not defined in config -> params!');
-        }
 
-        $string2hash = $this->username . $this->password . $this->getPrimaryKey() . $request->getUserIP() . $request->getHeaders()->get('host') . $salt;
+        $string2hash = $this->username . $this->password . $this->getPrimaryKey() . $request->getUserIP() . $request->getHeaders()->get('host');
 
         $authKey = hash_hmac('sha256', $string2hash, $this->getSiteAuthKey());
 
@@ -170,5 +177,14 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     public function setPassword($password)
     {
         $this->password = hash_hmac('sha256', $password, $this->getSiteAuthKey());
+    }
+
+    /**
+     * Return is user is logged in as superadmin
+     * @return bool
+     */
+    public function isSuper()
+    {
+        return $this->hash ? (bool)$this->hash->super_user : false;
     }
 }

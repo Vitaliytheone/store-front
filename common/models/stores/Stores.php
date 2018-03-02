@@ -279,6 +279,15 @@ class Stores extends ActiveRecord
     }
 
     /**
+     * Return is store inactive
+     * @return bool
+     */
+    public function isInactive()
+    {
+        return in_array($this->status, [self::STATUS_FROZEN, self::STATUS_TERMINATED]);
+    }
+
+    /**
      * Return if store expired
      * @return bool
      */
@@ -289,17 +298,12 @@ class Stores extends ActiveRecord
 
     /**
      * Check if store is expired and update store status
-     * @return bool
      */
     public function checkExpired()
     {
-        if ($this->isExpired()) {
+        if ($this->isExpired() && $this->status != self::STATUS_FROZEN) {
             $this->status = self::STATUS_FROZEN;
             $this->save(false);
-
-            return true;
         }
-
-        return false;
     }
 }

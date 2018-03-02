@@ -23,6 +23,22 @@ class SiteController extends CustomController
     }
 
     /**
+     * Frozen action
+     * @return string
+     */
+    public function actionFrozen()
+    {
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        if (!$store->isInactive()) {
+            return $this->redirect('/');
+        }
+
+        return $this->renderPartial('frozen');
+    }
+
+    /**
      * Displays index page.
      *
      * @return string

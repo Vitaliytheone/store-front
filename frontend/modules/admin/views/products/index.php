@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use frontend\assets\ProductsAsset;
 
 /* @var $this yii\web\View */
-/* @var $storeProviders common\models\stores\StoreProviders[] */
+/* @var $storeProviders array */
 /** @var $products array  Products with packages array */
 
 ProductsAsset::register($this);

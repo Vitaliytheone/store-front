@@ -7,6 +7,8 @@ return [
     '/cart' => 'cart/index',
     '/order/<id:\d+>' => 'cart/order',
     '/delete/<key:[\w\d-]+>' => 'cart/delete',
+    '/frozen' => 'site/frozen',
 
     '/admin/logout' => 'admin/account/logout',
+    '/admin/frozen' => 'admin/site/frozen',
 ];

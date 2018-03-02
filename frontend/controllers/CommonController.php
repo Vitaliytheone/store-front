@@ -23,8 +23,6 @@ class CommonController extends MainController
             exit;
         }
 
-        if ($store->checkExpired()) {
-            $this->refresh();
-        }
+        $store->checkExpired();
     }
 }

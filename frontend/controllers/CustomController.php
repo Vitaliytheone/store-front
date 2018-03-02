@@ -65,8 +65,17 @@ class CustomController extends CommonController
         $this->customJs[] = 'window.modules.' . $name . ' = ' . json_encode($options) . ';';
     }
 
+    /** @inheritdoc */
     public function beforeAction($action)
     {
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        // Redirect frozen store to `frozen page`
+        if ($store->isInactive() && $action->id !== 'frozen') {
+            $this->redirect(Url::to('/frozen'));
+        }
+
         return parent::beforeAction($action);
     }
 

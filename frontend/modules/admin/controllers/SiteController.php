@@ -2,6 +2,7 @@
 namespace frontend\modules\admin\controllers;
 
 use common\models\stores\StoreAdmins;
+use common\models\stores\Stores;
 use frontend\controllers\CommonController;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\LoginForm;
@@ -12,7 +13,7 @@ use yii\web\User;
 /**
  * Site controller for the `admin` module
  */
-class SiteController extends CommonController
+class SiteController extends AdminController
 {
     /**
      * Layout for login pages
@@ -128,6 +129,22 @@ class SiteController extends CommonController
         return $this->render('signin', [
             'form' => $form,
         ]);
+    }
+
+    /**
+     * Render store frozen page for guest and non-superadmins
+     * @return string
+     */
+    public function actionFrozen()
+    {
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        if (!$store->isInactive()) {
+            return $this->redirect(Url::toRoute('/'));
+        }
+
+        return $this->renderPartial('frozen');
     }
 
     /**

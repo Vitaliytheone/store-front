@@ -32,7 +32,10 @@ class MyRequest extends Request
          */
         $store = Yii::$app->store->getInstance();
 
-        if ($store) {
+        $isAdminModule = strpos($pathInfo, 'admin') !== false;
+
+        if ($store && !$isAdminModule) {
+
             $urls = RouteHelper::getRoutes();
 
             foreach ($urls as $url => $options) {
