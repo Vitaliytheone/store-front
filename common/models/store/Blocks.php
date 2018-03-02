@@ -99,10 +99,11 @@ class Blocks extends ActiveRecord
 
     /**
      * Get content data
+     * @param array $default
      * @return array|mixed
      */
-    public function getContent()
+    public function getContent($default = [])
     {
-        return !empty($this->content) ? json_decode($this->content, true) : [];
+        return !empty($this->content) ? json_decode($this->content, true) : $default;
     }
 }

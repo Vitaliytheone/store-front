@@ -4,6 +4,7 @@ namespace frontend\modules\admin\controllers\traits\settings;
 use common\components\ActiveForm;
 use common\models\store\Blocks;
 use common\models\stores\Stores;
+use frontend\helpers\BlockHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\BlockUploadForm;
 use frontend\modules\admin\models\forms\EditBlockForm;
@@ -88,7 +89,7 @@ trait BlocksTrait {
             'code' => $code,
             'saveUrl' => Url::toRoute(['settings/edit-block', 'code' => $code]),
             'uploadUrl' => Url::toRoute(['settings/block-upload', 'code' => $code]),
-            'block' => $block->getContent()
+            'block' => $block->getContent(BlockHelper::getDefaultBlock($code))
         ]);
 
         return $this->render('edit_block', [

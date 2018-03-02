@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\models\store\Blocks;
 use common\models\stores\Stores;
+use frontend\helpers\BlockHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -53,7 +54,7 @@ class SiteController extends CustomController
         $blocks = [];
         foreach (Blocks::find()->all() as $block) {
             if ($store->isEnableBlock($block->code)) {
-                $blocks[$block->code] = $block->getContent();
+                $blocks[$block->code] = $block->getContent(BlockHelper::getDefaultBlock($block->code));
             }
         }
 
