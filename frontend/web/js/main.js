@@ -1372,14 +1372,19 @@ customModule.adminEditBlock = {
 
         $(document).on('click', '.editor-action__delete', function () {
             var slideID = $(this).attr('data-id');
+            console.log(this, 'Delete elem');
+            console.log(slideID, 'ID');
             state.actions.delete.turn = slideID;
+            console.log(state, 'State after save');
         });
 
         $(document).on('click', '#feature-delete', function () {
             for (var i = 0; i < state.review.data.length; i++) {
                 if (state.review.data[i].id.indexOf(state.actions.delete.turn) == 0) {
                     state.review.data.splice(i, 1);
-                    swiperSlider.removeSlide(swiperSlider.activeIndex);
+                    console.log(swiperSlider.clickedIndex(), '1');
+                    console.log(swiperSlider.clickedIndex, '2');
+                    swiperSlider.removeSlide(i);
 
                     if(!state.review.data.length){
                         swiperSlider.destroy(true, true);
@@ -1412,6 +1417,7 @@ customModule.adminEditBlock = {
             e.preventDefault();
             var lastSlide = '';
             if (state.review.data.length == 0) {
+                $('.no-slide').remove();
                 swiperSlider = new Swiper('.swiper-container', {
                     pagination: '.swiper-pagination',
                     paginationClickable: true,
@@ -1615,7 +1621,7 @@ customModule.adminEditBlock = {
             state.steps.settings.column = $(this).val();
             $('#process-list').empty();
 
-            if (parseInt(state.steps.settings.column) == 4) {
+            if (parseInt($(this).val()) == 4) {
                 state.steps.data.pop();
             }else{
                 state.steps.data.push({
