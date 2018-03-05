@@ -1382,7 +1382,6 @@ customModule.adminEditBlock = {
             for (var i = 0; i < state.review.data.length; i++) {
                 if (state.review.data[i].id.indexOf(state.actions.delete.turn) == 0) {
                     state.review.data.splice(i, 1);
-                    console.log(swiperSlider.clickedIndex(), '1');
                     console.log(swiperSlider.clickedIndex, '2');
                     swiperSlider.removeSlide(i);
 
