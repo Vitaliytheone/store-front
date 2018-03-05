@@ -282,7 +282,7 @@ customModule.adminGeneral = {
                 }
 
                 $seoTitle.on('focus', function (e){
-                    seoTitleTouched = true;
+                   seoTitleTouched = true;
                 });
 
                 $storeName.on('input', function(e){
@@ -299,11 +299,11 @@ customModule.adminGeneral = {
          *            General settings delete logo & favicon
          ******************************************************************/
         var $modal = $('#delete-modal'),
-            $deleteBtn = $modal.find('#delete-image');
+        $deleteBtn = $modal.find('#delete-image');
 
         $modal.on('show.bs.modal', function (event){
             var button = $(event.relatedTarget),
-                actionUrl = button.attr('href');
+            actionUrl = button.attr('href');
             $deleteBtn.attr('href', actionUrl);
         });
 
@@ -884,7 +884,6 @@ customModule.adminEditBlock = {
                             state.slider.data[i].button.link = '/';
                             break;
                         default:
-                            console.log('default');
                             state.slider.data[i].button.link = false;
                             break;
                     }
@@ -1080,7 +1079,6 @@ customModule.adminEditBlock = {
                             }
                         }
                     }
-                    console.log(state.feature.data, dataNew);
                     state.feature.data = dataNew;
                 },
                 placeHolderTemplate: '<li class="col margin-top-bottom editor-placeholder-move"><div class="editor-card editor-card__left editor-tooltip__show placeholder-template d-flex align-items-lg-center justify-content-center"><span>Insert</span></div></li>'
@@ -1137,8 +1135,6 @@ customModule.adminEditBlock = {
 
             switch (featureType) {
                 case "header-title":
-                    console.log(state.feature.header.title);
-                    console.log(content);
                     state.feature.header.title = content;
                     break;
                 case "header-description":
@@ -1372,17 +1368,13 @@ customModule.adminEditBlock = {
 
         $(document).on('click', '.editor-action__delete', function () {
             var slideID = $(this).attr('data-id');
-            console.log(this, 'Delete elem');
-            console.log(slideID, 'ID');
             state.actions.delete.turn = slideID;
-            console.log(state, 'State after save');
         });
 
         $(document).on('click', '#feature-delete', function () {
             for (var i = 0; i < state.review.data.length; i++) {
                 if (state.review.data[i].id.indexOf(state.actions.delete.turn) == 0) {
                     state.review.data.splice(i, 1);
-                    console.log(swiperSlider.clickedIndex, '2');
                     swiperSlider.removeSlide(i);
 
                     if(!state.review.data.length){
@@ -1462,7 +1454,6 @@ customModule.adminEditBlock = {
                         }
 
                         if ('success' == response.status) {
-                            console.log(dataID);
                             for (var i = 0; i < state.review.data.length; i++) {
                                 if (state.review.data[i].id.indexOf(dataID) == 0) {
                                     state.review.data[i].image = response.link;
@@ -1591,7 +1582,6 @@ customModule.adminEditBlock = {
                         "fontSize": ui.value + 'px'
                     });
                     state.steps.settings.icon_size = ui.value;
-                    console.log(state.steps.settings.icon_size);
                 }
             });
             $('.steps-icon-size-show').text(state.steps.settings.icon_size);
@@ -2028,6 +2018,25 @@ customModule.ordersClipboard = {
             }();jQuery(document).ready(function () {
                 ClipboardDemo.init();
             });
+        });
+    }
+};
+
+/**
+ * Order change status custom js module
+ * @type {{run: customModule.ordersModalAlerts.run}}
+ */
+customModule.ordersModalAlerts = {
+    run : function(params) {
+
+        var $modals = $('.order_modal_alert');
+
+        $modals.on('show.bs.modal', function(event){
+            var $modal = $(this),
+                $target = $(event.relatedTarget);
+            var actionUrl = $target.data('action_url');
+
+            $modal.find('.submit_action').attr('href', actionUrl);
         });
     }
 };
