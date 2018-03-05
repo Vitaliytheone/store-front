@@ -2,6 +2,8 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use console\helpers\ConsoleHelper;
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
@@ -9,6 +11,7 @@ use common\models\stores\Stores;
 use frontend\modules\admin\models\search\ThemesSearch;
 use Yii;
 use yii\base\Exception;
+use yii\web\User;
 
 /**
  * Class ActivateThemeForm
@@ -16,15 +19,38 @@ use yii\base\Exception;
  */
 class ActivateThemeForm
 {
+
     /**
-     * Activate theme
+     * @var User
+     */
+    protected $_user;
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
+     * Activate theme by theme folder
      * @param $themeFolder
-     * @return DefaultThemes | CustomThemes
+     * @return CustomThemes|DefaultThemes|false
      * @throws Exception
      */
-    public static function activate($themeFolder)
+    public function activate($themeFolder)
     {
-
         $themeModel = (new ThemesSearch())->searchByFolder($themeFolder);
         if (!$themeModel) {
             throw new Exception('Theme does not exist in DB!');
@@ -50,7 +76,11 @@ class ActivateThemeForm
 
         ConsoleHelper::execGenerateAssets();
 
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity();
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_THEMES_THEME_ACTIVATED, $themeModel->id, $themeModel->name);
+
         return $themeModel;
     }
-
 }

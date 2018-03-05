@@ -2,6 +2,8 @@
 
 namespace frontend\modules\admin\controllers;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use frontend\helpers\UiHelper;
 use Yii;
 use frontend\modules\admin\components\Url;
@@ -104,6 +106,11 @@ class OrdersController extends CustomController
             $this->redirect(Url::toRoute(["/orders"]));
         }
 
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_ORDERS_ORDER_STATUS_CHANGED, $model->id, $model->id);
+
         UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 
         $filters = static::_queryParams();
@@ -127,6 +134,11 @@ class OrdersController extends CustomController
         if (!$model->cancel()) {
             $this->redirect(Url::toRoute(["/orders"]));
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_ORDERS_ORDER_CANCELED, $model->id, $model->id);
 
         UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 
@@ -153,6 +165,11 @@ class OrdersController extends CustomController
         if (!$model->resend()) {
             $this->redirect(Url::toRoute(["/orders"]));
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_ORDERS_ORDER_RESENT, $model->id, $model->id);
 
         UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
 

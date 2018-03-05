@@ -2,7 +2,9 @@
 
 namespace frontend\modules\admin\controllers;
 
+use common\models\store\ActivityLog;
 use common\models\store\Packages;
+use common\models\stores\StoreAdminAuth;
 use frontend\modules\admin\models\forms\MovePackageForm;
 use Yii;
 use yii\filters\AccessControl;
@@ -65,6 +67,7 @@ class ProductsController extends CustomController
         }
 
         $model = new CreateProductForm();
+        $model->setUser(Yii::$app->user);
 
         if (!$model->create($request->post())) {
             return $response->data = ['error' => [
@@ -125,6 +128,7 @@ class ProductsController extends CustomController
         }
 
         $model = CreateProductForm::findOne($id);
+        $model->setUser(Yii::$app->user);
 
         if (!$model) {
             throw new NotFoundHttpException();
@@ -163,6 +167,7 @@ class ProductsController extends CustomController
         }
 
         $model = MoveProductForm::findOne($id);
+        $model->setUser(Yii::$app->user);
 
         if (!$model) {
             throw new NotFoundHttpException();
@@ -193,6 +198,7 @@ class ProductsController extends CustomController
         }
 
         $model = new CreatePackageForm();
+        $model->setUser(Yii::$app->getUser());
 
         if (!$model->create($request->post())) {
             return $response->data = ['error' => [
@@ -253,6 +259,7 @@ class ProductsController extends CustomController
         }
 
         $model = CreatePackageForm::findOne($id);
+        $model->setUser(Yii::$app->user);
 
         if (!$model) {
             throw new NotFoundHttpException();
@@ -335,6 +342,10 @@ class ProductsController extends CustomController
         if (!$model->deleteVirtual()) {
             throw new NotAcceptableHttpException();
         }
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_DELETED, $model->id, $model->id);
 
         UiHelper::message(Yii::t('admin', 'products.message_package_deleted'));
 
@@ -362,6 +373,7 @@ class ProductsController extends CustomController
         }
 
         $model = MovePackageForm::findOne($id);
+        $model->setUser(Yii::$app->user);
 
         if (!$model) {
             throw new NotFoundHttpException();

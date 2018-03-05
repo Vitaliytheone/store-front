@@ -1,7 +1,9 @@
 <?php
 namespace frontend\modules\admin\controllers\traits\settings;
 
+use common\models\store\ActivityLog;
 use common\models\store\Pages;
+use common\models\stores\StoreAdminAuth;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\EditPageForm;
@@ -47,6 +49,7 @@ trait PagesTrait {
         $request = Yii::$app->getRequest();
 
         $pageModel = new EditPageForm();
+        $pageModel->setUser(Yii::$app->user);
 
         if ($pageModel->create($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.pages_message_created'));
@@ -80,6 +83,8 @@ trait PagesTrait {
         $request = Yii::$app->getRequest();
 
         $pageModel = EditPageForm::findOne($id);
+        $pageModel->setUser(Yii::$app->user);
+
         if (!$pageModel) {
             throw new NotFoundHttpException();
         }
@@ -122,6 +127,11 @@ trait PagesTrait {
         }
 
         $pageModel->deleteVirtual();
+
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_DELETED);
 
         UiHelper::message(Yii::t('admin', 'settings.pages_message_deleted'));
 

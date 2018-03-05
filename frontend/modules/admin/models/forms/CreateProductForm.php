@@ -2,7 +2,10 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use yii;
+use yii\web\User;
 use yii\behaviors\AttributeBehavior;
 use common\models\store\Pages;
 use common\models\store\Products;
@@ -13,6 +16,11 @@ use common\models\store\Products;
  */
 class CreateProductForm extends Products
 {
+    /**
+     * @var User
+     */
+    protected $_user;
+
     /**
      * @inheritdoc
      */
@@ -80,11 +88,28 @@ class CreateProductForm extends Products
             [['seo_title', ], 'string', 'max' => 300],
             [['seo_description', ], 'string', 'max' => 1000],
             [['properties', 'position'], 'safe'],
+            ['visibility', 'filter', 'filter' => function($value){ return (int)$value; }],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique'],
             ['url', 'unique', 'targetClass' => Pages::className(), 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => Pages::DELETED_NO]],
         ];
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
@@ -155,6 +180,11 @@ class CreateProductForm extends Products
             return false;
         }
 
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_ADDED, $this->id, $this->id);
+
         return $this;
     }
 
@@ -167,10 +197,40 @@ class CreateProductForm extends Products
     {
         $postData = $this->checkPropertiesField($postData);
 
-        if (!$this->load($postData) || !$this->save()) {
+        if (!$this->load($postData) || !$this->validate()) {
             return false;
         }
 
+        $changedAttributes = $this->getDirtyAttributes();
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->_changeLog($changedAttributes);
+
         return $this;
     }
+
+    /**
+     * Write changes to log
+     * @param $changedAttributes
+     * @return bool
+     */
+    private function _changeLog($changedAttributes)
+    {
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_UPDATED, $this->id, $this->id);
+
+        if (isset($changedAttributes['visibility'])) {
+            ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_VISIBILITY_CHANGED, $this->id, $this->id);
+        }
+
+        if (isset($changedAttributes['url'])) {
+            ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_URL_CHANGED, $this->id, $this->id);
+        }
+    }
+
 }

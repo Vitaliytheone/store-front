@@ -31,6 +31,7 @@ trait ProvidersTrait {
 
         $model = new ProvidersListForm();
         $model->setStore(Yii::$app->store->getInstance());
+        $model->setUser(Yii::$app->user);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             UiHelper::message(Yii::t('admin', 'settings.message_provider_updated'));
@@ -54,6 +55,7 @@ trait ProvidersTrait {
 
         $model = new CreateProviderForm();
         $model->setStore(Yii::$app->store->getInstance());
+        $model->setUser(Yii::$app->user);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             UiHelper::message(Yii::t('admin', 'settings.message_provider_created'));

@@ -2,10 +2,13 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\store\Pages;
 use common\models\store\Products;
+use common\models\stores\StoreAdminAuth;
 use yii\behaviors\AttributeBehavior;
 use common\models\store\Navigation;
+use yii\web\User;
 
 /**
  * Class EditNavigationForm
@@ -13,6 +16,9 @@ use common\models\store\Navigation;
  */
 class EditNavigationForm extends Navigation
 {
+    /** @var  User */
+    protected $_user;
+
     /**
      * @inheritdoc
      */
@@ -90,6 +96,24 @@ class EditNavigationForm extends Navigation
     }
 
     /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Return current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
      * Return link types list for create/edit form menu
      * @return array
      */
@@ -114,6 +138,44 @@ class EditNavigationForm extends Navigation
                 'select_id' => 4,
             ],
         ];
+    }
+
+    /**
+     * Create menu item
+     * @param $postData
+     * @return bool
+     */
+    public function create($postData)
+    {
+        if (!$this->load($postData) || !$this->save()) {
+            return false;
+        }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity();
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_ADDED, $this->id, $this->name);
+
+        return true;
+    }
+
+    /**
+     * Update menu item
+     * @param $postData
+     * @return bool
+     */
+    public function updateNav($postData)
+    {
+        if (!$this->load($postData) || !$this->save()) {
+            return false;
+        }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity();
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_UPDATED, $this->id, $this->name);
+
+        return true;
     }
 
 }
