@@ -148,50 +148,46 @@ class CreatePackageForm extends Packages
             return false;
         }
 
-        $changedAttributes = $this->getDirtyAttributes();
+        $this->_changeLog(clone $this);
 
         if (!$this->save(false)) {
             return false;
         }
 
-        $this->_changeLog($changedAttributes);
-
         return $this;
     }
 
     /**
-     * Write changes to log
-     * @param $changedAttributes
-     * @return bool
+     * Write interesting Package changes to log
+     * @param Packages $model
      */
-    private function _changeLog($changedAttributes)
+    private function _changeLog($model)
     {
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
 
         ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_UPDATED, $this->id, $this->id);
 
-        if (isset($changedAttributes['price'])) {
+        if ((float)$model->getAttribute('price') !== (float)$model->getOldAttribute('price')) {
             ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_PRICE_CHANGED, $this->id, $this->id);
         }
-        if (isset($changedAttributes['quantity'])) {
+        if ((int)$model->getAttribute('quantity') !== (int)$model->getOldAttribute('quantity')) {
             ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
         }
-        if (isset($changedAttributes['link_type'])) {
-            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_LINK_TYPE_CHANGED, $this->id, $this->id);
+        if ((int)$model->getAttribute('link_type') !== (int)$model->getOldAttribute('link_type')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
         }
-        if (isset($changedAttributes['visibility'])) {
-            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_AVAILABILITY_CHANGED, $this->id, $this->id);
+        if ((int)$model->getAttribute('visibility') !== (int)$model->getOldAttribute('visibility')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
         }
-        if (isset($changedAttributes['mode'])) {
-            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_MODE_CHANGED, $this->id, $this->id);
+        if ((int)$model->getAttribute('mode') !== (int)$model->getOldAttribute('mode')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
         }
-        if (isset($changedAttributes['provider_id'])) {
-            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_PROVIDER_CHANGED, $this->id, $this->id);
+        if ((int)$model->getAttribute('provider_id') !== (int)$model->getOldAttribute('provider_id')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
         }
-        if (isset($changedAttributes['provider_service'])) {
-            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_PROVIDER_SERVICE_CHANGED, $this->id, $this->id);
+        if ((int)$model->getAttribute('provider_service') !== (int)$model->getOldAttribute('provider_service')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
         }
     }
-
 }
