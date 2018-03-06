@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('/css/main.css') }}">
 </head>
 <body>
-<nav class="navbar navbar-white">
+<nav class="navbar navbar-default navbar-white">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
@@ -72,7 +72,7 @@
                 {% endfor %}
                 <!--/ User's menu -->
 
-                <li {% if site.active_menu %} class="active" {% endif %}><a href="/cart" class="bold">({{ site.cart.item_count }}) {{ lang('cart.title') }}</a></li>
+                <li {% if 'cart' == site.active_menu %} class="active" {% endif %}><a href="/cart" class="bold">({{ site.cart.item_count }}) {{ lang('cart.title') }}</a></li>
             </ul>
         </div>
     </div>
@@ -89,13 +89,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    {{ lang('footer.copyright') }}
+                   &copy; {{ site.story_name }} {{ "now"|date("Y") }}
                 </div>
                 <div class="col-md-8">
                     <ul class="footer-links">
                         <li><a href="/content">{{ lang('footer.terms') }}</a></li>
                         <li><a href="/content">{{ lang('footer.policy') }}</a></li>
-                        <li><a href="/contact-us">{{ lang('footer.contact') }}</a></li>
+                        <li><a href="/contacts">{{ lang('footer.contact') }}</a></li>
                     </ul>
                 </div>
             </div>

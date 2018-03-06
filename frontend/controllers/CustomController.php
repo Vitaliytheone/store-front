@@ -140,6 +140,9 @@ class CustomController extends CommonController
                     'keywords' => $store->seo_keywords,
                     'description' => $store->seo_description,
                 ],
+                'story_domain' => Yii::$app->getRequest()->getHostName(),
+                'story_name' => Yii::$app->store->getInstance()->name,
+                'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
             ]
         ];
 

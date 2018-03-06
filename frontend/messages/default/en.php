@@ -41,7 +41,6 @@ return [
     'payment_result.awaiting.title' => 'Awaiting',
     'payment_result.awaiting.description' => 'Your payment awaiting!',
 
-    'footer.copyright' => 'All Rights Reserved',
     'footer.terms' => 'Terms of Service',
     'footer.policy' => 'Privacy policy',
     'footer.contact' => 'Contact Us',
