@@ -27,7 +27,7 @@ class CartController extends CustomController
      */
     public function actionIndex()
     {
-        $this->pageTitle = Yii::t('app', 'cart_title');
+        $this->pageTitle = Yii::t('app', 'cart.title');
 
         Url::remember();
 
@@ -90,9 +90,9 @@ class CartController extends CustomController
      */
     public function actionOrder($id)
     {
-        $this->pageTitle = Yii::t('app', 'order_title');
-
         $package = $this->_findPackage($id);
+
+        $this->pageTitle = $package->name;
 
         $model = new AddToCartForm();
         $model->setPackage($package);
