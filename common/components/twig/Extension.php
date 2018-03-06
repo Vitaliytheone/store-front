@@ -47,7 +47,9 @@ class Extension extends \Twig_Extension {
                 return AssetsHelper::getAssetPath() . $value;
             }),
             new Twig_SimpleFunction('page_url', function($pageId){
-                $page = Pages::findOne($pageId);
+                $page = Pages::find()->active()->andWhere([
+                    'id' => $pageId,
+                ])->one();
                 return '/' . ($page ? $page->url : '#');
             }),
         ];
