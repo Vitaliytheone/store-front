@@ -33,11 +33,11 @@ class ProductController extends CustomController
             'product' => [
                 'id' => $product->id,
                 'title' => Html::encode($product->name),
-                'text' => $product->description,
+                'content' => $product->description,
                 'packages' => array_map(function ($package) {
                     return [
                         'id' => $package->id,
-                        'best' => UiHelper::toggleString($package->best, 'best-product'),
+                        'best' => $package->best,
                         'quantity' => $package->quantity,
                         'name' => Html::encode($package->name),
                         'price' => '$' . $package->price,

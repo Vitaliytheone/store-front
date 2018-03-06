@@ -22,10 +22,11 @@ return [
     'order.package' => 'Package name',
     'order.quantity' => 'Quantity',
     'order.price' => 'Price',
-    'order.cancel' => 'Cancel',
-    'order.submit' => 'Add to cart',
+    'order.button.back_url' => 'Cancel',
+    'order.button.add_to_cart' => 'Add to cart',
+    'order.link' => 'Link',
 
-    'product.submit' => 'Buy now',
+    'product.button.buy_now' => 'Buy now',
 
     'contact.subject' => 'Subject',
     'contact.name' => 'Name',

@@ -127,17 +127,20 @@ class CustomController extends CommonController
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
+                'page_title' => $this->pageTitle ? $this->pageTitle : $store->seo_title,
                 'menu' => $menuTree,
-                'cart_count' => $cartItems->getCount(),
-                'custom_footer' => $endContent,
+                'cart' => [
+                    'item_count' => $cartItems->getCount(),
+                ],
                 'language' => Yii::$app->language,
-                'pageTitle' => $this->pageTitle ? $this->pageTitle : $store->seo_title,
-                'seo_key' => $store->seo_keywords,
-                'seo_desc' => $store->seo_description,
-                'name' => $store->name,
+                'store_name' => $store->name,
                 'favicon' => $store->favicon,
+                'logo' => $store->logo,
+                'meta' => [
+                    'keywords' => $store->seo_keywords,
+                    'description' => $store->seo_description,
+                ],
             ]
-
         ];
 
         return $this->_globalParams;

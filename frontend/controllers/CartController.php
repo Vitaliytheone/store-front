@@ -103,16 +103,19 @@ class CartController extends CustomController
         }
 
         return $this->render('order.twig', [
-            'package' => [
+            'order' => [
                 'id' => $package->id,
                 'name' => Html::encode($package->name),
                 'quantity' => $package->quantity,
                 'price' => $package->price,
+                'back_url' => $this->getGoBackUrl(),
+                'form' => [
+                    'link' => $model->link,
+                ],
             ],
-            'goBackUrl' => $this->getGoBackUrl(),
-            'data' => $model->attributes,
+
             'error' => $model->hasErrors(),
-            'errorMessage' => ActiveForm::firstError($model)
+            'error_message' => ActiveForm::firstError($model),
         ]);
     }
 

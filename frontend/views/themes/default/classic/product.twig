@@ -2,35 +2,40 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-title">{{ product['title'] }}</h1>
+                <h1 class="page-title">{{ product.title }}</h1>
             </div>
         </div>
+        {% if product.content %}
         <div class="row">
             <div class="col-md-12">
                 <div class="content">
-                    {{ product['text'] }}
+                    {{ product.content }}
                 </div>
             </div>
         </div>
+        {% endif %}
         <div class="row products">
-            {% for package in product['packages'] %}
+            {% for package in product.packages %}
                 <div class="col-lg-3">
-                    <div class="product-card text-center {{ package['best'] }}">
-                        <div class="product-quantity">{{ package['quantity'] }}</div>
-                        <h3 class="product-title">{{ package['name'] }}</h3>
-                        <div class="product-price">{{ package['price'] }}</div>
+                    <div class="product-card text-center {% if package.best  %} best-product {% endif %}">
+                        <div class="product-quantity">{{ package.quantity }}</div>
+                        <h3 class="product-title">{{ package.name }}</h3>
+                        <div class="product-price">{{ package.price }}</div>
                         <div class="product-properties">
                             <ul>
-                                {% for property in product['properties'] %}
+                                {% for property in product.properties %}
                                     <li>{{ property }}</li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div class="product-actions">
-                            <a href="{{ package.addToCartUrl }}" class="btn btn-block btn-default">{{ lang('product.submit') }}</a>
+                            <a href="{{ package.addToCartUrl }}" class="btn btn-block btn-default">{{ lang('product.button.buy_now') }}</a>
                         </div>
                     </div>
                 </div>
+                {% if loop.index is divisible by(4) %}
+                    <div class="clearfix"></div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
