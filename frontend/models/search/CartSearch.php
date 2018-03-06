@@ -180,12 +180,10 @@ class CartSearch {
 
             $item['id'] = $itemNo;
             $item['name'] = $item['package_name'];
-            $item['details'] = $item['link'];
             $item['quantity'] = $item['package_quantity'];
 
             unset($item['package_id']);
             unset($item['package_name']);
-            unset($item['link']);
             unset($item['package_quantity']);
 
             $itemNo++;

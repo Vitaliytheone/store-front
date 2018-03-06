@@ -176,7 +176,7 @@ class OrderForm extends Model {
         array_walk($methods, function(&$method, $methodId){
             $method = [
                 'id' => $methodId,
-                'name' => $method,
+                'method' => $method,
             ];
         });
 

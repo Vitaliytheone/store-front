@@ -55,14 +55,16 @@ class CartController extends CustomController
         return $this->render('cart.twig', [
             'cart' => [
                 'orders' => $items,
-                'totalPrice' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
+                'total_price' => PriceHelper::prepare($searchModel->getTotal(), $store->currency),
                 'payments' => $model->getPaymentsMethodsForView(),
+                'form' => [
+                    'selected_method' => $model->method,
+                    'email' => $model->email,
+                ]
             ],
 
-            'selectedMethodId' => $model->method,
-            'data' => $model->attributes,
             'error' => $model->hasErrors(),
-            'errorMessage' => ActiveForm::firstError($model)
+            'error_message' => ActiveForm::firstError($model)
         ]);
     }
 
