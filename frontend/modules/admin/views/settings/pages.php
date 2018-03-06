@@ -42,6 +42,7 @@ use frontend\modules\admin\components\Url;
                 <table class="table-sommerce table m-table m-table--head-no-border">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Page name</th>
                         <th>Updated</th>
                         <th>Visibility</th>

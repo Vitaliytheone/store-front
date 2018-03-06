@@ -2,6 +2,7 @@
 namespace common\components\twig;
 
 use common\components\twig\parsers\TokenParser_Include;
+use common\models\store\Pages;
 use frontend\helpers\AssetsHelper;
 use Yii;
 use Twig_SimpleFunction;
@@ -44,6 +45,10 @@ class Extension extends \Twig_Extension {
             new Twig_SimpleFunction('ceil', 'ceil'),
             new Twig_SimpleFunction('asset', function($value) {
                 return AssetsHelper::getAssetPath() . $value;
+            }),
+            new Twig_SimpleFunction('page_url', function($pageId){
+                $page = Pages::findOne($pageId);
+                return '/' . ($page ? $page->url : '#');
             }),
         ];
 

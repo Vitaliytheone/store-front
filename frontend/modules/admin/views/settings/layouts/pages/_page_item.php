@@ -9,6 +9,7 @@ use yii\helpers\Html;
 ?>
 
 <tr class="<?= $page['visibility'] ? '' : 'text-muted' ?>">
+    <td><?= $page['id'] ?></td>
     <td class="sommerce-table__no-wrap"><?= Html::encode($page['title']) ?></td>
     <td class="sommerce-table__no-wrap"><?= $page['updated_at_formatted'] ?></td>
     <td><?= $page['visibility_title'] ?></td>
