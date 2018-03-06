@@ -58,11 +58,19 @@ class PageController extends CustomController
                 'title' => $page->title,
                 'content' => $page->content,
             ],
-            'data' => $contactForm,
+            'contact' => [
+                'form' => [
+                    'subject' => $contactForm->subject,
+                    'name' => $contactForm->name,
+                    'email' => $contactForm->email,
+                    'message' => $contactForm->message,
+                ],
+            ],
+
             'error' => $contactForm->hasErrors(),
-            'errorMessage' => ActiveForm::firstError($contactForm),
+            'error_message' => ActiveForm::firstError($contactForm),
             'success' => $contactForm->getSentSuccess(),
-            'captchaKey' => Yii::$app->params['reCaptcha.siteKey'],
+            'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
         ]);
     }
 

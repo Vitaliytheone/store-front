@@ -31,7 +31,7 @@ return [
     'contact.name' => 'Name',
     'contact.email' => 'Email',
     'contact.message' => 'Message',
-    'contact.submit' => 'Send message',
+    'contact.button.submit' => 'Send message',
     'contact.form.message.success' => 'Email was successfully sent!',
     'contact.form.message.error' => 'Internal error. Try again later!',
 
