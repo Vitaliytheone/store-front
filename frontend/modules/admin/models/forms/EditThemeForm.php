@@ -2,13 +2,16 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
+use common\models\stores\StoreAdminAuth;
 use console\helpers\ConsoleHelper;
 use frontend\helpers\CustomFilesHelper;
 use frontend\modules\admin\models\search\ThemesSearch;
 use yii\base\Exception;
 use yii\base\Model;
+use yii\web\User;
 
 /**
  * Class EditThemeForm
@@ -50,8 +53,10 @@ class EditThemeForm extends Model
         ],
     ];
 
+    /** @var   */
     public $file_content;
 
+    /** @var  */
     private $_theme_model;
 
     /** @var string Relative to theme folder filepath */
@@ -59,6 +64,9 @@ class EditThemeForm extends Model
 
     /** @var string Path to edited file */
     private $_path_to_file;
+
+    /** @var  User */
+    protected $_user;
 
     public function formName()
     {
@@ -72,6 +80,25 @@ class EditThemeForm extends Model
         return [
             ['file_content', 'string']
         ];
+    }
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
@@ -222,6 +249,11 @@ class EditThemeForm extends Model
         }
 
         ConsoleHelper::execGenerateAssets();
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_THEMES_THEME_FILE_UPDATED, $this->_theme_model->id,  $this->_theme_model->name);
 
         return true;
     }

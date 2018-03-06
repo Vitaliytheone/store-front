@@ -2,7 +2,9 @@
 namespace frontend\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
+use common\models\store\ActivityLog;
 use common\models\store\Navigation;
+use common\models\stores\StoreAdminAuth;
 use frontend\helpers\UiHelper;
 use frontend\models\search\NavigationSearch;
 use frontend\modules\admin\models\forms\EditNavigationForm;
@@ -53,8 +55,9 @@ trait NavigationTrait {
         }
 
         $model = new EditNavigationForm();
+        $model->setUser(Yii::$app->user);
 
-        if (!$model->load($request->post()) || !$model->save()) {
+        if (!$model->create($request->post())) {
             return ['error' => ActiveForm::firstError($model)];
         }
 
@@ -82,12 +85,13 @@ trait NavigationTrait {
         }
 
         $model = EditNavigationForm::findOne($id);
+        $model->setUser(Yii::$app->user);
 
         if (!$model) {
             throw new NotFoundHttpException();
         }
 
-        if (!$model->load($request->post()) || !$model->save()) {
+        if (!$model->updateNav($request->post())) {
             return ['error' => ActiveForm::firstError($model)];
         }
 
@@ -147,6 +151,11 @@ trait NavigationTrait {
 
         $model->deleteVirtual();
 
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity,ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_DELETED, $model->id, $model->name);
+
         UiHelper::message(Yii::t('admin', 'settings.nav_message_deleted'));
 
         return [true];
@@ -168,6 +177,8 @@ trait NavigationTrait {
         }
 
         $model = new UpdatePositionsNavigationForm();
+        $model->setUser(Yii::$app->user);
+
         if (!$model->updatePositions($request->post())) {
             throw new BadRequestHttpException();
         }

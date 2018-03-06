@@ -2,8 +2,11 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\store\Navigation;
+use common\models\stores\StoreAdminAuth;
 use yii\helpers\ArrayHelper;
+use yii\web\User;
 
 /**
  * Class UpdatePositionsNavigationForm
@@ -11,6 +14,29 @@ use yii\helpers\ArrayHelper;
  */
 class UpdatePositionsNavigationForm extends Navigation
 {
+    /**
+     * @var User
+     */
+    protected $_user;
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
     /**
      * Batch update Navigation item positions
      * @param $postData
@@ -42,6 +68,11 @@ class UpdatePositionsNavigationForm extends Navigation
                 ON DUPLICATE KEY UPDATE
                 parent_id=VALUES(parent_id), position=VALUES(position)
         ")->execute();
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity();
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_POSITION_CHANGED);
 
         return true;
     }

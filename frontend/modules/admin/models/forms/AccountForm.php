@@ -1,6 +1,7 @@
 <?php
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\base\Model;
@@ -96,6 +97,8 @@ class AccountForm extends Model
 
         $identity->setPassword($this->password);
         $identity->save(false);
+
+        ActivityLog::log($identity, ActivityLog::E_ADMIN_PASSWORD_CHANGED);
 
         $user->logout(false);
 

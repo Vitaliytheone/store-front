@@ -2,13 +2,15 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\store\Files;
+use common\models\stores\StoreAdminAuth;
 use Yii;
 use common\models\stores\Stores;
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
-use common\components\cdn\Cdn;
 use common\components\cdn\BaseCdn;
+use yii\web\User;
 
 
 /**
@@ -49,6 +51,12 @@ class EditStoreSettingsForm extends Stores
     ];
 
     /**
+     * Current User
+     * @var User
+     */
+    private $_user;
+
+    /**
      * @inheritdoc
      */
     public function formName()
@@ -64,8 +72,28 @@ class EditStoreSettingsForm extends Stores
         return array_merge(parent::rules(), [
             [['seo_description', 'seo_title', 'admin_email'], 'trim'],
             ['admin_email', 'email'],
+            ['timezone', 'filter', 'filter' => function($value) { return (int)$value; }]
         ]);
     }
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Return current user
+     * @return User
+     */
+    public function getuser()
+    {
+       return $this->_user;
+    }
+
 
     /**
      * Update General settings
@@ -74,7 +102,7 @@ class EditStoreSettingsForm extends Stores
      */
     public function updateSettings($postData)
     {
-        if (!$this->load($postData) || !$this->save()) {
+        if (!$this->load($postData) || !$this->validate()) {
             return false;
         }
 
@@ -107,7 +135,47 @@ class EditStoreSettingsForm extends Stores
 
         }
 
-        return $this->save(false);
+        $changedAttributes = $this->getDirtyAttributes();
+
+        if (!$this->save(false)) {
+
+            return false;
+        }
+
+        $this->_changeLog($changedAttributes);
+
+        return true;
+    }
+
+    /**
+     * Write changes to log
+     * @param $changedAttributes
+     * @return bool
+     */
+    private function _changeLog($changedAttributes)
+    {
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getuser()->getIdentity(false);
+
+        if (isset($changedAttributes['name'])) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_NAME_CHANGED);
+        }
+
+        if (isset($changedAttributes['timezone'])) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_TIMEZONE_CHANGED);
+        }
+
+        if (isset($changedAttributes['admin_email'])) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_ADMIN_EMAIL_CHANGED);
+        }
+
+        if (isset($changedAttributes['seo_title'])) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_SEO_TITLE_CHANGED);
+        }
+
+        if (isset($changedAttributes['seo_description'])) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_SEO_META_DESCRIPTION_CHANGED);
+        }
     }
 
 }

@@ -1,11 +1,14 @@
 <?php
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
+use yii\web\User;
 
 /**
  * Class CreateProviderForm
@@ -22,6 +25,9 @@ class ProvidersListForm extends Model {
      * @var Stores
      */
     protected $_store;
+
+    /** @var User */
+    protected $_user;
 
     /**
      * @return array the validation rules.
@@ -43,11 +49,32 @@ class ProvidersListForm extends Model {
     }
 
     /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Return current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
      * Save domain
      * @return bool
      */
     public function save()
     {
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
         foreach ((array)$this->providers as $provider) {
             $key = ArrayHelper::getValue($provider, 'key');
             $apiKey = ArrayHelper::getValue($provider, 'api_key');
@@ -62,10 +89,17 @@ class ProvidersListForm extends Model {
             ]);
 
             if ($model) {
+
                 $model->apikey = $apiKey;
+
+                if ($model->isAttributeChanged('apikey')) {
+                    ActivityLog::log($identity, ActivityLog::E_SETTINGS_PROVIDERS_PROVIDER_API_KEY_CHANGED, $model->id, $model->provider->site);
+                }
+
                 $model->save();
             }
         }
+
         return true;
     }
 }

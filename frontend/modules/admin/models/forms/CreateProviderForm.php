@@ -1,11 +1,14 @@
 <?php
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\stores\Providers;
+use common\models\stores\StoreAdminAuth;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use Yii;
 use yii\base\Model;
+use yii\web\User;
 
 /**
  * Class CreateProviderForm
@@ -24,6 +27,11 @@ class CreateProviderForm extends Model {
      * @var Stores
      */
     protected $_store;
+
+    /**
+     * @var User
+     */
+    protected $_user;
 
     /**
      * @return array the validation rules.
@@ -48,6 +56,24 @@ class CreateProviderForm extends Model {
     }
 
     /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Return current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
      * Save domain
      * @return bool
      */
@@ -68,6 +94,11 @@ class CreateProviderForm extends Model {
             $this->attributes = $attributes;
             return false;
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PROVIDERS_PROVIDER_ADEDD, $provider->id, $this->name);
 
         return true;
     }

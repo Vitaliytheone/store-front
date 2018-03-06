@@ -2,7 +2,10 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\store\Products;
+use common\models\stores\StoreAdminAuth;
+use yii\web\User;
 
 /**
  * Class MoveProductForm
@@ -10,6 +13,29 @@ use common\models\store\Products;
  */
 class MoveProductForm extends Products
 {
+    /**
+     * @var User
+     */
+    protected $_user;
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
     /**
      * Move product to new position
      * @param $newPosition
@@ -47,6 +73,11 @@ class MoveProductForm extends Products
         if ($query) {
             $this->setAttribute('position', $newPosition);
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_POSITION_CHANGED, $this->id, $this->id);
 
         return $this->getAttribute('position');
     }

@@ -2,12 +2,15 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\stores\DefaultThemes;
+use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\AttributeBehavior;
 use common\models\store\CustomThemes;
+use yii\web\User;
 
 /**
  * Class CreateThemeForm
@@ -17,6 +20,11 @@ class CreateThemeForm extends CustomThemes
 {
     /** @var  Stores */
     private $_store;
+
+    /**
+     * @var User
+     */
+    protected $_user;
 
     public function init()
     {
@@ -66,6 +74,25 @@ class CreateThemeForm extends CustomThemes
     }
 
     /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
      * Create new Theme
      * @param $postData
      * @return bool
@@ -103,7 +130,16 @@ class CreateThemeForm extends CustomThemes
             throw new Exception('Not all files have been copied!');
         }
 
-        return $this->save(false);
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity();
+
+        if (!$this->save(false)) {
+            return false;
+        }
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_THEMES_THEME_ADDED, $this->id, $this->name);
+
+        return true;
     }
 
     /**

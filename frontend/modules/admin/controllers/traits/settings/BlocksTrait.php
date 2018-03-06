@@ -2,7 +2,9 @@
 namespace frontend\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
+use common\models\store\ActivityLog;
 use common\models\store\Blocks;
+use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
 use frontend\helpers\BlockHelper;
 use frontend\modules\admin\components\Url;
@@ -47,6 +49,7 @@ trait BlocksTrait {
     /**
      * Edit block
      * @param $code
+     * @return array
      */
     public function actionEditBlock($code)
     {
@@ -58,6 +61,7 @@ trait BlocksTrait {
 
         $model = new EditBlockForm();
         $model->setBlock($block);
+        $model->setUser(Yii::$app->user);
 
         if (Yii::$app->request->isPost) {
             $model->content = Yii::$app->request->post('content');
@@ -100,6 +104,7 @@ trait BlocksTrait {
     /**
      * Edit block
      * @param $code
+     * @return array
      */
     public function actionBlockUpload($code)
     {
@@ -138,6 +143,7 @@ trait BlocksTrait {
     /**
      * Enable block
      * @param $code
+     * @return array
      */
     public function actionEnableBlock($code)
     {
@@ -159,6 +165,8 @@ trait BlocksTrait {
         $store->setAttribute($attributeName, 1);
         $store->save(false);
 
+        $this->_logToggleBlockStatus($code);
+
         return [
             'status' => 'success'
         ];
@@ -167,6 +175,7 @@ trait BlocksTrait {
     /**
      * Disable block
      * @param $code
+     * @return array
      */
     public function actionDisableBlock($code)
     {
@@ -187,6 +196,8 @@ trait BlocksTrait {
 
         $store->setAttribute($attributeName, 0);
         $store->save(false);
+
+        $this->_logToggleBlockStatus($code);
 
         return [
             'status' => 'success'
@@ -209,5 +220,19 @@ trait BlocksTrait {
         }
 
         return $block;
+    }
+
+    /**
+     * Logging change block active status event
+     * @param $code
+     */
+    private function _logToggleBlockStatus($code)
+    {
+        $block = $this->_findBlock($code);
+
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_ACTIVE_STATUS_CHANGED, $block->id, $block->code);
     }
 }

@@ -2,12 +2,21 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use Yii;
 use common\models\store\Products;
 use common\models\store\Pages;
+use yii\web\User;
 
 class EditPageForm extends Pages
 {
+
+    /**
+     * @var User
+     */
+    protected $_user;
+
 
     public function init()
     {
@@ -20,6 +29,24 @@ class EditPageForm extends Pages
     public function formName()
     {
         return 'PageForm';
+    }
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
@@ -52,11 +79,16 @@ class EditPageForm extends Pages
     {
         $this->_setDefaults();
 
-        if ($this->load($postData) && $this->save()) {
-            return true;
+        if (!$this->load($postData) || !$this->save()) {
+            return false;
         }
 
-        return false;
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_ADDED, $this->id, $this->id);
+
+        return true;
     }
 
     /**
@@ -66,11 +98,16 @@ class EditPageForm extends Pages
      */
     public function edit($postData)
     {
-        if ($this->load($postData) && $this->save()) {
-            return true;
+        if (!$this->load($postData) || !$this->save()) {
+            return false;
         }
 
-        return false;
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_UPDATED, $this->id, $this->id);
+
+        return true;
     }
 
     /**

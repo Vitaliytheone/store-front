@@ -1,9 +1,12 @@
 <?php
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\store\Blocks;
+use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\base\Model;
+use yii\web\User;
 
 /**
  * Class EditBlockForm
@@ -18,6 +21,8 @@ class EditBlockForm extends Model {
      */
     private $_block;
 
+    private $_user;
+
     /**
      * @return array the validation rules.
      */
@@ -26,6 +31,24 @@ class EditBlockForm extends Model {
         return [
             [['content'], 'safe']
         ];
+    }
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser($user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Get current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
@@ -53,6 +76,11 @@ class EditBlockForm extends Model {
             $this->addErrors($this->_block->getErrors());
             return false;
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_UPDATED, $this->_block->id, $this->_block->code);
 
         return true;
     }

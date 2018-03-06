@@ -1,7 +1,9 @@
 <?php
 namespace frontend\modules\admin\controllers\traits\settings;
 
+use common\models\store\ActivityLog;
 use common\models\stores\DefaultThemes;
+use common\models\stores\StoreAdminAuth;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\ActivateThemeForm;
@@ -44,6 +46,8 @@ trait ThemesTrait {
         $request = Yii::$app->getRequest();
 
         $themeModel = new CreateThemeForm();
+        $themeModel->setUser(Yii::$app->user);
+
         if($themeModel->create($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.themes_message_created'));
 
@@ -61,10 +65,13 @@ trait ThemesTrait {
      */
     public function actionActivateTheme($theme)
     {
-        $activatedTheme = ActivateThemeForm::activate($theme);
+
+        $activatedThemeForm = new ActivateThemeForm();
+        $activatedThemeForm->setUser(Yii::$app->user);
+
 
         UiHelper::message(Yii::t('admin', 'settings.themes_message_activated', [
-            'theme_name' => $activatedTheme->name
+            'theme_name' => $activatedThemeForm->activate($theme)->name,
         ]));
 
         return $this->redirect(Url::toRoute('/settings/themes'));
@@ -84,6 +91,7 @@ trait ThemesTrait {
         $this->addModule('adminThemes');
 
         $editThemeForm = EditThemeForm::make($theme, $file);
+        $editThemeForm->setUser(Yii::$app->user);
 
         if (!$editThemeForm) {
             return $this->redirect(Url::toRoute('/settings/themes'));
@@ -124,6 +132,11 @@ trait ThemesTrait {
         if (!$themeModel->reset($file)) {
             $this->refresh();
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity();
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_THEMES_THEME_FILE_RESETED, $themeModel->id, $themeModel->name);
 
         UiHelper::message(Yii::t('admin', 'settings.themes_message_reset'));
 

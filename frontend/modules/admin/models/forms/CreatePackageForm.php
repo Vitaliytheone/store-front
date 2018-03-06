@@ -2,16 +2,26 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use yii;
+use yii\web\User;
 use yii\behaviors\AttributeBehavior;
 use common\models\store\Products;
 use \common\models\store\Packages;
+
 /**
  * Class CreatePackageForm
  * @package frontend\modules\admin\models\forms
+ * @inheritdoc
  */
 class CreatePackageForm extends Packages
 {
+    /**
+     * @var User
+     */
+    protected $_user;
+
     /**
      * @inheritdoc
      */
@@ -82,6 +92,22 @@ class CreatePackageForm extends Packages
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+    /**
      * Calculate `position` for new package record
      * @return int
      */
@@ -97,10 +123,16 @@ class CreatePackageForm extends Packages
      * @param $postData
      * @return $this|bool
      */
-    public function create($postData) {
+    public function create($postData)
+    {
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_ADDED, $this->id, $this->id);
 
         return $this;
     }
@@ -110,11 +142,52 @@ class CreatePackageForm extends Packages
      * @param $postData
      * @return $this|bool
      */
-    public function edit($postData) {
-        if (!$this->load($postData) || !$this->save()) {
+    public function edit($postData)
+    {
+        if (!$this->load($postData) || !$this->validate()) {
+            return false;
+        }
+
+        $this->_changeLog(clone $this);
+
+        if (!$this->save(false)) {
             return false;
         }
 
         return $this;
+    }
+
+    /**
+     * Write interesting Package changes to log
+     * @param Packages $model
+     */
+    private function _changeLog($model)
+    {
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_UPDATED, $this->id, $this->id);
+
+        if ((float)$model->getAttribute('price') !== (float)$model->getOldAttribute('price')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_PRICE_CHANGED, $this->id, $this->id);
+        }
+        if ((int)$model->getAttribute('quantity') !== (int)$model->getOldAttribute('quantity')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
+        }
+        if ((int)$model->getAttribute('link_type') !== (int)$model->getOldAttribute('link_type')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
+        }
+        if ((int)$model->getAttribute('visibility') !== (int)$model->getOldAttribute('visibility')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
+        }
+        if ((int)$model->getAttribute('mode') !== (int)$model->getOldAttribute('mode')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
+        }
+        if ((int)$model->getAttribute('provider_id') !== (int)$model->getOldAttribute('provider_id')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
+        }
+        if ((int)$model->getAttribute('provider_service') !== (int)$model->getOldAttribute('provider_service')) {
+            ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_QUANTITY_CHANGED, $this->id, $this->id);
+        }
     }
 }

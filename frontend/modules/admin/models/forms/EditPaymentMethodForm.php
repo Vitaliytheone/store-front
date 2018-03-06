@@ -2,10 +2,13 @@
 
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
+use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\helpers\ArrayHelper;
 use common\models\stores\PaymentMethods;
+use yii\web\User;
 
 /**
  * Class EditPaymentMethodForm
@@ -13,6 +16,11 @@ use common\models\stores\PaymentMethods;
  */
 class EditPaymentMethodForm extends PaymentMethods
 {
+
+    /**
+     * @var User
+     */
+    private $_user;
 
     /**
      * @inheritdoc
@@ -61,6 +69,24 @@ class EditPaymentMethodForm extends PaymentMethods
     public function formName()
     {
         return 'PaymentsForm';
+    }
+
+    /**
+     * Set current user
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Return current user
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
@@ -132,5 +158,43 @@ class EditPaymentMethodForm extends PaymentMethods
         ];
 
         return ArrayHelper::getValue($paymentsFormData, $method);
+    }
+
+    /**
+     * Change PG active status
+     * @param $active
+     * @return mixed
+     */
+    public function setActive($active)
+    {
+        $this->setAttribute('active', $active);
+        $this->save();
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAYMENTS_PG_ACTIVE_STATUS_CHANGED, $this->id, $this->method);
+
+        return $active;
+    }
+
+
+    /**
+     * Change PG settings
+     * @param $postData
+     * @return bool
+     */
+    public function changeSettings($postData)
+    {
+        if (!$this->load($postData) || !$this->save()) {
+            return false;
+        }
+
+        /** @var StoreAdminAuth $identity */
+        $identity = $this->getUser()->getIdentity(false);
+
+        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAYMENTS_PG_SETTINGS_CHANGED, $this->id, $this->method);
+
+        return true;
     }
 }

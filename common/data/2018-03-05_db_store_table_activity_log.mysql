@@ -1,0 +1,18 @@
+CREATE TABLE `activity_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) NOT NULL DEFAULT '0',
+  `super_user` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` int(11) NOT NULL DEFAULT '0',
+  `ip` varchar(300) NOT NULL,
+  `controller` varchar(300) NOT NULL,
+  `action` varchar(300) NOT NULL,
+  `request_data` text NOT NULL,
+  `details` varchar(1000) DEFAULT NULL,
+  `details_id` int(11) DEFAULT NULL,
+  `event` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `admin_id` (`admin_id`),
+  KEY `event` (`event`),
+  KEY `ip` (`ip`(255)),
+  KEY `super_user` (`super_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

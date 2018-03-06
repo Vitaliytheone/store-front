@@ -1,6 +1,7 @@
 <?php
 namespace frontend\modules\admin\models\forms;
 
+use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\base\Model;
@@ -86,7 +87,14 @@ class LoginForm extends Model
 
         $user = $this->getUser();
 
-        return Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME);
+        if (Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME)) {
+
+            ActivityLog::log($user, ActivityLog::E_ADMIN_ADMIN_AUTHORIZATION);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

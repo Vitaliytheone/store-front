@@ -53,6 +53,8 @@ class SettingsController extends CustomController
         $store = Yii::$app->store->getInstance();
         $storeForm = EditStoreSettingsForm::findOne($store->id);
 
+        $storeForm->setUser(Yii::$app->user);
+
         if ($storeForm->updateSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_updated'));
             return $this->refresh();

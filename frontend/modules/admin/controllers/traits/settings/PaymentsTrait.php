@@ -58,7 +58,9 @@ trait PaymentsTrait {
             throw new NotFoundHttpException();
         }
 
-        if ($paymentModel->load($request->post()) && $paymentModel->save()) {
+        $paymentModel->setUser(Yii::$app->user);
+
+        if ($paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
         }
@@ -88,6 +90,7 @@ trait PaymentsTrait {
         }
 
         $active = $request->post('active', null);
+
         if (is_null($active)) {
             throw new BadRequestHttpException();
         }
@@ -101,11 +104,10 @@ trait PaymentsTrait {
             throw new NotFoundHttpException();
         }
 
-        $paymentModel->setAttribute('active', $active|0);
-        $paymentModel->save();
+        $paymentModel->setUser(Yii::$app->user);
 
         return [
-            'active' => $paymentModel->active,
+            'active' => $paymentModel->setActive($active|0),
         ];
     }
 }
