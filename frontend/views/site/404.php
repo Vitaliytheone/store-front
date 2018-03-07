@@ -49,9 +49,6 @@
 </style>
 <body>
 <div class="page-row">
-
-    Test
-    
     <div class="page-content">
         <div class="page-title">
             404
