@@ -91,11 +91,12 @@ trait ThemesTrait {
         $this->addModule('adminThemes');
 
         $editThemeForm = EditThemeForm::make($theme, $file);
-        $editThemeForm->setUser(Yii::$app->user);
 
         if (!$editThemeForm) {
             return $this->redirect(Url::toRoute('/settings/themes'));
         }
+
+        $editThemeForm->setUser(Yii::$app->user);
 
         if ($editThemeForm->load($request->post()) && $editThemeForm->updateThemeFile()) {
             UiHelper::message(Yii::t('admin', 'settings.themes_message_updated'));

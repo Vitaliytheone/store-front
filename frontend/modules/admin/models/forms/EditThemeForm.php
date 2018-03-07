@@ -22,7 +22,7 @@ class EditThemeForm extends Model
      * Theme allowed folders/files structure
      * @var array
      */
-    public static $filesTree = [
+    private $_filesTree = [
         'Layouts' => [
             'layout.twig',
         ],
@@ -121,8 +121,10 @@ class EditThemeForm extends Model
             return $model;
         }
 
+        $model->setFilesTree();
+
         /** Check is filename is allowed */
-        if (strpos(json_encode(static::$filesTree), $fileName) === false) {
+        if (strpos(json_encode($model->getFilesTree()), $fileName) === false) {
             return false;
         }
 
@@ -174,14 +176,12 @@ class EditThemeForm extends Model
     }
 
     /**
-     * Return theme files tree
-     * @return array
-     * @throws Exception
+     * Init files tree
      */
-    public function getFilesTree()
+    public function setFilesTree()
     {
-//        $defaultThemePath = $this->getThemeModel()::getDefaultThemePath();
-//        $filesTree = CustomFilesHelper::dirTree($defaultThemePath, $defaultThemePath, '/^.*\.(css|js)$/i');
+        // $defaultThemePath = $this->getThemeModel()::getDefaultThemePath();
+        // $filesTree = CustomFilesHelper::dirTree($defaultThemePath, $defaultThemePath, '/^.*\.(css|js)$/i');
 
         $themePath = $this->getThemeModel()->getThemePath();
 
@@ -193,19 +193,29 @@ class EditThemeForm extends Model
                 continue;
             }
             if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'js') === 0) {
-                static::$filesTree['JS'][] = $file;
+                $this->_filesTree['JS'][] = $file;
             }
             if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'css') === 0) {
-                static::$filesTree['CSS'][] = $file;
+                $this->_filesTree['CSS'][] = $file;
             }
         }
 
-        foreach (static::$filesTree as $key=>&$folder)
+        foreach ($this->_filesTree as $key=>&$folder)
         {
             sort($folder);
         }
 
-        return static::$filesTree;
+        return $this->_filesTree;
+    }
+
+    /**
+     * Return theme files tree
+     * @return array
+     * @throws Exception
+     */
+    public function getFilesTree()
+    {
+        return $this->_filesTree;
     }
 
     /**
