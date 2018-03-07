@@ -43,7 +43,10 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        return static::findOne(['id' => $id, 'store_id' => $store->id, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -169,7 +172,10 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username]);
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        return static::findOne(['store_id' => $store->id, 'username' => $username]);
     }
 
     /**
