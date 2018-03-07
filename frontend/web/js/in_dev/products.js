@@ -116,7 +116,8 @@
         url             : $productForm.find('.form_field__url'),
         visibility      : $productForm.find('.form_field__visibility'),
         seo_title       : $productForm.find('.form_field__seo_title'),
-        seo_description : $productForm.find('.form_field__seo_description')
+        seo_description : $productForm.find('.form_field__seo_description'),
+        seo_keywords    : $productForm.find('.form_field__seo_keywords')
     };
 
     var defaultFormData = {
@@ -126,7 +127,8 @@
         url             : $formFields.url.val(),
         visibility      : $formFields.visibility.val(),
         seo_title       : $formFields.seo_title.val(),
-        seo_description : $formFields.seo_description.val()
+        seo_description : $formFields.seo_description.val(),
+        seo_keywords    : $formFields.seo_keywords.val()
     };
 
     initPropertiesList();
@@ -188,7 +190,8 @@
                 visibility : 1,
                 url : '',
                 seo_title : '',
-                seo_description : ''
+                seo_description : '',
+                seo_keywords : ''
             };
             formData = _.defaults(data, defaultData);
 
@@ -198,6 +201,7 @@
             $formFields.url.val(formData.url).trigger('input');
             $formFields.seo_title.val(formData.seo_title).trigger('input');
             $formFields.seo_description.val(formData.seo_description).trigger('input');
+            $formFields.seo_keywords.val(formData.seo_keywords).trigger('input');
 
             // Fill summernote
             $formFields.description.summernote('code', formData.description);

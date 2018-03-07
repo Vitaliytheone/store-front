@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property integer $visibility
  * @property string $seo_title
  * @property string $seo_description
+ * @property string $seo_keywords
  *
  * @property Packages[] $packages
  */
@@ -99,7 +100,9 @@ class Products extends ActiveRecord
             [['description'], 'string'],
             [['name', 'url'], 'string', 'max' => 255],
             [['properties'], 'string', 'max' => 1000],
-            [['seo_title', 'seo_description'], 'string', 'max' => 45],
+            [['seo_title',], 'string', 'max' => 300],
+            [['seo_description'], 'string', 'max' => 1000],
+            [['seo_keywords'], 'string', 'max' => 2000],
         ];
     }
 
@@ -118,6 +121,7 @@ class Products extends ActiveRecord
             'visibility' => Yii::t('admin', 'products.f_visibility'),
             'seo_title' => Yii::t('admin', 'products.f_seo_title'),
             'seo_description' => Yii::t('admin', 'products.f_seo_description'),
+            'seo_keywords' => Yii::t('admin', 'products.f_seo_keywords'),
         ];
     }
 

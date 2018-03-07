@@ -60,7 +60,7 @@ class EditPageForm extends Pages
             [['visibility'], 'integer'],
             [['content', 'template'], 'string'],
             [['title', 'seo_title', 'seo_description', 'url',], 'trim'],
-            [['seo_description'], 'string', 'max' => 2000],
+            [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique', 'filter' => ['deleted' => Pages::DELETED_NO]],

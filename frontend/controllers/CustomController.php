@@ -18,10 +18,34 @@ class CustomController extends CommonController
     /** @var string  */
     public $pageTitle;
 
+    /**
+     * Header meta description
+     * You can redefine this value
+     * @var
+     */
+    public $seoDescription;
+
+    /**
+     * Header meta keywords
+     * You can redefine this value
+     * @var
+     */
+    public $seoKeywords;
+
+
+    /**
+     * @var string
+     */
     public $layout = '@frontend/views/site/layout.php';
 
+    /**
+     * @var
+     */
     protected $_globalParams;
 
+    /**
+     * @var array
+     */
     public $customJs = [];
 
     /**
@@ -137,8 +161,8 @@ class CustomController extends CommonController
                 'favicon' => $store->favicon,
                 'logo' => $store->logo,
                 'meta' => [
-                    'keywords' => $store->seo_keywords,
-                    'description' => $store->seo_description,
+                    'keywords' => $this->seoKeywords ? $this->seoKeywords : $store->seo_keywords,
+                    'description' => $this->seoDescription ? $this->seoDescription : $store->seo_description,
                 ],
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
                 'story_name' => Yii::$app->store->getInstance()->name,

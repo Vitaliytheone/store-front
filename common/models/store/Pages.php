@@ -17,6 +17,7 @@ use common\models\store\queries\PagesQuery;
  * @property string $content
  * @property string $seo_title
  * @property string $seo_description
+ * @property string $seo_keywords
  * @property string $url
  * @property bool $deleted
  * @property integer $created_at
@@ -133,7 +134,7 @@ class Pages extends ActiveRecord
             [['visibility', 'deleted', 'created_at', 'updated_at'], 'integer'],
             [['content', 'template'], 'string'],
             [['title', 'seo_title', 'url'], 'string', 'max' => 255],
-            [['seo_description'], 'string', 'max' => 2000],
+            [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
         ];
     }
 
@@ -150,6 +151,7 @@ class Pages extends ActiveRecord
             'content' => Yii::t('app', 'Content'),
             'seo_title' => Yii::t('app', 'Seo Title'),
             'seo_description' => Yii::t('app', 'Seo Description'),
+            'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'url' => Yii::t('app', 'Url'),
             'deleted' => Yii::t('app', 'Deleted'),
         ];

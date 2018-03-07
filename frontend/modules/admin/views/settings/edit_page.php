@@ -104,6 +104,10 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
                                     </small>
                                 </div>
                                 <div class="form-group">
+                                    <label for="edit-seo__meta-keyword"><?= Yii::t('admin', 'settings.pages_seo_meta_keywords') ?></label>
+                                    <textarea class="form-control" id="edit-seo__meta-keyword" rows="3" name="PageForm[seo_keywords]"><?= $page->seo_keywords ?></textarea>
+                                </div>
+                                <div class="form-group">
                                     <label for="edit-seo__url"><?= Yii::t('admin', 'settings.pages_seo_url') ?></label>
                                     <div class="input-group">
                                         <span class="input-group-addon" id="basic-addon3">http://<?= $storeUrl ?>/</span>

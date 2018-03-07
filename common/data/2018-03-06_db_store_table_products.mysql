@@ -1,0 +1,2 @@
+USE `store`;
+ALTER TABLE `products` ADD `seo_keywords` VARCHAR(2000)  NULL  DEFAULT NULL  AFTER `seo_description`;

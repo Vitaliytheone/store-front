@@ -124,6 +124,11 @@ $storeUrl = $currentStore->domain;
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="edit-seo__meta-keyword"><?= Yii::t('admin', 'settings.product_seo_meta_keywords') ?></label>
+                                    <textarea class="form_field__seo_keywords form-control" id="edit-seo__meta-keyword" rows="3" name="ProductForm[seo_keywords]"></textarea>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="edit-seo__url">
                                         <?= Yii::t('admin', 'products.product_seo_url') ?>
                                     </label>

@@ -87,6 +87,7 @@ class CreateProductForm extends Products
             [['description'], 'string'],
             [['seo_title', ], 'string', 'max' => 300],
             [['seo_description', ], 'string', 'max' => 1000],
+            [['seo_keywords', ], 'string', 'max' => 2000],
             [['properties', 'position'], 'safe'],
             ['visibility', 'filter', 'filter' => function($value){ return (int)$value; }],
 

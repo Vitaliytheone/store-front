@@ -142,6 +142,7 @@ return [
     'products.product_seo_meta' => 'Meta description',
     'products.product_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
     'products.product_seo_meta_chars_used' => ' of 160 characters used',
+    'settings.product_seo_meta_keywords' => 'Meta keywords',
     'products.product_seo_url' => 'URL',
     'products.product_seo_url_default' => 'about-us',
     'products.package_create' => 'Create package',
@@ -190,7 +191,8 @@ return [
     'products.f_visibility' => 'Visibility',
     'products.f_seo_title' => 'Seo Title',
     'products.f_seo_description' => 'Seo Description',
-    
+    'products.f_seo_keywords' => 'Seo Keywords',
+
     'settings.page_title' => 'Settings',
     'settings.left_menu_general' => 'General',
     'settings.left_menu_payments' => 'Payments',
@@ -220,6 +222,7 @@ return [
     'settings.general_seo_meta' => 'Meta description',
     'settings.general_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
     'settings.general_seo_meta_limits' => ' of 160 characters used',
+    'settings.general_seo_meta_keywords' => 'Meta keywords',
     'settings.general_save' => 'Save changes',
 
     'settings.general_delete_agree' => 'Are your sure that your want to delete this image?',
@@ -315,6 +318,7 @@ return [
     'settings.pages_seo_meta' => 'Meta description',
     'settings.pages_seo_meta_default' => 'A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text',
     'settings.pages_seo_meta_chars_used' => ' of 160 characters used',
+    'settings.pages_seo_meta_keywords' => 'Meta keywords',
     'settings.pages_seo_url' => 'URL',
     'settings.pages_seo_url_default' => 'about-us',
     'settings.pages_save' => 'Save changes',
