@@ -43,7 +43,9 @@ class ProductController extends CustomController
                         'quantity' => $package->quantity,
                         'name' => Html::encode($package->name),
                         'price' => '$' . $package->price,
-                        'addToCartUrl' => Url::toRoute("/order/$package->id"),
+                        'button' => [
+                            'url_buy_now' => Url::toRoute("/order/$package->id"),
+                        ],
                     ];
                 }, $product->packages),
                 'properties' => array_map(function ($property) {
