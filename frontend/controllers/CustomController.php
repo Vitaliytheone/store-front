@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\helpers\ThemesHelper;
 use common\models\stores\Stores;
 use frontend\models\search\CartSearch;
 use frontend\models\search\NavigationSearch;
@@ -239,6 +240,25 @@ class CustomController extends CommonController
     }
 
     /**
+     * Custom render view
+     * If theme file exist — render theme twig file with current layout
+     * If theme file non exist — render default file from controller folder(.php)
+     * @param $view
+     * @param array $params
+     * @return string
+     */
+    public function renderCustom($view, $params = [])
+    {
+        if (ThemesHelper::getView($view)) {
+            $content = $this->render($view, $params);
+        } else {
+            $content = $this->renderPartial(pathinfo($view, PATHINFO_FILENAME), $params);
+        }
+
+        return $content;
+    }
+
+    /**
      * Finds the applicable layout file.
      * @param View $view the view object to render the layout file.
      * @return string|bool the layout file path, or false if layout is not needed.
@@ -281,5 +301,4 @@ class CustomController extends CommonController
 
         return $path;
     }
-
 }

@@ -20,7 +20,7 @@ class SiteController extends CustomController
     {
         $this->view->title = Yii::t('app', '404.title');
 
-        return $this->renderPartial('404');
+        return $this->renderCustom('404.twig');
     }
 
     /**
