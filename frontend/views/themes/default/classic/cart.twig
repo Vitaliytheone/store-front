@@ -20,22 +20,22 @@
                         </thead>
                         <tbody>
 
-                        {% for order in cart.orders %}
+                        {% for item in cart.orders %}
                         <tr>
                             <td>
-                                {{ order.id}}
+                                {{ item.id }}
                             </td>
                             <td>
-                                {{ order.quantity }} {{ order.name }}
+                                {{ item.quantity }} {{ item.name }}
                             </td>
                             <td>
-                                {{ order.link }}
+                                {{ item.link }}
                             </td>
                             <td>
-                                {{ order.price }}
+                                {{ item.price }}
                             </td>
                             <td class="text-right">
-                                <a href="/delete/{{ order.key }}" class="btn btn-xs btn-default">
+                                <a href="/delete/{{ item.key }}" class="btn btn-xs btn-default">
                                     {{ lang('cart.remove') }}
                                 </a>
                             </td>
