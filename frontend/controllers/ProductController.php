@@ -26,6 +26,8 @@ class ProductController extends CustomController
         $product = $this->_findProduct($id);
 
         $this->pageTitle = $product->seo_title;
+        $this->seoDescription = $product->seo_description;
+        $this->seoKeywords = $product->seo_keywords;
 
         $this->view->title = $product->name;
 

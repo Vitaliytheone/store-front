@@ -22,6 +22,8 @@ class PageController extends CustomController
         $page = $this->_findPage($id);
 
         $this->pageTitle = $page->seo_title;
+        $this->seoDescription = $page->seo_description;
+        $this->seoKeywords = $page->seo_keywords;
 
         switch ($page->url) {
             case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page); break;
