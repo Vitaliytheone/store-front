@@ -1,0 +1,4 @@
+USE `stores`;
+INSERT INTO `default_themes` (`id`, `name`, `folder`, `position`, `thumbnail`)
+VALUES
+  (2, 'Green', 'green', 1, 'https://bootswatch.com/cerulean/thumbnail.png');
