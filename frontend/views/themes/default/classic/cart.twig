@@ -19,89 +19,90 @@
                         </tr>
                         </thead>
                         <tbody>
-
-                        {% for item in cart.orders %}
-                        <tr>
-                            <td>
-                                {{ item.id }}
-                            </td>
-                            <td>
-                                {{ item.quantity }} {{ item.name }}
-                            </td>
-                            <td>
-                                {{ item.link }}
-                            </td>
-                            <td>
-                                {{ item.price }}
-                            </td>
-                            <td class="text-right">
-                                <a href="/delete/{{ item.key }}" class="btn btn-xs btn-default">
-                                    {{ lang('cart.remove') }}
-                                </a>
-                            </td>
-                        </tr>
-
-                        {% endfor %}
+                        {% if cart.orders is empty %}
+                            <tr>
+                                <td colspan="5">{{ lang('cart.no_orders') }}</td>
+                            </tr>
+                        {% else %}
+                            {% for item in cart.orders %}
+                                <tr>
+                                    <td>
+                                        {{ item.id }}
+                                    </td>
+                                    <td>
+                                        {{ item.quantity }} {{ item.name }}
+                                    </td>
+                                    <td>
+                                        {{ item.link }}
+                                    </td>
+                                    <td>
+                                        {{ item.price }}
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="/delete/{{ item.key }}" class="btn btn-xs btn-default">
+                                            {{ lang('cart.remove') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-
-        <div class="row">
-            <div class="col-lg-offset-8 col-lg-4">
-                <div class="cart bg-white cart-total">
-                    <strong>{{ lang('cart.total_price') }} </strong><div class="cart-total__price pull-right">{{ cart.total_price }}</div>
-                </div>
-            </div>
-        </div>
-
-        <form id="orderForm" class="form" method="POST" action="/cart">
+        {% if cart.orders %}
             <div class="row">
                 <div class="col-lg-offset-8 col-lg-4">
-                    <div class="cart bg-white">
-
-                        {% if error %}
-                            <div class="error-summary alert alert-danger">{{ error_message }}</div>
-                        {% endif %}
-
-                        {% if cart.payments|length > 1 %}
-                            <div class="form-group">
-                                <label>{{ lang('cart.payment_method') }}</label>
-                                <div>
-                                    {% for payment in cart.payments %}
-                                        <label class="radio-inline">
-                                            {% if cart.form.selected_method %}
-                                                <input type="radio" name="OrderForm[method]" id="inlineRadio{{ payment.id }}" {% if cart.form.selected_method == payment.id %} checked {% endif %} value="{{ payment.id }}"> {{ payment.method }}
-                                            {% else %}
-                                                <input type="radio" name="OrderForm[method]" id="inlineRadio{{ payment.id }}" {% if loop.first %} checked {% endif %} value="{{ payment.id }}"> {{ payment.method }}
-                                            {% endif %}
-                                        </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
-
-                        <div class="form-group">
-                            <label class="control-label" for="orderform-email">{{ lang('cart.email') }}</label>
-                            <input type="email" id="orderform-email" class="form-control" name="OrderForm[email]" value="{{ cart.form.email }}" placeholder="mail@gmail.com">
-                        </div>
-
+                    <div class="cart bg-white cart-total">
+                        <strong>{{ lang('cart.total_price') }} </strong><div class="cart-total__price pull-right">{{ cart.total_price }}</div>
                     </div>
                 </div>
             </div>
+            <form id="orderForm" class="form" method="POST" action="/cart">
+                <div class="row">
+                    <div class="col-lg-offset-8 col-lg-4">
+                        <div class="cart bg-white">
 
-            <div class="row">
-                <div class="col-lg-6">
-                    <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
-                </div>
-                <div class="col-lg-6 text-right">
-                    <button type="submit" id="orderButton" class="btn btn-primary" name="order-button">{{ lang('cart.button.checkout') }}</button>
-                </div>
-            </div>
+                            {% if error %}
+                                <div class="error-summary alert alert-danger">{{ error_message }}</div>
+                            {% endif %}
 
-            <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
-        </form>
+                            {% if cart.payments|length > 1 %}
+                                <div class="form-group">
+                                    <label>{{ lang('cart.payment_method') }}</label>
+                                    <div>
+                                        {% for payment in cart.payments %}
+                                            <label class="radio-inline">
+                                                {% if cart.form.selected_method %}
+                                                    <input type="radio" name="OrderForm[method]" id="inlineRadio{{ payment.id }}" {% if cart.form.selected_method == payment.id %} checked {% endif %} value="{{ payment.id }}"> {{ payment.method }}
+                                                {% else %}
+                                                    <input type="radio" name="OrderForm[method]" id="inlineRadio{{ payment.id }}" {% if loop.first %} checked {% endif %} value="{{ payment.id }}"> {{ payment.method }}
+                                                {% endif %}
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="form-group">
+                                <label class="control-label" for="orderform-email">{{ lang('cart.email') }}</label>
+                                <input type="email" id="orderform-email" class="form-control" name="OrderForm[email]" value="{{ cart.form.email }}" placeholder="mail@gmail.com">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <button type="submit" id="orderButton" class="btn btn-primary" name="order-button">{{ lang('cart.button.checkout') }}</button>
+                    </div>
+                </div>
+                <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+            </form>
+        {% endif %}
     </div>
 </section>

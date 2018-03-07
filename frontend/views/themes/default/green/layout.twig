@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ site.page_title }}</title>
+    <meta name="keywords" content="{{ site.meta.keywords }}">
+    <meta name="description" content="{{ site.meta.description }}">
+    {% if site['favicon'] %}
+        <link rel="shortcut icon" type="image/ico" href="{{ site['favicon'] }}" />
+    {% endif %}
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/owl.carousel.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/green.css') }}">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!-- Wrapper Start -->
+<div class="wrapper">
+
+    <!-- Header Section Start -->
+    <header id="header">
+        <!-- Header Topbar Start -->
+        <div class="header--topbar">
+            <div class="container">
+
+                <!-- Header Topbar Logo Start -->
+                <div class="header--topbar-logo">
+                    <a href="/">
+                        {% if site.logo %}
+                            <img src="{{ site.logo }}" alt="{{ site.store_name }}" class="img-responsive">
+                        {% else %}
+                            {{ site.store_name }}
+                        {% endif %}
+                    </a>
+                </div>
+                <!-- Header Topbar Logo End -->
+
+            </div>
+        </div>
+        <!-- Header Topbar End -->
+
+        <!-- Header Navbar Wrapper Start -->
+        <div data-sticky="true">
+            <nav class="header--navbar-wrapper">
+                <div class="container">
+                    <!-- Header Navbar Start -->
+                    <div class="header--navbar navbar bg--color-theme">
+                        <!-- Header Navbar Header Start -->
+                        <div class="navbar-header">
+                            <!-- Header Nav Links Start -->
+                            <ul class="header--nav-links cart nav navbar-nav hidden-md hidden-lg">
+                                <li><a href="/cart"><i class="fa fa-shopping-basket"></i>{{ site.cart.item_count }}</a></li>
+                            </ul>
+                            <!-- Header Nav Links End -->
+
+                            <!-- Header Navbar Toggle Button Start -->
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#headerNav">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <!-- Header Navbar Toggle Button End -->
+                        </div>
+                        <!-- Header Navbar Header End -->
+
+                        <!-- Header Nav Start -->
+                        <div id="headerNav" class="header--nav navbar-collapse collapse">
+                            <!-- Header Nav Links Start -->
+                            <ul class="header--nav-links cart nav navbar-nav navbar-right hidden-sm hidden-xs">
+                                <li><a href="/cart"><i class="fa fa-shopping-basket"></i>{{ site.cart.item_count }}</a></li>
+                            </ul>
+                            <!-- Header Nav Links End -->
+
+                            <!-- Header Nav Links Start -->
+                            <ul class="header--nav-links nav navbar-nav">
+                                <!-- User's menu -->
+                                {% for menu_first_level in site.menu %}
+                                    {% if menu_first_level.submenu %}
+                                        <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
+                                            <a href="#" class="dropdown-toggle">{{ menu_first_level.name }} <span class="caret"></span></a>
+                                            <ul class="dropdown-menu multi-level">
+                                                {% for menu_second_level in menu_first_level.submenu %}
+                                                    {% if menu_second_level.submenu %}
+                                                        <li class="dropdown-submenu">
+                                                            <a href="#" class="dropdown-toggle">{{ menu_second_level.name }}</a>
+                                                            <ul class="dropdown-menu multi-level">
+                                                                {% for menu_third_level in menu_second_level.submenu %}
+                                                                    <li>
+                                                                        <a href="{{ menu_third_level.link }}">{{ menu_third_level.name }}</a>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% else %}
+                                                        <li>
+                                                            <a href="{{ menu_second_level.link }}">{{ menu_second_level.name }}</a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% else %}
+                                        <li class="{% if menu_first_level.active %}active{% endif %}">
+                                            <a href="{{ menu_first_level.link }}">{{ menu_first_level.name }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                <!--/ User's menu -->
+
+                            </ul>
+                            <!-- Header Nav Links End -->
+                        </div>
+                        <!-- Header Nav End -->
+                    </div>
+                    <!-- Header Navbar End -->
+                </div>
+            </nav>
+        </div>
+        <!-- Header Navbar Wrapper End -->
+    </header>
+    <!-- Header Section End -->
+
+
+    {# Required variable. Output page content #}
+    {{ content }}
+
+
+    <!-- Footer Section Start -->
+    <div id="footer" class="pd--50-0-0">
+        <!-- Footer Menu Start -->
+        <div class="footer--menu">
+            <div class="container-fluid bg--color-theme">
+                <div class="footer--menu-wrapper">
+                    <ul>
+                        <li><a href="{{ page_url(100) }}">{{ lang('footer.terms') }}</a></li>
+                        <li><a href="{{ page_url(2) }}">{{ lang('footer.policy') }}</a></li>
+                        <li><a href="{{ page_url(1) }}">{{ lang('footer.contact') }}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Menu End -->
+
+        <!-- Footer Copyright Start -->
+        <div class="footer--copyright bg--color-theme">
+            <div class="container">
+               <p>&copy; {{ site.store_name }} {{ "now"|date("Y") }}</p>
+            </div>
+        </div>
+        <!-- Footer Copyright End -->
+    </div>
+    <!-- Footer Section End -->
+
+    <!-- Back To Top Button Start -->
+    <div id="backToTop">
+        <a href="#" class="btn btn-default active"><i class="fa fa-angle-up"></i></a>
+    </div>
+    <!-- Back To Top Button End -->
+</div>
+<!-- Wrapper End -->
+
+<!-- CDN Scripts -->
+<script src="https://www.google.com/recaptcha/api.js?hl=en"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Custom Scripts -->
+<script src="{{ asset('/js/bootstrap.js') }}"></script>
+<script src="{{ asset('/js/owl.carousel.js') }}"></script>
+<script src="{{ asset('/js/main.js') }}"></script>
+</body>
+</html>

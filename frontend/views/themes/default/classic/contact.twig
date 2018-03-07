@@ -42,9 +42,11 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="contactUs-description">
-                    {{ page.content }}
-                </div>
+                {% if page.content %}
+                    <div class="contactUs-description">
+                        {{ page.content }}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

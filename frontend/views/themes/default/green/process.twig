@@ -1,0 +1,46 @@
+{% if block.process %}
+    <!-- Process Section Start -->
+    <div id="steps" class="pd--100-0-40">
+        <div class="container">
+    <!-- Section Title Start -->
+    <div class="section--title text-center">
+        <h2 class="h2">{{ block.process.header.title }}</h2>
+        {% if block.process.header.description %}
+            <!-- Section description Start -->
+            <div class="section--description text-center">{{ block.process.header.description }}</div>
+            <!-- Section description End -->
+        {% endif %}
+    </div>
+    <!-- Section Title End -->
+    <!-- Step Items Start -->
+    <div class="step--items row text-center">
+        <div class="step--line"></div>
+        {% for process in block.process.data  %}
+            <!-- Step Item Start -->
+            <div class="step--item col-sm-{{ block.process.settings.column }}">
+                <div class="icon">
+                    <div class="step--icon">
+                        <div class="vc--parent">
+                            <div class="vc--child">
+                                <span class="fa {{ process.icon }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="title">
+                    <h3 class="h3">{{ process.title }}</h3>
+                </div>
+                {% if block.process.settings.description %}
+                    <div class="step--content">
+                        <p>{{ process.description }}</p>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Step Item End -->
+            </div>
+            <!-- Step Items End -->
+        {% endfor %}
+        </div>
+    </div>
+        <!-- Process Section End -->
+{% endif %}

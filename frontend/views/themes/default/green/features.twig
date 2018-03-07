@@ -1,0 +1,38 @@
+{% if block.features %}
+    <!-- Feature Section Start -->
+    <div id="services" class="pd--100-0-40">
+        <div class="container">
+            <!-- Section Title Start -->
+            <div class="section--title text-center">
+                <h2 class="h2">{{ block.features.header.title }}</h2>
+                {% if block.features.header.description %}
+                    <!-- Section description Start -->
+                    <div class="section--description text-center">{{ block.features.header.description }}</div>
+                    <!-- Section description End -->
+                {% endif %}
+            </div>
+            <!-- Section Title End -->
+
+            <div class="row">
+                {% for feature in block.features.data %}
+                    <div class="col-md-{{ block.features.settings.column }} col-xs-6 col-xxs-12">
+                        <!-- Service Item Start -->
+                        <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
+                            <div class="icon">
+                                <i class="fa {{ feature.icon }}" style="font-size: {{ block.features.settings.icon_size }}px;"></i>
+                            </div>
+                            <div class="title">
+                                <h3 class="h4">{{ feature.title }}</h3>
+                            </div>
+                            <div class="content">
+                                <p>{{ feature.description }}</p>
+                            </div>
+                        </div>
+                        <!-- Service Item End -->
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Feature Section End -->
+{% endif %}
