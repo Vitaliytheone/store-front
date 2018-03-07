@@ -7,7 +7,6 @@ use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
 use common\models\stores\StoreAdminAuth;
 use console\helpers\ConsoleHelper;
-use frontend\helpers\CustomFilesHelper;
 use frontend\modules\admin\models\search\ThemesSearch;
 use yii\base\Exception;
 use yii\base\Model;
@@ -40,17 +39,11 @@ class EditThemeForm extends Model
             'reviews.twig',
             'process.twig',
         ],
-        'JS' => [
-            'bootstrap.js',
-            'scripts.js',
-        ],
-        'CSS' => [
-            'bootstrap.css',
-            'styles.css',
-        ],
-        'Config' => [
-            'settings.json'
-        ],
+        'JS' => [],
+        'CSS' => [],
+//        'Config' => [
+//            'settings.json'
+//        ],
     ];
 
     /** @var   */
@@ -183,10 +176,27 @@ class EditThemeForm extends Model
      */
     public function getFilesTree()
     {
-        $defaultThemePath = $this->getThemeModel()::getDefaultThemePath();
-        $filesTree = CustomFilesHelper::dirTree($defaultThemePath, $defaultThemePath, '/^.*\.(twig|css|json|js)$/i');
+//        $defaultThemePath = $this->getThemeModel()::getDefaultThemePath();
+//        $filesTree = CustomFilesHelper::dirTree($defaultThemePath, $defaultThemePath, '/^.*\.(css|js)$/i');
 
-        return $filesTree;
+        $themePath = $this->getThemeModel()->getThemePath();
+
+        $themeFiles = scandir($themePath, SCANDIR_SORT_ASCENDING);
+
+        foreach ($themeFiles as $file) {
+
+            if(!is_file($themePath . DIRECTORY_SEPARATOR . $file)) {
+                continue;
+            }
+            if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'js') === 0) {
+                static::$filesTree['JS'][] = $file;
+            }
+            if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'css') === 0) {
+                static::$filesTree['CSS'][] = $file;
+            }
+        }
+
+        return static::$filesTree;
     }
 
     /**

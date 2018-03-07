@@ -21,35 +21,36 @@ class FilesTree extends Widget
      * Theme folders/files structure
      * @var array
      */
-    public $filesTree = [
-        'Layouts' => [
-            'layout.twig',
-        ],
-        'Templates' => [
-            'index.twig',
-            'product.twig',
-            'order.twig',
-            'page.twig',
-            'cart.twig',
-        ],
-        'Snippets' => [
-            'slider.twig',
-            'features.twig',
-            'reviews.twig',
-            'process.twig',
-        ],
-        'JS' => [
-            'bootstrap.js',
-            'scripts.js',
-        ],
-        'CSS' => [
-            'bootstrap.css',
-            'styles.css',
-        ],
-        'Config' => [
-            'settings.json'
-        ],
-    ];
+    public $filesTree;
+//    [
+//        'Layouts' => [
+//            'layout.twig',
+//        ],
+//        'Templates' => [
+//            'index.twig',
+//            'product.twig',
+//            'order.twig',
+//            'page.twig',
+//            'cart.twig',
+//        ],
+//        'Snippets' => [
+//            'slider.twig',
+//            'features.twig',
+//            'reviews.twig',
+//            'process.twig',
+//        ],
+//        'JS' => [
+//            'bootstrap.js',
+//            'scripts.js',
+//        ],
+//        'CSS' => [
+//            'bootstrap.css',
+//            'styles.css',
+//        ],
+//        'Config' => [
+//            'settings.json'
+//        ],
+//    ];
 
     public function init()
     {

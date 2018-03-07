@@ -52,6 +52,7 @@ class CustomFilesHelper extends FileHelper
                     $files[$name] = [
                         'path_name' => $node->getPathname(),
                         'path' => $node->getPath(),
+                        'extension' => $node->getExtension(),
                         'path_relative_name' => static::getFileRelativePath($dir2, $node->getPathname()),
                     ];
                 }

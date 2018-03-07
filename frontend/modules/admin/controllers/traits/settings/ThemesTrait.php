@@ -110,7 +110,7 @@ trait ThemesTrait {
             'currentFile' => $file,
             'currentFileContent' => $fileContent,
             'reset' => $editThemeForm->isResetAble(),
-            'filesTree' => $editThemeForm::$filesTree,
+            'filesTree' => $editThemeForm->getFilesTree(),
         ]);
     }
 
