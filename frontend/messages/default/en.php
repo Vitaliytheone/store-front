@@ -15,6 +15,7 @@ return [
     'cart.payment_method' => 'Payment method',
     'cart.button.continue' => 'Continue shopping',
     'cart.button.checkout' => 'Proceed to Checkout',
+    'cart.no_orders' => 'No orders',
 
     'contact.subject' => 'Subject',
     'contact.name' => 'Name',
