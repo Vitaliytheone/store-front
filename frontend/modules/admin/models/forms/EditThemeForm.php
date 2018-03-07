@@ -34,7 +34,6 @@ class EditThemeForm extends Model
             'cart.twig',
             '404.twig',
             'contact.twig',
-            'layout.twig',
             'payment_result.twig',
         ],
         'Snippets' => [
