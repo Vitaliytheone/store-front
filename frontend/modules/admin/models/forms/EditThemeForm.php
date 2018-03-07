@@ -32,6 +32,10 @@ class EditThemeForm extends Model
             'order.twig',
             'page.twig',
             'cart.twig',
+            '404.twig',
+            'contact.twig',
+            'layout.twig',
+            'payment_result.twig',
         ],
         'Snippets' => [
             'slider.twig',
@@ -181,7 +185,7 @@ class EditThemeForm extends Model
 
         $themePath = $this->getThemeModel()->getThemePath();
 
-        $themeFiles = scandir($themePath, SCANDIR_SORT_ASCENDING);
+        $themeFiles = scandir($themePath);
 
         foreach ($themeFiles as $file) {
 
@@ -194,6 +198,11 @@ class EditThemeForm extends Model
             if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'css') === 0) {
                 static::$filesTree['CSS'][] = $file;
             }
+        }
+
+        foreach (static::$filesTree as $key=>&$folder)
+        {
+            sort($folder);
         }
 
         return static::$filesTree;
