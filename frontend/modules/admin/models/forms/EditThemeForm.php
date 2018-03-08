@@ -116,11 +116,12 @@ class EditThemeForm extends Model
         $model = new static();
         $model->_theme_model = $themeModel;
 
+        $model->setFilesTree();
+
         if (!$themeEditFileName) {
             return $model;
         }
 
-        $model->setFilesTree();
 
         /** Check is filename is allowed */
         if (strpos(json_encode($model->getFilesTree()), $fileName) === false) {

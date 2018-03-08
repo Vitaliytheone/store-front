@@ -4,6 +4,7 @@ namespace frontend\helpers;
 use Yii;
 use common\models\stores\Stores;
 use yii\helpers\FileHelper;
+use common\models\store\CustomThemes;
 
 /**
  * Class StoreHelper
@@ -56,6 +57,8 @@ class StoreHelper {
 
         $themePath = $store->theme_folder;
 
+        $isCustomTheme = strpos($themePath, CustomThemes::THEME_PREFIX) !== false;
+
         $customThemePath = $themesPath . 'custom' . $sp . $store->id . $sp . $themePath . $sp;
         $standardThemePath = $themesPath . 'default' . $sp . $themePath . $sp;
         $assetsPath = $assetsPath . $store->folder . $sp;
@@ -91,47 +94,69 @@ class StoreHelper {
             }
         }
 
-        if (!empty($standardStyles)) {
+        if (!empty($standardStyles) || !empty($customStyles)) {
             FileHelper::createDirectory($assetsPath . 'css' . $sp);
         }
 
-        if (!empty($standardScripts)) {
+        if (!empty($standardScripts) || !empty($customScripts)) {
             FileHelper::createDirectory($assetsPath . 'js' . $sp);
         }
 
-        if (!empty($standardJson)) {
+        if (!empty($standardJson) || !empty($customJson)) {
             FileHelper::createDirectory($assetsPath . 'json' . $sp);
         }
 
-        foreach ($standardStyles as $fileName => $filePath) {
-            if (isset($customStyles[$fileName])) {
-                $filePath = $customStyles[$fileName];
+        if ($isCustomTheme) {
+            foreach ($customStyles as $fileName => $filePath) {
+                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
+                    $css[] = $fileName;
+                }
             }
 
-            if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
-                $css[] = $fileName;
+            foreach ($customScripts as $fileName => $filePath) {
+                if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
+                    $js[] = $fileName;
+                }
+            }
+
+            foreach ($customJson as $fileName => $filePath) {
+                if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
+                    $json[] = $fileName;
+                }
+            }
+
+        } else {
+            foreach ($standardStyles as $fileName => $filePath) {
+                if (isset($customStyles[$fileName])) {
+                    $filePath = $customStyles[$fileName];
+                }
+
+                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
+                    $css[] = $fileName;
+                }
+            }
+
+            foreach ($standardScripts as $fileName => $filePath) {
+                if (isset($customScripts[$fileName])) {
+                    $filePath = $customScripts[$fileName];
+                }
+
+                if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
+                    $js[] = $fileName;
+                }
+            }
+
+            foreach ($standardJson as $fileName => $filePath) {
+                if (isset($customJson[$fileName])) {
+                    $filePath = $customJson[$fileName];
+                }
+
+                if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
+                    $json[] = $fileName;
+                }
             }
         }
 
-        foreach ($standardScripts as $fileName => $filePath) {
-            if (isset($customScripts[$fileName])) {
-                $filePath = $customScripts[$fileName];
-            }
-
-            if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
-                $js[] = $fileName;
-            }
-        }
-
-        foreach ($standardJson as $fileName => $filePath) {
-            if (isset($customJson[$fileName])) {
-                $filePath = $customJson[$fileName];
-            }
-
-            if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
-                $json[] = $fileName;
-            }
-        }
 
         $store->setFolderContentData([
             'css' => $css,
