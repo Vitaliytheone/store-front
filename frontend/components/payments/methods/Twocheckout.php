@@ -212,10 +212,10 @@ class Twocheckout extends BasePayment {
        PaymentsLog::log($this->_checkout->id, $requestParams);
 
        // Check invoice currency. Binary safe case-insensitive.
-       if (strcasecmp($messageListCurrency, $store->currency) !== 0) {
+       if (strcasecmp($messageListCurrency, $this->_checkout->currency) !== 0) {
            return [
                'result' => 3,
-               'content' => "Invalid checkout currency code verification result! Expected: $store->currency, Current: $messageListCurrency"
+               'content' => "Invalid checkout currency code verification result! Expected:" . $this->_checkout->currency . ", Current: $messageListCurrency"
            ];
        }
 

@@ -204,10 +204,10 @@ class Coinpayments extends BasePayment
         PaymentsLog::log($this->_checkout->id, $_POST);
 
         // Check invoice currency. Binary safe case-insensitive.
-        if (strcasecmp($ipnData['payment_currency'], $store->currency) !== 0) {
+        if (strcasecmp($ipnData['payment_currency'], $this->_checkout->currency) !== 0) {
             return [
                 'result' => 2,
-                'content' => "Invalid checkout currency code verification result! Expected: $store->currency, given: " . $ipnData['payment_currency'],
+                'content' => "Invalid checkout currency code verification result! Expected:" . $this->_checkout->currency . ", given: " . $ipnData['payment_currency'],
             ];
         }
 

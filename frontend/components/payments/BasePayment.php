@@ -198,6 +198,7 @@ abstract class BasePayment extends Component {
             $orderItem->link = $item['link'];
             $orderItem->quantity = $package->quantity;
             $orderItem->package_id = $package->id;
+            $orderItem->currency = $checkout->currency;
             $orderItem->amount = $package->price;
             $orderItem->mode = $package->mode;
             $orderItem->provider_id = $package->provider_id;

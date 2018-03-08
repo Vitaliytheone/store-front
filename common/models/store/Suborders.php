@@ -16,6 +16,7 @@ use common\models\store\queries\SubordersQuery;
  * @property integer $order_id
  * @property integer $checkout_id
  * @property string $link
+ * @property string $currency
  * @property string $amount
  * @property integer $package_id
  * @property integer $quantity
@@ -102,6 +103,7 @@ class Suborders extends ActiveRecord
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::className(), 'targetAttribute' => ['checkout_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packages::className(), 'targetAttribute' => ['package_id' => 'id']],
+            [['currency'], 'string', 'max' => 10],
         ];
     }
 
@@ -115,6 +117,7 @@ class Suborders extends ActiveRecord
             'order_id' => Yii::t('admin', 'sorders.f_order_id'),
             'checkout_id' => Yii::t('admin', 'sorders.f_checkout_id'),
             'link' => Yii::t('admin', 'sorders.f_link'),
+            'currency' => Yii::t('app', 'Currency'),
             'amount' => Yii::t('admin', 'sorders.f_amount'),
             'package_id' => Yii::t('admin', 'sorders.f_package_id'),
             'quantity' => Yii::t('admin', 'sorders.f_quantity'),

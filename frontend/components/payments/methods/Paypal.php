@@ -256,7 +256,7 @@ class Paypal extends BasePayment {
             ];
         }
 
-        if (ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE') != $store->currency) {// проверяем валюту панели и ту что вернула платежка
+        if (ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE') != $this->_checkout->currency) {// проверяем валюту чека и ту что вернула платежка
             // no invoice
             return [
                 'checkout_id' => $id,
