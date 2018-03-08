@@ -16,6 +16,7 @@ return [
     'cart.button.continue' => 'Continue shopping',
     'cart.button.checkout' => 'Proceed to Checkout',
     'cart.no_orders' => 'No orders',
+    'cart.quantity' => 'Quantity',
 
     'contact.header' => 'Get in touch',
     'contact.subject' => 'Subject',
