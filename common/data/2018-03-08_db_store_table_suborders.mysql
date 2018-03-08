@@ -1,0 +1,8 @@
+USE `store`;
+
+ALTER TABLE `suborders` ADD `currency` VARCHAR(5)  NOT NULL  DEFAULT ''  AFTER `amount`;
+
+UPDATE suborders so
+  INNER JOIN checkouts co
+    ON co.id = so.checkout_id
+SET so.currency = co.currency;
