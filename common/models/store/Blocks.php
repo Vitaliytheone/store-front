@@ -21,6 +21,17 @@ class Blocks extends ActiveRecord
     const CODE_PROCESS = 'process';
     const CODE_FEATURES = 'features';
 
+    /**
+     * List of available blocks
+     * @var array
+     */
+    private static $_codes = [
+        self::CODE_SLIDER,
+        self::CODE_REVIEW,
+        self::CODE_FEATURES,
+        self::CODE_PROCESS,
+    ];
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -105,5 +116,14 @@ class Blocks extends ActiveRecord
     public function getContent($default = [])
     {
         return !empty($this->content) ? json_decode($this->content, true) : $default;
+    }
+
+    /**
+     * Return available block codes
+     * @return array
+     */
+    public static function getCodes()
+    {
+        return static::$_codes;
     }
 }

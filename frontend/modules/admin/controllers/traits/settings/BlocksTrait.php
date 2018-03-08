@@ -53,7 +53,7 @@ trait BlocksTrait {
      */
     public function actionEditBlock($code)
     {
-        $block = $this->_findBlock($code);
+        $block = $this->_findBlock($code, true);
 
         $this->view->title = Yii::t('admin', "settings.edit_block_page_title", [
             'block' => $code
@@ -205,18 +205,27 @@ trait BlocksTrait {
     }
 
     /**
-     * Find block by code
-     * @param $code
+     * Find block by code or create new
+     * @param string $code
+     * @param bool $createOnEmpty
      * @return null|Blocks
      * @throws NotFoundHttpException
      */
-    public function _findBlock($code)
+    public function _findBlock($code, $createOnEmpty = false)
     {
         $block = null;
         if (!($block = Blocks::findOne([
             'code' => $code
         ]))) {
-            throw new NotFoundHttpException();
+
+            if (!$createOnEmpty || !in_array($code, Blocks::getCodes())) {
+                throw new NotFoundHttpException();
+            }
+
+            $block = new Blocks();
+            $block->code = $code;
+            $block->setContent(BlockHelper::getDefaultBlock($block->code));
+            $block->save(false);
         }
 
         return $block;
