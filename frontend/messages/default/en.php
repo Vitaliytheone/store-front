@@ -17,6 +17,7 @@ return [
     'cart.button.checkout' => 'Proceed to Checkout',
     'cart.no_orders' => 'No orders',
 
+    'contact.header' => 'Get in touch',
     'contact.subject' => 'Subject',
     'contact.name' => 'Name',
     'contact.email' => 'Email',
