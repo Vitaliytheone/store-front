@@ -1,0 +1,142 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section pd--70-0" data-bg-img="img/bg2@2x.jpg">
+    <div class="container">
+        <h1 class="title h1">{{ language('cart.title') }}</h1>
+
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Cart Section Start -->
+<form id="orderForm" method="POST" action="/cart" class="cart--section pd--100-0">
+    <div class="container">
+
+        {% if success %}
+            <!-- Alert Start -->
+            <div class="checkout--info pbottom--30">
+                <div class="title">
+                    <p><i class="fa fa-info-circle"></i> {{ successText }}</p>
+                </div>
+            </div>
+            <!-- Alert End -->
+        {% endif %}
+
+        {% if error %}
+        <!-- Alert Start -->
+        <div class="checkout--info pbottom--30">
+            <div class="title">
+                <p><i class="fa fa-info-circle"></i> {{ errorText }}</p>
+            </div>
+        </div>
+        <!-- Alert End -->
+        {% endif %}
+
+        <!-- Cart Items Start -->
+        <div class="cart--items pbottom--100">
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>{{ language('cart.package') }}</th>
+                        <th>{{ language('cart.details') }}</th>
+                        <th>{{ language('cart.quantity') }}</th>
+                        <th>{{ language('cart.price') }}</th>
+                        <th>{{ language('cart.remove') }}</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for order in cart['orders'] %}
+                    <tr>
+                        <td data-title="{{ language('cart.package') }}">{{ order['name'] }}</td>
+                        <td data-title="{{ language('cart.details') }}">{{ order['details'] }}</td>
+                        <td data-title="{{ language('cart.quantity') }}">{{ order['quantity'] }}</td>
+                        <td data-title="{{ language('cart.price') }}">${{ order['price'] }}</td>
+                        <td data-title="{{ language('cart.remove') }}"><a href="/delete/{{ order['id'] }}"><i class="fa fa-close"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        <!-- Cart Items End -->
+
+        {% if cart['orders']|length > 1 %}
+        <div class="row">
+            <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                <!-- Cart Total Start -->
+                <div class="cart--total pbottom--30">
+                    <div class="title">
+                        <h2 class="h4">{{ language('cart.totalTitle') }}</h2>
+                    </div>
+
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>{{ language('cart.total') }}</td>
+                            <td>{{ totalPrice }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Cart Total End -->
+            </div>
+
+            {% if cart['payments']|length > 1 %}
+            <!-- Payment method Start -->
+            <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                <div class="checkout--order-info pbottom--30">
+
+                    <div class="title">
+                        <h2 class="h4">{{ language('cart.paymentTitle') }}</h2>
+                    </div>
+
+                    <div class="panel-group" id="checkoutA">
+                        {% for payment in cart['payments'] %}
+                        <div class="panel-title">
+                            <label>
+                                <input type="radio" name="checkoutPayment" value="{{ payment['id'] }}" checked>
+                                <span>{{ payment['name'] }}</span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+            <!-- Payment method  End -->
+            {% endif %}
+
+            <!-- Email Start -->
+            <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                <div class="checkout--order-info pbottom--30">
+
+                    <div class="title">
+                        <h2 class="h4">{{ language('cart.emailTitle') }}</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="email" name="email" class="form-control" placeholder="mail@gmail.com" required>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Email  End -->
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-sm-6">
+                <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
+            </div>
+            <div class="col-sm-6">
+                <button id="orderButton" class="btn btn-default active pull-right">{{ lang('cart.button.checkout') }}</button>
+            </div>
+        </div>
+
+        <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+
+    </div>
+</form>
+<!-- Cart Section End -->

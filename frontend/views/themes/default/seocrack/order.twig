@@ -1,0 +1,85 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section bg--color-theme pd--80-0">
+    <div class="container">
+        <div class="title">
+            <h1 class="h1">{{ lang('order.title') }}</h1>
+        </div>
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Checkout Section Start -->
+<div class="checkout--section pd--100-0-40">
+    <div class="container">
+
+        <!-- Checkout Billing Info Start -->
+        <div class="checkout--billing-info">
+            <form id="addToCardForm" class="form" action="" method="post">
+
+                <!-- Checkout Order Info Start -->
+                <div class="checkout--order-info">
+                    <div class="row">
+                        <div class="col-md-6 pbottom--60">
+                            <div class="title">
+                                <h2 class="h4">{{ language('order.title') }}</h2>
+                            </div>
+
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>{{ lang('order.name') }}</th>
+                                    <th>{{ order.name }}</th>
+                                </tr>
+                                <tr>
+                                    <th>{{ lang('order.quantity') }}</th>
+                                    <th>{{ order.quantity }}</th>
+                                </tr>
+                                <tr>
+                                    <th>{{ lang('order.price') }}</th>
+                                    <th>{{ order.price }}</th>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="col-md-6 pbottom-60">
+                            <div class="title">
+                                <h2 class="h4">{{ lang('order.details') }}</h2>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-xxs-12">
+
+                                    {% if error %}
+                                        <div class="error-summary alert alert-danger">{{ error_message }}</div>
+                                    {% endif %}
+
+                                    <div class="form-group">
+                                        <label>
+                                            <span>{{ lang('order.link') }} *</span>
+                                            <input type="text" name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="{{ order.back_url }}" class="btn btn-default">{{ lang('order.button.back_url') }}</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-default pull-right active">{{ lang('order.button.add_to_cart') }}</button>
+                        </div>
+                        <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+                    </div>
+                </div>
+                <!-- Checkout Order Info End -->
+            </form>
+        </div>
+        <!-- Checkout Billing Info End -->
+    </div>
+</div>
+<!-- Checkout Section End -->

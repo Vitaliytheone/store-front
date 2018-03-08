@@ -1,0 +1,58 @@
+{% if block.reviews %}
+    <!-- Reviews Section Start -->
+    <div class="testimonial--section pd--100-0-40 bg--overlay-90" data-bg-img="img/bg@2x.jpg">
+        <div class="container">
+            <!-- Section Title Start -->
+            <div class="section--title mbottom--60">
+                <h2 class="h2">{{ block.reviews.header.title }}</h2>
+                {% if block.reviews.header.description %}
+                    <div class="section--description">
+                        {{ block.reviews.header.description }}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Section Title End -->
+
+            <div class="row">
+                <div class="col-md-12 pbottom--60">
+                    <!-- Reviews Slider Start -->
+                    <div class="testimonial--slider owl-carousel" data-owl-items="{{ block.reviews.settings.column }}" data-owl-dots="true">
+                        {% for review in block.reviews.data %}
+                            <!-- Reviews Item Start -->
+                            <div class="testimonial--item">
+                                <div class="header clearfix">
+                                    <div class="img float--left">
+                                        <div class="avatar" style="background-image: url('{{ review.image }}')"></div>
+                                    </div>
+
+                                    <div class="info">
+                                        <h3 class="h4">{{ review.name }}</h3>
+                                        <div class="rating">
+                                            {% for i in 0..4 %}
+                                                {% if i < review.rating %}
+                                                    <span class="fa fa-star"></span>
+                                                {% else %}
+                                                    <span class="fa fa-star-o"></span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="body">
+                                    <blockquote>
+                                        <p>{{ review.description }}</p>
+                                    </blockquote>
+                                </div>
+                            </div>
+                            <!-- Reviews Item End -->
+                        {% endfor %}
+                    </div>
+                    <!-- Reviews Slider End -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Reviews Section End -->
+{% endif %}

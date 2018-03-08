@@ -1,0 +1,58 @@
+{% if block.slider %}
+    <!-- Banner Section Start -->
+    <div class="banner--section">
+        <!-- Banner Slider Start -->
+        <div class="banner--slider owl-carousel bg--gradient-theme" data-owl-options='{"animateIn": {{ block.slider.settings.effect }}, autoplay": "true", autoplayTimeout: {{ block.slider.settings.interval }}, autoplayHoverPause:true,  }' data-owl-dots="true">
+            {% for slide in block.slider.data %}
+                <!-- Banner Item Start -->
+                <div class="banner--item">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="vc--parent">
+                                    <div class="vc--child">
+                                        <!-- Banner Content Start -->
+                                        <div class="banner--content">
+                                            <div class="header">
+                                                <h1 class="h1">{{ slide.title }}</h1>
+                                            </div>
+
+                                            {% if slide.description %}
+                                                <div class="body">
+                                                    <p>{{ slide.description }}</p>
+                                                </div>
+                                            {% endif %}
+                                            {% if slide.button %}
+                                                <div class="buttons">
+                                                    <a href="{{ slide.button.link }}" class="btn btn-default">{{ slide.button.title }}</a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Banner Content End -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="vc--parent">
+                                    <div class="vc--child">
+                                        <!-- Banner Image Start -->
+                                        <div class="banner--img">
+                                            {% if slide.image  %}
+                                                <img src="{{ slide.image }}" alt="{{ slide.title }}" class="img-responsive">
+                                            {% endif %}
+                                        </div>
+                                        <!-- Banner Image End -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Banner Item End -->
+            {% endfor %}
+        </div>
+        <!-- Banner Slider End -->
+    </div>
+    <!-- Banner Section End -->
+{% endif %}

@@ -1,0 +1,80 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section pd--70-0" data-bg-img="img/bg2@2x.jpg">
+    <div class="container">
+        <h1 class="title h1">{{ language('order.title') }}</h1>
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Checkout Section Start -->
+<div class="checkout--section pd--100-0-40">
+    <div class="container">
+
+        <!-- Order Start -->
+        <div class="checkout--billing-info">
+            <form action="#" method="post" data-form="validate">
+                {% if error %}
+                <!-- Alert Start -->
+                <div class="checkout--info pbottom--30">
+                    <div class="title">
+                        <p><i class="fa fa-info-circle"></i> {{ errorText }}</p>
+                    </div>
+                </div>
+                <!-- Alert End -->
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="title">
+                            <h2 class="h4">{{ language('order.details') }}</h2>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-xxs-12">
+                                {% for detail in order['details'] %}
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ detail['name'] }} *</span>
+                                        <input type="text" name="firstName" class="form-control" required>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 pbottom--60">
+                        <div class="checkout--order-info">
+                            <div class="title">
+                                <h2 class="h4">{{ language('order.youOrder') }}</h2>
+                            </div>
+
+                            <table class="table">
+                                <tbody>
+                                {% for item in order['items'] %}
+                                    <tr>
+                                        <th>{{ item['name'] }}</th>
+                                        <th>{{ item['value'] }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <a href="product.html" class="btn btn-default">{{ language('order.cancel') }}</a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="cart.html" class="btn btn-default active pull-right">{{ language('order.submit') }}</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <!-- Order End -->
+    </div>
+</div>
+<!-- Checkout Section End -->

@@ -1,0 +1,54 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section pd--70-0" data-bg-img="img/bg2@2x.jpg">
+    <div class="container">
+        <h1 class="title h1">{{ product['title'] }}</h1>
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+{% if product['description'] %}
+<!-- Page Header Section Start -->
+<div class="page-header--section ptop--60">
+    <div class="container">
+        {{ product['description'] }}
+    </div>
+</div>
+<!-- Page Header Section End -->
+{% endif %}
+
+<!-- Product Table Section Start -->
+<div class="pricing-table--section pd--60-0">
+    <div class="container">
+        <div class="row reset--gutter">
+
+            {% for package in product['packages'] %}
+            <!-- Product Table Item Start -->
+            <div class="pricing-table--item col-md-3 col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2 col-xxs-12">
+                <div class="header">
+                    <div class="vc--parent">
+                        <div class="vc--child">
+                            <h2 class="h3">{{ package['name'] }}</h2>
+                            <h3 class="h2"><sup>$</sup>{{ package['price'] }}<small>/{{ package['quantity'] }}</small></h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <ul class="nav">
+                        {% for propertie in package['properties'] %}
+                            <li data-label="Steup Fees">{{ propertie['name'] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="footer">
+                    <a href="add-to-cart.html" class="btn btn-default">{{ language('product.submit') }}</a>
+                </div>
+            </div>
+            <!-- Product Table Item End -->
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+<!-- Product Table Section End -->

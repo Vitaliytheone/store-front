@@ -1,0 +1,5 @@
+USE `stores`;
+INSERT INTO `default_themes` (`name`, `folder`, `position`, `thumbnail`)
+VALUES
+  ('SeoCrack', 'seocrack', 2, 'https://bootswatch.com/cerulean/thumbnail.png'),
+  ('Smm24', 'smm24', 3, 'https://bootswatch.com/cerulean/thumbnail.png');

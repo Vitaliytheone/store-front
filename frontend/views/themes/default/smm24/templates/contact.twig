@@ -1,0 +1,98 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section pd--70-0"  data-bg-img="img/bg2@2x.jpg">
+    <div class="container">
+        <h1 class="title h1">{{ page['title'] }}</h1>
+
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Contact Section Start -->
+<div class="contact--section pd--160-0">
+
+    <!-- Contact Form Start -->
+    <div class="contact--form">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="content">{{ page['content'] }}</div>
+                </div>
+                <div class="col-sm-6">
+                    <form action="/" method="post">
+
+                        <div class="title">
+                            <h2 class="h3">{{ language('contact.title') }}</h2>
+                        </div>
+
+                        <div class="status"></div>
+
+                        {% if error %}
+                        <!-- Alert Start -->
+                        <div class="checkout--info pbottom--30">
+                            <div class="title">
+                                <p><i class="fa fa-info-circle"></i> {{ errortext }}</p>
+                            </div>
+                        </div>
+                        <!-- Alert End -->
+                        {% endif %}
+
+                        <div class="row">
+
+                            <div class="col-xs-12 col-xxs-12">
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ language('contact.subject') }} *</span>
+                                        <input type="text" name="subject" class="form-control" required>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-xxs-12">
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ language('contact.name') }} *</span>
+                                        <input type="text" name="name" class="form-control" required>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-6 col-xxs-12">
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ language('contact.email') }} *</span>
+                                        <input type="email" name="email" class="form-control" required>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ language('contact.message') }} *</span>
+                                        <textarea name="message" class="form-control" required></textarea>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {% if captcha %}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="g-recaptcha" data-sitekey="6Lfz9BwTAAAAAIy0qqlz51yZpJYhsHZzlLcs_hgQ"></div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-block btn-default">{{ language('contact.submit') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact Form End -->
+</div>
+<!-- Contact Section End -->
