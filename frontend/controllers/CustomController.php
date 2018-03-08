@@ -240,22 +240,16 @@ class CustomController extends CommonController
     }
 
     /**
-     * Custom render view
-     * If theme file exist — render theme twig file with current layout
-     * If theme file non exist — render default file from controller folder(.php)
+     * Custom render partial
      * @param $view
      * @param array $params
      * @return string
      */
-    public function renderCustom($view, $params = [])
+    public function renderPartialCustom($view, $params = [])
     {
-        if (ThemesHelper::getView($view)) {
-            $content = $this->render($view, $params);
-        } else {
-            $content = $this->renderPartial(pathinfo($view, PATHINFO_FILENAME), $params);
-        }
+        $filename = ThemesHelper::getView($view) ? $view : pathinfo($view, PATHINFO_FILENAME);
 
-        return $content;
+        return $this->renderPartial($filename, $params);
     }
 
     /**
