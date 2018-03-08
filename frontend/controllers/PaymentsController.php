@@ -2,6 +2,9 @@
 
 namespace frontend\controllers;
 
+use common\models\store\Payments;
+use common\models\stores\PaymentMethods;
+use frontend\components\payments\BasePayment;
 use frontend\components\payments\Payment;
 use Yii;
 use common\models\stores\Stores;
@@ -52,6 +55,15 @@ class PaymentsController extends CustomController
             }
         }
 
-        return $this->redirect('/cart');
+        if (PaymentMethods::METHOD_PAYPAL !== $method) {
+            return $this->redirect('/cart');
+        }
+
+        $checkoutId = ArrayHelper::getValue($result, 'checkout_id');
+
+        return $this->render('payment_result.twig', [
+            'payment_result' => $paymentMethod::getPaymentResult($checkoutId),
+
+        ]);
     }
 }

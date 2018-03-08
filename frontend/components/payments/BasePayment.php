@@ -309,6 +309,31 @@ abstract class BasePayment extends Component {
     }
 
     /**
+     * Return payments result by Checkout Id
+     * Uses for payments result page
+     * @param $checkoutId
+     * @return array
+     */
+    public static function getPaymentResult($checkoutId)
+    {
+        $paymentsResult = [
+            'id' => $checkoutId,
+        ];
+
+        if (!$checkoutId ||
+            !$payment = Payments::findOne(['checkout_id' => $checkoutId])
+        ) {
+            $paymentsResult['failed'] = true;
+        } else {
+            $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
+            $paymentsResult['awaiting'] = in_array($payment->status, [Payments::STATUS_AWAITING]);
+            $paymentsResult['completed'] = in_array($payment->status, [Payments::STATUS_COMPLETED]);
+        }
+
+        return $paymentsResult;
+    }
+
+    /**
      * Log to file
      * @param $data
      */

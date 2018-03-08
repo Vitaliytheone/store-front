@@ -180,7 +180,7 @@ class Paypal extends BasePayment {
         if (!$token || !$payerId || !$id) {
             return [
                 'result' => 2,
-                'content' => 'no data'
+                'content' => 'no data',
             ];
         }
 
@@ -214,6 +214,7 @@ class Paypal extends BasePayment {
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
             return [
+                'checkout_id' => $id,
                 'result' => 2,
                 'content' => 'no invoice'
             ];
@@ -227,8 +228,9 @@ class Paypal extends BasePayment {
         if (!is_array($response) || strtolower(ArrayHelper::getValue($response, 'ACK', '')) != 'success') {
             // no invoice
             return [
+                'checkout_id' => $id,
                 'result' => 2,
-                'content' => 'bad response'
+                'content' => 'bad response',
             ];
         }
 
@@ -248,16 +250,18 @@ class Paypal extends BasePayment {
         if (ArrayHelper::getValue($checkoutDetails, 'AMT') != $this->_checkout->price) { // сверяем сумму оплаты payments.amount
             // no invoice
             return [
+                'checkout_id' => $id,
                 'result' => 2,
-                'content' => 'amount fail'
+                'content' => 'amount fail',
             ];
         }
 
         if (ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE') != $store->currency) {// проверяем валюту панели и ту что вернула платежка
             // no invoice
             return [
+                'checkout_id' => $id,
                 'result' => 2,
-                'content' => 'bad currency'
+                'content' => 'bad currency',
             ];
         }
 
@@ -282,8 +286,9 @@ class Paypal extends BasePayment {
 
             // no invoice
             return [
+                'checkout_id' => $id,
                 'result' => 2,
-                'content' => 'other status'
+                'content' => 'other status',
             ];
         }
 
