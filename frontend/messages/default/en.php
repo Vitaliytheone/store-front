@@ -33,6 +33,8 @@ return [
     'order.link' => 'Link',
     'order.button.back_url' => 'Cancel',
     'order.button.add_to_cart' => 'Add to Cart',
+    'order.details' => 'Order details',
+    'order.info' => 'Order info',
 
     'product.button.buy_now' => 'Buy now',
 
