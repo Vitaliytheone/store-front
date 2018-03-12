@@ -16,6 +16,11 @@ return [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
           ],
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationTable' => 'system_migrations',
+            'migrationPath' => dirname(dirname(__DIR__)) . '/common/data/',
+        ],
     ],
     'components' => [
         'log' => [
