@@ -18,7 +18,7 @@ return [
           ],
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
-            'migrationTable' => 'system_migrations',
+            'migrationTable' => 'stores.system_migrations',
             'migrationPath' => dirname(dirname(__DIR__)) . '/common/data/',
         ],
     ],
