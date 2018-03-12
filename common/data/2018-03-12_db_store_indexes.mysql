@@ -1,0 +1,6 @@
+USE `store`;
+ALTER TABLE `navigation` ADD INDEX `idx_parent_id_position` (`parent_id`, `position`);
+ALTER TABLE `carts` ADD INDEX `idx_key` (`key`);
+ALTER TABLE `suborders` ADD INDEX `idx_order_id_mode` (`order_id`, `mode`);
+ALTER TABLE `suborders` ADD INDEX `idx_mode` (`mode`);
+ALTER TABLE `payments` ADD INDEX `idx_status` (`status`);
