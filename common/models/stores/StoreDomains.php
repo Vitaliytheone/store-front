@@ -3,6 +3,8 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\db\ActiveRecord;
+use common\models\stores\queries\StoreDomainsQuery;
 
 /**
  * This is the model class for table "{{%store_domains}}".
@@ -14,7 +16,7 @@ use Yii;
  *
  * @property Stores $store
  */
-class StoreDomains extends \yii\db\ActiveRecord
+class StoreDomains extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -30,7 +32,7 @@ class StoreDomains extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'type'], 'integer'],
+            [['store_id', 'type', 'ssl'], 'integer'],
             [['domain'], 'string', 'max' => 255],
             [['domain'], 'unique'],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
@@ -46,7 +48,8 @@ class StoreDomains extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'store_id' => Yii::t('app', 'Store ID'),
             'domain' => Yii::t('app', 'Domain'),
-            'type' => Yii::t('app', '0 - standart, 1 - additional, 2 - subdomain'),
+            'type' => Yii::t('app', 'Type'),
+            'ssl' => Yii::t('app', 'SSL'),
         ];
     }
 
@@ -60,10 +63,10 @@ class StoreDomains extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\queries\StoreDomainsQuery the active query used by this AR class.
+     * @return StoreDomainsQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\stores\queries\StoreDomainsQuery(get_called_class());
+        return new StoreDomainsQuery(get_called_class());
     }
 }

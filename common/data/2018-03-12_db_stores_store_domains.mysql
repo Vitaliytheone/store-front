@@ -1,0 +1,3 @@
+USE `stores`;
+ALTER TABLE `store_domains` CHANGE `type` `type` TINYINT(1) NULL DEFAULT '0' COMMENT '0 - sommerce, 1 - default, 2 - additional, 3 - subdomain';
+ALTER TABLE `store_domains` ADD `ssl` TINYINT(1) NOT NULL COMMENT '0 - disabled, 1 - enabled' AFTER `type`;
