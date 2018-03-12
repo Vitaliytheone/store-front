@@ -27,4 +27,6 @@ return [
 
     'senderOrdersLimit' => 100,
     'getstatusOrdersLimit' => 100,
+
+    'mailer.status' => true,
 ];

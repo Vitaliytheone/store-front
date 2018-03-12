@@ -47,6 +47,10 @@ abstract class BaseMailer {
     {
         $this->options = $options;
 
+        if (isset(Yii::$app->params['mailer.status'])) {
+            $this->now = (boolean)Yii::$app->params['mailer.status'];
+        }
+
         $this->init();
     }
 
