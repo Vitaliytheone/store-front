@@ -731,12 +731,6 @@ customModule.adminEditBlock = {
             $('textarea.js-auto-size').textareaAutoSize();
         };
         var swiperSlider;
-        swiperSlider = new Swiper('.block-slider', {
-            pagination: '.swiper-pagination',
-            paginationClickable: true,
-            scrollbarDraggable: false,
-            simulateTouch: false
-        });
 
         var generateSlide = function generateSlide(action, id, title, description, button, image) {
             var template = '<div class="swiper-slide">\n                    <div class="slider__block-wrap slider__block-' + id + ' d-flex flex-wrap">\n\n                        <div class="editor-tooltip bg-danger editor-tooltip__right-top editor-action__delete-review editor-action__delete"  data-id="' + id + '" data-type="review" data-toggle="modal" data-target="#delete-feature-modal">\n                            <span class="fa fa-times"></span>\n                        </div>\n                        <div class="col-md-4">\n                            <label for="slider-image-' + id + '" class="slider__image slider__image_' + id + ' slider-image-' + id + '" style="background-image: url(' + image + ');">\n                                <input id="slider-image-' + id + '" type="file" name="slider-image-' + id + '" class="editor-slider-image-input" data-id="' + id + '">\n                            </label>\n                        </div>\n                        <div class="col">\n                            <div class="editor-block__reviev_name">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor-textarea__h text-left editor-textarea__h3 js-auto-size" data-id="' + id + '" data-textarea-title="title" rows="1" spellcheck="false" placeholder="Add title...">' + title + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <div class="editor-textarea__text-edit-off">\n                                    <textarea class="editor_textarea__text js-auto-size" data-id="' + id + '" data-textarea-title="description" rows="1" spellcheck="false" placeholder="Add text...">' + description + '</textarea>\n                                    <div class="editor-textarea__text-edit-action">\n                                        <button class="btn btn-sm btn-success cursor-pointer editor-textarea__text-edit-save">Save</button>\n                                        <button class="btn btn-sm btn-secondary cursor-pointer editor-textarea__text-edit-close">Close</button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class="editor-block__description">\n                                <button class="learn-more learn-more-' + id + '" data-toggle="modal" data-target="#learn-more" data-id="' + id + '">' + button + '</button>\n                            </div>\n                        </div>\n\n                    </div>\n\n                </div>';
@@ -756,10 +750,10 @@ customModule.adminEditBlock = {
                         "description": description,
                         "button": {
                             "title": button,
-                            "link": false,
-                            "type": false
+                            "link": 0,
+                            "type": 0
                         },
-                        "image": false
+                        "image": 0
                     });
                     break;
             }
@@ -770,8 +764,20 @@ customModule.adminEditBlock = {
         var initData = function(result) {
             $('#preload').remove();
 
-            for (var i = 0; i < result.data.length; i++) {
-                generateSlide('render', result.data[i].id, result.data[i].title, result.data[i].description, result.data[i].button.title, result.data[i].image);
+            if(state.slider.data !== undefined) {
+                $('.no-slide').remove();
+                swiperSlider = new Swiper('.block-slider', {
+                    pagination: '.swiper-pagination',
+                    paginationClickable: true,
+                    scrollbarDraggable: false,
+                    simulateTouch: false
+                });
+
+                for (var i = 0; i < result.data.length; i++) {
+                    generateSlide('render', result.data[i].id, result.data[i].title, result.data[i].description, result.data[i].button.title, result.data[i].image);
+                }
+            }else{
+                $('.swiper-wrapper').append('<div class="no-slide">No slides</div>');
             }
 
             var sliderEffects = $('.slider-effects'),
@@ -789,12 +795,12 @@ customModule.adminEditBlock = {
                     $(sliderInterval[i].parentNode).addClass('active');
                 }
             }
-        }
+        };
 
         $('.new-preview').on('click', function (e) {
             e.preventDefault();
             var lastSlide = '';
-            if (state.slider.data.length == 0) {
+            if (state.slider.data == undefined) {
                 $('.no-slide').remove();
                 swiperSlider = new Swiper('.block-slider', {
                     pagination: '.swiper-pagination',
@@ -802,6 +808,7 @@ customModule.adminEditBlock = {
                     scrollbarDraggable: false,
                     simulateTouch: false
                 });
+                state.slider.data = [];
                 lastSlide = "1";
             } else {
                 lastSlide = parseInt(state.slider.data[state.slider.data.length - 1].id) + 1;
@@ -878,13 +885,14 @@ customModule.adminEditBlock = {
                             state.slider.data[i].button.link = $(selectedNode + " option:selected").val();
                             break;
                         case "none":
-                            state.slider.data[i].button.link = false;
+                            state.slider.data[i].button.link = 0;
                             break;
                         case "home":
                             state.slider.data[i].button.link = '/';
                             break;
                         default:
-                            state.slider.data[i].button.link = false;
+                            console.log('default');
+                            state.slider.data[i].button.link = 0;
                             break;
                     }
 
@@ -944,6 +952,7 @@ customModule.adminEditBlock = {
                     swiperSlider.removeSlide(swiperSlider.activeIndex);
 
                     if(!state.slider.data.length){
+                        delete state.slider.data;
                         swiperSlider.destroy(true, true);
                         $('.swiper-wrapper').append('<div class="no-slide">No slides</div>');
                     }
@@ -1263,30 +1272,28 @@ customModule.adminEditBlock = {
         };
 
         var swiperSlider;
-        swiperSlider = new Swiper('.block-slider', {
-            pagination: '.swiper-pagination',
-            paginationClickable: true,
-            scrollbarDraggable: false,
-            simulateTouch: false,
-            centeredSlides: false
-        });
 
         var initData = function(result) {
             $('#preload').remove();
 
-            swiperSlider = new Swiper('.swiper-container', {
-                pagination: '.swiper-pagination',
-                paginationClickable: true,
-                scrollbarDraggable: false,
-                centeredSlides: false,
-                simulateTouch: false,
-                slidesPerView: parseInt(state.review.settings.column)
-            });
 
-            for (var i = 0; i < state.review.data.length; i++) {
-                generateSlide('render', state.review.data[i].id, state.review.data[i].name, state.review.data[i].rating, state.review.data[i].description, state.review.data[i].image);
+            if(state.review.data !== undefined) {
+                swiperSlider = new Swiper('.swiper-container', {
+                    pagination: '.swiper-pagination',
+                    paginationClickable: true,
+                    scrollbarDraggable: false,
+                    centeredSlides: false,
+                    simulateTouch: false,
+                    slidesPerView: parseInt(state.review.settings.column)
+                });
+
+                for (var i = 0; i < state.review.data.length; i++) {
+                    generateSlide('render', state.review.data[i].id, state.review.data[i].name, state.review.data[i].rating, state.review.data[i].description, state.review.data[i].image);
+                }
+
+            }else{
+                $('.swiper-wrapper').append('<div class="no-slide">No reviews</div>');
             }
-
             var reviewColumn = $('.review-column');
 
             for (var i = 0; i < reviewColumn.length; i++) {
@@ -1295,9 +1302,8 @@ customModule.adminEditBlock = {
                     $(reviewColumn[i].parentNode).addClass('active');
                 }
             }
-
             includeContent();
-        }
+        };
 
         var generateSlide = function generateSlide(action, id, name, rating, description, image) {
 
@@ -1379,6 +1385,7 @@ customModule.adminEditBlock = {
 
                     if(!state.review.data.length){
                         swiperSlider.destroy(true, true);
+                        delete state.review.data;
                         $('.swiper-wrapper').append('<div class="no-slide">No reviews</div>');
                     }
                     return;
@@ -1407,7 +1414,7 @@ customModule.adminEditBlock = {
         $(document).on('click', '#new-review', function (e) {
             e.preventDefault();
             var lastSlide = '';
-            if (state.review.data.length == 0) {
+            if (state.review.data == undefined) {
                 $('.no-slide').remove();
                 swiperSlider = new Swiper('.swiper-container', {
                     pagination: '.swiper-pagination',
@@ -1418,6 +1425,7 @@ customModule.adminEditBlock = {
                     slidesPerView: parseInt(state.review.settings.column)
                 });
                 lastSlide = "1";
+                state.review.data = [];
             } else {
                 lastSlide = parseInt(state.review.data[state.review.data.length - 1].id) + 1;
             }
