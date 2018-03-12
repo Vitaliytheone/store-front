@@ -1,0 +1,2 @@
+USE `stores`;
+DROP TABLE IF EXISTS `store_blocks`;
