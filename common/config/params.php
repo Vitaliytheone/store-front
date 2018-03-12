@@ -2,12 +2,15 @@
 $packageLinkTypes = require(__DIR__ . '/packageLinkTypes.php');
 $timezone = require(__DIR__ . '/timezone.php');
 $cdn = require(__DIR__ . '/cdn.php');
+$currencies = require(__DIR__ . '/currencies.php');
 
 return [
     'storeId' => 1,
     'packageLinkTypes' => $packageLinkTypes,
     'timezone' => $timezone,
     'cdn' => $cdn,
+    'currencies' => $currencies,
+
     'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
     'defaultTheme' => 'classic',
     'default_language' => 'en',

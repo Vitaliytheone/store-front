@@ -6,6 +6,8 @@ use common\models\store\Pages;
 use frontend\helpers\AssetsHelper;
 use Yii;
 use Twig_SimpleFunction;
+use Twig_SimpleFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class Extension
@@ -57,10 +59,29 @@ class Extension extends \Twig_Extension {
         return $functions;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getTokenParsers()
     {
         return [
             new TokenParser_Include($this->twigOptions)
         ];
+    }
+
+    /** @inheritdoc */
+    public function getFilters()
+    {
+        $filters = [
+            new Twig_SimpleFilter('money', function($price) {
+                $currencyRule = ArrayHelper::getValue(Yii::$app->params['currencies'], Yii::$app->store->getInstance()->currency);
+                if ($currencyRule && isset($currencyRule['money_format'])) {
+                    $price = str_replace('{{number}}', $price, $currencyRule['money_format']);
+                }
+                return $price;
+            })
+        ];
+
+        return $filters;
     }
 }
