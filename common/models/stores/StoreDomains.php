@@ -13,11 +13,20 @@ use common\models\stores\queries\StoreDomainsQuery;
  * @property integer $store_id
  * @property string $domain
  * @property integer $type
+ * @property integer $ssl
  *
  * @property Stores $store
  */
 class StoreDomains extends ActiveRecord
 {
+    const DOMAIN_TYPE_SOMMERCE = 0;
+    const DOMAIN_TYPE_DEFAULT = 1;
+    const DOMAIN_TYPE_ADDITIONAL = 2;
+    const DOMAIN_TYPE_SUBDOMAIN = 3;
+
+    const SSL_OFF = 0;
+    const SSL_ON = 1;
+
     /**
      * @inheritdoc
      */

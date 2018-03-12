@@ -4,6 +4,7 @@ namespace frontend\modules\admin\controllers\traits\settings;
 use common\models\store\ActivityLog;
 use common\models\store\Pages;
 use common\models\stores\StoreAdminAuth;
+use common\models\stores\Stores;
 use frontend\helpers\UiHelper;
 use frontend\modules\admin\components\Url;
 use frontend\modules\admin\models\forms\EditPageForm;
@@ -64,9 +65,13 @@ trait PagesTrait {
             'url_error' => $pageModel->getFirstError('url'),
         ]);
 
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
         return $this->render('edit_page', [
+            'store' => Yii::$app->store->getInstance(),
             'page' => $pageModel,
-            'storeUrl' => Yii::$app->store->getInstance()->domain,
+            'storeUrl' => $store->getSite(),
         ]);
     }
 
@@ -98,9 +103,13 @@ trait PagesTrait {
             'url_error' => $pageModel->getFirstError('url'),
         ]);
 
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
         return $this->render('edit_page', [
+            'store' => Yii::$app->store->getInstance(),
             'page' => $pageModel,
-            'storeUrl' => Yii::$app->store->getInstance()->domain,
+            'storeUrl' => $store->getSite(),
         ]);
     }
 

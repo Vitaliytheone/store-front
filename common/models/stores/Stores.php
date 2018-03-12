@@ -306,4 +306,24 @@ class Stores extends ActiveRecord
             $this->save(false);
         }
     }
+
+    /**
+     * Return store site url
+     * @return string
+     */
+    public function getSite()
+    {
+        /** @var StoreDomains $domain */
+        $domain = $this->getStoreDomains()
+            ->andWhere([
+                'type' => [
+                    StoreDomains::DOMAIN_TYPE_DEFAULT,
+                    StoreDomains::DOMAIN_TYPE_SOMMERCE,
+                ]
+            ])
+            ->orderBy(['type' => SORT_DESC])
+            ->one();
+
+        return ((bool)$domain->ssl ? 'https' : 'http') . '://' . $domain->domain;
+    }
 }

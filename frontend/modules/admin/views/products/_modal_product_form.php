@@ -3,9 +3,9 @@
 use frontend\modules\admin\components\Url;
 
 /* @var $this yii\web\View */
+/* @var $store \common\models\stores\Stores */
 
-$currentStore = yii::$app->store->getInstance();
-$storeUrl = $currentStore->domain;
+$storeUrl = $store->getSite();
 
 ?>
 
@@ -96,7 +96,7 @@ $storeUrl = $currentStore->domain;
 
                             <div class="seo-preview">
                                 <div class="seo-preview__title edit-seo__title"></div>
-                                <div class="seo-preview__url">http://<?= $storeUrl; ?>/<span class="edit-seo__url"></span></div>
+                                <div class="seo-preview__url"><?= $storeUrl; ?>/<span class="edit-seo__url"></span></div>
                                 <div class="seo-preview__description edit-seo__meta"></div>
                             </div>
 
@@ -134,7 +134,7 @@ $storeUrl = $currentStore->domain;
                                     </label>
                                     <div class="input-group">
                                         <span class="input-group-addon"
-                                              id="basic-addon3">http://<?= $storeUrl; ?>/</span>
+                                              id="basic-addon3"><?= $storeUrl; ?>/</span>
                                         <input type="text" class="form_field__url form-control" id="edit-seo__url" name="ProductForm[url]" value="<?= Yii::t('admin', 'products.product_seo_url_default') ?>">
                                     </div>
                                 </div>

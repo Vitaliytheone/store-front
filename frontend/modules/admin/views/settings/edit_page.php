@@ -84,7 +84,7 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
 
                             <div class="seo-preview">
                                 <div class="seo-preview__title edit-seo__title"></div>
-                                <div class="seo-preview__url">http://<?= $storeUrl; ?>/<span class="edit-seo__url"></span></div>
+                                <div class="seo-preview__url"><?= $storeUrl; ?>/<span class="edit-seo__url"></span></div>
                                 <div class="seo-preview__description edit-seo__meta"></div>
                             </div>
 
@@ -110,7 +110,7 @@ $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::
                                 <div class="form-group">
                                     <label for="edit-seo__url"><?= Yii::t('admin', 'settings.pages_seo_url') ?></label>
                                     <div class="input-group">
-                                        <span class="input-group-addon" id="basic-addon3">http://<?= $storeUrl ?>/</span>
+                                        <span class="input-group-addon" id="basic-addon3"><?= $storeUrl ?>/</span>
                                         <input type="text" class="form-control form_field__url" id="edit-seo__url" name="PageForm[url]" value="<?= $page->url ?>">
                                     </div>
                                 </div>

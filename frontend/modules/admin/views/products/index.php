@@ -4,6 +4,7 @@ use yii\helpers\Url;
 use frontend\assets\ProductsAsset;
 
 /* @var $this yii\web\View */
+/* @var $store \common\models\stores\Stores */
 /* @var $storeProviders array */
 /** @var $products array  Products with packages array */
 
@@ -49,6 +50,6 @@ ProductsAsset::register($this);
     </div>
 </div>
 
-<?= $this->render('_modal_product_form', []); ?>
+<?= $this->render('_modal_product_form', ['store' => $store]); ?>
 <?= $this->render('_modal_package_form', ['storeProviders' => $storeProviders,]); ?>
 <?= $this->render('_modal_delete_package', []); ?>

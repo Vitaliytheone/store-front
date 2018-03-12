@@ -52,9 +52,7 @@ class ProvidersSearch extends BaseSearch
         $query = clone $this->buildQuery();
 
         $items = $query
-            ->orderBy([
-                'id' => SORT_DESC
-            ])
+            ->orderBy(['site' => SORT_ASC])
             ->all();
 
 

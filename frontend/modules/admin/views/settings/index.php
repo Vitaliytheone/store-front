@@ -145,7 +145,7 @@ use common\models\store\Files;
                                 <div class="seo-preview__title edit-seo__title">
                                     <?= Yii::t('admin', 'settings.general_seo_index') ?>
                                 </div>
-                                <div class="seo-preview__url">http://<?= $store->domain ?></div>
+                                <div class="seo-preview__url"><?= $store->getSite() ?></div>
                                 <div class="seo-preview__description edit-seo__meta">
                                     <?= Yii::t('admin', 'settings.general_seo_meta_default') ?>
                                 </div>

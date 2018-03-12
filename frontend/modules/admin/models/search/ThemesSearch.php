@@ -51,10 +51,20 @@ class ThemesSearch extends Model
         $currentThemeFolder = $this->_store->theme_folder;
 
         // Mark active theme
-        array_walk($themes, function(&$theme) use ($currentThemeFolder) {
-            $theme['active'] = $theme['folder'] === $currentThemeFolder;
+        foreach ($themes as $idx => &$theme) {
+            $active = $theme['folder'] === $currentThemeFolder;
+            $theme['active'] = $active;
             $theme['thumbnail'] = ArrayHelper::getValue($theme, 'thumbnail', CustomThemes::THEME_THUMBNAIL_URL);
-        });
+        }
+
+        $activeItemIdx = array_search(true, array_column($themes, 'active'));
+
+        // Move active theme to first position
+        if ($activeItemIdx) {
+            $activeItem = $themes[$activeItemIdx];
+            unset($themes[$activeItemIdx]);
+            array_unshift($themes, $activeItem);
+        }
 
         return $themes;
     }

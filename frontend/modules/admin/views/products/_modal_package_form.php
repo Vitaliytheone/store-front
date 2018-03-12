@@ -56,7 +56,7 @@ $linkTypes = Yii::$app->params['packageLinkTypes'];
                             <option value="1">
                                 <?= Yii::t('admin', 'products.package_best_enabled') ?>
                             </option>
-                            <option value="0">
+                            <option selected value="0">
                                 <?= Yii::t('admin', 'products.package_best_disabled') ?>
                             </option>
                         </select>
