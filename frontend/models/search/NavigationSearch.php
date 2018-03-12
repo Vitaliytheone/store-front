@@ -164,42 +164,6 @@ class NavigationSearch extends Model
     }
 
     /**
-     * Return all children and subchildren ids of tree node
-     * @param $parentId
-     * @return array
-     */
-    public static function getChildrenTreeNodeIds($parentId)
-    {
-        $db = Yii::$app->storeDb;
-        $table = Navigation::tableName();
-
-        /** @var Connection $db */
-        $query = $db->createCommand("
-            SELECT GROUP_CONCAT(node SEPARATOR ',') ids 
-            FROM 
-            (
-                SELECT @Ids := (
-                   SELECT GROUP_CONCAT(`id` SEPARATOR ',')
-                   FROM $table
-                   WHERE FIND_IN_SET(`parent_id`, @Ids)
-                ) node
-                FROM $table
-                JOIN (SELECT @Ids := :parentId) temp1
-            ) temp2
-        ")
-            ->bindValue(':parentId', $parentId)
-            ->queryColumn();
-
-        $ids = [];
-
-        if ($query[0]) {
-            $ids = explode(',', $query[0]);
-        }
-
-        return $ids;
-    }
-
-    /**
      * Return first-level children ids of the parent id node
      * @param $parentId
      * @return array

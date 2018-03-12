@@ -385,14 +385,11 @@ class OrdersSearch extends Model
         // Get count suborders for product
         $subordersByProductsQuery = (new Query())
             ->select(['pr.id, COUNT(pr.id) count'])
-            ->from("$this->_subordersTable so")
-            ->leftJoin("$this->_packagesTable pk", 'pk.id = so.package_id')
-            ->leftJoin("$this->_productsTable pr", 'pk.product_id = pr.id')
-            ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
+            ->from(['pr' => $this->_productsTable])
+            ->rightJoin(['pk' => $this->_packagesTable], 'pk.product_id = pr.id')
+            ->rightJoin(['so' => $this->_subordersTable], 'pk.id = so.package_id')
+            ->rightJoin(['o' => $this->_ordersTable], 'o.id = so.order_id')
             ->groupBy('pr.id')
-            ->orderBy([
-                'pr.id' => SORT_ASC,
-            ])
             ->indexBy('id');
 
         $this->_applyFilters($subordersByProductsQuery, $this->_queryActiveFilters, ['product']);
