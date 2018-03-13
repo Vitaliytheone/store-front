@@ -1,0 +1,5 @@
+USE `stores`;
+UPDATE `default_themes` SET `thumbnail` = '/img/themes/preview_classic.png' WHERE `id` = '1';
+UPDATE `default_themes` SET `thumbnail` = '/img/themes/preview_green.png' WHERE `id` = '2';
+UPDATE `default_themes` SET `thumbnail` = '/img/themes/preview_seocrack.png' WHERE `id` = '3';
+UPDATE `default_themes` SET `thumbnail` = '/img/themes/preview_smm24.png' WHERE `id` = '4';
