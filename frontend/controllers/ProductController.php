@@ -42,7 +42,7 @@ class ProductController extends CustomController
                         'best' => $package->best,
                         'quantity' => $package->quantity,
                         'name' => Html::encode($package->name),
-                        'price' => '$' . $package->price,
+                        'price' => $package->price,
                         'button' => [
                             'url_buy_now' => Url::toRoute("/order/$package->id"),
                         ],
