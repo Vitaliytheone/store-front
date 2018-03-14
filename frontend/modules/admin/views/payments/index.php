@@ -101,10 +101,8 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
                                                             <ul class="m-nav">
                                                                 <?php foreach ($searchModel->getMethodFilterItems() as $item): ?>
                                                                     <li class="m-nav__item <?= $item['active'] ? 'active' : '' ?>">
-                                                                        <a href="<?= $item['url'] ?>"
-                                                                           class="m-nav__link">
-                                                                            <span class="m-nav__link-text"><?= $item['method_title'] ?>
-                                                                                (<?= $item['count'] ?>)</span>
+                                                                        <a href="<?= $item['url'] ?>" class="m-nav__link">
+                                                                            <span class="m-nav__link-text"><?= $item['method_title'] ?> (<?= $item['count'] ?>)</span>
                                                                         </a>
                                                                     </li>
                                                                 <?php endforeach; ?>

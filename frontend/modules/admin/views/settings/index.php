@@ -50,7 +50,7 @@ use common\models\store\Files;
                                         <?= Yii::t('admin', 'settings.general_logo_upload') ?>
                                     </a>
 
-                                    <input id="setting-logo" type="file" class="settings-file" name="SettingsGeneralForm[logoFile]">
+                                    <input id="setting-logo" type="file" class="settings-file" name="SettingsGeneralForm[logoFile]" data-target="#setting-logo__preview">
 
                                 </label>
                                 <small class="form-text text-muted">
@@ -59,14 +59,14 @@ use common\models\store\Files;
                             </div>
                         </div>
 
+                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2 uploaded-image" id="setting-logo__preview">
                         <?php if ($store->logo): ?>
-                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-1 order-lg-2 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
                                 <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => Files::FILE_TYPE_LOGO]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-logo-field"><span class="flaticon-cancel"></span></a>
                                 <img src="<?= $store->logo ?>" alt="...">
                             </div>
-                        </div>
                         <?php endif; ?>
+                        </div>
 
                         <div class="col-lg-7 order-4 order-lg-4">
                             <div class="form-group">
@@ -78,7 +78,7 @@ use common\models\store\Files;
                                         <?= Yii::t('admin', 'settings.general_favicon_upload') ?>
                                     </a>
 
-                                    <input id="setting-favicon" type="file" class="settings-file" name="SettingsGeneralForm[faviconFile]">
+                                    <input id="setting-favicon" type="file" class="settings-file" name="SettingsGeneralForm[faviconFile]" data-target="#setting-favicon__preview">
 
                                 </label>
                                 <small class="form-text text-muted">
@@ -87,14 +87,14 @@ use common\models\store\Files;
                             </div>
                         </div>
 
+                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4 uploaded-image" id="setting-favicon__preview">
                         <?php if ($store->favicon): ?>
-                        <div class="col-lg-5 d-flex justify-content-lg-end align-items-lg-center order-3 order-lg-4 uploaded-image">
                             <div class="sommerce-settings__theme-imagepreview">
                                 <a href="<?= Url::toRoute(['/settings/delete-image', 'type' => Files::FILE_TYPE_FAVICON]) ?>" class="sommerce-settings__delete-image delete-uploaded-images" data-toggle="modal" data-target="#delete-modal" data-field="settings-favicon-field"><span class="flaticon-cancel"></span></a>
                                 <img src="<?= $store->favicon ?>" alt="...">
                             </div>
-                        </div>
                         <?php endif; ?>
+                        </div>
 
                     </div>
 

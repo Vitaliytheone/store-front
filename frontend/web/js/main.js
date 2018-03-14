@@ -310,6 +310,31 @@ customModule.adminGeneral = {
         $modal.on('hidden.bs.modal', function (){
             $deleteBtn.attr('href', null);
         });
+
+
+        /******************************************************************
+         *            General settings favicon & logo
+         ******************************************************************/
+        $(document).ready(function () {
+            $('.settings-file').on('change', function () {
+
+                var dataTarget = $(this).attr('data-target'),
+                    that = this,
+                    template = '';
+
+                if (that.files && that.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        template = '<div class="sommerce-settings__theme-imagepreview"><img src="'+e.target.result+'" alt="'+that.files[0].name+'" id="setting-logo__preview"></div>'
+                        $(dataTarget).html(template);
+                    };
+
+                    reader.readAsDataURL(that.files[0]);
+                }
+            });
+        });
+
     }
 };
 /**

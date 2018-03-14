@@ -103,9 +103,9 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                                         <div class="m-dropdown__content">
                                                             <ul class="m-nav">
                                                                 <?php foreach ($ordersSearchModel->productFilterItems() as $item): ?>
-                                                                    <li class="<?= $item['active'] ? 'active' : '' ?>">
-                                                                        <a href="<?= $item['url'] ?>">
-                                                                            <?= $item['name'] ?> (<?= $item['count'] ?>)
+                                                                    <li class="<?= $item['active'] ? 'active' : '' ?> m-nav__item">
+                                                                        <a class="m-nav__link" href="<?= $item['url'] ?>">
+                                                                            <span class="m-nav__link-text"><?= $item['name'] ?> (<?= $item['count'] ?>)</span>
                                                                         </a>
                                                                     </li>
                                                                 <?php endforeach; ?>
@@ -132,10 +132,9 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                                         <div class="m-dropdown__content">
                                                             <ul class="m-nav">
                                                                 <?php foreach ($ordersSearchModel->modeFilterItems() as $modeItem): ?>
-                                                                    <li class="<?= $modeItem['active'] ? 'active' : '' ?>">
-                                                                        <a href="<?= $modeItem['url'] ?>">
-                                                                            <?= $modeItem['title'] ?>
-                                                                            (<?= $modeItem['count'] ?>)
+                                                                    <li class="<?= $modeItem['active'] ? 'active' : '' ?> m-nav__item">
+                                                                        <a href="<?= $modeItem['url'] ?>" class="m-nav__link">
+                                                                            <span class="m-nav__link-text"><?= $modeItem['title'] ?> (<?= $modeItem['count'] ?>)</span>
                                                                         </a>
                                                                     </li>
                                                                 <?php endforeach; ?>
