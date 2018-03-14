@@ -89,12 +89,12 @@
                                 {% for menu_first_level in site.menu %}
                                     {% if menu_first_level.submenu %}
                                         <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
-                                            <a href="#" class="dropdown-toggle">{{ menu_first_level.name }} <span class="caret"></span></a>
+                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_first_level.name }} <span class="caret"></span></a>
                                             <ul class="dropdown-menu multi-level">
                                                 {% for menu_second_level in menu_first_level.submenu %}
                                                     {% if menu_second_level.submenu %}
                                                         <li class="dropdown-submenu">
-                                                            <a href="#" class="dropdown-toggle">{{ menu_second_level.name }}</a>
+                                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_second_level.name }}</a>
                                                             <ul class="dropdown-menu multi-level">
                                                                 {% for menu_third_level in menu_second_level.submenu %}
                                                                     <li>
@@ -132,10 +132,8 @@
     </header>
     <!-- Header Section End -->
 
-
     {# Required variable. Output page content #}
     {{ content }}
-
 
     <!-- Footer Section Start -->
     <div id="footer" class="pd--50-0-0">
@@ -170,7 +168,6 @@
     <!-- Back To Top Button End -->
 </div>
 <!-- Wrapper End -->
-
 <!-- CDN Scripts -->
 <script src="https://www.google.com/recaptcha/api.js?hl=en"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -178,5 +175,6 @@
 <script src="{{ asset('/js/bootstrap.js') }}"></script>
 <script src="{{ asset('/js/owl.carousel.js') }}"></script>
 <script src="{{ asset('/js/main.js') }}"></script>
+<script src="{{ asset('/js/jquery.sticky.js') }}"></script>
 </body>
 </html>

@@ -1,13 +1,43 @@
-<!-- 404 Section Start -->
-<div id="f0f" class="pd--100-0">
-    <div class="container">
-        <div class="row">
-            <div class="f0f--content text-center col-md-10 col-md-offset-1">
-                <h1 class="h1">{{ lang('404.title') }}</h1>
-                <p>{{ lang('404.description') }} <a href="/">{{ lang('404.button.home_page') }}</a></p>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ site.page_title }}</title>
+    {% if site['favicon'] %}
+        <link rel="shortcut icon" type="image/ico" href="{{ site['favicon'] }}" />
+    {% endif %}
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/green.css') }}">
 
-        </div>
-    </div>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!-- Wrapper Start -->
+<div class="wrapper">
+  <!-- 404 Section Start -->
+  <div id="f0f" class="pd--100-0">
+      <div class="container">
+          <div class="row">
+              <div class="f0f--content text-center col-md-10 col-md-offset-1">
+                  <h1 class="h1">{{ lang('404.title') }}</h1>
+                  <p>{{ lang('404.description') }} <a href="/">{{ lang('404.button.home_page') }}</a></p>
+              </div>
+
+          </div>
+      </div>
+  </div>
+  <!-- 404 Section End -->
 </div>
-<!-- 404 Section End -->
+<!-- Wrapper End -->
+</body>
+</html>

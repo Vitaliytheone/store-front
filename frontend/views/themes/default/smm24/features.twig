@@ -13,7 +13,7 @@
         </div>
         <!-- Section Title End -->
 
-            <div class="row AdjustRow">
+            <div class="row AdjustRow section-col__clearfix">
              {% for feature in block.features.data %}
                 <div class="col-md-{{ block.features.settings.column }} col-xs-6 col-xxs-12">
                     <!-- Feature Item Start -->
@@ -32,7 +32,7 @@
                     </div>
                     <!-- Feature Item End -->
                 </div>
-                {% endif %}
+                {% endfor %}
                 </div>
 
             </div>

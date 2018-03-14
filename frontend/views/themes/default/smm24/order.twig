@@ -23,27 +23,11 @@
                     <!-- Alert End -->
                 {% endif %}
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="title">
-                            <h2 class="h4">{{ lang('order.details') }}</h2>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-12 col-xxs-12">
-                                <div class="form-group">
-                                    <label>
-                                        <span>{{ lang('order.link') }} *</span>
-                                        <input type="text"  name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="col-md-6 pbottom--60">
                         <div class="checkout--order-info">
                             <div class="title">
-                                <h2 class="h4">{{ lang('order.title') }}</h2>
+                                <h2 class="h4">{{ lang('order.info') }}</h2>
                             </div>
 
                             <table class="table">
@@ -64,7 +48,22 @@
                             </table>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="title">
+                            <h2 class="h4">{{ lang('order.details') }}</h2>
+                        </div>
 
+                        <div class="row">
+                            <div class="col-xs-12 col-xxs-12">
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ lang('order.link') }} *</span>
+                                        <input type="text"  name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">

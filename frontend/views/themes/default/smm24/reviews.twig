@@ -1,6 +1,6 @@
 {% if block.reviews %}
     <!-- Reviews Section Start -->
-    <div class="testimonial--section pd--100-0-40 bg--overlay-90" data-bg-img="img/bg@2x.jpg">
+    <div class="testimonial--section pd--100-0-40 bg--overlay-90" data-bg-img="/img/themes/smm24/bg_block.jpg">
         <div class="container">
             <!-- Section Title Start -->
             <div class="section--title mbottom--60">
@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-12 pbottom--60">
                     <!-- Reviews Slider Start -->
-                    <div class="testimonial--slider owl-carousel" data-owl-items="{{ block.reviews.settings.column }}" data-owl-dots="true">
+                    <div class="testimonial--slider owl-carousel" data-owl-dots="true" data-owl-responsive='{"0": {"items": "1"}, "768": {"items": "{{ block.reviews.settings.column }}"}}'>
                         {% for review in block.reviews.data %}
                             <!-- Reviews Item Start -->
                             <div class="testimonial--item">

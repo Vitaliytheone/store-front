@@ -1,22 +1,44 @@
-<!-- 404 Section Start -->
-<div class="f0f--section">
-    <div class="container">
-        <!-- 404 Content Start -->
-        <div class="f0f--content pd--100-0">
-            <div class="img">
-                <img src="img/404.png" alt="">
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ site.page_title }}</title>
+    {% if site.favicon %}
+        <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
+    {% endif %}
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/smm24.css') }}">
+</head>
+<body>
 
-            <div class="title">
-                <h1 class="h3">{{ lang('404.title') }}</h1>
-            </div>
-
-            <div class="action">
-                <a href="/" class="btn btn-default"><i class="fa fa-home"></i>{{ lang('404.button.home_page') }}</a>
-            </div>
-
-        </div>
-        <!-- 404 Content End -->
-    </div>
+<!-- Wrapper Start -->
+<div class="wrapper">
+  <!-- 404 Section Start -->
+  <div class="f0f--section">
+      <div class="container">
+          <!-- 404 Content Start -->
+          <div class="f0f--content pd--100-0">
+              <div class="img">
+                  <img src="/img/themes/smm24/404.png" alt="">
+              </div>
+              <div class="title">
+                  <h1 class="h3">
+					<strong>{{ lang('404.title') }}</strong> {{ lang('404.description') }}
+				  </h1>
+              </div>
+              <div class="action">
+                  <a href="/" class="btn btn-default"><i class="fa fa-home"></i>{{ lang('404.button.home_page') }}</a>
+              </div>
+          </div>
+          <!-- 404 Content End -->
+      </div>
+  </div>
+  <!-- 404 Section End -->
 </div>
-<!-- 404 Section End -->
+</body>
+</html>

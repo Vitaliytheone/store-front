@@ -7,14 +7,14 @@
     <title>{{ site.page_title }}</title>
     <meta name="keywords" content="{{ site.meta.keywords }}">
     <meta name="description" content="{{ site.meta.description }}">
-    {% if site.favicon] %}
+    {% if site.favicon %}
         <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
     {% endif %}
     <!-- CDN Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom styles -->
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('/css/own.carousel.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/owl.carousel.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/smm24.css') }}">
 </head>
 <body>
@@ -61,12 +61,12 @@
                         {% for menu_first_level in site.menu %}
                             {% if menu_first_level.submenu %}
                                 <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
-                                    <a href="#" class="dropdown-toggle">{{ menu_first_level.name }} <span class="caret"></span></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{{ menu_first_level.name }} <span class="caret"></span></a>
                                     <ul class="dropdown-menu multi-level">
                                         {% for menu_second_level in menu_first_level.submenu %}
                                             {% if menu_second_level.submenu %}
                                                 <li class="dropdown-submenu">
-                                                    <a href="#" class="dropdown-toggle">{{ menu_second_level.name }}</a>
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{{ menu_second_level.name }}</a>
                                                     <ul class="dropdown-menu multi-level">
                                                         {% for menu_third_level in menu_second_level.submenu %}
                                                             <li>
@@ -114,7 +114,7 @@
         <!-- Footer Copyright Start -->
         <div class="footer--copyright">
             <div class="container">
-                <p class="float--left">&copy; {{ site.store_name }} {{ "now"|date("Y") }}</p>
+                <p class="float--left">&copy; {{ "now"|date("Y") }} {{ site.store_name }}</p>
                 <ul class="nav float--right">
                     <li><a href="{{ page_url(3) }}">{{ lang('footer.terms') }}</a></li>
                     <li><a href="{{ page_url(2) }}">{{ lang('footer.policy') }}</a></li>
@@ -139,7 +139,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Custom Scripts -->
 <script src="{{ asset('/js/bootstrap.js') }}"></script>
-<script src="{{ asset('/js/own.carousel.js') }}"></script>
+<script src="{{ asset('/js/owl.carousel.js') }}"></script>
+<script src="{{ asset('/js/jquery.sticky.js') }}"></script>
 <script src="{{ asset('/js/main.js') }}"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!-- Page Header Section Start -->
-<div id="pageHeader" class="pd--80-0" data-bg-img="img/bg@2x.jpg">
+<div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
     <div class="container">
         <!-- Page Header Title Start -->
         <div class="page-header--title pull-left">
@@ -11,33 +11,14 @@
 </div>
 <!-- Page Header Section End -->
 
-<!-- Checkout Section Start -->
-<div id="checkout" class="pd--100-0-40">
+<!-- Order Section Start -->
+<div id="checkout" class="pd--100-0-40 min-height">
     <div class="container">
 
         <!-- Checkout Form Start -->
         <div class="checkout--form" data-form-validation="true">
             <form id="addToCardForm" class="form" action="" method="post">
                 <div class="row pt--80">
-                    <!-- Checkout Billing Info Start -->
-                    <div class="checkout--billing-info col-md-6">
-                        <h2 class="checkout--form-title h4">{{ lang('order.details') }}</h2>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>
-                                        <span>{{ lang('order.link') }} <em>*</em></span>
-                                        <input type="text" name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Checkout Billing Info End -->
-
-                    <!-- Checkout Order Info Start -->
                     <div class="checkout--order-info col-md-6">
                         <h2 class="checkout--form-title h4">{{ lang('order.title') }}</h2>
 
@@ -59,12 +40,26 @@
                         </table>
 
                     </div>
-                    <!-- Checkout Order Info End -->
+                    <div class="checkout--billing-info col-md-6">
+                        <h2 class="checkout--form-title h4">{{ lang('order.details') }}</h2>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>
+                                        <span>{{ lang('order.link') }} <em>*</em></span>
+                                        <input type="text" name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <a href="{{ order.back_url }}" class="btn btn-default">{{ lang('order.cancel') }}</a>
+                        <a href="{{ order.back_url }}" class="btn btn-default">{{ lang('order.button.back_url') }}</a>
                     </div>
                     <div class="col-md-6">
                         <button type="submit" id="addToCartButton" name="add-to-cart-button" class="btn btn-default pull-right">{{ lang('order.button.add_to_cart') }}</button>
@@ -76,4 +71,4 @@
         <!-- Checkout Form End -->
     </div>
 </div>
-<!-- Checkout Section End -->
+<!-- Order Section End -->

@@ -15,9 +15,9 @@
             <!--Description Block End-->
         {% endif %}
 
-        <div class="row AdjustRow">
+        <div class="row AdjustRow section-col__clearfix">
         {% for feature in block.features.data %}
-                <div class="col-md-3 col-xs-6 col-xxs-12">
+                <div class="col-md-{{ block.features.settings.column }} col-xs-6 col-xxs-12">
                     <!-- Service Item Start -->
                     <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
                         <div class="header">
@@ -36,7 +36,7 @@
                     </div>
                     <!-- Service Item End -->
                 </div>
-                {% endif %}
+                {% endfor %}
             </div>
             </div>
         </div>

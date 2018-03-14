@@ -2,7 +2,7 @@
     <!-- Banner Section Start -->
     <div class="banner--section">
         <!-- Banner Slider Start -->
-        <div class="banner--slider owl-carousel bg--gradient-theme" data-owl-options='{"animateIn": {{ block.slider.settings.effect }}, autoplay": "true", autoplayTimeout: {{ block.slider.settings.interval }}, autoplayHoverPause:true,  }' data-owl-dots="true">
+        <div class="banner--slider owl-carousel bg--gradient-theme" data-owl-carousel='{"margin": 10, "items": 2}' data-owl-dots="true">
             {% for slide in block.slider.data %}
                 <!-- Banner Item Start -->
                 <div class="banner--item">
@@ -16,7 +16,6 @@
                                             <div class="header">
                                                 <h1 class="h1">{{ slide.title }}</h1>
                                             </div>
-
                                             {% if slide.description %}
                                                 <div class="body">
                                                     <p>{{ slide.description }}</p>

@@ -54,12 +54,12 @@
                         {% for menu_first_level in site.menu %}
                             {% if menu_first_level.submenu %}
                                 <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
-                                    <a href="#" class="dropdown-toggle">{{ menu_first_level.name }} <span class="caret"></span></a>
+                                    <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_first_level.name }} <span class="caret"></span></a>
                                     <ul class="dropdown-menu multi-level">
                                         {% for menu_second_level in menu_first_level.submenu %}
                                             {% if menu_second_level.submenu %}
                                                 <li class="dropdown-submenu">
-                                                    <a href="#" class="dropdown-toggle">{{ menu_second_level.name }}</a>
+                                                    <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_second_level.name }}</a>
                                                     <ul class="dropdown-menu multi-level">
                                                         {% for menu_third_level in menu_second_level.submenu %}
                                                             <li>
@@ -84,7 +84,7 @@
                         {% endfor %}
                         <!--/ User's menu -->
 
-                        <li {% if site.active_menu %} class="active" {% endif %}><a href="/cart"><i class="fa fm fa-shopping-basket"></i>(<span>{{ site.cart.item_count }}</span>)</a></li>
+                        <li {% if 'cart' == site.active_menu %} class="active" {% endif %}><a href="/cart"><i class="fa fm fa-shopping-basket"></i>(<span>{{ site.cart.item_count }}</span>)</a></li>
                     </ul>
                     <!-- Header Nav Links End -->
                 </div>
@@ -130,6 +130,7 @@
 <!-- Custom Scripts -->
 <script src="{{ asset('/js/bootstrap.js') }}"></script>
 <script src="{{ asset('/js/owl.carousel.js') }}"></script>
+<script src="{{ asset('/js/jquery.sticky.js') }}"></script>
 <script src="{{ asset('/js/main.js') }}"></script>
 </body>
 </html>

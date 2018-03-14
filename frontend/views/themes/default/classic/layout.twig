@@ -7,8 +7,8 @@
     <title>{{ site.page_title }}</title>
     <meta name="keywords" content="{{ site.meta.keywords }}">
     <meta name="description" content="{{ site.meta.description }}">
-	{% if site['favicon'] %}
-      <link rel="shortcut icon" type="image/ico" href="{{ site['favicon'] }}" />
+	{% if site.favicon %}
+      <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
 	{% endif %}
     <!-- CDN Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -38,39 +38,39 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
 
-                <!-- User's menu -->
-                {% for menu_first_level in site.menu %}
-                    {% if menu_first_level.submenu %}
-                        <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
-                            <a href="#" class="dropdown-toggle">{{ menu_first_level.name }} <span class="caret"></span></a>
-                            <ul class="dropdown-menu multi-level">
-                                {% for menu_second_level in menu_first_level.submenu %}
-                                    {% if menu_second_level.submenu %}
-                                        <li class="dropdown-submenu">
-                                            <a href="#" class="dropdown-toggle">{{ menu_second_level.name }}</a>
+                                <!-- User's menu -->
+                                {% for menu_first_level in site.menu %}
+                                    {% if menu_first_level.submenu %}
+                                        <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
+                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_first_level.name }} <span class="caret"></span></a>
                                             <ul class="dropdown-menu multi-level">
-                                                {% for menu_third_level in menu_second_level.submenu %}
-                                                    <li>
-                                                        <a href="{{ menu_third_level.link }}">{{ menu_third_level.name }}</a>
-                                                    </li>
+                                                {% for menu_second_level in menu_first_level.submenu %}
+                                                    {% if menu_second_level.submenu %}
+                                                        <li class="dropdown-submenu">
+                                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_second_level.name }}</a>
+                                                            <ul class="dropdown-menu multi-level">
+                                                                {% for menu_third_level in menu_second_level.submenu %}
+                                                                    <li>
+                                                                        <a href="{{ menu_third_level.link }}">{{ menu_third_level.name }}</a>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% else %}
+                                                        <li>
+                                                            <a href="{{ menu_second_level.link }}">{{ menu_second_level.name }}</a>
+                                                        </li>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </ul>
                                         </li>
                                     {% else %}
-                                        <li>
-                                            <a href="{{ menu_second_level.link }}">{{ menu_second_level.name }}</a>
+                                        <li class="{% if menu_first_level.active %}active{% endif %}">
+                                            <a href="{{ menu_first_level.link }}">{{ menu_first_level.name }}</a>
                                         </li>
                                     {% endif %}
                                 {% endfor %}
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="{% if menu_first_level.active %}active{% endif %}">
-                            <a href="{{ menu_first_level.link }}">{{ menu_first_level.name }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                <!--/ User's menu -->
+                                <!--/ User's menu -->
 
                 <li {% if 'cart' == site.active_menu %} class="active" {% endif %}><a href="/cart" class="bold">({{ site.cart.item_count }}) {{ lang('cart.title') }}</a></li>
             </ul>
@@ -78,8 +78,9 @@
     </div>
 </nav>
 
-{# Required variable. Output page content #}
+<!-- Content Start -->
 {{ content }}
+<!-- Content End -->
 
 <!-- Process block End -->
 </body>
@@ -89,11 +90,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                   &copy; {{ site.store_name }} {{ "now"|date("Y") }}
+                   &copy; {{ site.store_name }} {{ "now"|date("Y") }} 
                 </div>
                 <div class="col-md-8">
                     <ul class="footer-links">
-                        <li><a href="{{ page_url(100) }}">{{ lang('footer.terms') }}</a></li>
+                        <li><a href="{{ page_url(3) }}">{{ lang('footer.terms') }}</a></li>
                         <li><a href="{{ page_url(2) }}">{{ lang('footer.policy') }}</a></li>
                         <li><a href="{{ page_url(1) }}">{{ lang('footer.contact') }}</a></li>
                     </ul>

@@ -3,7 +3,6 @@
     <div class="banner--section bg--color-theme">
         <!-- Banner Slider Start -->
         <div class="banner--slider owl-carousel pd--100-0-70" data-owl-options='{"animateIn": {{ block.slider.settings.effect }}, autoplay": "true", autoplayTimeout: {{ block.slider.settings.interval }}, autoplayHoverPause:true,  }' data-owl-dots="true">
-
             {% for slide in block.slider.data %}
                 <!-- Banner Item Start -->
                 <div class="banner--item">
@@ -15,13 +14,11 @@
                                     <div class="title">
                                         <h2 class="h1">{{ slide.title }}</h2>
                                     </div>
-
                                     {% if slide.description %}
                                         <div class="desc">
                                             <p>{{ slide.description }}</p>
                                         </div>
                                     {% endif %}
-
                                     {% if slide.button %}
                                         <div class="button">
                                             <a href="{{ slide.button.link }}" class="btn btn-default active">{{ slide.button.title }}</a>

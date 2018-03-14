@@ -1,6 +1,6 @@
 {% if block.reviews %}
     <!-- Reviews Section Start -->
-    <div class="testimonial--section pd--80-0 bg--overlay-50" data-bg-img="img/bg@2x.jpg">
+    <div class="testimonial--section pd--80-0 bg--overlay-50" data-bg-img="/img/themes/seocrack/bg_block.jpg">
         <div class="container">
             <!-- Section Title Start -->
             <div class="section--title">
@@ -20,9 +20,9 @@
                     <!-- Reviews Feedbacks Start -->
                     <div class="testimonial--feedbacks">
                         <!-- Reviews Clients Start -->
-                        <div class="testimonial--clients owl-carousel" data-owl-items="{{ block.reviews.settings.column }}" data-owl-margin="60" data-increment="1" data-owl-responsive='{"0": {"margin": 30}, "481": {"margin": 60}}'>
+                        <div class="testimonial--clients owl-carousel" data-owl-margin="60" data-owl-dots="true" data-owl-responsive='{"0": {"items": "1"}, "768": {"items": "{{ block.reviews.settings.column }}"}}' data-increment="1">
                             {% for review in block.reviews.data %}
-                                <div class="item" data-target="#testimonialInfoTab0{{ review.id }}">
+                                <div class="item" data-target="#testimonialInfoTab{{ review.id }}">
                                     <img src="{{ review.image }}" alt="{{ review.name }}">
                                 </div>
                             {% endfor %}
@@ -35,7 +35,7 @@
                             <div class="tab-content">
                                 {% for review in block.reviews.data %}
                                     <!-- Tab Pane Start -->
-                                    <div class="tab-pane active" id="testimonialInfoTab{{ review.id }}">
+                                    <div class="tab-pane {% if loop.first %} active {% endif %}" id="testimonialInfoTab{{ review.id }}">
                                         <div class="item">
                                             <div class="header">
                                                 <div class="title">

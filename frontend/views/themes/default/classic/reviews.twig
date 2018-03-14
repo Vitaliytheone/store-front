@@ -50,7 +50,12 @@
             var reviewsSlider = new Swiper('.review-swiper-container', {
                 pagination: '.review-swiper-container .swiper-pagination__review',
                 paginationClickable: true,
-                slidesPerView: {{  block.reviews.settings.column }}
+                slidesPerView: {{  block.reviews.settings.column }},
+               	breakpoints: {
+                  768: {
+                    slidesPerView: 1,
+                  }
+                }
             });
         });
     </script>
