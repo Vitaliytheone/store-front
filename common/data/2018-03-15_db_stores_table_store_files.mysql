@@ -1,0 +1,2 @@
+USE `stores`;
+DROP TABLE `stores`.`store_files`;
