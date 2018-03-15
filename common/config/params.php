@@ -2,7 +2,7 @@
 $packageLinkTypes = require(__DIR__ . '/packageLinkTypes.php');
 $timezone = require(__DIR__ . '/timezone.php');
 $cdn = require(__DIR__ . '/cdn.php');
-$currencies = require(__DIR__ . '/currencies.php');
+$currencies = require(__DIR__ . '/currencies/currencies.php');
 
 return [
     'storeId' => 1,
