@@ -124,6 +124,13 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
     ];
+
+    $config['components']['log']['targets'][] = [
+        'class' => 'yii\log\FileTarget',
+        'categories' => ['yii\db\*'],
+        'logFile' => dirname(dirname(__DIR__)) . '/frontend/runtime/logs/sql.log',
+    ];
+
 }
 
 return $config;

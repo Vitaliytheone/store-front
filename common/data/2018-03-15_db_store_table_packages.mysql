@@ -1,0 +1,2 @@
+USE `store`;
+ALTER TABLE `packages` ADD INDEX `idx_product_id` (`product_id`);
