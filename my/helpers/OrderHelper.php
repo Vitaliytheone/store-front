@@ -1,7 +1,7 @@
 <?php
 namespace my\helpers;
 
-use app\components\domains\Ahnames;
+use my\components\domains\Ahnames;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Domains;
@@ -10,8 +10,8 @@ use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\UserServices;
 use Yii;
-use app\components\dictionaries\SslCertAsGoGetSsl;
-use app\components\ssl\Ssl;
+use my\components\dictionaries\SslCertAsGoGetSsl;
+use my\components\ssl\Ssl;
 use common\models\panels\Orders;
 use common\models\panels\SslCert;
 use common\models\panels\SslCertItem;

@@ -2,7 +2,7 @@
 
 namespace common\models\panels;
 
-use app\helpers\DomainsHelper;
+use my\helpers\DomainsHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\panels\queries\AdditionalServicesQuery;

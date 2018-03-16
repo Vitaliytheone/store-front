@@ -2,8 +2,8 @@
 
 namespace common\models\panels;
 
-use app\components\behaviors\IpBehavior;
-use app\helpers\UserHelper;
+use my\components\behaviors\IpBehavior;
+use my\helpers\UserHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

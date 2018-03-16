@@ -2,17 +2,17 @@
 
 namespace common\models\panels;
 
-use app\helpers\DnsHelper;
-use app\helpers\DomainsHelper;
-use app\helpers\ExpiryHelper;
-use app\helpers\PanelHelper;
-use app\helpers\SuperTaskHelper;
+use my\helpers\DnsHelper;
+use my\helpers\DomainsHelper;
+use my\helpers\ExpiryHelper;
+use my\helpers\PanelHelper;
+use my\helpers\SuperTaskHelper;
 use app\mail\mailers\CreatedProject;
 use app\mail\mailers\PanelFrozen;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use yii\helpers\ArrayHelper;
 
 /**

@@ -2,9 +2,9 @@
 
 namespace common\models\panels;
 
-use app\components\behaviors\IpBehavior;
+use my\components\behaviors\IpBehavior;
 use Yii;
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 

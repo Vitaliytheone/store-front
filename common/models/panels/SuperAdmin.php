@@ -7,7 +7,7 @@ use common\models\panels\queries\SuperAdminQuery;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\Json;
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use yii\web\IdentityInterface;
 
 /**

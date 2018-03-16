@@ -2,7 +2,7 @@
 namespace my\helpers\order;
 
 use Yii;
-use app\components\domains\Ahnames;
+use my\components\domains\Ahnames;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use yii\helpers\ArrayHelper;

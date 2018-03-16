@@ -2,7 +2,7 @@
 namespace my\helpers;
 
 use Yii;
-use app\components\dns\Dns;
+use my\components\dns\Dns;
 use common\models\panels\ThirdPartyLog;
 use common\models\panels\Project;
 

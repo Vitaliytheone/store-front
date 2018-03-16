@@ -1,8 +1,8 @@
 <?php
 namespace my\helpers\order;
 
-use app\components\ddos\Ddos;
-use app\components\ssl\Ssl;
+use my\components\ddos\Ddos;
+use my\components\ssl\Ssl;
 use my\helpers\CurlHelper;
 use common\models\panels\Orders;
 use common\models\panels\SslCert;

@@ -2,7 +2,7 @@
 
 namespace common\models\panels;
 
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use Yii;
 use common\models\panels\queries\TicketMessagesQuery;
 use yii\db\ActiveRecord;

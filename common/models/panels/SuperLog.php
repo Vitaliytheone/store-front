@@ -2,9 +2,9 @@
 
 namespace common\models\panels;
 
-use app\components\behaviors\IpBehavior;
-use app\components\behaviors\UserAgentBehavior;
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\behaviors\IpBehavior;
+use my\components\behaviors\UserAgentBehavior;
+use my\components\traits\UnixTimeFormatTrait;
 use Yii;
 use common\models\panels\queries\SuperLogQuery;
 use yii\behaviors\TimestampBehavior;

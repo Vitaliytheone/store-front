@@ -2,9 +2,9 @@
 
 namespace common\models\panels;
 
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use app\mail\mailers\CreatedDomain;
-use app\helpers\DomainsHelper;
+use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

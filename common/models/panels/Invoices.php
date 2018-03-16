@@ -2,11 +2,11 @@
 
 namespace common\models\panels;
 
-use app\helpers\StringHelper;
+use my\helpers\StringHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use yii\helpers\ArrayHelper;
 
 /**

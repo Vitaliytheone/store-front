@@ -2,7 +2,7 @@
 
 namespace common\models\panels;
 
-use app\components\traits\UnixTimeFormatTrait;
+use my\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\db\ActiveRecord;
 use DateTime;
