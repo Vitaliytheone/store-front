@@ -75,7 +75,7 @@ class View extends \yii\web\View {
             throw new InvalidCallException("Unable to locate view file for view '$view': no active controller.");
         }
 
-        $viewsPath = Yii::getAlias('@frontend' . DIRECTORY_SEPARATOR . 'views');
+        $viewsPath = Yii::getAlias('@sommerce' . DIRECTORY_SEPARATOR . 'views');
 
         return $viewsPath . $view;
     }

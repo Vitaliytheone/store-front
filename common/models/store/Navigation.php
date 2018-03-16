@@ -2,7 +2,7 @@
 
 namespace common\models\store;
 
-use frontend\models\search\NavigationSearch;
+use sommerce\models\search\NavigationSearch;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;

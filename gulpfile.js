@@ -18,7 +18,7 @@ gulp.task('install', function () {
         });
 });
 
-gulp.task('sass-admin-frontend', function(done) {
+gulp.task('sass-admin-sommerce', function(done) {
     gulp.src([
         './web/scss/main.scss',
     ])
@@ -35,16 +35,16 @@ gulp.task('sass-admin-frontend', function(done) {
         .on('end', done);
 });
 
-gulp.task('js-frontend', function(done) {
+gulp.task('js-sommerce', function(done) {
     return gulp.src([
-            './frontend/web/js/app/*.js',
-            './frontend/web/js/app/**/*.js',
+            './sommerce/web/js/app/*.js',
+            './sommerce/web/js/app/**/*.js',
         ])
         .pipe(concat('main.js'))
         //.pipe(uglify())
-        .pipe(gulp.dest('./frontend/web/js/'));
+        .pipe(gulp.dest('./sommerce/web/js/'));
 });
 
 gulp.task('default', [
-    'js-frontend'
+    'js-sommerce'
 ]);

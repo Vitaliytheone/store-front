@@ -3,7 +3,7 @@
 namespace common\models\stores;
 
 use common\models\store\Blocks;
-use frontend\helpers\StoreHelper;
+use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

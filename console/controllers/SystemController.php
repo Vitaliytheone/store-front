@@ -4,7 +4,7 @@ namespace console\controllers;
 use common\models\stores\StoreAdmins;
 use yii\helpers\Console;
 use common\models\stores\Stores;
-use frontend\helpers\StoreHelper;
+use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\FileHelper;
@@ -93,7 +93,7 @@ class SystemController extends Controller
      */
     protected static function _clearAssetsCache($dirPath = null)
     {
-        $path = Yii::getAlias('@frontend/web/assets');
+        $path = Yii::getAlias('@sommerce/web/assets');
 
         if ($dirPath) {
             $dirPath = $path . DIRECTORY_SEPARATOR . $dirPath;

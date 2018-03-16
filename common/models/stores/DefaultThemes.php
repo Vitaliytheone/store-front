@@ -81,7 +81,7 @@ class DefaultThemes extends ActiveRecord
      */
     public static function getThemesPath()
     {
-        return Yii::getAlias('@frontend') .  '/views/themes/default';
+        return Yii::getAlias('@sommerce') .  '/views/themes/default';
     }
 
     /**
