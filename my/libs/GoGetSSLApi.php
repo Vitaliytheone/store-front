@@ -1,5 +1,5 @@
 <?php
-namespace app\libs;
+namespace my\libs;
 
 use Yii;
 
