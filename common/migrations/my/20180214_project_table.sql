@@ -1,0 +1,1 @@
+ALTER TABLE project ADD notification_email VARCHAR(300) NOT NULL, ADD forgot_password TINYINT(1) NOT NULL COMMENT '0 - disabled, 1 - enabled';

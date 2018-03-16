@@ -1,0 +1,1 @@
+ALTER TABLE `third_party_log` CHANGE `item` `item` tinyint(4) NOT NULL COMMENT '1 – buy panel, 2 – prolongation panel, 3 – buy domain, 4 – prolongation domain, 5 – buy ssl certification, 6 – prolongation ssl certification; 7 - order' AFTER `id`;

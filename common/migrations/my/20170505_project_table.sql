@@ -1,0 +1,2 @@
+ALTER TABLE `project` ADD `currency_format` INT NOT NULL AFTER `auto_order`;
+ALTER TABLE `project` CHANGE `act` `act` int(11) NOT NULL COMMENT '0 - frozen; 1 - active; 2 - terminated; 3 - pending; 4 - canceled' AFTER `date`;

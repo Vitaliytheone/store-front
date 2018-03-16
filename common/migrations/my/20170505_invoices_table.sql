@@ -1,0 +1,1 @@
+ALTER TABLE `invoices` CHANGE `status` `status` int(11) NOT NULL COMMENT '0 - unpaid; 1 - paid; 2 - canceled' AFTER `total`;
