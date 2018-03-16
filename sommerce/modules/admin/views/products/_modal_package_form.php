@@ -6,7 +6,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $storeProviders array  */
 
-$linkTypes = Yii::$app->params['packageLinkTypes'];
+$linkTypes = Yii::$app->params['orderLinks'];
 
 ?>
 

@@ -1,12 +1,13 @@
 <?php
-$packageLinkTypes = require(__DIR__ . '/packageLinkTypes.php');
-$timezone = require(__DIR__ . '/timezone.php');
-$cdn = require(__DIR__ . '/cdn.php');
-$currencies = require(__DIR__ . '/currencies/currencies.php');
+
+$orderLinks = require(__DIR__ . '/settings/order-link.php');
+$timezone = require(__DIR__ . '/settings/timezone.php');
+$cdn = require(__DIR__ . '/settings/cdn.php');
+$currencies = require(__DIR__ . '/settings/currency.php');
 
 return [
     'storeId' => 1,
-    'packageLinkTypes' => $packageLinkTypes,
+    'orderLinks' => $orderLinks,
     'timezone' => $timezone,
     'cdn' => $cdn,
     'currencies' => $currencies,
