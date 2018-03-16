@@ -16,10 +16,17 @@ return [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
           ],
-        'migrate' => [
+
+        'migrate-sommerce' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationTable' => 'panels.system_migrations',
+            'migrationPath' => '@common/migrations/sommerce/',
+        ],
+
+        'migrate-my' => [
             'class' => 'yii\console\controllers\MigrateController',
             'migrationTable' => 'stores.system_migrations',
-            'migrationPath' => dirname(dirname(__DIR__)) . '/common/data/',
+            'migrationPath' => '@common/migrations/my/',
         ],
     ],
     'components' => [
