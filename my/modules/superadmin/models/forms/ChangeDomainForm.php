@@ -1,0 +1,160 @@
+<?php
+namespace my\modules\superadmin\models\forms;
+
+use my\helpers\DnsHelper;
+use my\helpers\DomainsHelper;
+use my\helpers\SuperTaskHelper;
+use common\models\panels\AdditionalServices;
+use common\models\panels\Project;
+use yii\base\Model;
+
+/**
+ * Class ChangeDomainForm
+ * @package my\modules\superadmin\models\forms
+ */
+class ChangeDomainForm extends Model {
+
+    public $domain;
+    public $subdomain;
+
+    /**
+     * @var Project
+     */
+    private $_project;
+
+    /**
+     * @return array the validation rules.
+     */
+    public function rules()
+    {
+        return [
+            [['domain'], 'required'],
+            [['subdomain'], 'safe'],
+        ];
+    }
+
+    /**
+     * Set project
+     * @param Project $project
+     */
+    public function setProject(Project $project)
+    {
+        $this->_project = $project;
+    }
+
+    /**
+     * Save domain
+     * @return bool
+     */
+    public function save()
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $oldSubdomain = $this->_project->subdomain;
+        $oldDomain = $this->_project->site;
+
+        $domain = $this->prepareDomain();
+
+        $isChangedDomain = $oldDomain != $domain;
+        $isChangedSubdomain = $oldSubdomain != $this->subdomain;
+
+        if (!$isChangedDomain && !$isChangedSubdomain) {
+            return true;
+        }
+
+        if ($isChangedSubdomain) {
+            $this->_project->subdomain = $this->subdomain;
+        }
+
+        if ($isChangedDomain) {
+            if (!$this->_project->disableDomain()) {
+                $this->addError('domain', 'Can not change domain');
+                return false;
+            }
+
+            if (($additionalService = AdditionalServices::findOne([
+                'name' => $oldDomain
+            ]))) {
+
+                $additionalService->name = $domain;
+                $additionalService->generateApiHelp($domain);
+
+                if (!$additionalService->save(false)) {
+                    $this->addError('domain', 'Can not change domain');
+                    return false;
+                }
+            }
+
+            $this->_project->site = $domain;
+        }
+
+        if (!$this->_project->save(false)) {
+            $this->addError('domain', 'Can not change domain');
+            return false;
+        }
+
+        // Если был изменен домен, то необходимо провести еще операции с БД, рестартом нгинкса, добавлением
+        if ($isChangedDomain) {
+            $this->_project->refresh();
+
+            $this->_project->ssl = 0;
+
+            SuperTaskHelper::setTasksNginx($this->_project);
+
+            $this->_project->enableDomain();
+            $this->_project->renameDb();
+            $this->_project->save(false);
+        }
+
+        if ($isChangedSubdomain) {
+            if ($this->subdomain) {
+                // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
+                DnsHelper::removeMainDns($this->_project);
+            } else {
+                // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
+                DnsHelper::addMainDns($this->_project);
+            }
+        }
+
+
+        return true;
+    }
+
+    /**
+     * Prepare domain
+     * @return string
+     */
+    public function prepareDomain()
+    {
+        $domain = trim(strtolower(DomainsHelper::idnToAscii($this->domain)));
+
+        $exp = explode("://", $domain);
+
+        if (count($exp) > 1) {
+            $domain = $exp['1'];
+        }
+
+        $exp = explode("/", $domain);
+
+        $domain = $exp['0'];
+
+        if (substr($domain, 0, 4) == 'www.') {
+            $domain = substr($domain, 4);
+        }
+
+        return $domain;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'domain' => 'Domain',
+            'subdomain' => 'Is subdomain'
+        ];
+    }
+}
