@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
 use common\models\panels\queries\SslCertQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
-use app\mail\mailers\CreatedSSL;
+use my\mail\mailers\CreatedSSL;
 
 /**
  * This is the model class for table "{{%ssl_cert}}".

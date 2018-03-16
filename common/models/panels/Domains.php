@@ -3,7 +3,7 @@
 namespace common\models\panels;
 
 use my\components\traits\UnixTimeFormatTrait;
-use app\mail\mailers\CreatedDomain;
+use my\mail\mailers\CreatedDomain;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
