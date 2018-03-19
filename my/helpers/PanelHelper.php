@@ -77,11 +77,14 @@ class PanelHelper {
      */
     public static function getConnection()
     {
+
         if (null == static::$_connection) {
+            $dbConfig = Yii::$app->params['config.db'][0];
+
             static::$_connection = new Connection([
-                'dsn' => 'mysql:host=' . Yii::$app->params['config.db']['host'] . ';',
-                'username' => Yii::$app->params['config.db']['username'],
-                'password' => Yii::$app->params['config.db']['password'],
+                'dsn' => 'mysql:host=' . $dbConfig['host'] . ';',
+                'username' => $dbConfig['username'],
+                'password' => $dbConfig['password'],
             ]);
             static::$_connection->open();
         }
@@ -97,10 +100,12 @@ class PanelHelper {
     public static function getDbConnection($dbName)
     {
         if (empty(static::$_dbConnections[$dbName])) {
+            $dbConfig = Yii::$app->params['config.db'][0];
+
             static::$_dbConnections[$dbName] = new Connection([
-                'dsn' => 'mysql:host=' . Yii::$app->params['config.db']['host'] . ';dbname=' . $dbName,
-                'username' => Yii::$app->params['config.db']['username'],
-                'password' => Yii::$app->params['config.db']['password'],
+                'dsn' => 'mysql:host=' . $dbConfig['host'] . ';dbname=' . $dbName,
+                'username' => $dbConfig['username'],
+                'password' => $dbConfig['password'],
             ]);
             static::$_dbConnections[$dbName]->open();
         }
@@ -126,9 +131,11 @@ class PanelHelper {
             return false;
         }
 
-        $host = Yii::$app->params['config.db']['host'];
-        $username = Yii::$app->params['config.db']['username'];
-        $password = Yii::$app->params['config.db']['password'];
+        $dbConfig = Yii::$app->params['config.db'][0];
+
+        $host = $dbConfig['host'];
+        $username = $dbConfig['username'];
+        $password = $dbConfig['password'];
 
         $result = shell_exec("mysql -h{$host} -u{$username} -p{$password} {$db}  < {$path}");
 
