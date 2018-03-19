@@ -32,7 +32,7 @@ return [
             'showScriptName' => true,
         ],
         'user' => [
-            'identityClass' => 'app\models\Users',
+            'identityClass' => 'common\models\panels\Users',
         ],
         'geoip' => ['class' => 'lysenkobv\GeoIP\GeoIP'],
         'request' => [
@@ -48,8 +48,8 @@ return [
     ],
     'params' => $params,
     'aliases' => [
-        '@components' => '@app/components/',
-        '@superadmin' => '@app/modules/superadmin/',
-        '@libs' => '@app/libs/',
+        '@components' => '@my/components/',
+        '@superadmin' => '@my/modules/superadmin/',
+        '@libs' => '@my/libs/',
     ],
 ];

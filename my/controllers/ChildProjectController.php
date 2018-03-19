@@ -64,7 +64,7 @@ class ChildProjectController extends CustomController
 
     public function getViewPath()
     {
-        return Yii::getAlias('@app/views/child_project');
+        return Yii::getAlias('@my/views/child_project');
     }
 
     /**
