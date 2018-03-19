@@ -2,7 +2,7 @@
 use yii\web\UrlNormalizer;
 
 $db = array_merge(
-    require(__DIR__ . '/db.php'),
+    require_once(__DIR__ . '/db.php'),
     file_exists(__DIR__ . '/db-local.php') ? require(__DIR__ . '/db-local.php') : []
 );
 
@@ -12,6 +12,8 @@ $params = array_merge(
     require(__DIR__ . '/params.php'),
     file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
 );
+
+$configDb = $params['config.db'];
 
 $routers = require(__DIR__ . '/routers.php');
 

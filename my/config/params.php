@@ -1,43 +1,11 @@
 <?php
 
+$params = require_once(__DIR__ . '/../../common/config/params.php');
+
+$configDb = $params['config.db'];
+$configProxy = $params['config.proxy'];
+
 $serverIp = "137.74.23.77";
-
-$configPath = __DIR__ . '/config.json';
-
-$configParams = (function() use ($configPath) {
-    $configParams = file_get_contents($configPath);
-    return !empty($configParams) ? json_decode($configParams, true) : [];
-})();
-
-$dbParams = (function() use ($configParams) {
-    if (empty($configParams['db'][0])) {
-        return [
-            'host' => '',
-            'username' => '',
-            'password' => '',
-        ];
-    }
-
-    return [
-        'host' => $configParams['db'][0]['host'],
-        'username' => $configParams['db'][0]['user'],
-        'password' => $configParams['db'][0]['password'],
-    ];
-})();
-
-$proxyParams = (function() use ($configParams) {
-    if (empty($configParams['proxy'])) {
-        return [
-            'ip' => '',
-            'port' => '',
-        ];
-    }
-
-    return [
-        'ip' => $configParams['proxy']['ip'],
-        'port' => $configParams['proxy']['port'],
-    ];
-})();
 
 return [
     'access_key' => 'z1k05^d=^8*7rwh5t1h9+(kf9+907rg=(h$mq50rf*z3(zb1^_',
@@ -165,8 +133,8 @@ return [
     'levopanel_scanner' => [
         'apiKey' => 'b9f1d6f809b793321c700f45ca382f59ef83bf644c48118e6d3b9902ab0cb86f',
         'proxy' => [
-            'ip' => $proxyParams['ip'],
-            'port' => $proxyParams['port'],
+            'ip' => $configProxy['ip'],
+            'port' => $configProxy['port'],
             'type' => CURLPROXY_HTTP,
         ],
         'timeouts' => [
@@ -174,6 +142,4 @@ return [
             'connection_timeout' => 10,
         ],
     ],
-
-    'config.db' => $dbParams
 ];
