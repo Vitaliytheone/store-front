@@ -15,7 +15,7 @@ use yii\helpers\Json;
 
 /**
  * Class SslSearch
- * @package common\models\panels\search
+ * @package my\models\search
  */
 class SslSearch
 {

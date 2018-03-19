@@ -1,14 +1,14 @@
 <?php
 namespace my\models\forms;
 
-use my\models\Auth;
+use common\models\panels\Auth;
 use common\models\panels\Customers;
 use Yii;
 use yii\base\Model;
 
 /**
  * Class ResetPasswordForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class ResetPasswordForm extends Model
 {

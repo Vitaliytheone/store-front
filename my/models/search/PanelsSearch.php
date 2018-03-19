@@ -14,7 +14,7 @@ use yii\helpers\Json;
 
 /**
  * Class PanelsSearch
- * @package common\models\panels\search
+ * @package my\models\search
  */
 class PanelsSearch
 {

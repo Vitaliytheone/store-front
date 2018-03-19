@@ -4,7 +4,7 @@ namespace my\models\forms;
 use my\helpers\UserHelper;
 use Yii;
 use yii\base\Model;
-use my\models\Auth;
+use common\models\panels\Auth;
 
 /**
  * LoginFormSuper is the model behind the login form.

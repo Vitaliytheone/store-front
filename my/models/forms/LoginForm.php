@@ -5,13 +5,13 @@ use my\helpers\UserHelper;
 use common\models\panels\MyActivityLog;
 use Yii;
 use yii\base\Model;
-use my\models\Auth;
+use common\models\panels\Auth;
 use himiklab\yii2\recaptcha\ReCaptchaValidator;
 use yii\helpers\FileHelper;
 
 /**
  * Class LoginForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class LoginForm extends Model
 {

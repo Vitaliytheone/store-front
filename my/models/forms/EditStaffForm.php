@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class EditStaffForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class EditStaffForm extends Model
 {

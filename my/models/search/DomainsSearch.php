@@ -15,7 +15,7 @@ use yii\helpers\Json;
 
 /**
  * Class DomainsSearch
- * @package common\models\panels\search
+ * @package my\models\search
  */
 class DomainsSearch
 {

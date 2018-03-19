@@ -4,7 +4,7 @@ namespace my\controllers;
 
 use my\components\ActiveForm;
 use my\helpers\Url;
-use my\models\Auth;
+use common\models\panels\Auth;
 use my\models\forms\OrderDomainForm;
 use my\models\search\DomainsSearch;
 use Yii;

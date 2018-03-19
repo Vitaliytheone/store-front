@@ -10,7 +10,7 @@ use yii\base\Model;
 
 /**
  * Class ChangePasswordForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class ChangePasswordForm extends Model
 {

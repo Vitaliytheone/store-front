@@ -5,7 +5,7 @@ namespace my\controllers;
 use my\components\ActiveForm;
 use my\components\domains\Ahnames;
 use my\helpers\DomainsHelper;
-use my\models\Auth;
+use common\models\panels\Auth;
 use common\models\panels\Content;
 use common\models\panels\DomainZones;
 use my\models\forms\CreateOrderForm;

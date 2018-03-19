@@ -7,7 +7,7 @@ use my\components\validators\PanelDomainValidator;
 use my\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
-use my\models\Auth;
+use common\models\panels\Auth;
 use common\models\panels\DomainZones;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -22,7 +22,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class CreateOrderForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class CreateOrderForm extends Model
 {

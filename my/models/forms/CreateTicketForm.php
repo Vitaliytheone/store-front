@@ -11,7 +11,7 @@ use yii\base\Model;
 
 /**
  * Class CreateTicketForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class CreateTicketForm extends Model
 {

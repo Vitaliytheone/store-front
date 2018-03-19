@@ -45,12 +45,12 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'my\models\Auth',
+            'identityClass' => 'common\models\panels\Auth',
             'enableAutoLogin' => true,
             'loginUrl' => ['/signin'],
             'on afterLogin' => function($event) {
                 /**
-                 * @var $user \my\models\Auth
+                 * @var $user \common\models\panels\Auth
                  */
                 $user = Yii::$app->user->identity;
 
@@ -63,7 +63,7 @@ $config = [
             },
             'on beforeLogout' => function($event) {
                 /**
-                 * @var \my\models\Auth $user;
+                 * @var \common\models\panels\Auth $user;
                  */
                 $user = Yii::$app->user->identity;
 

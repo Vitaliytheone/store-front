@@ -10,7 +10,7 @@ use himiklab\yii2\recaptcha\ReCaptchaValidator;
 
 /**
  * Class SignupForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class SignupForm extends Model
 {

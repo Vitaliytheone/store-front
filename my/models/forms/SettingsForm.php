@@ -9,7 +9,7 @@ use yii\base\Model;
 
 /**
  * Class SettingsForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class SettingsForm extends Model
 {

@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class InvoicesSearch
- * @package common\models\panels\search
+ * @package my\models\search
  */
 class InvoicesSearch extends Invoices
 {

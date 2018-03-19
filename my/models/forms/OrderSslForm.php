@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderSslForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class OrderSslForm extends Model
 {

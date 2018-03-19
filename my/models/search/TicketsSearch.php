@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class TicketsSearch
- * @package common\models\panels\search
+ * @package my\models\search
  */
 class TicketsSearch extends Tickets
 {

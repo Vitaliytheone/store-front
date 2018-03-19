@@ -3,7 +3,7 @@
 namespace my\controllers;
 
 use my\components\ActiveForm;
-use my\models\Auth;
+use common\models\panels\Auth;
 use common\models\panels\Content;
 use common\models\panels\Customers;
 use my\models\forms\CreateChildForm;

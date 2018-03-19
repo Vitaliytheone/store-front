@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class TicketsSearch
- * @package common\models\panels\search
+ * @package my\modules\superadmin\models\search
  */
 class TicketsSearch extends Tickets
 {

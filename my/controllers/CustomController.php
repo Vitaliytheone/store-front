@@ -4,7 +4,7 @@ namespace my\controllers;
 
 use my\components\MainController;
 use my\helpers\UserHelper;
-use my\models\Auth;
+use common\models\panels\Auth;
 use Yii;
 
 /**

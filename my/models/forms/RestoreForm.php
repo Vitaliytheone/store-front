@@ -11,7 +11,7 @@ use himiklab\yii2\recaptcha\ReCaptchaValidator;
 
 /**
  * Class RestoreForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class RestoreForm extends Model
 {

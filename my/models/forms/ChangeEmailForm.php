@@ -10,7 +10,7 @@ use yii\base\Model;
 
 /**
  * Class ChangeEmailForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class ChangeEmailForm extends Model
 {

@@ -3,9 +3,9 @@
 namespace common\models\panels\queries;
 
 /**
- * This is the ActiveQuery class for [[\common\models\panels\SearchProcessor]].
+ * This is the ActiveQuery class for [[\my\models\searchProcessor]].
  *
- * @see \common\models\panels\SearchProcessor
+ * @see \my\models\searchProcessor
  */
 class SearchProcessorQuery extends \yii\db\ActiveQuery
 {
@@ -16,7 +16,7 @@ class SearchProcessorQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\panels\SearchProcessor[]|array
+     * @return \my\models\searchProcessor[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class SearchProcessorQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\panels\SearchProcessor|array|null
+     * @return \my\models\searchProcessor|array|null
      */
     public function one($db = null)
     {

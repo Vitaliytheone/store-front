@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class CreateStaffForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class CreateStaffForm extends Model
 {

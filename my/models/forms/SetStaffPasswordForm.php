@@ -9,7 +9,7 @@ use yii\base\Model;
 
 /**
  * Class SetStaffPasswordForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class SetStaffPasswordForm extends Model
 {

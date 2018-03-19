@@ -16,7 +16,7 @@ use yii\base\Model;
 
 /**
  * Class CreateMessageForm
- * @package common\models\panels\forms
+ * @package my\models\forms
  */
 class CreateMessageForm extends Model
 {

@@ -13,7 +13,7 @@ use DateTime;
 
 /**
  * Class ActivitySearch
- * @package common\models\panels\search
+ * @package my\models\search
  */
 class ActivitySearch extends Model
 {
