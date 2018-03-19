@@ -10,7 +10,7 @@ use yii\web\AssetBundle;
  */
 class ClipboardAsset extends AssetBundle
 {
-    public $sourcePath = '@webroot/node_modules/clipboard/dist';
+    public $sourcePath = '@node_modules/clipboard/dist';
 
     public $js = [
         'clipboard.min.js',

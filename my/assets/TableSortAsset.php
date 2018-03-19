@@ -10,7 +10,7 @@ use yii\web\AssetBundle;
  */
 class TableSortAsset extends AssetBundle
 {
-    public $sourcePath = '@webroot/node_modules/tablesorter/dist';
+    public $sourcePath = '@node_modules/tablesorter/dist';
 
     public $js = [
         'js/jquery.tablesorter.js',

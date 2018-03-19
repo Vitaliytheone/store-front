@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  */
 class UnderscoreAsset extends AssetBundle
 {
-    public $sourcePath = '@webroot/node_modules/underscore';
+    public $sourcePath = '@node_modules/underscore';
 
     public $js = [
         'underscore-min.js',
