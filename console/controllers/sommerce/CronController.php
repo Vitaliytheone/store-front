@@ -1,6 +1,6 @@
 <?php
 
-namespace console\controllers;
+namespace console\controllers\sommerce;
 
 use common\models\store\Carts;
 use common\models\stores\StoreAdminsHash;

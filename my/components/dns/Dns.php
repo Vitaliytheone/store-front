@@ -177,7 +177,7 @@ class Dns {
      * @param string $host
      * @param array $options
      * @param mixed $result
-     * @return bool
+     * @return array
      */
     public static function listRecords($domain, $host = '', $options = [], &$result)
     {
@@ -309,7 +309,7 @@ class Dns {
      * Add dns
      * @param array $options
      * @param mixed $results
-     * @return bool
+     * @return array
      */
     public static function listZones($options = [], &$results)
     {
@@ -337,7 +337,7 @@ class Dns {
      * @param int $page
      * @param array $options
      * @param mixed $result
-     * @return bool
+     * @return array
      */
     protected static function _listZones($page = 1, $options = [], &$result)
     {

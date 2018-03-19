@@ -509,7 +509,7 @@ class PaymentsController extends CustomController
 					$StringToHash = strtoupper(md5($hashOrder . $hashSid . $hashInvoice . $secret_word));
 
                     $payments = Payments::findOne(['id' => $payment->id]);
-                    $payments->comment = $hashOrder . ';' . $hashInvoice;
+                    $payments->comment = $hashOrder . '; ' . $hashInvoice;
                     $payments->transaction_id = $hashOrder;
 
 					if ($StringToHash == $_POST['md5_hash']) {

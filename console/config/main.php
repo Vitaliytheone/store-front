@@ -28,6 +28,30 @@ return [
             'migrationTable' => 'stores.system_migrations',
             'migrationPath' => '@common/migrations/my/',
         ],
+
+        'cron-sommerce' => [
+            'class' => 'console\controllers\sommerce\CronController',
+        ],
+
+        'system-sommerce' => [
+            'class' => 'console\controllers\sommerce\SystemController',
+        ],
+
+        'system-my' => [
+            'class' => 'console\controllers\my\SystemController',
+        ],
+
+        'cron-my' => [
+            'class' => 'console\controllers\my\CronController',
+        ],
+
+        'panel-scanner-my' => [
+            'class' => 'console\controllers\my\PanelScannerController',
+        ],
+
+        'template-my' => [
+            'class' => 'console\controllers\my\TemplateController',
+        ],
     ],
     'components' => [
         'log' => [

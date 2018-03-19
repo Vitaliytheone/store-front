@@ -1,5 +1,5 @@
 <?php
-namespace console\controllers;
+namespace console\controllers\sommerce;
 
 use common\models\stores\StoreAdmins;
 use yii\helpers\Console;
