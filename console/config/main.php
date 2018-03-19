@@ -1,10 +1,4 @@
 <?php
-$params = array_merge(
-    require(__DIR__ . '/../../common/config/params.php'),
-    file_exists(__DIR__ . '/../../common/config/params-local.php') ? require(__DIR__ . '/../../common/config/params-local.php') : [],
-    require(__DIR__ . '/params.php'),
-    file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
-);
 
 return [
     'id' => 'app-console',
@@ -15,7 +9,7 @@ return [
         'fixture' => [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
+        ],
 
         'migrate-sommerce' => [
             'class' => 'yii\console\controllers\MigrateController',
@@ -63,5 +57,5 @@ return [
             ],
         ],
     ],
-    'params' => $params,
+    'params' => [],
 ];

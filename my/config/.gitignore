@@ -1,6 +1,6 @@
 db.php
 db-local.php
-web-local.php
+main-local.php
 params-local.php
 environments-local.php
 config.json

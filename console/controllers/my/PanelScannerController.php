@@ -3,14 +3,13 @@ namespace console\controllers\my;
 
 use my\components\scanners\Scanner;
 use Yii;
-use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class PanelScannerController
  * @package console\controllers\my
  */
-class PanelScannerController extends Controller
+class PanelScannerController extends CustomController
 {
     /**
      * Return

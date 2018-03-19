@@ -2,7 +2,6 @@
 namespace console\controllers\my;
 
 use Yii;
-use yii\console\Controller;
 use yii\helpers\FileHelper;
 
 /**
@@ -10,7 +9,7 @@ use yii\helpers\FileHelper;
  * Class TemplateController
  * @package console\controllers\my
  */
-class TemplateController extends Controller
+class TemplateController extends CustomController
 {
     public function actionIndex()
     {
