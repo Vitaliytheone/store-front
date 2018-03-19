@@ -1,18 +1,21 @@
 <?php
 
+defined('YII_DEBUG') or define('YII_DEBUG', true);
+defined('YII_ENV') or define('YII_ENV', 'dev');
 
-if (file_exists(__DIR__ . '/../basic/config/environments-local.php')) {
-    require(__DIR__ . '/../basic/config/environments-local.php');
-} else {
-    require(__DIR__ . '/../basic/config/environments.php');
-}
-
-require('../basic/vendor/autoload.php');
-require('../basic/vendor/yiisoft/yii2/Yii.php');
+require(__DIR__ . '/../../vendor/autoload.php');
+require(__DIR__ . '/../../vendor/yiisoft/yii2/Yii.php');
+require(__DIR__ . '/../../common/config/bootstrap.php');
+require(__DIR__ . '/../config/bootstrap.php');
 
 $config = yii\helpers\ArrayHelper::merge(
-    require(__DIR__ . '/../basic/config/web.php'),
-    file_exists(__DIR__ . '/../basic/config/web-local.php') ? require(__DIR__ . '/../basic/config/web-local.php') : []
+    require(__DIR__ . '/../../common/config/main.php'),
+    file_exists(__DIR__ . '/../../common/config/main-local.php') ?
+        require(__DIR__ . '/../../common/config/main-local.php') : [],
+
+    require(__DIR__ . '/../../my/config/main.php'),
+    file_exists(__DIR__ . '/../../my/config/main-local.php') ?
+        require(__DIR__ . '/../../my/config/main-local.php') : []
 );
 
 (new yii\web\Application($config))->run();

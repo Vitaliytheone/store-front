@@ -20,10 +20,10 @@ $config = [
     'language' => 'en-US',
     'components' => [
         'mailer' => [
-            'class' => 'app\components\mailer\mailgun\Mailer',
+            'class' => 'my\components\mailer\mailgun\Mailer',
             'key' => $params['mailgun.key'],
             'domain' => $params['mailgun.domain'],
-            'viewPath' => '@app/mail/views',
+            'viewPath' => '@my/mail/views',
         ],
         'mailerSwift' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -35,7 +35,7 @@ $config = [
                 'password' => 'T8XXFqT4IS',
                 'port' => '465',
             ],
-            'viewPath' => '@app/mail/views',
+            'viewPath' => '@my/mail/views',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -75,7 +75,7 @@ $config = [
             'translations' => [
                 'app*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@app/messages',
+                    'basePath' => '@my/messages',
                     'sourceLanguage' => 'en',
                     'fileMap' => [
                         'app' => 'app.php',
@@ -87,10 +87,10 @@ $config = [
     ],
     'params' => $params,
     'aliases' => [
-        '@components' => '@app/components/',
-        '@superadmin' => '@app/modules/superadmin/',
-        '@libs' => '@app/libs/',
-        '@webroot' => '@app/../web/',
+        '@components' => '@my/components/',
+        '@superadmin' => '@my/modules/superadmin/',
+        '@libs' => '@my/libs/',
+        '@webroot' => '@my/../web/',
     ],
     /*
     'controllerMap' => [

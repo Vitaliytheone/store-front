@@ -13,16 +13,17 @@ $db = array_merge(
 $routes = require(__DIR__ . '/routes.php');
 
 $config = [
-    'id' => 'basic',
+    'id' => 'app-my',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'debug'],
+    'controllerNamespace' => 'my\controllers',
     'language' => 'en-US',
     'components' => [
         'mailer' => [
-            'class' => 'app\components\mailer\mailgun\Mailer',
+            'class' => 'my\components\mailer\mailgun\Mailer',
             'key' => $params['mailgun.key'],
             'domain' => $params['mailgun.domain'],
-            'viewPath' => '@app/mail/views',
+            'viewPath' => '@my/mail/views',
         ],
         'mailerSwift' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -34,7 +35,7 @@ $config = [
                 'password' => 'T8XXFqT4IS',
                 'port' => '465',
             ],
-            'viewPath' => '@app/mail/views',
+            'viewPath' => '@my/mail/views',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -44,12 +45,12 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\Auth',
+            'identityClass' => 'my\models\Auth',
             'enableAutoLogin' => true,
             'loginUrl' => ['/signin'],
             'on afterLogin' => function($event) {
                 /**
-                 * @var $user \app\models\Auth
+                 * @var $user \my\models\Auth
                  */
                 $user = Yii::$app->user->identity;
 
@@ -62,11 +63,11 @@ $config = [
             },
             'on beforeLogout' => function($event) {
                 /**
-                 * @var \app\models\Auth $user;
+                 * @var \my\models\Auth $user;
                  */
                 $user = Yii::$app->user->identity;
 
-                $hash = \app\helpers\UserHelper::getHash();
+                $hash = \my\helpers\UserHelper::getHash();
 
                 $user->clearAuthKey($hash);
             },
@@ -77,8 +78,8 @@ $config = [
             ],
         ],
         'superadmin' => [
-            'class' => 'app\components\User',
-            'identityClass' => 'app\models\SuperAdmin',
+            'class' => 'my\components\User',
+            'identityClass' => 'common\models\panels\SuperAdmin',
             'enableAutoLogin' => true,
             'loginUrl' => ['/' . $params['superadminUrl']],
             'identityCookie' => [
@@ -94,7 +95,7 @@ $config = [
             }
         ],
         'formatter' => [
-            'class' => 'app\components\Formatter',
+            'class' => 'my\components\Formatter',
             'dateFormat' => 'php:d.m.Y',
             'datetimeFormat' => 'php:d.m.Y H:i:s',
             'timeFormat' => 'php:H:i:s',
@@ -159,7 +160,7 @@ $config = [
                 ],
                 'yii\web\YiiAsset' => [
                     'depends' => [
-                        'app\assets\JqueryAsset'
+                        'my\assets\JqueryAsset'
                     ]
                 ],
             ],
@@ -170,7 +171,7 @@ $config = [
             'translations' => [
                 'app*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@app/messages',
+                    'basePath' => '@my/messages',
                     'sourceLanguage' => 'en',
                     'fileMap' => [
                         'app' => 'app.php',
@@ -182,17 +183,17 @@ $config = [
     ],
     'params' => $params,
     'aliases' => [
-        '@components' => '@app/components/',
-        '@superadmin' => '@app/modules/superadmin/',
-        '@libs' => '@app/libs/',
+        '@components' => '@my/components/',
+        '@superadmin' => '@my/modules/superadmin/',
+        '@libs' => '@my/libs/',
     ],
     'modules' => [
         $params['superadminUrl'] => [
-            'class' => '\app\modules\superadmin\Module',
+            'class' => '\my\modules\superadmin\Module',
             'defaultRoute' => 'site'
         ],
         'supervisor' => [
-            'class' => 'app\modules\supervisor\Supervisor',
+            'class' => 'my\modules\supervisor\Supervisor',
         ],
         'debug' => [
             'class' => 'yii\debug\Module',
