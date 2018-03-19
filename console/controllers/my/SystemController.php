@@ -17,7 +17,6 @@ use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\SuperTaskHelper;
 use Yii;
-use yii\console\Controller;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -26,7 +25,7 @@ use yii\helpers\Console;
  * Class SystemController
  * @package console\controllers\my
  */
-class SystemController extends Controller
+class SystemController extends CustomController
 {
     public $start;
 

@@ -7,13 +7,12 @@ use common\models\stores\StoreAdminsHash;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
 use Yii;
-use yii\console\Controller;
 
 /**
  * Class CronController
  * @package console\controllers
  */
-class CronController extends Controller
+class CronController extends CustomController
 {
     /**
      * Clear cart items

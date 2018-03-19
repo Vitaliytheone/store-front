@@ -20,10 +20,10 @@ use my\components\Paypal;
 use my\helpers\OrderHelper;
 use my\helpers\SuperTaskHelper;
 use my\mail\mailers\InvoiceCreated;
+use my\mail\mailers\PanelExpired;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
-use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use yii\base\Module;
 use yii\db\Exception as DbException;
@@ -32,11 +32,11 @@ use yii\db\Exception as DbException;
  * Class CronController
  * @package console\controllers\my
  */
-class CronController extends Controller
+class CronController extends CustomController
 {
     public function __construct($id, Module $module, array $config = [])
     {
-        Yii::$app->db->commandClass = '\app\components\db\Command';
+        Yii::$app->db->commandClass = '\my\components\db\Command';
         parent::__construct($id, $module, $config);
     }
 

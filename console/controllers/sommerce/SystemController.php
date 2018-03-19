@@ -6,14 +6,13 @@ use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
 use Yii;
-use yii\console\Controller;
 use yii\helpers\FileHelper;
 
 /**
  * Class SystemController
  * @package console\controllers
  */
-class SystemController extends Controller
+class SystemController extends CustomController
 {
     public $storeId;
     public $username;
