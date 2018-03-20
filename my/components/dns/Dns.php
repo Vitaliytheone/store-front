@@ -195,7 +195,7 @@ class Dns {
         $result = CurlHelper::request($host . '/dns/records.json?' . http_build_query($options));
 
         if (!$result) {
-            return false;
+            return [];
         }
 
         try {
@@ -354,7 +354,7 @@ class Dns {
         $result = CurlHelper::request($host . '/dns/list-zones.json?' . http_build_query($options));
 
         if (!$result) {
-            return false;
+            return [];
         }
 
         try {

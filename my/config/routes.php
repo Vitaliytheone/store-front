@@ -104,6 +104,7 @@ $routes = [
     '/dns/delete.json' => '/system/dns/',
     '/dns/delete-record.json' => '/system/dns/',
     '/dns/records.json' => '/system/dns-list/',
+    '/dns/get-zone-info.json' => '/system/dns-list/',
     'panel-notify' => '/system/panel-notify',
 
     '/redirect' => '/site/redirect',

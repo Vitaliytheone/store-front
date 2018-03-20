@@ -20,20 +20,20 @@ class MainController extends Controller
         $frontendPath = $this->frontendPath;
 
         $params = array_merge(
-            require_once($commonPath . '/params.php'),
-            file_exists($commonPath . '/params-local.php') ? require_once($commonPath . '/params-local.php') : [],
-            require_once($consolePath. '/params.php'),
-            file_exists($consolePath . '/params-local.php') ? require_once($consolePath . '/params-local.php') : [],
-            require_once($frontendPath. '/params.php'),
-            file_exists($frontendPath . '/params-local.php') ? require_once($frontendPath . '/params-local.php') : []
-        );
-
-        $db = array_merge(
-            require_once($frontendPath. '/db.php'),
-            file_exists($frontendPath . '/db-local.php') ? require_once($frontendPath . '/db-local.php') : []
+            require($commonPath . '/params.php'),
+            file_exists($commonPath . '/params-local.php') ? require($commonPath . '/params-local.php') : [],
+            require($consolePath . '/params.php'),
+            file_exists($consolePath . '/params-local.php') ? require($consolePath . '/params-local.php') : [],
+            require($frontendPath . '/params.php'),
+            file_exists($frontendPath . '/params-local.php') ? require($frontendPath . '/params-local.php') : []
         );
 
         Yii::$app->params = $params;
+
+        $db = array_merge(
+            require($frontendPath. '/db.php'),
+            file_exists($frontendPath . '/db-local.php') ? require($frontendPath . '/db-local.php') : []
+        );
 
         foreach ($db as $name => $options) {
             Yii::$app->set($name, $options);
