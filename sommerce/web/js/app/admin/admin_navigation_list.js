@@ -6,8 +6,6 @@ customModule.adminNavigationList = {
          *****************************************************************************************************/
         (function (window, alert){
 
-            var params = {}; // TODO:: DELETE IT! Prepare for custom modules
-
             var updatePositionUrl = params.action_update_url;
 
             var $neatable = $('#nestable'),

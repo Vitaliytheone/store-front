@@ -36,8 +36,8 @@ trait NavigationTrait {
             'action_update_url' => Url::toRoute('/settings/update-positions-nav'),
         ]);
         $this->addModule('adminNavigationEdit', [
-            'params.get_links_url' =>  Url::toRoute('/settings/get-links'),
-            'params.success_redirect_url' => Url::toRoute('/settings/navigation'),
+            'get_links_url' =>  Url::toRoute('/settings/get-links'),
+            'success_redirect_url' => Url::toRoute('/settings/navigation'),
         ]);
 
         $model = new EditNavigationForm();
@@ -184,6 +184,7 @@ trait NavigationTrait {
         if (!$request->isAjax) {
             exit;
         }
+
 
         $model = new UpdatePositionsNavigationForm();
         $model->setUser(Yii::$app->user);

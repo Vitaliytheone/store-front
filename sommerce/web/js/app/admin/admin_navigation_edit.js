@@ -6,8 +6,8 @@ customModule.adminNavigationEdit = {
          *****************************************************************************************************/
         (function (window, alert){
 
-            var getLinksUrl         = params.get_links_url        || '/admin/settings/get-links',
-                successRedirectUrl  = params.success_redirect_url || '/admin/settings/navigation';
+            var getLinksUrl         = params.get_links_url,
+                successRedirectUrl  = params.success_redirect_url;
 
             var titles = {
                 modal_title : [
