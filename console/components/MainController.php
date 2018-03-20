@@ -28,12 +28,12 @@ class MainController extends Controller
             file_exists($frontendPath . '/params-local.php') ? require_once($frontendPath . '/params-local.php') : []
         );
 
+        Yii::$app->params = $params;
+
         $db = array_merge(
             require_once($frontendPath. '/db.php'),
             file_exists($frontendPath . '/db-local.php') ? require_once($frontendPath . '/db-local.php') : []
         );
-
-        Yii::$app->params = $params;
 
         foreach ($db as $name => $options) {
             Yii::$app->set($name, $options);
