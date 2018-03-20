@@ -17,7 +17,7 @@ class RestoreForm extends Model
 {
     public $email;
 
-    public $re_сaptcha;
+    public $re_captcha;
 
     /**
      * @var Customers
@@ -30,7 +30,7 @@ class RestoreForm extends Model
     public function rules()
     {
         return [
-            [['re_сaptcha'], ReCaptchaValidator::className(), 'uncheckedMessage' => Yii::t('app', 'error.restore.incorrect_captcha'), 'message' => Yii::t('app', 'error.restore.incorrect_captcha')],
+            [['re_captcha'], ReCaptchaValidator::className(), 'uncheckedMessage' => Yii::t('app', 'error.restore.incorrect_captcha'), 'message' => Yii::t('app', 'error.restore.incorrect_captcha')],
             [['email'], 'required'],
             ['email', 'customerValidator'],
             ['email', 'email'],
@@ -43,6 +43,8 @@ class RestoreForm extends Model
     public function restore()
     {
         if (!$this->validate()) {
+            var_dump($_POST, $this->attributes); exit();
+
             return false;
         }
 

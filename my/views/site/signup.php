@@ -46,7 +46,10 @@
                 <?= $form->field($model, 'password_confirm')->passwordInput(['class' => 'form-control', 'placeholder' => $model->getAttributeLabel('password_confirm')]) ?>
               </div>
 
-              <?= ReCaptcha::widget(['name' => 're_captcha']) ?>
+              <?= ReCaptcha::widget([
+                  'model' => $model,
+                  'attribute' => 're_captcha',
+              ]) ?>
 
               <div class="checkbox">
                 <label>
