@@ -48,7 +48,10 @@
                 </div>
 
                 <?php if ($model->isCheckCaptcha()) : ?>
-                  <?= ReCaptcha::widget(['name' => 're_captcha']) ?>
+                  <?= ReCaptcha::widget([
+                        'model' => $model,
+                        'attribute' => 're_captcha',
+                    ]) ?>
                   <br />
                 <?php endif; ?>
 

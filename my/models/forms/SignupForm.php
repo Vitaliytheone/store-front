@@ -21,7 +21,7 @@ class SignupForm extends Model
     public $password_confirm;
     public $terms;
 
-    public $re_сaptcha;
+    public $re_captcha;
 
     /**
      * @return array the validation rules.
@@ -31,7 +31,7 @@ class SignupForm extends Model
         $rules = [];
 
         if ('test' != YII_ENV) {
-            $rules[] = [['re_сaptcha'], ReCaptchaValidator::className(), 'uncheckedMessage' => Yii::t('app', 'error.signup.incorrect_captcha'), 'message' => Yii::t('app', 'error.signup.incorrect_captcha')];
+            $rules[] = [['re_captcha'], ReCaptchaValidator::className(), 'uncheckedMessage' => Yii::t('app', 'error.signup.incorrect_captcha'), 'message' => Yii::t('app', 'error.signup.incorrect_captcha')];
         }
 
         $rules = array_merge($rules, [

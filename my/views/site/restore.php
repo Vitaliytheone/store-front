@@ -7,6 +7,7 @@
 
     use my\components\ActiveForm;
     use himiklab\yii2\recaptcha\ReCaptcha;
+    use yii\bootstrap\Html;
 ?>
 <div class="container">
     <div class="row">
@@ -38,7 +39,10 @@
                             </div>
 
                             <div class="form-group">
-                                <?= ReCaptcha::widget(['name' => 're_captcha']) ?>
+                                <?= ReCaptcha::widget([
+                                    'model' => $model,
+                                    'attribute' => 're_captcha',
+                                ]) ?>
                             </div>
 
                             <button type="submit" class="btn btn-outline btn-primary btn-lg btn-block"><?= Yii::t('app', 'index.restore.btn_submit')?></button>
@@ -52,4 +56,3 @@
         </div>
     </div>
 </div>
-
