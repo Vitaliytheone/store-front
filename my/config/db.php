@@ -3,7 +3,6 @@
 $params = require(__DIR__ . '/../../common/config/params.php');
 
 $configDb = $params['config.db'];
-$configProxy = $params['config.proxy'];
 
 return [
     'class' => 'yii\db\Connection',

@@ -6,13 +6,17 @@ $configDb = $params['config.db'];
 
 return [
     'db' => [
-        'host' => $configDb[0]['host'],
+        'class' => 'yii\db\Connection',
+        'dsn' => 'mysql:host=' . $configDb[0]['host'] . ';dbname=stores',
         'username' => $configDb[0]['user'],
         'password' => $configDb[0]['password'],
+        'charset' => 'utf8',
     ],
     'store_db' => [
-        'host' => $configDb[1]['host'],
+        'class' => 'yii\db\Connection',
+        'dsn' => 'mysql:host=' . $configDb[1]['host'],
         'username' => $configDb[1]['username'],
         'password' => $configDb[1]['password'],
+        'charset' => 'utf8mb4',
     ],
 ];
