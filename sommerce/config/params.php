@@ -1,5 +1,10 @@
 <?php
 
+$orderLinks = require(__DIR__ . '/settings/order-link.php');
+$timezone = require(__DIR__ . '/settings/timezone.php');
+$cdn = require(__DIR__ . '/settings/cdn.php');
+$currencies = require(__DIR__ . '/settings/currency.php');
+
 return [
     'defaultTheme' => 'classic',
     'default_language' => 'en',
@@ -28,4 +33,9 @@ return [
 
     'senderOrdersLimit' => 100,
     'getstatusOrdersLimit' => 100,
+
+    'orderLinks' => $orderLinks,
+    'timezone' => $timezone,
+    'cdn' => $cdn,
+    'currencies' => $currencies,
 ];
