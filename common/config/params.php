@@ -13,20 +13,16 @@ $configParams = (function() use ($configPath) {
 })();
 
 $dbParams = (function() use ($configParams) {
-    if (empty($configParams['db'])) {
-        return [];
+    if (!$configParams['db']) {
+        throw new Exception('DB is not configured yet!');
     }
     return $configParams['db'];
 })();
 
 $proxyParams = (function() use ($configParams) {
-    if (empty($configParams['proxy'])) {
-        return [
-            'ip' => '',
-            'port' => '',
-        ];
+    if (!$configParams['proxy']) {
+        throw new Exception('Proxy is not configured yet!');
     }
-
     return [
         'ip' => $configParams['proxy']['ip'],
         'port' => $configParams['proxy']['port'],
@@ -34,30 +30,10 @@ $proxyParams = (function() use ($configParams) {
 })();
 
 return [
-    'storeId' => 1,
     'orderLinks' => $orderLinks,
     'timezone' => $timezone,
     'cdn' => $cdn,
     'currencies' => $currencies,
-
-    'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
-    'defaultTheme' => 'classic',
-    'default_language' => 'en',
-
-    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
-    'mailgun.domain' => 'perfectpanel.net',
-
-    'gearmanIp' => '127.0.0.1',
-    'gearmanPort' => 4730,
-    'gearmanPrefix' => 'sommerce_',
-    'support_email' => 'mailgun@perfectpanel.net',
-
-    'debugEmail' => null,
-
-    'senderOrdersLimit' => 100,
-    'getstatusOrdersLimit' => 100,
-
-    'mailer.status' => true,
 
     'config.db' => $dbParams,
     'config.proxy' => $proxyParams,
