@@ -108,7 +108,7 @@ $config = [
             'class' => 'common\components\stores\StoreComponent'
         ],
         'db' => $db['db'],
-        'storeDb' => $db['store_db'],
+        'storeDb' => $db['storeDb'],
     ],
     'params' => $params,
     'modules' => [

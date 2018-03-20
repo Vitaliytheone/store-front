@@ -12,7 +12,7 @@ return [
         'password' => $configDb[0]['password'],
         'charset' => 'utf8',
     ],
-    'store_db' => [
+    'storeDb' => [
         'class' => 'yii\db\Connection',
         'dsn' => 'mysql:host=' . $configDb[1]['host'],
         'username' => $configDb[1]['username'],
