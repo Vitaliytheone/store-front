@@ -17,7 +17,6 @@ class NavigationAsset extends AssetBundle
 
     public $js = [
         'js/libs/nestable/nestable.lib.js',
-        'js/in_dev/navigation.js', // TODO:: Delete scripts after the main script developing is finished
     ];
 
     public $depends = [

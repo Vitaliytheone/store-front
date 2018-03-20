@@ -1,10 +1,5 @@
 <?php
 
-$orderLinks = require(__DIR__ . '/settings/order-link.php');
-$timezone = require(__DIR__ . '/settings/timezone.php');
-$cdn = require(__DIR__ . '/settings/cdn.php');
-$currencies = require(__DIR__ . '/settings/currency.php');
-
 $configPath = __DIR__ . '/config.json';
 
 $configParams = (function() use ($configPath) {
@@ -30,11 +25,6 @@ $proxyParams = (function() use ($configParams) {
 })();
 
 return [
-    'orderLinks' => $orderLinks,
-    'timezone' => $timezone,
-    'cdn' => $cdn,
-    'currencies' => $currencies,
-
     'config.db' => $dbParams,
     'config.proxy' => $proxyParams,
 ];

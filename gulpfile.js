@@ -35,7 +35,7 @@ gulp.task('sass-admin-sommerce', function(done) {
         .on('end', done);
 });
 
-gulp.task('js-sommerce', function(done) {
+gulp.task('js-so', function(done) {
     return gulp.src([
             './sommerce/web/js/app/*.js',
             './sommerce/web/js/app/**/*.js',
@@ -45,6 +45,19 @@ gulp.task('js-sommerce', function(done) {
         .pipe(gulp.dest('./sommerce/web/js/'));
 });
 
+gulp.task('js-my', function (done) {
+    gulp.src([
+        './my/web/themes/js/app/*.js',
+        './my/web/themes/js/app/**/*.js',
+    ])
+        .pipe(concat('script.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./my/web/themes/js'))
+        .on('end', done);
+});
+
+gulp.task('js', ['js-so', 'js-my']);
+
 gulp.task('default', [
-    'js-sommerce'
+    'js'
 ]);

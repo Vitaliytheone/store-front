@@ -7,6 +7,7 @@ use common\models\store\Navigation;
 use common\models\stores\StoreAdminAuth;
 use sommerce\helpers\UiHelper;
 use sommerce\models\search\NavigationSearch;
+use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditNavigationForm;
 use sommerce\modules\admin\models\forms\UpdatePositionsNavigationForm;
 use Yii;
@@ -30,6 +31,14 @@ trait NavigationTrait {
     public function actionNavigation()
     {
         $this->view->title = Yii::t('admin', 'settings.nav_page_title');
+
+        $this->addModule('adminNavigationList', [
+            'action_update_url' => Url::toRoute('/settings/update-positions-nav'),
+        ]);
+        $this->addModule('adminNavigationEdit', [
+            'get_links_url' =>  Url::toRoute('/settings/get-links'),
+            'success_redirect_url' => Url::toRoute('/settings/navigation'),
+        ]);
 
         $model = new EditNavigationForm();
         $search = new NavigationSearch();
@@ -175,6 +184,7 @@ trait NavigationTrait {
         if (!$request->isAjax) {
             exit;
         }
+
 
         $model = new UpdatePositionsNavigationForm();
         $model->setUser(Yii::$app->user);
