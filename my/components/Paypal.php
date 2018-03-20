@@ -105,7 +105,7 @@ class Paypal{
             //CURLOPT_VERBOSE => 1,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_CAINFO => Yii::getAlias('@webroot') . '/pp.pem', // Файл сертификата
+            CURLOPT_CAINFO => Yii::getAlias('@common') . '/config/certificates/pp.pem', // Файл сертификата
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => $request,
@@ -117,17 +117,17 @@ class Paypal{
       // Отправляем наш запрос, $response будет содержать ответ от API
       $response = curl_exec($ch);
 
-      // Проверяем, нету ли ошибок в инициализации cURL
-      if (curl_errno($ch)) {
-         $this ->_errors = curl_error($ch);
-         curl_close($ch);
-         return false;
-      } else  {
-         curl_close($ch);
-         $responseArray = array();
-         parse_str($response,$responseArray); // Разбиваем данные, полученные от NVP в массив
-         return $responseArray;
-      }
+        // Проверяем, нету ли ошибок в инициализации cURL
+        if (curl_errno($ch)) {
+            $this ->_errors = curl_error($ch);
+            curl_close($ch);
+            return false;
+        } else  {
+            curl_close($ch);
+            $responseArray = array();
+            parse_str($response,$responseArray); // Разбиваем данные, полученные от NVP в массив
+            return $responseArray;
+        }
    }
 
     /**

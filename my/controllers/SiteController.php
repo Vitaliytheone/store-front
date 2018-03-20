@@ -600,7 +600,8 @@ class SiteController extends CustomController
 
                             $paypal = new Paypal;
                             $response = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $items);
-                            if(is_array($response) && $response['ACK'] == 'Success') {
+
+                            if (is_array($response) && $response['ACK'] == 'Success') {
                                return $paypal->checkout($response['TOKEN']);
                             }
 
