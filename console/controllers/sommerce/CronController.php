@@ -10,7 +10,7 @@ use Yii;
 
 /**
  * Class CronController
- * @package console\controllers
+ * @package console\controllers\sommerce
  */
 class CronController extends CustomController
 {

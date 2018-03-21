@@ -225,9 +225,11 @@ abstract class BaseScanner extends Component
                 $status = $panelInfo['status'];
                 $domain = $panelInfo['host'];
 
+                echo 'Checking: ' . $domain;
+
                 if (in_array($status, $this->panelStatuses)) {
 
-                    echo 'Added: ' . $domain . ' Status: ' . $status . PHP_EOL;
+                    echo ' ---> Added ';
 
                     $domainModel = new SuperToolsScanner();
                     $domainModel->setAttributes([
@@ -242,7 +244,11 @@ abstract class BaseScanner extends Component
                     $domainModel->save();
 
                     $domainsAddedCount++;
+                } else {
+                    echo ' ---> Skipped ';
                 }
+
+                echo '[' . $status . ']' .  PHP_EOL;
 
                 $domainsProcessedCount++;
             }
