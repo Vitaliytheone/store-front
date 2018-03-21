@@ -6,7 +6,7 @@
   "db": [
     {
       "host": "localhost",
-      "user": "root",
+      "username": "root",
       "password": "X3X8HseMomCWgHv3"
     },
     {

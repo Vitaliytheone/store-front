@@ -19,7 +19,7 @@
             <?= $logItem['event'] ?>
         </td>
         <td>
-            <?= $logItem['details'] ?>
+            <?= htmlspecialchars($logItem['details']) ?>
         </td>
         <td>
             <?= $logItem['ip'] ?>

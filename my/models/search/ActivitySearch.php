@@ -81,7 +81,7 @@ class ActivitySearch extends Model
     public function rules()
     {
         return [
-            [['from', 'to'], 'date', 'format' => 'Y-m-d'],
+            [['from', 'to'], 'date', 'format' => 'php:Y-m-d'],
             [['from'], 'compareDateValidator'],
         ];
     }
