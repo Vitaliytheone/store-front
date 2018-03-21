@@ -404,7 +404,7 @@ class Paypal extends BasePayment {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
 
-        curl_setopt($ch, CURLOPT_CAINFO, Yii::getAlias('@sommerce') . '/config/certificates/pp.pem'); // сертификат стандартный для paypal тоже есть в my
+        curl_setopt($ch, CURLOPT_CAINFO, Yii::getAlias('@common') . '/config/certificates/pp.pem'); // сертификат стандартный для paypal тоже есть в my
 
         $res = curl_exec($ch);
 
@@ -495,7 +495,7 @@ class Paypal extends BasePayment {
             CURLOPT_URL             => $this->endPoint,
             CURLOPT_SSL_VERIFYPEER  => 1,
             CURLOPT_SSL_VERIFYHOST  => 2,
-            CURLOPT_CAINFO          => Yii::getAlias('@sommerce') . '/config/certificates/pp.pem', // Файл сертификата
+            CURLOPT_CAINFO => Yii::getAlias('@common') . '/config/certificates/pp.pem', // Файл сертификата
             CURLOPT_RETURNTRANSFER  => 1,
             CURLOPT_POST            => 1,
             CURLOPT_POSTFIELDS      => $request,

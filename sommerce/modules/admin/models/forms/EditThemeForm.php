@@ -277,7 +277,7 @@ class EditThemeForm extends Model
             return false;
         }
 
-        ConsoleHelper::execGenerateAssets();
+        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);

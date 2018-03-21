@@ -1,6 +1,6 @@
 <?php
 
-$params = require_once(__DIR__ . '/../../common/config/params.php');
+$params = require(__DIR__ . '/../../common/config/params.php');
 
 $configDb = $params['config.db'];
 
