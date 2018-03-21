@@ -122,6 +122,10 @@ class DowngradePanelForm extends Model {
             return $this->_providers;
         }
 
+        if (empty($this->_project)) {
+            return [];
+        }
+
         $this->_providers = ChildHelper::getProviders($this->_project->cid, [
             Project::STATUS_ACTIVE,
             Project::STATUS_FROZEN
