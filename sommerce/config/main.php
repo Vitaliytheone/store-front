@@ -117,6 +117,9 @@ $config = [
             'defaultRoute' => 'site'
         ],
     ],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+    ],
 ];
 
 

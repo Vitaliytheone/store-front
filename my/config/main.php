@@ -188,6 +188,7 @@ $config = [
         '@components' => '@my/components/',
         '@superadmin' => '@my/modules/superadmin/',
         '@libs' => '@my/libs/',
+        '@bower' => '@vendor/bower-asset',
     ],
     'modules' => [
         $params['superadminUrl'] => [
