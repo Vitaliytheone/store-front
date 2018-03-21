@@ -74,7 +74,7 @@ class ActivateThemeForm
             throw new Exception('Could not update active theme settings!');
         }
 
-        ConsoleHelper::execGenerateAssets();
+        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity();

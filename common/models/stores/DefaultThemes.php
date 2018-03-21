@@ -136,7 +136,7 @@ class DefaultThemes extends ActiveRecord
             return false;
         }
 
-        ConsoleHelper::execGenerateAssets();
+        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
 
         return unlink($pathToFile);
     }
