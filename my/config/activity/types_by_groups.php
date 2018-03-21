@@ -27,7 +27,8 @@ return [
     [
         'title' => 'Subscriptions',
         'events' => [
-            50
+            50,
+            91
         ]
     ],
     [

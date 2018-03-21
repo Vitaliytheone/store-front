@@ -78,6 +78,7 @@ return [
     '88' => 'Mark as unread',
     '89' => 'Delete message',
     '90' => 'Edit message',
+    '91' => 'Change expiry',
 
 
 //    '' => 'Add custom rates',
