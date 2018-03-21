@@ -83,7 +83,7 @@ class PanelHelper {
 
             static::$_connection = new Connection([
                 'dsn' => 'mysql:host=' . $dbConfig['host'] . ';',
-                'username' => $dbConfig['username'],
+                'username' => $dbConfig['user'],
                 'password' => $dbConfig['password'],
             ]);
             static::$_connection->open();
@@ -104,7 +104,7 @@ class PanelHelper {
 
             static::$_dbConnections[$dbName] = new Connection([
                 'dsn' => 'mysql:host=' . $dbConfig['host'] . ';dbname=' . $dbName,
-                'username' => $dbConfig['username'],
+                'username' => $dbConfig['user'],
                 'password' => $dbConfig['password'],
             ]);
             static::$_dbConnections[$dbName]->open();
@@ -134,7 +134,7 @@ class PanelHelper {
         $dbConfig = Yii::$app->params['config.db'][0];
 
         $host = $dbConfig['host'];
-        $username = $dbConfig['username'];
+        $username = $dbConfig['user'];
         $password = $dbConfig['password'];
 
         $result = shell_exec("mysql -h{$host} -u{$username} -p{$password} {$db}  < {$path}");
