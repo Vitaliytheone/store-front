@@ -12,14 +12,14 @@ return [
         ],
 
         'migrate-sommerce' => [
-            'class' => 'yii\console\controllers\MigrateController',
-            'migrationTable' => 'panels.system_migrations',
+            'class' => 'console\controllers\sommerce\CustomMigrateController',
+            'migrationTable' => 'stores.system_migrations',
             'migrationPath' => '@common/migrations/sommerce/',
         ],
 
         'migrate-my' => [
-            'class' => 'yii\console\controllers\MigrateController',
-            'migrationTable' => 'stores.system_migrations',
+            'class' => 'console\controllers\my\CustomMigrateController',
+            'migrationTable' => 'panels.system_migrations',
             'migrationPath' => '@common/migrations/my/',
         ],
 

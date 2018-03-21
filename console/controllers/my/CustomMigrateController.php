@@ -1,14 +1,14 @@
 <?php
 namespace console\controllers\my;
 
-use console\components\MainController;
 use Yii;
+use console\components\MainMigrateController;
 
 /**
- * Class CustomController
+ * Class CustomMigrateController
  * @package console\controllers\my
  */
-class CustomController extends MainController
+class CustomMigrateController extends MainMigrateController
 {
     public function init()
     {
