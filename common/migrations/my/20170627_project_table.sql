@@ -1,0 +1,1 @@
+ALTER TABLE `project` ADD `userpass` INT NOT NULL AFTER `writing`;

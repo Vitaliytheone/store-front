@@ -1,0 +1,1 @@
+ALTER TABLE `customers` CHANGE `status` `status` int(11) NOT NULL COMMENT '0 - suspended; 1 - active' AFTER `token`;

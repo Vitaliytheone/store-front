@@ -1,0 +1,1 @@
+ALTER TABLE `tickets` ADD `admin_id` int(11) NOT NULL AFTER `cid`;

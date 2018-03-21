@@ -1,0 +1,1 @@
+INSERT INTO `admin_users` (`id`, `username`, `password`, `first_name`, `last_name`, `last_login`, `last_ip`) VALUES (10000000, 'perfectpanel', '(JW!:23_Mws_HXr,', 'Perfect Panel', '', '', '');

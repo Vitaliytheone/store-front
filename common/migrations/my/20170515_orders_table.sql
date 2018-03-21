@@ -1,0 +1,1 @@
+ALTER TABLE `orders` CHANGE `status` `status` int(11) NOT NULL COMMENT '1 - pending; 2 - paid;3 - added; 4 - canceled' AFTER `currency`;

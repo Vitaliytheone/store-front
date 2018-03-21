@@ -1,0 +1,1 @@
+ALTER TABLE `payment_gateway` ADD `maximal` DECIMAL(10,2) NOT NULL AFTER `minimal`;

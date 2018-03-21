@@ -3,7 +3,7 @@ namespace common\components\twig;
 
 use common\components\twig\parsers\TokenParser_Include;
 use common\models\store\Pages;
-use frontend\helpers\AssetsHelper;
+use sommerce\helpers\AssetsHelper;
 use Yii;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;

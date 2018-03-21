@@ -81,7 +81,7 @@ class DefaultThemes extends ActiveRecord
      */
     public static function getThemesPath()
     {
-        return Yii::getAlias('@frontend') .  '/views/themes/default';
+        return Yii::getAlias('@sommerce') .  '/views/themes/default';
     }
 
     /**
@@ -136,7 +136,7 @@ class DefaultThemes extends ActiveRecord
             return false;
         }
 
-        ConsoleHelper::execGenerateAssets();
+        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
 
         return unlink($pathToFile);
     }

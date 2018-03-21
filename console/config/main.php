@@ -1,10 +1,4 @@
 <?php
-$params = array_merge(
-    require(__DIR__ . '/../../common/config/params.php'),
-    file_exists(__DIR__ . '/../../common/config/params-local.php') ? require(__DIR__ . '/../../common/config/params-local.php') : [],
-    require(__DIR__ . '/params.php'),
-    file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
-);
 
 return [
     'id' => 'app-console',
@@ -15,11 +9,42 @@ return [
         'fixture' => [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
-        'migrate' => [
-            'class' => 'yii\console\controllers\MigrateController',
+        ],
+
+        'migrate-sommerce' => [
+            'class' => 'console\controllers\sommerce\CustomMigrateController',
             'migrationTable' => 'stores.system_migrations',
-            'migrationPath' => dirname(dirname(__DIR__)) . '/common/data/',
+            'migrationPath' => '@common/migrations/sommerce/',
+        ],
+
+        'migrate-my' => [
+            'class' => 'console\controllers\my\CustomMigrateController',
+            'migrationTable' => 'panels.system_migrations',
+            'migrationPath' => '@common/migrations/my/',
+        ],
+
+        'cron-sommerce' => [
+            'class' => 'console\controllers\sommerce\CronController',
+        ],
+
+        'system-sommerce' => [
+            'class' => 'console\controllers\sommerce\SystemController',
+        ],
+
+        'system-my' => [
+            'class' => 'console\controllers\my\SystemController',
+        ],
+
+        'cron-my' => [
+            'class' => 'console\controllers\my\CronController',
+        ],
+
+        'panel-scanner-my' => [
+            'class' => 'console\controllers\my\PanelScannerController',
+        ],
+
+        'template-my' => [
+            'class' => 'console\controllers\my\TemplateController',
         ],
     ],
     'components' => [
@@ -32,5 +57,5 @@ return [
             ],
         ],
     ],
-    'params' => $params,
+    'params' => [],
 ];

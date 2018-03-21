@@ -1,0 +1,2 @@
+ALTER TABLE `project_admin` ADD `rules_subscriptions` int(11) NOT NULL;
+ALTER TABLE `project_admin` CHANGE `status` `status` int(11) NOT NULL COMMENT '0 - active; 1 - suspended; -1 - active' AFTER `last_ip`;

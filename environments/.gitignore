@@ -1,9 +1,9 @@
 /dev/backend/config/*
 /dev/common/config/*
 /dev/console/config/*
-/dev/frontend/config/*
+/dev/sommerce/config/*
 /prod/backend/config/*
 /prod/common/config/*
 /prod/console/config/*
-/prod/frontend/config/*
+/prod/sommerce/config/*
 !.gitignore

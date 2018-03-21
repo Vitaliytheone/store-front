@@ -1,0 +1,1 @@
+ALTER TABLE `third_party_log` ADD `code` varchar(32) NULL AFTER `item_id`;

@@ -1,0 +1,30 @@
+{
+  "proxy": {
+    "ip": "10.0.1.6",
+    "port": 3128
+  },
+  "db": [
+    {
+      "host": "localhost",
+      "username": "root",
+      "password": "X3X8HseMomCWgHv3"
+    },
+    {
+      "host": "localhost",
+      "username": "root",
+      "password": "X3X8HseMomCWgHv3"
+    }
+  ],
+  "ftp": [
+    {
+      "host": "",
+      "user": "",
+      "password": "a"
+    },
+    {
+      "host": "",
+      "user": "",
+      "password": "1"
+    }
+  ]
+}

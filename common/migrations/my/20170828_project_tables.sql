@@ -1,0 +1,1 @@
+ALTER TABLE `project` ADD `folder` VARCHAR(6) NOT NULL AFTER `act`;
