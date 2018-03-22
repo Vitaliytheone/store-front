@@ -186,8 +186,6 @@ class PanelHelper {
 
         if (!empty(Yii::$app->params['config.db'][0])) {
             $returnData = Yii::$app->params['config.db'][0];
-        } else {
-            Yii::error(var_export(Yii::$app->params, true));
         }
 
         return $returnData;

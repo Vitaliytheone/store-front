@@ -142,4 +142,6 @@ return [
             'connection_timeout' => 10,
         ],
     ],
+    'config.db' => $configDb,
+    'config.proxy' => $configProxy,
 ];
