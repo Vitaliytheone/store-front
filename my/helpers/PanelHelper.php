@@ -80,7 +80,7 @@ class PanelHelper {
 
         if (null == static::$_connection) {
             $dbConfig = Yii::$app->params['config.db'][0];
-
+            Yii::debug(var_export(Yii::$app->params, true));
             static::$_connection = new Connection([
                 'dsn' => 'mysql:host=' . $dbConfig['host'] . ';',
                 'username' => $dbConfig['user'],
