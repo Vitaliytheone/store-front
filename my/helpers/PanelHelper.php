@@ -79,8 +79,8 @@ class PanelHelper {
     {
 
         if (null == static::$_connection) {
-            $dbConfig = Yii::$app->params['config.db'][0];
-            Yii::debug(var_export(Yii::$app->params, true));
+            $dbConfig = static::getDbOptions();
+
             static::$_connection = new Connection([
                 'dsn' => 'mysql:host=' . $dbConfig['host'] . ';',
                 'username' => $dbConfig['user'],
@@ -100,7 +100,7 @@ class PanelHelper {
     public static function getDbConnection($dbName)
     {
         if (empty(static::$_dbConnections[$dbName])) {
-            $dbConfig = Yii::$app->params['config.db'][0];
+            $dbConfig = static::getDbOptions();
 
             static::$_dbConnections[$dbName] = new Connection([
                 'dsn' => 'mysql:host=' . $dbConfig['host'] . ';dbname=' . $dbName,
@@ -131,7 +131,7 @@ class PanelHelper {
             return false;
         }
 
-        $dbConfig = Yii::$app->params['config.db'][0];
+        $dbConfig = static::getDbOptions();
 
         $host = $dbConfig['host'];
         $username = $dbConfig['user'];
@@ -171,5 +171,23 @@ class PanelHelper {
         static::getConnection()->close();
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected static function getDbOptions()
+    {
+        $returnData = [
+            'host' => null,
+            'user' => null,
+            'password' => null,
+        ];
+
+        if (!empty(Yii::$app->params['config.db'][0])) {
+            $returnData = Yii::$app->params['config.db'][0];
+        }
+
+        return $returnData;
     }
 }
