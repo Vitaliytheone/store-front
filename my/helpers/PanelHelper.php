@@ -184,8 +184,8 @@ class PanelHelper {
             'password' => null,
         ];
 
-        if (!empty(DB_CONFIG) && is_array(DB_CONFIG)) {
-            $returnData = DB_CONFIG;
+        if (!empty(DB_CONFIG[0]) && is_array(DB_CONFIG[0])) {
+            $returnData = DB_CONFIG[0];
         } else {
             Yii::error(var_export(DB_CONFIG, true));
         }
