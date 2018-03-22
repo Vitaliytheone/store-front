@@ -16,7 +16,4 @@ $config = yii\helpers\ArrayHelper::merge(
     file_exists(__DIR__ . '/../config/main-local.php') ? require(__DIR__ . '/../config/main-local.php') : []
 );
 
-Yii::debug(print_r(DB_CONFIG,1), 'my_debug');
-Yii::debug(print_r($config,1), 'my_debug');
-
 (new yii\web\Application($config))->run();
