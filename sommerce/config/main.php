@@ -148,6 +148,7 @@ if (YII_ENV_DEV) {
     $config['components']['log']['targets'][] = [
         'class' => 'yii\log\FileTarget',
         'levels' => ['trace'],
+        'categories' => ['my_debug'],
         'logVars' => [],
         'logFile' => dirname(dirname(__DIR__)) . '/sommerce/runtime/logs/debug.log',
     ];
