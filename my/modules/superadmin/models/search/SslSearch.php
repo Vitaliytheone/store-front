@@ -85,7 +85,7 @@ class SslSearch extends SslCert {
             static::$_sslCerts = $this->buildQuery()->all();
         }
 
-        if (empty($status)) {
+        if (null === $status || '' === $status) {
             return static::$_sslCerts;
         }
 
