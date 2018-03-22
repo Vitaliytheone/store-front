@@ -29,11 +29,7 @@ class ConsoleHelper
         $cmd = $cli . ' ' . Yii::getAlias('@project_root') . '/yii ' . ' ' . $command . ' 2>&1';
 
         exec($cmd, $output, $returnVar);
-
-        Yii::debug(print_r($cli,1), 'my_debug');
-        Yii::debug(print_r($cmd,1), 'my_debug');
-        Yii::debug(print_r($output,1), 'my_debug');
-
+        
         return (int)$returnVar === 0;
     }
 }
