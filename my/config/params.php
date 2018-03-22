@@ -1,9 +1,8 @@
 <?php
 
-$params = require_once(__DIR__ . '/../../common/config/params.php');
-
-$configDb = $params['config.db'];
-$configProxy = $params['config.proxy'];
+/**
+ * @var $proxyParams - global params from common bootstrap.php
+ */
 
 $serverIp = "137.74.23.77";
 
@@ -133,8 +132,8 @@ return [
     'levopanel_scanner' => [
         'apiKey' => 'b9f1d6f809b793321c700f45ca382f59ef83bf644c48118e6d3b9902ab0cb86f',
         'proxy' => [
-            'ip' => $configProxy['ip'],
-            'port' => $configProxy['port'],
+            'ip' => PROXY_CONFIG['ip'],
+            'port' => PROXY_CONFIG['port'],
             'type' => CURLPROXY_HTTP,
         ],
         'timeouts' => [
@@ -142,6 +141,4 @@ return [
             'connection_timeout' => 10,
         ],
     ],
-    'config.db' => $configDb,
-    'config.proxy' => $configProxy,
 ];
