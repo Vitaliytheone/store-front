@@ -1,5 +1,10 @@
 <?php
 
+$params = require_once(__DIR__ . '/../../common/config/params.php');
+
+$configDb = $params['config.db'];
+$configProxy = $params['config.proxy'];
+
 $serverIp = "137.74.23.77";
 
 return [
