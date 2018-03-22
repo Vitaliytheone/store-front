@@ -15,7 +15,10 @@
             $customer = $message->customer;
             $projects = [];
             foreach ($customer->actualProjects as $project) {
-                $projects[] = Html::a($project->getSite(), 'https://my.perfectpanel.com/redirect?url=' . ($project->getSiteUrl() . '/admin'), [
+                $projects[] = Html::a($project->getSite(), Url::toRoute([
+                    $project->child_panel ? '/child-panels' : '/panels',
+                    'id' => $project->id
+                ]), [
                     'target' => '_blank'
                 ]);
             }

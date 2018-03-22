@@ -58,7 +58,9 @@ return [
     'panels.edit.advanced_header' => 'Advanced',
 
     'panels.list.action_downgrade' => 'Downgrade to child panel',
+    'panels.list.sign_in_as_admin' => 'Sign in as admin',
     'child_panels.list.action_upgrade' => 'Upgrade to panel',
+    'child_panels.list.sign_in_as_admin' => 'Sign in as admin',
     'child_panels.upgrade.invoice_description' => 'Upgrade {panel}',
 
     'panels.downgrade.header' => 'Downgrade panel',

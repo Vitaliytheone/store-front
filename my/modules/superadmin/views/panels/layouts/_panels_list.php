@@ -118,6 +118,10 @@
                                     'data-providersurl' => Url::toRoute(['/panels/providers', 'id' => $panel['id']])
                                 ])?>
                             <?php endif; ?>
+
+                            <?= Html::a(Yii::t('app/superadmin', 'panels.list.sign_in_as_admin'), Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]), [
+                                'class' => 'dropdown-item',
+                            ])?>
                         </div>
                     </div>
                 </td>

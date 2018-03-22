@@ -93,6 +93,10 @@
                                 'class' => 'dropdown-item upgrade',
                                 'data-total' => 25
                             ])?>
+
+                            <?= Html::a(Yii::t('app/superadmin', 'child_panels.list.sign_in_as_admin'), Url::toRoute(['/child-panels/sign-in-as-admin', 'id' => $panel['id']]), [
+                                'class' => 'dropdown-item',
+                            ])?>
                         </div>
                     </div>
                 </td>

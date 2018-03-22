@@ -55,6 +55,7 @@ class PanelsSearch {
         $searchQuery = $this->getQuery();
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
         $child = ArrayHelper::getValue($this->params, 'child');
+        $id = ArrayHelper::getValue($this->params, 'id');
 
         $projects = (new Query())
             ->from('project');
@@ -97,6 +98,12 @@ class PanelsSearch {
                 ['=', 'project.id', $searchQuery],
                 ['like', 'project.name', $searchQuery],
                 ['like', 'project.site', $searchQuery],
+            ]);
+        }
+
+        if ($id) {
+            $projects->andWhere([
+                'project.id' => $id
             ]);
         }
 

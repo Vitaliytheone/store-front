@@ -2,6 +2,9 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\PanelDomains;
+use common\models\panels\SuperAdmin;
+use common\models\panels\SuperAdminToken;
 use my\components\ActiveForm;
 use my\helpers\StringHelper;
 use my\helpers\Url;
@@ -243,4 +246,37 @@ class ChildPanelsController extends CustomController
             ];
         }
     }
+
+    /**
+     * Sign in as admin panel
+     *
+     * @access public
+     * @param int $id
+     * @return Response
+     */
+    public function actionSignInAsAdmin($id)
+    {
+        if (!($project = Project::findOne($id))) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!($panelDomain = PanelDomains::find()->andWhere([
+            'panel_id' => $project->id,
+            'type' => PanelDomains::TYPE_SUBDOMAIN
+        ])->andFilterWhere([
+            'AND',
+            ['like', 'domain', '.' . Yii::$app->params['panelDomain']],
+        ])->one())) {
+            throw new NotFoundHttpException();
+        }
+
+        /**
+         * @var SuperAdmin $superUser
+         */
+        $superUser = Yii::$app->superadmin->getIdentity();
+        $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_PANELS, $project->id);
+
+        return $this->redirect('//' . $panelDomain->domain . '/admin/default/check?id=' . $token);
+    }
+
 }
