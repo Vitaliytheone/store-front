@@ -289,7 +289,7 @@ class PanelsController extends CustomController
         $superUser = Yii::$app->superadmin->getIdentity();
         $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_PANELS, $project->id);
 
-        return $this->redirect('//' . $panelDomain->domain . '/admin/default/check?id=' . $token);
+        return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token);
     }
 
 }

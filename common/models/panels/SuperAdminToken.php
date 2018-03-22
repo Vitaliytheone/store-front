@@ -91,7 +91,7 @@ class SuperAdminToken extends ActiveRecord
      */
     public function generateToken()
     {
-        $token = substr(md5(microtime()), 0, 32);
+        $token = substr(md5(microtime()) . md5(microtime() . microtime()), 0, 64);
         $result = static::findOne(['token' => $token]);
         if($result !== null) {
             $this->generateToken();
