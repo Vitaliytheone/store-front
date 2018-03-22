@@ -221,7 +221,14 @@ class ProjectAdmin extends ActiveRecord
      */
     public function isFullAccess()
     {
-        return !in_array(0, $this->getRules());
+        $rules = $this->getRules();
+
+        if (0 != $rules['providers']) {
+            return false;
+        }
+        unset($rules['providers']);
+
+        return !in_array(0, $rules);
     }
 
     public function behaviors()

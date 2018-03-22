@@ -121,6 +121,7 @@
 
                             <?= Html::a(Yii::t('app/superadmin', 'panels.list.sign_in_as_admin'), Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]), [
                                 'class' => 'dropdown-item',
+                                'target' => '_blank',
                             ])?>
                         </div>
                     </div>
