@@ -13,7 +13,7 @@ $params = array_merge(
     file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
 );
 
-$configDb = $params['config.db'];
+$configDb = DB_CONFIG;
 
 $routers = require(__DIR__ . '/routers.php');
 
