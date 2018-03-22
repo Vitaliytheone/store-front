@@ -137,10 +137,19 @@ if (YII_ENV_DEV) {
         'class' => 'yii\gii\Module',
     ];
 
+// Mysql logger
+//    $config['components']['log']['targets'][] = [
+//        'class' => 'yii\log\FileTarget',
+//        'categories' => ['yii\db\*'],
+//        'logFile' => dirname(dirname(__DIR__)) . '/sommerce/runtime/logs/sql.log',
+//    ];
+
+//  Debug logger
     $config['components']['log']['targets'][] = [
         'class' => 'yii\log\FileTarget',
-        'categories' => ['yii\db\*'],
-        'logFile' => dirname(dirname(__DIR__)) . '/sommerce/runtime/logs/sql.log',
+        'levels' => ['trace'],
+        'logVars' => [],
+        'logFile' => dirname(dirname(__DIR__)) . '/sommerce/runtime/logs/debug.log',
     ];
 
 }
