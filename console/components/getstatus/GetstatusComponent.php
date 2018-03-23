@@ -136,6 +136,9 @@ class GetstatusComponent extends Component
                 ->select(['*'])
                 ->from("$db.$this->_tableSuborders")
                 ->andWhere([
+                    'mode' => Suborders::MODE_AUTO
+                ])
+                ->andWhere([
                     'status' => [
                         Suborders::STATUS_PENDING,
                         Suborders::STATUS_IN_PROGRESS,
@@ -145,10 +148,6 @@ class GetstatusComponent extends Component
                 ->orderBy(['updated_at' => SORT_ASC])
                 ->limit($requestLimit)
                 ->all();
-
-            print_r('----Store ID:  '. $storeId);
-            print_r($storeProviders, 0);
-            print_r($newOrders, 0);
 
             //Populate each order by store and provider data
             foreach ($newOrders as &$order) {
