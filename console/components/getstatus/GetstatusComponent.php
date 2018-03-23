@@ -149,10 +149,6 @@ class GetstatusComponent extends Component
                 ->limit($requestLimit)
                 ->all();
 
-            echo PHP_EOL . '-----Store ----' . PHP_EOL;
-            echo $storeId . PHP_EOL;
-            print_r($newOrders);
-
             //Populate each order by store and provider data
             foreach ($newOrders as &$order) {
                 $providerId = $order['provider_id'];
@@ -165,6 +161,10 @@ class GetstatusComponent extends Component
             }
 
             $orders += $newOrders;
+
+            echo PHP_EOL . '-----Store ----' . PHP_EOL;
+            echo $storeId . PHP_EOL;
+            print_r($orders);
 
             if (count($orders) >= $this->ordersLimit) {
                 break;
@@ -226,7 +226,7 @@ class GetstatusComponent extends Component
 
         $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
               SET 
-              `status` = COALESCE(:status, `provider_charge`),
+              `status` = COALESCE(:status, `status`),
               `provider_charge` = COALESCE(:provider_charge, `provider_charge`),
               `provider_response` = COALESCE(:provider_response, `provider_response`),
               `provider_response_code` = COALESCE(:provider_response_code, `provider_response_code`),
