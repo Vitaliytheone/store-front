@@ -122,7 +122,7 @@ class GetstatusComponent extends Component
                     'site' => 'pr.site',
                     'protocol' => 'pr.protocol',
                     'type' => 'pr.type',
-                    'apikey' => 'sp.apikey',
+                    'apikey' => 'sp.a1pikey',
                 ])
                 ->from(['sp' => $this->_tableStoreProviders])
                 ->leftJoin(['pr' => $this->_tableProviders], 'pr.id = sp.provider_id')
@@ -148,7 +148,6 @@ class GetstatusComponent extends Component
 
             print_r($storeProviders, 0);
             print_r($newOrders, 0);
-
 
             //Populate each order by store and provider data
             foreach ($newOrders as &$order) {
