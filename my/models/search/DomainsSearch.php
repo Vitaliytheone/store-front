@@ -45,7 +45,8 @@ class DomainsSearch
                 'cid' => $customer,
                 'status' => [
                     Orders::STATUS_PAID,
-                    Orders::STATUS_PENDING
+                    Orders::STATUS_PENDING,
+                    Orders::STATUS_ERROR
                 ],
                 'item' => Orders::ITEM_BUY_DOMAIN,
             ])->orderBy([
