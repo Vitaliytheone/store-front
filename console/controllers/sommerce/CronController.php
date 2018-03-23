@@ -34,7 +34,6 @@ class CronController extends CustomController
        $result = $sender->run();
 
        echo 'Send orders result' . PHP_EOL;
-       print_r($result, 0);
     }
 
     /**

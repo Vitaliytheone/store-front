@@ -88,8 +88,6 @@ class GetstatusComponent extends Component
     {
         $this->_orders = $this->_getOrders();
 
-        print_r($this->_orders);
-
         return $this->_getStatus();
     }
 
@@ -150,6 +148,10 @@ class GetstatusComponent extends Component
                 ->orderBy(['updated_at' => SORT_ASC])
                 ->limit($requestLimit)
                 ->all();
+
+            echo PHP_EOL . '-----Store ----' . PHP_EOL;
+            echo $storeId . PHP_EOL;
+            print_r($newOrders);
 
             //Populate each order by store and provider data
             foreach ($newOrders as &$order) {
