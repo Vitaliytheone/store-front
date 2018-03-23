@@ -88,6 +88,8 @@ class GetstatusComponent extends Component
     {
         $this->_orders = $this->_getOrders();
 
+        print_r($this->_orders);
+
         return $this->_getStatus();
     }
 
@@ -209,9 +211,6 @@ class GetstatusComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-
-        print_r($orderId);
-        print_r($orderInfo);
 
         $defaultValues = [
             ':status' => null,
