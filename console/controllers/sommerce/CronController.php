@@ -19,7 +19,7 @@ class CronController extends CustomController
      */
     public function actionClearCartItems()
     {
-        SommerceHelper::clearStoresCarts(0);
+        SommerceHelper::clearStoresCarts(30);
     }
 
     /**
