@@ -150,7 +150,7 @@ class GetstatusComponent extends Component
                 ->all();
 
             //Populate each order by store and provider data
-            foreach ($newOrders as &$order) {
+            foreach ($newOrders as $order) {
                 $providerId = $order['provider_id'];
 
                 $order['store_id'] = $storeId;
@@ -159,17 +159,16 @@ class GetstatusComponent extends Component
                 $order['provider_protocol'] = $storeProviders[$providerId]['protocol'];
                 $order['provider_apikey'] = $storeProviders[$providerId]['apikey'];
 
-                echo PHP_EOL . '-----Store ----' . PHP_EOL;
-                echo $storeId . PHP_EOL;
-                print_r($order);
+                $orders += $order;
             }
-
-            $orders += $newOrders;
 
             if (count($orders) >= $this->ordersLimit) {
                 break;
             }
         }
+
+        echo PHP_EOL . '-----Store ----' . PHP_EOL;
+        print_r($orders);
 
         return $orders;
     }
