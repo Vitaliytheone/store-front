@@ -31,9 +31,7 @@ class CronController extends CustomController
            'ordersLimit' => Yii::$app->params['senderOrdersLimit'],
        ]);
        $sender->setConnection(Yii::$app->storeDb);
-       $result = $sender->run();
-
-       echo 'Send orders result' . PHP_EOL;
+       $sender->run();
     }
 
     /**
@@ -45,10 +43,7 @@ class CronController extends CustomController
             'ordersLimit' => Yii::$app->params['getstatusOrdersLimit'],
         ]);
         $getstatus->setConnection(Yii::$app->storeDb);
-        $result = $getstatus->run();
-
-        echo 'Getstatus result' . PHP_EOL;
-        print_r($result, 0);
+        $getstatus->run();
     }
 
     /**

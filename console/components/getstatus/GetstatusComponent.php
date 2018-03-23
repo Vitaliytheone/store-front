@@ -167,9 +167,6 @@ class GetstatusComponent extends Component
             }
         }
 
-        echo PHP_EOL . '-----Store ----' . PHP_EOL;
-        print_r($orders);
-
         return $orders;
     }
 
