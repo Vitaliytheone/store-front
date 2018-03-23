@@ -56,8 +56,6 @@ class SommerceHelper
                     ':created_at' => time() - $olderWhenDays * 24 * 60 * 60,
                 ])
                 ->execute();
-
-            echo 'Cleared cart for store ' . '[ ' . $db . ' ]' . PHP_EOL;
         }
     }
 }
