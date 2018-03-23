@@ -147,7 +147,8 @@ class PaymentsSearch extends Model
 
         // Searches:
         // 1. Strong by `customer` if $searchQuery : valid Email
-        // 2. Soft by `memo`
+        // 2. Strong by payment id
+        // 3. Soft by `memo`
         $searchFilter = null;
         $emailValidator = new EmailValidator();
 
@@ -156,7 +157,7 @@ class PaymentsSearch extends Model
         } elseif ($paymentIds) {
             $query->andFilterWhere(['in', 'id', $paymentIds]);
         }
-        
+
         $query->orFilterWhere(['like', 'memo', $searchQuery]);
 
         return $this->_dataProvider;
