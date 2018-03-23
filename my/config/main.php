@@ -185,9 +185,6 @@ $config = [
     ],
     'params' => $params,
     'aliases' => [
-        '@components' => '@my/components/',
-        '@superadmin' => '@my/modules/superadmin/',
-        '@libs' => '@my/libs/',
         '@bower' => '@vendor/bower-asset',
     ],
     'modules' => [

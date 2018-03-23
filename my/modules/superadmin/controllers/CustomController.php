@@ -14,7 +14,7 @@ use yii\web\Response;
 class CustomController extends MainController
 {
     public $activeTab;
-    public $layout = '@superadmin/views/layouts/superadmin.php';
+    public $layout = '@my/modules/superadmin/views/layouts/superadmin.php';
 
     /**
      * @return mixed|\yii\web\User

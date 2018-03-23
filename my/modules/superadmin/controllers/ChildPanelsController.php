@@ -29,7 +29,7 @@ class ChildPanelsController extends CustomController
 
     public function getViewPath()
     {
-        return Yii::getAlias('@superadmin/views/child_panels');
+        return Yii::getAlias('@my/modules/superadmin/views/child_panels');
     }
 
     /**

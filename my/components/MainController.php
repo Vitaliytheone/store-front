@@ -26,9 +26,9 @@ class MainController extends Controller
     {
         if (0 === strpos(Yii::$app->request->url, '/' . Yii::$app->params['superadminUrl'] . '/')) {
             if (Yii::$app->superadmin->isGuest) {
-                $this->layout = '@superadmin/views/layouts/guest.php';
+                $this->layout = '@my/modules/superadmin/views/layouts/guest.php';
             } else {
-                $this->layout = '@superadmin/views/layouts/superadmin.php';
+                $this->layout = '@my/modules/superadmin/views/layouts/superadmin.php';
             }
         }
 
