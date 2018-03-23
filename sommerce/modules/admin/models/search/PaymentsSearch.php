@@ -155,9 +155,9 @@ class PaymentsSearch extends Model
             $query->andFilterWhere(['customer' => $searchQuery]);
         } elseif ($paymentIds) {
             $query->andFilterWhere(['in', 'id', $paymentIds]);
-        } else {
-            $query->andFilterWhere(['like', 'memo', $searchQuery]);
         }
+        
+        $query->orFilterWhere(['like', 'memo', $searchQuery]);
 
         return $this->_dataProvider;
     }
