@@ -24,7 +24,7 @@ class SommerceHelper
         $fields = $fields ? $fields : '*';
 
         return (new Query())
-            ->select($fields)
+            ->select(array_merge(['id'], $fields))
             ->from(Stores::tableName())
             ->andWhere(['status' => Stores::STATUS_ACTIVE])
             ->andWhere(['not', ['db_name' => null]])
