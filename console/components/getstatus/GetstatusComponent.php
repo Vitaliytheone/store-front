@@ -122,7 +122,7 @@ class GetstatusComponent extends Component
                     'site' => 'pr.site',
                     'protocol' => 'pr.protocol',
                     'type' => 'pr.type',
-                    'apikey' => 'sp.a1pikey',
+                    'apikey' => 'sp.apikey',
                 ])
                 ->from(['sp' => $this->_tableStoreProviders])
                 ->leftJoin(['pr' => $this->_tableProviders], 'pr.id = sp.provider_id')
@@ -146,6 +146,7 @@ class GetstatusComponent extends Component
                 ->limit($requestLimit)
                 ->all();
 
+            print_r('----Store ID:  '. $storeId);
             print_r($storeProviders, 0);
             print_r($newOrders, 0);
 
