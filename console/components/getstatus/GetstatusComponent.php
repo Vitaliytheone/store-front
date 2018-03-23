@@ -80,11 +80,15 @@ class GetstatusComponent extends Component
         $this->_db = $connection;
     }
 
+    /**
+     * Run Getstatus
+     * @return array
+     */
     public function run()
     {
         $this->_orders = $this->_getOrders();
 
-        $this->_getStatus();
+        return $this->_getStatus();
     }
 
     /**
@@ -405,6 +409,7 @@ class GetstatusComponent extends Component
         }
         
         curl_multi_close($mh);
+
         return $sendResults;
     }
 }
