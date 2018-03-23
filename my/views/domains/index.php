@@ -14,6 +14,7 @@
     $orderColors = [
         Orders::STATUS_PENDING => '',
         Orders::STATUS_PAID => '',
+        Orders::STATUS_ERROR => '',
         Orders::STATUS_CANCELED => 'text-muted',
     ];
 
