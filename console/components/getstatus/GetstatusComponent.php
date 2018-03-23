@@ -146,6 +146,10 @@ class GetstatusComponent extends Component
                 ->limit($requestLimit)
                 ->all();
 
+            print_r($storeProviders, 0);
+            print_r($newOrders, 0);
+
+
             //Populate each order by store and provider data
             foreach ($newOrders as &$order) {
                 $providerId = $order['provider_id'];
