@@ -159,7 +159,7 @@ class GetstatusComponent extends Component
                 $order['provider_protocol'] = $storeProviders[$providerId]['protocol'];
                 $order['provider_apikey'] = $storeProviders[$providerId]['apikey'];
 
-                $orders += $order;
+                $orders[] = $order;
             }
 
             if (count($orders) >= $this->ordersLimit) {
