@@ -158,13 +158,13 @@ class GetstatusComponent extends Component
                 $order['provider_site'] = $storeProviders[$providerId]['site'];
                 $order['provider_protocol'] = $storeProviders[$providerId]['protocol'];
                 $order['provider_apikey'] = $storeProviders[$providerId]['apikey'];
+
+                echo PHP_EOL . '-----Store ----' . PHP_EOL;
+                echo $storeId . PHP_EOL;
+                print_r($order);
             }
 
             $orders += $newOrders;
-
-            echo PHP_EOL . '-----Store ----' . PHP_EOL;
-            echo $storeId . PHP_EOL;
-            print_r($orders);
 
             if (count($orders) >= $this->ordersLimit) {
                 break;
