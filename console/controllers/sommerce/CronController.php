@@ -2,10 +2,10 @@
 
 namespace console\controllers\sommerce;
 
-use common\models\store\Carts;
 use common\models\stores\StoreAdminsHash;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
+use console\helpers\SommerceHelper;
 use Yii;
 
 /**
@@ -19,9 +19,7 @@ class CronController extends CustomController
      */
     public function actionClearCartItems()
     {
-        Carts::deleteAll('created_at <= :created_at', [
-            ':created_at' => time() - 2592000 // 30 days
-        ]);
+        SommerceHelper::clearStoresCarts(5);
     }
 
     /**
