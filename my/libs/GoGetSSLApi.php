@@ -3,7 +3,7 @@ namespace my\libs;
 
 use Yii;
 
-require_once(Yii::getAlias('@libs/GoGetSSL/GoGetSSLApi.php'));
+require_once(Yii::getAlias('@my/libs/GoGetSSL/GoGetSSLApi.php'));
 
 use GoGetSSLApi as BaseGoGetSSLApi;
 

@@ -48,8 +48,5 @@ return [
     ],
     'params' => $params,
     'aliases' => [
-        '@components' => '@my/components/',
-        '@superadmin' => '@my/modules/superadmin/',
-        '@libs' => '@my/libs/',
     ],
 ];
