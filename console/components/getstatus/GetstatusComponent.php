@@ -210,7 +210,7 @@ class GetstatusComponent extends Component
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
 
-        print_r($orderId);ndo
+        print_r($orderId);
         print_r($orderInfo);
 
         $defaultValues = [
