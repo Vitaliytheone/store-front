@@ -60,12 +60,12 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                                        value="<?= Html::encode(yii::$app->getRequest()->get('query')) ?>"
                                        placeholder="<?= Yii::t('admin', 'orders.search_placeholder') ?>"
                                        aria-label="<?= Yii::t('admin', 'orders.search_placeholder') ?>">
-                                <?php foreach (yii::$app->getRequest()->get() as $param => $value): ?>
-                                    <?php if ($param !== 'query'): ?>
-                                        <input type="hidden" name="<?= Html::encode($param); ?>"
-                                               value="<?= Html::encode($value); ?>">
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
+<!--                                --><?php //foreach (yii::$app->getRequest()->get() as $param => $value): ?>
+<!--                                    --><?php //if ($param !== 'query'): ?>
+<!--                                        <input type="hidden" name="--><?//= Html::encode($param); ?><!--"-->
+<!--                                               value="--><?//= Html::encode($value); ?><!--">-->
+<!--                                    --><?php //endif; ?>
+<!--                                --><?php //endforeach; ?>
                                 <span class="input-group-btn">
                             <button class="btn btn-primary" type="submit">
                                 <span class="fa fa-search"></span>
