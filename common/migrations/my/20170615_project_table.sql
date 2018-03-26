@@ -1,0 +1,1 @@
+ALTER TABLE `project` ADD `drip_feed` tinyint(2) NOT NULL COMMENT '0 - on, 1 - off';

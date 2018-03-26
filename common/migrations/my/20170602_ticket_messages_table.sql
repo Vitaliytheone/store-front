@@ -1,0 +1,1 @@
+ALTER TABLE `ticket_messages` CHANGE `message` `message` VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;

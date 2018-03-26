@@ -80,11 +80,15 @@ class GetstatusComponent extends Component
         $this->_db = $connection;
     }
 
+    /**
+     * Run Getstatus
+     * @return array
+     */
     public function run()
     {
         $this->_orders = $this->_getOrders();
 
-        $this->_getStatus();
+        return $this->_getStatus();
     }
 
     /**
@@ -132,6 +136,9 @@ class GetstatusComponent extends Component
                 ->select(['*'])
                 ->from("$db.$this->_tableSuborders")
                 ->andWhere([
+                    'mode' => Suborders::MODE_AUTO
+                ])
+                ->andWhere([
                     'status' => [
                         Suborders::STATUS_PENDING,
                         Suborders::STATUS_IN_PROGRESS,
@@ -143,7 +150,7 @@ class GetstatusComponent extends Component
                 ->all();
 
             //Populate each order by store and provider data
-            foreach ($newOrders as &$order) {
+            foreach ($newOrders as $order) {
                 $providerId = $order['provider_id'];
 
                 $order['store_id'] = $storeId;
@@ -151,9 +158,9 @@ class GetstatusComponent extends Component
                 $order['provider_site'] = $storeProviders[$providerId]['site'];
                 $order['provider_protocol'] = $storeProviders[$providerId]['protocol'];
                 $order['provider_apikey'] = $storeProviders[$providerId]['apikey'];
-            }
 
-            $orders += $newOrders;
+                $orders[] = $order;
+            }
 
             if (count($orders) >= $this->ordersLimit) {
                 break;
@@ -215,7 +222,7 @@ class GetstatusComponent extends Component
 
         $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
               SET 
-              `status` = COALESCE(:status, `provider_charge`),
+              `status` = COALESCE(:status, `status`),
               `provider_charge` = COALESCE(:provider_charge, `provider_charge`),
               `provider_response` = COALESCE(:provider_response, `provider_response`),
               `provider_response_code` = COALESCE(:provider_response_code, `provider_response_code`),
@@ -405,6 +412,7 @@ class GetstatusComponent extends Component
         }
         
         curl_multi_close($mh);
+
         return $sendResults;
     }
 }

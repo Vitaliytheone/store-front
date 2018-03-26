@@ -29,7 +29,7 @@ class ThemesHelper {
 
         $themeFolder = $store->getThemeFolder();
 
-        $viewsPath = Yii::getAlias('@frontend' . DIRECTORY_SEPARATOR . 'views');
+        $viewsPath = Yii::getAlias('@sommerce' . DIRECTORY_SEPARATOR . 'views');
 
         $custom = $sp . 'themes' . $sp . 'custom' . $sp . $store->id . $sp . $themeFolder . $sp . $view;
         $standard = $sp . 'themes' . $sp . 'default' . $sp . $themeFolder . $sp . $view;

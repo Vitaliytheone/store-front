@@ -83,9 +83,7 @@ class SenderComponent extends Component
 
         $this->_updateOrdersSendStatus(Suborders::SEND_STATUS_SENDING);
 
-        $result = $this->sendOrders();
-
-        return $result;
+        return $this->sendOrders();
     }
 
     /**

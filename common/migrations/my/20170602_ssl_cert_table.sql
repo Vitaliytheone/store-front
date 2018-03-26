@@ -1,0 +1,1 @@
+ALTER TABLE `ssl_cert` CHANGE `expiry` `expiry` varchar(10) COLLATE 'utf8_general_ci' NULL AFTER `details`;

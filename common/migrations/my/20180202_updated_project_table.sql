@@ -1,0 +1,1 @@
+ALTER TABLE project ADD hash_method TINYINT NOT NULL DEFAULT '0' COMMENT '(0 - md5, 1 - bcrypt)' AFTER custom_footer;

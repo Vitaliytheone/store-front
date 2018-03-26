@@ -1,0 +1,1 @@
+ALTER TABLE `ssl_cert` ADD `checked` tinyint(1) NOT NULL AFTER `status`;

@@ -1,0 +1,1 @@
+INSERT INTO payment_gateway (id, pid, pgid, name, minimal, maximal, new_users, visibility, fee, options, type, dev_options, position) VALUES (NULL, '-1', '6', 'CoinPayments', '0.00', '0.00', '1', '1', '0', '{\"merchant_id\":\"\",\"secret\":\"\"}', '0', '', '6');

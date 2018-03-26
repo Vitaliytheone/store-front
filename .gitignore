@@ -1,5 +1,4 @@
 # yii console commands
-/yii
 /yii_test
 /yii_test.bat
 
@@ -38,10 +37,10 @@ phpunit.phar
 /.vagrant
 
 # Templates src
-/frontend/web/src
+/sommerce/web/src
 
 # Test debug files
 /my_test.php
 
 # Custom Themes folder
-/frontend/views/themes/custom
+/sommerce/views/themes/custom

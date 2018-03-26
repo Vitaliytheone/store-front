@@ -103,7 +103,7 @@ class CustomThemes extends ActiveRecord
      */
     public static function getThemesPath()
     {
-        return Yii::getAlias('@frontend') .  '/views/themes/custom/' . Yii::$app->store->getInstance()->id;
+        return Yii::getAlias('@sommerce') .  '/views/themes/custom/' . Yii::$app->store->getInstance()->id;
     }
 
     /**

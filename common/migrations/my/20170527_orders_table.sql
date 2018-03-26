@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD `processing` INT NOT NULL AFTER `status`;

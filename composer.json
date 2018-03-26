@@ -15,11 +15,17 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.4",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "uploadcare/uploadcare-php": ">=v2.0,<3.0",
-        "twig/twig": "^2.4"
+        "twig/twig": "^2.4",
+        "himiklab/yii2-recaptcha-widget": "^1.1",
+        "lysenkobv/yii2-geoip": "^1.0",
+        "mailgun/mailgun-php": "^2.4",
+        "php-http/curl-client": "^1.7",
+        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/psr7": "^1.4",
+        "yiisoft/yii2": "^2.0.15"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
@@ -34,7 +40,7 @@
         "fxp-asset":{
             "installer-paths": {
                 "npm-asset-library": "vendor/npm",
-                "bower-asset-library": "vendor/bower"
+                "bower-asset-library": "vendor/bower-asset"
             }
         }
     }
