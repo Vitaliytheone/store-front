@@ -15,6 +15,7 @@ use my\modules\superadmin\models\forms\EditProjectForm;
 use my\modules\superadmin\models\forms\EditProvidersForm;
 use my\modules\superadmin\models\forms\UpgradePanelForm;
 use my\modules\superadmin\models\search\PanelsSearch;
+use my\modules\superadmin\models\search\StoresSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -37,18 +38,17 @@ class StoresController extends CustomController
 
         $params = Yii::$app->request->get();
         $params['child'] = 1;
-        $panelsSearch = new PanelsSearch();
-        $panelsSearch->setParams($params);
+        $storesSearch = new StoresSearch();
+        $storesSearch->setParams($params);
 
-        $filters = $panelsSearch->getParams();
+        $filters = $storesSearch->getParams();
         $status = ArrayHelper::getValue($filters, 'status');
 
         return $this->render('index', [
-            'stores' => $panelsSearch->search(),
-            'navs' => $panelsSearch->navs(),
+            'stores' => $storesSearch->search(),
+            'navs' => $storesSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
-            'plans' => $panelsSearch->getAggregatedPlans(),
-            'filters' => $panelsSearch->getParams()
+            'filters' => $storesSearch->getParams()
         ]);
     }
 }

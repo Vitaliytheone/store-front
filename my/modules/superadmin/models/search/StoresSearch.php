@@ -1,11 +1,10 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
+use common\helpers\CurrencyHelper;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use Yii;
-use common\models\panels\Project;
-use common\models\panels\Tariff;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -19,6 +18,8 @@ class StoresSearch {
      * @var array
      */
     protected $_stores = [];
+
+    protected $pageSize = 500;
 
     use SearchTrait;
 
@@ -46,7 +47,7 @@ class StoresSearch {
         $id = ArrayHelper::getValue($this->params, 'id');
 
         $projects = (new Query())
-            ->from(DB_PANELS . '.stores');
+            ->from(DB_STORES . '.stores');
 
         if (!('all' === $status || null === $status)) {
             $projects->andWhere([
@@ -59,7 +60,7 @@ class StoresSearch {
                 'or',
                 ['=', 'stores.id', $searchQuery],
                 ['like', 'stores.name', $searchQuery],
-                ['like', 'stores.domain', $searchQuery],
+                ['like', 'customers.email', $searchQuery],
             ]);
         }
 
@@ -84,8 +85,9 @@ class StoresSearch {
             'stores.status',
             'stores.created_at',
             'stores.expired',
+            'customers.email AS customer_email'
         ]);
-        $projects->leftJoin(DB_PANELS . '.customers', 'customers.id = project.cid');
+        $projects->leftJoin(DB_STORES . '.customers', 'customers.id = stores.customer_id');
 
         return $projects->orderBy([
             'stores.id' => SORT_DESC
@@ -142,41 +144,27 @@ class StoresSearch {
      */
     protected function preparePanelsData($stores)
     {
-        $returnPanels = [];
-        'stores.id',
-            'stores.domain',
-            'stores.currency',
-            'stores.language',
-            'stores.customer_id',
-            'stores.status',
-            'stores.created_at',
-            'stores.expired',
+        $returnStores = [];
+
         foreach ($stores as $store) {
-            $returnPanels[] = [
+            $returnStores[] = [
                 'id' => $store['id'],
                 'domain' => DomainsHelper::idnToUtf8($store['domain']),
-                'currency' => Project::getCurrencyCodeById($store['currency']),
+                'currency' => CurrencyHelper::getCurrencyCodeById($store['currency']),
                 'lang' => strtoupper((string)$store['language']),
                 'customer_id' => $store['customer_id'],
-                'status' => Stores::getActNameString($panel['act']),
-                'created_date' => Project::formatDate($panel['date'], 'php:Y-m-d'),
-                'created_time' => Project::formatDate($panel['date'], 'php:H:i:s'),
-                'expired_date' => Project::formatDate($panel['expired'], 'php:Y-m-d'),
-                'expired_time' => Project::formatDate($panel['expired'], 'php:H:i:s'),
-                'expired_datetime' => Project::formatDate($panel['expired']),
-                'expired' => $panel['expired'],
-                'subdomain' => $panel['subdomain'],
-                'date' => $panel['date'],
-                'customer_email' => $panel['customer_email'],
-                'referrer_id' => $panel['referrer_id'],
-                'providers' => ArrayHelper::getValue($providers, $panel['id'], []),
-                'can' => [
-                    'downgrade' => 1 < $panel['panels']
-                ]
+                'status' => Stores::getActNameString($store['status']),
+                'created' => Stores::formatDate($store['created_at']),
+                'expired' => Stores::formatDate($store['expired']),
+                'created_date' => Stores::formatDate($store['created_at'], 'php:Y-m-d'),
+                'created_time' => Stores::formatDate($store['created_at'], 'php:H:i:s'),
+                'expired_date' => Stores::formatDate($store['expired'], 'php:Y-m-d'),
+                'expired_time' => Stores::formatDate($store['expired'], 'php:H:i:s'),
+                'customer_email' => $store['customer_email'],
             ];
         }
 
-        return $returnPanels;
+        return $returnStores;
     }
 
     /**

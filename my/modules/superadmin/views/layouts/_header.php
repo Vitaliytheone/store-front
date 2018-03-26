@@ -22,84 +22,88 @@
     $optionsLeft = [];
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
-        $optionsLeft[] = ['label' => 'Panels', 'url' => Url::toRoute('/panels'), 'active' => 'panels' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.panels'), 'url' => Url::toRoute('/panels'), 'active' => 'panels' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
-        $optionsLeft[] = ['label' => 'Child Panels', 'url' => Url::toRoute('/child-panels'), 'active' => 'child-panels' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.child_panels'), 'url' => Url::toRoute('/child-panels'), 'active' => 'child-panels' == $activeTab];
+    }
+
+    if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.stores'), 'url' => Url::toRoute('/stores'), 'active' => 'child-panels' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_ORDERS)) {
-        $optionsLeft[] = ['label' => 'Orders ' . ErrorOrdersWidget::widget(), 'url' => Url::toRoute('/orders'), 'active' => 'orders' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.orders') . ' ' . ErrorOrdersWidget::widget(), 'url' => Url::toRoute('/orders'), 'active' => 'orders' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
-        $optionsLeft[] = ['label' => 'Domains', 'url' => Url::toRoute('/domains'), 'active' => 'domains' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.domains'), 'url' => Url::toRoute('/domains'), 'active' => 'domains' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SSL)) {
-        $optionsLeft[] = ['label' => 'SSL', 'url' => Url::toRoute('/ssl'), 'active' => 'ssl' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.ssl'), 'url' => Url::toRoute('/ssl'), 'active' => 'ssl' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_CUSTOMERS)) {
-        $optionsLeft[] = ['label' => 'Customers', 'url' => Url::toRoute('/customers'), 'active' => 'customers' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.customers'), 'url' => Url::toRoute('/customers'), 'active' => 'customers' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_REFERRALS)) {
-        $optionsLeft[] = ['label' => 'Referrals', 'url' => Url::toRoute('/referrals'), 'active' => 'referrals' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.referrals'), 'url' => Url::toRoute('/referrals'), 'active' => 'referrals' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_INVOICES)) {
-        $optionsLeft[] = ['label' => 'Invoices', 'url' => Url::toRoute('/invoices'), 'active' => 'invoices' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.invoices'), 'url' => Url::toRoute('/invoices'), 'active' => 'invoices' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PAYMENTS)) {
-        $optionsLeft[] = ['label' => 'Payments', 'url' => Url::toRoute('/payments'), 'active' => 'payments' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.payments'), 'url' => Url::toRoute('/payments'), 'active' => 'payments' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_TICKETS)) {
-        $optionsLeft[] = ['label' => 'Tickets ' . UnreadMessagesWidget::widget(), 'url' => Url::toRoute('/tickets'), 'active' => 'tickets' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.tickets') . ' ' . UnreadMessagesWidget::widget(), 'url' => Url::toRoute('/tickets'), 'active' => 'tickets' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PROVIDERS)) {
-        $optionsLeft[] = ['label' => 'Providers', 'url' => Url::toRoute('/providers'), 'active' => 'providers' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.providers'), 'url' => Url::toRoute('/providers'), 'active' => 'providers' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_REPORTS)) {
-        $optionsLeft[] = ['label' => 'Reports', 'url' => Url::toRoute('/reports'), 'active' => 'reports' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.reports'), 'url' => Url::toRoute('/reports'), 'active' => 'reports' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_LOGS)) {
         $optionsLeft[] = [
-            'label' => 'Logs',
+            'label' => Yii::t('app/superadmin', 'header.nav.logs'),
             'active' => 'logs' === $activeTab,
             'items' => [
-                ['label' => 'Status log', 'url' => Url::toRoute('/logs/status')],
-                ['label' => 'Providers log', 'url' => Url::toRoute('/logs/providers')],
-                ['label' => 'API keys log', 'url' => Url::toRoute('/logs/api-keys')],
-                ['label' => 'Credits', 'url' => Url::toRoute('/logs/credits')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.status_log'), 'url' => Url::toRoute('/logs/status')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.providers_log'), 'url' => Url::toRoute('/logs/providers')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.api_keys_log'), 'url' => Url::toRoute('/logs/api-keys')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.credits'), 'url' => Url::toRoute('/logs/credits')],
             ]
         ];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_TOOLS)) {
         $optionsLeft[] = [
-            'label' => 'Tools',
+            'label' => Yii::t('app/superadmin', 'header.nav.tools'),
             'active' => 'tools' === $activeTab,
             'items' => [
-                ['label' => 'Levopanel scanner', 'url' => Url::toRoute('/tools/levopanel')],
-                ['label' => 'Panelfire scanner', 'url' => Url::toRoute('/tools/panelfire')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.levopanel_scanner'), 'url' => Url::toRoute('/tools/levopanel')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'url' => Url::toRoute('/tools/panelfire')],
             ]
         ];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SETTINGS)) {
-        $optionsLeft[] = ['label' => 'Settings', 'url' => Url::toRoute('/settings'), 'active' => 'settings' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.settings'), 'url' => Url::toRoute('/settings'), 'active' => 'settings' == $activeTab];
     }
 
     $optionsRight = [
-        ['label' => 'Account', 'url' => Url::toRoute('/account'), 'active' => 'account' == $activeTab],
-        ['label' => 'Logout', 'url' => Url::toRoute('/logout'), 'active' => 'logout' == $activeTab],
+        ['label' => Yii::t('app/superadmin', 'header.nav.account'), 'url' => Url::toRoute('/account'), 'active' => 'account' == $activeTab],
+        ['label' => Yii::t('app/superadmin', 'header.nav.logout'), 'url' => Url::toRoute('/logout'), 'active' => 'logout' == $activeTab],
     ];
 
     foreach ($optionsLeft as &$option) {

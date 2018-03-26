@@ -3,7 +3,7 @@
 namespace common\models\panels;
 
 use my\components\behaviors\IpBehavior;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;

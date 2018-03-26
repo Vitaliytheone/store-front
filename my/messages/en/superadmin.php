@@ -1,6 +1,31 @@
 <?php
 
 return [
+    'header.nav.panels' => 'Panels',
+    'header.nav.child_panels' => 'Child Panels',
+    'header.nav.stores' => 'Stores',
+    'header.nav.orders' => 'Orders',
+    'header.nav.domains' => 'Domains',
+    'header.nav.ssl' => 'SSL',
+    'header.nav.customers' => 'Customers',
+    'header.nav.referrals' => 'Refferals',
+    'header.nav.invoices' => 'Invoices',
+    'header.nav.payments' => 'Payments',
+    'header.nav.tickets' => 'Tickets',
+    'header.nav.providers' => 'Providers',
+    'header.nav.reports' => 'Reports',
+    'header.nav.logs' => 'Logs',
+    'header.nav.status_log' => 'Status log',
+    'header.nav.providers_log' => 'Providers log',
+    'header.nav.api_keys_log' => 'API keys log',
+    'header.nav.credits' => 'Credits',
+    'header.nav.tools' => 'Tools',
+    'header.nav.levopanel_scanner' => 'Levopanel scanner',
+    'header.nav.panelfire_scanner' => 'Panelfire scanner',
+    'header.nav.settings' => 'Settings',
+    'header.nav.account' => 'Account',
+    'header.nav.logout' => 'Logout',
+
     'pages.title.edit_panel' => 'Edit {domain} panel',
     'pages.title.panels' => 'Panels',
     'pages.title.child_panels' => 'Child panels',
@@ -396,4 +421,5 @@ return [
     'stores.list.navs_active' => 'Active ({count})',
     'stores.list.navs_frozen' => 'Frozen ({count})',
     'stores.list.navs_terminated' => 'Terminated ({count})',
+    'stores.list.search' => 'Search stores',
 ];

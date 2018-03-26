@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\helpers\CurrencyHelper;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -12,7 +13,7 @@ use my\mail\mailers\PanelFrozen;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -369,21 +370,7 @@ class Project extends ActiveRecord
      */
     public function getCurrencyCode()
     {
-        return static::getCurrencyCodeById($this->currency);
-    }
-
-    /**
-     * Get currency code by currency id
-     * @param $id
-     * @return mixed
-     */
-    public static function getCurrencyCodeById($id)
-    {
-        $currencies = [];
-        foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $code;
-        }
-        return ArrayHelper::getValue($currencies, (integer)$id);
+        return CurrencyHelper::getCurrencyCodeById($this->currency);
     }
 
     /**

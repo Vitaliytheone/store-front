@@ -2,7 +2,7 @@
 
 namespace common\models\panel;
 
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Json;

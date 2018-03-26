@@ -6,7 +6,7 @@ use my\helpers\StringHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use yii\helpers\ArrayHelper;
 
 /**

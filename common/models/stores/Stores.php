@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\store\Blocks;
 use sommerce\helpers\StoreHelper;
 use Yii;
@@ -9,6 +10,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
 use common\models\store\Files;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%stores}}".
@@ -51,6 +53,8 @@ class Stores extends ActiveRecord
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
+
+    use UnixTimeFormatTrait;
 
     /**
      * @inheritdoc
@@ -327,10 +331,26 @@ class Stores extends ActiveRecord
         return ((bool)$domain->ssl ? 'https' : 'http') . '://' . $domain->domain;
     }
 
+    /**
+     * Get statuses
+     * @return array
+     */
     public static function getStatuses()
     {
         return [
-            static::STATUS_ACTIVE => Yii::t('app', 'Active'),
+            static::STATUS_ACTIVE => Yii::t('app', 'stores.status.active'),
+            static::STATUS_FROZEN => Yii::t('app', 'stores.status.frozen'),
+            static::STATUS_TERMINATED => Yii::t('app', 'stores.status.terminated'),
         ];
+    }
+
+    /**
+     * Get status string name by status
+     * @param int $status
+     * @return mixed
+     */
+    public static function getActNameString($status)
+    {
+        return ArrayHelper::getValue(static::getStatuses(), $status, '');
     }
 }

@@ -4,7 +4,7 @@ namespace common\models\panels;
 
 use my\components\behaviors\IpBehavior;
 use Yii;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
