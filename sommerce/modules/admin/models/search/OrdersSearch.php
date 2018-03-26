@@ -282,12 +282,16 @@ class OrdersSearch extends Model
      */
     public function geSubordersCountsByStatus()
     {
-        $presentSubordersCounts = (new Query())
-            ->select(['status', 'COUNT(*) count'])
-            ->from($this->_subordersTable)
+        $query = (new Query())
+            ->select (['status', 'COUNT(mode) count'])
+            ->from ("$this->_subordersTable so")
+            ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
             ->groupBy('status')
-            ->indexBy('status')
-            ->all();
+            ->indexBy('status');
+
+        $this->_applyFilters($query, $this->_queryActiveFilters, ['status']);
+
+        $presentSubordersCounts = $query->all();
 
         $subordersCounts = [];
 
@@ -430,10 +434,11 @@ class OrdersSearch extends Model
             ->select (['mode', 'COUNT(mode) count'])
             ->from ("$this->_subordersTable so")
             ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
-            ->groupBy('mode' );
+            ->groupBy('mode')
+            ->indexBy('mode');
 
         $this->_applyFilters($query, $this->_queryActiveFilters, ['mode']);
-        $modeFilterStat = $query->createCommand()->queryAll();
+        $modeFilterStat = $query->all();
 
         $filterItems = [
             'all' => [
