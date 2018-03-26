@@ -207,69 +207,66 @@ class OrdersSearch extends Model
             $this->_queryActiveFilters['product']['where'] = $filter;
         }
 
-        $this->_applyFilters($query, $this->_queryActiveFilters);
-
+        // Search
         $searchQuery = trim($this->query);
-        if ($searchQuery === '') {
-            return $this->_dataProvider;
-        }
+        if ($searchQuery !== '') {
 
-        // For order_id and provider_order_id lists
-        // Query string example: 1, 22ED-3DD-32, 2, 3, 4, 9909
-        $queryList = array_unique(explode(',', str_replace(' ', '', $searchQuery)));
-        $orderIds = [];
-        $providerOrderIds = [];
+            // For order_id and provider_order_id lists
+            // Query string example: 1, 22ED-3DD-32, 2, 3, 4, 9909
+            $queryList = array_unique(explode(',', str_replace(' ', '', $searchQuery)));
+            $orderIds = [];
+            $providerOrderIds = [];
 
-        foreach ($queryList as $item) {
-            if (ctype_digit($item)) {
-                $orderIds[] = $item;
+            foreach ($queryList as $item) {
+                if (ctype_digit($item)) {
+                    $orderIds[] = $item;
+                }
+                $providerOrderIds[] = $item;
             }
-            $providerOrderIds[] = $item;
+
+            // Searches:
+            // 1. Search strong by `id` &  soft by `link` if $searchQuery : number
+            // 2. Search strong by `customer` if $searchQuery : valid Email
+            // 3. Search strong by orderIds list or providerOrderIds list
+            // 3.1. Search soft by `link` if $searchQuery : some string
+            $emailValidator = new EmailValidator();
+            $searchFilter = null;
+            if (ctype_digit($searchQuery)) {
+                $searchOrderIdsSubquery = (new Query())
+                    ->select('order_id')
+                    ->from($this->_subordersTable)
+                    ->where([
+                        'or',
+                        ['order_id' => $searchQuery],
+                        ['like', 'link', $searchQuery]
+                    ])
+                    ->groupBy('order_id');
+                $searchFilter = ['o.id' => $searchOrderIdsSubquery];
+            } elseif ($emailValidator->validate($searchQuery)) {
+                $searchOrderIdsSubquery = (new Query())
+                    ->select('id order_id')
+                    ->from($this->_ordersTable)
+                    ->where(['customer' => $searchQuery])
+                    ->groupBy('order_id');
+                $searchFilter = ['o.id' => $searchOrderIdsSubquery];
+            } else {
+                $searchOrderIdsSubquery = (new Query())
+                    ->select('order_id')
+                    ->from($this->_subordersTable)
+                    ->where([
+                        'or',
+                        ['in', 'order_id', $orderIds],
+                        ['in', 'provider_order_id', $providerOrderIds],
+                        ['like', 'link', $searchQuery]
+                    ])
+                    ->groupBy('order_id');
+                $searchFilter = ['o.id' => $searchOrderIdsSubquery];
+            }
+
+            $this->_queryActiveFilters['search']['where'] = $searchFilter;
         }
 
-        // Searches:
-        // 1. Search strong by `id` &  soft by `link` if $searchQuery : number
-        // 2. Search strong by `customer` if $searchQuery : valid Email
-        // 3. Search strong by orderIds list or providerOrderIds list
-        // 3.1. Search soft by `link` if $searchQuery : some string
-        $emailValidator = new EmailValidator();
-        $searchFilter = null;
-        if (ctype_digit($searchQuery)) {
-            $searchOrderIdsSubquery = (new Query())
-                ->select('order_id')
-                ->from($this->_subordersTable)
-                ->where([
-                    'or',
-                    ['order_id' => $searchQuery],
-                    ['like', 'link', $searchQuery]
-                ])
-                ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
-        } elseif ($emailValidator->validate($searchQuery)) {
-            $searchOrderIdsSubquery = (new Query())
-                ->select('id order_id')
-                ->from($this->_ordersTable)
-                ->where(['customer' => $searchQuery])
-                ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
-        } else {
-            $searchOrderIdsSubquery = (new Query())
-                ->select('order_id')
-                ->from($this->_subordersTable)
-                ->where([
-                    'or',
-                    ['in', 'order_id', $orderIds],
-                    ['in', 'provider_order_id', $providerOrderIds],
-                    ['like', 'link', $searchQuery]
-                ])
-                ->groupBy('order_id');
-            $searchFilter = ['o.id' => $searchOrderIdsSubquery];
-        }
-
-        // Apply query filter
-        if ($searchFilter) {
-            $query->andFilterWhere($searchFilter);
-        }
+        $this->_applyFilters($query, $this->_queryActiveFilters);
 
         return $this->_dataProvider;
     }

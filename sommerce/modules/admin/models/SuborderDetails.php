@@ -2,10 +2,9 @@
 
 namespace sommerce\modules\admin\models;
 
-use common\models\stores\Providers;
 use Yii;
-use yii\db\Query;
 use common\models\store\Suborders;
+use common\helpers\CustomHtmlHelper;
 
 /**
  * Class Suborder
@@ -25,13 +24,11 @@ class SuborderDetails extends Suborders
             return null;
         }
 
-        $providerResponse = print_r(json_decode($this->provider_response), 1);
-
         $formatter = Yii::$app->formatter;
         $orderDetails = [
             'provider' => $provider->site,
             'provider_order_id' => $this->provider_order_id,
-            'provider_response' => $providerResponse,
+            'provider_response' =>CustomHtmlHelper::responseFormatter($this->provider_response),
             'updated_at' => $formatter->asDatetime($this->updated_at,'yyyy-MM-dd HH:mm:ss'),
         ];
 
