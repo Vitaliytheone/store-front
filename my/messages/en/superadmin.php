@@ -25,6 +25,7 @@ return [
     'pages.title.reports' => 'Reports',
     'pages.title.tools.levopanel' => 'Levopanel scanner',
     'pages.title.tools.smmfire' => 'Panelfire scanner',
+    'pages.title.stores' => 'Stores',
 
     'panels.edit.header' => 'Edit {domain} panel',
     'panels.edit.btn_submit' => 'Save changes',
@@ -391,4 +392,8 @@ return [
     'tools.levopanel.error.invalid_domain_name' => 'Invalid domain name!',
     'tools.levopanel.error.domain_exist' => 'Domain {domain} already exist!',
 
+    'stores.list.navs_all' => 'All ({count})',
+    'stores.list.navs_active' => 'Active ({count})',
+    'stores.list.navs_frozen' => 'Frozen ({count})',
+    'stores.list.navs_terminated' => 'Terminated ({count})',
 ];

@@ -31,3 +31,6 @@ define('PROXY_CONFIG', (function() use ($configParams) {
         'port' => $configParams['proxy']['port'],
     ];
 })());
+
+define('DB_STORES', 'stores');
+define('DB_PANELS', 'panels');

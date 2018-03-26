@@ -77,7 +77,7 @@ class Stores extends ActiveRecord
             [['currency', 'language'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['admin_email'], 'string', 'max' => 300],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
         ];
     }
 
@@ -121,7 +121,7 @@ class Stores extends ActiveRecord
      */
     public function getPaymentMethods()
     {
-        return $this->hasMany(PaymentMethods::className(), ['store_id' => 'id']);
+        return $this->hasMany(PaymentMethods::class, ['store_id' => 'id']);
     }
 
     /**
@@ -129,7 +129,7 @@ class Stores extends ActiveRecord
      */
     public function getStoreAdmins()
     {
-        return $this->hasMany(StoreAdmins::className(), ['store_id' => 'id']);
+        return $this->hasMany(StoreAdmins::class, ['store_id' => 'id']);
     }
 
     /**
@@ -137,7 +137,7 @@ class Stores extends ActiveRecord
      */
     public function getStoreDomains()
     {
-        return $this->hasMany(StoreDomains::className(), ['store_id' => 'id']);
+        return $this->hasMany(StoreDomains::class, ['store_id' => 'id']);
     }
 
     /**
@@ -145,7 +145,7 @@ class Stores extends ActiveRecord
      */
     public function getStoreProviders()
     {
-        return $this->hasMany(StoreProviders::className(), ['store_id' => 'id']);
+        return $this->hasMany(StoreProviders::class, ['store_id' => 'id']);
     }
 
     /**
@@ -153,7 +153,7 @@ class Stores extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'customer_id']);
+        return $this->hasOne(Customers::class, ['id' => 'customer_id']);
     }
 
     /**
@@ -172,7 +172,7 @@ class Stores extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',
@@ -325,5 +325,12 @@ class Stores extends ActiveRecord
             ->one();
 
         return ((bool)$domain->ssl ? 'https' : 'http') . '://' . $domain->domain;
+    }
+
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_ACTIVE => Yii::t('app', 'Active'),
+        ];
     }
 }
