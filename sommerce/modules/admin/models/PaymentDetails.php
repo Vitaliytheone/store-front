@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\models;
 
-use common\models\store\Checkouts;
+use common\helpers\CustomHtmlHelper;
 use common\models\store\PaymentsLog;
 use Yii;
 use yii\db\Query;
@@ -47,12 +47,12 @@ class PaymentDetails extends Payments
         $paymentDetails = [];
 
         foreach ($paymentLogs as $log) {
-            $detail = ArrayHelper::getValue($log, 'result', []);
+            $detail = CustomHtmlHelper::responseFormatter(ArrayHelper::getValue($log, 'result', []));
             $created = ArrayHelper::getValue($log, 'created_at');
 
             $paymentDetails[] = [
                 'time' => $formatter->asDatetime($created,'yyyy-MM-dd HH:mm:ss'),
-                'data' => print_r(json_decode($detail,false),1),
+                'data' => $detail,
             ];
         }
 
