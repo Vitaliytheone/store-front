@@ -52,10 +52,19 @@
             } else if ($panel['forecast_count'] < $panel['of_orders']) {
                 $forecastColor = 'text-orange';
             }
+
+            $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
             ?>
             <tr>
                 <td><?= $panel['id'] ?></td>
-                <td><?= $panel['site'] ?> <?= ($panel['referrer_id'] ? '(' . Html::a('r', Url::toRoute(['/customers', 'id' => $panel['referrer_id']]), ['target' => '_blank']) . ')' : '')?></td>
+                <td>
+                    <div class="pull-left">
+                        <?= $panel['site'] ?> <?= ($panel['referrer_id'] ? '(' . Html::a('r', Url::toRoute(['/customers', 'id' => $panel['referrer_id']]), ['target' => '_blank']) . ')' : '')?>
+                    </div>
+                    <div class="pull-right">
+                        <a href="<?= $loginUrl ?>" class="login-key-link" target="_blank"><i class="fa fa-key fa-flip-horizontal" aria-hidden="true"></i></a>
+                    </div>
+                </td>
                 <td><?= $panel['currency'] ?></td>
                 <td class="text-nowrap"><?= strtoupper($panel['lang']) ?></td>
                 <td>
@@ -119,7 +128,7 @@
                                 ])?>
                             <?php endif; ?>
 
-                            <?= Html::a(Yii::t('app/superadmin', 'panels.list.sign_in_as_admin'), Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]), [
+                            <?= Html::a(Yii::t('app/superadmin', 'panels.list.sign_in_as_admin'), $loginUrl, [
                                 'class' => 'dropdown-item',
                                 'target' => '_blank',
                             ])?>

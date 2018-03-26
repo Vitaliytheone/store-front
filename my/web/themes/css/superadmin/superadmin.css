@@ -213,3 +213,11 @@ hr {
 .checkbox-inline {
   margin-right: 10px;
 }
+
+.login-key-link, .login-key-link:hover, .login-key-link:active {
+  border: 1px solid #ddd;
+  padding: 3px 6px;
+  border-radius: 3px;
+  background: #dfe2e7;
+  color: #292b2c;
+}

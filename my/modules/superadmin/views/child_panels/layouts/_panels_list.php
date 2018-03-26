@@ -31,9 +31,19 @@
     <tbody>
     <?php if (!empty($panels['models'])) : ?>
         <?php foreach ($panels['models'] as $panel) : ?>
+            <?php
+            $loginUrl = Url::toRoute(['/child-panels/sign-in-as-admin', 'id' => $panel['id']]);
+            ?>
             <tr>
                 <td><?= $panel['id'] ?></td>
-                <td><?= $panel['site'] ?></td>
+                <td>
+                    <div class="pull-left">
+                        <?= $panel['site'] ?>
+                    </div>
+                    <div class="pull-right">
+                        <a href="<?= $loginUrl ?>" class="login-key-link" target="_blank"><i class="fa fa-key fa-flip-horizontal" aria-hidden="true"></i></a>
+                    </div>
+                </td>
                 <td><?= $panel['currency'] ?></td>
                 <td class="text-nowrap"><?= strtoupper($panel['lang']) ?></td>
                 <td>
@@ -94,7 +104,7 @@
                                 'data-total' => 25
                             ])?>
 
-                            <?= Html::a(Yii::t('app/superadmin', 'child_panels.list.sign_in_as_admin'), Url::toRoute(['/child-panels/sign-in-as-admin', 'id' => $panel['id']]), [
+                            <?= Html::a(Yii::t('app/superadmin', 'child_panels.list.sign_in_as_admin'), $loginUrl, [
                                 'class' => 'dropdown-item',
                                 'target' => '_blank',
                             ])?>
