@@ -5,7 +5,7 @@ namespace console\controllers\sommerce;
 use common\models\stores\StoreAdminsHash;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
-use console\helpers\SommerceHelper;
+use sommerce\helpers\StoresHelper;
 use Yii;
 
 /**
@@ -19,7 +19,7 @@ class CronController extends CustomController
      */
     public function actionClearCartItems()
     {
-        SommerceHelper::clearStoresCarts(30);
+        StoresHelper::clearStoresCarts(30);
     }
 
     /**
