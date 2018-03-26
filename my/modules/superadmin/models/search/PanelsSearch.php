@@ -54,8 +54,8 @@ class PanelsSearch {
     {
         $searchQuery = $this->getQuery();
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
-        $child = ArrayHelper::getValue($this->params, 'child');
         $id = ArrayHelper::getValue($this->params, 'id');
+        $child = ArrayHelper::getValue($this->params, 'child');
 
         $projects = (new Query())
             ->from('project');
@@ -128,14 +128,16 @@ class PanelsSearch {
             'project.subdomain',
             'project.date',
             'customers.email AS customer_email',
-            'customers.referrer_id AS referrer_id'
+            'customers.referrer_id AS referrer_id',
+            'COUNT(DISTINCT pr2.id) as panels'
         ]);
+        $projects->leftJoin('project as pr2', 'pr2.cid = project.cid AND pr2.child_panel = project.child_panel');
         $projects->leftJoin('customers', 'customers.id = project.cid');
 
         return $projects->orderBy([
             'project.id' => SORT_DESC
         ])->groupBy('project.id')
-        ->all();
+            ->all();
     }
 
     /**
@@ -149,9 +151,9 @@ class PanelsSearch {
         }
 
         foreach ((new Query())
-            ->select('id, before_orders, of_orders, title')
-            ->from('tariff')
-            ->all() as $tariff) {
+                     ->select('id, before_orders, of_orders, title')
+                     ->from('tariff')
+                     ->all() as $tariff) {
             $this->_tariffs[$tariff['id']] = $tariff;
         }
 
@@ -169,9 +171,9 @@ class PanelsSearch {
         }
 
         foreach ((new Query())
-            ->select('pid, aid')
-            ->from('user_services')
-            ->all() as $provider) {
+                     ->select('pid, aid')
+                     ->from('user_services')
+                     ->all() as $provider) {
             $this->_userServices[$provider['pid']][] = $provider['aid'];
         }
 
@@ -238,8 +240,6 @@ class PanelsSearch {
         $tariffs = $this->getTariffs();
         $providers = $this->getProviders();
 
-        $customerPanels = ArrayHelper::index($panels, null, 'cid');
-
         foreach ($panels as $panel) {
             $tariff = ArrayHelper::getValue($tariffs, $panel['plan']);
             $returnPanels[] = [
@@ -268,7 +268,7 @@ class PanelsSearch {
                 'referrer_id' => $panel['referrer_id'],
                 'providers' => ArrayHelper::getValue($providers, $panel['id'], []),
                 'can' => [
-                    'downgrade' => 1 < count($customerPanels[$panel['cid']])
+                    'downgrade' => 1 < $panel['panels']
                 ]
             ];
         }
@@ -292,6 +292,7 @@ class PanelsSearch {
 
             return $panels;
         };
+
         return [
             'all' => 'All (' . count($skipSomeData($this->getPanels('all'))) . ')',
             Project::STATUS_ACTIVE => 'Active (' . count($skipSomeData($this->getPanels(Project::STATUS_ACTIVE))) . ')',

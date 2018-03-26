@@ -1,6 +1,8 @@
 <?php
 namespace my\modules\superadmin\models\forms;
 
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use my\helpers\ChildHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\UserServices;
@@ -65,7 +67,7 @@ class DowngradePanelForm extends Model {
         $currentProviders = ArrayHelper::index($this->_project->userServices, 'aid');
 
         $transaction = Yii::$app->db->beginTransaction();
-        
+
         try {
             if (!$this->_project->downgrade()) {
                 $this->addError('mode', 'Can not downgrade.');
@@ -98,6 +100,25 @@ class DowngradePanelForm extends Model {
                 ], 'res IN (' . implode(",", $resIds) . ')')->execute();
             }
 
+            // При downgrade - надо поменять сумму инфойса и айтем инвойса на продление child
+            foreach (InvoiceDetails::find()->andWhere([
+                'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                'item_id' => $this->_project->id,
+                'invoices.status' => Invoices::STATUS_UNPAID
+            ])->joinWith(['invoice'])->all() as $invoiceDetails) {
+                $invoice = $invoiceDetails->invoice;
+                $amount = Yii::$app->params['childPanelDeployPrice'];
+
+                $invoice->total -= $amount;
+                $invoiceDetails->amount = $amount;
+                $invoiceDetails->item = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
+
+                if (!$invoice->save(false) || !$invoiceDetails->save(false)) {
+                    $this->addError('mode', 'Can not downgrade.');
+                    return false;
+                }
+            }
+
         } catch (Exception $exception) {
             $transaction->rollBack();
 
@@ -120,10 +141,6 @@ class DowngradePanelForm extends Model {
     {
         if (null !== $this->_providers) {
             return $this->_providers;
-        }
-
-        if (empty($this->_project)) {
-            return [];
         }
 
         $this->_providers = ChildHelper::getProviders($this->_project->cid, [
