@@ -1,6 +1,6 @@
 <?php
 
-namespace console\helpers;
+namespace sommerce\helpers;
 
 use common\models\store\Carts;
 use common\models\stores\Stores;
@@ -8,10 +8,10 @@ use Yii;
 use yii\db\Query;
 
 /**
- * Class SommerceHelper
+ * Class StoresHelper
  * @package console\helpers
  */
-class SommerceHelper
+class StoresHelper
 {
     /**
      * Return active stores list
