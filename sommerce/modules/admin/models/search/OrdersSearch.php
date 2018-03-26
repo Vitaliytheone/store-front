@@ -209,7 +209,6 @@ class OrdersSearch extends Model
 
         $this->_applyFilters($query, $this->_queryActiveFilters);
 
-
         $searchQuery = trim($this->query);
         if ($searchQuery === '') {
             return $this->_dataProvider;
@@ -282,12 +281,16 @@ class OrdersSearch extends Model
      */
     public function geSubordersCountsByStatus()
     {
-        $presentSubordersCounts = (new Query())
-            ->select(['status', 'COUNT(*) count'])
-            ->from($this->_subordersTable)
+        $query = (new Query())
+            ->select (['status', 'COUNT(mode) count'])
+            ->from ("$this->_subordersTable so")
+            ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
             ->groupBy('status')
-            ->indexBy('status')
-            ->all();
+            ->indexBy('status');
+
+        $this->_applyFilters($query, $this->_queryActiveFilters, ['status']);
+
+        $presentSubordersCounts = $query->all();
 
         $subordersCounts = [];
 
@@ -316,9 +319,8 @@ class OrdersSearch extends Model
         $buttons = [
             'all' => [
                 'title' => Yii::t('admin', 'orders.filter_status_all'),
-                'filter' => null,
-                'url' => null,
-                'count' => null,
+                'url' => Url::toRoute('/orders'),
+                'count' => array_sum(array_column($subordersByStatusCounts, 'count')),
             ],
             Suborders::STATUS_AWAITING => [
                 'title' => Suborders::getStatusName(Suborders::STATUS_AWAITING),
@@ -344,12 +346,10 @@ class OrdersSearch extends Model
         ];
 
         array_walk($buttons, function (&$button, $filter) use ($subordersByStatusCounts, $options) {
-            if ($filter === 'all') {
-                $count = array_sum(array_column($subordersByStatusCounts, 'count'));
-                $url = Url::toRoute('/orders');
-            } else {
-                $count = ArrayHelper::getValue($subordersByStatusCounts, "$filter.count" );
-                $url = Url::current(['status' => $filter]);
+
+            if ($filter !== 'all') {
+                $button['count'] = ArrayHelper::getValue($subordersByStatusCounts, "$filter.count" );
+                $button['url'] =  Url::current(['status' => $filter]);
             }
 
             if ($options) {
@@ -361,9 +361,7 @@ class OrdersSearch extends Model
 
             $button['id'] = "status_button_$filter";
             $button['filter'] = $filter;
-            $button['url'] = $url;
             $button['active'] = UiHelper::isFilterActive('status', $filter);
-            $button['count'] = $count;
         });
 
         return $buttons;
@@ -430,10 +428,11 @@ class OrdersSearch extends Model
             ->select (['mode', 'COUNT(mode) count'])
             ->from ("$this->_subordersTable so")
             ->leftJoin("$this->_ordersTable o", 'o.id = so.order_id')
-            ->groupBy('mode' );
+            ->groupBy('mode')
+            ->indexBy('mode');
 
         $this->_applyFilters($query, $this->_queryActiveFilters, ['mode']);
-        $modeFilterStat = $query->createCommand()->queryAll();
+        $modeFilterStat = $query->all();
 
         $filterItems = [
             'all' => [
