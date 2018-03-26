@@ -41,7 +41,7 @@ class StoresHelper
     {
         $stores = static::getStoresList(['db_name']);
 
-        /** @var yii\db\Connection $connection */
+        /** @var \yii\db\Connection $connection */
         $connection = Yii::$app->storeDb;
 
         $tableName = Carts::tableName();

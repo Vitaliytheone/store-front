@@ -56,7 +56,7 @@ class InvoiceDetails extends ActiveRecord
             [['invoice_id', 'item_id', 'item', 'created_at'], 'integer'],
             [['description'], 'string'],
             [['amount'], 'number'],
-            [['invoice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Invoices::className(), 'targetAttribute' => ['invoice_id' => 'id']],
+            [['invoice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Invoices::class, 'targetAttribute' => ['invoice_id' => 'id']],
         ];
     }
 
