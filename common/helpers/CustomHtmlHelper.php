@@ -2,6 +2,7 @@
 
 namespace common\helpers;
 
+use yii\base\Exception;
 use yii\helpers\Html;
 
 /**
@@ -28,5 +29,28 @@ class CustomHtmlHelper extends Html
         $response = print_r($response, 1);
 
         return static::encode($response);
+    }
+
+    /**
+     * Recirsively encoding array keys and values
+     * @param array $array
+     * @throws Exception
+     */
+    public static function arrayEncoder(array &$array)
+    {
+        if (!is_array($array)) {
+            throw new Exception('Array expected!');
+        }
+
+        foreach(array_keys($array) as $key) {
+            $value = &$array[$key];
+            unset($array[$key]);
+
+            if (is_array($value)) static::arrayEncoder($value);
+
+            $array[Html::encode($key)] = $value;
+
+            unset($value);
+        }
     }
 }

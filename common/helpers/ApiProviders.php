@@ -151,6 +151,8 @@ class ApiProviders
             ];
         };
 
+        CustomHtmlHelper::arrayEncoder($jsonResult);
+
         return $jsonResult;
     }
 }
