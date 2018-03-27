@@ -35,8 +35,8 @@ class StoreProviders extends ActiveRecord
         return [
             [['provider_id', 'store_id'], 'integer'],
             [['apikey'], 'string', 'max' => 255],
-            [['provider_id'], 'exist', 'skipOnError' => true, 'targetClass' => Providers::className(), 'targetAttribute' => ['provider_id' => 'id']],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['provider_id'], 'exist', 'skipOnError' => true, 'targetClass' => Providers::class, 'targetAttribute' => ['provider_id' => 'id']],
+            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -58,7 +58,7 @@ class StoreProviders extends ActiveRecord
      */
     public function getProvider()
     {
-        return $this->hasOne(Providers::className(), ['id' => 'provider_id']);
+        return $this->hasOne(Providers::class, ['id' => 'provider_id']);
     }
 
     /**
@@ -66,7 +66,7 @@ class StoreProviders extends ActiveRecord
      */
     public function getStore()
     {
-        return $this->hasOne(Stores::className(), ['id' => 'store_id']);
+        return $this->hasOne(Stores::class, ['id' => 'store_id']);
     }
 
     /**

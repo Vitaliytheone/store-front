@@ -58,7 +58,7 @@ class DomainZones extends ActiveRecord
      */
     public function getDomains()
     {
-        return $this->hasMany(Domains::className(), ['zone_id' => 'id']);
+        return $this->hasMany(Domains::class, ['zone_id' => 'id']);
     }
 
     /**

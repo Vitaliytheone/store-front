@@ -422,4 +422,13 @@ return [
     'stores.list.navs_frozen' => 'Frozen ({count})',
     'stores.list.navs_terminated' => 'Terminated ({count})',
     'stores.list.search' => 'Search stores',
+    'stores.list.column_id' => 'ID',
+    'stores.list.column_domain' => 'Domain',
+    'stores.list.column_currency' => 'Currency',
+    'stores.list.column_language' => 'Language',
+    'stores.list.column_customer' => 'Customer',
+    'stores.list.column_status' => 'Status',
+    'stores.list.column_created' => 'Created',
+    'stores.list.column_expiry' => 'Expiry',
+    'stores.list.column_actions' => 'Actions',
 ];

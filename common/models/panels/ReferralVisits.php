@@ -74,7 +74,7 @@ class ReferralVisits extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],
@@ -83,7 +83,7 @@ class ReferralVisits extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]

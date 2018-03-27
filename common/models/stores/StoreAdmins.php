@@ -65,7 +65,7 @@ class StoreAdmins extends ActiveRecord
             [['password',], 'string', 'max' => 64],
             [['rules'], 'string', 'max' => 1000],
             ['status', 'in', 'range' => [self::STATUS_SUSPENDED, self::STATUS_ACTIVE]],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -95,7 +95,7 @@ class StoreAdmins extends ActiveRecord
      */
     public function getStore()
     {
-        return $this->hasOne(Stores::className(), ['id' => 'store_id']);
+        return $this->hasOne(Stores::class, ['id' => 'store_id']);
     }
 
     /**
@@ -112,7 +112,7 @@ class StoreAdmins extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',

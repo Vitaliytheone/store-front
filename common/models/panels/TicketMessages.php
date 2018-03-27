@@ -76,7 +76,7 @@ class TicketMessages extends ActiveRecord
      */
     public function getTicket()
     {
-        return $this->hasOne(Tickets::className(), ['id' => 'tid']);
+        return $this->hasOne(Tickets::class, ['id' => 'tid']);
     }
 
     /**
@@ -84,7 +84,7 @@ class TicketMessages extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'cid']);
     }
 
     /**
@@ -92,7 +92,7 @@ class TicketMessages extends ActiveRecord
      */
     public function getAdmin()
     {
-        return $this->hasOne(SuperAdmin::className(), ['id' => 'uid']);
+        return $this->hasOne(SuperAdmin::class, ['id' => 'uid']);
     }
 
 }

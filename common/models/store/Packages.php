@@ -61,7 +61,7 @@ class Packages extends ActiveRecord
             [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],
-            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'id']],
+            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::class, 'targetAttribute' => ['product_id' => 'id']],
         ];
     }
 
@@ -92,7 +92,7 @@ class Packages extends ActiveRecord
      */
     public function getProduct()
     {
-        return $this->hasOne(Products::className(), ['id' => 'product_id']);
+        return $this->hasOne(Products::class, ['id' => 'product_id']);
     }
 
     /**
@@ -100,7 +100,7 @@ class Packages extends ActiveRecord
      */
     public function getSuborders()
     {
-        return $this->hasMany(Suborders::className(), ['package_id' => 'id']);
+        return $this->hasMany(Suborders::class, ['package_id' => 'id']);
     }
 
     /**

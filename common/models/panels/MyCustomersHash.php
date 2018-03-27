@@ -77,7 +77,7 @@ class MyCustomersHash extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Auth::className(), ['id' => 'customer_id']);
+        return $this->hasOne(Auth::class, ['id' => 'customer_id']);
     }
 
     /**
@@ -93,7 +93,7 @@ class MyCustomersHash extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',
@@ -106,7 +106,7 @@ class MyCustomersHash extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]

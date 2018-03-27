@@ -80,7 +80,7 @@ class InvoiceDetails extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],
@@ -96,7 +96,7 @@ class InvoiceDetails extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid'])->via('invoice');
+        return $this->hasOne(Customers::class, ['id' => 'cid'])->via('invoice');
     }
 
     /**
@@ -104,7 +104,7 @@ class InvoiceDetails extends ActiveRecord
      */
     public function getInvoice()
     {
-        return $this->hasOne(Invoices::className(), ['id' => 'invoice_id']);
+        return $this->hasOne(Invoices::class, ['id' => 'invoice_id']);
     }
 
     /**
@@ -112,7 +112,7 @@ class InvoiceDetails extends ActiveRecord
      */
     public function getOrder()
     {
-        return $this->hasOne(Orders::className(), ['id' => 'item_id']);
+        return $this->hasOne(Orders::class, ['id' => 'item_id']);
     }
 
     /**
@@ -120,7 +120,7 @@ class InvoiceDetails extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'item_id']);
+        return $this->hasOne(Project::class, ['id' => 'item_id']);
     }
 
     /**

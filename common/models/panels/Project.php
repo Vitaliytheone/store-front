@@ -258,7 +258,7 @@ class Project extends ActiveRecord
      */
     public function getPanelDomains()
     {
-        return $this->hasMany(PanelDomains::className(), ['panel_id' => 'id']);
+        return $this->hasMany(PanelDomains::class, ['panel_id' => 'id']);
     }
 
     /**
@@ -266,7 +266,7 @@ class Project extends ActiveRecord
      */
     public function getSslValidations()
     {
-        return $this->hasMany(SslValidation::className(), ['pid' => 'id']);
+        return $this->hasMany(SslValidation::class, ['pid' => 'id']);
     }
 
     /**
@@ -274,7 +274,7 @@ class Project extends ActiveRecord
      */
     public function getUserServices()
     {
-        return $this->hasMany(UserServices::className(), ['pid' => 'id']);
+        return $this->hasMany(UserServices::class, ['pid' => 'id']);
     }
 
     /**
@@ -282,7 +282,7 @@ class Project extends ActiveRecord
      */
     public function getTariffDetails()
     {
-        return $this->hasOne(Tariff::className(), ['id' => 'plan']);
+        return $this->hasOne(Tariff::class, ['id' => 'plan']);
     }
 
     /**
@@ -290,7 +290,7 @@ class Project extends ActiveRecord
      */
     public function getNewTariffDetails()
     {
-        return $this->hasOne(Tariff::className(), ['id' => 'tariff']);
+        return $this->hasOne(Tariff::class, ['id' => 'tariff']);
     }
 
     /**
@@ -298,7 +298,7 @@ class Project extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'cid']);
     }
 
     /**
@@ -353,7 +353,7 @@ class Project extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'date',
                 ],

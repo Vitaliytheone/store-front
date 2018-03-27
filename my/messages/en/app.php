@@ -508,4 +508,7 @@ return [
     'project_admin.rules_settings_themes' => 'Themes',
     'project_admin.rules_settings_languages' => 'Languages',
     'project_admin.rules_providers' => 'Hide providers details',
+    'stores.status.active' => 'Active',
+    'stores.status.frozen' => 'Frozen',
+    'stores.status.terminated' => 'Terminated',
 ];

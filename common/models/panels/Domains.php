@@ -55,8 +55,8 @@ class Domains extends ActiveRecord
             [['customer_id', 'zone_id', 'status', 'created_at', 'expiry', 'privacy_protection', 'transfer_protection'], 'integer'],
             [['details'], 'string'],
             [['contact_id', 'domain', 'password'], 'string', 'max' => 250],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => DomainZones::className(), 'targetAttribute' => ['zone_id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
+            [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => DomainZones::class, 'targetAttribute' => ['zone_id' => 'id']],
         ];
     }
 
@@ -86,7 +86,7 @@ class Domains extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'customer_id']);
+        return $this->hasOne(Customers::class, ['id' => 'customer_id']);
     }
 
     /**
@@ -94,7 +94,7 @@ class Domains extends ActiveRecord
      */
     public function getZone()
     {
-        return $this->hasOne(DomainZones::className(), ['id' => 'zone_id']);
+        return $this->hasOne(DomainZones::class, ['id' => 'zone_id']);
     }
 
     /**
@@ -110,7 +110,7 @@ class Domains extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

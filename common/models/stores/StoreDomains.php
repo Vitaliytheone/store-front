@@ -44,7 +44,7 @@ class StoreDomains extends ActiveRecord
             [['store_id', 'type', 'ssl'], 'integer'],
             [['domain'], 'string', 'max' => 255],
             [['domain'], 'unique'],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -67,7 +67,7 @@ class StoreDomains extends ActiveRecord
      */
     public function getStore()
     {
-        return $this->hasOne(Stores::className(), ['id' => 'store_id']);
+        return $this->hasOne(Stores::class, ['id' => 'store_id']);
     }
 
     /**

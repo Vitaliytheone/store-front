@@ -42,7 +42,7 @@ class Orders extends ActiveRecord
         return [
             [['id', 'checkout_id', 'created_at'], 'integer'],
             [['customer'], 'string', 'max' => 255],
-            [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::className(), 'targetAttribute' => ['checkout_id' => 'id']],
+            [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::class, 'targetAttribute' => ['checkout_id' => 'id']],
         ];
     }
 
@@ -64,7 +64,7 @@ class Orders extends ActiveRecord
      */
     public function getCheckout()
     {
-        return $this->hasOne(Checkouts::className(), ['id' => 'checkout_id']);
+        return $this->hasOne(Checkouts::class, ['id' => 'checkout_id']);
     }
 
     /**
@@ -72,7 +72,7 @@ class Orders extends ActiveRecord
      */
     public function getSuborders()
     {
-        return $this->hasMany(Suborders::className(), ['order_id' => 'id']);
+        return $this->hasMany(Suborders::class, ['order_id' => 'id']);
     }
 
     /**
@@ -88,7 +88,7 @@ class Orders extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

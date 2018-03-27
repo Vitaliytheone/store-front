@@ -103,7 +103,7 @@ class Customers extends ActiveRecord
      */
     public function getInvoices()
     {
-        return $this->hasMany(Invoices::className(), ['cid' => 'id']);
+        return $this->hasMany(Invoices::class, ['cid' => 'id']);
     }
 
     /**
@@ -111,7 +111,7 @@ class Customers extends ActiveRecord
      */
     public function getPayments()
     {
-        return $this->hasMany(Payments::className(), ['iid' => 'id'])->via('invoices');
+        return $this->hasMany(Payments::class, ['iid' => 'id'])->via('invoices');
     }
 
     /**
@@ -119,7 +119,7 @@ class Customers extends ActiveRecord
      */
     public function getSuccessPayments()
     {
-        return $this->hasMany(Payments::className(), ['iid' => 'id'])
+        return $this->hasMany(Payments::class, ['iid' => 'id'])
             ->onCondition([
                 'payments.status' => Payments::STATUS_COMPLETED
             ])
@@ -131,7 +131,7 @@ class Customers extends ActiveRecord
      */
     public function getDomains()
     {
-        return $this->hasMany(Domains::className(), ['customer_id' => 'id']);
+        return $this->hasMany(Domains::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -139,7 +139,7 @@ class Customers extends ActiveRecord
      */
     public function getSslCerts()
     {
-        return $this->hasMany(SslCert::className(), ['cid' => 'id']);
+        return $this->hasMany(SslCert::class, ['cid' => 'id']);
     }
 
     /**
@@ -147,7 +147,7 @@ class Customers extends ActiveRecord
      */
     public function getProjects()
     {
-        return $this->hasMany(Project::className(), ['cid' => 'id']);
+        return $this->hasMany(Project::class, ['cid' => 'id']);
     }
 
     /**
@@ -155,7 +155,7 @@ class Customers extends ActiveRecord
      */
     public function getReferrer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'referrer_id']);
+        return $this->hasOne(Customers::class, ['id' => 'referrer_id']);
     }
 
     /**
@@ -163,7 +163,7 @@ class Customers extends ActiveRecord
      */
     public function getReferralVisits()
     {
-        return $this->hasMany(ReferralVisits::className(), ['customer_id' => 'id']);
+        return $this->hasMany(ReferralVisits::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -171,7 +171,7 @@ class Customers extends ActiveRecord
      */
     public function getReferrals()
     {
-        return $this->hasMany(Customers::className(), ['referrer_id' => 'id']);
+        return $this->hasMany(Customers::class, ['referrer_id' => 'id']);
     }
 
     /**
@@ -179,7 +179,7 @@ class Customers extends ActiveRecord
      */
     public function getUnpaidReferrals()
     {
-        return $this->hasMany(Customers::className(), ['referrer_id' => 'id'])->onCondition([
+        return $this->hasMany(Customers::class, ['referrer_id' => 'id'])->onCondition([
             'paid' => static::REFERRAL_NOT_PAID
         ]);
     }
@@ -189,7 +189,7 @@ class Customers extends ActiveRecord
      */
     public function getPaidReferrals()
     {
-        return $this->hasMany(Customers::className(), ['referrer_id' => 'id'])->onCondition([
+        return $this->hasMany(Customers::class, ['referrer_id' => 'id'])->onCondition([
             'paid' => static::REFERRAL_PAID
         ]);
     }
@@ -199,7 +199,7 @@ class Customers extends ActiveRecord
      */
     public function getReferralEarnings()
     {
-        return $this->hasMany(ReferralEarnings::className(), ['customer_id' => 'id']);
+        return $this->hasMany(ReferralEarnings::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -207,7 +207,7 @@ class Customers extends ActiveRecord
      */
     public function getTotalEarnings()
     {
-        return $this->hasMany(ReferralEarnings::className(), ['customer_id' => 'id'])->andOnCondition([
+        return $this->hasMany(ReferralEarnings::class, ['customer_id' => 'id'])->andOnCondition([
             'status' => ReferralEarnings::STATUS_COMPLETED
         ])->sum('earnings');
     }
@@ -217,7 +217,7 @@ class Customers extends ActiveRecord
      */
     public function getActualProjects()
     {
-        return $this->hasMany(Project::className(), ['cid' => 'id'])->onCondition('`project`.`act` IN(' . implode(",", [
+        return $this->hasMany(Project::class, ['cid' => 'id'])->onCondition('`project`.`act` IN(' . implode(",", [
             Project::STATUS_ACTIVE,
             Project::STATUS_FROZEN
         ]). ')');

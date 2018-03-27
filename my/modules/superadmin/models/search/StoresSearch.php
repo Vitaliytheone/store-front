@@ -5,6 +5,8 @@ use common\helpers\CurrencyHelper;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use Yii;
+use yii\data\Pagination;
+use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -14,14 +16,19 @@ use yii\helpers\ArrayHelper;
  */
 class StoresSearch {
 
+    use SearchTrait;
+
     /**
      * @var array
      */
     protected $_stores = [];
 
-    protected $pageSize = 500;
+    protected $_counts_by_status;
 
-    use SearchTrait;
+    public function __construct()
+    {
+        $this->pageSize = 100;
+    }
 
     /**
      * Get parameters
@@ -36,47 +43,47 @@ class StoresSearch {
     }
 
     /**
-     * Build sql query
+     * Build main search query
      * @param int $status
-     * @return array
+     * @return Query the newly created [[ActiveQuery]] instance.
      */
-    public function _getStores($status = null)
+    private function buildQuery($status = null)
     {
         $searchQuery = $this->getQuery();
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
         $id = ArrayHelper::getValue($this->params, 'id');
 
-        $projects = (new Query())
+        $stores = (new Query())
             ->from(DB_STORES . '.stores');
 
         if (!('all' === $status || null === $status)) {
-            $projects->andWhere([
+            $stores->andWhere([
                 'stores.status' => $status
             ]);
         }
 
         if (!empty($searchQuery)) {
-            $projects->andFilterWhere([
+            $stores->andFilterWhere([
                 'or',
                 ['=', 'stores.id', $searchQuery],
-                ['like', 'stores.name', $searchQuery],
+                ['like', 'stores.domain', $searchQuery],
                 ['like', 'customers.email', $searchQuery],
             ]);
         }
 
         if ($id) {
-            $projects->andWhere([
+            $stores->andWhere([
                 'stores.id' => $id
             ]);
         }
 
         if ($customerId) {
-            $projects->andWhere([
+            $stores->andWhere([
                 'stores.customer_id' => $customerId
             ]);
         }
 
-        $projects->select([
+        $stores->select([
             'stores.id',
             'stores.domain',
             'stores.currency',
@@ -85,55 +92,46 @@ class StoresSearch {
             'stores.status',
             'stores.created_at',
             'stores.expired',
-            'customers.email AS customer_email'
+            'customers.email AS customer_email',
+            'customers.referrer_id AS referrer_id',
         ]);
-        $projects->leftJoin(DB_STORES . '.customers', 'customers.id = stores.customer_id');
-
-        return $projects->orderBy([
-            'stores.id' => SORT_DESC
-        ])->groupBy('stores.id')
-            ->all();
-    }
-
-    /**
-     * Get panels
-     * @param null|string|integer $status
-     * @param null|integer $plan
-     * @return PanelsSearch|array
-     */
-    public function getStores($status = null)
-    {
-        if (empty($this->_stores)) {
-            $this->_stores = $this->_getStores();
-        }
-
-        if ((null === $status || 'all' === $status)) {
-            return $this->_stores;
-        }
-
-        $stores = [];
-
-        foreach ($this->_stores as $store) {
-            if (is_numeric($status) && (int)$store['status'] != (int)$status) {
-                continue;
-            }
-
-            $stores[] = $store;
-        }
+        $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
 
         return $stores;
     }
 
     /**
-     * Search panels
+     * Search stores
      * @return array
      */
     public function search()
     {
-        $status = ArrayHelper::getValue($this->params, 'status', 'all');
+        $this->setCountsByStatus();
+
+        $status = isset($this->params['status']) ? $this->params['status'] : 'all';
+
+        $query = clone $this->buildQuery($status);
+
+        $pages = new Pagination(['totalCount' => $this->getCountByStatus($status)]);
+        $pages->setPageSize($this->pageSize);
+        $pages->defaultPageSize = $this->pageSize;
+
+        if (!empty($this->params['pageSize'])) {
+            $pages->setPageSize($this->params['pageSize']);
+        }
+
+        $stores = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->orderBy([
+                'stores.id' => SORT_DESC
+            ])
+            ->groupBy('stores.id')
+            ->all();
 
         return [
-            'models' => $this->preparePanelsData($this->getStores($status))
+            'models' => $this->prepareStoresData($stores),
+            'pages' => $pages,
         ];
     }
 
@@ -142,7 +140,7 @@ class StoresSearch {
      * @param array $stores
      * @return array
      */
-    protected function preparePanelsData($stores)
+    protected function prepareStoresData($stores)
     {
         $returnStores = [];
 
@@ -150,17 +148,18 @@ class StoresSearch {
             $returnStores[] = [
                 'id' => $store['id'],
                 'domain' => DomainsHelper::idnToUtf8($store['domain']),
-                'currency' => CurrencyHelper::getCurrencyCodeById($store['currency']),
-                'lang' => strtoupper((string)$store['language']),
+                'currency' => $store['currency'],
+                'language' => strtoupper((string)$store['language']),
                 'customer_id' => $store['customer_id'],
                 'status' => Stores::getActNameString($store['status']),
                 'created' => Stores::formatDate($store['created_at']),
                 'expired' => Stores::formatDate($store['expired']),
                 'created_date' => Stores::formatDate($store['created_at'], 'php:Y-m-d'),
                 'created_time' => Stores::formatDate($store['created_at'], 'php:H:i:s'),
-                'expired_date' => Stores::formatDate($store['expired'], 'php:Y-m-d'),
-                'expired_time' => Stores::formatDate($store['expired'], 'php:H:i:s'),
+                'expired_date' => !empty($store['expired']) ? Stores::formatDate($store['expired'], 'php:Y-m-d') : null,
+                'expired_time' => !empty($store['expired']) ? Stores::formatDate($store['expired'], 'php:H:i:s') : null,
                 'customer_email' => $store['customer_email'],
+                'referrer_id' => $store['referrer_id'],
             ];
         }
 
@@ -173,19 +172,62 @@ class StoresSearch {
      */
     public function navs()
     {
+        $countsByStatus = $this->getCountsByStatuses();
+
         return [
             'all' => Yii::t('app/superadmin', 'stores.list.navs_all', [
-                'count' => count($this->getStores('all'))
+                'count' => array_sum($countsByStatus)
             ]),
             Stores::STATUS_ACTIVE => Yii::t('app/superadmin', 'stores.list.navs_active', [
-                'count' => count($this->getStores(Stores::STATUS_ACTIVE))
+                'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_ACTIVE, 0)
             ]),
             Stores::STATUS_FROZEN => Yii::t('app/superadmin', 'stores.list.navs_frozen', [
-                'count' => count($this->getStores(Stores::STATUS_FROZEN))
+                'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_FROZEN, 0)
             ]),
             Stores::STATUS_TERMINATED => Yii::t('app/superadmin', 'stores.list.navs_terminated', [
-                'count' => count($this->getStores(Stores::STATUS_TERMINATED))
+                'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_TERMINATED, 0)
             ]),
         ];
+    }
+
+    /**
+     * Return topics count for status or all
+     * @param null $status
+     * @return float|int|mixed
+     */
+    public function getCountByStatus($status = null)
+    {
+        if ($status === null || $status === 'all') {
+            return array_sum($this->_counts_by_status);
+        }
+
+        return ArrayHelper::getValue($this->_counts_by_status, $status);
+    }
+
+    /**
+     * Return cached counted tickets for statuses
+     * considering search query string
+     * @return array
+     */
+    public function setCountsByStatus()
+    {
+        $query = clone $this->buildQuery(null);
+
+        $this->_counts_by_status = $query
+            ->select(['count' => 'COUNT(DISTINCT stores.id)', 'status' => 'stores.status'])
+            ->groupBy('stores.status')
+            ->indexBy('status')
+            ->column();
+
+        return $this->_counts_by_status;
+    }
+
+    /**
+     * Return topics counts for each status
+     * @return array
+     */
+    public function getCountsByStatuses()
+    {
+        return $this->_counts_by_status;
     }
 }

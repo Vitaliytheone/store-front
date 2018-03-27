@@ -42,7 +42,7 @@ class PanelDomains extends ActiveRecord
             [['created_at'], 'safe'],
             [['domain'], 'string', 'max' => 255],
             [['domain'], 'unique'],
-            [['panel_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['panel_id' => 'id']],
+            [['panel_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::class, 'targetAttribute' => ['panel_id' => 'id']],
         ];
     }
 
@@ -65,7 +65,7 @@ class PanelDomains extends ActiveRecord
      */
     public function getPanel()
     {
-        return $this->hasOne(Project::className(), ['id' => 'panel_id']);
+        return $this->hasOne(Project::class, ['id' => 'panel_id']);
     }
 
     /**

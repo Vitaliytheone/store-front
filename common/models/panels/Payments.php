@@ -108,7 +108,7 @@ class Payments extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'date',
                 ],
@@ -124,7 +124,7 @@ class Payments extends ActiveRecord
      */
     public function getMethod()
     {
-        return $this->hasOne(PaymentGateway::className(), ['pgid' => 'type'])
+        return $this->hasOne(PaymentGateway::class, ['pgid' => 'type'])
             ->andOnCondition([ 'payment_gateway.pid' => '-1']);
     }
 
@@ -133,7 +133,7 @@ class Payments extends ActiveRecord
      */
     public function getPaymentLogs()
     {
-        return $this->hasMany(PaymentsLog::className(), ['pid' => 'id']);
+        return $this->hasMany(PaymentsLog::class, ['pid' => 'id']);
     }
 
     /**
@@ -141,7 +141,7 @@ class Payments extends ActiveRecord
      */
     public function getInvoice()
     {
-        return $this->hasOne(Invoices::className(), ['id' => 'iid']);
+        return $this->hasOne(Invoices::class, ['id' => 'iid']);
     }
 
     /**
@@ -149,7 +149,7 @@ class Payments extends ActiveRecord
      */
     public function getInvoiceDetails()
     {
-        return $this->hasMany(InvoiceDetails::className(), ['invoice_id' => 'id'])->via('invoice');
+        return $this->hasMany(InvoiceDetails::class, ['invoice_id' => 'id'])->via('invoice');
     }
 
     /**
@@ -157,7 +157,7 @@ class Payments extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**

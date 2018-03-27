@@ -74,7 +74,7 @@ class SearchProcessor extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**
@@ -82,7 +82,7 @@ class SearchProcessor extends ActiveRecord
      */
     public function getAdmin()
     {
-        return $this->hasOne(ProjectAdmin::className(), ['id' => 'uid']);
+        return $this->hasOne(ProjectAdmin::class, ['id' => 'uid']);
     }
 
     /**
@@ -100,7 +100,7 @@ class SearchProcessor extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'date',
                 ],

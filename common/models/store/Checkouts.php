@@ -86,7 +86,7 @@ class Checkouts extends ActiveRecord
      */
     public function getOrders()
     {
-        return $this->hasMany(Orders::className(), ['checkout_id' => 'id']);
+        return $this->hasMany(Orders::class, ['checkout_id' => 'id']);
     }
 
     /**
@@ -94,7 +94,7 @@ class Checkouts extends ActiveRecord
      */
     public function getPayments()
     {
-        return $this->hasMany(Payments::className(), ['checkout_id' => 'id']);
+        return $this->hasMany(Payments::class, ['checkout_id' => 'id']);
     }
 
     /**
@@ -102,7 +102,7 @@ class Checkouts extends ActiveRecord
      */
     public function getPaymentsLogs()
     {
-        return $this->hasMany(PaymentsLog::className(), ['checkout_id' => 'id']);
+        return $this->hasMany(PaymentsLog::class, ['checkout_id' => 'id']);
     }
 
     /**
@@ -110,7 +110,7 @@ class Checkouts extends ActiveRecord
      */
     public function getSuborders()
     {
-        return $this->hasMany(Suborders::className(), ['checkout_id' => 'id']);
+        return $this->hasMany(Suborders::class, ['checkout_id' => 'id']);
     }
 
     /**
@@ -126,7 +126,7 @@ class Checkouts extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',
@@ -139,7 +139,7 @@ class Checkouts extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ],

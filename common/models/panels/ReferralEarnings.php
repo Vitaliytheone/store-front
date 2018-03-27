@@ -79,7 +79,7 @@ class ReferralEarnings extends ActiveRecord
      */
     public function getInvoice()
     {
-        return $this->hasOne(Invoices::className(), ['id' => 'invoice_id']);
+        return $this->hasOne(Invoices::class, ['id' => 'invoice_id']);
     }
 
     public static function getStatuses()
@@ -113,7 +113,7 @@ class ReferralEarnings extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',

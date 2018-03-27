@@ -38,7 +38,7 @@ class SslValidation extends ActiveRecord
             [['pid', 'created_at'], 'integer'],
             [['file_name'], 'string', 'max' => 250],
             [['content'], 'string', 'max' => 1000],
-            [['pid'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['pid' => 'id']],
+            [['pid'], 'exist', 'skipOnError' => true, 'targetClass' => Project::class, 'targetAttribute' => ['pid' => 'id']],
         ];
     }
 
@@ -61,7 +61,7 @@ class SslValidation extends ActiveRecord
      */
     public function getP()
     {
-        return $this->hasOne(Project::className(), ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**
@@ -77,7 +77,7 @@ class SslValidation extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

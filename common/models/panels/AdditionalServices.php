@@ -148,7 +148,7 @@ class AdditionalServices extends ActiveRecord
      */
     public function getUserServices()
     {
-        return $this->hasMany(UserServices::className(), ['aid' => 'id']);
+        return $this->hasMany(UserServices::class, ['aid' => 'id']);
     }
 
     /**

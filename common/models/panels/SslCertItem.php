@@ -57,7 +57,7 @@ class SslCertItem extends ActiveRecord
      */
     public function getSslCerts()
     {
-        return $this->hasMany(SslCert::className(), ['item_id' => 'id']);
+        return $this->hasMany(SslCert::class, ['item_id' => 'id']);
     }
 
     /**

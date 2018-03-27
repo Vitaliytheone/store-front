@@ -130,7 +130,7 @@ class Products extends ActiveRecord
      */
     public function getPackages()
     {
-        return $this->hasMany(Packages::className(), ['product_id' => 'id']);
+        return $this->hasMany(Packages::class, ['product_id' => 'id']);
     }
 
     /**
