@@ -61,7 +61,7 @@ class Stores extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%stores}}';
+        return DB_STORES . '.{{%stores}}';
     }
 
     /**
@@ -352,5 +352,30 @@ class Stores extends ActiveRecord
     public static function getActNameString($status)
     {
         return ArrayHelper::getValue(static::getStatuses(), $status, '');
+    }
+
+    /**
+     * Change store status
+     * @param int $status
+     * @return bool
+     */
+    public function changeStatus($status)
+    {
+        switch ($status) {
+            case static::STATUS_ACTIVE:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_ACTIVE;
+                }
+
+            break;
+
+            case static::STATUS_FROZEN:
+                if (static::STATUS_ACTIVE == $this->status) {
+                    $this->status = static::STATUS_FROZEN;
+                }
+            break;
+        }
+
+        return $this->save(false);
     }
 }
