@@ -32,7 +32,7 @@ class CustomHtmlHelper extends Html
     }
 
     /**
-     * Recirsively encoding array keys and values
+     * Recursively encoding array keys and values
      * @param array $array
      * @throws Exception
      */
@@ -46,10 +46,14 @@ class CustomHtmlHelper extends Html
             $value = &$array[$key];
             unset($array[$key]);
 
-            if (is_array($value)) static::arrayEncoder($value);
+            if (is_array($value)) {
+                static::arrayEncoder($value);
+            } else {
+                $value = Html::encode($value);
+            };
 
             $array[Html::encode($key)] = $value;
-
+            
             unset($value);
         }
     }
