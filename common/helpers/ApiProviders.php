@@ -59,8 +59,9 @@ class ApiProviders
 
     /**
      * Get services
-     * @param array $serviceTypeFilter array of service`s type filters
+     * @param null $serviceTypeFilter
      * @return array|mixed
+     * @throws Exception
      */
     public function services($serviceTypeFilter = null) {
         $services = $this->connect(array(
@@ -68,17 +69,25 @@ class ApiProviders
             'action' => 'services',
         ));
 
+        if (!is_array($services)) {
+            throw new Exception('Bad response format!');
+        }
+
+        // Clean from xss
+        CustomHtmlHelper::arrayEncoder($services);
+
         if (isset($services['error'])) {
             return $services;
         }
 
          //Filtering results by service type
-        if (is_array($services) && is_array($serviceTypeFilter)) {
+        if (is_array($serviceTypeFilter)) {
             $filteredServices = array_filter($services, function($service, $index) use ($serviceTypeFilter){
                 return in_array(ArrayHelper::getValue($service, 'type', null), $serviceTypeFilter);
             }, ARRAY_FILTER_USE_BOTH);
             return  $filteredServices;
         }
+
         // Or return all services
         return $services;
     }
@@ -150,8 +159,6 @@ class ApiProviders
                 'message' => $message,
             ];
         };
-
-        CustomHtmlHelper::arrayEncoder($jsonResult);
 
         return $jsonResult;
     }
