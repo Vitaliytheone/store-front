@@ -11,7 +11,7 @@ use yii\base\Exception;
  */
 class PanelfireScanner extends BaseScanner
 {
-    protected static $pageSize = 50;
+    protected static $pageSize = 200;
 
     public $panelInfoClass = 'my\components\scanners\components\info\PanelfireInfo';
 
@@ -48,6 +48,9 @@ class PanelfireScanner extends BaseScanner
         }
 
         // Take only those domains that we do not have in DB
-        return $this->getNewDomains($domains);
+        $newDomains = $this->getNewDomains($domains);
+        shuffle($newDomains);
+
+        return $newDomains;
     }
 }

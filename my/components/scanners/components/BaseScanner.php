@@ -208,6 +208,7 @@ abstract class BaseScanner extends Component
         // Check panels
         echo (PHP_EOL . "Task get panel status started" . PHP_EOL);
         echo ( "Domains for checking count: " . count($newDomains) . PHP_EOL);
+        echo ( "Domains per request page: " . static::$pageSize . PHP_EOL);
 
         $taskTime = time();
         $domainsAddedCount = 0;
@@ -253,7 +254,7 @@ abstract class BaseScanner extends Component
                 $domainsProcessedCount++;
             }
 
-            sleep(5);
+            echo PHP_EOL . 'Domains left ' . count($newDomains) . PHP_EOL;
         };
 
         $taskTime = time() - $taskTime;
