@@ -71,7 +71,7 @@ class UserServices extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**
@@ -79,6 +79,6 @@ class UserServices extends ActiveRecord
      */
     public function getAdditionalService()
     {
-        return $this->hasOne(AdditionalServices::className(), ['id' => 'aid']);
+        return $this->hasOne(AdditionalServices::class, ['id' => 'aid']);
     }
 }

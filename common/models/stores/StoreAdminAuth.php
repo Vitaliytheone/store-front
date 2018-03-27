@@ -32,7 +32,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     {
         $hash = $this->generateAuthKey();
 
-        return $this->hasOne(StoreAdminsHash::className(), ['admin_id' => 'id'])
+        return $this->hasOne(StoreAdminsHash::class, ['admin_id' => 'id'])
             ->where(['hash' => $hash]);
     }
 

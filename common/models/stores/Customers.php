@@ -75,7 +75,7 @@ class Customers extends ActiveRecord
      */
     public function getStores()
     {
-        return $this->hasMany(Stores::className(), ['customer_id' => 'id']);
+        return $this->hasMany(Stores::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -91,7 +91,7 @@ class Customers extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',

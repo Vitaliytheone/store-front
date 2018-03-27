@@ -27,7 +27,7 @@ class StoreAdminsHash extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',
@@ -40,7 +40,7 @@ class StoreAdminsHash extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]

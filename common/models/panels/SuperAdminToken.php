@@ -3,7 +3,7 @@
 namespace common\models\panels;
 
 use common\models\panels\queries\SuperAdminTokenQuery;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

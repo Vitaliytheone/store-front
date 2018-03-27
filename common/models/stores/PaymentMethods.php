@@ -45,7 +45,7 @@ class PaymentMethods extends ActiveRecord
             [['store_id', 'active'], 'integer'],
             [['details'], 'string'],
             [['method'], 'string', 'max' => 255],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::className(), 'targetAttribute' => ['store_id' => 'id']],
+            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
 
@@ -68,7 +68,7 @@ class PaymentMethods extends ActiveRecord
      */
     public function getStore()
     {
-        return $this->hasOne(Stores::className(), ['id' => 'store_id']);
+        return $this->hasOne(Stores::class, ['id' => 'store_id']);
     }
 
     /**

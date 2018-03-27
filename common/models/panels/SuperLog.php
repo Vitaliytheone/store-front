@@ -4,7 +4,7 @@ namespace common\models\panels;
 
 use my\components\behaviors\IpBehavior;
 use my\components\behaviors\UserAgentBehavior;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use common\models\panels\queries\SuperLogQuery;
 use yii\behaviors\TimestampBehavior;
@@ -48,7 +48,7 @@ class SuperLog extends ActiveRecord
             [['id', 'admin_id', 'created_at', 'action'], 'integer'],
             [['ip'], 'string', 'max' => 250],
             [['params', 'user_agent'], 'string', 'max' => 1000],
-            [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => SuperAdmin::className(), 'targetAttribute' => ['admin_id' => 'id']],
+            [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => SuperAdmin::class, 'targetAttribute' => ['admin_id' => 'id']],
         ];
     }
 
@@ -73,7 +73,7 @@ class SuperLog extends ActiveRecord
      */
     public function getAdmin()
     {
-        return $this->hasOne(SuperAdmin::className(), ['id' => 'admin_id']);
+        return $this->hasOne(SuperAdmin::class, ['id' => 'admin_id']);
     }
 
     /**
@@ -89,7 +89,7 @@ class SuperLog extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],
@@ -98,13 +98,13 @@ class SuperLog extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]
             ],
             'user_agent' => [
-                'class' => UserAgentBehavior::className(),
+                'class' => UserAgentBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'user_agent',
                 ]

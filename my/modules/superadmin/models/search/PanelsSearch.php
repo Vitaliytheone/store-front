@@ -1,6 +1,7 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
+use common\helpers\CurrencyHelper;
 use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Project;
@@ -245,7 +246,7 @@ class PanelsSearch {
             $returnPanels[] = [
                 'id' => $panel['id'],
                 'site' => DomainsHelper::idnToUtf8($panel['site']),
-                'currency' => Project::getCurrencyCodeById($panel['currency']),
+                'currency' => CurrencyHelper::getCurrencyCodeById($panel['currency']),
                 'lang' => strtoupper($panel['lang']),
                 'cid' => $panel['cid'],
                 'tariff' => ArrayHelper::getValue($tariff, 'title'),

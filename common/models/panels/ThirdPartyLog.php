@@ -2,7 +2,7 @@
 
 namespace common\models\panels;
 
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -79,7 +79,7 @@ class ThirdPartyLog extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

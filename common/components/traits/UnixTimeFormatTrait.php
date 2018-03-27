@@ -1,13 +1,12 @@
 <?php
 
-namespace my\components\traits;
+namespace common\components\traits;
 
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class UnixTimeFormatTrait
- * @package my\components\traits
+ * @package common\components\traits
  */
 trait UnixTimeFormatTrait {
 
@@ -38,11 +37,17 @@ trait UnixTimeFormatTrait {
     {
         if (!empty(Yii::$app->controller)) {
 
-            $user = Yii::$app->controller->getUser();
+            if (method_exists(Yii::$app->controller, 'getUser')) {
+                $user = Yii::$app->controller->getUser();
+            } else {
+                $user = Yii::$app->user;
+            }
 
-            if (null === $timezone && !$user->isGuest) {
-                $user = $user->identity;
-                $timezone = !empty($user->timezone) ? $user->timezone : null;
+            if ($user) {
+                if (null === $timezone && !$user->isGuest) {
+                    $user = $user->identity;
+                    $timezone = !empty($user->timezone) ? $user->timezone : null;
+                }
             }
         }
 

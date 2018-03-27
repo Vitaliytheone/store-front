@@ -2,6 +2,7 @@
 
 namespace my\models;
 
+use common\models\panels\MyCustomersHash;
 use yii\web\IdentityInterface;
 use Yii;
 use common\models\panels\Customers;

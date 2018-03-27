@@ -3,7 +3,7 @@
 namespace common\models\panels;
 
 use my\components\behaviors\IpBehavior;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -90,7 +90,7 @@ class Orders extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'cid']);
     }
 
     /**
@@ -98,7 +98,7 @@ class Orders extends ActiveRecord
      */
     public function getInvoice()
     {
-        return $this->hasOne(Invoices::className(), ['id' => 'invoice_id'])
+        return $this->hasOne(Invoices::class, ['id' => 'invoice_id'])
             ->viaTable('invoice_details', ['item_id' => 'id'], function ($query) {
                 $query->andWhere(['invoice_details.item' => [
                     InvoiceDetails::ITEM_BUY_PANEL,
@@ -196,7 +196,7 @@ class Orders extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'date',
                 ],
@@ -205,7 +205,7 @@ class Orders extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]

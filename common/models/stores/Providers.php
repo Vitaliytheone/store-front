@@ -68,7 +68,7 @@ class Providers extends ActiveRecord
      */
     public function getStoreProviders()
     {
-        return $this->hasMany(StoreProviders::className(), ['provider_id' => 'id']);
+        return $this->hasMany(StoreProviders::class, ['provider_id' => 'id']);
     }
 
     /**
@@ -84,7 +84,7 @@ class Providers extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

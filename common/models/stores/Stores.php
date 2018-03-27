@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\store\Blocks;
 use sommerce\helpers\StoreHelper;
 use Yii;
@@ -9,6 +10,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
 use common\models\store\Files;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%stores}}".
@@ -52,6 +54,8 @@ class Stores extends ActiveRecord
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
+    use UnixTimeFormatTrait;
+
     /**
      * @inheritdoc
      */
@@ -77,7 +81,7 @@ class Stores extends ActiveRecord
             [['currency', 'language'], 'string', 'max' => 10],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['admin_email'], 'string', 'max' => 300],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
         ];
     }
 
@@ -121,7 +125,7 @@ class Stores extends ActiveRecord
      */
     public function getPaymentMethods()
     {
-        return $this->hasMany(PaymentMethods::className(), ['store_id' => 'id']);
+        return $this->hasMany(PaymentMethods::class, ['store_id' => 'id']);
     }
 
     /**
@@ -129,7 +133,7 @@ class Stores extends ActiveRecord
      */
     public function getStoreAdmins()
     {
-        return $this->hasMany(StoreAdmins::className(), ['store_id' => 'id']);
+        return $this->hasMany(StoreAdmins::class, ['store_id' => 'id']);
     }
 
     /**
@@ -137,7 +141,7 @@ class Stores extends ActiveRecord
      */
     public function getStoreDomains()
     {
-        return $this->hasMany(StoreDomains::className(), ['store_id' => 'id']);
+        return $this->hasMany(StoreDomains::class, ['store_id' => 'id']);
     }
 
     /**
@@ -145,7 +149,7 @@ class Stores extends ActiveRecord
      */
     public function getStoreProviders()
     {
-        return $this->hasMany(StoreProviders::className(), ['store_id' => 'id']);
+        return $this->hasMany(StoreProviders::class, ['store_id' => 'id']);
     }
 
     /**
@@ -153,7 +157,7 @@ class Stores extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'customer_id']);
+        return $this->hasOne(Customers::class, ['id' => 'customer_id']);
     }
 
     /**
@@ -172,7 +176,7 @@ class Stores extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [
                         'created_at',
@@ -325,5 +329,28 @@ class Stores extends ActiveRecord
             ->one();
 
         return ((bool)$domain->ssl ? 'https' : 'http') . '://' . $domain->domain;
+    }
+
+    /**
+     * Get statuses
+     * @return array
+     */
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_ACTIVE => Yii::t('app', 'stores.status.active'),
+            static::STATUS_FROZEN => Yii::t('app', 'stores.status.frozen'),
+            static::STATUS_TERMINATED => Yii::t('app', 'stores.status.terminated'),
+        ];
+    }
+
+    /**
+     * Get status string name by status
+     * @param int $status
+     * @return mixed
+     */
+    public static function getActNameString($status)
+    {
+        return ArrayHelper::getValue(static::getStatuses(), $status, '');
     }
 }

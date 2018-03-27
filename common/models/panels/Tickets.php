@@ -4,7 +4,7 @@ namespace common\models\panels;
 
 use my\components\behaviors\IpBehavior;
 use Yii;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -60,7 +60,7 @@ class Tickets extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['date', 'date_update'],
                 ],
@@ -69,7 +69,7 @@ class Tickets extends ActiveRecord
                 },
             ],
             'ip' => [
-                'class' => IpBehavior::className(),
+                'class' => IpBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]
@@ -101,7 +101,7 @@ class Tickets extends ActiveRecord
      */
     public function getMessages()
     {
-        return $this->hasMany(TicketMessages::className(), ['tid' => 'id']);
+        return $this->hasMany(TicketMessages::class, ['tid' => 'id']);
     }
 
     /**
@@ -109,7 +109,7 @@ class Tickets extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'cid']);
     }
 
     /**

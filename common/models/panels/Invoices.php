@@ -6,7 +6,7 @@ use my\helpers\StringHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -101,7 +101,7 @@ class Invoices extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'cid']);
     }
 
     /**
@@ -109,7 +109,7 @@ class Invoices extends ActiveRecord
      */
     public function getInvoiceDetails()
     {
-        return $this->hasMany(InvoiceDetails::className(), ['invoice_id' => 'id']);
+        return $this->hasMany(InvoiceDetails::class, ['invoice_id' => 'id']);
     }
 
     /**
@@ -174,7 +174,7 @@ class Invoices extends ActiveRecord
      */
     public function getLastPayment()
     {
-        return $this->hasOne(Payments::className(), ['iid' => 'id'])->orderBy([
+        return $this->hasOne(Payments::class, ['iid' => 'id'])->orderBy([
             'payments.id' => SORT_DESC
         ]);
     }
@@ -297,7 +297,7 @@ class Invoices extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'date',
                 ],

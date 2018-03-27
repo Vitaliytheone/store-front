@@ -2,7 +2,7 @@
 
 namespace common\models\panels;
 
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -72,8 +72,8 @@ class SslCert extends ActiveRecord
             [['domain'], 'string', 'max' => 255],
             [['checked'], 'default', 'value' => static::CHECKED_YES],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
-            [['cid'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::className(), 'targetAttribute' => ['cid' => 'id']],
-            [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::className(), 'targetAttribute' => ['item_id' => 'id']],
+            [['cid'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['cid' => 'id']],
+            [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::class, 'targetAttribute' => ['item_id' => 'id']],
         ];
     }
 
@@ -101,7 +101,7 @@ class SslCert extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**
@@ -109,7 +109,7 @@ class SslCert extends ActiveRecord
      */
     public function getItem()
     {
-        return $this->hasOne(SslCertItem::className(), ['id' => 'item_id']);
+        return $this->hasOne(SslCertItem::class, ['id' => 'item_id']);
     }
 
     /**
@@ -117,7 +117,7 @@ class SslCert extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::className(), ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'cid']);
     }
 
     /**
@@ -133,7 +133,7 @@ class SslCert extends ActiveRecord
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

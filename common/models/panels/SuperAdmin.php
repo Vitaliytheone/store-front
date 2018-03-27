@@ -7,7 +7,7 @@ use common\models\panels\queries\SuperAdminQuery;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\Json;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use yii\web\IdentityInterface;
 
 /**
@@ -98,7 +98,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
      */
     public function getSuperLogs()
     {
-        return $this->hasMany(SuperLog::className(), ['admin_id' => 'id']);
+        return $this->hasMany(SuperLog::class, ['admin_id' => 'id']);
     }
 
     /**
@@ -238,7 +238,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
     {
         return [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],

@@ -62,7 +62,7 @@ class Suborders extends ActiveRecord
     {
         return [
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_BEFORE_INSERT => 'updated_at',
                     self::EVENT_BEFORE_UPDATE => 'updated_at',
@@ -100,9 +100,9 @@ class Suborders extends ActiveRecord
             [['link'], 'string', 'max' => 1000],
             [['provider_service', 'provider_order_id'], 'string', 'max' => 300],
             [['status'], 'default', 'value' => static::STATUS_AWAITING],
-            [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::className(), 'targetAttribute' => ['checkout_id' => 'id']],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::className(), 'targetAttribute' => ['order_id' => 'id']],
-            [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packages::className(), 'targetAttribute' => ['package_id' => 'id']],
+            [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::class, 'targetAttribute' => ['checkout_id' => 'id']],
+            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::class, 'targetAttribute' => ['order_id' => 'id']],
+            [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packages::class, 'targetAttribute' => ['package_id' => 'id']],
             [['currency'], 'string', 'max' => 10],
         ];
     }
@@ -137,7 +137,7 @@ class Suborders extends ActiveRecord
      */
     public function getCheckout()
     {
-        return $this->hasOne(Checkouts::className(), ['id' => 'checkout_id']);
+        return $this->hasOne(Checkouts::class, ['id' => 'checkout_id']);
     }
 
     /**
@@ -145,7 +145,7 @@ class Suborders extends ActiveRecord
      */
     public function getOrder()
     {
-        return $this->hasOne(Orders::className(), ['id' => 'order_id']);
+        return $this->hasOne(Orders::class, ['id' => 'order_id']);
     }
 
     /**
@@ -153,7 +153,7 @@ class Suborders extends ActiveRecord
      */
     public function getPackage()
     {
-        return $this->hasOne(Packages::className(), ['id' => 'package_id']);
+        return $this->hasOne(Packages::class, ['id' => 'package_id']);
     }
 
     /**
@@ -162,7 +162,7 @@ class Suborders extends ActiveRecord
      */
     public function getProvider()
     {
-        return $this->hasOne(Providers::className(), ['id' => 'provider_id']);
+        return $this->hasOne(Providers::class, ['id' => 'provider_id']);
     }
 
     /**
