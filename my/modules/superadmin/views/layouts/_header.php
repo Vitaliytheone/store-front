@@ -30,7 +30,7 @@
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
-        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.stores'), 'url' => Url::toRoute('/stores'), 'active' => 'child-panels' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.stores'), 'url' => Url::toRoute('/stores'), 'active' => 'stores' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_ORDERS)) {
