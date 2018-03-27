@@ -4,6 +4,7 @@ namespace common\components\twig;
 use common\components\twig\parsers\TokenParser_Include;
 use common\models\store\Pages;
 use sommerce\helpers\AssetsHelper;
+use sommerce\helpers\PackageHelper;
 use Yii;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
@@ -53,6 +54,9 @@ class Extension extends \Twig_Extension {
                     'id' => $pageId,
                 ])->one();
                 return '/' . ($page ? $page->url : '#');
+            }),
+            new Twig_SimpleFunction('package', function($value) {
+                return PackageHelper::getPackageBuyNow($value);
             }),
         ];
 
