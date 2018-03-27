@@ -48,6 +48,9 @@ class PanelfireScanner extends BaseScanner
         }
 
         // Take only those domains that we do not have in DB
-        return $this->getNewDomains($domains);
+        $newDomains = $this->getNewDomains($domains);
+        shuffle($newDomains);
+
+        return $newDomains;
     }
 }
