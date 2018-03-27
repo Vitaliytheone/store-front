@@ -11,7 +11,7 @@ use yii\base\Exception;
  */
 class PanelfireScanner extends BaseScanner
 {
-    protected static $pageSize = 50;
+    protected static $pageSize = 200;
 
     public $panelInfoClass = 'my\components\scanners\components\info\PanelfireInfo';
 
