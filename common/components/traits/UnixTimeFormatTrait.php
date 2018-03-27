@@ -1,6 +1,6 @@
 <?php
 
-namespace my\components\traits;
+namespace common\components\traits;
 
 use Yii;
 use yii\helpers\ArrayHelper;

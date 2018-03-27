@@ -4,7 +4,7 @@ namespace my\components\scanners\components;
 use my\components\scanners\components\Tcpiputils;
 use my\components\scanners\components\BasePanelInfo;
 
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\SuperToolsScanner;
 use yii\base\Component;
 use yii\base\Exception;
