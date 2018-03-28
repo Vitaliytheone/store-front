@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\NginxHelper;
 use common\models\store\Blocks;
 use sommerce\helpers\StoreHelper;
 use Yii;
@@ -352,5 +353,23 @@ class Stores extends ActiveRecord
     public static function getActNameString($status)
     {
         return ArrayHelper::getValue(static::getStatuses(), $status, '');
+    }
+
+    /**
+     * Create nginx config
+     * @return bool
+     */
+    public function createNginxConfig()
+    {
+        return NginxHelper::create($this);
+    }
+
+    /**
+     * Remove nginx config
+     * @return bool
+     */
+    public function deleteNginxConfig()
+    {
+        return NginxHelper::delete($this);
     }
 }
