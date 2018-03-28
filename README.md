@@ -103,7 +103,3 @@ php yii worker/start > /dev/null 2>&1 & - запуск воркера в фон�
         
     gulp js-my
     
-    
-test2
-
-test3
