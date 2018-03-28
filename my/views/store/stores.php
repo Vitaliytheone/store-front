@@ -92,7 +92,7 @@
 
                                 <?php if ($store['access']['canDomainConnect']) : ?>
                                     <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), '#', [
-                                        'class' => 'btn btn-outline btn-success btn-xs',
+                                        'class' => 'btn btn-outline btn-purple btn-xs',
                                     ])?>
                                 <?php else : ?>
                                     <?= Html::tag('span', '<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
