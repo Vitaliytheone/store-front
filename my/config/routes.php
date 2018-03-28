@@ -120,6 +120,7 @@ $routes = [
     'childpanels/staff/passwd/<id:>' => '/child-project/staff-passwd',
     'childpanels/staff/edit/<id:>' => '/child-project/staff-edit',
 
+    'stores' => '/store/stores',
 ];
 
 return array_merge($routes, $superadmin);

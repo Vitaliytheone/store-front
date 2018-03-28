@@ -24,6 +24,7 @@ class ExpiredLog extends ActiveRecord
     const TYPE_BITCOIN = 4;
     const TYPE_CHANGE_EXPIRY = 21;
     const TYPE_CREATE_EXPIRY = 22;
+    const TYPE_CHANGE_STORE_EXPIRY = 23;
 
     /**
      * @inheritdoc

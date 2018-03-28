@@ -34,3 +34,5 @@ $this->context->addModule('superadminStoresController');
         'filters' => $filters
     ])?>
 </div>
+
+<?= $this->render('layouts/_edit_expiry_modal')?>

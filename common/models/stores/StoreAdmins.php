@@ -51,7 +51,7 @@ class StoreAdmins extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%store_admins}}';
+        return DB_STORES . '.store_admins';
     }
 
     /**
