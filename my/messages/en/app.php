@@ -12,6 +12,7 @@ return [
     'layouts.header.toggle' => 'Toggle navigation',
     'layouts.header.referral' => 'Referrals',
     'layouts.header.child_panels' => 'Child panels',
+    'layouts.header.stores' => 'Stores',
 
     'pages.title.domains' => 'Domains',
     'pages.title.staff' => 'Staff',
@@ -32,6 +33,7 @@ return [
     'pages.title.checkout' => 'Checkout',
     'pages.title.activity' => '{panel} activity log',
     'pages.title.referral' => 'Referral program',
+    'pages.title.stores' => 'Stores',
 
     'panels.list.header' => 'Panels',
     'panels.list.order_panel' => 'Order new panel',
@@ -319,6 +321,7 @@ return [
     'orders.item.buy_domain' => 'Domain',
     'orders.item.buy_ssl' => 'SSL',
     'orders.item.buy_child_panel' => 'Child Panel',
+    'orders.item.buy_store' => 'Store',
     'panel_domains.type.standard' => 'Standard',
     'panel_domains.type.additional' => 'Additional',
     'panel_domains.type.subdomain' => 'Subdomain',
@@ -511,4 +514,16 @@ return [
     'stores.status.active' => 'Active',
     'stores.status.frozen' => 'Frozen',
     'stores.status.terminated' => 'Terminated',
+
+    'stores.list.header' => 'Stores',
+    'stores.list.trial_info' => 'New SMM stores platform with which you may create automated SMM store for $35 per month. Free 14-day trial available.',
+    'stores.list.order_store' => 'Order new store',
+    'stores.list.order_store_trial' => 'Start a free trial',
+    'stores.list.column_domain' => 'Store',
+    'stores.list.column_created' => 'Created',
+    'stores.list.column_expiry' => 'Expiry',
+    'stores.list.column_status' => 'Status',
+    'stores.list.action_dashboard' => 'Dashboard',
+    'stores.list.action_domain_connect' => 'Domain connect',
+    'stores.list.action_prolong' => 'Prolong',
 ];
