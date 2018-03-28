@@ -78,9 +78,6 @@ return [
     //
     'testPayPal' => false, // true - используем sandbox, false - рабочий аккаунт
 
-
-    'nginxConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
-    'panelSqlPath' => '', // Путь к дампу базы данных соззданной панели
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
     'failsEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем неудачные действия - пока не используется нигде
 

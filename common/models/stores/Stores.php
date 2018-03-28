@@ -2,14 +2,16 @@
 
 namespace common\models\stores;
 
+use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\NginxHelper;
 use common\models\store\Blocks;
 use sommerce\helpers\StoreHelper;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
-use common\models\store\Files;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -54,6 +56,12 @@ class Stores extends ActiveRecord
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
+    const CAN_STORE = 1;
+    const CAN_DASHBOARD = 2;
+    const CAN_PROLONG = 3;
+    const CAN_ACTIVITY_LOG = 4;
+    const CAN_DOMAIN_CONNECT = 5;
+
     use UnixTimeFormatTrait;
 
     /**
@@ -61,7 +69,7 @@ class Stores extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%stores}}';
+        return DB_STORES . '.{{%stores}}';
     }
 
     /**
@@ -352,5 +360,98 @@ class Stores extends ActiveRecord
     public static function getActNameString($status)
     {
         return ArrayHelper::getValue(static::getStatuses(), $status, '');
+    }
+
+    /**
+     * Change store status
+     * @param int $status
+     * @return bool
+     */
+    public function changeStatus($status)
+    {
+        switch ($status) {
+            case static::STATUS_ACTIVE:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_ACTIVE;
+                }
+
+            break;
+
+            case static::STATUS_FROZEN:
+                if (static::STATUS_ACTIVE == $this->status) {
+                    $this->status = static::STATUS_FROZEN;
+                }
+            break;
+        }
+
+        return $this->save(false);
+    }
+
+    /**
+     * Check store access some actions
+     * @param Stores|array $store
+     * @param string $code
+     * @return bool
+     * @throws Exception
+     */
+    public static function hasAccess($store, $code)
+    {
+        if ($store instanceof Stores) {
+            $status = $store->status;
+        } else {
+            $status = ArrayHelper::getValue($store, 'status');
+        }
+
+        if (!in_array($status, array_keys(static::getStatuses()))) {
+            throw new Exception('Unknown store status ' . "[$status]");
+        }
+
+        switch ($code) {
+            case self::CAN_STORE:
+                return in_array($status, [
+                    self::STATUS_ACTIVE,
+                    self::STATUS_FROZEN,
+                ]);
+                break;
+
+            case self::CAN_DASHBOARD:
+                return self::STATUS_ACTIVE == $status;
+                break;
+
+            case self::CAN_PROLONG:
+                return in_array($status, [
+                    static::STATUS_ACTIVE,
+                    static::STATUS_FROZEN,
+                ]);
+                break;
+
+            case self::CAN_DOMAIN_CONNECT:
+                return static::STATUS_ACTIVE == $status;
+                break;
+
+            case self::CAN_ACTIVITY_LOG:
+                return true;
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * Create nginx config
+     * @return bool
+     */
+    public function createNginxConfig()
+    {
+        return NginxHelper::create($this);
+    }
+
+    /**
+     * Remove nginx config
+     * @return bool
+     */
+    public function deleteNginxConfig()
+    {
+        return NginxHelper::delete($this);
     }
 }
