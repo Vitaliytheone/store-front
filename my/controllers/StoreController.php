@@ -41,7 +41,7 @@ class StoreController extends CustomController
 
         $storesSearch = new StoresSearch();
         $storesSearch->setParams([
-            'customer_id' => 1//Yii::$app->user->identity->id
+            'customer_id' => Yii::$app->user->identity->id
         ]);
 
         return $this->render('stores', [
