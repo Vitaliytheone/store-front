@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\store\Blocks;
 use sommerce\helpers\StoreHelper;
@@ -10,7 +11,6 @@ use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
-use common\models\store\Files;
 use yii\helpers\ArrayHelper;
 
 /**
