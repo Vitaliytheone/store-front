@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\helpers\CurrencyHelper;
+use common\helpers\NginxHelper;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -637,28 +638,7 @@ class Project extends ActiveRecord
      */
     public function createNginxConfig()
     {
-        $domain = $this->site;
-        $subPrefix = str_replace('.', '-', $domain);
-        $configPath = Yii::$app->params['nginxConfigPath'];
-        $configPath = rtrim($configPath, '/') . '/';
-
-        // Create nginx config
-
-        if (!file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
-            if (file_exists($configPath . 'default_config.conf')) {
-                $configContent = file_get_contents($configPath . 'default_config.conf');
-                $configContent = str_replace('domain_name', $domain, $configContent);
-                @file_put_contents($configPath .'/conf.d/' .$subPrefix . '.conf', $configContent);
-            }
-        }
-
-
-        if (!file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $this->id, '', 'project.create_nginx_config');
-            return false;
-        }
-
-        return true;
+       return NginxHelper::create($this);
     }
 
     /**
@@ -667,22 +647,7 @@ class Project extends ActiveRecord
      */
     public function deleteNginxConfig()
     {
-        $domain = $this->site;
-        $subPrefix = str_replace('.', '-', $domain);
-        $configPath = Yii::$app->params['nginxConfigPath'];
-        $configPath = rtrim($configPath, '/') . '/';
-
-        // Remove nginx config
-        if (file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
-            unlink($configPath .'/conf.d/' .$subPrefix . '.conf');
-        }
-
-        if (file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $this->id, '', 'project.remove_nginx_config');
-            return false;
-        }
-
-        return true;
+        return NginxHelper::delete($this);
     }
 
     /**

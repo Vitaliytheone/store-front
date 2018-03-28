@@ -37,6 +37,8 @@ class InvoiceDetails extends ActiveRecord
     const ITEM_PROLONGATION_CHILD_PANEL = 8;
     const ITEM_CUSTOM_CUSTOMER = 9;
     const ITEM_CUSTOM_PANEL = 10;
+    const ITEM_BUY_STORE = 11;
+    const ITEM_PROLONGATION_STORE = 12;
 
     /**
      * @inheritdoc
@@ -148,6 +150,8 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_BUY_CHILD_PANEL => Yii::t('app', 'invoice_details.item.buy_child_panel'),
             static::ITEM_CUSTOM_CUSTOMER => Yii::t('app', 'invoice_details.item.custom'),
             static::ITEM_CUSTOM_PANEL => Yii::t('app', 'invoice_details.item.custom'),
+            static::ITEM_BUY_STORE => Yii::t('app', 'invoice_details.item.buy_store'),
+            static::ITEM_PROLONGATION_STORE => Yii::t('app', 'invoice_details.item.prolongation_store'),
         ];
     }
 

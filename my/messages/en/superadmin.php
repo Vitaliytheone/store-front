@@ -431,4 +431,10 @@ return [
     'stores.list.column_created' => 'Created',
     'stores.list.column_expiry' => 'Expiry',
     'stores.list.column_actions' => 'Actions',
+    'stores.list.action_activate_store' => 'Activate store',
+    'stores.list.action_freeze_store' => 'Freeze store',
+    'stores.list.action_edit_expiry' => 'Edit expiry date',
+    'stores.btn.submit' => 'Save changes',
+    'stores.btn.modal_close' => 'Close',
+    'stores.btn.edit_expire_modal_header' => 'Edit expiry',
 ];
