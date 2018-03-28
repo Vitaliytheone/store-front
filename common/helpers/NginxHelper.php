@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use ReflectionClass;
 use common\models\panels\Project;
 use common\models\stores\Stores;
 use Yii;
@@ -20,7 +21,7 @@ class NginxHelper {
      */
     public static function create($object)
     {
-        switch (get_class($object)) {
+        switch ((new ReflectionClass($object))->getShortName()) {
             case 'Project':
                 /**
                  * @var Project $object
@@ -73,7 +74,7 @@ class NginxHelper {
      */
     public static function delete($object)
     {
-        switch (get_class($object)) {
+        switch ((new ReflectionClass($object))->getShortName()) {
             case 'Project':
                 /**
                  * @var Project $object
