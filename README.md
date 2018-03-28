@@ -105,6 +105,10 @@ php yii worker/start > /dev/null 2>&1 & - запуск воркера в фон�
 <<<<<<< HEAD
     
     
+<<<<<<< HEAD
 =======
 Test
 >>>>>>> test_branch
+=======
+test2
+>>>>>>> #ID-203
