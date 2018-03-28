@@ -69,7 +69,7 @@ class Stores extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.{{%stores}}';
+        return DB_STORES . '.stores';
     }
 
     /**

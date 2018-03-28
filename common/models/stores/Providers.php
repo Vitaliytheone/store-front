@@ -34,7 +34,7 @@ class Providers extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%providers}}';
+        return DB_STORES . '.providers';
     }
 
     /**
