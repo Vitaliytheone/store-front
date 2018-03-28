@@ -31,6 +31,9 @@
                     <li class="sidebar-search">
                     </li>
                     <li>
+                        <?= Html::a('<i class="fa fa-shopping-cart fa-fw"></i> ' . Yii::t('app', 'layouts.header.stores'), '/stores') ?>
+                    </li>
+                    <li>
                         <?= Html::a('<i class="fa fa-table fa-fw"></i> ' . Yii::t('app', 'layouts.header.panels'), '/panels') ?>
                     </li>
                     <?php if ($user && $user->can('child')) : ?>

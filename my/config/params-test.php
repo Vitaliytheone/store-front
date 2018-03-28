@@ -6,7 +6,7 @@ return [
     'testPayPal' => true,
     'testSSL' => true,
 
-    'nginxConfigPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/nginx/',
+    'panelNginxConfigPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/nginx/',
     'panelSqlPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/sql/panel.sql',
     'panelRunPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/run/run',
 
