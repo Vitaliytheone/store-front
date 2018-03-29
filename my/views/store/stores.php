@@ -4,6 +4,7 @@
     /* @var \common\models\stores\Stores $store */
     /* @var $accesses */
 
+    use yii\helpers\Url;
     use common\models\stores\Stores;
     use common\models\panels\Orders;
     use yii\bootstrap\Html;
@@ -35,11 +36,11 @@
         <h2 class="page-header">
             <?= Yii::t('app', 'stores.list.header')?>
             <?php if (!empty($stores)): ?>
-                <a href="#" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
+                <a href="<?= Url::toRoute('stores/order') ?>" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
                     <?= Yii::t('app', 'stores.list.order_store')?>
                 </a>
             <?php else: ?>
-                <a href="#" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
+                <a href="<?= Url::toRoute('stores/order') ?>" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
                     <?= Yii::t('app', 'stores.list.order_store_trial')?>
                 </a>
             <?php endif; ?>

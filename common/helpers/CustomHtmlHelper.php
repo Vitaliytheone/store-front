@@ -23,7 +23,7 @@ class CustomHtmlHelper extends Html
         if(json_last_error()){
             $response = $data;
         } else {
-             $response = $jsonDecodedResult;
+            $response = $jsonDecodedResult;
         }
 
         $response = print_r($response, 1);

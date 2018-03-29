@@ -96,6 +96,7 @@ return [
     'invoice.panelDuration' => 7,
     'invoice.sslDuration' => 7,
     'invoice.customDuration' => 7,
+    'invoice.storeDuration' => 7,
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
@@ -138,4 +139,6 @@ return [
             'connection_timeout' => 10,
         ],
     ],
+
+    'stores_domain' => 'mysommerce.com', // New Sommerce store base domain
 ];
