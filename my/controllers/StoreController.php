@@ -3,13 +3,12 @@
 namespace my\controllers;
 
 use common\models\panels\Auth;
-use common\models\panels\Customers;
 use common\models\panels\Orders;
 use my\models\forms\OrderStoreForm;
 use my\models\search\StoresSearch;
-use my\helpers\CustomerHelper;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 
 /**
  * Class StoreController
@@ -69,15 +68,23 @@ class StoreController extends CustomController
         /** @var Auth $user */
         $user = Yii::$app->user->getIdentity();
 
+        $request = Yii::$app->request;
+
         $model = new OrderStoreForm();
         $model->setUser($user);
+        $model->setIp($request->getUserIP());
+        $model->setTrial(!$user->hasStores());
 
-        if ($model->load(Yii::$app->request->post()) && $model->createOrder()) {
-            error_log('Order has been created!');
+        if (!$model->load($request->post()) || !$model->orderStore()) {
+            return $this->render('order', [
+                'model' => $model,
+            ]);
         }
 
-        return $this->render('order', [
-            'model' => $model,
-        ]);
+        if ($model->getTrial()) {
+            return $this->redirect(Url::toRoute('/stores'));
+        }
+
+        return $this->redirect('/invoices/' . $model->getInvoiceCode());
     }
 }

@@ -53,10 +53,10 @@
                     <?= $form->field($model, 'admin_username')->textInput(['class' => 'form-control']) ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->field($model, 'admin_password')->textInput(['class' => 'form-control']) ?>
+                    <?= $form->field($model, 'admin_password')->passwordInput(['class' => 'form-control']) ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->field($model, 'confirm_password')->textInput(['class' => 'form-control']) ?>
+                    <?= $form->field($model, 'confirm_password')->passwordInput(['class' => 'form-control']) ?>
                 </div>
             </div>
 

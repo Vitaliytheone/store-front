@@ -230,6 +230,13 @@ class InvoiceDetails extends ActiveRecord
                 case static::ITEM_CUSTOM_PANEL:
                     $this->description = !empty($this->description) ? $this->description : Yii::t('app', 'invoice_details.description.custom');
                 break;
+
+                case static::ITEM_BUY_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
             }
         }
         return parent::beforeSave($insert);
