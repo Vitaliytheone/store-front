@@ -22,7 +22,7 @@ abstract class BaseTask {
      * @param int $task
      * @param array $options
      */
-    public function __construct(int $task, array $options)
+    public function __construct(int $task = null, array $options = [])
     {
         $this->task = $task;
         $this->options = $options;

@@ -492,6 +492,6 @@ class CronController extends CustomController
      */
     public function actionSuperTasks()
     {
-        SuperTaskHelper::runTasksNginx();
+        SuperTaskHelper::runTasks();
     }
 }
