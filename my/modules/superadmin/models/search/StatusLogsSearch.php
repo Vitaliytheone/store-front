@@ -2,7 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use Yii;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\Logs;
 use common\models\panels\Project;
 use yii\data\ActiveDataProvider;
