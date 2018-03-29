@@ -52,7 +52,7 @@ class SuperTaskHelper
     {
         $superTask = new SuperTasks();
 
-        $superTask->task = SuperTasks::TASK_CREATE_NGINX_CONFIG;
+        $superTask->task = SuperTasks::TASK_CREATE_PANEL_NGINX_CONFIG;
         $superTask->status = SuperTasks::STATUS_PENDING;
         $superTask->item_id = $panelId;
 
@@ -121,7 +121,7 @@ class SuperTaskHelper
     public static function runTasksCreateNginxConfig()
     {
         $tasks = SuperTasks::findAll([
-            'task' => SuperTasks::TASK_CREATE_NGINX_CONFIG,
+            'task' => SuperTasks::TASK_CREATE_PANEL_NGINX_CONFIG,
             'status' => SuperTasks::STATUS_PENDING,
         ]);
 

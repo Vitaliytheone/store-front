@@ -1,6 +1,7 @@
 <?php
 namespace my\helpers;
 
+use common\helpers\DbHelper;
 use my\components\domains\Ahnames;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
@@ -297,20 +298,20 @@ class OrderHelper {
         ]);
 
         // Create panel db
-        if (!PanelHelper::existDatabase($project->db)) {
-            PanelHelper::createDatabase($project->db);
+        if (!DbHelper::existDatabase($project->db)) {
+            DbHelper::createDatabase($project->db);
         }
 
-        if (!PanelHelper::existDatabase($project->db)) {
+        if (!DbHelper::existDatabase($project->db)) {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, '', 'cron.order.db');
         }
 
         // Deploy panel tables
-        if (PanelHelper::existDatabase($project->db)) {
+        if (DbHelper::existDatabase($project->db)) {
             $sqlPanelPath = Yii::$app->params['panelSqlPath'];
             if (file_exists($sqlPanelPath)) {
-                PanelHelper::dumpSql($project->db, $sqlPanelPath);
+                DbHelper::dumpSql($project->db, $sqlPanelPath);
             }
         }
 

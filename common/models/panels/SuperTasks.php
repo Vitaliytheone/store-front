@@ -22,7 +22,8 @@ class SuperTasks extends ActiveRecord
 {
     // Tasks
     const TASK_RESTART_NGINX = 1;
-    const TASK_CREATE_NGINX_CONFIG = 2;
+    const TASK_CREATE_PANEL_NGINX_CONFIG = 2;
+    const TASK_CREATE_STORE_NGINX_CONFIG = 3;
 
     // Task statuses
     const STATUS_PENDING = 0;

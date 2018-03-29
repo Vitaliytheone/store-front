@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\helpers\DbHelper;
 use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
@@ -598,5 +599,36 @@ class Stores extends ActiveRecord
         DnsHelper::removeMainDns($this);
 
         return true;
+    }
+
+    /**
+     * Rename database
+     */
+    public function renameDb()
+    {
+        $oldDbName = $this->db;
+        $this->generateDbName();
+        DbHelper::renameDatabase($oldDbName, $this->db);
+    }
+
+    /**
+     * Create panel db name
+     */
+    public function generateDbName()
+    {
+        $dbName = "store_" . $this->id . "_" . strtolower(str_replace(['.', '-'], '', $this->domain));
+
+        if (!DbHelper::existDatabase($dbName)) {
+            $this->db_name = $dbName;
+            return;
+        }
+
+        $dbName = $dbName . '_';
+        for ($i = 1; $i < 100; $i++) {
+            $this->db_name = $dbName . $i;
+            if (!DbHelper::existDatabase($this->db)) {
+                return;
+            }
+        }
     }
 }
