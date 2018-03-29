@@ -1,26 +1,26 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
-    /* @var $modal \my\modules\superadmin\models\forms\ChangeDomainForm */
+    /* @var $modal \my\modules\superadmin\models\forms\ChangeStoreDomainForm */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \my\modules\superadmin\models\forms\ChangeDomainForm();
+    $model = new \my\modules\superadmin\models\forms\ChangeStoreDomainForm();
 ?>
 <div class="modal fade" id="changeDomainModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Change domain</h5>
+                <h5 class="modal-title"><?= Yii::t('app/superadmin', 'stores.modal.change_domain_modal_header') ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <?php $form = ActiveForm::begin([
                 'id' => 'changeDomainForm',
-                'action' => Url::toRoute('/panels/change-domain'),
+                'action' => Url::toRoute('/stores/change-domain'),
                 'options' => [
                     'class' => "form",
                 ],
@@ -39,8 +39,8 @@
                     <?= $form->field($model, 'subdomain')->checkbox() ?>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <?= Html::submitButton('Save changes', [
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'stores.btn.modal_close') ?></button>
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'stores.btn.submit'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'change-domain-button',
                         'id' => 'changeDomainButton'

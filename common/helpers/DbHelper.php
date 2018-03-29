@@ -162,7 +162,7 @@ class DbHelper
     /**
      * Rename database by name
      * @param string $oldName
-     * @param string $name
+     * @param string $newName
      * @return mixed
      */
     public static function renameDatabase($oldName, $newName)
@@ -171,7 +171,7 @@ class DbHelper
         $tables = $oldDbConnection->schema->getTableNames();
         $oldDbConnection->close();
 
-        $sql = "CREATE DATABASE `{$newName}` COLLATE 'utf8_general_ci';";
+        $sql = "CREATE DATABASE `{$newName}` COLLATE 'utf8mb4_general_ci';";
 
         foreach ($tables as $table) {
             $sql .= "RENAME TABLE `{$oldName}`.`{$table}` TO `{$newName}`.`{$table}`;";

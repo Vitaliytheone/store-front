@@ -3,7 +3,7 @@ namespace my\modules\superadmin\models\forms;
 
 use Yii;
 use common\models\stores\Stores;
-use my\helpers\DnsHelper;
+use sommerce\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use yii\base\Model;
@@ -37,7 +37,7 @@ class ChangeStoreDomainForm extends Model {
      * Set store
      * @param Stores $store
      */
-    public function setProject(Stores $store)
+    public function setStore(Stores $store)
     {
         $this->_store = $store;
     }
@@ -96,10 +96,10 @@ class ChangeStoreDomainForm extends Model {
         if ($isChangedSubdomain) {
             if ($this->subdomain) {
                 // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
-                DnsHelper::removeMainDns($this->_project);
+                DnsHelper::removeMainDns($this->_store);
             } else {
                 // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
-                DnsHelper::addMainDns($this->_project);
+                DnsHelper::addMainDns($this->_store);
             }
         }
 

@@ -5,6 +5,7 @@ namespace my\modules\superadmin\controllers;
 use common\models\stores\Stores;
 use my\components\ActiveForm;
 use my\helpers\Url;
+use my\modules\superadmin\models\forms\ChangeStoreDomainForm;
 use my\modules\superadmin\models\forms\EditStoreExpiryForm;
 use my\modules\superadmin\models\search\StoresSearch;
 use Yii;
@@ -84,6 +85,34 @@ class StoresController extends CustomController
         $store->changeStatus($status);
 
         $this->redirect(Url::toRoute('/stores'));
+    }
+
+    /**
+     * Change store domain.
+     *
+     * @access public
+     * @param int $id
+     * @return mixed
+     */
+    public function actionChangeDomain($id)
+    {
+        $store = $this->_findStore($id);
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new ChangeStoreDomainForm();
+        $model->setStore($store);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**

@@ -86,6 +86,7 @@ class StoresSearch {
         $stores->select([
             'stores.id',
             'stores.domain',
+            'stores.subdomain',
             'stores.currency',
             'stores.language',
             'stores.customer_id',
@@ -148,6 +149,7 @@ class StoresSearch {
             $returnStores[] = [
                 'id' => $store['id'],
                 'domain' => DomainsHelper::idnToUtf8($store['domain']),
+                'subdomain' => $store['subdomain'],
                 'currency' => $store['currency'],
                 'language' => strtoupper((string)$store['language']),
                 'customer_id' => $store['customer_id'],

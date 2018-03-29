@@ -436,8 +436,9 @@ return [
     'stores.list.action_edit_expiry' => 'Edit expiry date',
     'stores.btn.submit' => 'Save changes',
     'stores.btn.modal_close' => 'Close',
-    'stores.btn.edit_expire_modal_header' => 'Edit expiry',
-
+    'stores.modal.edit_expire_modal_header' => 'Edit expiry',
+    'stores.list.action_change_domain' => 'Change domain',
     'stores.change_domain.column_domain' => 'Domain',
     'stores.change_domain.column_subdomain' => 'Is subdomain',
+    'stores.modal.change_domain_modal_header' => 'Change domain',
 ];

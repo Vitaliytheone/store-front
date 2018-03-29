@@ -472,7 +472,7 @@ class Stores extends ActiveRecord
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
                 StoreDomains::DOMAIN_TYPE_SUBDOMAIN
             ],
-            'panel_id' => $this->id
+            'store_id' => $this->id
         ]);
 
         DnsHelper::removeDns($this);
@@ -560,7 +560,7 @@ class Stores extends ActiveRecord
 
         if (!StoreDomains::findOne([
             'type' => StoreDomains::DOMAIN_TYPE_DEFAULT,
-            'panel_id' => $this->id
+            'store_id' => $this->id
         ])) {
             $storeDomain = new StoreDomains();
             $storeDomain->type = StoreDomains::DOMAIN_TYPE_DEFAULT;
@@ -606,9 +606,9 @@ class Stores extends ActiveRecord
      */
     public function renameDb()
     {
-        $oldDbName = $this->db;
+        $oldDbName = $this->db_name;
         $this->generateDbName();
-        DbHelper::renameDatabase($oldDbName, $this->db);
+        DbHelper::renameDatabase($oldDbName, $this->db_name);
     }
 
     /**
