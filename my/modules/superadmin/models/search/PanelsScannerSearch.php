@@ -2,7 +2,7 @@
 
 namespace my\modules\superadmin\models\search;
 
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\SuperToolsScanner;
 use yii\base\Model;
 use yii\db\Query;

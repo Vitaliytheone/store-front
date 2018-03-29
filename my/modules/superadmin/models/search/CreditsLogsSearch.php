@@ -2,7 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use common\models\panels\SuperAdmin;
-use my\components\traits\UnixTimeFormatTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\SuperCreditsLog;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
