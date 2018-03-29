@@ -5,7 +5,7 @@ use Yii;
 use common\models\stores\Stores;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
-use my\helpers\SuperTaskHelper;
+use common\helpers\SuperTaskHelper;
 use yii\base\Model;
 
 /**

@@ -18,7 +18,7 @@ use common\models\panels\Tariff;
 use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use my\helpers\OrderHelper;
-use my\helpers\SuperTaskHelper;
+use common\helpers\SuperTaskHelper;
 use my\mail\mailers\InvoiceCreated;
 use my\mail\mailers\PanelExpired;
 use Yii;

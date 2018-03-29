@@ -8,7 +8,7 @@ use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use common\helpers\DbHelper;
-use my\helpers\SuperTaskHelper;
+use common\helpers\SuperTaskHelper;
 use my\mail\mailers\CreatedProject;
 use my\mail\mailers\PanelFrozen;
 use Yii;

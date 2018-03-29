@@ -15,7 +15,7 @@ use Faker\Factory;
 use my\components\dns\Dns;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
-use my\helpers\SuperTaskHelper;
+use common\helpers\SuperTaskHelper;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

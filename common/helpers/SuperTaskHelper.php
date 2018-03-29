@@ -1,8 +1,9 @@
 <?php
-namespace my\helpers;
+namespace common\helpers;
 
 use common\models\panels\Orders;
 use common\models\panels\Project;
+use common\models\stores\Stores;
 use Yii;
 use common\models\panels\SuperTasks;
 use yii\base\Exception;
@@ -10,16 +11,16 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class SuperTaskHelper
- * @package my\helpers
+ * @package common\helpers
  */
 class SuperTaskHelper
 {
     /**
      * Set common Nginx tasks
-     * @param Project $project
+     * @param Project|Stores $object
      * @param array $data
      */
-    public static function setTasksNginx(Project $project, $data = [])
+    public static function setTasksNginx($object, $data = [])
     {
         static::setTaskRestartNginx($project->site);
         static::setTaskCreateNginxConfig($project->id, $project->site, $data);
