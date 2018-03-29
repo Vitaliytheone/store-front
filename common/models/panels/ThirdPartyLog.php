@@ -37,7 +37,7 @@ class ThirdPartyLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%third_party_log}}';
+        return DB_PANELS . '.third_party_log';
     }
 
     /**

@@ -39,7 +39,7 @@ class Invoices extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'invoices';
+        return DB_PANELS . '.invoices';
     }
 
     /**

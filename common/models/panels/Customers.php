@@ -72,7 +72,7 @@ class Customers extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'customers';
+        return DB_PANELS . '.customers';
     }
 
     /**
