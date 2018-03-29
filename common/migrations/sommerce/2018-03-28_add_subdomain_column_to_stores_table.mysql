@@ -1,0 +1,2 @@
+USE `stores`;
+ALTER TABLE `stores` ADD `subdomain` smallint(1) NULL DEFAULT '0' AFTER `domain`;

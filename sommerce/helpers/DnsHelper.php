@@ -1,25 +1,25 @@
 <?php
-namespace my\helpers;
+namespace sommerce\helpers;
 
 use Yii;
 use common\components\dns\Dns;
 use common\models\panels\ThirdPartyLog;
-use common\models\panels\Project;
+use common\models\stores\Stores;
 
 /**
  * Class DnsHelper
- * @package my\helpers
+ * @package sommerce\helpers
  */
 class DnsHelper {
 
     /**
      * Add main domain dns
-     * @param Project $project
+     * @param Stores $store
      */
-    public static function addMainDns(Project $project)
+    public static function addMainDns(Stores $store)
     {
         $result = true;
-        $domain = $project->site;
+        $domain = $store->domain;
 
         $results = [];
 
@@ -29,7 +29,7 @@ class DnsHelper {
         }
 
         // Add master
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $domain,
@@ -39,16 +39,16 @@ class DnsHelper {
                 'ns2.perfectdns.com',
                 'ns3.perfectdns.com'
             ],
-        ], 'panel.send_master_dns');
+        ], 'store.send_master_dns');
         // Add master
         if (!Dns::addMaster($domain, $results)) {
             $result = false;
         }
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $results, 'panel.master_dns');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.master_dns');
 
 
         // Add dns record type A
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $domain,
@@ -56,7 +56,7 @@ class DnsHelper {
             'ttl' => 1800,
             'record-type' => 'A',
             'record' => Yii::$app->params['dnsIp']
-        ], 'panel.send_dns_record_a');
+        ], 'store.send_dns_record_a');
 
         // Add dns record type A
         if (!Dns::addRecord($domain, '', [
@@ -65,11 +65,11 @@ class DnsHelper {
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $results, 'panel.dns_record_a');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.dns_record_a');
 
 
         // Add dns record type CNAME for www
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $domain,
@@ -77,7 +77,7 @@ class DnsHelper {
             'ttl' => 1800,
             'record-type' => 'CNAME',
             'record' => $domain
-        ], 'panel.send_dns_record_www_cname');
+        ], 'store.send_dns_record_www_cname');
 
         // Add dns record type CNAME for www
         if (!Dns::addRecord($domain, 'www', [
@@ -86,19 +86,19 @@ class DnsHelper {
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $results, 'panel.dns_record_www_cname');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.dns_record_www_cname');
 
         return $result;
     }
 
     /**
      * Add subdomain dns
-     * @param Project $project
+     * @param Stores $store
      */
-    public static function addSubDns(Project $project)
+    public static function addSubDns(Stores $store)
     {
         $result = true;
-        $domain = $project->site;
+        $domain = $store->domain;
         $subPrefix = str_replace('.', '-', $domain);
         $panelDomainName = Yii::$app->params['panelDomain'];
 
@@ -111,7 +111,7 @@ class DnsHelper {
             return true;
         }
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $domain,
@@ -119,7 +119,7 @@ class DnsHelper {
             'ttl' => 1800,
             'record-type' => 'CNAME',
             'record' => $panelDomainName
-        ], 'panel.send_dns_record_cname');
+        ], 'store.send_dns_record_cname');
 
         // Add NS type CNAME
         if (!Dns::addRecord($panelDomainName, $subPrefix, [
@@ -128,37 +128,37 @@ class DnsHelper {
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $results, 'panel.dns_record_cname');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.dns_record_cname');
 
         return $result;
     }
 
     /**
      * Remove main domain dns
-     * @param Project $project
+     * @param Stores $store
      */
-    public static function removeMainDns(Project $project)
+    public static function removeMainDns(Stores $store)
     {
         $result = true;
-        $domain = $project->site;
+        $domain = $store->domain;
 
         // Remove all dns records
         if (!Dns::removeMaster($domain, $results)) {
             $result = false;
         }
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_PANEL, $project->id, $results, 'panel.remove_master');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.remove_master');
 
         return $result;
     }
 
     /**
      * Remove subdomain dns
-     * @param Project $project
+     * @param Stores $store
      */
-    public static function removeSubDns(Project $project)
+    public static function removeSubDns(Stores $store)
     {
         $result = true;
-        $domain = $project->site;
+        $domain = $store->domain;
         $subPrefix = str_replace('.', '-', $domain);
         $panelDomainName = Yii::$app->params['panelDomain'];
 
@@ -167,7 +167,7 @@ class DnsHelper {
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_PANEL, $project->id, $results, 'panel.remove_record');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.remove_record');
 
         return $result;
     }
@@ -175,26 +175,26 @@ class DnsHelper {
 
     /**
      * Add dns
-     * @param Project $project
+     * @param Stores $store
      */
-    public static function addDns(Project $project)
+    public static function addDns(Stores $store)
     {
-        $result = static::addMainDns($project);
+        $result = static::addMainDns($store);
 
-        $result = static::addSubDns($project) && $result;
+        $result = static::addSubDns($store) && $result;
 
         return $result;
     }
 
     /**
      * Remove dns
-     * @param Project $project
+     * @param Stores $store
      */
-    public static function removeDns(Project $project)
+    public static function removeDns(Stores $store)
     {
-        $result = static::removeMainDns($project);
+        $result = static::removeMainDns($store);
 
-        $result = static::removeSubDns($project) && $result;
+        $result = static::removeSubDns($store) && $result;
 
         return $result;
     }

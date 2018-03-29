@@ -437,4 +437,7 @@ return [
     'stores.btn.submit' => 'Save changes',
     'stores.btn.modal_close' => 'Close',
     'stores.btn.edit_expire_modal_header' => 'Edit expiry',
+
+    'stores.change_domain.column_domain' => 'Domain',
+    'stores.change_domain.column_subdomain' => 'Is subdomain',
 ];
