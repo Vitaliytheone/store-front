@@ -24,7 +24,7 @@ class SuperCreditsLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'super_credits_log';
+        return DB_PANELS . '.super_credits_log';
     }
 
     /**

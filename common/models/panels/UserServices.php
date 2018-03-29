@@ -26,7 +26,7 @@ class UserServices extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%user_services}}';
+        return DB_PANELS . '.user_services';
     }
 
     /**

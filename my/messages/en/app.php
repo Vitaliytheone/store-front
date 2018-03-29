@@ -417,6 +417,9 @@ return [
     'error.settings.bad_timezone' => 'Bad timezone',
     'error.signup.incorrect_captcha' => 'Incorrect captcha',
     'error.signup.aggre_with_terms' => 'You must agree with Terms of Service',
+    'error.store.bad_currency' => 'Bad currency',
+    'error.store.bad_name' => 'Wrong store name! Allowed only `A-Z`, `0-9`, `space` and `-` symbols.',
+    'error.store.can_not_order_store' => 'Can not order store',
 
     'ssl.created.ticket_subject' => 'Attention',
     'ssl.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
@@ -526,4 +529,13 @@ return [
     'stores.list.action_dashboard' => 'Dashboard',
     'stores.list.action_domain_connect' => 'Domain connect',
     'stores.list.action_prolong' => 'Prolong',
+
+    'stores.order.form.title' => 'Order new store',
+    'stores.order.form.title_trial' => 'Start your free 14-day trial',
+    'stores.order.form.submit' => 'Submit order',
+    'stores.order.form.label.store_name' => 'Store name',
+    'stores.order.form.label.store_currency' => 'Store currency',
+    'stores.order.form.label.admin_username' => 'Admin username',
+    'stores.order.form.label.admin_password' => 'Admin password',
+    'stores.order.form.label.confirm_password' => 'Confirm password',
 ];

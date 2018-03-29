@@ -31,7 +31,7 @@ class ExpiredLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'expired_log';
+        return DB_PANELS . '.expired_log';
     }
 
     /**

@@ -49,7 +49,7 @@ class Orders extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'orders';
+        return DB_PANELS . '.orders';
     }
 
     /**

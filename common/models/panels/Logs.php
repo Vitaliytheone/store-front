@@ -26,7 +26,7 @@ class Logs extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%logs}}';
+        return DB_PANELS . '.logs';
     }
 
     /**
