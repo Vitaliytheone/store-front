@@ -82,7 +82,7 @@ class MyActivityLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'my_activity_log';
+        return DB_PANELS . '.my_activity_log';
     }
 
     /**

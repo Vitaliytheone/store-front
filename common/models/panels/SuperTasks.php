@@ -54,7 +54,7 @@ class SuperTasks extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'super_tasks';
+        return DB_PANELS . '.super_tasks';
     }
 
     /**

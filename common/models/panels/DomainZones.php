@@ -24,7 +24,7 @@ class DomainZones extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%domain_zones}}';
+        return DB_PANELS . '.domain_zones';
     }
 
     /**

@@ -29,7 +29,7 @@ class ReferralVisits extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%referral_visits}}';
+        return DB_PANELS . '.referral_visits';
     }
 
     /**

@@ -119,7 +119,7 @@ class Project extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%project}}';
+        return DB_PANELS . '.project';
     }
 
     /**

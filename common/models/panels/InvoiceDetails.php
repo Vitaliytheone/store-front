@@ -45,7 +45,7 @@ class InvoiceDetails extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%invoice_details}}';
+        return DB_PANELS . '.invoice_details';
     }
 
     /**

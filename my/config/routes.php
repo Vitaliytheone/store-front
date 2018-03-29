@@ -121,6 +121,7 @@ $routes = [
     'childpanels/staff/edit/<id:>' => '/child-project/staff-edit',
 
     'stores' => '/store/stores',
+    'stores/order' => '/store/order',
 ];
 
 return array_merge($routes, $superadmin);
