@@ -32,10 +32,10 @@ $config = [
             // раскомментировать если использовать smtp отправку и наоборот
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'ssl://smtp.yandex.ru', //вставляем имя или адрес почтового сервера
-                'username' => 'noreply@getyourpanel.com',
-                'password' => 'T8XXFqT4IS',
-                'port' => '465',
+                'host' => $params['swift.host'], //вставляем имя или адрес почтового сервера
+                'username' => $params['swift.username'],
+                'password' => $params['swift.password'],
+                'port' => $params['swift.port'],
             ],
             'viewPath' => '@my/mail/views',
         ],
@@ -209,7 +209,7 @@ if (!empty($params['devEmail'])) {
         'mailer' => 'mailerSwift',
         'levels' => ['error'],
         'message' => [
-            'from' => ['noreply@getyourpanel.com'],
+            'from' => ['yii2errorlog@13.uz'],
             'to' =>  $params['devEmail'],
             'subject' => 'Error ' . $_SERVER['HTTP_HOST'],
         ],
@@ -227,7 +227,7 @@ if (!empty($params['failsEmail'])) {
         'mailer' => 'mailerSwift',
         'levels' => ['info'],
         'message' => [
-            'from' => ['noreply@getyourpanel.com'],
+            'from' => ['yii2errorlog@13.uz'],
             'to' =>  $params['failsEmail'],
             'subject' => 'Fail ' . $_SERVER['HTTP_HOST'],
         ],

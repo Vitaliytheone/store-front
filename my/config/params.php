@@ -49,6 +49,16 @@ return [
         'ticket_per_user' => 3,
     ],
 
+    // Mailgun mailer
+    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
+    'mailgun.domain' => 'perfectpanel.net',
+
+    // Swift mailer
+    'swift.host' => 'ssl://smtp.yandex.ru',
+    'swift.username' => 'noreply@perfectpanel.com',
+    'swift.password' => 'aD213kfio34',
+    'swift.port' => '465',
+
     // Ddos сервис по защите
     'ddosGuardUrl' => 'https://control.ddosa.net/client/api/task?token=f8ea293ffcb13a263f26410032fa0db6',
     'ddosGuardOptions' => [
@@ -104,8 +114,6 @@ return [
 
     'reCaptcha.siteKey' => '6LeQyxkUAAAAACZsRNUpGI-5rw7ifdLgP0mUyE4O',
     'reCaptcha.secret' => '6LeQyxkUAAAAAEe6JEo4yITBbTqtCqzr9pzK1EgA',
-    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
-    'mailgun.domain' => 'perfectpanel.net',
 
     'system.sslGuardUrl' => '',
     'system.sslGuardKey' => '',
