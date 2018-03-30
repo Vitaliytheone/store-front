@@ -60,7 +60,6 @@ class Stores extends ActiveRecord
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
-    const CAN_STORE = 1;
     const CAN_DASHBOARD = 2;
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
@@ -412,13 +411,6 @@ class Stores extends ActiveRecord
         }
 
         switch ($code) {
-            case self::CAN_STORE:
-                return in_array($status, [
-                    self::STATUS_ACTIVE,
-                    self::STATUS_FROZEN,
-                ]);
-                break;
-
             case self::CAN_DASHBOARD:
                 return self::STATUS_ACTIVE == $status;
                 break;

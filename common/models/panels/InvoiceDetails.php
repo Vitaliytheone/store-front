@@ -230,6 +230,13 @@ class InvoiceDetails extends ActiveRecord
                 case static::ITEM_CUSTOM_PANEL:
                     $this->description = !empty($this->description) ? $this->description : Yii::t('app', 'invoice_details.description.custom');
                 break;
+
+                case static::ITEM_BUY_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
             }
         }
         return parent::beforeSave($insert);
@@ -246,6 +253,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_PANEL:
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order ? $order->getDomain() : '';
             break;
@@ -295,6 +303,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order;
                 break;
@@ -327,6 +336,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);

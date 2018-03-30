@@ -84,7 +84,8 @@ class InvoicesSearch extends Invoices {
                 InvoiceDetails::ITEM_BUY_PANEL,
                 InvoiceDetails::ITEM_BUY_SSL,
                 InvoiceDetails::ITEM_BUY_DOMAIN,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL
+                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+                InvoiceDetails::ITEM_BUY_STORE,
             ]) . ')'
         );
         $query->leftJoin('project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [

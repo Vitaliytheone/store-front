@@ -31,6 +31,7 @@ return [
     'sysmailSupportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта для sysmail метода
     'panelDeployPrice' => '50',
     'childPanelDeployPrice' => '25',
+    'storeDeployPrice' => '35',
 
     // Параметры по умолчанию при создании панели
     'projectDefaults' => [
