@@ -60,6 +60,11 @@ use common\models\stores\Stores;
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'stores.list.column_actions')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
+                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_change_domain'), Url::toRoute(['/stores/change-domain', 'id' => $store['id']]), [
+                                'class' => 'dropdown-item change-domain',
+                                'data-domain' => $store['domain'],
+                                'data-subdomain' => $store['subdomain']
+                            ])?>
                             <?php if (Stores::STATUS_ACTIVE == $store['status']) : ?>
                                 <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_freeze_store'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_FROZEN]), ['class' => 'dropdown-item'])?>
                             <?php elseif (Stores::STATUS_FROZEN == $store['status']) : ?>

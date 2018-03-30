@@ -7,8 +7,8 @@ use common\helpers\NginxHelper;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
-use my\helpers\PanelHelper;
-use my\helpers\SuperTaskHelper;
+use common\helpers\DbHelper;
+use common\helpers\SuperTaskHelper;
 use my\mail\mailers\CreatedProject;
 use my\mail\mailers\PanelFrozen;
 use Yii;
@@ -309,7 +309,7 @@ class Project extends ActiveRecord
     {
         $dbName = "panel_" . strtolower(str_replace(['.', '-'], '', $this->site));
 
-        if (!PanelHelper::existDatabase($dbName)) {
+        if (!DbHelper::existDatabase($dbName)) {
             $this->db = $dbName;
             return;
         }
@@ -317,7 +317,7 @@ class Project extends ActiveRecord
         $dbName = $dbName . '_';
         for ($i = 1; $i < 100; $i++) {
             $this->db = $dbName . $i;
-            if (!PanelHelper::existDatabase($this->db)) {
+            if (!DbHelper::existDatabase($this->db)) {
                 return;
             }
         }
@@ -667,11 +667,11 @@ class Project extends ActiveRecord
      */
     public function getDbConnection()
     {
-        if (empty($this->db) || !PanelHelper::existDatabase($this->db)) {
+        if (empty($this->db) || !DbHelper::existDatabase($this->db)) {
             return null;
         }
 
-        return PanelHelper::getDbConnection($this->db);
+        return DbHelper::getDbConnection($this->db);
     }
 
     /**
@@ -681,7 +681,7 @@ class Project extends ActiveRecord
     {
         $oldDbName = $this->db;
         $this->generateDbName();
-        PanelHelper::renameDatabase($oldDbName, $this->db);
+        DbHelper::renameDatabase($oldDbName, $this->db);
     }
 
     /**

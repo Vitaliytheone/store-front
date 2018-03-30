@@ -15,14 +15,14 @@ $configParams = (function() use ($configPath) {
     return !empty($configParams) ? json_decode($configParams, true) : [];
 })();
 
-define('DB_CONFIG', (function() use ($configParams) {
+defined('DB_CONFIG') or define('DB_CONFIG', (function() use ($configParams) {
     if (empty($configParams['db'])) {
         throw new Exception('DB is not configured yet!');
     }
     return $configParams['db'];
 })());
 
-define('PROXY_CONFIG', (function() use ($configParams) {
+defined('PROXY_CONFIG') or define('PROXY_CONFIG', (function() use ($configParams) {
     if (empty($configParams['proxy'])) {
         throw new Exception('Proxy is not configured yet!');
     }

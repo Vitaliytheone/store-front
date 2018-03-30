@@ -1,26 +1,26 @@
 <?php
 namespace my\modules\superadmin\models\forms;
 
-use my\helpers\DnsHelper;
+use Yii;
+use common\models\stores\Stores;
+use sommerce\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
-use common\models\panels\AdditionalServices;
-use common\models\panels\Project;
 use yii\base\Model;
 
 /**
- * Class ChangeDomainForm
+ * Class ChangeStoreDomainForm
  * @package my\modules\superadmin\models\forms
  */
-class ChangeDomainForm extends Model {
+class ChangeStoreDomainForm extends Model {
 
     public $domain;
     public $subdomain;
 
     /**
-     * @var Project
+     * @var Stores
      */
-    private $_project;
+    private $_store;
 
     /**
      * @return array the validation rules.
@@ -34,12 +34,12 @@ class ChangeDomainForm extends Model {
     }
 
     /**
-     * Set project
-     * @param Project $project
+     * Set store
+     * @param Stores $store
      */
-    public function setProject(Project $project)
+    public function setStore(Stores $store)
     {
-        $this->_project = $project;
+        $this->_store = $store;
     }
 
     /**
@@ -52,8 +52,8 @@ class ChangeDomainForm extends Model {
             return false;
         }
 
-        $oldSubdomain = $this->_project->subdomain;
-        $oldDomain = $this->_project->site;
+        $oldSubdomain = $this->_store->subdomain;
+        $oldDomain = $this->_store->domain;
 
         $domain = $this->prepareDomain();
 
@@ -65,56 +65,41 @@ class ChangeDomainForm extends Model {
         }
 
         if ($isChangedSubdomain) {
-            $this->_project->subdomain = $this->subdomain;
+            $this->_store->subdomain = $this->subdomain;
         }
 
         if ($isChangedDomain) {
-            if (!$this->_project->disableDomain()) {
+            if (!$this->_store->disableDomain()) {
                 $this->addError('domain', 'Can not change domain');
                 return false;
             }
 
-            if (($additionalService = AdditionalServices::findOne([
-                'name' => $oldDomain
-            ]))) {
-
-                $additionalService->name = $domain;
-                $additionalService->generateApiHelp($domain);
-
-                if (!$additionalService->save(false)) {
-                    $this->addError('domain', 'Can not change domain');
-                    return false;
-                }
-            }
-
-            $this->_project->site = $domain;
+            $this->_store->domain = $domain;
         }
 
-        if (!$this->_project->save(false)) {
+        if (!$this->_store->save(false)) {
             $this->addError('domain', 'Can not change domain');
             return false;
         }
 
         // Если был изменен домен, то необходимо провести еще операции с БД, рестартом нгинкса, добавлением
         if ($isChangedDomain) {
-            $this->_project->refresh();
+            $this->_store->refresh();
 
-            $this->_project->ssl = 0;
+            SuperTaskHelper::setTasksNginx($this->_store);
 
-            SuperTaskHelper::setTasksNginx($this->_project);
-
-            $this->_project->enableDomain();
-            $this->_project->renameDb();
-            $this->_project->save(false);
+            $this->_store->enableDomain();
+            $this->_store->renameDb();
+            $this->_store->save(false);
         }
 
         if ($isChangedSubdomain) {
             if ($this->subdomain) {
                 // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
-                DnsHelper::removeMainDns($this->_project);
+                DnsHelper::removeMainDns($this->_store);
             } else {
                 // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
-                DnsHelper::addMainDns($this->_project);
+                DnsHelper::addMainDns($this->_store);
             }
         }
 
@@ -153,8 +138,8 @@ class ChangeDomainForm extends Model {
     public function attributeLabels()
     {
         return [
-            'domain' => 'Domain',
-            'subdomain' => 'Is subdomain'
+            'domain' => Yii::t('app/superadmin', 'stores.change_domain.column_domain'),
+            'subdomain' => Yii::t('app/superadmin', 'stores.change_domain.column_subdomain')
         ];
     }
 }
