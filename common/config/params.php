@@ -1,5 +1,7 @@
 <?php
 
+$serverIp = "137.74.23.77";
+
 return [
     'config.db' => DB_CONFIG,
     'config.proxy' => PROXY_CONFIG,
