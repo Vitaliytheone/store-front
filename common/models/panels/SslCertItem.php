@@ -23,7 +23,7 @@ class SslCertItem extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%ssl_cert_item}}';
+        return DB_PANELS . '.ssl_cert_item';
     }
 
     /**

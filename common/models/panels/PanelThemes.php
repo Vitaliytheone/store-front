@@ -21,7 +21,7 @@ class PanelThemes extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%panel_themes}}';
+        return DB_PANELS . '.panel_themes';
     }
 
     /**

@@ -37,7 +37,7 @@ class MyCustomersHash extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%my_customers_hash}}';
+        return DB_PANELS . '.my_customers_hash';
     }
 
     /**

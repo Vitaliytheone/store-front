@@ -31,6 +31,7 @@ return [
     'sysmailSupportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта для sysmail метода
     'panelDeployPrice' => '50',
     'childPanelDeployPrice' => '25',
+    'storeDeployPrice' => '35',
 
     // Параметры по умолчанию при создании панели
     'projectDefaults' => [
@@ -88,9 +89,6 @@ return [
     //
     'testPayPal' => false, // true - используем sandbox, false - рабочий аккаунт
 
-
-    'nginxConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
-    'panelSqlPath' => '', // Путь к дампу базы данных соззданной панели
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
     'failsEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем неудачные действия - пока не используется нигде
 
@@ -109,6 +107,7 @@ return [
     'invoice.panelDuration' => 7,
     'invoice.sslDuration' => 7,
     'invoice.customDuration' => 7,
+    'invoice.storeDuration' => 7,
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
@@ -133,7 +132,6 @@ return [
     'system.sslScriptKey' => '',
     'superadminUrl' => 'superadmin',
     'nginx.tasksFile' => '@runtime/nginx.txt',
-    'nginx_restart' => '/etc/init.d/nginx restart',
     'debugIps' => ['*'],
     'debugEmail' => null,
 
@@ -149,4 +147,6 @@ return [
             'connection_timeout' => 10,
         ],
     ],
+
+    'stores_domain' => 'mysommerce.com', // New Sommerce store base domain
 ];

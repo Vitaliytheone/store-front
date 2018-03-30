@@ -53,7 +53,7 @@ class StoreAdminsHash extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%store_admins_hash}}';
+        return DB_STORES . '.store_admins_hash';
     }
 
     /**

@@ -17,7 +17,7 @@ class PaymentHash extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'payment_hash';
+        return DB_PANELS . '.payment_hash';
     }
 
     /**

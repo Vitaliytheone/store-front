@@ -1,5 +1,5 @@
 <?php
-namespace my\components\dns;
+namespace common\components\dns;
 
 use Yii;
 use my\helpers\CurlHelper;
@@ -9,7 +9,7 @@ use yii\helpers\Json;
 
 /**
  * Class Dns
- * @package my\components\dns
+ * @package common\components\dns
  */
 class Dns {
 

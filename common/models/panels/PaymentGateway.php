@@ -42,7 +42,7 @@ class PaymentGateway extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'payment_gateway';
+        return DB_PANELS . '.payment_gateway';
     }
 
     /**

@@ -2,14 +2,19 @@
 
 namespace common\models\stores;
 
+use common\helpers\DbHelper;
+use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\NginxHelper;
+use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
+use sommerce\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
-use common\models\store\Files;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -18,6 +23,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property integer $customer_id
  * @property string $domain
+ * @property integer $subdomain
  * @property string $name
  * @property integer $timezone
  * @property string $language
@@ -54,6 +60,11 @@ class Stores extends ActiveRecord
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
+    const CAN_DASHBOARD = 2;
+    const CAN_PROLONG = 3;
+    const CAN_ACTIVITY_LOG = 4;
+    const CAN_DOMAIN_CONNECT = 5;
+
     use UnixTimeFormatTrait;
 
     /**
@@ -61,7 +72,7 @@ class Stores extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%stores}}';
+        return DB_STORES . '.stores';
     }
 
     /**
@@ -72,7 +83,7 @@ class Stores extends ActiveRecord
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process',
+                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain'
             ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
@@ -94,6 +105,7 @@ class Stores extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'customer_id' => Yii::t('app', 'Customer ID'),
             'domain' => Yii::t('app', 'Domain'),
+            'subdomain' => Yii::t('app', 'Subdomain'),
             'name' => Yii::t('app', 'Name'),
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
@@ -352,5 +364,259 @@ class Stores extends ActiveRecord
     public static function getActNameString($status)
     {
         return ArrayHelper::getValue(static::getStatuses(), $status, '');
+    }
+
+    /**
+     * Change store status
+     * @param int $status
+     * @return bool
+     */
+    public function changeStatus($status)
+    {
+        switch ($status) {
+            case static::STATUS_ACTIVE:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_ACTIVE;
+                }
+
+            break;
+
+            case static::STATUS_FROZEN:
+                if (static::STATUS_ACTIVE == $this->status) {
+                    $this->status = static::STATUS_FROZEN;
+                }
+            break;
+        }
+
+        return $this->save(false);
+    }
+
+    /**
+     * Check store access some actions
+     * @param Stores|array $store
+     * @param string $code
+     * @return bool
+     * @throws Exception
+     */
+    public static function hasAccess($store, $code)
+    {
+        if ($store instanceof Stores) {
+            $status = $store->status;
+        } else {
+            $status = ArrayHelper::getValue($store, 'status');
+        }
+
+        if (!in_array($status, array_keys(static::getStatuses()))) {
+            throw new Exception('Unknown store status ' . "[$status]");
+        }
+
+        switch ($code) {
+            case self::CAN_DASHBOARD:
+                return self::STATUS_ACTIVE == $status;
+                break;
+
+            case self::CAN_PROLONG:
+                return in_array($status, [
+                    static::STATUS_ACTIVE,
+                    static::STATUS_FROZEN,
+                ]);
+                break;
+
+            case self::CAN_DOMAIN_CONNECT:
+                return static::STATUS_ACTIVE == $status;
+                break;
+
+            case self::CAN_ACTIVITY_LOG:
+                return true;
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * Create nginx config
+     * @return bool
+     */
+    public function createNginxConfig()
+    {
+        return NginxHelper::create($this);
+    }
+
+    /**
+     * Remove nginx config
+     * @return bool
+     */
+    public function deleteNginxConfig()
+    {
+        return NginxHelper::delete($this);
+    }
+
+    /**
+     * Disable domain (remove store domains and remove domain from dns servers)
+     * @return bool
+     */
+    public function disableDomain()
+    {
+        // Remove all subdomains and domains
+        StoreDomains::deleteAll([
+            'type' => [
+                StoreDomains::DOMAIN_TYPE_DEFAULT,
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+            ],
+            'store_id' => $this->id
+        ]);
+
+        DnsHelper::removeDns($this);
+
+        return true;
+    }
+
+    /**
+     * Enable domain (create panel domains and add domain to dns servers)
+     * @return bool
+     */
+    public function enableDomain()
+    {
+        $domain = $this->domain;
+
+        // Если включен режим субдомена, не выполняем действий с доменом
+        $storeDomain = StoreDomains::findOne([
+            'domain' => $domain,
+        ]);
+
+        if ($storeDomain) {
+            $panel = $storeDomain->store;
+
+            if (static::STATUS_TERMINATED !== $panel->status) {
+                return false;
+            }
+
+            $storeDomain->delete();
+        }
+
+        $result = true;
+
+        if (!$this->enableSubDomain()) {
+            $result = false;
+        }
+
+        if (!$this->enableMainDomain()) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Enable sub domain
+     * @return bool
+     */
+    public function enableSubDomain()
+    {
+        $domain = $this->domain;
+        $subPrefix = str_replace('.', '-', $domain);
+        $storeDomainName = Yii::$app->params['storeDomain'];
+        $subDomain = $subPrefix . '.' . $storeDomainName;
+
+        $storeDomain = StoreDomains::findOne([
+            'domain' => $subDomain,
+        ]);
+
+        if (!$storeDomain) {
+            $storeDomain = new StoreDomains();
+            $storeDomain->type = StoreDomains::DOMAIN_TYPE_SUBDOMAIN;
+            $storeDomain->store_id = $this->id;
+            $storeDomain->domain = $subDomain;
+
+            if (!$storeDomain->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.subdomain');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Enable main domain
+     * @return bool
+     */
+    public function enableMainDomain()
+    {
+        $domain = $this->domain;
+
+        if (!StoreDomains::findOne([
+            'type' => StoreDomains::DOMAIN_TYPE_DEFAULT,
+            'store_id' => $this->id
+        ])) {
+            $storeDomain = new StoreDomains();
+            $storeDomain->type = StoreDomains::DOMAIN_TYPE_DEFAULT;
+            $storeDomain->store_id = $this->id;
+            $storeDomain->domain = $domain;
+
+            if (!$storeDomain->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                return false;
+            }
+
+            if (!$this->subdomain) {
+                if (!DnsHelper::addMainDns($this)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Disable main domain (remove store domains and remove domain from dns servers)
+     * @return bool
+     */
+    public function disableMainDomain()
+    {
+        // Remove all subdomains and domains
+        StoreDomains::deleteAll([
+            'type' => [
+                StoreDomains::DOMAIN_TYPE_DEFAULT
+            ],
+            'store_id' => $this->id
+        ]);
+
+        DnsHelper::removeMainDns($this);
+
+        return true;
+    }
+
+    /**
+     * Rename database
+     */
+    public function renameDb()
+    {
+        $oldDbName = $this->db_name;
+        $this->generateDbName();
+        DbHelper::renameDatabase($oldDbName, $this->db_name);
+    }
+
+    /**
+     * Create panel db name
+     */
+    public function generateDbName()
+    {
+        $dbName = "store_" . $this->id . "_" . strtolower(str_replace(['.', '-'], '', $this->domain));
+
+        if (!DbHelper::existDatabase($dbName)) {
+            $this->db_name = $dbName;
+            return;
+        }
+
+        $dbName = $dbName . '_';
+        for ($i = 1; $i < 100; $i++) {
+            $this->db_name = $dbName . $i;
+            if (!DbHelper::existDatabase($this->db)) {
+                return;
+            }
+        }
     }
 }
