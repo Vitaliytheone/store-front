@@ -28,7 +28,9 @@
         } else {
             return $storeColors[$store['status']];
         }
-    }
+    };
+
+    $this->context->addModule('storeController');
 ?>
 
 <div class="row">
@@ -92,8 +94,12 @@
                                 <?php endif; ?>
 
                                 <?php if ($store['access']['canDomainConnect']) : ?>
-                                    <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), '#', [
-                                        'class' => 'btn btn-outline btn-purple btn-xs',
+                                    <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
+                                        '/store/edit-domain',
+                                        'id' => $store['id']
+                                    ], [
+                                        'class' => 'btn btn-outline btn-purple btn-xs edit-store-domain',
+                                        'data-domain' => $store['store_domain']
                                     ])?>
                                 <?php else : ?>
                                     <?= Html::tag('span', '<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
@@ -126,3 +132,5 @@
         </div>
     </div>
 <?php endif; ?>
+
+<?= $this->render('layouts/_edit_domain_modal'); ?>

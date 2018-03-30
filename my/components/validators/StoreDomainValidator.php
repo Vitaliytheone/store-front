@@ -11,12 +11,9 @@ use yii\base\Model;
  * Class PanelDomainValidator
  * @package my\components\validators
  */
-class PanelDomainValidator extends BaseDomainValidator
+class StoreDomainValidator extends BaseDomainValidator
 {
     protected $domain;
-    protected $user_id;
-
-    public $child_panel = false;
 
     /**
      * Validate domain
@@ -35,12 +32,12 @@ class PanelDomainValidator extends BaseDomainValidator
         }
 
         $this->domain = $model->{$attribute};
-        $this->user_id = $model->getUser()->id;
+        $storeId = $model->getStore()->id;
 
         $domain = $this->prepareDomain();
 
         if (!filter_var('info@' . $domain, FILTER_VALIDATE_EMAIL)) {
-            $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain'));
+            $model->addError($attribute, Yii::t('app', 'error.store.invalid_domain'));
             return false;
         }
 
@@ -48,7 +45,7 @@ class PanelDomainValidator extends BaseDomainValidator
             $result = $this->isValidDomainName($domain);
 
             if (!$result['result']) {
-                $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_not_registered'));
+                $model->addError($attribute, Yii::t('app', 'error.store.domain_is_not_registered'));
                 return false;
             }
 
@@ -68,7 +65,7 @@ class PanelDomainValidator extends BaseDomainValidator
 
         // Если есть активная панель, то выдаем ошибку что уже существует панель
         if ($hasAvailableProject) {
-            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            $model->addError($attribute, Yii::t('app', 'error.store.domain_is_already_exist'));
             return false;
         }
 
@@ -81,11 +78,13 @@ class PanelDomainValidator extends BaseDomainValidator
                     Project::STATUS_ACTIVE,
                     Project::STATUS_FROZEN
                 ]
-            ])->exists();
+            ])->andWhere(
+                'stores.id <> ' . $storeId
+            )->exists();
 
         // Если есть активный магазин, то выдаем ошибку что уже существует панель или магазин
         if ($hasAvailableStores) {
-            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            $model->addError($attribute, Yii::t('app', 'error.store.domain_is_already_exist'));
             return false;
         }
 
@@ -103,20 +102,12 @@ class PanelDomainValidator extends BaseDomainValidator
 
         if (!empty($hasOrder)) {
             if (Orders::STATUS_PENDING == $hasOrder->status) {
-                $item = Orders::ITEM_BUY_PANEL;
-                if ($this->child_panel) {
-                    $item = Orders::ITEM_BUY_CHILD_PANEL;
-                }
-
-                // Для заказов с отличным item и статусом pending не проверяем, а после создания нового заказа - отменяем предыдущий заказ
-                if ($item != $hasOrder->item) {
-                    return true;
-                }
+                $hasOrder->cancel();
             }
         }
 
         if ($hasOrder) {
-            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            $model->addError($attribute, Yii::t('app', 'error.store.domain_is_already_exist'));
             return false;
         }
     }

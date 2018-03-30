@@ -395,14 +395,17 @@ class Stores extends ActiveRecord
      * Check store access some actions
      * @param Stores|array $store
      * @param string $code
+     * @param array $options
      * @return bool
      * @throws Exception
      */
-    public static function hasAccess($store, $code)
+    public static function hasAccess($store, $code, $options = [])
     {
         if ($store instanceof Stores) {
+            $customerId = $store->customer_id;
             $status = $store->status;
         } else {
+            $customerId = ArrayHelper::getValue($store, 'customer_id');
             $status = ArrayHelper::getValue($store, 'status');
         }
 
@@ -410,25 +413,43 @@ class Stores extends ActiveRecord
             throw new Exception('Unknown store status ' . "[$status]");
         }
 
+        /**
+         * @var Customers $customer
+         */
+        $customer = ArrayHelper::getValue($options, 'customer');
+
         switch ($code) {
             case self::CAN_DASHBOARD:
                 return self::STATUS_ACTIVE == $status;
-                break;
+            break;
 
             case self::CAN_PROLONG:
                 return in_array($status, [
                     static::STATUS_ACTIVE,
                     static::STATUS_FROZEN,
                 ]);
-                break;
+            break;
 
             case self::CAN_DOMAIN_CONNECT:
-                return static::STATUS_ACTIVE == $status;
-                break;
+                if (static::STATUS_ACTIVE != (int)$status) {
+                    return false;
+                }
+
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                $updatedAt = ArrayHelper::getValue($options, 'last_update');
+                if ($updatedAt && ($updatedAt > (time() - (Yii::$app->params['storeChangeDomainDuration'])))) {
+                    return false;
+                }
+
+                return true;
+            break;
 
             case self::CAN_ACTIVITY_LOG:
                 return true;
-                break;
+            break;
         }
 
         return false;

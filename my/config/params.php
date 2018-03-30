@@ -29,9 +29,6 @@ return [
     'noreplyEmail' => 'noreply@getyourpanel.com', // Адрес почты для отправки писем (from)
     'supportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта
     'sysmailSupportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта для sysmail метода
-    'panelDeployPrice' => '50',
-    'childPanelDeployPrice' => '25',
-    'storeDeployPrice' => '35',
 
     // Параметры по умолчанию при создании панели
     'projectDefaults' => [
@@ -102,12 +99,6 @@ return [
         'ns_3' => 'ns3.perfectdns.com',
         'ns_4' => null,
     ],
-
-    'invoice.domainDuration' => 7,
-    'invoice.panelDuration' => 7,
-    'invoice.sslDuration' => 7,
-    'invoice.customDuration' => 7,
-    'invoice.storeDuration' => 7,
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
