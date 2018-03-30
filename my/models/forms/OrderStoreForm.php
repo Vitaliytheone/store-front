@@ -3,9 +3,11 @@ namespace my\models\forms;
 
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
+use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
+use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
 use Yii;
 use yii\base\Exception;
@@ -296,6 +298,8 @@ class OrderStoreForm extends Model
         }
 
         $transaction->commit();
+
+        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_STORE_ORDER, $order->id, $order->id, UserHelper::getHash());
 
         return true;
     }
