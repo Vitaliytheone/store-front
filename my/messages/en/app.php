@@ -419,7 +419,7 @@ return [
     'error.signup.incorrect_captcha' => 'Incorrect captcha',
     'error.signup.aggre_with_terms' => 'You must agree with Terms of Service',
     'error.store.bad_currency' => 'Bad currency',
-    'error.store.bad_name' => 'Wrong store name! Allowed only `A-Z`, `0-9`, `space` and `-` symbols.',
+    'error.store.bad_name' => 'Wrong store name! Allowed symbols are: `A-Z`, `0-9`, `-`, and `space`',
     'error.store.can_not_order_store' => 'Can not order store',
 
     'ssl.created.ticket_subject' => 'Attention',
