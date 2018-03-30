@@ -239,23 +239,26 @@ class OrderStoreForm extends Model
      */
     protected function createInvoice(Orders $order)
     {
-        $storePrice = Yii::$app->params['storeDeployPrice'];
+        $isTrial = $this->getTrial();
 
+        // Make invoice
         $invoice = new Invoices();
-        $invoice->total = $storePrice;
         $invoice->cid = $this->_user->id;
         $invoice->generateCode();
         $invoice->daysExpired(Yii::$app->params['invoice.storeDuration']);
+        $invoice->total = $isTrial ? 0 : Yii::$app->params['storeDeployPrice'];
+        $invoice->status = $isTrial ? Invoices::STATUS_PAID : Invoices::STATUS_UNPAID;
 
         if (!$invoice->save()) {
             return false;
         }
 
+        // Make invoice details
         $invoiceDetails = new InvoiceDetails();
         $invoiceDetails->invoice_id = $invoice->id;
         $invoiceDetails->item_id = $order->id;
-        $invoiceDetails->item = InvoiceDetails::ITEM_BUY_STORE;
-        $invoiceDetails->amount = $storePrice;
+        $invoiceDetails->item = $isTrial ? InvoiceDetails::ITEM_BUY_TRIAL_STORE : InvoiceDetails::ITEM_BUY_STORE;
+        $invoiceDetails->amount = $invoice->total;
 
         if (!$invoiceDetails->save()) {
             return false;
@@ -282,20 +285,17 @@ class OrderStoreForm extends Model
 
         if (!$order) {
             $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
-
             return false;
         }
 
-        if (!$this->getTrial()) {
-            $invoice = $this->createInvoice($order);
-            if (!$invoice) {
-                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+        $invoice = $this->createInvoice($order);
 
-                return false;
-            }
-
-            $this->_invoiceCode = $invoice->code;
+        if (!$invoice) {
+            $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+            return false;
         }
+
+        $this->_invoiceCode = $invoice->code;
 
         $transaction->commit();
 

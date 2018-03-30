@@ -38,7 +38,8 @@ class InvoiceDetails extends ActiveRecord
     const ITEM_CUSTOM_CUSTOMER = 9;
     const ITEM_CUSTOM_PANEL = 10;
     const ITEM_BUY_STORE = 11;
-    const ITEM_PROLONGATION_STORE = 12;
+    const ITEM_BUY_TRIAL_STORE = 12;
+    const ITEM_PROLONGATION_STORE = 13;
 
     /**
      * @inheritdoc
@@ -151,6 +152,7 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_CUSTOM_CUSTOMER => Yii::t('app', 'invoice_details.item.custom'),
             static::ITEM_CUSTOM_PANEL => Yii::t('app', 'invoice_details.item.custom'),
             static::ITEM_BUY_STORE => Yii::t('app', 'invoice_details.item.buy_store'),
+            static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'invoice_details.item.buy_trial_store'),
             static::ITEM_PROLONGATION_STORE => Yii::t('app', 'invoice_details.item.prolongation_store'),
         ];
     }
@@ -237,6 +239,20 @@ class InvoiceDetails extends ActiveRecord
                         'domain' => $order->domain
                     ]);
                     break;
+
+                case static::ITEM_BUY_TRIAL_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_trial_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
+
+                case static::ITEM_PROLONGATION_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.prolongation_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
             }
         }
         return parent::beforeSave($insert);
@@ -254,6 +270,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
+            case static::ITEM_BUY_TRIAL_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order ? $order->getDomain() : '';
             break;
@@ -304,6 +321,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
+            case static::ITEM_BUY_TRIAL_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order;
                 break;

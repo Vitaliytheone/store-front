@@ -107,7 +107,7 @@ class Orders extends ActiveRecord
                     InvoiceDetails::ITEM_BUY_SSL,
                     InvoiceDetails::ITEM_BUY_CHILD_PANEL,
                     InvoiceDetails::ITEM_BUY_STORE,
-                    InvoiceDetails::ITEM_PROLONGATION_STORE,
+                    InvoiceDetails::ITEM_BUY_TRIAL_STORE,
                 ]]);
             });
     }
