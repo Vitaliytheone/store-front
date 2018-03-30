@@ -127,7 +127,6 @@ class StoresSearch
                 $value['statusName'] = $storesStatuses[$value['status']];
                 $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
 
-                $access['canStore'] = Stores::hasAccess($value, Stores::CAN_STORE);
                 $access['canDashboard'] = Stores::hasAccess($value, Stores::CAN_DASHBOARD);
                 $access['canDomainConnect'] = Stores::hasAccess($value, Stores::CAN_DOMAIN_CONNECT);
                 $access['canProlong'] = Stores::hasAccess($value, Stores::CAN_PROLONG);

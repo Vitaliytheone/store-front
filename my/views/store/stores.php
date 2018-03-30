@@ -78,7 +78,7 @@
                             <?= $store['statusName'] ?>
                         </td>
                         <td>
-                            <?php if ($store['access']['canStore']): ?>
+                            <?php if ($store['type'] === 'store'): ?>
 
                                 <?php if ($store['access']['canDashboard']) : ?>
                                     <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), '#', [

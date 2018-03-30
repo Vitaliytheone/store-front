@@ -144,7 +144,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 
         $string2hash = $this->username . $this->password . $this->getPrimaryKey() . $request->getUserIP() . $request->getHeaders()->get('host');
 
-        $authKey = hash_hmac('sha256', $string2hash, $this->getSiteAuthKey());
+        $authKey = hash_hmac('sha256', $string2hash, static::getSiteAuthKey());
 
         return $authKey;
     }
@@ -154,7 +154,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      * @return mixed
      * @throws Exception
      */
-    public function getSiteAuthKey()
+    public static function getSiteAuthKey()
     {
         $siteAuthKey = ArrayHelper::getValue(Yii::$app->params, 'auth_key', null);
 
@@ -185,7 +185,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        $passwordHash = hash_hmac('sha256', $password, $this->getSiteAuthKey());
+        $passwordHash = static::hashPassword($password);
 
         return $this->password === $passwordHash;
     }
@@ -196,7 +196,16 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password = hash_hmac('sha256', $password, $this->getSiteAuthKey());
+        $this->password = static::hashPassword($password);
+    }
+
+    /**
+     * @param $password
+     * @return string
+     */
+    public static function hashPassword($password)
+    {
+        return hash_hmac('sha256', $password, static::getSiteAuthKey());
     }
 
     /**

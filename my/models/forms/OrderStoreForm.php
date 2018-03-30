@@ -1,8 +1,10 @@
 <?php
 namespace my\models\forms;
 
+use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Orders;
+use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
 use sommerce\helpers\ConfigHelper;
 use Yii;
@@ -24,13 +26,19 @@ class OrderStoreForm extends Model
     public $confirm_password;
 
     /** @var string */
-    public $subdomain;
+    public $storeDomain;
 
     /** @var string Generated invoice code */
-    public $code;
+    private $_invoiceCode;
 
     /** @var Auth */
     private $_user;
+
+    /** @var string */
+    private $_ip;
+
+    /** @var  bool Is order trial store */
+    private $_isTrial;
 
     /**
      * @return array the validation rules.
@@ -82,6 +90,51 @@ class OrderStoreForm extends Model
     }
 
     /**
+     * Set user ip
+     * @param $ip
+     */
+    public function setIp($ip)
+    {
+        $this->_ip = $ip;
+    }
+
+    /**
+     * Get user ip
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->_ip;
+    }
+
+    /**
+     * Set is orders trial store
+     * @param bool $isTrial
+     */
+    public function setTrial(bool $isTrial)
+    {
+        $this->_isTrial = $isTrial;
+    }
+
+    /**
+     * Get is order trial
+     * @return bool
+     */
+    public function getTrial()
+    {
+        return $this->_isTrial;
+    }
+
+    /**
+     * Get invoice code
+     * @return string
+     */
+    public function getInvoiceCode()
+    {
+        return $this->_invoiceCode;
+    }
+
+    /**
      * Return store currencies list
      * @return array
      */
@@ -101,7 +154,7 @@ class OrderStoreForm extends Model
      * @return string
      * @throws Exception
      */
-    private function generateSubdomain()
+    protected function generateSubdomain()
     {
         $domain = Yii::$app->params['stores_domain'];
 
@@ -114,7 +167,10 @@ class OrderStoreForm extends Model
         $pendingOrders = (new Query())
             ->select('domain')
             ->from(Orders::tableName())
-            ->andWhere(['status' => Orders::STATUS_PENDING])
+            ->andWhere(['status' => [
+                Orders::STATUS_PENDING,
+                Orders::STATUS_PAID
+            ]])
             ->column();
 
         $exitingStores = (new Query())
@@ -124,46 +180,93 @@ class OrderStoreForm extends Model
 
         $exitingDomains = array_merge($pendingOrders, $exitingStores);
 
-        $domainExist = false;
+        $subdomainPostfix = 2;
 
-        $subdomainPostfix = 1;
+        $checkingSubdomain = $subdomain;
 
         // Check if store with same domain already exist
         do {
-            $chekingDomain = $subdomain . '.' . $domain;
+            $chekingDomain = $checkingSubdomain . '.' . $domain;
 
             $domainExist = in_array($chekingDomain, $exitingDomains);
 
             if ($domainExist) {
-                $subdomain = $subdomain . $subdomainPostfix;
+                $checkingSubdomain = $subdomain . $subdomainPostfix;
                 $subdomainPostfix++;
             }
 
         } while ($domainExist);
 
-        $this->subdomain = $subdomain . '.' . $domain;
+        $this->storeDomain = $chekingDomain;
 
-        return $this->subdomain;
-    }
-
-    public function orderStore()
-    {
-        //  Далее создаем заказ, если у кастомера ранее не было магазина то,
-        //  в orders.details добавляем параметр trial = 1
-        //  и ставим orders.status = 1 и делаем редирект на список магазинов
-
-        // Если магазин у кастомера уже есть то
-        // ставим trial = 0, и создаем инвойс на создания магазина 35$ (надо занести сумму в конфиг)
-        //  и делаем редирект на ранее созданый инвойс
-
-
+        return $this->storeDomain;
     }
 
     /**
-     * Create store invoice && order
-     * @return bool|string
+     * Create order
+     * @return bool|Orders
      */
-    public function createOrder()
+    protected function createOrder()
+    {
+        $order = new Orders();
+        $order->cid = $this->getUser()->id;
+        $order->item = Orders::ITEM_BUY_STORE;
+        $order->domain = $this->storeDomain;
+        $order->ip = $this->getIp();
+        $order->status = $this->getTrial() ? Orders::STATUS_PAID : Orders::STATUS_PENDING;
+        $order->setDetails([
+            'trial' => $this->getTrial() ? 1 : 0,
+            'name' => $this->store_name,
+            'domain' => $this->storeDomain,
+            'currency' => $this->store_currency,
+            'username' => $this->admin_username,
+            'password' => StoreAdminAuth::hashPassword($this->admin_password),
+        ]);
+
+        if (!$order->save()) {
+            return false;
+        }
+
+        return $order;
+    }
+
+    /**
+     * Create invoice
+     * @param Orders $order
+     * @return bool|Invoices
+     */
+    protected function createInvoice(Orders $order)
+    {
+        $storePrice = Yii::$app->params['storeDeployPrice'];
+
+        $invoice = new Invoices();
+        $invoice->total = $storePrice;
+        $invoice->cid = $this->_user->id;
+        $invoice->generateCode();
+        $invoice->daysExpired(Yii::$app->params['invoice.storeDuration']);
+
+        if (!$invoice->save()) {
+            return false;
+        }
+
+        $invoiceDetails = new InvoiceDetails();
+        $invoiceDetails->invoice_id = $invoice->id;
+        $invoiceDetails->item_id = $order->id;
+        $invoiceDetails->item = InvoiceDetails::ITEM_BUY_STORE;
+        $invoiceDetails->amount = $storePrice;
+
+        if (!$invoiceDetails->save()) {
+            return false;
+        }
+
+        return $invoice;
+    }
+
+    /**
+     * Order store
+     * @return bool
+     */
+    public function orderStore()
     {
         if (!$this->validate()) {
             return false;
@@ -173,27 +276,27 @@ class OrderStoreForm extends Model
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        $invoiceModel = new Invoices();
-        $invoiceModel->total = 0;
-        $invoiceModel->cid = $this->_user->id;
-        $invoiceModel->generateCode();
-        $invoiceModel->daysExpired(Yii::$app->params['invoice.storeDuration']);
+        $order = $this->createOrder();
 
-        if (!$invoiceModel->save()) {
+        if (!$order) {
+            $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+
             return false;
         }
 
-        if (!$this->orderStore($invoiceModel)) {
-            $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
-            return false;
+        if (!$this->getTrial()) {
+            $invoice = $this->createInvoice($order);
+            if (!$invoice) {
+                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+
+                return false;
+            }
+
+            $this->_invoiceCode = $invoice->code;
         }
 
         $transaction->commit();
-        $this->code = $invoiceModel->code;
 
-        return $this->code;
+        return true;
     }
-
-
-
 }
