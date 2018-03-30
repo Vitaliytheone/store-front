@@ -522,10 +522,10 @@ class Stores extends ActiveRecord
      */
     public function enableSubDomain()
     {
-        $domain = $this->site;
+        $domain = $this->domain;
         $subPrefix = str_replace('.', '-', $domain);
-        $panelDomainName = Yii::$app->params['panelDomain'];
-        $subDomain = $subPrefix . '.' . $panelDomainName;
+        $storeDomainName = Yii::$app->params['storeDomain'];
+        $subDomain = $subPrefix . '.' . $storeDomainName;
 
         $storeDomain = StoreDomains::findOne([
             'domain' => $subDomain,
@@ -538,11 +538,7 @@ class Stores extends ActiveRecord
             $storeDomain->domain = $subDomain;
 
             if (!$storeDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $this->id, $storeDomain->getErrors(), 'store.restore.subdomain');
-                return false;
-            }
-
-            if (!DnsHelper::addSubDns($this)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.subdomain');
                 return false;
             }
         }

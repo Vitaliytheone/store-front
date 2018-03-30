@@ -131,7 +131,6 @@ return [
     'system.sslScriptKey' => '',
     'superadminUrl' => 'superadmin',
     'nginx.tasksFile' => '@runtime/nginx.txt',
-    'nginx_restart' => '/etc/init.d/nginx restart',
     'debugIps' => ['*'],
     'debugEmail' => null,
 

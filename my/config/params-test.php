@@ -6,10 +6,6 @@ return [
     'testPayPal' => true,
     'testSSL' => true,
 
-    'panelNginxConfigPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/nginx/',
-    'panelSqlPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/sql/panel.sql',
-    'panelRunPath' => '/Users/vitaliysh/www/myperectpanel/basic/runtime/run/run',
-
     // Ahnames auth data
     'ahnames.url' => 'https://demo-api.ahnames.com',
     'ahnames.login' => 'demo',

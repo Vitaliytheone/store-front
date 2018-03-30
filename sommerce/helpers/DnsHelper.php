@@ -100,12 +100,12 @@ class DnsHelper {
         $result = true;
         $domain = $store->domain;
         $subPrefix = str_replace('.', '-', $domain);
-        $panelDomainName = Yii::$app->params['panelDomain'];
+        $storeDomainName = Yii::$app->params['storeDomain'];
 
         $results = [];
 
         // If sub domain exist, return true
-        if (Dns::getRecordInfo($panelDomainName, $subPrefix, [
+        if (Dns::getRecordInfo($storeDomainName, $subPrefix, [
             'type' => 'CNAME'
         ], $results)) {
             return true;
@@ -118,13 +118,13 @@ class DnsHelper {
             'host' => '',
             'ttl' => 1800,
             'record-type' => 'CNAME',
-            'record' => $panelDomainName
+            'record' => $storeDomainName
         ], 'store.send_dns_record_cname');
 
         // Add NS type CNAME
-        if (!Dns::addRecord($panelDomainName, $subPrefix, [
+        if (!Dns::addRecord($storeDomainName, $subPrefix, [
             'record-type' => 'CNAME',
-            'record' => $panelDomainName
+            'record' => $storeDomainName
         ], $results)) {
             $result = false;
         }
@@ -160,9 +160,9 @@ class DnsHelper {
         $result = true;
         $domain = $store->domain;
         $subPrefix = str_replace('.', '-', $domain);
-        $panelDomainName = Yii::$app->params['panelDomain'];
+        $storeDomainName = Yii::$app->params['storeDomain'];
 
-        if (!Dns::removeRecord($panelDomainName, $subPrefix, [
+        if (!Dns::removeRecord($storeDomainName, $subPrefix, [
             'type' => 'CNAME'
         ], $results)) {
             $result = false;
@@ -181,8 +181,6 @@ class DnsHelper {
     {
         $result = static::addMainDns($store);
 
-        $result = static::addSubDns($store) && $result;
-
         return $result;
     }
 
@@ -193,8 +191,6 @@ class DnsHelper {
     public static function removeDns(Stores $store)
     {
         $result = static::removeMainDns($store);
-
-        $result = static::removeSubDns($store) && $result;
 
         return $result;
     }

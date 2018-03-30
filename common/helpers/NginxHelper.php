@@ -30,6 +30,7 @@ class NginxHelper {
                 $logItem = ThirdPartyLog::ITEM_BUY_PANEL;
                 $logCode = 'project.create_nginx_config';
                 $configPath = Yii::$app->params['panelNginxConfigPath'];
+                $defaultConfigPath = Yii::$app->params['panelNginxDefaultConfigPath'];
             break;
 
             case 'Stores':
@@ -40,6 +41,7 @@ class NginxHelper {
                 $logItem = ThirdPartyLog::ITEM_BUY_STORE;
                 $logCode = 'store.create_nginx_config';
                 $configPath = Yii::$app->params['storeNginxConfigPath'];
+                $defaultConfigPath = Yii::$app->params['storeNginxDefaultConfigPath'];
             break;
 
             default:
@@ -48,18 +50,18 @@ class NginxHelper {
 
         $subPrefix = str_replace('.', '-', $domain);
         $configPath = rtrim($configPath, '/') . '/';
+        $configPath = $configPath . $subPrefix . '.conf';
 
         // Create nginx config
-        if (!file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
-            if (file_exists($configPath . 'default_config.conf')) {
-                $configContent = file_get_contents($configPath . 'default_config.conf');
+        if (!file_exists($configPath)) {
+            if (file_exists($defaultConfigPath)) {
+                $configContent = file_get_contents($defaultConfigPath);
                 $configContent = str_replace('domain_name', $domain, $configContent);
-                @file_put_contents($configPath .'/conf.d/' .$subPrefix . '.conf', $configContent);
+                @file_put_contents($configPath, $configContent);
             }
         }
 
-
-        if (!file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
+        if (!file_exists($configPath)) {
             ThirdPartyLog::log($logItem, $object->id, '', $logCode);
             return false;
         }
@@ -103,11 +105,11 @@ class NginxHelper {
         $configPath = rtrim($configPath, '/') . '/';
 
         // Remove nginx config
-        if (file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
-            unlink($configPath .'/conf.d/' .$subPrefix . '.conf');
+        if (file_exists($configPath . $subPrefix . '.conf')) {
+            unlink($configPath . $subPrefix . '.conf');
         }
 
-        if (file_exists($configPath .'/conf.d/' .$subPrefix . '.conf')) {
+        if (file_exists($configPath . $subPrefix . '.conf')) {
             ThirdPartyLog::log($logItem, $object->id, '', $logCode);
             return false;
         }
