@@ -140,6 +140,7 @@ class OrdersSearch {
             Orders::ITEM_BUY_CHILD_PANEL => 'Child Panels (' . $this->count($status, Orders::ITEM_BUY_CHILD_PANEL) . ')',
             Orders::ITEM_BUY_DOMAIN => 'Domains (' . $this->count($status, Orders::ITEM_BUY_DOMAIN) . ')',
             Orders::ITEM_BUY_SSL => 'Certificates (' . $this->count($status, Orders::ITEM_BUY_SSL) . ')',
+            Orders::ITEM_BUY_STORE => 'Stores (' . $this->count($status, Orders::ITEM_BUY_STORE) . ')',
         ];
 
         return $items;
