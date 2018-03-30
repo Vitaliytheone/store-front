@@ -253,6 +253,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_PANEL:
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order ? $order->getDomain() : '';
             break;
@@ -302,6 +303,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order;
                 break;
@@ -334,6 +336,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);
