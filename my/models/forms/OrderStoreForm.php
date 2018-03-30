@@ -5,7 +5,6 @@ use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreAdmins;
 use common\models\stores\Stores;
 use sommerce\helpers\ConfigHelper;
 use Yii;
@@ -217,11 +216,11 @@ class OrderStoreForm extends Model
         $order->status = $this->getTrial() ? Orders::STATUS_PAID : Orders::STATUS_PENDING;
         $order->setDetails([
             'trial' => $this->getTrial() ? 1 : 0,
-            'store_name' => $this->store_name,
-            'store_domain' => $this->storeDomain,
-            'store_currency' => $this->store_currency,
-            'admin_username' => $this->admin_username,
-            'admin_password' => StoreAdminAuth::hashPassword($this->admin_password),
+            'name' => $this->store_name,
+            'domain' => $this->storeDomain,
+            'currency' => $this->store_currency,
+            'username' => $this->admin_username,
+            'password' => StoreAdminAuth::hashPassword($this->admin_password),
         ]);
 
         if (!$order->save()) {

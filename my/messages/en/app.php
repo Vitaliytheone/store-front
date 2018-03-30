@@ -299,7 +299,7 @@ return [
     'invoice_details.description.buy_ssl' =>  '{name} for 1 year ({domain})',
     'invoice_details.description.prolongation_ssl' => '{name} for 1 year ({domain})',
     'invoice_details.description.custom' => 'Custom',
-    'invoice_details.description.buy_store' => 'One month maintenance for {domain}',
+    'invoice_details.description.buy_store' => 'One month maintenance for store {domain}',
     'invoices.status.unpaid' => 'Unpaid',
     'invoices.status.paid' => 'Paid',
     'invoices.status.canceled' => 'Canceled',

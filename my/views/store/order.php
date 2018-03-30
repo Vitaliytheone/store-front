@@ -5,8 +5,6 @@
     /* @var $hasStores bool */
 
     use my\components\ActiveForm;
-    use my\models\forms\OrderStoreForm;
-    use yii\bootstrap\Html;
     use yii\helpers\Url;
 
     $hasStores = $model->getUser()->hasStores();
