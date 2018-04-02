@@ -186,10 +186,11 @@ class DbHelper
 
         $mysqldumpExecPath = ArrayHelper::getValue(Yii::$app->params, 'mysqldump_exec_path', 'mysqldump');
 
-        // Create dir if non exist
         $dirname = dirname($filePath);
+
+        // Create dir if non exist
         if (!file_exists($dirname)) {
-            mkdir("folder/" . $dirname, 0777);
+            mkdir($dirname, 0777);
         }
 
         // Remove old dump
