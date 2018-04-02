@@ -324,6 +324,7 @@ return [
 
     'customers.list.enable_referral_action' => 'Enable referral system',
     'customers.list.disable_referral_action' => 'Disable referral system',
+    'customers.list.activate_stores' => 'Activate stores',
 
     'referrals.list.search' => 'Referrals Search',
     'referrals.list.customer_id' => 'Customer ID',
