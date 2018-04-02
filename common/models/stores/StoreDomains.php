@@ -32,7 +32,7 @@ class StoreDomains extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%store_domains}}';
+        return DB_STORES . '.store_domains';
     }
 
     /**

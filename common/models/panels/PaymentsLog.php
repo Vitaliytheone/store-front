@@ -26,7 +26,7 @@ class PaymentsLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'payments_log';
+        return DB_PANELS . '.payments_log';
     }
 
     /**

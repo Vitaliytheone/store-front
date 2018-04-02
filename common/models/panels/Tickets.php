@@ -40,7 +40,7 @@ class Tickets extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'tickets';
+        return DB_PANELS . '.tickets';
     }
 
     /**

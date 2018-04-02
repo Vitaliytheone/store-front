@@ -74,7 +74,7 @@ class ProjectAdmin extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'project_admin';
+        return DB_PANELS . '.project_admin';
     }
 
     /**

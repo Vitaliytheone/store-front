@@ -57,7 +57,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%super_admin}}';
+        return DB_PANELS . '.super_admin';
     }
 
     /**

@@ -25,7 +25,7 @@ class NotificationEmail extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%notification_email}}';
+        return DB_PANELS . '.notification_email';
     }
 
     /**

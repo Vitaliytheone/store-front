@@ -25,7 +25,7 @@ class Tariff extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'tariff';
+        return DB_PANELS . '.tariff';
     }
 
     /**

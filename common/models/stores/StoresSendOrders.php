@@ -22,7 +22,7 @@ class StoresSendOrders extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%stores_send_orders}}';
+        return DB_STORES . '.stores_send_orders';
     }
 
     /**
