@@ -158,7 +158,7 @@ class OrderStoreForm extends Model
      */
     protected function generateSubdomain()
     {
-        $domain = Yii::$app->params['stores_domain'];
+        $domain = Yii::$app->params['storeDomain'];
 
         if (empty($domain)) {
             throw new Exception('Bad config-params: store_domain not configured yet!');

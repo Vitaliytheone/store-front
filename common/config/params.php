@@ -11,10 +11,12 @@ return [
     'storeNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
 
     'panelSqlPath' => '', // Путь к дампу базы данных соззданной панели
-    'storeSqlPath' => '', // Путь к дампу базы данных соззданной магазина
+    'storeSqlPath' => Yii::getAlias('@sommerce/runtime/store_template.sql'), // Путь к дампу базы данных созданного магазина
 
-    'panelDomain' => 'myperfectpanel.com',// Домен нашего сайта
-    'storeDomain' => 'sommerce.net',// Домен нашего сайта
+    'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
+
+    'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
+    'storeDomain' => 'sommerce.net', // Домен нашего сайта
 
     'nginx_restart' => '/etc/init.d/nginx restart',
 

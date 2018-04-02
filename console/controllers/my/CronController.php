@@ -56,7 +56,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_PANEL,
                 Orders::ITEM_BUY_SSL,
                 Orders::ITEM_BUY_DOMAIN,
-                Orders::ITEM_BUY_CHILD_PANEL
+                Orders::ITEM_BUY_CHILD_PANEL,
+                Orders::ITEM_BUY_STORE,
             ]
         ])->all();
 
@@ -81,6 +82,10 @@ class CronController extends CustomController
 
                     case Orders::ITEM_BUY_CHILD_PANEL:
                         OrderHelper::panel($order, true);
+                    break;
+
+                    case Orders::ITEM_BUY_STORE:
+                        OrderHelper::store($order);
                     break;
                 }
             } catch (Exception $e) {
