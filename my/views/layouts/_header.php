@@ -30,9 +30,11 @@
                 <ul class="nav" id="side-menu">
                     <li class="sidebar-search">
                     </li>
+                    <?php if ($user && $user->can('stores')) : ?>
                     <li>
                         <?= Html::a('<i class="fa fa-shopping-cart fa-fw"></i> ' . Yii::t('app', 'layouts.header.stores'), '/stores') ?>
                     </li>
+                    <?php endif; ?>
                     <li>
                         <?= Html::a('<i class="fa fa-table fa-fw"></i> ' . Yii::t('app', 'layouts.header.panels'), '/panels') ?>
                     </li>

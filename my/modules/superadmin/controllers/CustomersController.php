@@ -163,6 +163,23 @@ class CustomersController extends CustomController
     }
 
     /**
+     * Activate stores feature
+     * @param $id
+     * @return Response
+     */
+    public function actionActivateStores($id)
+    {
+        $customer = $this->findModel($id);
+
+        if ($customer && !$customer->can('stores')) {
+            $customer->stores = Customers::STORES_ACTIVE;
+            $customer->save(false);
+        }
+
+        return $this->redirect(Url::toRoute('/customers'));
+    }
+
+    /**
      * Find customer model
      * @param $id
      * @return null|Customers

@@ -64,6 +64,9 @@ class Customers extends ActiveRecord
     const REFERRAL_PAID = 1;
     const REFERRAL_NOT_PAID = 0;
 
+    const STORES_ACTIVE = 1;
+    const STORES_NOT_ACTIVE = 0;
+
     public $password_confirm;
 
     use UnixTimeFormatTrait;
@@ -404,9 +407,9 @@ class Customers extends ActiveRecord
                 return $this->child_panels;
             break;
 
-            case 'store':
+            case 'stores':
                 return $this->stores;
-                break;
+            break;
 
             case 'referral':
                 return static::REFERRAL_ACTIVE == $this->referral_status;
