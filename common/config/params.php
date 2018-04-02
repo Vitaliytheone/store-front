@@ -11,7 +11,7 @@ return [
     'storeNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
 
     'panelSqlPath' => '', // Путь к дампу базы данных соззданной панели
-    'storeSqlPath' => Yii::getAlias('@sommerce/runtime/store_template.sql'), // Путь к дампу базы данных созданного магазина
+    'storeSqlPath' => Yii::getAlias('@sommerce/runtime/sql/store_template.sql'), // Путь к дампу базы данных созданного магазина
 
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
 
