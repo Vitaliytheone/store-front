@@ -81,6 +81,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $ticket_per_user
  * @property integer $auto_order
  * @property integer $drip_feed
+ * @property integer $name_fields
+ * @property integer $name_modal
  * @property string $notification_email
  * @property int $forgot_password
  *
@@ -133,7 +135,8 @@ class Project extends ActiveRecord
                 'forecast_count', 'paypal', 'type', 'currency', 'seo', 'comments', 'mentions', 'mentions_wo_hashtag', 'mentions_custom',
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
-                'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password'
+                'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password',
+                'name_fields', 'name_modal',
             ], 'integer'],
             [['site', 'name', 'skype'], 'string', 'max' => 1000],
             [['theme_custom', 'theme_default', 'db', 'logo', 'favicon', 'notification_email'], 'string', 'max' => 300],
@@ -214,6 +217,8 @@ class Project extends ActiveRecord
             'auto_order' => Yii::t('app', 'Auto Order'),
             'ssl' => Yii::t('app', 'Ssl'),
             'drip_feed' => Yii::t('app', 'Drip Feed'),
+            'name_fields' => Yii::t('app', 'Name fields'),
+            'name_modal' => Yii::t('app', 'Name modal'),
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
         ];
