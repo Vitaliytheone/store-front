@@ -77,6 +77,7 @@ return [
     'panels.edit.writing' => 'Writing',
     'panels.edit.drip_feed' => 'Drip-feed',
     'panels.edit.captcha' => 'Captcha',
+    'panels.edit.name_modal' => 'Name modal',
     'panels.edit.custom' => 'Custom code',
     'panels.edit.start_count' => 'Start count',
     'panels.edit.apikey' => 'PrivateAPI key',
