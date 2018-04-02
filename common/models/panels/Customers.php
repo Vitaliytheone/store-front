@@ -484,4 +484,15 @@ class Customers extends ActiveRecord
     {
         return CustomerHelper::hasStores($this->id);
     }
+
+    /**
+     * Activate stores feature status
+     */
+    public function activateStores()
+    {
+        if (!$this->can('stores')) {
+            $this->stores = self::STORES_ACTIVE;
+            $this->save(false);
+        }
+    }
 }

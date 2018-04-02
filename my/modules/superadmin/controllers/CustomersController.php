@@ -171,10 +171,7 @@ class CustomersController extends CustomController
     {
         $customer = $this->findModel($id);
 
-        if ($customer && !$customer->can('stores')) {
-            $customer->stores = Customers::STORES_ACTIVE;
-            $customer->save(false);
-        }
+        $customer->activateStores();
 
         return $this->redirect(Url::toRoute('/customers'));
     }
