@@ -20,6 +20,7 @@ use DateTime;
  * @property string $token
  * @property integer $status
  * @property integer $child_panels
+ * @property integer $stores
  * @property integer $date_create
  * @property integer $auth_date
  * @property string $auth_ip
@@ -83,7 +84,7 @@ class Customers extends ActiveRecord
         return [
             [['email', 'password', 'password_confirm', 'first_name', 'last_name'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['first_name', 'last_name'], 'required', 'on' => self::SCENARIO_SETTINGS],
-            [['status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels'], 'integer'],
+            [['status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores'], 'integer'],
             [['unpaid_earnings'], 'number'],
             [['referral_link'], 'string', 'max' => 5],
             [['first_name'], 'string', 'max' => 300],
@@ -267,6 +268,7 @@ class Customers extends ActiveRecord
             'token' => Yii::t('app', 'Token'),
             'status' => Yii::t('app', 'Status'),
             'child_panels' => Yii::t('app', 'Child Panels'),
+            'stores' => Yii::t('app', 'Stores'),
             'date_create' => Yii::t('app', 'Date Create'),
             'auth_date' => Yii::t('app', 'Auth Date'),
             'auth_ip' => Yii::t('app', 'Auth Ip'),
@@ -401,6 +403,10 @@ class Customers extends ActiveRecord
             case 'child':
                 return $this->child_panels;
             break;
+
+            case 'store':
+                return $this->stores;
+                break;
 
             case 'referral':
                 return static::REFERRAL_ACTIVE == $this->referral_status;
