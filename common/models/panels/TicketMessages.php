@@ -31,7 +31,7 @@ class TicketMessages extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'ticket_messages';
+        return DB_PANELS . '.ticket_messages';
     }
 
     /**

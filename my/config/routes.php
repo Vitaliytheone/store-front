@@ -1,10 +1,5 @@
 <?php
 
-$params = array_merge(
-    require(__DIR__ . '/params.php'),
-    file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
-);
-
 $superadmin = [];
 
 foreach ([
@@ -120,6 +115,8 @@ $routes = [
     'childpanels/staff/passwd/<id:>' => '/child-project/staff-passwd',
     'childpanels/staff/edit/<id:>' => '/child-project/staff-edit',
 
+    'stores' => '/store/stores',
+    'stores/order' => '/store/order',
 ];
 
 return array_merge($routes, $superadmin);

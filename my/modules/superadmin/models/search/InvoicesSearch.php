@@ -84,13 +84,15 @@ class InvoicesSearch extends Invoices {
                 InvoiceDetails::ITEM_BUY_PANEL,
                 InvoiceDetails::ITEM_BUY_SSL,
                 InvoiceDetails::ITEM_BUY_DOMAIN,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL
+                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+                InvoiceDetails::ITEM_BUY_STORE,
+                InvoiceDetails::ITEM_BUY_TRIAL_STORE,
             ]) . ')'
         );
         $query->leftJoin('project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
-            InvoiceDetails::ITEM_PROLONGATION_PANEL,
-            InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-                InvoiceDetails::ITEM_CUSTOM_PANEL
+                InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                InvoiceDetails::ITEM_CUSTOM_PANEL,
         ]) . ')');
         $query->leftJoin('ssl_cert', 'ssl_cert.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL);
         $query->leftJoin('customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);

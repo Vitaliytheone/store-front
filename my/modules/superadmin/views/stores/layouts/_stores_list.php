@@ -5,6 +5,7 @@
 use my\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
+use common\models\stores\Stores;
 
 ?>
 <table class="table table-border">
@@ -41,7 +42,7 @@ use yii\widgets\LinkPager;
                     <?= $store['customer_email'] ?>
                 </td>
                 <td>
-                    <?= $store['status'] ?>
+                    <?= $store['status_name'] ?>
                 </td>
                 <td>
                     <span class="text-nowrap">
@@ -53,13 +54,26 @@ use yii\widgets\LinkPager;
                     <span class="text-nowrap">
                         <?= $store['expired_date'] ?>
                     </span>
-                    <?= $store['expired_date'] ?>
+                    <?= $store['expired_time'] ?>
                 </td>
                 <td>
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'stores.list.column_actions')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
-
+                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_change_domain'), Url::toRoute(['/stores/change-domain', 'id' => $store['id']]), [
+                                'class' => 'dropdown-item change-domain',
+                                'data-domain' => $store['domain'],
+                                'data-subdomain' => $store['subdomain']
+                            ])?>
+                            <?php if (Stores::STATUS_ACTIVE == $store['status']) : ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_freeze_store'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_FROZEN]), ['class' => 'dropdown-item'])?>
+                            <?php elseif (Stores::STATUS_FROZEN == $store['status']) : ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_activate_store'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_ACTIVE]), ['class' => 'dropdown-item'])?>
+                            <?php endif; ?>
+                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_edit_expiry'), Url::toRoute(['/stores/edit-expiry', 'id' => $store['id']]), [
+                                'class' => 'dropdown-item edit-expiry',
+                                'data-expired' => $store['expired']
+                            ])?>
                         </div>
                     </div>
                 </td>

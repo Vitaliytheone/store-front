@@ -1,0 +1,5 @@
+USE `stores`;
+ALTER TABLE `stores` DROP FOREIGN KEY `fk_customer_id_stores`;
+
+USE `stores`;
+DROP TABLE IF EXISTS `customers`;
