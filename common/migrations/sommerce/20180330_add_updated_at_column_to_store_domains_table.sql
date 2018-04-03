@@ -1,0 +1,1 @@
+ALTER TABLE `store_domains` ADD `updated_at` int(11) NOT NULL;

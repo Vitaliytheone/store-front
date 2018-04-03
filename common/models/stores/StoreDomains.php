@@ -2,7 +2,9 @@
 
 namespace common\models\stores;
 
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoreDomainsQuery;
 
@@ -14,6 +16,7 @@ use common\models\stores\queries\StoreDomainsQuery;
  * @property string $domain
  * @property integer $type
  * @property integer $ssl
+ * @property integer $updated_at
  *
  * @property Stores $store
  */
@@ -26,6 +29,8 @@ class StoreDomains extends ActiveRecord
 
     const SSL_OFF = 0;
     const SSL_ON = 1;
+
+    use UnixTimeFormatTrait;
 
     /**
      * @inheritdoc
@@ -41,7 +46,7 @@ class StoreDomains extends ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'type', 'ssl'], 'integer'],
+            [['store_id', 'type', 'ssl', 'updated_at'], 'integer'],
             [['domain'], 'string', 'max' => 255],
             [['domain'], 'unique'],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
@@ -77,5 +82,24 @@ class StoreDomains extends ActiveRecord
     public static function find()
     {
         return new StoreDomainsQuery(get_called_class());
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'updated_at',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }

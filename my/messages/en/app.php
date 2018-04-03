@@ -544,4 +544,11 @@ return [
     'stores.order.form.label.admin_username' => 'Admin username',
     'stores.order.form.label.admin_password' => 'Admin password',
     'stores.order.form.label.confirm_password' => 'Confirm password',
+
+    'stores.edit_store_domain.domain' => 'Domain name',
+    'stores.edit_store_domain.modal_submit' => 'Save changes',
+    'stores.edit_store_domain.modal_cancel' => 'Cancel',
+    'stores.edit_store_domain.header' => 'Domain connect',
+    'error.store.domain_is_not_registered' => 'Domain is not registered',
+    'error.store.domain_is_already_exist' => 'Domain is already exist',
 ];

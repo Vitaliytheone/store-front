@@ -2,6 +2,7 @@
 
 namespace my\models\search;
 
+use common\models\stores\StoreDomains;
 use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Orders;
@@ -18,6 +19,11 @@ class StoresSearch
 {
     /** @var  array Search params */
     private $params;
+
+    /**
+     * @var array
+     */
+    public static $storeDomains;
 
     /**
      * Set search parameters
@@ -37,7 +43,7 @@ class StoresSearch
         $customer = ArrayHelper::getValue($this->params, 'customer_id');
 
         $orderPending = (new Query())
-            ->select(['id', '("order") AS type', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
+            ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
             ->from('orders')
             ->andWhere([
                 'cid' => $customer,
@@ -52,7 +58,7 @@ class StoresSearch
             ]);
 
         $orderCanceled = (new Query())
-            ->select(['id', '("order") AS type', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
+            ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
             ->from('orders')
             ->andWhere([
                 'cid' => $customer,
@@ -63,7 +69,7 @@ class StoresSearch
             ]);
 
         $stores = (new Query())
-            ->select(['id', '("store") AS type', 'domain AS domain', 'status', 'created_at AS date', '(NULL) AS plan', 'expired', 'db_name AS db'])
+            ->select(['id', '("store") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'created_at AS date', '(NULL) AS plan', 'expired', 'db_name AS db'])
             ->from(Stores::tableName())
             ->andWhere([
                 'customer_id' => $customer,
@@ -95,6 +101,7 @@ class StoresSearch
      */
     public function search()
     {
+        $customer = ArrayHelper::getValue($this->params, 'customer');
         $timezone = null;
         if (!Yii::$app->user->isGuest) {
             $timezone = Yii::$app->user->identity->timezone;
@@ -107,19 +114,23 @@ class StoresSearch
 
         $ordersStatuses = Orders::getStatuses();
         $storesStatuses = Stores::getStatuses();
+        $storeDomains = [];
 
-        $prepareData = function ($value, $code) use ($ordersStatuses, $storesStatuses, $timezone, $errorsOrders) {
+        $prepareData = function ($value, $code) use ($customer, $ordersStatuses, $storesStatuses, $timezone, $errorsOrders, &$storeDomains) {
             $access = [
                 'isActive' => false,
                 'isActivityLog' => false,
                 'isDomainConnect' => false,
                 'isProlong' => false,
+                'store_domain' => null
             ];
             if ('pending' == $code) {
                 $value['statusName'] = $ordersStatuses[Orders::STATUS_PENDING];
             } else if ('canceled' == $code) {
                 $value['statusName'] = $ordersStatuses[Orders::STATUS_CANCELED];
             } else {
+                $storeDomain = !empty($storeDomains[$value['id']]) ? $storeDomains[$value['id']] : null;
+
                 // skip stores with errors
                 if (in_array($value['domain'], $errorsOrders)) {
                     return null;
@@ -128,9 +139,14 @@ class StoresSearch
                 $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
 
                 $access['canDashboard'] = Stores::hasAccess($value, Stores::CAN_DASHBOARD);
-                $access['canDomainConnect'] = Stores::hasAccess($value, Stores::CAN_DOMAIN_CONNECT);
+                $access['canDomainConnect'] = Stores::hasAccess($value, Stores::CAN_DOMAIN_CONNECT, [
+                    'customer' => $customer,
+                    'last_update' => ArrayHelper::getValue($storeDomain, 'updated_at')
+                ]);
                 $access['canProlong'] = Stores::hasAccess($value, Stores::CAN_PROLONG);
                 $access['canActivityLog'] = Stores::hasAccess($value, Stores::CAN_ACTIVITY_LOG);
+
+                $value['store_domain'] = ArrayHelper::getValue($storeDomain, 'domain');
             }
 
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
@@ -147,6 +163,9 @@ class StoresSearch
         foreach ($queries as $code => $query) {
             $data = $query->all();
 
+            if ('stores' == $code) {
+                $storeDomains = static::getStoreDomains(ArrayHelper::getColumn($data, 'id'));
+            }
             foreach ($data as $value) {
                 $value = $prepareData($value, $code);
 
@@ -157,5 +176,33 @@ class StoresSearch
         }
 
         return $return;
+    }
+
+    /**
+     * Get sores domains
+     * @param array $storeIds
+     * @return array
+     */
+    public static function getStoreDomains($storeIds)
+    {
+        if (null === static::$storeDomains) {
+            static::$storeDomains = (new Query())
+                ->select([
+                    'store_id',
+                    'domain',
+                    'type',
+                    'updated_at'
+                ])
+                ->from(StoreDomains::tableName())
+                ->andWhere([
+                    'type' => StoreDomains::DOMAIN_TYPE_DEFAULT,
+                    'store_id' => $storeIds
+                ])
+                ->all();
+
+            static::$storeDomains = ArrayHelper::index(static::$storeDomains, 'store_id');
+        }
+
+        return static::$storeDomains;
     }
 }

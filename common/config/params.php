@@ -26,4 +26,15 @@ return [
     'dnsId' => '1181',
     'dnsPassword' => '2njujbuhwrZSgW96JynTN7JASe6Q8X64',
     'dnsIp' => $serverIp,
+
+    'panelDeployPrice' => '50',
+    'childPanelDeployPrice' => '25',
+    'storeDeployPrice' => '35',
+    'storeChangeDomainDuration' => 6 * 60 * 60, // Время паузы между сменами домена магазина
+
+    'invoice.domainDuration' => 7,
+    'invoice.panelDuration' => 7,
+    'invoice.sslDuration' => 7,
+    'invoice.customDuration' => 7,
+    'invoice.storeDuration' => 7,
 ];

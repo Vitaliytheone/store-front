@@ -3,12 +3,20 @@
 namespace my\controllers;
 
 use common\models\panels\Auth;
+use common\models\panels\Customers;
 use common\models\panels\Orders;
+use common\models\stores\StoreDomains;
+use common\models\stores\Stores;
+use my\components\ActiveForm;
+use my\models\forms\EditStoreDomainForm;
 use my\models\forms\OrderStoreForm;
 use my\models\search\StoresSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Class StoreController
@@ -42,16 +50,22 @@ class StoreController extends CustomController
     {
         $this->view->title = Yii::t('app', 'pages.title.stores');
 
+        /**
+         * @var Customers $customer
+         */
+        $customer = Yii::$app->user->identity;
+
         $storesSearch = new StoresSearch();
         $storesSearch->setParams([
-            'customer_id' => Yii::$app->user->identity->id
+            'customer_id' => $customer->id,
+            'customer' => $customer
         ]);
 
         return $this->render('stores', [
             'stores' => $storesSearch->search(),
             'accesses' => [
                 'canCreate' => Orders::can('create_store', [
-                    'customerId' => Yii::$app->user->identity->id
+                    'customerId' => $customer->id
                 ])
             ]
         ]);
@@ -86,5 +100,72 @@ class StoreController extends CustomController
         }
 
         return $this->redirect('/invoices/' . $model->getInvoiceCode());
+    }
+
+    /**
+     * Edit store domain
+     * @param int $id
+     * @return array
+     */
+    public function actionEditDomain($id)
+    {
+        $store = $this->_findStore($id);
+
+        /**
+         * @var Customers $user
+         */
+        $user = Yii::$app->user->getIdentity();
+        $storeDomain = StoreDomains::findOne([
+            'store_id' => $store->id,
+            'type' => StoreDomains::DOMAIN_TYPE_DEFAULT
+        ]);
+
+        if (!Stores::hasAccess($store, Stores::CAN_DOMAIN_CONNECT, [
+            'user' => $user,
+            'last_update' => $storeDomain ? $storeDomain->updated_at : null
+        ])) {
+            throw new ForbiddenHttpException();
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new EditStoreDomainForm();
+        $model->setStore($store);
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if (!$model->save()) {
+                return [
+                    'status' => 'error',
+                    'message' => ActiveForm::firstError($model)
+                ];
+            }
+
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => Yii::t('app', 'error.staff.can_not_edit')
+        ];
+    }
+
+    /**
+     * Find store
+     * @param integer $id
+     * @return Stores
+     * @throws NotFoundHttpException
+     */
+    protected function _findStore($id)
+    {
+        $store = Stores::findOne($id);
+
+        if (!$store) {
+            throw new NotFoundHttpException();
+        }
+
+        return $store;
     }
 }
