@@ -60,7 +60,7 @@ class AdditionalServices extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%additional_services}}';
+        return DB_PANELS . '.additional_services';
     }
 
     /**

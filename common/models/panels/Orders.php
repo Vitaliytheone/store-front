@@ -40,6 +40,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_DOMAIN = 2;
     const ITEM_BUY_SSL = 3;
     const ITEM_BUY_CHILD_PANEL = 4;
+    const ITEM_BUY_STORE = 5;
 
     use UnixTimeFormatTrait;
 
@@ -48,7 +49,7 @@ class Orders extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'orders';
+        return DB_PANELS . '.orders';
     }
 
     /**
@@ -104,7 +105,9 @@ class Orders extends ActiveRecord
                     InvoiceDetails::ITEM_BUY_PANEL,
                     InvoiceDetails::ITEM_BUY_DOMAIN,
                     InvoiceDetails::ITEM_BUY_SSL,
-                    InvoiceDetails::ITEM_BUY_CHILD_PANEL
+                    InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+                    InvoiceDetails::ITEM_BUY_STORE,
+                    InvoiceDetails::ITEM_BUY_TRIAL_STORE,
                 ]]);
             });
     }
@@ -144,6 +147,7 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_DOMAIN => Yii::t('app', 'orders.item.buy_domain'),
             static::ITEM_BUY_SSL => Yii::t('app', 'orders.item.buy_ssl'),
             static::ITEM_BUY_CHILD_PANEL => Yii::t('app', 'orders.item.buy_child_panel'),
+            static::ITEM_BUY_STORE => Yii::t('app', 'orders.item.buy_store'),
         ];
     }
 
@@ -306,10 +310,17 @@ class Orders extends ActiveRecord
                         ':status' => Project::STATUS_TERMINATED
                     ])->exists();
             break;
+
+            // TODO:: Dummy rules. Populate it for real conditions.
+            case 'create_store':
+                if (empty($customerId)) {
+                    return false;
+                }
+
+                return true;
         }
 
         return false;
-
     }
 
     /**

@@ -1,20 +1,17 @@
 <?php
 namespace my\components\validators;
 
-use my\helpers\CurlHelper;
-use my\helpers\DomainsHelper;
-use common\models\panels\OrderLogs;
+use common\models\stores\Stores;
 use Yii;
 use common\models\panels\Orders;
 use common\models\panels\Project;
 use yii\base\Model;
-use yii\validators\Validator;
 
 /**
  * Class PanelDomainValidator
  * @package my\components\validators
  */
-class PanelDomainValidator extends Validator
+class PanelDomainValidator extends BaseDomainValidator
 {
     protected $domain;
     protected $user_id;
@@ -75,6 +72,23 @@ class PanelDomainValidator extends Validator
             return false;
         }
 
+        $hasAvailableStores = Stores::find()
+            ->joinWith([
+                'storeDomains'
+            ])->andWhere([
+                'store_domains.domain' => $domain,
+                'stores.status' => [
+                    Project::STATUS_ACTIVE,
+                    Project::STATUS_FROZEN
+                ]
+            ])->exists();
+
+        // Если есть активный магазин, то выдаем ошибку что уже существует панель или магазин
+        if ($hasAvailableStores) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            return false;
+        }
+
         /**
          * @var Orders $hasOrder
          */
@@ -105,61 +119,5 @@ class PanelDomainValidator extends Validator
             $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
             return false;
         }
-    }
-
-    /**
-     * Check is valid domain
-     * @param $domainName
-     * @return array
-     */
-    private function isValidDomainName($domainName)
-    {
-        $result = array('result' => false);
-
-        $list = CurlHelper::request('https://www.whoisxmlapi.com/whoisserver/WhoisService?cmd=GET_DN_AVAILABILITY&domainName=' . $domainName . '&username=' . Yii::$app->params['dnsLogin'] . '&password=' . Yii::$app->params['dnsPasswd'] . '&getMode=DNS_AND_WHOIS&outputFormat=JSON');
-        $listEncode = json_decode($list);
-        if ($listEncode !== false) {
-            if (!empty($listEncode->DomainInfo) && $listEncode->DomainInfo->domainAvailability == 'UNAVAILABLE') {
-                $result = array('result' => true, 'domain' => $listEncode->DomainInfo->domainName);
-            }
-        } else {
-            $result = array('result' => true, 'domain' => $domainName);
-        }
-
-        $OrderLogsModel = new OrderLogs();
-
-        $OrderLogsModel->domain = $domainName;
-        $OrderLogsModel->cid = $this->user_id;
-        $OrderLogsModel->date = time();
-        $OrderLogsModel->log = json_encode(array('result' => $result, 'html' => $list));
-        $OrderLogsModel->save();
-
-        return $result;
-    }
-
-    /**
-     * Prepare domain
-     * @return string
-     */
-    public function prepareDomain()
-    {
-        $domain = trim(mb_strtolower($this->domain));
-        $domain = DomainsHelper::idnToAscii($domain);
-
-        $exp = explode("://", $domain);
-
-        if (count($exp) > 1) {
-            $domain = $exp['1'];
-        }
-
-        $exp = explode("/", $domain);
-
-        $domain = $exp['0'];
-
-        if (substr($domain, 0, 4) == 'www.') {
-            $domain = substr($domain, 4);
-        }
-
-        return $domain;
     }
 }

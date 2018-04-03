@@ -42,7 +42,7 @@ class Domains extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%domains}}';
+        return DB_PANELS . '.domains';
     }
 
     /**

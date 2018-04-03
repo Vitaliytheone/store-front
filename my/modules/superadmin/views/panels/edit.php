@@ -92,6 +92,8 @@ $this->context->addModule('superadminEditPanelController');
 
                         <?= $form->field($model, 'captcha')->checkbox() ?>
 
+                        <?= $form->field($model, 'name_modal')->checkbox() ?>
+
                         <?= $form->field($model, 'custom')->checkbox() ?>
 
                         <?= $form->field($model, 'start_count')->checkbox() ?>

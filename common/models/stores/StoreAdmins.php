@@ -5,6 +5,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoreAdminsQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%store_admins}}".
@@ -33,6 +34,17 @@ class StoreAdmins extends ActiveRecord
     const SUPER_USER_MODE_ON = 1;
 
     /**
+     * Default store admin rules for new stores
+     * @var array
+     */
+    static $defaultRules = [
+        'orders' => 1,
+        'products' => 1,
+        'payments' => 1,
+        'settings' => 1,
+    ];
+
+    /**
      * Default allowed controller
      * Admin will be redirect to this controller
      * if other controllers are not allowed
@@ -51,7 +63,7 @@ class StoreAdmins extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%store_admins}}';
+        return DB_STORES . '.store_admins';
     }
 
     /**
@@ -165,6 +177,18 @@ class StoreAdmins extends ActiveRecord
         }
 
         return $rules;
+    }
+
+    /**
+     * Set admin rules
+     * @param array $rules
+     */
+    public function setRules(array $rules = [])
+    {
+        $defaultRules = array_fill_keys(array_keys(static::$defaultRules), 0);
+        $rules = ArrayHelper::merge($defaultRules, $rules);
+        $rules = array_intersect_key($rules, $defaultRules);
+        $this->rules = json_encode($rules);
     }
 
     /**
