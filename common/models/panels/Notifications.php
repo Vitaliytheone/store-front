@@ -31,7 +31,7 @@ class Notifications extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%notifications}}';
+        return DB_PANELS . '.notifications';
     }
 
     /**

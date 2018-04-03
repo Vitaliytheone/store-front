@@ -135,7 +135,7 @@ class SuperToolsScanner extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'super_tools_scanner';
+        return DB_PANELS . '.super_tools_scanner';
     }
 
     /**

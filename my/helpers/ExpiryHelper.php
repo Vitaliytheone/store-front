@@ -30,4 +30,17 @@ class ExpiryHelper {
 
         return mktime(date("H", $time), date("i", $time), date("s", $time), date("n", $time), date("j", $time), date("Y", $time) + 1);
     }
+
+    /**
+     * Generate expired time plus num $days, started from $fromTime
+     * @param $days
+     * @param $fromTime
+     * @return false|int
+     */
+    public static function days($days, $fromTime = null)
+    {
+        $fromTime = empty($fromTime) ? time() : $fromTime;
+
+        return $fromTime + $days * 24 * 60 * 60;
+    }
 }

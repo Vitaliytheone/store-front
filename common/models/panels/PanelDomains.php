@@ -28,7 +28,7 @@ class PanelDomains extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%panel_domains}}';
+        return DB_PANELS . '.panel_domains';
     }
 
     /**
