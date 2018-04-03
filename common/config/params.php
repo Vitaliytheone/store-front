@@ -31,6 +31,7 @@ return [
     'childPanelDeployPrice' => '25',
     'storeDeployPrice' => '35',
     'storeChangeDomainDuration' => 6 * 60 * 60, // Время паузы между сменами домена магазина
+    'storeProlongMinDuration' => 14 * 24 * 60 * 60, // 14 дней до окончания действия магазина, в который можно продлить магазин
 
     'invoice.domainDuration' => 7,
     'invoice.panelDuration' => 7,

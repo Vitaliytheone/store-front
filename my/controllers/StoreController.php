@@ -175,6 +175,28 @@ class StoreController extends CustomController
         ];
     }
 
+    public function actionProlong($id)
+    {
+        $store = $this->_findStore($id);
+
+        /**
+         * @var Customers $user
+         */
+        $user = Yii::$app->user->getIdentity();
+
+        if (!Stores::hasAccess($store, Stores::CAN_PROLONG, [
+            'user' => $user,
+        ])) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (!($code = $store->prolong())) {
+            return $this->redirect('/stores');
+        }
+
+        return $this->redirect('/invoices/' . $code);
+    }
+
     /**
      * Find store
      * @param integer $id

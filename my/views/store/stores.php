@@ -74,7 +74,7 @@
                             <?= $store['date']; ?>
                         </td>
                         <td>
-                            <?= $store['expired']; ?>
+                            <?= $store['expiredDate']; ?>
                         </td>
                         <td class="<?= $colors($store) ?>">
                             <?= $store['statusName'] ?>
@@ -108,7 +108,10 @@
                                 <?php endif; ?>
 
                                 <?php if ($store['access']['canProlong']) : ?>
-                                    <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), '#', [
+                                    <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
+                                        '/store/prolong',
+                                        'id' => $store['id']
+                                    ], [
                                         'class' => 'btn btn-outline btn-warning btn-xs',
                                     ])?>
                                 <?php else : ?>
