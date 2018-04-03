@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\Auth;
+use common\models\panels\Customers;
 use common\models\panels\Orders;
 use my\models\forms\OrderStoreForm;
 use my\models\search\StoresSearch;
@@ -27,7 +28,24 @@ class StoreController extends CustomController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->isGuest) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            /**
+                             * @var $customer Customers
+                             */
+                            $customer = Yii::$app->user->getIdentity();
+
+                            if (!$customer || !$customer->can('stores')) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            return true;
+                        }
                     ],
                 ],
             ],
