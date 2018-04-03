@@ -629,4 +629,24 @@ class Stores extends ActiveRecord
     {
         $this->expired = $isTrial ? ExpiryHelper::days(14, time()) : ExpiryHelper::month(time());;
     }
+
+    /**
+     * Return store Sommerce domain from store domain list
+     * @return array|StoreDomains|null
+     */
+    public function getSommerceDomain()
+    {
+        $sommerceDomain = StoreDomains::find()
+            ->andWhere([
+                'store_id' => $this->id,
+                'type' => StoreDomains::DOMAIN_TYPE_SOMMERCE,
+            ])
+            ->andFilterWhere([
+                'AND',
+                ['like', 'domain', Yii::$app->params['storeDomain']]
+            ])
+            ->one();
+
+        return $sommerceDomain;
+    }
 }
