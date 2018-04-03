@@ -195,7 +195,10 @@ class StoresSearch
                 ])
                 ->from(StoreDomains::tableName())
                 ->andWhere([
-                    'type' => StoreDomains::DOMAIN_TYPE_DEFAULT,
+                    'type' => [
+                        StoreDomains::DOMAIN_TYPE_DEFAULT,
+                        StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+                    ],
                     'store_id' => $storeIds
                 ])
                 ->all();

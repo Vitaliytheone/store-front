@@ -551,4 +551,5 @@ return [
     'stores.edit_store_domain.header' => 'Domain connect',
     'error.store.domain_is_not_registered' => 'Domain is not registered',
     'error.store.domain_is_already_exist' => 'Domain is already exist',
+    'error.store.can_not_change_domain' => 'Can not change store domain',
 ];

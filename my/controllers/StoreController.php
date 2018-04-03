@@ -111,23 +111,29 @@ class StoreController extends CustomController
     {
         $store = $this->_findStore($id);
 
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         /**
          * @var Customers $user
          */
         $user = Yii::$app->user->getIdentity();
         $storeDomain = StoreDomains::findOne([
             'store_id' => $store->id,
-            'type' => StoreDomains::DOMAIN_TYPE_DEFAULT
+            'type' => [
+                StoreDomains::DOMAIN_TYPE_DEFAULT,
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+            ]
         ]);
 
         if (!Stores::hasAccess($store, Stores::CAN_DOMAIN_CONNECT, [
             'user' => $user,
             'last_update' => $storeDomain ? $storeDomain->updated_at : null
         ])) {
-            throw new ForbiddenHttpException();
+            return [
+                'status' => 'error',
+                'message' => Yii::t('app', 'error.store.can_not_change_domain')
+            ];
         }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new EditStoreDomainForm();
         $model->setStore($store);
@@ -148,7 +154,7 @@ class StoreController extends CustomController
 
         return [
             'status' => 'error',
-            'message' => Yii::t('app', 'error.staff.can_not_edit')
+            'message' => Yii::t('app', 'error.store.can_not_change_domain')
         ];
     }
 
