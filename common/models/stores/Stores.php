@@ -6,9 +6,12 @@ use common\helpers\DbHelper;
 use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
 use my\helpers\ExpiryHelper;
+use my\mail\mailers\InvoiceCreated;
 use sommerce\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
@@ -407,9 +410,11 @@ class Stores extends ActiveRecord
         if ($store instanceof Stores) {
             $customerId = $store->customer_id;
             $status = $store->status;
+            $expired = $store->expired;
         } else {
             $customerId = ArrayHelper::getValue($store, 'customer_id');
             $status = ArrayHelper::getValue($store, 'status');
+            $expired = ArrayHelper::getValue($store, 'expired');
         }
 
         if (!in_array($status, array_keys(static::getStatuses()))) {
@@ -427,10 +432,23 @@ class Stores extends ActiveRecord
             break;
 
             case self::CAN_PROLONG:
-                return in_array($status, [
+                if (!in_array($status, [
                     static::STATUS_ACTIVE,
                     static::STATUS_FROZEN,
-                ]);
+                ])) {
+                  return false;
+                }
+
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if ($expired && ($expired > (time() - (Yii::$app->params['storeProlongMinDuration'])))) {
+                    return false;
+                }
+
+                return true;
+
             break;
 
             case self::CAN_DOMAIN_CONNECT:
@@ -601,5 +619,65 @@ class Stores extends ActiveRecord
             ->one();
 
         return $sommerceDomain;
+    }
+
+    /**
+     * Prolong store and create new invoice
+     */
+    public function prolong()
+    {
+        /**
+         * @var Invoices $invoice
+         */
+        if (($invoice = Invoices::find()
+            ->joinWith([
+                'invoiceDetails'
+            ])
+            ->andWhere([
+                'status' => Invoices::STATUS_UNPAID,
+                'invoice_details.item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
+                'invoice_details.item_id' => $this->id,
+            ])
+            ->one())) {
+
+            if ($invoice->expired > time()) {
+                return $invoice->code;
+            }
+
+            $invoice->status = Invoices::STATUS_CANCELED;
+            $invoice->save(false);
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        $invoice = new Invoices();
+        $invoice->cid = $this->customer_id;
+        $invoice->total = Yii::$app->params['storeDeployPrice'];
+        $invoice->generateCode();
+        $invoice->daysExpired(7);
+
+        if ($invoice->save()) {
+            $invoiceDetailsModel = new InvoiceDetails();
+            $invoiceDetailsModel->invoice_id = $invoice->id;
+            $invoiceDetailsModel->item_id = $this->id;
+            $invoiceDetailsModel->amount = $invoice->total;
+            $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_STORE;
+
+            if (!$invoiceDetailsModel->save()) {
+                $transaction->rollBack();
+                return null;
+            }
+
+            $transaction->commit();
+
+            $mail = new InvoiceCreated([
+                'store' => $this
+            ]);
+            $mail->send();
+
+            return $invoice->code;
+        }
+
+        return null;
     }
 }
