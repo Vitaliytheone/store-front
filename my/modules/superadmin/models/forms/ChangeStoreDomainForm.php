@@ -64,18 +64,13 @@ class ChangeStoreDomainForm extends Model {
             return true;
         }
 
-        if ($isChangedSubdomain) {
-            $this->_store->subdomain = $this->subdomain;
+        if (!$this->_store->disableDomain()) {
+            $this->addError('domain', 'Can not change domain');
+            return false;
         }
 
-        if ($isChangedDomain) {
-            if (!$this->_store->disableDomain()) {
-                $this->addError('domain', 'Can not change domain');
-                return false;
-            }
-
-            $this->_store->domain = $domain;
-        }
+        $this->_store->domain = $domain;
+        $this->_store->subdomain = $this->subdomain;
 
         if (!$this->_store->save(false)) {
             $this->addError('domain', 'Can not change domain');
@@ -83,26 +78,18 @@ class ChangeStoreDomainForm extends Model {
         }
 
         // Если был изменен домен, то необходимо провести еще операции с БД, рестартом нгинкса, добавлением
+
+        $this->_store->refresh();
+
+        $this->_store->enableDomain();
+
         if ($isChangedDomain) {
-            $this->_store->refresh();
-
-            SuperTaskHelper::setTasksNginx($this->_store);
-
-            $this->_store->enableDomain();
             $this->_store->renameDb();
-            $this->_store->save(false);
         }
 
-        if ($isChangedSubdomain) {
-            if ($this->subdomain) {
-                // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
-                DnsHelper::removeMainDns($this->_store);
-            } else {
-                // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
-                DnsHelper::addMainDns($this->_store);
-            }
-        }
+        $this->_store->save(false);
 
+        SuperTaskHelper::setTasksNginx($this->_store);
 
         return true;
     }

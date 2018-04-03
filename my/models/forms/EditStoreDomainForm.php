@@ -84,6 +84,7 @@ class EditStoreDomainForm extends Model
         }
 
         $this->_store->domain = $domain;
+        $this->_store->subdomain = 0;
 
         if (!$this->_store->save(false)) {
             $this->addError('domain', 'Can update domain');
@@ -93,11 +94,11 @@ class EditStoreDomainForm extends Model
         // Если был изменен домен, то необходимо провести еще операции с БД, рестартом нгинкса, добавлением
         $this->_store->refresh();
 
-        SuperTaskHelper::setTasksNginx($this->_store);
-
         $this->_store->enableDomain();
         $this->_store->renameDb();
         $this->_store->save(false);
+
+        SuperTaskHelper::setTasksNginx($this->_store);
 
         return true;
     }

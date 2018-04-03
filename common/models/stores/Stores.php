@@ -519,63 +519,14 @@ class Stores extends ActiveRecord
             $storeDomain->delete();
         }
 
-        $result = true;
-
-        if (!$this->enableSubDomain()) {
-            $result = false;
-        }
-
-        if (!$this->enableMainDomain()) {
-            $result = false;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Enable sub domain
-     * @return bool
-     */
-    public function enableSubDomain()
-    {
-        $domain = $this->domain;
-        $subPrefix = str_replace('.', '-', $domain);
-        $storeDomainName = Yii::$app->params['storeDomain'];
-        $subDomain = $subPrefix . '.' . $storeDomainName;
-
-        $storeDomain = StoreDomains::findOne([
-            'domain' => $subDomain,
-        ]);
-
-        if (!$storeDomain) {
-            $storeDomain = new StoreDomains();
-            $storeDomain->type = StoreDomains::DOMAIN_TYPE_SUBDOMAIN;
-            $storeDomain->store_id = $this->id;
-            $storeDomain->domain = $subDomain;
-
-            if (!$storeDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.subdomain');
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Enable main domain
-     * @return bool
-     */
-    public function enableMainDomain()
-    {
-        $domain = $this->domain;
+        $type = $this->subdomain ? StoreDomains::DOMAIN_TYPE_SUBDOMAIN : StoreDomains::DOMAIN_TYPE_DEFAULT;
 
         if (!StoreDomains::findOne([
-            'type' => StoreDomains::DOMAIN_TYPE_DEFAULT,
+            'type' => $type,
             'store_id' => $this->id
         ])) {
             $storeDomain = new StoreDomains();
-            $storeDomain->type = StoreDomains::DOMAIN_TYPE_DEFAULT;
+            $storeDomain->type = $type;
             $storeDomain->store_id = $this->id;
             $storeDomain->domain = $domain;
 
@@ -590,25 +541,6 @@ class Stores extends ActiveRecord
                 }
             }
         }
-
-        return true;
-    }
-
-    /**
-     * Disable main domain (remove store domains and remove domain from dns servers)
-     * @return bool
-     */
-    public function disableMainDomain()
-    {
-        // Remove all subdomains and domains
-        StoreDomains::deleteAll([
-            'type' => [
-                StoreDomains::DOMAIN_TYPE_DEFAULT
-            ],
-            'store_id' => $this->id
-        ]);
-
-        DnsHelper::removeMainDns($this);
 
         return true;
     }
