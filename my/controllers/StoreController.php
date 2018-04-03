@@ -35,7 +35,24 @@ class StoreController extends CustomController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->isGuest) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            /**
+                             * @var $customer Customers
+                             */
+                            $customer = Yii::$app->user->getIdentity();
+
+                            if (!$customer || !$customer->can('stores')) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            return true;
+                        }
                     ],
                 ],
             ],
