@@ -163,6 +163,20 @@ class CustomersController extends CustomController
     }
 
     /**
+     * Activate stores feature
+     * @param $id
+     * @return Response
+     */
+    public function actionActivateStores($id)
+    {
+        $customer = $this->findModel($id);
+
+        $customer->activateStores();
+
+        return $this->redirect(Url::toRoute('/customers'));
+    }
+
+    /**
      * Find customer model
      * @param $id
      * @return null|Customers

@@ -8,6 +8,7 @@ use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
+use my\helpers\ExpiryHelper;
 use sommerce\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
@@ -64,6 +65,8 @@ class Stores extends ActiveRecord
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
     const CAN_DOMAIN_CONNECT = 5;
+
+    const STORE_DB_NAME_PREFIX = 'store_';
 
     use UnixTimeFormatTrait;
 
@@ -625,19 +628,26 @@ class Stores extends ActiveRecord
      */
     public function generateDbName()
     {
-        $dbName = "store_" . $this->id . "_" . strtolower(str_replace(['.', '-'], '', $this->domain));
+        $domain = Yii::$app->params['storeDomain'];
 
-        if (!DbHelper::existDatabase($dbName)) {
-            $this->db_name = $dbName;
-            return;
-        }
+        $baseDbName = self::STORE_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', $this->domain));
 
-        $dbName = $dbName . '_';
-        for ($i = 1; $i < 100; $i++) {
-            $this->db_name = $dbName . $i;
-            if (!DbHelper::existDatabase($this->db)) {
-                return;
-            }
-        }
+        $postfix = null;
+
+        do {
+            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
+            $postfix ++;
+        } while(DbHelper::existDatabase($dbName));
+
+        $this->db_name = $dbName;
+    }
+
+    /**
+     * Generate store expired datetime
+     * @param bool $isTrial is store trial
+     */
+    public function generateExpired($isTrial = false)
+    {
+        $this->expired = $isTrial ? ExpiryHelper::days(14, time()) : ExpiryHelper::month(time());;
     }
 }

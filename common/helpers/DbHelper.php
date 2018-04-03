@@ -2,6 +2,7 @@
 namespace common\helpers;
 
 use Yii;
+use yii\base\Exception;
 use yii\db\Connection;
 use yii\helpers\ArrayHelper;
 
@@ -152,11 +153,58 @@ class DbHelper
         $username = $dbConfig['user'];
         $password = $dbConfig['password'];
 
-        $result = shell_exec("mysql -h{$host} -u{$username} -p{$password} {$db}  < {$path}");
+        $mysqlExecPath = ArrayHelper::getValue(Yii::$app->params, 'mysql_exec_path', 'mysql');
+
+        $cmd = "$mysqlExecPath -h{$host} -u{$username} -p{$password} {$db}  < {$path}";
+
+        exec($cmd, $output, $result);
 
         $connection->close();
 
-        return $result;
+        return (int)$result === 0; // 0 — without errors
+    }
+
+    /**
+     * Make MYSQL DB $db dump to file $filePath
+     * @param $db
+     * @param $filePath
+     * @return bool
+     * @throws Exception
+     */
+    public static function makeSqlDump($db, $filePath)
+    {
+        $connection = static::getConnection();
+
+        if (!$connection) {
+            return false;
+        }
+
+        $dbConfig = static::getDbOptions();
+        $host = $dbConfig['host'];
+        $username = $dbConfig['user'];
+        $password = $dbConfig['password'];
+
+        $mysqldumpExecPath = ArrayHelper::getValue(Yii::$app->params, 'mysqldump_exec_path', 'mysqldump');
+
+        $dirname = dirname($filePath);
+
+        // Create dir if non exist
+        if (!file_exists($dirname)) {
+            mkdir($dirname, 0777);
+        }
+
+        // Remove old dump
+        if (file_exists($filePath) && is_file($filePath)) {
+            unlink ($filePath);
+        }
+
+        $cmd = "$mysqldumpExecPath --user=$username --password=$password --host=$host --protocol=tcp --port=3306 $db > $filePath";
+
+        exec($cmd, $output, $result);
+
+        $connection->close();
+
+        return (int)$result === 0; // 0 - without errors
     }
 
     /**

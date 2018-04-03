@@ -77,6 +77,7 @@ return [
     'panels.edit.writing' => 'Writing',
     'panels.edit.drip_feed' => 'Drip-feed',
     'panels.edit.captcha' => 'Captcha',
+    'panels.edit.name_modal' => 'Name modal',
     'panels.edit.custom' => 'Custom code',
     'panels.edit.start_count' => 'Start count',
     'panels.edit.apikey' => 'PrivateAPI key',
@@ -324,6 +325,7 @@ return [
 
     'customers.list.enable_referral_action' => 'Enable referral system',
     'customers.list.disable_referral_action' => 'Disable referral system',
+    'customers.list.activate_stores' => 'Activate stores',
 
     'referrals.list.search' => 'Referrals Search',
     'referrals.list.customer_id' => 'Customer ID',

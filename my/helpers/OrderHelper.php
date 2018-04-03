@@ -3,6 +3,9 @@ namespace my\helpers;
 
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
+use common\models\stores\StoreAdmins;
+use common\models\stores\StoreDomains;
+use common\models\stores\Stores;
 use my\components\domains\Ahnames;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
@@ -467,5 +470,112 @@ class OrderHelper {
         }
 
         $domainModel->createdNotice();
+    }
+
+    /**
+     * Create store
+     * @param Orders $order
+     * @return bool
+     */
+    public static function store(Orders $order)
+    {
+        $orderDetails = $order->getDetails();
+        $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
+
+        $projectDefaults = Yii::$app->params['storeDefaults'];
+
+        $store = new Stores();
+        $store->setAttributes($projectDefaults);
+
+        $store->customer_id = $order->cid;
+        $store->currency = ArrayHelper::getValue($orderDetails,'currency');
+        $store->domain = DomainsHelper::idnToUtf8($order->domain);
+        $store->subdomain = 0;
+        $store->name = ArrayHelper::getValue($orderDetails,'name');
+        $store->status = Stores::STATUS_ACTIVE;
+        $store->generateExpired($isTrial);
+
+        if (!$store->save(false)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
+            return false;
+        }
+
+        $store->generateDbName();
+
+        if (!$store->save(false)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
+            return false;
+        }
+
+        $expiredLog = new ExpiredLog();
+        $expiredLog->setAttributes([
+            'pid' => $store->id,
+            'expired_last' => 0,
+            'expired' => $store->expired,
+            'created_at' => time(),
+            'type' => ExpiredLog::TYPE_CREATE_STORE_EXPIRY
+        ]);
+        $expiredLog->save(false);
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->item_id = $store->id;
+        $order->save(false);
+        $order->refresh();
+
+        $storeAdmin = new StoreAdmins();
+        $storeAdmin->store_id = $store->id;
+        $storeAdmin->username = ArrayHelper::getValue($orderDetails,'username');
+        $storeAdmin->password = ArrayHelper::getValue($orderDetails,'password');;
+        $storeAdmin->status = StoreAdmins::STATUS_ACTIVE;
+        $storeAdmin->setRules(StoreAdmins::$defaultRules);
+
+        if (!$storeAdmin->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_admin');
+        }
+
+        $storeDomain = new StoreDomains();
+        $storeDomain->store_id = $store->id;
+        $storeDomain->domain = $store->domain;
+        $storeDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
+        $storeDomain->ssl = StoreDomains::SSL_OFF;
+
+        if (!$storeDomain->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_domain');
+        }
+
+        // Create Store db
+        if (!DbHelper::existDatabase($store->db_name)) {
+            DbHelper::createDatabase($store->db_name);
+        }
+
+        if (!DbHelper::existDatabase($store->db_name)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, '', 'cron.order.store_db');
+        }
+
+        $storeSqlPath = Yii::$app->params['storeSqlPath'];
+
+        // Make Sql dump from store template db
+        if (!DbHelper::makeSqlDump(Yii::$app->params['storeDefaultDatabase'], $storeSqlPath)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, '', 'cron.order.make_sql_dump');
+        }
+
+        // Deploy Sql dump to store db
+        if (!DbHelper::dumpSql($store->db_name, $storeSqlPath)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, '', 'cron.order.deploy_sql_dump');
+        }
+
+        // Change status
+        if (Orders::STATUS_ADDED != $order->status) {
+            $order->save(false);
+
+            return false;
+        }
+
+        return true;
     }
 }
