@@ -254,7 +254,9 @@ class Invoices extends ActiveRecord
 
                 if (in_array($detail->item, [
                     InvoiceDetails::ITEM_BUY_PANEL,
-                    InvoiceDetails::ITEM_PROLONGATION_PANEL
+                    InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                    InvoiceDetails::ITEM_BUY_STORE,
+                    InvoiceDetails::ITEM_PROLONGATION_STORE,
                 ])) {
                     if (!$customer->can('referral') && !$activateReferral) {
                         $activateReferral = true;
