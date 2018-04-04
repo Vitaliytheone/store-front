@@ -602,6 +602,24 @@ class Stores extends ActiveRecord
     }
 
     /**
+     * Update expired
+     * @return bool
+     */
+    public function updateExpired()
+    {
+        if ($this->status == static::STATUS_ACTIVE) {
+            $time = $this->expired;
+        } else {
+            $time = time();
+        }
+
+        $this->status = static::STATUS_ACTIVE;
+        $this->expired = ExpiryHelper::month($time);
+
+        return $this->save(false);
+    }
+
+    /**
      * Return store Sommerce domain from store domain list
      * @return array|StoreDomains|null
      */

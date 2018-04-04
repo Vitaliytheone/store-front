@@ -52,7 +52,7 @@ class InvoicesSearch extends Invoices {
             ]);
         }
 
-        $invoices->leftJoin('invoice_details', 'invoice_details.invoice_id = invoices.id');
+        $invoices->leftJoin(DB_PANELS . '.invoice_details', 'invoice_details.invoice_id = invoices.id');
 
         if ($searchQuery) {
             $invoices->andFilterWhere([
@@ -80,7 +80,7 @@ class InvoicesSearch extends Invoices {
      */
     protected function addDomainJoinQuery($query)
     {
-        $query->leftJoin('orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
+        $query->leftJoin(DB_PANELS . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_BUY_PANEL,
                 InvoiceDetails::ITEM_BUY_SSL,
                 InvoiceDetails::ITEM_BUY_DOMAIN,
@@ -89,13 +89,16 @@ class InvoicesSearch extends Invoices {
                 InvoiceDetails::ITEM_BUY_TRIAL_STORE,
             ]) . ')'
         );
-        $query->leftJoin('project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+        $query->leftJoin(DB_PANELS . '.project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_PROLONGATION_PANEL,
                 InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
                 InvoiceDetails::ITEM_CUSTOM_PANEL,
         ]) . ')');
-        $query->leftJoin('ssl_cert', 'ssl_cert.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL);
-        $query->leftJoin('customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
+        $query->leftJoin(DB_STORES . '.stores', 'stores.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+                InvoiceDetails::ITEM_PROLONGATION_STORE,
+        ]) . ')');
+        $query->leftJoin(DB_PANELS . '.ssl_cert', 'ssl_cert.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL);
+        $query->leftJoin(DB_PANELS . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
 
         return $query;
     }
@@ -122,7 +125,7 @@ class InvoicesSearch extends Invoices {
 
         $invoices = $query->select([
                 'invoices.*',
-                'COALESCE(orders.domain, project.site, ssl_cert.domain, customers.email) as domain',
+                'COALESCE(orders.domain, project.site, ssl_cert.domain, stores.domain, customers.email) as domain',
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)
