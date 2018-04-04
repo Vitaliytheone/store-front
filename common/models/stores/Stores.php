@@ -2,14 +2,23 @@
 
 namespace common\models\stores;
 
+use common\helpers\DbHelper;
+use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\NginxHelper;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
+use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
+use my\helpers\ExpiryHelper;
+use my\mail\mailers\InvoiceCreated;
+use sommerce\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoresQuery;
-use common\models\store\Files;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -18,6 +27,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property integer $customer_id
  * @property string $domain
+ * @property integer $subdomain
  * @property string $name
  * @property integer $timezone
  * @property string $language
@@ -54,6 +64,13 @@ class Stores extends ActiveRecord
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
+    const CAN_DASHBOARD = 2;
+    const CAN_PROLONG = 3;
+    const CAN_ACTIVITY_LOG = 4;
+    const CAN_DOMAIN_CONNECT = 5;
+
+    const STORE_DB_NAME_PREFIX = 'store_';
+
     use UnixTimeFormatTrait;
 
     /**
@@ -61,7 +78,7 @@ class Stores extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%stores}}';
+        return DB_STORES . '.stores';
     }
 
     /**
@@ -72,7 +89,7 @@ class Stores extends ActiveRecord
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process',
+                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain'
             ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
@@ -94,6 +111,7 @@ class Stores extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'customer_id' => Yii::t('app', 'Customer ID'),
             'domain' => Yii::t('app', 'Domain'),
+            'subdomain' => Yii::t('app', 'Subdomain'),
             'name' => Yii::t('app', 'Name'),
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
@@ -352,5 +370,332 @@ class Stores extends ActiveRecord
     public static function getActNameString($status)
     {
         return ArrayHelper::getValue(static::getStatuses(), $status, '');
+    }
+
+    /**
+     * Change store status
+     * @param int $status
+     * @return bool
+     */
+    public function changeStatus($status)
+    {
+        switch ($status) {
+            case static::STATUS_ACTIVE:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_ACTIVE;
+                }
+
+            break;
+
+            case static::STATUS_FROZEN:
+                if (static::STATUS_ACTIVE == $this->status) {
+                    $this->status = static::STATUS_FROZEN;
+                }
+            break;
+        }
+
+        return $this->save(false);
+    }
+
+    /**
+     * Check store access some actions
+     * @param Stores|array $store
+     * @param string $code
+     * @param array $options
+     * @return bool
+     * @throws Exception
+     */
+    public static function hasAccess($store, $code, $options = [])
+    {
+        if ($store instanceof Stores) {
+            $customerId = $store->customer_id;
+            $status = $store->status;
+            $expired = $store->expired;
+        } else {
+            $customerId = ArrayHelper::getValue($store, 'customer_id');
+            $status = ArrayHelper::getValue($store, 'status');
+            $expired = ArrayHelper::getValue($store, 'expired');
+        }
+
+        if (!in_array($status, array_keys(static::getStatuses()))) {
+            throw new Exception('Unknown store status ' . "[$status]");
+        }
+
+        /**
+         * @var Customers $customer
+         */
+        $customer = ArrayHelper::getValue($options, 'customer');
+
+        switch ($code) {
+            case self::CAN_DASHBOARD:
+                return self::STATUS_ACTIVE == $status;
+            break;
+
+            case self::CAN_PROLONG:
+                if (!in_array($status, [
+                    static::STATUS_ACTIVE,
+                    static::STATUS_FROZEN,
+                ])) {
+                  return false;
+                }
+
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if ($expired && ($expired > (time() - (Yii::$app->params['storeProlongMinDuration'])))) {
+                    return false;
+                }
+
+                return true;
+
+            break;
+
+            case self::CAN_DOMAIN_CONNECT:
+                if (static::STATUS_ACTIVE != (int)$status) {
+                    return false;
+                }
+
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                $updatedAt = ArrayHelper::getValue($options, 'last_update');
+                if ($updatedAt && ($updatedAt > (time() - (Yii::$app->params['storeChangeDomainDuration'])))) {
+                    return false;
+                }
+
+                return true;
+            break;
+
+            case self::CAN_ACTIVITY_LOG:
+                return true;
+            break;
+        }
+
+        return false;
+    }
+
+    /**
+     * Create nginx config
+     * @return bool
+     */
+    public function createNginxConfig()
+    {
+        return NginxHelper::create($this);
+    }
+
+    /**
+     * Remove nginx config
+     * @return bool
+     */
+    public function deleteNginxConfig()
+    {
+        return NginxHelper::delete($this);
+    }
+
+    /**
+     * Disable domain (remove store domains and remove domain from dns servers)
+     * @return bool
+     */
+    public function disableDomain()
+    {
+        // Remove all subdomains and domains
+        StoreDomains::deleteAll([
+            'type' => [
+                StoreDomains::DOMAIN_TYPE_DEFAULT,
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+            ],
+            'store_id' => $this->id
+        ]);
+
+        DnsHelper::removeDns($this);
+
+        return true;
+    }
+
+    /**
+     * Enable domain (create panel domains and add domain to dns servers)
+     * @return bool
+     */
+    public function enableDomain()
+    {
+        $domain = $this->domain;
+
+        // Если включен режим субдомена, не выполняем действий с доменом
+        $storeDomain = StoreDomains::findOne([
+            'domain' => $domain,
+        ]);
+
+        if ($storeDomain) {
+            $panel = $storeDomain->store;
+
+            if (static::STATUS_TERMINATED !== $panel->status) {
+                return false;
+            }
+
+            $storeDomain->delete();
+        }
+
+        $type = $this->subdomain ? StoreDomains::DOMAIN_TYPE_SUBDOMAIN : StoreDomains::DOMAIN_TYPE_DEFAULT;
+
+        if (!StoreDomains::findOne([
+            'type' => $type,
+            'store_id' => $this->id
+        ])) {
+            $storeDomain = new StoreDomains();
+            $storeDomain->type = $type;
+            $storeDomain->store_id = $this->id;
+            $storeDomain->domain = $domain;
+
+            if (!$storeDomain->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                return false;
+            }
+
+            if (!$this->subdomain) {
+                if (!DnsHelper::addMainDns($this)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Rename database
+     */
+    public function renameDb()
+    {
+        $oldDbName = $this->db_name;
+        $this->generateDbName();
+        DbHelper::renameDatabase($oldDbName, $this->db_name);
+    }
+
+    /**
+     * Create panel db name
+     */
+    public function generateDbName()
+    {
+        $domain = Yii::$app->params['storeDomain'];
+
+        $baseDbName = self::STORE_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', $this->domain));
+
+        $postfix = null;
+
+        do {
+            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
+            $postfix ++;
+        } while(DbHelper::existDatabase($dbName));
+
+        $this->db_name = $dbName;
+    }
+
+    /**
+     * Generate store expired datetime
+     * @param bool $isTrial is store trial
+     */
+    public function generateExpired($isTrial = false)
+    {
+        $this->expired = $isTrial ? ExpiryHelper::days(14, time()) : ExpiryHelper::month(time());;
+    }
+
+    /**
+     * Update expired
+     * @return bool
+     */
+    public function updateExpired()
+    {
+        if ($this->status == static::STATUS_ACTIVE) {
+            $time = $this->expired;
+        } else {
+            $time = time();
+        }
+
+        $this->status = static::STATUS_ACTIVE;
+        $this->expired = ExpiryHelper::month($time);
+
+        return $this->save(false);
+    }
+
+    /**
+     * Return store Sommerce domain from store domain list
+     * @return array|StoreDomains|null
+     */
+    public function getSommerceDomain()
+    {
+        $sommerceDomain = StoreDomains::find()
+            ->andWhere([
+                'store_id' => $this->id,
+                'type' => StoreDomains::DOMAIN_TYPE_SOMMERCE,
+            ])
+            ->andFilterWhere([
+                'AND',
+                ['like', 'domain', Yii::$app->params['storeDomain']]
+            ])
+            ->one();
+
+        return $sommerceDomain;
+    }
+
+    /**
+     * Prolong store and create new invoice
+     */
+    public function prolong()
+    {
+        /**
+         * @var Invoices $invoice
+         */
+        if (($invoice = Invoices::find()
+            ->joinWith([
+                'invoiceDetails'
+            ])
+            ->andWhere([
+                'status' => Invoices::STATUS_UNPAID,
+                'invoice_details.item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
+                'invoice_details.item_id' => $this->id,
+            ])
+            ->one())) {
+
+            if ($invoice->expired > time()) {
+                return $invoice->code;
+            }
+
+            $invoice->status = Invoices::STATUS_CANCELED;
+            $invoice->save(false);
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        $invoice = new Invoices();
+        $invoice->cid = $this->customer_id;
+        $invoice->total = Yii::$app->params['storeDeployPrice'];
+        $invoice->generateCode();
+        $invoice->daysExpired(7);
+
+        if ($invoice->save()) {
+            $invoiceDetailsModel = new InvoiceDetails();
+            $invoiceDetailsModel->invoice_id = $invoice->id;
+            $invoiceDetailsModel->item_id = $this->id;
+            $invoiceDetailsModel->amount = $invoice->total;
+            $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_STORE;
+
+            if (!$invoiceDetailsModel->save()) {
+                $transaction->rollBack();
+                return null;
+            }
+
+            $transaction->commit();
+
+            $mail = new InvoiceCreated([
+                'store' => $this
+            ]);
+            $mail->send();
+
+            return $invoice->code;
+        }
+
+        return null;
     }
 }

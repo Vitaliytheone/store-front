@@ -25,7 +25,7 @@ class SslValidation extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%ssl_validation}}';
+        return DB_PANELS . '.ssl_validation';
     }
 
     /**

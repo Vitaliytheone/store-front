@@ -57,7 +57,7 @@ class SslCert extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%ssl_cert}}';
+        return DB_PANELS . '.ssl_cert';
     }
 
     /**

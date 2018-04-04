@@ -88,7 +88,7 @@ trait ThemesTrait {
     {
         $request = Yii::$app->getRequest();
         $this->view->title = Yii::t('admin', 'settings.themes_edit_title');
-        $this->addModule('adminThemes');
+        $this->addModule('adminThemes', ['extention' => pathinfo($file, PATHINFO_EXTENSION)]);
 
         $editThemeForm = EditThemeForm::make($theme, $file);
 

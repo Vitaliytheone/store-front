@@ -89,6 +89,12 @@
                                     ])?>
                                 <?php endif; ?>
 
+                                <?php if (!$customer->can('stores')) : ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'customers.list.activate_stores'), Url::toRoute(['/customers/activate-stores', 'id' => $customer->id]), [
+                                    'class' => 'dropdown-item',
+                                ])?>
+                                <?php endif; ?>
+
                                 <?= Html::a('Sign in as customer', Url::toRoute(['/customers/auth', 'id' => $customer->id]), [
                                     'class' => 'dropdown-item auth',
                                     'target' => '_blank'

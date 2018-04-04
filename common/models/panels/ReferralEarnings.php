@@ -34,7 +34,7 @@ class ReferralEarnings extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%referral_earnings}}';
+        return DB_PANELS . '.referral_earnings';
     }
 
     /**

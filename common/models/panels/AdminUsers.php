@@ -25,7 +25,7 @@ class AdminUsers extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'admin_users';
+        return DB_PANELS . '.admin_users';
     }
 
     /**

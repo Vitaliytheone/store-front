@@ -30,7 +30,7 @@ class SearchProcessor extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%search_processor}}';
+        return DB_PANELS . '.search_processor';
     }
 
     /**

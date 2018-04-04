@@ -38,6 +38,7 @@ class EditProjectForm extends Model {
     public $writing;
     public $drip_feed;
     public $captcha;
+    public $name_modal;
     public $custom;
     public $start_count;
     public $apikey;
@@ -81,6 +82,7 @@ class EditProjectForm extends Model {
                 'writing',
                 'drip_feed',
                 'captcha',
+                'name_modal',
                 'custom',
                 'start_count',
                 'apikey'
@@ -194,6 +196,7 @@ class EditProjectForm extends Model {
             'writing' => Yii::t('app/superadmin', 'panels.edit.writing'),
             'drip_feed' => Yii::t('app/superadmin', 'panels.edit.drip_feed'),
             'captcha' => Yii::t('app/superadmin', 'panels.edit.captcha'),
+            'name_modal' => Yii::t('app/superadmin', 'panels.edit.name_modal'),
             'custom' => Yii::t('app/superadmin', 'panels.edit.custom'),
             'start_count' => Yii::t('app/superadmin', 'panels.edit.start_count'),
             'apikey' => Yii::t('app/superadmin', 'panels.edit.apikey'),

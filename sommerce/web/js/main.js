@@ -1905,20 +1905,74 @@ customModule.adminThemes = {
         /*****************************************************************************************************
          *                     CodeMirror activation
          *****************************************************************************************************/
-        var $codeMirror = $('#codemirror'),
+
+        var fileType = params.extention || null;
+
+        var $codeMirror = $('#code'),
             codeMirror,
             contentOnInit;
 
-        var $modalSubmitClose = $('#modal_submit_close');
-        var $modalSubmitReset = $('#modal_submit_reset');
+        var codeMirroSetting = {},
+            codeType = 'js';
 
-        if ($codeMirror.length > 0) {
-            codeMirror = CodeMirror.fromTextArea($codeMirror[0], {
-                lineNumbers: true
-            });
-
-            contentOnInit = codeMirror.getValue();
+        switch (fileType){
+            case 'twig':
+                codeMirroSetting = {
+                    mode : "text/html",
+                    lineNumbers : true,
+                    profile: 'xhtml',
+                    lineWrapping: true,
+                    extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+                };
+                break;
+            case 'css':
+                codeMirroSetting = {
+                    mode : "text/css",
+                    lineNumbers : true,
+                    lineWrapping: true,
+                    extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+                };
+                break;
+            case 'js':
+                codeMirroSetting = {
+                    mode : "text/javascript",
+                    lineNumbers : true,
+                    lineWrapping: true,
+                    extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+                };
+                break;
+            default:
+                codeMirroSetting = {
+                    lineNumbers : true,
+                    lineWrapping: true,
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+                };
+                break;
         }
+
+        CodeMirror.fromTextArea($codeMirror[0], codeMirroSetting);
+
+        // var $codeMirror = $('#codemirror'),
+        //     codeMirror,
+        //     contentOnInit;
+        //
+        // var $modalSubmitClose = $('#modal_submit_close');
+        // var $modalSubmitReset = $('#modal_submit_reset');
+        //
+        // if ($codeMirror.length > 0) {
+        //     codeMirror = CodeMirror.fromTextArea($codeMirror[0], {
+        //         lineNumbers: true
+        //     });
+        //
+        //     contentOnInit = codeMirror.getValue();
+        // }
 
         /*****************************************************************************************************
          *                     JS Tree Files init
@@ -1957,6 +2011,8 @@ customModule.adminThemes = {
         /*****************************************************************************************************
          *               Modal submit close
          *****************************************************************************************************/
+        var $modalSubmitClose = $('#modal_submit_close');
+
         $modalSubmitClose.on('show.bs.modal', function(event){
             var $href = $(event.relatedTarget),
                 href = $href.attr('href');
@@ -1974,6 +2030,8 @@ customModule.adminThemes = {
         /*****************************************************************************************************
          *               Modal submit reset
          *****************************************************************************************************/
+        var $modalSubmitReset = $('#modal_submit_reset');
+
         $modalSubmitReset.on('show.bs.modal', function(event){
             var $href = $(event.relatedTarget),
                 href = $href.attr('href');

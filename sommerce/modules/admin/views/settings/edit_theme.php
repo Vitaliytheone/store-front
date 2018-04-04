@@ -61,7 +61,7 @@ ThemesAsset::register($this);
                                         <div class="col-lg-10 sommerce-editorPage__text order-2 order-lg-1 <?= $currentFile ? '' : 'text-center' ?> ">
                                             <?php if ($currentFile): ?>
                                                 <div class="sommerce-editorPage__codemirror">
-                                                    <textarea class="codemirror-textarea" id="codemirror" name="ThemeForm[file_content]"><?= Html::encode($currentFileContent) ?></textarea>
+                                                    <textarea class="codemirror-textarea" id="code" name="ThemeForm[file_content]"><?= Html::encode($currentFileContent) ?></textarea>
                                                 </div>
                                             <?php else: ?>
                                                 <div class="col-12">
