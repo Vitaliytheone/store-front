@@ -136,7 +136,7 @@ class StoresSearch
                     return null;
                 }
                 $value['statusName'] = $storesStatuses[$value['status']];
-                $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
+                $value['expiredDate'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
 
                 $access['canDashboard'] = Stores::hasAccess($value, Stores::CAN_DASHBOARD);
                 $access['canDomainConnect'] = Stores::hasAccess($value, Stores::CAN_DOMAIN_CONNECT, [

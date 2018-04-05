@@ -35,7 +35,24 @@ class StoreController extends CustomController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->isGuest) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            /**
+                             * @var $customer Customers
+                             */
+                            $customer = Yii::$app->user->getIdentity();
+
+                            if (!$customer || !$customer->can('stores')) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            return true;
+                        }
                     ],
                 ],
             ],
@@ -156,6 +173,28 @@ class StoreController extends CustomController
             'status' => 'error',
             'message' => Yii::t('app', 'error.store.can_not_change_domain')
         ];
+    }
+
+    public function actionProlong($id)
+    {
+        $store = $this->_findStore($id);
+
+        /**
+         * @var Customers $user
+         */
+        $user = Yii::$app->user->getIdentity();
+
+        if (!Stores::hasAccess($store, Stores::CAN_PROLONG, [
+            'user' => $user,
+        ])) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (!($code = $store->prolong())) {
+            return $this->redirect('/stores');
+        }
+
+        return $this->redirect('/invoices/' . $code);
     }
 
     /**

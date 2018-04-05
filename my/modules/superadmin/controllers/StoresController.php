@@ -2,6 +2,8 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\SuperAdmin;
+use common\models\panels\SuperAdminToken;
 use common\models\stores\Stores;
 use my\components\ActiveForm;
 use my\helpers\Url;
@@ -116,6 +118,31 @@ class StoresController extends CustomController
     }
 
     /**
+     * Sign in as admin store
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionSignInAsAdmin($id)
+    {
+        $store = $this->_findStore($id);
+
+        $sommerceDomain = $store->getSommerceDomain();
+
+        if (!$sommerceDomain) {
+            throw new NotFoundHttpException();
+        }
+
+        /**
+         * @var SuperAdmin $superUser
+         */
+        $superUser = Yii::$app->superadmin->getIdentity();
+        $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_SOMMERCE, $store->id);
+
+        return $this->redirect('http://' . $sommerceDomain->domain . '/admin/' . $token);
+    }
+
+    /**
      * Find store
      * @param int $id
      * @return Stores
@@ -123,7 +150,7 @@ class StoresController extends CustomController
      */
     protected function _findStore(int $id)
     {
-        $store =  Stores::findOne((int)$id);
+        $store = Stores::findOne((int)$id);
 
         if (!$store) {
             throw new NotFoundHttpException();

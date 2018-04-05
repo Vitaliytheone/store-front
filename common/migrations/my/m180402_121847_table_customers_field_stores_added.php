@@ -29,7 +29,6 @@ class m180402_121847_table_customers_field_stores_added extends Migration
     public function up()
     {
         $this->execute('
-            USE `panels`;
             ALTER TABLE `customers` ADD `stores` TINYINT(1)  NOT NULL  DEFAULT \'0\'  AFTER `child_panels`;
         ');
     }
@@ -37,7 +36,6 @@ class m180402_121847_table_customers_field_stores_added extends Migration
     public function down()
     {
         $this->execute('
-            USE `panels`;
             ALTER TABLE `customers` DROP `stores`;
         ');
         return false;
