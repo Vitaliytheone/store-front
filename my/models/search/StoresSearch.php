@@ -148,7 +148,7 @@ class StoresSearch
 
                 $value['store_domain'] = ArrayHelper::getValue($storeDomain, 'domain');
             }
-
+            $value['expiredDate'] = ArrayHelper::getValue($value,'expiredDate', null);
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
             $value['access'] = $access;
