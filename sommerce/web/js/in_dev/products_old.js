@@ -191,7 +191,9 @@
      * Common functions
      *******************************************************************************************/
 
-
+    /**
+     * Init products-properties list
+     */
     function initProductsPropertiesList(){
 
         var itemTemplate = _.template(
@@ -208,6 +210,7 @@
 
         _.each(productsProperties, function (product) {
             if (!product.properties || !_.isArray(product.properties)) {
+
                 return;
             }
             $productsPropertiesList.append(itemTemplate({
@@ -223,15 +226,34 @@
             $btnSubmitCopy.data('id', productId);
         });
 
+        // Copy properties
         $btnSubmitCopy.click(function(){
-            var productId = $(this).data('id');
+            var productId = $(this).data('id'),
+                product;
 
-            error.log()
+            if (productId === undefined) {
+                return;
+            }
 
-            _.each(formData.properties, function (value, key, list){
-                $formFields.properties.append(getPropertyField(value, 'properties', formName));
+            product = _.find(productsProperties, function(product_item){
+                return parseInt(product_item.id) === parseInt(productId);
             });
 
+            if (product === undefined || !_.isArray(product.properties)) {
+                return;
+            }
+
+            // Render copied properties
+            $formFields.properties.empty();
+
+            _.each(product.properties, function (property){
+
+                console.log(property);
+                $formFields.properties.append(getPropertyField(property, 'properties', formName));
+
+            });
+
+            toggleCreateNewInfoBox();
         });
     }
 
