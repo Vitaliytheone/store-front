@@ -44,12 +44,14 @@ customModule.superadminStoresController = {
             var errorBlock = $('#changeDomainError', form);
             var domain = link.data('domain');
             var subdomain = link.data('subdomain');
+            var title = link.data('title')
 
             form.attr('action', action);
 
             errorBlock.addClass('hidden');
             errorBlock.html('');
 
+            $('.modal-title', modal).html(title);
             $('#changestoredomainform-domain', form).val(domain);
             $('#changestoredomainform-subdomain', form).prop('checked', subdomain);
 

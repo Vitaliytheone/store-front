@@ -440,9 +440,9 @@ return [
     'stores.btn.modal_close' => 'Close',
     'stores.modal.edit_expire_modal_header' => 'Edit expiry',
     'stores.list.action_change_domain' => 'Change domain',
+    'stores.list.action_add_domain' => 'Add domain',
     'stores.change_domain.column_domain' => 'Domain',
     'stores.change_domain.column_subdomain' => 'Is subdomain',
     'stores.modal.change_domain_modal_header' => 'Change domain',
     'stores.list.action_sign_in_as_admin' => 'Sign in as admin',
-
 ];
