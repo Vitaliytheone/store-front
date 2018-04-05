@@ -552,4 +552,5 @@ return [
     'error.store.domain_is_not_registered' => 'Domain is not registered',
     'error.store.domain_is_already_exist' => 'Domain is already exist',
     'error.store.can_not_change_domain' => 'Can not change store domain',
+    'error.store.invalid_domain' => 'Invalid domain',
 ];
