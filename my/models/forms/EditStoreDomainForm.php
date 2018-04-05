@@ -30,6 +30,7 @@ class EditStoreDomainForm extends Model
     {
         return [
             [['domain'], StoreDomainValidator::class],
+            [['domain'], 'required', 'message' => Yii::t('app', 'error.store.invalid_domain')],
         ];
     }
 
@@ -79,7 +80,7 @@ class EditStoreDomainForm extends Model
         }
 
         if (!$this->_store->disableDomain()) {
-            $this->addError('domain', 'Can update domain');
+            $this->addError('domain', Yii::t('app', 'error.store.can_not_change_domain'));
             return false;
         }
 
@@ -87,7 +88,7 @@ class EditStoreDomainForm extends Model
         $this->_store->subdomain = 0;
 
         if (!$this->_store->save(false)) {
-            $this->addError('domain', 'Can update domain');
+            $this->addError('domain', Yii::t('app', 'error.store.can_not_change_domain'));
             return false;
         }
 
