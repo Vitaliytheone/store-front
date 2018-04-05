@@ -12,7 +12,7 @@ customModule.storeController = {
             errorBlock.addClass('hidden');
             errorBlock.html('');
 
-            $('#editstoredomainform-domain', form).val(domain);
+            //$('#editstoredomainform-domain', form).val(domain);
 
             form.attr('action', link.attr('href'));
 

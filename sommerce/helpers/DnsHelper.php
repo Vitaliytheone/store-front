@@ -34,14 +34,10 @@ class DnsHelper {
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $domain,
             'zone-type' => 'master',
-            'ns' => [
-                'ns1.perfectdns.com',
-                'ns2.perfectdns.com',
-                'ns3.perfectdns.com'
-            ],
+            'ns' => implode(",", Yii::$app->params['ahnames.sommerce.ns']),
         ], 'store.send_master_dns');
         // Add master
-        if (!Dns::addMaster($domain, $results)) {
+        if (!Dns::addMaster($domain, Yii::$app->params['ahnames.sommerce.ns'], $results)) {
             $result = false;
         }
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $results, 'store.master_dns');

@@ -93,12 +93,6 @@ return [
     'ahnames.url' => 'https://api.ahnames.com',
     'ahnames.login' => '',
     'ahnames.password' => '',
-    'ahnames.ns' => [
-        'ns_1' => 'ns1.perfectdns.com',
-        'ns_2' => 'ns2.perfectdns.com',
-        'ns_3' => 'ns3.perfectdns.com',
-        'ns_4' => null,
-    ],
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,

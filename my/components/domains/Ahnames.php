@@ -136,7 +136,7 @@ class Ahnames {
     public static function domainSetNSs($domain, $ns = [])
     {
         if (empty($ns)) {
-            $ns = Yii::$app->params['ahnames.ns'];
+            $ns = Yii::$app->params['ahnames.my.ns'];
         }
 
         $ns = array_filter($ns);

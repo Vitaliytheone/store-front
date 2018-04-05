@@ -140,7 +140,7 @@ class OrderDomainHelper {
             'domain' => $domain,
             'auth_login' => Yii::$app->params['ahnames.login'],
             'auth_password' => Yii::$app->params['ahnames.password'],
-            'nss' => implode(",", array_filter(Yii::$app->params['ahnames.ns']))
+            'nss' => implode(",", array_filter(Yii::$app->params['ahnames.my.ns']))
         ], 'cron.order.send_domain_nss');
 
         $setNss = Ahnames::domainSetNSs($domain);
