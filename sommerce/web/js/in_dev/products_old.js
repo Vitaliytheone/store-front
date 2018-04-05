@@ -81,10 +81,14 @@
 /*****************************************************************************************************
  *                      Create/Update Products form script
  *****************************************************************************************************/
+
+
 (function (window, alert){
     'use strict';
 
     var _self = this;
+
+    var productsProperties = [{"id":1,"name":"Facebook likes","properties":["prop1","prop2","prop3","prop4"]},{"id":2,"name":"Instagram likes","properties":["prop_1","prop_2","prop_3","prop_4"]}];
 
     var formName = 'ProductForm';
 
@@ -102,7 +106,10 @@
         $addPropertyInput = $modal.find('.input-properties'),
         $inputPropertyError = $modal.find('.empty-property-error'),
 
-        currentProductId,
+        $productsPropertiesList = $modal.find('.list__products_properties'),
+        $modalPropertiesCopy = $('#copyPropertiesModal');
+
+    var currentProductId,
         currentActionUrl,
         successRedirectUrl,
         getExitingUrlsUrl;
@@ -134,6 +141,14 @@
     initPropertiesList();
     initSeoParts();
     initSummernote($formFields.description);
+    initProductsPropertiesList();
+
+    // Fix modal on modal bug
+    $(document).on('hidden.bs.modal', function (event) {
+        if ($('.modal:visible').length) {
+            $('body').addClass('modal-open');
+        }
+    });
 
     /*******************************************************************************************
      * Save Product form data
@@ -176,6 +191,51 @@
      * Common functions
      *******************************************************************************************/
 
+
+    function initProductsPropertiesList(){
+
+        var itemTemplate = _.template(
+            '<li class="m-nav__item" data-id="<%- product_id %>">' +
+                '<a href="" class="m-nav__link" data-toggle="modal" data-target="#copyPropertiesModal">' +
+                    '<span class="m-nav__link-text"><%- product_title %></span>' +
+                '</a>' +
+            '</li>'
+        );
+
+        var $btnSubmitCopy = $modalPropertiesCopy.find('.btn__submit_copy');
+
+        $productsPropertiesList.empty();
+
+        _.each(productsProperties, function (product) {
+            if (!product.properties || !_.isArray(product.properties)) {
+                return;
+            }
+            $productsPropertiesList.append(itemTemplate({
+                product_title : product.name,
+                product_id : product.id
+            }));
+        });
+
+        $modalPropertiesCopy.on('shown.bs.modal', function (event){
+            var selectedItem = $(event.relatedTarget),
+            productId =  selectedItem.closest('li').data('id');
+
+            $btnSubmitCopy.data('id', productId);
+        });
+
+        $btnSubmitCopy.click(function(){
+            var productId = $(this).data('id');
+
+            error.log()
+
+            _.each(formData.properties, function (value, key, list){
+                $formFields.properties.append(getPropertyField(value, 'properties', formName));
+            });
+
+        });
+    }
+
+
     /**
      *  Fill form fields by data
      * @param data
@@ -210,6 +270,8 @@
             _.each(formData.properties, function (value, key, list){
                 $formFields.properties.append(getPropertyField(value, 'properties', formName));
             });
+
+            toggleCreateNewInfoBox();
         }
     }
 
@@ -255,12 +317,17 @@
      * Init properties list
      */
     function initPropertiesList(){
-        $(document).on('click', '.delete-properies', function (){
-            $(this).parent().remove();
+
+        toggleCreateNewInfoBox();
+
+        $(document).on('click', '.action-delete_property', function (){
+            $(this).closest('li').remove();
+            toggleCreateNewInfoBox();
         });
         $(document).on('click', '.add-properies', function (){
             checkInput();
         });
+
         $addPropertyInput.keypress(function (e) {
             if (e.which !== 13) {
                 return;
@@ -286,7 +353,14 @@
         function addProperty(property){
             $formFields.properties.append(getPropertyField(property, 'properties', formName));
             $addPropertyInput.val('').focus();
+            toggleCreateNewInfoBox();
         }
+    }
+
+    function toggleCreateNewInfoBox()
+    {
+        var toggle = !!$formFields.properties.find('li').length;
+        $('.info__create_new_prop').toggleClass('d-none', toggle);
     }
 
     /**
@@ -326,7 +400,32 @@
      */
     function getPropertyField(propertyText, propertyFieldName, formName){
         var propertyName = formName ? formName + '[' + propertyFieldName + '][]' : propertyFieldName + '[]';
-        return '<li class="list-group-item">' + propertyText + '<span class="fa fa-times delete-properies"></span><input type="hidden" name="'+ propertyName +'" value="'+ propertyText +'"></li>';
+
+        var itemTemplate = _.template(
+            '<li class="dd-item" data-id="3">' +
+                '<div class="dd-handle">' +
+                    '<div class="dd-handle__icon">' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">' +
+                            '<title>Drag-handle</title>' +
+                            '<path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>' +
+                        '</svg>' +
+                    '</div>' +
+                    '<%- title %>' +
+                '</div>' +
+                '<div class="dd-edit-button">' +
+                    '<a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill action-delete_property" title="Delete">' +
+                        '<i class="la la-trash"></i>' +
+                    '</a>' +
+                '</div>' +
+                '<input type="hidden" name="<%- property_name %>" value="<%- property_value %>"' +
+            '</li>'
+        );
+
+        return itemTemplate({
+            title : propertyText,
+            property_name : propertyName,
+            property_value : propertyText
+        });
     }
 
     /*******************************************************************************************
