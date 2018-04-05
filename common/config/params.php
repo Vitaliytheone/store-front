@@ -42,4 +42,18 @@ return [
     'sommerce.twig.cachePath' => '@sommerce/runtime/twig/cache',
     'sommerce.assets.cachePath' => '@sommerce/web/assets',
     'my.assets.cachePath' => '@my/web/assets',
+
+    'ahnames.my.ns' => [
+        'ns_1' => 'ns1.perfectdns.com',
+        'ns_2' => 'ns2.perfectdns.com',
+        'ns_3' => 'ns3.perfectdns.com',
+        'ns_4' => null,
+    ],
+
+    'ahnames.sommerce.ns' => [
+        'ns_1' => 'ns1.sommerce.com',
+        'ns_2' => 'ns2.sommerce.com',
+        'ns_3' => null,
+        'ns_4' => null,
+    ],
 ];

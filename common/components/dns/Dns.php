@@ -50,21 +50,18 @@ class Dns {
     /**
      * Add master
      * @param string $domain
+     * @param array $nss
      * @param mixed $result
      * @return bool
      */
-    public static function addMaster($domain, &$result)
+    public static function addMaster($domain, $nss, &$result)
     {
         $options = [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $domain,
             'zone-type' => 'master',
-            'ns' => [
-                'ns1.perfectdns.com',
-                'ns2.perfectdns.com',
-                'ns3.perfectdns.com'
-            ],
+            'ns' => array_values($nss),
         ];
 
         $host = Yii::$app->params['dnsService'];
