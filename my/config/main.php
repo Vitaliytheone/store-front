@@ -115,7 +115,9 @@ $config = [
                     'except' => [
                         'yii\web\HttpException:400',
                         'yii\web\HttpException:403',
-                        'yii\web\HttpException:404'
+                        'yii\web\HttpException:404',
+                        'yii\i18n\PhpMessageSource::loadMessages',
+                        'yii\i18n\PhpMessageSource::loadFallbackMessages'
                     ],
                 ],
                 [
@@ -216,7 +218,9 @@ if (!empty($params['devEmail'])) {
         'except' => [
             'yii\web\HttpException:400',
             'yii\web\HttpException:403',
-            'yii\web\HttpException:404'
+            'yii\web\HttpException:404',
+            'yii\i18n\PhpMessageSource::loadMessages',
+            'yii\i18n\PhpMessageSource::loadFallbackMessages'
         ],
     ];
 }
