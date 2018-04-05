@@ -122,9 +122,12 @@ class StoresSearch
                 'isActivityLog' => false,
                 'isDomainConnect' => false,
                 'isProlong' => false,
+            ];
+
+            $value = array_merge([
                 'store_domain' => null,
                 'store_domain_url' => null
-            ];
+            ], $value);
             if ('pending' == $code) {
                 $value['statusName'] = $ordersStatuses[Orders::STATUS_PENDING];
             } else if ('canceled' == $code) {
