@@ -35,7 +35,7 @@ class SuperLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%super_log}}';
+        return DB_PANELS . '.super_log';
     }
 
     /**

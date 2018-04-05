@@ -14,11 +14,19 @@ class ThemesAsset extends AssetBundle
 
     public $baseUrl = '@web';
 
-    public $css = [];
+    public $css = [
+        'js/libs/codemirror/vendor/codemirror/v4/codemirror.css',
+        'js/libs/codemirror/vendor/codemirror/v4/foldgutter.css',
+    ];
 
     public $js = [
-        'js/libs/codemirror/codemirror.lib.js',
-        'js/libs/codemirror/codemirror-compressed.lib.js',
+        'js/libs/codemirror/vendor/codemirror/v4/codemirror.js',
+        'js/libs/codemirror/vendor/codemirror/v4/xml.js',
+        'js/libs/codemirror/vendor/codemirror/v4/css.js',
+        'js/libs/codemirror/vendor/codemirror/v4/htmlmixed.js',
+        'js/libs/codemirror/emmet.min.js',
+        'js/libs/codemirror/codemirrorlibs.js',
+
         'js/libs/jstree/jstree.lib.js',
     ];
 

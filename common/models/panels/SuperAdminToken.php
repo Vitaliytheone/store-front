@@ -31,7 +31,7 @@ class SuperAdminToken extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%super_admin_token}}';
+        return DB_PANELS . '.super_admin_token';
     }
 
     /**

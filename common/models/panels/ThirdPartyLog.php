@@ -28,6 +28,8 @@ class ThirdPartyLog extends ActiveRecord
     const ITEM_BUY_SSL = 5;
     const ITEM_PROLONGATION_SSL = 6;
     const ITEM_ORDER = 7;
+    const ITEM_BUY_STORE = 8;
+    const ITEM_PROLONGATION_STORE = 9;
 
     use UnixTimeFormatTrait;
 
@@ -36,7 +38,7 @@ class ThirdPartyLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%third_party_log}}';
+        return DB_PANELS . '.third_party_log';
     }
 
     /**

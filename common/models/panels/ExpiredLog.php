@@ -24,13 +24,15 @@ class ExpiredLog extends ActiveRecord
     const TYPE_BITCOIN = 4;
     const TYPE_CHANGE_EXPIRY = 21;
     const TYPE_CREATE_EXPIRY = 22;
+    const TYPE_CREATE_STORE_EXPIRY = 23;
+    const TYPE_CHANGE_STORE_EXPIRY = 24;
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'expired_log';
+        return DB_PANELS . '.expired_log';
     }
 
     /**

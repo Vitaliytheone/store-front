@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use common\helpers\CurrencyHelper;
+use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use Yii;
@@ -86,6 +87,7 @@ class StoresSearch {
         $stores->select([
             'stores.id',
             'stores.domain',
+            'stores.subdomain',
             'stores.currency',
             'stores.language',
             'stores.customer_id',
@@ -94,8 +96,13 @@ class StoresSearch {
             'stores.expired',
             'customers.email AS customer_email',
             'customers.referrer_id AS referrer_id',
+            'store_domains.domain AS store_domain',
         ]);
         $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
+        $stores->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
+            StoreDomains::DOMAIN_TYPE_DEFAULT,
+            StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+        ]). ')');
 
         return $stores;
     }
@@ -148,10 +155,12 @@ class StoresSearch {
             $returnStores[] = [
                 'id' => $store['id'],
                 'domain' => DomainsHelper::idnToUtf8($store['domain']),
+                'subdomain' => $store['subdomain'],
                 'currency' => $store['currency'],
                 'language' => strtoupper((string)$store['language']),
                 'customer_id' => $store['customer_id'],
-                'status' => Stores::getActNameString($store['status']),
+                'status' => $store['status'],
+                'status_name' => Stores::getActNameString($store['status']),
                 'created' => Stores::formatDate($store['created_at']),
                 'expired' => Stores::formatDate($store['expired']),
                 'created_date' => Stores::formatDate($store['created_at'], 'php:Y-m-d'),
@@ -160,6 +169,7 @@ class StoresSearch {
                 'expired_time' => !empty($store['expired']) ? Stores::formatDate($store['expired'], 'php:H:i:s') : null,
                 'customer_email' => $store['customer_email'],
                 'referrer_id' => $store['referrer_id'],
+                'store_domain' => $store['store_domain'],
             ];
         }
 

@@ -18,7 +18,7 @@ use common\models\panels\Tariff;
 use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use my\helpers\OrderHelper;
-use my\helpers\SuperTaskHelper;
+use common\helpers\SuperTaskHelper;
 use my\mail\mailers\InvoiceCreated;
 use my\mail\mailers\PanelExpired;
 use Yii;
@@ -56,7 +56,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_PANEL,
                 Orders::ITEM_BUY_SSL,
                 Orders::ITEM_BUY_DOMAIN,
-                Orders::ITEM_BUY_CHILD_PANEL
+                Orders::ITEM_BUY_CHILD_PANEL,
+                Orders::ITEM_BUY_STORE,
             ]
         ])->all();
 
@@ -81,6 +82,10 @@ class CronController extends CustomController
 
                     case Orders::ITEM_BUY_CHILD_PANEL:
                         OrderHelper::panel($order, true);
+                    break;
+
+                    case Orders::ITEM_BUY_STORE:
+                        OrderHelper::store($order);
                     break;
                 }
             } catch (Exception $e) {
@@ -492,6 +497,6 @@ class CronController extends CustomController
      */
     public function actionSuperTasks()
     {
-        SuperTaskHelper::runTasksNginx();
+        SuperTaskHelper::runTasks();
     }
 }

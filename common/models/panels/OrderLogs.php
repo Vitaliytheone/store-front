@@ -21,7 +21,7 @@ class OrderLogs extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'order_logs';
+        return DB_PANELS . '.order_logs';
     }
 
     /**

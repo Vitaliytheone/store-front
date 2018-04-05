@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -37,13 +38,16 @@ class InvoiceDetails extends ActiveRecord
     const ITEM_PROLONGATION_CHILD_PANEL = 8;
     const ITEM_CUSTOM_CUSTOMER = 9;
     const ITEM_CUSTOM_PANEL = 10;
+    const ITEM_BUY_STORE = 11;
+    const ITEM_BUY_TRIAL_STORE = 12;
+    const ITEM_PROLONGATION_STORE = 13;
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%invoice_details}}';
+        return DB_PANELS . '.invoice_details';
     }
 
     /**
@@ -148,6 +152,9 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_BUY_CHILD_PANEL => Yii::t('app', 'invoice_details.item.buy_child_panel'),
             static::ITEM_CUSTOM_CUSTOMER => Yii::t('app', 'invoice_details.item.custom'),
             static::ITEM_CUSTOM_PANEL => Yii::t('app', 'invoice_details.item.custom'),
+            static::ITEM_BUY_STORE => Yii::t('app', 'invoice_details.item.buy_store'),
+            static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'invoice_details.item.buy_trial_store'),
+            static::ITEM_PROLONGATION_STORE => Yii::t('app', 'invoice_details.item.prolongation_store'),
         ];
     }
 
@@ -226,6 +233,27 @@ class InvoiceDetails extends ActiveRecord
                 case static::ITEM_CUSTOM_PANEL:
                     $this->description = !empty($this->description) ? $this->description : Yii::t('app', 'invoice_details.description.custom');
                 break;
+
+                case static::ITEM_BUY_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
+
+                case static::ITEM_BUY_TRIAL_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_trial_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
+
+                case static::ITEM_PROLONGATION_STORE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.prolongation_store', [
+                        'domain' => $order->domain
+                    ]);
+                break;
             }
         }
         return parent::beforeSave($insert);
@@ -242,6 +270,8 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_PANEL:
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
+            case static::ITEM_BUY_TRIAL_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order ? $order->getDomain() : '';
             break;
@@ -251,6 +281,11 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_CUSTOM_PANEL:
                 $project = Project::findOne($this->item_id);
                 return $project ? $project->getSite() : '';
+            break;
+
+            case static::ITEM_PROLONGATION_STORE:
+                $store = Stores::findOne($this->item_id);
+                return $store ? $store->getSite() : '';
             break;
 
             case static::ITEM_PROLONGATION_SSL:
@@ -291,16 +326,23 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
+            case static::ITEM_BUY_TRIAL_STORE:
                 $order = Orders::findOne($this->item_id);
                 return $order;
-                break;
+            break;
 
             case static::ITEM_PROLONGATION_PANEL:
             case static::ITEM_PROLONGATION_CHILD_PANEL:
             case static::ITEM_CUSTOM_PANEL:
                 $project = Project::findOne($this->item_id);
                 return $project;
-                break;
+            break;
+
+            case static::ITEM_PROLONGATION_STORE:
+                $store = Stores::findOne($this->item_id);
+                return $store;
+            break;
 
             case static::ITEM_CUSTOM_CUSTOMER:
                 $customer = Customers::findOne($this->item_id);
@@ -323,6 +365,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
+            case static::ITEM_BUY_STORE:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);
@@ -339,11 +382,39 @@ class InvoiceDetails extends ActiveRecord
                     return false;
                 }
 
+                if ($method == static::ITEM_PROLONGATION_PANEL) {
+                    $customer = $project->customer;
+                    if (!$customer || !$customer->activateStores()) {
+                        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_PANEL, $project->id, $project->getErrors(), 'paid.activate_stores_feature');
+                    }
+                }
+
                 $ExpiredLogModel = new ExpiredLog();
                 $ExpiredLogModel->attributes = [
                     'pid' => $project->id,
                     'expired_last' => $lastExpired,
                     'expired' => $project->expired,
+                    'created_at' => time(),
+                    'type' => ExpiredLog::getTypeByGateway($method)
+                ];
+                $ExpiredLogModel->save(false);
+
+            return true;
+
+            case static::ITEM_PROLONGATION_STORE:
+                $store = Stores::findOne($this->item_id);
+                $lastExpired = $store->expired;
+
+                if (!$store->updateExpired()) {
+                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $store->id, $store->getErrors(), 'paid.invoice_details.expired');
+                    return false;
+                }
+
+                $ExpiredLogModel = new ExpiredLog();
+                $ExpiredLogModel->attributes = [
+                    'pid' => $store->id,
+                    'expired_last' => $lastExpired,
+                    'expired' => $store->expired,
                     'created_at' => time(),
                     'type' => ExpiredLog::getTypeByGateway($method)
                 ];

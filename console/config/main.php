@@ -13,13 +13,13 @@ return [
 
         'migrate-sommerce' => [
             'class' => 'console\controllers\sommerce\CustomMigrateController',
-            'migrationTable' => 'stores.system_migrations',
+            'migrationTable' => DB_STORES . '.system_migrations',
             'migrationPath' => '@common/migrations/sommerce/',
         ],
 
         'migrate-my' => [
             'class' => 'console\controllers\my\CustomMigrateController',
-            'migrationTable' => 'panels.system_migrations',
+            'migrationTable' => DB_PANELS . '.system_migrations',
             'migrationPath' => '@common/migrations/my/',
         ],
 
