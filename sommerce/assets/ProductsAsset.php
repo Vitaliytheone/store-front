@@ -20,6 +20,8 @@ class ProductsAsset extends AssetBundle
         'js/libs/nestable/nestable.lib.js',
         'js/libs/nestable/nestable-script.js',
         'js/libs/summernote/summernote-bs4.js',
+
+        'js/in_dev/products_old.js', // TODO:: Delete after finish dev
     ];
 
     public $depends = [

@@ -56,8 +56,147 @@ $storeUrl = $store->getSite();
                         <textarea class="form_field__description summernote" id="description" title="Description" name="ProductForm[description]"></textarea>
                     </div>
 
-                    <div class="form-group">
+<!--    New props     -->
+                    <div class="card card-white mb-3">
+                        <div class="card-body">
+                            <div class="row seo-header align-items-center">
+                                <div class="col-sm-8">
+                                    Properties
+                                </div>
+<!-- Dropdown select to copy menu block -->
+                                <div class="col-sm-4 text-sm-right">
+                                    <div class="m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left" data-dropdown-toggle="hover" aria-expanded="true">
+                                        <a class="btn btn-sm btn-link m-dropdown__toggle" href="#"><span class="la 	la-clone"></span> Copy properties</a>
+                                        <div class="m-dropdown__wrapper">
+                                            <span class="m-dropdown__arrow m-dropdown__arrow--left"></span>
+                                            <div class="m-dropdown__inner">
+                                                <div class="m-dropdown__body">
+                                                    <div class="m-dropdown__content dd-properties__max-height">
+                                                        <div class="m--font-primary dd-properties__alert" role="alert">
+                                                            Select the product from which you want to copy properties
+                                                        </div>
+                                                        <ul class="m-nav">
+                                                            <li class="m-nav__item">
+                                                                <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                    <span class="m-nav__link-text">Buy Facebook likes</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+<!-- /Dropdown select to copy menu block -->
+                            </div>
+                            input prop block
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-properties">
+<!--      Input new prop block           -->
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary add-properies" type="button">Add</button>
+                                    </span>
+<!--      /Input new prop block           -->
+                                </div>
+                            </div>
 
+<!--    Empty placeholder block   -->
+                            <div class="alert m-alert--default" role="alert">
+                                Create a new property or <b><span class="la la-clone" style="font-size: 12px;"></span> copy properties</b> from another product
+                            </div>
+<!--    /Empty placeholder block   -->
+
+                        </div>
+
+                        <div class="dd-properties">
+                            <div class="dd" id="nestableProperties">
+                                <ol class="dd-list">
+                                    <li class="dd-item" data-id="3">
+                                        <div class="dd-handle">
+                                            <div class="dd-handle__icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <title>Drag-Handle</title>
+                                                    <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                                </svg>
+                                            </div>
+                                            Est.Delivery Time: 6-12 hrs</div>
+                                        <div class="dd-edit-button">
+                                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                                <i class="la la-trash"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="3">
+                                        <div class="dd-handle">
+                                            <div class="dd-handle__icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <title>Drag-Handle</title>
+                                                    <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                                </svg>
+                                            </div>
+                                            Password/Admin access Not Required</div>
+                                        <div class="dd-edit-button">
+                                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                                <i class="la la-trash"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="3">
+                                        <div class="dd-handle">
+                                            <div class="dd-handle__icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <title>Drag-Handle</title>
+                                                    <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                                </svg>
+                                            </div>
+                                            Follow Others Not Required</div>
+                                        <div class="dd-edit-button">
+                                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                                <i class="la la-trash"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="3">
+                                        <div class="dd-handle">
+                                            <div class="dd-handle__icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <title>Drag-Handle</title>
+                                                    <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                                </svg>
+                                            </div>
+                                            High Quality Followers</div>
+                                        <div class="dd-edit-button">
+                                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                                <i class="la la-trash"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="dd-item" data-id="3">
+                                        <div class="dd-handle">
+                                            <div class="dd-handle__icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <title>Drag-Handle</title>
+                                                    <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                                </svg>
+                                            </div>
+                                            Customer satisfection</div>
+                                        <div class="dd-edit-button">
+                                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                                <i class="la la-trash"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                    </div>
+<!--   / New props     -->
+
+
+                    <div class="form-group">
                         <label for="package-product">
                             <?= Yii::t('admin', 'products.product_properties_title') ?>
                         </label>
@@ -77,7 +216,6 @@ $storeUrl = $store->getSite();
                         </span>
 
                         <ul class="form_field__properties list-group list-properties"></ul>
-
                     </div>
 
                     <div class="card card-white">
