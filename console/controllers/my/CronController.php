@@ -487,8 +487,8 @@ class CronController extends CustomController
         $cookieDuration = time() - (30 * 24 * 60 * 60);
 
         MyCustomersHash::deleteAll('
-        (type = ' . MyCustomersHash::TYPE_REMEMBER . ' AND updated_at < ' . $cookieDuration . ') 
-        OR (type = ' . MyCustomersHash::TYPE_NOT_REMEMBER . ' AND updated_at < ' . $sessionDuration . ')');
+        (remember = ' . MyCustomersHash::TYPE_REMEMBER . ' AND updated_at < ' . $cookieDuration . ') 
+        OR (remember = ' . MyCustomersHash::TYPE_NOT_REMEMBER . ' AND updated_at < ' . $sessionDuration . ')');
 
     }
 

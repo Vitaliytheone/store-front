@@ -36,8 +36,8 @@ class SystemController extends CustomController
      */
     protected static function _clearTwigCache()
     {
-        if (!empty(Yii::$app->params['twig.cachePath'])) {
-            $path = Yii::getAlias(Yii::$app->params['twig.cachePath']);
+        if (!empty(Yii::$app->params['sommerce.twig.cachePath'])) {
+            $path = Yii::getAlias(Yii::$app->params['sommerce.twig.cachePath']);
             if (is_dir($path)) {
                 FileHelper::removeDirectory($path);
             }
@@ -92,7 +92,7 @@ class SystemController extends CustomController
      */
     protected static function _clearAssetsCache($dirPath = null)
     {
-        $path = Yii::getAlias('@sommerce/web/assets');
+        $path = Yii::getAlias(Yii::$app->params['sommerce.assets.cachePath']);
 
         if ($dirPath) {
             $dirPath = $path . DIRECTORY_SEPARATOR . $dirPath;

@@ -38,4 +38,8 @@ return [
     'invoice.sslDuration' => 7,
     'invoice.customDuration' => 7,
     'invoice.storeDuration' => 7,
+
+    'sommerce.twig.cachePath' => '@sommerce/runtime/twig/cache',
+    'sommerce.assets.cachePath' => '@sommerce/web/assets',
+    'my.assets.cachePath' => '@my/web/assets',
 ];

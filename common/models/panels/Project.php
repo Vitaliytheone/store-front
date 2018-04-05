@@ -561,6 +561,11 @@ class Project extends ActiveRecord
             if (!DnsHelper::addSubDns($this)) {
                 return false;
             }
+        } else {
+            if ($panelDomain->panel_id != $this->id) {
+                $panelDomain->panel_id = $this->id;
+                $panelDomain->save(false);
+            }
         }
 
         return true;
