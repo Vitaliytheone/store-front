@@ -83,7 +83,7 @@
                             <?php if ($store['type'] === 'store'): ?>
 
                                 <?php if ($store['access']['canDashboard']) : ?>
-                                    <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), '#', [
+                                    <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), $store['store_domain_url'] . '/admin', [
                                         'class' => 'btn btn-outline btn-primary btn-xs',
                                         'target' => '_blank'
                                     ])?>

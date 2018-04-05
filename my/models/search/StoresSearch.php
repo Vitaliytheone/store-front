@@ -122,7 +122,8 @@ class StoresSearch
                 'isActivityLog' => false,
                 'isDomainConnect' => false,
                 'isProlong' => false,
-                'store_domain' => null
+                'store_domain' => null,
+                'store_domain_url' => null
             ];
             if ('pending' == $code) {
                 $value['statusName'] = $ordersStatuses[Orders::STATUS_PENDING];
@@ -146,7 +147,16 @@ class StoresSearch
                 $access['canProlong'] = Stores::hasAccess($value, Stores::CAN_PROLONG);
                 $access['canActivityLog'] = Stores::hasAccess($value, Stores::CAN_ACTIVITY_LOG);
 
-                $value['store_domain'] = ArrayHelper::getValue($storeDomain, 'domain');
+                $domain = ArrayHelper::getValue($storeDomain, 'domain');
+                $ssl = ArrayHelper::getValue($storeDomain, 'ssl', 0);
+
+
+                if ($domain) {
+                    $value['store_domain'] = $domain;
+                    $value['store_domain_url'] = ($ssl ? 'https://' : 'http://') . $domain;
+                } else {
+                    $access['canDashboard'] = false;
+                }
             }
 
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
@@ -189,6 +199,7 @@ class StoresSearch
             static::$storeDomains = (new Query())
                 ->select([
                     'store_id',
+                    'ssl',
                     'domain',
                     'type',
                     'updated_at'
