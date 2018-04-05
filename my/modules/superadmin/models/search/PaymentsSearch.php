@@ -1,6 +1,9 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
+use common\models\panels\Project;
+use common\models\store\Orders;
+use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\PaymentGateway;
@@ -93,15 +96,18 @@ class PaymentsSearch extends Payments {
      */
     protected function addDomainJoinQuery($query)
     {
-        $query->leftJoin('invoice_details', 'invoice_details.invoice_id = payments.iid');
-        $query->leftJoin('orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
+        $query->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.invoice_id = payments.iid');
+        $query->leftJoin(['orders' => Orders::tableName()], 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_BUY_PANEL,
                 InvoiceDetails::ITEM_BUY_CHILD_PANEL,
                 InvoiceDetails::ITEM_BUY_SSL,
-                InvoiceDetails::ITEM_BUY_DOMAIN
+                InvoiceDetails::ITEM_BUY_DOMAIN,
+                InvoiceDetails::ITEM_BUY_STORE,
+                InvoiceDetails::ITEM_BUY_TRIAL_STORE,
+                InvoiceDetails::ITEM_PROLONGATION_STORE,
             ]) . ')'
         );
-        $query->leftJoin('project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+        $query->leftJoin(['project' => Project::tableName()], 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
             InvoiceDetails::ITEM_PROLONGATION_PANEL,
             InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
         ]) . ')');
