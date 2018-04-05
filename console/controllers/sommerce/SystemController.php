@@ -154,4 +154,9 @@ class SystemController extends CustomController
 
         $this->stderr('User created: ' . $user->id . "\n", Console::FG_GREEN);
     }
+
+    public function actionTestMessage()
+    {
+        echo Yii::t('app', 'checkout.redirect.title');
+    }
 }

@@ -489,4 +489,9 @@ class SystemController extends CustomController
             }
         }
     }
+
+    public function actionTestMessage()
+    {
+        echo Yii::t('app', 'ssl.created.ticket_subject');
+    }
 }
