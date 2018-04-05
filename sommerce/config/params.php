@@ -11,7 +11,6 @@ return [
 
     'adminEmail' => 'admin@example.com',
     'debugIps' => ['*'],
-    'twig.cachePath' => '@runtime/twig/cache',
 
     'auth_key' => '001100110011001100110011',
 
