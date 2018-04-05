@@ -126,8 +126,10 @@ class StoresSearch
 
             $value = array_merge([
                 'store_domain' => null,
-                'store_domain_url' => null
+                'store_domain_url' => null,
+                'store_admin_url' => null,
             ], $value);
+
             if ('pending' == $code) {
                 $value['statusName'] = $ordersStatuses[Orders::STATUS_PENDING];
             } else if ('canceled' == $code) {
@@ -153,14 +155,14 @@ class StoresSearch
                 $domain = ArrayHelper::getValue($storeDomain, 'domain');
                 $ssl = ArrayHelper::getValue($storeDomain, 'ssl', 0);
 
-
                 if ($domain) {
                     $value['store_domain'] = $domain;
                     $value['store_domain_url'] = ($ssl ? 'https://' : 'http://') . $domain;
-                } else {
-                    $access['canDashboard'] = false;
                 }
+
+                $value['store_admin_url'] = isset($value['domain']) ? 'http://' . $value['domain'] . '/admin' : null;
             }
+
             $value['expiredDate'] = ArrayHelper::getValue($value,'expiredDate', null);
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
