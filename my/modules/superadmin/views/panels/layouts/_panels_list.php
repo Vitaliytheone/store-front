@@ -44,16 +44,16 @@
     <?php if (!empty($panels['models'])) : ?>
         <?php foreach ($panels['models'] as $panel) : ?>
             <?php
-            $can = $panel['can'];
-            $forecastColor = '';
+                $can = $panel['can'];
+                $forecastColor = '';
 
-            if ($panel['forecast_count'] > $panel['before_orders']) {
-                $forecastColor = 'text-danger';
-            } else if ($panel['forecast_count'] < $panel['of_orders']) {
-                $forecastColor = 'text-orange';
-            }
+                if ($panel['forecast_count'] > $panel['before_orders']) {
+                    $forecastColor = 'text-danger';
+                } else if ($panel['forecast_count'] < $panel['of_orders']) {
+                    $forecastColor = 'text-orange';
+                }
 
-            $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
+                $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
             ?>
             <tr>
                 <td><?= $panel['id'] ?></td>

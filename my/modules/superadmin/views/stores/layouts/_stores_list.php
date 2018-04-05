@@ -7,6 +7,8 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use common\models\stores\Stores;
 
+$now = time();
+
 ?>
 <table class="table table-border">
     <thead>
@@ -25,12 +27,20 @@ use common\models\stores\Stores;
     <tbody>
     <?php if (!empty($stores['models'])) : ?>
         <?php foreach ($stores['models'] as $store) : ?>
+            <?php
+                $loginUrl = Url::toRoute(['/stores/sign-in-as-admin', 'id' => $store['id']]);
+            ?>
             <tr>
                 <td>
                     <?= $store['id'] ?>
                 </td>
                 <td>
-                    <?= $store['domain'] ?> <?= ($store['referrer_id'] ? '(' . Html::a('r', Url::toRoute(['/customers', 'id' => $store['referrer_id']]), ['target' => '_blank']) . ')' : '')?>
+                    <div class="pull-left">
+                        <?= $store['domain'] ?> <?= ($store['referrer_id'] ? '(' . Html::a('r', Url::toRoute(['/customers', 'id' => $store['referrer_id']]), ['target' => '_blank']) . ')' : '')?>
+                    </div>
+                    <div class="pull-right">
+                        <a href="<?= $loginUrl ?>" class="login-key-link" target="_blank"><i class="fa fa-key fa-flip-horizontal" aria-hidden="true"></i></a>
+                    </div>
                 </td>
                 <td>
                     <?= $store['currency'] ?>
@@ -39,7 +49,9 @@ use common\models\stores\Stores;
                     <?= $store['language'] ?>
                 </td>
                 <td>
-                    <?= $store['customer_email'] ?>
+                    <?php if ($store['customer_id']) : ?>
+                        <a href="<?= Url::toRoute(['/customers', 'id' => $store['customer_id']]); ?>" target="_blank"><?= $store['customer_email'] ?></a>
+                    <?php endif; ?>
                 </td>
                 <td>
                     <?= $store['status_name'] ?>
@@ -50,7 +62,7 @@ use common\models\stores\Stores;
                     </span>
                     <?= $store['created_time'] ?>
                 </td>
-                <td>
+                <td <?= ($now > $store['expired'] ? 'class="text-danger"' : '') ?>>
                     <span class="text-nowrap">
                         <?= $store['expired_date'] ?>
                     </span>
@@ -73,7 +85,7 @@ use common\models\stores\Stores;
                             <?php endif; ?>
                             <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_edit_expiry'), Url::toRoute(['/stores/edit-expiry', 'id' => $store['id']]), [
                                 'class' => 'dropdown-item edit-expiry',
-                                'data-expired' => $store['expired']
+                                'data-expired' => $store['expired_datetime']
                             ])?>
                             <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_sign_in_as_admin'), Url::toRoute(['/stores/sign-in-as-admin', 'id' => $store['id']]), ['class' => 'dropdown-item'])?>
                         </div>
