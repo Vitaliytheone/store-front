@@ -36,6 +36,7 @@ class ProductController extends CustomController
                 'id' => $product->id,
                 'title' => Html::encode($product->name),
                 'content' => $product->description,
+                'color' => Html::encode($product->color),
                 'packages' => array_map(function ($package) {
                     return [
                         'id' => $package->id,
