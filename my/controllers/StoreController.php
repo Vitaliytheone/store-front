@@ -152,8 +152,14 @@ class StoreController extends CustomController
             ];
         }
 
+        /**
+         * @var Auth $user
+         */
+        $user = Yii::$app->user->getIdentity();
+
         $model = new EditStoreDomainForm();
         $model->setStore($store);
+        $model->setUser($user);
 
         if ($model->load(Yii::$app->request->post())) {
 

@@ -15,6 +15,8 @@ class BaseDomainValidator extends Validator
 {
     protected $domain;
 
+    protected $user_id;
+
     /**
      * Check is valid domain
      * @param $domainName
