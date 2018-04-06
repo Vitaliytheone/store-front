@@ -66,10 +66,17 @@
                     <?= $panel['created_time'] ?>
                 </td>
                 <td <?= ($now > $panel['expired'] ? 'class="text-danger"' : '') ?>>
+                    <div class="pull-left">
+                        <?php if ($panel['no_invoice']) : ?>
+                            <i class="fa fa-ban" aria-hidden="true"></i>
+                        <?php endif; ?>
+                    </div>
+                    <div class="pull-right">
                         <span class="text-nowrap">
                             <?= $panel['expired_date'] ?>
                         </span>
-                    <?= $panel['expired_time'] ?>
+                        <?= $panel['expired_time'] ?>
+                    </div>
                 </td>
                 <td>
                     <div class="dropdown">
