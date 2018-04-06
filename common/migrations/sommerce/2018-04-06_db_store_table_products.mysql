@@ -1,0 +1,2 @@
+USE `store_template`;
+ALTER TABLE `products` ADD `color` VARCHAR(255)  NULL  DEFAULT NULL  AFTER `visibility`;
