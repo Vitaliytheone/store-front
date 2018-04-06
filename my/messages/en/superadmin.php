@@ -83,6 +83,7 @@ return [
     'panels.edit.apikey' => 'PrivateAPI key',
     'panels.edit.service_type_header' => 'Service Type',
     'panels.edit.advanced_header' => 'Advanced',
+    'panels.edit.no_invoice' => 'Don\'t create invoice',
 
     'panels.list.action_downgrade' => 'Downgrade to child panel',
     'panels.list.sign_in_as_admin' => 'Sign in as admin',

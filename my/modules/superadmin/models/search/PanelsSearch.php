@@ -128,6 +128,7 @@ class PanelsSearch {
             'project.expired',
             'project.subdomain',
             'project.date',
+            'project.no_invoice',
             'customers.email AS customer_email',
             'customers.referrer_id AS referrer_id',
             'COUNT(DISTINCT pr2.id) as panels'
@@ -268,6 +269,7 @@ class PanelsSearch {
                 'customer_email' => $panel['customer_email'],
                 'referrer_id' => $panel['referrer_id'],
                 'providers' => ArrayHelper::getValue($providers, $panel['id'], []),
+                'no_invoice' => $panel['no_invoice'],
                 'can' => [
                     'downgrade' => 1 < $panel['panels']
                 ]

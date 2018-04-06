@@ -136,6 +136,7 @@ class CronController extends CustomController
             ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
             ->andWhere([
                 'project.act' => Project::STATUS_ACTIVE,
+                'project.no_invoice' => Project::NO_INVOICE_DISABLED
             ])->andWhere('project.expired < :expired', [
                 ':expired' => $date
             ])
