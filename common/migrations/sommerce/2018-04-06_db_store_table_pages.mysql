@@ -1,0 +1,5 @@
+USE `store_template`;
+INSERT INTO `pages` (`id`, `title`, `visibility`, `content`, `seo_title`, `seo_description`, `seo_keywords`, `url`, `template`, `deleted`, `created_at`, `updated_at`) VALUES ('', 'Privacy policy', '1', '', 'Privacy policy', NULL, NULL, 'privacypolicy', 'page', '0', NULL, NULL);
+UPDATE `pages` SET `url` = 'termsofservice' WHERE `url` = 'terms-of-service';
+UPDATE `pages` SET `url` = 'contactus' WHERE `url` = 'contact-us';
+
