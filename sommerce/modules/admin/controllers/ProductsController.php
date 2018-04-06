@@ -43,11 +43,13 @@ class ProductsController extends CustomController
     {
         $this->view->title = Yii::t('admin', 'products.page_title');
 
-//        $this->addModule('adminProductsList');  TODO:: Uncommit after finish JS dev
-//        $this->addModule('adminProductEdit');
-//        $this->addModule('adminPackageEdit');
-
         $search = new ProductsSearch();
+
+        $this->addModule('adminProductsList');
+        $this->addModule('adminProductEdit', [
+            'products' => $search->getProductsProperties()
+        ]);
+        $this->addModule('adminPackageEdit');
 
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),

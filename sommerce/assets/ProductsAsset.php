@@ -22,7 +22,6 @@ class ProductsAsset extends AssetBundle
         'js/libs/jquery-ui.js',
         'js/libs/summernote/summernote-bs4.js',
         'js/libs/spectrum/spectrum.js',
-        'js/in_dev/products_old.js', // TODO:: Delete after finish dev
     ];
 
     public $depends = [

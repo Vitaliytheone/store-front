@@ -145,6 +145,13 @@ return [
     'settings.product_seo_meta_keywords' => 'Meta keywords',
     'products.product_seo_url' => 'URL',
     'products.product_seo_url_default' => 'about-us',
+
+    'products.product_properties_copy' => ' Copy properties',
+    'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',
+    'products.product_properties_create_new_1' => 'Create a new property or',
+    'products.product_properties_create_new_2' => ' copy properties',
+    'products.product_properties_create_new_3' => ' from another product',
+
     'products.package_create' => 'Create package',
     'products.package_edit' => 'Edit package',
     'products.package_save_create' => 'Add package',

@@ -76,22 +76,16 @@ $storeUrl = $store->getSite();
 
                                 <div class="col-sm-4 text-sm-right">
                                     <div class="m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left" data-dropdown-toggle="hover" aria-expanded="true">
-                                        <a class="btn btn-sm btn-link m-dropdown__toggle" href="#"><span class="la 	la-clone"></span> Copy properties</a>
+                                        <a class="btn btn-sm btn-link m-dropdown__toggle" href="#"><span class="la 	la-clone"></span><?= Yii::t('admin', 'products.product_properties_copy') ?></a>
                                         <div class="m-dropdown__wrapper">
                                             <span class="m-dropdown__arrow m-dropdown__arrow--left"></span>
                                             <div class="m-dropdown__inner">
                                                 <div class="m-dropdown__body">
                                                     <div class="m-dropdown__content dd-properties__max-height">
                                                         <div class="m--font-primary dd-properties__alert" role="alert">
-                                                            Select the product from which you want to copy properties
+                                                            <?= Yii::t('admin', 'products.product_properties_copy_text') ?>
                                                         </div>
-                                                        <ul class="m-nav list__products_properties">
-                                                            <li class="m-nav__item">
-                                                                <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
-                                                                    <span class="m-nav__link-text">Buy Facebook likes</span>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
+                                                        <ul class="m-nav list__products_properties"></ul>
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,13 +98,13 @@ $storeUrl = $store->getSite();
                                 <div class="input-group">
                                     <input type="text" class="form-control input-properties">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-primary add-properies" type="button">Add</button>
+                                        <button class="btn btn-primary add-properies" type="button"><?= Yii::t('admin', 'products.product_properties_add') ?></button>
                                     </span>
                                 </div>
                             </div>
 
                             <div class="alert m-alert--default d-none info__create_new_prop" role="alert">
-                                Create a new property or <b><span class="la la-clone" style="font-size: 12px;"></span> copy properties</b> from another product
+                                <?= Yii::t('admin', 'products.product_properties_create_new_1') ?> <b><span class="la la-clone" style="font-size: 12px;"></span> <?= Yii::t('admin', 'products.product_properties_create_new_2') ?></b> <?= Yii::t('admin', 'products.product_properties_create_new_3') ?>
                             </div>
 
                         </div>
