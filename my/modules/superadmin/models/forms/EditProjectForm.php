@@ -2,6 +2,8 @@
 namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\Customers;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use common\models\panels\PaymentGateway;
 use common\models\panels\Tariff;
 use Yii;
@@ -42,6 +44,7 @@ class EditProjectForm extends Model {
     public $custom;
     public $start_count;
     public $apikey;
+    public $no_invoice;
 
     /**
      * @var Project
@@ -85,7 +88,8 @@ class EditProjectForm extends Model {
                 'name_modal',
                 'custom',
                 'start_count',
-                'apikey'
+                'apikey',
+                'no_invoice'
             ], 'safe'],
             [['apikey'], 'string'],
             [['apikey'], 'uniqApikey'],
@@ -133,13 +137,17 @@ class EditProjectForm extends Model {
             return false;
         }
 
-        $isChangedCurrency = $isChangedCustomer = false;
+        $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
         if ($this->currency != $this->_project->currency) {
             $isChangedCurrency = true;
         }
 
         if ($this->cid != $this->_project->cid) {
             $isChangedCustomer = true;
+        }
+
+        if ($this->no_invoice != $this->_project->no_invoice) {
+            $isChangedNoInvoice = true;
         }
 
         $this->_project->attributes = $this->attributes;
@@ -162,6 +170,26 @@ class EditProjectForm extends Model {
 
             $customer->activateReferral();
             $customer->activateChildPanels();
+        }
+
+        if ($isChangedNoInvoice && Project::NO_INVOICE_ENABLED == $this->_project->no_invoice) {
+            /**
+             * @var Invoices $invoice
+             */
+            foreach (Invoices::find()
+                 ->joinWith(['invoiceDetails'])
+                 ->andWhere([
+                     'invoices.status' => Invoices::STATUS_UNPAID,
+                     'invoice_details.item_id' => $this->_project->id,
+                     'invoice_details.item' => [
+                         InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                         InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                     ],
+                 ])
+                 ->all() as $invoice) {
+                $invoice->status = Invoices::STATUS_CANCELED;
+                $invoice->save(false);
+            }
         }
 
         return true;
@@ -200,6 +228,7 @@ class EditProjectForm extends Model {
             'custom' => Yii::t('app/superadmin', 'panels.edit.custom'),
             'start_count' => Yii::t('app/superadmin', 'panels.edit.start_count'),
             'apikey' => Yii::t('app/superadmin', 'panels.edit.apikey'),
+            'no_invoice' => Yii::t('app/superadmin', 'panels.edit.no_invoice'),
         ];
     }
 

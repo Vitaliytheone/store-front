@@ -86,6 +86,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $name_modal
  * @property string $notification_email
  * @property int $forgot_password
+ * @property int $no_invoice
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -114,6 +115,9 @@ class Project extends ActiveRecord
     const FORGOT_PASSWORD_ENABLED = 1;
     const FORGOT_PASSWORD_DISABLED = 0;
 
+    const NO_INVOICE_ENABLED = 1;
+    const NO_INVOICE_DISABLED = 0;
+
     use UnixTimeFormatTrait;
 
     /**
@@ -137,7 +141,7 @@ class Project extends ActiveRecord
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
                 'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password',
-                'name_fields', 'name_modal',
+                'name_fields', 'name_modal', 'no_invoice'
             ], 'integer'],
             [['site', 'name', 'skype'], 'string', 'max' => 1000],
             [['theme_custom', 'theme_default', 'db', 'logo', 'favicon', 'notification_email'], 'string', 'max' => 300],
@@ -222,6 +226,7 @@ class Project extends ActiveRecord
             'name_modal' => Yii::t('app', 'Name modal'),
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
+            'no_invoice' => Yii::t('app', 'No Invoice'),
         ];
     }
 
