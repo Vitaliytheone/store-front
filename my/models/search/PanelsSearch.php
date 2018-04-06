@@ -131,13 +131,13 @@ class PanelsSearch
                 }
                 $value['statusName'] = $projectsStatuses[$value['status']];
                 $value['plan'] = ArrayHelper::getValue($tariffs, $value['plan'], $defaultTariff)->getFullName();
-                $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
+                $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone), 'php:Y-m-d H:i:s');
 
                 $access['isActive'] = Project::hasAccess($value, 'canEdit');
                 $access['isActivityLog'] = Project::hasAccess($value, 'canActivityLog');
             }
 
-            $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
+            $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
             $value['access'] = $access;
 

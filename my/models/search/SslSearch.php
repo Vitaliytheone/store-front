@@ -139,7 +139,7 @@ class SslSearch
                 $value['statusName'] = $sslStatuses[$value['status']];
             }
 
-            $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
+            $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
 
             return $value;

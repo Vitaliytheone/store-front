@@ -110,10 +110,10 @@ class DomainsSearch
                 $value['statusName'] = $ordersStatuses[Orders::STATUS_CANCELED];
             } else {
                 $value['statusName'] = $domainStatuses[$value['status']];
-                $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
+                $value['expired'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             }
 
-            $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone) + Yii::$app->params['time'], 'php:Y-m-d H:i:s');
+            $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
             return $value;
         };
