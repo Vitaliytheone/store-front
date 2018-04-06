@@ -54,7 +54,7 @@ $storeUrl = $store->getSite();
                     <div class="form-group">
                         <label>Color</label>
                         <div class="product-color__wrap">
-                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="#ffffff" name="ProductForm[visibility]">
+                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="#ffffff" name="ProductForm[color]">
                         </div>
                     </div>
 
@@ -62,7 +62,6 @@ $storeUrl = $store->getSite();
                         <textarea class="form_field__description summernote" id="description" title="Description" name="ProductForm[description]"></textarea>
                     </div>
 
-<!--  New props     -->
                     <div class="card card-white mb-3">
                         <div class="card-body">
                             <div class="row seo-header align-items-center">
@@ -74,7 +73,7 @@ $storeUrl = $store->getSite();
                                         <?= Yii::t('admin', 'products.product_properties_message') ?>
                                     </span>
                                 </div>
-<!-- Dropdown select to copy menu block -->
+
                                 <div class="col-sm-4 text-sm-right">
                                     <div class="m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left" data-dropdown-toggle="hover" aria-expanded="true">
                                         <a class="btn btn-sm btn-link m-dropdown__toggle" href="#"><span class="la 	la-clone"></span> Copy properties</a>
@@ -99,24 +98,20 @@ $storeUrl = $store->getSite();
                                         </div>
                                     </div>
                                 </div>
-<!-- /Dropdown select to copy menu block -->
+
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="text" class="form-control input-properties">
-<!--      Input new prop block           -->
                                     <span class="input-group-btn">
                                         <button class="btn btn-primary add-properies" type="button">Add</button>
                                     </span>
-                                    <!--      /Input new prop block           -->
                                 </div>
                             </div>
 
-                            <!--    Empty placeholder block   -->
                             <div class="alert m-alert--default d-none info__create_new_prop" role="alert">
                                 Create a new property or <b><span class="la la-clone" style="font-size: 12px;"></span> copy properties</b> from another product
                             </div>
-<!--    /Empty placeholder block   -->
 
                         </div>
 
@@ -127,7 +122,6 @@ $storeUrl = $store->getSite();
                         </div>
 
                     </div>
-<!--   / New props     -->
 
                     <div class="card card-white">
                         <div class="card-body">
@@ -208,8 +202,6 @@ $storeUrl = $store->getSite();
         </div>
     </div>
 </div>
-
-
 
 <!--Copy properties modal-->
 <div class="modal fade" id="copyPropertiesModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">

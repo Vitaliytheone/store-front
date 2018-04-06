@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string $properties
  * @property string $description
  * @property integer $visibility
+ * @property integer $color
  * @property string $seo_title
  * @property string $seo_description
  * @property string $seo_keywords
@@ -98,7 +99,7 @@ class Products extends ActiveRecord
             [['id'], 'required'],
             [['id', 'position', 'visibility'], 'integer'],
             [['description'], 'string'],
-            [['name', 'url'], 'string', 'max' => 255],
+            [['name', 'url', 'color'], 'string', 'max' => 255],
             [['properties'], 'string', 'max' => 1000],
             [['seo_title',], 'string', 'max' => 300],
             [['seo_description'], 'string', 'max' => 1000],
@@ -119,6 +120,7 @@ class Products extends ActiveRecord
             'properties' => Yii::t('admin', 'products.f_properties'),
             'description' => Yii::t('admin', 'products.f_description'),
             'visibility' => Yii::t('admin', 'products.f_visibility'),
+            'color' => Yii::t('admin', 'products.f_color'),
             'seo_title' => Yii::t('admin', 'products.f_seo_title'),
             'seo_description' => Yii::t('admin', 'products.f_seo_description'),
             'seo_keywords' => Yii::t('admin', 'products.f_seo_keywords'),

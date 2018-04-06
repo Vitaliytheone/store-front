@@ -90,6 +90,7 @@ class CreateProductForm extends Products
             [['seo_keywords', ], 'string', 'max' => 2000],
             [['properties', 'position'], 'safe'],
             ['visibility', 'filter', 'filter' => function($value){ return (int)$value; }],
+            ['color', 'string', 'max' => 255],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique'],

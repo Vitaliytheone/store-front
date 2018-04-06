@@ -15,6 +15,7 @@ class ProductsAsset extends AssetBundle
 
     public $css = [
         'css/admin/spectrum/spectrum.css',
+        'css/admin/spectrum/spectrum-custom.css',
     ];
 
     public $js = [
