@@ -122,6 +122,7 @@
         properties      : $productForm.find('.form_field__properties'),
         url             : $productForm.find('.form_field__url'),
         visibility      : $productForm.find('.form_field__visibility'),
+        color           : $productForm.find('.form_field__color'),
         seo_title       : $productForm.find('.form_field__seo_title'),
         seo_description : $productForm.find('.form_field__seo_description'),
         seo_keywords    : $productForm.find('.form_field__seo_keywords')
@@ -133,6 +134,7 @@
         properties      : [],
         url             : $formFields.url.val(),
         visibility      : $formFields.visibility.val(),
+        color           : $formFields.color.val(),
         seo_title       : $formFields.seo_title.val(),
         seo_description : $formFields.seo_description.val(),
         seo_keywords    : $formFields.seo_keywords.val()
@@ -257,7 +259,6 @@
         });
     }
 
-
     /**
      *  Fill form fields by data
      * @param data
@@ -339,6 +340,14 @@
      * Init properties list
      */
     function initPropertiesList(){
+
+        $formFields.properties.sortable({
+            opacity: 1,
+            tolerance: "pointer",
+            revert: false,
+            delay: false,
+            // placeholder: "movable-placeholder"
+        });
 
         toggleCreateNewInfoBox();
 

@@ -9,7 +9,6 @@ $storeUrl = $store->getSite();
 
 ?>
 
-
 <div class="modal fade add_product" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -50,6 +49,13 @@ $storeUrl = $store->getSite();
                             </option>
                         </select>
 
+                    </div>
+
+                    <div class="form-group">
+                        <label>Color</label>
+                        <div class="product-color__wrap">
+                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="#ffffff" name="ProductForm[visibility]">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -122,31 +128,6 @@ $storeUrl = $store->getSite();
 
                     </div>
 <!--   / New props     -->
-
-
-<!--  Old Props -->
-<!--                    <div class="form-group">-->
-<!--                        <label for="package-product">-->
-<!--                            --><?//= Yii::t('admin', 'products.product_properties_title') ?>
-<!--                        </label>-->
-
-<!--                        <div class="input-group">-->
-<!--                            <input type="text" class="form-control input-properties"-->
-<!--                                   placeholder="--><?//= Yii::t('admin', 'products.product_properties_placeholder') ?><!--">-->
-<!--                            <span class="input-group-btn">-->
-<!--                                <button class="btn btn-primary add-properies" type="button">-->
-<!--                                    --><?//= Yii::t('admin', 'products.product_properties_add') ?>
-<!--                                </button>-->
-<!--                              </span>-->
-<!--                        </div>-->
-
-<!--                        <span class="empty-property-error m--font-danger d-none">-->
-<!--                            --><?//= Yii::t('admin', 'products.product_properties_message') ?>
-<!--                        </span>-->
-
-<!--                        <ul class="form_field__properties list-group list-properties"></ul>-->
-<!--                    </div>-->
-<!-- / Old Props -->
 
                     <div class="card card-white">
                         <div class="card-body">
