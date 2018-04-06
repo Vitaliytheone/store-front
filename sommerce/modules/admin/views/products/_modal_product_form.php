@@ -52,7 +52,7 @@ $storeUrl = $store->getSite();
                     </div>
 
                     <div class="form-group">
-                        <label>Color</label>
+                        <label><?= Yii::t('admin', 'products.product_color') ?></label>
                         <div class="product-color__wrap">
                             <input type="text" class="form_field__color product-color" id="edit-page-color" value="#ffffff" name="ProductForm[color]">
                         </div>
@@ -68,9 +68,6 @@ $storeUrl = $store->getSite();
                                 <div class="col-sm-8">
                                     <span>
                                         <?= Yii::t('admin', 'products.product_properties_title') ?>
-                                    </span>
-                                    <span class="empty-property-error m--font-danger d-none">
-                                        <?= Yii::t('admin', 'products.product_properties_message') ?>
                                     </span>
                                 </div>
 
@@ -101,6 +98,9 @@ $storeUrl = $store->getSite();
                                         <button class="btn btn-primary add-properies" type="button"><?= Yii::t('admin', 'products.product_properties_add') ?></button>
                                     </span>
                                 </div>
+                                <span class="empty-property-error m--font-danger d-none">
+                                        <?= Yii::t('admin', 'products.product_properties_message') ?>
+                                </span>
                             </div>
 
                             <div class="alert m-alert--default d-none info__create_new_prop" role="alert">
