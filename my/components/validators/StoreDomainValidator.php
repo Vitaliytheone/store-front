@@ -33,6 +33,7 @@ class StoreDomainValidator extends BaseDomainValidator
 
         $this->domain = $model->{$attribute};
         $storeId = $model->getStore()->id;
+        $this->user_id = $model->getUser()->id;
 
         $domain = $this->prepareDomain();
 

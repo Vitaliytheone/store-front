@@ -14,7 +14,6 @@ use yii\base\Model;
 class PanelDomainValidator extends BaseDomainValidator
 {
     protected $domain;
-    protected $user_id;
 
     public $child_panel = false;
 

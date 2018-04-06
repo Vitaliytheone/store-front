@@ -5,6 +5,7 @@ use common\helpers\SuperTaskHelper;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\components\validators\StoreDomainValidator;
+use common\models\panels\Auth;
 use Yii;
 use yii\base\Model;
 
@@ -22,6 +23,11 @@ class EditStoreDomainForm extends Model
      * @var Stores
      */
     public $_store;
+
+    /**
+     * @var Auth
+     */
+    public $_user;
 
     /**
      * @return array the validation rules.
@@ -50,6 +56,24 @@ class EditStoreDomainForm extends Model
     public function getStore()
     {
         return $this->_store;
+    }
+
+    /**
+     * Set user
+     * @param Auth $user
+     */
+    public function setUser(Auth $user)
+    {
+        $this->_user = $user;
+    }
+
+    /**
+     * Get current user
+     * @return Auth
+     */
+    public function getUser()
+    {
+        return $this->_user;
     }
 
     /**
