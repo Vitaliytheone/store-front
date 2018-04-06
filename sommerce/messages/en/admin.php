@@ -130,6 +130,7 @@ return [
     'products.product_visibility' => 'Visibility',
     'products.product_visibility_enabled' => 'Enabled',
     'products.product_visibility_disabled' => 'Disabled',
+    'products.product_color' => 'Color',
     'products.product_properties_title' => 'Properties',
     'products.product_properties_placeholder' => 'Add property',
     'products.product_properties_add' => 'Add',
