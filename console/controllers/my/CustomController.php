@@ -15,6 +15,11 @@ class CustomController extends MainController
         $this->frontendPath = Yii::getAlias('@my/config');
 
         Yii::$app->i18n->translations = [
+            'yii' => [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'basePath' => "@vendor/yiisoft/yii2/messages",
+                'sourceLanguage' => 'en',
+            ],
             'app*' => [
                 'class' => 'yii\i18n\PhpMessageSource',
                 'basePath' => '@my/messages',
