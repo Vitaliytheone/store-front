@@ -7,12 +7,13 @@ use \sommerce\assets\PagesAsset;
 
 /* @var $page \sommerce\modules\admin\models\forms\EditPageForm */
 /* @var $storeUrl string */
+/* @var $store \common\models\stores\Stores */
 /* @var $this \yii\web\View */
 
 PagesAsset::register($this);
 
 $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::toRoute(['/settings/edit-page', 'id' => $page->id]);
-
+$storeUrl = 'http://' . $store->domain;
 ?>
 
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">

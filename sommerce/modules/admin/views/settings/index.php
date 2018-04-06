@@ -9,6 +9,8 @@ use common\models\store\Files;
 /* @var $timezones array */
 /* @var $store \sommerce\modules\admin\models\forms\EditStoreSettingsForm */
 
+$storeUrl = 'http://' . $store->domain;
+
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">
@@ -145,7 +147,7 @@ use common\models\store\Files;
                                 <div class="seo-preview__title edit-seo__title">
                                     <?= Yii::t('admin', 'settings.general_seo_index') ?>
                                 </div>
-                                <div class="seo-preview__url"><?= $store->getSite() ?></div>
+                                <div class="seo-preview__url"><?= $storeUrl ?></div>
                                 <div class="seo-preview__description edit-seo__meta">
                                     <?= Yii::t('admin', 'settings.general_seo_meta_default') ?>
                                 </div>
