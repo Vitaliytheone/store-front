@@ -443,7 +443,7 @@ class Stores extends ActiveRecord
                     return false;
                 }
 
-                if ($expired && ($expired > (time() - (Yii::$app->params['storeProlongMinDuration'])))) {
+                if ($expired && ($expired > (time() + (Yii::$app->params['storeProlongMinDuration'])))) {
                     return false;
                 }
 
