@@ -71,7 +71,6 @@ trait PagesTrait {
         return $this->render('edit_page', [
             'store' => Yii::$app->store->getInstance(),
             'page' => $pageModel,
-            'storeUrl' => $store->getSite(),
         ]);
     }
 
@@ -109,7 +108,6 @@ trait PagesTrait {
         return $this->render('edit_page', [
             'store' => Yii::$app->store->getInstance(),
             'page' => $pageModel,
-            'storeUrl' => $store->getSite(),
         ]);
     }
 
