@@ -2,6 +2,7 @@
 
 namespace my\controllers;
 
+use common\models\panels\Customers;
 use my\components\ActiveForm;
 use my\components\domains\Ahnames;
 use my\helpers\DomainsHelper;
@@ -99,7 +100,8 @@ class ProjectController extends CustomController
 
         return $this->render('order', [
             'model' => $model,
-            'note' => Content::getContent('nameservers')
+            'note' => Content::getContent('nameservers'),
+            'user' => $user,
         ]);
     }
 
@@ -116,7 +118,12 @@ class ProjectController extends CustomController
         $model = new CreateOrderForm();
         $model->scenario = CreateOrderForm::SCENARIO_CREATE_DOMAIN;
 
-        if ($model->load(Yii::$app->request->post())) {
+        /**
+         * @var $customer Customers
+         */
+        $customer = Yii::$app->user->getIdentity();
+
+        if ($customer->can('domains') && $model->load(Yii::$app->request->post())) {
             if (!$model->validate()) {
                 return [
                     'status' => 'error',

@@ -118,7 +118,8 @@ class ChildProjectController extends CustomController
 
         return $this->render('order', [
             'model' => $model,
-            'note' => Content::getContent('nameservers_child')
+            'note' => Content::getContent('nameservers_child'),
+            'user' => $user,
         ]);
     }
 
@@ -130,6 +131,9 @@ class ChildProjectController extends CustomController
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
+        /**
+         * @var $user Auth
+         */
         $user = Yii::$app->user->getIdentity();
 
         $model = new CreateChildForm();
@@ -137,7 +141,7 @@ class ChildProjectController extends CustomController
 
         $model->scenario = CreateChildForm::SCENARIO_CREATE_DOMAIN;
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($user->can('domains') && $model->load(Yii::$app->request->post())) {
             if (!$model->validate()) {
                 return [
                     'status' => 'error',

@@ -499,9 +499,18 @@ class Customers extends ActiveRecord
      */
     public function activateStores()
     {
-        if (!$this->can('stores')) {
-            $this->stores = self::STORES_ACTIVE;
-            $this->save(false);
-        }
+        $this->stores = self::STORES_ACTIVE;
+
+        return  $this->save(false);
+    }
+
+    /**
+     * Activate stores feature status
+     */
+    public function activateDomains()
+    {
+        $this->buy_domain = self::BUY_DOMAIN_ACTIVE;
+
+        return $this->save(false);
     }
 }
