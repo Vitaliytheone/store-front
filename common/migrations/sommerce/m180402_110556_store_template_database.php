@@ -37,20 +37,6 @@ class m180402_110556_store_template_database extends Migration
         $this->execute('    
             USE `store_template`;
             
-            /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-            /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-            /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-            /*!40101 SET NAMES utf8 */;
-            /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-            /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=\'NO_AUTO_VALUE_ON_ZERO\' */;
-            /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-            
-            
-            # Дамп таблицы activity_log
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `activity_log`;
-            
             CREATE TABLE `activity_log` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `admin_id` int(11) NOT NULL DEFAULT \'0\',
@@ -69,14 +55,7 @@ class m180402_110556_store_template_database extends Migration
               KEY `ip` (`ip`(191)),
               KEY `super_user` (`super_user`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы blocks
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `blocks`;
-            
+                        
             CREATE TABLE `blocks` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `code` varchar(300) NOT NULL,
@@ -85,14 +64,7 @@ class m180402_110556_store_template_database extends Migration
               PRIMARY KEY (`id`),
               KEY `code` (`code`(191))
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы carts
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `carts`;
-            
+                        
             CREATE TABLE `carts` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `key` varchar(64) DEFAULT NULL,
@@ -102,14 +74,7 @@ class m180402_110556_store_template_database extends Migration
               PRIMARY KEY (`id`),
               KEY `idx_key` (`key`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы checkouts
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `checkouts`;
-            
+                        
             CREATE TABLE `checkouts` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `customer` varchar(255) DEFAULT NULL,
@@ -124,14 +89,7 @@ class m180402_110556_store_template_database extends Migration
               `currency` varchar(10) DEFAULT NULL,
               PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы custom_themes
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `custom_themes`;
-            
+                        
             CREATE TABLE `custom_themes` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `name` varchar(300) NOT NULL,
@@ -140,14 +98,7 @@ class m180402_110556_store_template_database extends Migration
               `updated_at` int(11) NOT NULL DEFAULT \'0\',
               PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы files
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `files`;
-            
+                        
             CREATE TABLE `files` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `type` tinyint(1) DEFAULT NULL COMMENT \'1 - logo, 2 - favicon, 3 - slider, 4 - features, 5 - review, 6 - steps\',
@@ -155,14 +106,7 @@ class m180402_110556_store_template_database extends Migration
               `created_at` int(11) DEFAULT NULL,
               PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы navigation
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `navigation`;
-            
+                        
             CREATE TABLE `navigation` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `parent_id` tinyint(255) unsigned DEFAULT NULL,
@@ -175,14 +119,7 @@ class m180402_110556_store_template_database extends Migration
               PRIMARY KEY (`id`),
               KEY `idx_parent_id_position` (`parent_id`,`position`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы orders
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `orders`;
-            
+                        
             CREATE TABLE `orders` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `checkout_id` int(11) DEFAULT NULL,
@@ -192,14 +129,7 @@ class m180402_110556_store_template_database extends Migration
               KEY `fk_orders_checkout_id` (`checkout_id`),
               CONSTRAINT `fk_orders_checkout_id` FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы packages
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `packages`;
-            
+                        
             CREATE TABLE `packages` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
@@ -220,14 +150,7 @@ class m180402_110556_store_template_database extends Migration
               KEY `idx_product_id` (`product_id`),
               CONSTRAINT `fk_packages_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
-            
-            
-            
-            # Дамп таблицы pages
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `pages`;
-            
+                        
             CREATE TABLE `pages` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `title` varchar(255) DEFAULT NULL,
@@ -245,23 +168,12 @@ class m180402_110556_store_template_database extends Migration
               KEY `idx_deleted_visibility` (`deleted`,`visibility`),
               KEY `idx_deleted` (`deleted`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            LOCK TABLES `pages` WRITE;
-            /*!40000 ALTER TABLE `pages` DISABLE KEYS */;
-            
+                        
             INSERT INTO `pages` (`id`, `title`, `visibility`, `content`, `seo_title`, `seo_description`, `seo_keywords`, `url`, `template`, `deleted`, `created_at`, `updated_at`)
             VALUES
                 (1,\'Contacts us\',1,\'\',\'Contacts us\',NULL,NULL,\'contacts\',\'contact\',0,NULL,NULL),
                 (2,\'Terms of services\',1,\'\',\'Terms of services\',NULL,NULL,\'terms\',\'page\',0,NULL,NULL);
             
-            /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
-            UNLOCK TABLES;
-            
-            
-            # Дамп таблицы payments
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `payments`;
             
             CREATE TABLE `payments` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -286,14 +198,7 @@ class m180402_110556_store_template_database extends Migration
               KEY `idx_method` (`method`(191)),
               CONSTRAINT `fk_checkout_id` FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы payments_log
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `payments_log`;
-            
+                        
             CREATE TABLE `payments_log` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `checkout_id` int(11) DEFAULT NULL,
@@ -304,14 +209,7 @@ class m180402_110556_store_template_database extends Migration
               KEY `fk_paymens_log_checkout_id` (`checkout_id`),
               CONSTRAINT `id` FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-            
-            
-            
-            # Дамп таблицы products
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `products`;
-            
+                        
             CREATE TABLE `products` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
@@ -326,14 +224,7 @@ class m180402_110556_store_template_database extends Migration
               PRIMARY KEY (`id`),
               KEY `idx_possition` (`position`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
-            
-            
-            
-            # Дамп таблицы suborders
-            # ------------------------------------------------------------
-            
-            DROP TABLE IF EXISTS `suborders`;
-            
+                        
             CREATE TABLE `suborders` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `order_id` int(11) DEFAULT NULL,
@@ -361,15 +252,7 @@ class m180402_110556_store_template_database extends Migration
               KEY `idx_mode` (`mode`),
               CONSTRAINT `fk_order_item_checkout_id` FOREIGN KEY (`checkout_id`) REFERENCES `checkouts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
               CONSTRAINT `fk_order_item_package_id` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
-            
-            /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-            /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-            /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-            /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-            /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-            /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
         ');
     }
 
