@@ -21,6 +21,7 @@ use DateTime;
  * @property integer $status
  * @property integer $child_panels
  * @property integer $stores
+ * @property integer $buy_domain
  * @property integer $date_create
  * @property integer $auth_date
  * @property string $auth_ip
@@ -67,6 +68,9 @@ class Customers extends ActiveRecord
     const STORES_ACTIVE = 1;
     const STORES_NOT_ACTIVE = 0;
 
+    const BUY_DOMAIN_ACTIVE = 1;
+    const BUY_DOMAIN_NOT_ACTIVE = 0;
+
     public $password_confirm;
 
     use UnixTimeFormatTrait;
@@ -87,7 +91,7 @@ class Customers extends ActiveRecord
         return [
             [['email', 'password', 'password_confirm', 'first_name', 'last_name'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['first_name', 'last_name'], 'required', 'on' => self::SCENARIO_SETTINGS],
-            [['status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores'], 'integer'],
+            [['status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores', 'buy_domain'], 'integer'],
             [['unpaid_earnings'], 'number'],
             [['referral_link'], 'string', 'max' => 5],
             [['first_name'], 'string', 'max' => 300],
@@ -272,6 +276,7 @@ class Customers extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'child_panels' => Yii::t('app', 'Child Panels'),
             'stores' => Yii::t('app', 'Stores'),
+            'buy_domain' => Yii::t('app', 'Domains'),
             'date_create' => Yii::t('app', 'Date Create'),
             'auth_date' => Yii::t('app', 'Auth Date'),
             'auth_ip' => Yii::t('app', 'Auth Ip'),
@@ -411,6 +416,10 @@ class Customers extends ActiveRecord
                 return $this->stores;
             break;
 
+            case 'domains':
+                return $this->buy_domain;
+            break;
+
             case 'referral':
                 return static::REFERRAL_ACTIVE == $this->referral_status;
             break;
@@ -490,9 +499,18 @@ class Customers extends ActiveRecord
      */
     public function activateStores()
     {
-        if (!$this->can('stores')) {
-            $this->stores = self::STORES_ACTIVE;
-            $this->save(false);
-        }
+        $this->stores = self::STORES_ACTIVE;
+
+        return  $this->save(false);
+    }
+
+    /**
+     * Activate stores feature status
+     */
+    public function activateDomains()
+    {
+        $this->buy_domain = self::BUY_DOMAIN_ACTIVE;
+
+        return $this->save(false);
     }
 }

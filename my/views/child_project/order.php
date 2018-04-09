@@ -3,6 +3,7 @@
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\CreateChildForm */
     /* @var $note string */
+    /* @var $user \common\models\panels\Customers */
 
     use my\components\ActiveForm;
     use my\models\forms\CreateChildForm;
@@ -32,18 +33,19 @@
             ]);?>
 
                 <div class="panel-body">
-
-                    <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
-                        <div class="radio">
-                            <label>
-                                <?= Html::radio('CreateChildForm[has_domain]', $id == $model->has_domain, [
-                                    'value' => $id,
-                                    'class' => 'has_domain'
-                                ])?>
-                                <?= $label ?>
-                            </label>
-                        </div>
-                    <?php endforeach; ?>
+                    <?php if ($user->can('domains')): ?>
+                        <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
+                            <div class="radio">
+                                <label>
+                                    <?= Html::radio('CreateChildForm[has_domain]', $id == $model->has_domain, [
+                                        'value' => $id,
+                                        'class' => 'has_domain'
+                                    ])?>
+                                    <?= $label ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 
                     <?= $form->errorSummary($model); ?>
 
@@ -63,10 +65,14 @@
                     </div>
 
                 </div>
+
+            <?php if ($user->can('domains')): ?>
                 <?= $this->render('layouts/_order_domain_modal', [
-                    'form' => $form,
-                    'model' => $model
+                        'form' => $form,
+                        'model' => $model
                 ])?>
+            <?php endif; ?>
+
             <?php ActiveForm::end(); ?>
         </div>
     </div>

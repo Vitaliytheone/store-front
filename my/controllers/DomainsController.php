@@ -2,6 +2,7 @@
 
 namespace my\controllers;
 
+use common\models\panels\Customers;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\Auth;
@@ -25,11 +26,28 @@ class DomainsController extends CustomController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->isGuest) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            /**
+                             * @var $customer Customers
+                             */
+                            $customer = Yii::$app->user->getIdentity();
+
+                            if (!$customer || !$customer->can('domains')) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            return true;
+                        }
                     ],
                 ],
             ],
