@@ -48,9 +48,6 @@
                     <?php endif; ?>
 
                     <?= $form->errorSummary($model); ?>
-                </div>
-
-
 
                 <div class="<?= (CreateOrderForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderPanelBlock">
                     <?= $this->render('layouts/_order_panel_block', [
