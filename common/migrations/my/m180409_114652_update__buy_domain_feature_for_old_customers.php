@@ -32,7 +32,7 @@ class m180409_114652_update__buy_domain_feature_for_old_customers extends Migrat
         $customerIds = (new Query())
             ->select(`cid`)
             ->from(Project::tableName())
-            ->where('`expired`-`date` > (45*24*6060)')
+            ->where('`expired`-`date` > (45*24*60*60)')
             ->orderBy(`cid`)
             ->column();
 
