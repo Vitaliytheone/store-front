@@ -382,12 +382,16 @@ class InvoiceDetails extends ActiveRecord
                     return false;
                 }
 
-//                if ($method == static::ITEM_PROLONGATION_PANEL) {
-//                    $customer = $project->customer;
+                if ($method == static::ITEM_PROLONGATION_PANEL) {
+                    $customer = $project->customer;
+
+                    if (!$customer || !$customer->activateDomains()) {
+                        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_PANEL, $project->id, $project->getErrors(), 'paid.activate_domains_feature');
+                    }
 //                    if (!$customer || !$customer->activateStores()) {
 //                        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_PANEL, $project->id, $project->getErrors(), 'paid.activate_stores_feature');
 //                    }
-//                }
+                }
 
                 $ExpiredLogModel = new ExpiredLog();
                 $ExpiredLogModel->attributes = [
