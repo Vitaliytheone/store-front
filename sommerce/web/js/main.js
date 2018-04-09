@@ -2121,7 +2121,11 @@ customModule.adminThemes = {
                 break;
         }
 
-        CodeMirror.fromTextArea($codeMirror[0], codeMirroSetting);
+        if ($codeMirror.length > 0) {
+            codeMirror = CodeMirror.fromTextArea($codeMirror[0], codeMirroSetting);
+            contentOnInit = codeMirror.getValue();
+        }
+
 
         // var $codeMirror = $('#codemirror'),
         //     codeMirror,
