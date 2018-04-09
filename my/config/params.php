@@ -123,8 +123,8 @@ return [
     'levopanel_scanner' => [
         'apiKey' => 'b9f1d6f809b793321c700f45ca382f59ef83bf644c48118e6d3b9902ab0cb86f',
         'proxy' => [
-            'ip' => PROXY_CONFIG['ip'],
-            'port' => PROXY_CONFIG['port'],
+            'ip' => PROXY_CONFIG['main']['ip'],
+            'port' => PROXY_CONFIG['main']['port'],
             'type' => CURLPROXY_HTTP,
         ],
         'timeouts' => [

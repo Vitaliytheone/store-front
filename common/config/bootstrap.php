@@ -27,8 +27,14 @@ defined('PROXY_CONFIG') or define('PROXY_CONFIG', (function() use ($configParams
         throw new Exception('Proxy is not configured yet!');
     }
     return [
-        'ip' => $configParams['proxy']['ip'],
-        'port' => $configParams['proxy']['port'],
+        'main' => [
+            'ip' => $configParams['proxy']['ip'],
+            'port' => $configParams['proxy']['port'],
+        ],
+        'link_type' => [
+            'ip' => $configParams['proxy_link_type']['ip'],
+            'port' => $configParams['proxy_link_type']['port'],
+        ]
     ];
 })());
 
