@@ -43,9 +43,11 @@
                             <?= Html::a('<i class="fa fa-cubes fa-fw"></i> ' . Yii::t('app', 'layouts.header.child_panels'), '/childpanels') ?>
                         </li>
                     <?php endif; ?>
+                    <?php if ($user && $user->can('domains')) : ?>
                     <li>
                         <?= Html::a('<i class="fa fa fa-globe fa-fw"></i> ' . Yii::t('app', 'layouts.header.domains'), '/domains') ?>
                     </li>
+                    <?php endif; ?>
                     <li>
                         <?= Html::a('<i class="fa fa-certificate fa-fw"></i> ' . Yii::t('app', 'layouts.header.ssl'), '/ssl') ?>
                     </li>
