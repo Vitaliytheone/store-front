@@ -329,7 +329,7 @@ customModule.adminPackageEdit = {
                 //     submitTitle = currentPackageId ? 'Save package' : 'Add package';
 
                 var $dataTitle = $modal.find('.modal-header'),
-                    modalTitle = currentPackageId ? $dataTitle.data('title_edit') : $dataTitle.data('title_create'),
+                    modalTitle = currentPackageId ? $dataTitle.data('title_edit') + ' (ID: ' + currentPackageId + ')' : $dataTitle.data('title_create'),
                     submitTitle = currentPackageId ? $submitPackageForm.data('title_save') : $submitPackageForm.data('title_create');
 
 
