@@ -11,7 +11,7 @@ class InstagramPost extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.instagram\.com\/p\/([a-z0-9_]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.instagram\.com\/p\/([a-z0-9_-]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid instagram post link.');
 
             return false;
