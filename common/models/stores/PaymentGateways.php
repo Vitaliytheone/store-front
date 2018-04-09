@@ -54,4 +54,28 @@ class PaymentGateways extends ActiveRecord
     {
         return new PaymentGatewaysQuery(get_called_class());
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrencies()
+    {
+        $currenciesList = json_decode($this->currencies, true);
+
+        if (!is_array($currenciesList)) {
+            $currenciesList = [];
+        }
+
+        return $currenciesList;
+    }
+
+    /**
+     * Return is passed $currencyCode is supported by this payment gateway
+     * @param $currencyCode
+     * @return bool
+     */
+    public function isCurrencySupported($currencyCode)
+    {
+        return in_array($currencyCode, $this->getCurrencies());
+    }
 }

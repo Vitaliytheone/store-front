@@ -1,8 +1,10 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use common\models\stores\Stores;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\helpers\PaymentsHelper;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
 use sommerce\modules\admin\models\search\PaymentMethodsSearch;
 use Yii;
@@ -26,6 +28,11 @@ trait PaymentsTrait {
     {
         $this->view->title = Yii::t('admin', 'settings.payments_page_title');
         $this->addModule('adminPayments');
+
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        PaymentsHelper::updateStorePaymentMethods($store);
 
         $paymentMethods = PaymentMethodsSearch::findAll([
             'store_id' => yii::$app->store->getId(),
