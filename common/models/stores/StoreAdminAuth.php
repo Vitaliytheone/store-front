@@ -18,22 +18,28 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     /** Auth cookie lifetime */
     const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
 
-    /**
-     * Cached hash auth key
-     * @var
-     */
-    private $_auth_key;
+    const SESSION_KEY_ADMIN_HASH = 'super_admin_hash';
 
     /**
-     * Return current auth user hash object
-     * @return \yii\db\ActiveQuery
+     * Cached copy of StoreAdminHash model
+     * @var  null|StoreAdminsHash
      */
-    public function getHash()
+    private static $_hash;
+
+    /**
+     * Cached copy of StoreAdminHash model
+     * @var  null|StoreAdminAuth
+     */
+    private static $_identity;
+
+    /**
+     * Returns an ID that can uniquely identify a user identity.
+     *
+     * @return string|int an ID that uniquely identifies a user identity.
+     */
+    public function getId()
     {
-        $hash = $this->generateAuthKey();
-
-        return $this->hasOne(StoreAdminsHash::class, ['admin_id' => 'id'])
-            ->where(['hash' => $hash]);
+        return $this->id;
     }
 
     /**
@@ -43,10 +49,20 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public static function findIdentity($id)
     {
+        if (static::$_identity instanceof StoreAdminAuth) {
+            return static::$_identity;
+        }
+
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
 
-        return static::findOne(['id' => $id, 'store_id' => $store->id, 'status' => self::STATUS_ACTIVE]);
+        if (!static::getHash() || static::getHash()->admin_id != $id) {
+            return null;
+        }
+
+        static::$_identity = static::findOne(['id' => $id, 'store_id' => $store->id, 'status' => self::STATUS_ACTIVE]);
+
+        return static::$_identity;
     }
 
     /**
@@ -65,16 +81,6 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     }
 
     /**
-     * Returns an ID that can uniquely identify a user identity.
-     *
-     * @return string|int an ID that uniquely identifies a user identity.
-     */
-    public function getId()
-    {
-        return $this->getPrimaryKey();
-    }
-
-    /**
      * Returns a key that can be used to check the validity of a given identity ID.
      *
      * The key should be unique for each individual user, and should be persistent
@@ -89,31 +95,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function getAuthKey()
     {
-        if (!$this->_auth_key) {
-
-            $hashObject = $this->getHash()->one();
-            $this->_auth_key = $hashObject ? $hashObject->hash : null;
-        }
-
-        return $this->_auth_key;
-    }
-
-    /**
-     * Set generated auth key
-     */
-    public function setAuthKey()
-    {
-        $this->_auth_key = $this->generateAuthKey();
-        StoreAdminsHash::setHash($this->id, $this->_auth_key);
-    }
-
-    /**
-     * Delete auth key
-     */
-    public function deleteAuthKey()
-    {
-        $this->_auth_key = null;
-        StoreAdminsHash::deleteByUser($this->id);
+        return static::getHash()->hash;
     }
 
     /**
@@ -125,7 +107,6 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-
         $storedAuthKey = $this->getAuthKey();
         $userAuthKey = $this->generateAuthKey();
         $cookieAuthKey = $authKey;
@@ -144,7 +125,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 
         $string2hash = $this->username . $this->password . $this->getPrimaryKey() . $request->getUserIP() . $request->getHeaders()->get('host');
 
-        $authKey = hash_hmac('sha256', $string2hash, static::getSiteAuthKey());
+        $authKey = hash_hmac('sha256', $string2hash, static::getSalt());
 
         return $authKey;
     }
@@ -154,7 +135,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      * @return mixed
      * @throws Exception
      */
-    public static function getSiteAuthKey()
+    public static function getSalt()
     {
         $siteAuthKey = ArrayHelper::getValue(Yii::$app->params, 'auth_key', null);
 
@@ -163,6 +144,23 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
         }
 
         return $siteAuthKey;
+    }
+
+    /**
+     * Return StoreAdmin hash object
+     * @return StoreAdminsHash|null
+     */
+    private static function getHash()
+    {
+        if (static::$_hash instanceof StoreAdminsHash) {
+            return static::$_hash;
+        }
+
+        $hash = Yii::$app->session->get(static::SESSION_KEY_ADMIN_HASH);
+
+        static::$_hash = StoreAdminsHash::findOne(['hash' => $hash]);
+
+        return static::$_hash;
     }
 
     /**
@@ -205,7 +203,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public static function hashPassword($password)
     {
-        return hash_hmac('sha256', $password, static::getSiteAuthKey());
+        return hash_hmac('sha256', $password, static::getSalt());
     }
 
     /**
@@ -214,6 +212,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function isSuper()
     {
-        return $this->hash ? (bool)$this->hash->super_user : false;
+        return false;
+//        return static::$_hash ? (bool)static::$_hash->super_user : false;
     }
 }

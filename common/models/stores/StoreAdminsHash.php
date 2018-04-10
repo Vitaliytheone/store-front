@@ -20,6 +20,9 @@ use \common\models\stores\queries\StoreAdminsHashQuery;
  */
 class StoreAdminsHash extends ActiveRecord
 {
+    const MODE_SUPERADMIN_ON = 1;
+    const MODE_SUPERADMIN_OFF = 0;
+
     /**
      * @inheritdoc
      */
@@ -105,7 +108,7 @@ class StoreAdminsHash extends ActiveRecord
         $hashModel->admin_id = $adminId;
         $hashModel->hash = $hash;
         $hashModel->super_user = (int)$super;
-        $hashModel->save();
+        $hashModel->save(false);
     }
 
     /**

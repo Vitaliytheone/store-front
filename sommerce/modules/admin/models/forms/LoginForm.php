@@ -3,6 +3,7 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
+use common\models\stores\StoreAdminsHash;
 use Yii;
 use yii\base\Model;
 
@@ -87,14 +88,28 @@ class LoginForm extends Model
 
         $user = $this->getUser();
 
-        if (Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME)) {
-
-            ActivityLog::log($user, ActivityLog::E_ADMIN_ADMIN_AUTHORIZATION);
-
-            return true;
+        if (!$user) {
+            return false;
         }
 
-        return false;
+        StoreAdminsHash::deleteByUser($user->id);
+
+        $hash = $user->generateAuthKey();
+        StoreAdminsHash::setHash($user->id, $hash, StoreAdminsHash::MODE_SUPERADMIN_OFF);
+
+        Yii::$app->session->set(StoreAdminAuth::SESSION_KEY_ADMIN_HASH, $hash);
+
+        if (!Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME)) {
+            return false;
+        }
+
+        $user->ip = Yii::$app->getRequest()->getUserIP();
+        $user->last_login = time();
+        $user->save();
+
+        ActivityLog::log($user, ActivityLog::E_ADMIN_ADMIN_AUTHORIZATION);
+
+        return true;
     }
 
     /**
