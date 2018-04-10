@@ -99,8 +99,8 @@ class ReportsPaymentsSearch
         $yearFilter = ArrayHelper::getValue($filters, self::FILTER_YEAR, null);
         $gatewayFilter = ArrayHelper::getValue($filters, self::FILTER_PAYMENT_GATEWAY, null);
 
-        $startYearTS = mktime(0, 0, 0, 01, 01, $yearFilter) + $this->_timeOffset;
-        $endYearTS = mktime(23, 59, 59, 12, 31, $yearFilter) + $this->_timeOffset;
+        $startYearTS = mktime(0, 0, 0, 01, 01, $yearFilter) - $this->_timeOffset;
+        $endYearTS = mktime(23, 59, 59, 12, 31, $yearFilter) - $this->_timeOffset;
 
         $query->andWhere('`date` BETWEEN :startTS AND :endTS', [':startTS' => $startYearTS, ':endTS' => $endYearTS]);
 
