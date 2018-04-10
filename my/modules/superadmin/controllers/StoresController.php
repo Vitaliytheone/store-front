@@ -139,7 +139,7 @@ class StoresController extends CustomController
         $superUser = Yii::$app->superadmin->getIdentity();
         $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_SOMMERCE, $store->id);
 
-        return $this->redirect('http://' . $sommerceDomain->domain . '/admin/' . $token);
+        return $this->redirect('http://' . $sommerceDomain->domain . '/admin/super-login?token=' . $token);
     }
 
     /**

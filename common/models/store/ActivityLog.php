@@ -185,7 +185,7 @@ class ActivityLog extends ActiveRecord
             'details_id' => $detailsId,
             'details' => $details,
             'admin_id' => $identity->id,
-            'super_user' => $identity->isSuper(),
+            'super_user' => $identity->isSuperAdmin(),
             'ip' => Yii::$app->getRequest()->getUserIP(),
             'controller' => $controller->id,
             'action' => $controller->action->id,

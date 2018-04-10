@@ -1,6 +1,7 @@
 <?php
 namespace common\models\stores;
 
+use common\models\panels\SuperAdminToken;
 use Yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
@@ -16,7 +17,7 @@ use yii\web\IdentityInterface;
 class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 {
     /** Auth cookie lifetime */
-    const COOKIE_LIFETIME = 365 * 24 * 60 * 60; // One year
+    const COOKIE_LIFETIME = 365 * 24 * 60 * 60;
 
     const SESSION_KEY_ADMIN_HASH = 'super_admin_hash';
 
@@ -56,11 +57,25 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
 
-        if (!static::getHash() || static::getHash()->admin_id != $id) {
+        $hash = static::getHash();
+
+        if (!$hash || $hash->admin_id != $id) {
             return null;
         }
 
-        static::$_identity = static::findOne(['id' => $id, 'store_id' => $store->id, 'status' => self::STATUS_ACTIVE]);
+        if ($hash->super_user == StoreAdminsHash::MODE_SUPERADMIN_ON) {
+
+            static::$_identity = static::_getSuperadminIdentity($id);
+
+        } else {
+
+            static::$_identity = static::findOne([
+                'id' => $id,
+                'store_id' => $store->id,
+                'status' => self::STATUS_ACTIVE
+            ]);
+
+        }
 
         return static::$_identity;
     }
@@ -168,12 +183,55 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByUsername(string $username)
     {
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
 
         return static::findOne(['store_id' => $store->id, 'username' => $username]);
+    }
+
+    /**
+     * Find superadmin by superadmin token
+     * @param string $token
+     * @return null|static
+     */
+    public static function findByToken(string $token)
+    {
+        $store = Yii::$app->store->getInstance();
+
+        $superAdminToken = SuperAdminToken::find()
+            ->andFilterWhere([
+                'token' => $token,
+                'item_id' => $store->id,
+                'item' => SuperAdminToken::ITEM_SOMMERCE,
+            ])
+            ->andFilterWhere(['>', 'expiry_at', time()])
+            ->one();
+
+        if (!$superAdminToken) {
+            return null;
+        }
+
+        return static::_getSuperadminIdentity($superAdminToken->super_admin_id);
+    }
+
+    /**
+     * Return SuperAdmin identity with virtual id
+     * @param $superadminId
+     * @return StoreAdminAuth|null
+     */
+    private static function _getSuperadminIdentity($superadminId)
+    {
+        $identity = static::findOne([
+            'store_id' => self::SUPERADMIN_STORE_ID,
+        ]);
+
+        $identity->id = $superadminId;
+
+        static::$_identity = $identity;
+
+        return static::$_identity;
     }
 
     /**
@@ -210,9 +268,8 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      * Return is user is logged in as superadmin
      * @return bool
      */
-    public function isSuper()
+    public function isSuperAdmin()
     {
-        return false;
-//        return static::$_hash ? (bool)static::$_hash->super_user : false;
+        return (bool)static::getHash()->super_user;
     }
 }
