@@ -110,8 +110,10 @@ $checkRowSpan = function($suborder) use ($suborders) {
 
                                 <?php if (ArrayHelper::getValue($suborder, 'action_menu.cancel')): ?>
                                 <li class="m-nav__item">
-                                    <a href="#" data-toggle="modal" data-target="#modal-alert-cancel" data-backdrop="static" class="change-status" data-action_url="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $currentFilters]) ?>">
-                                        <?= Yii::t('admin', 'orders.action_cancel') ?>
+                                    <a href="#" data-toggle="modal" data-target="#modal-alert-cancel" data-backdrop="static" class="m-nav__link" data-action_url="<?= Url::to(['/admin/orders/cancel', 'id'=>$suborder['suborder_id'], 'filters' => $currentFilters]) ?>">
+                                        <span class="m-nav__link-text">
+                                            <?= Yii::t('admin', 'orders.action_cancel') ?>
+                                        </span>
                                     </a>
                                 </li>
                                 <?php endif; ?>
