@@ -34,7 +34,7 @@ class AddToCartForm extends Model {
     {
         return [
             [['link'], 'required'],
-            ['link', LinkValidator::className()],
+            ['link', LinkValidator::class],
         ];
     }
 

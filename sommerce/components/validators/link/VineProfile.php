@@ -15,7 +15,7 @@ class VineProfile extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/vine\.co\/([a-z0-9]+)(\/)?$/uis", $this->link))
+        if (!(preg_match("/https\:\/\/vine\.co\/([a-z0-9\.]+)(\/)?$/uis", $this->link))
             && !(preg_match("/https\:\/\/vine\.co\/u\/([0-9]+)(\/)?$/uis", $this->link))) {
             $this->addError('Invalid vine profile link.');
 

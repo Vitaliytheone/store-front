@@ -79,15 +79,25 @@ abstract class BaseLinkValidator {
      */
     protected function checkUrl($link)
     {
+        $proxy = null;
+
+        if (!empty(PROXY_CONFIG['link_type']['ip']) && !empty(PROXY_CONFIG['link_type']['port'])) {
+            $proxy = PROXY_CONFIG['link_type']['ip'] . ':' . PROXY_CONFIG['link_type']['port'];
+        }
+
         $ch = curl_init($link);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 4);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['link_type']['ip'] . ':' . PROXY_CONFIG['link_type']['port']);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+
+        if (!empty($proxy)) {
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12',
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -103,7 +113,9 @@ abstract class BaseLinkValidator {
 
         // System errors
         if (curl_errno($ch) != 0 && empty($result)) {
+            $error = curl_error($ch);
             curl_close($ch);
+            var_dump($link, $error, file_get_contents($link)); exit();
             return null;
         }
         curl_close($ch);
