@@ -51,6 +51,7 @@ class CronController extends CustomController
      */
     public function actionClearAuth()
     {
-        StoreAdminsHash::deleteOld();
+        StoreAdminsHash::deleteOld(StoreAdminsHash::MODE_SUPERADMIN_ON, 30 * 60);
+        StoreAdminsHash::deleteOld(StoreAdminsHash::MODE_SUPERADMIN_OFF, 30 * 24 * 60 * 60);
     }
 }

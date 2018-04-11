@@ -31,6 +31,8 @@ class ActivityLog extends ActiveRecord
     const E_ADMIN_ADMIN_AUTHORIZATION = 1001;
     const E_ADMIN_PASSWORD_CHANGED = 1002;
 
+    const E_SUPERADMIN_AUTHORIZATION_BY_TOKEN = 1101;
+
     const E_SETTINGS_GENERAL_STORE_NAME_CHANGED = 2001;
     const E_SETTINGS_GENERAL_STORE_TIMEZONE_CHANGED = 2002;
     const E_SETTINGS_GENERAL_STORE_ADMIN_EMAIL_CHANGED = 2003;
@@ -185,7 +187,7 @@ class ActivityLog extends ActiveRecord
             'details_id' => $detailsId,
             'details' => $details,
             'admin_id' => $identity->id,
-            'super_user' => $identity->isSuper(),
+            'super_user' => $identity->isSuperAdmin(),
             'ip' => Yii::$app->getRequest()->getUserIP(),
             'controller' => $controller->id,
             'action' => $controller->action->id,
