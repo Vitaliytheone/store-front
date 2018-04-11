@@ -195,7 +195,7 @@ return [
     'payments.list.navs_mode_auto' => 'Auto ({count})',
     'payments.list.navs_method_all' => 'All ({count})',
     'payments.list.navs_method_other' => 'Other ({count})',
-    'payments.list.details_modal_header' => 'Order details',
+    'payments.list.details_modal_header' => 'Payment details',
     'payments.list.details_modal_btn_close' => 'Close',
     'payments.list.details_modal_logs_header' => 'Logs',
     'payments.list.actions_label' => 'Actions',
