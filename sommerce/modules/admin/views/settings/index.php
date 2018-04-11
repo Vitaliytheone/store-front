@@ -8,6 +8,8 @@ use common\models\store\Files;
 /* @var $this \yii\web\View */
 /* @var $timezones array */
 /* @var $store \sommerce\modules\admin\models\forms\EditStoreSettingsForm */
+/* @var $iconFileSizeLimit string */
+/* @var $logoFileSizeLimit string */
 
 $storeUrl = 'http://' . $store->domain;
 
@@ -56,7 +58,7 @@ $storeUrl = 'http://' . $store->domain;
 
                                 </label>
                                 <small class="form-text text-muted">
-                                    <?= Yii::t('admin', 'settings.general_logo_limits') ?>
+                                    <?= Yii::t('admin', 'settings.general_logo_limits', ['fileSize' => $logoFileSizeLimit]) ?>
                                 </small>
                             </div>
                         </div>
@@ -84,7 +86,7 @@ $storeUrl = 'http://' . $store->domain;
 
                                 </label>
                                 <small class="form-text text-muted">
-                                    <?= Yii::t('admin', 'settings.general_favicon_limits') ?>
+                                    <?= Yii::t('admin', 'settings.general_favicon_limits', ['fileSize' => $iconFileSizeLimit]) ?>
                                 </small>
                             </div>
                         </div>

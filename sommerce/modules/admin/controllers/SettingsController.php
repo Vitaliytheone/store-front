@@ -64,6 +64,8 @@ class SettingsController extends CustomController
         return $this->render('index', [
             'store' => $storeForm,
             'timezones' => Yii::$app->params['timezone'],
+            'iconFileSizeLimit' => Yii::$app->formatter->asShortSize(Yii::$app->params['iconFileSizeLimit']),
+            'logoFileSizeLimit' => Yii::$app->formatter->asShortSize(Yii::$app->params['logoFileSizeLimit']),
         ]);
     }
 
