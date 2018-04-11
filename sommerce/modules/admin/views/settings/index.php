@@ -149,7 +149,7 @@ $storeUrl = 'http://' . $store->domain;
                                 </div>
                                 <div class="seo-preview__url"><?= $storeUrl ?></div>
                                 <div class="seo-preview__description edit-seo__meta">
-                                    <?= Yii::t('admin', 'settings.general_seo_meta_default') ?>
+                                    <?/*= Yii::t('admin', 'settings.general_seo_meta_default') */?>
                                 </div>
                             </div>
 
@@ -168,7 +168,7 @@ $storeUrl = 'http://' . $store->domain;
                                     <label for="edit-seo__meta">
                                         <?= Yii::t('admin', 'settings.general_seo_meta') ?>
                                     </label>
-                                    <textarea class="form-control" id="edit-seo__meta" rows="3" name="SettingsGeneralForm[seo_description]"><?= $store->seo_description ? Html::encode($store->seo_description) : Yii::t('admin', 'settings.general_seo_meta_default') ?></textarea>
+                                    <textarea class="form-control" id="edit-seo__meta" rows="3" name="SettingsGeneralForm[seo_description]"><?= $store->seo_description ? Html::encode($store->seo_description) : "" /* Yii::t('admin', 'settings.general_seo_meta_default') */ ?></textarea>
                                     <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span>
                                         <?= Yii::t('admin', 'settings.general_seo_meta_limits') ?>
                                     </small>
