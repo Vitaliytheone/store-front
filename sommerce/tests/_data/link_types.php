@@ -851,11 +851,23 @@ return [
         'invalid' => []
     ],
     LinkTypeHelper::YOUTUBE_CHANNEL => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.youtube.com/user/Apple',
+            'https://www.youtube.com/user/aroundtheworld4k',
+            'https://www.youtube.com/channel/UCNPXMyQe-jbSYjiQiP6KQow',
+            'https://www.youtube.com/c/magicwithearvin',
+            'http://www.youtube.com/tonercrafts',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::YOUTUBE_VIDEO => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.youtube.com/watch?v=L5FIAniosZU',
+            'https://youtu.be/L5FIAniosZU',
+            'https://youtu.be/L5FIAniosZU?t=7',
+            'https://www.youtube.com/embed/L5FIAniosZU',
+            'https://www.youtube.com/video/L5FIAniosZU'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::VINE_PICTURE => [
