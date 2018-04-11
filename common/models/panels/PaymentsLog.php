@@ -73,4 +73,13 @@ class PaymentsLog extends ActiveRecord
     {
         return Json::decode($this->response);
     }
+
+    /**
+     * Get log
+     * @return mixed
+     */
+    public function getLog()
+    {
+        return Json::decode($this->logs);
+    }
 }
