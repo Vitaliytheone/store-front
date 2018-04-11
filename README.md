@@ -52,10 +52,11 @@ php yii worker/start > /dev/null 2>&1 & - запуск воркера в фон�
 	php yii system-sommerce/add-admin
 
 
-####Cron
+####Cron    
 	php yii cron-sommerce/clear-cart-items
 	php yii cron-sommerce/sender
 	php yii cron-sommerce/getstatus
+    php yii cron-sommerce/clear-auth
 
 ###My
 
