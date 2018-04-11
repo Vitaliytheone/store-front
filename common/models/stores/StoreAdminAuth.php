@@ -165,7 +165,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      * Return StoreAdmin hash object
      * @return StoreAdminsHash|null
      */
-    private static function getHash()
+    public static function getHash()
     {
         if (static::$_hash instanceof StoreAdminsHash) {
             return static::$_hash;
@@ -213,7 +213,11 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
             return null;
         }
 
-        return static::_getSuperadminIdentity($superAdminToken->super_admin_id);
+        $identity = static::_getSuperadminIdentity($superAdminToken->super_admin_id);
+
+        $superAdminToken->delete();
+
+        return $identity;
     }
 
     /**

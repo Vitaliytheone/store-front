@@ -36,8 +36,7 @@ class SuperLoginForm extends Model
             return false;
         }
 
-//        ActivityLog::log($user, ActivityLog::E_ADMIN_ADMIN_AUTHORIZATION);
-
+        ActivityLog::log($user, ActivityLog::E_SUPERADMIN_AUTHORIZATION_BY_TOKEN);
 
         return true;
     }

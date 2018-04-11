@@ -112,7 +112,7 @@ class StoreAdminsHash extends ActiveRecord
     }
 
     /**
-     * Update freshness of the admin hash records
+     * Update freshness of the admin hash record
      * @param $adminId
      */
     public static function updateFreshness($adminId)
@@ -128,27 +128,56 @@ class StoreAdminsHash extends ActiveRecord
     }
 
     /**
+     * Update hash freshness of the current admin
+     * @return bool
+     */
+    public static function updateFreshnessCurrentAdmin()
+    {
+        /** @var StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity();
+
+        if (!$identity) {
+            return false;
+        }
+
+
+        $hash = $identity::getHash();
+
+        if (!$hash || !$hash instanceof StoreAdminsHash) {
+            return false;
+        }
+
+        $hash->updated_at = time();
+
+        return $hash->save(false);
+    }
+
+
+    /**
      * Delete hash records by user id
      * @param $adminId
-     * @param int $super
      */
-    public static function deleteByUser($adminId, $super = StoreAdmins::SUPER_USER_MODE_OFF)
+    public static function deleteByUser($adminId)
     {
         static::deleteAll([
             'admin_id' => $adminId,
-            'super_user' => $super
+            'super_user' => StoreAdmins::SUPER_USER_MODE_OFF,
         ]);
     }
 
     /**
-     * Delete all records older than $time
-     * @param $time
+     * Delete all records older than $time for $adminMode
+     * @param $adminMode integer { Superadmin (1) || Admin (0) }
+     * @param $time integer Time in seconds. Example $time = 30 * 24 * 60 * 60 (30 days)
      */
-    public static function deleteOld($time = 30 * 24 * 60 * 60)
+    public static function deleteOld($adminMode, $time)
     {
-        static::deleteAll([
-            '<',
-            'updated_at', time() - $time,
-        ]);
+        static::deleteAll(
+            'super_user = :adminMode AND updated_at < :time',
+            [
+                ':adminMode' => $adminMode,
+                ':time' => time() - $time
+            ]
+        );
     }
 }

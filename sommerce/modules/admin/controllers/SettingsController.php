@@ -3,6 +3,7 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\store\Files;
+use common\models\stores\StoreAdminAuth;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
