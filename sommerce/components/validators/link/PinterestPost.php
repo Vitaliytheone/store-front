@@ -7,11 +7,32 @@ class PinterestPost extends BaseLinkValidator
 {
     public function validate()
     {
-        $this->link = "https://www." . parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+        $this->link = parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+
+        $domainFirst = "([a-z]+\.)";
+
+        if (preg_match("/^" . $domainFirst . "/", $this->link)) {
+            $this->link = "https://" . $this->link;
+        } else {
+            $this->link = "https://www." . $this->link;
+        }
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.pinterest\.com\/pin\/([0-9]+)(\/)?$/i", $this->link))) {
+        $domainZero = [
+            'com',
+            'co\.uk',
+            'pt',
+            'fr',
+            'ca',
+            'com\.au',
+        ];
+
+        $domainZero = "(" . implode(")|(", $domainZero) . ")";
+
+        $content = null;
+
+        if (!(preg_match("/https\:\/\/" . $domainFirst . "pinterest\." . $domainZero . "\/pin\/([0-9]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid pinterest post link.');
 
             return false;

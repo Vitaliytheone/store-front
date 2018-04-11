@@ -87,11 +87,12 @@ abstract class BaseLinkValidator {
 
         $ch = curl_init($link);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
 
         if (!empty($proxy)) {
@@ -115,7 +116,6 @@ abstract class BaseLinkValidator {
         if (curl_errno($ch) != 0 && empty($result)) {
             $error = curl_error($ch);
             curl_close($ch);
-            var_dump($link, $error, file_get_contents($link)); exit();
             return null;
         }
         curl_close($ch);
