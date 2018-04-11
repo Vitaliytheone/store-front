@@ -29,7 +29,7 @@ class AdminController extends CommonController
             /** @var StoreAdminAuth $identity */
             $identity = $user->getIdentity();
 
-            if (!$identity->isSuper()) {
+            if (!$identity->isSuperAdmin()) {
                 $user->logout();
             }
         }

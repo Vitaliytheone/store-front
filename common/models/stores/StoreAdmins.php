@@ -27,6 +27,8 @@ use yii\helpers\ArrayHelper;
  */
 class StoreAdmins extends ActiveRecord
 {
+    const SUPERADMIN_STORE_ID = '-1';
+
     const STATUS_ACTIVE     = 1;
     const STATUS_SUSPENDED  = 2;
 

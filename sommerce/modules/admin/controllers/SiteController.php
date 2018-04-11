@@ -6,6 +6,7 @@ use common\models\stores\Stores;
 use sommerce\controllers\CommonController;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\LoginForm;
+use sommerce\modules\admin\models\forms\SuperLoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\User;
@@ -133,6 +134,22 @@ class SiteController extends AdminController
         return $this->render('signin', [
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @param $token
+     * @return \yii\web\Response
+     */
+    public function actionSuperLogin($token)
+    {
+        $form = new SuperLoginForm();
+
+        if (!$form->login($token)) {
+
+            return $this->redirect(Url::toRoute('/'));
+        }
+
+        $this->redirect(Url::toRoute($this->_loggedInRedirectUrl));
     }
 
     /**

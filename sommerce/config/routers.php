@@ -11,4 +11,5 @@ return [
 
     '/admin/logout' => 'admin/account/logout',
     '/admin/frozen' => 'admin/site/frozen',
+    '/admin/super-login' => 'admin/site/super-login',
 ];
