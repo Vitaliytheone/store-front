@@ -15,7 +15,9 @@ class VimeoChannel extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/vimeo\.com\/([a-z0-9]+)(\/)?$/uis", $this->link))) {
+        if (!(preg_match("/https\:\/\/vimeo\.com\/([a-z0-9]+)(\/)?$/uis", $this->link))
+            && !(preg_match("/https\:\/\/vimeo\.com\/channels\/([a-z0-9]+)(\/)?$/uis", $this->link))
+            && !(preg_match("/https\:\/\/vimeo\.com\/groups\/([a-z0-9]+)(\/)?$/uis", $this->link))) {
             $this->addError('Invalid vimeo channel link.');
 
             return false;

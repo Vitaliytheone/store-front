@@ -17,7 +17,7 @@ class LinkedinProfile extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.linkedin\.com\/in\/([a-z0-9-_\.]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.linkedin\.com\/in\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid LinkedIn profile link.');
 
             return false;

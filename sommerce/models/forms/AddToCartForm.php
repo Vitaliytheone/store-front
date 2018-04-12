@@ -34,7 +34,7 @@ class AddToCartForm extends Model {
     {
         return [
             [['link'], 'required'],
-            ['link', LinkValidator::className()],
+            ['link', LinkValidator::class],
         ];
     }
 
@@ -63,6 +63,15 @@ class AddToCartForm extends Model {
     public function setStore($store)
     {
         $this->_store = $store;
+    }
+
+    /**
+     * Get store
+     * @return Stores
+     */
+    public function getStore()
+    {
+        return $this->_store;
     }
 
     /**

@@ -13,7 +13,7 @@ class TwitterPost extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/twitter\.com\/([a-z0-9\_]{1,15})\/status\/([0-9]+)(\/)$?/i", $this->link))
+        if (!(preg_match("/https\:\/\/twitter\.com\/([a-z0-9\_]+)\/status\/([0-9]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/twitter\.com\/statuses\/([0-9]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/t\.co\/([a-z0-9-_]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/twitter\.com\/i\/web\/status\/([0-9]+)(\/)?$/i", $this->link))) {

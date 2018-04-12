@@ -11,7 +11,7 @@ class PeriscopeVideo extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.periscope\.tv\/([a-z0-9\_]+)\/([a-z0-9]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.(periscope|pscp)\.tv\/([a-z0-9\_]+)\/([a-z0-9]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid periscope video link.');
 
             return false;
