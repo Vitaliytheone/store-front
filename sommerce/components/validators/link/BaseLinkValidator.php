@@ -122,7 +122,6 @@ abstract class BaseLinkValidator {
         // System errors
         if (curl_errno($ch) != 0 && empty($result)) {
             $error = curl_error($ch);
-            var_dump($error); exit();
             curl_close($ch);
             return null;
         }
