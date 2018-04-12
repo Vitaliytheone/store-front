@@ -48,8 +48,8 @@ class LinkValidator extends Validator
             return false;
         }
 
-        $link = $model->$attribute;
-        $link = $this->clearLink($link);
+        $linkOrig = $model->$attribute;
+        $link = $this->clearLink($linkOrig);
         
         $validator = $this->getValidator($package->link_type);
 
@@ -59,7 +59,7 @@ class LinkValidator extends Validator
 
 
         if (!$validator->run($link)) {
-            LinkValidations::add($link, $package->link_type, $store->id);
+            LinkValidations::add($linkOrig, $package->link_type, $store->id);
 
             $model->addError($attribute, $validator->getError());
 
