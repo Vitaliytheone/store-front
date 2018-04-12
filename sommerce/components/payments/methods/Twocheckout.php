@@ -100,7 +100,7 @@ class Twocheckout extends BasePayment {
             'sid' => $accountNumber,
             'mode' => '2CO',
             'li_0_type' => 'product',
-            'li_0_name' => static::getDescription($email),
+            'li_0_name' => static::getDescription($checkout->order->id),
             'li_0_quantity' => 1,
             'li_0_price' => $amount,
             'li_0_tangible' => 'N',

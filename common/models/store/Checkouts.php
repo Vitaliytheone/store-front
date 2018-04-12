@@ -23,6 +23,7 @@ use common\models\store\queries\CheckoutsQuery;
  * @property integer $updated_at
  * @property string $currency
  *
+ * @property Orders $order
  * @property Orders[] $orders
  * @property Payments[] $payments
  * @property PaymentsLog[] $paymentsLogs
@@ -87,6 +88,14 @@ class Checkouts extends ActiveRecord
     public function getOrders()
     {
         return $this->hasMany(Orders::class, ['checkout_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Orders::class, ['checkout_id' => 'id']);
     }
 
     /**
