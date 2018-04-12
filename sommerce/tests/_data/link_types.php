@@ -4,7 +4,7 @@ use sommerce\helpers\LinkTypeHelper;
 return [
     LinkTypeHelper::INSTAGRAM_PROFILE => [
         'valid' => [
-            /*'https://www.instagram.com/joniaguirre',
+            'https://www.instagram.com/joniaguirre',
             'devjuvenile',
             'https://www.instagram.com/greedycoins/',
             'https://www.instagram.com/istanbul.grapher/',
@@ -50,7 +50,6 @@ return [
             'https://www.instagram.com/brisadiniz_',
             'yanzmedia',
             '@managementstrong.id',
-            //'https://www.instagram.com/lucio.sza',// Не доступна
             'https://www.instagram.com/danas_rapsys/',
             'Youth.affairs',
             'rizky4628',
@@ -68,7 +67,6 @@ return [
             'https://www.instagram.com/dzawin.n/',
             'Davezyntek_bv',
             'https://www.instagram.com/fortherightcause/',
-            //'https://www.instagram.com/pamhermes', // Не доступна
             'https://www.instagram.com/manuelacampani/',
             'Endahmust_',
             'https://instagram.com/lillarceni',
@@ -81,8 +79,6 @@ return [
             'flexergoo',
             'https://www.instagram.com/anyuta_rai',
             '01.eros',
-            //'https://www.instagram.com/patrickseabra00', // Не доступна
-            //'https://www.instagram.com/adelaidesimoess', // Не доступна
             'Fitnessnetworkconnect',
             'https://www.instagram.com/couples_era2k18/',
             'mk_mohamedkarim',
@@ -103,13 +99,18 @@ return [
             'Customcase.brb',
             'ByJxck',
             'alyzein06',
-            'sandro_kristiawan',*/
+            'sandro_kristiawan',
         ],
-        'invalid' => []
+        'invalid' => [
+            //'https://www.instagram.com/patrickseabra00', // Не доступна
+            //'https://www.instagram.com/adelaidesimoess', // Не доступна
+            //'https://www.instagram.com/pamhermes', // Не доступна
+            //'https://www.instagram.com/lucio.sza',// Не доступна
+        ]
     ],
     LinkTypeHelper::INSTAGRAM_POST => [
         'valid' => [
-            /*'https://www.instagram.com/p/BhYE0B6l0cZ/',
+            'https://www.instagram.com/p/BhYE0B6l0cZ/',
             'https://www.instagram.com/p/BhWkztSj83D/?taken-by=...',
             'https://www.instagram.com/p/BhTpIRuHqXh/',
             'https://www.instagram.com/p/BhJ5E16DIsr/?taken-by=...',
@@ -206,7 +207,7 @@ return [
             'https://www.instagram.com/p/BhWTar9gipF/',
             'https://www.instagram.com/p/BhX2tJ9Fhi6/',
             'https://www.instagram.com/p/Bg_LNOdHjyo/',
-            'https://instagram.com/p/BhX5_18A352/',*/
+            'https://instagram.com/p/BhX5_18A352/',
         ],
         'invalid' => [
             //'https://instagram.com/p/BhYDsskh4s4/', // Не доступна
@@ -215,7 +216,7 @@ return [
     ],
     LinkTypeHelper::FACEBOOK_PAGE => [
         'valid' => [
-            /*'https://www.facebook.com/savagesportsbox',
+            'https://www.facebook.com/savagesportsbox',
             'https://www.facebook.com/Hihgt-Marketing-1479054652223719/?ref=your_pages',
             'https://www.facebook.com/KostaPhotograph/',
             'https://www.facebook.com/ZubyC786/',
@@ -312,7 +313,7 @@ return [
             'https://web.facebook.com/lcwmstarcity/',
             'https://www.facebook.com/NetflixTrapped/',
             'https://www.facebook.com/berkozlerblog/',
-            'https://www.facebook.com/Ralf-Taucher-351059372052320/',*/
+            'https://www.facebook.com/Ralf-Taucher-351059372052320/',
         ],
         'invalid' => [
             //'https://www.facebook.com/search/top/?q=missxvsanantonio', // Не валидная ссылка поиск
@@ -320,7 +321,7 @@ return [
     ],
     LinkTypeHelper::FACEBOOK_PROFILE => [
         'valid' => [
-            /*'https://www.facebook.com/profile.php?id=100025217078282',
+            'https://www.facebook.com/profile.php?id=100025217078282',
             'treydinerolive',
             'https://www.facebook.com/Miyoshee',
             'https://www.facebook.com/pphu.staleuro.5',
@@ -368,7 +369,7 @@ return [
             'https://www.facebook.com/profile.php?id=100005714613086',
             'https://www.facebook.com/Reece.WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
             'https://www.facebook.com/ellie.stuart.777',
-            'https://www.facebook.com/irfan.nursahid.1',*/
+            'https://www.facebook.com/irfan.nursahid.1',
 
         ],
         'invalid' => [
@@ -421,7 +422,7 @@ return [
     ],
     LinkTypeHelper::FACEBOOK_POST => [
         'valid' => [
-            /*'https://www.facebook.com/photo.php?fbid=183602438946945',
+            'https://www.facebook.com/photo.php?fbid=183602438946945',
             'https://m.facebook.com/story.php?story_fbid=1512432852211842&id=100003354242483',
             'https://facebook.com/AQUA9THAILAND/photos/a.1093205680818863.1073741828.1087053708100727/1113800318759399/?type=3',
             'https://m.facebook.com/story.php?story_fbid=1630489003703420&id=100002270083945',
@@ -518,7 +519,7 @@ return [
             'https://www.facebook.com/galpaodobras/photos/a.361230111013373.1073741828.357389168064134/387936611676056/?type=3&theater',
             'https://www.facebook.com/photo.php?fbid=579907875723745',
             'https://www.facebook.com/galpaodobras/photos/a.361230111013373.1073741828.357389168064134/387367835066267/?type=3&theater',
-            'https://www.facebook.com/oticaabc/photos/a.306853552746250.66281.297262827038656/1528010403963886/?type=3',*/
+            'https://www.facebook.com/oticaabc/photos/a.306853552746250.66281.297262827038656/1528010403963886/?type=3',
         ],
         'invalid' => [
             //'https://m.facebook.com/home.php?refsrc=https%3A%2F%2Fm.facebook.com%2F&_rdr#!/photo.php?fbid=352807831875297&id=100014382485557&set=a.105829229906493.1073741828.100014382485557&notif_t=feedback_reaction_generic&notif_id=1523324607087303&ref=m_notif',
@@ -526,18 +527,18 @@ return [
     ],
     LinkTypeHelper::FACEBOOK_GROUP => [
         'valid' => [
-            /*'https://www.facebook.com/groups/288661564927334/about/',
+            'https://www.facebook.com/groups/288661564927334/about/',
             'https://www.facebook.com/groups/288661564927334',
             'https://www.facebook.com/groups/543628065696081',
             'https://www.facebook.com/groups/momsdadsworkathome/?ref=br_rs',
             'https://www.facebook.com/groups/notlob/about/',
-            'https://www.facebook.com/groups/applerecife/?ref=br_rs',*/
+            'https://www.facebook.com/groups/applerecife/?ref=br_rs',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::FACEBOOK_EVENT => [
         'valid' => [
-            /*'https://www.facebook.com/events/380258432442325/',
+            'https://www.facebook.com/events/380258432442325/',
             'https://www.facebook.com/events/2053909388267261??ti=ia',
             'https://www.facebook.com/events/161853121295110/',
             'https://www.facebook.com/events/2053909388267261??ti=ia',
@@ -636,13 +637,13 @@ return [
             'https://www.facebook.com/events/232527110637868',
             'https://www.facebook.com/events/592806054398284',
             'https://www.facebook.com/events/576234512714755/',
-            'https://www.facebook.com/events/302854233577506/',*/
+            'https://www.facebook.com/events/302854233577506/',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::TWITTER_PROFILE => [
         'valid' => [
-            /*'https://twitter.com/robertbeadles',
+            'https://twitter.com/robertbeadles',
             'https://twitter.com/robertbeadles',
             'https://twitter.com/piunelli',
             'https://twitter.com/preetisurvivor',
@@ -688,7 +689,6 @@ return [
             'https://twitter.com/bearlymarketing',
             'bagheri1396',
             'c_blossom912',
-            //'74kihana', // Не существует страницы этой
             '10GENSAHEAD',
             'https://twitter.com/BirenderTokas',
             'ajooeunice',
@@ -741,13 +741,15 @@ return [
             'https://twitter.com/KHughesactor',
             'thezackmassey',
             'umrohalfurqon',
-            'https://twitter.com/hendersonjohn10',*/
+            'https://twitter.com/hendersonjohn10',
         ],
-        'invalid' => []
+        'invalid' => [
+            //'74kihana', // Не существует страницы этой
+        ]
     ],
     LinkTypeHelper::TWITTER_POST => [
         'valid' => [
-            /*'https://twitter.com/746459120308363266/status/983550680030789632',
+            'https://twitter.com/746459120308363266/status/983550680030789632',
             'https://twitter.com/755665752351440896/status/983552153913577472',
             'https://twitter.com/976153909264879617/status/983507040516628480',
             'https://twitter.com/839869174419714048/status/983533794127958016',
@@ -758,7 +760,6 @@ return [
             'https://twitter.com/27973977/status/982645776575795200',
             'https://twitter.com/827271469910544392/status/983472453635706881',
             'https://twitter.com/15063044/status/983430601058418688',
-            //'https://twitter.com/lalitkmodi/status/983464513620951040', // Не существует страницы этой
             'https://twitter.com/PaintingArtLife/status/415304326618558464',
             'https://twitter.com/1062323982/status/983435731975704577',
             'https://twitter.com/EylemCulculoglu/status/983442298708135937',
@@ -806,7 +807,6 @@ return [
             'https://twitter.com/wiamwahhab/status/983313159455993856',
             'https://twitter.com/15063044/status/983312174629179392',
             'https://twitter.com/15063044/status/983311740552253440',
-            //'https://twitter.com/15063044/status/983311285361299458', // Не существует страницы этой
             'https://twitter.com/15063044/status/983310514188152833',
             'https://twitter.com/15063044/status/983309471240851456',
             'https://twitter.com/ruchirlmodi/status/983311222807248896',
@@ -846,33 +846,36 @@ return [
             'https://twitter.com/1706208703/status/983114540509347843',
             'https://twitter.com/Rocket_Signals/status/983127902442196992',
             'https://twitter.com/21781405/status/983125876735913984',
-            'https://twitter.com/amyisgood1/status/983121492861911040',*/
+            'https://twitter.com/amyisgood1/status/983121492861911040',
         ],
-        'invalid' => []
+        'invalid' => [
+            //'https://twitter.com/15063044/status/983311285361299458', // Не существует страницы этой
+            //'https://twitter.com/lalitkmodi/status/983464513620951040', // Не существует страницы этой
+        ]
     ],
     LinkTypeHelper::YOUTUBE_CHANNEL => [
         'valid' => [
-            /*'https://www.youtube.com/user/Apple',
+            'https://www.youtube.com/user/Apple',
             'https://www.youtube.com/user/aroundtheworld4k',
             'https://www.youtube.com/channel/UCNPXMyQe-jbSYjiQiP6KQow',
             'https://www.youtube.com/c/magicwithearvin',
-            'http://www.youtube.com/tonercrafts',*/
+            'http://www.youtube.com/tonercrafts',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::YOUTUBE_VIDEO => [
         'valid' => [
-            /*'https://www.youtube.com/watch?v=L5FIAniosZU',
+            'https://www.youtube.com/watch?v=L5FIAniosZU',
             'https://youtu.be/L5FIAniosZU',
             'https://youtu.be/L5FIAniosZU?t=7',
             'https://www.youtube.com/embed/L5FIAniosZU',
-            'https://www.youtube.com/video/L5FIAniosZU'*/
+            'https://www.youtube.com/video/L5FIAniosZU'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::VINE_PICTURE => [
         'valid' => [
-            /*'https://vine.co/v/53TD7MEnrqz',
+            'https://vine.co/v/53TD7MEnrqz',
             'https://vine.co/v/5UYKMhzLDVJ',
             'https://vine.co/v/5t6tZAgxujm',
             'https://vine.co/v/5T5jb9idFDb',
@@ -882,13 +885,13 @@ return [
             'https://vine.co/v/5jdwtdE9dJ2',
             'https://vine.co/v/5Dr1HvQ53Mx',
             'https://vine.co/v/5pxlj2Q735H',
-            'https://vine.co/v/5pxw2imIn70',*/
+            'https://vine.co/v/5pxw2imIn70',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::VINE_PROFILE => [
         'valid' => [
-            /*'https://vine.co/u/1430317352024739840',
+            'https://vine.co/u/1430317352024739840',
             'https://vine.co/Saron.Temesgen',
             'https://vine.co/u/1419056441574191104',
             'https://vine.co/zulkhairiazizan',
@@ -907,7 +910,7 @@ return [
             'https://vine.co/Joke.Neyrinck',
             'https://vine.co/u/1380947669668843520',
             'https://vine.co/u/1372382610411925504',
-            'https://vine.co/u/1386986480156987392'
+            'https://vine.co/u/1386986480156987392',
             'https://vine.co/Michael.Fu',
             'https://vine.co/u/1227184386425159680',
             'https://vine.co/Alicia.G.World',
@@ -925,7 +928,7 @@ return [
             'https://vine.co/ArcanaArt',
             'https://vine.co/u/1057149977396486144',
             'vine.co/u/1186356152884256768',
-            'https://vine.co/u/1347873862918029312',*/
+            'https://vine.co/u/1347873862918029312',
 
         ],
         'invalid' => [
@@ -953,7 +956,7 @@ return [
     ],
     LinkTypeHelper::PINTEREST_PROFILE => [
         'valid' => [
-            /*'https://in.pinterest.com/startel0182/',
+            'https://in.pinterest.com/startel0182/',
             'https://www.pinterest.co.uk/eye0600/',
             'https://www.pinterest.co.uk/urbncovr',
             'https://www.pinterest.pt/KitchConnOrg/',
@@ -964,7 +967,6 @@ return [
             'https://www.pinterest.com/grlterror/',
             'https://in.pinterest.com/hartzpets/',
             'https://www.pinterest.co.uk/whatshot2018/',
-            //'https://www.pinterest.com/frontstreetcafe/front-st...', // Не существует страницы этой
             'https://www.pinterest.pt/KitchConnOrg/',
             'https://in.pinterest.com/blockchainhelp/',
             'https://in.pinterest.com/tradebots/',
@@ -1045,21 +1047,23 @@ return [
             'https://www.pinterest.com/ebllashes',
             'https://www.pinterest.com.au/LTLLiteracy/',
             'https://in.pinterest.com/whymewhydont12/',
-            'https://www.pinterest.com/guangzhouchina/',*/
+            'https://www.pinterest.com/guangzhouchina/',
         ],
-        'invalid' => []
+        'invalid' => [
+            //'https://www.pinterest.com/frontstreetcafe/front-st...', // Не существует страницы этой
+        ]
     ],
     LinkTypeHelper::PINTEREST_BOARD => [
         'valid' => [
-            /*'https://ru.pinterest.com/apple/disney-quotes/',
+            'https://ru.pinterest.com/apple/disney-quotes/',
             'https://ru.pinterest.com/samsung/products-i-love/',
-            'https://ru.pinterest.com/panasonic/gifts-under-25/'*/
+            'https://ru.pinterest.com/panasonic/gifts-under-25/'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::PINTEREST_POST => [
         'valid' => [
-            /*'https://www.pinterest.pt/pin/535998793141461081/',
+            'https://www.pinterest.pt/pin/535998793141461081/',
             'https://pinterest.com/pin/670684569481342282/',
             'https://pinterest.com/pin/670684569481353094/',
             'https://www.pinterest.com/pin/277041814550258449/',
@@ -1155,66 +1159,67 @@ return [
             'https://in.pinterest.com/pin/742108844817533553/',
             'https://in.pinterest.com/pin/742108844817517562/',
             'https://id.pinterest.com/pin/779122804254891774/',
-            //'https://www.pinterest.com/pin/516788125976072266/', // Не существует страницы этой
-            'https://in.pinterest.com/dunarfoodsltd/dunar-foods-ltd/',*/
+            'https://in.pinterest.com/dunarfoodsltd/dunar-foods-ltd/',
         ],
-        'invalid' => []
+        'invalid' => [
+            //'https://www.pinterest.com/pin/516788125976072266/', // Не существует страницы этой
+        ]
     ],
     LinkTypeHelper::SOUNDCLOUD_TRACK => [
         'valid' => [
-            /*'https://soundcloud.com/paulmccartney/wonderful-christmastime-3',
+            'https://soundcloud.com/paulmccartney/wonderful-christmastime-3',
             'https://soundcloud.com/paulmccartney/take-it-away-remixed-2015',
-            'https://soundcloud.com/gufslim/oxxxymiron-sutoloka-2017'*/
+            'https://soundcloud.com/gufslim/oxxxymiron-sutoloka-2017'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::SOUNDCLOUD_PROFILE => [
         'valid' => [
-            /*'https://soundcloud.com/paulmccartney',
+            'https://soundcloud.com/paulmccartney',
             'https://soundcloud.com/rapup',
-            'https://soundcloud.com/latinpowermusic',*/
+            'https://soundcloud.com/latinpowermusic',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::MIXCLOUD_TRACK => [
         'valid' => [
-            /*'https://www.mixcloud.com/dieselinthemix/diesel-live-the-stache-moshaholics-tour-2018/',
+            'https://www.mixcloud.com/dieselinthemix/diesel-live-the-stache-moshaholics-tour-2018/',
             'https://www.mixcloud.com/l%C3%A1o-n%C3%A1o-t%C3%BAc/nst-bay-ph%C3%B2ng-h%E1%BB%91i-h%E1%BA%ADn-trong-anh-deezay-c%C3%B2-muzik-t%E1%BA%B7ng-b%C3%A9-ngoc-anh-3/',
-            'https://www.mixcloud.com/DJDimsa/ebony-house-jazzy-soulful-house-mix-2018/',*/
+            'https://www.mixcloud.com/DJDimsa/ebony-house-jazzy-soulful-house-mix-2018/',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::MIXCLOUD_PROFILE => [
         'valid' => [
-            /*'https://www.mixcloud.com/apple/',
+            'https://www.mixcloud.com/apple/',
             'https://www.mixcloud.com/cat/',
             'https://www.mixcloud.com/bongduday9698/',
             'https://www.mixcloud.com/l%C3%A1o-n%C3%A1o-t%C3%BAc/',
-            'https://www.mixcloud.com/%D0%B8%D0%B2%D0%B0%D0%BD-%D0%BF%D1%87%D0%B5%D0%BB%D0%B8%D0%BD%D1%86%D0%B5%D0%B2',*/
+            'https://www.mixcloud.com/%D0%B8%D0%B2%D0%B0%D0%BD-%D0%BF%D1%87%D0%B5%D0%BB%D0%B8%D0%BD%D1%86%D0%B5%D0%B2',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::PERISCOPE_PROFILE => [
         'valid' => [
-            /*'https://www.pscp.tv/TheGamingExplorer',
+            'https://www.pscp.tv/TheGamingExplorer',
             'https://www.pscp.tv/WildEarth',
-            'https://www.pscp.tv/offtheball',*/
+            'https://www.pscp.tv/offtheball',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::PERISCOPE_VIDEO => [
         'valid' => [
-            /*'https://www.pscp.tv/TheGamingExplorer/1nAJERkeRpnxL',
+            'https://www.pscp.tv/TheGamingExplorer/1nAJERkeRpnxL',
             'https://www.pscp.tv/WildEarth/1DXGyXOXakyKM',
-            'https://www.pscp.tv/offtheball/1lDGLajlgvLJm',*/
+            'https://www.pscp.tv/offtheball/1lDGLajlgvLJm',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::LINKEDIN_PROFILE => [
         'valid' => [
-            /*'https://www.linkedin.com/in/roksana-b%C5%82%C4%99dowska-9ba3b5105',
+            'https://www.linkedin.com/in/roksana-b%C5%82%C4%99dowska-9ba3b5105',
             'https://www.linkedin.com/in/3ginger/',
-            'https://www.linkedin.com/in/alexander-bystrov-0724b1114/'*/
+            'https://www.linkedin.com/in/alexander-bystrov-0724b1114/'
         ],
         'invalid' => []
     ],
@@ -1228,119 +1233,119 @@ return [
     ],
     LinkTypeHelper::LINKEDIN_POST => [
         'valid' => [
-            /*'https://www.linkedin.com/pulse/how-display-more-than-3-views-sharepoint-list-vikas-kottari?trk=v-feed',
+            'https://www.linkedin.com/pulse/how-display-more-than-3-views-sharepoint-list-vikas-kottari?trk=v-feed',
             'https://www.linkedin.com/pulse/4-lessons-from-facebook-communications-crisis-barbara-mahe?trk=v-feed',
             'https://www.linkedin.com/pulse/need-know-sparks-infotech?trk=v-feed',
-            'https://www.linkedin.com/feed/update/urn:li:activity:6389140631201083393',*/
+            'https://www.linkedin.com/feed/update/urn:li:activity:6389140631201083393',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_VIDEO => [
         'valid' => [
-            /*'https://www.radiojavan.com/videos/video/erfan-haleh-man-khoobeh',
+            'https://www.radiojavan.com/videos/video/erfan-haleh-man-khoobeh',
             'https://www.radiojavan.com/videos/video/sasy-saaghiya',
-            'https://www.radiojavan.com/videos/video/arash-omg-(ft-snoop-dogg)',*/
+            'https://www.radiojavan.com/videos/video/arash-omg-(ft-snoop-dogg)',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_TRACK => [
         'valid' => [
-            /*'https://www.radiojavan.com/mp3s/mp3/Ali-Lohrasbi-Cheshmamo-Mibandam?start=82271&index=4',
+            'https://www.radiojavan.com/mp3s/mp3/Ali-Lohrasbi-Cheshmamo-Mibandam?start=82271&index=4',
             'https://www.radiojavan.com/mp3s/mp3/Masoud-Sadeghloo-Mehdi-Hosseini-Akhare-Shab',
-            'https://www.radiojavan.com/mp3s/mp3/EpiCure-Bache-Balas',*/
+            'https://www.radiojavan.com/mp3s/mp3/EpiCure-Bache-Balas',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_PODCAST => [
         'valid' => [
-            /*'https://www.radiojavan.com/podcasts/podcast/Abo-Atash-100',
+            'https://www.radiojavan.com/podcasts/podcast/Abo-Atash-100',
             'https://www.radiojavan.com/podcasts/podcast/Abo-Atash-99',
-            'https://www.radiojavan.com/podcasts/podcast/DeepLight-12',*/
+            'https://www.radiojavan.com/podcasts/podcast/DeepLight-12',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_PLAYLIST => [
         'valid' => [
-            /*'https://www.radiojavan.com/playlists/playlist/mp3/f33149cedcc2',
+            'https://www.radiojavan.com/playlists/playlist/mp3/f33149cedcc2',
             'https://www.radiojavan.com/playlists/playlist/mp3/0fa40da912e4',
-            'https://www.radiojavan.com/playlists/playlist/mp3/fb5953b84c68'*/
+            'https://www.radiojavan.com/playlists/playlist/mp3/fb5953b84c68'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::SHAZAM_PROFILE => [
         'valid' => [
-            /*'https://www.shazam.com/ru/artist/43050120/james-bay',
+            'https://www.shazam.com/ru/artist/43050120/james-bay',
             'https://www.shazam.com/ru/artist/23197/shakira',
             'https://www.shazam.com/ru/artist/40286441/selena-gomez',
             'https://www.shazam.com/ru/artist/1',
-            'https://www.shazam.com/artist/1'*/
+            'https://www.shazam.com/artist/1'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::SHAZAM_TRACK => [
         'valid' => [
-            /*'https://www.shazam.com/ru/track/44961393/apologize',
+            'https://www.shazam.com/ru/track/44961393/apologize',
             'https://www.shazam.com/track/44961393/apologize',
-            'https://www.shazam.com/track/44961393'*/
+            'https://www.shazam.com/track/44961393'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::REVERBNATION_TRACK => [
         'valid' => [
-            /*'https://www.reverbnation.com/bewareofdarkness/song/19703145-howl',
+            'https://www.reverbnation.com/bewareofdarkness/song/19703145-howl',
             'https://www.reverbnation.com/fortyfeettall/song/16354948-not-so-nice',
-            'https://www.reverbnation.com/undecidedfuture6/song/27986235-atlas-avenue-by-undecided-future',*/
+            'https://www.reverbnation.com/undecidedfuture6/song/27986235-atlas-avenue-by-undecided-future',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::REVERBNATION_VIDEO => [
         'valid' => [
-            /*'https://www.reverbnation.com/collection/259-rock-steady?autoplay_video_id=14288845',
+            'https://www.reverbnation.com/collection/259-rock-steady?autoplay_video_id=14288845',
             'https://www.reverbnation.com/collection/259-rock-steady',
-            'https://www.reverbnation.com/artist/video/15589615',*/
+            'https://www.reverbnation.com/artist/video/15589615',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::REVERBNATION_PROFILE => [
         'valid' => [
-            /*'https://www.reverbnation.com/zuli7',
+            'https://www.reverbnation.com/zuli7',
             'https://www.reverbnation.com/apple',
-            'https://www.reverbnation.com/cat',*/
+            'https://www.reverbnation.com/cat',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::TUMBLR_PROFILE => [
         'valid' => [
-            /*'http://selenadaily.tumblr.com/',
+            'http://selenadaily.tumblr.com/',
             'http://this-is-nba.tumblr.com/',
-            'http://this-day-in-baseball.tumblr.com/',*/
+            'http://this-day-in-baseball.tumblr.com/',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::TUMBLR_POST => [
         'valid' => [
-            /*'http://this-is-nba.tumblr.com/post/172717227322',
+            'http://this-is-nba.tumblr.com/post/172717227322',
             'http://this-day-in-baseball.tumblr.com/image/172824116749',
-            'https://katereader19.tumblr.com/post/140735435141/100-%D0%BB%D1%83%D1%87%D1%88%D0%B8%D1%85-%D0%B4%D0%B5%D1%82%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%BE%D0%B2-%D0%B2%D1%81%D0%B5%D1%85-%D0%B2%D1%80%D0%B5%D0%BC%D1%91%D0%BD-%D0%B8-%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BE%D0%B2'*/
+            'https://katereader19.tumblr.com/post/140735435141/100-%D0%BB%D1%83%D1%87%D1%88%D0%B8%D1%85-%D0%B4%D0%B5%D1%82%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%BE%D0%B2-%D0%B2%D1%81%D0%B5%D1%85-%D0%B2%D1%80%D0%B5%D0%BC%D1%91%D0%BD-%D0%B8-%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BE%D0%B2'
         ],
         'invalid' => []
     ],
     LinkTypeHelper::VIMEO_CHANNEL => [
         'valid' => [
-            /*'https://vimeo.com/channels/bmwnation',
+            'https://vimeo.com/channels/bmwnation',
             'https://vimeo.com/user20655776',
             'https://vimeo.com/groups/bmwracing',
             'https://vimeo.com/groups/92985',
             'https://vimeo.com/bmwmission',
-            'https://vimeo.com/bmwm',*/
+            'https://vimeo.com/bmwm',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::VIMEO_VIDEO => [
         'valid' => [
-            /*'https://vimeo.com/80216302',
+            'https://vimeo.com/80216302',
             'https://vimeo.com/83483411',
-            'https://vimeo.com/32452292',*/
+            'https://vimeo.com/32452292',
         ],
         'invalid' => []
     ],
@@ -1354,30 +1359,30 @@ return [
     ],
     LinkTypeHelper::GOOGLE_PROFILE => [
         'valid' => [
-            /*'https://plus.google.com/+BBCRussian',
+            'https://plus.google.com/+BBCRussian',
             'https://plus.google.com/108855660368769362180',
             'https://plus.google.com/+lifehacker_ru',
             'https://plus.google.com/+цензорнет',
             'https://plus.google.com/communities/110022555221895619727',
-            'https://plus.google.com/communities/109782861737541516410',*/
+            'https://plus.google.com/communities/109782861737541516410',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::GOOGLE_POST => [
         'valid' => [
-            /*'https://plus.google.com/+BBCRussian/posts/68tfiXXaMUy',
+            'https://plus.google.com/+BBCRussian/posts/68tfiXXaMUy',
             'https://plus.google.com/+tsnua/posts/hPLCj7HqCNx',
             'https://plus.google.com/107904342617542713870/posts/gw5skdz2AJM',
-            'https://plus.google.com/u/0/107904342617542713870/posts/gw5skdz2AJM',*/
+            'https://plus.google.com/u/0/107904342617542713870/posts/gw5skdz2AJM',
         ],
         'invalid' => []
     ],
     LinkTypeHelper::TWITCH_CHANNEL => [
         'valid' => [
-            /*'https://www.twitch.tv/reynad27',
+            'https://www.twitch.tv/reynad27',
             'https://www.twitch.tv/simcopter1',
             'https://player.twitch.tv/?channel=lpl1',
-            'https://www.twitch.tv/lpl1'*/
+            'https://www.twitch.tv/lpl1'
         ],
         'invalid' => []
     ]
