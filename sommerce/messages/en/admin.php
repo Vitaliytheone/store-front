@@ -213,10 +213,10 @@ return [
     'settings.general_title' => 'General',
     'settings.general_logo' => 'Logo',
     'settings.general_logo_upload' => 'Upload logo',
-    'settings.general_logo_limits' => 'Image available types: jpg, png or gif. Maximum image size 3 Mb.',
+    'settings.general_logo_limits' => 'Image available types: jpg, png or gif. Maximum image size {fileSize}',
     'settings.general_favicon' => 'Favicon',
     'settings.general_favicon_upload' => 'Upload favicon',
-    'settings.general_favicon_limits' => 'Image available types: jpg, png, gif or ico. Maximum image size 0.5 Mb',
+    'settings.general_favicon_limits' => 'Image available types: jpg, png, gif or ico. Maximum image {fileSize}',
     'settings.general_store_name' => 'Store name',
     'settings.general_store_name_placeholder' => 'Input store name',
     'settings.general_timezone' => 'Timezone',
@@ -285,6 +285,8 @@ return [
     'settings.payments_coinpayments_guide_2_1' => 'Generate IPN secret',
     'settings.payments_coinpayments_guide_2_2' => 'Apply changes',
     'settings.payments_coinpayments_guide_3' => 'Enter your Merchant ID and IPN Secret bellow',
+
+    'settings.payments_payment_description' => 'Order #{order_id}',
 
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',

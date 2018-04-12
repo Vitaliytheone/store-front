@@ -86,7 +86,7 @@ class Paypal extends BasePayment {
                 'return' => SiteHelper::hostUrl() . '/cart',
                 'notify_url' => SiteHelper::hostUrl() . '/paypalstandart/' . $checkout->id,
                 'cancel_return' => SiteHelper::hostUrl() . '/cart',
-                'item_name' => static::getDescription($email),
+                'item_name' => static::getDescription($checkout->id),
                 'amount' => $amount,
             ]);
         } else {
@@ -111,7 +111,7 @@ class Paypal extends BasePayment {
 
 
             $item = [
-                'L_PAYMENTREQUEST_0_NAME0' => static::getDescription($email),
+                'L_PAYMENTREQUEST_0_NAME0' => static::getDescription($checkout->id),
                 'L_PAYMENTREQUEST_0_AMT0' => $amount,
                 'L_PAYMENTREQUEST_0_QTY0' => '1'
             ];

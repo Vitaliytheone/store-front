@@ -100,7 +100,7 @@ class Twocheckout extends BasePayment {
             'sid' => $accountNumber,
             'mode' => '2CO',
             'li_0_type' => 'product',
-            'li_0_name' => static::getDescription($email),
+            'li_0_name' => static::getDescription($checkout->id),
             'li_0_quantity' => 1,
             'li_0_price' => $amount,
             'li_0_tangible' => 'N',
@@ -285,6 +285,8 @@ class Twocheckout extends BasePayment {
        }
 
        if ($messageFraudStatus == self::FRAUD_STATUS_PASS) {
+           $this->_payment->status = Payments::STATUS_COMPLETED;
+           $this->_payment->save(false);
 
            return [
                'result' => 1,

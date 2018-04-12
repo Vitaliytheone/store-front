@@ -120,7 +120,7 @@ class EditPageForm extends Pages
             'visibility' => self::VISIBILITY_YES,
             'content' => '',
             'seo_title' => Yii::t('admin', 'settings.pages_seo_page_default'),
-            'seo_description' => Yii::t('admin', 'settings.pages_seo_meta_default'),
+            'seo_description' => "", /* Yii::t('admin', 'settings.pages_seo_meta_default') */
             'url' => Yii::t('admin', 'settings.pages_seo_url_default'),
         ], false);
     }

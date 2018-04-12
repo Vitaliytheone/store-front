@@ -301,12 +301,12 @@ abstract class BasePayment extends Component {
 
     /**
      * Get formatted description
-     * @param string $email
+     * @param string $orderId
      * @return string
      */
-    protected static function getDescription($email)
+    protected static function getDescription($orderId)
     {
-        return 'Balance recharge (' . $email . ')';
+        return Yii::t('admin', 'settings.payments_payment_description', ['order_id' => $orderId]);
     }
 
     /**
