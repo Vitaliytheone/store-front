@@ -217,7 +217,7 @@ class CartSearch {
             static::$_items[] = [
                 'id' => $item['id'],
                 'key' => $item['key'],
-                'price' => PriceHelper::prepare($package['price'], $this->_store->currency),
+                'price' => $package['price'],
                 'package_id' => $item['package_id'],
                 'created' => $item['created_at'],
                 'package_quantity' => $package['quantity'],
