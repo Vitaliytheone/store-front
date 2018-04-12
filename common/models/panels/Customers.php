@@ -494,6 +494,11 @@ class Customers extends ActiveRecord
         return CustomerHelper::hasStores($this->id);
     }
 
+    public function hasProlongedPanels()
+    {
+
+    }
+
     /**
      * Activate stores feature status
      */
