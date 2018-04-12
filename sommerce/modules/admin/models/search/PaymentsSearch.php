@@ -128,37 +128,46 @@ class PaymentsSearch extends Model
             $this->_queryActiveFilters['method']['where'] = $filter;
         }
 
-        $this->_applyFilters($query, $this->_queryActiveFilters);
-
+        // Search
         $searchQuery = trim($this->query);
-        if ($searchQuery === '') {
-            return $this->_dataProvider;
-        }
 
-        // For payment ids lists
-        // Example query string: 23, 432, 33, 42
-        $queryList = array_unique(explode(',', str_replace(' ', '', $searchQuery)));
-        $paymentIds = [];
-        foreach ($queryList as $item) {
-            if (ctype_digit($item)) {
-                $paymentIds[] = $item;
+        if ($searchQuery !== '') {
+
+            // For payment ids lists
+            // Example query string: 23, 432, 33, 42
+            $queryList = array_unique(explode(',', str_replace(' ', '', $searchQuery)));
+            $paymentIds = [];
+            foreach ($queryList as $item) {
+                if (ctype_digit($item)) {
+                    $paymentIds[] = $item;
+                }
             }
+
+            // Searches:
+            // 1. Strong by `customer` if $searchQuery : valid Email
+            // 2. Strong by payment id
+            // 3. Soft by `memo`
+            $searchFilter = null;
+            $emailValidator = new EmailValidator();
+
+            $searchFilter = null;
+
+            if ($emailValidator->validate($searchQuery)) {
+                $searchFilter = ['customer' => $searchQuery];
+            } elseif ($paymentIds) {
+                $searchFilter = ['in', 'id', $paymentIds];
+            }
+
+            $searchFilter = [
+                'or',
+                ['like', 'memo', $searchQuery],
+                $searchFilter,
+            ];
+
+            $this->_queryActiveFilters['search']['where'] = $searchFilter;
         }
 
-        // Searches:
-        // 1. Strong by `customer` if $searchQuery : valid Email
-        // 2. Strong by payment id
-        // 3. Soft by `memo`
-        $searchFilter = null;
-        $emailValidator = new EmailValidator();
-
-        if ($emailValidator->validate($searchQuery)) {
-            $query->andFilterWhere(['customer' => $searchQuery]);
-        } elseif ($paymentIds) {
-            $query->andFilterWhere(['in', 'id', $paymentIds]);
-        }
-
-        $query->orFilterWhere(['like', 'memo', $searchQuery]);
+        $this->_applyFilters($query, $this->_queryActiveFilters);
 
         return $this->_dataProvider;
     }
@@ -169,12 +178,15 @@ class PaymentsSearch extends Model
      */
     public function countsByStatus()
     {
-        $counts = (new Query())
+        $countsQuery = (new Query())
             ->select(['status', 'COUNT(*) count'])
             ->from($this->_paymentsTable)
             ->groupBy(['status'])
-            ->indexBy('status')
-            ->all();
+            ->indexBy('status');
+
+        $this->_applyFilters($countsQuery, $this->_queryActiveFilters, ['status']);
+
+        $counts = $countsQuery->all();
 
         return $counts;
     }
