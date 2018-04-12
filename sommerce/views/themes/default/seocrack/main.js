@@ -58,7 +58,20 @@
         var $owlCarousel = $('.owl-carousel');
         
         $owlCarousel.each(function () {
-            var $t = $(this);
+            var $t = $(this),
+                effectSlide = $t.data('owl-effect');
+          
+          	switch(effectSlide){
+            	case 'slide':
+                	effectSlide = 'slideOutDown';
+                break;
+                case 'fade':
+                	effectSlide = 'fadeOut';
+                break;
+                default: 
+                	effectSlide = 'slideOutDown';
+                break;
+            };
             
             $t.owlCarousel({
                 rtl: isRTL,
@@ -68,6 +81,7 @@
                 autoplay: checkData( $t.data('owl-autoplay'), true ),
                 smartSpeed: checkData( $t.data('owl-speed'), 1200 ),
                 autoplaySpeed: 1600,
+              	animateOut: effectSlide,
                 mouseDrag: checkData( $t.data('owl-drag'), true ),
                 nav: checkData( $t.data('owl-nav'), false ),
                 navText: ['<i class="fa fa-long-arrow-left"></i>', '<i class="fa fa-long-arrow-right"></i>'],
@@ -75,6 +89,7 @@
                 responsive: checkData( $t.data('owl-responsive'), {} )
             });
         });
+      
 
         /* ------------------------------------------------------------------------- *
          * BACK TO TOP BUTTON

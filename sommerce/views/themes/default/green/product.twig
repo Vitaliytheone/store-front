@@ -10,21 +10,21 @@
 </div>
 <!-- Page Header Section End -->
 
-{% if product.content %}
-    <!-- Content Start -->
-    <div class="contact--info pd--100-0-40">
-        <div class="container">
-            <div class="row">
-                <!-- Contact Info Item Start -->
-                <div class="contact--info-item">
-                    {{ product.content }}
-                </div>
-                <!-- Contact Info Item End -->
+
+<!-- Content Start -->
+<div class="contact--info pd--100-0-40">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Info Item Start -->
+            <div class="contact--info-item">
+                {{ product.content }}
             </div>
+            <!-- Contact Info Item End -->
         </div>
     </div>
-    <!-- Content End -->
-{% endif %}
+</div>
+<!-- Content End -->
+
 
 <!-- Pricing Section Start -->
 <div id="pricing" class="pd--100-0-0">
@@ -32,34 +32,36 @@
 
         <div class="row AdjustRow">
             {% for package in product.packages %}
-                <div class="col-md-3 col-xs-6">
-                    <!-- Pricing Item Start -->
-                    <div class="pricing--item {% if package.best  %} best-product {% endif %}">
-                        <div class="pricing--header bg--color-theme">
-                            <h3 class="h4">{{ package.name}}</h3>
-                        </div>
-
-                        <div class="pricing--price">
-                            <p class="price-text"><strong><sup>$</sup>{{ package.price }}</strong>/{{ package.quantity }}</p>
-                        </div>
-
-                        <div class="pricing--features">
-                            <ul class="nav">
-                                {% for property in product.properties %}
-                                    <li>{{ property }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-
-                        <div class="pricing--footer">
-                            <a href="{{ package.button.url_buy_now }}" class="btn btn-default">{{ lang('product.button.buy_now') }}</a>
-                        </div>
+            <div class="col-md-3 col-xs-6">
+                <!-- Pricing Item Start -->
+                <div class="pricing--item {% if package.best  %} best-product {% endif %}">
+                    <div class="pricing--header bg--color-theme">
+                        <h3 class="h4">{{ package.name}}</h3>
                     </div>
-                    <!-- Pricing Item End -->
+
+                    <div class="pricing--price">
+                        <p class="price-text"><strong>{{ package.price|money }}</strong>/{{ package.quantity }}
+                        </p>
+                    </div>
+
+                    <div class="pricing--features">
+                        <ul class="nav">
+                            {% for property in product.properties %}
+                            <li>{{ property }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="pricing--footer">
+                        <a href="{{ package.button.url_buy_now }}" class="btn btn-default">{{
+                            lang('product.button.buy_now') }}</a>
+                    </div>
                 </div>
-                {% if loop.index is divisible by(4) %}
-                    <div class="clearfix"></div>
-                {% endif %}
+                <!-- Pricing Item End -->
+            </div>
+            {% if loop.index is divisible by(4) %}
+            <div class="clearfix"></div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

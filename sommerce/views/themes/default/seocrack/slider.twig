@@ -2,7 +2,9 @@
     <!-- Banner Section Start -->
     <div class="banner--section bg--color-theme">
         <!-- Banner Slider Start -->
-        <div class="banner--slider owl-carousel pd--100-0-70" data-owl-options='{"animateIn": {{ block.slider.settings.effect }}, autoplay": "true", autoplayTimeout: {{ block.slider.settings.interval }}, autoplayHoverPause:true,  }' data-owl-dots="true">
+        <div class="banner--slider owl-carousel pd--100-0-70" 
+             data-owl-effect="{{ block.slider.settings.effect }}"
+             data-owl-dots="true">
             {% for slide in block.slider.data %}
                 <!-- Banner Item Start -->
                 <div class="banner--item">

@@ -91,12 +91,26 @@
         var $owlCarousel = $('.owl-carousel');
 
         $owlCarousel.each(function () {
-            var $t = $(this);
+            var $t = $(this),
+                effectSlide = $t.data('owl-effect');
+          
+          	switch(effectSlide){
+            	case 'slide':
+                	effectSlide = 'slideOutDown';
+                break;
+                case 'fade':
+                	effectSlide = 'fadeOut';
+                break;
+                default: 
+                	effectSlide = 'slideOutDown';
+                break;
+            };
 
             $t.owlCarousel({
                 items: checkData( $t.data('owl-items'), 1 ),
                 margin: checkData( $t.data('owl-margin'), 0 ),
                 loop: checkData( $t.data('owl-loop'), true ),
+              	animateOut: effectSlide,
                 smartSpeed: 1200,
                 autoplaySpeed: 800,
                 autoplay: checkData( $t.data('owl-autoplay'), true ),

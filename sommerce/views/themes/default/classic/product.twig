@@ -20,7 +20,7 @@
                     <div class="product-card text-center {% if package.best  %} best-product {% endif %}">
                         <div class="product-quantity">{{ package.quantity }}</div>
                         <h3 class="product-title">{{ package.name }}</h3>
-                        <div class="product-price">{{ package.price }}</div>
+                        <div class="product-price">{{ package.price|money }}</div>
                         <div class="product-properties">
                             <ul>
                                 {% for property in product.properties %}
