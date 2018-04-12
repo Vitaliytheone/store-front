@@ -81,8 +81,6 @@ class CustomerHelper {
      */
     public static function hasStores($customerId)
     {
-        $count = static::getStores($customerId);
-
         return (bool)array_sum(static::getStores($customerId));
     }
 }

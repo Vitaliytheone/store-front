@@ -69,6 +69,7 @@ class Payments extends ActiveRecord
             [['ip', 'transaction_id'], 'string', 'max' => 300],
             [['mode'], 'default', 'value' => static::MODE_AUTO],
             [['options'], 'string'],
+            [['verification_code'], 'string', 'max' => 64],
         ];
     }
 
@@ -92,6 +93,7 @@ class Payments extends ActiveRecord
             'response' => Yii::t('app', 'Response'),
             'mode' => Yii::t('app', 'Mode'),
             'options' => Yii::t('app', 'Options'),
+            'verification_code' => Yii::t('app', 'Verification code'),
         ];
     }
 
