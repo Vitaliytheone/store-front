@@ -3,6 +3,8 @@
 namespace sommerce\components\validators;
 
 use common\models\store\Packages;
+use common\models\stores\LinkValidations;
+use common\models\stores\Stores;
 use sommerce\helpers\LinkTypeHelper;
 use yii\helpers\ArrayHelper;
 use yii\validators\Validator;
@@ -34,7 +36,13 @@ class LinkValidator extends Validator
         if (empty($model->$attribute)) {
             return false;
         }
+
+        /**
+         * @var Packages $package
+         * @var Stores $store
+         */
         $package = $model->getPackage();
+        $store = $model->getStore();
 
         if (!$package) {
             return false;
@@ -49,7 +57,10 @@ class LinkValidator extends Validator
             return true;
         }
 
+
         if (!$validator->run($link)) {
+            LinkValidations::add($link, $package->link_type, $store->id);
+
             $model->addError($attribute, $validator->getError());
 
             return false;

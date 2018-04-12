@@ -66,6 +66,15 @@ class AddToCartForm extends Model {
     }
 
     /**
+     * Get store
+     * @return Stores
+     */
+    public function getStore()
+    {
+        return $this->_store;
+    }
+
+    /**
      * Save to cart
      * @return bool
      */
