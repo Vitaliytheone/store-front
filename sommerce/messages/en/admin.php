@@ -286,7 +286,7 @@ return [
     'settings.payments_coinpayments_guide_2_2' => 'Apply changes',
     'settings.payments_coinpayments_guide_3' => 'Enter your Merchant ID and IPN Secret bellow',
 
-    'settings.payments_payment_description' => 'Order #{{order_id}}',
+    'settings.payments_payment_description' => 'Order #{order_id}',
 
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
