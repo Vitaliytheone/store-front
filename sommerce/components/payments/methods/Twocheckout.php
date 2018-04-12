@@ -285,6 +285,8 @@ class Twocheckout extends BasePayment {
        }
 
        if ($messageFraudStatus == self::FRAUD_STATUS_PASS) {
+           $this->_payment->status = Payments::STATUS_COMPLETED;
+           $this->_payment->save(false);
 
            return [
                'result' => 1,
