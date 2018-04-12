@@ -11,11 +11,47 @@ class PinterestProfile extends BaseLinkValidator
             $this->link = 'pinterest.com/' . $this->link;
         }
 
-        $this->link = "https://www." . parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+        $this->link = parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+
+        $domainFirst = [
+            'www\.',
+            'in\.',
+            'pl\.',
+            'ru\.',
+            'tr\.',
+            'it\.',
+            'nl\.',
+            'fi\.',
+            'ro\.',
+            'au\.',
+            'fr\.',
+            'es\.',
+            'za\.',
+            'id\.',
+        ];
+
+        $domainFirst = "(" . implode(")|(", $domainFirst) . ")";
+
+        if (preg_match("/^" . $domainFirst . "/", $this->link)) {
+            $this->link = "https://" . $this->link;
+        } else {
+            $this->link = "https://www." . $this->link;
+        }
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.pinterest\.com\/([a-z0-9\.\_-]+)(\/)?$/i", $this->link))) {
+        $domainZero = [
+            'com',
+            'co\.uk',
+            'pt',
+            'fr',
+            'ca',
+            'com\.au',
+        ];
+
+        $domainZero = "(" . implode(")|(", $domainZero) . ")";
+
+        if (!(preg_match("/https\:\/\/(" . $domainFirst . ")pinterest\.(" . $domainZero . ")\/([a-z0-9\.\_-]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid pinterest profile link.');
 
             return false;

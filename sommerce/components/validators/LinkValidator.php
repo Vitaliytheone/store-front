@@ -3,6 +3,9 @@
 namespace sommerce\components\validators;
 
 use common\models\store\Packages;
+use common\models\stores\LinkValidations;
+use common\models\stores\Stores;
+use sommerce\helpers\LinkTypeHelper;
 use yii\helpers\ArrayHelper;
 use yii\validators\Validator;
 
@@ -33,7 +36,13 @@ class LinkValidator extends Validator
         if (empty($model->$attribute)) {
             return false;
         }
+
+        /**
+         * @var Packages $package
+         * @var Stores $store
+         */
         $package = $model->getPackage();
+        $store = $model->getStore();
 
         if (!$package) {
             return false;
@@ -48,7 +57,10 @@ class LinkValidator extends Validator
             return true;
         }
 
+
         if (!$validator->run($link)) {
+            LinkValidations::add($link, $package->link_type, $store->id);
+
             $model->addError($attribute, $validator->getError());
 
             return false;
@@ -102,49 +114,49 @@ class LinkValidator extends Validator
     public function getValidatorNames()
     {
         return [
-            1 => 'InstagramProfile',
-            2 => 'InstagramPost',
-            3 => 'FacebookPage',
-            4 => 'FacebookProfile',
-            5 => 'FacebookPost',
-            6 => 'FacebookGroup',
-            7 => 'FacebookEvent',
-            8 => 'TwitterProfile',
-            9 => 'TwitterPost',
-            10 => 'YoutubeChannel',
-            11 => 'YoutubeVideo',
-            12 => 'VinePicture',
-            13 => 'VineProfile',
-            14 => 'PinterestProfile',
-            15 => 'PinterestBoard',
-            16 => 'PinterestPost',
-            17 => 'SoundcloudTrack',
-            18 => 'SoundcloudProfile',
-            19 => 'MixcloudTrack',
-            20 => 'MixcloudProfile',
-            21 => 'PeriscopeProfile',
-            22 => 'PeriscopeVideo',
-            25 => 'LinkedinProfile',
-            26 => 'LinkedinGroup',
-            27 => 'LinkedinPost',
-            28 => 'RadiojavanVideo',
-            29 => 'RadiojavanTrack',
-            30 => 'RadiojavanPodcast',
-            31 => 'RadiojavanPlaylist',
-            32 => 'ShazamProfile',
-            33 => 'ShazamTrack',
-            34 => 'ReverbnationTrack',
-            35 => 'ReverbnationVideo',
-            36 => 'ReverbnationProfile',
-            37 => 'TumblrProfile',
-            38 => 'TumblrPost',
-            39 => 'VimeoChannel',
-            40 => 'VimeoVideo',
-            41 => 'FyuseProfile',
-            42 => 'FyusePicture',
-            43 => 'GoogleProfile',
-            44 => 'GooglePost',
-            45 => 'TwitchChannel'
+            LinkTypeHelper::INSTAGRAM_PROFILE => 'InstagramProfile',
+            LinkTypeHelper::INSTAGRAM_POST => 'InstagramPost',
+            LinkTypeHelper::FACEBOOK_PAGE => 'FacebookPage',
+            LinkTypeHelper::FACEBOOK_PROFILE => 'FacebookProfile',
+            LinkTypeHelper::FACEBOOK_POST => 'FacebookPost',
+            LinkTypeHelper::FACEBOOK_GROUP => 'FacebookGroup',
+            LinkTypeHelper::FACEBOOK_EVENT => 'FacebookEvent',
+            LinkTypeHelper::TWITTER_PROFILE => 'TwitterProfile',
+            LinkTypeHelper::TWITTER_POST => 'TwitterPost',
+            LinkTypeHelper::YOUTUBE_CHANNEL => 'YoutubeChannel',
+            LinkTypeHelper::YOUTUBE_VIDEO => 'YoutubeVideo',
+            LinkTypeHelper::VINE_PICTURE => 'VinePicture',
+            LinkTypeHelper::VINE_PROFILE => 'VineProfile',
+            LinkTypeHelper::PINTEREST_PROFILE => 'PinterestProfile',
+            LinkTypeHelper::PINTEREST_BOARD => 'PinterestBoard',
+            LinkTypeHelper::PINTEREST_POST => 'PinterestPost',
+            LinkTypeHelper::SOUNDCLOUD_TRACK => 'SoundcloudTrack',
+            LinkTypeHelper::SOUNDCLOUD_PROFILE => 'SoundcloudProfile',
+            LinkTypeHelper::MIXCLOUD_TRACK => 'MixcloudTrack',
+            LinkTypeHelper::MIXCLOUD_PROFILE => 'MixcloudProfile',
+            LinkTypeHelper::PERISCOPE_PROFILE => 'PeriscopeProfile',
+            LinkTypeHelper::PERISCOPE_VIDEO => 'PeriscopeVideo',
+            LinkTypeHelper::LINKEDIN_PROFILE => 'LinkedinProfile',
+            LinkTypeHelper::LINKEDIN_GROUP => 'LinkedinGroup',
+            LinkTypeHelper::LINKEDIN_POST => 'LinkedinPost',
+            LinkTypeHelper::RADIOJAVAN_VIDEO => 'RadiojavanVideo',
+            LinkTypeHelper::RADIOJAVAN_TRACK => 'RadiojavanTrack',
+            LinkTypeHelper::RADIOJAVAN_PODCAST => 'RadiojavanPodcast',
+            LinkTypeHelper::RADIOJAVAN_PLAYLIST => 'RadiojavanPlaylist',
+            LinkTypeHelper::SHAZAM_PROFILE => 'ShazamProfile',
+            LinkTypeHelper::SHAZAM_TRACK => 'ShazamTrack',
+            LinkTypeHelper::REVERBNATION_TRACK => 'ReverbnationTrack',
+            LinkTypeHelper::REVERBNATION_VIDEO => 'ReverbnationVideo',
+            LinkTypeHelper::REVERBNATION_PROFILE => 'ReverbnationProfile',
+            LinkTypeHelper::TUMBLR_PROFILE => 'TumblrProfile',
+            LinkTypeHelper::TUMBLR_POST => 'TumblrPost',
+            LinkTypeHelper::VIMEO_CHANNEL => 'VimeoChannel',
+            LinkTypeHelper::VIMEO_VIDEO => 'VimeoVideo',
+            LinkTypeHelper::FYUSE_PROFILE => 'FyuseProfile',
+            LinkTypeHelper::FYUSE_PICTURE => 'FyusePicture',
+            LinkTypeHelper::GOOGLE_PROFILE => 'GoogleProfile',
+            LinkTypeHelper::GOOGLE_POST => 'GooglePost',
+            LinkTypeHelper::TWITCH_CHANNEL => 'TwitchChannel'
         ];
     }
 }

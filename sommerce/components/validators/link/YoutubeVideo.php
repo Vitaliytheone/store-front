@@ -11,7 +11,13 @@ class YoutubeVideo extends BaseLinkValidator
 
         $getStr = parse_url($this->link, PHP_URL_QUERY);
         parse_str($getStr, $getParams);
-        $this->link = "https://www." . parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+        $this->link = parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+
+        if (FALSE !== strpos($this->link, 'youtu.be')) {
+            $this->link = "https://" . $this->link;
+        } else {
+            $this->link = "https://www." . $this->link;
+        }
 
         if (!empty($getParams['v'])) {
             $this->link .= '?v=' . $getParams['v'];
@@ -19,10 +25,10 @@ class YoutubeVideo extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.youtube\.com\/video\/([a-z0-9-_]+)(\/)?$/i", $this->link))
-            && !(preg_match("/https\:\/\/www\.youtube\.com\/embed\/([a-z0-9-_]+)(\/)?$/i", $this->link))
-            && !(preg_match("/https\:\/\/www\.youtu\.be\/([a-z0-9-_]+)(\/)?$/i", $this->link))
-            && !(preg_match("/https\:\/\/www\.youtube\.com\/watch\?v\=([a-z0-9-_]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.youtube\.([a-z]+)\/video\/([a-z0-9-_]+)(\/)?$/i", $this->link))
+            && !(preg_match("/https\:\/\/www\.youtube\.([a-z]+)\/embed\/([a-z0-9-_]+)(\/)?$/i", $this->link))
+            && !(preg_match("/https\:\/\/youtu\.be\/([a-z0-9-_]+)(\/)?$/i", $this->link))
+            && !(preg_match("/https\:\/\/www\.youtube\.([a-z]+)\/watch\?v\=([a-z0-9-_]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid youtube video link.');
 
             return false;

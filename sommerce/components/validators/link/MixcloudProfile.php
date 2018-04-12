@@ -15,7 +15,7 @@ class MixcloudProfile extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.mixcloud\.com\/([a-z0-9\_]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.mixcloud\.com\/([^\/]+)(\/)?$/uis", $this->link))) {
             $this->addError('Invalid mixcloud profile link.');
 
             return false;

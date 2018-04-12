@@ -11,7 +11,8 @@ class ReverbnationVideo extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.reverbnation\.com\/artist\/video\/([0-9]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.reverbnation\.com\/artist\/video\/([0-9]+)(\/)?$/i", $this->link))
+            && !(preg_match("/https\:\/\/www\.reverbnation\.com\/collection\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid reverbnation video link.');
 
             return false;

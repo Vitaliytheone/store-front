@@ -11,7 +11,7 @@ class MixcloudTrack extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.mixcloud\.com\/([a-z0-9\_]+)\/([a-z0-9\_-]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.mixcloud\.com\/([^\/]+)\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid mixcloud track link.');
 
             return false;

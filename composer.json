@@ -25,11 +25,11 @@
         "php-http/curl-client": "^1.7",
         "guzzlehttp/guzzle": "^6.3",
         "guzzlehttp/psr7": "^1.4",
-        "yiisoft/yii2": "^2.0.15"
+        "yiisoft/yii2": "^2.0.15",
+        "yiisoft/yii2-gii": "2.0.6"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
-        "yiisoft/yii2-gii": "~2.0.0",
         "yiisoft/yii2-faker": "~2.0.0",
 
         "codeception/base": "^2.2.3",

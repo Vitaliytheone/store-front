@@ -8,6 +8,7 @@ class InstagramProfile extends BaseLinkValidator
     public function validate()
     {
         if (FALSE === strpos($this->link, '/')) {
+            $this->link = ltrim($this->link, '@');
             $this->link = 'instagram.com/' . $this->link;
         }
 

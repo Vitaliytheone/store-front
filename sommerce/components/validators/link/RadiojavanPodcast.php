@@ -11,7 +11,7 @@ class RadiojavanPodcast extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/podcasts\/podcast\/([a-z0-9\-]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/podcasts\/podcast\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid radiojavan podcast link.');
 
             return false;

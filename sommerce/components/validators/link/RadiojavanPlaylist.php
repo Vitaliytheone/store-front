@@ -11,7 +11,7 @@ class RadiojavanPlaylist extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/playlists\/playlist\/mp3\/([a-z0-9\-]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/playlists\/playlist\/mp3\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid radiojavan playlist link.');
 
             return false;

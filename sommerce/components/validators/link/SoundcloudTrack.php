@@ -19,11 +19,11 @@ class SoundcloudTrack extends BaseLinkValidator
             $this->addError('Invalid soundcloud track link.');
 
             return false;
-        } /*else if (!($content = $this->checkUrl($this->link))) {
+        } else if (!($content = $this->checkUrl($this->link, true))) {
             $this->addError('Invalid soundcloud track link1.');
 
             return false;
-        }*/
+        }
 
         return true;
     }

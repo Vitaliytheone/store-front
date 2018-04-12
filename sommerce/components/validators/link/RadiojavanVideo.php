@@ -11,7 +11,7 @@ class RadiojavanVideo extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/videos\/video\/([a-z0-9\-]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/videos\/video\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid radiojavan video link.');
 
             return false;

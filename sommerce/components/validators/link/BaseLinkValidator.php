@@ -74,20 +74,38 @@ abstract class BaseLinkValidator {
 
     /**
      * Check link
-     * @param $link
+     * @param string $link
+     * @param boolean $ssl
      * @return string|null
      */
-    protected function checkUrl($link)
+    protected function checkUrl($link, $ssl = false)
     {
+        $proxy = null;
+
+        if (!empty(PROXY_CONFIG['link_type']['ip']) && !empty(PROXY_CONFIG['link_type']['port'])) {
+            $proxy = PROXY_CONFIG['link_type']['ip'] . ':' . PROXY_CONFIG['link_type']['port'];
+        }
+
         $ch = curl_init($link);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['link_type']['ip'] . ':' . PROXY_CONFIG['link_type']['port']);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+
+        if ($ssl) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+        if (!empty($proxy)) {
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12',
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -103,6 +121,8 @@ abstract class BaseLinkValidator {
 
         // System errors
         if (curl_errno($ch) != 0 && empty($result)) {
+            $error = curl_error($ch);
+            var_dump($error); exit();
             curl_close($ch);
             return null;
         }

@@ -15,7 +15,7 @@ class PeriscopeProfile extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.periscope\.tv\/([a-z0-9\_]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.(periscope|pscp)\.tv\/([a-z0-9\_]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid periscope profile link.');
 
             return false;
