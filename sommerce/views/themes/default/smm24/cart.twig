@@ -13,7 +13,7 @@
 
         {% if error %}
             <!-- Alert Start -->
-            <div class="checkout--info pbottom--30">
+            <div class="checkout--info checkout--info-error pbottom--30">
                 <div class="title">
                     <p><i class="fa fa-info-circle"></i> {{ error_message }}</p>
                 </div>
@@ -46,7 +46,7 @@
                             <td data-title="{{ lang('cart.package') }}">{{ item.name }}</td>
                             <td data-title="{{ lang('cart.details') }}">{{ item.link }}</td>
                             <td data-title="{{ lang('cart.quantity') }}">{{ item.quantity }}</td>
-                            <td data-title="{{ lang('cart.price') }}">{{ item.price }}</td>
+                            <td data-title="{{ lang('cart.price') }}">{{ item.price|money }}</td>
                             <td data-title="{{ lang('cart.remove') }}"><a href="/delete/{{ item.key }}"><i class="fa fa-close"></i></a></td>
                         </tr>
                     {% endfor %}
@@ -69,7 +69,7 @@
                             <tbody>
                             <tr>
                                 <td>{{ lang('cart.total_price') }}</td>
-                                <td>{{ cart.total_price }}</td>
+                                <td>{{ cart.total_price|money }}</td>
                             </tr>
                             </tbody>
                         </table>

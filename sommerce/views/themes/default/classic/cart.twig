@@ -36,7 +36,7 @@
                                         {{ item.link }}
                                     </td>
                                     <td>
-                                        {{ item.price }}
+                                        {{ item.price|money }}
                                     </td>
                                     <td class="text-right">
                                         <a href="/delete/{{ item.key }}" class="btn btn-xs btn-default">
@@ -57,7 +57,7 @@
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">
                 <div class="cart bg-white cart-total">
-                    <strong>{{ lang('cart.total_price') }} </strong><div class="cart-total__price pull-right">{{ cart.total_price }}</div>
+                    <strong>{{ lang('cart.total_price') }} </strong><div class="cart-total__price pull-right">{{ cart.total_price|money }}</div>
                 </div>
             </div>
         </div>

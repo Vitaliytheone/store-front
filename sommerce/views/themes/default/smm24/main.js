@@ -55,7 +55,20 @@
         var $owlCarousel = $('.owl-carousel');
         
         $owlCarousel.each(function () {
-            var $t = $(this);
+            var $t = $(this),
+                effectSlide = $t.data('owl-effect');
+          
+          	switch(effectSlide){
+            	case 'slide':
+                	effectSlide = 'slideOutDown';
+                break;
+                case 'fade':
+                	effectSlide = 'fadeOut';
+                break;
+                default: 
+                	effectSlide = 'slideOutDown';
+                break;
+            };
             
             $t.owlCarousel({
                 items: checkData( $t.data('owl-items'), 1 ),
@@ -64,6 +77,7 @@
                 autoplay: checkData( $t.data('owl-autoplay'), true ),
                 smartSpeed: checkData( $t.data('owl-speed'), 1200 ),
                 autoplaySpeed: 1600,
+              	animateOut: effectSlide,
                 mouseDrag: checkData( $t.data('owl-drag'), true ),
                 nav: checkData( $t.data('owl-nav'), false ),
                 navText: ['', ''],

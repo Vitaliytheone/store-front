@@ -36,7 +36,7 @@
                             <td data-title="{{ lang('cart.package') }}">{{ item.name }}</td>
                             <td data-title="{{ lang('cart.details') }}">{{ item.link }}</td>
                             <td data-title="{{ lang('cart.quantity') }}">{{ item.quantity }}</td>
-                            <td data-title="{{ lang('cart.price') }}">{{ item.price }}</td>
+                            <td data-title="{{ lang('cart.price') }}">{{ item.price|money }}</td>
                             <td data-title="{{ lang('cart.remove') }}"><a href="/delete/{{ item.key }}"><i class="fa fa-close"></i></a></td>
                         </tr>
                     {% endfor %}
@@ -60,7 +60,7 @@
                                 <tbody>
                                 <tr>
                                     <td>{{ lang('cart.total_price') }}</td>
-                                    <td>{{ cart.total_price }}</td>
+                                    <td>{{ cart.total_price|money }}</td>
                                 </tr>
                                 </tbody>
                             </table>
