@@ -1050,7 +1050,11 @@ return [
         'invalid' => []
     ],
     LinkTypeHelper::PINTEREST_BOARD => [
-        'valid' => [],
+        'valid' => [
+            /*'https://ru.pinterest.com/apple/disney-quotes/',
+            'https://ru.pinterest.com/samsung/products-i-love/',
+            'https://ru.pinterest.com/panasonic/gifts-under-25/'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::PINTEREST_POST => [
@@ -1157,91 +1161,187 @@ return [
         'invalid' => []
     ],
     LinkTypeHelper::SOUNDCLOUD_TRACK => [
-        'valid' => [],
+        'valid' => [
+            /*'https://soundcloud.com/paulmccartney/wonderful-christmastime-3',
+            'https://soundcloud.com/paulmccartney/take-it-away-remixed-2015',
+            'https://soundcloud.com/gufslim/oxxxymiron-sutoloka-2017'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::SOUNDCLOUD_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://soundcloud.com/paulmccartney',
+            'https://soundcloud.com/rapup',
+            'https://soundcloud.com/latinpowermusic',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::MIXCLOUD_TRACK => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.mixcloud.com/dieselinthemix/diesel-live-the-stache-moshaholics-tour-2018/',
+            'https://www.mixcloud.com/l%C3%A1o-n%C3%A1o-t%C3%BAc/nst-bay-ph%C3%B2ng-h%E1%BB%91i-h%E1%BA%ADn-trong-anh-deezay-c%C3%B2-muzik-t%E1%BA%B7ng-b%C3%A9-ngoc-anh-3/',
+            'https://www.mixcloud.com/DJDimsa/ebony-house-jazzy-soulful-house-mix-2018/',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::MIXCLOUD_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.mixcloud.com/apple/',
+            'https://www.mixcloud.com/cat/',
+            'https://www.mixcloud.com/bongduday9698/',
+            'https://www.mixcloud.com/l%C3%A1o-n%C3%A1o-t%C3%BAc/',
+            'https://www.mixcloud.com/%D0%B8%D0%B2%D0%B0%D0%BD-%D0%BF%D1%87%D0%B5%D0%BB%D0%B8%D0%BD%D1%86%D0%B5%D0%B2',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::PERISCOPE_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.pscp.tv/TheGamingExplorer',
+            'https://www.pscp.tv/WildEarth',
+            'https://www.pscp.tv/offtheball',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::PERISCOPE_VIDEO => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.pscp.tv/TheGamingExplorer/1nAJERkeRpnxL',
+            'https://www.pscp.tv/WildEarth/1DXGyXOXakyKM',
+            'https://www.pscp.tv/offtheball/1lDGLajlgvLJm',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::LINKEDIN_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.linkedin.com/in/roksana-b%C5%82%C4%99dowska-9ba3b5105',
+            'https://www.linkedin.com/in/3ginger/',
+            'https://www.linkedin.com/in/alexander-bystrov-0724b1114/'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::LINKEDIN_GROUP => [
-        'valid' => [],
+        'valid' => [
+            'https://www.linkedin.com/groups/1483367/profile',
+            'https://www.linkedin.com/groups/42140/profile',
+            'https://www.linkedin.com/groups/121615/profile'
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::LINKEDIN_POST => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.linkedin.com/pulse/how-display-more-than-3-views-sharepoint-list-vikas-kottari?trk=v-feed',
+            'https://www.linkedin.com/pulse/4-lessons-from-facebook-communications-crisis-barbara-mahe?trk=v-feed',
+            'https://www.linkedin.com/pulse/need-know-sparks-infotech?trk=v-feed',
+            'https://www.linkedin.com/feed/update/urn:li:activity:6389140631201083393',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_VIDEO => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.radiojavan.com/videos/video/erfan-haleh-man-khoobeh',
+            'https://www.radiojavan.com/videos/video/sasy-saaghiya',
+            'https://www.radiojavan.com/videos/video/arash-omg-(ft-snoop-dogg)',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_TRACK => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.radiojavan.com/mp3s/mp3/Ali-Lohrasbi-Cheshmamo-Mibandam?start=82271&index=4',
+            'https://www.radiojavan.com/mp3s/mp3/Masoud-Sadeghloo-Mehdi-Hosseini-Akhare-Shab',
+            'https://www.radiojavan.com/mp3s/mp3/EpiCure-Bache-Balas',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_PODCAST => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.radiojavan.com/podcasts/podcast/Abo-Atash-100',
+            'https://www.radiojavan.com/podcasts/podcast/Abo-Atash-99',
+            'https://www.radiojavan.com/podcasts/podcast/DeepLight-12',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::RADIOJAVAN_PLAYLIST => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.radiojavan.com/playlists/playlist/mp3/f33149cedcc2',
+            'https://www.radiojavan.com/playlists/playlist/mp3/0fa40da912e4',
+            'https://www.radiojavan.com/playlists/playlist/mp3/fb5953b84c68'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::SHAZAM_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.shazam.com/ru/artist/43050120/james-bay',
+            'https://www.shazam.com/ru/artist/23197/shakira',
+            'https://www.shazam.com/ru/artist/40286441/selena-gomez',
+            'https://www.shazam.com/ru/artist/1',
+            'https://www.shazam.com/artist/1'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::SHAZAM_TRACK => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.shazam.com/ru/track/44961393/apologize',
+            'https://www.shazam.com/track/44961393/apologize',
+            'https://www.shazam.com/track/44961393'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::REVERBNATION_TRACK => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.reverbnation.com/bewareofdarkness/song/19703145-howl',
+            'https://www.reverbnation.com/fortyfeettall/song/16354948-not-so-nice',
+            'https://www.reverbnation.com/undecidedfuture6/song/27986235-atlas-avenue-by-undecided-future',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::REVERBNATION_VIDEO => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.reverbnation.com/collection/259-rock-steady?autoplay_video_id=14288845',
+            'https://www.reverbnation.com/collection/259-rock-steady',
+            'https://www.reverbnation.com/artist/video/15589615',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::REVERBNATION_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.reverbnation.com/zuli7',
+            'https://www.reverbnation.com/apple',
+            'https://www.reverbnation.com/cat',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::TUMBLR_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'http://selenadaily.tumblr.com/',
+            'http://this-is-nba.tumblr.com/',
+            'http://this-day-in-baseball.tumblr.com/',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::TUMBLR_POST => [
-        'valid' => [],
+        'valid' => [
+            /*'http://this-is-nba.tumblr.com/post/172717227322',
+            'http://this-day-in-baseball.tumblr.com/image/172824116749',
+            'https://katereader19.tumblr.com/post/140735435141/100-%D0%BB%D1%83%D1%87%D1%88%D0%B8%D1%85-%D0%B4%D0%B5%D1%82%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%BE%D0%B2-%D0%B2%D1%81%D0%B5%D1%85-%D0%B2%D1%80%D0%B5%D0%BC%D1%91%D0%BD-%D0%B8-%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BE%D0%B2'*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::VIMEO_CHANNEL => [
-        'valid' => [],
+        'valid' => [
+            /*'https://vimeo.com/channels/bmwnation',
+            'https://vimeo.com/user20655776',
+            'https://vimeo.com/groups/bmwracing',
+            'https://vimeo.com/groups/92985',
+            'https://vimeo.com/bmwmission',
+            'https://vimeo.com/bmwm',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::VIMEO_VIDEO => [
-        'valid' => [],
+        'valid' => [
+            /*'https://vimeo.com/80216302',
+            'https://vimeo.com/83483411',
+            'https://vimeo.com/32452292',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::FYUSE_PROFILE => [
@@ -1253,15 +1353,32 @@ return [
         'invalid' => []
     ],
     LinkTypeHelper::GOOGLE_PROFILE => [
-        'valid' => [],
+        'valid' => [
+            /*'https://plus.google.com/+BBCRussian',
+            'https://plus.google.com/108855660368769362180',
+            'https://plus.google.com/+lifehacker_ru',
+            'https://plus.google.com/+цензорнет',
+            'https://plus.google.com/communities/110022555221895619727',
+            'https://plus.google.com/communities/109782861737541516410',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::GOOGLE_POST => [
-        'valid' => [],
+        'valid' => [
+            /*'https://plus.google.com/+BBCRussian/posts/68tfiXXaMUy',
+            'https://plus.google.com/+tsnua/posts/hPLCj7HqCNx',
+            'https://plus.google.com/107904342617542713870/posts/gw5skdz2AJM',
+            'https://plus.google.com/u/0/107904342617542713870/posts/gw5skdz2AJM',*/
+        ],
         'invalid' => []
     ],
     LinkTypeHelper::TWITCH_CHANNEL => [
-        'valid' => [],
+        'valid' => [
+            /*'https://www.twitch.tv/reynad27',
+            'https://www.twitch.tv/simcopter1',
+            'https://player.twitch.tv/?channel=lpl1',
+            'https://www.twitch.tv/lpl1'*/
+        ],
         'invalid' => []
     ]
 ];

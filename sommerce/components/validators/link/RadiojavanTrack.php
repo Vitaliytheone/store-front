@@ -11,7 +11,7 @@ class RadiojavanTrack extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/mp3s\/mp3\/([a-z0-9\-]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.radiojavan\.com\/mp3s\/mp3\/([^\/]+)(\/)?$/i", $this->link))) {
             $this->addError('Invalid radiojavan track link.');
 
             return false;

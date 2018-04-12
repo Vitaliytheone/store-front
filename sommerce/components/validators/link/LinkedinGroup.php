@@ -13,13 +13,13 @@ class LinkedinGroup extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.linkedin\.com\/groups\/([0-9]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.linkedin\.com\/groups\/([0-9]+)(\/profile)?(\/)?$/i", $this->link))) {
             $this->addError('Invalid LinkedIn group link.');
 
             return false;
-        }/* else if (!($content = $this->checkUrl($this->link))) {
+        } else if (!($content = $this->checkUrl($this->link))) {
             $this->addError('Invalid Google+ post link.');
-        }*/
+        }
 
         return true;
     }

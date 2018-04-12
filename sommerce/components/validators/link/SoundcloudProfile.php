@@ -15,15 +15,15 @@ class SoundcloudProfile extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/soundcloud\.com\/([a-z0-9\_-]+)(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/soundcloud\.com\/([a-z0-9\_-]+)(\/)?$/i", $this->link, $match))) {
             $this->addError('Invalid soundcloud profile link.');
 
             return false;
-        } /*else if (!($content = $this->checkUrl($this->link))) {
+        } else if (!($content = $this->checkUrl($this->link, true))) {
             $this->addError('Invalid soundcloud profile link.');
 
             return false;
-        }*/
+        }
 
         return true;
     }

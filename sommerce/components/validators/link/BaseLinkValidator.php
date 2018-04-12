@@ -74,10 +74,11 @@ abstract class BaseLinkValidator {
 
     /**
      * Check link
-     * @param $link
+     * @param string $link
+     * @param boolean $ssl
      * @return string|null
      */
-    protected function checkUrl($link)
+    protected function checkUrl($link, $ssl = false)
     {
         $proxy = null;
 
@@ -90,10 +91,16 @@ abstract class BaseLinkValidator {
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
+
+        if ($ssl) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
 
         if (!empty($proxy)) {
             curl_setopt($ch, CURLOPT_PROXY, $proxy);
@@ -115,6 +122,7 @@ abstract class BaseLinkValidator {
         // System errors
         if (curl_errno($ch) != 0 && empty($result)) {
             $error = curl_error($ch);
+            var_dump($error); exit();
             curl_close($ch);
             return null;
         }
