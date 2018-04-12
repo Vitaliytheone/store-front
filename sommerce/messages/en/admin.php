@@ -216,7 +216,7 @@ return [
     'settings.general_logo_limits' => 'Image available types: jpg, png or gif. Maximum image size {fileSize}',
     'settings.general_favicon' => 'Favicon',
     'settings.general_favicon_upload' => 'Upload favicon',
-    'settings.general_favicon_limits' => 'Image available types: jpg, png, gif or ico. Maximum image {fileSize}',
+    'settings.general_favicon_limits' => 'Image available types: jpg, png, gif or ico. Maximum image size {fileSize}',
     'settings.general_store_name' => 'Store name',
     'settings.general_store_name_placeholder' => 'Input store name',
     'settings.general_timezone' => 'Timezone',
