@@ -7,6 +7,7 @@ use my\helpers\CustomerHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use DateTime;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%customers}}".
@@ -494,9 +495,16 @@ class Customers extends ActiveRecord
         return CustomerHelper::hasStores($this->id);
     }
 
+
+
     public function hasProlongedPanels()
     {
-
+        $panels = (new Query())
+            ->select(`pid`)
+            ->from(Project::tableName())
+            ->andWhere([])
+            ->andWhere('`expired`-`date` > :period', [':period' => 45*24*60*60])
+            ->count();
     }
 
     /**
