@@ -3,9 +3,11 @@
 namespace my\controllers;
 
 use my\components\bitcoin\Bitcoin;
+use my\helpers\PaymentsHelper;
 use my\mail\mailers\PaypalFailed;
 use my\mail\mailers\PaypalPassed;
 use my\mail\mailers\PaypalReviewed;
+use my\mail\mailers\PaypalVerificationNeeded;
 use my\mail\mailers\TwoCheckoutFailed;
 use my\mail\mailers\TwoCheckoutPass;
 use my\mail\mailers\TwoCheckoutReview;
@@ -108,24 +110,42 @@ class PaymentsController extends CustomController
 			            if ($getTransactionDetailsStatus == 'completed' && $getTransactionDetailsStatus == $doExpressCheckoutPaymentStatus) {
 			            	$hash = PaymentHash::findOne(['hash' => $response['PAYMENTINFO_0_TRANSACTIONID']]);
 			            	if ($hash === null) {
-			            		if ($checkoutDetails['AMT'] == $payments->amount) {
-	                				if ($GetTransactionDetails['CURRENCYCODE'] == 'USD') {
+                                if ($checkoutDetails['AMT'] == $payments->amount) {
 
-                                        $payments->complete();
+                                    if ($GetTransactionDetails['CURRENCYCODE'] == 'USD') {
 
-	                					$paymentHashModel = new PaymentHash();
-										$paymentHashModel->load(array('PaymentHash' => array(
-											'hash' => $response['PAYMENTINFO_0_TRANSACTIONID'],
-										)));
-										$paymentHashModel->save();
+	                				    $payerId = $GetTransactionDetails['PAYERID'];
+	                				    $payerEmail = $GetTransactionDetails['EMAIL'];
 
-                                        // Send email notification
-                                        $mail = new PaypalPassed([
-                                            'payment' => $payments,
-                                            'customer' => $invoice->customer
-                                        ]);
-                                        $mail->send();
+                                        if (PaymentsHelper::validatePaypalPayment($payments, $payerId, $payerEmail)) {
 
+                                            $payments->complete();
+
+                                            $paymentHashModel = new PaymentHash();
+                                            $paymentHashModel->load(array('PaymentHash' => array(
+                                                'hash' => $response['PAYMENTINFO_0_TRANSACTIONID'],
+                                            )));
+                                            $paymentHashModel->save();
+
+                                            // Send email notification
+                                            $mail = new PaypalPassed([
+                                                'payment' => $payments,
+                                                'customer' => $invoice->customer
+                                            ]);
+                                            $mail->send();
+                                        } else {
+
+                                            $code = $payments->verification($payerId, $payerEmail);
+
+                                            if ($code && filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {
+                                                $mail = new PaypalVerificationNeeded([
+                                                    'payment' => $payments,
+                                                    'email' => $payerEmail,
+                                                    'code' => $code
+                                                ]);
+                                                $mail->send();
+                                            }
+                                        }
 	                				} else {
 	                					$this->Errorlogging("bad currency", "Paypalexpress", $paymentSignature);
 	                				}
@@ -176,7 +196,14 @@ class PaymentsController extends CustomController
 		} else {
 			$this->Errorlogging("no data", "Paypalexpress", $paymentSignature);
 		}
-		return $this->redirect('/invoices',302);
+
+		$redirectUrl = '/invoices';
+
+		if (!empty($invoice) && $invoice instanceof Invoices) {
+            $redirectUrl .= '/' . $invoice->code;
+        }
+
+		return $this->redirect($redirectUrl,302);
     }
 
     public function actionWebmoney()

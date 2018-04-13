@@ -146,6 +146,26 @@ class Invoices extends ActiveRecord
     }
 
     /**
+     * Get is this invoice payment payer verification needed
+     * @return bool
+     */
+    public function isVerificationWait()
+    {
+        if (static::STATUS_UNPAID == $this->status) {
+            $payment = Payments::findOne([
+                'iid' => $this->id,
+                'status' => Payments::STATUS_VERIFICATION
+            ]);
+
+            if ($payment) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get invoice status depended of payment status
      * @return int
      */

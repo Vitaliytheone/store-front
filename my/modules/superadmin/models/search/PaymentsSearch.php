@@ -214,6 +214,9 @@ class PaymentsSearch extends Payments {
             Payments::STATUS_COMPLETED => Yii::t('app/superadmin', 'payments.list.navs_completed', [
                 'count' => $this->count(Payments::STATUS_COMPLETED)
             ]),
+            Payments::STATUS_VERIFICATION => Yii::t('app/superadmin', 'payments.list.navs_verification', [
+                'count' => $this->count(Payments::STATUS_VERIFICATION)
+            ]),
             Payments::STATUS_WAIT => Yii::t('app/superadmin', 'payments.list.navs_wait', [
                 'count' => $this->count(Payments::STATUS_WAIT)
             ]),
