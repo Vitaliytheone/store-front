@@ -179,6 +179,7 @@ return [
     'payments.list.navs_review' => 'Review ({count})',
     'payments.list.navs_refunded' => 'Refunded ({count})',
     'payments.list.navs_expired' => 'Expired ({count})',
+    'payments.list.navs_verification' => 'Verification ({count})',
     'payments.list.search' => 'Search payments',
     'payments.list.column_id' => 'ID',
     'payments.list.column_invoice' => 'Invoice',
