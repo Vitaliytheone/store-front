@@ -373,11 +373,7 @@ class Invoices extends ActiveRecord
     {
         $notes = [];
 
-        if ($this->isVerificationWait()) {
-            $notes = [
-                PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_verify_note'),
-            ];
-        } elseif ($this->isWait()) {
+        if ($this->isWait()) {
             $notes = [
                 PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_hold'),
                 PaymentGateway::METHOD_TWO_CHECKOUT => Content::getContent('2checkout_review'),
