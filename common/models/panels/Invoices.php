@@ -146,6 +146,26 @@ class Invoices extends ActiveRecord
     }
 
     /**
+     * Get is this invoice payment payer verification needed
+     * @return bool
+     */
+    public function isVerificationWait()
+    {
+        if (static::STATUS_UNPAID == $this->status) {
+            $payment = Payments::findOne([
+                'iid' => $this->id,
+                'status' => Payments::STATUS_VERIFICATION
+            ]);
+
+            if ($payment) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get invoice status depended of payment status
      * @return int
      */
@@ -353,7 +373,11 @@ class Invoices extends ActiveRecord
     {
         $notes = [];
 
-        if ($this->isWait()) {
+        if ($this->isVerificationWait()) {
+            $notes = [
+                PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_verify_note'),
+            ];
+        } elseif ($this->isWait()) {
             $notes = [
                 PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_hold'),
                 PaymentGateway::METHOD_TWO_CHECKOUT => Content::getContent('2checkout_review'),

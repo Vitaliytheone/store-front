@@ -29,6 +29,8 @@ use common\models\panels\Payments;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use my\helpers\PaymentsHelper;
+use common\models\panels\MyVerifiedPaypal;
 
 /**
  * Class SiteController
@@ -50,7 +52,7 @@ class SiteController extends CustomController
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'error', 'redirect'],
+                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -286,7 +288,7 @@ class SiteController extends CustomController
      * @return string|\yii\web\Response
      */
     public function actionSettings()
-    {   
+    {
         $this->view->title = Yii::t('app', 'pages.title.settings');
 
         $customer = Customers::findOne(Yii::$app->user->identity->id);
@@ -573,8 +575,8 @@ class SiteController extends CustomController
                     switch ($_POST['pgid']) {
                         case "1":
                             $requestParams = array(
-                                'RETURNURL' => 'https://'.$_SERVER['HTTP_HOST'].'/paypalexpress/'.$paymentsModel->id,
-                                'CANCELURL' => 'https://'.$_SERVER['HTTP_HOST'].'/invoices'
+                                'RETURNURL' => 'http://'.$_SERVER['HTTP_HOST'].'/paypalexpress/'.$paymentsModel->id,
+                                'CANCELURL' => 'http://'.$_SERVER['HTTP_HOST'].'/invoices'
                             );
 
                             $orderParams = array(
@@ -602,7 +604,7 @@ class SiteController extends CustomController
                             $response = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $items);
 
                             if (is_array($response) && $response['ACK'] == 'Success') {
-                               return $paypal->checkout($response['TOKEN']);
+                                return $paypal->checkout($response['TOKEN']);
                             }
 
                             break;
@@ -717,5 +719,26 @@ class SiteController extends CustomController
         } else {
             return $this->redirect('/');
         }
+    }
+
+    /**
+     * Payer payment verification
+     * @param $code
+     * @return Response
+     */
+    public function actionPayerVerify($code)
+    {
+        $payment = Payments::findOne([
+            'verification_code' => $code,
+            'status' => Payments::STATUS_VERIFICATION,
+        ]);
+
+        if (!$payment || !$payment->invoice) {
+            return $this->redirect('/invoices');
+        }
+
+        $payment->verified();
+
+        return $this->redirect('/invoices/' . $payment->invoice->code);
     }
 }
