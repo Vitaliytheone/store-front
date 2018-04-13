@@ -14,7 +14,7 @@ class PaypalVerificationNeeded extends BaseMailer {
 
     public $code = 'paypal_verify';
 
-    public $now = true; // TODO:: Remove it to default for production
+    public $now = false;
 
     public $unique = false;
 
@@ -27,18 +27,14 @@ class PaypalVerificationNeeded extends BaseMailer {
         $payment = ArrayHelper::getValue($this->options, 'payment');
         $email = ArrayHelper::getValue($this->options, 'email');
 
-        error_log($email);
-
-        $__email = 'alex.fatyeev@yandex.ru';
-
         $this->notificationOptions = [
             'item' => Notifications::ITEM_PAYMENTS,
             'item_id' => $payment->id
         ];
 
+        $this->to = $email;
         $this->message = ArrayHelper::getValue($this->notificationEmail, 'message');
         $this->subject = ArrayHelper::getValue($this->notificationEmail, 'subject');
-        $this->to = $__email;
 
         $verificationUrl = Url::toRoute('/payer-verify/' . $payment->verification_code, true);
 
@@ -47,7 +43,5 @@ class PaypalVerificationNeeded extends BaseMailer {
         ], [
             $verificationUrl
         ], $this->message);
-
-        $this->message = $this->message . '|||' . $email;
     }
 }
