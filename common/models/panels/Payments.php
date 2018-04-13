@@ -283,6 +283,14 @@ class Payments extends ActiveRecord
 
                 }
             break;
+
+            case 'makeAccepted':
+                if (in_array($this->type, [PaymentGateway::METHOD_PAYPAL]) &&
+                    $this->status == self::STATUS_VERIFICATION
+                ) {
+                    return true;
+                }
+            break;
         }
         return false;
     }

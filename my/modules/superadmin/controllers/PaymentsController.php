@@ -79,6 +79,21 @@ class PaymentsController extends CustomController
     }
 
     /**
+     * Accept verified payment
+     * @param $id
+     */
+    public function actionMakeAccepted($id)
+    {
+        $payment = $this->findModel($id);
+
+        if ($payment->can('makeAccepted')) {
+            $payment->complete();
+        }
+
+        $this->redirect(Url::toRoute('/payments'));
+    }
+
+    /**
      * Find payments model
      * @param $id
      * @return null|Payments
