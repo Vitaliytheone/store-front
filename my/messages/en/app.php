@@ -392,6 +392,7 @@ return [
     'payments.status.refunded' => 'Refunded',
     'payments.status.expired' => 'Expired',
     'payments.status.review' => 'Review',
+    'payments.status.verification' => 'Verification',
 
     'error.staff.can_not_change_password' => 'Can not set staff password',
     'error.staff.can_not_edit' => 'Can not edit staff',

@@ -495,16 +495,19 @@ class Customers extends ActiveRecord
         return CustomerHelper::hasStores($this->id);
     }
 
-
-
+    /**
+     * Return is customer have prolonged panels
+     * @return bool
+     */
     public function hasProlongedPanels()
     {
-        $panels = (new Query())
-            ->select(`pid`)
+        $panelsCount = (new Query())
             ->from(Project::tableName())
-            ->andWhere([])
-            ->andWhere('`expired`-`date` > :period', [':period' => 45*24*60*60])
+            ->andWhere(['cid' => $this->id])
+            ->andWhere('`expired`-`date` > :period', [':period' => 45 * 24 * 60 * 60])
             ->count();
+
+        return (bool)$panelsCount;
     }
 
     /**

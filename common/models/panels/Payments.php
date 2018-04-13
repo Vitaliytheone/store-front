@@ -4,10 +4,12 @@ namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use common\models\panels\queries\PaymentsQuery;
+use yii\base\Security;
 
 /**
  * This is the model class for table "{{%payments}}".
@@ -26,6 +28,7 @@ use common\models\panels\queries\PaymentsQuery;
  * @property integer $response
  * @property integer $mode
  * @property string $options
+ * @property string $verification_code
  *
  * @property Project $project
  * @property PaymentGateway $method
@@ -42,6 +45,7 @@ class Payments extends ActiveRecord
     const STATUS_REFUNDED = 4;
     const STATUS_EXPIRED = 5;
     const STATUS_REVIEW = 6;
+    const STATUS_VERIFICATION = 7;
 
     const MODE_MANUAL = 0;
     const MODE_AUTO = 1;
@@ -188,6 +192,7 @@ class Payments extends ActiveRecord
             static::STATUS_REFUNDED => Yii::t('app', 'payments.status.refunded'),
             static::STATUS_EXPIRED => Yii::t('app', 'payments.status.expired'),
             static::STATUS_REVIEW => Yii::t('app', 'payments.status.review'),
+            static::STATUS_VERIFICATION => Yii::t('app', 'payments.status.verification'),
         ];
     }
 
@@ -371,5 +376,53 @@ class Payments extends ActiveRecord
 
         $this->status = static::STATUS_COMPLETED;
         $this->update();
+    }
+
+    /**
+     * Mark payment as `Payer verification needed`
+     * @param $payerId string|int
+     * @param $payerEmail string
+     * @return string generated verification code
+     * @throws Exception
+     */
+    public function verification($payerId, $payerEmail)
+    {
+        $this->status = Payments::STATUS_VERIFICATION;
+
+        // Generate unique verification code
+        do {
+            $code = (new Security)->generateRandomString(32);
+        } while(static::findOne(['verification_code' => $code]));
+
+        $this->verification_code = $code;
+        $this->update(false);
+
+        if (filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {
+            $verification = new MyVerifiedPaypal();
+            $verification->payment_id = $this->id;
+            $verification->paypal_payer_id = $payerId;
+            $verification->paypal_payer_email = $payerEmail;
+            $verification->verified = MyVerifiedPaypal::STATUS_NOT_VERIFIED;
+            $verification->save(false);
+        }
+
+        return $this->verification_code;
+    }
+
+    /**
+     * Mark payment as verified and completed
+     */
+    public function verified()
+    {
+        $verify = MyVerifiedPaypal::findOne(['payment_id' => $this->id]);
+
+        if (!$verify) {
+            throw new Exception('Payment verification data not found');
+        }
+
+        $verify->verified = MyVerifiedPaypal::STATUS_VERIFIED;
+        $verify->update(false);
+
+        $this->complete();
     }
 }

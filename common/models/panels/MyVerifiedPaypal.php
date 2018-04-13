@@ -11,6 +11,7 @@ use common\models\panels\queries\MyVerifiedPaypalQuery;
  * This is the model class for table "my_verified_paypal".
  *
  * @property integer $id
+ * @property integer $payment_id
  * @property string $paypal_payer_id
  * @property string $paypal_payer_email
  * @property integer $verified
@@ -19,6 +20,8 @@ use common\models\panels\queries\MyVerifiedPaypalQuery;
  */
 class MyVerifiedPaypal extends ActiveRecord
 {
+    const STATUS_VERIFIED = 1;
+    const STATUS_NOT_VERIFIED = 0;
 
     /** @inheritdoc */
     public function behaviors()
@@ -51,7 +54,7 @@ class MyVerifiedPaypal extends ActiveRecord
     public function rules()
     {
         return [
-            [['updated_at', 'created_at'], 'integer'],
+            [['payment_id', 'updated_at', 'created_at'], 'integer'],
             [['paypal_payer_id'], 'string', 'max' => 100],
             [['paypal_payer_email'], 'string', 'max' => 300],
             [['verified'], 'string', 'max' => 1],
@@ -65,8 +68,9 @@ class MyVerifiedPaypal extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'paypal_payer_id' => Yii::t('app', 'Payer id from GetTransactionDetails.PAYERID'),
-            'paypal_payer_email' => Yii::t('app', 'Payer email from GetTransactionDetails.EMAIL'),
+            'payment_id' => Yii::t('app', 'Payment ID'),
+            'paypal_payer_id' => Yii::t('app', 'Payer ID'),
+            'paypal_payer_email' => Yii::t('app', 'Payer email'),
             'verified' => Yii::t('app', 'Verified'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_at' => Yii::t('app', 'Created At'),
