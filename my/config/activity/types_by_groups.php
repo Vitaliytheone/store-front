@@ -59,7 +59,8 @@ return [
     [
         'title' => 'Payments',
         'events' => [
-            13
+            13,
+            92,
         ]
     ],
     [

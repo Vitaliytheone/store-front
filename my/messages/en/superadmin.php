@@ -202,6 +202,7 @@ return [
     'payments.list.actions_label' => 'Actions',
     'payments.list.action_details' => 'Details',
     'payments.list.action_make_active' => 'Make active',
+    'payments.list.action_make_accepted' => 'Accept payment',
 
     'pages.settings.menu_payments' => 'Payments',
     'pages.settings.menu_staff' => 'Staff',

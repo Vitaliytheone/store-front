@@ -101,6 +101,11 @@
                                     'class' => 'dropdown-item',
                                 ])?>
                             <?php endif; ?>
+                            <?php if ($payment->can('makeAccepted')) : ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_make_accepted'), Url::toRoute(['/payments/make-accepted', 'id' => $payment->id]), [
+                                    'class' => 'dropdown-item',
+                                ])?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </td>
