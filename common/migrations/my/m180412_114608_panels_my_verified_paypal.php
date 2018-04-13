@@ -31,6 +31,7 @@ class m180412_114608_panels_my_verified_paypal extends Migration
             USE `panels`;
             CREATE TABLE `my_verified_paypal` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `payment_id` int(11) unsigned NOT NULL,
               `paypal_payer_id` varchar(100) DEFAULT NULL COMMENT \'Payer id from GetTransactionDetails.PAYERID\',
               `paypal_payer_email` varchar(300) DEFAULT NULL COMMENT \'Payer email from GetTransactionDetails.EMAIL\',
               `verified` tinyint(1) NOT NULL DEFAULT \'0\',
