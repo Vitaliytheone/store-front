@@ -7,11 +7,25 @@ class TwitchChannel extends BaseLinkValidator
 {
     public function validate()
     {
-        $this->link = "https://www." . parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+        $getStr = parse_url($this->link, PHP_URL_QUERY);
+        parse_str($getStr, $getParams);
+
+        $this->link = parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);
+
+        if (preg_match("/^player\./", $this->link)) {
+            $this->link = "https://" . $this->link;
+        } else {
+            $this->link = "https://www." . $this->link;
+        }
+
+        if (!empty($getParams['channel'])) {
+            $this->link .= '?channel=' . $getParams['channel'];
+        }
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/www\.twitch\.tv\/([a-z0-9_]+)(\/)?$/iu", $this->link))) {
+        if (!(preg_match("/https\:\/\/www\.twitch\.tv\/([a-z0-9_]+)(\/)?$/iu", $this->link))
+            && !(preg_match("/https\:\/\/player\.twitch\.tv\/\?channel\=([a-z0-9_]+)(\/)?$/iu", $this->link))) {
             $this->addError('Invalid shazam track link.');
 
             return false;

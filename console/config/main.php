@@ -56,6 +56,7 @@ return [
                 ],
             ],
         ],
+        'db' => $db['db'],
     ],
     'params' => array_merge(
         require(__DIR__ . '/../../common/config/params.php'),

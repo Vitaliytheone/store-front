@@ -11,8 +11,8 @@ class TumblrPost extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/([a-z0-9-]+)\.tumblr\.com\/post\/([0-9]+)(\/)?$/i", $this->link))
-            && !(preg_match("/https\:\/\/([a-z0-9-]+)\.tumblr\.com\/post\/([0-9]+)\/.*?(\/)?$/i", $this->link))) {
+        if (!(preg_match("/https\:\/\/([a-z0-9-]+)\.tumblr\.com\/(post|image)\/([0-9]+)(\/)?$/i", $this->link))
+            && !(preg_match("/https\:\/\/([a-z0-9-]+)\.tumblr\.com\/(post|image)\/([0-9]+)\/.*?(\/)?$/i", $this->link))) {
             $this->addError('Invalid tumblr post link.');
 
             return false;

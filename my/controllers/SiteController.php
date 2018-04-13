@@ -261,7 +261,8 @@ class SiteController extends CustomController
             'customer' => $invoice->customer,
             'paymentsList' => $paymentsList,
             'payWait' => !!$payWait,
-            'pgid' => $payWait ? $payWait->type : key($paymentsList)
+            'pgid' => $payWait ? $payWait->type : key($paymentsList),
+            'verificationWait' => $invoice->isVerificationWait() ? Content::getContent('paypal_verify_note') : null,
         ]);
     }
 
@@ -722,11 +723,11 @@ class SiteController extends CustomController
     }
 
     /**
-     * Payer payment verification
+     * Paypal payer payment verification
      * @param $code
      * @return Response
      */
-    public function actionPayerVerify($code)
+    public function actionPaypalVerify($code)
     {
         $payment = Payments::findOne([
             'verification_code' => $code,

@@ -36,7 +36,7 @@ class PaypalVerificationNeeded extends BaseMailer {
         $this->message = ArrayHelper::getValue($this->notificationEmail, 'message');
         $this->subject = ArrayHelper::getValue($this->notificationEmail, 'subject');
 
-        $verificationUrl = Url::toRoute('/payer-verify/' . $payment->verification_code, true);
+        $verificationUrl = Url::toRoute('/paypal-verify/' . $payment->verification_code, true);
 
         $this->message = str_replace([
             '{{verify_link}}'

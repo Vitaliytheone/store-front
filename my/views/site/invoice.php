@@ -6,7 +6,7 @@
     /* @var $paymentsList array */
     /* @var $pgid integer */
     /* @var $payWait boolean */
-    /* @var $verificationWait bool payment verification needed */
+    /* @var $verificationWait null|string payment verification needed */
 
     use common\models\panels\Invoices;
 
@@ -63,11 +63,19 @@
                     </div>
                 </div>
 
-                <div class="row hidden" id="paymentContent">
-                    <div class="col-sm-offset-2 col-sm-8" style="margin-top: 20px">
-                        <div class="alert <?= ($payWait || $invoice->isVerificationWait() ? 'alert-warning' : 'alert-info') ?> content"></div>
+                <?php if($verificationWait): ?>
+                    <div class="row">
+                        <div class="col-sm-offset-2 col-sm-8" style="margin-top: 20px">
+                                <div class="alert alert-warning text-center"> <?= $verificationWait ?></div>
+                        </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <div class="row hidden" id="paymentContent">
+                        <div class="col-sm-offset-2 col-sm-8" style="margin-top: 20px">
+                            <div class="alert <?= ($payWait ? 'alert-warning' : 'alert-info') ?> content"></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <div class="row">
                         <div class="col-xs-12" style="margin-top: 20px">

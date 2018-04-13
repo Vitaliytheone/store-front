@@ -15,9 +15,26 @@ class VineProfile extends BaseLinkValidator
 
         $content = null;
 
-        if (!(preg_match("/https\:\/\/vine\.co\/([a-z0-9]+)(\/)?$/uis", $this->link))
-            && !(preg_match("/https\:\/\/vine\.co\/u\/([0-9]+)(\/)?$/uis", $this->link))) {
+        if (!(preg_match("/https\:\/\/vine\.co\/([a-z0-9\.]+)(\/)?$/uis", $this->link, $matchName))
+            && !(preg_match("/https\:\/\/vine\.co\/u\/([0-9]+)(\/)?$/uis", $this->link, $matchId))) {
             $this->addError('Invalid vine profile link.');
+
+            return false;
+        } else if (!(empty($matchId[1]))) {
+            $content = @file_get_contents("https://archive.vine.co/profiles/" . $matchId[1] . ".json");
+            $content = !empty($content) ? @json_decode($content, true) : null;
+
+            if (is_array($content) && !empty($content['userId'])) {
+                return true;
+            }
+
+            return false;
+        } else if (!(empty($matchName[1]))) {
+            $content = @file_get_contents("https://vine.co/api/users/profiles/vanity/" . $matchName[1]);
+            $content = !empty($content) ? @json_decode($content, true) : null;
+            if (is_array($content) && !empty($content['data']['userId'])) {
+                return true;
+            }
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
