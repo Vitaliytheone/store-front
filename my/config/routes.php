@@ -72,7 +72,7 @@ $routes = [
     'logout' => '/site/logout',
     'forgot' => '/site/restore',
     'authSuperadmin/<key:>/<token:>' => '/system/superadminauth',
-    'payer-verify/<code:>' => '/site/payer-verify',
+    'paypal-verify/<code:>' => '/site/paypal-verify',
 
     'ssl' => '/ssl/index',
     'ssl/order' => '/ssl/order',
