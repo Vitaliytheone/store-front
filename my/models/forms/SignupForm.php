@@ -71,8 +71,8 @@ class SignupForm extends Model
         $model->password_confirm = hash_hmac('sha256', $this->password_confirm, Yii::$app->params['auth_key']);
         $model->generateToken();
 
-        $model->stores = Customers::STORES_ACTIVE;
-        
+        $model->stores = Customers::BUY_DOMAIN_ACTIVE;
+
         if (ReferralHelper::has()) {
             $code = ReferralHelper::get();
             if ($code && ($referrerCompany = Customers::findOne([
