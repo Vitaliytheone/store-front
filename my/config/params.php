@@ -4,7 +4,7 @@
  * @var $proxyParams - global params from common bootstrap.php
  */
 
-$serverIp = "137.74.23.77";
+$serverIp = "54.37.92.228";
 
 return [
     'access_key' => 'z1k05^d=^8*7rwh5t1h9+(kf9+907rg=(h$mq50rf*z3(zb1^_',
