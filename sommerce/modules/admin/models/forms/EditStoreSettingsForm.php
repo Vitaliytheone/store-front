@@ -7,6 +7,7 @@ use common\models\store\Files;
 use common\models\stores\StoreAdminAuth;
 use Yii;
 use common\models\stores\Stores;
+use yii\helpers\ArrayHelper;
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
 use common\components\cdn\BaseCdn;
@@ -132,6 +133,17 @@ class EditStoreSettingsForm extends Stores
        return $this->_user;
     }
 
+    /**
+     * Return uploaded files params
+     * @return array
+     */
+    public function getUploadedFilesLimits()
+    {
+        return [
+            'logoFileSizeLimit' => Yii::$app->formatter->asShortSize(ArrayHelper::getValue(static::$_files, 'logoFile.rules.maxSize')),
+            'iconFileSizeLimit' => Yii::$app->formatter->asShortSize(ArrayHelper::getValue(static::$_files, 'faviconFile.rules.maxSize')),
+        ];
+    }
 
     /**
      * Update General settings
