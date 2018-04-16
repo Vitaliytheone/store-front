@@ -407,6 +407,12 @@ return [
     'account.message_wrong_current_password' => 'Invalid current password!',
     'account.message_password_changed' => 'Password successfully updated!',
 
-
-    'settings.blocks_page_title' => 'Blocks',
+    'component.file_validator.message' => 'File upload failed.',
+    'component.file_validator.uploadRequired' => 'Please upload a file.',
+    'component.file_validator.tooMany' => 'You can upload at most {limit, number} {limit, plural, one{file} other{files}}.',
+    'component.file_validator.tooFew' => 'You should upload at least {limit, number} {limit, plural, one{file} other{files}}.',
+    'component.file_validator.tooBig' => 'The file "{file}" is too big. Its size cannot exceed {formattedLimit}.',
+    'component.file_validator.tooSmall' => 'The file "{file}" is too small. Its size cannot be smaller than {formattedLimit}.',
+    'component.file_validator.wrongMimeType' => 'Only files with these MIME types are allowed: {mimeTypes}.',
+    'component.file_validator.wrongExtension' => 'Only files with these extensions are allowed: {extensions}.',
 ];
