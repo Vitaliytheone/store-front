@@ -125,10 +125,14 @@ class CreateProductForm extends Products
     }
 
 
-
+    /**
+     * Folter and generate URL for empty product url
+     */
     public function filterUrl()
     {
-        $url = trim($this->url);
+        $url = trim($this->url, ' ');
+        $url = trim($url, '_');
+        $url = trim($url, '-');
 
         if (!empty($url)) {
             return;
@@ -138,12 +142,13 @@ class CreateProductForm extends Products
 
         $_url = $url;
         $postfix = 1;
-        while (Pages::findOne([$_url, 'deleted' => Pages::DELETED_NO])) {
+
+        while (Pages::findOne(['url' => $_url, 'deleted' => Pages::DELETED_NO])) {
             $_url = $url . '-' . $postfix;
         };
 
-        $this->url = $url;
-        $this->save(true);
+        $this->url = $_url;
+        $this->save(false);
     }
 
     /**

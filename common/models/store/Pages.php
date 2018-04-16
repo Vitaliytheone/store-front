@@ -39,6 +39,8 @@ class Pages extends ActiveRecord
     const TEMPLATE_404 = '404';
     const TEMPLATE_CONTACT = 'contact';
 
+    const NEW_PAGE_URL_PREFIX = 'page-';
+
     /**
      * @return mixed
      */
