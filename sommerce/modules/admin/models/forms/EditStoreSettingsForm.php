@@ -24,7 +24,17 @@ class EditStoreSettingsForm extends Stores
     public $faviconFile;
     public $logoFile;
 
+    /**
+     * Uploaded files rules
+     * @var array
+     */
     private static $_files;
+
+    /**
+     * File validator custom messages
+     * @var array
+     */
+    private static $_file_validator_messages;
 
     /**
      * Current User
@@ -65,6 +75,17 @@ class EditStoreSettingsForm extends Stores
             ],
         ];
 
+        /** Init custom file validator messages  */
+        static::$_file_validator_messages = [
+            'message' => Yii::t('admin', 'component.file_validator.message'),
+            'uploadRequired' => Yii::t('admin', 'component.file_validator.uploadRequired'),
+            'tooMany' => Yii::t('admin', 'component.file_validator.toMany'),
+            'tooFew' => Yii::t('admin', 'component.file_validator.tooFew'),
+            'tooBig' => Yii::t('admin', 'component.file_validator.tooBig'),
+            'tooSmall' => Yii::t('admin', 'component.file_validator.tooSmall'),
+            'wrongMimeType' => Yii::t('admin', 'component.file_validator.wrongMimeType'),
+            'wrongExtension' => Yii::t('admin', 'component.file_validator.wrongExtension'),
+        ];
     }
 
     /**
@@ -127,7 +148,7 @@ class EditStoreSettingsForm extends Stores
                 continue;
             }
 
-            $fileValidator = new FileValidator($fileData['rules']);
+            $fileValidator = new FileValidator(array_merge($fileData['rules'], static::$_file_validator_messages));
 
             if (!$fileValidator->validate($fileInstance, $message)) {
                 $this->addError($attribute, $message);
