@@ -1,6 +1,6 @@
 <?php
 
-$serverIp = "137.74.23.77";
+$serverIp = "54.37.92.228";
 
 return [
     'config.db' => DB_CONFIG,
