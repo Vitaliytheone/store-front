@@ -154,7 +154,7 @@ $storeUrl = 'http://' . $store->domain;
                                     <label for="edit-seo__meta">
                                         <?= Yii::t('admin', 'products.product_seo_meta') ?>
                                     </label>
-                                    <textarea class="form_field__seo_description form-control" id="edit-seo__meta" rows="3" name="ProductForm[seo_description]"><?/*= Yii::t('admin', 'products.product_seo_meta_default') */?></textarea>
+                                    <textarea class="form_field__seo_description form-control" id="edit-seo__meta" rows="3" name="ProductForm[seo_description]"></textarea>
                                     <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span>
                                         <?= Yii::t('admin', 'products.product_seo_meta_chars_used') ?>
                                     </small>

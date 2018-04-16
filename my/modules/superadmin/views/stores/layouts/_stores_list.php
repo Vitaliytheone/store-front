@@ -87,7 +87,7 @@ $now = time();
                                 'class' => 'dropdown-item edit-expiry',
                                 'data-expired' => $store['expired_datetime']
                             ])?>
-                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_sign_in_as_admin'), Url::toRoute(['/stores/sign-in-as-admin', 'id' => $store['id']]), ['class' => 'dropdown-item'])?>
+                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_sign_in_as_admin'), Url::toRoute(['/stores/sign-in-as-admin', 'id' => $store['id']]), ['class' => 'dropdown-item', 'target' => '_blank'])?>
                         </div>
                     </div>
                 </td>
