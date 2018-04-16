@@ -74,7 +74,6 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
                 'store_id' => $store->id,
                 'status' => self::STATUS_ACTIVE
             ]);
-
         }
 
         return static::$_identity;
@@ -131,6 +130,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     * @param $adminId string|integer Current admin/superadmin id
      * @return string
      * @throws Exception
      */
@@ -141,8 +141,6 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
         $string2hash =  $adminId . $request->getUserIP() . $request->getHeaders()->get('host');
 
         $authKey = hash_hmac('sha256', $string2hash, static::getSalt());
-
-        error_log('Auth key :' . "[$adminId]=" . $authKey);
 
         return $authKey;
     }
