@@ -172,7 +172,7 @@ $storeUrl = 'http://' . $store->domain;
                                     <div class="input-group">
                                         <span class="input-group-addon"
                                               id="basic-addon3"><?= $storeUrl; ?>/</span>
-                                        <input type="text" class="form_field__url form-control" id="edit-seo__url" name="ProductForm[url]" value="<?= Yii::t('admin', 'products.product_seo_url_default') ?>">
+                                        <input type="text" class="form_field__url form-control" id="edit-seo__url" name="ProductForm[url]" value="">
                                     </div>
                                 </div>
 
