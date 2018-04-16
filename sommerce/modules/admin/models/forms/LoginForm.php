@@ -94,10 +94,8 @@ class LoginForm extends Model
 
         StoreAdminsHash::deleteByUser($user->id);
 
-        $hash = $user->generateAuthKey();
+        $hash = $user::generateAuthKey($user->id);
         StoreAdminsHash::setHash($user->id, $hash, StoreAdminsHash::MODE_SUPERADMIN_OFF);
-
-        Yii::$app->session->set(StoreAdminAuth::SESSION_KEY_ADMIN_HASH, $hash);
 
         if (!Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME)) {
             return false;
