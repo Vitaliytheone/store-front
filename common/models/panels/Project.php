@@ -562,10 +562,6 @@ class Project extends ActiveRecord
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $this->id, $panelDomain->getErrors(), 'project.restore.subdomain');
                 return false;
             }
-
-            if (!DnsHelper::addSubDns($this)) {
-                return false;
-            }
         } else {
             if ($panelDomain->panel_id != $this->id) {
                 $panelDomain->panel_id = $this->id;
