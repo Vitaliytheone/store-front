@@ -27,10 +27,10 @@ class SuperLoginForm extends Model
             return false;
         }
 
-        $hash = $user->generateAuthKey();
+        $hash = $user::generateAuthKey($user->getId());
+        
+        StoreAdminsHash::deleteByHash($hash);
         StoreAdminsHash::setHash($user->id, $hash, StoreAdminsHash::MODE_SUPERADMIN_ON);
-
-        Yii::$app->session->set(StoreAdminAuth::SESSION_KEY_ADMIN_HASH, $hash);
 
         if (!Yii::$app->user->login($user)) {
             return false;
