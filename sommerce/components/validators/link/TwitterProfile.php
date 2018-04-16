@@ -22,7 +22,15 @@ class TwitterProfile extends BaseLinkValidator
             $this->addError('Invalid twitter profile link.');
 
             return false;
-        } else if (!($content = $this->checkUrl($this->link))) {
+        } else if (!($content = $this->checkUrl($this->link . '?lang=en', [
+            'headers' => [
+                'Accept-Encoding' => '',
+            ]
+        ]))) {
+            $this->addError('Invalid twitter profile link.');
+
+            return false;
+        } else if (false !== strpos($content, 'This account has been suspended')) {
             $this->addError('Invalid twitter profile link.');
 
             return false;

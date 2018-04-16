@@ -19,7 +19,9 @@ class SoundcloudProfile extends BaseLinkValidator
             $this->addError('Invalid soundcloud profile link.');
 
             return false;
-        } else if (!($content = $this->checkUrl($this->link, true))) {
+        } else if (!($content = $this->checkUrl($this->link, [
+            'ssl' => true
+        ]))) {
             $this->addError('Invalid soundcloud profile link.');
 
             return false;
