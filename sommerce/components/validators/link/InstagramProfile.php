@@ -20,7 +20,15 @@ class InstagramProfile extends BaseLinkValidator
             $this->addError('Invalid instagram profile link.');
 
             return false;
-        } else if (!($content = $this->checkUrl($this->link . '?hl=en'))) {
+        } else if (!($content = $this->checkUrl($this->link . '?hl=en', [
+            'headers' => [
+                'Accept-Encoding' => '',
+            ]
+        ]))) {
+            $this->addError('Invalid instagram profile link.');
+
+            return false;
+        } else if (false !== strpos($content, '"is_private":true')) {
             $this->addError('Invalid instagram profile link.');
 
             return false;

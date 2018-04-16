@@ -1,6 +1,8 @@
 <?php
 namespace sommerce\components\validators\link;
 
+use yii\helpers\ArrayHelper;
+
 /**
  * Class BaseLinkValidator
  * @package sommerce\components\validators\link
@@ -75,12 +77,24 @@ abstract class BaseLinkValidator {
     /**
      * Check link
      * @param string $link
-     * @param boolean $ssl
+     * @param array $options
      * @return string|null
      */
-    protected function checkUrl($link, $ssl = false)
+    protected function checkUrl($link, $options = [])
     {
         $proxy = null;
+
+        $headers = [
+            'User-Agent' => 'User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12',
+            'Accept' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language' => 'Accept-Language: en-us,en;q=0.5',
+            'Accept-Encoding' => 'Accept-Encoding: gzip,deflate',
+            'Accept-Charset' => 'Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7',
+            'Keep-Alive' => 'Keep-Alive: 115',
+            'Connection' => 'Connection: keep-alive',
+        ];
+
+        $headers = ArrayHelper::merge($headers, ArrayHelper::getValue($options, 'headers', []));
 
         if (!empty(PROXY_CONFIG['link_type']['ip']) && !empty(PROXY_CONFIG['link_type']['port'])) {
             $proxy = PROXY_CONFIG['link_type']['ip'] . ':' . PROXY_CONFIG['link_type']['port'];
@@ -94,7 +108,7 @@ abstract class BaseLinkValidator {
         curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
 
-        if ($ssl) {
+        if (isset($options['ssl']) && $options['ssl']) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         } else {
@@ -106,15 +120,7 @@ abstract class BaseLinkValidator {
             curl_setopt($ch, CURLOPT_PROXY, $proxy);
         }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12',
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language: en-us,en;q=0.5',
-            'Accept-Encoding: gzip,deflate',
-            'Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-            'Keep-Alive: 115',
-            'Connection: keep-alive',
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array_values($headers));
 
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
         $result = curl_exec($ch);

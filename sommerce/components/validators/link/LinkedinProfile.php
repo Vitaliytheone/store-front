@@ -21,8 +21,8 @@ class LinkedinProfile extends BaseLinkValidator
             $this->addError('Invalid LinkedIn profile link.');
 
             return false;
-        }/* else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid Google+ post link.');
+        } /*else if (!($content = $this->checkUrl($this->link))) {
+            $this->addError('Invalid LinkedIn profile link.');
         }*/
 
         return true;

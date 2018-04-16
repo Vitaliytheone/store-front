@@ -102,6 +102,7 @@ return [
             'sandro_kristiawan',
         ],
         'invalid' => [
+            'https://www.instagram.com/13_uz',
             //'https://www.instagram.com/patrickseabra00', // Не доступна
             //'https://www.instagram.com/adelaidesimoess', // Не доступна
             //'https://www.instagram.com/pamhermes', // Не доступна
@@ -744,6 +745,7 @@ return [
             'https://twitter.com/hendersonjohn10',
         ],
         'invalid' => [
+            'https://twitter.com/testing_views',
             //'74kihana', // Не существует страницы этой
         ]
     ],
