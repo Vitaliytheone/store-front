@@ -19,11 +19,14 @@ class LinkTypeTest extends Unit
      */
     public function testLinkTypeValidation()
     {
-        Yii::$app->store->setInstance(Stores::find()->one());
+        $store = Stores::find()->one();
+
+        Yii::$app->store->setInstance($store);
 
         $linkByTypes = require_once(Yii::getAlias('@sommerce/tests/_data/link_types.php'));
 
         $model = new AddToCartForm();
+        $model->setStore($store);
 
         foreach ($linkByTypes as $linkType => $links) {
             $valid = ArrayHelper::getValue($links, 'valid');
@@ -48,7 +51,7 @@ class LinkTypeTest extends Unit
 
                 $result = $model->validate();
 
-                $this->assertFalse($result);
+                $this->assertFalse($result, 'Failed link ' . $link . ' validation in ' . $linkType . ' link type');
             }
         }
     }
