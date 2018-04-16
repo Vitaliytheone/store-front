@@ -33,8 +33,8 @@ return [
     'senderOrdersLimit' => 100,
     'getstatusOrdersLimit' => 100,
 
-    'iconFileSizeLimit' => 0.512e6, // Bytes
-    'logoFileSizeLimit' => 3.146e6, // Bytes
+    'iconFileSizeLimit' => 0.512e6,     // Bytes
+    'logoFileSizeLimit' => 2.097152e6,  // Bytes
 
     'orderLinks' => $orderLinks,
     'timezone' => $timezone,
