@@ -141,7 +141,7 @@ class StoreAdminsHash extends ActiveRecord
         }
 
 
-        $hash = $identity::getHash();
+        $hash = $identity::getHash($identity->getId());
 
         if (!$hash || !$hash instanceof StoreAdminsHash) {
             return false;
@@ -152,7 +152,6 @@ class StoreAdminsHash extends ActiveRecord
         return $hash->save(false);
     }
 
-
     /**
      * Delete hash records by user id
      * @param $adminId
@@ -162,6 +161,17 @@ class StoreAdminsHash extends ActiveRecord
         static::deleteAll([
             'admin_id' => $adminId,
             'super_user' => StoreAdmins::SUPER_USER_MODE_OFF,
+        ]);
+    }
+
+    /**
+     * Delete all hash records with same $hash
+     * @param $hash
+     */
+    public static function deleteByHash($hash)
+    {
+        static::deleteAll([
+            'hash' => $hash,
         ]);
     }
 

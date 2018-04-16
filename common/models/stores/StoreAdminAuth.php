@@ -57,7 +57,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
 
-        $hash = static::getHash();
+        $hash = static::getHash($id);
 
         if (!$hash || $hash->admin_id != $id) {
             return null;
@@ -74,7 +74,6 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
                 'store_id' => $store->id,
                 'status' => self::STATUS_ACTIVE
             ]);
-
         }
 
         return static::$_identity;
@@ -110,7 +109,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function getAuthKey()
     {
-        return static::getHash()->hash;
+        return static::getHash($this->getId())->hash;
     }
 
     /**
@@ -123,7 +122,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         $storedAuthKey = $this->getAuthKey();
-        $userAuthKey = $this->generateAuthKey();
+        $userAuthKey = static::generateAuthKey($this->getId());
         $cookieAuthKey = $authKey;
 
         return ($storedAuthKey === $cookieAuthKey) && ($storedAuthKey === $userAuthKey);
@@ -131,14 +130,15 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     * @param $adminId string|integer Current admin/superadmin id
      * @return string
      * @throws Exception
      */
-    public function generateAuthKey()
+    public static function generateAuthKey($adminId)
     {
         $request = Yii::$app->getRequest();
 
-        $string2hash = $this->username . $this->password . $this->getPrimaryKey() . $request->getUserIP() . $request->getHeaders()->get('host');
+        $string2hash =  $adminId . $request->getUserIP() . $request->getHeaders()->get('host');
 
         $authKey = hash_hmac('sha256', $string2hash, static::getSalt());
 
@@ -163,15 +163,16 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 
     /**
      * Return StoreAdmin hash object
+     * @param $adminId int|string Current admin/superadmin ID
      * @return StoreAdminsHash|null
      */
-    public static function getHash()
+    public static function getHash($adminId)
     {
         if (static::$_hash instanceof StoreAdminsHash) {
             return static::$_hash;
         }
 
-        $hash = Yii::$app->session->get(static::SESSION_KEY_ADMIN_HASH);
+        $hash = static::generateAuthKey($adminId);
 
         static::$_hash = StoreAdminsHash::findOne(['hash' => $hash]);
 
@@ -274,6 +275,6 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
      */
     public function isSuperAdmin()
     {
-        return (bool)static::getHash()->super_user;
+        return (bool)static::getHash($this->getId())->super_user;
     }
 }
