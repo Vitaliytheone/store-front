@@ -40,4 +40,5 @@ return [
     'timezone' => $timezone,
     'cdn' => $cdn,
     'currencies' => $currencies,
+    'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
 ];

@@ -29,6 +29,12 @@ $config = [
             'cookieValidationKey' => 'uKJVjhPVYpKcAirTEKcgVrcau5ZVPV0d',
             'class'	=> 'sommerce\components\MyRequest',
         ],
+        'devMailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'transport' => [
+                'class' => 'Swift_MailTransport',
+            ],
+        ],
         'user' => [
             'class' => 'sommerce\modules\admin\components\CustomUser',
             'identityClass' => 'common\models\stores\StoreAdminAuth',
@@ -121,6 +127,26 @@ $config = [
         '@bower' => '@vendor/bower-asset',
     ],
 ];
+
+if (!empty($params['devEmail'])) {
+    $config['components']['log']['targets'][] = [
+        'class' => 'yii\log\EmailTarget',
+        'mailer' => 'devMailer',
+        'levels' => ['error'],
+        'message' => [
+            'from' => ['noreply@getyourpanel.com'],
+            'to' =>  $params['devEmail'],
+            'subject' => 'Error ' . $_SERVER['HTTP_HOST'],
+        ],
+        'except' => [
+            'yii\web\HttpException:400',
+            'yii\web\HttpException:403',
+            'yii\web\HttpException:404',
+            'yii\i18n\PhpMessageSource::loadMessages',
+            'yii\i18n\PhpMessageSource::loadFallbackMessages',
+        ],
+    ];
+}
 
 
 if (YII_ENV_DEV) {
