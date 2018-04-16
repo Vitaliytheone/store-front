@@ -177,8 +177,6 @@ class DnsHelper {
     {
         $result = static::addMainDns($project);
 
-        $result = static::addSubDns($project) && $result;
-
         return $result;
     }
 
@@ -188,10 +186,6 @@ class DnsHelper {
      */
     public static function removeDns(Project $project)
     {
-        $result = static::removeMainDns($project);
-
-        $result = static::removeSubDns($project) && $result;
-
-        return $result;
+        return static::removeMainDns($project);
     }
 }
