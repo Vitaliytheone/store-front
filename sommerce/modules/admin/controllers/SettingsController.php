@@ -15,6 +15,7 @@ use sommerce\modules\admin\controllers\traits\settings\ThemesTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
+use yii\validators\FileValidator;
 use yii\web\Response;
 
 /**
@@ -61,11 +62,13 @@ class SettingsController extends CustomController
             return $this->refresh();
         }
 
+        $filesLimits = $storeForm->getUploadedFilesLimits();
+
         return $this->render('index', [
             'store' => $storeForm,
             'timezones' => Yii::$app->params['timezone'],
-            'iconFileSizeLimit' => Yii::$app->formatter->asShortSize(Yii::$app->params['iconFileSizeLimit']),
-            'logoFileSizeLimit' => Yii::$app->formatter->asShortSize(Yii::$app->params['logoFileSizeLimit']),
+            'iconFileSizeLimit' => $filesLimits['iconFileSizeLimit'],
+            'logoFileSizeLimit' => $filesLimits['logoFileSizeLimit'],
         ]);
     }
 
