@@ -119,7 +119,7 @@ class SenderComponent extends Component
         /** TODO::: UNCOMM */
 
         if ($sendOrdersIds) {
-//            Yii::$app->db->createCommand("DELETE FROM $this->_tableStoresSendOrders WHERE id IN ($sendOrdersIds)")->execute();
+            Yii::$app->db->createCommand("DELETE FROM $this->_tableStoresSendOrders WHERE id IN ($sendOrdersIds)")->execute();
         }
 
         return $sendOrders;
