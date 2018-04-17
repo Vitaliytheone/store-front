@@ -6,7 +6,7 @@ $cdn = require(__DIR__ . '/settings/cdn.php');
 $currencies = require(__DIR__ . '/settings/currency.php');
 
 return [
-    'defaultTheme' => 'classic',
+    'defaultTheme' => 'smm24',
     'default_language' => 'en',
 
     'adminEmail' => 'admin@example.com',

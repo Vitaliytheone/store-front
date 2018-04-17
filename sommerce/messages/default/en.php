@@ -47,7 +47,7 @@ return [
     'payment_result.awaiting.description' => 'Your payment awaiting!',
 
     'footer.terms' => 'Terms of Service',
-    'footer.policy' => 'Privacy policy',
+    'footer.policy' => 'Privacy Policy',
     'footer.contact' => 'Contact Us',
 
     '404.title' => '404',
