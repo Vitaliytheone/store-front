@@ -155,7 +155,7 @@ customModule.adminProductEdit = {
 
                 var itemTemplate = _.template(
                     '<li class="m-nav__item" data-id="<%- product_id %>">' +
-                    '<a href="" class="m-nav__link" data-toggle="modal" data-target="#copyPropertiesModal">' +
+                    '<a href="" class="m-nav__link">' +
                     '<span class="m-nav__link-text"><%- product_title %></span>' +
                     '</a>' +
                     '</li>'
@@ -176,11 +176,22 @@ customModule.adminProductEdit = {
                     }));
                 });
 
-                $modalPropertiesCopy.on('shown.bs.modal', function (event){
-                    var selectedItem = $(event.relatedTarget),
+                $productsPropertiesList.find('li a').on('click', function (event) {
+                    event.preventDefault();
+
+                    var selectedItem = $(event.currentTarget),
                         productId =  selectedItem.closest('li').data('id');
 
                     $btnSubmitCopy.data('id', productId);
+
+                    // Show or not modal if present product properties
+                    if ($formFields.properties.find('li').length === 0) {
+                        $btnSubmitCopy.click();
+                    } else {
+                        $modalPropertiesCopy.modal('show');
+                    }
+
+
                 });
 
                 // Copy properties
@@ -223,7 +234,7 @@ customModule.adminProductEdit = {
                         description : '',
                         properties : [],
                         visibility : 1,
-                        color : '#FFFFFF',
+                        color : null,
                         url : '',
                         seo_title : '',
                         seo_description : '',

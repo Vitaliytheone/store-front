@@ -54,7 +54,7 @@ $storeUrl = 'http://' . $store->domain;
                     <div class="form-group">
                         <label><?= Yii::t('admin', 'products.product_color') ?></label>
                         <div class="product-color__wrap">
-                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="#ffffff" name="ProductForm[color]">
+                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="" name="ProductForm[color]">
                         </div>
                     </div>
 
