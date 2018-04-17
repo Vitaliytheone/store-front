@@ -13,6 +13,7 @@ return [
     'layouts.header.referral' => 'Referrals',
     'layouts.header.child_panels' => 'Child panels',
     'layouts.header.stores' => 'Stores',
+    'layouts.header.beta' => 'Beta',
 
     'pages.title.domains' => 'Domains',
     'pages.title.staff' => 'Staff',

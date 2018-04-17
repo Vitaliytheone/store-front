@@ -32,7 +32,7 @@
                     </li>
                     <?php if ($user && $user->can('stores')) : ?>
                     <li>
-                        <?= Html::a('<i class="fa fa-shopping-cart fa-fw"></i> ' . Yii::t('app', 'layouts.header.stores'), '/stores') ?>
+                        <?= Html::a('<i class="fa fa-shopping-cart fa-fw"></i> ' . Yii::t('app', 'layouts.header.stores') . ' <sup class="beta-label">' . Yii::t('app', 'layouts.header.beta') . '</sup>', '/stores') ?>
                     </li>
                     <?php endif; ?>
                     <li>
