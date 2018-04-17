@@ -224,7 +224,7 @@ class StoreAdmins extends ActiveRecord
      */
     public function getAllowedControllers()
     {
-        $controllers =$this->getAllowedControllersNames();
+        $controllers = $this->getAllowedControllersNames();
 
         array_walk($controllers, function (&$controller){
             $controller = self::MODULE_PREFIX . '/' . $controller;

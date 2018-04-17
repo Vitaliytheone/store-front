@@ -7,6 +7,7 @@ use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
+use my\helpers\OrderHelper;
 use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
 use Yii;
@@ -226,6 +227,10 @@ class OrderStoreForm extends Model
         ]);
 
         if (!$order->save()) {
+            return false;
+        }
+
+        if (!OrderHelper::store($order)) {
             return false;
         }
 
