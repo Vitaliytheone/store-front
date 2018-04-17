@@ -820,6 +820,21 @@ textarea.form-control {
     background-color: transparent;
 }
 
+.best-product:before{
+    content: 'BEST';
+    display: block;
+    font-size: 12px;
+    height: 24px;
+    position: absolute;
+    right: 9px;
+    top: -10px;
+    background-color: #fd8469;
+    width: 60px;
+    color: #fff;
+    z-index: 5;
+    border: 1px solid #fff;
+}
+
 /* 3.7. COMMENT TITLE */
 .comment--title {
     position: relative;
@@ -1895,6 +1910,7 @@ textarea.form-control {
 
 .feature--item > .title {
     opacity: 1;
+    margin-top: 10px;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     visibility: visible;
     -webkit-transition-property: opacity, visibility;
@@ -2223,6 +2239,7 @@ textarea.form-control {
     -webkit-transition-timing-function: ease-in-out;
     transition-timing-function: ease-in-out;
     text-align: center;
+    overflow: hidden;
 }
 
 .pricing--item:hover,
@@ -4027,6 +4044,7 @@ textarea.form-control {
     transition: border-color .25s, padding .25s ease-in-out, -webkit-filter .25s ease-in-out;
     transition: border-color .25s, padding .25s ease-in-out, filter .25s ease-in-out;
     transition: border-color .25s, padding .25s ease-in-out, filter .25s ease-in-out, -webkit-filter .25s ease-in-out;
+    max-height: 275px;
 }
 
 .testimonial--clients .owl-item.active + .active .item {
@@ -4626,6 +4644,11 @@ body.isScrolling .back-to-top-btn {
 
 .cart-button__checkout{
     text-align: right;
+}
+
+.owl-carousel .owl-item img{
+    width: auto!important;
+    margin: 0 auto;
 }
 
 /*------------------------------------*\

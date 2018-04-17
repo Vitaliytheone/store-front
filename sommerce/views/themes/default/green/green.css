@@ -538,6 +538,24 @@ a:active, .btn-link:active {
     outline: 0;
 }
 
+.best-product:before {
+    content: 'BEST';
+    display: block;
+    font-size: 12px;
+    height: 24px;
+    position: absolute;
+    right: 9px;
+    top: -10px;
+    background-color: #ffffff;
+    width: 60px;
+    color: #81b43f;
+    z-index: 5;
+    border-radius: 2px;
+    box-shadow: 0 3px 30px rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0 3px 30px rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 3px 30px rgba(0, 0, 0, 0.12);
+}
+
 /* 2.9. COMMENT ITEMS */
 .comment--items {
     margin-top: 40px;
@@ -3922,7 +3940,7 @@ body.isTawkMobile #backToTop {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #fff;
+    background-color: #fbfbfb;
     border-radius: 2px 2px 0 0;
     z-index: -1;
 }
@@ -3974,7 +3992,7 @@ body.isTawkMobile #backToTop {
     position: relative;
     margin-bottom: 10px;
     padding: 24px 30px 23px;
-    background-color: #fff;
+    background-color: #fbfbfb;
     border-radius: 2px;
 }
 .testimonial--content:before {

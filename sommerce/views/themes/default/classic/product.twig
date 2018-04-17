@@ -17,7 +17,7 @@
         <div class="row products">
             {% for package in product.packages %}
                 <div class="col-lg-3">
-                    <div class="product-card text-center {% if package.best  %} best-product {% endif %}">
+                    <div class="product-card text-center {% if package.best  %} best-product {% endif %}" {% if product.color %} style="background-color: {{ product.color }}; border: 1px solid {{ product.color }};" {% endif %}>
                         <div class="product-quantity">{{ package.quantity }}</div>
                         <h3 class="product-title">{{ package.name }}</h3>
                         <div class="product-price">{{ package.price|money }}</div>

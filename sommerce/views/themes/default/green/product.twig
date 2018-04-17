@@ -67,3 +67,25 @@
     </div>
 </div>
 <!-- Pricing Section End -->
+
+
+{% if product.color %}
+  <style>
+    .pricing--header{
+      background-color: {{ product.color }};
+    }
+    .pricing--header:before{
+      border-color: {{ product.color }} transparent transparent transparent;
+    }
+    .pricing--price .price-text strong{
+      color: {{ product.color }};
+    }
+    .best-product:before{
+      color: {{ product.color }};
+    }
+    .pricing--item .btn-default:hover{
+      background: {{ product.color }};
+      border-color: {{ product.color }};
+    }
+  </style>
+{% endif %}
