@@ -543,6 +543,7 @@ return [
     'stores.order.form.submit' => 'Submit order',
     'stores.order.form.label.store_name' => 'Store name',
     'stores.order.form.label.store_currency' => 'Store currency',
+    'stores.order.form.label.admin_email' => 'Admin email',
     'stores.order.form.label.admin_username' => 'Admin username',
     'stores.order.form.label.admin_password' => 'Admin password',
     'stores.order.form.label.confirm_password' => 'Confirm password',

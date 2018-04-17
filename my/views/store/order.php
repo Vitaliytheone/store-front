@@ -47,6 +47,10 @@
                 </div>
 
                 <hr>
+
+                <div class="form-group">
+                    <?= $form->field($model, 'admin_email')->textInput(['class' => 'form-control', 'type' => 'email']) ?>
+                </div>
                 <div class="form-group">
                     <?= $form->field($model, 'admin_username')->textInput(['class' => 'form-control']) ?>
                 </div>
