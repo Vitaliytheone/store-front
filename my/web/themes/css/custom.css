@@ -580,3 +580,7 @@
 .has-spinner:not(.active) .fa-spinner {
   display: none;
 }
+
+.beta-label {
+  color: #f0ad4e;
+}
