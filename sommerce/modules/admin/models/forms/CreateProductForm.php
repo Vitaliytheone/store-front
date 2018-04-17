@@ -63,15 +63,6 @@ class CreateProductForm extends Products
                     return $this->getNewProductPosition();
                 },
             ],
-            [
-                'class' => AttributeBehavior::class,
-                'attributes' => [
-                    self::EVENT_AFTER_INSERT => 'url',
-                ],
-                'value' => function ($event) {
-                    return $this->filterUrl();
-                },
-            ],
         ];
     }
 
@@ -126,9 +117,9 @@ class CreateProductForm extends Products
 
 
     /**
-     * Folter and generate URL for empty product url
+     * Filter and generate URL for empty product url
      */
-    public function filterUrl()
+    private function _filterUrl()
     {
         $url = trim($this->url, ' ');
         $url = trim($url, '_');
@@ -145,6 +136,7 @@ class CreateProductForm extends Products
 
         while (Pages::findOne(['url' => $_url, 'deleted' => Pages::DELETED_NO])) {
             $_url = $url . '-' . $postfix;
+            $postfix++;
         };
 
         $this->url = $_url;
@@ -218,6 +210,8 @@ class CreateProductForm extends Products
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
+
+        $this->_filterUrl();
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
