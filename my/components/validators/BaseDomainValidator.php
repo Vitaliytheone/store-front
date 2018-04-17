@@ -22,7 +22,6 @@ class BaseDomainValidator extends Validator
      */
     protected function isValidDomainZone()
     {
-        //var_dump(Yii::$app->params['my.domains.stop_zones'], preg_match('/(\.' . implode("|", Yii::$app->params['my.domains.stop_zones']). '$)/ui', $this->domain), $this->domain); exit();
         if (!empty(Yii::$app->params['my.domains.stop_zones'])) {
             if (preg_match('/(\.' . implode("|", Yii::$app->params['my.domains.stop_zones']). '$)/ui', $this->domain)) {
                 return false;
@@ -37,7 +36,6 @@ class BaseDomainValidator extends Validator
      */
     protected function isValidDomainName()
     {
-        var_dump(Yii::$app->params['my.domains.stop_words'], preg_match('/(' . implode("|", Yii::$app->params['my.domains.stop_words']). ')/ui', $this->domain), $this->domain); exit();
         if (!empty(Yii::$app->params['my.domains.stop_words'])) {
             if (preg_match('/(' . implode("|", Yii::$app->params['my.domains.stop_words']). ')/ui', $this->domain)) {
                 return false;
