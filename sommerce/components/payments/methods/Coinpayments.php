@@ -200,6 +200,24 @@ class Coinpayments extends BasePayment
             ];
         }
 
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
+        } else if ($this->_payment->method != $this->_method) {
+            // no invoice
+            return [
+                'checkout_id' => $ipnData['sommerce_checkout_id'],
+                'result' => 2,
+                'content' => 'bad invoice payment'
+            ];
+        }
+
         // Logging PS checkout request
         PaymentsLog::log($this->_checkout->id, $_POST);
 

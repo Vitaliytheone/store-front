@@ -205,7 +205,6 @@ class Paypal extends BasePayment {
 
         $this->log(json_encode($response, JSON_PRETTY_PRINT));
 
-
         if (empty($id)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $id,
@@ -217,6 +216,24 @@ class Paypal extends BasePayment {
                 'checkout_id' => $id,
                 'result' => 2,
                 'content' => 'no invoice'
+            ];
+        }
+
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
+        } else if ($this->_payment->method != $this->_method) {
+            // no invoice
+            return [
+                'checkout_id' => $id,
+                'result' => 2,
+                'content' => 'bad invoice payment'
             ];
         }
 
@@ -350,6 +367,24 @@ class Paypal extends BasePayment {
             return [
                 'result' => 2,
                 'content' => 'no invoice'
+            ];
+        }
+
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
+        } else if ($this->_payment->method != $this->_method) {
+            // no invoice
+            return [
+                'checkout_id' => $id,
+                'result' => 2,
+                'content' => 'bad invoice payment'
             ];
         }
 
