@@ -1,6 +1,6 @@
 <?php
 
-$serverIp = "137.74.23.77";
+$serverIp = "54.37.92.228";
 
 return [
     'config.db' => DB_CONFIG,
@@ -55,5 +55,13 @@ return [
         'ns_2' => 'ns2.sommerce.com',
         'ns_3' => null,
         'ns_4' => null,
+    ],
+
+    'my.domains.stop_words' => [
+        'perfect'
+    ],
+
+    'my.domains.stop_zones' => [
+        'tk'
     ],
 ];

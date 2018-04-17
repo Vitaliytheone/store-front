@@ -7,28 +7,10 @@ use yii\db\Migration;
  */
 class m180412_114608_panels_my_verified_paypal extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m180412_114608_panels_my_verified_paypal cannot be reverted.\n";
-
-        return false;
-    }
-
     public function up()
     {
         $this->execute('
-            USE `panels`;
+            USE `' . DB_PANELS . '`;
             CREATE TABLE `my_verified_paypal` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `payment_id` int(11) unsigned NOT NULL,
@@ -45,7 +27,7 @@ class m180412_114608_panels_my_verified_paypal extends Migration
     public function down()
     {
         $this->execute('
-            USE `panels`;
+            USE `' . DB_PANELS . '`;
             DROP TABLE `my_verified_paypal`;
         ');
     }

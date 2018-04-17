@@ -7,28 +7,10 @@ use yii\db\Migration;
  */
 class m180412_114208_panels_payments__field_verification_code_added extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m180412_114208_panels_payments__field_verification_code_added cannot be reverted.\n";
-
-        return false;
-    }
-
     public function up()
     {
         $this->execute('
-            USE `panels`;
+            USE `' . DB_PANELS . '`;
             ALTER TABLE `payments` ADD `verification_code` VARCHAR(64)  NULL  DEFAULT NULL  AFTER `options`;
         ');
     }
@@ -36,7 +18,7 @@ class m180412_114208_panels_payments__field_verification_code_added extends Migr
     public function down()
     {
         $this->execute('
-            USE `panels`;
+            USE `' . DB_PANELS . '`;
             ALTER TABLE `payments` DROP `verification_code`;
         ');
 

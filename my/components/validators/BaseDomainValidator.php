@@ -18,11 +18,39 @@ class BaseDomainValidator extends Validator
     protected $user_id;
 
     /**
+     * @return bool
+     */
+    protected function isValidDomainZone()
+    {
+        if (!empty(Yii::$app->params['my.domains.stop_zones'])) {
+            if (preg_match('/(\.' . implode("|", Yii::$app->params['my.domains.stop_zones']). '$)/ui', $this->domain)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isValidDomainName()
+    {
+        if (!empty(Yii::$app->params['my.domains.stop_words'])) {
+            if (preg_match('/(' . implode("|", Yii::$app->params['my.domains.stop_words']). ')/ui', $this->domain)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Check is valid domain
      * @param $domainName
      * @return array
      */
-    protected function isValidDomainName($domainName)
+    protected function isExistDomainName($domainName)
     {
         $result = array('result' => false);
 

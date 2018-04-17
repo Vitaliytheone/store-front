@@ -9,24 +9,6 @@ use \yii\db\Query;
  */
 class m180409_114652_update__buy_domain_feature_for_old_customers extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m180409_114652_update__buy_domain_feature_for_old_customers cannot be reverted.\n";
-
-        return false;
-    }
-
     public function up()
     {
         $customerIds = (new Query())
@@ -43,7 +25,7 @@ class m180409_114652_update__buy_domain_feature_for_old_customers extends Migrat
         }
 
         $this->execute("
-          USE `panels`;
+          USE `" . DB_PANELS . "`;
           UPDATE `customers` SET `buy_domain` = '1' WHERE `id` IN ('$customerIds');
         ");
     }
