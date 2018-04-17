@@ -66,6 +66,7 @@ class CronController extends CustomController
          */
         foreach ($orders as $order) {
             $order->process();
+            $orderDetails = $order->getDetails();
             try {
                 switch ($order->item) {
                     case Orders::ITEM_BUY_SSL:
@@ -85,6 +86,13 @@ class CronController extends CustomController
                     break;
 
                     case Orders::ITEM_BUY_STORE:
+
+                        // Создаем триальный магазин сразу
+                        $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
+                        if ($isTrial) {
+                            continue;
+                        }
+
                         OrderHelper::store($order);
                     break;
                 }
