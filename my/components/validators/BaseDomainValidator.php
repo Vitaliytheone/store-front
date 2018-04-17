@@ -18,11 +18,41 @@ class BaseDomainValidator extends Validator
     protected $user_id;
 
     /**
+     * @return bool
+     */
+    protected function isValidDomainZone()
+    {
+        //var_dump(Yii::$app->params['my.domains.stop_zones'], preg_match('/(\.' . implode("|", Yii::$app->params['my.domains.stop_zones']). '$)/ui', $this->domain), $this->domain); exit();
+        if (!empty(Yii::$app->params['my.domains.stop_zones'])) {
+            if (preg_match('/(\.' . implode("|", Yii::$app->params['my.domains.stop_zones']). '$)/ui', $this->domain)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isValidDomainName()
+    {
+        var_dump(Yii::$app->params['my.domains.stop_words'], preg_match('/(' . implode("|", Yii::$app->params['my.domains.stop_words']). ')/ui', $this->domain), $this->domain); exit();
+        if (!empty(Yii::$app->params['my.domains.stop_words'])) {
+            if (preg_match('/(' . implode("|", Yii::$app->params['my.domains.stop_words']). ')/ui', $this->domain)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Check is valid domain
      * @param $domainName
      * @return array
      */
-    protected function isValidDomainName($domainName)
+    protected function isExistDomainName($domainName)
     {
         $result = array('result' => false);
 

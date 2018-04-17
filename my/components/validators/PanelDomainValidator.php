@@ -25,6 +25,18 @@ class PanelDomainValidator extends BaseDomainValidator
      */
     public function validateAttribute($model, $attribute)
     {
+        $this->domain = $model->{$attribute};
+
+        if (!$this->isValidDomainZone()) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain'));
+            return false;
+        }
+
+        if (!$this->isValidDomainName()) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain'));
+            return false;
+        }
+
         if (method_exists($model, 'isValidateDomain') && !$model->isValidateDomain()) {
             return true;
         }
@@ -33,7 +45,6 @@ class PanelDomainValidator extends BaseDomainValidator
             return false;
         }
 
-        $this->domain = $model->{$attribute};
         $this->user_id = $model->getUser()->id;
 
         $domain = $this->prepareDomain();
@@ -44,7 +55,7 @@ class PanelDomainValidator extends BaseDomainValidator
         }
 
         if (Yii::$app->params['whoisxml']) {
-            $result = $this->isValidDomainName($domain);
+            $result = $this->isExistDomainName($domain);
 
             if (!$result['result']) {
                 $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_not_registered'));

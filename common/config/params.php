@@ -56,4 +56,12 @@ return [
         'ns_3' => null,
         'ns_4' => null,
     ],
+
+    'my.domains.stop_words' => [
+        'perfect'
+    ],
+
+    'my.domains.stop_zones' => [
+        'tk'
+    ],
 ];
