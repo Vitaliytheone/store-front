@@ -488,6 +488,7 @@ class OrderHelper {
         $store->setAttributes($projectDefaults);
 
         $store->customer_id = $order->cid;
+        $store->admin_email = ArrayHelper::getValue($orderDetails, 'admin_email');
         $store->currency = ArrayHelper::getValue($orderDetails,'currency');
         $store->domain = DomainsHelper::idnToUtf8($order->domain);
         $store->subdomain = 0;
