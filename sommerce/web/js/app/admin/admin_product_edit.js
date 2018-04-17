@@ -190,8 +190,6 @@ customModule.adminProductEdit = {
                     } else {
                         $modalPropertiesCopy.modal('show');
                     }
-
-
                 });
 
                 // Copy properties
