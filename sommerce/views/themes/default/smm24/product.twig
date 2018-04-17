@@ -56,3 +56,20 @@
     </div>
 </div>
 <!-- Product Table Section End -->
+
+{% if product.color %}
+<style>
+  .pricing-table--item .header .h2{
+  	color: {{ product.color }};
+  }
+  .pricing-table--item .btn-default{
+    border-color: {{ product.color }};
+  }
+  .pricing-table--item .btn-default:hover{
+    background-color: {{ product.color }};
+  }
+  .best-product:before{
+  	background: {{ product.color }};
+  }
+</style>
+{% endif %}
