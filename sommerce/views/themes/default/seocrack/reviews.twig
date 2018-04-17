@@ -23,7 +23,7 @@
                         <div class="testimonial--clients owl-carousel" data-owl-margin="60" data-owl-dots="true" data-owl-responsive='{"0": {"items": "1"}, "768": {"items": "{{ block.reviews.settings.column }}"}}' data-increment="1">
                             {% for review in block.reviews.data %}
                                 <div class="item" data-target="#testimonialInfoTab{{ review.id }}">
-                                    <img src="{{ review.image }}" alt="{{ review.name }}">
+                                    <img src="{{ review.image }}" alt="{{ review.name }}" class="img-responsive">
                                 </div>
                             {% endfor %}
                         </div>

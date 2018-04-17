@@ -23,7 +23,7 @@
             {% for package in product.packages %}
                 <div class="col-md-4 col-md-offset-0 col-xs-8 col-xs-offset-2 col-xxs-12">
                     <!-- Pricing Item Start -->
-                    <div class="pricing--item">
+                    <div class="pricing--item {% if package.best %} best-product {% endif %}">
                         <div class="title">
                             <h2 class="h3">{{ package.name }}</h2>
 
@@ -57,3 +57,29 @@
     </div>
 </div>
 <!-- Pricing Section End -->
+
+{% if product.color %}
+<style>
+  .pricing--item .btn-default{
+  	border-color: {{ product.color }};
+  }
+  .pricing--item .btn-default:before{
+  	background-color: {{ product.color }};
+  }
+  .best-product:before{
+  	background-color: {{ product.color }};
+  }
+  .pricing--item .features .nav li .fa{
+  	color: {{ product.color }};
+  }
+  .pricing--item .icon:after{
+  	background-color: {{ product.color }};
+  }
+  .pricing--item:hover .title:before, .pricing--item.active .title:before{
+  	background-color: {{ product.color }};
+  }
+  .pricing--item:hover .icon:before, .pricing--item.active .icon:before{
+  	background-color: {{ product.color }};
+  }
+</style>
+{% endif %}
