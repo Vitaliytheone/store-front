@@ -91,6 +91,7 @@ class CreateProductForm extends Products
             [['properties', 'position'], 'safe'],
             ['visibility', 'filter', 'filter' => function($value){ return (int)$value; }],
             ['color', 'string', 'max' => 255],
+            ['color', 'filter', 'filter' => function($color){ return empty($color) ? null : $color; }],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique'],
