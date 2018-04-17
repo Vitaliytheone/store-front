@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\models\forms;
 
+use Codeception\PHPUnit\Constraint\Page;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use yii;
@@ -28,7 +29,7 @@ class CreateProductForm extends Products
     {
         return [
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_BEFORE_INSERT => 'properties',
                     self::EVENT_BEFORE_UPDATE => 'properties',
@@ -42,7 +43,7 @@ class CreateProductForm extends Products
                 },
             ],
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_AFTER_FIND => 'properties',
                 ],
@@ -54,7 +55,7 @@ class CreateProductForm extends Products
                 },
             ],
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_BEFORE_INSERT => 'position',
                 ],
@@ -62,7 +63,6 @@ class CreateProductForm extends Products
                     return $this->getNewProductPosition();
                 },
             ],
-
         ];
     }
 
@@ -80,9 +80,9 @@ class CreateProductForm extends Products
     public function rules()
     {
         return [
-            [['name', 'url', 'visibility'], 'required'],
+            [['name', 'visibility'], 'required'],
             [['id', 'visibility'], 'integer'],
-            [['seo_title', 'seo_description', 'url',], 'trim'],
+            [['seo_title', 'seo_description'], 'trim'],
             [['name', 'url'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['seo_title', ], 'string', 'max' => 300],
@@ -92,9 +92,10 @@ class CreateProductForm extends Products
             ['visibility', 'filter', 'filter' => function($value){ return (int)$value; }],
             ['color', 'string', 'max' => 255],
 
+            ['url', 'trim' ],
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique'],
-            ['url', 'unique', 'targetClass' => Pages::className(), 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => Pages::DELETED_NO]],
+            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => Pages::DELETED_NO]],
         ];
     }
 
@@ -112,6 +113,34 @@ class CreateProductForm extends Products
     public function getUser()
     {
         return $this->_user;
+    }
+
+
+    /**
+     * Filter and generate URL for empty product url
+     */
+    private function _filterUrl()
+    {
+        $url = trim($this->url, ' ');
+        $url = trim($url, '_');
+        $url = trim($url, '-');
+
+        if (!empty($url)) {
+            return;
+        }
+
+        $url = Products::NEW_PRODUCT_URL_PREFIX . $this->id;
+
+        $_url = $url;
+        $postfix = 1;
+
+        while (Pages::findOne(['url' => $_url, 'deleted' => Pages::DELETED_NO])) {
+            $_url = $url . '-' . $postfix;
+            $postfix++;
+        };
+
+        $this->url = $_url;
+        $this->save(false);
     }
 
     /**
@@ -181,6 +210,8 @@ class CreateProductForm extends Products
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
+
+        $this->_filterUrl();
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);

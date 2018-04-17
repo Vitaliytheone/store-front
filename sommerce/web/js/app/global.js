@@ -204,7 +204,13 @@ var custom = new function() {
      */
     self.generateUrlFromString = function(string)
     {
-        return string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-').toLowerCase();
+        var url = string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-').toLowerCase();
+
+        if (url === '-' || url === '_') {
+            url = '';
+        }
+
+        return url;
     };
 
     /**

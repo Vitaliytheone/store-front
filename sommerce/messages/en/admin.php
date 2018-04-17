@@ -145,7 +145,6 @@ return [
     'products.product_seo_meta_chars_used' => ' of 160 characters used',
     'settings.product_seo_meta_keywords' => 'Meta keywords',
     'products.product_seo_url' => 'URL',
-    'products.product_seo_url_default' => 'about-us',
 
     'products.product_properties_copy' => ' Copy properties',
     'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',

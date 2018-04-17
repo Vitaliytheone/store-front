@@ -55,8 +55,8 @@ class EditPageForm extends Pages
     public function rules()
     {
         return [
-            [['title', 'url', 'visibility'], 'required'],
-            [['title', 'seo_title', 'url'], 'string', 'max' => 255],
+            [['title', 'visibility'], 'required'],
+            [['title', 'seo_title'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
             [['content', 'template'], 'string'],
             [['title', 'seo_title', 'seo_description', 'url',], 'trim'],
@@ -64,7 +64,7 @@ class EditPageForm extends Pages
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique', 'filter' => ['deleted' => Pages::DELETED_NO]],
-            ['url', 'unique', 'targetClass' => Products::className(), 'targetAttribute' => ['url' => 'url']],
+            ['url', 'unique', 'targetClass' => Products::class, 'targetAttribute' => ['url' => 'url']],
 
             ['template', 'default', 'value' => self::TEMPLATE_PAGE],
         ];
@@ -82,6 +82,8 @@ class EditPageForm extends Pages
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
+
+        $this->_filterUrl();
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
@@ -101,6 +103,8 @@ class EditPageForm extends Pages
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
+
+        $this->_filterUrl();
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
@@ -125,4 +129,30 @@ class EditPageForm extends Pages
         ], false);
     }
 
+    /**
+     * Filter and generate URL for empty page url
+     */
+    private function _filterUrl()
+    {
+        $url = trim($this->url, ' ');
+        $url = trim($url, '_');
+        $url = trim($url, '-');
+
+        if (!empty($url)) {
+            return;
+        }
+
+        $url = Pages::NEW_PAGE_URL_PREFIX . $this->id;
+
+        $_url = $url;
+        $postfix = 1;
+
+        while (Products::findOne(['url' => $_url])) {
+            $_url = $url . '-' . $postfix;
+            $postfix++;
+        };
+
+        $this->url = $_url;
+        $this->save(false);
+    }
 }
