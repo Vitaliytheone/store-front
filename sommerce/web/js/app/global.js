@@ -3,7 +3,7 @@ var custom = new function() {
 
     self.request = null;
 
-    self.confirm = function (title, text, callback, options) {
+    self.confirm = function (title, text, options, callback, cancelCallback) {
         var confirmPopupHtml;
         var compiled = templates['modal/confirm'];
         confirmPopupHtml = compiled($.extend({}, true, {
@@ -20,6 +20,10 @@ var custom = new function() {
 
         $('#confirmModal').on('hidden.bs.modal', function (e) {
             $('#confirmModal').remove();
+
+            if ('function' == typeof cancelCallback) {
+                return cancelCallback.call();
+            }
         });
 
         return $('#confirm_yes').on('click', function (e) {
