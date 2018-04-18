@@ -110,6 +110,7 @@ class EditStoreSettingsForm extends Stores
     {
         return array_merge(parent::rules(), [
             [['seo_description', 'seo_title', 'admin_email'], 'trim'],
+            ['admin_email', 'required'],
             ['admin_email', 'email'],
             ['timezone', 'filter', 'filter' => function($value) { return (int)$value; }]
         ]);

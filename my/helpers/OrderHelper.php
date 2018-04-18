@@ -526,7 +526,7 @@ class OrderHelper {
         $storeAdmin = new StoreAdmins();
         $storeAdmin->store_id = $store->id;
         $storeAdmin->username = ArrayHelper::getValue($orderDetails,'username');
-        $storeAdmin->password = ArrayHelper::getValue($orderDetails,'password');;
+        $storeAdmin->password = ArrayHelper::getValue($orderDetails,'password');
         $storeAdmin->status = StoreAdmins::STATUS_ACTIVE;
         $storeAdmin->setRules(StoreAdmins::$defaultRules);
 
@@ -561,13 +561,13 @@ class OrderHelper {
         // Make Sql dump from store template db
         if (!DbHelper::makeSqlDump(Yii::$app->params['storeDefaultDatabase'], $storeSqlPath)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, '', 'cron.order.make_sql_dump');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.make_sql_dump');
         }
 
         // Deploy Sql dump to store db
         if (!DbHelper::dumpSql($store->db_name, $storeSqlPath)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, '', 'cron.order.deploy_sql_dump');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
 
         // Change status
