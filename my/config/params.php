@@ -8,7 +8,7 @@ $serverIp = "54.37.92.228";
 
 return [
     'access_key' => 'z1k05^d=^8*7rwh5t1h9+(kf9+907rg=(h$mq50rf*z3(zb1^_',
-    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r',
+    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r', // Must be a same as sommerce/config/params.php 'auth_key'!
     'admin_auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r',
     'captcha_public' => '6LfQQg4UAAAAAB62JyN6ItlfpxXpY7Az2s_4IxLR',
     'captcha_private' => '6LfQQg4UAAAAAApcLHRHzdh84liBAP4lBZzMgpyF',
