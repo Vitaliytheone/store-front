@@ -132,17 +132,4 @@ return [
             'connection_timeout' => 10,
         ],
     ],
-
-    // Default store attributes
-    'storeDefaults' => [
-        'timezone' => 0,
-        'language' => 'en',
-        'theme_name' => 'Classic',
-        'theme_folder' => 'classic',
-        'block_slider' => 1,
-        'block_features' => 1,
-        'block_reviews' => 1,
-        'block_process' => 1,
-    ],
-
 ];
