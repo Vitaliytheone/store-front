@@ -66,7 +66,7 @@ return [
     ],
 
     // Default store attributes
-    'storeDefaults' => [
+    'store.defaults' => [
         'timezone' => 0,
         'language' => 'en',
         'theme_name' => 'SMM24',
