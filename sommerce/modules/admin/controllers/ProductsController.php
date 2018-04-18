@@ -2,12 +2,15 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Packages;
+use common\models\store\Products;
 use common\models\stores\StoreAdminAuth;
+use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\models\forms\EditNavigationForm;
 use sommerce\modules\admin\models\forms\MovePackageForm;
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\NotAcceptableHttpException;
@@ -47,7 +50,16 @@ class ProductsController extends CustomController
 
         $this->addModule('adminProductsList');
         $this->addModule('adminProductEdit', [
-            'products' => $search->getProductsProperties()
+            'products' => $search->getProductsProperties(),
+            'confirmMenu' => [
+                'url' => Url::toRoute('/products/create-product-menu'),
+                'labels' => [
+                    'title' => Yii::t('admin', 'products.product_menu_header'),
+                    'message' => Yii::t('admin', 'products.product_menu_message'),
+                    'confirm_button' => Yii::t('admin', 'products.product_menu_success'),
+                    'cancel_button' => Yii::t('admin', 'products.product_menu_cancel'),
+                ]
+            ]
         ]);
         $this->addModule('adminPackageEdit');
 
@@ -61,7 +73,7 @@ class ProductsController extends CustomController
     /**
      * Create new Product AJAX action
      * @return array
-     * @throws yii\web\NotAcceptableHttpException
+     * @throws \yii\web\NotAcceptableHttpException
      */
     public function actionCreateProduct()
     {
@@ -88,6 +100,38 @@ class ProductsController extends CustomController
         return [
             'product' => $model->getAttributes(),
         ];
+    }
+
+    /**
+     * Create product menu item
+     * @param integer $id
+     * @return array
+     */
+    public function actionCreateProductMenu($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!($product = Products::findOne($id))) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new EditNavigationForm();
+
+        if ($model->create([$model->formName() => [
+            'name' => $product->name,
+            'link' => EditNavigationForm::LINK_PRODUCT,
+            'link_id' => $product->id
+        ]])) {
+            UiHelper::message(Yii::t('admin', 'settings.nav_message_created'));
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**

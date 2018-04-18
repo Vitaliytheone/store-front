@@ -1,10 +1,13 @@
 
 customModule.adminProductEdit = {
     run: function(params) {
+        var self = this;
+        var confirmMenuOptions = params.confirmMenu;
+
         /*****************************************************************************************************
          *                      Create/Update Products form script
          *****************************************************************************************************/
-        (function (window, alert){
+        (function (window, alert) {
             'use strict';
 
             var _self = this;
@@ -38,27 +41,27 @@ customModule.adminProductEdit = {
             var exitingUrls;
 
             var $formFields = {
-                name            : $productForm.find('.form_field__name'),
-                description     : $productForm.find('.form_field__description'),
-                properties      : $productForm.find('.form_field__properties'),
-                url             : $productForm.find('.form_field__url'),
-                visibility      : $productForm.find('.form_field__visibility'),
-                color           : $productForm.find('.form_field__color'),
-                seo_title       : $productForm.find('.form_field__seo_title'),
-                seo_description : $productForm.find('.form_field__seo_description'),
-                seo_keywords    : $productForm.find('.form_field__seo_keywords')
+                name: $productForm.find('.form_field__name'),
+                description: $productForm.find('.form_field__description'),
+                properties: $productForm.find('.form_field__properties'),
+                url: $productForm.find('.form_field__url'),
+                visibility: $productForm.find('.form_field__visibility'),
+                color: $productForm.find('.form_field__color'),
+                seo_title: $productForm.find('.form_field__seo_title'),
+                seo_description: $productForm.find('.form_field__seo_description'),
+                seo_keywords: $productForm.find('.form_field__seo_keywords')
             };
 
             var defaultFormData = {
-                name            : $formFields.name.val(),
-                description     : $formFields.description.val(),
-                properties      : [],
-                url             : $formFields.url.val(),
-                visibility      : $formFields.visibility.val(),
-                color           : $formFields.color.val(),
-                seo_title       : $formFields.seo_title.val(),
-                seo_description : $formFields.seo_description.val(),
-                seo_keywords    : $formFields.seo_keywords.val()
+                name: $formFields.name.val(),
+                description: $formFields.description.val(),
+                properties: [],
+                url: $formFields.url.val(),
+                visibility: $formFields.visibility.val(),
+                color: $formFields.color.val(),
+                seo_title: $formFields.seo_title.val(),
+                seo_description: $formFields.seo_description.val(),
+                seo_keywords: $formFields.seo_keywords.val()
             };
 
             initPropertiesList();
@@ -77,7 +80,7 @@ customModule.adminProductEdit = {
             /*******************************************************************************************
              * Save Product form data
              *******************************************************************************************/
-            $productForm.submit(function (e){
+            $productForm.submit(function (e) {
                 e.preventDefault();
                 $modalLoader.removeClass('hidden');
                 $.ajax({
@@ -85,23 +88,37 @@ customModule.adminProductEdit = {
                     type: "POST",
                     data: $(this).serialize(),
 
-                    success: function (data, textStatus, jqXHR){
-                        if (data.error){
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.error) {
                             $modalLoader.addClass('hidden');
                             $errorContainer.append(data.error.html);
-                            $modal.animate({ scrollTop: 0 }, 'slow');
+                            $modal.animate({scrollTop: 0}, 'slow');
                             $seoCollapse.collapse("show");
                             return;
                         }
                         //Success
-                        _.delay(function(){
-                            $(location).attr('href', successRedirectUrl);
-                            // $modalLoader.addClass('hidden');
-                            // $modal.modal('hide');
+                        _.delay(function () {
+                            $modal.modal('hide');
+                            var message = confirmMenuOptions.labels.message.replace('{name}', data.product.name);
+
+                            custom.confirm(confirmMenuOptions.labels.title, message, {
+                                confirm_button : confirmMenuOptions.labels.confirm_button,
+                                cancel_button : confirmMenuOptions.labels.cancel_button
+                            }, function() {
+                                $.ajax({
+                                    url: confirmMenuOptions.url,
+                                    data: {
+                                        id: data.product.id
+                                    },
+                                    async: false
+                                });
+                            }, function() {
+                                location.href = successRedirectUrl;
+                            });
                         }, 500);
                     },
 
-                    error: function (jqXHR, textStatus, errorThrown){
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $modalLoader.addClass('hidden');
                         $modal.modal('hide');
                         console.log('Error on service save', jqXHR, textStatus, errorThrown);
@@ -118,7 +135,7 @@ customModule.adminProductEdit = {
             /** Init spectrum color plugin */
             function initColorSpectrum() {
                 $formFields.color.spectrum({
-                    allowEmpty:true,
+                    allowEmpty: true,
                     // color: "#ffffff",
                     showInput: true,
                     containerClassName: "full-spectrum",
@@ -129,7 +146,7 @@ customModule.adminProductEdit = {
                     maxPaletteSize: 19,
                     preferredFormat: "hex",
                     localStorageKey: "spectrum.color",
-                    change: function(){
+                    change: function () {
 
                     },
                     palette: [
@@ -151,7 +168,7 @@ customModule.adminProductEdit = {
             /**
              * Init products-properties list
              */
-            function initProductsPropertiesList(){
+            function initProductsPropertiesList() {
 
                 var itemTemplate = _.template(
                     '<li class="m-nav__item" data-id="<%- product_id %>">' +
@@ -171,20 +188,20 @@ customModule.adminProductEdit = {
                         return;
                     }
                     $productsPropertiesList.append(itemTemplate({
-                        product_title : product.name,
-                        product_id : product.id
+                        product_title: product.name,
+                        product_id: product.id
                     }));
                 });
 
-                $modalPropertiesCopy.on('shown.bs.modal', function (event){
+                $modalPropertiesCopy.on('shown.bs.modal', function (event) {
                     var selectedItem = $(event.relatedTarget),
-                        productId =  selectedItem.closest('li').data('id');
+                        productId = selectedItem.closest('li').data('id');
 
                     $btnSubmitCopy.data('id', productId);
                 });
 
                 // Copy properties
-                $btnSubmitCopy.click(function(){
+                $btnSubmitCopy.click(function () {
                     var productId = $(this).data('id'),
                         product;
 
@@ -192,7 +209,7 @@ customModule.adminProductEdit = {
                         return;
                     }
 
-                    product = _.find(productsProperties, function(product_item){
+                    product = _.find(productsProperties, function (product_item) {
                         return parseInt(product_item.id) === parseInt(productId);
                     });
 
@@ -203,7 +220,7 @@ customModule.adminProductEdit = {
                     // Render copied properties
                     $formFields.properties.empty();
 
-                    _.each(product.properties, function (property){
+                    _.each(product.properties, function (property) {
                         $formFields.properties.append(getPropertyField(property, 'properties', formName));
                     });
 
@@ -215,19 +232,19 @@ customModule.adminProductEdit = {
              *  Fill form fields by data
              * @param data
              */
-            function fillFormFields(data){
+            function fillFormFields(data) {
                 var defaultData, formData;
-                if (data !== undefined && _.isObject(data)){
+                if (data !== undefined && _.isObject(data)) {
                     defaultData = {
-                        name : '',
-                        description : '',
-                        properties : [],
-                        visibility : 1,
-                        color : '#FFFFFF',
-                        url : '',
-                        seo_title : '',
-                        seo_description : '',
-                        seo_keywords : ''
+                        name: '',
+                        description: '',
+                        properties: [],
+                        visibility: 1,
+                        color: '#FFFFFF',
+                        url: '',
+                        seo_title: '',
+                        seo_description: '',
+                        seo_keywords: ''
                     };
                     formData = _.defaults(data, defaultData);
 
@@ -246,7 +263,7 @@ customModule.adminProductEdit = {
                     $formFields.color.spectrum('set', formData.color);
 
                     // Fill properties array
-                    _.each(formData.properties, function (value, key, list){
+                    _.each(formData.properties, function (value, key, list) {
                         $formFields.properties.append(getPropertyField(value, 'properties', formName));
                     });
 
@@ -257,7 +274,7 @@ customModule.adminProductEdit = {
             /**
              * Reset form fields to init values
              */
-            function resetForm(){
+            function resetForm() {
                 //Reset inputs & textarea
                 $productForm.find('input').val('');
                 $productForm.find('textarea').val('');
@@ -270,7 +287,7 @@ customModule.adminProductEdit = {
             /**
              * Init Summernote editor
              */
-            function initSummernote($element){
+            function initSummernote($element) {
                 $element.summernote({
                     minHeight: 300,
                     focus: true,
@@ -295,7 +312,7 @@ customModule.adminProductEdit = {
             /**
              * Init properties list
              */
-            function initPropertiesList(){
+            function initPropertiesList() {
 
                 $formFields.properties.sortable({
                     opacity: 1,
@@ -307,11 +324,11 @@ customModule.adminProductEdit = {
 
                 toggleCreateNewInfoBox();
 
-                $(document).on('click', '.action-delete_property', function (){
+                $(document).on('click', '.action-delete_property', function () {
                     $(this).closest('li').remove();
                     toggleCreateNewInfoBox();
                 });
-                $(document).on('click', '.add-properies', function (){
+                $(document).on('click', '.add-properies', function () {
                     checkInput();
                 });
 
@@ -327,7 +344,7 @@ customModule.adminProductEdit = {
                     $inputPropertyError.addClass('d-none');
                 });
 
-                function checkInput(){
+                function checkInput() {
                     var inputProperty = $addPropertyInput.val(),
                         length = inputProperty.length;
 
@@ -337,15 +354,14 @@ customModule.adminProductEdit = {
                     $inputPropertyError.toggleClass('d-none', !!length);
                 }
 
-                function addProperty(property){
+                function addProperty(property) {
                     $formFields.properties.append(getPropertyField(property, 'properties', formName));
                     $addPropertyInput.val('').focus();
                     toggleCreateNewInfoBox();
                 }
             }
 
-            function toggleCreateNewInfoBox()
-            {
+            function toggleCreateNewInfoBox() {
                 var toggle = !!$formFields.properties.find('li').length;
                 $('.info__create_new_prop').toggleClass('d-none', toggle);
             }
@@ -353,16 +369,16 @@ customModule.adminProductEdit = {
             /**
              * Init auto-fill SEO-edit part
              */
-            function initSeoParts(){
-                if ($('.edit-seo__title').length > 0){
-                    (function (){
+            function initSeoParts() {
+                if ($('.edit-seo__title').length > 0) {
+                    (function () {
 
                         var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
 
-                        var _loop = function _loop(i){
+                        var _loop = function _loop(i) {
                             $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
-                            $("#" + seoEdit[i]).on('input', function (e){
-                                if (i == 2){
+                            $("#" + seoEdit[i]).on('input', function (e) {
+                                if (i == 2) {
                                     $('.' + seoEdit[i]).text($(e.target).val().toLowerCase());
                                 } else {
                                     $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
@@ -371,7 +387,7 @@ customModule.adminProductEdit = {
                             });
                         };
 
-                        for (var i = 0; i < seoEdit.length; i++){
+                        for (var i = 0; i < seoEdit.length; i++) {
                             _loop(i);
                         }
                     })();
@@ -385,7 +401,7 @@ customModule.adminProductEdit = {
              * @param formName
              * @returns {string}
              */
-            function getPropertyField(propertyText, propertyFieldName, formName){
+            function getPropertyField(propertyText, propertyFieldName, formName) {
                 var propertyName = formName ? formName + '[' + propertyFieldName + '][]' : propertyFieldName + '[]';
 
                 var itemTemplate = _.template(
@@ -409,20 +425,20 @@ customModule.adminProductEdit = {
                 );
 
                 return itemTemplate({
-                    title : propertyText,
-                    property_name : propertyName,
-                    property_value : propertyText
+                    title: propertyText,
+                    property_name: propertyName,
+                    property_value: propertyText
                 });
             }
 
             /*******************************************************************************************
              * Create new product routine
              *******************************************************************************************/
-            function createProduct(){
+            function createProduct() {
 
                 fetchExitingUrls();
 
-                $(document).on('urls-fetched', function(e, urls){
+                $(document).on('urls-fetched', function (e, urls) {
 
                     exitingUrls = urls;
 
@@ -435,7 +451,7 @@ customModule.adminProductEdit = {
                 });
             }
 
-            function bindCreateProductEvents(){
+            function bindCreateProductEvents() {
                 // Start autofilling URL
                 $formFields.name.on('input.create_product', autoFillFields);
 
@@ -447,7 +463,7 @@ customModule.adminProductEdit = {
                 $formFields.url.on('input.create_product', cleanupUrl);
             }
 
-            function unbindCrereateProductEvents(){
+            function unbindCrereateProductEvents() {
                 // Stop autofilling URL
                 $formFields.name.off('input.create_product');
                 // Stop autofill on first user's touch
@@ -459,14 +475,14 @@ customModule.adminProductEdit = {
             /**
              * Fetch exiting url
              */
-            function fetchExitingUrls(){
+            function fetchExitingUrls() {
                 $.ajax({
                     url: getExitingUrlsUrl,
                     type: "GET",
-                    success: function ($urls, textStatus, jqXHR){
+                    success: function ($urls, textStatus, jqXHR) {
                         $(document).trigger('urls-fetched', [$urls]);
                     },
-                    error: function (jqXHR, textStatus, errorThrown){
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $modalLoader.addClass('hidden');
                         $modal.modal('hide');
                         console.log('Error on service save', jqXHR, textStatus, errorThrown);
@@ -477,7 +493,7 @@ customModule.adminProductEdit = {
             /**
              * Autofilling `url` by `product name`
              */
-            function autoFillFields(e){
+            function autoFillFields(e) {
                 var inputName = $(e.target).val(),
                     generatedUrl;
 
@@ -493,7 +509,7 @@ customModule.adminProductEdit = {
             /**
              * Stop autofilling `url` by `product name`
              */
-            function autoFillFieldsOff(){
+            function autoFillFieldsOff() {
                 $formFields.name.off('input', autoFillFields);
                 $formFields.seo_title.off('input', autoFillFields);
             }
@@ -501,7 +517,7 @@ customModule.adminProductEdit = {
             /**
              * Cleanup url
              */
-            function cleanupUrl(e){
+            function cleanupUrl(e) {
                 var urlMaxLenght = 200,
                     urlByName,
                     target = e.currentTarget,
@@ -512,8 +528,8 @@ customModule.adminProductEdit = {
 
                 urlByName = custom.generateUrlFromString(inputedName);
 
-                if (urlByName.length >= urlMaxLenght){
-                    urlByName = urlByName.substring(0, (urlMaxLenght-1));
+                if (urlByName.length >= urlMaxLenght) {
+                    urlByName = urlByName.substring(0, (urlMaxLenght - 1));
                 }
 
                 $target.val(urlByName);
@@ -524,7 +540,7 @@ customModule.adminProductEdit = {
             /*******************************************************************************************
              * Update exiting product routine
              *******************************************************************************************/
-            function updateProduct(productUrl){
+            function updateProduct(productUrl) {
                 bindEditProductEvents();
 
                 $modalLoader.removeClass('hidden');
@@ -532,25 +548,25 @@ customModule.adminProductEdit = {
                 $.ajax({
                     url: productUrl,
                     type: "GET",
-                    success: function (data, textStatus, jqXHR){
-                        if (data.product){
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.product) {
                             fillFormFields(data.product);
                         }
                         $modalLoader.addClass('hidden');
                     },
-                    error: function (jqXHR, textStatus, errorThrown){
+                    error: function (jqXHR, textStatus, errorThrown) {
                         console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
                         $modalLoader.addClass('hidden');
                     }
                 });
             }
 
-            function bindEditProductEvents(){
+            function bindEditProductEvents() {
                 // Start cleanup url
                 $formFields.url.on('input.update_product', cleanupUrl);
             }
 
-            function unbindEditProductEvents(){
+            function unbindEditProductEvents() {
                 // Stop cleanup url
                 $formFields.url.off('input.update_product');
             }
@@ -562,7 +578,7 @@ customModule.adminProductEdit = {
             /**
              * Modal Hide Events
              */
-            $modal.on('hidden.bs.modal', function (){
+            $modal.on('hidden.bs.modal', function () {
                 /* Unbind events */
                 unbindCrereateProductEvents();
                 unbindEditProductEvents();
@@ -575,12 +591,12 @@ customModule.adminProductEdit = {
             /**
              * Modal Show Events
              */
-            $modal.on('show.bs.modal', function (event){
+            $modal.on('show.bs.modal', function (event) {
                 $modalLoader.removeClass('hidden');
                 resetForm();
             });
 
-            $modal.on('shown.bs.modal', function (event){
+            $modal.on('shown.bs.modal', function (event) {
                 $modalLoader.addClass('hidden');
 
                 // Define if pressed "Add Service" or "Edit" exiting
@@ -600,7 +616,7 @@ customModule.adminProductEdit = {
                 $modalTitle.html(modalTitle);
                 $submitProductForm.html(submitTitle);
 
-                if (currentProductId === undefined){
+                if (currentProductId === undefined) {
                     createProduct();
                 } else {
                     productUrl = button.data('get-url');
@@ -608,7 +624,8 @@ customModule.adminProductEdit = {
                 }
             });
 
-        })({}, function (){});
+        })({}, function () {
+        });
 
     }
 };

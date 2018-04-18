@@ -189,6 +189,10 @@ return [
     'products.message_api_error' => 'Loading error, try again later',
     'products.message_api_key_error' => 'Incorrect Apikey',
     'products.message_api_json_decode_error' => 'API response JSON decode errors!',
+    'products.product_menu_header' => 'Confirm',
+    'products.product_menu_message' => 'Do you want to create menu item {name}?',
+    'products.product_menu_success' => 'Yes',
+    'products.product_menu_cancel' => 'No',
 
     'products.f_id' => 'ID',
     'products.f_name' => 'Name',
