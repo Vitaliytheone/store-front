@@ -180,6 +180,7 @@ return [
     'payments.list.navs_refunded' => 'Refunded ({count})',
     'payments.list.navs_expired' => 'Expired ({count})',
     'payments.list.navs_verification' => 'Verification ({count})',
+    'payments.list.navs_unverified' => 'Unverified ({count})',
     'payments.list.search' => 'Search payments',
     'payments.list.column_id' => 'ID',
     'payments.list.column_invoice' => 'Invoice',
@@ -203,6 +204,7 @@ return [
     'payments.list.action_details' => 'Details',
     'payments.list.action_make_active' => 'Make active',
     'payments.list.action_make_accepted' => 'Accept payment',
+    'payments.list.action_make_refunded' => 'Refund payment',
 
     'pages.settings.menu_payments' => 'Payments',
     'pages.settings.menu_staff' => 'Staff',

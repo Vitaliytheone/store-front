@@ -46,6 +46,7 @@ class Payments extends ActiveRecord
     const STATUS_EXPIRED = 5;
     const STATUS_REVIEW = 6;
     const STATUS_VERIFICATION = 7;
+    const STATUS_UNVERIFIED = 8;
 
     const MODE_MANUAL = 0;
     const MODE_AUTO = 1;
@@ -193,6 +194,7 @@ class Payments extends ActiveRecord
             static::STATUS_EXPIRED => Yii::t('app', 'payments.status.expired'),
             static::STATUS_REVIEW => Yii::t('app', 'payments.status.review'),
             static::STATUS_VERIFICATION => Yii::t('app', 'payments.status.verification'),
+            static::STATUS_UNVERIFIED => Yii::t('app', 'payments.status.unverified'),
         ];
     }
 
@@ -285,6 +287,14 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeAccepted':
+                if (in_array($this->type, [PaymentGateway::METHOD_PAYPAL]) &&
+                    $this->status == self::STATUS_VERIFICATION
+                ) {
+                    return true;
+                }
+            break;
+
+            case 'makeRefunded':
                 if (in_array($this->type, [PaymentGateway::METHOD_PAYPAL]) &&
                     $this->status == self::STATUS_VERIFICATION
                 ) {
