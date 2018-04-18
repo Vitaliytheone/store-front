@@ -2,6 +2,8 @@
 
 namespace my\controllers;
 
+use common\models\panels\MyActivityLog;
+use my\helpers\UserHelper;
 use my\mail\mailers\PanelFrozen;
 use my\models\forms\LoginFormSuper;
 use common\models\panels\Project;
@@ -79,6 +81,9 @@ class SystemController extends CustomController
                 $model = new LoginFormSuper();
                 $model->load(array('LoginFormSuper' => array('username' => $customer->email,'password' => $customer->password)));
                 $model->login();
+
+                MyActivityLog::log(MyActivityLog::E_SUPER_USER_AUTHORIZATION, $customer->id, $customer->id, UserHelper::getHash());
+
                 return $this->redirect('/panels');
             }
         }
