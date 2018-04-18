@@ -149,7 +149,7 @@ customModule.adminProductEdit = {
                     showInitial: true,
                     showPalette: true,
                     showSelectionPalette: true,
-                    showAlpha: true,
+                    showAlpha: false,
                     maxPaletteSize: 19,
                     preferredFormat: "hex",
                     localStorageKey: "spectrum.color",
