@@ -1,0 +1,9 @@
+/**
+  Insert default blocks settings to store template db
+ */
+INSERT INTO `store_template`.`blocks` (`code`, `content`)
+VALUES
+  ('slider', '{\"settings\":{\"effect\":\"slide\",\"interval\":\"5000\"},\"data\":[{\"id\":\"1\",\"title\":\"Title slide #1\",\"description\":\"Description slide #1\",\"button\":{\"title\":\"Edit link\",\"link\":\"\/#\",\"type\":\"web\"},\"image\":\"\/img\/slide_no_image.png\"}]}'),
+  ('features', '{\"settings\":{\"icon_size\":\"75\",\"column\":\"4\",\"align\":\"center\"},\"header\":{\"title\":\"Features\",\"description\":\"Description of the main features of service\"},\"data\":[{\"id\":\"1\",\"title\":\"Feature #1\",\"description\":\"Description feature #1\",\"icon\":\"fa-picture-o\"},{\"id\":\"2\",\"title\":\"Feature #2\",\"description\":\"Description feature #2\",\"icon\":\"fa-picture-o\"},{\"id\":\"3\",\"title\":\"Feature #3\",\"description\":\"Description feature #3\",\"icon\":\"fa-picture-o\"}]}'),
+  ('process', '{\"settings\":{\"icon_size\":\"75\",\"description\":\"1\",\"column\":\"3\"},\"header\":{\"title\":\"Process\",\"description\":\"Description precess block\"},\"data\":[{\"id\":\"1\",\"title\":\"Process #1\",\"description\":\"Description process #1\",\"icon\":\"fa-picture-o\"},{\"id\":\"2\",\"title\":\"Process #2\",\"description\":\"Description process #2\",\"icon\":\"fa-picture-o\"},{\"id\":\"3\",\"title\":\"Process #3\",\"description\":\"Description process #3\",\"icon\":\"fa-picture-o\"},{\"id\":\"4\",\"title\":\"Process #4\",\"description\":\"Description process #4\",\"icon\":\"fa-picture-o\"}]}'),
+  ('reviews', '{\"settings\":{\"column\":\"1\"},\"header\":{\"title\":\"Reviews\",\"description\":\"Description block reviews\"},\"data\":[{\"id\":\"1\",\"image\":\"\/img\/review_no_avatar.gif\",\"name\":\"John\",\"rating\":\"5\",\"description\":\"Great service!\"}]}');
