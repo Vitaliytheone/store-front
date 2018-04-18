@@ -283,8 +283,8 @@ class Stores extends ActiveRecord
         return [
             Blocks::CODE_SLIDER => Yii::t('app', 'Slider'),
             Blocks::CODE_FEATURES => Yii::t('app', 'Features'),
-            Blocks::CODE_REVIEW => Yii::t('app', 'Reviews'),
             Blocks::CODE_PROCESS => Yii::t('app', 'Process'),
+            Blocks::CODE_REVIEW => Yii::t('app', 'Reviews'),
         ];
     }
 
