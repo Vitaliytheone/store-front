@@ -6,7 +6,7 @@ use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
+use common\models\stores\StoreDomains;
 use my\helpers\OrderHelper;
 use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
@@ -181,7 +181,7 @@ class OrderStoreForm extends Model
 
         $exitingStores = (new Query())
             ->select('domain')
-            ->from(Stores::tableName())
+            ->from(StoreDomains::tableName())
             ->column();
 
         $exitingDomains = array_merge($pendingOrders, $exitingStores);
@@ -192,9 +192,9 @@ class OrderStoreForm extends Model
 
         // Check if store with same domain already exist
         do {
-            $chekingDomain = $checkingSubdomain . '.' . $domain;
+            $checkingDomain = $checkingSubdomain . '.' . $domain;
 
-            $domainExist = in_array($chekingDomain, $exitingDomains);
+            $domainExist = in_array($checkingDomain, $exitingDomains);
 
             if ($domainExist) {
                 $checkingSubdomain = $subdomain . $subdomainPostfix;
@@ -203,7 +203,7 @@ class OrderStoreForm extends Model
 
         } while ($domainExist);
 
-        $this->storeDomain = $chekingDomain;
+        $this->storeDomain = $checkingDomain;
 
         return $this->storeDomain;
     }

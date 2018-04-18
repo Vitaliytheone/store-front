@@ -272,6 +272,12 @@ class Invoices extends ActiveRecord
                     $cancelPendingOrders($detail);
                 }
 
+                if ($detail->item == InvoiceDetails::ITEM_PROLONGATION_PANEL &&
+                    !$customer->can('stores')
+                ) {
+                    $customer->activateStores();
+                }
+
                 if (in_array($detail->item, [
                     InvoiceDetails::ITEM_BUY_PANEL,
                     InvoiceDetails::ITEM_PROLONGATION_PANEL,
