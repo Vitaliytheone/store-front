@@ -52,6 +52,8 @@ customModule.adminProductEdit = {
                 seo_keywords: $productForm.find('.form_field__seo_keywords')
             };
 
+            $productForm.formType = undefined;
+
             var defaultFormData = {
                 name: $formFields.name.val(),
                 description: $formFields.description.val(),
@@ -98,6 +100,11 @@ customModule.adminProductEdit = {
                         }
                         //Success
                         _.delay(function () {
+                            if ('update' == $productForm.formType){
+                                location.href = successRedirectUrl;
+                                return;
+                            }
+
                             $modal.modal('hide');
                             var message = confirmMenuOptions.labels.message.replace('{name}', data.product.name);
 
@@ -457,6 +464,7 @@ customModule.adminProductEdit = {
                     bindCreateProductEvents();
 
                     $formFields.name.focus();
+                    $productForm.formType = 'create';
                 });
             }
 
@@ -551,6 +559,8 @@ customModule.adminProductEdit = {
              *******************************************************************************************/
             function updateProduct(productUrl) {
                 bindEditProductEvents();
+
+                $productForm.formType = 'update';
 
                 $modalLoader.removeClass('hidden');
                 // Get exiting product
