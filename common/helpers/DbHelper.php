@@ -189,13 +189,13 @@ class DbHelper
         $dirname = dirname($filePath);
 
         // Create dir if non exist
-        if (!file_exists($dirname)) {
-            mkdir($dirname, 0777);
+        if (!file_exists($dirname) && !mkdir($dirname, 0777)) {
+            throw new Exception('Сan not create sql dump directory!');
         }
 
         // Remove old dump
-        if (file_exists($filePath) && is_file($filePath)) {
-            unlink ($filePath);
+        if (file_exists($filePath) && is_file($filePath) && !unlink($filePath)) {
+            throw new Exception('Сan not delete old sql dump file!');
         }
 
         $cmd = "$mysqldumpExecPath --user=$username --password=$password --host=$host --protocol=tcp --port=3306 $db > $filePath";
