@@ -91,7 +91,7 @@ class DefaultThemes extends ActiveRecord
      */
     public static function getDefaultThemePath()
     {
-        $defaultTheme = ArrayHelper::getValue(Yii::$app->params, 'defaultTheme', null);
+        $defaultTheme = ArrayHelper::getValue(Yii::$app->params, ['store.defaults', 'theme_folder'], null);
         if (!$defaultTheme) {
             throw new Exception('Default theme does not configured!');
         }

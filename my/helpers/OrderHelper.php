@@ -482,7 +482,7 @@ class OrderHelper {
         $orderDetails = $order->getDetails();
         $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
 
-        $projectDefaults = Yii::$app->params['storeDefaults'];
+        $projectDefaults = Yii::$app->params['store.defaults'];
 
         $store = new Stores();
         $store->setAttributes($projectDefaults);
