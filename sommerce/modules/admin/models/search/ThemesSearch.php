@@ -4,16 +4,31 @@ namespace sommerce\modules\admin\models\search;
 
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
+use common\models\stores\Stores;
 use Yii;
 use yii\base\Model;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class ThemesSearch
+ * @package sommerce\modules\admin\models\search
+ */
 class ThemesSearch extends Model
 {
-
+    /**
+     * @var Stores
+     */
     private $_store;
+
+    /**
+     * @var string
+     */
     private $_customThemesTable;
+
+    /**
+     * @var string
+     */
     private $_defaultThemesTable;
 
     public function init()

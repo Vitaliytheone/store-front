@@ -811,6 +811,22 @@ textarea.form-control {
     margin-right: 8px;
 }
 
+.best-product:before{
+    content: 'BEST';
+    display: block;
+    font-size: 10px;
+    height: 22px;
+    position: absolute;
+    right: -36px;
+    top: 5px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(40deg);
+    background-color: #169ea8;
+    width: 105px;
+    color: #fff;
+}
+
 /* 3.7. COMMENT TITLE */
 .comment--title {
     position: relative;
@@ -2344,13 +2360,14 @@ textarea.form-control {
 .pricing-table--item {
     text-align: center;
     margin-bottom: 30px;
+    overflow: hidden;
 }
 
 .pricing-table--item .header {
     padding: 27px 15px 24px;
     background-color: #fafafa;
     border-style: solid;
-    border-width: 1px 0 1px 1px;
+    border-width: 1px 1px 1px 1px;
     border-color: #eee;
 }
 
@@ -2381,7 +2398,7 @@ textarea.form-control {
 
 .pricing-table--item .features {
     border-style: solid;
-    border-width: 0 0 0 1px;
+    border-width: 0 1px 0 1px;
     border-color: #eee;
     font-size: 16px;
     line-height: 26px;
@@ -2481,7 +2498,10 @@ textarea.form-control {
 }
 
 .pricing-table--item .footer {
-    margin-top: 40px;
+    padding: 15px 0px;
+    border-left: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
 }
 
 /*------------------------------------*\

@@ -87,11 +87,6 @@ abstract class BasePayment extends Component {
     {
         $this->_token = bin2hex(random_bytes(32));
 
-//        $this->_method = strtolower((new \ReflectionClass($this))->getShortName()); TODO:: _method declaration is moved to constructor
-
-        $this->_payment = new Payments();
-        $this->_payment->method = $this->_method;
-
         return parent::init();
     }
 
@@ -158,12 +153,20 @@ abstract class BasePayment extends Component {
      * @param Payments $payment
      * @param array $result
      * @param Stores $store
-     * @return bool|void
+     * @return void
      */
     public static function success($payment, $result, $store)
     {
         if (1 != $result['result']) {
-            return false;
+            if ($payment) {
+                if (!$payment->status) {
+                    $payment->status = Payments::STATUS_FAILED;
+                }
+
+                $payment->save(false);
+            }
+
+            return;
         }
 
         $checkout = Checkouts::findOne($result['checkout_id']);

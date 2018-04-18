@@ -6,13 +6,10 @@ $cdn = require(__DIR__ . '/settings/cdn.php');
 $currencies = require(__DIR__ . '/settings/currency.php');
 
 return [
-    'defaultTheme' => 'classic',
-    'default_language' => 'en',
-
     'adminEmail' => 'admin@example.com',
     'debugIps' => ['*'],
 
-    'auth_key' => '001100110011001100110011',
+    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r', // Must be a same as my/config/params.php 'auth_key'!
 
     'reCaptcha.siteKey' => '6LeAmT4UAAAAAKz1c-wjHdI2XDp_PglfA1rl8RbG',
     'reCaptcha.secret' => '6LeAmT4UAAAAAI88eDxVJkusrAurV9A8EqwphqVw',
@@ -40,4 +37,5 @@ return [
     'timezone' => $timezone,
     'cdn' => $cdn,
     'currencies' => $currencies,
+    'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
 ];

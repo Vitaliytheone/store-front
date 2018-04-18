@@ -7,6 +7,7 @@ use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
+use my\helpers\OrderHelper;
 use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
 use Yii;
@@ -23,6 +24,7 @@ class OrderStoreForm extends Model
 {
     public $store_name;
     public $store_currency;
+    public $admin_email;
     public $admin_username;
     public $admin_password;
     public $confirm_password;
@@ -48,11 +50,12 @@ class OrderStoreForm extends Model
     public function rules()
     {
         return [
-            [['store_name', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required'],
-            [['store_name', 'admin_username',], 'trim'],
+            [['store_name', 'store_currency', 'admin_email', 'admin_username', 'admin_password', 'confirm_password'], 'required'],
+            [['store_name', 'admin_username', 'admin_email'], 'trim'],
             ['store_name', 'string', 'max' => 255,],
             ['store_name', 'match', 'pattern' => '/^[a-zA-Z0-9 \-\s]+$/', 'message' => Yii::t('app', 'error.store.bad_name')],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
+            ['admin_email', 'email'],
             ['admin_username', 'string', 'max' => 255],
             ['admin_password', 'string', 'min' => 5],
             ['admin_password', 'compare', 'compareAttribute' => 'confirm_password'],
@@ -67,6 +70,7 @@ class OrderStoreForm extends Model
         return [
             'store_name' => Yii::t('app', 'stores.order.form.label.store_name'),
             'store_currency' => Yii::t('app', 'stores.order.form.label.store_currency'),
+            'admin_email' => Yii::t('app', 'stores.order.form.label.admin_email'),
             'admin_username' => Yii::t('app', 'stores.order.form.label.admin_username'),
             'admin_password' => Yii::t('app', 'stores.order.form.label.admin_password'),
             'confirm_password' => Yii::t('app', 'stores.order.form.label.confirm_password'),
@@ -221,12 +225,19 @@ class OrderStoreForm extends Model
             'name' => $this->store_name,
             'domain' => $this->storeDomain,
             'currency' => $this->store_currency,
+            'admin_email' => $this->admin_email,
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
         ]);
 
         if (!$order->save()) {
             return false;
+        }
+
+        if ($this->getTrial()) {
+            if (!OrderHelper::store($order)) {
+                return false;
+            }
         }
 
         return $order;

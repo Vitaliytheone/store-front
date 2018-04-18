@@ -482,12 +482,13 @@ class OrderHelper {
         $orderDetails = $order->getDetails();
         $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
 
-        $projectDefaults = Yii::$app->params['storeDefaults'];
+        $projectDefaults = Yii::$app->params['store.defaults'];
 
         $store = new Stores();
         $store->setAttributes($projectDefaults);
 
         $store->customer_id = $order->cid;
+        $store->admin_email = ArrayHelper::getValue($orderDetails, 'admin_email');
         $store->currency = ArrayHelper::getValue($orderDetails,'currency');
         $store->domain = DomainsHelper::idnToUtf8($order->domain);
         $store->subdomain = 0;

@@ -23,6 +23,18 @@ class StoreDomainValidator extends BaseDomainValidator
      */
     public function validateAttribute($model, $attribute)
     {
+        $this->domain = $model->{$attribute};
+
+        if (!$this->isValidDomainZone()) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain'));
+            return false;
+        }
+
+        if (!$this->isValidDomainName()) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain'));
+            return false;
+        }
+
         if (method_exists($model, 'isValidateDomain') && !$model->isValidateDomain()) {
             return true;
         }
@@ -31,7 +43,6 @@ class StoreDomainValidator extends BaseDomainValidator
             return false;
         }
 
-        $this->domain = $model->{$attribute};
         $storeId = $model->getStore()->id;
         $this->user_id = $model->getUser()->id;
 
@@ -43,7 +54,7 @@ class StoreDomainValidator extends BaseDomainValidator
         }
 
         if (Yii::$app->params['whoisxml']) {
-            $result = $this->isValidDomainName($domain);
+            $result = $this->isExistDomainName($domain);
 
             if (!$result['result']) {
                 $model->addError($attribute, Yii::t('app', 'error.store.domain_is_not_registered'));

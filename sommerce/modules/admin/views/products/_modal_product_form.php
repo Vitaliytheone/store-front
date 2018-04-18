@@ -54,7 +54,7 @@ $storeUrl = 'http://' . $store->domain;
                     <div class="form-group">
                         <label><?= Yii::t('admin', 'products.product_color') ?></label>
                         <div class="product-color__wrap">
-                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="#ffffff" name="ProductForm[color]">
+                            <input type="text" class="form_field__color product-color" id="edit-page-color" value="" name="ProductForm[color]">
                         </div>
                     </div>
 
@@ -172,7 +172,7 @@ $storeUrl = 'http://' . $store->domain;
                                     <div class="input-group">
                                         <span class="input-group-addon"
                                               id="basic-addon3"><?= $storeUrl; ?>/</span>
-                                        <input type="text" class="form_field__url form-control" id="edit-seo__url" name="ProductForm[url]" value="<?= Yii::t('admin', 'products.product_seo_url_default') ?>">
+                                        <input type="text" class="form_field__url form-control" id="edit-seo__url" name="ProductForm[url]" value="">
                                     </div>
                                 </div>
 

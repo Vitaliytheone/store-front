@@ -56,4 +56,24 @@ return [
         'ns_3' => null,
         'ns_4' => null,
     ],
+
+    'my.domains.stop_words' => [
+        'perfect'
+    ],
+
+    'my.domains.stop_zones' => [
+        'tk'
+    ],
+
+    // Default store attributes
+    'store.defaults' => [
+        'timezone' => 0,
+        'language' => 'en',
+        'theme_name' => 'SMM24',
+        'theme_folder' => 'smm24',
+        'block_slider' => 1,
+        'block_features' => 1,
+        'block_reviews' => 1,
+        'block_process' => 1,
+    ],
 ];
