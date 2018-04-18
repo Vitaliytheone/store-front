@@ -229,6 +229,9 @@ class PaymentsSearch extends Payments {
             Payments::STATUS_REFUNDED => Yii::t('app/superadmin', 'payments.list.navs_refunded', [
                 'count' => $this->count(Payments::STATUS_REFUNDED)
             ]),
+            Payments::STATUS_UNVERIFIED => Yii::t('app/superadmin', 'payments.list.navs_unverified', [
+                'count' => $this->count(Payments::STATUS_UNVERIFIED)
+            ]),
             Payments::STATUS_EXPIRED => Yii::t('app/superadmin', 'payments.list.navs_expired', [
                 'count' => $this->count(Payments::STATUS_EXPIRED)
             ]),
