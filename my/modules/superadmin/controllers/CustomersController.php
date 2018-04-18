@@ -124,8 +124,6 @@ class CustomersController extends CustomController
         $customer->generateAuthToken();
         $customer->save(false);
 
-        MyActivityLog::log(MyActivityLog::E_SUPER_USER_AUTHORIZATION, $customer->id, $customer->id, UserHelper::getHash());
-
         $url = Yii::$app->params['my_domain'] . '/authSuperadmin/' . Yii::$app->params['gypAuth'] . '/' . $customer->auth_token;
         $this->redirect(Url::to('//' . $url, true));
     }
