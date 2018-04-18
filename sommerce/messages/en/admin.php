@@ -293,7 +293,7 @@ return [
     'settings.providers_save' => 'Save changes',
     'settings.providers_modal_title' => 'Add provider',
     'settings.providers_m_title' => 'Add provider',
-    'settings.providers_m_name' => 'Provider name',
+    'settings.providers_m_name' => 'Exact link',
     'settings.providers_m_add' => 'Add provider',
     'settings.providers_m_cancel' => 'Cancel',
 

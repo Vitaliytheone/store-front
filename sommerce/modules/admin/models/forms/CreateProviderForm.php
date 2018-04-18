@@ -109,7 +109,7 @@ class CreateProviderForm extends Model {
     public function attributeLabels()
     {
         return [
-            'name' => 'Provider name',
+            'name' => Yii::t('admin', 'settings.providers_m_name'),
         ];
     }
 
