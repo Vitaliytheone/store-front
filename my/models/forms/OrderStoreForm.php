@@ -234,8 +234,10 @@ class OrderStoreForm extends Model
             return false;
         }
 
-        if (!OrderHelper::store($order)) {
-            return false;
+        if ($this->getTrial()) {
+            if (!OrderHelper::store($order)) {
+                return false;
+            }
         }
 
         return $order;
