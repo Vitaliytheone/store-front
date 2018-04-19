@@ -25,6 +25,7 @@ class Notifications extends ActiveRecord
     const ITEM_CUSTOMER = 4;
     const ITEM_PAYMENTS = 5;
     const ITEM_TICKET = 6;
+    const ITEM_STORE = 7;
 
     /**
      * @inheritdoc
@@ -80,6 +81,7 @@ class Notifications extends ActiveRecord
         return [
             static::ITEM_PANEL => Yii::t('app', 'notifications.item.panel'),
             static::ITEM_SSL => Yii::t('app', 'notifications.item.ssl'),
+            static::ITEM_STORE => Yii::t('app', 'notifications.item.store'),
             static::ITEM_DOMAIN => Yii::t('app', 'notifications.item.domain'),
             static::ITEM_CUSTOMER => Yii::t('app', 'notifications.item.customer'),
             static::ITEM_PAYMENTS => Yii::t('app', 'notifications.item.payments'),
