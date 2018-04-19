@@ -19,6 +19,7 @@ class InvoiceCreated extends BaseMailer {
         $project = ArrayHelper::getValue($this->options, 'project');
         $domain = ArrayHelper::getValue($this->options, 'domain');
         $ssl = ArrayHelper::getValue($this->options, 'ssl');
+        $store = ArrayHelper::getValue($this->options, 'store');
 
         if ($project) {
             $this->to = $project->customer->email;
@@ -37,6 +38,12 @@ class InvoiceCreated extends BaseMailer {
             $this->notificationOptions = [
                 'item' => Notifications::ITEM_SSL,
                 'item_id' => $ssl->id
+            ];
+        } else if ($store) {
+            $this->to = $store->customer->email;
+            $this->notificationOptions = [
+                'item' => Notifications::ITEM_STORE,
+                'item_id' => $store->id
             ];
         } else {
             $this->notificationEmail = false;
