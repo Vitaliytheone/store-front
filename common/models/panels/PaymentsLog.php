@@ -5,6 +5,7 @@ namespace common\models\panels;
 use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 /**
@@ -81,5 +82,41 @@ class PaymentsLog extends ActiveRecord
     public function getLog()
     {
         return Json::decode($this->logs);
+    }
+
+    /**
+     * Set log
+     * @param $log
+     */
+    public function setLog($log)
+    {
+        $this->logs = Json::encode($log);
+    }
+
+    /**
+     * Get IP
+     */
+    public function getIp()
+    {
+        return ArrayHelper::getValue(json_decode($this->logs, true), 'REMOTE_ADDR');
+    }
+
+    /**
+     * Write one log record
+     * @param $paymentId integer
+     * @param $response array|string
+     * @param $log array|string
+     * @param $ip string
+     * @return bool;
+     */
+    public static function log($paymentId, $response, $log, $ip)
+    {
+        $model = new static();
+        $model->pid = $paymentId;
+        $model->setResponse($response);
+        $model->setLog($log);
+        $model->ip = $ip;
+
+        return $model->save(false);
     }
 }

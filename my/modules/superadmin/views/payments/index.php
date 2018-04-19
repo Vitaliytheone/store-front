@@ -42,3 +42,4 @@
 </div>
 
 <?= $this->render('layouts/_payment_details_modal')?>
+<?= $this->render('layouts/_payment_refund_modal')?>

@@ -27,5 +27,18 @@ customModule.superadminPaymentsController = {
 
             return false;
         });
+
+        $('#paymentRefundModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget),
+                paymentId = button.data('payment_id'),
+                paymentAmount = button.data('payment_amount'),
+                actionUrl = button.data('action_url');
+
+            if (paymentId === undefined || actionUrl === undefined) {
+                return;
+            }
+
+            $('#submitRefund').attr('href', actionUrl);
+        });
     }
 };
