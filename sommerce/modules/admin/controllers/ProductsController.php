@@ -106,6 +106,7 @@ class ProductsController extends CustomController
      * Create product menu item
      * @param integer $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionCreateProductMenu($id)
     {
@@ -116,6 +117,7 @@ class ProductsController extends CustomController
         }
 
         $model = new EditNavigationForm();
+        $model->setUser(Yii::$app->user);
 
         if ($model->create([$model->formName() => [
             'name' => $product->name,
