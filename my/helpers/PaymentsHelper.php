@@ -110,7 +110,7 @@ class PaymentsHelper {
                 'type' => PaymentGateway::METHOD_PAYPAL,
                 'status' => Payments::STATUS_VERIFICATION,
             ])
-            ->andWhere(['>', 'date_update', time() - $verificationTime])
+            ->andWhere(['<', 'date_update', time() - $verificationTime])
             ->all();
 
         /** @var Payments $payment */
