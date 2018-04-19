@@ -2,10 +2,8 @@
 
 namespace console\controllers\my;
 
+use common\helpers\InvoiceHelper;
 use common\models\panel\PaymentsLog;
-use common\models\panels\Domains;
-use common\models\panels\InvoiceDetails;
-use common\models\panels\Invoices;
 use common\models\panels\Logs;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
@@ -14,12 +12,10 @@ use common\models\panels\PaymentHash;
 use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
-use common\models\panels\Tariff;
 use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
-use my\mail\mailers\InvoiceCreated;
 use my\mail\mailers\PanelExpired;
 use Yii;
 use yii\base\ErrorException;
@@ -125,160 +121,16 @@ class CronController extends CustomController
     }
 
     /**
-     * Create new panel invoice
+     * Create prolongation invoices
      * @access public
      * @return void
      */
     public function actionCreateInvoice()
     {
-        $date = time() + (7 * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
-
-        /**
-         * @var Project $project
-         */
-        $projects = Project::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = project.id AND invoice_details.item IN (' . implode(",", [
-                InvoiceDetails::ITEM_PROLONGATION_PANEL,
-                InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-            ]) . ')')
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
-            ->andWhere([
-                'project.act' => Project::STATUS_ACTIVE,
-                'project.no_invoice' => Project::NO_INVOICE_DISABLED
-            ])->andWhere('project.expired < :expired', [
-                ':expired' => $date
-            ])
-            ->groupBy('project.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->all();
-
-        foreach ($projects as $project) {
-            $tariff = Tariff::findOne($project->tariff);
-
-            if (!$tariff || !$tariff->price) {
-                continue;
-            }
-
-            $transaction = Yii::$app->db->beginTransaction();
-
-            $invoice = new Invoices();
-            $invoice->cid = $project->cid;
-            $invoice->total = $tariff->price;
-            $invoice->generateCode();
-            $invoice->daysExpired(7);
-
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $project->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_PANEL;
-
-                if ($project->child_panel) {
-                    $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
-                }
-
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
-
-                $transaction->commit();
-
-                if (!$project->child_panel) {
-                    if ($project->plan != $project->tariff) {
-                        $project->plan = $project->tariff;
-                        $project->save(false);
-                    }
-                }
-                
-                $mail = new InvoiceCreated([
-                    'project' => $project
-                ]);
-                $mail->send();
-            }
-        }
-
-        $domains = Domains::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = domains.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_DOMAIN)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
-            ->andWhere([
-                'domains.status' => Domains::STATUS_OK,
-            ])->andWhere('domains.expiry < :expiry', [
-                ':expiry' => $date
-            ])
-            ->groupBy('domains.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->all();
-
-        foreach ($domains as $domain) {
-            $transaction = Yii::$app->db->beginTransaction();
-
-            $invoice = new Invoices();
-            $invoice->cid = $domain->customer_id;
-            $invoice->total = $domain->zone->price_renewal;
-            $invoice->generateCode();
-            $invoice->daysExpired(7);
-
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $domain->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_DOMAIN;
-
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
-
-                $transaction->commit();
-
-                $mail = new InvoiceCreated([
-                    'domain' => $domain
-                ]);
-                $mail->send();
-            }
-        }
-
-        $sslCerts = SslCert::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = ssl_cert.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
-            ->andWhere([
-                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
-            ])->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
-                ':expiry' => $date
-            ])
-            ->groupBy('ssl_cert.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->all();
-
-        foreach ($sslCerts as $ssl) {
-            $transaction = Yii::$app->db->beginTransaction();
-
-            $invoice = new Invoices();
-            $invoice->cid = $ssl->cid;
-            $invoice->total = $ssl->item->price;
-            $invoice->generateCode();
-            $invoice->daysExpired(7);
-
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $ssl->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_SSL;
-
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
-
-                $transaction->commit();
-
-                $mail = new InvoiceCreated([
-                    'ssl' => $ssl
-                ]);
-                $mail->send();
-            }
-        }
+        InvoiceHelper::prolongPanels();
+        InvoiceHelper::prolongDomains();
+        InvoiceHelper::prolongSsl();
+        InvoiceHelper::prolongStores();
     }
 
     /**

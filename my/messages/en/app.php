@@ -315,6 +315,7 @@ return [
     'notification_email.status.disabled' => 'Disabled',
     'notifications.item.panel' => 'Panel',
     'notifications.item.ssl' => 'SSL',
+    'notifications.item.store' => 'Store',
     'notifications.item.domain' => 'Domain',
     'notifications.item.customer' => 'Customer',
     'notifications.item.payments' => 'Payments',
