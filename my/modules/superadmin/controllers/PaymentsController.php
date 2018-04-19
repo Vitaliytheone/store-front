@@ -94,6 +94,21 @@ class PaymentsController extends CustomController
     }
 
     /**
+     * Refund payment to payer
+     * @param $id
+     */
+    public function actionMakeRefunded($id)
+    {
+        $payment = $this->findModel($id);
+
+        if ($payment->can('makeRefunded')) {
+            $payment->refund();
+        }
+
+        $this->redirect(Url::toRoute('/payments'));
+    }
+
+    /**
      * Find payments model
      * @param $id
      * @return null|Payments

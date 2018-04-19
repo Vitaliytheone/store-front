@@ -4,7 +4,7 @@
 /* @var $log \common\models\panels\PaymentsLog */
 ?>
 <?php if (!empty($logs)) : ?>
-<Strong>IP: </Strong><?= $logs[0]->getLog()['REMOTE_ADDR'] ?><br />
+<Strong>IP: </Strong><?= $logs[0]->getIp() ?><br />
 <strong><?= Yii::t('app/superadmin', 'payments.list.details_modal_logs_header')?></strong><br />
 <?php foreach ($logs as $log) : ?>
 <pre>

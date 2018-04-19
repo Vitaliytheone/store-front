@@ -107,8 +107,13 @@
                                 ])?>
                             <?php endif; ?>
                             <?php if ($payment->can('makeRefunded')) : ?>
-                                <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_make_refunded'), Url::toRoute(['#', 'id' => $payment->id]), [
+                                <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_make_refunded'), '#' , [
                                     'class' => 'dropdown-item',
+                                    'data-toggle' => 'modal',
+                                    'data-target' => '#paymentRefundModal',
+                                    'data-payment_id' => $payment->id,
+                                    'data-payment_amount' => $payment->amount,
+                                    'data-action_url' => Url::toRoute(['/payments/make-refunded', 'id' => $payment->id]),
                                 ])?>
                             <?php endif; ?>
                         </div>

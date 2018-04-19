@@ -30,6 +30,7 @@ class ThirdPartyLog extends ActiveRecord
     const ITEM_ORDER = 7;
     const ITEM_BUY_STORE = 8;
     const ITEM_PROLONGATION_STORE = 9;
+    const ITEM_REFUND_PAYPAL_PAYMENT = 10;
 
     use UnixTimeFormatTrait;
 

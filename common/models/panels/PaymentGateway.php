@@ -38,6 +38,11 @@ class PaymentGateway extends ActiveRecord
 
 
     /**
+     * After this time after payment refund paypal transaction impossible
+     */
+    const PAYPAL_REFUND_EXPIRED_AFTER = 180 * 24 * 60 * 60;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
