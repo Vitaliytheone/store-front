@@ -34,6 +34,8 @@ class AccountForm extends Model
     {
         return [
             [['current_password', 'password', 'confirm_password'], 'required'],
+            [['current_password', 'password', 'confirm_password'], 'string'],
+            [['current_password', 'password', 'confirm_password'], 'trim'],
             ['password', 'compare', 'compareAttribute' => 'confirm_password', 'message' => Yii::t('admin', 'account.message_wrong_new_password_pair')],
             ['password', 'compare', 'compareAttribute' => 'current_password', 'operator' => '!=', 'message' => Yii::t('admin', 'account.message_wrong_new_password')],
             ['current_password', 'validatePassword']
