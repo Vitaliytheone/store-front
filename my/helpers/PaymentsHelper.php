@@ -79,11 +79,15 @@ class PaymentsHelper {
 
         $response = $paypal->request('RefundTransaction', $requestParams);
 
+        error_log(print_r($payment->id,1));
+        error_log(print_r($payment->transaction_id,1));
+        error_log(print_r($response,1));
+
         $logParams = ['payment_model' => $payment->attributes, 'request_params' => $requestParams, 'response' => $response];
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_REFUND_PAYPAL_PAYMENT, $payment->id, $logParams, 'refund.response');
 
-        PaymentsLog::log($payment->id, ['RefundTransaction' => $response], array_merge($_GET, $_POST, $_SERVER), ArrayHelper::getValue($_SERVER, 'REMOTE_ADDR'));
+        PaymentsLog::log($payment->id, ['RefundTransaction' => $response], array_merge($_GET, $_POST, $_SERVER), ArrayHelper::getValue($_SERVER, 'REMOTE_ADDR','localhost'));
 
         $ppAck = ArrayHelper::getValue($response,'ACK');
         $ppRefundAmount = ArrayHelper::getValue($response,'TOTALREFUNDEDAMOUNT');
@@ -109,10 +113,15 @@ class PaymentsHelper {
             ])
             ->andWhere(['>', 'date_update', time() - $verificationTime])
             ->all();
-        
 
-        error_log(print_r($payments,1));
         error_log('----------------');
         error_log(time() - $verificationTime);
+        error_log(count($payments));
+
+        /** @var Payments $payment */
+        foreach ($payments as $payment) {
+            static::refundPaypalPayment($payment);
+        }
+
     }
 }

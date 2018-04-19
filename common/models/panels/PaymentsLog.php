@@ -117,6 +117,10 @@ class PaymentsLog extends ActiveRecord
         $model->setLog($log);
         $model->ip = $ip;
 
+        error_log('----error----log-----');
+        error_log(print_r($model->errors,1));
+        error_log(print_r($model->attributes,1));
+
         return $model->save(false);
     }
 }
