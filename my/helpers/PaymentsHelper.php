@@ -9,6 +9,7 @@ use common\models\panels\PaymentsLog;
 use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class PaymentsHelper
@@ -95,5 +96,23 @@ class PaymentsHelper {
         }
 
         return true;
+    }
+
+    public static function refundPaypalPayments()
+    {
+        $verificationTime = Yii::$app->params['payment_verification_time'];
+
+        $payments = Payments::find()
+            ->andWhere([
+                'type' => PaymentGateway::METHOD_PAYPAL,
+                'status' => Payments::STATUS_VERIFICATION,
+            ])
+            ->andWhere(['>', 'date_update', time() - $verificationTime])
+            ->all();
+        
+
+        error_log(print_r($payments,1));
+        error_log('----------------');
+        error_log(time() - $verificationTime);
     }
 }

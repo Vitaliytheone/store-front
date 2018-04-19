@@ -19,6 +19,7 @@ use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
+use my\helpers\PaymentsHelper;
 use my\mail\mailers\InvoiceCreated;
 use my\mail\mailers\PanelExpired;
 use Yii;
@@ -507,5 +508,10 @@ class CronController extends CustomController
     public function actionSuperTasks()
     {
         SuperTaskHelper::runTasks();
+    }
+
+    public function actionRefundPayments()
+    {
+        PaymentsHelper::refundPaypalPayments();
     }
 }
