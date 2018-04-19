@@ -510,8 +510,11 @@ class CronController extends CustomController
         SuperTaskHelper::runTasks();
     }
 
+    /**
+     * Refund all unverified payments
+     */
     public function actionRefundPayments()
     {
-        PaymentsHelper::refundPaypalPayments();
+        PaymentsHelper::refundPaypalVerifyExpiredPayments();
     }
 }
