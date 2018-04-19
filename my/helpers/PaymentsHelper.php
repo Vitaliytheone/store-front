@@ -9,6 +9,7 @@ use common\models\panels\PaymentsLog;
 use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class PaymentsHelper
@@ -82,7 +83,7 @@ class PaymentsHelper {
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_REFUND_PAYPAL_PAYMENT, $payment->id, $logParams, 'refund.response');
 
-        PaymentsLog::log($payment->id, ['RefundTransaction' => $response], array_merge($_GET, $_POST, $_SERVER), ArrayHelper::getValue($_SERVER, 'REMOTE_ADDR'));
+        PaymentsLog::log($payment->id, ['RefundTransaction' => $response], array_merge($_GET, $_POST, $_SERVER), ArrayHelper::getValue($_SERVER, 'REMOTE_ADDR','localhost'));
 
         $ppAck = ArrayHelper::getValue($response,'ACK');
         $ppRefundAmount = ArrayHelper::getValue($response,'TOTALREFUNDEDAMOUNT');
@@ -95,5 +96,29 @@ class PaymentsHelper {
         }
 
         return true;
+    }
+
+    /**
+     * Refund all PayPal verification expired payments
+     */
+    public static function refundPaypalVerifyExpiredPayments()
+    {
+        $verificationTime = Yii::$app->params['payment_verification_time'];
+
+        $payments = Payments::find()
+            ->andWhere([
+                'type' => PaymentGateway::METHOD_PAYPAL,
+                'status' => Payments::STATUS_VERIFICATION,
+            ])
+            ->andWhere(['>', 'date_update', time() - $verificationTime])
+            ->all();
+
+        /** @var Payments $payment */
+        foreach ($payments as $payment) {
+            if (static::refundPaypalPayment($payment)) {
+                $payment->status = Payments::STATUS_UNVERIFIED;
+                $payment->save(false);
+            }
+        }
     }
 }

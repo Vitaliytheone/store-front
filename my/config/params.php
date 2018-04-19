@@ -132,4 +132,7 @@ return [
             'connection_timeout' => 10,
         ],
     ],
+
+    'payment_verification_time' => 1 * 24 * 60 * 60,
+
 ];

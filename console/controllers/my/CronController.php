@@ -16,6 +16,7 @@ use common\models\panels\ThirdPartyLog;
 use my\components\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
+use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
 use Yii;
 use yii\base\ErrorException;
@@ -359,5 +360,13 @@ class CronController extends CustomController
     public function actionSuperTasks()
     {
         SuperTaskHelper::runTasks();
+    }
+
+    /**
+     * Refund all unverified payments
+     */
+    public function actionRefundPayments()
+    {
+        PaymentsHelper::refundPaypalVerifyExpiredPayments();
     }
 }
