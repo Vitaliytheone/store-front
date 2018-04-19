@@ -205,6 +205,13 @@ return [
     'payments.list.action_make_active' => 'Make active',
     'payments.list.action_make_accepted' => 'Accept payment',
     'payments.list.action_make_refunded' => 'Refund payment',
+    'payments.list.refund_modal_title' => 'Refund payment',
+    'payments.list.refund_modal_text_1' => 'Attention!',
+    'payments.list.refund_modal_text_2' => 'By pressing the "Refund" button you will return all the money of this payment back to the payer.',
+    'payments.list.refund_modal_text_3' => 'This action can not be canceled after pressing the "Refund" button.',
+    'payments.list.refund_modal_btn_cancel' => 'Cancel',
+    'payments.list.refund_modal_btn_submit' => 'Refund',
+
 
     'pages.settings.menu_payments' => 'Payments',
     'pages.settings.menu_staff' => 'Staff',

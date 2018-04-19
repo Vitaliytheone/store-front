@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
+use my\helpers\PaymentsHelper;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
@@ -296,7 +297,9 @@ class Payments extends ActiveRecord
 
             case 'makeRefunded':
                 if (in_array($this->type, [PaymentGateway::METHOD_PAYPAL]) &&
-                    $this->status == self::STATUS_VERIFICATION
+                    $this->status == self::STATUS_VERIFICATION &&
+                    !empty($this->transaction_id) &&
+                     time() < $this->date_update + PaymentGateway::PAYPAL_REFUND_EXPIRED_AFTER
                 ) {
                     return true;
                 }
@@ -397,7 +400,7 @@ class Payments extends ActiveRecord
     }
 
     /**
-     * Mark payment as `Payer verification needed`
+     * Make payment as `Payer verification needed`
      * @param $payerId string|int
      * @param $payerEmail string
      * @return string generated verification code
@@ -405,6 +408,10 @@ class Payments extends ActiveRecord
      */
     public function verification($payerId, $payerEmail)
     {
+        if ($this->type != PaymentGateway::METHOD_PAYPAL) {
+            throw new Exception('This method for PayPal payments only!');
+        }
+
         $this->status = Payments::STATUS_VERIFICATION;
 
         // Generate unique verification code
@@ -428,10 +435,15 @@ class Payments extends ActiveRecord
     }
 
     /**
-     * Mark payment as verified and completed
+     * Make payment as verified and completed
+     * @throws Exception
      */
     public function verified()
     {
+        if ($this->type != PaymentGateway::METHOD_PAYPAL) {
+            throw new Exception('This method for PayPal payments only!');
+        }
+
         $verify = MyVerifiedPaypal::findOne(['payment_id' => $this->id]);
 
         if (!$verify) {
@@ -442,5 +454,22 @@ class Payments extends ActiveRecord
         $verify->update(false);
 
         $this->complete();
+    }
+
+    /**
+     * Make payment refunded
+     * @return bool
+     * @throws Exception
+     */
+    public function refund()
+    {
+        if ($this->type != PaymentGateway::METHOD_PAYPAL) {
+            throw new Exception('This method for PayPal payments only!');
+        }
+
+        if (PaymentsHelper::refundPaypalPayment($this)) {
+            $this->status = Payments::STATUS_UNVERIFIED;
+            $this->save(false);
+        }
     }
 }
