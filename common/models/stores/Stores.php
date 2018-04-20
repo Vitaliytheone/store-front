@@ -29,6 +29,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $customer_id
  * @property string $domain
  * @property integer $subdomain
+ * @property integer $ssl
  * @property string $name
  * @property integer $timezone
  * @property string $language
@@ -70,6 +71,9 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_ACTIVITY_LOG = 4;
     const CAN_DOMAIN_CONNECT = 5;
 
+    const DOMAIN_SSL_MODE_OFF = 0;
+    const DOMAIN_SSL_MODE_ON = 1;
+
     const STORE_DB_NAME_PREFIX = 'store_';
 
     use UnixTimeFormatTrait;
@@ -90,7 +94,7 @@ class Stores extends ActiveRecord implements ProjectInterface
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain'
+                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl'
             ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
@@ -113,6 +117,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             'customer_id' => Yii::t('app', 'Customer ID'),
             'domain' => Yii::t('app', 'Domain'),
             'subdomain' => Yii::t('app', 'Subdomain'),
+            'ssl' => Yii::t('app', 'SSL'),
             'name' => Yii::t('app', 'Name'),
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
@@ -208,6 +213,14 @@ class Stores extends ActiveRecord implements ProjectInterface
                 },
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getProjectType()
+    {
+        return self::PROJECT_TYPE_STORE;
     }
 
     /**

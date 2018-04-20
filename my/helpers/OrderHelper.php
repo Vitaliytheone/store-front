@@ -110,6 +110,26 @@ class OrderHelper {
 
         $sslCert->createdNotice();
 
+        // Activate Store ssl
+        $projectType = ArrayHelper::getValue($orderDetails,'project_type');
+
+        if ($projectType == Stores::getProjectType()) {
+            $pid = ArrayHelper::getValue($orderDetails, 'pid');
+            $store = Stores::findOne($pid);
+
+            if (!$store) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, "Store ID: $pid can not be found!", 'cron.ssl.store');
+                return false;
+            }
+
+            $store->ssl = Stores::DOMAIN_SSL_MODE_ON;
+
+            if (!$store->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $store->getErrors(), 'cron.ssl.store');
+                return false;
+            }
+        }
+
         return true;
     }
 

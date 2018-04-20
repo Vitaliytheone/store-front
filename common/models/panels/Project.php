@@ -316,6 +316,14 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * @inheritdoc
      */
+    public static function getProjectType()
+    {
+        return self::PROJECT_TYPE_PANEL;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getBaseDomain()
     {
         return $this->site;

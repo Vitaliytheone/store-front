@@ -24,8 +24,8 @@ use yii\helpers\ArrayHelper;
  */
 class OrderSslForm extends Model
 {
-    const PROJECT_STORE = 's#';
-    const PROJECT_PANEL = 'p#';
+    const PROJECT_STORE_PREFIX = 's#';
+    const PROJECT_PANEL_PREFIX = 'p#';
 
     public $pid;
     public $item_id;
@@ -177,7 +177,8 @@ class OrderSslForm extends Model
         $orderModel->domain = $project->getBaseDomain();
         $orderModel->ip = $this->_ip;
         $orderModel->setDetails([
-            'pid' => $this->pid,
+            'pid' => $project->id,
+            'project_type' => $project::getProjectType(),
             'domain' => $project->getBaseDomain(),
             'item_id' => $this->item_id,
             'details' => $this->getAttributes($this->getDetails()),
@@ -254,24 +255,24 @@ class OrderSslForm extends Model
             return null;
         }
 
-        if (strpos($this->pid, self::PROJECT_STORE) !== false) {
-            $type = self::PROJECT_STORE;
-        } elseif (strpos($this->pid, self::PROJECT_PANEL) !== false) {
-            $type = self::PROJECT_PANEL;
+        if (strpos($this->pid, self::PROJECT_STORE_PREFIX) !== false) {
+            $type = self::PROJECT_STORE_PREFIX;
+        } elseif (strpos($this->pid, self::PROJECT_PANEL_PREFIX) !== false) {
+            $type = self::PROJECT_PANEL_PREFIX;
         } else {
             throw new Exception('Unknown project type!');
         }
 
-        $pid = str_replace([self::PROJECT_STORE, self::PROJECT_PANEL], '', $this->pid);
+        $pid = str_replace([self::PROJECT_STORE_PREFIX, self::PROJECT_PANEL_PREFIX], '', $this->pid);
 
         $project = null;
 
         switch ($type) {
-            case self::PROJECT_STORE :
+            case self::PROJECT_STORE_PREFIX :
                 $project = Stores::findOne($pid);
             break;
 
-            case self::PROJECT_PANEL :
+            case self::PROJECT_PANEL_PREFIX :
                 $project = Project::findOne($pid);
             break;
         }
@@ -361,7 +362,7 @@ class OrderSslForm extends Model
         /** @var Stores $store */
         foreach ($stores as $store) {
             if ($group) {
-                $storesDomains[Yii::t('app', 'form.order_ssl.stores_group')][self::PROJECT_STORE.$store->id] = $store->getBaseDomain();
+                $storesDomains[Yii::t('app', 'form.order_ssl.stores_group')][self::PROJECT_STORE_PREFIX.$store->id] = $store->getBaseDomain();
             } else {
                 $storesDomains[$store->id] = $store->getBaseDomain();
             }
@@ -371,9 +372,9 @@ class OrderSslForm extends Model
         foreach ($panels as $panel) {
             if ($group) {
                 if ($panel->child_panel) {
-                    $childPanelsDomains[Yii::t('app', 'form.order_ssl.child_group')][self::PROJECT_PANEL.$panel->id] = $panel->getBaseDomain();
+                    $childPanelsDomains[Yii::t('app', 'form.order_ssl.child_group')][self::PROJECT_PANEL_PREFIX.$panel->id] = $panel->getBaseDomain();
                 } else {
-                    $panelsDomains[Yii::t('app', 'form.order_ssl.panels_group')][self::PROJECT_PANEL.$panel->id] = $panel->getBaseDomain();
+                    $panelsDomains[Yii::t('app', 'form.order_ssl.panels_group')][self::PROJECT_PANEL_PREFIX.$panel->id] = $panel->getBaseDomain();
                 }
             } else {
                 $panelsDomains[$panel->id] = $panel->getBaseDomain();
