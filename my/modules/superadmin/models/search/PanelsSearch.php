@@ -6,6 +6,9 @@ use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Project;
 use common\models\panels\Tariff;
+use yii\data\Pagination;
+use yii\db\ActiveQuery;
+use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -15,10 +18,7 @@ use yii\helpers\ArrayHelper;
  */
 class PanelsSearch {
 
-    /**
-     * @var array
-     */
-    protected $_projects = [];
+    protected $pageSize = 100;
 
     /**
      * @var array
@@ -49,9 +49,10 @@ class PanelsSearch {
      * Build sql query
      * @param int $status
      * @param int $plan
-     * @return array
+     * @param array $filters
+     * @return Query
      */
-    public function _getPanels($status = null, $plan = null)
+    public function buildQuery($status = null, $plan = null, $filters = [])
     {
         $searchQuery = $this->getQuery();
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
@@ -102,6 +103,11 @@ class PanelsSearch {
             ]);
         }
 
+        if (!empty($filters['skip']['plan'])) {
+            $projects->andWhere('project.plan <> ' . (int)$filters['skip']['plan']);
+        }
+
+
         if ($id) {
             $projects->andWhere([
                 'project.id' => $id
@@ -135,11 +141,9 @@ class PanelsSearch {
         ]);
         $projects->leftJoin('project as pr2', 'pr2.cid = project.cid AND pr2.child_panel = project.child_panel');
         $projects->leftJoin('customers', 'customers.id = project.cid');
+        $projects->groupBy('project.id');
 
-        return $projects->orderBy([
-            'project.id' => SORT_DESC
-        ])->groupBy('project.id')
-            ->all();
+        return $projects;
     }
 
     /**
@@ -152,10 +156,11 @@ class PanelsSearch {
             return $this->_tariffs;
         }
 
-        foreach ((new Query())
-                     ->select('id, before_orders, of_orders, title')
-                     ->from('tariff')
-                     ->all() as $tariff) {
+        $query = (new Query())
+            ->select('id, before_orders, of_orders, title')
+            ->from('tariff');
+
+        foreach (static::queryAllCache($query) as $tariff) {
             $this->_tariffs[$tariff['id']] = $tariff;
         }
 
@@ -172,47 +177,15 @@ class PanelsSearch {
             return $this->_userServices;
         }
 
-        foreach ((new Query())
-                     ->select('pid, aid')
-                     ->from('user_services')
-                     ->all() as $provider) {
+        $query = (new Query())
+            ->select('pid, aid')
+            ->from('user_services');
+
+        foreach (static::queryAllCache($query) as $provider) {
             $this->_userServices[$provider['pid']][] = $provider['aid'];
         }
 
         return $this->_userServices;
-    }
-
-    /**
-     * Get panels
-     * @param null|string|integer $status
-     * @param null|integer $plan
-     * @return PanelsSearch|array
-     */
-    public function getPanels($status = null, $plan = null)
-    {
-        if (empty($this->_projects)) {
-            $this->_projects = $this->_getPanels();
-        }
-
-        if ((null === $status || 'all' === $status) && null === $plan) {
-            return $this->_projects;
-        }
-
-        $projects = [];
-
-        foreach ($this->_projects as $project) {
-            if (is_numeric($status) && (int)$project['act'] != (int)$status) {
-                continue;
-            }
-
-            if (is_numeric($plan) && (int)$project['plan'] != (int)$plan) {
-                continue;
-            }
-
-            $projects[] = $project;
-        }
-
-        return $projects;
     }
 
     /**
@@ -224,10 +197,61 @@ class PanelsSearch {
         $status = ArrayHelper::getValue($this->params, 'status', 'all');
         $plan = isset($this->params['plan']) ? (int)$this->params['plan'] : null;
 
+        $query = clone $this->buildQuery($status, $plan);
+
+        $pages = new Pagination(['totalCount' => $this->count($status, $plan)]);
+        $pages->setPageSize($this->pageSize);
+        $pages->defaultPageSize = $this->pageSize;
+
+        if (!empty($this->params['pageSize'])) {
+            $pages->setPageSize($this->params['pageSize']);
+        }
+
+        $panels = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->orderBy([
+                'project.id' => SORT_DESC
+            ]);
 
         return [
-            'models' => $this->preparePanelsData($this->getPanels($status, $plan))
+            'models' => $this->preparePanelsData(static::queryAllCache($panels)),
+            'pages' => $pages,
         ];
+    }
+
+    /**
+     * Get count panels by type
+     * @param int $status
+     * @param int $plan
+     * @param array $filters
+     * @return int|array
+     */
+    public function count($status = null, $plan = null, $filters = [])
+    {
+        $query = clone $this->buildQuery($status, $plan, $filters);
+
+        if (!empty($filters['group']['status'])) {
+            $query->select([
+                'project.act as status',
+                'COUNT(DISTINCT project.id) as rows'
+            ])->groupBy('project.act');
+
+            return ArrayHelper::map(static::queryAllCache($query), 'status', 'rows');
+        }
+
+        if (!empty($filters['group']['plan'])) {
+            $query->select([
+                'project.plan as plan',
+                'COUNT(DISTINCT project.id) as rows'
+            ])->groupBy('project.plan');
+
+            return ArrayHelper::map(static::queryAllCache($query), 'plan', 'rows');
+        }
+
+        $query = $query->select('COUNT(*)');
+
+        return (int)static::queryScalarCache($query);
     }
 
     /**
@@ -285,22 +309,24 @@ class PanelsSearch {
      */
     public function navs()
     {
-        $skipSomeData = function($panels) {
-            foreach ($panels as $key => $panel) {
-                if (0 == $panel['plan']) {
-                    unset($panels[$key]);
-                    continue;
-                }
-            }
-
-            return $panels;
-        };
+        $statusCounters = $this->count(null, null, [
+            'group' => [
+                'status' => 1
+            ],
+            'skip' => [
+                'plan' => 0
+            ]
+        ]);
 
         return [
-            'all' => 'All (' . count($skipSomeData($this->getPanels('all'))) . ')',
-            Project::STATUS_ACTIVE => 'Active (' . count($skipSomeData($this->getPanels(Project::STATUS_ACTIVE))) . ')',
-            Project::STATUS_FROZEN => 'Frozen (' . count($skipSomeData($this->getPanels(Project::STATUS_FROZEN))) . ')',
-            Project::STATUS_TERMINATED => 'Terminated (' . count($skipSomeData($this->getPanels(Project::STATUS_TERMINATED))) . ')',
+            'all' => 'All (' . $this->count('all', null, [
+                'skip' => [
+                    'plan' => 0
+                ]
+            ]) . ')',
+            Project::STATUS_ACTIVE => 'Active (' . ArrayHelper::getValue($statusCounters, Project::STATUS_ACTIVE, 0) . ')',
+            Project::STATUS_FROZEN => 'Frozen (' . ArrayHelper::getValue($statusCounters, Project::STATUS_FROZEN, 0) . ')',
+            Project::STATUS_TERMINATED => 'Terminated (' . ArrayHelper::getValue($statusCounters, Project::STATUS_TERMINATED, 0) . ')',
         ];
     }
 
@@ -316,16 +342,22 @@ class PanelsSearch {
 
         $returnPlans = [
             null => Yii::t('app/superadmin', 'panels.list.navs_method_all', [
-                'count' => count($this->getPanels($status))
+                'count' => $this->count($status)
             ])
         ];
+
+        $plansCounters = $this->count($status, null, [
+            'group' => [
+                'plan' => 1
+            ],
+        ]);
 
         foreach ($plans as $plan) {
             // Не выводим тарифы -1
             if (0 > $plan['id']) {
                 continue;
             }
-            $returnPlans[$plan['id']] = $plan['title'] . ' (' . count($this->getPanels($status, $plan['id'])) . ')';
+            $returnPlans[$plan['id']] = $plan['title'] . ' (' . ArrayHelper::getValue($plansCounters, $plan['id'], 0) . ')';
         }
 
         return $returnPlans;

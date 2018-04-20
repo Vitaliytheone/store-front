@@ -19,17 +19,14 @@ class StoresSearch {
 
     use SearchTrait;
 
+    protected $pageSize = 100;
+
     /**
      * @var array
      */
     protected $_stores = [];
 
     protected $_counts_by_status;
-
-    public function __construct()
-    {
-        $this->pageSize = 100;
-    }
 
     /**
      * Get parameters
