@@ -98,5 +98,9 @@ return [
     'THB' => array(
         'name' => 'Thai Baht',
         'money_format' => '฿{{number}}',
-    )
+    ),
+    'INR' => array(
+        'name' => 'Indian Rupee',
+        'money_format' => '₹{{number}}',
+    ),
 ];
