@@ -103,4 +103,8 @@ return [
         'name' => 'Indian Rupee',
         'money_format' => '₹{{number}}',
     ),
+    'IDR' => array(
+        'name' => 'Indonesian Rupiah',
+        'money_format' => 'Rp{{number}}',
+    ),
 ];
