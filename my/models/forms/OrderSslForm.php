@@ -1,6 +1,8 @@
 <?php
 namespace my\models\forms;
 
+use common\models\stores\StoreDomains;
+use common\models\stores\Stores;
 use my\helpers\UserHelper;
 use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
@@ -12,6 +14,7 @@ use common\models\panels\SslCert;
 use common\models\panels\SslCertItem;
 use Yii;
 use yii\base\Model;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -52,6 +55,11 @@ class OrderSslForm extends Model
      * @var Project[]
      */
     protected $_availableProjects;
+
+    /**
+     * @var Stores[]
+     */
+    protected $_availableStores;
 
     /**
      * @return array the validation rules.
@@ -232,6 +240,8 @@ class OrderSslForm extends Model
      */
     public function getProjects($group = false)
     {
+        $this->getStores();
+
         if (!$this->_availableProjects) {
             $this->_availableProjects = Project::find()
                 ->leftJoin('ssl_cert sc', 'project.site = sc.domain AND sc.status <> :status', [
@@ -281,6 +291,59 @@ class OrderSslForm extends Model
 
         return $availableProjects;
     }
+
+    public function getStores()
+    {
+//        if (!$this->_availableProjects) {
+//            $this->_availableProjects = Project::find()
+//                ->leftJoin('ssl_cert sc', 'project.site = sc.domain AND sc.status <> :status', [
+//                    ':status' => SslCert::STATUS_CANCELED
+//                ])
+//                ->leftJoin('orders o', 'project.site = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
+//                    ':orderStatus' => Orders::STATUS_CANCELED,
+//                    ':orderItem' => Orders::ITEM_BUY_SSL
+//                ])
+//                ->andWhere([
+//                    'project.cid' => $this->_customer->id,
+//                    'project.act' => Project::STATUS_ACTIVE
+//                ])
+//                ->groupBy('project.id')
+//                ->having('COUNT(sc.id) = 0 AND COUNT(o.id) = 0')
+//                ->all();
+//        }
+
+
+        if (!$this->_availableStores) {
+
+            $allowedDomains = (new Query())
+                ->select('domain')
+                ->from(StoreDomains::tableName())
+                ->where('')
+
+
+
+            $this->_availableStores = Stores::find()
+                ->rightJoin(StoreDomains::tableName()." sd", ['sd.store_id' => $this->_customer->id, 'sd.type' => [StoreDomains::DOMAIN_TYPE_DEFAULT, StoreDomains::DOMAIN_TYPE_SUBDOMAIN]])
+//                ->leftJoin('ssl_cert sc', 'stores.domain = sc.domain AND sc.status <> :status', [
+//                    ':status' => SslCert::STATUS_CANCELED
+//                ])
+//                ->leftJoin('orders o', 'stores.domain = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
+//                    ':orderStatus' => Orders::STATUS_CANCELED,
+//                    ':orderItem' => Orders::ITEM_BUY_SSL
+//                ])
+                ->andWhere([
+                    'stores.customer_id' => $this->_customer->id,
+                    'stores.statu1s' => Stores::STATUS_ACTIVE,
+                ])
+                ->all();
+        }
+
+        foreach ($this->_availableStores as $store) {
+            error_log(print_r($store->domain,1));
+        }
+
+    }
+
 
     /**
      * Get ssl certifications available items
