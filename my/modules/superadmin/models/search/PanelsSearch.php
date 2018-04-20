@@ -141,7 +141,6 @@ class PanelsSearch {
         ]);
         $projects->leftJoin('project as pr2', 'pr2.cid = project.cid AND pr2.child_panel = project.child_panel');
         $projects->leftJoin('customers', 'customers.id = project.cid');
-        $projects->groupBy('project.id');
 
         return $projects;
     }
@@ -210,6 +209,7 @@ class PanelsSearch {
         $panels = $query
             ->offset($pages->offset)
             ->limit($pages->limit)
+            ->groupBy('project.id')
             ->orderBy([
                 'project.id' => SORT_DESC
             ]);
@@ -249,7 +249,7 @@ class PanelsSearch {
             return ArrayHelper::map(static::queryAllCache($query), 'plan', 'rows');
         }
 
-        $query = $query->select('COUNT(*)');
+        $query = $query->select('COUNT(DISTINCT project.id)');
 
         return (int)static::queryScalarCache($query);
     }

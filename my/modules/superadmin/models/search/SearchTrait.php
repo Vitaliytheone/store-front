@@ -43,7 +43,7 @@ trait SearchTrait {
     public static function queryAllCache(Query $query, $duration = 60)
     {
         return Yii::$app->db->cache(function(Connection $db) use ($query) {
-            return $query->createCommand()->queryAll();
+            return $query->all();
         }, $duration);
     }
 
@@ -56,7 +56,7 @@ trait SearchTrait {
     public static function queryOneCache(Query $query, $duration = 60)
     {
         return Yii::$app->db->cache(function(Connection $db) use ($query) {
-            return $query->createCommand()->queryOne();
+            return $query->one();
         }, $duration);
     }
 
@@ -69,7 +69,7 @@ trait SearchTrait {
     public static function queryScalarCache(Query $query, $duration = 60)
     {
         return Yii::$app->db->cache(function(Connection $db) use ($query) {
-            return $query->createCommand()->queryScalar();
+            return $query->scalar();
         }, $duration);
     }
 }
