@@ -107,4 +107,8 @@ return [
         'name' => 'Indonesian Rupiah',
         'money_format' => 'Rp{{number}}',
     ),
+    'TRY' => array(
+        'name' => 'Turkish Lira',
+        'money_format' => '{{number}}₺',
+    ),
 ];
