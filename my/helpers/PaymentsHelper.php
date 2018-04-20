@@ -68,9 +68,6 @@ class PaymentsHelper {
             // Unique identifier of the transaction to be refunded.
             // Character length and limitations: 17 characters except for transactions of the type Order have a character length of 19.
             'TRANSACTIONID' => $payment->transaction_id,
-            // (Optional) Your own invoice or tracking ID number.
-            // Character length and limitations: 127 single-byte alphanumeric characters.
-            'INVOICEID' => $payment->iid,
             // Type of refund you are making. Value is:
             // Full — Full refund (default).
             // Partial — Partial refund.
