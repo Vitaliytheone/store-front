@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use common\helpers\DbHelper;
+use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
@@ -58,7 +59,7 @@ use yii\helpers\ArrayHelper;
  * @property StoreProviders[] $storeProviders
  * @property Customers $customer
  */
-class Stores extends ActiveRecord
+class Stores extends ActiveRecord implements ProjectInterface
 {
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
@@ -207,6 +208,14 @@ class Stores extends ActiveRecord
                 },
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseDomain()
+    {
+        return $this->domain;
     }
 
     /**

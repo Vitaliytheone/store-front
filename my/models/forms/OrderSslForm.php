@@ -13,6 +13,7 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\SslCertItem;
 use Yii;
+use yii\base\Exception;
 use yii\base\Model;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -23,6 +24,9 @@ use yii\helpers\ArrayHelper;
  */
 class OrderSslForm extends Model
 {
+    const PROJECT_STORE = 's#';
+    const PROJECT_PANEL = 'p#';
+
     public $pid;
     public $item_id;
 
@@ -54,7 +58,7 @@ class OrderSslForm extends Model
     /**
      * @var Project[]
      */
-    protected $_availableProjects;
+    protected $_availablePanels;
 
     /**
      * @var Stores[]
@@ -87,8 +91,8 @@ class OrderSslForm extends Model
             [['admin_country'], 'in', 'range' => array_keys($this->getCountries())],
             [['admin_email'], 'email'],
             [['admin_phone'], 'integer'],
-            [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::className(), 'targetAttribute' => ['item_id' => 'id']],
-            [['pid'], 'uniqCertValidation'],
+            [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::class, 'targetAttribute' => ['item_id' => 'id']],
+            [['pid'], 'isDomainAllowedValidator'],
         ];
     }
 
@@ -156,29 +160,35 @@ class OrderSslForm extends Model
             return false;
         }
 
-        $certItem = SslCertItem::findOne($this->item_id);
-        $project = Project::findOne($this->pid);
+        $project = $this->_getProject();
 
-        $model = new Orders();
-        $model->date = time();
-        $model->ip = Yii::$app->request->userIP;
-        $model->cid = $this->_customer->id;
-        $model->item = Orders::ITEM_BUY_SSL;
-        $model->domain = $project->site;
-        $model->ip = $this->_ip;
-        $model->setDetails([
+        if (empty($project)) {
+            $this->addError('pid', Yii::t('app', 'error.ssl.can_not_order_ssl'));
+            return false;
+        }
+
+        $certItem = SslCertItem::findOne($this->item_id);
+
+        $orderModel = new Orders();
+        $orderModel->date = time();
+        $orderModel->ip = Yii::$app->request->userIP;
+        $orderModel->cid = $this->_customer->id;
+        $orderModel->item = Orders::ITEM_BUY_SSL;
+        $orderModel->domain = $project->getBaseDomain();
+        $orderModel->ip = $this->_ip;
+        $orderModel->setDetails([
             'pid' => $this->pid,
-            'domain' => $project->site,
+            'domain' => $project->getBaseDomain(),
             'item_id' => $this->item_id,
             'details' => $this->getAttributes($this->getDetails()),
         ]);
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        if ($model->save()) {
+        if ($orderModel->save()) {
             $invoiceModel = new Invoices();
             $invoiceModel->total = $certItem->price;
-            $invoiceModel->cid = $model->cid;
+            $invoiceModel->cid = $orderModel->cid;
             $invoiceModel->generateCode();
             $invoiceModel->daysExpired(Yii::$app->params['invoice.sslDuration']);
 
@@ -189,7 +199,7 @@ class OrderSslForm extends Model
 
             $invoiceDetailsModel = new InvoiceDetails();
             $invoiceDetailsModel->invoice_id = $invoiceModel->id;
-            $invoiceDetailsModel->item_id = $model->id;
+            $invoiceDetailsModel->item_id = $orderModel->id;
             $invoiceDetailsModel->amount = $certItem->price;
             $invoiceDetailsModel->item = InvoiceDetails::ITEM_BUY_SSL;
 
@@ -198,7 +208,7 @@ class OrderSslForm extends Model
                 return false;
             }
         } else {
-            $this->addErrors($model->getErrors());
+            $this->addErrors($orderModel->getErrors());
             return false;
         }
 
@@ -206,7 +216,7 @@ class OrderSslForm extends Model
 
         $this->code = $invoiceModel->code;
 
-        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_SSL_ORDER, $model->id, $model->id, UserHelper::getHash());
+        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_SSL_ORDER, $orderModel->id, $orderModel->id, UserHelper::getHash());
 
         return true;
     }
@@ -234,16 +244,49 @@ class OrderSslForm extends Model
     }
 
     /**
-     * Get available projects
-     * @param boolean $group
-     * @return array|\yii\db\ActiveRecord[]
+     * Return `project` (Store or Project) by encoded type from form `pid`
+     * @return null|Stores|Project
+     * @throws Exception
      */
-    public function getProjects($group = false)
+    private function _getProject()
     {
-        $this->getStores();
+        if (empty($this->pid)) {
+            return null;
+        }
 
-        if (!$this->_availableProjects) {
-            $this->_availableProjects = Project::find()
+        if (strpos($this->pid, self::PROJECT_STORE) !== false) {
+            $type = self::PROJECT_STORE;
+        } elseif (strpos($this->pid, self::PROJECT_PANEL) !== false) {
+            $type = self::PROJECT_PANEL;
+        } else {
+            throw new Exception('Unknown project type!');
+        }
+
+        $pid = str_replace([self::PROJECT_STORE, self::PROJECT_PANEL], '', $this->pid);
+
+        $project = null;
+
+        switch ($type) {
+            case self::PROJECT_STORE :
+                $project = Stores::findOne($pid);
+            break;
+
+            case self::PROJECT_PANEL :
+                $project = Project::findOne($pid);
+            break;
+        }
+
+        return $project;
+    }
+
+    /**
+     * Get available panels
+     * @return Project[]|[]
+     */
+    private function _getPanels()
+    {
+        if (!$this->_availablePanels) {
+            $this->_availablePanels = Project::find()
                 ->leftJoin('ssl_cert sc', 'project.site = sc.domain AND sc.status <> :status', [
                     ':status' => SslCert::STATUS_CANCELED
                 ])
@@ -260,90 +303,85 @@ class OrderSslForm extends Model
                 ->all();
         }
 
-        $availableProjects = $panels = $child = [];
-
-        /**
-         * @var $availableProject Project
-         */
-        foreach ($this->_availableProjects as $availableProject) {
-            if ($group) {
-                if ($availableProject->child_panel) {
-                    $child[$availableProject->id] = $availableProject->getSite();
-                } else {
-                    $panels[$availableProject->id] = $availableProject->getSite();
-                }
-            } else {
-                $availableProjects[$availableProject->id] = $availableProject->getSite();
-            }
-        }
-
-        if ($group) {
-            $availableProjects = [];
-
-            if (!empty($panels)) {
-                $availableProjects[Yii::t('app', 'form.order_ssl.panels_group')] = $panels;
-            }
-
-            if (!empty($child)) {
-                $availableProjects[Yii::t('app', 'form.order_ssl.child_group')] = $child;
-            }
-        }
-
-        return $availableProjects;
+        return $this->_availablePanels;
     }
 
-    public function getStores()
+    /**
+     * Return available stores domains
+     * @return Stores[]|[]
+     */
+    private function _getStores()
     {
-//        if (!$this->_availableProjects) {
-//            $this->_availableProjects = Project::find()
-//                ->leftJoin('ssl_cert sc', 'project.site = sc.domain AND sc.status <> :status', [
-//                    ':status' => SslCert::STATUS_CANCELED
-//                ])
-//                ->leftJoin('orders o', 'project.site = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
-//                    ':orderStatus' => Orders::STATUS_CANCELED,
-//                    ':orderItem' => Orders::ITEM_BUY_SSL
-//                ])
-//                ->andWhere([
-//                    'project.cid' => $this->_customer->id,
-//                    'project.act' => Project::STATUS_ACTIVE
-//                ])
-//                ->groupBy('project.id')
-//                ->having('COUNT(sc.id) = 0 AND COUNT(o.id) = 0')
-//                ->all();
-//        }
-
-
         if (!$this->_availableStores) {
 
             $allowedDomains = (new Query())
-                ->select('domain')
-                ->from(StoreDomains::tableName())
-                ->where('')
-
-
+                ->select(['sd.domain'])
+                ->from(['sd' => StoreDomains::tableName()])
+                ->rightJoin(['s' => Stores::tableName()], 's.id = sd.store_id')
+                ->andWhere(['s.customer_id' => $this->_customer->id])
+                ->andWhere(['sd.type' => [
+                    StoreDomains::DOMAIN_TYPE_DEFAULT,
+                    StoreDomains::DOMAIN_TYPE_SUBDOMAIN]
+                ])
+                ->column();
 
             $this->_availableStores = Stores::find()
-                ->rightJoin(StoreDomains::tableName()." sd", ['sd.store_id' => $this->_customer->id, 'sd.type' => [StoreDomains::DOMAIN_TYPE_DEFAULT, StoreDomains::DOMAIN_TYPE_SUBDOMAIN]])
-//                ->leftJoin('ssl_cert sc', 'stores.domain = sc.domain AND sc.status <> :status', [
-//                    ':status' => SslCert::STATUS_CANCELED
-//                ])
-//                ->leftJoin('orders o', 'stores.domain = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
-//                    ':orderStatus' => Orders::STATUS_CANCELED,
-//                    ':orderItem' => Orders::ITEM_BUY_SSL
-//                ])
+                ->leftJoin('ssl_cert sc', 'stores.domain = sc.domain AND sc.status <> :status', [
+                    ':status' => SslCert::STATUS_CANCELED
+                ])
+                ->leftJoin('orders o', 'stores.domain = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
+                    ':orderStatus' => Orders::STATUS_CANCELED,
+                    ':orderItem' => Orders::ITEM_BUY_SSL
+                ])
                 ->andWhere([
                     'stores.customer_id' => $this->_customer->id,
-                    'stores.statu1s' => Stores::STATUS_ACTIVE,
+                    'stores.status' => Stores::STATUS_ACTIVE,
+                    'stores.domain' => $allowedDomains,
                 ])
+                ->groupBy('stores.id')
+                ->having('COUNT(sc.id) = 0 AND COUNT(o.id) = 0')
                 ->all();
         }
 
-        foreach ($this->_availableStores as $store) {
-            error_log(print_r($store->domain,1));
-        }
-
+        return $this->_availableStores;
     }
 
+    /**
+     * Return Stores & Panels & Child panels domains list
+     * @param $group bool Is needs group projects domains by groups (stores domains, panels domains)
+     * @return array;
+     */
+    public function getAllProjectsDomains($group = false)
+    {
+        $stores = $this->_getStores();
+        $panels = $this->_getPanels();
+
+        $storesDomains = $panelsDomains = $childPanelsDomains = [];
+
+        /** @var Stores $store */
+        foreach ($stores as $store) {
+            if ($group) {
+                $storesDomains[Yii::t('app', 'form.order_ssl.stores_group')][self::PROJECT_STORE.$store->id] = $store->getBaseDomain();
+            } else {
+                $storesDomains[$store->id] = $store->getBaseDomain();
+            }
+        }
+
+        /** @var $panel Project */
+        foreach ($panels as $panel) {
+            if ($group) {
+                if ($panel->child_panel) {
+                    $childPanelsDomains[Yii::t('app', 'form.order_ssl.child_group')][self::PROJECT_PANEL.$panel->id] = $panel->getBaseDomain();
+                } else {
+                    $panelsDomains[Yii::t('app', 'form.order_ssl.panels_group')][self::PROJECT_PANEL.$panel->id] = $panel->getBaseDomain();
+                }
+            } else {
+                $panelsDomains[$panel->id] = $panel->getBaseDomain();
+            }
+        }
+
+        return array_merge($storesDomains, $panelsDomains, $childPanelsDomains);
+    }
 
     /**
      * Get ssl certifications available items
@@ -398,21 +436,21 @@ class OrderSslForm extends Model
     }
 
     /**
-     * Check selected panel
+     * Check if the passed domain is allowed to be registered
      * @param $attribute
      * @return bool
      */
-    public function uniqCertValidation($attribute)
+    public function isDomainAllowedValidator($attribute)
     {
         if ($this->hasErrors($attribute)) {
             return false;
         }
 
-        $availableProjects = $this->getProjects();
+        $availableDomains = $this->getAllProjectsDomains();
 
-        $project = Project::findOne($this->pid);
+        $project = $this->_getProject();
 
-        if (!in_array($project->getSite(), $availableProjects)) {
+        if (!in_array($project->getBaseDomain(), $availableDomains)) {
             $this->addError($attribute, Yii::t('app', 'error.ssl.panel_is_not_available'));
             return false;
         }

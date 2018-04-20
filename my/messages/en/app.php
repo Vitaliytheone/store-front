@@ -199,6 +199,7 @@ return [
     'form.reset_password.password' => 'Password',
     'form.reset_password.password_repeat' => 'Confirm password',
 
+    'form.order_ssl.stores_group' => 'Stores',
     'form.order_ssl.panels_group' => 'Panels',
     'form.order_ssl.child_group' => 'Child panels',
     'form.order_ssl.pid' => 'Domain',

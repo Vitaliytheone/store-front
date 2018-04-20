@@ -4,6 +4,7 @@ namespace common\models\panels;
 
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
+use common\models\common\ProjectInterface;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -95,7 +96,7 @@ use yii\helpers\ArrayHelper;
  * @property Customers $customer
  * @property UserServices[] $userServices
  */
-class Project extends ActiveRecord
+class Project extends ActiveRecord implements ProjectInterface
 {
     const STATUS_FROZEN = 0;
     const STATUS_ACTIVE = 1;
@@ -310,6 +311,14 @@ class Project extends ActiveRecord
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'cid']);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseDomain()
+    {
+        return $this->site;
     }
 
     /**

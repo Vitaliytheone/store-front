@@ -1,12 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alex
- * Date: 20.04.18
- * Time: 15:32
- */
+namespace common\models\common;
 
 interface ProjectInterface
 {
-
+    /**
+     * Return main domain of project (Project, Store...)
+     * @return string|null
+     */
+    public function getBaseDomain();
 }
