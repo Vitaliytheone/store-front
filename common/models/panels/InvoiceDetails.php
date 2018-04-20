@@ -249,9 +249,9 @@ class InvoiceDetails extends ActiveRecord
                     break;
 
                 case static::ITEM_PROLONGATION_STORE:
-                    $order = Orders::findOne($this->item_id);
+                    $store = Stores::findOne($this->item_id);
                     $this->description = Yii::t('app', 'invoice_details.description.prolongation_store', [
-                        'domain' => $order->domain
+                        'domain' => $store->domain
                     ]);
                 break;
             }
