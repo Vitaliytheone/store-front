@@ -98,12 +98,13 @@ class AccountForm extends Model
         }
 
         $identity->setPassword($this->password);
-        $identity->save(false);
+
+        if (!$identity->save(false)) {
+            return false;
+        }
 
         ActivityLog::log($identity, ActivityLog::E_ADMIN_PASSWORD_CHANGED);
 
-        $user->logout(false);
-
-        return $user->login($identity, StoreAdminAuth::COOKIE_LIFETIME);
+        return true;
     }
 }
