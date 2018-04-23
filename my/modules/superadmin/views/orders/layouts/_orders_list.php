@@ -8,6 +8,7 @@
     use yii\helpers\Html;
     use common\models\panels\Orders;
     use my\helpers\Url;
+    use yii\widgets\LinkPager;
 ?>
 <table class="table table-border">
     <thead>
@@ -88,3 +89,9 @@
 
     </tbody>
 </table>
+
+<div class="text-align-center pager">
+    <?= LinkPager::widget([
+        'pagination' => $orders['pages'],
+    ]); ?>
+</div>

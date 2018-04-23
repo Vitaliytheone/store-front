@@ -1,12 +1,11 @@
 <?php
-/* @var $this yii\web\View */
-/* @var $sslList \my\modules\superadmin\models\search\SslSearch */
-/* @var $ssl \my\modules\superadmin\models\search\SslSearch */
+    /* @var $this yii\web\View */
+    /* @var $sslList \my\modules\superadmin\models\search\SslSearch */
+    /* @var $ssl \my\modules\superadmin\models\search\SslSearch */
 
-use my\helpers\Url;
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-
+    use my\helpers\Url;
+    use yii\helpers\Html;
+    use yii\widgets\LinkPager;
 ?>
 <table class="table table-border">
     <thead>
@@ -61,3 +60,9 @@ use yii\helpers\ArrayHelper;
 
     </tbody>
 </table>
+
+<div class="text-align-center pager">
+    <?= LinkPager::widget([
+        'pagination' => $sslList['pages'],
+    ]); ?>
+</div>
