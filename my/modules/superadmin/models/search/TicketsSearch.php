@@ -16,7 +16,7 @@ class TicketsSearch extends Tickets
 {
     use SearchTrait;
 
-    protected $pageSize = 500;
+    protected $pageSize = 100;
 
     public $rows;
     public $customer_email;
