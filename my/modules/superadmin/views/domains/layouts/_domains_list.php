@@ -1,11 +1,11 @@
 <?php
-/* @var $this yii\web\View */
-/* @var $domains \my\modules\superadmin\models\search\DomainsSearch */
-/* @var $domain \common\models\panels\Domains */
+    /* @var $this yii\web\View */
+    /* @var $domains \my\modules\superadmin\models\search\DomainsSearch */
+    /* @var $domain \common\models\panels\Domains */
 
-use my\helpers\Url;
-use yii\helpers\Html;
-
+    use my\helpers\Url;
+    use yii\helpers\Html;
+    use yii\widgets\LinkPager;
 ?>
 <table class="table table-border">
     <thead>
@@ -74,3 +74,9 @@ use yii\helpers\Html;
 
     </tbody>
 </table>
+
+<div class="text-align-center pager">
+    <?= LinkPager::widget([
+        'pagination' => $domains['pages'],
+    ]); ?>
+</div>
