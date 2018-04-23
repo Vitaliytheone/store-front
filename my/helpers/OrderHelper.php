@@ -144,13 +144,14 @@ class OrderHelper {
         $crt = ArrayHelper::getValue($orderDetails, 'crt_code');
         $ca = ArrayHelper::getValue($orderDetails, 'ca_code');
 
+        $crt = 'dowefkjerfkreferq';
+        $ca = 'ferwfrewfrewfrewfrewfe';
+        $status = SslCert::STATUS_ACTIVE;
+
         if (!$status) {
             return false;
         }
 
-        $crt = 'dowefkjerfkreferq';
-        $ca = 'ferwfrewfrewfrewfrewfe';
-        $status = SslCert::STATUS_ACTIVE;
 
         if (SslCert::STATUS_ACTIVE == $status) {
 
