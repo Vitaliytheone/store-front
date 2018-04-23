@@ -125,6 +125,8 @@ class OrderHelper {
         $order = $ssl->getOrderDetails();
         $project = $ssl->project;
 
+        print_r($project->attributes);
+
         $orderId = ArrayHelper::getValue($order, 'order_id');
 
         if (!$orderId || !$project) {
@@ -132,6 +134,9 @@ class OrderHelper {
         }
 
         $orderDetails = OrderSslHelper::getOrderStatus($ssl);
+
+        print_r($orderDetails);
+
 
         if (empty($orderDetails['success'])) {
             return false;
