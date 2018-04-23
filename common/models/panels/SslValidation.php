@@ -11,6 +11,7 @@ use common\models\panels\queries\SslValidationQuery;
  * This is the model class for table "{{%ssl_validation}}".
  *
  * @property integer $id
+ * @property integer $ptype
  * @property integer $pid
  * @property string $file_name
  * @property string $content
@@ -34,8 +35,8 @@ class SslValidation extends ActiveRecord
     public function rules()
     {
         return [
-            [['pid', 'file_name', 'content'], 'required'],
-            [['pid', 'created_at'], 'integer'],
+            [['pid', 'ptype', 'file_name', 'content'], 'required'],
+            [['pid', 'ptype', 'created_at'], 'integer'],
             [['file_name'], 'string', 'max' => 250],
             [['content'], 'string', 'max' => 1000],
             [['pid'], 'exist', 'skipOnError' => true, 'targetClass' => Project::class, 'targetAttribute' => ['pid' => 'id']],
@@ -49,6 +50,7 @@ class SslValidation extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'ptype' => Yii::t('app', 'Project type'),
             'pid' => Yii::t('app', 'Pid'),
             'file_name' => Yii::t('app', 'File Name'),
             'content' => Yii::t('app', 'Content'),
