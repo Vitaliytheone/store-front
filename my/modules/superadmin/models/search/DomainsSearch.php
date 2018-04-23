@@ -3,13 +3,19 @@ namespace my\modules\superadmin\models\search;
 
 use Yii;
 use common\models\panels\Domains;
+use yii\data\Pagination;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class DomainsSearch
  * @package my\modules\superadmin\models\search
  */
-class DomainsSearch {
+class DomainsSearch extends Domains {
+
+    protected $pageSize = 100;
+
+    public $rows;
 
     use SearchTrait;
 
@@ -27,14 +33,14 @@ class DomainsSearch {
     /**
      * Build sql query
      * @param int $status
-     * @return $this
+     * @return Query
      */
     public function buildQuery($status = null)
     {
         $searchQuery = $this->getQuery();
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
 
-        $domains = Domains::find();
+        $domains = static::find();
 
         $domains->joinWith(['customer']);
 
@@ -84,23 +90,47 @@ class DomainsSearch {
 
         $query = clone $this->buildQuery($status);
 
-        $panels = $query->groupBy('domains.id')->all();
+        $pages = new Pagination(['totalCount' => $this->count($status)]);
+        $pages->setPageSize($this->pageSize);
+        $pages->defaultPageSize = $this->pageSize;
+
+        if (!empty($this->params['pageSize'])) {
+            $pages->setPageSize($this->params['pageSize']);
+        }
+
+        $domains = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->groupBy('domains.id');
 
         return [
-            'models' => $panels
+            'models' => static::queryAllCache($domains),
+            'pages' => $pages
         ];
     }
 
     /**
      * Get count panels by type
      * @param int $status
-     * @return int
+     * @param array $filters
+     * @return int|array
      */
-    public function count($status = null)
+    public function count($status = null, $filters = [])
     {
         $query = clone $this->buildQuery($status);
 
-        return (int)$query->select('COUNT(*)')->scalar();
+        if (!empty($filters['group']['status'])) {
+            $query->select([
+                'domains.status as status',
+                'COUNT(DISTINCT domains.id) as rows'
+            ])->groupBy('domains.status');
+
+            return ArrayHelper::map(static::queryAllCache($query), 'status', 'rows');
+        }
+
+        $query->select('COUNT(DISTINCT domains.id)');
+
+        return (int)static::queryScalarCache($query);
     }
 
     /**
@@ -109,15 +139,21 @@ class DomainsSearch {
      */
     public function navs()
     {
+        $statusCounters = $this->count(null, [
+            'group' => [
+                'status' => 1
+            ],
+        ]);
+
         return [
             null => Yii::t('app/superadmin', 'domains.list.navs_all', [
                 'count' => $this->count()
             ]),
             Domains::STATUS_OK => Yii::t('app/superadmin', 'domains.list.navs_ok', [
-                'count' => $this->count(Domains::STATUS_OK)
+                'count' => ArrayHelper::getValue($statusCounters, Domains::STATUS_OK, 0)
             ]),
             Domains::STATUS_EXPIRED => Yii::t('app/superadmin', 'domains.list.navs_expired', [
-                'count' => $this->count(Domains::STATUS_EXPIRED)
+                'count' => ArrayHelper::getValue($statusCounters, Domains::STATUS_EXPIRED, 0)
             ]),
         ];
     }

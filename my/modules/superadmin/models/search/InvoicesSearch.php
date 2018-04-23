@@ -20,6 +20,8 @@ class InvoicesSearch extends Invoices {
     public $domain;
     public $editTotal;
 
+    protected $pageSize = 500;
+
     use SearchTrait;
 
     /**

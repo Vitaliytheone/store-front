@@ -3,6 +3,8 @@ namespace my\modules\superadmin\models\search;
 
 use Yii;
 use common\models\panels\SslCert;
+use yii\data\Pagination;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -12,6 +14,10 @@ use yii\helpers\ArrayHelper;
 class SslSearch extends SslCert {
 
     public $email;
+
+    protected $pageSize = 100;
+
+    public $rows;
 
     protected static $_sslCerts;
 
@@ -31,7 +37,7 @@ class SslSearch extends SslCert {
     /**
      * Build sql query
      * @param int $status
-     * @return $this
+     * @return Query
      */
     public function buildQuery($status = null)
     {
@@ -68,63 +74,61 @@ class SslSearch extends SslCert {
             ]);
         }
 
-        $sslList->orderBy([
-            'ssl_cert.id' => SORT_DESC
-        ])->groupBy('ssl_cert.id');
-
         return $sslList;
     }
 
     /**
-     * Get ssl certs
-     * @param null|integer $status
-     */
-    protected function getSslCerts($status = null)
-    {
-        if (empty(static::$_sslCerts)) {
-            static::$_sslCerts = $this->buildQuery()->all();
-        }
-
-        if (null === $status || '' === $status) {
-            return static::$_sslCerts;
-        }
-
-        $sslCerts = [];
-
-        foreach (static::$_sslCerts as $sslCert) {
-            if ($sslCert->status != $status) {
-                continue;
-            }
-
-            $sslCerts[] = $sslCert;
-        }
-
-        return $sslCerts;
-    }
-
-    /**
-     * Search domains
+     * Search ssl
      * @return array
      */
     public function search()
     {
         $status = ArrayHelper::getValue($this->params, 'status');
 
+        $query = clone $this->buildQuery($status);
+
+        $pages = new Pagination(['totalCount' => $this->count($status)]);
+        $pages->setPageSize($this->pageSize);
+        $pages->defaultPageSize = $this->pageSize;
+
+        if (!empty($this->params['pageSize'])) {
+            $pages->setPageSize($this->params['pageSize']);
+        }
+
+        $ssl = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit)->orderBy([
+                'ssl_cert.id' => SORT_DESC
+            ])->groupBy('ssl_cert.id');
+
         return [
-            'models' => $this->getSslCerts($status)
+            'models' => static::queryAllCache($ssl),
+            'pages' => $pages,
         ];
     }
 
     /**
-     * Get count panels by type
+     * Get count ssl by type
      * @param int $status
-     * @return int
+     * @param array $filters
+     * @return int|array
      */
-    public function count($status = null)
+    public function count($status = null, $filters = [])
     {
         $query = clone $this->buildQuery($status);
 
-        return $query->count();
+        if (!empty($filters['group']['status'])) {
+            $query->select([
+                'ssl_cert.status as status',
+                'COUNT(DISTINCT ssl_cert.id) as rows'
+            ])->groupBy('ssl_cert.status');
+
+            return ArrayHelper::map(static::queryAllCache($query), 'status', 'rows');
+        }
+
+        $query->select('COUNT(DISTINCT ssl_cert.id)');
+
+        return (int)static::queryScalarCache($query);
     }
 
     /**
@@ -133,33 +137,39 @@ class SslSearch extends SslCert {
      */
     public function navs()
     {
+        $statusCounters = $this->count(null, [
+            'group' => [
+                'status' => 1
+            ],
+        ]);
+
         return [
             null => Yii::t('app/superadmin', 'ssl.list.navs_all', [
-                'count' => count($this->getSslCerts())
+                'count' => $this->count()
             ]),
             SslCert::STATUS_PENDING => Yii::t('app/superadmin', 'ssl.list.navs_pending', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_PENDING))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_PENDING, 0)
             ]),
             SslCert::STATUS_ACTIVE => Yii::t('app/superadmin', 'ssl.list.navs_active', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_ACTIVE))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_ACTIVE, 0)
             ]),
             SslCert::STATUS_PROCESSING => Yii::t('app/superadmin', 'ssl.list.navs_processing', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_PROCESSING))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_PROCESSING, 0)
             ]),
             SslCert::STATUS_PAYMENT_NEEDED => Yii::t('app/superadmin', 'ssl.list.navs_payment_needed', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_PAYMENT_NEEDED))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_PAYMENT_NEEDED, 0)
             ]),
             SslCert::STATUS_CANCELED => Yii::t('app/superadmin', 'ssl.list.navs_canceled', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_CANCELED))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_CANCELED, 0)
             ]),
             SslCert::STATUS_INCOMPLETE => Yii::t('app/superadmin', 'ssl.list.navs_incomplete', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_INCOMPLETE))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_INCOMPLETE, 0)
             ]),
             SslCert::STATUS_EXPIRED => Yii::t('app/superadmin', 'ssl.list.navs_expired', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_EXPIRED))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_EXPIRED, 0)
             ]),
             SslCert::STATUS_DDOS_ERROR => Yii::t('app/superadmin', 'ssl.list.navs_ddos_error', [
-                'count' => count($this->getSslCerts(SslCert::STATUS_DDOS_ERROR))
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_DDOS_ERROR, 0)
             ]),
         ];
     }

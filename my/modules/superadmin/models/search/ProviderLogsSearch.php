@@ -11,13 +11,9 @@ use yii\data\Pagination;
  */
 class ProviderLogsSearch
 {
-    
     use SearchTrait;
 
-    public function __construct()
-    {
-        $this->pageSize = 100;
-    }
+    protected $pageSize = 100;
 
     /**
      * Get parameters

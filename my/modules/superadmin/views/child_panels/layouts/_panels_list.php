@@ -8,6 +8,7 @@
     use yii\helpers\Html;
     use common\models\panels\Project;
     use yii\helpers\Json;
+    use yii\widgets\LinkPager;
 
     $now = time();
 ?>
@@ -120,3 +121,9 @@
 
     </tbody>
 </table>
+
+<div class="text-align-center pager">
+    <?= LinkPager::widget([
+        'pagination' => $panels['pages'],
+    ]); ?>
+</div>
