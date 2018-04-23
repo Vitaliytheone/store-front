@@ -91,6 +91,7 @@ class OrderHelper {
         $sslCert->item_id = $sslItem->id;
         $sslCert->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslCert->domain = $order->domain;
+        $sslCert->ptype = ArrayHelper::getValue($orderDetails,'project_type');
 
         $sslCert->setOrderDetails($orderSsl);
         $sslCert->setCsrDetails($csr);
@@ -109,26 +110,6 @@ class OrderHelper {
         $order->save(false);
 
         $sslCert->createdNotice();
-
-        // Activate Store ssl
-        $projectType = ArrayHelper::getValue($orderDetails,'project_type');
-
-        if ($projectType == Stores::getProjectType()) {
-            $pid = ArrayHelper::getValue($orderDetails, 'pid');
-            $store = Stores::findOne($pid);
-
-            if (!$store) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, "Store ID: $pid can not be found!", 'cron.ssl.store');
-                return false;
-            }
-
-            $store->ssl = Stores::DOMAIN_SSL_MODE_ON;
-
-            if (!$store->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $store->getErrors(), 'cron.ssl.store');
-                return false;
-            }
-        }
 
         return true;
     }
@@ -183,7 +164,7 @@ class OrderHelper {
 
             // $crt + $ca code
             if (!(OrderSslHelper::addDdos($ssl, [
-                'site' => $project->site,
+                'site' => $project->getBaseDomain(),
                 'crt' => $crtKey,
                 'key' => $csrKey,
             ]))) {
@@ -191,14 +172,14 @@ class OrderHelper {
             }
 
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
-                'domain' => $project->site,
+                'domain' => $project->getBaseDomain(),
                 'crt_cert' => $crtKey,
                 'key_cert' => $csrKey,
                 'key' => Yii::$app->params['system.sslScriptKey']
             ], 'cron.ssl_status.send_ssl_config');
 
             if (!(OrderSslHelper::addConfig($ssl, [
-                    'domain' => $project->site,
+                    'domain' => $project->getBaseDomain(),
                     'crt_cert' => $crtKey,
                     'key_cert' => $csrKey,
                 ]))) {

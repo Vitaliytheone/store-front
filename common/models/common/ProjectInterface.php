@@ -1,10 +1,17 @@
 <?php
 namespace common\models\common;
 
+/**
+ * Interface ProjectInterface
+ * @package common\models\common
+ */
 interface ProjectInterface
 {
-    const PROJECT_TYPE_STORE = 1;
-    const PROJECT_TYPE_PANEL = 2;
+    const PROJECT_TYPE_PANEL = 1;
+    const PROJECT_TYPE_STORE = 2;
+
+    const SSL_MODE_ON = 1;
+    const SSL_MODE_OFF = 0;
 
     /**
      * Return project type
@@ -13,8 +20,14 @@ interface ProjectInterface
     public static function getProjectType();
 
     /**
-     * Return main domain of project (Project, Store...)
+     * Return current base domain of project (only raw domain, without http scheme, itc)
      * @return string|null
      */
     public function getBaseDomain();
+
+    /**
+     * Set is SSL-mode active for base domain
+     * @param $isActive bool
+     */
+    public function setSslMode($isActive);
 }

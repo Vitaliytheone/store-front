@@ -247,6 +247,30 @@ class Project extends ActiveRecord implements ProjectInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function getProjectType()
+    {
+        return ProjectInterface::PROJECT_TYPE_PANEL;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseDomain()
+    {
+        return $this->getSite();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSslMode($isActive)
+    {
+        $this->ssl = $isActive;
+    }
+
+    /**
      * Get act status name
      * @return string
      */
@@ -311,22 +335,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'cid']);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getProjectType()
-    {
-        return self::PROJECT_TYPE_PANEL;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return $this->site;
     }
 
     /**

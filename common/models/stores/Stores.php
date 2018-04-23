@@ -11,6 +11,7 @@ use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
+use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
 use sommerce\helpers\DnsHelper;
@@ -70,9 +71,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
     const CAN_DOMAIN_CONNECT = 5;
-
-    const DOMAIN_SSL_MODE_OFF = 0;
-    const DOMAIN_SSL_MODE_ON = 1;
 
     const STORE_DB_NAME_PREFIX = 'store_';
 
@@ -220,7 +218,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public static function getProjectType()
     {
-        return self::PROJECT_TYPE_STORE;
+        return ProjectInterface::PROJECT_TYPE_STORE;
     }
 
     /**
@@ -228,7 +226,15 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function getBaseDomain()
     {
-        return $this->domain;
+        return DomainsHelper::idnToUtf8($this->domain);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSslMode($isActive)
+    {
+        $this->ssl = $isActive;
     }
 
     /**
