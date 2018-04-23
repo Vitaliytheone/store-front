@@ -22,7 +22,7 @@ class PaymentsSearch extends Payments {
 
     public $domain;
 
-    protected $pageSize = 500;
+    protected $pageSize = 100;
 
     /**
      * @var array - methods
