@@ -213,9 +213,6 @@ class SslCert extends ActiveRecord
      */
     public function changeStatus($status)
     {
-        echo '------Change status-----';
-        echo "------$status-----";
-
         $this->status = $status;
 
         if (in_array($status, [
