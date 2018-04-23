@@ -163,18 +163,20 @@ class OrderHelper {
 
             $csr = $ssl->getCsrDetails();
 
+            echo '---------';
+
             $crtKey = $crt . "\n" . $ca;
             $csrKey = ArrayHelper::getValue($csr, 'csr_key');
 
-//
-//            // $crt + $ca code
-//            if (!(OrderSslHelper::addDdos($ssl, [
-//                'site' => $project->getBaseDomain(),
-//                'crt' => $crtKey,
-//                'key' => $csrKey,
-//            ]))) {
-//                $status = SslCert::STATUS_DDOS_ERROR;
-//            }
+
+            // $crt + $ca code
+            if (!(OrderSslHelper::addDdos($ssl, [
+                'site' => $project->getBaseDomain(),
+                'crt' => $crtKey,
+                'key' => $csrKey,
+            ]))) {
+                $status = SslCert::STATUS_DDOS_ERROR;
+            }
 //
 //            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
 //                'domain' => $project->getBaseDomain(),
