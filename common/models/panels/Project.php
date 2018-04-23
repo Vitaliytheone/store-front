@@ -271,6 +271,14 @@ class Project extends ActiveRecord implements ProjectInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getBaseSite()
+    {
+        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
+    }
+
+    /**
      * Get act status name
      * @return string
      */

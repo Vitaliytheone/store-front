@@ -26,6 +26,12 @@ interface ProjectInterface
     public function getBaseDomain();
 
     /**
+     * Return current domain base site of project (http:// or  https:// scheme included)
+     * @return mixed
+     */
+    public function getBaseSite();
+
+    /**
      * Set is SSL-mode active for base domain
      * @param $isActive bool
      */

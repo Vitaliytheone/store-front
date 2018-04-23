@@ -13,7 +13,7 @@ use \sommerce\assets\PagesAsset;
 PagesAsset::register($this);
 
 $actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::toRoute(['/settings/edit-page', 'id' => $page->id]);
-$storeUrl = 'http://' . $store->domain;
+$storeUrl = $store->getBaseSite();
 ?>
 
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
