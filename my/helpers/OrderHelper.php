@@ -3,6 +3,7 @@ namespace my\helpers;
 
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
+use common\models\common\ProjectInterface;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -91,7 +92,7 @@ class OrderHelper {
         $sslCert->item_id = $sslItem->id;
         $sslCert->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslCert->domain = $order->domain;
-        $sslCert->ptype = ArrayHelper::getValue($orderDetails,'project_type');
+        $sslCert->ptype = ArrayHelper::getValue($orderDetails,'project_type', ProjectInterface::PROJECT_TYPE_PANEL);
 
         $sslCert->setOrderDetails($orderSsl);
         $sslCert->setCsrDetails($csr);
