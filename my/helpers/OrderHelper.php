@@ -148,6 +148,10 @@ class OrderHelper {
             return false;
         }
 
+        $crt = 'dowefkjerfkreferq';
+        $ca = 'ferwfrewfrewfrewfrewfe';
+        $status = SslCert::STATUS_ACTIVE;
+
         if (SslCert::STATUS_ACTIVE == $status) {
 
             if (empty($crt) || empty($ca)) {
@@ -162,30 +166,30 @@ class OrderHelper {
             $crtKey = $crt . "\n" . $ca;
             $csrKey = ArrayHelper::getValue($csr, 'csr_key');
 
-
-            // $crt + $ca code
-            if (!(OrderSslHelper::addDdos($ssl, [
-                'site' => $project->getBaseDomain(),
-                'crt' => $crtKey,
-                'key' => $csrKey,
-            ]))) {
-                $status = SslCert::STATUS_DDOS_ERROR;
-            }
-
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
-                'domain' => $project->getBaseDomain(),
-                'crt_cert' => $crtKey,
-                'key_cert' => $csrKey,
-                'key' => Yii::$app->params['system.sslScriptKey']
-            ], 'cron.ssl_status.send_ssl_config');
-
-            if (!(OrderSslHelper::addConfig($ssl, [
-                    'domain' => $project->getBaseDomain(),
-                    'crt_cert' => $crtKey,
-                    'key_cert' => $csrKey,
-                ]))) {
-                $status = SslCert::STATUS_DDOS_ERROR;
-            }
+//
+//            // $crt + $ca code
+//            if (!(OrderSslHelper::addDdos($ssl, [
+//                'site' => $project->getBaseDomain(),
+//                'crt' => $crtKey,
+//                'key' => $csrKey,
+//            ]))) {
+//                $status = SslCert::STATUS_DDOS_ERROR;
+//            }
+//
+//            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
+//                'domain' => $project->getBaseDomain(),
+//                'crt_cert' => $crtKey,
+//                'key_cert' => $csrKey,
+//                'key' => Yii::$app->params['system.sslScriptKey']
+//            ], 'cron.ssl_status.send_ssl_config');
+//
+//            if (!(OrderSslHelper::addConfig($ssl, [
+//                    'domain' => $project->getBaseDomain(),
+//                    'crt_cert' => $crtKey,
+//                    'key_cert' => $csrKey,
+//                ]))) {
+//                $status = SslCert::STATUS_DDOS_ERROR;
+//            }
 
             if (!$ssl->changeStatus($status)) {
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, $ssl->getErrors(), 'cron.ssl_status');
