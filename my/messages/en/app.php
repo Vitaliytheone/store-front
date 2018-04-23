@@ -199,6 +199,7 @@ return [
     'form.reset_password.password' => 'Password',
     'form.reset_password.password_repeat' => 'Confirm password',
 
+    'form.order_ssl.stores_group' => 'Stores',
     'form.order_ssl.panels_group' => 'Panels',
     'form.order_ssl.child_group' => 'Child panels',
     'form.order_ssl.pid' => 'Domain',
@@ -431,12 +432,17 @@ return [
     'error.store.bad_name' => 'Wrong store name! Allowed symbols are: `A-Z`, `0-9`, `-`, and `space`',
     'error.store.can_not_order_store' => 'Can not order store',
 
-    'ssl.created.ticket_subject' => 'Attention',
-    'ssl.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
+    'ssl.my.created.ticket_subject' => 'Attention',
+    'ssl.my.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
                 If payment method requires to set URL, you need to change it from http to https.
                 For example, if old URL was http://{domain}/bitcoin you need to change it to https://{domain}/bitcoin
                 Also keep in mind that panel API URL changed from http://{domain}/api/v2
                 to https://{domain}/api/v2',
+
+    'ssl.sommerce.created.ticket_subject' => 'Attention',
+    'ssl.sommerce.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
+                If payment method requires to set URL, you need to change it from http to https.
+                For example, if old URL was http://{domain}/bitcoin you need to change it to https://{domain}/bitcoin',
 
     'referral.index.header' => 'Referral program',
     'referral.index.url_comment' => 'Your referral URL is: {url}',

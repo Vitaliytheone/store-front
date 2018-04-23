@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use common\helpers\DbHelper;
+use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
@@ -10,6 +11,7 @@ use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
+use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
 use sommerce\helpers\DnsHelper;
@@ -28,6 +30,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $customer_id
  * @property string $domain
  * @property integer $subdomain
+ * @property integer $ssl
  * @property string $name
  * @property integer $timezone
  * @property string $language
@@ -58,7 +61,7 @@ use yii\helpers\ArrayHelper;
  * @property StoreProviders[] $storeProviders
  * @property Customers $customer
  */
-class Stores extends ActiveRecord
+class Stores extends ActiveRecord implements ProjectInterface
 {
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
@@ -89,7 +92,7 @@ class Stores extends ActiveRecord
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain'
+                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl'
             ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
@@ -112,6 +115,7 @@ class Stores extends ActiveRecord
             'customer_id' => Yii::t('app', 'Customer ID'),
             'domain' => Yii::t('app', 'Domain'),
             'subdomain' => Yii::t('app', 'Subdomain'),
+            'ssl' => Yii::t('app', 'SSL'),
             'name' => Yii::t('app', 'Name'),
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
@@ -207,6 +211,38 @@ class Stores extends ActiveRecord
                 },
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getProjectType()
+    {
+        return ProjectInterface::PROJECT_TYPE_STORE;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseDomain()
+    {
+        return DomainsHelper::idnToUtf8($this->domain);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseSite()
+    {
+        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSslMode($isActive)
+    {
+        $this->ssl = $isActive;
     }
 
     /**

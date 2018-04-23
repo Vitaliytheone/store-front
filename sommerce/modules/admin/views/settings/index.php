@@ -11,7 +11,7 @@ use common\models\store\Files;
 /* @var $iconFileSizeLimit string */
 /* @var $logoFileSizeLimit string */
 
-$storeUrl = 'http://' . $store->domain;
+$storeUrl = $store->getBaseSite();
 
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">

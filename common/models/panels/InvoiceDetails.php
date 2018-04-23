@@ -285,7 +285,7 @@ class InvoiceDetails extends ActiveRecord
 
             case static::ITEM_PROLONGATION_STORE:
                 $store = Stores::findOne($this->item_id);
-                return $store ? $store->getSite() : '';
+                return $store ? $store->getBaseDomain() : '';
             break;
 
             case static::ITEM_PROLONGATION_SSL:

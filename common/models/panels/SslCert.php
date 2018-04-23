@@ -3,6 +3,8 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
+use common\models\common\ProjectInterface;
+use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -17,6 +19,7 @@ use my\mail\mailers\CreatedSSL;
  *
  * @property integer $id
  * @property integer $cid
+ * @property integer $ptype
  * @property integer $pid
  * @property integer $item_id
  * @property integer $status
@@ -26,12 +29,15 @@ use my\mail\mailers\CreatedSSL;
  * @property string $expiry
  * @property integer $created_at
  *
- * @property Project $project
+ * @property Project|Stores $project
  * @property Customers $customer
  * @property SslCertItem $item
  */
 class SslCert extends ActiveRecord
 {
+    const PROJECT_TYPE_PANEL = 1;
+    const PROJECT_TYPE_STORE = 2;
+
     const STATUS_PENDING = 0;
     const STATUS_ACTIVE = 1;
     const STATUS_PROCESSING = 2;
@@ -67,7 +73,7 @@ class SslCert extends ActiveRecord
     {
         return [
             [['pid', 'cid', 'item_id', 'details'], 'required'],
-            [['pid', 'cid', 'item_id', 'status', 'created_at', 'checked'], 'integer'],
+            [['pid', 'cid', 'item_id', 'status', 'created_at', 'checked', 'ptype'], 'integer'],
             [['details', 'expiry'], 'string'],
             [['domain'], 'string', 'max' => 255],
             [['checked'], 'default', 'value' => static::CHECKED_YES],
@@ -85,6 +91,7 @@ class SslCert extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'cid' => Yii::t('app', 'Customer'),
+            'ptype' => Yii::t('app', 'Project type'),
             'pid' => Yii::t('app', 'Pid'),
             'item_id' => Yii::t('app', 'Item ID'),
             'status' => Yii::t('app', 'Status'),
@@ -101,7 +108,17 @@ class SslCert extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::class, ['id' => 'pid']);
+        switch ($this->ptype) {
+            case self::PROJECT_TYPE_PANEL:
+                return $this->hasOne(Project::class, ['id' => 'pid']);
+                break;
+            case self::PROJECT_TYPE_STORE:
+                return $this->hasOne(Stores::class, ['id' => 'pid']);
+                break;
+            default:
+                return $this->hasOne(Project::class, ['id' => 'pid']);
+                break;
+        }
     }
 
     /**
@@ -206,21 +223,33 @@ class SslCert extends ActiveRecord
             $this->expiry = ArrayHelper::getValue($orderDetails, 'valid_till');
             $this->checked = static::CHECKED_YES;
 
-            $this->project->ssl = 1;
+            $this->project->setSslMode(ProjectInterface::SSL_MODE_ON);
             $this->project->save(false);
-            
+
+            switch ($this->project::getProjectType()) {
+                case ProjectInterface::PROJECT_TYPE_PANEL:
+                    $messagePrefix = 'my';
+                    break;
+                case ProjectInterface::PROJECT_TYPE_STORE:
+                    $messagePrefix = 'sommerce';
+                    break;
+                default:
+                    $messagePrefix = 'my';
+                    break;
+            }
+
             // Create new unreaded ticket after activate ssl cert
             $ticket = new Tickets();
             $ticket->cid = $this->cid;
             $ticket->admin = 1;
-            $ticket->subject = Yii::t('app', 'ssl.created.ticket_subject');
+            $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
             if ($ticket->save(false)) {
                 $ticketMessage = new TicketMessages();
                 $ticketMessage->tid = $ticket->id;
                 $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
                 $ticketMessage->date = time();
-                $ticketMessage->message = Yii::t('app', 'ssl.created.ticket_message', [
-                    'domain' => $this->project->getSite()
+                $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
+                    'domain' => $this->project->getBaseDomain()
                 ]);
                 $ticketMessage->save(false);
             }
