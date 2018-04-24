@@ -67,6 +67,8 @@ customModule.activityController = {
         self.hideError();
         self.showLoader(self.activityLogContainer);
 
+        filters.v = custom.generatePassword(32);
+
         $.ajax({
             url: url,
             data: filters,
