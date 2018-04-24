@@ -26,7 +26,7 @@ use yii\helpers\ArrayHelper;
 
                     <?= $form->errorSummary($model); ?>
 
-                    <?= $form->field($model, 'pid')->dropDownList($model->getProjects(true)) ?>
+                    <?= $form->field($model, 'pid')->dropDownList($model->getAllProjectsDomains(true)) ?>
 
                     <?= $form->field($model, 'item_id')->dropDownList($model->getSslItems()) ?>
 

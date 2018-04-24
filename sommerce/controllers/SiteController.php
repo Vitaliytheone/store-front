@@ -1,11 +1,14 @@
 <?php
 namespace sommerce\controllers;
 
+use common\models\common\ProjectInterface;
+use common\models\panels\SslValidation;
 use common\models\store\Blocks;
 use common\models\stores\Stores;
 use sommerce\helpers\BlockHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -71,5 +74,30 @@ class SiteController extends CustomController
     public function actionCheckout()
     {
         return $this->renderPartial('checkout');
+    }
+
+
+    /**
+     * Validate ssl certificate. For robot comings
+     * @param $filename
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionSsl($filename)
+    {
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+
+        $model = SslValidation::findOne([
+            'ptype' => $store::getProjectType(),
+            'pid' => $store->id,
+            'file_name' => $filename . '.txt'
+        ]);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model->content;
     }
 }
