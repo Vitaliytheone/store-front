@@ -2,6 +2,8 @@
 
 namespace common\models\panels;
 
+use common\models\common\ProjectInterface;
+use common\models\stores\Stores;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -63,7 +65,17 @@ class SslValidation extends ActiveRecord
      */
     public function getP()
     {
-        return $this->hasOne(Project::class, ['id' => 'pid']);
+        switch ($this->ptype) {
+            case ProjectInterface::PROJECT_TYPE_PANEL:
+                return $this->hasOne(Project::class, ['id' => 'pid']);
+                break;
+            case ProjectInterface::PROJECT_TYPE_STORE:
+                return $this->hasOne(Stores::class, ['id' => 'pid']);
+                break;
+            default:
+                return $this->hasOne(Project::class, ['id' => 'pid']);
+                break;
+        }
     }
 
     /**
