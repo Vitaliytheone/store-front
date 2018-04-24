@@ -2,15 +2,15 @@
 
 namespace common\models\store\queries;
 
-use \common\models\store\Languages;
+use \common\models\store\Messages;
 use \yii\db\ActiveQuery;
 
 /**
- * This is the ActiveQuery class for [[\common\models\store\Languages]].
+ * This is the ActiveQuery class for [[\common\models\store\Messages]].
  *
- * @see Languages
+ * @see Messages
  */
-class LanguagesQuery extends ActiveQuery
+class MessagesQuery extends ActiveQuery
 {
     /*public function active()
     {
@@ -19,7 +19,7 @@ class LanguagesQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Languages[]|array
+     * @return Messages[]|array
      */
     public function all($db = null)
     {
@@ -28,7 +28,7 @@ class LanguagesQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Languages|array|null
+     * @return Messages|array|null
      */
     public function one($db = null)
     {

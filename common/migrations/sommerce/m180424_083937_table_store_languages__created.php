@@ -32,16 +32,28 @@ class m180424_083937_table_store_languages__created extends Migration
 
             if ($isDbExist) {
                 $this->execute("
-                     USE $db;
-                     CREATE TABLE `languages` (
+                    USE $db;
+                    CREATE TABLE `languages` (
                       `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                      `code` varchar(5) NOT NULL DEFAULT '' COMMENT 'Language code in IETF lang format',
-                      `content` text COMMENT 'Json messages content',
+                      `code` varchar(5) DEFAULT NULL COMMENT 'Language code in IETF lang format',
                       `created_at` int(11) DEFAULT NULL,
                       `updated_at` int(11) DEFAULT NULL,
                       PRIMARY KEY (`id`),
                       KEY `idx_lang_code` (`code`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                ");
+                $this->execute("
+                    USE $db;
+                    CREATE TABLE `messages` (
+                      `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                      `lang_code` varchar(10) DEFAULT NULL COMMENT 'Language code in IETF lang format',
+                      `section` varchar(100) DEFAULT NULL COMMENT 'Message section',
+                      `name` varchar(500) DEFAULT NULL COMMENT 'Message variable name',
+                      `value` varchar(2000) DEFAULT NULL COMMENT 'Message text',
+                      PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    
+                    ALTER TABLE `messages` ADD INDEX `idx_lang_code__name` (`lang_code`, `name`);
                 ");
             } else {
                 echo PHP_EOL . 'Database ' . $db . 'does not exist. Skipped!';
@@ -61,6 +73,10 @@ class m180424_083937_table_store_languages__created extends Migration
                 $this->execute("
                     USE $db;
                     DROP TABLE `languages`;
+                ");
+                $this->execute("
+                    USE $db;
+                    DROP TABLE `messages`;
                 ");
             } else {
                 echo PHP_EOL . 'Database ' . $db . 'does not exist. Skipped!';
