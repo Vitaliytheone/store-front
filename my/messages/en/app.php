@@ -442,7 +442,7 @@ return [
     'ssl.sommerce.created.ticket_subject' => 'Attention',
     'ssl.sommerce.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
                 If payment method requires to set URL, you need to change it from http to https.
-                For example, if old URL was http://{domain}/bitcoin you need to change it to https://{domain}/bitcoin',
+                For example, if old URL was http://{domain}/2checkout you need to change it to https://{domain}/2checkout',
 
     'referral.index.header' => 'Referral program',
     'referral.index.url_comment' => 'Your referral URL is: {url}',
