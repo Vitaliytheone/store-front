@@ -79,7 +79,6 @@ class OrderHelper {
         $validation = ArrayHelper::getValue($validation, Ssl::DCV_METHOD_HTTP);
 
         $sslValidation = new SslValidation();
-        $sslValidation->ptype = $projectType;
         $sslValidation->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslValidation->file_name = ArrayHelper::getValue($validation, 'filename');
         $sslValidation->content = ArrayHelper::getValue($validation, 'content');
@@ -95,7 +94,7 @@ class OrderHelper {
         $sslCert->item_id = $sslItem->id;
         $sslCert->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslCert->domain = $order->domain;
-        $sslCert->ptype = $projectType;
+        $sslCert->project_type = $projectType;
 
         $sslCert->setOrderDetails($orderSsl);
         $sslCert->setCsrDetails($csr);

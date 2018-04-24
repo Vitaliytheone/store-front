@@ -19,7 +19,7 @@ use my\mail\mailers\CreatedSSL;
  *
  * @property integer $id
  * @property integer $cid
- * @property integer $ptype
+ * @property integer $project_type
  * @property integer $pid
  * @property integer $item_id
  * @property integer $status
@@ -73,7 +73,7 @@ class SslCert extends ActiveRecord
     {
         return [
             [['pid', 'cid', 'item_id', 'details'], 'required'],
-            [['pid', 'cid', 'item_id', 'status', 'created_at', 'checked', 'ptype'], 'integer'],
+            [['pid', 'cid', 'item_id', 'status', 'created_at', 'checked', 'project_type'], 'integer'],
             [['details', 'expiry'], 'string'],
             [['domain'], 'string', 'max' => 255],
             [['checked'], 'default', 'value' => static::CHECKED_YES],
@@ -91,7 +91,7 @@ class SslCert extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'cid' => Yii::t('app', 'Customer'),
-            'ptype' => Yii::t('app', 'Project type'),
+            'project_type' => Yii::t('app', 'Project type'),
             'pid' => Yii::t('app', 'Pid'),
             'item_id' => Yii::t('app', 'Item ID'),
             'status' => Yii::t('app', 'Status'),
@@ -108,7 +108,7 @@ class SslCert extends ActiveRecord
      */
     public function getProject()
     {
-        switch ($this->ptype) {
+        switch ($this->project_type) {
             case self::PROJECT_TYPE_PANEL:
                 return $this->hasOne(Project::class, ['id' => 'pid']);
                 break;
