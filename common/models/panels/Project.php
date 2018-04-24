@@ -310,7 +310,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function getSslValidations()
     {
-        return $this->hasMany(SslValidation::class, ['pid' => 'id']);
+        return $this->hasMany(SslValidation::class, ['pid' => 'id', 'ptype' => static::getProjectType()]);
     }
 
     /**
