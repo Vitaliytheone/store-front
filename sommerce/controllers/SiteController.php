@@ -89,7 +89,6 @@ class SiteController extends CustomController
         $store = Yii::$app->store->getInstance();
 
         $model = SslValidation::findOne([
-            'ptype' => $store::getProjectType(),
             'pid' => $store->id,
             'file_name' => $filename . '.txt'
         ]);
