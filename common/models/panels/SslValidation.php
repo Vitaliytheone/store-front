@@ -2,6 +2,8 @@
 
 namespace common\models\panels;
 
+use common\models\common\ProjectInterface;
+use common\models\stores\Stores;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -54,14 +56,6 @@ class SslValidation extends ActiveRecord
             'content' => Yii::t('app', 'Content'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getP()
-    {
-        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**

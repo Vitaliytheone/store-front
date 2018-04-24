@@ -3,6 +3,7 @@ namespace my\helpers;
 
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
+use common\models\common\ProjectInterface;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -41,6 +42,8 @@ class OrderHelper {
     {
         $orderDetails = $order->getDetails();
         $details = ArrayHelper::getValue($orderDetails, 'details');
+
+        $projectType = ArrayHelper::getValue($orderDetails,'project_type', ProjectInterface::PROJECT_TYPE_PANEL);
 
         $sslItem = SslCertItem::findOne(ArrayHelper::getValue($orderDetails, 'item_id'));
 
@@ -91,6 +94,7 @@ class OrderHelper {
         $sslCert->item_id = $sslItem->id;
         $sslCert->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslCert->domain = $order->domain;
+        $sslCert->project_type = $projectType;
 
         $sslCert->setOrderDetails($orderSsl);
         $sslCert->setCsrDetails($csr);
@@ -163,7 +167,7 @@ class OrderHelper {
 
             // $crt + $ca code
             if (!(OrderSslHelper::addDdos($ssl, [
-                'site' => $project->site,
+                'site' => $project->getBaseDomain(),
                 'crt' => $crtKey,
                 'key' => $csrKey,
             ]))) {
@@ -171,14 +175,14 @@ class OrderHelper {
             }
 
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
-                'domain' => $project->site,
+                'domain' => $project->getBaseDomain(),
                 'crt_cert' => $crtKey,
                 'key_cert' => $csrKey,
                 'key' => Yii::$app->params['system.sslScriptKey']
             ], 'cron.ssl_status.send_ssl_config');
 
             if (!(OrderSslHelper::addConfig($ssl, [
-                    'domain' => $project->site,
+                    'domain' => $project->getBaseDomain(),
                     'crt_cert' => $crtKey,
                     'key_cert' => $csrKey,
                 ]))) {
