@@ -4,6 +4,7 @@ $orderLinks = require(__DIR__ . '/settings/order-link.php');
 $timezone = require(__DIR__ . '/settings/timezone.php');
 $cdn = require(__DIR__ . '/settings/cdn.php');
 $currencies = require(__DIR__ . '/settings/currency.php');
+$languages = require(__DIR__ . '/settings/languages.php');
 
 return [
     'adminEmail' => 'admin@example.com',
@@ -37,5 +38,6 @@ return [
     'timezone' => $timezone,
     'cdn' => $cdn,
     'currencies' => $currencies,
+    'languages' => $languages,
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
 ];
