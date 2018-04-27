@@ -252,10 +252,6 @@ return [
     'settings.payments_edit_method' => 'Edit',
     'settings.payments_save_method' => 'Save changes',
     'settings.payments_cancel_method' => 'Cancel',
-    'settings.payments_method_paypal' => 'PayPal',
-    'settings.payments_method_2checkout' => '2Checkout',
-    'settings.payments_method_bitcoin' => 'Bitcoin',
-    'settings.payments_method_coinpayments' => 'CoinPayments',
     'settings.message_settings_saved' => 'Changes successfully saved!',
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 

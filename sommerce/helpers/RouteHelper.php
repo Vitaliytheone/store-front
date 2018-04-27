@@ -46,6 +46,9 @@ class RouteHelper {
         foreach (CurrencyHelper::getPaymentsByCurrency($store->currency) as $method) {
             $methodUrls = is_array($method['url']) ? $method['url'] : [$method['url']];
             foreach ($methodUrls as $url) {
+                if (empty($url)) {
+                    continue;
+                }
                 $urls[$url] = [
                     'rule' => "/^\/?{$url}(?:\/(?<id>[\d]+))?.*?$/i",
                     'match' => [

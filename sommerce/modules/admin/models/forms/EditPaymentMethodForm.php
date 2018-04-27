@@ -100,12 +100,12 @@ class EditPaymentMethodForm extends PaymentMethods
 
         $methodItemsData = [
             self::METHOD_PAYPAL => [
-                'icon' => '/img/paypal.png',
+                'icon' => '/img/pg/paypal.png',
                 'title' => Yii::t('admin', 'settings.payments_method_paypal'),
                 'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
             ],
             self::METHOD_2CHECKOUT => [
-                'icon' => '/img/2checkout.png',
+                'icon' => '/img/pg/2checkout.png',
                 'title' => Yii::t('admin', 'settings.payments_method_2checkout'),
                 'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
             ],
