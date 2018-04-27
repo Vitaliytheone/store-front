@@ -96,7 +96,7 @@ $config = [
                     'db' => 'db',
                     'storeDb' => 'storeDb',
                     'cache' => 'cache',
-                    'enableCaching' => true,
+                    'enableCaching' => false,
                     'cachingDuration' => 0, // cached data will never expire
                 ],
             ],
