@@ -7,24 +7,6 @@ use yii\db\Migration;
  */
 class m180427_082326_db_stores__table_payment_gateways__field_name__added extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m180427_082326_db_stores__table_payment_gateways__field_name__added cannot be reverted.\n";
-
-        return false;
-    }
-
     // Use up()/down() to run migration code without a transaction.
     public function up()
     {

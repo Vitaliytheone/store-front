@@ -210,6 +210,7 @@ class Pagseguro extends BasePayment {
             'transaction_id' => $notificationCode,
             'amount' => $this->_checkout->price,
             'checkout_id' => $this->_checkout->id,
+            'content' => 'Ok'
         ];
     }
 }

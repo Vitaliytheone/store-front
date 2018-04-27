@@ -24,8 +24,13 @@ class PaymentMethods extends ActiveRecord
     const METHOD_PAYPAL = 'paypal';
     const METHOD_2CHECKOUT = '2checkout';
     const METHOD_COINPAYMENTS = 'coinpayments';
-
     const METHOD_PAGSEGURO = 'pagseguro';
+    const METHOD_WEBMONEY = 'webmoney';
+    const METHOD_YANDEX_MONEY = 'yandexmoney';
+    const METHOD_FREE_KASSA = 'freekassa';
+    const METHOD_PAYTR = 'paytr';
+    const METHOD_PAYWANT = 'paywant';
+    const METHOD_BILLPLZ = 'billplz';
 
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;
@@ -98,11 +103,7 @@ class PaymentMethods extends ActiveRecord
                 ->column();
         }
 
-        return [
-            static::METHOD_PAYPAL => ArrayHelper::getValue(static::$methodsNames, static::METHOD_PAYPAL, static::METHOD_PAYPAL),
-            static::METHOD_2CHECKOUT => ArrayHelper::getValue(static::$methodsNames, static::METHOD_2CHECKOUT, static::METHOD_2CHECKOUT),
-            static::METHOD_COINPAYMENTS => ArrayHelper::getValue(static::$methodsNames, static::METHOD_COINPAYMENTS, static::METHOD_COINPAYMENTS),
-        ];
+        return static::$methodsNames;
     }
 
     /**
@@ -111,16 +112,7 @@ class PaymentMethods extends ActiveRecord
      */
     public function getName()
     {
-        return ArrayHelper::getValue(static::getNames(), $this->method, '');
-    }
-
-    /**
-     * Get payment method details
-     * @return array|mixed
-     */
-    public function getDetails()
-    {
-        return !empty($this->details) ? json_decode($this->details, true) : [];
+        return ArrayHelper::getValue(static::getNames(), $this->method, $this->method);
     }
 
     /**
@@ -131,5 +123,14 @@ class PaymentMethods extends ActiveRecord
     public static function getMethodName($method)
     {
         return ArrayHelper::getValue(static::getNames(), $method, $method);
+    }
+
+    /**
+     * Get payment method details
+     * @return array|mixed
+     */
+    public function getDetails()
+    {
+        return !empty($this->details) ? json_decode($this->details, true) : [];
     }
 }
