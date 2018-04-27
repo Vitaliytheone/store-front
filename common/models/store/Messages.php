@@ -5,6 +5,7 @@ namespace common\models\store;
 use Yii;
 use \yii\db\Connection;
 use \yii\db\ActiveRecord;
+use \common\models\store\queries\MessagesQuery;
 
 /**
  * This is the model class for table "{{%messages}}".
@@ -17,6 +18,15 @@ use \yii\db\ActiveRecord;
  */
 class Messages extends ActiveRecord
 {
+    const SECTION_404 = '404';
+    const SECTION_CART = 'cart';
+    const SECTION_CHECKOUT = 'checkout';
+    const SECTION_CONTACT = 'contact';
+    const SECTION_FOOTER = 'footer';
+    const SECTION_ORDER = 'order';
+    const SECTION_PAYMENT_RESULT = 'payment_result';
+    const SECTION_PRODUCT = 'product';
+
     /**
      * @return Connection the database connection used by this AR class.
      */
@@ -62,10 +72,44 @@ class Messages extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @return \common\models\store\queries\Messages the active query used by this AR class.
+     * @return MessagesQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\store\queries\Messages(get_called_class());
+        return new MessagesQuery(get_called_class());
     }
+
+    /**
+     * Return messages sections
+     * @return array
+     */
+    public static function getSections()
+    {
+        return [
+            static::SECTION_404 => Yii::t('admin', 'settings.languages_section_404'),
+            static::SECTION_CART => Yii::t('admin', 'settings.languages_section_cart'),
+            static::SECTION_CHECKOUT => Yii::t('admin', 'settings.languages_section_checkout'),
+            static::SECTION_CONTACT => Yii::t('admin', 'settings.languages_section_contact'),
+            static::SECTION_FOOTER => Yii::t('admin', 'settings.languages_section_footer'),
+            static::SECTION_ORDER => Yii::t('admin', 'settings.languages_section_order'),
+            static::SECTION_PAYMENT_RESULT => Yii::t('admin', 'settings.languages_section_result'),
+            static::SECTION_PRODUCT => Yii::t('admin', 'settings.languages_section_product'),
+        ];
+    }
+
+    /**
+     * Return store messages array for language $langCode
+     * @param $langCode
+     * @return array
+     */
+    public static function getMessagesByLanguageCode($langCode)
+    {
+        return static::find()
+            ->select(['id', 'lang_code', 'section', 'name', 'value'])
+            ->where(['lang_code' => $langCode])
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+    }
+
 }

@@ -2,10 +2,13 @@
 
 namespace common\models\store;
 
+use sommerce\modules\admin\helpers\LanguagesHelper;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use \yii\db\Connection;
 use \yii\db\ActiveRecord;
 use \common\models\store\queries\LanguagesQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{languages}}".
@@ -14,9 +17,33 @@ use \common\models\store\queries\LanguagesQuery;
  * @property string $code
  * @property integer $created_at
  * @property integer $updated_at
+ *
+ * @property string $name
+ * @property Messages[] $messages
  */
 class Languages extends ActiveRecord
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
+    }
+
     /**
      * @return Connection the database connection used by this AR class.
      */
@@ -64,5 +91,22 @@ class Languages extends ActiveRecord
     public static function find()
     {
         return new LanguagesQuery(get_called_class());
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMessages()
+    {
+        return $this->hasMany(Messages::class, ['lang_code' => 'code']);
+    }
+
+    /**
+     * Return language name
+     * @return string|null
+     */
+    public function getName()
+    {
+        return ArrayHelper::getValue(LanguagesHelper::getAllLanguagesList(true), $this->code);
     }
 }
