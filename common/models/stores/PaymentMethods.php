@@ -104,11 +104,7 @@ class PaymentMethods extends ActiveRecord
                 ->column();
         }
 
-        return [
-            static::METHOD_PAYPAL => ArrayHelper::getValue(static::$methodsNames, static::METHOD_PAYPAL, static::METHOD_PAYPAL),
-            static::METHOD_2CHECKOUT => ArrayHelper::getValue(static::$methodsNames, static::METHOD_2CHECKOUT, static::METHOD_2CHECKOUT),
-            static::METHOD_COINPAYMENTS => ArrayHelper::getValue(static::$methodsNames, static::METHOD_COINPAYMENTS, static::METHOD_COINPAYMENTS),
-        ];
+        return static::$methodsNames;
     }
 
     /**
@@ -117,16 +113,7 @@ class PaymentMethods extends ActiveRecord
      */
     public function getName()
     {
-        return ArrayHelper::getValue(static::getNames(), $this->method, '');
-    }
-
-    /**
-     * Get payment method details
-     * @return array|mixed
-     */
-    public function getDetails()
-    {
-        return !empty($this->details) ? json_decode($this->details, true) : [];
+        return ArrayHelper::getValue(static::getNames(), $this->method, $this->method);
     }
 
     /**
@@ -137,6 +124,15 @@ class PaymentMethods extends ActiveRecord
     public static function getMethodName($method)
     {
         return ArrayHelper::getValue(static::getNames(), $method, $method);
+    }
+
+    /**
+     * Get payment method details
+     * @return array|mixed
+     */
+    public function getDetails()
+    {
+        return !empty($this->details) ? json_decode($this->details, true) : [];
     }
 
 }

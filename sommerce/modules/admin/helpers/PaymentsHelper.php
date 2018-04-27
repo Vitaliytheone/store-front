@@ -9,7 +9,8 @@ use common\models\stores\Stores;
  * Class PaymentsHelper
  * @package sommerce\modules\admin\helpers
  */
-class PaymentsHelper {
+class PaymentsHelper
+{
 
     /**
      * Update store payment method list by available payment gateways
