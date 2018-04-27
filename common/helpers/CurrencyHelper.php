@@ -99,7 +99,7 @@ class CurrencyHelper {
      * Get payment system class name by payment method
      * @param $paymentMethod
      * @param $code
-     * @return mixed
+     * @return string
      */
     public static function getPaymentClass($paymentMethod, $code = 'USD')
     {
