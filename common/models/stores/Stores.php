@@ -11,6 +11,7 @@ use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
+use common\models\store\Languages;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
@@ -59,6 +60,7 @@ use yii\helpers\ArrayHelper;
  * @property StoreAdmins[] $storeAdmins
  * @property StoreDomains[] $storeDomains
  * @property StoreProviders[] $storeProviders
+ * @property array $languages
  * @property Customers $customer
  */
 class Stores extends ActiveRecord implements ProjectInterface
@@ -243,6 +245,26 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function setSslMode($isActive)
     {
         $this->ssl = $isActive;
+    }
+
+    /**
+     * Return store languages codes array
+     * @return array
+     */
+    public function getLanguages()
+    {
+        return Languages::find()
+            ->select(['code'])
+            ->column();
+    }
+
+    /**
+     * Return store default language code
+     * @return mixed
+     */
+    public static function getDefaultLanguage()
+    {
+        return Yii::$app->params['store.defaults']['language'];
     }
 
     /**
