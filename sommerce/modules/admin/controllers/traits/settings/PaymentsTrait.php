@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use common\models\stores\PaymentGateways;
 use common\models\stores\Stores;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -36,6 +37,7 @@ trait PaymentsTrait {
 
         $paymentMethods = PaymentMethodsSearch::findAll([
             'store_id' => yii::$app->store->getId(),
+            'method' => PaymentGateways::getSupportedMethods($store->currency),
         ]);
 
         return $this->render('payments', [
