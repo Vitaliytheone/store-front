@@ -28,6 +28,8 @@ class PaymentMethods extends ActiveRecord
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;
 
+    public static $methodsNames = [];
+
     /**
      * @inheritdoc
      */
@@ -86,10 +88,18 @@ class PaymentMethods extends ActiveRecord
      */
     public static function getNames()
     {
+        if (empty(static::$methodsNames) || !is_array(static::$methodsNames)) {
+            static::$methodsNames = PaymentGateways::find()
+                ->select(['name'])
+                ->indexBy('method')
+                ->asArray()
+                ->column();
+        }
+
         return [
-            static::METHOD_PAYPAL => Yii::t('admin', 'payments.payment_method_paypal'),
-            static::METHOD_2CHECKOUT => Yii::t('admin', 'payments.payment_method_2checkout'),
-            static::METHOD_COINPAYMENTS => Yii::t('admin', 'payments.payment_method_coinpayments'),
+            static::METHOD_PAYPAL => ArrayHelper::getValue(static::$methodsNames, static::METHOD_PAYPAL, static::METHOD_PAYPAL),
+            static::METHOD_2CHECKOUT => ArrayHelper::getValue(static::$methodsNames, static::METHOD_2CHECKOUT, static::METHOD_2CHECKOUT),
+            static::METHOD_COINPAYMENTS => ArrayHelper::getValue(static::$methodsNames, static::METHOD_COINPAYMENTS, static::METHOD_COINPAYMENTS),
         ];
     }
 
