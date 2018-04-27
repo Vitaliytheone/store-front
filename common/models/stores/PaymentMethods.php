@@ -25,6 +25,14 @@ class PaymentMethods extends ActiveRecord
     const METHOD_2CHECKOUT = '2checkout';
     const METHOD_COINPAYMENTS = 'coinpayments';
 
+    const METHOD_WEBMONEY = 'webmoney';
+    const METHOD_YANDEX_MONEY = 'yandexmoney';
+    const METHOD_FREE_KASSA = 'freekassa';
+    const METHOD_PAYTR = 'paytr';
+    const METHOD_PAYWANT = 'paywant';
+    const METHOD_PAGSEGURU = 'pagseguro';
+    const METHOD_BILLPLZ = 'billplz';
+
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;
 
