@@ -25,6 +25,8 @@ class PaymentMethods extends ActiveRecord
     const METHOD_2CHECKOUT = '2checkout';
     const METHOD_COINPAYMENTS = 'coinpayments';
 
+    const METHOD_PAGSEGURO = 'pagseguro';
+
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;
 
@@ -120,5 +122,4 @@ class PaymentMethods extends ActiveRecord
     {
         return ArrayHelper::getValue(static::getNames(), $method, $method);
     }
-
 }

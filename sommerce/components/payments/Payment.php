@@ -4,6 +4,7 @@ namespace sommerce\components\payments;
 use common\helpers\CurrencyHelper;
 use common\models\store\Payments;
 use common\models\stores\PaymentMethods;
+use common\models\stores\Stores;
 use Yii;
 use yii\base\UnknownClassException;
 
@@ -31,7 +32,11 @@ class Payment {
             return static::$methods[$method];
         }
 
-        $className = CurrencyHelper::getPaymentClass($method);
+        /**
+         * @var Stores $store
+         */
+        $store = Yii::$app->store->getInstance();
+        $className = CurrencyHelper::getPaymentClass($method, $store->currency);
 
         $className = '\sommerce\components\payments\methods\\' . $className;
 

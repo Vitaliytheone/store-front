@@ -147,7 +147,7 @@ class OrderForm extends Model {
                 $methods[] = [
                     'id' => $method->id,
                     'name' => $method->getName(),
-                    'position' => ArrayHelper::getValue($currencyPayments, "$method->method.position", 0),
+                    'position' => ArrayHelper::getValue($currencyPayments, [$method->method, 'position'], 0),
                 ];
             }
 
