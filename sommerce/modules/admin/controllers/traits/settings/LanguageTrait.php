@@ -119,6 +119,8 @@ trait LanguageTrait {
      */
     public function actionEditLanguage($code)
     {
+        $this->view->title = Yii::t('admin', 'settings.languages_edit_page_title');
+
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
 
