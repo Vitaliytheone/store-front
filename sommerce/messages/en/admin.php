@@ -418,6 +418,7 @@ return [
     'settings.themes_message_reset' => 'Theme file was successfully reset!',
 
     'settings.languages_page_title' => 'Languages',
+    'settings.languages_edit_page_title' => 'Edit language',
     'settings.languages_add' => 'Add language',
     'settings.languages_edit' => 'Edit',
     'settings.languages_modal_title' => 'Add language',
