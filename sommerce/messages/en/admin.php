@@ -213,7 +213,7 @@ return [
     'settings.left_menu_pages' => 'Pages',
     'settings.left_menu_themes' => 'Themes',
     'settings.left_menu_blocks' => 'Blocks',
-    'settings.left_menu_languages' => 'Languages',
+    'settings.left_menu_languages' => 'Language',
 
     'settings.general_title' => 'General',
     'settings.general_logo' => 'Logo',
