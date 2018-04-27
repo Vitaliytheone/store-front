@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property string $method
  * @property string $currencies
+ * @property string $name
  */
 class PaymentGateways extends ActiveRecord
 {
@@ -30,7 +31,7 @@ class PaymentGateways extends ActiveRecord
     public function rules()
     {
         return [
-            [['method'], 'string', 'max' => 255],
+            [['method','name'], 'string', 'max' => 255],
             [['currencies'], 'string', 'max' => 3000],
         ];
     }
@@ -44,6 +45,7 @@ class PaymentGateways extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'method' => Yii::t('app', 'Method'),
             'currencies' => Yii::t('app', 'Currencies'),
+            'name' => Yii::t('app', 'Name'),
         ];
     }
 

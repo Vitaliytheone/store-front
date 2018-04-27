@@ -92,8 +92,12 @@ $config = [
                     ],
                 ],
                 'app*' => [
-                    'class' => 'sommerce\components\i18n\CustomMessageSource',
-                    'basePath' => dirname(__DIR__) . '/messages',
+                    'class' => 'sommerce\components\i18n\CustomDbMessageSource',
+                    'db' => 'db',
+                    'storeDb' => 'storeDb',
+                    'cache' => 'cache',
+                    'enableCaching' => true,
+                    'cachingDuration' => 0, // cached data will never expire
                 ],
             ],
         ],

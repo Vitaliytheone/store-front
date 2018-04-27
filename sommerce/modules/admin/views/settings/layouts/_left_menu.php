@@ -68,6 +68,14 @@
                 </span>
             </a>
         </li>
+        <li class="m-nav__item <?=('languages' == $active ? 'm-nav__item--active' : '') ?>">
+            <a href="<?= Url::toRoute('/settings/languages')?>" class="m-nav__link">
+                <i class="m-nav__link-icon fa fa-language"></i>
+                <span class="m-nav__link-text">
+                    <?= Yii::t('admin', 'settings.left_menu_languages') ?>
+                </span>
+            </a>
+        </li>
     </ul>
 </div>
 <!-- END: Aside Menu -->
