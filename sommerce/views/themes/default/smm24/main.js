@@ -56,34 +56,30 @@
         
         $owlCarousel.each(function () {
             var $t = $(this),
-                effectSlide = $t.data('owl-effect');
-          
-          	switch(effectSlide){
-            	case 'slide':
-                	effectSlide = 'slideOutDown';
-                break;
-                case 'fade':
-                	effectSlide = 'fadeOut';
-                break;
-                default: 
-                	effectSlide = 'slideOutDown';
-                break;
-            };
-            
-            $t.owlCarousel({
+                effectSlide = $t.data('owl-effect'),
+                sliderSettings = {
                 items: checkData( $t.data('owl-items'), 1 ),
                 margin: checkData( $t.data('owl-margin'), 0 ),
                 loop: checkData( $t.data('owl-loop'), true ),
                 autoplay: checkData( $t.data('owl-autoplay'), true ),
-                smartSpeed: checkData( $t.data('owl-speed'), 1200 ),
-                autoplaySpeed: 1600,
-              	animateOut: effectSlide,
+                smartSpeed: checkData( $t.data('owl-speed'), 500 ),
+                autoplaySpeed: checkData( $t.data('owl-interval'), 5000 ),
+                autoplayTimeout: checkData( $t.data('owl-interval'), 5000 ),
                 mouseDrag: checkData( $t.data('owl-drag'), true ),
                 nav: checkData( $t.data('owl-nav'), false ),
-                navText: ['', ''],
+                navText: ['<i class="fa fa-long-arrow-left"></i>', '<i class="fa fa-long-arrow-right"></i>'],
                 dots: checkData( $t.data('owl-dots'), false ),
                 responsive: checkData( $t.data('owl-responsive'), {} )
-            });
+            };
+          
+          	switch(effectSlide){
+                case 'fade':
+                	sliderSettings.animateOut = 'fadeOut';
+                	sliderSettings.animateIn = 'fadeIn';
+                break;
+            };
+          
+            $t.owlCarousel(sliderSettings);
         });
         
         /* ------------------------------------------------------------------------- *

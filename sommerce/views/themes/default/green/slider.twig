@@ -3,7 +3,8 @@
     <div id="banner">
         <!-- Banner Slider Start -->
         <div class="banner--slider owl-carousel bg--color-lightgray" 
-             data-owl-effect="{{ block.slider.settings.effect }}",
+             data-owl-effect="{{ block.slider.settings.effect }}"
+             data-owl-interval="{{ block.slider.settings.interval }}"
              data-owl-dots="true">
             {% for slide in block.slider.data %}
             <!-- Banner Item Start -->
