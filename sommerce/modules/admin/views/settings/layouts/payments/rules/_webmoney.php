@@ -7,17 +7,7 @@ $siteUrl = $store->getBaseSite();
     <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_1') ?></li>
     <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_2') ?><a href="https://merchant.wmtransfer.com/conf/purses.asp" target="_blank">https://merchant.wmtransfer.com/conf/purses.asp</a>
     <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_3') ?>
-    <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_4-1') ?> <i><?= Yii::t('admin', 'settings.payments_webmoney_guide_4-2') ?></i> <?= Yii::t('admin', 'settings.payments_webmoney_guide_4-3') ?> <?php switch ($store->currency) {
-            case "RUB":
-                echo 'WMR';
-                break;
-            case "USD":
-                echo 'WMZ';
-                break;
-            case "EUR":
-                echo 'WME';
-                break;
-        } ?>  <?= Yii::t('admin', 'settings.payments_webmoney_guide_4-4') ?>
+    <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_4') ?>
         <ul>
             <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_4-4-1-1') ?><code><?= Yii::t('admin', 'settings.payments_webmoney_guide_4-4-1-2') ?></code></li>
             <li><?= Yii::t('admin', 'settings.payments_webmoney_guide_4-4-2') ?></li>
