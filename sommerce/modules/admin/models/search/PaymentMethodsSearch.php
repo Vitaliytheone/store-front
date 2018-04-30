@@ -55,7 +55,7 @@ class PaymentMethodsSearch extends PaymentMethods
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYWANT),
             ],
             PaymentMethods::METHOD_PAGSEGURO => [
-                'icon' => '/img/pg/pageseguro.png',
+                'icon' => '/img/pg/pagseguro.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAGSEGURO),
             ],
             PaymentMethods::METHOD_BILLPLZ => [

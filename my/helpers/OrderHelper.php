@@ -182,10 +182,10 @@ class OrderHelper {
             ], 'cron.ssl_status.send_ssl_config');
 
             if (!(OrderSslHelper::addConfig($ssl, [
-                    'domain' => $project->getBaseDomain(),
-                    'crt_cert' => $crtKey,
-                    'key_cert' => $csrKey,
-                ]))) {
+                'domain' => $project->getBaseDomain(),
+                'crt_cert' => $crtKey,
+                'key_cert' => $csrKey,
+            ]))) {
                 $status = SslCert::STATUS_DDOS_ERROR;
             }
 
