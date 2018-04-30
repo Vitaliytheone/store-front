@@ -30,7 +30,7 @@ class PaymentMethods extends ActiveRecord
     const METHOD_FREE_KASSA = 'freekassa';
     const METHOD_PAYTR = 'paytr';
     const METHOD_PAYWANT = 'paywant';
-    const METHOD_PAGSEGURU = 'pagseguro';
+    const METHOD_PAGSEGURO = 'pagseguro';
     const METHOD_BILLPLZ = 'billplz';
 
     const ACTIVE_DISABLED = 0;
