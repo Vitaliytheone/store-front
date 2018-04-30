@@ -30,5 +30,20 @@ UPDATE `payment_gateways` SET
 `options` = '{\"merchant_id\":\"\",\"ipn_secret\":\"\",\"test_mode\":\"\"}'
 WHERE `method` = 'coinpayments';
 
-INSERT INTO `payment_gateways` (`method`, `name`, `class_name`, `url`, `position`, `options`, `currencies`) VALUES
-('pagseguro',	'PagSeguro',	'Pagseguro',	'pagseguro',	4,	'{\"email\":\"\",\"token\":\"\",\"test_mode\":1}',	'[\"BRL\"]');
+
+UPDATE `payment_gateways` SET
+`name` = 'PagSeguro',
+`class_name` = 'Pagseguro',
+`url` = 'pagseguro',
+`position` = '4',
+`options` = '{\"email\":\"\",\"token\":\"\",\"test_mode\":1}'
+WHERE `method` = 'pagseguro';
+
+
+UPDATE `payment_gateways` SET
+`name` = 'WebMoney',
+`class_name` = 'Webmoney',
+`url` = 'webmoney',
+`position` = '5',
+`options` = '{\"purse\":\"\",\"secret_key\":\"\",\"test_mode\":1}'
+WHERE `method` = 'webmoney';
