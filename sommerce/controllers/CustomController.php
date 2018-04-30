@@ -168,6 +168,8 @@ class CustomController extends CommonController
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
                 'story_name' => Yii::$app->store->getInstance()->name,
                 'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
+                'custom_header' => $store->custom_header,
+                'custom_footer' => $store->custom_footer,
             ]
         ];
 
