@@ -108,4 +108,18 @@ class CurrencyHelper {
             'class_name'
         ]);
     }
+
+    /**
+     * Get currency code by id
+     * @param $id
+     * @return mixed
+     */
+    public static function getCurrencyCodeById($id)
+    {
+        $currencies = [];
+        foreach (Yii::$app->params['currencies'] as $code => $currency) {
+            $currencies[$currency['id']] = $code;
+        }
+        return ArrayHelper::getValue($currencies, (integer)$id);
+    }
 }

@@ -295,6 +295,7 @@ class Paypal extends BasePayment {
         $this->_payment->name = trim(ArrayHelper::getValue($GetTransactionDetails, 'FIRSTNAME') . ' ' . ArrayHelper::getValue($GetTransactionDetails, 'LASTNAME'));
         $this->_payment->email = ArrayHelper::getValue($GetTransactionDetails, 'EMAIL');
         $this->_payment->country = ArrayHelper::getValue($GetTransactionDetails, 'COUNTRYCODE');
+        $this->_payment->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT', 0);
 
         if ($getTransactionDetailsStatus != 'completed' || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
             if ('pending' == $getTransactionDetailsStatus || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
