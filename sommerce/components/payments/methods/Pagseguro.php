@@ -21,7 +21,7 @@ use PagSeguroLibrary;
 
 /**
  * Class Pagseguro
- * @package app\components\payments\methods
+ * @package sommerce\components\payments\methods
  */
 class Pagseguro extends BasePayment {
 
@@ -141,9 +141,9 @@ class Pagseguro extends BasePayment {
         $amount = $response->getGrossAmount();
         $checkoutId = $response->getReference();
 
-        if (empty($id)
+        if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
-                'id' => $id,
+                'id' => $checkoutId,
                 'method_id' => $paymentMethod->id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
