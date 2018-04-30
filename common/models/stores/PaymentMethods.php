@@ -133,4 +133,5 @@ class PaymentMethods extends ActiveRecord
     {
         return !empty($this->details) ? json_decode($this->details, true) : [];
     }
+
 }
