@@ -47,3 +47,11 @@ UPDATE `payment_gateways` SET
 `position` = '5',
 `options` = '{\"purse\":\"\",\"secret_key\":\"\",\"test_mode\":1}'
 WHERE `method` = 'webmoney';
+
+UPDATE `payment_gateways` SET
+`name` = 'Free-Kassa',
+`class_name` = 'Freekassa',
+`url` = 'freekassa',
+`position` = '6',
+`options` = '{\\"merchant_id\\":\\"\\",\\"secret_word\\":\\"\\",\\"secret_word2\\":\\"\\",\\"test_mode\\":1}'
+WHERE `method` = 'freekassa';
