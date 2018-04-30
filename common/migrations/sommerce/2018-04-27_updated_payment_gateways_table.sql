@@ -55,3 +55,11 @@ UPDATE `payment_gateways` SET
 `position` = '6',
 `options` = '{\\"merchant_id\\":\\"\\",\\"secret_word\\":\\"\\",\\"secret_word2\\":\\"\\",\\"test_mode\\":1}'
 WHERE `method` = 'freekassa';
+
+UPDATE `payment_gateways` SET
+`name` = 'Yandex.Money',
+`class_name` = 'Yandexmoney',
+`url` = 'yandexmoney',
+`position` = '7',
+`options` = '{\\"wallet_number\\":\\"\\",\\"secret_word\\":\\"\\",\\"test_mode\\":1}'
+WHERE `method` = 'yandexmoney';

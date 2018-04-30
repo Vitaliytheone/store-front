@@ -168,7 +168,7 @@ class Webmoney extends BasePayment {
             ];
         }
 
-        if ($this->_payment->amount != ArrayHelper::getValue($_POST, 'LMI_PAYMENT_AMOUNT')) {
+        if ($this->_checkout->price != ArrayHelper::getValue($_POST, 'LMI_PAYMENT_AMOUNT')) {
             return [
                 'result' => 2,
                 'content' => 'bad amount'

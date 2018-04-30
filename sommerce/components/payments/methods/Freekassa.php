@@ -134,7 +134,7 @@ class Freekassa extends BasePayment {
             ];
         }
 
-        if ($this->_payment->amount != $amount) {
+        if ($this->_checkout->price != $amount) {
             return [
                 'result' => 2,
                 'content' => 'bad amount'
