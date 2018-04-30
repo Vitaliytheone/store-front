@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use common\models\stores\PaymentGateways;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -10,72 +11,44 @@ use yii\helpers\ArrayHelper;
  */
 class CurrencyHelper {
 
-    // TODO: Update after use multiple currencies
-    public static $currencies = [
-        'USD' => [
-            'id' => 1,
-            'name' => 'United States Dollars',
-            'symbol' => '$',
-            'symbol_aligment' => '1',
-            'gateway' => [
-                'paypal' => [
-                    'method_name' => 'PayPal',
-                    'class_name' => "Paypal",
-                    'url' => [
-                        'paypalexpress',
-                        'paypalstandart',
-                    ],
-                    'mode' => 'standart',
-                    'name' => 'PayPal',
-                    'minimal' => '1.00',
-                    'maximal' => 0,
-                    'active' => 0,
-                    'fee' => 0,
-                    'options' => [
-                        'username' => '',
-                        'password' => '',
-                        'signature' => '',
-                    ],
-                    'type' => 0,
-                    'position' => 1,
-                ],
-                '2checkout' => [
-                    'method_name' => '2Checkout',
-                    'class_name' => "Twocheckout",
-                    'url' => '2checkout',
-                    'mode' => 'standart',
-                    'name' => '2Checkout',
-                    'minimal' => '1.00',
-                    'maximal' => 0,
-                    'active' => 0,
-                    'fee' => 0,
-                    'options' => [
-                        'account_number' => '',
-                        'secret_word' => '',
-                    ],
-                    'type' => 0,
-                    'position' => 2,
-                ],
-                'coinpayments' => [
-                    'method_name' => 'CoinPayments',
-                    'class_name' => "Coinpayments",
-                    'url' => 'coinpayments',
-                    'mode' => 'standart',
-                    'name' => 'CoinPayments',
-                    'minimal' => '1.00',
-                    'maximal' => 0,
-                    'active' => 0,
-                    'fee' => 0,
-                    'options' => [
-                        'merchant_id' => '',
-                        'ipn_secret' => '',
-                    ],
-                    'type' => 0,
-                    'position' => 3,
-                ],
-            ]
-        ]
-    ];
+    protected static $currencyOptions = [];
+
+    /**
+     * Get currency options by code
+     * @param string $code
+     * @return array
+     */
+    public static function getCurrencyOptions(string $code):array
+    {
+        if (isset(static::$currencyOptions[$code])) {
+            return static::$currencyOptions[$code];
+        }
+
+        static::$currencyOptions[$code] = [];
+
+        /**
+         * @var PaymentGateways $method
+         */
+        foreach (PaymentGateways::getMethods() as $method) {
+            $availableCurrencies = (array)$method->getCurrencies();
+
+            if (!in_array($code, $availableCurrencies)) {
+                continue;
+            }
+
+            static::$currencyOptions[$code][$method->method] = [
+                'url' => $method->url,
+                'class_name' => $method->class_name,
+                'name' => $method->name,
+                'code' => $method->method,
+                'position' => $method->position,
+                'options' => $method->getOptions()
+            ];
+        }
+
+        return static::$currencyOptions[$code];
+    }
+
 
     /**
      * Get currency symbol
@@ -86,8 +59,8 @@ class CurrencyHelper {
     {
         $symbol = $code;
 
-        if (!empty(static::$currencies[$code])) {
-            $symbol = static::$currencies[$code]['symbol'];
+        if (!empty(Yii::$app->params['currencies'][$code])) {
+            $symbol = Yii::$app->params['currencies'][$code]['symbol'];
         }
 
         return $symbol;
@@ -101,8 +74,8 @@ class CurrencyHelper {
     public static function getCurrencyTemplate($code)
     {
         $template = '{{value}}';
-        if (!empty(static::$currencies[$code])) {
-            $currencyOptions = static::$currencies[$code];
+        if (!empty(Yii::$app->params['currencies'][$code])) {
+            $currencyOptions = Yii::$app->params['currencies'][$code];
             if (1 == (int)$currencyOptions['symbol_aligment']) {
                 $template = '{{symbol}}{{value}}';
             } else if (2 == (int)$currencyOptions['symbol_aligment']) {
@@ -119,40 +92,20 @@ class CurrencyHelper {
      */
     public static function getPaymentsByCurrency($code)
     {
-        $currencyPayments = ArrayHelper::getValue(static::$currencies, $code, []);
-        $currencyPayments = ArrayHelper::getValue($currencyPayments, 'gateway', []);
-
-        $currencyPaymentsList = [];
-        foreach ($currencyPayments as $code => $currencyPayment) {
-            $currencyPaymentsList[$code] = $currencyPayment;
-            $currencyPaymentsList[$code]['code'] = $code;
-        }
-
-        return $currencyPaymentsList;
+        return static::getCurrencyOptions($code);
     }
 
     /**
      * Get payment system class name by payment method
      * @param $paymentMethod
      * @param $code
-     * @return mixed
+     * @return string
      */
     public static function getPaymentClass($paymentMethod, $code = 'USD')
     {
-        return ArrayHelper::getValue(static::$currencies, "$code.gateway.$paymentMethod.class_name");
-    }
-
-    /**
-     * Get currency code by id
-     * @param $id
-     * @return mixed
-     */
-    public static function getCurrencyCodeById($id)
-    {
-        $currencies = [];
-        foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $code;
-        }
-        return ArrayHelper::getValue($currencies, (integer)$id);
+        return ArrayHelper::getValue(static::getCurrencyOptions($code), [
+            $paymentMethod,
+            'class_name'
+        ]);
     }
 }

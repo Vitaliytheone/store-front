@@ -90,31 +90,6 @@ class EditPaymentMethodForm extends PaymentMethods
     }
 
     /**
-     * Return payments methods list item data
-     * @param $field
-     * @return mixed
-     */
-    public function getMethodsListItemData($field)
-    {
-        $method = $this->method;
-
-        $methodItemsData = [
-            self::METHOD_PAYPAL => [
-                'icon' => '/img/paypal.png',
-                'title' => Yii::t('admin', 'settings.payments_method_paypal'),
-                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
-            ],
-            self::METHOD_2CHECKOUT => [
-                'icon' => '/img/2checkout.png',
-                'title' => Yii::t('admin', 'settings.payments_method_2checkout'),
-                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
-            ],
-        ];
-
-        return ArrayHelper::getValue($methodItemsData, "$method.$field", $field);
-    }
-
-    /**
      * Return payments method edit form data
      * @return mixed
      */
@@ -128,9 +103,8 @@ class EditPaymentMethodForm extends PaymentMethods
         };
         
         $paymentsFormData = [
-
-            self::METHOD_PAYPAL => [
-                'icon' => '/img/paypal.png',
+            PaymentMethods::METHOD_PAYPAL => [
+                'icon' => '/img/pg/paypal.png',
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][username]', 'value' => $getDetailsField('username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][password]', 'value' => $getDetailsField('password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
@@ -138,21 +112,70 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
-
-            self::METHOD_2CHECKOUT => [
-                'icon' => '/img/2checkout.png',
+            PaymentMethods::METHOD_2CHECKOUT => [
+                'icon' => '/img/pg/2checkout.png',
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'credit_card_number', 'placeholder' => '', 'name' => 'PaymentsForm[details][account_number]', 'value' => $getDetailsField('account_number'), 'label' => Yii::t('admin', 'settings.payments_2checkout_account_number')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'credit_card_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_2checkout_secret_word')],
-//                    ['tag' => 'input', 'type' => 'checkbox', 'id' => '', 'name' => 'PaymentsForm[details][test_mode]', 'value' => 1, 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
+                    //['tag' => 'input', 'type' => 'checkbox', 'id' => '', 'name' => 'PaymentsForm[details][test_mode]', 'value' => 1, 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
-
-            self::METHOD_COINPAYMENTS => [
-                'icon' => '/img/coinpayments.png',
+            PaymentMethods::METHOD_COINPAYMENTS => [
+                'icon' => '/img/pg/coinpayments.png',
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_merchant_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_id]', 'value' => $getDetailsField('merchant_id'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_merchant_id')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'coinpayments_ipn_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][ipn_secret]', 'value' => $getDetailsField('ipn_secret'), 'label' => Yii::t('admin', 'settings.payments_coinpayments_ipn_secret')],
+                ]
+            ],
+            PaymentMethods::METHOD_WEBMONEY => [
+                'icon' => '/img/pg/webmoney.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'webmoney_purse', 'placeholder' => '', 'name' => 'PaymentsForm[details][purse]', 'value' => $getDetailsField('purse'), 'label' => Yii::t('admin', 'settings.payments_webmoney_purse')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'webmoney_secret_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_key]', 'value' => $getDetailsField('secret_key'), 'label' => Yii::t('admin', 'settings.payments_webmoney_secret_key')],
+                ]
+            ],
+            PaymentMethods::METHOD_YANDEX_MONEY => [
+                'icon' => '/img/pg/yandex_money.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'yandex_money_wallet_number', 'placeholder' => '', 'name' => 'PaymentsForm[details][wallet_number]', 'value' => $getDetailsField('wallet_number'), 'label' => Yii::t('admin', 'settings.payments_yandex_money_wallet_number')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'yandex_money_secret_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_yandex_money_secret_word')],
+                ]
+            ],
+            PaymentMethods::METHOD_PAGSEGURO => [
+                'icon' => '/img/pg/pagseguro.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'pagseguro_email', 'placeholder' => '', 'name' => 'PaymentsForm[details][email]', 'value' => $getDetailsField('email'), 'label' => Yii::t('admin', 'settings.payments_pagseguro_email')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'pagseguro_token', 'placeholder' => '', 'name' => 'PaymentsForm[details][token]', 'value' => $getDetailsField('token'), 'label' => Yii::t('admin', 'settings.payments_pagseguro_token')],
+                ]
+            ],
+            PaymentMethods::METHOD_FREE_KASSA => [
+                'icon' => '/img/pg/free_kassa.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'free_kassa_merchant_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_id]', 'value' => $getDetailsField('merchant_id'), 'label' => Yii::t('admin', 'settings.payments_free_kassa_merchant_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'free_kassa_secret_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_free_kassa_secret_word')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'free_kassa_secret_word2', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word2]', 'value' => $getDetailsField('secret_word2'), 'label' => Yii::t('admin', 'settings.payments_free_kassa_secret_word2')],
+                ]
+            ],
+            PaymentMethods::METHOD_PAYTR => [
+                'icon' => '/img/pg/paytr.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paytr_merchant_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_id]', 'value' => $getDetailsField('merchant_id'), 'label' => Yii::t('admin', 'settings.payments_paytr_merchant_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paytr_merchant_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_key]', 'value' => $getDetailsField('merchant_key'), 'label' => Yii::t('admin', 'settings.payments_paytr_merchant_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paytr_merchant_salt', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_salt]', 'value' => $getDetailsField('merchant_salt'), 'label' => Yii::t('admin', 'settings.payments_paytr_merchant_salt')],
+                ]
+            ],
+            PaymentMethods::METHOD_PAYWANT => [
+                'icon' => '/img/pg/paywant.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paywant_apiKey', 'placeholder' => '', 'name' => 'PaymentsForm[details][apiKey]', 'value' => $getDetailsField('apiKey'), 'label' => Yii::t('admin', 'settings.payments_paywant_apiKey')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paywant_apiSecret', 'placeholder' => '', 'name' => 'PaymentsForm[details][apiSecret]', 'value' => $getDetailsField('apiSecret'), 'label' => Yii::t('admin', 'settings.payments_paywant_apiSecret')],
+                ]
+            ],
+            PaymentMethods::METHOD_BILLPLZ => [
+                'icon' => '/img/pg/billplz.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'billplz_collectionId', 'placeholder' => '', 'name' => 'PaymentsForm[details][collectionId]', 'value' => $getDetailsField('collectionId'), 'label' => Yii::t('admin', 'settings.payments_billplz_collectionId')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'billplz_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret]', 'value' => $getDetailsField('secret'), 'label' => Yii::t('admin', 'settings.payments_billplz_secret')],
                 ]
             ],
         ];

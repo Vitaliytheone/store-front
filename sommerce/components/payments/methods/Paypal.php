@@ -159,7 +159,7 @@ class Paypal extends BasePayment {
             $this->_method = 'paypalstandart';
             return $this->standardProcessing($store, $paymentMethod);
         } else {
-            $this->_method = 'paypalexpress';
+            $this->_method = 'paypal';
             return $this->expressProcessing($store, $paymentMethod);
         }
     }

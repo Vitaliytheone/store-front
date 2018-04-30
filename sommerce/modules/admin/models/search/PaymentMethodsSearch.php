@@ -17,25 +17,50 @@ class PaymentMethodsSearch extends PaymentMethods
      * @param $methodName
      * @return mixed
      */
-    public function getMethodsListItemData($methodName)
+    public function getViewData($methodName)
     {
         $method = $this->method;
 
         $methodItemsData = [
-            self::METHOD_PAYPAL => [
-                'icon' => '/img/paypal.png',
-                'title' => Yii::t('admin', 'settings.payments_method_paypal'),
-                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            PaymentMethods::METHOD_PAYPAL => [
+                'icon' => '/img/pg/paypal.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYPAL),
             ],
-            self::METHOD_2CHECKOUT => [
-                'icon' => '/img/2checkout.png',
-                'title' => Yii::t('admin', 'settings.payments_method_2checkout'),
-                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            PaymentMethods::METHOD_2CHECKOUT => [
+                'icon' => '/img/pg/2checkout.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_2CHECKOUT),
             ],
-            self::METHOD_COINPAYMENTS => [
-                'icon' => '/img/coinpayments.png',
-                'title' => Yii::t('admin', 'settings.payments_method_coinpayments'),
-                'edit_button_title' => Yii::t('admin', 'settings.payments_edit_method'),
+            PaymentMethods::METHOD_COINPAYMENTS => [
+                'icon' => '/img/pg/coinpayments.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_COINPAYMENTS),
+            ],
+            PaymentMethods::METHOD_WEBMONEY => [
+                'icon' => '/img/pg/webmoney.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_WEBMONEY),
+            ],
+            PaymentMethods::METHOD_YANDEX_MONEY => [
+                'icon' => '/img/pg/yandex_money.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_YANDEX_MONEY),
+            ],
+            PaymentMethods::METHOD_FREE_KASSA => [
+                'icon' => '/img/pg/free_kassa.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_FREE_KASSA),
+            ],
+            PaymentMethods::METHOD_PAYTR => [
+                'icon' => '/img/pg/paytr.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYTR),
+            ],
+            PaymentMethods::METHOD_PAYWANT => [
+                'icon' => '/img/pg/paywant.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYWANT),
+            ],
+            PaymentMethods::METHOD_PAGSEGURO => [
+                'icon' => '/img/pg/pageseguro.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAGSEGURO),
+            ],
+            PaymentMethods::METHOD_BILLPLZ => [
+                'icon' => '/img/pg/billplz.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_BILLPLZ),
             ],
         ];
 

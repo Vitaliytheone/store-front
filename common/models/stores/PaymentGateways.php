@@ -5,16 +5,24 @@ namespace common\models\stores;
 use Yii;
 use \yii\db\ActiveRecord;
 use \common\models\stores\queries\PaymentGatewaysQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "payment_gateways".
  *
  * @property integer $id
  * @property string $method
+ * @property string $name
+ * @property string $class_name
+ * @property string $url
+ * @property integer $position
+ * @property string $options
  * @property string $currencies
  */
 class PaymentGateways extends ActiveRecord
 {
+    public static $methods;
+
     /**
      * @inheritdoc
      */
@@ -29,8 +37,9 @@ class PaymentGateways extends ActiveRecord
     public function rules()
     {
         return [
-            [['method'], 'string', 'max' => 255],
-            [['currencies'], 'string', 'max' => 3000],
+            [['method', 'name', 'class_name', 'url'], 'string', 'max' => 255],
+            [['position'], 'integer'],
+            [['currencies', 'options'], 'string', 'max' => 3000],
         ];
     }
 
@@ -42,6 +51,11 @@ class PaymentGateways extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'method' => Yii::t('app', 'Method'),
+            'name' => Yii::t('app', 'Name'),
+            'class_name' => Yii::t('app', 'Class name'),
+            'url' => Yii::t('app', 'Url'),
+            'position' => Yii::t('app', 'Position'),
+            'options' => Yii::t('app', 'Options'),
             'currencies' => Yii::t('app', 'Currencies'),
         ];
     }
@@ -70,6 +84,14 @@ class PaymentGateways extends ActiveRecord
     }
 
     /**
+     * @return mixed
+     */
+    public function getOptions():array
+    {
+        return (array)json_decode($this->options, true);
+    }
+
+    /**
      * Return is passed $currencyCode is supported by this payment gateway
      * @param $currencyCode
      * @return bool
@@ -77,5 +99,45 @@ class PaymentGateways extends ActiveRecord
     public function isCurrencySupported($currencyCode)
     {
         return in_array($currencyCode, $this->getCurrencies());
+    }
+
+    /**
+     * Get all payment methods with options
+     * @return static[]
+     */
+    public static function getMethods():array
+    {
+        if (empty(static::$methods)) {
+            static::$methods = static::find()->all();
+
+        }
+
+        return (array)static::$methods;
+    }
+
+    /**
+     * Return payments methods list which is supported this $currencyCode
+     * @param $currencyCode string
+     * @param $onlyMethods boolean Return only method code or full method data array
+     * @return array
+     */
+    public static function getSupportedMethods($currencyCode, $onlyMethods  = true)
+    {
+        $methods = static::find()->asArray()->all();
+
+        foreach ($methods as $key => &$method) {
+            $supportedCurrencies = json_decode(ArrayHelper::getValue($method, 'currencies', []), true);
+
+            if (!in_array($currencyCode, $supportedCurrencies)) {
+                unset($methods[$key]);
+                continue;
+            }
+
+            if ($onlyMethods) {
+                $method = $method['method'];
+            }
+        }
+
+        return $methods;
     }
 }
