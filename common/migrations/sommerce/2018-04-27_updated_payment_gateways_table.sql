@@ -9,7 +9,7 @@ ADD `options` text NOT NULL AFTER `position`;
 UPDATE `payment_gateways` SET
 `name` = 'PayPal',
 `class_name` = 'Paypal',
-`url` = 'paypal',
+`url` = 'paypalexpress',
 `position` = '1',
 `options` = '{\"email\":\"\",\"username\":\"\",\"password\":\"\",\"signature\":\"\",\"test_mode\":\"\"}'
 WHERE `method` = 'paypal';
