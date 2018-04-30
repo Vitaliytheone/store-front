@@ -167,7 +167,7 @@ class Pagseguro extends BasePayment {
         } else if ($this->_payment->method != $this->_method) {
             // no invoice
             return [
-                'checkout_id' => $id,
+                'checkout_id' => $this->_checkout->id,
                 'result' => 2,
                 'content' => 'bad invoice payment'
             ];
