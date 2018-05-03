@@ -39,6 +39,21 @@ class LanguagesHelper
     }
 
     /**
+     * Return default messages list for $languageCode
+     * @param $languageCode
+     * @return array
+     */
+    public static function getDefaultMessages($languageCode)
+    {
+        return StoreDefaultMessages::find()
+            ->select(['value', 'key' => "CONCAT(section, '.', name)"])
+            ->andWhere(['lang_code' => $languageCode])
+            ->indexBy('key')
+            ->asArray()
+            ->column();
+    }
+
+    /**
      * Create store language & language messages
      * @param Stores $store
      * @param $languageCode
