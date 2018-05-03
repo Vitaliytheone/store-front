@@ -4,6 +4,7 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\Languages;
 use common\models\store\Messages;
+use common\models\stores\StoreDefaultMessages;
 use common\models\stores\Stores;
 use sommerce\modules\admin\helpers\LanguagesHelper;
 use yii\base\Model;
@@ -22,7 +23,7 @@ class EditLanguageForm extends Model
     /** @var string Language code */
     public $code;
 
-    /** @var array Messages fields-values */
+    /** @var array Messages Form-key-values */
     public $messages = [];
 
     /** @var  Languages|null cached language for current code */
@@ -33,6 +34,9 @@ class EditLanguageForm extends Model
 
     /** @var array cached store message for current language */
     private $_languageMessages = [];
+
+    /** @var array cached default language messages. Used for fill form placeholders */
+    private $_defaultMessages = [];
 
     /** @var Stores */
     private $_store;
@@ -84,11 +88,11 @@ class EditLanguageForm extends Model
      */
     public function getLanguage()
     {
-        if (empty($_language) || !$_language instanceof Languages) {
-            $_language = Languages::findOne(['code' => $this->code]);
+        if (empty($this->_language) || !$this->_language instanceof Languages) {
+            $this->_language = Languages::findOne(['code' => $this->code]);
         }
 
-        return $_language;
+        return $this->_language;
     }
 
     /**
@@ -105,6 +109,20 @@ class EditLanguageForm extends Model
     }
 
     /**
+     * Return store default language messages list
+     * Used for fill edit-form messages placeholders
+     * @return array|StoreDefaultMessages[]
+     */
+    public function getDefaultMessages()
+    {
+        if (empty($this->_defaultMessages) || !is_array($this->_languageMessages)) {
+            $this->_defaultMessages = LanguagesHelper::getDefaultMessages($this->getStore()->getDefaultLanguage());
+        }
+
+        return $this->_defaultMessages;
+    }
+
+    /**
      * Return language messages grouped by section
      * @return array
      */
@@ -114,7 +132,7 @@ class EditLanguageForm extends Model
     }
 
     /**
-     * Fetch language message.
+     * Fetch language message from DB
      * Create new lang and lang messages from defaults if lang not exist yet
      * @return bool
      */
@@ -165,8 +183,11 @@ class EditLanguageForm extends Model
             }
 
             $this->_mesagesBySection[$section]['name'] = $sections[$section];
-            $this->_mesagesBySection[$section]['messages'][$messageKey] = $messageValue;
+            $this->_mesagesBySection[$section]['messages'][$messageKey]['message'] = $messageValue;
+            $this->_mesagesBySection[$section]['messages'][$messageKey]['default'] = ArrayHelper::getValue($this->getDefaultMessages(), $messageKey, '');
         }
+
+        error_log(print_r($this->_mesagesBySection,1));
 
         return true;
     }
