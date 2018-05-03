@@ -63,3 +63,11 @@ UPDATE `payment_gateways` SET
 `position` = '7',
 `options` = '{\\"wallet_number\\":\\"\\",\\"secret_word\\":\\"\\",\\"test_mode\\":1}'
 WHERE `method` = 'yandexmoney';
+
+UPDATE `payment_gateways` SET
+`name` = 'Paywant',
+`class_name` = 'Paywant',
+`url` = 'paywant',
+`position` = '8',
+`options` = '{\\"apiKey\\":\\"\\",\\"apiSecret\\":\\"\\",\\"fee\\":1}'
+WHERE `method` = 'paywant';

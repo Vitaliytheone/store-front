@@ -835,6 +835,20 @@ textarea.form-control {
     border: 1px solid #fff;
 }
 
+.product-card__best{
+    display: block;
+    font-size: 12px;
+    height: 24px;
+    position: absolute;
+    right: 9px;
+    top: -10px;
+    padding: 0px 6px;
+    background-color: #fd8469;
+    color: #fff;
+    z-index: 5;
+    border: 1px solid #fff;
+}
+
 /* 3.7. COMMENT TITLE */
 .comment--title {
     position: relative;
@@ -2286,7 +2300,7 @@ textarea.form-control {
 }
 
 .pricing--item .title .h4 {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 28px;
     font-weight: normal;
     -webkit-transition: color .25s;

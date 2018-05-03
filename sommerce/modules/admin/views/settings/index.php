@@ -128,7 +128,20 @@ $storeUrl = $store->getBaseSite();
                         </label>
                         <input type="email" id="admin_email" class="form-control" name="SettingsGeneralForm[admin_email]" value="<?= $store->admin_email ?>" autofocus="" aria-required="true"
                                placeholder="<?= Yii::t('admin', 'settings.general_admin_email_placeholder') ?>">
+                    </div>
 
+                    <div class="form-group">
+                        <label for="custom_header">
+                            <?= Yii::t('admin', 'settings.general_custom_header') ?>
+                        </label>
+                        <textarea class="form-control" id="custom_header" rows="3" name="SettingsGeneralForm[custom_header]" placeholder="<?= Html::encode(Yii::t('admin', 'settings.general_custom_header_placeholder')) ?>"><?= Html::encode($store->custom_header) ?></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custom_footer">
+                            <?= Yii::t('admin', 'settings.general_custom_footer') ?>
+                        </label>
+                        <textarea class="form-control" id="custom_footer" rows="3" name="SettingsGeneralForm[custom_footer]" placeholder="<?= Html::encode(Yii::t('admin', 'settings.general_custom_footer_placeholder')) ?>"><?= Html::encode($store->custom_footer) ?></textarea>
                     </div>
 
                     <div class="card card-white ">

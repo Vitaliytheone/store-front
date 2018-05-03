@@ -826,6 +826,20 @@ textarea.form-control {
     width: 105px;
     color: #fff;
 }
+.product-card__best{
+    display: block;
+    font-size: 10px;
+    height: 22px;
+    position: absolute;
+    right: -36px;
+    top: 5px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(40deg);
+    background-color: #169ea8;
+    width: 105px;
+    color: #fff;
+}
 
 /* 3.7. COMMENT TITLE */
 .comment--title {
