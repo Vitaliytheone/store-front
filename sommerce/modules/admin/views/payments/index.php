@@ -16,10 +16,6 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
         'show_count' => true,
         'badge-class' => 'm-badge--metal'
     ],
-    Payments::STATUS_FAILED => [
-        'show_count' => true,
-        'badge-class' => 'm-badge--danger'
-    ],
 ]);
 
 ?>
@@ -43,8 +39,8 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
                                     <?= $button['title'] ?>
                                     <?php if (ArrayHelper::getValue($button, 'options.show_count') && $button['count'] > 0): ?>
                                         <span class="<?= $button['options']['badge-class'] ?> m-badge m-badge--wide">
-                                    <?= $button['count'] ?>
-                                </span>
+                                            <?= $button['count'] ?>
+                                        </span>
                                     <?php endif; ?>
                                 </a>
                             <?php endforeach; ?>
