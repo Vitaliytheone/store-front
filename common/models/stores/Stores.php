@@ -55,6 +55,8 @@ use yii\helpers\ArrayHelper;
  * @property string $block_reviews
  * @property string $block_process
  * @property string $admin_email
+ * @property string $custom_header
+ * @property string $custom_footer
  *
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
@@ -101,6 +103,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             ], 'default', 'value' => 0],
             [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder', 'folder', 'folder_content'], 'string', 'max' => 255],
             [['currency', 'language'], 'string', 'max' => 10],
+            [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['admin_email'], 'string', 'max' => 300],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
@@ -141,6 +144,8 @@ class Stores extends ActiveRecord implements ProjectInterface
             'block_reviews' => Yii::t('app', 'Block Reviews'),
             'block_process' => Yii::t('app', 'Block Process'),
             'admin_email' => Yii::t('app', 'Admin e-mail'),
+            'custom_header' => Yii::t('app', 'Custom header'),
+            'custom_footer' => Yii::t('app', 'Custom footer'),
         ];
     }
 

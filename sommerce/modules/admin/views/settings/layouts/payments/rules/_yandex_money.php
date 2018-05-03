@@ -7,7 +7,7 @@
     <li><?= Yii::t('admin', 'settings.payments_yandex_money_guide_2') ?>
         <ul>
             <li><?= Yii::t('admin', 'settings.payments_yandex_money_guide_2-1') ?>
-            <li><?= Yii::t('admin', 'settings.payments_yandex_money_guide_2-2') ?> <code><?= $store->getBaseSite() . '/yandex' ?></code>
+            <li><?= Yii::t('admin', 'settings.payments_yandex_money_guide_2-2') ?> <code><?= $store->getBaseSite() . '/yandexmoney' ?></code>
         </ul>
     <li><?= Yii::t('admin', 'settings.payments_yandex_money_guide_3') ?>
 </ol>

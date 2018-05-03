@@ -309,6 +309,17 @@ footer .footer-links li {
     padding-bottom: 5px;
 }
 
+.product-card__best{
+    display: block;
+    font-size: 12px;
+    position: absolute;
+    right: 15px;
+    top: -9px;
+    background-color: #ffd400;
+    width: 105px;
+    padding-top: 3px;
+}
+
 .dropdown-submenu {
     position: relative;
 }

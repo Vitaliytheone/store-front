@@ -34,14 +34,17 @@
             {% for package in product.packages %}
             <div class="col-md-3 col-xs-6">
                 <!-- Pricing Item Start -->
-                <div class="pricing--item {% if package.best  %} best-product {% endif %}">
+                <div class="pricing--item">
+                  	{% if package.best %} <span class="best-product">{{ lang('product.best') }}</span> {% endif %}
                     <div class="pricing--header bg--color-theme">
+                        <div class="pricing--quantity">
+                            <span class="price-text">{{ package.quantity }}</span>
+                        </div>
                         <h3 class="h4">{{ package.name}}</h3>
                     </div>
-
+                  
                     <div class="pricing--price">
-                        <p class="price-text"><strong>{{ package.price|money }}</strong>/{{ package.quantity }}
-                        </p>
+                        <p class="price-text"><strong>{{ package.price|money }}</strong></p>
                     </div>
 
                     <div class="pricing--features">
