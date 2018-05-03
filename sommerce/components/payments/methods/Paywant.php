@@ -45,7 +45,7 @@ class Paywant extends BasePayment {
                 $email,
                 // $payment->id,
                 $email,
-                $email,
+                $checkout->id,
             ]).ArrayHelper::getValue($paymentMethodOptions, 'apiKey'), ArrayHelper::getValue($paymentMethodOptions, 'apiSecret'),true));
 
         $amount = $checkout->price + round((($checkout->price / 100) * ((float)ArrayHelper::getValue($paymentMethodOptions, 'fee', 0))), 2);
@@ -56,7 +56,7 @@ class Paywant extends BasePayment {
             'returnData' => $email,
             'userEmail' => $email,
             'userIPAddress' => $_SERVER['REMOTE_ADDR'],
-            'userID' => $email,
+            'userID' => $checkout->id,
             'proApi' => true,
             'productData' => array(
                 'name' => static::getDescription($checkout->id),
