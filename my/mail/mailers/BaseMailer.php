@@ -123,7 +123,7 @@ abstract class BaseMailer {
         }
         
         $mailer = Yii::$app->mailer->compose()
-            ->setFrom(Yii::$app->params['noreplyEmail'])
+            ->setFrom(Yii::$app->params['swift.username'])
             ->setTo($to)
             ->setSubject($subject)
             ->setTextBody($message);
