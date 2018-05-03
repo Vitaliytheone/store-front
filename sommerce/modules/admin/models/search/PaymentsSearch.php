@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
+use common\models\stores\PaymentGateways;
 use Yii;
 use yii\base\Model;
 use yii\db\Query;
@@ -292,7 +293,7 @@ class PaymentsSearch extends Model
             $method = $menuItem['method'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = PaymentMethods::getMethodName($method);
+            $menuItem['method_title'] = PaymentGateways::getMethodName($method);
         });
 
         $allMethodsMenuItem = [
@@ -323,7 +324,7 @@ class PaymentsSearch extends Model
 
         /* Populate payments list by additional formats and data */
         array_walk($payments, function(&$payment) {
-            $payment['method_title'] = PaymentMethods::getMethodName($payment['method']);
+            $payment['method_title'] = PaymentGateways::getMethodName($payment['method']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

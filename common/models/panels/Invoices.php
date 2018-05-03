@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use my\helpers\CustomerHelper;
 use my\helpers\StringHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -276,6 +277,13 @@ class Invoices extends ActiveRecord
                     !$customer->can('stores')
                 ) {
                     $customer->activateStores();
+                }
+
+                // Activate `Domains` section after order _first_ panel or _first_ store
+                if (($detail->item == InvoiceDetails::ITEM_BUY_STORE && CustomerHelper::getCountStores($customer->id, true) === 1) ||
+                    $detail->item == InvoiceDetails::ITEM_BUY_PANEL && CustomerHelper::getCountPanels($customer->id, true) === 1) {
+
+                    $customer->activateDomains();
                 }
 
                 if (in_array($detail->item, [
