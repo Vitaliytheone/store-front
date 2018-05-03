@@ -24,7 +24,7 @@ class Paywant extends BasePayment {
 
     public function __construct(array $config = [])
     {
-        $this->action = Yii::$app->params['paywant_proxy'];
+        $this->action = Yii::$app->params['store.paywant_proxy'];
         return parent::__construct($config);
     }
 
