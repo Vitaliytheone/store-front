@@ -35,4 +35,19 @@ class ConfigHelper {
     {
         return ArrayHelper::getValue(static::getParams(), $paramName,null);
     }
+
+    /**
+     * Return store currencies key-value list
+     * @return array
+     */
+    public static function getCurrenciesList()
+    {
+        $currencies = Yii::$app->params['currencies'];
+
+        array_walk($currencies, function(&$value, $key){
+            $value = $value['name'] . " ($key)";
+        });
+
+        return $currencies;
+    }
 }

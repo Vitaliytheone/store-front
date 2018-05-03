@@ -5,6 +5,7 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\store\Files;
 use common\models\stores\StoreAdminAuth;
+use sommerce\helpers\ConfigHelper;
 use Yii;
 use common\models\stores\Stores;
 use yii\helpers\ArrayHelper;
@@ -113,7 +114,10 @@ class EditStoreSettingsForm extends Stores
             ['admin_email', 'required'],
             ['admin_email', 'email'],
             [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
-            ['timezone', 'filter', 'filter' => function($value) { return (int)$value; }]
+            ['timezone', 'filter', 'filter' => function($value) { return (int)$value; }],
+
+            ['currency', 'required'],
+            ['currency', 'in', 'range' => array_keys(ConfigHelper::getCurrenciesList())],
         ]);
     }
 
@@ -227,6 +231,10 @@ class EditStoreSettingsForm extends Stores
 
         if (isset($changedAttributes['seo_description'])) {
             ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_SEO_META_DESCRIPTION_CHANGED);
+        }
+
+        if (isset($changedAttributes['currency'])) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_CURRENCY_CHANGED);
         }
     }
 
