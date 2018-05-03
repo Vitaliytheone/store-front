@@ -309,7 +309,7 @@ abstract class BasePayment extends Component {
      */
     protected static function getDescription($orderId)
     {
-        return 'Order #' . $orderId; //Yii::t('admin', 'settings.payments_payment_description', ['order_id' => $orderId]);
+        return Yii::t('app', 'cart.payment_description', ['order_id' => $orderId]);
     }
 
     /**
