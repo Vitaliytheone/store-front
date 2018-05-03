@@ -112,6 +112,7 @@ class EditStoreSettingsForm extends Stores
             [['seo_description', 'seo_title', 'admin_email'], 'trim'],
             ['admin_email', 'required'],
             ['admin_email', 'email'],
+            [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
             ['timezone', 'filter', 'filter' => function($value) { return (int)$value; }]
         ]);
     }

@@ -23,11 +23,12 @@
             {% for package in product.packages %}
                 <div class="col-md-4 col-md-offset-0 col-xs-8 col-xs-offset-2 col-xxs-12">
                     <!-- Pricing Item Start -->
-                    <div class="pricing--item {% if package.best %} best-product {% endif %}">
+                    <div class="pricing--item">
+                        {% if package.best %} <span class="product-card__best">{{ lang('product.best') }}</span> {% endif %}
                         <div class="title">
-                            <h2 class="h3">{{ package.name }}</h2>
+                            <h2 class="h3">{{ package.quantity }} {{ package.name }}</h2>
 
-                            <h3 class="h4">{{ package.price|money }} / {{ package.quantity }}</h3>
+                            <h3 class="h4">{{ package.price|money }}</h3>
                         </div>
 
                         <div class="icon">

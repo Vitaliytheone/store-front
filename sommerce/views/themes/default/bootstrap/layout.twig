@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/swiper.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/classic.css') }}">
+    {{ site.custom_header }}
 </head>
 <body>
 <nav class="navbar navbar-default navbar-white">
@@ -112,4 +113,5 @@
 <script src="{{ asset('/js/bootstrap.js') }}"></script>
 <script src="{{ asset('/js/swiper.js') }}"></script>
 <script src="{{ asset('/js/main.js') }}"></script>
+{{ site.custom_footer }}
 </html>

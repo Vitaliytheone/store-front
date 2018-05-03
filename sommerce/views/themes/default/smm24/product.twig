@@ -23,12 +23,13 @@
 
             {% for package in product.packages %}
                 <!-- Product Table Item Start -->
-                <div class="pricing-table--item col-md-3 col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2 col-xxs-12 {% if package.best  %} best-product {% endif %}">
+                <div class="pricing-table--item col-md-3 col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2 col-xxs-12">
+                    {% if package.best %}<span class="product-card__best">{{ lang('product.best') }}</span>{% endif %}
                     <div class="header">
                         <div class="vc--parent">
                             <div class="vc--child">
-                                <h2 class="h3">{{ package.name }}</h2>
-                                <h3 class="h2">{{ package.price|money }}<small>/{{ package.quantity }}</small></h3>
+                                <h2 class="h3">{{ package.quantity }} {{ package.name }}</h2>
+                                <h3 class="h2">{{ package.price|money }}<small></small></h3>
                             </div>
                         </div>
                     </div>

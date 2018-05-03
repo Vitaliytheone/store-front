@@ -227,6 +227,12 @@ return [
     'settings.general_timezone' => 'Timezone',
     'settings.general_admin_email' => 'Admin email',
     'settings.general_admin_email_placeholder' => 'Store admin email',
+    'settings.general_custom_header' => 'Custom header code',
+    'settings.general_custom_header_placeholder' => '<style type="text/css">...</style>',
+    'settings.general_custom_footer' => 'Custom footer code',
+    'settings.general_custom_footer_placeholder' => '<script>...</script>',
+
+
     'settings.general_seo' => 'Search engine listing preview',
     'settings.general_seo_edit' => 'Edit website SEO',
     'settings.general_seo_index' => 'Title index',

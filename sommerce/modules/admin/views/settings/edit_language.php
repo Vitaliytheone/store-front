@@ -53,7 +53,7 @@
                                         <?php foreach ($section['messages'] as $messageKey => $message): ?>
                                             <div class="form-group m-form__group">
                                                 <label><?= $messageKey ?></label>
-                                                <input type="text" class="form-control m-input" name="EditLanguageForm[messages][<?= $messageKey ?>]" value="<?= $message ?>">
+                                                <input type="text" class="form-control m-input" name="EditLanguageForm[messages][<?= $messageKey ?>]" placeholder="<?= $message['default'] ?>" value="<?= $message['message'] ?>">
                                             </div>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
