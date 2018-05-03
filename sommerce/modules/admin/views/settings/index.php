@@ -7,6 +7,7 @@ use common\models\store\Files;
 
 /* @var $this \yii\web\View */
 /* @var $timezones array */
+/** @var $currencies array */
 /* @var $store \sommerce\modules\admin\models\forms\EditStoreSettingsForm */
 /* @var $iconFileSizeLimit string */
 /* @var $logoFileSizeLimit string */
@@ -108,7 +109,17 @@ $storeUrl = $store->getBaseSite();
                         </label>
                         <input type="text" id="store-name" class="form-control" name="SettingsGeneralForm[name]" value="<?= $store->name ?>" autofocus="" aria-required="true"
                                placeholder="<?= Yii::t('admin', 'settings.general_store_name_placeholder') ?>">
+                    </div>
 
+                    <div class="form-group field-settingsgeneralform-currency required">
+                        <label class="control-label" for="settingsgeneralform-currency">
+                            <?= Yii::t('admin', 'settings.general_currency') ?>
+                        </label>
+                        <select id="settingsgeneralform-currency" class="form-control" name="SettingsGeneralForm[currency]" aria-required="true">
+                            <?php  foreach ($currencies as $currencyCode => $currencyName): ?>
+                                <option value="<?= $currencyCode ?>"  <?= $store->currency == $currencyCode ? 'selected' : '' ?> > <?= $currencyName ?> </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="form-group field-settingsgeneralform-timezone required">

@@ -225,6 +225,7 @@ return [
     'settings.general_store_name' => 'Store name',
     'settings.general_store_name_placeholder' => 'Input store name',
     'settings.general_timezone' => 'Timezone',
+    'settings.general_currency' => 'Currency',
     'settings.general_admin_email' => 'Admin email',
     'settings.general_admin_email_placeholder' => 'Store admin email',
     'settings.general_custom_header' => 'Custom header code',
