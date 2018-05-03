@@ -296,6 +296,7 @@ class Paypal extends BasePayment {
         $this->_payment->email = ArrayHelper::getValue($GetTransactionDetails, 'EMAIL');
         $this->_payment->country = ArrayHelper::getValue($GetTransactionDetails, 'COUNTRYCODE');
         $this->_payment->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT', 0);
+        $this->_payment->memo = ArrayHelper::getValue($GetTransactionDetails, 'EMAIL') . '; ' . $transactionId;
 
         if ($getTransactionDetailsStatus != 'completed' || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
             if ('pending' == $getTransactionDetailsStatus || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
@@ -488,6 +489,11 @@ class Paypal extends BasePayment {
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->response_status = $paymentStatus;
         $this->_payment->email = $payerEmail;
+        $this->_payment->memo = $payerEmail . '; ' . $txnId;
+
+        if (isset($_POST['mc_fee'])) {
+            $this->_payment->fee = $_POST['mc_fee'];
+        }
 
         if (strtolower($paymentStatus) != 'completed') {
             return [
