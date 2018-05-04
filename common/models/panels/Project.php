@@ -30,6 +30,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $expired
  * @property integer $date
  * @property integer $act
+ * @property integer $hide
  * @property integer $child_panel
  * @property integer $provider_id
  * @property integer $theme
@@ -104,6 +105,9 @@ class Project extends ActiveRecord implements ProjectInterface
     const STATUS_PENDING = 3;
     const STATUS_CANCELED = 4;
 
+    const HIDDEN_ON = 1;
+    const HIDDEN_OFF = 0;
+
     const DRIP_FEED_ON = 1;
     const DRIP_FEED_OFF = 0;
 
@@ -137,7 +141,7 @@ class Project extends ActiveRecord implements ProjectInterface
         return [
             [['cid', 'site'], 'required'],
             [[
-                'cid', 'subdomain', 'expired', 'date', 'act', 'theme', 'ssl', 'utc', 'plan', 'tariff', 'last_count', 'current_count',
+                'cid', 'subdomain', 'expired', 'date', 'act', 'hide', 'theme', 'ssl', 'utc', 'plan', 'tariff', 'last_count', 'current_count',
                 'forecast_count', 'paypal', 'type', 'currency', 'seo', 'comments', 'mentions', 'mentions_wo_hashtag', 'mentions_custom',
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
@@ -170,6 +174,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'expired' => Yii::t('app', 'Expired'),
             'date' => Yii::t('app', 'Date'),
             'act' => Yii::t('app', 'Status'),
+            'hide' => Yii::t('app', 'Hidden'),
             'child_panel' => Yii::t('app', 'Child Panel'),
             'provider_id' => Yii::t('app', 'Provider ID'),
             'theme' => Yii::t('app', 'Theme'),
