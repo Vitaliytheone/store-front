@@ -101,14 +101,15 @@ class Orders extends ActiveRecord
     {
         return $this->hasOne(Invoices::class, ['id' => 'invoice_id'])
             ->viaTable('invoice_details', ['item_id' => 'id'], function ($query) {
-                $query->andWhere(['invoice_details.item' => [
-                    InvoiceDetails::ITEM_BUY_PANEL,
-                    InvoiceDetails::ITEM_BUY_DOMAIN,
-                    InvoiceDetails::ITEM_BUY_SSL,
-                    InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                    InvoiceDetails::ITEM_BUY_STORE,
-                    InvoiceDetails::ITEM_BUY_TRIAL_STORE,
-                ]]);
+//                TODO:: Commented for support Orders without invoices in my/superadmin
+//                $query->andWhere(['invoice_details.item' => [
+//                    InvoiceDetails::ITEM_BUY_PANEL,
+//                    InvoiceDetails::ITEM_BUY_DOMAIN,
+//                    InvoiceDetails::ITEM_BUY_SSL,
+//                    InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+//                    InvoiceDetails::ITEM_BUY_STORE,
+//                    InvoiceDetails::ITEM_BUY_TRIAL_STORE,
+//                ]]);
             });
     }
 
