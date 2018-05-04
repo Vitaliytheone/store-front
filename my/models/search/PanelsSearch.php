@@ -38,7 +38,7 @@ class PanelsSearch
         $customer = ArrayHelper::getValue($this->params, 'customer_id');
 
         $orderPending = (new Query())
-            ->select(['id', '("order") AS type', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
+            ->select(['id', '("order") AS type', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db', 'hide'])
             ->from('orders')
             ->andWhere([
                 'cid' => $customer,
@@ -53,7 +53,7 @@ class PanelsSearch
             ]);
 
         $orderCanceled = (new Query())
-            ->select(['id', '("order") AS type', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
+            ->select(['id', '("order") AS type', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db', 'hide'])
             ->from('orders')
             ->andWhere([
                 'cid' => $customer,
@@ -64,7 +64,7 @@ class PanelsSearch
             ]);
 
         $projects = (new Query())
-            ->select(['id', '("project") AS type', 'site as domain', 'act AS status', 'date', 'plan', 'expired', 'db'])
+            ->select(['id', '("project") AS type', 'site as domain', 'act AS status', 'date', 'plan', 'expired', 'db', 'hide'])
             ->from('project')
             ->andWhere([
                 'child_panel' => 0,
@@ -140,6 +140,7 @@ class PanelsSearch
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
             $value['access'] = $access;
+            $value['hide'] = ArrayHelper::getValue($value, 'hide', null);
 
             return $value;
         };
