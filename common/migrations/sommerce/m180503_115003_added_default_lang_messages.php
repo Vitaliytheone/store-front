@@ -13,6 +13,9 @@ class m180503_115003_added_default_lang_messages extends Migration
         $this->execute('
             INSERT INTO `store_default_messages` (`lang_code`, `section`, `name`, `value`)
             VALUES (\'en\', \'cart\', \'payment_description\', \'Order #{order_id}\');
+            
+            INSERT INTO `store_default_messages` (`lang_code`, `section`, `name`, `value`)
+            VALUES (\'en\', \'order\', \'invalid_link\', \'Invalid {name} link.\');
         ');
 
         foreach ((new \yii\db\Query())->select([
@@ -30,6 +33,9 @@ class m180503_115003_added_default_lang_messages extends Migration
             $this->execute('
                 INSERT INTO `' . $db . '`.`messages` (`lang_code`, `section`, `name`, `value`)
                 VALUES (\'en\', \'cart\', \'payment_description\', \'Order #{order_id}\');
+                
+                INSERT INTO `' . $db . '`.`messages` (`lang_code`, `section`, `name`, `value`)
+                VALUES (\'en\', \'order\', \'invalid_link\', \'Invalid {name} link.\');
             ');
         }
     }
@@ -50,7 +56,8 @@ class m180503_115003_added_default_lang_messages extends Migration
                 continue;
             }
 
-            $this->execute('DELETE FROM `' . $db . '`.`store_default_messages` WHERE ((`lang_code` = \'en\') AND (`section` = \'cart\') AND (`name` = \'payment_description\'));');
+            $this->execute('DELETE FROM `' . $db . '`.`messages` WHERE ((`lang_code` = \'en\') AND (`section` = \'cart\') AND (`name` = \'payment_description\'));');
+            $this->execute('DELETE FROM `' . $db . '`.`messages` WHERE ((`lang_code` = \'en\') AND (`section` = \'order\') AND (`name` = \'invalid_link\'));');
         }
     }
 }

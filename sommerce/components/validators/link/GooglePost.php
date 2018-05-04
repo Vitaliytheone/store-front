@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class GooglePost
+ * @package sommerce\components\validators\link
+ */
 class GooglePost extends BaseLinkValidator
 {
     public function validate()
@@ -16,9 +20,13 @@ class GooglePost extends BaseLinkValidator
         if (!(preg_match("/https\:\/\/plus\.google\.com\/([0-9]+)\/posts\/([a-z0-9]+)$/i", $this->link))
             && !(preg_match("/https\:\/\/plus\.google\.com\/\+([a-z0-9-]+)\/posts\/([a-z0-9]+)$/i", $this->link))
             && !(preg_match("/https\:\/\/plus\.google\.com\/u\/0\/([0-9]+)\/posts\/([a-z0-9]+)$/i", $this->link))) {
-            $this->addError('Invalid Google+ post link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid Google+ post link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
         }
 
         return $this->link;

@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class MusicaVideo
+ * @package sommerce\components\validators\link
+ */
 class MusicaVideo extends BaseLinkValidator
 {
     public function validate()
@@ -16,11 +20,15 @@ class MusicaVideo extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.musical\.ly\/([a-z0-9\_]+)(\/)?$/i", $this->link))) {
-            $this->addError('Invalid musical video link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid musical video link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

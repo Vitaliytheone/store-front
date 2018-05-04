@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class SoundcloudProfile
+ * @package sommerce\components\validators\link
+ */
 class SoundcloudProfile extends BaseLinkValidator
 {
     public function validate()
@@ -16,13 +20,17 @@ class SoundcloudProfile extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/soundcloud\.com\/([a-z0-9\_-]+)(\/)?$/i", $this->link, $match))) {
-            $this->addError('Invalid soundcloud profile link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link, [
             'ssl' => true
         ]))) {
-            $this->addError('Invalid soundcloud profile link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

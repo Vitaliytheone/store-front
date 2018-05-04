@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class FacebookProfile
+ * @package sommerce\components\validators\link
+ */
 class FacebookProfile extends BaseLinkValidator
 {
     public function validate()
@@ -27,11 +31,15 @@ class FacebookProfile extends BaseLinkValidator
 
         if (!(preg_match("/https\:\/\/www\.facebook\.com\/([a-z0-9а-я\_\-\.]+)(\/.*?)?$/uis", $this->link))
             && !(preg_match("/https\:\/\/www\.facebook\.com\/profile\.php\?id\=([0-9]+)$/uis", $this->link))) {
-            $this->addError('Invalid facebook profile link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link . '?hl=en'))) {
-            $this->addError('Invalid facebook profile link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }
