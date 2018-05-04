@@ -205,6 +205,7 @@ class SystemController extends CustomController
                         $this->stderr('Can not add message ' . var_export($messageModel->attributes, true) . " Details: Message already exist\n", Console::FG_RED, Console::UNDERLINE);
                         continue;
                     }
+                    $messageModel = new Messages();
                     $messageModel->lang_code = $language->code;
                     $messageModel->attributes = $message;
 
