@@ -414,6 +414,11 @@ class InvoiceDetails extends ActiveRecord
                     return false;
                 }
 
+                if ($store->trial == Stores::TRIAL_MODE_ON && !$store->activateFullMode()) {
+                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $store->id, $store->getErrors(), 'paid.invoice_details.trial_off');
+                    return false;
+                }
+
                 $ExpiredLogModel = new ExpiredLog();
                 $ExpiredLogModel->attributes = [
                     'pid' => $store->id,
