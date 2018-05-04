@@ -104,7 +104,7 @@ class Stores extends ActiveRecord implements ProjectInterface
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl'
+                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl',
                 'trial', 'hide'
                 ], 'integer'],
             [[
