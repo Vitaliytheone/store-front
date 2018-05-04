@@ -20,11 +20,11 @@ class GooglePost extends BaseLinkValidator
         if (!(preg_match("/https\:\/\/plus\.google\.com\/([0-9]+)\/posts\/([a-z0-9]+)$/i", $this->link))
             && !(preg_match("/https\:\/\/plus\.google\.com\/\+([a-z0-9-]+)\/posts\/([a-z0-9]+)$/i", $this->link))
             && !(preg_match("/https\:\/\/plus\.google\.com\/u\/0\/([0-9]+)\/posts\/([a-z0-9]+)$/i", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
         }

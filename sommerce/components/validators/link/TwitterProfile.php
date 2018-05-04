@@ -31,13 +31,13 @@ class TwitterProfile extends BaseLinkValidator
                 'Accept-Encoding' => '',
             ]
         ]))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (false !== strpos($content, 'This account has been suspended')) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 

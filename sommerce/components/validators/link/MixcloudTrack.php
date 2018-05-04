@@ -16,13 +16,13 @@ class MixcloudTrack extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.mixcloud\.com\/([^\/]+)\/([^\/]+)(\/)?$/i", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
