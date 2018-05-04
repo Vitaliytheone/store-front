@@ -105,8 +105,8 @@ class Stores extends ActiveRecord implements ProjectInterface
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
                 'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl',
-                'trial', 'hide'
-                ], 'integer'],
+                'trial', 'hide',
+            ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
             ], 'default', 'value' => 0],
@@ -134,8 +134,8 @@ class Stores extends ActiveRecord implements ProjectInterface
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
             'status' => Yii::t('app', 'Status'),
-            'hide' => Yii::t('app', 'Hidden'),
             'trial' => Yii::t('app', 'Trial'),
+            'hide' => Yii::t('app', 'Hidden'),
             'db_name' => Yii::t('app', 'Db Name'),
             'expired' => Yii::t('app', 'Expired'),
             'created_at' => Yii::t('app', 'Created At'),
