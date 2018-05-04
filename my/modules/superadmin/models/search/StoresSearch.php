@@ -245,21 +245,27 @@ class StoresSearch {
     {
         $query = clone $this->buildQuery(null);
 
-        $this->_counts_by_status = $query
+        $stores = $query
             ->select(['id' => 'stores.id', 'status' => 'stores.status', 'trial' => 'stores.trial'])
-//            ->all();
-            ->select(['count' => 'COUNT(DISTINCT stores.id)', 'status' => 'stores.status'])
-            ->groupBy('stores.status')
-            ->indexBy('status')
-            ->column();
+            ->groupBy('id')
+            ->all();
 
-
-//        $this->_counts_by_status = [
-//            ''
-//        ];
-//
-//
-//        error_log(print_r($this->_counts_by_status,1));
+        $this->_counts_by_status = [
+            Stores::STATUS_ACTIVE => count(array_filter($stores, function($store){
+                return
+                    $store['status'] == Stores::STATUS_ACTIVE &&
+                    $store['trial'] == Stores::TRIAL_MODE_OFF;
+            })),
+            Stores::STATUS_FROZEN => count(array_filter($stores, function($store){
+                return $store['status'] == Stores::STATUS_FROZEN;
+            })),
+            Stores::STATUS_TERMINATED => count(array_filter($stores, function($store){
+                return $store['status'] == Stores::STATUS_TERMINATED;
+            })),
+            self::TRIAL_MODE_KEY => count(array_filter($stores, function($store){
+                return $store['trial'] == Stores::TRIAL_MODE_ON;
+            })),
+        ];
 
         return $this->_counts_by_status;
     }
