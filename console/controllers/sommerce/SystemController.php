@@ -197,22 +197,23 @@ class SystemController extends CustomController
             foreach (Languages::find()->all() as $language) {
 
                 foreach ($messages as $message) {
-                    if (!($messageModel = Messages::findOne([
+                    if (($messageModel = Messages::findOne([
                         'section' => $message['section'],
                         'name' => $message['name'],
                         'lang_code' => $language->code
                     ]))) {
-                        $messageModel = new Messages();
+                        $this->stderr('Can not add message ' . var_export($messageModel->attributes, true) . " Details: Message already exist\n", Console::FG_RED, Console::UNDERLINE);
+                        continue;
                     }
                     $messageModel->lang_code = $language->code;
                     $messageModel->attributes = $message;
 
                     if (!$messageModel->save(false)) {
-                        $this->stderr('Can not add/update message ' . var_export($messageModel->attributes, true) . " Details: " . var_export($messageModel->getErrors(), true) . "\n", Console::FG_RED, Console::UNDERLINE);
+                        $this->stderr('Can not add message ' . var_export($messageModel->attributes, true) . " Details: " . var_export($messageModel->getErrors(), true) . "\n", Console::FG_RED, Console::UNDERLINE);
                         continue;
                     }
 
-                    $this->stderr('Message was added/updated ' . var_export($messageModel->attributes, true) . ". \n", Console::FG_GREEN, Console::UNDERLINE);
+                    $this->stderr('Message was added ' . var_export($messageModel->attributes, true) . ". \n", Console::FG_GREEN, Console::UNDERLINE);
                 }
             }
         }
