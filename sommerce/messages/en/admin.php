@@ -380,8 +380,6 @@ return [
     'settings.payments_webmoney_guide_4-4-7-1' => 'SHA256',
     'settings.payments_webmoney_guide_5' => 'Enter your WebMoney details below.',
 
-    'settings.payments_payment_description' => 'Order #{order_id}',
-
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
     'settings.providers_save' => 'Save changes',

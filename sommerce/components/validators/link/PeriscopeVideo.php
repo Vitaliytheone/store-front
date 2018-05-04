@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class PeriscopeVideo
+ * @package sommerce\components\validators\link
+ */
 class PeriscopeVideo extends BaseLinkValidator
 {
     public function validate()
@@ -12,11 +16,15 @@ class PeriscopeVideo extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.(periscope|pscp)\.tv\/([a-z0-9\_]+)\/([a-z0-9]+)(\/)?$/i", $this->link))) {
-            $this->addError('Invalid periscope video link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid periscope video link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

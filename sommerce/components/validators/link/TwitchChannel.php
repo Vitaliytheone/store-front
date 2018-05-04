@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class TwitchChannel
+ * @package sommerce\components\validators\link
+ */
 class TwitchChannel extends BaseLinkValidator
 {
     public function validate()
@@ -26,11 +30,15 @@ class TwitchChannel extends BaseLinkValidator
 
         if (!(preg_match("/https\:\/\/www\.twitch\.tv\/([a-z0-9_]+)(\/)?$/iu", $this->link))
             && !(preg_match("/https\:\/\/player\.twitch\.tv\/\?channel\=([a-z0-9_]+)(\/)?$/iu", $this->link))) {
-            $this->addError('Invalid shazam track link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid twitch channel link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

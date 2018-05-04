@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class TumblrProfile
+ * @package sommerce\components\validators\link
+ */
 class TumblrProfile extends BaseLinkValidator
 {
     public function validate()
@@ -17,11 +21,15 @@ class TumblrProfile extends BaseLinkValidator
 
         $content = null;
         if (!(preg_match("/http\:\/\/([a-z0-9-]+)\.tumblr\.com(\/)?$/i", $this->link))) {
-            $this->addError('Invalid tumblr profile link.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid tumblr profile linkt.');
+            $this->addError(Yii::t('app', 'order.invalid_link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }
