@@ -34,19 +34,18 @@ class StoreComponent extends Component
     {
         if (null === static::$_instance) {
 
-            $store = null;
+            $store = $domain = null;
 
             if ($this->domain) {
                 $domain = $this->domain;
-            } else {
+            } else if (!empty(Yii::$app->request->hostName)) {
                 $domain = Yii::$app->request->hostName;
                 $domain = preg_replace('/^www\./i', '', $domain);
             }
 
-            $domainModel = StoreDomains::findOne(['domain' => $domain]);
+            $domainModel = $domain ? StoreDomains::findOne(['domain' => $domain]) : null;
 
-            if ($domainModel && $domainModel instanceof StoreDomains)
-            {
+            if ($domainModel && $domainModel instanceof StoreDomains) {
                 $store = $domainModel->store;
             }
 
