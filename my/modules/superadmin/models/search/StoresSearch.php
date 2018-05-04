@@ -76,6 +76,7 @@ class StoresSearch {
             // For trial mode
             if ($status == self::TRIAL_MODE_KEY) {
                 $stores->andWhere([
+                    'stores.status' => Stores::STATUS_ACTIVE,
                     'stores.trial' => Stores::TRIAL_MODE_ON,
                 ]);
             }
@@ -262,8 +263,11 @@ class StoresSearch {
             Stores::STATUS_TERMINATED => count(array_filter($stores, function($store){
                 return $store['status'] == Stores::STATUS_TERMINATED;
             })),
+
             self::TRIAL_MODE_KEY => count(array_filter($stores, function($store){
-                return $store['trial'] == Stores::TRIAL_MODE_ON;
+                return
+                    $store['status'] == Stores::STATUS_ACTIVE &&
+                    $store['trial'] == Stores::TRIAL_MODE_ON;
             })),
         ];
 
