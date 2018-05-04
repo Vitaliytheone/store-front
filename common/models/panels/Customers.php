@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
+use common\models\stores\Stores;
 use my\helpers\CustomerHelper;
 use Yii;
 use yii\db\ActiveRecord;
@@ -158,6 +159,14 @@ class Customers extends ActiveRecord
     public function getProjects()
     {
         return $this->hasMany(Project::class, ['cid' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStores()
+    {
+        return $this->hasMany(Stores::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -487,12 +496,21 @@ class Customers extends ActiveRecord
     }
 
     /**
+     * Return is customer have at least one project?
+     * @return bool
+     */
+    public function hasPanels()
+    {
+        return (bool)CustomerHelper::getCountPanels($this->id, true);
+    }
+
+    /**
      * Return is customer have at least one store?
      * @return bool
      */
     public function hasStores()
     {
-        return CustomerHelper::hasStores($this->id);
+        return (bool)CustomerHelper::getCountStores($this->id, true);
     }
 
     /**

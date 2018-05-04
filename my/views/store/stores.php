@@ -68,61 +68,63 @@
                 </thead>
                 <tbody>
                     <?php foreach ($stores as $store): ?>
-                    <tr>
-                        <td><?= $store['domain'] ?></td>
-                        <td>
-                            <?= $store['date']; ?>
-                        </td>
-                        <td>
-                            <?= $store['expiredDate']; ?>
-                        </td>
-                        <td class="<?= $colors($store) ?>">
-                            <?= $store['statusName'] ?>
-                        </td>
-                        <td>
-                            <?php if ($store['type'] === 'store'): ?>
+                        <?php if(!$store['hide']): ?>
+                            <tr>
+                                <td><?= $store['domain'] ?></td>
+                                <td>
+                                    <?= $store['date']; ?>
+                                </td>
+                                <td>
+                                    <?= $store['expiredDate']; ?>
+                                </td>
+                                <td class="<?= $colors($store) ?>">
+                                    <?= $store['statusName'] ?>
+                                </td>
+                                <td>
+                                    <?php if ($store['type'] === 'store'): ?>
 
-                                <?php if ($store['access']['canDashboard']) : ?>
-                                    <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), $store['store_admin_url'], [
-                                        'class' => 'btn btn-outline btn-primary btn-xs',
-                                        'target' => '_blank'
-                                    ])?>
-                                <?php else : ?>
-                                    <?= Html::tag('span', '<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), [
-                                        'class' => 'btn btn-outline btn-default btn-xs disabled',
-                                    ])?>
-                                <?php endif; ?>
+                                        <?php if ($store['access']['canDashboard']) : ?>
+                                            <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), $store['store_admin_url'], [
+                                                'class' => 'btn btn-outline btn-primary btn-xs',
+                                                'target' => '_blank'
+                                            ])?>
+                                        <?php else : ?>
+                                            <?= Html::tag('span', '<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'stores.list.action_dashboard'), [
+                                                'class' => 'btn btn-outline btn-default btn-xs disabled',
+                                            ])?>
+                                        <?php endif; ?>
 
-                                <?php if ($store['access']['canDomainConnect']) : ?>
-                                    <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
-                                        '/store/edit-domain',
-                                        'id' => $store['id']
-                                    ], [
-                                        'class' => 'btn btn-outline btn-purple btn-xs edit-store-domain',
-                                        'data-domain' => $store['store_domain']
-                                    ])?>
-                                <?php else : ?>
-                                    <?= Html::tag('span', '<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
-                                        'class' => 'btn btn-outline btn-default btn-xs disabled',
-                                    ])?>
-                                <?php endif; ?>
+                                        <?php if ($store['access']['canDomainConnect']) : ?>
+                                            <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
+                                                '/store/edit-domain',
+                                                'id' => $store['id']
+                                            ], [
+                                                'class' => 'btn btn-outline btn-purple btn-xs edit-store-domain',
+                                                'data-domain' => $store['store_domain']
+                                            ])?>
+                                        <?php else : ?>
+                                            <?= Html::tag('span', '<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
+                                                'class' => 'btn btn-outline btn-default btn-xs disabled',
+                                            ])?>
+                                        <?php endif; ?>
 
-                                <?php if ($store['access']['canProlong']) : ?>
-                                    <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
-                                        '/store/prolong',
-                                        'id' => $store['id']
-                                    ], [
-                                        'class' => 'btn btn-outline btn-warning btn-xs',
-                                    ])?>
-                                <?php else : ?>
-                                    <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
-                                        'class' => 'btn btn-outline btn-default btn-xs disabled',
-                                    ])?>
-                                <?php endif; ?>
+                                        <?php if ($store['access']['canProlong']) : ?>
+                                            <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
+                                                '/store/prolong',
+                                                'id' => $store['id']
+                                            ], [
+                                                'class' => 'btn btn-outline btn-warning btn-xs',
+                                            ])?>
+                                        <?php else : ?>
+                                            <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
+                                                'class' => 'btn btn-outline btn-default btn-xs disabled',
+                                            ])?>
+                                        <?php endif; ?>
 
-                            <?php endif; ?>
-                        </td>
-                    </tr>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     <?php endforeach ?>
                 </tbody>
             </table>

@@ -17,6 +17,7 @@ use yii\helpers\Json;
  * @property integer $id
  * @property integer $cid
  * @property integer $status
+ * @property integer $hide
  * @property integer $processing
  * @property integer $date
  * @property string $ip
@@ -35,6 +36,9 @@ class Orders extends ActiveRecord
     const STATUS_ADDED = 2;
     const STATUS_ERROR = 3;
     const STATUS_CANCELED = 4;
+
+    const HIDDEN_ON = 1;
+    const HIDDEN_OFF = 0;
 
     const ITEM_BUY_PANEL = 1;
     const ITEM_BUY_DOMAIN = 2;
@@ -59,7 +63,7 @@ class Orders extends ActiveRecord
     {
         return [
             [['cid'], 'required'],
-            [['cid', 'status', 'processing', 'date', 'item', 'item_id'], 'integer'],
+            [['cid', 'status', 'hide', 'processing', 'date', 'item', 'item_id'], 'integer'],
             [['ip', 'domain'], 'string', 'max' => 300],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
             [['item'], 'default', 'value' => static::ITEM_BUY_PANEL],
@@ -76,6 +80,7 @@ class Orders extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'cid' => Yii::t('app', 'Cid'),
             'status' => Yii::t('app', 'Status'),
+            'hide' => Yii::t('app', 'Hidden'),
             'processing' => Yii::t('app', 'Processing'),
             'date' => Yii::t('app', 'Date'),
             'domain' => Yii::t('app', 'Domain'),
@@ -101,14 +106,15 @@ class Orders extends ActiveRecord
     {
         return $this->hasOne(Invoices::class, ['id' => 'invoice_id'])
             ->viaTable('invoice_details', ['item_id' => 'id'], function ($query) {
-                $query->andWhere(['invoice_details.item' => [
-                    InvoiceDetails::ITEM_BUY_PANEL,
-                    InvoiceDetails::ITEM_BUY_DOMAIN,
-                    InvoiceDetails::ITEM_BUY_SSL,
-                    InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                    InvoiceDetails::ITEM_BUY_STORE,
-                    InvoiceDetails::ITEM_BUY_TRIAL_STORE,
-                ]]);
+//                TODO:: Commented for support Orders without invoices in my/superadmin
+//                $query->andWhere(['invoice_details.item' => [
+//                    InvoiceDetails::ITEM_BUY_PANEL,
+//                    InvoiceDetails::ITEM_BUY_DOMAIN,
+//                    InvoiceDetails::ITEM_BUY_SSL,
+//                    InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+//                    InvoiceDetails::ITEM_BUY_STORE,
+//                    InvoiceDetails::ITEM_BUY_TRIAL_STORE,
+//                ]]);
             });
     }
 

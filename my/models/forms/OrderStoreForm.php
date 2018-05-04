@@ -299,14 +299,18 @@ class OrderStoreForm extends Model
             return false;
         }
 
-        $invoice = $this->createInvoice($order);
+        /* Make Invoice only for non-trial stores */
+        if (!$this->getTrial()) {
 
-        if (!$invoice) {
-            $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
-            return false;
+            $invoice = $this->createInvoice($order);
+
+            if (!$invoice) {
+                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+                return false;
+            }
+
+            $this->_invoiceCode = $invoice->code;
         }
-
-        $this->_invoiceCode = $invoice->code;
 
         $transaction->commit();
 

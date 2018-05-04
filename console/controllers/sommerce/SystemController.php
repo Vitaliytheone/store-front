@@ -1,7 +1,10 @@
 <?php
 namespace console\controllers\sommerce;
 
+use common\models\store\Languages;
+use common\models\store\Messages;
 use common\models\stores\StoreAdmins;
+use yii\db\Query;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -158,5 +161,62 @@ class SystemController extends CustomController
     public function actionTestMessage()
     {
         echo Yii::t('app', 'checkout.redirect.title');
+    }
+
+    /**
+     * Added new messages
+     */
+    public function actionAddNewMessages()
+    {
+        $db = Yii::$app->db;
+
+        $messages = [
+            [
+                'section' => 'cart',
+                'name' => 'payment_description',
+                'value' => 'Order #{order_id}',
+            ],
+            [
+                'section' => 'order',
+                'name' => 'error.link',
+                'value' => 'Incorrect link.',
+            ],
+        ];
+
+        foreach (Stores::find()->all() as $store) {
+            $dbName = $store->db_name;
+            $isDbExist = $db->createCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'")
+                ->queryScalar();
+
+            if (!$isDbExist) {
+                continue;
+            }
+
+            Yii::$app->store->setInstance($store);
+
+            foreach (Languages::find()->all() as $language) {
+
+                foreach ($messages as $message) {
+                    if (($messageModel = Messages::findOne([
+                        'section' => $message['section'],
+                        'name' => $message['name'],
+                        'lang_code' => $language->code
+                    ]))) {
+                        $this->stderr('Can not add message ' . var_export($messageModel->attributes, true) . " Details: Message already exist\n", Console::FG_RED, Console::UNDERLINE);
+                        continue;
+                    }
+                    $messageModel = new Messages();
+                    $messageModel->lang_code = $language->code;
+                    $messageModel->attributes = $message;
+
+                    if (!$messageModel->save(false)) {
+                        $this->stderr('Can not add message ' . var_export($messageModel->attributes, true) . " Details: " . var_export($messageModel->getErrors(), true) . "\n", Console::FG_RED, Console::UNDERLINE);
+                        continue;
+                    }
+
+                    $this->stderr('Message was added ' . var_export($messageModel->attributes, true) . ". \n", Console::FG_GREEN, Console::UNDERLINE);
+                }
+            }
+        }
     }
 }

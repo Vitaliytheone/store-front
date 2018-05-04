@@ -58,7 +58,7 @@ class LinkValidator extends Validator
         }
 
 
-        if (!$validator->run($link)) {
+        if (!$validator->run($link, $package->name)) {
             LinkValidations::add($linkOrig, $package->link_type, $store->id);
 
             $model->addError($attribute, $validator->getError());

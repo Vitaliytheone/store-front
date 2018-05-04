@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class InstagramProfile
+ * @package sommerce\components\validators\link
+ */
 class InstagramProfile extends BaseLinkValidator
 {
     public function validate()
@@ -17,7 +21,9 @@ class InstagramProfile extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.instagram\.com\/([a-z0-9\.\_]+)(\/)?$/i", $this->link))) {
-            $this->addError('Invalid instagram profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link . '?hl=en', [
@@ -25,11 +31,15 @@ class InstagramProfile extends BaseLinkValidator
                 'Accept-Encoding' => '',
             ]
         ]))) {
-            $this->addError('Invalid instagram profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (false !== strpos($content, '"is_private":true')) {
-            $this->addError('Invalid instagram profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

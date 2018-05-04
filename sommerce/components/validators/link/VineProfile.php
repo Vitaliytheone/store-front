@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class VineProfile
+ * @package sommerce\components\validators\link
+ */
 class VineProfile extends BaseLinkValidator
 {
     public function validate()
@@ -17,7 +21,9 @@ class VineProfile extends BaseLinkValidator
 
         if (!(preg_match("/https\:\/\/vine\.co\/([a-z0-9\.]+)(\/)?$/uis", $this->link, $matchName))
             && !(preg_match("/https\:\/\/vine\.co\/u\/([0-9]+)(\/)?$/uis", $this->link, $matchId))) {
-            $this->addError('Invalid vine profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!(empty($matchId[1]))) {
@@ -38,7 +44,9 @@ class VineProfile extends BaseLinkValidator
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid vine profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

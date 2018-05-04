@@ -20,6 +20,11 @@ abstract class BaseLinkValidator {
     protected $link;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * Validate method
      * @return mixed
      */
@@ -28,12 +33,14 @@ abstract class BaseLinkValidator {
     /**
      * Run validation
      * @param string $link
+     * @param string $name
      * @return bool
      */
-    public function run($link)
+    public function run($link, $name)
     {
         $this->errors = [];
         $this->link = $link;
+        $this->name = $name;
 
         return $this->validate();
     }

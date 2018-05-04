@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class TwitterProfile
+ * @package sommerce\components\validators\link
+ */
 class TwitterProfile extends BaseLinkValidator
 {
     public function validate()
@@ -27,11 +31,15 @@ class TwitterProfile extends BaseLinkValidator
                 'Accept-Encoding' => '',
             ]
         ]))) {
-            $this->addError('Invalid twitter profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (false !== strpos($content, 'This account has been suspended')) {
-            $this->addError('Invalid twitter profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

@@ -53,7 +53,7 @@ class SystemController extends CustomController
                     ['html' => 'sysmail'],
                     $post
                 )
-                    ->setFrom(Yii::$app->params['noreplyEmail'])
+                    ->setFrom(Yii::$app->params['swift.username'])
                     ->setTo(Yii::$app->params['sysmailSupportEmail'])
                     ->setReplyTo([$post['email'] => $post['name']])
                     ->setSubject('Perfect Panel contact form ' . $post['email'] . ' @' . date("Y-m-d H:i:s", time() + Yii::$app->params['time']))

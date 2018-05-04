@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class YoutubeChannel
+ * @package sommerce\components\validators\link
+ */
 class YoutubeChannel extends BaseLinkValidator
 {
     public function validate()
@@ -20,11 +24,15 @@ class YoutubeChannel extends BaseLinkValidator
             && !(preg_match("/https\:\/\/www\.youtube\.com\/c\/([a-z0-9-_]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/www\.youtube\.com\/(?!watch)([a-z0-9-_]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/www\.youtube\.com\/user\/([a-z0-9-_]+)(\/)?.*?/i", $this->link))) {
-            $this->addError('Invalid youtube channel link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid youtube channel link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

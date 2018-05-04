@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class FacebookEvent
+ * @package sommerce\components\validators\link
+ */
 class FacebookEvent extends BaseLinkValidator
 {
     public function validate()
@@ -20,11 +24,15 @@ class FacebookEvent extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.facebook\.com\/events\/([0-9]+)(\/)?$/uis", $this->link))) {
-            $this->addError('Invalid facebook page link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link . '?hl=en'))) {
-            $this->addError('Invalid facebook event link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

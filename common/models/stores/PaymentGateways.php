@@ -140,4 +140,14 @@ class PaymentGateways extends ActiveRecord
 
         return $methods;
     }
+
+    /**
+     * Get method name
+     * @param string $method
+     * @return string
+     */
+    public static function getMethodName(string $method):string
+    {
+        return (string)ArrayHelper::getValue(ArrayHelper::index(static::getMethods(), 'method'), [$method, 'name'], $method);
+    }
 }

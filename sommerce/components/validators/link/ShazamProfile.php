@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class ShazamProfile
+ * @package sommerce\components\validators\link
+ */
 class ShazamProfile extends BaseLinkValidator
 {
     public function validate()
@@ -12,11 +16,15 @@ class ShazamProfile extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.shazam\.com\/([a-z]{2}\/)?artist\/([0-9]+)(\/.*?)?(\/)?$/i", $this->link))) {
-            $this->addError('Invalid shazam profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid shazam profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         }

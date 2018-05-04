@@ -225,6 +225,7 @@ return [
     'settings.general_store_name' => 'Store name',
     'settings.general_store_name_placeholder' => 'Input store name',
     'settings.general_timezone' => 'Timezone',
+    'settings.general_currency' => 'Currency',
     'settings.general_admin_email' => 'Admin email',
     'settings.general_admin_email_placeholder' => 'Store admin email',
     'settings.general_custom_header' => 'Custom header code',
@@ -378,8 +379,6 @@ return [
     'settings.payments_webmoney_guide_4-4-7' => 'Control sign forming method: ',
     'settings.payments_webmoney_guide_4-4-7-1' => 'SHA256',
     'settings.payments_webmoney_guide_5' => 'Enter your WebMoney details below.',
-
-    'settings.payments_payment_description' => 'Order #{order_id}',
 
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',

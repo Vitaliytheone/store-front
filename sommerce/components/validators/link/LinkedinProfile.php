@@ -1,8 +1,12 @@
 <?php
-
 namespace sommerce\components\validators\link;
 
+use Yii;
 
+/**
+ * Class LinkedinProfile
+ * @package sommerce\components\validators\link
+ */
 class LinkedinProfile extends BaseLinkValidator
 {
     public function validate()
@@ -18,11 +22,15 @@ class LinkedinProfile extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.linkedin\.com\/in\/([^\/]+)(\/)?$/i", $this->link))) {
-            $this->addError('Invalid LinkedIn profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
 
             return false;
         } /*else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError('Invalid LinkedIn profile link.');
+            $this->addError(Yii::t('app', 'order.error.link', [
+                'name' => $this->name
+            ]));
         }*/
 
         return true;
