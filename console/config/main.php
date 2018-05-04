@@ -56,6 +56,10 @@ return [
                 ],
             ],
         ],
+
+        'store' => [
+            'class' => 'common\components\stores\StoreComponent'
+        ],
     ],
     'params' => array_merge(
         require(__DIR__ . '/../../common/config/params.php'),
