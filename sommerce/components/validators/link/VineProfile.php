@@ -21,7 +21,7 @@ class VineProfile extends BaseLinkValidator
 
         if (!(preg_match("/https\:\/\/vine\.co\/([a-z0-9\.]+)(\/)?$/uis", $this->link, $matchName))
             && !(preg_match("/https\:\/\/vine\.co\/u\/([0-9]+)(\/)?$/uis", $this->link, $matchId))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
@@ -44,7 +44,7 @@ class VineProfile extends BaseLinkValidator
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 

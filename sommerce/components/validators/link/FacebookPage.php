@@ -27,13 +27,13 @@ class FacebookPage extends BaseLinkValidator
             && !(preg_match("/https\:\/\/www\.facebook\.com\/pages\/street\/([0-9]+)(\/)?$/uis", $this->link))
             && !(preg_match("/https\:\/\/www\.facebook\.com\/places\/([a-z0-9а-я\_\-\.]+)\/([0-9]+)?$/uis", $this->link))
             && !(preg_match("/https\:\/\/www\.facebook\.com\/pages\/([a-z0-9а-я\_\-\.]+)\/([0-9]+)?$/uis", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 

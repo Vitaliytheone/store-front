@@ -2,6 +2,7 @@
 namespace console\controllers\sommerce;
 
 use common\models\stores\StoreAdmins;
+use yii\db\Query;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -158,5 +159,33 @@ class SystemController extends CustomController
     public function actionTestMessage()
     {
         echo Yii::t('app', 'checkout.redirect.title');
+    }
+
+    /**
+     * Added new messages
+     */
+    public function actionAddNewMessages()
+    {
+        $db = Yii::$app->db;
+
+        foreach ((new Query())->select([
+            'db_name'
+        ])->from(DB_STORES . '.stores')->all() as $store) {
+            $dbName = $store['db_name'];
+            $isDbExist = $db->createCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'")
+                ->queryScalar();
+
+            if (!$isDbExist) {
+                continue;
+            }
+
+            $db->createCommand('
+                INSERT INTO `' . $dbName . '`.`messages` (`lang_code`, `section`, `name`, `value`)
+                VALUES (\'en\', \'cart\', \'payment_description\', \'Order #{order_id}\');
+                
+                INSERT INTO `' . $dbName . '`.`messages` (`lang_code`, `section`, `name`, `value`)
+                VALUES (\'en\', \'order\', \'error.link\', \'Incorrect link.\');
+            ')->execute();
+        }
     }
 }

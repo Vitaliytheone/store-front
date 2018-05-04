@@ -16,13 +16,13 @@ class InstagramPost extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.instagram\.com\/p\/([a-z0-9_-]+)(\/)?$/i", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link . '?hl=en'))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 

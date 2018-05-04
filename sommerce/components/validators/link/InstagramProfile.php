@@ -21,7 +21,7 @@ class InstagramProfile extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/www\.instagram\.com\/([a-z0-9\.\_]+)(\/)?$/i", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
@@ -31,13 +31,13 @@ class InstagramProfile extends BaseLinkValidator
                 'Accept-Encoding' => '',
             ]
         ]))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (false !== strpos($content, '"is_private":true')) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
