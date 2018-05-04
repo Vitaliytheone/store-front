@@ -60,51 +60,53 @@
                 </thead>
                 <tbody>
                     <?php foreach ($panels as $panel): ?>
-                    <tr>
-                        <td><?= $panel['domain'] ?></td>
-                        <td><?= $panel['plan']; ?></td>
-                        <td>
-                            <?= $panel['date']; ?>
-                        </td>
-                        <td>
-                            <?= $panel['expired']; ?>
-                        </td>
-                        <td class="<?= $colors($panel) ?>">
-                            <?= $panel['statusName'] ?>
-                        </td>
-                        <td>
-                            <?php if ($panel['access']['isActive']) : ?>
-                                <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'panels.list.action_dashboard'), 'http://'. strip_tags($panel['domain']) . '/admin', [
-                                    'class' => 'btn btn-outline btn-primary btn-xs',
-                                    'target' => '_blank'
-                                ])?>
-                                <?= Html::a('<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'panels.list.action_staff'), '/staff/' . $panel['id'], [
-                                    'class' => 'btn btn-outline btn-info btn-xs',
-                                ])?>
+                        <?php if (!$panel['hide']): ?>
+                            <tr>
+                                <td><?= $panel['domain'] ?></td>
+                                <td><?= $panel['plan']; ?></td>
+                                <td>
+                                    <?= $panel['date']; ?>
+                                </td>
+                                <td>
+                                    <?= $panel['expired']; ?>
+                                </td>
+                                <td class="<?= $colors($panel) ?>">
+                                    <?= $panel['statusName'] ?>
+                                </td>
+                                <td>
+                                    <?php if ($panel['access']['isActive']) : ?>
+                                        <?= Html::a('<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'panels.list.action_dashboard'), 'http://'. strip_tags($panel['domain']) . '/admin', [
+                                            'class' => 'btn btn-outline btn-primary btn-xs',
+                                            'target' => '_blank'
+                                        ])?>
+                                        <?= Html::a('<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'panels.list.action_staff'), '/staff/' . $panel['id'], [
+                                            'class' => 'btn btn-outline btn-info btn-xs',
+                                        ])?>
 
 
-                            <?php else : ?>
-                                <?= Html::tag('span', '<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'panels.list.action_dashboard'), [
-                                    'class' => 'btn btn-outline btn-primary btn-xs disabled',
-                                    'target' => '_blank'
-                                ])?>
-                                <?= Html::tag('span', '<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'panels.list.action_staff'), [
-                                    'class' => 'btn btn-outline btn-info btn-xs disabled',
-                                ])?>
-                            <?php endif; ?>
+                                    <?php else : ?>
+                                        <?= Html::tag('span', '<i class="fa fa-external-link fa-fw"></i> ' . Yii::t('app', 'panels.list.action_dashboard'), [
+                                            'class' => 'btn btn-outline btn-primary btn-xs disabled',
+                                            'target' => '_blank'
+                                        ])?>
+                                        <?= Html::tag('span', '<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'panels.list.action_staff'), [
+                                            'class' => 'btn btn-outline btn-info btn-xs disabled',
+                                        ])?>
+                                    <?php endif; ?>
 
-                            <?php if ($panel['access']['isActivityLog']) : ?>
-                                <?= Html::a('<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), '/activitylog/' . $panel['id'], [
-                                    'class' => 'btn btn-outline btn-warning btn-xs',
-                                ])?>
-                            <?php else : ?>
-                                <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), [
-                                    'class' => 'btn btn-outline btn-warning btn-xs disabled',
-                                ])?>
-                            <?php endif; ?>
+                                    <?php if ($panel['access']['isActivityLog']) : ?>
+                                        <?= Html::a('<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), '/activitylog/' . $panel['id'], [
+                                            'class' => 'btn btn-outline btn-warning btn-xs',
+                                        ])?>
+                                    <?php else : ?>
+                                        <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), [
+                                            'class' => 'btn btn-outline btn-warning btn-xs disabled',
+                                        ])?>
+                                    <?php endif; ?>
 
-                        </td>
-                    </tr>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     <?php endforeach ?>
                 </tbody>
             </table>

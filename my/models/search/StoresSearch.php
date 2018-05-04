@@ -43,7 +43,7 @@ class StoresSearch
         $customer = ArrayHelper::getValue($this->params, 'customer_id');
 
         $orderPending = (new Query())
-            ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
+            ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db', 'hide'])
             ->from('orders')
             ->andWhere([
                 'cid' => $customer,
@@ -58,7 +58,7 @@ class StoresSearch
             ]);
 
         $orderCanceled = (new Query())
-            ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db'])
+            ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db', 'hide'])
             ->from('orders')
             ->andWhere([
                 'cid' => $customer,
@@ -69,7 +69,7 @@ class StoresSearch
             ]);
 
         $stores = (new Query())
-            ->select(['id', '("store") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'created_at AS date', '(NULL) AS plan', 'expired', 'db_name AS db'])
+            ->select(['id', '("store") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'created_at AS date', '(NULL) AS plan', 'expired', 'db_name AS db', 'hide'])
             ->from(Stores::tableName())
             ->andWhere([
                 'customer_id' => $customer,
@@ -167,6 +167,7 @@ class StoresSearch
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
             $value['access'] = $access;
+            $value['hide'] = ArrayHelper::getValue($value,'hide', null);
 
             return $value;
         };

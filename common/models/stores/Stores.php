@@ -36,6 +36,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $timezone
  * @property string $language
  * @property integer $status
+ * @property integer $hide
  * @property string $db_name
  * @property integer $expired
  * @property integer $created_at
@@ -71,6 +72,9 @@ class Stores extends ActiveRecord implements ProjectInterface
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
+    const HIDDEN_ON = 1;
+    const HIDDEN_OFF = 0;
+
     const CAN_DASHBOARD = 2;
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
@@ -95,7 +99,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     {
         return [
             [[
-                'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
+                'customer_id', 'timezone', 'status', 'hide', 'expired', 'created_at', 'updated_at',
                 'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl'
             ], 'integer'],
             [[
@@ -125,6 +129,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
             'status' => Yii::t('app', 'Status'),
+            'hide' => Yii::t('app', 'Hidden'),
             'db_name' => Yii::t('app', 'Db Name'),
             'expired' => Yii::t('app', 'Expired'),
             'created_at' => Yii::t('app', 'Created At'),
