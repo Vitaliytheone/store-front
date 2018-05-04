@@ -45,13 +45,13 @@ class FacebookPost extends BaseLinkValidator
             && !(preg_match("/https\:\/\/www\.facebook\.com\/([a-z0-9а-я\_\-\.]+)\/photos\/([a-z0-9\.]+)\/([0-9]+)(\/)?$/uis", $this->link))
             && !(preg_match("/https\:\/\/www\.facebook\.com\/photo\.php\?fbid\=([0-9]+)\&set\=([0-9a-z\.]+)$/uis", $this->link))
             && !(preg_match("/https\:\/\/www\.facebook\.com\/photo\.php\?fbid\=([0-9]+)$/uis", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 

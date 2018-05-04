@@ -30,13 +30,13 @@ class TwitchChannel extends BaseLinkValidator
 
         if (!(preg_match("/https\:\/\/www\.twitch\.tv\/([a-z0-9_]+)(\/)?$/iu", $this->link))
             && !(preg_match("/https\:\/\/player\.twitch\.tv\/\?channel\=([a-z0-9_]+)(\/)?$/iu", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 

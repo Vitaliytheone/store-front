@@ -21,13 +21,13 @@ class LinkedinPost extends BaseLinkValidator
             && !(preg_match("/https\:\/\/www\.linkedin\.com\/feed\/update\/([a-z\:]+)([0-9]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/www\.linkedin\.com\/pulse\/([^\/]+)(\/)?$/i", $this->link))
             && !(preg_match("/https\:\/\/www\.linkedin\.com\/hp\/update\/([0-9]+)(\/)?$/i", $this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
             return false;
         } else if (!($content = $this->checkUrl($this->link))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
         }

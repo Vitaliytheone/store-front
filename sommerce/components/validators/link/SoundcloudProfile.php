@@ -20,7 +20,7 @@ class SoundcloudProfile extends BaseLinkValidator
         $content = null;
 
         if (!(preg_match("/https\:\/\/soundcloud\.com\/([a-z0-9\_-]+)(\/)?$/i", $this->link, $match))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
@@ -28,7 +28,7 @@ class SoundcloudProfile extends BaseLinkValidator
         } else if (!($content = $this->checkUrl($this->link, [
             'ssl' => true
         ]))) {
-            $this->addError(Yii::t('app', 'order.invalid_link', [
+            $this->addError(Yii::t('app', 'order.error.link', [
                 'name' => $this->name
             ]));
 
