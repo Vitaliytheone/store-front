@@ -694,6 +694,16 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
+     * Activate store non trial mode
+     * @return bool
+     */
+    public function activateFullMode()
+    {
+        $this->trial = self::TRIAL_MODE_OFF;
+        return $this->save(false);
+    }
+
+    /**
      * Return store Sommerce domain from store domain list
      * @return array|StoreDomains|null
      */
