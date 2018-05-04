@@ -435,6 +435,7 @@ return [
     'stores.list.navs_active' => 'Active ({count})',
     'stores.list.navs_frozen' => 'Frozen ({count})',
     'stores.list.navs_terminated' => 'Terminated ({count})',
+    'stores.list.navs_trial' => 'Trial ({count})',
     'stores.list.search' => 'Search stores',
     'stores.list.column_id' => 'ID',
     'stores.list.column_domain' => 'Domain',

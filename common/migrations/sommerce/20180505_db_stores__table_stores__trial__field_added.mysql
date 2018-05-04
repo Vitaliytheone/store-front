@@ -1,0 +1,4 @@
+USE `stores`;
+ALTER TABLE `stores` ADD `trial` TINYINT(1)  NOT NULL  DEFAULT '0'  AFTER `db_name`;
+
+UPDATE `stores` SET `trial` = '1' WHERE `expired` - `created_at` <= 14 * 24 * 60 * 60;

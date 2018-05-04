@@ -234,12 +234,6 @@ class OrderStoreForm extends Model
             return false;
         }
 
-        if ($this->getTrial()) {
-            if (!OrderHelper::store($order)) {
-                return false;
-            }
-        }
-
         return $order;
     }
 
@@ -296,20 +290,29 @@ class OrderStoreForm extends Model
 
         if (!$order) {
             $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+
             return false;
         }
 
-        /* Make Invoice only for non-trial stores */
+        // Make Invoice for non-trial stores
+        // Create trial store immediately
         if (!$this->getTrial()) {
-
             $invoice = $this->createInvoice($order);
 
             if (!$invoice) {
                 $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+
                 return false;
             }
 
             $this->_invoiceCode = $invoice->code;
+
+        } else {
+            if (!OrderHelper::store($order)) {
+                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+
+                return false;
+            }
         }
 
         $transaction->commit();

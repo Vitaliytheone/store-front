@@ -19,6 +19,9 @@ class StoresSearch {
 
     use SearchTrait;
 
+    /** Store trial mode key name */
+    const TRIAL_MODE_KEY = 'trial';
+
     protected $pageSize = 100;
 
     /**
@@ -55,9 +58,28 @@ class StoresSearch {
             ->from(DB_STORES . '.stores');
 
         if (!('all' === $status || null === $status)) {
-            $stores->andWhere([
-                'stores.status' => $status
-            ]);
+
+            // For store statuses
+            if (in_array($status, array_keys(Stores::getStatuses()))) {
+
+                if ($status == Stores::STATUS_ACTIVE) {
+                    $stores->andWhere([
+                        'stores.trial' => Stores::TRIAL_MODE_OFF,
+                    ]);
+                }
+
+                $stores->andWhere([
+                    'stores.status' => $status
+                ]);
+            }
+
+            // For trial mode
+            if ($status == self::TRIAL_MODE_KEY) {
+                $stores->andWhere([
+                    'stores.status' => Stores::STATUS_ACTIVE,
+                    'stores.trial' => Stores::TRIAL_MODE_ON,
+                ]);
+            }
         }
 
         if (!empty($searchQuery)) {
@@ -189,6 +211,9 @@ class StoresSearch {
             Stores::STATUS_ACTIVE => Yii::t('app/superadmin', 'stores.list.navs_active', [
                 'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_ACTIVE, 0)
             ]),
+            self::TRIAL_MODE_KEY => Yii::t('app/superadmin', 'stores.list.navs_trial', [
+                'count' => ArrayHelper::getValue($countsByStatus, self::TRIAL_MODE_KEY, 0)
+            ]),
             Stores::STATUS_FROZEN => Yii::t('app/superadmin', 'stores.list.navs_frozen', [
                 'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_FROZEN, 0)
             ]),
@@ -221,11 +246,30 @@ class StoresSearch {
     {
         $query = clone $this->buildQuery(null);
 
-        $this->_counts_by_status = $query
-            ->select(['count' => 'COUNT(DISTINCT stores.id)', 'status' => 'stores.status'])
-            ->groupBy('stores.status')
-            ->indexBy('status')
-            ->column();
+        $stores = $query
+            ->select(['id' => 'stores.id', 'status' => 'stores.status', 'trial' => 'stores.trial'])
+            ->groupBy('id')
+            ->all();
+
+        $this->_counts_by_status = [
+            Stores::STATUS_ACTIVE => count(array_filter($stores, function($store){
+                return
+                    $store['status'] == Stores::STATUS_ACTIVE &&
+                    $store['trial'] == Stores::TRIAL_MODE_OFF;
+            })),
+            Stores::STATUS_FROZEN => count(array_filter($stores, function($store){
+                return $store['status'] == Stores::STATUS_FROZEN;
+            })),
+            Stores::STATUS_TERMINATED => count(array_filter($stores, function($store){
+                return $store['status'] == Stores::STATUS_TERMINATED;
+            })),
+
+            self::TRIAL_MODE_KEY => count(array_filter($stores, function($store){
+                return
+                    $store['status'] == Stores::STATUS_ACTIVE &&
+                    $store['trial'] == Stores::TRIAL_MODE_ON;
+            })),
+        ];
 
         return $this->_counts_by_status;
     }

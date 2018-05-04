@@ -498,6 +498,7 @@ class OrderHelper {
         $store->subdomain = 0;
         $store->name = ArrayHelper::getValue($orderDetails,'name');
         $store->status = Stores::STATUS_ACTIVE;
+        $store->trial = $isTrial;
         $store->generateExpired($isTrial);
 
         if (!$store->save(false)) {
