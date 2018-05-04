@@ -37,6 +37,7 @@ use yii\helpers\ArrayHelper;
  * @property string $language
  * @property integer $status
  * @property string $db_name
+ * @property integer $trial
  * @property integer $expired
  * @property integer $created_at
  * @property integer $updated_at
@@ -71,6 +72,9 @@ class Stores extends ActiveRecord implements ProjectInterface
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
+    const TRIAL_MODE_ON = 1;
+    const TRIAL_MODE_OFF = 0;
+
     const CAN_DASHBOARD = 2;
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
@@ -96,7 +100,7 @@ class Stores extends ActiveRecord implements ProjectInterface
         return [
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl'
+                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl', 'trial',
             ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
@@ -125,6 +129,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             'timezone' => Yii::t('app', 'Timezone'),
             'language' => Yii::t('app', 'Language'),
             'status' => Yii::t('app', 'Status'),
+            'trial' => Yii::t('app', 'Trial'),
             'db_name' => Yii::t('app', 'Db Name'),
             'expired' => Yii::t('app', 'Expired'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -661,7 +666,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function generateExpired($isTrial = false)
     {
-        $this->expired = $isTrial ? ExpiryHelper::days(14, time()) : ExpiryHelper::month(time());;
+        $this->expired = $isTrial ? ExpiryHelper::days(14, time()) : ExpiryHelper::month(time());
     }
 
     /**
