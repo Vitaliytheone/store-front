@@ -71,3 +71,11 @@ UPDATE `payment_gateways` SET
 `position` = '8',
 `options` = '{\\"apiKey\\":\\"\\",\\"apiSecret\\":\\"\\",\\"fee\\":1}'
 WHERE `method` = 'paywant';
+
+UPDATE `payment_gateways` SET
+`name` = 'Billplz',
+`class_name` = 'Billplz',
+`url` = 'billplz',
+`position` = '9',
+`options` = '{\\"collectionId\\":\\"\\",\\"secret\\":\\"\\"}'
+WHERE `method` = 'billplz';
