@@ -16,7 +16,7 @@ return [
     '13' => 'Add payment',
     '14' => 'Change status',
     '15' => 'Submit message',
-    '16' => 'Autorization',
+    '16' => 'Authorization',
     '17' => 'Add category',
     '18' => 'Edit category',
     '19' => 'Up category',
