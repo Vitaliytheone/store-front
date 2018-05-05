@@ -81,6 +81,7 @@ return [
     '91' => 'Change expiry',
     '92' => 'Edit payment',
     '93' => 'Open unread ticket',
+    '94' => 'Delete ticket',
 
 
 //    '' => 'Add custom rates',
