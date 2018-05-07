@@ -33,6 +33,10 @@ class CustomController extends CommonController
      */
     public $seoKeywords;
 
+    /**
+     * @var string
+     */
+    public $endContent;
 
     /**
      * @var string
@@ -139,12 +143,12 @@ class CustomController extends CommonController
 
         $menuTree = (new NavigationSearch())->getSiteMenuTree(Yii::$app->request->url);
 
-        $endContent = '';
+        $this->endContent = '';
 
         if (YII_ENV_DEV) {
             ob_start();
             $this->getView()->trigger(View::EVENT_END_BODY);
-            $endContent = ob_get_contents();
+            $this->endContent = ob_get_contents();
             ob_end_clean();
         }
 
