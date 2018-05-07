@@ -497,6 +497,9 @@
 .table-bordered-custom thead tr{
   background: #f9f9f9;
 }
+.beta-label{
+  color: #f0ad4e;
+}
 
 
 
@@ -577,10 +580,3 @@
   }
 }
 
-.has-spinner:not(.active) .fa-spinner {
-  display: none;
-}
-
-.beta-label {
-  color: #f0ad4e;
-}
