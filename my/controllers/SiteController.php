@@ -83,6 +83,7 @@ class SiteController extends CustomController
             'checkout',
             'invoices',
             'invoice',
+            'signin',
         ])) {
             $this->enableCsrfValidation = false;
         }
