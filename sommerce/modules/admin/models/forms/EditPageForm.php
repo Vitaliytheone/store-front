@@ -22,14 +22,14 @@ class EditPageForm extends Model
     public $template;
 
     /**
-     * Created/edit page id
-     * @var integer
+     * Current page
+     * @var Pages|null
      */
-    protected $_id;
+    protected $_page =  null;
 
     /**
      * Current User
-     * @var User
+     * @var User|null
      */
     protected $_user;
 
@@ -60,22 +60,28 @@ class EditPageForm extends Model
 
     /**
      * Get current user
-     * @return User
+     * @return User|null
      */
     public function getUser()
     {
         return $this->_user;
     }
 
-
-    public function setId($id)
+    /**
+     * Set page
+     * @param Pages $page
+     */
+    public function setPage(Pages $page)
     {
-        $this->_id = $id;
+        $this->_page = $page;
     }
 
-    public function getId()
+    /**
+     * Get page
+     */
+    public function getPage()
     {
-
+        return $this->_page;
     }
 
     /**
@@ -150,7 +156,7 @@ class EditPageForm extends Model
     {
         $this->setAttributes([
             'title' => '',
-            'visibility' => self::VISIBILITY_YES,
+            'visibility' => Pages::VISIBILITY_YES,
             'content' => '',
             'seo_title' => Yii::t('admin', 'settings.pages_seo_page_default'),
             'seo_description' => "", /* Yii::t('admin', 'settings.pages_seo_meta_default') */
