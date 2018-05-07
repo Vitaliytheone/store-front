@@ -121,6 +121,114 @@ body {
   vertical-align: -1px;
 }
 
+.sidebar-tooltip{
+  position: absolute;
+  right: 10px;
+  top: 11px;
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #777;
+  border-radius: 10px;
+}
+.sidebar-tooltip__warning{
+  color: #fff;
+  background-color: #f0ad4e;
+}
+
+.sidebar-tooltip__danger{
+  color: #fff;
+  background-color: #a94442;
+}
+.group-select{
+  width: 100%!important;
+}
+
+.group-select .dropdown-header{
+  padding: 3px 12px!important;
+}
+.group-select.btn-group .dropdown-menu li a.opt{
+  padding-left: 24px!important;
+}
+.group-select .dropdown-menu .divider{
+  display: none;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 37px;
+  height: 21px;
+  margin-bottom: 0px;
+  vertical-align: -5px;
+}
+
+.switch input {display:none;}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ebedf2;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #cecece;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .switch-slider {
+  background-color: #ebedf2;
+}
+
+input:focus + .switch-slider {
+  box-shadow: 0 0 1px #ebedf2;
+}
+
+input:checked + .switch-slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+  background: #3395fc;
+}
+
+.switch-slider.round {
+  border-radius: 34px;
+}
+
+.switch-slider.round:before {
+  border-radius: 50%;
+}
+.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline{
+  margin-left: 0px;
+}
+.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline{
+  margin-right: 10px;
+}
+.checkbox-inline{
+  margin-right: 10px;
+}
+
 
 @media (min-width: 768px) {
   .sidebar {
@@ -430,7 +538,6 @@ table.dataTable thead .sorting:after {
 }
 .signIn-forgotPassword{
   text-align: right;
-  padding-bottom: 10px;
 }
 .table_actions{
   padding-left: 0px!important;
@@ -443,6 +550,15 @@ table.dataTable thead .sorting:after {
   margin-left: 5px;
   margin-right: 5px;
 }
+
+
+@media(max-width: 991px){
+  .action-td{
+    white-space: normal;
+  }
+}
+
+
 @media (max-width: 767px) {
   ul.timeline:before {
     left: 40px;
@@ -485,4 +601,12 @@ table.dataTable thead .sorting:after {
     right: 0;
     top: 0;
   }
+  .navbar-right{
+    border-top: 1px solid #ddd;
+  }
+
+  .page-header {
+    margin: 20px 0 20px;
+  }
+
 }
