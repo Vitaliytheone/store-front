@@ -1247,7 +1247,10 @@ customModule.adminPageEdit = {
          *              Create/Edit Page autofill SEO & URL routine
          *****************************************************************************************************/
         var $pageForm = $('#pageForm'),
-            $seoCollapse = $pageForm.find('.collapse');
+            $submit = $pageForm.find('submit'),
+            $seoCollapse = $pageForm.find('.collapse'),
+            $modalLoader = $pageForm.find('.modal-loader'),
+            $errorContainer = $pageForm.find('.error-summary');
 
         var isNewPage = $pageForm.data('new_page');
         var $formFields = {
@@ -1259,6 +1262,7 @@ customModule.adminPageEdit = {
             seo_description : $pageForm.find('.form_field__seo_description')
         };
 
+        var pageId = params.pageId || undefined;
         var exitingUrls = params.urls || [];
         var isValidationUrlError = params.url_error || false;
 
@@ -1391,6 +1395,55 @@ customModule.adminPageEdit = {
 
             target.selectionEnd = position;
         }
+
+        /*****************************************************************************************************
+         *              Create/Edit Page save/update
+         *****************************************************************************************************/
+        var actionUrl = $pageForm.attr('action');
+
+        $pageForm.submit(function (e) {
+            e.preventDefault();
+
+            $modalLoader.removeClass('hidden');
+            $errorContainer.addClass('hidden');
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                data: $(this).serialize(),
+
+                success: function (data, textStatus, jqXHR) {
+
+                    $modalLoader.addClass('hidden');
+
+                    if (data.success === true) {
+                        if (data.message !== undefined) {
+                            toastr.success(data.message);
+                        }
+
+                        if (pageId === undefined && data.id !== undefined) {
+                            pageId = data.id;
+                            actionUrl = actionUrl + '?id=' + pageId;
+                        }
+                    }
+
+                    if(data.success === false && data.message !== undefined) {
+                        $errorContainer.removeClass('hidden');
+                        $errorContainer.html(data.message);
+                    }
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $modalLoader.addClass('hidden');
+                    console.log('Error on create/update page!', jqXHR, textStatus, errorThrown);
+                }
+            });
+
+            $errorContainer.empty();
+        });
+
+
+
     }
 };
 /**

@@ -2,18 +2,18 @@
 
 use yii\helpers\Html;
 use sommerce\modules\admin\components\Url;
-use common\components\ActiveForm;
 use \sommerce\assets\PagesAsset;
 
-/* @var $page \sommerce\modules\admin\models\forms\EditPageForm */
-/* @var $storeUrl string */
-/* @var $store \common\models\stores\Stores */
 /* @var $this \yii\web\View */
+/* @var $pageForm \sommerce\modules\admin\models\forms\EditPageForm */
+/* @var $isNewPage boolean Is page is new or updated */
+/* @var $actionUrl string Action form url */
+/* @var $storeUrl string */
+
+$page = $pageForm->getPage();
 
 PagesAsset::register($this);
 
-$actionUrl = $page->isNewRecord ? Url::toRoute('/settings/create-page') :  Url::toRoute(['/settings/edit-page', 'id' => $page->id]);
-$storeUrl = $store->getBaseSite();
 ?>
 
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
@@ -34,19 +34,20 @@ $storeUrl = $store->getBaseSite();
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title">
-                            <?= $page->isNewRecord ? Yii::t('admin', 'settings.pages_create_page') : Yii::t('admin', 'settings.pages_edit_page') ?>
+                            <?= $isNewPage ? Yii::t('admin', 'settings.pages_create_page') : Yii::t('admin', 'settings.pages_edit_page') ?>
                         </h3>
                     </div>
                 </div>
             </div>
 
-            <form id="pageForm" class="form-horizontal" action="<?= $actionUrl ?>" method="post" role="form" data-new_page="<?= $page->isNewRecord ?>">
-            <?= Html::beginForm() ?>
+            <form id="pageForm" class="form-horizontal" action="<?= $actionUrl ?>" method="post" role="form" data-new_page="<?= $isNewPage ?>">
+
+                <div class="modal-loader square hidden"></div>
+
+                <?= Html::beginForm() ?>
                 <div class="m-content">
 
-                    <?php if($page->hasErrors()): ?>
-                        <div class="error-summary alert alert-danger"><?= ActiveForm::firstError($page) ?></div>
-                    <?php endif; ?>
+                    <div class="error-summary alert alert-danger hidden"></div>
 
                     <div class="form-group">
                         <label for="edit-page-title"><?= Yii::t('admin', 'settings.pages_title') ?></label>
@@ -56,10 +57,10 @@ $storeUrl = $store->getBaseSite();
                     <div class="form-group">
                         <label for="exampleFormControlSelect1"><?= Yii::t('admin', 'settings.pages_visibility') ?></label>
                         <select class="form-control form_field__visibility" id="exampleFormControlSelect1" name="PageForm[visibility]">
-                            <option name="PageForm[visibility]" value="1" <?= $page->visibility == 1 ? 'selected' : '' ?>>
+                            <option name="PageForm[visibility]" value="1" <?= $page->visibility === 1 ? 'selected' : '' ?>>
                                 <?= Yii::t('admin', 'settings.pages_visibility_visible') ?>
                             </option>
-                            <option name="PageForm[visibility]" value="0" <?= $page->visibility == 0 ? 'selected' : '' ?>>
+                            <option name="PageForm[visibility]" value="0" <?= $page->visibility === 0 ? 'selected' : '' ?>>
                                 <?= Yii::t('admin', 'settings.pages_visibility_hidden') ?>
                             </option>
                         </select>
