@@ -16,7 +16,7 @@ return [
     '13' => 'Add payment',
     '14' => 'Change status',
     '15' => 'Submit message',
-    '16' => 'Autorization',
+    '16' => 'Authorization',
     '17' => 'Add category',
     '18' => 'Edit category',
     '19' => 'Up category',
@@ -81,6 +81,7 @@ return [
     '91' => 'Change expiry',
     '92' => 'Edit payment',
     '93' => 'Open unread ticket',
+    '94' => 'Delete ticket',
 
 
 //    '' => 'Add custom rates',
