@@ -1249,7 +1249,8 @@ customModule.adminPageEdit = {
         var $pageForm = $('#pageForm'),
             $submit = $pageForm.find('submit'),
             $seoCollapse = $pageForm.find('.collapse'),
-            $modalLoader = $pageForm.find('.modal-loader');
+            $modalLoader = $pageForm.find('.modal-loader'),
+            $errorContainer = $pageForm.find('.error-summary');
 
         var isNewPage = $pageForm.data('new_page');
         var $formFields = {
@@ -1261,6 +1262,7 @@ customModule.adminPageEdit = {
             seo_description : $pageForm.find('.form_field__seo_description')
         };
 
+        var pageId = params.pageId || undefined;
         var exitingUrls = params.urls || [];
         var isValidationUrlError = params.url_error || false;
 
@@ -1401,51 +1403,39 @@ customModule.adminPageEdit = {
 
         $pageForm.submit(function (e) {
             e.preventDefault();
+
             $modalLoader.removeClass('hidden');
+            $errorContainer.addClass('hidden');
+
             $.ajax({
                 url: actionUrl,
                 type: "POST",
                 data: $(this).serialize(),
 
                 success: function (data, textStatus, jqXHR) {
-                    if (data.error) {
-                        $modalLoader.addClass('hidden');
-                        $errorContainer.append(data.error.html);
-                        $modal.animate({scrollTop: 0}, 'slow');
-                        $seoCollapse.collapse("show");
-                        return;
-                    }
-                    //Success
-                    _.delay(function () {
-                        if ('update' == $productForm.formType){
-                            location.href = successRedirectUrl;
-                            return;
+
+                    $modalLoader.addClass('hidden');
+
+                    if (data.success === true) {
+                        if (data.message !== undefined) {
+                            toastr.success(data.message);
                         }
 
-                        $modal.modal('hide');
-                        var message = confirmMenuOptions.labels.message.replace('{name}', data.product.name);
+                        if (pageId === undefined && data.id !== undefined) {
+                            pageId = data.id;
+                            actionUrl = actionUrl + '?id=' + pageId;
+                        }
+                    }
 
-                        custom.confirm(confirmMenuOptions.labels.title, message, {
-                            confirm_button : confirmMenuOptions.labels.confirm_button,
-                            cancel_button : confirmMenuOptions.labels.cancel_button
-                        }, function() {
-                            $.ajax({
-                                url: confirmMenuOptions.url,
-                                data: {
-                                    id: data.product.id
-                                },
-                                async: false
-                            });
-                        }, function() {
-                            location.href = successRedirectUrl;
-                        });
-                    }, 500);
+                    if(data.success === false && data.message !== undefined) {
+                        $errorContainer.removeClass('hidden');
+                        $errorContainer.html(data.message);
+                    }
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {
                     $modalLoader.addClass('hidden');
-                    $modal.modal('hide');
-                    console.log('Error on service save', jqXHR, textStatus, errorThrown);
+                    console.log('Error on create/update page!', jqXHR, textStatus, errorThrown);
                 }
             });
 

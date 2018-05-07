@@ -15,3 +15,7 @@
 .modal-loader.hidden {
     display: none;
 }
+
+.modal-loader.square {
+    border-radius: 0;
+}

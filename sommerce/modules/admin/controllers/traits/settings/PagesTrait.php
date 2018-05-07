@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Pages;
 use common\models\stores\StoreAdminAuth;
@@ -47,20 +48,23 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
 
-        $pageModel = new EditPageForm();
-        $pageModel->setUser(Yii::$app->user);
+        $pageForm = new EditPageForm();
+        $pageForm->setUser(Yii::$app->user);
+        $pageForm->setPage(new Pages());
 
         $urlsModel = new UrlsSearch();
         $exitingUrls = $urlsModel->searchUrls();
 
         $this->addModule('adminPageEdit', [
             'urls' => $exitingUrls,
-            'url_error' => $pageModel->getFirstError('url'),
+            'url_error' => $pageForm->getFirstError('url'),
         ]);
 
         return $this->render('edit_page', [
-            'store' => Yii::$app->store->getInstance(),
-            'page' => $pageModel,
+            'pageForm' => $pageForm,
+            'isNewPage' => $pageForm->getPage()->isNewRecord,
+            'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
+            'actionUrl' => Url::toRoute('/settings/edit-page'),
         ]);
     }
 
@@ -70,29 +74,33 @@ trait PagesTrait {
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionUpdatePage($id = null)
+    public function actionUpdatePage($id)
     {
         $this->view->title = Yii::t('admin', "settings.pages_edit_page");
 
-        $pageModel = new EditPageForm(['id' => $id]);
-        $pageModel->setUser(Yii::$app->user);
+        $pageForm = new EditPageForm();
+        $pageForm->setUser(Yii::$app->user);
+        $pageForm->setPage(Pages::findOne($id));
 
-        if (!$pageModel) {
+        if (!$pageForm->getPage() instanceof Pages) {
             throw new NotFoundHttpException();
         }
 
         $this->addModule('adminPageEdit', [
-            'url_error' => $pageModel->getFirstError('url'),
+            'url_error' => $pageForm->getFirstError('url'),
+            'pageId' => $pageForm->getPage()->id,
         ]);
 
         return $this->render('edit_page', [
-            'store' => Yii::$app->store->getInstance(),
-            'page' => $pageModel,
+            'pageForm' => $pageForm,
+            'isNewPage' => $pageForm->getPage()->isNewRecord,
+            'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
+            'actionUrl' => Url::toRoute(['/settings/edit-page', 'id' => $pageForm->getPage()->id]),
         ]);
     }
 
     /**
-     * Update edited page AJAX action
+     * Create/Update page AJAX action
      * @param $id
      * @return array
      * @throws NotFoundHttpException
@@ -107,32 +115,20 @@ trait PagesTrait {
             exit;
         }
 
-        $pageModel = EditPageForm::findOne($id);
-        $pageModel->setUser(Yii::$app->user);
+        $pageForm = new EditPageForm();
+        $pageForm->setUser(Yii::$app->user);
 
-        if (!$pageModel) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!$pageModel->edit($request->post())) {
-            return $response->data = ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($pageModel, ['class' => 'alert-danger alert']),
-            ]];
-        }
-
-
-//        if ($pageModel->create($request->post())) {
-//            UiHelper::message(Yii::t('admin', 'settings.pages_message_created'));
-//            return $this->redirect(Url::toRoute('/settings/pages'));
-//        }
-
-
+        if (!$pageForm->edit($request->post(), $id)) {
+            return [
+                'success' => false,
+                'message' => ActiveForm::firstError($pageForm, true)
+            ];
+        };
 
         return [
-          'success' => [
-              'message' => Yii::t('admin', 'settings.pages_message_updated'),
-          ],
+            'success' => true,
+            'message' => Yii::t('admin', 'settings.pages_message_updated'),
+            'id' => $pageForm->getPage()->id,
         ];
     }
 
