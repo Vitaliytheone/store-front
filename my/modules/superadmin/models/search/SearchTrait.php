@@ -15,6 +15,11 @@ trait SearchTrait {
     protected $params;
 
     /**
+     * @var bool
+     */
+    protected static $enableCache = false;
+
+    /**
      * Set search parameters
      * @param array $params
      */
@@ -42,6 +47,10 @@ trait SearchTrait {
      */
     public static function queryAllCache(Query $query, $duration = 60)
     {
+        if (!static::$enableCache) {
+            return $query->all();
+        }
+
         return Yii::$app->db->cache(function(Connection $db) use ($query) {
             return $query->all();
         }, $duration);
@@ -55,6 +64,10 @@ trait SearchTrait {
      */
     public static function queryOneCache(Query $query, $duration = 60)
     {
+        if (!static::$enableCache) {
+            return $query->one();
+        }
+
         return Yii::$app->db->cache(function(Connection $db) use ($query) {
             return $query->one();
         }, $duration);
@@ -68,6 +81,10 @@ trait SearchTrait {
      */
     public static function queryScalarCache(Query $query, $duration = 60)
     {
+        if (!static::$enableCache) {
+            return $query->scalar();
+        }
+
         return Yii::$app->db->cache(function(Connection $db) use ($query) {
             return $query->scalar();
         }, $duration);
