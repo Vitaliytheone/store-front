@@ -7,35 +7,17 @@ use common\models\stores\StoreAdminAuth;
 use Yii;
 use common\models\store\Products;
 use common\models\store\Pages;
-use yii\base\Model;
 use yii\web\User;
 
-class EditPageForm extends Model
+class __EditPageForm extends Pages
 {
-    public $title;
-    public $content;
-    public $visibility;
-    public $url;
-    public $seo_title;
-    public $seo_description;
-    public $seo_keywords;
-    public $template;
 
     /**
-     * Created/edit page id
-     * @var integer
-     */
-    protected $_id;
-
-    /**
-     * Current User
      * @var User
      */
     protected $_user;
 
-    /**
-     * @inheritdoc
-     */
+
     public function init()
     {
         parent::init();
@@ -67,17 +49,6 @@ class EditPageForm extends Model
         return $this->_user;
     }
 
-
-    public function setId($id)
-    {
-        $this->_id = $id;
-    }
-
-    public function getId()
-    {
-
-    }
-
     /**
      * @inheritdoc
      */
@@ -95,7 +66,7 @@ class EditPageForm extends Model
             ['url', 'unique', 'filter' => ['deleted' => Pages::DELETED_NO]],
             ['url', 'unique', 'targetClass' => Products::class, 'targetAttribute' => ['url' => 'url']],
 
-            ['template', 'default', 'value' => Pages::TEMPLATE_PAGE],
+            ['template', 'default', 'value' => self::TEMPLATE_PAGE],
         ];
     }
 

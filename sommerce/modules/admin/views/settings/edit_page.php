@@ -41,7 +41,10 @@ $storeUrl = $store->getBaseSite();
             </div>
 
             <form id="pageForm" class="form-horizontal" action="<?= $actionUrl ?>" method="post" role="form" data-new_page="<?= $page->isNewRecord ?>">
-            <?= Html::beginForm() ?>
+
+                <div class="modal-loader hidden"></div>
+
+                <?= Html::beginForm() ?>
                 <div class="m-content">
 
                     <?php if($page->hasErrors()): ?>

@@ -47,15 +47,8 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
 
-        $request = Yii::$app->getRequest();
-
         $pageModel = new EditPageForm();
         $pageModel->setUser(Yii::$app->user);
-
-        if ($pageModel->create($request->post())) {
-            UiHelper::message(Yii::t('admin', 'settings.pages_message_created'));
-            return $this->redirect(Url::toRoute('/settings/pages'));
-        }
 
         $urlsModel = new UrlsSearch();
         $exitingUrls = $urlsModel->searchUrls();
@@ -65,8 +58,32 @@ trait PagesTrait {
             'url_error' => $pageModel->getFirstError('url'),
         ]);
 
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
+        return $this->render('edit_page', [
+            'store' => Yii::$app->store->getInstance(),
+            'page' => $pageModel,
+        ]);
+    }
+
+    /**
+     * Update page
+     * @param $id
+     * @return string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdatePage($id = null)
+    {
+        $this->view->title = Yii::t('admin', "settings.pages_edit_page");
+
+        $pageModel = new EditPageForm(['id' => $id]);
+        $pageModel->setUser(Yii::$app->user);
+
+        if (!$pageModel) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->addModule('adminPageEdit', [
+            'url_error' => $pageModel->getFirstError('url'),
+        ]);
 
         return $this->render('edit_page', [
             'store' => Yii::$app->store->getInstance(),
@@ -75,16 +92,20 @@ trait PagesTrait {
     }
 
     /**
-     * Edit page
+     * Update edited page AJAX action
      * @param $id
-     * @return string|Response
+     * @return array
      * @throws NotFoundHttpException
      */
-    public function actionEditPage($id)
+    public function actionEditPage($id = null)
     {
-        $this->view->title = Yii::t('admin', "settings.pages_edit_page");
-
         $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
 
         $pageModel = EditPageForm::findOne($id);
         $pageModel->setUser(Yii::$app->user);
@@ -93,22 +114,26 @@ trait PagesTrait {
             throw new NotFoundHttpException();
         }
 
-        if ($pageModel->edit($request->post())) {
-            UiHelper::message(Yii::t('admin', 'settings.pages_message_updated'));
-            return $this->redirect(Url::toRoute('/settings/pages'));
+        if (!$pageModel->edit($request->post())) {
+            return $response->data = ['error' => [
+                'message' => 'Model validation error',
+                'html' => UiHelper::errorSummary($pageModel, ['class' => 'alert-danger alert']),
+            ]];
         }
 
-        $this->addModule('adminPageEdit', [
-            'url_error' => $pageModel->getFirstError('url'),
-        ]);
 
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
+//        if ($pageModel->create($request->post())) {
+//            UiHelper::message(Yii::t('admin', 'settings.pages_message_created'));
+//            return $this->redirect(Url::toRoute('/settings/pages'));
+//        }
 
-        return $this->render('edit_page', [
-            'store' => Yii::$app->store->getInstance(),
-            'page' => $pageModel,
-        ]);
+
+
+        return [
+          'success' => [
+              'message' => Yii::t('admin', 'settings.pages_message_updated'),
+          ],
+        ];
     }
 
     /**

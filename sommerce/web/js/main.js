@@ -1247,7 +1247,9 @@ customModule.adminPageEdit = {
          *              Create/Edit Page autofill SEO & URL routine
          *****************************************************************************************************/
         var $pageForm = $('#pageForm'),
-            $seoCollapse = $pageForm.find('.collapse');
+            $submit = $pageForm.find('submit'),
+            $seoCollapse = $pageForm.find('.collapse'),
+            $modalLoader = $pageForm.find('.modal-loader');
 
         var isNewPage = $pageForm.data('new_page');
         var $formFields = {
@@ -1391,6 +1393,67 @@ customModule.adminPageEdit = {
 
             target.selectionEnd = position;
         }
+
+        /*****************************************************************************************************
+         *              Create/Edit Page save/update
+         *****************************************************************************************************/
+        var actionUrl = $pageForm.attr('action');
+
+        $pageForm.submit(function (e) {
+            e.preventDefault();
+            $modalLoader.removeClass('hidden');
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                data: $(this).serialize(),
+
+                success: function (data, textStatus, jqXHR) {
+                    if (data.error) {
+                        $modalLoader.addClass('hidden');
+                        $errorContainer.append(data.error.html);
+                        $modal.animate({scrollTop: 0}, 'slow');
+                        $seoCollapse.collapse("show");
+                        return;
+                    }
+                    //Success
+                    _.delay(function () {
+                        if ('update' == $productForm.formType){
+                            location.href = successRedirectUrl;
+                            return;
+                        }
+
+                        $modal.modal('hide');
+                        var message = confirmMenuOptions.labels.message.replace('{name}', data.product.name);
+
+                        custom.confirm(confirmMenuOptions.labels.title, message, {
+                            confirm_button : confirmMenuOptions.labels.confirm_button,
+                            cancel_button : confirmMenuOptions.labels.cancel_button
+                        }, function() {
+                            $.ajax({
+                                url: confirmMenuOptions.url,
+                                data: {
+                                    id: data.product.id
+                                },
+                                async: false
+                            });
+                        }, function() {
+                            location.href = successRedirectUrl;
+                        });
+                    }, 500);
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $modalLoader.addClass('hidden');
+                    $modal.modal('hide');
+                    console.log('Error on service save', jqXHR, textStatus, errorThrown);
+                }
+            });
+
+            $errorContainer.empty();
+        });
+
+
+
     }
 };
 /**
