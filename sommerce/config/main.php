@@ -81,6 +81,7 @@ $config = [
                     ]
                 ],
             ],
+            'appendTimestamp' => true,
         ],
         'i18n' => [
             'translations' => [
