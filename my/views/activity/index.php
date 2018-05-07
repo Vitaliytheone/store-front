@@ -54,7 +54,7 @@
                         <div class="activity-log__panel-header">
                             <div class="activity-log__sections-bar">
                                 <div class="row">
-                                    <form class="form-inline" method="GET" id="activitySearch">
+                                    <form method="GET" id="activitySearch">
                                         <div class="activity-log__date-block">
                                             <div class="input-group__block input-group__block-from">
                                                 <div class="input-group">
