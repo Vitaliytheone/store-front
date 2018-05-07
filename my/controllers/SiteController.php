@@ -83,10 +83,17 @@ class SiteController extends CustomController
             'checkout',
             'invoices',
             'invoice',
-            'signin',
         ])) {
             $this->enableCsrfValidation = false;
         }
+
+        // Disable csrf-validation for logged-in user on SignIn form
+        // Uses for prevent "Bad Request (#400): Unable to verify your data submission"
+        // on form double submit
+        if (!Yii::$app->user->isGuest && $this->action->id === 'signin') {
+            $this->enableCsrfValidation = false;
+        }
+
         return parent::beforeAction($action);
     }
 
