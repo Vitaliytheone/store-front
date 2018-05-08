@@ -25,6 +25,8 @@ use my\mail\mailers\CreatedSSL;
  * @property integer $status
  * @property integer $checked
  * @property string $domain
+ * @property string $csr_code
+ * @property string $csr_key
  * @property string $details
  * @property string $expiry
  * @property integer $created_at
@@ -74,7 +76,7 @@ class SslCert extends ActiveRecord
         return [
             [['pid', 'cid', 'item_id', 'details'], 'required'],
             [['pid', 'cid', 'item_id', 'status', 'created_at', 'checked', 'project_type'], 'integer'],
-            [['details', 'expiry'], 'string'],
+            [['details', 'expiry', 'csr_code', 'csr_key'], 'string'],
             [['domain'], 'string', 'max' => 255],
             [['checked'], 'default', 'value' => static::CHECKED_YES],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
@@ -97,6 +99,8 @@ class SslCert extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'domain' => Yii::t('app', 'Domain'),
             'checked' => Yii::t('app', 'Is Checked'),
+            'csr_code' => Yii::t('app', 'CSR code'),
+            'csr_key' => Yii::t('app', 'CSR key'),
             'details' => Yii::t('app', 'Details'),
             'expiry' => Yii::t('app', 'Expiry'),
             'created_at' => Yii::t('app', 'Created At'),

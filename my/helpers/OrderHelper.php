@@ -95,9 +95,11 @@ class OrderHelper {
         $sslCert->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslCert->domain = $order->domain;
         $sslCert->project_type = $projectType;
+        $sslCert->csr_code = ArrayHelper::getValue($csr, 'csr_code');
+        $sslCert->csr_key = ArrayHelper::getValue($csr, 'csr_key');
 
         $sslCert->setOrderDetails($orderSsl);
-        $sslCert->setCsrDetails($csr);
+//        $sslCert->setCsrDetails($csr);
 
         if (!$sslCert->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $sslCert->getErrors(), 'cron.ssl.ssl');
@@ -159,17 +161,13 @@ class OrderHelper {
             // Save order status details
             $ssl->setOrderStatusDetails($orderDetails);
 
-            $csr = $ssl->getCsrDetails();
-
             $crtKey = $crt . "\n" . $ca;
-            $csrKey = ArrayHelper::getValue($csr, 'csr_key');
-
 
             // $crt + $ca code
             if (!(OrderSslHelper::addDdos($ssl, [
                 'site' => $project->getBaseDomain(),
                 'crt' => $crtKey,
-                'key' => $csrKey,
+                'key' => $ssl->csr_key,
             ]))) {
                 $status = SslCert::STATUS_DDOS_ERROR;
             }
@@ -177,14 +175,14 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
                 'domain' => $project->getBaseDomain(),
                 'crt_cert' => $crtKey,
-                'key_cert' => $csrKey,
+                'key_cert' => $ssl->csr_key,
                 'key' => Yii::$app->params['system.sslScriptKey']
             ], 'cron.ssl_status.send_ssl_config');
 
             if (!(OrderSslHelper::addConfig($ssl, [
                 'domain' => $project->getBaseDomain(),
                 'crt_cert' => $crtKey,
-                'key_cert' => $csrKey,
+                'key_cert' => $ssl->csr_key,
             ]))) {
                 $status = SslCert::STATUS_DDOS_ERROR;
             }
