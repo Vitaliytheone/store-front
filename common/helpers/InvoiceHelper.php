@@ -1,12 +1,15 @@
 <?php
 namespace common\helpers;
 
+use common\models\common\ProjectInterface;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\Tariff;
+use common\models\panels\Orders;
+use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
@@ -140,7 +143,7 @@ class InvoiceHelper
     }
 
     /**
-     * Create invoices to prolong ssl
+     * Create invoices and orders to prolong ssl
      */
     public static function prolongSsl()
     {
@@ -159,6 +162,43 @@ class InvoiceHelper
             ->all();
 
         foreach ($sslCerts as $ssl) {
+
+            /** @var ProjectInterface $project */
+            $project = ProjectHelper::getProjectByType($ssl->project_type, $ssl->pid);
+
+            if (!$project) {
+                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $ssl->id, "Project not found: project_type[$ssl->project_type], project_id[$ssl->pid]", 'cron.create_invoice.project');
+
+                continue;
+            }
+
+            $order = new Orders();
+            $order->date = time();
+            $order->ip = 'localhost';
+            $order->cid = $ssl->cid;
+            $order->item = Orders::ITEM_PROLONGATION_SSL;
+            $order->item_id = $ssl->id;
+            $order->domain = $ssl->getDomain();
+            $order->setDetails([
+                'pid' => $ssl->cid,
+                'project_type' => $project::getProjectType(),
+                'domain' => $ssl->getDomain(),
+                'item_id' => $ssl->item_id,
+                'details' => $ssl->getAttributes(),
+            ]);
+
+            if (!$order->save(false)) {
+                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->id, $order->getErrors(), 'cron.create_invoice.order');
+
+                continue;
+            }
+
             $transaction = Yii::$app->db->beginTransaction();
 
             $invoice = new Invoices();
@@ -167,24 +207,36 @@ class InvoiceHelper
             $invoice->generateCode();
             $invoice->daysExpired(7);
 
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $ssl->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_SSL;
+            if (!$invoice->save()) {
+                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->save(false);
 
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $invoice->id, $invoice->getErrors(), 'cron.create_invoice');
 
-                $transaction->commit();
-
-                $mail = new InvoiceCreated([
-                    'ssl' => $ssl
-                ]);
-                $mail->send();
+                continue;
             }
+
+            $invoiceDetails = new InvoiceDetails();
+            $invoiceDetails->invoice_id = $invoice->id;
+            $invoiceDetails->item_id = $ssl->id;
+            $invoiceDetails->amount = $invoice->total;
+            $invoiceDetails->item = InvoiceDetails::ITEM_PROLONGATION_SSL;
+
+            if (!$invoiceDetails->save()) {
+                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $invoiceDetails->id, $invoiceDetails->getErrors(), 'cron.create_invoice.details');
+
+                continue;
+            }
+
+            $transaction->commit();
+
+            $mail = new InvoiceCreated([
+                'ssl' => $ssl
+            ]);
+            $mail->send();
         }
     }
 

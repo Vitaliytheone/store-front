@@ -45,6 +45,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_SSL = 3;
     const ITEM_BUY_CHILD_PANEL = 4;
     const ITEM_BUY_STORE = 5;
+    const ITEM_PROLONGATION_SSL = 6;
 
     use UnixTimeFormatTrait;
 

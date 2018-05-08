@@ -99,7 +99,7 @@ class OrderHelper {
         $sslCert->csr_key = ArrayHelper::getValue($csr, 'csr_key');
 
         $sslCert->setOrderDetails($orderSsl);
-//        $sslCert->setCsrDetails($csr);
+        $sslCert->setCsrDetails($csr);
 
         if (!$sslCert->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $sslCert->getErrors(), 'cron.ssl.ssl');
