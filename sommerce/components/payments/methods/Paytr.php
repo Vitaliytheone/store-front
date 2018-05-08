@@ -150,7 +150,7 @@ class Paytr extends BasePayment {
         }
 
         $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_BILLPLZ,
+            'method' => PaymentMethods::METHOD_PAYTR,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED
         ]);
