@@ -88,8 +88,8 @@ class MessagesHelper {
                     continue;
                 }
                 $messageModel = new Messages();
-                $messageModel->lang_code = $language->code;
                 $messageModel->attributes = $message;
+                $messageModel->lang_code = $language->code;
 
                 if (!$messageModel->save(false)) {
                     continue;
