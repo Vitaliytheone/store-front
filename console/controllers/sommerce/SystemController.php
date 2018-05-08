@@ -169,6 +169,13 @@ class SystemController extends CustomController
      */
     public function actionSyncMessages()
     {
+        $this->stderr("Started sync messages\n", Console::FG_GREEN);
+
         MessagesHelper::syncStoresMessages('en');
+
+        // Clear global cache
+        Yii::$app->runAction('cache/flush-all');
+
+        $this->stderr("Finished sync messages\n", Console::FG_GREEN);
     }
 }
