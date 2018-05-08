@@ -354,4 +354,35 @@ abstract class BasePayment extends Component {
         ]);
         @file_put_contents($filePath, $data . "\r\n\r\n", FILE_APPEND);
     }
+
+    /**
+     * Get js payment environment
+     * @param Stores $store
+     * @param string $email
+     * @param PaymentMethods $details
+     * @return array
+     */
+    public function getJsEnvironments($store, $email, $details)
+    {
+        return [];
+    }
+
+    /**
+     * @param Stores $store
+     * @param string $name
+     * @param string|mixed $value
+     * @return bool
+     */
+    public function validate($store, $name, $value)
+    {
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function fields()
+    {
+        return [];
+    }
 }

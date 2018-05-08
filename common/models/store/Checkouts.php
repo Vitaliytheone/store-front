@@ -22,6 +22,7 @@ use common\models\store\queries\CheckoutsQuery;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $currency
+ * @property string $user_details
  *
  * @property Orders $order
  * @property Orders[] $orders
@@ -55,7 +56,7 @@ class Checkouts extends ActiveRecord
         return [
             [['id', 'status', 'method_id', 'created_at', 'updated_at'], 'integer'],
             [['price'], 'number'],
-            [['details'], 'string'],
+            [['details', 'user_details'], 'string'],
             [['customer', 'method_status', 'ip'], 'string', 'max' => 255],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
             [['currency'], 'string', 'max' => 10],
@@ -79,6 +80,7 @@ class Checkouts extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'currency' => Yii::t('app', 'Currency'),
+            'user_details' => Yii::t('app', 'User details'),
         ];
     }
 
@@ -172,5 +174,23 @@ class Checkouts extends ActiveRecord
     public function getDetails()
     {
         return empty($this->details) ? [] : json_decode($this->details, true);
+    }
+
+    /**
+     * Get user details
+     * @return array
+     */
+    public function getUserDetails()
+    {
+        return !empty($this->user_details) ? json_decode($this->user_details, true) : [];
+    }
+
+    /**
+     * Set user details
+     * @param $userDetails
+     */
+    public function setUserDetails($userDetails)
+    {
+        $this->user_details = json_encode($userDetails);
     }
 }

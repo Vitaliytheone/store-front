@@ -48,7 +48,7 @@ gulp.task('js-so', function(done) {
 gulp.task('js-sommerce-frontend', function(done) {
     return gulp.src([
             './sommerce/web/js/app/*.js',
-            './sommerce/web/js/app/frintend/*.js',
+            './sommerce/web/js/app/frontend/*.js',
         ])
         .pipe(concat('frontend.js'))
         .pipe(uglify())

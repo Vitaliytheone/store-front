@@ -1,0 +1,52 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Class m180508_095449_added_checkout_user_details_column
+ */
+class m180508_095449_added_checkout_user_details_column extends Migration
+{
+    // Use up()/down() to run migration code without a transaction.
+    public function up()
+    {
+        foreach ((new \yii\db\Query())->select([
+            'db_name'
+        ])->from(DB_STORES . '.stores')->all() as $store) {
+            $db = $store['db_name'];
+            $isDbExist = Yii::$app->db
+                ->createCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$db'")
+                ->queryScalar();
+
+            if (!$isDbExist) {
+                continue;
+            }
+
+            $this->execute('
+                ALTER TABLE `' . $db . '`.`checkouts`
+                ADD `user_details` text NULL;
+            ');
+        }
+    }
+
+    public function down()
+    {
+        foreach ((new \yii\db\Query())->select([
+            'db_name'
+        ])->from(DB_STORES . '.stores')->all() as $store) {
+            $db = $store['db_name'];
+            $isDbExist = Yii::$app->db
+                ->createCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$db'")
+                ->queryScalar();
+
+            if (!$isDbExist) {
+                continue;
+            }
+
+            $this->execute('
+                ALTER TABLE `' . $db . '`.`checkouts`
+                DROP `user_details`;
+            ');
+        }
+    }
+}

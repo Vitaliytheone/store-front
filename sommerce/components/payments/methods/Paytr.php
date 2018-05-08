@@ -33,7 +33,7 @@ class Paytr extends BasePayment {
     public function checkout($checkout, $store, $email, $details)
     {
         $paymentMethodOptions = $details->getDetails();
-        //$options = $payment->getUserDetails();
+        $options = $checkout->getUserDetails();
 
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id');
         $merchantKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_key');
@@ -48,14 +48,11 @@ class Paytr extends BasePayment {
         $paymentCommission = $paymentAmountTl + $paymentAmountTl * ($merchantCommission / 100);
         $paymentAmount = $paymentCommission * 100;
 
-        $payment->amount_course = $paymentAmount;
-        $payment->save(false);
 
-
-        $id = $payment->id;
+        $id = $checkout->id;
         $userName = $email;
         $userAddress = "-";
-        $userPhone = null;//ArrayHelper::getValue($options, 'phone', "-");
+        $userPhone = ArrayHelper::getValue($options, 'phone', "-");
         $merchantSuccess = SiteHelper::hostUrl() . '/addfunds';
         $merchantFail = SiteHelper::hostUrl() . '/addfunds';
 
@@ -280,5 +277,22 @@ class Paytr extends BasePayment {
         }
 
         return $ip;
+    }
+
+    /**
+     * @return array
+     */
+    public function fields()
+    {
+        return [
+            'phone' => [
+                'label' => 'cart.phone',
+                'type' => 'input',
+                'rules' => [
+                    ['phone', 'required', 'message' => 'cart.error.phone'],
+                    ['phone', 'string', 'message' => 'cart.error.phone']
+                ]
+            ]
+        ];
     }
 }
