@@ -13,6 +13,7 @@ use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
+use common\models\stores\Stores;
 use my\components\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
@@ -217,6 +218,21 @@ class CronController extends CustomController
             if ($project->act == Project::STATUS_ACTIVE && $project->expired < $date) {
                 $project->changeStatus(Project::STATUS_FROZEN);
             }
+        }
+
+        $stores = Stores::find()
+            ->andWhere([
+                'status' => Stores::STATUS_ACTIVE,
+            ])
+            ->andWhere('expired < :currentTime', [
+                ':currentTime' => $date
+            ])
+            ->all();
+
+        /** @var Stores $store */
+        foreach ($stores as $store) {
+            $store->refresh();
+            $store->checkExpired();
         }
     }
 
