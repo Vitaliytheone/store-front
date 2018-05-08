@@ -1,15 +1,18 @@
 <?php
 namespace sommerce\models\forms;
 
+use common\components\ActiveForm;
 use common\helpers\CurrencyHelper;
 use common\models\store\Carts;
 use common\models\store\Checkouts;
+use common\models\stores\PaymentGateways;
 use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\UserHelper;
 use sommerce\models\search\CartSearch;
 use Yii;
+use yii\base\DynamicModel;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
@@ -21,6 +24,11 @@ class OrderForm extends Model {
 
     public $email;
     public $method;
+
+    /**
+     * @var array
+     */
+    public $fields;
 
     /**
      * @var Stores
@@ -35,7 +43,7 @@ class OrderForm extends Model {
     /**
      * @var array - payment methods
      */
-    protected $_methods;
+    protected static $_methods;
 
     /**
      * @var CartSearch
@@ -58,6 +66,11 @@ class OrderForm extends Model {
     protected $_currencyPayments;
 
     /**
+     * @var array
+     */
+    protected $_userData;
+
+    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -65,6 +78,7 @@ class OrderForm extends Model {
         $rules = [];
 
         $methods = $this->getPaymentMethods();
+        $methods = ArrayHelper::index($methods, 'id');
 
         if (1 == count($methods)) {
             $this->method = key($methods);
@@ -76,10 +90,26 @@ class OrderForm extends Model {
         $rules = array_merge($rules, [
             [['email'], 'required'],
             [['email'], 'email'],
-            [['email'], 'validateCarItems']
+            [['email'], 'validateCarItems'],
+            [['fields'], 'safe']
         ]);
 
         return $rules;
+    }
+
+    /**
+     * Validate data
+     * @param string[]|string $attributeNames
+     * @param bool $clearErrors
+     * @return bool
+     */
+    public function validate($attributeNames = null, $clearErrors = true)
+    {
+        if (!parent::validate() || !$this->validateUserOptions('fields')) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -128,37 +158,42 @@ class OrderForm extends Model {
      */
     public function getPaymentMethods()
     {
-        if (null === $this->_methods) {
+        if (null === static::$_methods) {
 
             $currencyPayments = $this->getCurrencyPayments();
 
-            $this->_methods = [];
+            static::$_methods = [];
             $methods = [];
 
             foreach (PaymentMethods::find()
+                 ->andWhere([
+                     'method' => array_keys($currencyPayments)
+                 ])
                  ->store($this->_store)
                  ->active()
-                 ->all() as $method) {
+                 ->all() as $key => $method) {
 
-                if (empty($currencyPayments[$method->method])) {
-                    continue;
-                }
-
-                $methods[] = [
+                $methods[$key] = [
                     'id' => $method->id,
                     'name' => $method->getName(),
+                    'method' => $method->method,
+                    'details' => $method->getDetails(),
                     'position' => ArrayHelper::getValue($currencyPayments, [$method->method, 'position'], 0),
+                    'fields' => [],
+                    'jsOptions' => []
                 ];
+
+                $payment = Payment::getPayment($method->method);
+                $methods[$key]['fields'] = $payment->fields();
+                $methods[$key]['jsOptions'] = $payment->getJsEnvironments($this->_store, $this->email, $method);
             }
 
             ArrayHelper::multisort($methods, 'position', SORT_ASC);
 
-            foreach ($methods as $method) {
-                $this->_methods[$method['id']] = $method['name'];
-            }
+            static::$_methods = ArrayHelper::index($methods, 'method');
         }
 
-        return $this->_methods;
+        return static::$_methods;
     }
 
     /**
@@ -167,18 +202,13 @@ class OrderForm extends Model {
      */
     public function getPaymentsMethodsForView()
     {
-        $methods = $this->_methods;
-
-        if (null === $this->_methods) {
-            $methods = $this->getPaymentMethods();
-        }
-
-        array_walk($methods, function(&$method, $methodId){
-            $method = [
-                'id' => $methodId,
-                'method' => $method,
+        $methods = [];
+        foreach ($this->getPaymentMethods() as $method) {
+            $methods[] = [
+                'id' => $method['id'],
+                'method' => $method['name']
             ];
-        });
+        }
 
         return $methods;
     }
@@ -201,16 +231,17 @@ class OrderForm extends Model {
         $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
         $checkout->setDetails($this->getItems());
+        $checkout->setUserDetails($this->_userData);
 
         if (!$checkout->save()) {
             $this->addError('email', 'Can not create order.');
             return false;
         }
 
-        $paymentMethod = PaymentMethods::find()->andWhere([
-            'id' => $this->method
-        ])->store($this->_store)->active()->one();
-
+        $paymentMethod = PaymentMethods::find()
+            ->andWhere([
+                'id' => $this->method
+            ])->store($this->_store)->active()->one();
 
         $result = Payment::getPayment($paymentMethod->method)->checkout($checkout, $this->_store, $this->email, $paymentMethod);
 
@@ -235,7 +266,7 @@ class OrderForm extends Model {
             return $this->_currencyPayments;
         }
 
-        $this->_currencyPayments = CurrencyHelper::getPaymentsByCurrency($this->_store->currency);
+        $this->_currencyPayments = ArrayHelper::index(CurrencyHelper::getPaymentsByCurrency($this->_store->currency), 'code');
 
         return $this->_currencyPayments;
     }
@@ -283,5 +314,134 @@ class OrderForm extends Model {
     public function clearCart()
     {
         UserHelper::flushCart();
+    }
+
+    /**
+     * @param $attribute
+     * @return bool
+     */
+    public function validateUserOptions($attribute)
+    {
+        if ($this->hasErrors()) {
+            return false;
+        }
+
+        $panel = $this->_store;
+        $paymentMethods = ArrayHelper::index($this->getPaymentMethods(), 'id');
+        $methodOptions = ArrayHelper::getValue($paymentMethods, $this->method, []);
+        $fields = ArrayHelper::getValue($methodOptions, 'fields', []);
+        $paymentMethod = Payment::getPayment($methodOptions['method']);
+
+        if (empty($fields)) {
+            return true;
+        }
+
+        $this->_userData = [];
+        $rules = [];
+
+        foreach ($fields as $name => $field) {
+            $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name);
+            if (empty($field['rules'])) {
+                continue;
+            }
+
+            foreach ($field['rules'] as &$rule) {
+                if (!empty($rule[1]) && 'method' == $rule[1]) {
+                    $attributes = $this->getAttributes();
+                    $error = Yii::t('app', ArrayHelper::getValue($rule, 'message'));
+                    $rule[1] = function($attribute, $params = []) use ($panel, $paymentMethod, $name, $attributes, $error) {
+                        if ($this->hasErrors($attribute)) {
+                            return false;
+                        }
+                        if (!$paymentMethod->validate($panel, $name, $attributes)) {
+                            $this->addError($attribute, $error);
+                            return false;
+                        }
+
+                        return true;
+                    };
+                }
+            }
+
+            $rules = ArrayHelper::merge($rules, $field['rules']);
+        }
+
+        if (empty($rules)) {
+            return true;
+        }
+
+        $model = DynamicModel::validateData($this->_userData, $rules);
+
+        if (!$model->validate()) {
+            $error = ActiveForm::firstError($model);
+            $this->addError($attribute, Yii::t('app', $error));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJsOptions()
+    {
+        $jsOptions = [];
+
+        foreach ($this->getPaymentMethods() as $key => $method) {
+            $jsOptions[$method['method']] = $method['jsOptions'];
+        }
+
+        return $jsOptions;
+    }
+
+    /**
+     * Get available payments methods
+     * @return array
+     */
+    public function getPaymentsFields()
+    {
+        $paymentsFields = [];
+
+        foreach ($this->getPaymentMethods() as $key => $payment) {
+            $paymentsFields[$payment['id']] = [];
+
+            if (!empty($payment['fields'])) {
+                foreach($payment['fields'] as $name => $field) {
+                    $field = ArrayHelper::merge($field, [
+                        'label' => Yii::t('app', ArrayHelper::getValue($field, 'label')),
+                        'type' => $field['type'],
+                        'value' => '',
+                    ]);
+
+                    if (in_array($field['type'], ['input', 'hidden'])) {
+                        $field['name'] = $name;
+                    }
+
+                    if (!empty($field['texts'])) {
+                        foreach ($field['texts'] as &$text) {
+                            $text = Yii::t('app', $text);
+                        }
+                    } else {
+                        $field['texts'] = [];
+                    }
+
+                    $paymentsFields[$payment['id']][$name] = $field;
+                }
+            }
+        }
+
+        // Assign fields post data
+        foreach ($paymentsFields as $payment => $fields) {
+            foreach ($fields as $key => $field) {
+                $name = ArrayHelper::getValue($field, 'name');
+                if ($name) {
+                    $paymentsFields[$payment][$key]['value'] = ArrayHelper::getValue($this->fields, $name);
+                }
+            }
+        }
+
+
+        return $paymentsFields;
     }
 }

@@ -107,7 +107,14 @@ class ViewRenderer extends BaseViewRenderer
         }
         $this->addAliases($loader, Yii::$aliases);
         $this->twig->setLoader($loader);
-        return $this->twig->render(pathinfo($file, PATHINFO_BASENAME), $params);
+
+        // Add custom scripts/styles/code before </html> tag
+        $content = $this->twig->render(pathinfo($file, PATHINFO_BASENAME), $params);
+        if (!empty($view->context->endContent)) {
+            $content = preg_replace("/\<\/html.*?\>/uis", "\r\n" . implode("\r\n", $view->context->endContent) . "\r\n</html>", $content);
+        }
+
+        return $content;
     }
 
     /**

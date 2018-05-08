@@ -49,10 +49,12 @@ class CartSearch {
     /**
      * Set store
      * @param Stores $store
+     * @return static
      */
     public function setStore($store)
     {
         $this->_store = $store;
+        return $this;
     }
 
     /**

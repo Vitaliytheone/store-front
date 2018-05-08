@@ -47,47 +47,22 @@ class AssetsHelper {
     }
 
     /**
-     * Get panel assets files list
+     * Get store script files list
      * @return array
      */
-    public static function getPanelAssets() {
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-        $folderContent = $store->getFolderContentData();
+    public static function getStoreScripts() {
 
-        $folder = static::getAssetPath();
+        $nodePath = Yii::getAlias('@node_modules');
 
-        $styles = [];
+        $scripts= [];
 
-        $scripts = [];
-
-        $json = [];
-
-
-        foreach (ArrayHelper::getValue($folderContent, 'css', []) as $filename) {
-            $styles[] = [
-                'href' => $folder . '/css/' . $filename
-            ];
+        $asset = Yii::$app->assetManager->publish($nodePath . '/underscore/underscore-min.js');
+        if (!empty($asset[1])) {
+            $scripts[] = $asset[1];
         }
 
-        foreach (ArrayHelper::getValue($folderContent, 'js', []) as $filename) {
-            $scripts[] = [
-                'src' => $folder . '/js/' . $filename
-            ];
-        }
+        $scripts[] = AssetsHelper::getFileUrl('/js/frontend.js');
 
-        foreach (ArrayHelper::getValue($folderContent, 'json', []) as $filename) {
-            $json[] = [
-                'src' => $folder . '/json/' . $filename
-            ];
-        }
-
-        return [
-            'scripts' => $scripts,
-            'styles' => $styles,
-            'json' => $json
-        ];
+        return $scripts;
     }
 }
