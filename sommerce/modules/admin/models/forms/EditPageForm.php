@@ -7,17 +7,37 @@ use common\models\stores\StoreAdminAuth;
 use Yii;
 use common\models\store\Products;
 use common\models\store\Pages;
+use yii\base\Model;
+use yii\db\Query;
+use yii\web\NotFoundHttpException;
 use yii\web\User;
 
-class EditPageForm extends Pages
+class EditPageForm extends Model
 {
+    public $title;
+    public $content;
+    public $visibility;
+    public $url;
+    public $seo_title;
+    public $seo_description;
+    public $seo_keywords;
+    public $template;
 
     /**
-     * @var User
+     * Current page
+     * @var Pages|null
+     */
+    protected $_page =  null;
+
+    /**
+     * Current User
+     * @var User|null
      */
     protected $_user;
 
-
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         parent::init();
@@ -42,11 +62,28 @@ class EditPageForm extends Pages
 
     /**
      * Get current user
-     * @return User
+     * @return User|null
      */
     public function getUser()
     {
         return $this->_user;
+    }
+
+    /**
+     * Set page
+     * @param Pages $page
+     */
+    public function setPage(Pages $page)
+    {
+        $this->_page = $page;
+    }
+
+    /**
+     * Get page
+     */
+    public function getPage()
+    {
+        return $this->_page;
     }
 
     /**
@@ -55,7 +92,7 @@ class EditPageForm extends Pages
     public function rules()
     {
         return [
-            [['title', 'visibility'], 'required'],
+            [['title', 'visibility', 'url'], 'required'],
             [['title', 'seo_title'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
             [['content', 'template'], 'string'],
@@ -63,70 +100,59 @@ class EditPageForm extends Pages
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
-            ['url', 'unique', 'filter' => ['deleted' => Pages::DELETED_NO]],
             ['url', 'unique', 'targetClass' => Products::class, 'targetAttribute' => ['url' => 'url']],
+            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => function(Query $query) {
+                $query->andWhere(['deleted' => Pages::DELETED_NO]);
+                $pageId = $this->getPage()->id;
+                if ($pageId) {
+                    $query->andWhere('id <> :pageId', [':pageId' => $pageId]);
+                }
+            }],
 
-            ['template', 'default', 'value' => self::TEMPLATE_PAGE],
+            ['template', 'default', 'value' => Pages::TEMPLATE_PAGE],
         ];
     }
 
     /**
-     * Create Page routine
+     * Create or Update page.
+     * If page $id is exist will try to update exiting page, else try to create new page
      * @param $postData
+     * @param $id
      * @return bool
+     * @throws NotFoundHttpException
      */
-    public function create($postData)
+    public function edit($postData, $id)
     {
-        $this->_setDefaults();
+        $pageModel = empty($id) ? new Pages() : Pages::findOne($id);
 
-        if (!$this->load($postData) || !$this->save()) {
+        if (!empty($id) && empty($pageModel)) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->setPage($pageModel);
+
+        if (!$this->load($postData) || !$this->validate()) {
             return false;
         }
 
+        $pageModel->attributes = $this->attributes;
+
         $this->_filterUrl();
+
+        if (!$pageModel->save(false)) {
+            return false;
+        };
 
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
 
-        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_ADDED, $this->id, $this->id);
-
-        return true;
-    }
-
-    /**
-     * Save Page routine
-     * @param $postData
-     * @return bool
-     */
-    public function edit($postData)
-    {
-        if (!$this->load($postData) || !$this->save()) {
-            return false;
+        if ($pageModel->isNewRecord) {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_ADDED, $pageModel->id, $pageModel->id);
+        } else {
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_UPDATED, $pageModel->id, $pageModel->id);
         }
 
-        $this->_filterUrl();
-
-        /** @var StoreAdminAuth $identity */
-        $identity = $this->getUser()->getIdentity(false);
-
-        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_UPDATED, $this->id, $this->id);
-
         return true;
-    }
-
-    /**
-     * Set default model attributes
-     */
-    private function _setDefaults()
-    {
-        $this->setAttributes([
-            'title' => '',
-            'visibility' => self::VISIBILITY_YES,
-            'content' => '',
-            'seo_title' => Yii::t('admin', 'settings.pages_seo_page_default'),
-            'seo_description' => "", /* Yii::t('admin', 'settings.pages_seo_meta_default') */
-            'url' => Yii::t('admin', 'settings.pages_seo_url_default'),
-        ], false);
     }
 
     /**
@@ -153,6 +179,5 @@ class EditPageForm extends Pages
         };
 
         $this->url = $_url;
-        $this->save(false);
     }
 }
