@@ -8,6 +8,7 @@ use common\models\panels\Orders;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -128,6 +129,77 @@ class OrderSslHelper {
         ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, Ssl::getResponseDetails(), 'cron.ssl.order_ssl');
 
         return $orderSsl;
+    }
+
+    /**
+     * @param Orders $order
+     * @param SslCert $ssl
+     * @return mixed
+     * @throws Exception
+     */
+    public static function addSslRenewOrder(Orders $order, SslCert $ssl)
+    {
+        if (!$order instanceof Orders || !$ssl instanceof SslCert) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Order or SslCert is undefined!', 'cron.ssl.send_order_renew_ssl');
+
+            throw new Exception('Order or SslCert is undefined!');
+        }
+
+        if ($ssl->status != SslCert::STATUS_ACTIVE  || $ssl->checked != SslCert::CHECKED_YES) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Invalid SslCert!', 'cron.ssl.send_order_renew_ssl');
+
+            throw new Exception('Invalid SslCert!');
+        }
+
+        $sslOrderDetails = $ssl->getOrderDetails();
+        $sslOrderStatus = $ssl->getOrderStatusDetails();
+
+        if (empty($sslOrderDetails) || empty($sslOrderStatus)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Invalid SslCert data!', 'cron.ssl.send_order_renew_ssl');
+
+            throw new Exception('Invalid SslCert data!');
+        }
+
+        $data = [
+            'product_id' => $sslOrderDetails['product_id'],
+            'csr' => $ssl->csr_code,
+            'admin_email' => $sslOrderStatus['admin_email'],
+            'admin_firstname' => $sslOrderStatus['admin_firstname'],
+            'admin_lastname' => $sslOrderStatus['admin_lastname'],
+            'admin_title' => $sslOrderStatus['admin_title'],
+            'admin_phone' => $sslOrderStatus['admin_phone'],
+            'admin_addressline1' => $sslOrderStatus['admin_title'],
+            'admin_organization' => ArrayHelper::getValue($sslOrderStatus,'admin_organization'),
+            'admin_city' => ArrayHelper::getValue($sslOrderStatus, 'admin_city'),
+            'admin_country' => ArrayHelper::getValue($sslOrderStatus, 'admin_country'),
+            'admin_fax' => ArrayHelper::getValue($sslOrderStatus, 'admin_fax'),
+            'admin_postalcode' => ArrayHelper::getValue($sslOrderStatus, 'admin_postalcode'),
+            'admin_region' => ArrayHelper::getValue($sslOrderStatus, 'admin_region'),
+
+            'tech_organization' => $sslOrderStatus['tech_organization'],
+            'tech_firstname' => $sslOrderStatus['tech_firstname'],
+            'tech_lastname' => $sslOrderStatus['tech_lastname'],
+            'tech_addressline1' => $sslOrderStatus['tech_addressline1'],
+            'tech_phone' => $sslOrderStatus['tech_phone'],
+            'tech_title' => $sslOrderStatus['tech_title'],
+            'tech_email' => $sslOrderStatus['tech_email'],
+            'tech_city' => $sslOrderStatus['tech_city'],
+            'tech_country' => $sslOrderStatus['tech_country'],
+            'tech_postalcode' => $sslOrderStatus['tech_postalcode'],
+            'tech_region' => $sslOrderStatus['tech_region'],
+            'period' => SslCert::SSL_CERT_PERIOD,
+            'server_count' => '-1',
+            'webserver_type' => 1,
+            'dcv_method' => Ssl::DCV_METHOD_HTTP,
+            'signature_hash' => 'SHA2',
+        ];
+
+        $orderRenewSsl = Ssl::addSSLRenewOrder($data);
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, Ssl::getSendDetails(), 'cron.ssl.send_order_renew_ssl');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, Ssl::getResponseDetails(), 'cron.ssl.order_renew_ssl');
+
+        return $orderRenewSsl;
     }
 
     /**

@@ -95,6 +95,8 @@ class OrderHelper {
         $sslCert->pid = ArrayHelper::getValue($orderDetails, 'pid');
         $sslCert->domain = $order->domain;
         $sslCert->project_type = $projectType;
+        $sslCert->csr_code = ArrayHelper::getValue($csr, 'csr_code');
+        $sslCert->csr_key = ArrayHelper::getValue($csr, 'csr_key');
 
         $sslCert->setOrderDetails($orderSsl);
         $sslCert->setCsrDetails($csr);
@@ -159,17 +161,13 @@ class OrderHelper {
             // Save order status details
             $ssl->setOrderStatusDetails($orderDetails);
 
-            $csr = $ssl->getCsrDetails();
-
             $crtKey = $crt . "\n" . $ca;
-            $csrKey = ArrayHelper::getValue($csr, 'csr_key');
-
 
             // $crt + $ca code
             if (!(OrderSslHelper::addDdos($ssl, [
                 'site' => $project->getBaseDomain(),
                 'crt' => $crtKey,
-                'key' => $csrKey,
+                'key' => $ssl->csr_key,
             ]))) {
                 $status = SslCert::STATUS_DDOS_ERROR;
             }
@@ -177,14 +175,14 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
                 'domain' => $project->getBaseDomain(),
                 'crt_cert' => $crtKey,
-                'key_cert' => $csrKey,
+                'key_cert' => $ssl->csr_key,
                 'key' => Yii::$app->params['system.sslScriptKey']
             ], 'cron.ssl_status.send_ssl_config');
 
             if (!(OrderSslHelper::addConfig($ssl, [
                 'domain' => $project->getBaseDomain(),
                 'crt_cert' => $crtKey,
-                'key_cert' => $csrKey,
+                'key_cert' => $ssl->csr_key,
             ]))) {
                 $status = SslCert::STATUS_DDOS_ERROR;
             }
@@ -200,6 +198,79 @@ class OrderHelper {
                 return false;
             }
         }
+
+        return true;
+    }
+
+
+    /**
+     * Process prolongation SSL
+     * @param Orders $order
+     * @return bool
+     */
+    public static function prolongationSsl(Orders $order)
+    {
+        $sslCert = SslCert::findOne([
+            'id' => $order->item_id,
+        ]);
+
+        if (empty($sslCert)) {
+            $order->status = Orders::STATUS_ERROR;
+            $order->save(false);
+
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'SslCert not found', 'cron.ssl.prolong');
+
+            return false;
+        }
+
+        // Save old SslCert data before order renew ssl
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $sslCert->attributes, 'cron.ssl.prolong.old_data');
+
+        $orderRenewSsl = OrderSslHelper::addSslRenewOrder($order, $sslCert);
+
+        if (empty($orderRenewSsl['success'])) {
+            $order->status = Orders::STATUS_ERROR;
+            $order->save(false);
+
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, ['message' => 'Prolong SSL Api response error!', 'error' => $orderRenewSsl], 'cron.ssl.prolong');
+
+            return false;
+        }
+
+        $validation = ArrayHelper::getValue($orderRenewSsl, 'validation');
+        $validation = ArrayHelper::getValue($validation, Ssl::DCV_METHOD_HTTP);
+
+        $sslValidation = new SslValidation();
+        $sslValidation->pid = $sslCert->pid;
+        $sslValidation->file_name = ArrayHelper::getValue($validation, 'filename');
+        $sslValidation->content = ArrayHelper::getValue($validation, 'content');
+
+        if (!$sslValidation->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            $order->save(false);
+
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $sslValidation->getErrors(), 'cron.ssl.prolong.validation');
+
+            return false;
+        }
+
+        // Update SslCert needed data
+        $sslCert->checked = SslCert::CHECKED_NO;
+        $sslCert->setOrderDetails($orderRenewSsl);
+
+        if (!$sslCert->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            $order->save(false);
+
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, ['message' => 'Error on SslCert Update', 'error' => $sslCert->getErrors()], 'cron.ssl.prolong');
+
+            return false;
+        }
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->save(false);
+
+        $sslCert->prolongedNotice();
 
         return true;
     }
