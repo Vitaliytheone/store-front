@@ -52,6 +52,11 @@ class CartController extends CustomController
             return $this->renderPartial('checkout', $model->formData);
         }
 
+        $this->addModule('cartFrontend', [
+            'fieldOptions' => $model->getPaymentsFields(),
+            'options' => $model->getJsOptions()
+        ]);
+
         return $this->render('cart.twig', [
             'cart' => [
                 'orders' => $items,

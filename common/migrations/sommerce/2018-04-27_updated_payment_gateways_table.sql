@@ -79,3 +79,11 @@ UPDATE `payment_gateways` SET
 `position` = '9',
 `options` = '{\\"collectionId\\":\\"\\",\\"secret\\":\\"\\"}'
 WHERE `method` = 'billplz';
+
+UPDATE `payment_gateways` SET
+`name` = 'Paytr',
+`class_name` = 'Paytr',
+`url` = 'paytr',
+`position` = '10',
+`options` = '{\\"merchant_id\\":\\"\\",\\"merchant_key\\":\\"\\",\\"merchant_salt\\":\\"\\",\\"commission\\":\\"\\"}'
+WHERE `method` = 'paytr';
