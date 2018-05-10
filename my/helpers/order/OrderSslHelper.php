@@ -8,6 +8,7 @@ use common\models\panels\Orders;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -134,22 +135,29 @@ class OrderSslHelper {
      * @param Orders $order
      * @param SslCert $ssl
      * @return mixed
+     * @throws Exception
      */
     public static function addSslRenewOrder(Orders $order, SslCert $ssl)
     {
         if (!$order instanceof Orders || !$ssl instanceof SslCert) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Order or SslCert is undefined!', 'cron.ssl.send_order_renew_ssl');
+
+            throw new Exception('Order or SslCert is undefined!');
         }
 
         if ($ssl->status != SslCert::STATUS_ACTIVE  || $ssl->checked != SslCert::CHECKED_YES) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Invalid SslCert!', 'cron.ssl.send_order_renew_ssl');
+
+            throw new Exception('Invalid SslCert!');
         }
 
         $sslOrderDetails = $ssl->getOrderDetails();
         $sslOrderStatus = $ssl->getOrderStatusDetails();
 
-        if (empty($sslDetails) || empty($sslOrderDetails) || empty($sslOrderStatus)) {
+        if (empty($sslOrderDetails) || empty($sslOrderStatus)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Invalid SslCert data!', 'cron.ssl.send_order_renew_ssl');
+
+            throw new Exception('Invalid SslCert data!');
         }
 
         $data = [
