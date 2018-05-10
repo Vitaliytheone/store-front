@@ -360,7 +360,11 @@ class Invoices extends ActiveRecord
                 }
 
                 foreach ($details as $item) {
-                    if ($item->item != InvoiceDetails::ITEM_PROLONGATION_PANEL) {
+                    if (!in_array($item->item, [
+                        InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                        InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+                        InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                    ])) {
                         return false;
                     }
                     break;

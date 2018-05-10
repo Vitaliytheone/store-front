@@ -30,16 +30,16 @@ class InvoicesController extends CustomController
     {
         $this->view->title = Yii::t('app', 'pages.title.invoices');
 
-        $sslSearch = new InvoicesSearch();
-        $sslSearch->setParams(Yii::$app->request->get());
+        $invoicesSearch = new InvoicesSearch();
+        $invoicesSearch->setParams(Yii::$app->request->get());
 
         $status = Yii::$app->request->get('status', null);
 
         return $this->render('index', [
-            'invoices' => $sslSearch->search(),
-            'navs' => $sslSearch->navs(),
+            'invoices' => $invoicesSearch->search(),
+            'navs' => $invoicesSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
-            'filters' => $sslSearch->getParams()
+            'filters' => $invoicesSearch->getParams()
         ]);
     }
 

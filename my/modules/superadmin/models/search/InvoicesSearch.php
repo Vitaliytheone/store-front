@@ -192,25 +192,27 @@ class InvoicesSearch extends Invoices {
         return $this->domain ? DomainsHelper::idnToUtf8($this->domain) : '';
     }
 
-    /**
-     * Check access by code
-     * @param string $code
-     * @return bool
-     */
-    public function can($code)
-    {
-        switch ($code) {
-            case 'editTotal':
-                return $this->editTotal;
-            break;
 
-            case 'pay':
-                if (static::STATUS_UNPAID == $this->status) {
-                    return true;
-                }
-            break;
-        }
-
-        return false;
-    }
+// TODO:: used parent `can` function
+//    /**
+//     * Check access by code
+//     * @param string $code
+//     * @return bool
+//     */
+//    public function can($code)
+//    {
+//        switch ($code) {
+//            case 'editTotal':
+//                return $this->editTotal;
+//            break;
+//
+//            case 'pay':
+//                if (static::STATUS_UNPAID == $this->status) {
+//                    return true;
+//                }
+//            break;
+//        }
+//
+//        return false;
+//    }
 }
