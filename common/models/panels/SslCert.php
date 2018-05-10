@@ -6,6 +6,7 @@ use common\components\traits\UnixTimeFormatTrait;
 use common\models\common\ProjectInterface;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
+use my\mail\mailers\RenewedSSL;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -350,6 +351,17 @@ class SslCert extends ActiveRecord
     {
         $mailer = new CreatedSSL([
             'ssl' => $this
+        ]);
+        $mailer->send();
+    }
+
+    /**
+     * Send prolonged notification
+     */
+    public function prolongedNotice()
+    {
+        $mailer = new RenewedSSL([
+            'ssl' => $this,
         ]);
         $mailer->send();
     }

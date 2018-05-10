@@ -150,11 +150,20 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = ssl_cert.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :item AND `orders`.`processing` = :processing', [
+                ':item' => Orders::ITEM_PROLONGATION_SSL,
+                ':processing' => Orders::PROCESSING_OFF
+            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :item', [
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_SSL
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',  [
+                ':status' => Invoices::STATUS_UNPAID
+            ])
             ->andWhere([
                 'ssl_cert.status' => SslCert::STATUS_ACTIVE,
-            ])->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
+            ])
+            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
                 ':expiry' => $date
             ])
             ->groupBy('ssl_cert.id')
@@ -177,13 +186,13 @@ class InvoiceHelper
 
             $order = new Orders();
             $order->date = time();
-            $order->ip = 'localhost';
+            $order->ip = '127.0.0.1';
             $order->cid = $ssl->cid;
             $order->item = Orders::ITEM_PROLONGATION_SSL;
             $order->item_id = $ssl->id;
             $order->domain = $ssl->getDomain();
             $order->setDetails([
-                'pid' => $ssl->cid,
+                'pid' => $ssl->pid,
                 'project_type' => $project::getProjectType(),
                 'domain' => $ssl->getDomain(),
                 'item_id' => $ssl->item_id,
@@ -218,9 +227,9 @@ class InvoiceHelper
 
             $invoiceDetails = new InvoiceDetails();
             $invoiceDetails->invoice_id = $invoice->id;
-            $invoiceDetails->item_id = $ssl->id;
-            $invoiceDetails->amount = $invoice->total;
             $invoiceDetails->item = InvoiceDetails::ITEM_PROLONGATION_SSL;
+            $invoiceDetails->item_id = $order->id;
+            $invoiceDetails->amount = $invoice->total;
 
             if (!$invoiceDetails->save()) {
                 $ssl->status = SslCert::STATUS_INCOMPLETE;

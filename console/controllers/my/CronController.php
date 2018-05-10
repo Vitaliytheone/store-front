@@ -55,6 +55,7 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_DOMAIN,
                 Orders::ITEM_BUY_CHILD_PANEL,
                 Orders::ITEM_BUY_STORE,
+                Orders::ITEM_PROLONGATION_SSL,
             ]
         ])->all();
 
@@ -83,7 +84,6 @@ class CronController extends CustomController
                     break;
 
                     case Orders::ITEM_BUY_STORE:
-
                         // Создаем триальный магазин сразу
                         $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
                         if ($isTrial) {
@@ -91,6 +91,10 @@ class CronController extends CustomController
                         }
 
                         OrderHelper::store($order);
+                    break;
+
+                    case Orders::ITEM_PROLONGATION_SSL:
+                        OrderHelper::prolongationSsl($order);
                     break;
                 }
             } catch (Exception $e) {
