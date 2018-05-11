@@ -243,9 +243,11 @@ class SslCert extends ActiveRecord
                     break;
             }
 
+            $isProlonged = Orders::findOne(['item' => Orders::ITEM_PROLONGATION_SSL, 'item_id' => $this->id]);
+
             // Create new unreaded ticket after activate ssl cert.
             // Not for SSL prolongation
-            if(ArrayHelper::getValue($orderDetails, 'renew') == 0) {
+            if(!$isProlonged) {
                 $ticket = new Tickets();
                 $ticket->cid = $this->cid;
                 $ticket->admin = 1;
