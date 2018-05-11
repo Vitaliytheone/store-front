@@ -1,34 +1,31 @@
 <?php
 namespace my\modules\superadmin\widgets;
 
-use Yii;
-use common\models\panels\Tickets;
+use common\models\panels\SslCert;
 use yii\base\Widget;
 use yii\bootstrap\Html;
-use yii\db\Query;
 
 /**
- * Class UnreadMessagesWidget
- * @package my\widgets
+ * Class ErrorSslWidget
+ * @package my\modules\superadmin\widgets
  */
-class UnreadMessagesWidget extends Widget {
+class ErrorSslWidget extends Widget {
 
     /**
      * Run method
-     * @return string|void
+     * @return string|null
      */
     public function run()
     {
-        $count = (new Query())
+        $count = SslCert::find()
             ->select('COUNT(*)')
-            ->from('tickets')
             ->andWhere([
-                'user' => 1
+                'status' => SslCert::STATUS_ERROR,
             ])
             ->scalar();
 
         if (!$count) {
-            return;
+            return null;
         }
 
         return Html::tag('span', $count, [

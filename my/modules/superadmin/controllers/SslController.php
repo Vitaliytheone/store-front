@@ -50,7 +50,10 @@ class SslController extends CustomController
 
         $logs = ThirdPartyLog::find()->andWhere([
             'item_id' => $ssl->id,
-            'item' => ThirdPartyLog::ITEM_BUY_SSL
+            'item' => [
+                ThirdPartyLog::ITEM_BUY_SSL,
+                ThirdPartyLog::ITEM_PROLONGATION_SSL,
+            ]
         ])->all();
 
         return [

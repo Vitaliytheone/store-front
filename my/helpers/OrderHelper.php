@@ -217,18 +217,18 @@ class OrderHelper {
         ]);
 
         if (empty($sslCert)) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'SslCert not found', 'cron.ssl.prolong');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, 'SslCert not found', 'cron.ssl.prolong');
 
-            throw new Exception("SslCert not found [id = $order->item_id]");
+            throw new Exception("SslCert not found [$order->item_id]");
         }
 
         // Save old SslCert data before order renew ssl
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $sslCert->attributes, 'cron.ssl.prolong.old_data');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, $sslCert->attributes, 'cron.ssl.prolong.old_data');
 
         $orderRenewSsl = OrderSslHelper::addSslRenewOrder($order, $sslCert);
 
         if (empty($orderRenewSsl['success'])) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, ['message' => 'Prolong SSL Api response not success!', 'error' => $orderRenewSsl], 'cron.ssl.prolong');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, ['error' => 'Prolong SSL Api response not success!', 'data' => $orderRenewSsl], 'cron.ssl.prolong.api');
 
             return false;
         }
@@ -245,9 +245,9 @@ class OrderHelper {
             $sslCert->status = SslCert::STATUS_ERROR;
             $sslCert->save(false);
 
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $sslValidation->getErrors(), 'cron.ssl.prolong.validation');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, ['error' => 'Error on SslValidation create', 'data' => $sslValidation->getErrors()], 'cron.ssl.prolong.validation');
 
-            throw new Exception("SslValidation does not created! [id = $order->item_id]");
+            throw new Exception("SslValidation does not created! [$order->item_id");
         }
 
         // Update SslCert needed data
@@ -258,9 +258,9 @@ class OrderHelper {
             $sslCert->status = SslCert::STATUS_ERROR;
             $sslCert->save(false);
 
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, ['message' => 'Error on SslCert Update', 'error' => $sslCert->getErrors()], 'cron.ssl.prolong');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, ['error' => 'Error on SslCert update', 'data' => $sslCert->getErrors()], 'cron.ssl.prolong.save');
 
-            throw new Exception("SslCert does not updated! [id = $order->item_id]");
+            throw new Exception("SslCert does not updated! [$order->item_id]");
         }
 
         $order->status = Orders::STATUS_ADDED;
