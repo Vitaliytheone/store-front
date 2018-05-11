@@ -190,7 +190,7 @@ class OrderSslHelper {
             'period' => SslCert::SSL_CERT_PERIOD,
             'server_count' => '-1',
             'webserver_type' => 1,
-            'dcv_method' => Ssl::DCV_METHOD_HTTP,
+            'dcv_method' => Ssl::DCV_METHOD_HTTPS,
             'signature_hash' => 'SHA2',
         ];
 
