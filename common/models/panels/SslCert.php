@@ -243,20 +243,23 @@ class SslCert extends ActiveRecord
                     break;
             }
 
-            // Create new unreaded ticket after activate ssl cert
-            $ticket = new Tickets();
-            $ticket->cid = $this->cid;
-            $ticket->admin = 1;
-            $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
-            if ($ticket->save(false)) {
-                $ticketMessage = new TicketMessages();
-                $ticketMessage->tid = $ticket->id;
-                $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
-                $ticketMessage->date = time();
-                $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
-                    'domain' => $this->project->getBaseDomain()
-                ]);
-                $ticketMessage->save(false);
+            // Create new unreaded ticket after activate ssl cert.
+            // Not for SSL prolongation
+            if(ArrayHelper::getValue($orderDetails, 'renew') == 0) {
+                $ticket = new Tickets();
+                $ticket->cid = $this->cid;
+                $ticket->admin = 1;
+                $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
+                if ($ticket->save(false)) {
+                    $ticketMessage = new TicketMessages();
+                    $ticketMessage->tid = $ticket->id;
+                    $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
+                    $ticketMessage->date = time();
+                    $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
+                        'domain' => $this->project->getBaseDomain()
+                    ]);
+                    $ticketMessage->save(false);
+                }
             }
         }
 
