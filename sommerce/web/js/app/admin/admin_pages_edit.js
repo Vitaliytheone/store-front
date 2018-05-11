@@ -163,6 +163,11 @@ customModule.adminPageEdit = {
          *****************************************************************************************************/
         var actionUrl = $pageForm.attr('action');
 
+        toastr.options = {
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+        };
+
         $pageForm.submit(function (e) {
             e.preventDefault();
 

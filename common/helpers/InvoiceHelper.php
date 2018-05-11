@@ -1,12 +1,15 @@
 <?php
 namespace common\helpers;
 
+use common\models\common\ProjectInterface;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\Tariff;
+use common\models\panels\Orders;
+use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
@@ -140,18 +143,27 @@ class InvoiceHelper
     }
 
     /**
-     * Create invoices to prolong ssl
+     * Create invoices and orders to prolong ssl
      */
     public static function prolongSsl()
     {
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = ssl_cert.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :item AND `orders`.`processing` = :processing', [
+                ':item' => Orders::ITEM_PROLONGATION_SSL,
+                ':processing' => Orders::PROCESSING_OFF
+            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :item', [
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_SSL
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',  [
+                ':status' => Invoices::STATUS_UNPAID
+            ])
             ->andWhere([
                 'ssl_cert.status' => SslCert::STATUS_ACTIVE,
-            ])->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
+            ])
+            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
                 ':expiry' => $date
             ])
             ->groupBy('ssl_cert.id')
@@ -159,6 +171,43 @@ class InvoiceHelper
             ->all();
 
         foreach ($sslCerts as $ssl) {
+
+            /** @var ProjectInterface $project */
+            $project = ProjectHelper::getProjectByType($ssl->project_type, $ssl->pid);
+
+            if (!$project) {
+                $ssl->status = SslCert::STATUS_ERROR;
+                $ssl->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $ssl->id, "Project not found: project_type[$ssl->project_type], project_id[$ssl->pid]", 'cron.create_invoice.project');
+
+                continue;
+            }
+
+            $order = new Orders();
+            $order->date = time();
+            $order->ip = '127.0.0.1';
+            $order->cid = $ssl->cid;
+            $order->item = Orders::ITEM_PROLONGATION_SSL;
+            $order->item_id = $ssl->id;
+            $order->domain = $ssl->getDomain();
+            $order->setDetails([
+                'pid' => $ssl->pid,
+                'project_type' => $project::getProjectType(),
+                'domain' => $ssl->getDomain(),
+                'item_id' => $ssl->item_id,
+                'details' => $ssl->getAttributes(),
+            ]);
+
+            if (!$order->save(false)) {
+                $ssl->status = SslCert::STATUS_ERROR;
+                $ssl->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->id, $order->getErrors(), 'cron.create_invoice.order');
+
+                continue;
+            }
+
             $transaction = Yii::$app->db->beginTransaction();
 
             $invoice = new Invoices();
@@ -167,24 +216,36 @@ class InvoiceHelper
             $invoice->generateCode();
             $invoice->daysExpired(7);
 
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $ssl->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_SSL;
+            if (!$invoice->save()) {
+                $ssl->status = SslCert::STATUS_ERROR;
+                $ssl->save(false);
 
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $invoice->id, $invoice->getErrors(), 'cron.create_invoice');
 
-                $transaction->commit();
-
-                $mail = new InvoiceCreated([
-                    'ssl' => $ssl
-                ]);
-                $mail->send();
+                continue;
             }
+
+            $invoiceDetails = new InvoiceDetails();
+            $invoiceDetails->invoice_id = $invoice->id;
+            $invoiceDetails->item = InvoiceDetails::ITEM_PROLONGATION_SSL;
+            $invoiceDetails->item_id = $order->id;
+            $invoiceDetails->amount = $invoice->total;
+
+            if (!$invoiceDetails->save()) {
+                $ssl->status = SslCert::STATUS_ERROR;
+                $ssl->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $invoiceDetails->id, $invoiceDetails->getErrors(), 'cron.create_invoice.details');
+
+                continue;
+            }
+
+            $transaction->commit();
+
+            $mail = new InvoiceCreated([
+                'ssl' => $ssl
+            ]);
+            $mail->send();
         }
     }
 

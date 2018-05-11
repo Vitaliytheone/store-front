@@ -171,7 +171,6 @@ class OrderSslForm extends Model
 
         $orderModel = new Orders();
         $orderModel->date = time();
-        $orderModel->ip = Yii::$app->request->userIP;
         $orderModel->cid = $this->_customer->id;
         $orderModel->item = Orders::ITEM_BUY_SSL;
         $orderModel->domain = $project->getBaseDomain();

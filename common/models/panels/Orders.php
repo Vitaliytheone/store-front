@@ -37,6 +37,9 @@ class Orders extends ActiveRecord
     const STATUS_ERROR = 3;
     const STATUS_CANCELED = 4;
 
+    const PROCESSING_ON = 1;
+    const PROCESSING_OFF = 0;
+
     const HIDDEN_ON = 1;
     const HIDDEN_OFF = 0;
 
@@ -45,6 +48,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_SSL = 3;
     const ITEM_BUY_CHILD_PANEL = 4;
     const ITEM_BUY_STORE = 5;
+    const ITEM_PROLONGATION_SSL = 6;
 
     use UnixTimeFormatTrait;
 
@@ -154,6 +158,7 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_SSL => Yii::t('app', 'orders.item.buy_ssl'),
             static::ITEM_BUY_CHILD_PANEL => Yii::t('app', 'orders.item.buy_child_panel'),
             static::ITEM_BUY_STORE => Yii::t('app', 'orders.item.buy_store'),
+            static::ITEM_PROLONGATION_SSL => Yii::t('app', 'orders.item.prolongation_ssl'),
         ];
     }
 

@@ -6,6 +6,7 @@ use common\components\traits\UnixTimeFormatTrait;
 use common\models\common\ProjectInterface;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
+use my\mail\mailers\RenewedSSL;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -25,6 +26,8 @@ use my\mail\mailers\CreatedSSL;
  * @property integer $status
  * @property integer $checked
  * @property string $domain
+ * @property string $csr_code
+ * @property string $csr_key
  * @property string $details
  * @property string $expiry
  * @property integer $created_at
@@ -45,7 +48,7 @@ class SslCert extends ActiveRecord
     const STATUS_CANCELED = 4;
     const STATUS_INCOMPLETE = 5;
     const STATUS_EXPIRED = 6;
-    const STATUS_DDOS_ERROR = 7;
+    const STATUS_ERROR = 7;
 
     const CHECKED_NO = 0;
     const CHECKED_YES = 1;
@@ -74,7 +77,7 @@ class SslCert extends ActiveRecord
         return [
             [['pid', 'cid', 'item_id', 'details'], 'required'],
             [['pid', 'cid', 'item_id', 'status', 'created_at', 'checked', 'project_type'], 'integer'],
-            [['details', 'expiry'], 'string'],
+            [['details', 'expiry', 'csr_code', 'csr_key'], 'string'],
             [['domain'], 'string', 'max' => 255],
             [['checked'], 'default', 'value' => static::CHECKED_YES],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
@@ -97,6 +100,8 @@ class SslCert extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'domain' => Yii::t('app', 'Domain'),
             'checked' => Yii::t('app', 'Is Checked'),
+            'csr_code' => Yii::t('app', 'CSR code'),
+            'csr_key' => Yii::t('app', 'CSR key'),
             'details' => Yii::t('app', 'Details'),
             'expiry' => Yii::t('app', 'Expiry'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -175,7 +180,7 @@ class SslCert extends ActiveRecord
             static::STATUS_CANCELED => Yii::t('app', 'ssl_cert.status.canceled'),
             static::STATUS_INCOMPLETE => Yii::t('app', 'ssl_cert.status.incomplete'),
             static::STATUS_EXPIRED => Yii::t('app', 'ssl_cert.status.expired'),
-            static::STATUS_DDOS_ERROR => Yii::t('app', 'ssl_cert.status.ddos_error')
+            static::STATUS_ERROR => Yii::t('app', 'ssl_cert.status.ddos_error')
         ];
     }
 
@@ -217,7 +222,7 @@ class SslCert extends ActiveRecord
 
         if (in_array($status, [
             static::STATUS_ACTIVE,
-            static::STATUS_DDOS_ERROR,
+            static::STATUS_ERROR,
         ])) {
             $orderDetails = $this->getOrderStatusDetails();
             $this->expiry = ArrayHelper::getValue($orderDetails, 'valid_till');
@@ -346,6 +351,17 @@ class SslCert extends ActiveRecord
     {
         $mailer = new CreatedSSL([
             'ssl' => $this
+        ]);
+        $mailer->send();
+    }
+
+    /**
+     * Send prolonged notification
+     */
+    public function prolongedNotice()
+    {
+        $mailer = new RenewedSSL([
+            'ssl' => $this,
         ]);
         $mailer->send();
     }

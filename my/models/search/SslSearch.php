@@ -82,7 +82,7 @@ class SslSearch
                 'sc.cid' => $customer,
                 'sc.status' => [
                     SslCert::STATUS_ACTIVE,
-                    SslCert::STATUS_DDOS_ERROR,
+                    SslCert::STATUS_ERROR,
                     SslCert::STATUS_PROCESSING,
                     SslCert::STATUS_PAYMENT_NEEDED,
                     SslCert::STATUS_INCOMPLETE,
@@ -92,7 +92,7 @@ class SslSearch
             ->orderBy([
                 new Expression('FIELD (sc.status, ' . implode(',', [
                         SslCert::STATUS_ACTIVE,
-                        SslCert::STATUS_DDOS_ERROR,
+                        SslCert::STATUS_ERROR,
                         SslCert::STATUS_PROCESSING,
                         SslCert::STATUS_PAYMENT_NEEDED,
                         SslCert::STATUS_INCOMPLETE,

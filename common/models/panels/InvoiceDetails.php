@@ -208,7 +208,9 @@ class InvoiceDetails extends ActiveRecord
                     break;
 
                 case static::ITEM_PROLONGATION_SSL:
-                    $ssl = SslCert::findOne($this->item_id);
+                    $order = Orders::findOne($this->item_id);
+                    $ssl = SslCert::findOne($order->item_id);
+
                     $this->description = Yii::t('app', 'invoice_details.description.prolongation_ssl', [
                         'name' => $ssl->item->name,
                         'domain' => $ssl->project->site
@@ -328,6 +330,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
             case static::ITEM_BUY_TRIAL_STORE:
+            case static::ITEM_PROLONGATION_SSL:
                 $order = Orders::findOne($this->item_id);
                 return $order;
             break;
@@ -366,6 +369,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
+            case static::ITEM_PROLONGATION_SSL:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);

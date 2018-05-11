@@ -72,6 +72,22 @@ class Ssl {
     }
 
     /**
+     * Renew SSL Order
+     * @param array $data
+     * @return mixed
+     */
+    public static function addSSLRenewOrder($data)
+    {
+        try {
+            $result = static::getInstance()->addSSLRenewOrder($data);
+        } catch (GoGetSSLAuthException $e) {
+            return $e->getMessage();
+        }
+
+        return $result;
+    }
+
+    /**
      * Get order status
      * @param $orderId
      * @return null
