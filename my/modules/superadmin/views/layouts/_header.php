@@ -8,6 +8,7 @@
     use my\modules\superadmin\widgets\ErrorOrdersWidget;
     use my\helpers\Url;
     use my\modules\superadmin\widgets\UnreadMessagesWidget;
+    use my\modules\superadmin\widgets\ErrorSslWidget;
 
     $activeTab = empty($this->context->activeTab) ? null : ArrayHelper::getValue($this->context, 'activeTab');
 
@@ -42,7 +43,7 @@
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SSL)) {
-        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.ssl'), 'url' => Url::toRoute('/ssl'), 'active' => 'ssl' == $activeTab];
+        $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.ssl') . ' ' . ErrorSslWidget::widget(), 'url' => Url::toRoute('/ssl'), 'active' => 'ssl' == $activeTab];
     }
 
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_CUSTOMERS)) {
