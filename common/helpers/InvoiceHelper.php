@@ -176,7 +176,7 @@ class InvoiceHelper
             $project = ProjectHelper::getProjectByType($ssl->project_type, $ssl->pid);
 
             if (!$project) {
-                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->status = SslCert::STATUS_ERROR;
                 $ssl->save(false);
 
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $ssl->id, "Project not found: project_type[$ssl->project_type], project_id[$ssl->pid]", 'cron.create_invoice.project');
@@ -200,7 +200,7 @@ class InvoiceHelper
             ]);
 
             if (!$order->save(false)) {
-                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->status = SslCert::STATUS_ERROR;
                 $ssl->save(false);
 
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->id, $order->getErrors(), 'cron.create_invoice.order');
@@ -217,7 +217,7 @@ class InvoiceHelper
             $invoice->daysExpired(7);
 
             if (!$invoice->save()) {
-                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->status = SslCert::STATUS_ERROR;
                 $ssl->save(false);
 
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $invoice->id, $invoice->getErrors(), 'cron.create_invoice');
@@ -232,7 +232,7 @@ class InvoiceHelper
             $invoiceDetails->amount = $invoice->total;
 
             if (!$invoiceDetails->save()) {
-                $ssl->status = SslCert::STATUS_INCOMPLETE;
+                $ssl->status = SslCert::STATUS_ERROR;
                 $ssl->save(false);
 
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $invoiceDetails->id, $invoiceDetails->getErrors(), 'cron.create_invoice.details');

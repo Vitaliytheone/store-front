@@ -48,7 +48,7 @@ class SslCert extends ActiveRecord
     const STATUS_CANCELED = 4;
     const STATUS_INCOMPLETE = 5;
     const STATUS_EXPIRED = 6;
-    const STATUS_DDOS_ERROR = 7;
+    const STATUS_ERROR = 7;
 
     const CHECKED_NO = 0;
     const CHECKED_YES = 1;
@@ -180,7 +180,7 @@ class SslCert extends ActiveRecord
             static::STATUS_CANCELED => Yii::t('app', 'ssl_cert.status.canceled'),
             static::STATUS_INCOMPLETE => Yii::t('app', 'ssl_cert.status.incomplete'),
             static::STATUS_EXPIRED => Yii::t('app', 'ssl_cert.status.expired'),
-            static::STATUS_DDOS_ERROR => Yii::t('app', 'ssl_cert.status.ddos_error')
+            static::STATUS_ERROR => Yii::t('app', 'ssl_cert.status.ddos_error')
         ];
     }
 
@@ -222,7 +222,7 @@ class SslCert extends ActiveRecord
 
         if (in_array($status, [
             static::STATUS_ACTIVE,
-            static::STATUS_DDOS_ERROR,
+            static::STATUS_ERROR,
         ])) {
             $orderDetails = $this->getOrderStatusDetails();
             $this->expiry = ArrayHelper::getValue($orderDetails, 'valid_till');

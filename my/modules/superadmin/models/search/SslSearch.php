@@ -168,8 +168,8 @@ class SslSearch extends SslCert {
             SslCert::STATUS_EXPIRED => Yii::t('app/superadmin', 'ssl.list.navs_expired', [
                 'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_EXPIRED, 0)
             ]),
-            SslCert::STATUS_DDOS_ERROR => Yii::t('app/superadmin', 'ssl.list.navs_ddos_error', [
-                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_DDOS_ERROR, 0)
+            SslCert::STATUS_ERROR => Yii::t('app/superadmin', 'ssl.list.navs_ddos_error', [
+                'count' => ArrayHelper::getValue($statusCounters, SslCert::STATUS_ERROR, 0)
             ]),
         ];
     }
