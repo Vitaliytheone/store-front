@@ -139,14 +139,14 @@ class OrderSslHelper {
      */
     public static function addSslRenewOrder(Orders $order, SslCert $ssl)
     {
-        if (!$order instanceof Orders || !$ssl instanceof SslCert) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Order or SslCert is undefined!', 'cron.ssl.send_order_renew_ssl');
+        if (!$ssl instanceof SslCert) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, 'SslCert is undefined!', 'cron.ssl.send_order_renew_ssl');
 
-            throw new Exception('Order or SslCert is undefined!');
+            throw new Exception('SslCert is undefined!');
         }
 
         if ($ssl->status != SslCert::STATUS_ACTIVE  || $ssl->checked != SslCert::CHECKED_YES) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Invalid SslCert!', 'cron.ssl.send_order_renew_ssl');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, 'Invalid SslCert!', 'cron.ssl.send_order_renew_ssl');
 
             throw new Exception('Invalid SslCert!');
         }
@@ -155,7 +155,7 @@ class OrderSslHelper {
         $sslOrderStatus = $ssl->getOrderStatusDetails();
 
         if (empty($sslOrderDetails) || empty($sslOrderStatus)) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, 'Invalid SslCert data!', 'cron.ssl.send_order_renew_ssl');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, 'Invalid SslCert data!', 'cron.ssl.send_order_renew_ssl');
 
             throw new Exception('Invalid SslCert data!');
         }
@@ -196,8 +196,8 @@ class OrderSslHelper {
 
         $orderRenewSsl = Ssl::addSSLRenewOrder($data);
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, Ssl::getSendDetails(), 'cron.ssl.send_order_renew_ssl');
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, Ssl::getResponseDetails(), 'cron.ssl.order_renew_ssl');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, Ssl::getSendDetails(), 'cron.ssl.send_order_renew_ssl');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, Ssl::getResponseDetails(), 'cron.ssl.order_renew_ssl');
 
         return $orderRenewSsl;
     }
