@@ -161,8 +161,8 @@ class OrderSslHelper {
         }
 
         $data = [
-            'product_id' => $sslOrderDetails['product_id'],
             'csr' => $ssl->csr_code,
+            'product_id' => $sslOrderStatus['product_id'],
             'admin_email' => $sslOrderStatus['admin_email'],
             'admin_firstname' => $sslOrderStatus['admin_firstname'],
             'admin_lastname' => $sslOrderStatus['admin_lastname'],
