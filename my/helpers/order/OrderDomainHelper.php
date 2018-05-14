@@ -1,6 +1,7 @@
 <?php
 namespace my\helpers\order;
 
+use common\models\panels\Domains;
 use Yii;
 use my\components\domains\Ahnames;
 use common\models\panels\Orders;
@@ -171,5 +172,25 @@ class OrderDomainHelper {
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $enableLock, 'cron.order.domain_lock');
 
         return $enableLock;
+    }
+
+    /**
+     * Domain renew registration
+     * @param Orders $order
+     * @return array
+     */
+    public static function domainRenew(Orders $order)
+    {
+        $orderDetails = $order->getDetails();
+        $domain = ArrayHelper::getValue($orderDetails, 'domain');
+        $expiry = ArrayHelper::getValue($orderDetails, 'details.domain_info.expires');
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->id, $orderDetails, 'cron.order.send_renew_domain');
+
+        $domainRenewResult = Ahnames::domainRenew($domain, $expiry);
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->id, $domainRenewResult, 'cron.order.renew_domain');
+
+        return $domainRenewResult;
     }
 }

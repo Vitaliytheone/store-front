@@ -37,8 +37,8 @@ class Orders extends ActiveRecord
     const STATUS_ERROR = 3;
     const STATUS_CANCELED = 4;
 
-    const PROCESSING_ON = 1;
-    const PROCESSING_OFF = 0;
+    const PROCESSING_YES = 1;
+    const PROCESSING_NO = 0;
 
     const HIDDEN_ON = 1;
     const HIDDEN_OFF = 0;

@@ -176,6 +176,37 @@ class Ahnames {
     }
 
     /**
+     * Renew exiting domain
+     *
+     * Domain name
+     * @param $domain string
+     *
+     * Current expiry date in ISO format
+     * example `2012—09—25`
+     * @param $expires
+     *
+     * Renewal period, year
+     * @param $period integer
+     *
+     * @return array
+     */
+    public static function domainRenew($domain, $expires, $period = 1)
+    {
+        $options = [
+            'domain' => $domain,
+            'expires' => $expires,
+            'period' => $period,
+        ];
+
+        $url = Yii::$app->params['ahnames.url'];
+
+        $result = CurlHelper::request($url . '/domainRenew', $options);
+
+        return static::_processResult($result);
+    }
+
+
+    /**
      * Get result
      * @param mixed $result
      * @param bool $returnError

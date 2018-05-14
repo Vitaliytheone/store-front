@@ -49,7 +49,7 @@ class CronController extends CustomController
     {
         $orders = Orders::find()->andWhere([
             'status' => Orders::STATUS_PAID,
-            'processing' => 0,
+            'processing' => Orders::PROCESSING_NO,
             'item' => [
                 Orders::ITEM_BUY_PANEL,
                 Orders::ITEM_BUY_SSL,
@@ -57,6 +57,7 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_CHILD_PANEL,
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
+                Orders::ITEM_PROLONGATION_DOMAIN,
             ]
         ])->all();
 
@@ -64,38 +65,42 @@ class CronController extends CustomController
          * @var Orders $order
          */
         foreach ($orders as $order) {
-            $order->process();
+//            $order->process();
             $orderDetails = $order->getDetails();
             try {
                 switch ($order->item) {
-                    case Orders::ITEM_BUY_SSL:
-                        OrderHelper::ssl($order);
-                    break;
+//                    case Orders::ITEM_BUY_SSL:
+//                        OrderHelper::ssl($order);
+//                    break;
+//
+//                    case Orders::ITEM_BUY_PANEL:
+//                        OrderHelper::panel($order);
+//                    break;
+//
+//                    case Orders::ITEM_BUY_DOMAIN:
+//                        OrderHelper::domain($order);
+//                    break;
+//
+//                    case Orders::ITEM_BUY_CHILD_PANEL:
+//                        OrderHelper::panel($order, true);
+//                    break;
+//
+//                    case Orders::ITEM_BUY_STORE:
+//                        // Создаем триальный магазин сразу
+//                        $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
+//                        if ($isTrial) {
+//                            continue;
+//                        }
+//
+//                        OrderHelper::store($order);
+//                    break;
+//
+//                    case Orders::ITEM_PROLONGATION_SSL:
+//                        OrderHelper::prolongationSsl($order);
+//                    break;
 
-                    case Orders::ITEM_BUY_PANEL:
-                        OrderHelper::panel($order);
-                    break;
-
-                    case Orders::ITEM_BUY_DOMAIN:
-                        OrderHelper::domain($order);
-                    break;
-
-                    case Orders::ITEM_BUY_CHILD_PANEL:
-                        OrderHelper::panel($order, true);
-                    break;
-
-                    case Orders::ITEM_BUY_STORE:
-                        // Создаем триальный магазин сразу
-                        $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
-                        if ($isTrial) {
-                            continue;
-                        }
-
-                        OrderHelper::store($order);
-                    break;
-
-                    case Orders::ITEM_PROLONGATION_SSL:
-                        OrderHelper::prolongationSsl($order);
+                    case Orders::ITEM_PROLONGATION_DOMAIN:
+                        OrderHelper::prolongationDomain($order);
                     break;
                 }
             } catch (Exception $e) {
@@ -133,10 +138,10 @@ class CronController extends CustomController
      */
     public function actionCreateInvoice()
     {
-//        InvoiceHelper::prolongPanels();
+        InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
-//        InvoiceHelper::prolongSsl();
-//        InvoiceHelper::prolongStores();
+        InvoiceHelper::prolongSsl();
+        InvoiceHelper::prolongStores();
     }
 
     /**

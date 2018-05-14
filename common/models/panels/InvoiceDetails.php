@@ -193,7 +193,9 @@ class InvoiceDetails extends ActiveRecord
                     break;
 
                 case static::ITEM_PROLONGATION_DOMAIN:
-                    $domain = Domains::findOne($this->item_id);
+                    $order = Orders::findOne($this->item_id);
+                    $domain = Domains::findOne($order->item_id);
+
                     $this->description = $domain->zone->zone . ' domain renewal for 1 year';
                     break;
 

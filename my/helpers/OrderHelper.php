@@ -203,7 +203,6 @@ class OrderHelper {
         return true;
     }
 
-
     /**
      * Process prolongation SSL
      * @param Orders $order
@@ -568,6 +567,40 @@ class OrderHelper {
 
         $domainModel->createdNotice();
     }
+
+    /**
+     * @param Orders $order
+     * @throws Exception
+     */
+    public static function prolongationDomain(Orders $order)
+    {
+        $domainModel = Domains::findOne($order->item_id);
+
+        if (empty($domainModel)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, 'Domain [' . $domainModel->getDomain() . '] is not found in database!', 'cron.domain.prolong');
+            throw new Exception("Domain not found [$order->item_id]");
+        }
+
+        $orderDetails = $order->getDetails();
+        $domainDetails = ArrayHelper::getValue($orderDetails, 'details', []);
+        $expiry = ArrayHelper::getValue($domainDetails, 'domain_info.expires');
+
+        if (empty($expiry)) {
+            $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
+            $expiry = ArrayHelper::getValue(OrderDomainHelper::domainGetInfo($order), 'expires');
+        }
+
+
+        // Save old SslCert data before order renew ssl
+//        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.domain.prolong.old_data');
+
+        $domainRenewResult = OrderDomainHelper::domainRenew($order);
+
+        exit;
+    }
+
+
+
 
     /**
      * Create store
