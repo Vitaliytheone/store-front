@@ -86,7 +86,7 @@ class InvoiceHelper
                 }
 
                 $mail = new InvoiceCreated([
-                    'project' => $project
+                    'project' => $projects
                 ]);
                 $mail->send();
             }
@@ -105,25 +105,25 @@ class InvoiceHelper
         $domains = Domains::find()
             ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :item AND `orders`.`processing` = :processing', [
                 ':item' => Orders::ITEM_PROLONGATION_DOMAIN,
-                ':processing' => Orders::PROCESSING_OFF
             ])
-            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = order.id AND invoice_details.item = :item', [
-                ':item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
-            ])
-            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',[
-                ':status' => Invoices::STATUS_UNPAID
-            ])
+//            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = order.id AND invoice_details.item = :item', [
+//                ':item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
+//            ])
+//            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',[
+//                ':status' => Invoices::STATUS_UNPAID
+//            ])
             ->andWhere([
                 'domains.status' => Domains::STATUS_OK,
             ])->andWhere('domains.expiry < :expiry', [
                 ':expiry' => $date
             ])
-            ->groupBy('domains.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->asArray()
-            ->all();
+//            ->groupBy('domains.id')
+//            ->having("COUNT(invoices.id) = 0")
+//            ->asArray()
+            ->createCommand();
 
 
+        error_log(print_r($domains->getRawSql(),1)); exit;
         error_log(print_r($domains,1));
         exit('!!!!!');
 
