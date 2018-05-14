@@ -103,15 +103,15 @@ class InvoiceHelper
         error_log($date);
 
         $domains = Domains::find()
-            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :item AND `orders`.`processing` = :processing', [
-                ':item' => Orders::ITEM_PROLONGATION_DOMAIN,
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :order_item', [
+                ':order_item' => Orders::ITEM_PROLONGATION_DOMAIN,
             ])
-//            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = order.id AND invoice_details.item = :item', [
-//                ':item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
-//            ])
-//            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',[
-//                ':status' => Invoices::STATUS_UNPAID
-//            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
+                ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
+                ':status' => Invoices::STATUS_UNPAID
+            ])
             ->andWhere([
                 'domains.status' => Domains::STATUS_OK,
             ])->andWhere('domains.expiry < :expiry', [
@@ -119,12 +119,11 @@ class InvoiceHelper
             ])
 //            ->groupBy('domains.id')
 //            ->having("COUNT(invoices.id) = 0")
-//            ->asArray()
             ->createCommand();
+//            ->all();
 
 
-        error_log(print_r($domains->getRawSql(),1)); exit;
-        error_log(print_r($domains,1));
+        error_log(print_r($domains->getRawSql(),1));
         exit('!!!!!');
 
         foreach ($domains as $domain) {
@@ -171,7 +170,7 @@ class InvoiceHelper
             ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :item', [
                 ':item' => InvoiceDetails::ITEM_PROLONGATION_SSL
             ])
-            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',  [
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
                 ':status' => Invoices::STATUS_UNPAID
             ])
             ->andWhere([
