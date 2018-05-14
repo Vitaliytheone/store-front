@@ -161,8 +161,8 @@ class OrderSslHelper {
         }
 
         $data = [
-            'product_id' => $sslOrderDetails['product_id'],
             'csr' => $ssl->csr_code,
+            'product_id' => $sslOrderStatus['product_id'],
             'admin_email' => $sslOrderStatus['admin_email'],
             'admin_firstname' => $sslOrderStatus['admin_firstname'],
             'admin_lastname' => $sslOrderStatus['admin_lastname'],
@@ -190,7 +190,7 @@ class OrderSslHelper {
             'period' => SslCert::SSL_CERT_PERIOD,
             'server_count' => '-1',
             'webserver_type' => 1,
-            'dcv_method' => Ssl::DCV_METHOD_HTTP,
+            'dcv_method' => Ssl::DCV_METHOD_HTTPS,
             'signature_hash' => 'SHA2',
         ];
 

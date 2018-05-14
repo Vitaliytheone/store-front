@@ -167,7 +167,6 @@ class InvoiceHelper
         $sslCerts = SslCert::find()
             ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :item AND `orders`.`processing` = :processing', [
                 ':item' => Orders::ITEM_PROLONGATION_SSL,
-                ':processing' => Orders::PROCESSING_OFF
             ])
             ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :item', [
                 ':item' => InvoiceDetails::ITEM_PROLONGATION_SSL

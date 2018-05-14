@@ -243,20 +243,25 @@ class SslCert extends ActiveRecord
                     break;
             }
 
-            // Create new unreaded ticket after activate ssl cert
-            $ticket = new Tickets();
-            $ticket->cid = $this->cid;
-            $ticket->admin = 1;
-            $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
-            if ($ticket->save(false)) {
-                $ticketMessage = new TicketMessages();
-                $ticketMessage->tid = $ticket->id;
-                $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
-                $ticketMessage->date = time();
-                $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
-                    'domain' => $this->project->getBaseDomain()
-                ]);
-                $ticketMessage->save(false);
+            $isProlonged = Orders::findOne(['item' => Orders::ITEM_PROLONGATION_SSL, 'item_id' => $this->id]);
+
+            // Create new unreaded ticket after activate ssl cert.
+            // Not for SSL prolongation
+            if(!$isProlonged) {
+                $ticket = new Tickets();
+                $ticket->cid = $this->cid;
+                $ticket->admin = 1;
+                $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
+                if ($ticket->save(false)) {
+                    $ticketMessage = new TicketMessages();
+                    $ticketMessage->tid = $ticket->id;
+                    $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
+                    $ticketMessage->date = time();
+                    $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
+                        'domain' => $this->project->getBaseDomain()
+                    ]);
+                    $ticketMessage->save(false);
+                }
             }
         }
 

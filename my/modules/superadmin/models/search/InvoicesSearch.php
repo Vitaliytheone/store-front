@@ -62,7 +62,6 @@ class InvoicesSearch extends Invoices {
                 ['=', 'invoices.id', $searchQuery],
                 ['like', 'orders.domain', $searchQuery],
                 ['like', 'project.site', $searchQuery],
-                ['like', 'ssl_cert.domain', $searchQuery]
             ]);
         }
 
@@ -89,6 +88,7 @@ class InvoicesSearch extends Invoices {
                 InvoiceDetails::ITEM_BUY_CHILD_PANEL,
                 InvoiceDetails::ITEM_BUY_STORE,
                 InvoiceDetails::ITEM_BUY_TRIAL_STORE,
+                InvoiceDetails::ITEM_PROLONGATION_SSL,
             ]) . ')'
         );
         $query->leftJoin(DB_PANELS . '.project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
@@ -99,7 +99,6 @@ class InvoicesSearch extends Invoices {
         $query->leftJoin(DB_STORES . '.stores', 'stores.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_PROLONGATION_STORE,
         ]) . ')');
-        $query->leftJoin(DB_PANELS . '.ssl_cert', 'ssl_cert.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SSL);
         $query->leftJoin(DB_PANELS . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
 
         return $query;
@@ -127,7 +126,7 @@ class InvoicesSearch extends Invoices {
 
         $invoices = $query->select([
                 'invoices.*',
-                'COALESCE(orders.domain, project.site, ssl_cert.domain, stores.domain, customers.email) as domain',
+                'COALESCE(orders.domain, project.site, stores.domain, customers.email) as domain',
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)

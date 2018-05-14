@@ -233,13 +233,43 @@ class OrderHelper {
             return false;
         }
 
-        $validation = ArrayHelper::getValue($orderRenewSsl, 'validation');
-        $validation = ArrayHelper::getValue($validation, Ssl::DCV_METHOD_HTTP);
+        // Update SslCert needed data
+        $sslCert->checked = SslCert::CHECKED_NO;
+        $sslCert->setOrderDetails($orderRenewSsl);
+
+        if (!$sslCert->save(false)) {
+            $sslCert->status = SslCert::STATUS_ERROR;
+            $sslCert->save(false);
+
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, ['error' => 'Error on SslCert update', 'data' => $sslCert->getErrors()], 'cron.ssl.prolong.save');
+
+            throw new Exception("SslCert does not updated! [$order->item_id]");
+        }
+
+        // Save ssl validation file name and content
+        $validation = ArrayHelper::getValue($orderRenewSsl, 'approver_method', ArrayHelper::getValue($orderRenewSsl, 'validation'));
+        $validation = ArrayHelper::getValue($validation, Ssl::DCV_METHOD_HTTPS, ArrayHelper::getValue($validation, Ssl::DCV_METHOD_HTTP));
+
+        $validFilename = ArrayHelper::getValue($validation, 'filename');
+        $validContent = ArrayHelper::getValue($validation, 'content');
+
+        if (empty($validFilename) || empty($validContent)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, [
+                'error' => 'Empty validation data',
+                'data' => ['filename' => $validFilename, 'content' => $validContent]
+            ], 'cron.ssl.prolong.validation');
+
+            throw new Exception("Empty validation data! [$order->item_id]");
+        }
+
+        if ($existValidator = SslValidation::findOne(['file_name' => $validFilename])) {
+            $existValidator->delete();
+        }
 
         $sslValidation = new SslValidation();
         $sslValidation->pid = $sslCert->pid;
-        $sslValidation->file_name = ArrayHelper::getValue($validation, 'filename');
-        $sslValidation->content = ArrayHelper::getValue($validation, 'content');
+        $sslValidation->file_name = $validFilename;
+        $sslValidation->content = $validContent;
 
         if (!$sslValidation->save(false)) {
             $sslCert->status = SslCert::STATUS_ERROR;
@@ -247,12 +277,8 @@ class OrderHelper {
 
             ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, ['error' => 'Error on SslValidation create', 'data' => $sslValidation->getErrors()], 'cron.ssl.prolong.validation');
 
-            throw new Exception("SslValidation does not created! [$order->item_id");
+            throw new Exception("SslValidation does not created! [$order->item_id]");
         }
-
-        // Update SslCert needed data
-        $sslCert->checked = SslCert::CHECKED_NO;
-        $sslCert->setOrderDetails($orderRenewSsl);
 
         if (!$sslCert->save(false)) {
             $sslCert->status = SslCert::STATUS_ERROR;

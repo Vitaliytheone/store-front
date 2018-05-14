@@ -123,7 +123,8 @@ class ProjectController extends CustomController
          */
         $customer = Yii::$app->user->getIdentity();
 
-        if ($customer->can('domains') && $model->load(Yii::$app->request->post())) {
+        // if ($customer->can('domains') && $model->load(Yii::$app->request->post())) { TODO:: Temporary allowed buy domain with panel for new customer
+        if ($model->load(Yii::$app->request->post())) {
             if (!$model->validate()) {
                 return [
                     'status' => 'error',
