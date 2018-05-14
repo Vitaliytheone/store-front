@@ -33,7 +33,7 @@
 
                 <div class="panel-body">
 
-                    <?php if ($user->can('domains')): ?>
+                    <?php //if ($user->can('domains')): TODO:: Temporary allowed buy domain with panel for new customer ?>
                         <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
                             <div class="radio">
                                 <label>
@@ -45,7 +45,7 @@
                                 </label>
                             </div>
                         <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php //endif; ?>
 
                     <?= $form->errorSummary($model); ?>
 
