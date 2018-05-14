@@ -62,7 +62,6 @@ class InvoicesSearch extends Invoices {
                 ['=', 'invoices.id', $searchQuery],
                 ['like', 'orders.domain', $searchQuery],
                 ['like', 'project.site', $searchQuery],
-                ['like', 'ssl_cert.domain', $searchQuery]
             ]);
         }
 
