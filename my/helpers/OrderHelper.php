@@ -582,33 +582,25 @@ class OrderHelper {
             throw new Exception("Domain [$order->item_id] is not found in database!");
         }
 
-        $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
-
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.domain.prolong.info');
-
-        if (empty($domainInfoResult)) {
-            throw new Exception("Domain [$order->item_id] domainGetInfo returned an incorrect result!");
-        }
-
-        $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
-
-        if (empty($expiry)) {
-            throw new Exception("Domain [$order->item_id] `expiry` info is not defined!");
-        }
+        // Save old Domain data before renew
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.domain.prolong.old_data');
 
         $domainRenewResult = OrderDomainHelper::domainRenew($order);
 
-        if (empty($domainRenewResult)) {
+        if (empty($domainRenewResult) || !empty($domainInfoResult['_error'])) {
             throw new Exception("Domain [$order->item_id] domainRenew action failed! [$order->item_id]");
         }
 
-        // Save old SslCert data before order renew ssl
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.domain.prolong.old_data');
+        $expiry = strtotime(ArrayHelper::getValue($domainRenewResult, 'expires'));
 
-        $domain->expiry = strtotime($expiry);
-        $domain->setItemDetails($domainRenewResult, 'domain_info');
+        if (empty($expiry) || $expiry < time()) {
+            throw new Exception("Domain [$order->item_id] new expiry date [$expiry] is invalid!");
+        }
 
-        if ($domain->save(false)) {
+        $domain->expiry =$expiry;
+        $domain->setItemDetails($domainRenewResult, 'domain_renew_info');
+
+        if (!$domain->save(false)) {
             throw new Exception("Domain [$order->item_id] update action failed!");
         }
 

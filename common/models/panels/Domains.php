@@ -131,7 +131,6 @@ class Domains extends ActiveRecord
         return [
             static::STATUS_OK => Yii::t('app', 'domains.status.ok'),
             static::STATUS_EXPIRED => Yii::t('app', 'domains.status.expired'),
-            static::STATUS_ERROR => Yii::t('app', 'domains.status.error'),
         ];
     }
 
