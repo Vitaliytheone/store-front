@@ -569,37 +569,56 @@ class OrderHelper {
     }
 
     /**
+     * Prolongation domain
      * @param Orders $order
+     * @return bool
      * @throws Exception
      */
     public static function prolongationDomain(Orders $order)
     {
-        $domainModel = Domains::findOne($order->item_id);
+        $domain = Domains::findOne($order->item_id);
 
-        if (empty($domainModel)) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, 'Domain [' . $domainModel->getDomain() . '] is not found in database!', 'cron.domain.prolong');
-            throw new Exception("Domain not found [$order->item_id]");
+        if (empty($domain)) {
+            throw new Exception("Domain [$order->item_id] is not found in database!");
         }
 
-        $orderDetails = $order->getDetails();
-        $domainDetails = ArrayHelper::getValue($orderDetails, 'details', []);
-        $expiry = ArrayHelper::getValue($domainDetails, 'domain_info.expires');
+        $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.domain.prolong.info');
+
+        if (empty($domainInfoResult)) {
+            throw new Exception("Domain [$order->item_id] domainGetInfo returned an incorrect result!");
+        }
+
+        $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
 
         if (empty($expiry)) {
-            $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
-            $expiry = ArrayHelper::getValue(OrderDomainHelper::domainGetInfo($order), 'expires');
+            throw new Exception("Domain [$order->item_id] `expiry` info is not defined!");
         }
-
-
-        // Save old SslCert data before order renew ssl
-//        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.domain.prolong.old_data');
 
         $domainRenewResult = OrderDomainHelper::domainRenew($order);
 
-        exit;
+        if (empty($domainRenewResult)) {
+            throw new Exception("Domain [$order->item_id] domainRenew action failed! [$order->item_id]");
+        }
+
+        // Save old SslCert data before order renew ssl
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.domain.prolong.old_data');
+
+        $domain->expiry = strtotime($expiry);
+        $domain->setItemDetails($domainRenewResult, 'domain_info');
+
+        if ($domain->save(false)) {
+            throw new Exception("Domain [$order->item_id] update action failed!");
+        }
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->save(false);
+
+        $domain->prolongedNotice();
+
+        return true;
     }
-
-
 
 
     /**
