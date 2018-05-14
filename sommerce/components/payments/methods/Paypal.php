@@ -299,10 +299,6 @@ class Paypal extends BasePayment {
         $this->_payment->memo = ArrayHelper::getValue($GetTransactionDetails, 'EMAIL') . '; ' . $transactionId;
 
         if ($getTransactionDetailsStatus != 'completed' || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
-            if ('pending' == $getTransactionDetailsStatus || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
-                $this->_payment->status = Payments::STATUS_FAILED;
-            }
-
             // no invoice
             return [
                 'checkout_id' => $id,
