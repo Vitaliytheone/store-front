@@ -64,12 +64,12 @@
                     ])?>
                 </div>
 
-            <?php if ($user->can('domains')): ?>
+            <?php //if ($user->can('domains')): TODO:: Temporary allowed buy domain with panel for new customer ?>
                 <?= $this->render('layouts/_order_domain_modal', [
                         'form' => $form,
                         'model' => $model
                 ])?>
-            <?php endif; ?>
+            <?php //endif; ?>
 
             <?php ActiveForm::end(); ?>
         </div>
