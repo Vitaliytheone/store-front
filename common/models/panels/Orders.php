@@ -49,6 +49,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_CHILD_PANEL = 4;
     const ITEM_BUY_STORE = 5;
     const ITEM_PROLONGATION_SSL = 6;
+    const ITEM_PROLONGATION_DOMAIN = 7;
 
     use UnixTimeFormatTrait;
 
@@ -159,6 +160,7 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_CHILD_PANEL => Yii::t('app', 'orders.item.buy_child_panel'),
             static::ITEM_BUY_STORE => Yii::t('app', 'orders.item.buy_store'),
             static::ITEM_PROLONGATION_SSL => Yii::t('app', 'orders.item.prolongation_ssl'),
+            static::ITEM_PROLONGATION_DOMAIN => Yii::t('app', 'orders.item.prolongation_domain'),
         ];
     }
 

@@ -133,10 +133,10 @@ class CronController extends CustomController
      */
     public function actionCreateInvoice()
     {
-        InvoiceHelper::prolongPanels();
+//        InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
-        InvoiceHelper::prolongSsl();
-        InvoiceHelper::prolongStores();
+//        InvoiceHelper::prolongSsl();
+//        InvoiceHelper::prolongStores();
     }
 
     /**

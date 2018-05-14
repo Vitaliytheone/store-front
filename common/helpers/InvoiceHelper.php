@@ -100,9 +100,19 @@ class InvoiceHelper
     {
         $date = time() + (Yii::$app->params['domain.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
+        error_log($date);
+
         $domains = Domains::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = domains.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_DOMAIN)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :item AND `orders`.`processing` = :processing', [
+                ':item' => Orders::ITEM_PROLONGATION_DOMAIN,
+                ':processing' => Orders::PROCESSING_OFF
+            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = order.id AND invoice_details.item = :item', [
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',[
+                ':status' => Invoices::STATUS_UNPAID
+            ])
             ->andWhere([
                 'domains.status' => Domains::STATUS_OK,
             ])->andWhere('domains.expiry < :expiry', [
@@ -110,7 +120,12 @@ class InvoiceHelper
             ])
             ->groupBy('domains.id')
             ->having("COUNT(invoices.id) = 0")
+            ->asArray()
             ->all();
+
+
+        error_log(print_r($domains,1));
+        exit('!!!!!');
 
         foreach ($domains as $domain) {
             $transaction = Yii::$app->db->beginTransaction();
