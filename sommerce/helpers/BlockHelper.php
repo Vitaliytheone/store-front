@@ -50,4 +50,9 @@ class BlockHelper {
     {
         return ArrayHelper::getValue(static::getDefaultBlocks(), $code, []);
     }
+
+    public static function getBlocks()
+    {
+        
+    }
 }

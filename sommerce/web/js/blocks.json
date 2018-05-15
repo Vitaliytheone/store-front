@@ -1,26 +1,8 @@
 {
-  "slider": {
-    "settings": {
-      "effect": "slide",
-      "interval": "5000"
-    },
-    "data": [
-      {
-        "id": "1",
-        "title": "Title slide #1",
-        "description": "Description slide #1",
-        "button": {
-          "title": "Edit link",
-          "link": "/#",
-          "type": "web"
-        },
-        "image": "/img/slide_no_image.png"
-      }
-    ]
-  },
   "features": {
     "settings": {
       "icon_size": "75",
+      "picture_type": "icon",
       "column": "4",
       "align": "center"
     },
@@ -33,19 +15,95 @@
         "id": "1",
         "title": "Feature #1",
         "description": "Description feature #1",
-        "icon": "fa-picture-o"
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
       },
       {
         "id": "2",
         "title": "Feature #2",
         "description": "Description feature #2",
-        "icon": "fa-picture-o"
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
       },
       {
         "id": "3",
         "title": "Feature #3",
         "description": "Description feature #3",
-        "icon": "fa-picture-o"
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      },
+      {
+        "id": "4",
+        "title": "Feature #4",
+        "description": "Description feature #4",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      },
+      {
+        "id": "5",
+        "title": "Feature #5",
+        "description": "Description feature #5",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      },
+      {
+        "id": "6",
+        "title": "Feature #6",
+        "description": "Description feature #6",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      }
+    ]
+  },
+  "process": {
+    "settings": {
+      "icon_size": 75,
+      "picture_type": "icon",
+      "description": 1,
+      "column": "col-md-3"
+    },
+    "header":{
+      "title": "Process",
+      "description": "Description precess block"
+    },
+    "data": [
+      {
+        "id": "1",
+        "title": "Process #1",
+        "description": "Description process #1",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      },
+      {
+        "id": "2",
+        "title": "Process #2",
+        "description": "Description process #2",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      },
+      {
+        "id": "3",
+        "title": "Process #3",
+        "description": "Description process #3",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
+      },
+      {
+        "id": "4",
+        "title": "Process #4",
+        "description": "Description process #4",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "https://www.tempevvs.no/sites/default/files/product_display/INGENBILDE_2.png"
       }
     ]
   },
@@ -60,47 +118,47 @@
     "data":[
       {
         "id": "1",
-        "image": "/img/review_no_avatar.gif",
+        "image": "http://dev.sommerce.net/img/review_no_avatar.gif",
         "name": "John",
         "rating": "5",
+        "description": "Great service!"
+      },
+      {
+        "id": "2",
+        "image": "http://dev.sommerce.net/img/review_no_avatar.gif",
+        "name": "Bob",
+        "rating": "3",
         "description": "Great service!"
       }
     ]
   },
-  "process": {
+  "slider": {
     "settings": {
-      "icon_size": 75,
-      "description": 1,
-      "column": "3"
-    },
-    "header":{
-      "title": "Process",
-      "description": "Description precess block"
+      "effect": "slide",
+      "interval": "5000"
     },
     "data": [
       {
         "id": "1",
-        "title": "Process #1",
-        "description": "Description process #1",
-        "icon": "fa-picture-o"
+        "title": "Title slide #1",
+        "description": "Description slide #1",
+        "button": {
+          "title": "Edit link",
+          "link": "/terms-of-service",
+          "type": "page"
+        },
+        "image": "https://image.freepik.com/free-vector/no-translate-detected_1407-419.jpg"
       },
       {
         "id": "2",
-        "title": "Process #2",
-        "description": "Description process #2",
-        "icon": "fa-picture-o"
-      },
-      {
-        "id": "3",
-        "title": "Process #3",
-        "description": "Description process #3",
-        "icon": "fa-picture-o"
-      },
-      {
-        "id": "4",
-        "title": "Process #4",
-        "description": "Description process #4",
-        "icon": "fa-picture-o"
+        "title": "Title slide #2",
+        "description": "Description slide #2",
+        "button": {
+          "title": "Edit link",
+          "link": "/",
+          "type": "none"
+        },
+        "image": "http://static.euronews.com/articles/stories/03/02/58/22/1000x563_story-353f6fe8-c164-5129-b92c-2dc8a7f188d1_343372.jpg"
       }
     ]
   }

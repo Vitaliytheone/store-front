@@ -6,12 +6,15 @@ use common\models\store\ActivityLog;
 use common\models\store\Blocks;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
+use sommerce\assets\BlocksAppAsset;
 use sommerce\helpers\BlockHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\BlockUploadForm;
 use sommerce\modules\admin\models\forms\EditBlockForm;
+use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
 use sommerce\modules\admin\models\search\BlocksSearch;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -47,11 +50,95 @@ trait BlocksTrait {
     }
 
     /**
+     * Initialize Blocks ReactJs app
+     * @param $code
+     * @return mixed
+     */
+    public function actionEditBlock($code)
+    {
+        $this->view->title = Yii::t('admin', "settings.edit_block_page_title", [
+            'block' => ''
+        ]);
+
+        $this->layout = '@admin/views/layouts/react_app';
+
+        return $this->render('edit_blocks_app', [
+            'code' => $code,
+        ]);
+    }
+
+    /**
+     * Return product/page links for blocks AJAX action
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function actionGetBlockUrls()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+
+        return (new LinksSearch())->searchLinks4Blocks();
+    }
+
+    /**
+     * Return all blocks AJAX action
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function actionGetBlocks()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+
+        return BlockHelper::getDefaultBlocks();
+    }
+
+    /**
+     * Update all blocks AJAX POST action
+     * @return bool
+     * @throws BadRequestHttpException
+     */
+    public function actionUpdateBlocks()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+
+        return true;
+    }
+
+    /**
+     * Upload block image AJAX POST action
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    public function actionUploadBlockImage()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+
+        return ['url' => 'http://static.euronews.com/articles/stories/03/02/58/22/1000x563_story-353f6fe8-c164-5129-b92c-2dc8a7f188d1_343372.jpg'];
+    }
+
+
+    /**
+     * // TODO:: OLD EDIT! Delete it after finish!
      * Edit block
      * @param $code
      * @return array
      */
-    public function actionEditBlock($code)
+    public function __actionEditBlock($code)
     {
         $block = $this->_findBlock($code, true);
 
