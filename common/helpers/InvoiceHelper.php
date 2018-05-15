@@ -145,7 +145,7 @@ class InvoiceHelper
             $invoice->cid = $domain->customer_id;
             $invoice->total = $domain->zone->price_renewal;
             $invoice->generateCode();
-            $invoice->daysExpired(7);
+            $invoice->daysExpired(30);
 
             if (!$invoice->save()) {
                 $order->status = Orders::STATUS_ERROR;
@@ -251,7 +251,7 @@ class InvoiceHelper
             $invoice->cid = $ssl->cid;
             $invoice->total = $ssl->item->price;
             $invoice->generateCode();
-            $invoice->daysExpired(7);
+            $invoice->daysExpired(30);
 
             if (!$invoice->save()) {
                 $ssl->status = SslCert::STATUS_ERROR;
