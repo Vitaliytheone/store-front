@@ -1,10 +1,12 @@
 <?php
 namespace my\helpers\order;
 
+use common\models\panels\Domains;
 use Yii;
 use my\components\domains\Ahnames;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -171,5 +173,42 @@ class OrderDomainHelper {
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $enableLock, 'cron.order.domain_lock');
 
         return $enableLock;
+    }
+
+    /**
+     * Domain renew registration
+     * @param Orders $order
+     * @return array
+     * @throws Exception
+     */
+    public static function domainRenew(Orders $order)
+    {
+        $orderDetails = $order->getDetails();
+        $domain = ArrayHelper::getValue($orderDetails, 'domain');
+
+        $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.prolong.domain_info_result');
+
+        if (empty($domainInfoResult) || !empty($domainInfoResult['_error'])) {
+            throw new Exception("Domain [$order->item_id] domainGetInfo returned an incorrect result!");
+        }
+
+        $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
+
+        if (empty($expiry)) {
+            throw new Exception("Domain [$order->item_id] `expiry` info is not defined!");
+        }
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
+            'domain' => $domain,
+            'expiry' => $expiry
+        ], 'cron.prolong.send_renew_domain');
+
+        $domainRenewResult = Ahnames::domainRenew($domain, $expiry);
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainRenewResult, 'cron.prolong.renew_domain');
+
+        return $domainRenewResult;
     }
 }

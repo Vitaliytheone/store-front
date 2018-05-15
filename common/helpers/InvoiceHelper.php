@@ -86,7 +86,7 @@ class InvoiceHelper
                 }
 
                 $mail = new InvoiceCreated([
-                    'project' => $project
+                    'project' => $projects
                 ]);
                 $mail->send();
             }
@@ -101,8 +101,15 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['domain.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $domains = Domains::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = domains.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_DOMAIN)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :order_item', [
+                ':order_item' => Orders::ITEM_PROLONGATION_DOMAIN,
+            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
+                ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
+                ':status' => Invoices::STATUS_UNPAID
+            ])
             ->andWhere([
                 'domains.status' => Domains::STATUS_OK,
             ])->andWhere('domains.expiry < :expiry', [
@@ -113,32 +120,63 @@ class InvoiceHelper
             ->all();
 
         foreach ($domains as $domain) {
+
+            $order = new Orders();
+            $order->date = time();
+            $order->ip = '127.0.0.1';
+            $order->cid = $domain->customer_id;
+            $order->item = Orders::ITEM_PROLONGATION_DOMAIN;
+            $order->item_id = $domain->id;
+            $order->domain = $domain->getDomain();
+            $order->setDetails([
+                'domain' => $order->getDomain(),
+                'details' => $domain->getDetails(),
+            ]);
+
+            if (!$order->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->id, $order->getErrors(), 'cron.create_invoice.order');
+
+                continue;
+            }
+
             $transaction = Yii::$app->db->beginTransaction();
 
             $invoice = new Invoices();
             $invoice->cid = $domain->customer_id;
             $invoice->total = $domain->zone->price_renewal;
             $invoice->generateCode();
-            $invoice->daysExpired(7);
+            $invoice->daysExpired(30);
 
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $domain->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_DOMAIN;
+            if (!$invoice->save()) {
+                $order->status = Orders::STATUS_ERROR;
+                $domain->save(false);
 
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $invoice->id, $invoice->getErrors(), 'cron.create_invoice.invoice');
 
-                $transaction->commit();
-
-                $mail = new InvoiceCreated([
-                    'domain' => $domain
-                ]);
-                $mail->send();
+                continue;
             }
+
+            $invoiceDetails = new InvoiceDetails();
+            $invoiceDetails->invoice_id = $invoice->id;
+            $invoiceDetails->item = InvoiceDetails::ITEM_PROLONGATION_DOMAIN;
+            $invoiceDetails->item_id = $order->id;
+            $invoiceDetails->amount = $invoice->total;
+
+            if (!$invoiceDetails->save()) {
+                $order->status = Orders::STATUS_ERROR;
+                $domain->save(false);
+
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $invoiceDetails->id, $invoiceDetails->getErrors(), 'cron.create_invoice.details');
+
+                continue;
+            }
+
+            $transaction->commit();
+
+            $mail = new InvoiceCreated([
+                'domain' => $domain
+            ]);
+            $mail->send();
         }
     }
 
@@ -150,13 +188,13 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :item', [
-                ':item' => Orders::ITEM_PROLONGATION_SSL,
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item', [
+                ':order_item' => Orders::ITEM_PROLONGATION_SSL,
             ])
-            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :item', [
-                ':item' => InvoiceDetails::ITEM_PROLONGATION_SSL
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
+                ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_SSL
             ])
-            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status',  [
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
                 ':status' => Invoices::STATUS_UNPAID
             ])
             ->andWhere([
@@ -213,7 +251,7 @@ class InvoiceHelper
             $invoice->cid = $ssl->cid;
             $invoice->total = $ssl->item->price;
             $invoice->generateCode();
-            $invoice->daysExpired(7);
+            $invoice->daysExpired(30);
 
             if (!$invoice->save()) {
                 $ssl->status = SslCert::STATUS_ERROR;

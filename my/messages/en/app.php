@@ -332,6 +332,7 @@ return [
     'orders.item.buy_child_panel' => 'Child Panel',
     'orders.item.buy_store' => 'Store',
     'orders.item.prolongation_ssl' => 'Prolongation SSL',
+    'orders.item.prolongation_domain' => 'Prolongation domain',
     'panel_domains.type.standard' => 'Standard',
     'panel_domains.type.additional' => 'Additional',
     'panel_domains.type.subdomain' => 'Subdomain',

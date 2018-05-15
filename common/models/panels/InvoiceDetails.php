@@ -193,7 +193,9 @@ class InvoiceDetails extends ActiveRecord
                     break;
 
                 case static::ITEM_PROLONGATION_DOMAIN:
-                    $domain = Domains::findOne($this->item_id);
+                    $order = Orders::findOne($this->item_id);
+                    $domain = Domains::findOne($order->item_id);
+
                     $this->description = $domain->zone->zone . ' domain renewal for 1 year';
                     break;
 
@@ -331,6 +333,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_STORE:
             case static::ITEM_BUY_TRIAL_STORE:
             case static::ITEM_PROLONGATION_SSL:
+            case static::ITEM_PROLONGATION_DOMAIN:
                 $order = Orders::findOne($this->item_id);
                 return $order;
             break;
@@ -370,6 +373,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
             case static::ITEM_PROLONGATION_SSL:
+            case static::ITEM_PROLONGATION_DOMAIN:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);

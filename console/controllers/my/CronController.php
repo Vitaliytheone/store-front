@@ -49,7 +49,7 @@ class CronController extends CustomController
     {
         $orders = Orders::find()->andWhere([
             'status' => Orders::STATUS_PAID,
-            'processing' => 0,
+            'processing' => Orders::PROCESSING_NO,
             'item' => [
                 Orders::ITEM_BUY_PANEL,
                 Orders::ITEM_BUY_SSL,
@@ -57,6 +57,7 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_CHILD_PANEL,
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
+                Orders::ITEM_PROLONGATION_DOMAIN,
             ]
         ])->all();
 
@@ -96,6 +97,10 @@ class CronController extends CustomController
 
                     case Orders::ITEM_PROLONGATION_SSL:
                         OrderHelper::prolongationSsl($order);
+                    break;
+
+                    case Orders::ITEM_PROLONGATION_DOMAIN:
+                        OrderHelper::prolongationDomain($order);
                     break;
                 }
             } catch (Exception $e) {
