@@ -188,7 +188,7 @@ class OrderDomainHelper {
 
         $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->id, $domainInfoResult, 'cron.order.domain_info_result');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.prolong.domain_info_result');
 
         if (empty($domainInfoResult) || !empty($domainInfoResult['_error'])) {
             throw new Exception("Domain [$order->item_id] domainGetInfo returned an incorrect result!");
@@ -200,11 +200,14 @@ class OrderDomainHelper {
             throw new Exception("Domain [$order->item_id] `expiry` info is not defined!");
         }
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->id, ['domain' => $domain, 'expiry' => $expiry], 'cron.order.send_renew_domain');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
+            'domain' => $domain,
+            'expiry' => $expiry
+        ], 'cron.prolong.send_renew_domain');
 
         $domainRenewResult = Ahnames::domainRenew($domain, $expiry);
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->id, $domainRenewResult, 'cron.order.renew_domain');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainRenewResult, 'cron.prolong.renew_domain');
 
         return $domainRenewResult;
     }

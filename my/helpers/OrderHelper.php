@@ -579,28 +579,48 @@ class OrderHelper {
         $domain = Domains::findOne($order->item_id);
 
         if (empty($domain)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
+                'error' => 'Domain not found in database',
+                'domain_id' => $order->item_id,
+            ], 'cron.prolong.domain.e_domain');
+
             throw new Exception("Domain [$order->item_id] is not found in database!");
         }
 
         // Save old Domain data before renew
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.domain.prolong.old_data');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domain->attributes, 'cron.prolong.domain.old_data');
 
         $domainRenewResult = OrderDomainHelper::domainRenew($order);
 
         if (empty($domainRenewResult) || !empty($domainInfoResult['_error'])) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
+                'error' => 'Invalid API domainRenew result',
+                'api_response' => $domainRenewResult,
+            ], 'cron.prolong.domain.e_renew');
+
             throw new Exception("Domain [$order->item_id] domainRenew action failed! [$order->item_id]");
         }
 
         $expiry = strtotime(ArrayHelper::getValue($domainRenewResult, 'expires'));
 
         if (empty($expiry) || $expiry < time()) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
+                'error' => 'Invalid domain expiry value',
+                'expiry' => $expiry,
+            ], 'cron.prolong.domain.e_expiry');
+
             throw new Exception("Domain [$order->item_id] new expiry date [$expiry] is invalid!");
         }
 
-        $domain->expiry =$expiry;
+        $domain->expiry = $expiry;
         $domain->setItemDetails($domainRenewResult, 'domain_renew_info');
 
         if (!$domain->save(false)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
+                'error' => 'Invalid domain update',
+                'errors' => $domain->getErrors(),
+            ], 'cron.prolong.domain.e_update');
+
             throw new Exception("Domain [$order->item_id] update action failed!");
         }
 
