@@ -5,6 +5,7 @@ namespace common\models\panels;
 use common\components\traits\UnixTimeFormatTrait;
 use my\mail\mailers\CreatedDomain;
 use my\helpers\DomainsHelper;
+use my\mail\mailers\RenewedDomain;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -129,7 +130,7 @@ class Domains extends ActiveRecord
     {
         return [
             static::STATUS_OK => Yii::t('app', 'domains.status.ok'),
-            static::STATUS_EXPIRED => Yii::t('app', 'domains.status.expired')
+            static::STATUS_EXPIRED => Yii::t('app', 'domains.status.expired'),
         ];
     }
 
@@ -184,6 +185,17 @@ class Domains extends ActiveRecord
     public function createdNotice()
     {
         $mailer = new CreatedDomain([
+            'domain' => $this
+        ]);
+        $mailer->send();
+    }
+
+    /**
+     * Send prolonged notification
+     */
+    public function prolongedNotice()
+    {
+        $mailer = new RenewedDomain([
             'domain' => $this
         ]);
         $mailer->send();

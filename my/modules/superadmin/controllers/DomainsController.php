@@ -50,7 +50,10 @@ class DomainsController extends CustomController
 
         $logs = ThirdPartyLog::find()->andWhere([
             'item_id' => $domain->id,
-            'item' => ThirdPartyLog::ITEM_BUY_DOMAIN
+            'item' => [
+                ThirdPartyLog::ITEM_BUY_DOMAIN,
+                ThirdPartyLog::ITEM_PROLONGATION_DOMAIN,
+            ],
         ])->all();
 
         return [
