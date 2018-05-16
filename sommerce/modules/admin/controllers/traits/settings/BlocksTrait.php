@@ -11,6 +11,7 @@ use sommerce\helpers\BlockHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\BlockUploadForm;
 use sommerce\modules\admin\models\forms\EditBlockForm;
+use sommerce\modules\admin\models\forms\UpdateBlocksForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
 use sommerce\modules\admin\models\search\BlocksSearch;
@@ -57,7 +58,7 @@ trait BlocksTrait {
     public function actionEditBlock($code)
     {
         $this->view->title = Yii::t('admin', "settings.edit_block_page_title", [
-            'block' => ''
+            'block' => null
         ]);
 
         $this->layout = '@admin/views/layouts/react_app';
@@ -96,7 +97,7 @@ trait BlocksTrait {
             throw new BadRequestHttpException();
         }
 
-        return BlockHelper::getDefaultBlocks();
+        return BlockHelper::getBlocks();
     }
 
     /**
@@ -106,9 +107,18 @@ trait BlocksTrait {
      */
     public function actionUpdateBlocks()
     {
+        $request = Yii::$app->request;
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (!Yii::$app->request->isAjax) {
+        if (!$request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+
+        $form = new UpdateBlocksForm();
+        $form->setUser(Yii::$app->user);
+        $form->setBlocks(json_decode($request->getRawBody(), true));
+
+        if (!$form->save()) {
             throw new BadRequestHttpException();
         }
 
@@ -130,7 +140,6 @@ trait BlocksTrait {
 
         return ['url' => 'http://static.euronews.com/articles/stories/03/02/58/22/1000x563_story-353f6fe8-c164-5129-b92c-2dc8a7f188d1_343372.jpg'];
     }
-
 
     /**
      * // TODO:: OLD EDIT! Delete it after finish!
