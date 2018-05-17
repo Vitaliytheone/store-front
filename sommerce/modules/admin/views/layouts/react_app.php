@@ -16,6 +16,7 @@ use yii\helpers\Html;
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
+        <script> window.modules = {}; </script>
     </head>
 
     <body>
