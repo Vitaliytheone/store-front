@@ -90,4 +90,27 @@ class LinksSearch extends Model
 
         return $links;
     }
+
+    /**
+     * Return `pages` & `products` urls for blocks
+     * @return array
+     */
+    public function searchLinks4Blocks()
+    {
+        $links = [
+            'pages' => $this->searchPagesLinks(),
+            'products' => $this->searchProductsLinks(),
+        ];
+
+        foreach ($links as &$linkItem) {
+            array_walk($linkItem, function(&$value){
+                $value = [
+                    'name' => $value['name'],
+                    'url' => '/' . $value['url'],
+                ];
+            });
+        }
+
+        return $links;
+    }
 }

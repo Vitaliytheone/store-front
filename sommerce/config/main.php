@@ -28,6 +28,9 @@ $config = [
             'csrfParam' => '_csrf-sommerce',
             'cookieValidationKey' => 'uKJVjhPVYpKcAirTEKcgVrcau5ZVPV0d',
             'class'	=> 'sommerce\components\MyRequest',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser'
+            ],
         ],
         'devMailer' => [
             'class' => 'yii\swiftmailer\Mailer',
