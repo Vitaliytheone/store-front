@@ -3,14 +3,10 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
 use common\models\store\ActivityLog;
-use common\models\store\Blocks;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
-use sommerce\assets\BlocksAppAsset;
 use sommerce\helpers\BlockHelper;
-use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\BlockUploadForm;
-use sommerce\modules\admin\models\forms\EditBlockForm;
 use sommerce\modules\admin\models\forms\UpdateBlocksForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
@@ -157,105 +153,6 @@ trait BlocksTrait {
         return ['url' => $model->link];
     }
 
-
-
-
-
-    /**
-     * // TODO:: OLD EDIT! Delete it after finish!
-     * Edit block
-     * @param $code
-     * @return array
-     */
-    public function __actionEditBlock($code)
-    {
-        $block = $this->_findBlock($code, true);
-
-        $this->view->title = Yii::t('admin', "settings.edit_block_page_title", [
-            'block' => $code
-        ]);
-
-        $model = new EditBlockForm();
-        $model->setBlock($block);
-        $model->setUser(Yii::$app->user);
-
-        if (Yii::$app->request->isPost) {
-            $model->content = Yii::$app->request->post('content');
-            $save = $model->save();
-
-            if (Yii::$app->request->isAjax) {
-                Yii::$app->response->format = Response::FORMAT_JSON;
-
-                if (!$save) {
-                    return [
-                        'status' => 'error',
-                        'error' => ActiveForm::firstError($model)
-                    ];
-                }
-
-                return [
-                    'status' => 'success'
-                ];
-            }
-
-            if ($save) {
-                return $this->refresh();
-            }
-        }
-
-        $this->layout = 'block';
-
-        $this->addModule('adminEditBlock', [
-            'code' => $code,
-            'saveUrl' => Url::toRoute(['settings/edit-block', 'code' => $code]),
-            'uploadUrl' => Url::toRoute(['settings/block-upload', 'code' => $code]),
-            'block' => $block->getContent(BlockHelper::getDefaultBlock($code))
-        ]);
-
-        return $this->render('edit_block', [
-            'code' => $code,
-        ]);
-    }
-
-    /**
-     * Edit block
-     * @param $code
-     * @return array
-     */
-    public function __actionBlockUpload($code)
-    {
-        $block = $this->_findBlock($code);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new BlockUploadForm();
-        $model->setBlock($block);
-
-        if (Yii::$app->request->isPost) {
-            $model->load([
-                $model->formName() => Yii::$app->request->post()
-            ]);
-            $save = $model->save();
-
-            if (!$save) {
-                return [
-                    'status' => 'error',
-                    'error' => ActiveForm::firstError($model)
-                ];
-            }
-
-            return [
-                'status' => 'success',
-                'link' => $model->link
-            ];
-        }
-
-        return [
-            'status' => 'error',
-            'error' => ''
-        ];
-    }
-
     /**
      * Enable block
      * @param $code
@@ -321,39 +218,17 @@ trait BlocksTrait {
     }
 
     /**
-     * Find block by code or create new
-     * @param string $code
-     * @param bool $createOnEmpty
-     * @return null|Blocks
-     * @throws NotFoundHttpException
-     */
-    public function _findBlock($code, $createOnEmpty = false)
-    {
-        $block = null;
-        if (!($block = Blocks::findOne([
-            'code' => $code
-        ]))) {
-
-            if (!$createOnEmpty || !in_array($code, Blocks::getCodes())) {
-                throw new NotFoundHttpException();
-            }
-
-            $block = new Blocks();
-            $block->code = $code;
-            $block->setContent(BlockHelper::getDefaultBlock($block->code));
-            $block->save(false);
-        }
-
-        return $block;
-    }
-
-    /**
      * Logging change block active status event
      * @param $code
+     * @throws NotFoundHttpException
      */
     private function _logToggleBlockStatus($code)
     {
-        $block = $this->_findBlock($code);
+        $block = BlockHelper::getBlock($code, true);
+
+        if (!$block) {
+            throw new NotFoundHttpException();
+        }
 
         /** @var StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
