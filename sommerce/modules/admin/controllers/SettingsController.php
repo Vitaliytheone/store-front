@@ -42,7 +42,7 @@ class SettingsController extends CustomController
         // Disabled csrf validation for some actions
         if (in_array($action->id, [
             'update-blocks',
-            'upload-block-image',
+            'block-upload',
         ])) {
             $this->enableCsrfValidation = false;
         }

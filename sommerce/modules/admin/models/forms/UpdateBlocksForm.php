@@ -4,6 +4,7 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\store\Blocks;
 use common\models\stores\StoreAdminAuth;
+use sommerce\helpers\BlockHelper;
 use Yii;
 use yii\base\Model;
 use yii\web\User;
@@ -77,19 +78,31 @@ class UpdateBlocksForm extends Model {
      */
     public function save()
     {
-        foreach ($this->getBlocks() as $blockSettings) {
-
-
-        }
-
-
-
-
-
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
 
-//        ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_UPDATED, $this->_block->id, $this->_block->code);
+        $blocksContent = $this->getBlocks();
+
+        foreach ($blocksContent as $blockCode => $blockContent) {
+
+            if (!in_array($blockCode, Blocks::getCodes())) {
+                continue;
+            }
+
+            $blockModel = BlockHelper::getBlock($blockCode, true);
+
+            if (!$blockModel) {
+                return false;
+            }
+
+            $blockModel->setContent($blockContent);
+
+            if (!$blockModel->save(false)) {
+                return false;
+            }
+
+            ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_UPDATED, $blockModel->id, $blockModel->code);
+        }
 
         return true;
     }

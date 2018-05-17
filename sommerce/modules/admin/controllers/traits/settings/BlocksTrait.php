@@ -78,7 +78,7 @@ trait BlocksTrait {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!Yii::$app->request->isAjax) {
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException('Ajax request expected!');
         }
 
         return (new LinksSearch())->searchLinks4Blocks();
@@ -94,10 +94,10 @@ trait BlocksTrait {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!Yii::$app->request->isAjax) {
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException('Ajax request expected!');
         }
 
-        return BlockHelper::getBlocks();
+        return BlockHelper::getBlocksContent();
     }
 
     /**
@@ -110,36 +110,56 @@ trait BlocksTrait {
         $request = Yii::$app->request;
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (!$request->isAjax) {
-            throw new BadRequestHttpException();
+        if (!$request->isAjax || !$request->isPost) {
+            throw new BadRequestHttpException('Ajax request expected!');
         }
 
         $form = new UpdateBlocksForm();
         $form->setUser(Yii::$app->user);
-        $form->setBlocks(json_decode($request->getRawBody(), true));
+        $form->setBlocks($request->post());
 
         if (!$form->save()) {
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException('Something was wrong! Try again later...');
         }
 
         return true;
     }
 
     /**
-     * Upload block image AJAX POST action
+     * Upload block image
+     * @param $code
      * @return array
+     * @throws NotFoundHttpException
      * @throws BadRequestHttpException
      */
-    public function actionUploadBlockImage()
+    public function actionBlockUpload($code)
     {
+        $request = Yii::$app->request;
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (!Yii::$app->request->isAjax) {
-            throw new BadRequestHttpException();
+        if (!$request->isAjax || !$request->isPost) {
+            throw new BadRequestHttpException('Ajax POST request expected!');
         }
 
-        return ['url' => 'http://static.euronews.com/articles/stories/03/02/58/22/1000x563_story-353f6fe8-c164-5129-b92c-2dc8a7f188d1_343372.jpg'];
+        $block = BlockHelper::getBlock($code);
+
+        if (!$block) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new BlockUploadForm();
+        $model->setBlock($block);
+
+        if (!$model->save()) {
+            throw new BadRequestHttpException(ActiveForm::firstError($model));
+        }
+
+        return ['url' => $model->link];
     }
+
+
+
+
 
     /**
      * // TODO:: OLD EDIT! Delete it after finish!
@@ -202,7 +222,7 @@ trait BlocksTrait {
      * @param $code
      * @return array
      */
-    public function actionBlockUpload($code)
+    public function __actionBlockUpload($code)
     {
         $block = $this->_findBlock($code);
 
