@@ -127,11 +127,11 @@ class ApiKeysLogsSearch
 
         if ($this->getQuery() !== null) {
             if ($searchType == 1) {
-                $query->orWhere(['=', 'prvt.name', $this->getQuery()]);
-            }
-            
-            if ($searchType == 2) {
                 $query->orWhere(['=', 'pt.site', $this->getQuery()]);
+            }
+
+            if ($searchType == 2) {
+                $query->orWhere(['=', 'prvt.name', $this->getQuery()]);
             }
 
             if ($searchType == 3) {
