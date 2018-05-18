@@ -8,6 +8,7 @@ use common\models\panels\Customers;
 use common\models\panels\PanelDomains;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\Project;
+use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 
@@ -15,12 +16,12 @@ use yii\db\Query;
  * Class ApiKeysLogsSearch
  *
  * ID       panel_providers_log.id
- * Panel	project.site
- * Account	project_admin.login
- * Provider	additional_services.name
- * Key		panel_providers_log.apiKey, panel_providers_log.login, panel_providers_log.passwd
- * In use	[project.site, …]
- * Date		panel_providers_log.created_at
+ * Panel    project.site
+ * Account  project_admin.login
+ * Provider additional_services.name
+ * Key      panel_providers_log.apiKey, panel_providers_log.login, panel_providers_log.passwd
+ * In use   [project.site, …]
+ * Date     panel_providers_log.created_at
  *
  * @package my\modules\superadmin\models\search
  */
@@ -37,6 +38,11 @@ class ApiKeysLogsSearch
     private $_providersTable;
     private $_projectAdminTable;
 
+    /**
+     * @var array
+     */
+    private $params;
+
     /** @var $_dataProvider ActiveDataProvider */
     private $_dataProvider;
 
@@ -51,11 +57,46 @@ class ApiKeysLogsSearch
     }
 
     /**
+     * Set search parameters
+     * @param array $params
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
+        $this->attributes = $params;
+    }
+
+    /**
+     * Get parameters
+     * @return array
+     */
+    public function getParams()
+    {
+        return [
+            'search' => $this->getQuery(),
+            'status' => isset($this->params['status']) ? $this->params['status'] : '0',
+        ];
+    }
+
+    /**
+     * Get search query
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        $query = (string)ArrayHelper::getValue($this->params, 'search', '');
+        $query = trim($query);
+        return !empty($query) ? $query : null;
+    }
+
+    /**
      * Search
      * @return ActiveDataProvider
      */
     public function search()
     {
+        $status = ArrayHelper::getValue($this->params, 'status', 0);
+
         $query = (new Query())
             ->select([
                 'lt.id id', 'lt.panel_id panel_id', 'lt.admin_id admin_id', 'lt.provider_id provider_id',
@@ -69,16 +110,33 @@ class ApiKeysLogsSearch
             ->leftJoin(['pt' => $this->_projectTable], 'pt.id = lt.panel_id')
             ->leftJoin(['pat' => $this->_projectAdminTable], 'pat.id = lt.admin_id')
             ->leftJoin(['ct' => $this->_customersTable], 'ct.id = pt.cid')
+            ->leftJoin(['provt' => $this->_providersTable], 'lt.provider_id = provt.res')
             ->leftJoin(['prvt' => (new Query())
                 ->select(['res', 'name'])
                 ->from($this->_providersTable)
                 ->groupBy('res')
             ],'prvt.res = lt.provider_id')
-            ->andWhere(['not', ['matched' => null]])
             ->orderBy([
                 'id' => SORT_DESC,
             ])
             ->indexBy('id');
+
+
+        if ($this->getQuery() !== null) {
+            $query->orWhere(['=', 'prvt.name', $this->getQuery()]);
+            $query->orWhere(['=', 'pt.site', $this->getQuery()]);
+        }
+
+        if ($status == 1) {
+            $query->andWhere(['=', 'report', 0]);
+        }
+
+        if ($status == 2) {
+            $query->andWhere(['=', 'report', 1]);
+        }
+        
+        $query->andWhere(['not', ['matched' => null]]);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -132,6 +190,7 @@ class ApiKeysLogsSearch
         foreach ($models as &$model) {
 
             $matchedProjects = [];
+
             $currentModelProjectsIds = $model['matched'];
 
             foreach ($projects as $projectId => &$project) {
@@ -142,7 +201,6 @@ class ApiKeysLogsSearch
                     array_push($matchedProjects, $project);
                 }
             }
-
             // Add additional data
             $model['matched_projects'] = $matchedProjects;
             $model['date'] = static::formatDate($model['created_at']);

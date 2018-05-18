@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\LinkPager;
+use my\helpers\Url;
 
 /** @var \yii\data\Pagination $pagination */
 /** @var array $logs */
@@ -7,7 +8,25 @@ use yii\widgets\LinkPager;
 ?>
 
 <div class="container-fluid mt-3">
-
+    <ul class="nav mb-3">
+        <li class="mr-auto">
+            <ul class="nav nav-pills">
+                <?php foreach ($navs as $code => $label) : ?>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code == $filters['status'] ? 'active' : '') ?>" href="<?= ($code != 0 ? Url::toRoute(['/logs/api-keys', 'status' => $code, 'search' => $filters['search']]) : Url::toRoute(['/logs/api-keys'])) ?>"><?= $label ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+        <li>
+            <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(['/logs/api-keys'], $filters, ['search' => null]))?>">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" placeholder="Search" value="<?=$filters['search']?>">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
+                    </span>
+                </div>
+            </form>
+        </li>
+    </ul>
     <table class="table table-border">
         <thead>
         <tr>
