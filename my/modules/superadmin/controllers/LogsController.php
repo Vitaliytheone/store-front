@@ -80,9 +80,16 @@ class LogsController extends CustomController
             '2' => 'Ne svoi',
         ];
 
+        $searchType = [
+            '1' => 'Panel',
+            '2' => 'Provider',
+            '3' => 'In use',
+        ];
+
         return $this->render('api_keys', [
             'logs' => $searchModel->getModelsForView(),
             'navs' => $navs,
+            'searchType' => $searchType,
             'filters' => $searchModel->getParams(),
             'pagination' => $dataProvider->getPagination(),
         ]);

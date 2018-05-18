@@ -74,6 +74,7 @@ class ApiKeysLogsSearch
     {
         return [
             'search' => $this->getQuery(),
+            'search-type' => isset($this->params['search-type']) ? $this->params['search-type'] : '1',
             'status' => isset($this->params['status']) ? $this->params['status'] : '0',
         ];
     }
@@ -96,6 +97,8 @@ class ApiKeysLogsSearch
     public function search()
     {
         $status = ArrayHelper::getValue($this->params, 'status', 0);
+        
+        $searchType = ArrayHelper::getValue($this->params, 'search-type', 1);
 
         $query = (new Query())
             ->select([
@@ -123,8 +126,24 @@ class ApiKeysLogsSearch
 
 
         if ($this->getQuery() !== null) {
-            $query->orWhere(['=', 'prvt.name', $this->getQuery()]);
-            $query->orWhere(['=', 'pt.site', $this->getQuery()]);
+            if ($searchType == 1) {
+                $query->orWhere(['=', 'prvt.name', $this->getQuery()]);
+            }
+            
+            if ($searchType == 2) {
+                $query->orWhere(['=', 'pt.site', $this->getQuery()]);
+            }
+
+            if ($searchType == 3) {
+                $panel = Project::find()->where(['site' => $this->getQuery()])->one();
+
+                if ($panel !== null) {
+                    $query->orFilterWhere([
+                        'OR',
+                        'matched LIKE "%\"' . $panel->id . '\"%" ',
+                    ]);
+                }
+            }
         }
 
         if ($status == 1) {
@@ -132,7 +151,7 @@ class ApiKeysLogsSearch
         }
 
         if ($status == 2) {
-            $query->andWhere(['=', 'report', 1]);
+            $query->andWhere(['>=', 'report', 1]);
         }
         
         $query->andWhere(['not', ['matched' => null]]);

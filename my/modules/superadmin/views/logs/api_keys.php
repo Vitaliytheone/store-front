@@ -12,7 +12,7 @@ use my\helpers\Url;
         <li class="mr-auto">
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code == $filters['status'] ? 'active' : '') ?>" href="<?= ($code != 0 ? Url::toRoute(['/logs/api-keys', 'status' => $code, 'search' => $filters['search']]) : Url::toRoute(['/logs/api-keys'])) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code == $filters['status'] ? 'active' : '') ?>" href="<?= ($code != 0 ? Url::toRoute(['/logs/api-keys', 'status' => $code, 'search' => $filters['search'], 'search-type' => $filters['search-type']]) : Url::toRoute(['/logs/api-keys'])) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>
@@ -20,6 +20,11 @@ use my\helpers\Url;
             <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(['/logs/api-keys'], $filters, ['search' => null]))?>">
                 <div class="input-group">
                     <input type="text" class="form-control" name="search" placeholder="Search" value="<?=$filters['search']?>">
+                    <select  name="search-type">
+                        <?php foreach ($searchType as $key => $type): ?>
+                            <option value="<?php echo $key ?>"<?php if ($filters['search-type'] == $key) echo ' selected' ?>><?php echo $type ?></option>
+                        <?php endforeach ?>
+                    </select>
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
                     </span>
