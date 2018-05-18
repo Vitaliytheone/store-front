@@ -22,7 +22,7 @@
                                         <img src="{{ feature.image }}" alt="" class="img-responsive">
                                     {% else %}
                                         <div class="feature-icon">
-                                            <span class="fa {{ feature.icon }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+                                            <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
                                         </div>
                                     {% endif %}
                                 </div>

@@ -22,15 +22,15 @@
                                         <img src="{{ process.image }}" alt="" class="img-responsive">
                                     {% else %}
                                         <div class="process-icon text-center">
-                                            <span class="fa {{ process.icon }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
+                                            <span class="{{ process.icon_class }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
                                         </div>
                                     {% endif %}
                                 </div>
-                                <div class="title">
+                                <div class="title text-center">
                                     <h3 class="process-title">{{ process.title }}</h3>
                                 </div>
                                 {% if block.process.settings.description %}
-                                    <div class="description">
+                                    <div class="description text-center">
                                         <div class="process-text">
                                             {{ process.description }}
                                         </div>
