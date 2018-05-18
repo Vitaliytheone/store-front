@@ -766,7 +766,7 @@ textarea.form-control {
     right: 0;
     bottom: 0;
     color: #ccc;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     line-height: 6px;
     text-align: center;
 }
@@ -1095,7 +1095,7 @@ textarea.form-control {
     display: inline-block;
     margin-left: 1px;
     margin-right: 8px;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
 }
 
 .sidebar--widgets .links--widget .nav li + li {
@@ -1786,7 +1786,7 @@ textarea.form-control {
     content: "\f068";
     margin-right: 10px;
     color: #777;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     font-size: 14px;
     line-height: 24px;
 }
@@ -1993,7 +1993,7 @@ textarea.form-control {
 .intro--content .list .nav > li:before {
     content: "\f101";
     margin-right: 8px;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
 }
 
 .intro--content .list .nav li + li {
@@ -2126,9 +2126,10 @@ textarea.form-control {
     display: block;
     content: "\f0da";
     position: absolute;
-    top: 15px;
+    top: 14px;
     right: 7px;
-    font: normal normal normal 14px/1 FontAwesome;
+    font-family: Font Awesome\ 5 Pro;
+    font-weight: 900;
 }
 
 .dropdown-submenu:hover>a:after {
@@ -2583,7 +2584,7 @@ textarea.form-control {
     right: 0;
     margin-top: -60px;
     color: #fff;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     font-size: 30px;
     line-height: 40px;
     text-align: center;
@@ -2659,7 +2660,7 @@ textarea.form-control {
     display: inline-block;
     margin-right: 10px;
     color: #fd8469;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
 }
 
 .gallery--details ul li + li {
@@ -3444,7 +3445,7 @@ textarea.form-control {
     left: 0;
     width: 10px;
     margin-top: -10px;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     font-size: 8px;
     line-height: 18px;
     text-align: center;
@@ -3553,7 +3554,7 @@ textarea.form-control {
     left: 0;
     width: 10px;
     margin-top: -10px;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     font-size: 8px;
     line-height: 18px;
     text-align: center;
@@ -3835,7 +3836,7 @@ textarea.form-control {
     display: inline-block;
     margin-left: 1px;
     margin-right: 15px;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     font-style: normal;
 }
 
@@ -4111,7 +4112,7 @@ textarea.form-control {
 .testimonial--info .body blockquote p:before {
     content: "\f10d";
     margin-right: 8px;
-    font-family: "FontAwesome";
+    font-family: "Font Awesome\ 5 Pro";
     font-size: 24px;
     line-height: 34px;
 }

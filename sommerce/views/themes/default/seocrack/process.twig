@@ -17,12 +17,16 @@
             <div class="row">
 
                 {% for process in block.process.data %}
-                    <div class="col-md-{{ block.process.settings.column }} col-xs-6 col-xxs-12">
+                    <div class="{{ block.process.settings.bootstrap_column }} col-xs-6 col-xxs-12">
                         <!-- Feature Item Start -->
                         <div class="feature--item">
-                            <div class="icon">
-                                <span class="fa {{ process.icon }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
-                            </div>
+                             {% if block.process.settings.picture_type == 'image' %}
+                                 <img src="{{ process.image }}" alt="" class="img-responsive">
+                             {% else %}
+                                <div class="icon">
+                                    <span class="{{ process.icon_class }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
+                                </div>
+                             {% endif %}
 
                             <div class="title">
                                 <h2 class="h4">{{ process.title }}</h2>

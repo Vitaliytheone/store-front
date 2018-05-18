@@ -15,12 +15,16 @@
 
             <div class="row AdjustRow section-col__clearfix">
              {% for feature in block.features.data %}
-                <div class="col-md-{{ block.features.settings.column }} col-xs-6 col-xxs-12">
+                <div class="{{ block.features.settings.bootstrap_column }} col-xs-6 col-xxs-12">
                     <!-- Feature Item Start -->
                     <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
-                        <div class="icon">
-                            <span class="fa {{ feature.icon }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
-                        </div>
+                        {% if block.features.settings.picture_type == 'image' %}
+                           <img src="{{ feature.image }}" alt="" class="img-responsive">
+                        {% else %}
+                          <div class="icon">
+                              <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+                          </div>
+                        {% endif %}
 
                         <div class="title">
                             <h3 class="h4">{{ feature.title }}</h3>

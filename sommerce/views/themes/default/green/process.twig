@@ -19,15 +19,21 @@
 
               {% for process in block.process.data %}
                 <!-- Step Item Start -->
-                <div class="step--item col-sm-{{ block.process.settings.column }}">
+                <div class="step--item {{ block.process.settings.bootstrap_column }}">
                     <div class="icon">
+                    
                         <div class="step--icon">
                             <div class="vc--parent">
                                 <div class="vc--child">
-                                    <span class="fa {{ process.icon }}" style="font-size: {{ block.process.settings.icon_size }}"></span>
+                                  {% if block.process.settings.picture_type == 'image' %}
+                                  	<img src="{{ process.image }}" alt="" class="img-responsive">
+                            	  {% else %}
+                                    <span class="fa {{ process.icon_class }}" style="font-size: {{ block.process.settings.icon_size }}"></span>
+ 								  {% endif %}
                                 </div>
                             </div>
                         </div>
+            
                     </div>
                     <div class="title">
                         <h3 class="h3">{{ process.title }}</h3>
