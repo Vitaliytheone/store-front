@@ -339,15 +339,22 @@ class PanelsSearch {
 
         $plans = $this->getTariffs();
 
+        $options = [];
+        if (Project::STATUS_ACTIVE == $status) {
+            $options = [
+                'skip' => [
+                    'plan' => 0
+                ]
+            ];
+        }
+
         $returnPlans = [
             null => Yii::t('app/superadmin', 'panels.list.navs_method_all', [
-                'count' => $this->count($status, null, [
-                    'skip' => [
-                        'plan' => 0
-                    ]
-                ])
+                'count' => $this->count($status, null, $options)
             ])
         ];
+
+
 
         $plansCounters = $this->count($status, null, [
             'group' => [
