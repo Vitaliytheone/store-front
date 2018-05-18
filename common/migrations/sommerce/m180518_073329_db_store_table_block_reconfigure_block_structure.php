@@ -47,7 +47,6 @@ class m180518_073329_db_store_table_block_reconfigure_block_structure extends Mi
                 ")
                 ->queryAll();
 
-
             foreach ($blocks as $block) {
 
                 $blockCode = ArrayHelper::getValue($block, 'code');
@@ -99,18 +98,19 @@ class m180518_073329_db_store_table_block_reconfigure_block_structure extends Mi
 
                 $blockContent = json_encode($blockContent);
 
-                Yii::$app->db
-                    ->createCommand("
-                        UPDATE $db.$blocksTableName
-                        SET `content` = '$blockContent'
-                        WHERE `code` =  '$blockCode';
-                    ")
-                    ->execute();
+                $this->execute("
+                    UPDATE $db.$blocksTableName
+                    SET `content` = '$blockContent'
+                    WHERE `code` =  '$blockCode';
+                ");
             }
-
-            exit;
-
         }
     }
 
+    public function down()
+    {
+        echo "m180518_113237_db___store_template__defaults__updates cannot be reverted.\n";
+
+        return false;
+    }
 }
