@@ -228,7 +228,7 @@ class EditThemeForm extends Model
 
                 $file = [
                     'name' => $file,
-                    'modified_at' => $isModified ? static::formatDate($modifiedAt, 'Y-m-d') : null,
+                    'modified_at' => $isModified ? static::formatDate($modifiedAt, 'php:Y-m-d') : null,
                     'is_modified' => $isModified,
                 ];
             });
@@ -333,7 +333,7 @@ class EditThemeForm extends Model
             return false;
         }
 
-        return static::formatDate($modifiedAt, 'Y-m-d');
+        return static::formatDate($modifiedAt, 'php:Y-m-d');
     }
 
     /**
