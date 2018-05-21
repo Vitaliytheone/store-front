@@ -39,6 +39,14 @@ class SettingsController extends CustomController
      */
     public function beforeAction($action)
     {
+        // Disabled csrf validation for some actions
+        if (in_array($action->id, [
+            'update-blocks',
+            'block-upload',
+        ])) {
+            $this->enableCsrfValidation = false;
+        }
+
         // Add custom JS modules
         // $this->addModule('settings');
         return parent::beforeAction($action);

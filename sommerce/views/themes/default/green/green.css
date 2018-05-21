@@ -221,11 +221,12 @@ a:active, .btn-link:active {
 
 .dropdown-submenu>a:before {
     display: block;
-    content: "\f0da";
+    content: "\F0DA";
     position: absolute;
-    top: 10px;
+    top: 4px;
     right: 7px;
-    font: normal normal normal 14px/1 FontAwesome;
+    font-family: Font Awesome\ 5 Pro;
+    font-weight: 900;
 }
 
 .dropdown-submenu:hover>a:after {

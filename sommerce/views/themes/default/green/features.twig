@@ -15,12 +15,18 @@
 
             <div class="row section-col__clearfix">
                 {% for feature in block.features.data %}
-                    <div class="col-md-{{ block.features.settings.column }} col-xs-6 col-xxs-12">
+                    <div class="{{ block.features.settings.bootstrap_column }} col-xs-6 col-xxs-12">
                         <!-- Service Item Start -->
                         <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
+                            {% if block.features.settings.picture_type == 'image' %}
+                          	 <div class="icon">
+                              	<img src="{{ feature.image }}" alt="" class="img-responsive">
+                             </div>
+                            {% else %}
                             <div class="icon">
-                                <i class="fa {{ feature.icon }}" style="font-size: {{ block.features.settings.icon_size }}px;"></i>
+                                <i class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></i>
                             </div>
+                          	{% endif %}
                             <div class="title">
                                 <h3 class="h4">{{ feature.title }}</h3>
                             </div>
