@@ -228,7 +228,7 @@ class EditThemeForm extends Model
 
                 $file = [
                     'name' => $file,
-                    'modified_at' => $isModified ? static::formatDate($modifiedAt) : null,
+                    'modified_at' => $isModified ? static::formatDate($modifiedAt, 'Y-m-d') : null,
                     'is_modified' => $isModified,
                 ];
             });
@@ -299,10 +299,16 @@ class EditThemeForm extends Model
     }
 
     /**
+     * Update theme file
+     * @param $postData
      * @return bool
      */
-    public function updateThemeFile()
+    public function updateThemeFile($postData)
     {
+        if (!$this->load($postData)) {
+            return false;
+        }
+
         $pathToFile = $this->getPathToFile();
         $path = dirname($pathToFile);
 

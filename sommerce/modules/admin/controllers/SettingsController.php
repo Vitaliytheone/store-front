@@ -39,10 +39,11 @@ class SettingsController extends CustomController
      */
     public function beforeAction($action)
     {
-        // Disabled csrf validation for some actions
+        // Disabled csrf validation for some ajax actions
         if (in_array($action->id, [
             'update-blocks',
             'block-upload',
+            'update-theme',
         ])) {
             $this->enableCsrfValidation = false;
         }

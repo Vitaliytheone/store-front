@@ -88,6 +88,7 @@ class FilesTree extends Widget
                 ]);
 
                 $fileItem = Html::tag('li', $fileItem, [
+                    'id' => $file['name'],
                     'data-jstree' => $modifiedAt ?
                         '{ "type" : "file", "icon":"fa fa-file" }' :
                         '{ "type" : "file", "icon":"fa fa-file-o" }'

@@ -27,7 +27,10 @@ ThemesAsset::register($this);
                     <div class="row">
                         <div class="col-12">
 
-                            <form name="ThemeForm" method="post" action="<?= Url::toRoute(['/settings/edit-theme', 'theme' => $theme->folder, 'file' => $currentFile]) ?>">
+                            <form id="edit_theme_form" name="ThemeForm" method="post" action="<?= Url::toRoute(['/settings/update-theme', 'theme' => $theme->folder, 'file' => $currentFile]) ?>">
+
+                                <div class="modal-loader square hidden"></div>
+
                                 <?= Html::beginForm() ?>
                                 <div class="m-portlet sommerce-settings__editor">
                                     <div class="m-portlet__head">
@@ -44,17 +47,15 @@ ThemesAsset::register($this);
                                             </div>
                                         </div>
 
-                                        <?php if ($reset): ?>
-                                            <div class="m-portlet__head-tools">
-                                                <ul class="m-portlet__nav">
-                                                    <li class="m-portlet__nav-item">
-                                                        <a href="<?= Url::toRoute(['/settings/reset-theme-file', 'theme' => $theme->folder, 'file' => $currentFile]) ?>" class="m-portlet__nav-link m-portlet__nav-link--icon reset-file" data-toggle="modal" data-target="#modal_submit_reset">
-                                                            <i class="la la-refresh"></i> <?= Yii::t('admin', 'settings.themes_editing_reset') ?>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        <?php endif; ?>
+                                        <div id="reset_file" class="m-portlet__head-tools <?= $reset ? '' : 'd-none' ?>">
+                                            <ul class="m-portlet__nav">
+                                                <li class="m-portlet__nav-item">
+                                                    <a href="<?= Url::toRoute(['/settings/reset-theme-file', 'theme' => $theme->folder, 'file' => $currentFile]) ?>" class="m-portlet__nav-link m-portlet__nav-link--icon reset-file" data-toggle="modal" data-target="#modal_submit_reset">
+                                                        <i class="la la-refresh"></i> <?= Yii::t('admin', 'settings.themes_editing_reset') ?>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
 
                                     </div>
                                     <div class="row sommerce-editorPage <?= $currentFile ? '' : 'align-items-center' ?> ">

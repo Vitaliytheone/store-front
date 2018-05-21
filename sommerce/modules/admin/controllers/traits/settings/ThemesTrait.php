@@ -86,9 +86,11 @@ trait ThemesTrait {
      */
     public function actionEditTheme($theme, $file = null)
     {
-        $request = Yii::$app->getRequest();
         $this->view->title = Yii::t('admin', 'settings.themes_edit_title');
-        $this->addModule('adminThemes', ['extention' => pathinfo($file, PATHINFO_EXTENSION)]);
+        $this->addModule('adminThemes', [
+            'filename' => $file,
+            'extension' => pathinfo($file, PATHINFO_EXTENSION)
+        ]);
 
         $editThemeForm = EditThemeForm::make($theme, $file);
 
@@ -98,12 +100,6 @@ trait ThemesTrait {
 
         $editThemeForm->setUser(Yii::$app->user);
 
-        if ($editThemeForm->load($request->post()) && $editThemeForm->updateThemeFile()) {
-            UiHelper::message(Yii::t('admin', 'settings.themes_message_updated'));
-
-            return $this->refresh();
-        }
-
         return $this->render('edit_theme', [
             'currentFile' => $file,
             'theme' => $editThemeForm->getThemeModel(),
@@ -111,6 +107,43 @@ trait ThemesTrait {
             'reset' => $editThemeForm->isResetAble(),
             'filesTree' => $editThemeForm->getFilesTree(),
         ]);
+    }
+
+    /**
+     * Update theme file AJAX action
+     * @param $theme
+     * @param $file
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdateTheme($theme, $file)
+    {
+        $request = Yii::$app->getRequest();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            throw new BadRequestHttpException();
+        }
+
+        $editThemeForm = EditThemeForm::make($theme, $file);
+        $editThemeForm->setUser(Yii::$app->user);
+
+
+        if (!$editThemeForm) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$editThemeForm->updateThemeFile($request->post())) {
+            throw new BadRequestHttpException();
+        }
+
+        return [
+            'success' => true,
+            'filename' => $file,
+            'resetable' =>  $editThemeForm->isResetAble(),
+            'message' => Yii::t('admin', Yii::t('admin', 'settings.themes_message_updated'))
+        ];
     }
 
     /**

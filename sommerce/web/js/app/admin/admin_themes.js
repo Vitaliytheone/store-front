@@ -9,7 +9,7 @@ customModule.adminThemes = {
          *                     CodeMirror activation
          *****************************************************************************************************/
 
-        var fileType = params.extention || null;
+        var fileType = params.extension || null;
 
         var $codeMirror = $('#code'),
             codeMirror,
@@ -114,6 +114,60 @@ customModule.adminThemes = {
                 window.location = _node.a_attr.href;
             }
         });
+
+        /*****************************************************************************************************
+         *               Ajax submit form
+         *****************************************************************************************************/
+
+        toastr.options = {
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false
+        };
+
+        var $editForm = $('#edit_theme_form'),
+            $resetFile = $('#reset_file'),
+            $modalLoader = $editForm.find('.modal-loader'),
+            actionUrl = $editForm.attr('action');
+
+        $editForm.submit(function (e) {
+            e.preventDefault();
+
+            $modalLoader.removeClass('hidden');
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                data: $(this).serialize(),
+
+                success: function (data, textStatus, jqXHR){
+                    $modalLoader.addClass('hidden');
+                    if (data.success === true) {
+
+                        // Update JS-tree icon
+                        if (data.filename) {
+                            var treeNode = $filesTree.jstree(true).get_node(data.filename);
+                            $filesTree.jstree(true).set_icon(treeNode, 'fa fa-file');
+                        }
+
+                        // Update `reset file` button
+                        if (data.resetable) {
+                            $resetFile.removeClass('d-none');
+                        }
+
+                        // Send message
+                        if (data.message !== undefined) {
+                            toastr.success(data.message);
+                        }
+                    }
+                },
+
+                error: function (jqXHR, textStatus, errorThrown){
+                    $modalLoader.addClass('hidden');
+                    console.log('Error on service save', jqXHR, textStatus, errorThrown);
+                }
+            });
+        });
+
 
         /*****************************************************************************************************
          *               Modal submit close
