@@ -2,6 +2,7 @@
 
 namespace common\models\store;
 
+use common\models\common\ThemesInterface;
 use common\models\stores\DefaultThemes;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -19,10 +20,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class CustomThemes extends ActiveRecord
+class CustomThemes extends ActiveRecord implements ThemesInterface
 {
-    const THEME_TYPE = 1; // Custom
-
     const THEME_PREFIX = 'custom_';
     const THEME_THUMBNAIL_URL = '/img/custom_theme_thumbnail.jpg';
 
@@ -98,20 +97,29 @@ class CustomThemes extends ActiveRecord
     }
 
     /**
-     * Return custom themes folder path
-     * @return string
+     * @inheritdoc
+     */
+    public static function getThemeType()
+    {
+        return static::THEME_TYPE_CUSTOM;
+    }
+
+    /**
+     * @inheritdoc
      */
     public static function getThemesPath()
     {
         return Yii::getAlias('@sommerce') .  '/views/themes/custom/' . Yii::$app->store->getInstance()->id;
     }
 
-    /**
-     * Return default theme path
-     * @return string
-     * @throws Exception
-     */
-    public static function getDefaultThemePath()
+    /** @inheritdoc */
+    public function getSaveToPath()
+    {
+        return $this->getThemePath();
+    }
+
+    /** @inheritdoc */
+    public static function getTemplateThemePath()
     {
         $defaultTheme = ArrayHelper::getValue(Yii::$app->params, ['store.defaults', 'theme_folder'], null);
         if (!$defaultTheme) {

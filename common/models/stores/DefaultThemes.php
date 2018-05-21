@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\models\common\ThemesInterface;
 use common\models\store\CustomThemes;
 use console\helpers\ConsoleHelper;
 use Yii;
@@ -19,10 +20,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $position
  * @property string $thumbnail
  */
-class DefaultThemes extends ActiveRecord
+class DefaultThemes extends ActiveRecord implements ThemesInterface
 {
-    const THEME_TYPE = 0; // Default
-
     private $_store;
 
     public function init()
@@ -76,6 +75,14 @@ class DefaultThemes extends ActiveRecord
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function getThemeType()
+    {
+        return static::THEME_TYPE_DEFAULT;
+    }
+
+    /**
      * Return Default Themes folder path
      * @return string
      */
@@ -85,11 +92,20 @@ class DefaultThemes extends ActiveRecord
     }
 
     /**
+     * Return path to modified theme default files
+     * @return string
+     */
+    public function getSaveToPath()
+    {
+        return CustomThemes::getThemesPath() . '/' . $this->folder;
+    }
+
+    /**
      * Return default theme path
      * @return string
      * @throws Exception
      */
-    public static function getDefaultThemePath()
+    public static function getTemplateThemePath()
     {
         $defaultTheme = ArrayHelper::getValue(Yii::$app->params, ['store.defaults', 'theme_folder'], null);
         if (!$defaultTheme) {

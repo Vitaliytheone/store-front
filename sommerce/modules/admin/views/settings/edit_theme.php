@@ -9,6 +9,7 @@ use sommerce\modules\admin\components\Url;
 /* @var $filesTree array */
 /** @var $theme \common\models\stores\DefaultThemes | \common\models\store\CustomThemes */
 /** @var string $currentFile */
+/** @var string $editDate */
 /** @var string $currentFileContent */
 /** @var bool $reset */
 

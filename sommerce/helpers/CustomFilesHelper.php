@@ -54,6 +54,7 @@ class CustomFilesHelper extends FileHelper
                         'path' => $node->getPath(),
                         'extension' => $node->getExtension(),
                         'path_relative_name' => static::getFileRelativePath($dir2, $node->getPathname()),
+                        'modified_at' => $node->getMTime(),
                     ];
                 }
             }

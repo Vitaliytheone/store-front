@@ -104,12 +104,10 @@ trait ThemesTrait {
             return $this->refresh();
         }
 
-        $fileContent = $editThemeForm->fetchFileContent();
-
         return $this->render('edit_theme', [
-            'theme' => $editThemeForm->getThemeModel(),
             'currentFile' => $file,
-            'currentFileContent' => $fileContent,
+            'theme' => $editThemeForm->getThemeModel(),
+            'currentFileContent' => $editThemeForm->fetchFileContent(),
             'reset' => $editThemeForm->isResetAble(),
             'filesTree' => $editThemeForm->getFilesTree(),
         ]);

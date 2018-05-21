@@ -110,7 +110,7 @@ class CreateThemeForm extends CustomThemes
         };
 
         // Copy template files
-        $srcPath = static::getDefaultThemePath();
+        $srcPath = static::getTemplateThemePath();
         $dstPath = $this->getThemePath();
 
         if (!file_exists($srcPath)) {
