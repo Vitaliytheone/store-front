@@ -1,30 +1,49 @@
 <?php
     /* @var $this \yii\web\View */
+    /* @var $model \sommerce\modules\admin\models\forms\SendTestNotificationForm */
+
+    use sommerce\modules\admin\models\forms\SendTestNotificationForm;
+    use common\components\ActiveForm;
+    use yii\bootstrap\Html;
+
+    $model = new SendTestNotificationForm();
 ?>
-<div class="modal fade notification-test-send" tabindex="-1" role="dialog">
+<div class="modal fade" tabindex="-1" role="dialog" id="sendTestNotificationModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Send test</h5>
+                <h5 class="modal-title"><?= Yii::t('admin', 'settings.send_test_m_header') ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <?php $form = ActiveForm::begin([
+                'id' => 'sendTestNotificationForm',
+                'fieldConfig' => [
+                    'template' => "{label}{input}",
+                ],
+            ]); ?>
+                <div class="modal-body">
+                    <?= $form->errorSummary($model, [
+                        'id' => 'sendTestNotificationError'
+                    ]); ?>
+                    <div class="form-group m-form__group">
+                        <?= $form->field($model, 'admin_email_id')->dropDownList($model->getAdminEmails(), [
+                            'class' => 'form-control m-input m-input--square'
+                        ])?>
+                    </div>
 
-                <div class="form-group m-form__group">
-                    <label for="select-admin">Send to</label>
-                    <select class="form-control m-input m-input--square" id="select-admin">
-                        <option>adminmail@mail.ru</option>
-                        <option>admin2@yandex.ru</option>
-                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><?= Yii::t('admin', 'settings.send_test_m_cancel') ?></button>
+                    <?= Html::submitButton(Yii::t('admin', 'settings.send_test_m_confirm'), [
+                        'class' => 'btn btn-secondary',
+                        'name' => 'send-test-notification-button',
+                        'id' => 'sendTestNotificationButton'
+                    ]) ?>
                 </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Send</button>
-            </div>
+            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>

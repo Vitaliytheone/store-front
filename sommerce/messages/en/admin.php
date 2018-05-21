@@ -568,7 +568,7 @@ return [
     'settings.edit_notification_cancel_btn' => 'Cancel',
     'settings.edit_notification_preview_btn' => 'Preview',
     'settings.edit_notification_send_test_btn' => 'Send test',
-    'settings.edit_notification_reset_btn' => 'Resend',
+    'settings.edit_notification_reset_btn' => 'Reset',
 
     'settings.notification_has_been_updated' => 'Notification has been updated',
     'settings.emails_m_add' => 'Save changes',
@@ -578,6 +578,15 @@ return [
     'settings.message_admin_email_updated' => 'Email has been updated',
     'settings.message_admin_email_created' => 'Email has been created',
     'settings.confirm_delete_email' => 'Are your sure that your want to delete this email?',
-    'settings.confirm_delete_email_confirm' => 'Confirm',
-    'settings.confirm_delete_email_cancel' => 'Cancel',
+    'settings.confirm_reset_email' => 'Are your sure that you want to reset this template?',
+    'settings.notifications_confirm_btn' => 'Confirm',
+    'settings.notifications_cancel_btn' => 'Cancel',
+
+    'settings.send_test_m_cancel' => 'Cancel',
+    'settings.send_test_m_confirm' => 'Send',
+    'settings.send_test_m_header' => 'Send test',
+    'settings.message_send_test_email_success' => 'Notification has been sent',
+
+    'settings.notification_preview_m_header' => 'Preview',
+    'settings.notification_preview_m_cancel' => 'Cancel',
 ];

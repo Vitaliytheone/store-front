@@ -76,9 +76,18 @@
                     <div class="row mb-5">
                         <div class="col-md-7">
                             <div class="btn-group m-btn-group">
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".notification-preview"><?= Yii::t('admin', 'settings.edit_notification_preview_btn')?></button>
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".notification-test-send"><?= Yii::t('admin', 'settings.edit_notification_send_test_btn')?></button>
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".notification-reset"><?= Yii::t('admin', 'settings.edit_notification_reset_btn')?></button>
+                                <?= Html::a(Yii::t('admin', 'settings.edit_notification_preview_btn'), Url::toRoute(['/settings/notification-preview', 'code' => $model->code]), [
+                                    'class' => 'btn btn-secondary notification-preview',
+                                ])?>
+                                <?= Html::a(Yii::t('admin', 'settings.edit_notification_send_test_btn'), Url::toRoute(['/settings/send-test-notification', 'code' => $model->code]), [
+                                    'class' => 'btn btn-secondary send-test-notification',
+                                ])?>
+                                <?= Html::a(Yii::t('admin', 'settings.edit_notification_reset_btn'), Url::toRoute(['/settings/reset-notification', 'code' => $model->code]), [
+                                    'class' => 'btn btn-secondary confirm-link',
+                                    'data-message' => Yii::t('admin', 'settings.confirm_reset_email'),
+                                    'data-confirm_button' => Yii::t('admin', 'settings.notifications_confirm_btn'),
+                                    'data-cancel_button' => Yii::t('admin', 'settings.notifications_cancel_btn'),
+                                ])?>
                             </div>
                         </div>
                         <div class="col-md-5 text-md-right">
@@ -95,5 +104,3 @@
 
 <?= $this->render('layouts/notifications/_notification_preview_modal') ?>
 <?= $this->render('layouts/notifications/_send_test_modal') ?>
-<?= $this->render('layouts/notifications/_reset_notification_modal') ?>
-

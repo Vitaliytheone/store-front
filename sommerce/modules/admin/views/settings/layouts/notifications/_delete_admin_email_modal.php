@@ -22,8 +22,8 @@
                         ]); ?>
                             <span class="fa fa-trash-o"></span>
                             <p><?= Yii::t('admin', 'settings.confirm_delete_email') ?></p>
-                            <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.confirm_delete_email_cancel') ?></button>
-                            <?= Html::submitButton(Yii::t('admin', 'settings.confirm_delete_email_confirm'), [
+                            <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.notifications_cancel_btn') ?></button>
+                            <?= Html::submitButton(Yii::t('admin', 'settings.notifications_confirm_btn'), [
                                 'class' => 'btn btn-danger ml-2',
                                 'name' => 'delete-admin-email-button',
                                 'id' => 'deleteAdminEmailButton'

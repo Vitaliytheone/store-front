@@ -9,6 +9,7 @@ use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditAdminEmailForm;
 use sommerce\modules\admin\models\forms\EditNotificationForm;
+use sommerce\modules\admin\models\forms\SendTestNotificationForm;
 use sommerce\modules\admin\models\search\NotificationsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -19,6 +20,16 @@ use yii\web\Response;
  * @package sommerce\modules\admin\controllers\traits\settings
  */
 trait NotificationsTrait {
+
+    /**
+     * @var NotificationDefaultTemplates|null
+     */
+    protected $_defaultTemplate;
+
+    /**
+     * @var NotificationTemplates|null
+     */
+    protected $_storeTemplate;
 
     /**
      * Return available notifications for current store
@@ -51,7 +62,7 @@ trait NotificationsTrait {
             'name' => Yii::t('admin', 'notifications.label.' . $code)
         ]);
 
-        $notification = $this->_findNotification($code);
+        $notification = $this->_findNotification($code, true);
 
         $model = new EditNotificationForm();
         $model->setNotification($notification);
@@ -66,6 +77,51 @@ trait NotificationsTrait {
         return $this->render('edit_notification', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Reset notification action
+     * @param string $code
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionResetNotification($code)
+    {
+        $notification = $this->_findNotification($code, true);
+
+        $notification->subject = $this->_defaultTemplate->subject;
+        $notification->body = $this->_defaultTemplate->body;
+
+        UiHelper::message(Yii::t('admin', 'settings.notification_has_been_updated'));
+
+        return $this->redirect(Url::toRoute(['/settings/edit-notification', 'code' => $code]));
+    }
+
+    /**
+     * Send test notification email
+     * @param string $code
+     * @return array
+     */
+    public function actionSendTestNotification($code)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $notification = $this->_findNotification($code);
+
+        $model = new SendTestNotificationForm();
+        $model->setNotification($notification);
+
+        if ($model->load(Yii::$app->request->post()) && $model->send()) {
+            return [
+                'status' => 'success',
+                'message' => Yii::t('admin', 'settings.message_send_test_email_success')
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**
@@ -201,32 +257,52 @@ trait NotificationsTrait {
     }
 
     /**
+     * Render notification preview
+     * @param string $code
+     * @return string
+     */
+    public function actionNotificationPreview($code)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $notification = $this->_findNotification($code);
+
+        return 'preview ' . $code;
+    }
+
+    /**
      * Find notification
      * @param string $code
+     * @param boolean $content - use content or not
      * @return NotificationTemplates|null
      * @throws NotFoundHttpException
      */
-    protected function _findNotification($code)
+    protected function _findNotification($code, $content = false)
     {
-        $defaultTemplate = NotificationDefaultTemplates::findOne([
+        $this->_defaultTemplate = NotificationDefaultTemplates::findOne([
             'code' => $code
         ]);
 
-        if (!$defaultTemplate) {
+        if (!$this->_defaultTemplate) {
             throw new NotFoundHttpException();
         }
 
-        $storeTemplate = NotificationTemplates::findOne([
+        $this->_storeTemplate = NotificationTemplates::findOne([
             'notification_code' => $code
         ]);
 
-        if (!$storeTemplate) {
-            $storeTemplate = new NotificationTemplates();
-            $storeTemplate->notification_code = $code;
-            $storeTemplate->attributes = $defaultTemplate->attributes;
+        if (!$this->_storeTemplate) {
+            $this->_storeTemplate = new NotificationTemplates();
+            $this->_storeTemplate->notification_code = $code;
+            $this->_storeTemplate->status = $this->_defaultTemplate->status;
+
+            if ($content) {
+                $this->_storeTemplate->subject = $this->_defaultTemplate->subject;
+                $this->_storeTemplate->body = $this->_defaultTemplate->body;
+            }
         }
 
-        return $storeTemplate;
+        return $this->_storeTemplate;
     }
 
     /**

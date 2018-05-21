@@ -34,16 +34,19 @@ customModule.adminNotifyLayout = {
             return;
         }
 
-        _.forEach(params.messages, function(message){
-            if (message.success) {
-                toastr.success(message.success);
-            }
-            if (message.warning) {
-                toastr.warning(message.warning);
-            }
-            if (message.error) {
-                toastr.error(message.error);
-            }
+        _.forEach(params.messages, function(message) {
+            self.send(message);
         });
+    },
+    send: function (message) {
+        if (message.success) {
+            toastr.success(message.success);
+        }
+        if (message.warning) {
+            toastr.warning(message.warning);
+        }
+        if (message.error) {
+            toastr.error(message.error);
+        }
     }
 };

@@ -14,6 +14,11 @@ class EditNotificationForm extends Model {
     /**
      * @var string
      */
+    public $code;
+
+    /**
+     * @var string
+     */
     public $subject;
 
     /**
@@ -45,6 +50,7 @@ class EditNotificationForm extends Model {
         $this->_notification = $notification;
         $this->subject = $notification->subject;
         $this->body = $notification->body;
+        $this->code = $notification->notification_code;
     }
 
     /**

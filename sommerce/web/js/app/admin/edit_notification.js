@@ -48,5 +48,89 @@ customModule.adminEditNotification = {
         }
 
         CodeMirror.fromTextArea(document.getElementById("code"), codeMirroSetting);
+
+        $(document).on('click', '.confirm-link', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+
+            custom.confirm(btn.data('message'), undefined, {
+                confirm_button : btn.data('confirm_button'),
+                cancel_button : btn.data('cancel_button')
+            }, function() {
+                location.href = btn.data('href');
+            });
+
+            return false;
+        });
+
+        $(document).on('click', '.confirm-link', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+
+            custom.confirm(btn.data('message'), undefined, {
+                confirm_button : btn.data('confirm_button'),
+                cancel_button : btn.data('cancel_button')
+            }, function() {
+                location.href = btn.attr('href');
+            });
+
+            return false;
+        });
+
+        $(document).on('click', '.send-test-notification', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var modal = $('#sendTestNotificationModal');
+            var form = $('#sendTestNotificationForm', modal);
+            var errorBlock = $('#sendTestNotificationError', form);
+            form.attr('action', link.attr('href'));
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $('select', form).prop('selectedIndex',0);
+
+            modal.modal('show');
+
+            return false;
+        });
+
+        $(document).on('click', '#sendTestNotificationButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#sendTestNotificationForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    if ('success' == response.status) {
+                        $('#sendTestNotificationModal').modal('hide');
+                        customModule.adminNotifyLayout.send({
+                            success: response.message
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+
+
+        $(document).on('click', '.notification-preview', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var modal = $('#notificationPreviewModal');
+            var iframe = $('iframe', modal);
+
+            iframe.attr('src', link.attr('href'));
+
+            modal.modal('show');
+
+            return false;
+        });
     }
 };
