@@ -11,6 +11,7 @@ use sommerce\modules\admin\models\forms\CreateThemeForm;
 use sommerce\modules\admin\models\forms\EditThemeForm;
 use sommerce\modules\admin\models\search\ThemesSearch;
 use Yii;
+use yii\helpers\Html;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -134,13 +135,17 @@ trait ThemesTrait {
             throw new NotFoundHttpException();
         }
 
-        if (!$editThemeForm->updateThemeFile($request->post())) {
+        if (!$modifiedAt = $editThemeForm->updateThemeFile($request->post())) {
             throw new BadRequestHttpException();
         }
 
         return [
             'success' => true,
             'filename' => $file,
+            'modified_at' => Html::tag('span',
+                Yii::t('admin', 'settings.themes_modified') . ' ' . $modifiedAt,
+                ['class' => 'jstree-tooltip']
+            ),
             'resetable' =>  $editThemeForm->isResetAble(),
             'message' => Yii::t('admin', Yii::t('admin', 'settings.themes_message_updated'))
         ];

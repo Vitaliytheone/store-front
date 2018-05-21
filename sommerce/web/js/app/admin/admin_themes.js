@@ -143,10 +143,19 @@ customModule.adminThemes = {
                     $modalLoader.addClass('hidden');
                     if (data.success === true) {
 
-                        // Update JS-tree icon
+                        // Update JS-tree item icon
                         if (data.filename) {
-                            var treeNode = $filesTree.jstree(true).get_node(data.filename);
+
+                            var treeNode = $filesTree.jstree(true).get_node(data.filename),
+                                $nodeDoom = $filesTree.jstree(true).get_node(data.filename, true);
+
+                            // Update icon
                             $filesTree.jstree(true).set_icon(treeNode, 'fa fa-file');
+
+                            // Add modified at
+                            if (data.modified_at && $nodeDoom) {
+                                $nodeDoom.find('a.jstree-anchor').prepend(data.modified_at);
+                            }
                         }
 
                         // Update `reset file` button
