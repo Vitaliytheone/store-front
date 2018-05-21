@@ -103,10 +103,9 @@ class PanelsSearch {
             ]);
         }
 
-        if (!empty($filters['skip']['plan'])) {
+        if (isset($filters['skip']['plan'])) {
             $projects->andWhere('project.plan <> ' . (int)$filters['skip']['plan']);
         }
-
 
         if ($id) {
             $projects->andWhere([
@@ -342,7 +341,7 @@ class PanelsSearch {
 
         $returnPlans = [
             null => Yii::t('app/superadmin', 'panels.list.navs_method_all', [
-                'count' => $this->count($status)
+                'count' => $this->count($status, null)
             ])
         ];
 
@@ -354,7 +353,7 @@ class PanelsSearch {
 
         foreach ($plans as $plan) {
             // Не выводим тарифы -1
-            if (0 > $plan['id']) {
+            if (0 > (int)$plan['id']) {
                 continue;
             }
             $returnPlans[$plan['id']] = $plan['title'] . ' (' . ArrayHelper::getValue($plansCounters, $plan['id'], 0) . ')';

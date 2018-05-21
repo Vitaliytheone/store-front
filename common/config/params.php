@@ -3,6 +3,8 @@
 $serverIp = "54.37.92.228";
 
 return [
+    'time' => '10800',
+    
     'config.db' => DB_CONFIG,
     'config.proxy' => PROXY_CONFIG,
     'panelNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
