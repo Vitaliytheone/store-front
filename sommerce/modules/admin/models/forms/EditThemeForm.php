@@ -301,7 +301,7 @@ class EditThemeForm extends Model
     /**
      * Update theme file
      * @param $postData
-     * @return bool
+     * @return false|string
      */
     public function updateThemeFile($postData)
     {
@@ -327,7 +327,13 @@ class EditThemeForm extends Model
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_THEMES_THEME_FILE_UPDATED, $this->_theme_model->id,  $this->_theme_model->name);
 
-        return true;
+        $modifiedAt = @filemtime($pathToFile);
+
+        if (!$modifiedAt) {
+            return false;
+        }
+
+        return static::formatDate($modifiedAt, 'Y-m-d');
     }
 
     /**
