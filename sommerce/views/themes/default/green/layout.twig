@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.language }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +13,12 @@
     <!-- CDN Font Awesome -->
     <link rel="stylesheet" href="/css/frontend/fontawesome.css">
     <!-- CDN Animate -->
-  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <!-- Custom styles -->
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/owl.carousel.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/green.css') }}">
-  	{{ site.custom_header }}
+    {{ site.custom_header }}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -146,7 +146,7 @@
                 <div class="footer--menu-wrapper">
                     <ul>
                         <li><a href="{{ page_url(3) }}">{{ lang('footer.policy') }}</a></li>
-                       	<li><a href="{{ page_url(2) }}">{{ lang('footer.terms') }}</a></li>
+                        <li><a href="{{ page_url(2) }}">{{ lang('footer.terms') }}</a></li>
                         <li><a href="{{ page_url(1) }}">{{ lang('footer.contact') }}</a></li>
                     </ul>
                 </div>
@@ -157,7 +157,7 @@
         <!-- Footer Copyright Start -->
         <div class="footer--copyright bg--color-theme">
             <div class="container">
-               <p>&copy; {{ site.store_name }} {{ "now"|date("Y") }}</p>
+                <p>&copy; {{ site.store_name }} {{ "now"|date("Y") }}</p>
             </div>
         </div>
         <!-- Footer Copyright End -->
@@ -172,7 +172,7 @@
 </div>
 <!-- Wrapper End -->
 <!-- CDN Scripts -->
-<script src="https://www.google.com/recaptcha/api.js?hl=en"></script>
+<script src="https://www.google.com/recaptcha/api.js?hl={{ site.language }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Custom Scripts -->
 <script src="{{ asset('/js/bootstrap.js') }}"></script>

@@ -19,14 +19,14 @@
                 {% for process in block.process.data %}
                     <div class="{{ block.process.settings.bootstrap_column }} col-xs-6 col-xxs-12">
                         <!-- Feature Item Start -->
-                        <div class="feature--item">
-                             {% if block.process.settings.picture_type == 'image' %}
-                                 <img src="{{ process.image }}" alt="" class="img-responsive">
-                             {% else %}
+                        <div class="feature--item {% if block.process.settings.picture_type == 'image' %} feature--item__image {% endif %}">
+                            {% if block.process.settings.picture_type == 'image' %}
+                                <img src="{{ process.image }}" alt="" class="img-responsive">
+                            {% else %}
                                 <div class="icon">
                                     <span class="{{ process.icon_class }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
                                 </div>
-                             {% endif %}
+                            {% endif %}
 
                             <div class="title">
                                 <h2 class="h4">{{ process.title }}</h2>
