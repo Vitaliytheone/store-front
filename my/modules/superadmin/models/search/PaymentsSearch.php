@@ -116,6 +116,10 @@ class PaymentsSearch extends Payments {
             InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
         ]) . ')');
 
+        $query->leftJoin(['store' => Stores::tableName()], 'store.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+            InvoiceDetails::ITEM_PROLONGATION_STORE,
+        ]) . ')');
+
         return $query;
     }
 
@@ -143,7 +147,7 @@ class PaymentsSearch extends Payments {
 
         $payments = $query->select([
                 'payments.*',
-                'COALESCE(orders.domain, project.site) as domain'
+                'COALESCE(orders.domain, project.site, store.domain) as domain'
             ])
             ->offset($pages->offset)
             ->limit($pages->limit)
