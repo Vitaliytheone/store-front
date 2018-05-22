@@ -90,31 +90,43 @@
          * ------------------------------------------------------------------------- */
         var $owlCarousel = $('.owl-carousel');
 
+
         $owlCarousel.each(function () {
             var $t = $(this),
                 effectSlide = $t.data('owl-effect'),
                 sliderSettings = {
-                items: checkData( $t.data('owl-items'), 1 ),
-                margin: checkData( $t.data('owl-margin'), 0 ),
-                loop: checkData( $t.data('owl-loop'), true ),
-                autoplay: checkData( $t.data('owl-autoplay'), true ),
-                smartSpeed: checkData( $t.data('owl-speed'), 500 ),
-                autoplaySpeed: checkData( $t.data('owl-interval'), 5000 ),
-                autoplayTimeout: checkData( $t.data('owl-interval'), 5000 ),
-                mouseDrag: checkData( $t.data('owl-drag'), true ),
-                nav: checkData( $t.data('owl-nav'), false ),
-                navText: ['<i class="fa fa-long-arrow-left"></i>', '<i class="fa fa-long-arrow-right"></i>'],
-                dots: checkData( $t.data('owl-dots'), false ),
-                responsive: checkData( $t.data('owl-responsive'), {} )
-            };
-          
-          	switch(effectSlide){
+                    items: checkData( $t.data('owl-items'), 1 ),
+                    margin: checkData( $t.data('owl-margin'), 0 ),
+                    loop: checkData( $t.data('owl-loop'), true ),
+                    autoplay: checkData( $t.data('owl-autoplay'), true ),
+                    smartSpeed: checkData( $t.data('owl-speed'), 500 ),
+                    autoplaySpeed: checkData( $t.data('owl-interval'), 5000 ),
+                    autoplayTimeout: checkData( $t.data('owl-interval'), 5000 ),
+                    mouseDrag: checkData( $t.data('owl-drag'), true ),
+                    nav: checkData( $t.data('owl-nav'), false ),
+                    navText: ['<i class="fa fa-long-arrow-left"></i>', '<i class="fa fa-long-arrow-right"></i>'],
+                    dots: checkData( $t.data('owl-dots'), false ),
+                };
+
+            if($t.data('owl-responsive')){
+                sliderSettings.responsive = {
+                    0: {
+                        items: 1
+                    },
+                    1200: {
+                        items: parseInt($t.data('owl-items'))
+                    }
+                }
+            }
+
+
+            switch(effectSlide){
                 case 'fade':
-                	sliderSettings.animateOut = 'fadeOut';
-                	sliderSettings.animateIn = 'fadeIn';
-                break;
+                    sliderSettings.animateOut = 'fadeOut';
+                    sliderSettings.animateIn = 'fadeIn';
+                    break;
             };
-          
+
             $t.owlCarousel(sliderSettings);
         });
 

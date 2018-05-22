@@ -128,7 +128,7 @@ footer .footer-links li {
 }
 
 .feature .feature-title {
-    margin-top: 0px;
+    margin-top: 5px;
 }
 
 .feature .feature-icon {
@@ -209,13 +209,17 @@ footer .footer-links li {
     padding-bottom: 15px;
 }
 
+.process .process-body img{
+    margin: 0 auto;
+}
+
 .process .process-text {
     font-size: 14px;
     color: #333;
 }
 
 .process .process-title {
-    margin-top: 0px;
+    margin-top: 5px;
     color: #333;
 }
 
@@ -348,10 +352,9 @@ footer .footer-links li {
     content: "\f0d9";
     position: absolute;
     left: 5px;
-    top: 7px;
-    font: normal normal normal 14px/1 FontAwesome;
-    -webkit-box-shadow: 0 4px 5px rgba(181, 181, 181, 0.175);
-    box-shadow: 0 4px 5px rgba(181, 181, 181, 0.175);
+    top: 3px;
+    font-family: Font Awesome\ 5 Pro;
+    font-weight: 900;
 }
 
 .dropdown-submenu:hover>a:after {
