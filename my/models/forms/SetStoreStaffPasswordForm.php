@@ -62,7 +62,7 @@ class SetStoreStaffPasswordForm extends Model
 
         $this->_staff->setPassword($this->password);
 
-        if (!$this->_staff->update()) {
+        if (!$this->_staff->save()) {
             $this->addErrors($this->_staff->getErrors());
             return false;
         }
