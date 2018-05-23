@@ -15,7 +15,7 @@
         <li class="mr-auto">
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/child-panels', 'status' => $code]) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute($code === 'all' ? '/child-panels' : ['/child-panels', 'status' => $code]) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>

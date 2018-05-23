@@ -14,7 +14,7 @@ $this->context->addModule('superadminStoresController');
         <li class="mr-auto">
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/stores', 'status' => $code]) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute($code === 'all' ? '/stores' : ['/stores', 'status' => $code]) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>
