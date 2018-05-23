@@ -12,7 +12,6 @@ use yii\bootstrap\Html;
  */
 class UnpaidInvoicesWidget extends Widget
 {
-
     /**
      * Run method
      * @return string|null
