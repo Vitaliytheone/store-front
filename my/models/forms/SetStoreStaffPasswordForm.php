@@ -67,6 +67,8 @@ class SetStoreStaffPasswordForm extends Model
             return false;
         }
 
+        $this->_staff->logout();
+
         MyActivityLog::log(MyActivityLog::E_STORE_UPDATE_STAFF_ACCOUNT_PASSWORD,
             $this->_staff->id, $this->_staff->id, UserHelper::getHash()
         );
