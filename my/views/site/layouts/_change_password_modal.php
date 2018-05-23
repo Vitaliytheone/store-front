@@ -50,7 +50,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'customer.change_password_modal.btn_cancel')?></button>
-                    <button type="button" class="btn btn-outline btn-primary" id="changePasswdSubmit"><?= Yii::t('app', 'customer.change_password_modal.btn_submit')?></button>
+                    <button type="submit" class="btn btn-outline btn-primary" id="changePasswdSubmit"><?= Yii::t('app', 'customer.change_password_modal.btn_submit')?></button>
                 </div>
             <?php ActiveForm::end(); ?>
         </div>
