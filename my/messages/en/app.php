@@ -35,6 +35,7 @@ return [
     'pages.title.activity' => '{panel} activity log',
     'pages.title.referral' => 'Referral program',
     'pages.title.stores' => 'Stores',
+    'pages.title.store.staff' => 'Staff',
 
     'panels.list.header' => 'Panels',
     'panels.list.order_panel' => 'Order new panel',
@@ -547,6 +548,7 @@ return [
     'stores.list.action_dashboard' => 'Dashboard',
     'stores.list.action_domain_connect' => 'Domain connect',
     'stores.list.action_prolong' => 'Prolong',
+    'stores.list.action_staff' => 'Staff',
 
     'stores.order.form.title' => 'Order new store',
     'stores.order.form.title_trial' => 'Start your free 14-day trial',
@@ -566,4 +568,46 @@ return [
     'error.store.domain_is_already_exist' => 'Domain is already exist',
     'error.store.can_not_change_domain' => 'Can not change store domain',
     'error.store.invalid_domain' => 'Invalid domain',
+
+    'stores.staff.create_new_account' => 'Create new account',
+    'stores.staff.column_account' => 'Account',
+    'stores.staff.column_status' => 'Status',
+    'stores.staff.column_access' => 'Access',
+    'stores.staff.column_last_login' => 'Last login',
+    'store_admin.status.active' => 'Active',
+    'store_admin.status.suspended' => 'Suspended',
+    'stores.staff.action_edit_account' => 'Edit account',
+    'stores.staff.action_set_password' => 'Set password',
+    'stores.staff.full_access' => 'Full access',
+    'stores.staff.limited_access' => "Limited access",
+
+    'stores.create_staff.header' => 'Create account',
+    'stores.create_staff.modal_submit' => 'Create account',
+    'stores.create_staff.modal_cancel' => 'Cancel',
+
+    'form.create_store_staff.account' => 'Account',
+    'form.create_store_staff.password' => 'Password',
+    'form.create_store_staff.status' => 'Status',
+
+    'stores.edit_staff.header' => 'Edit account',
+    'stores.edit_staff.modal_submit' => 'Update account',
+    'stores.edit_staff.modal_cancel' => 'Cancel',
+
+    'form.edit_store_staff.account' => 'Account',
+    'form.edit_store_staff.status' => 'Status',
+    'form.edit_store_staff.password' => 'Password',
+
+    'stores.edit_staff_password.header' => 'Set password',
+    'stores.edit_staff_password.modal_submit' => 'Set password',
+    'stores.edit_staff_password.modal_cancel' => 'Cancel',
+
+    'store_admin.rule_orders' => 'Orders',
+    'store_admin.rule_payments' => 'Payments',
+    'store_admin.rule_products' => 'Products',
+    'store_admin.rule_settings' => 'Settings',
+
+    'error.stores.staff.can_not_change_password' => 'Can not set staff password',
+    'error.stores.staff.can_not_edit' => 'Can not edit staff',
+    'error.stores.staff.can_not_create' => 'Can not create staff',
+    'error.stores.staff.already_exist' => 'Account already exist',
 ];

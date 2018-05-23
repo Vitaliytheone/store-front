@@ -94,6 +94,12 @@
                                             ])?>
                                         <?php endif; ?>
 
+                                        <?php if ($store['access']['canStaffView']) : ?>
+                                            <?= Html::a('<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'stores.list.action_staff'), '/stores/staff/' . $store['id'], [
+                                                'class' => 'btn btn-outline btn-info btn-xs',
+                                            ])?>
+                                        <?php endif; ?>
+
                                         <?php if ($store['access']['canDomainConnect']) : ?>
                                             <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
                                                 '/store/edit-domain',

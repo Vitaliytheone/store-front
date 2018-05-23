@@ -83,6 +83,10 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
     const CAN_DOMAIN_CONNECT = 5;
+    const CAN_STAFF_VIEW = 6;
+    const CAN_STAFF_CREATE = 7;
+    const CAN_STAFF_EDIT = 8;
+    const CAN_STAFF_UPDATE_PASSWORD = 9;
 
     const STORE_DB_NAME_PREFIX = 'store_';
 
@@ -543,6 +547,50 @@ class Stores extends ActiveRecord implements ProjectInterface
             break;
 
             case self::CAN_ACTIVITY_LOG:
+                return true;
+            break;
+
+            case self::CAN_STAFF_VIEW:
+                return self::STATUS_ACTIVE == $status;
+            break;
+
+            case self::CAN_STAFF_CREATE:
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if (self::STATUS_ACTIVE != $status) {
+                    return false;
+                }
+
+                if (Yii::$app->params['store.staff_users.limit'] <= $store->getStoreAdmins()->count()) {
+                    return false;
+                }
+
+                return true;
+            break;
+
+            case self::CAN_STAFF_EDIT:
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if (self::STATUS_ACTIVE != $status) {
+                    return false;
+                }
+
+                return true;
+            break;
+
+            case self::CAN_STAFF_UPDATE_PASSWORD:
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if (self::STATUS_ACTIVE != $status) {
+                    return false;
+                }
+
                 return true;
             break;
         }
