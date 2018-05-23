@@ -525,6 +525,16 @@
   padding-right: 15px;
 }
 
+#cover {
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: url(/themes/img/ajax-loader.gif) no-repeat scroll center center rgba( 255, 255, 255, .8 );
+}
+
 
 @media(max-width: 1150px) {
   .activity-log__sections-bar{
@@ -582,4 +592,3 @@
     border-bottom: 0px!important;
   }
 }
-
