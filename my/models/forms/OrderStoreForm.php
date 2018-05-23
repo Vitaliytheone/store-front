@@ -15,6 +15,7 @@ use yii\base\Exception;
 use yii\base\Model;
 use common\models\panels\Auth;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderStoreForm
@@ -151,6 +152,15 @@ class OrderStoreForm extends Model
         array_walk($currencies, function(&$value, $key){
             $value = $value['name'] . " ($key)";
         });
+
+        ksort($currencies);
+
+        $usd = ArrayHelper::getValue($currencies, 'USD');
+
+        if ($usd) {
+            unset($currencies['USD']);
+            $currencies = array_merge(['USD' => $usd], $currencies);
+        }
 
         return $currencies;
     }
