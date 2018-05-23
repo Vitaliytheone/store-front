@@ -290,7 +290,7 @@ class StoreController extends CustomController
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $staff = StoreAdmins::findOne([
+        $staff = StoreAdminAuth::findOne([
             'id' => $id,
         ]);
 

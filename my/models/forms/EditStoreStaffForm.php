@@ -1,7 +1,7 @@
 <?php
 namespace my\models\forms;
 
-use common\models\stores\StoreAdmins;
+use common\models\stores\StoreAdminAuth;
 use my\helpers\UserHelper;
 use common\models\panels\MyActivityLog;
 use Yii;
@@ -18,7 +18,7 @@ class EditStoreStaffForm extends Model
     public $access = [];
 
     /**
-     * @var StoreAdmins
+     * @var StoreAdminAuth
      */
     public $_staff;
 
@@ -41,7 +41,7 @@ class EditStoreStaffForm extends Model
 
             [['account', 'status'], 'required'],
             [['account'], 'string', 'min' => 5, 'max' => 20],
-            [['status'], 'in', 'range' => array_keys(StoreAdmins::getStatuses())],
+            [['status'], 'in', 'range' => array_keys(StoreAdminAuth::getStatuses())],
             [['account'], 'uniqueAccount'],
             [['access'], 'safe'],
         ];
@@ -49,9 +49,9 @@ class EditStoreStaffForm extends Model
 
     /**
      * Set staff
-     * @param StoreAdmins $staff
+     * @param StoreAdminAuth $staff
      */
-    public function setStaff(StoreAdmins $staff)
+    public function setStaff(StoreAdminAuth $staff)
     {
         $this->_staff = $staff;
     }
@@ -68,7 +68,7 @@ class EditStoreStaffForm extends Model
             return false;
         }
 
-        if (StoreAdmins::find()->andWhere('username = :username AND store_id = :store_id AND id <> :id', [
+        if (StoreAdminAuth::find()->andWhere('username = :username AND store_id = :store_id AND id <> :id', [
             ':username' => $this->$attribute,
             ':id' => $this->_staff->id,
             ':store_id' => $this->_staff->store_id
@@ -98,6 +98,10 @@ class EditStoreStaffForm extends Model
             return false;
         }
 
+        if (isset($dirtyAttributes['username'])) {
+            $this->_staff->logout();
+        }
+
         $this->_changeLog($this->_staff, $dirtyAttributes);
 
         return true;
@@ -120,12 +124,12 @@ class EditStoreStaffForm extends Model
      */
     public function getAccessRules()
     {
-        return StoreAdmins::getRulesLabels();
+        return StoreAdminAuth::getRulesLabels();
     }
 
     /**
      * Write changes to log
-     * @param $model StoreAdmins
+     * @param $model StoreAdminAuth
      * @param $changedAttributes
      * @return bool
      */
@@ -141,7 +145,7 @@ class EditStoreStaffForm extends Model
         }
 
         // Changelog Staff lonin name changes
-        if (isset($changedAttributes['login'])) {
+        if (isset($changedAttributes['username'])) {
             MyActivityLog::log(MyActivityLog::E_STORE_UPDATE_STAFF_ACCOUNT_NAME,
                 $model->id, $model->id, UserHelper::getHash()
             );
