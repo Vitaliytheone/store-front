@@ -17,6 +17,7 @@ use common\models\store\queries\OrdersQuery;
  * @property integer $created_at
  *
  * @property Checkouts $checkout
+ * @property Payments $payment
  * @property Suborders[] $suborders
  */
 class Orders extends ActiveRecord
@@ -73,6 +74,14 @@ class Orders extends ActiveRecord
     public function getSuborders()
     {
         return $this->hasMany(Suborders::class, ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPayment()
+    {
+        return $this->hasOne(Payments::class, ['id' => 'checkout_id'])->via('checkout');
     }
 
     /**

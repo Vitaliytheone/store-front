@@ -206,7 +206,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function getAdminEmail()
     {
-        return ArrayHelper::getValue(NotificationAdminEmails::findOne(['primary' => 1, 'enabled' => NotificationAdminEmails::STATUS_ENABLED]), 'email');
+        return ArrayHelper::getValue(NotificationAdminEmails::findOne(['primary' => 1, 'status' => NotificationAdminEmails::STATUS_ENABLED]), 'email');
     }
 
     /**

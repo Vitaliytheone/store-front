@@ -26,6 +26,11 @@ class SendTestNotificationForm extends Model {
     private $_notification;
 
     /**
+     * @var Stores
+     */
+    private $_store;
+
+    /**
      * @var array
      */
     protected static $adminEmails;
@@ -50,6 +55,15 @@ class SendTestNotificationForm extends Model {
     }
 
     /**
+     * Set store
+     * @param Stores $store
+     */
+    public function setStore($store)
+    {
+        $this->_store = $store;
+    }
+
+    /**
      * Send test notification email
      * @return bool
      */
@@ -61,9 +75,12 @@ class SendTestNotificationForm extends Model {
 
         $notificationAdmin = NotificationAdminEmails::findOne($this->admin_email_id);
 
-        // TODO: send email test notification
+        $testMail = new TestNotificationForm();
+        $testMail->setNotification($this->_notification);
+        $testMail->setStore($this->_store);
+        $testMail->setEmail($notificationAdmin->email);
 
-        return true;
+        return $testMail->send();
     }
 
     /**

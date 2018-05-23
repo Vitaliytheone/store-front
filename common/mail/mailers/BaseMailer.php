@@ -5,6 +5,8 @@ use common\components\email\Mailgun;
 use Yii;
 use common\tasks\Client;
 use yii\helpers\ArrayHelper;
+use Twig_Environment;
+use Twig_Loader_Array;
 
 /**
  * Class BaseMailer
@@ -12,9 +14,29 @@ use yii\helpers\ArrayHelper;
  */
 abstract class BaseMailer {
 
+    /**
+     * @var string
+     */
     public $code;
+
+    /**
+     * @var string
+     */
     public $to;
-    public $message;
+
+    /**
+     * @var string
+     */
+    public $text;
+
+    /**
+     * @var string
+     */
+    public $html;
+
+    /**
+     * @var string
+     */
     public $subject;
 
     /**
@@ -25,7 +47,7 @@ abstract class BaseMailer {
     /**
      * @var bool - Is send email now or use gearman
      */
-    public $now = false;
+    public $now = true;
 
     /**
      * @var array
@@ -46,6 +68,7 @@ abstract class BaseMailer {
     public function __construct($options)
     {
         $this->options = $options;
+        $this->to = ArrayHelper::getValue($options, 'to');
 
         if (isset(Yii::$app->params['mailer.status'])) {
             $this->now = (boolean)Yii::$app->params['mailer.status'];
@@ -55,20 +78,28 @@ abstract class BaseMailer {
     }
 
     /**
+     * Get mail data
+     * @return array
+     */
+    public function getData()
+    {
+        return [
+            'to' => $this->to,
+            'html' => $this->html,
+            'text' => $this->text,
+            'subject' => $this->subject,
+        ];
+    }
+
+    /**
      * Send
      */
     public function send()
     {
-        $options = [
-            'to' => $this->to,
-            'message' => $this->message,
-            'subject' => $this->subject,
-        ];
-
         if ($this->now) {
-            return static::sendNow($options);
+            return static::sendNow($this->getData());
         } else {
-            return (bool)Client::addTask('mail', $options);
+            return (bool)Client::addTask('mail', $this->getData());
         }
     }
 
@@ -81,12 +112,27 @@ abstract class BaseMailer {
     {
         $to = ArrayHelper::getValue($data, 'to');
         $subject = ArrayHelper::getValue($data, 'subject');
-        $message = ArrayHelper::getValue($data, 'message');
+        $text = ArrayHelper::getValue($data, 'text');
+        $html = ArrayHelper::getValue($data, 'html');
 
         if (!empty(Yii::$app->params['debugEmail'])) {
             $to = Yii::$app->params['debugEmail'];
         }
 
-        return (bool)Mailgun::send($to, $subject, $message);
+        return (bool)Mailgun::send($to, $subject, [
+            'text' => $text,
+            'html' => $html
+        ]);
+    }
+
+    /**
+     * Render twig content by string
+     * @param string $content
+     * @param array $params
+     * @return string
+     */
+    public function renderTwig(string $content, array $params = []):string
+    {
+        return Yii::$app->view->renderContent($content, $params);
     }
 }
