@@ -5,11 +5,16 @@ namespace my\controllers;
 use common\models\panels\Auth;
 use common\models\panels\Customers;
 use common\models\panels\Orders;
+use common\models\stores\StoreAdminAuth;
+use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\components\ActiveForm;
+use my\models\forms\CreateStoreStaffForm;
 use my\models\forms\EditStoreDomainForm;
+use my\models\forms\EditStoreStaffForm;
 use my\models\forms\OrderStoreForm;
+use my\models\forms\SetStoreStaffPasswordForm;
 use my\models\search\StoresSearch;
 use Yii;
 use yii\filters\AccessControl;
@@ -143,7 +148,7 @@ class StoreController extends CustomController
         ]);
 
         if (!Stores::hasAccess($store, Stores::CAN_DOMAIN_CONNECT, [
-            'user' => $user,
+            'customer' => $user,
             'last_update' => $storeDomain ? $storeDomain->updated_at : null
         ])) {
             return [
@@ -182,7 +187,7 @@ class StoreController extends CustomController
     }
 
     /**
-     * Prolong store
+     * Prolongation store
      * @param $id
      * @return Response
      * @throws ForbiddenHttpException
@@ -199,7 +204,7 @@ class StoreController extends CustomController
         $user = Yii::$app->user->getIdentity();
 
         if (!Stores::hasAccess($store, Stores::CAN_PROLONG, [
-            'user' => $user,
+            'customer' => $user,
         ])) {
             throw new ForbiddenHttpException();
         }
@@ -209,6 +214,170 @@ class StoreController extends CustomController
         }
 
         return $this->redirect('/invoices/' . $code);
+    }
+
+    /**
+     * Render store staff list
+     * @param $id
+     * @return string|Response
+     */
+    public function actionStaff($id)
+    {
+        $this->view->title = Yii::t('app', 'pages.title.store.staff');
+        $store = $this->_findStore($id);
+
+        if ($store->status != Stores::STATUS_ACTIVE) {
+            return $this->redirect('/stores');
+        }
+
+        $staffs = StoreAdmins::find()->where(['store_id' => $store->id])->orderBy(['id' => SORT_DESC])->all();
+
+        return $this->render('staff', [
+            'store' => $store,
+            'staffs' => $staffs,
+            'canCreate' => Stores::hasAccess($store, Stores::CAN_STAFF_CREATE, [
+                'customer' => Yii::$app->user->getIdentity(),
+            ]),
+        ]);
+    }
+
+    /**
+     * Create store staff ajax action
+     * @param $id integer store id
+     * @return array
+     * @throws ForbiddenHttpException
+     */
+    public function actionStaffCreate($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $store = $this->_findStore($id);
+
+        if (!Stores::hasAccess($store, Stores::CAN_STAFF_CREATE, [
+            'customer' => Yii::$app->user->getIdentity(),
+        ])) {
+            throw new ForbiddenHttpException();
+        }
+
+        $form = new CreateStoreStaffForm();
+        $form->setStore($store);
+
+        if ($form->load(Yii::$app->request->post())) {
+
+            if (!$form->save()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($form)
+                ];
+            }
+
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('app', 'error.stores.staff.can_not_create')
+        ];
+    }
+
+    /**
+     * Edit store staff ajax action
+     * @param $id integer staff user id
+     * @return array
+     * @throws ForbiddenHttpException
+     */
+    public function actionStaffEdit($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $staff = StoreAdminAuth::findOne([
+            'id' => $id,
+        ]);
+
+        if (!$staff) {
+            throw new ForbiddenHttpException();
+        }
+
+        $store = $this->_findStore($staff->store_id);
+
+        if (!Stores::hasAccess($store, Stores::CAN_STAFF_EDIT, [
+            'customer' => Yii::$app->user->getIdentity(),
+        ])) {
+            throw new ForbiddenHttpException();
+        }
+
+        $model = new EditStoreStaffForm();
+        $model->setStaff($staff);
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if (!$model->save()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($model)
+                ];
+            }
+
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('app', 'error.stores.staff.can_not_edit')
+        ];
+    }
+
+    /**
+     * Update store staff password ajax action
+     * @param $id
+     * @return array
+     * @throws ForbiddenHttpException
+     */
+    public function actionStaffPassword($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $staff = StoreAdminAuth::findOne([
+            'id' => $id,
+        ]);
+
+        if (!$staff) {
+            throw new ForbiddenHttpException();
+        }
+
+        $store = $this->_findStore($staff->store_id);
+
+        if (!Stores::hasAccess($store, Stores::CAN_STAFF_UPDATE_PASSWORD, [
+            'customer' => Yii::$app->user->getIdentity(),
+        ])) {
+            throw new ForbiddenHttpException();
+        }
+
+        $model = new SetStoreStaffPasswordForm();
+        $model->setStaff($staff);
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if (!$model->save()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($model)
+                ];
+            }
+
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('app', 'error.stores.staff.can_not_change_password')
+        ];
     }
 
     /**

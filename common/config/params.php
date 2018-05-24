@@ -77,6 +77,8 @@ return [
         'block_process' => 1,
     ],
 
+    'store.staff_users.limit' => 10,
+
     'project.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели
     'domain.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели
     'ssl.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели

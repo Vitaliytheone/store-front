@@ -145,6 +145,8 @@ class StoresSearch
                 $value['expiredDate'] = Yii::$app->formatter->asDate($value['expired'] + ((int)$timezone), 'php:Y-m-d H:i:s');
 
                 $access['canDashboard'] = Stores::hasAccess($value, Stores::CAN_DASHBOARD);
+                $access['canStaffView'] = Stores::hasAccess($value, Stores::CAN_STAFF_VIEW);
+
                 $access['canDomainConnect'] = Stores::hasAccess($value, Stores::CAN_DOMAIN_CONNECT, [
                     'customer' => $customer,
                     'last_update' => ArrayHelper::getValue($storeDomain, 'updated_at')

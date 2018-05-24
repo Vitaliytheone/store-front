@@ -1,6 +1,7 @@
 <?php
 namespace common\models\stores;
 
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -36,17 +37,6 @@ class StoreAdmins extends ActiveRecord
     const SUPER_USER_MODE_ON = 1;
 
     /**
-     * Default store admin rules for new stores
-     * @var array
-     */
-    static $defaultRules = [
-        'orders' => 1,
-        'products' => 1,
-        'payments' => 1,
-        'settings' => 1,
-    ];
-
-    /**
      * Default allowed controller
      * Admin will be redirect to this controller
      * if other controllers are not allowed
@@ -59,6 +49,19 @@ class StoreAdmins extends ActiveRecord
      * MODULE_PREFIX/CONTROLLER
      */
     const MODULE_PREFIX = 'admin';
+
+    /**
+     * Default store admin rules for new stores
+     * @var array
+     */
+    static $defaultRules = [
+        'orders' => 1,
+        'products' => 1,
+        'payments' => 1,
+        'settings' => 1,
+    ];
+
+    use UnixTimeFormatTrait;
 
     /**
      * @inheritdoc
@@ -142,43 +145,33 @@ class StoreAdmins extends ActiveRecord
     }
 
     /**
+     * Return admin statuses list
+     * @return array
+     */
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_ACTIVE => Yii::t('app', 'store_admin.status.active'),
+            static::STATUS_SUSPENDED => Yii::t('app', 'store_admin.status.suspended')
+        ];
+    }
+
+    /**
+     * Return admin current status name
+     * @return mixed
+     */
+    public function getStatusName()
+    {
+        return ArrayHelper::getValue(static::getStatuses(), $this->status);
+    }
+
+    /**
      * Return if admin active
      * @return bool
      */
     public function isActive()
     {
         return $this->status === self::STATUS_ACTIVE;
-    }
-
-    /**
-     * Return current admin allowed rules list
-     * Default allowed controller will be present
-     * if $includeDefault is true
-     *
-     * [
-     *      'orders => 1,
-     *      'settings' => 0,
-     *      ...
-     *      default_controller => 1
-     * ]
-     *
-     * @param $includeDefault bool
-     * @return array
-     */
-    public function getRules($includeDefault = true)
-    {
-        $rules = json_decode($this->rules, true);
-
-        if (!is_array($rules)) {
-            $rules = [];
-        }
-
-        if ($includeDefault) {
-            // Add default allowed controller to rules array
-            $rules[self::DEFAULT_CONTROLLER] = 1;
-        }
-
-        return $rules;
     }
 
     /**
@@ -190,7 +183,42 @@ class StoreAdmins extends ActiveRecord
         $defaultRules = array_fill_keys(array_keys(static::$defaultRules), 0);
         $rules = ArrayHelper::merge($defaultRules, $rules);
         $rules = array_intersect_key($rules, $defaultRules);
+        $rules = array_map('intval', $rules);
         $this->rules = json_encode($rules);
+    }
+
+    /**
+     * Return current admin allowed rules list
+     * Default allowed controller will be present
+     * @return array
+     */
+    public function getRules()
+    {
+        return ArrayHelper::merge(static::$defaultRules, json_decode($this->rules, true));
+    }
+
+    /**
+     * Return rules names
+     * @return array
+     */
+    public static function getRulesLabels()
+    {
+        return [
+            'orders' => Yii::t('app', 'store_admin.rule_orders'),
+            'payments' => Yii::t('app', 'store_admin.rule_payments'),
+            'products' => Yii::t('app', 'store_admin.rule_products'),
+            'settings' => Yii::t('app', 'store_admin.rule_settings'),
+        ];
+    }
+
+    /**
+     * Return is admin has access to all rules
+     * @return bool
+     */
+    public function isFullAccess()
+    {
+        $rules = $this->getRules();
+        return !in_array(0, $rules);
     }
 
     /**
@@ -208,6 +236,7 @@ class StoreAdmins extends ActiveRecord
         });
 
         $controllers = array_keys($rules);
+        array_push($controllers, self::DEFAULT_CONTROLLER);
 
         return $controllers;
     }
