@@ -22,12 +22,12 @@
 
 <div class="row">
     <div class="col-lg-8">
+        <?php if (!empty($note)) : ?>
+            <div class="alert alert-info">
+                <?= $note ?>
+            </div>
+        <?php endif; ?>
         <?php if (!empty($tickets['models'])): ?>
-            <?php if (!empty($note)) : ?>
-                <div class="alert alert-info">
-                    <?= $note ?>
-                </div>
-            <?php endif; ?>
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>

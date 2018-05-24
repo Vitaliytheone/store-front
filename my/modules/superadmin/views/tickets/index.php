@@ -15,7 +15,7 @@ $this->context->addModule('superadminTicketsController');
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
                     <?php $code = is_numeric($code) ? (int)$code : $code;?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(array_merge($filters, ['/tickets', 'status' => $code])) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute($code === 'all' ? '/tickets' : array_merge($filters, ['/tickets', 'status' => $code])) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>

@@ -17,7 +17,7 @@
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
                     <?php $code = is_numeric($code) ? $code : null;?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(array_merge(['/payments'], $filters, ['status' => $code])) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute($code === null ? '/payments' : array_merge(['/payments'], $filters, ['status' => $code])) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>
