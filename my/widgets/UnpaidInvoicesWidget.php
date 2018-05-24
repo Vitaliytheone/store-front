@@ -1,26 +1,26 @@
 <?php
 namespace my\widgets;
 
+use common\models\panels\Invoices;
 use Yii;
-use common\models\panels\Tickets;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 
 /**
- * Class UnreadMessagesWidget
+ * Class UnpaidInvoicesWidget
  * @package my\widgets
  */
-class UnreadMessagesWidget extends Widget {
-
+class UnpaidInvoicesWidget extends Widget
+{
     /**
      * Run method
      * @return string|null
      */
     public function run()
     {
-        $count = Tickets::find()->andWhere([
+        $count = Invoices::find()->andWhere([
             'cid' => Yii::$app->user->identity->id,
-            'admin' => 1
+            'status' => Invoices::STATUS_UNPAID,
         ])->count();
 
         if (!$count) {
@@ -28,7 +28,7 @@ class UnreadMessagesWidget extends Widget {
         }
 
         return Html::tag('span', $count, [
-            'class' => 'sidebar-tooltip sidebar-tooltip__warning',
+            'class' => 'sidebar-tooltip sidebar-tooltip__danger',
         ]);
     }
 }

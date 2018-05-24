@@ -4,6 +4,7 @@
 
     use yii\bootstrap\Html;
     use my\widgets\UnreadMessagesWidget;
+    use my\widgets\UnpaidInvoicesWidget;
 
     $user = Yii::$app->user->getIdentity();
 ?>
@@ -52,7 +53,7 @@
                         <?= Html::a('<i class="fa fa-certificate fa-fw"></i> ' . Yii::t('app', 'layouts.header.ssl'), '/ssl') ?>
                     </li>
                     <li>
-                        <?= Html::a('<i class="fa fa-usd fa-fw"></i> ' . Yii::t('app', 'layouts.header.invoices'), '/invoices') ?>
+                        <?= Html::a('<i class="fa fa-usd fa-fw"></i> ' . Yii::t('app', 'layouts.header.invoices') . ' ' . UnpaidInvoicesWidget::widget(), '/invoices') ?>
                     </li>
                     <?php if ($user && $user->can('referral')) : ?>
                         <li>
@@ -60,7 +61,7 @@
                         </li>
                     <?php endif; ?>
                     <li>
-                        <?= Html::a('<i class="fa fa-support fa-fw"></i>  ' . Yii::t('app', 'layouts.header.support') . ' ' .UnreadMessagesWidget::widget(), '/support') ?>
+                        <?= Html::a('<i class="fa fa-support fa-fw"></i>  ' . Yii::t('app', 'layouts.header.support') . ' ' . UnreadMessagesWidget::widget(), '/support') ?>
                     </li>
                     <li>
                         <?= Html::a('<i class="fa fa-gear fa-fw"></i> ' . Yii::t('app', 'layouts.header.settings'), '/settings') ?>
