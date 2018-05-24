@@ -13,6 +13,8 @@ return [
     '/admin/frozen' => 'admin/site/frozen',
     '/admin/super-login' => 'admin/site/super-login',
 
+    '/admin/settings/edit-block/<code:[\w\d-]+>' => 'admin/settings/edit-block',
+
     [
         'pattern' => '<filename:[\w\d]+>',
         'route' => 'site/ssl',

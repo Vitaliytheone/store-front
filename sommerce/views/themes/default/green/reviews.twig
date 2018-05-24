@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% if block.reviews %}
     <!-- Reviews Section Start -->
     <div id="testimonial" class="pd--100-0-40">
@@ -51,4 +52,59 @@
         </div>
     </div>
     <!-- Reviews Tab Section End -->
+=======
+{% if block.reviews %}
+    <!-- Reviews Section Start -->
+    <div id="testimonial" class="pd--100-0-40">
+        <div class="container">
+            <!-- Section Title Start -->
+            <div class="section--title text-center">
+                <h2 class="h2">{{ block.reviews.header.title }}</h2>
+                {% if block.reviews.header.description %}
+                    <!-- Section description Start -->
+                    <div class="section--description text-center">{{ block.reviews.header.description }}</div>
+                    <!-- Section description End -->
+                {% endif %}
+            </div>
+            <!-- Section Title End -->
+
+            <!-- Reviews Slider Start -->
+            <div class="testimonial--slider owl-carousel" data-owl-margin="30" data-owl-items="{{ block.reviews.settings.column }}" data-owl-dots="true">
+
+
+                {% for review in block.reviews.data %}
+                    <!-- Reviews Item Start -->
+                    <div class="testimonial--item">
+                        <div class="testimonial--img">
+                            <figure>
+                                <div class="avatar" style="background-image: url('{{ review.image }}');"></div>
+                            </figure>
+                        </div>
+
+                        <div class="testimonial--content">
+                            <blockquote>
+                                <p><i class="fa fm fa-quote-left"></i>{{ review.description }}</p>
+                            </blockquote>
+
+                            <h3 class="h4">{{ review.name }}</h3>
+
+                            <p class="subtitle">
+                                {% for i in 0..4 %}
+                                    {% if i < review.rating %}
+                                        <span class="fas fa-star"></span>
+                                    {% else %}
+                                        <span class="fal fa-star"></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Reviews Item End -->
+                {% endfor %}
+            </div>
+            <!-- Reviews Slider End -->
+        </div>
+    </div>
+    <!-- Reviews Tab Section End -->
+>>>>>>> #ID-505_ID-509_renew_twig_editor
 {% endif %}

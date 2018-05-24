@@ -61,7 +61,7 @@ class BlockUploadForm extends Model {
             return false;
         }
 
-        $fileInstance = UploadedFile::getInstanceByName('file');
+        $fileInstance = UploadedFile::getInstanceByName('image');
 
         if (!($fileInstance instanceof UploadedFile)) {
             $this->addError('file', Yii::t('admin', 'settings.message_cdn_upload_error'));

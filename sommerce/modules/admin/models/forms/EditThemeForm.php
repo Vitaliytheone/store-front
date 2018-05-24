@@ -2,14 +2,17 @@
 
 namespace sommerce\modules\admin\models\forms;
 
+use common\components\traits\UnixTimeFormatTrait;
 use common\models\store\ActivityLog;
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
 use common\models\stores\StoreAdminAuth;
 use console\helpers\ConsoleHelper;
+use sommerce\helpers\CustomFilesHelper;
 use sommerce\modules\admin\models\search\ThemesSearch;
 use yii\base\Exception;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**
@@ -18,6 +21,8 @@ use yii\web\User;
  */
 class EditThemeForm extends Model
 {
+    use UnixTimeFormatTrait;
+
     /**
      * Theme allowed folders/files structure
      * @var array
@@ -44,9 +49,6 @@ class EditThemeForm extends Model
         ],
         'JS' => [],
         'CSS' => [],
-//        'Config' => [
-//            'settings.json'
-//        ],
     ];
 
     /** @var   */
@@ -86,7 +88,6 @@ class EditThemeForm extends Model
     {
         $this->_user = $user;
     }
-
 
     /**
      * Get current user
@@ -134,10 +135,10 @@ class EditThemeForm extends Model
          * For Custom theme — save file to theme path
          * For Default theme — save file to custom themes path
          */
-        if ($themeModel::THEME_TYPE === 1) {
+        if ($themeModel::getThemeType() === $themeModel::THEME_TYPE_CUSTOM) {
             $model->_path_to_file = $themeModel->getThemePath() . '/' . $model->_file;
         } else {
-            $model->_path_to_file = CustomThemes::getThemesPath() . '/' . $themeModel->folder . '/' . $model->_file;
+            $model->_path_to_file = $themeModel->getSaveToPath() . '/' . $model->_file;
         }
 
         return $model;
@@ -180,23 +181,31 @@ class EditThemeForm extends Model
      */
     public function setFilesTree()
     {
-        // $defaultThemePath = $this->getThemeModel()::getDefaultThemePath();
-        // $filesTree = CustomFilesHelper::dirTree($defaultThemePath, $defaultThemePath, '/^.*\.(css|js)$/i');
+        $themeModel = $this->getThemeModel();
+        $themePath = $themeModel->getThemePath();
 
-        $themePath = $this->getThemeModel()->getThemePath();
+        $themeCustomFiles = [];
 
-        $themeFiles = scandir($themePath);
+        $themeFiles = CustomFilesHelper::dirTree($themePath, $themePath, '/^.*\.(css|js|twig|json)$/i');
 
-        foreach ($themeFiles as $file) {
+        if ($themeModel::getThemeType() === $themeModel::THEME_TYPE_DEFAULT) {
+            $customFilePath = $themeModel->getSaveToPath();
 
-            if(!is_file($themePath . DIRECTORY_SEPARATOR . $file)) {
-                continue;
+            if (file_exists($customFilePath)) {
+                $themeCustomFiles = CustomFilesHelper::dirTree($customFilePath, $customFilePath, '/^.*\.(css|js|twig|json)$/i');
             }
-            if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'js') === 0) {
-                $this->_filesTree['JS'][] = $file;
+        }
+
+        $themeFiles = array_merge($themeFiles, $themeCustomFiles);
+
+        foreach ($themeFiles as $fileName => $fileData) {
+            $extension = ArrayHelper::getValue($fileData, 'extension');
+
+            if ($extension === 'js') {
+                $this->_filesTree['JS'][] = $fileName;
             }
-            if (strcasecmp(pathinfo($file, PATHINFO_EXTENSION), 'css') === 0) {
-                $this->_filesTree['CSS'][] = $file;
+            if ($extension === 'css') {
+                $this->_filesTree['CSS'][] = $fileName;
             }
         }
 
@@ -205,17 +214,45 @@ class EditThemeForm extends Model
             sort($folder);
         }
 
+        // Populate files by files data
+        foreach ($this->_filesTree as &$folder) {
+            array_walk($folder, function(&$file) use ($themeFiles, $themeModel, $themeCustomFiles) {
+
+                $modifiedAt = ArrayHelper::getValue($themeFiles, [$file, 'modified_at']);
+
+                if ($themeModel::getThemeType() === $themeModel::THEME_TYPE_DEFAULT) {
+                    $isModified = in_array($file, array_keys($themeCustomFiles));
+                } else {
+                    $isModified = (int)$modifiedAt > (int)$themeModel->created_at;
+                }
+
+                $file = [
+                    'name' => $file,
+                    'modified_at' => $isModified ? static::formatDate($modifiedAt, 'php:Y-m-d') : null,
+                    'is_modified' => $isModified,
+                ];
+            });
+        }
+
         return $this->_filesTree;
     }
 
     /**
      * Return theme files tree
      * @return array
-     * @throws Exception
      */
     public function getFilesTree()
     {
         return $this->_filesTree;
+    }
+
+    /**
+     * Return theme files array of folders names
+     * @return array
+     */
+    public function getFolders()
+    {
+        return array_keys($this->_filesTree);
     }
 
     /**
@@ -239,7 +276,7 @@ class EditThemeForm extends Model
         $filePath = false;
 
         /** Custom Theme: Try to find file (1) in theme path */
-        if ($themeModel::THEME_TYPE === 1 &&
+        if ($themeModel::getThemeType() === $themeModel::THEME_TYPE_CUSTOM &&
             !file_exists($filePath = $themeFilePath)
         ) {
             $filePath = false;
@@ -247,7 +284,7 @@ class EditThemeForm extends Model
 
         /** Default Theme: Try to find file (1) in custom folder, (2) in real theme folder */
         if (
-            $themeModel::THEME_TYPE === 0 &&
+            $themeModel::getThemeType() === $themeModel::THEME_TYPE_DEFAULT &&
             !file_exists($filePath = $themeFilePath) &&
             !file_exists($filePath = $themeRealFilePath)
         ) {
@@ -262,10 +299,16 @@ class EditThemeForm extends Model
     }
 
     /**
-     * @return bool
+     * Update theme file
+     * @param $postData
+     * @return false|string
      */
-    public function updateThemeFile()
+    public function updateThemeFile($postData)
     {
+        if (!$this->load($postData)) {
+            return false;
+        }
+
         $pathToFile = $this->getPathToFile();
         $path = dirname($pathToFile);
 
@@ -284,7 +327,13 @@ class EditThemeForm extends Model
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_THEMES_THEME_FILE_UPDATED, $this->_theme_model->id,  $this->_theme_model->name);
 
-        return true;
+        $modifiedAt = @filemtime($pathToFile);
+
+        if (!$modifiedAt) {
+            return false;
+        }
+
+        return static::formatDate($modifiedAt, 'php:Y-m-d');
     }
 
     /**
@@ -297,7 +346,22 @@ class EditThemeForm extends Model
 
         $file = $this->getPathToFile();
 
-        return $themeModel::THEME_TYPE === 0 && $file && file_exists($file);
+        return $themeModel::getThemeType() === $themeModel::THEME_TYPE_DEFAULT && $file && file_exists($file);
+    }
+
+    /**
+     * Return file last edit date
+     * @return bool|int
+     */
+    public function getModifiedDate()
+    {
+        $file = $this->getPathToFile();
+
+        if (!file_exists($file) || !$editDate = @filemtime($file)) {
+            return null;
+        }
+
+        return static::formatDate($editDate);
     }
 
 }
