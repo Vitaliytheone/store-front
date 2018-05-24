@@ -1,13 +1,11 @@
 <?php
 namespace sommerce\controllers;
 
-use common\models\common\ProjectInterface;
 use common\models\panels\SslValidation;
 use common\models\store\Blocks;
 use common\models\stores\Stores;
 use sommerce\helpers\BlockHelper;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -60,6 +58,8 @@ class SiteController extends CustomController
                 $blocks[$block->code] = $block->getContent(BlockHelper::getDefaultBlock($block->code));
             }
         }
+
+        error_log(print_r($blocks,1));
 
         return $this->render('index.twig', [
             'block' => $blocks

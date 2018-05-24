@@ -35,7 +35,6 @@ class BlocksController extends CustomController
                 return;
             }
 
-
             $blocksTableName = Blocks::tableName();
 
             $blocks = Yii::$app->db
@@ -72,15 +71,15 @@ class BlocksController extends CustomController
                 if (is_array($blockSettings)) {
                     switch ((int)$blockSettings['column']) {
                         case 6:
-                            $blockSettings['column'] = 2;
+                            $blockSettings['column'] = '2';
                             $blockSettings['bootstrap_column'] = 'col-md-6';
                             break;
                         case 4:
-                            $blockSettings['column'] = 3;
+                            $blockSettings['column'] = '3';
                             $blockSettings['bootstrap_column'] = 'col-md-4';
                             break;
                         case 3:
-                            $blockSettings['column'] = 4;
+                            $blockSettings['column'] = '4';
                             $blockSettings['bootstrap_column'] = 'col-md-3';
                             break;
                     }
@@ -101,7 +100,7 @@ class BlocksController extends CustomController
                     $blockContent['data'] = $contentData;
                 }
 
-                $blockContent = json_encode($blockContent);
+                $blockContent = json_encode($blockContent, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
                  Yii::$app->db->createCommand("
                     UPDATE $db.$blocksTableName
@@ -153,7 +152,7 @@ class BlocksController extends CustomController
                 throw new Exception('Default block content does not exist!');
             }
 
-            $defaultContent = json_encode($defaultContent);
+            $defaultContent = json_encode($defaultContent, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
             Yii::$app->db->createCommand("
                 UPDATE $tableName
