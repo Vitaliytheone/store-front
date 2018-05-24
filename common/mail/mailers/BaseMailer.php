@@ -1,12 +1,14 @@
 <?php
 namespace common\mail\mailers;
 
-use common\components\email\Mailgun;
 use Yii;
+
+require_once(Yii::getAlias("@libs/premailer/Premailer.php"));
+
+use Premailer;
+use common\components\email\Mailgun;
 use common\tasks\Client;
 use yii\helpers\ArrayHelper;
-use Twig_Environment;
-use Twig_Loader_Array;
 
 /**
  * Class BaseMailer
@@ -121,7 +123,7 @@ abstract class BaseMailer {
 
         return (bool)Mailgun::send($to, $subject, [
             'text' => $text,
-            'html' => $html
+            'html' => $html ? (new Premailer($html))->getConvertedHtml() : null
         ]);
     }
 
