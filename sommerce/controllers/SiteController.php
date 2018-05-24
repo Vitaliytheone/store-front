@@ -59,8 +59,6 @@ class SiteController extends CustomController
             }
         }
 
-        error_log(print_r($blocks,1));
-
         return $this->render('index.twig', [
             'block' => $blocks
         ]);

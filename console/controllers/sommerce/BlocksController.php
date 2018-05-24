@@ -35,11 +35,11 @@ class BlocksController extends CustomController
                 return;
             }
 
-            $blocksTableName = Blocks::tableName();
+            $blocksTableName = $db . '.' . Blocks::tableName();
 
             $blocks = Yii::$app->db
                 ->createCommand("
-                    SELECT * FROM $db.$blocksTableName;
+                    SELECT * FROM $blocksTableName;
                 ")
                 ->queryAll();
 
@@ -100,13 +100,14 @@ class BlocksController extends CustomController
                     $blockContent['data'] = $contentData;
                 }
 
-                $blockContent = json_encode($blockContent, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                $blockContent = json_encode($blockContent);
 
-                 Yii::$app->db->createCommand("
-                    UPDATE $db.$blocksTableName
-                    SET `content` = '$blockContent'
-                    WHERE `code` =  '$blockCode';
-                ")->execute();
+                Yii::$app->db->createCommand("UPDATE $blocksTableName SET `content`=:block_content WHERE `code`=:block_code")
+                    ->bindValues([
+                        ':block_content' => $blockContent,
+                        ':block_code' => $blockCode,
+                    ])
+                    ->execute();
 
                 $this->stderr('Updated block: ' . "[$blockCode]" . "\n", Console::FG_GREEN);
             }
@@ -152,7 +153,7 @@ class BlocksController extends CustomController
                 throw new Exception('Default block content does not exist!');
             }
 
-            $defaultContent = json_encode($defaultContent, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $defaultContent = json_encode($defaultContent);
 
             Yii::$app->db->createCommand("
                 UPDATE $tableName
