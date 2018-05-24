@@ -107,20 +107,7 @@
                                                 'class' => 'btn btn-outline btn-default btn-xs disabled',
                                             ])?>
                                         <?php endif; ?>
-
-                                        <?php if ($store['access']['canProlong']) : ?>
-                                            <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
-                                                '/store/prolong',
-                                                'id' => $store['id']
-                                            ], [
-                                                'class' => 'btn btn-outline btn-warning btn-xs',
-                                            ])?>
-                                        <?php else : ?>
-                                            <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'stores.list.action_prolong'), [
-                                                'class' => 'btn btn-outline btn-default btn-xs disabled',
-                                            ])?>
-                                        <?php endif; ?>
-
+                                        
                                     <?php endif; ?>
                                 </td>
                             </tr>

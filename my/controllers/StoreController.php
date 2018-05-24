@@ -181,8 +181,16 @@ class StoreController extends CustomController
         ];
     }
 
+    /**
+     * Prolong store
+     * @param $id
+     * @return Response
+     * @throws ForbiddenHttpException
+     */
     public function actionProlong($id)
     {
+        throw new ForbiddenHttpException();
+
         $store = $this->_findStore($id);
 
         /**
