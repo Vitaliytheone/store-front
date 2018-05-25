@@ -36,7 +36,8 @@ class PaymentsController extends CustomController
             'status' => is_numeric($status) ? (int)$status : $status,
             'modes' => $paymentsSearch->getAggregatedModes(),
             'methods' => $paymentsSearch->getAggregatedMethods(),
-            'filters' => $paymentsSearch->getParams()
+            'filters' => $paymentsSearch->getParams(),
+            'searchType' => $paymentsSearch->getSearchTypes(),
         ]);
     }
 

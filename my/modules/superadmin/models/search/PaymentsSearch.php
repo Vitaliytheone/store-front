@@ -20,6 +20,11 @@ use yii\helpers\ArrayHelper;
  */
 class PaymentsSearch extends Payments {
 
+    const SEARCH_TYPE_PAYMENT_ID = 1;
+    const SEARCH_TYPE_INVOICE_ID = 2;
+    const SEARCH_TYPE_PAYMENT_COMMENT = 3;
+    const SEARCH_TYPE_DOMAIN = 4;
+
     public $domain;
 
     protected $pageSize = 100;
@@ -43,6 +48,7 @@ class PaymentsSearch extends Payments {
             'status' => isset($this->params['status']) ? $this->params['status'] : null,
             'mode' => isset($this->params['mode']) && is_numeric($this->params['mode']) ? (int)$this->params['mode'] : null,
             'method' => isset($this->params['method']) && is_numeric($this->params['method']) ? (int)$this->params['method'] : null,
+            'search-type' => isset($this->params['search-type']) && is_numeric($this->params['search-type']) ? (int)$this->params['search-type'] : null,
         ];
     }
 
@@ -56,6 +62,7 @@ class PaymentsSearch extends Payments {
     public function buildQuery($status = null, $mode = null, $method = null)
     {
         $searchQuery = $this->getQuery();
+        $searchType = isset($this->params['search-type']) && is_numeric($this->params['search-type']) ? $this->params['search-type'] : null;
 
         $payments = static::find();
 
@@ -77,15 +84,31 @@ class PaymentsSearch extends Payments {
             ]);
         }
 
-        if (!empty($searchQuery)) {
-            $payments->andFilterWhere([
-                'or',
-                ['=', 'payments.id', $searchQuery],
-                ['like', 'payments.comment', $searchQuery],
-                ['like', 'payments.transaction_id', $searchQuery],
-                ['like', 'orders.domain', $searchQuery],
-                ['like', 'project.site', $searchQuery],
-            ]);
+        if (!empty($searchQuery) && !empty($searchType)) {
+
+            switch ($searchType) {
+                case static::SEARCH_TYPE_PAYMENT_ID:
+                    $payments->andFilterWhere(['=', 'payments.id', $searchQuery]);
+                    break;
+                case static::SEARCH_TYPE_INVOICE_ID:
+                    $payments->andFilterWhere(['=', 'invoice_details.invoice_id', $searchQuery]);
+                    break;
+                case static::SEARCH_TYPE_DOMAIN:
+                    $payments->andFilterWhere([
+                        'or',
+                        ['like', 'orders.domain', $searchQuery],
+                        ['like', 'project.site', $searchQuery],
+                        ['like', 'store.domain', $searchQuery],
+                    ]);
+                    break;
+                case static::SEARCH_TYPE_PAYMENT_COMMENT:
+                    $payments->andFilterWhere([
+                        'or',
+                        ['like', 'payments.comment', $searchQuery],
+                        ['like', 'payments.transaction_id', $searchQuery]
+                    ]);
+                    break;
+            }
         }
 
         return $payments;
@@ -106,7 +129,6 @@ class PaymentsSearch extends Payments {
                 InvoiceDetails::ITEM_BUY_DOMAIN,
                 InvoiceDetails::ITEM_BUY_STORE,
                 InvoiceDetails::ITEM_BUY_TRIAL_STORE,
-                InvoiceDetails::ITEM_PROLONGATION_STORE,
                 InvoiceDetails::ITEM_PROLONGATION_SSL,
                 InvoiceDetails::ITEM_PROLONGATION_DOMAIN,
             ]) . ')'
@@ -197,6 +219,7 @@ class PaymentsSearch extends Payments {
     public function count($status = null, $mode = null, $method = null)
     {
         $searchQuery = $this->getQuery();
+
         $query = clone $this->buildQuery($status, $mode, $method);
 
         if (!empty($searchQuery)) {
@@ -254,6 +277,7 @@ class PaymentsSearch extends Payments {
     {
         $status = ArrayHelper::getValue($this->params, 'status', null);
         $method = isset($this->params['method']) && is_numeric($this->params['method']) ? $this->params['method'] : null;
+
         $modes = [
             null => Yii::t('app/superadmin', 'payments.list.navs_mode_all', [
                 'count' => $this->count($status, null, $method)
@@ -315,5 +339,19 @@ class PaymentsSearch extends Payments {
     public function getDomain()
     {
         return $this->domain ? DomainsHelper::idnToUtf8($this->domain) : '';
+    }
+
+    /**
+     * Return search types
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return [
+            self::SEARCH_TYPE_PAYMENT_ID => Yii::t('app/superadmin', 'payments.list.search_type.payment_id'),
+            self::SEARCH_TYPE_INVOICE_ID => Yii::t('app/superadmin', 'payments.list.search_type.invoice_id'),
+            self::SEARCH_TYPE_PAYMENT_COMMENT => Yii::t('app/superadmin', 'payments.list.search_type.payment_comment'),
+            self::SEARCH_TYPE_DOMAIN => Yii::t('app/superadmin', 'payments.list.search_type.domain'),
+        ];
     }
 }
