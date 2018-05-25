@@ -23,7 +23,7 @@
             </ul>
         </li>
         <li>
-            <form class="form-inline" method="GET" id="paymentsSearch" action="<?=Url::toRoute(array_merge(['/payments'], $filters, ['query' => null]))?>">
+            <form class="form-inline" method="GET" id="paymentsSearch" action="<?=Url::toRoute(array_merge(['/payments'], $filters, ['search-type' => null, 'query' => null]))?>">
                 <div class="input-group input-group__select">
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'payments.list.search') ?>" value="<?=$filters['query']?>">
                     <div class="form-group__select">
@@ -33,7 +33,6 @@
                             <?php endforeach ?>
                         </select>
                     </div>
-                    <input type="hidden" name="status" value="<?php echo $filters['status'] ?>">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
                     </span>
