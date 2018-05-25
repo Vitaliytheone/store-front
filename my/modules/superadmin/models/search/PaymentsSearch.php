@@ -277,7 +277,6 @@ class PaymentsSearch extends Payments {
     {
         $status = ArrayHelper::getValue($this->params, 'status', null);
         $method = isset($this->params['method']) && is_numeric($this->params['method']) ? $this->params['method'] : null;
-        $searchType = isset($this->params['search-type']) && is_numeric($this->params['search-type']) ? $this->params['search-type'] : null;;
 
         $modes = [
             null => Yii::t('app/superadmin', 'payments.list.navs_mode_all', [
@@ -302,7 +301,6 @@ class PaymentsSearch extends Payments {
     {
         $status = ArrayHelper::getValue($this->params, 'status', null);
         $mode = isset($this->params['mode']) && is_numeric($this->params['mode']) ? $this->params['mode'] : null;
-        $searchType = isset($this->params['search-type']) && is_numeric($this->params['search-type']) ? $this->params['search-type'] : null;;
 
         $returnMethods = [
             null => Yii::t('app/superadmin', 'payments.list.navs_method_all', [
