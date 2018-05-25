@@ -20,6 +20,10 @@ use yii\helpers\ArrayHelper;
  */
 class PaymentsSearch extends Payments {
 
+    const SEARCH_TYPE_PAYMENT_ID = 1;
+    const SEARCH_TYPE_INVOICE_ID = 2;
+    const SEARCH_TYPE_DOMAIN = 3;
+
     public $domain;
 
     protected $pageSize = 100;
@@ -43,6 +47,7 @@ class PaymentsSearch extends Payments {
             'status' => isset($this->params['status']) ? $this->params['status'] : null,
             'mode' => isset($this->params['mode']) && is_numeric($this->params['mode']) ? (int)$this->params['mode'] : null,
             'method' => isset($this->params['method']) && is_numeric($this->params['method']) ? (int)$this->params['method'] : null,
+            'search-type' => isset($this->params['search-type']) && is_numeric($this->params['search-type']) ? (int)$this->params['search-type'] : null,
         ];
     }
 
@@ -315,5 +320,18 @@ class PaymentsSearch extends Payments {
     public function getDomain()
     {
         return $this->domain ? DomainsHelper::idnToUtf8($this->domain) : '';
+    }
+
+    /**
+     * Return search types
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return [
+            self::SEARCH_TYPE_PAYMENT_ID => Yii::t('app/superadmin', 'payments.list.search_type.payment_id'),
+            self::SEARCH_TYPE_INVOICE_ID => Yii::t('app/superadmin', 'payments.list.search_type.invoice_id'),
+            self::SEARCH_TYPE_DOMAIN => Yii::t('app/superadmin', 'payments.list.search_type.domain'),
+        ];
     }
 }

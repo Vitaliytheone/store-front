@@ -217,3 +217,51 @@ hr {
 .login-key-link, .login-key-link:hover, .login-key-link:active {
   color: #292b2c;
 }
+
+/*  Payments, apikey log */
+.form-group__select{
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+}
+.input-group__select .btn{
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.form-group__select select{
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  border-left: none;
+  position: relative;
+  background: #fff;
+  cursor: pointer;
+  padding-left: 15px;
+  padding-right: 30px;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  padding-top: .375rem;
+  padding-bottom: .375rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+}
+.form-group__select:before{
+  content: "\f0d7";
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  right: 12px;
+}

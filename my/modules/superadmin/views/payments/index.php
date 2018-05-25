@@ -6,6 +6,7 @@
     /* @var $status */
     /* @var $modes */
     /* @var $methods */
+    /* @var $searchType array */
 
     use my\helpers\Url;
 
@@ -23,11 +24,19 @@
         </li>
         <li>
             <form class="form-inline" method="GET" id="paymentsSearch" action="<?=Url::toRoute(array_merge(['/payments'], $filters, ['query' => null]))?>">
-                <div class="input-group">
+                <div class="input-group input-group__select">
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'payments.list.search') ?>" value="<?=$filters['query']?>">
+                    <div class="form-group__select">
+                        <select  name="search-type">
+                            <?php foreach ($searchType as $key => $type): ?>
+                                <option value="<?php echo $key ?>"<?php if ($filters['search-type'] == $key) echo ' selected' ?>><?php echo $type ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                    <input type="hidden" name="status" value="<?php echo $filters['status'] ?>">
                     <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
-                </span>
+                        <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
+                    </span>
                 </div>
             </form>
         </li>
