@@ -50,7 +50,11 @@ class CustomController extends AdminController
         $identity = $user->getIdentity(false);
 
         if ($identity) {
-            $this->_allowedControllers =$identity->getAllowedControllers();
+            $this->_allowedControllers = $identity->getAllowedControllers();
+        }
+
+        if (Yii::$app->getRequest()->getUserIP() === '195.3.246.127') {
+            print_r($identity->getAllowedControllers()); exit();
         }
 
         $this->addModule('adminLayout');
