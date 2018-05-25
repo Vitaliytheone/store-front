@@ -2,44 +2,46 @@
     <!-- Features Section Start -->
     <div class="services--section pd--100-0 bg--overlay-90" data-bg-img="http://themelooks.us/demo/smm24/html/preview/img/testimonial-img/bg@2x.jpg">
         <div class="container">
-        <!-- Section Title Start -->
-        <div class="section--title mbottom--60">
-            <h2 class="h2">{{ block.features.header.title }}</h2>
-            {% if block.features.header.description %}
-                <div class="section--description">
-                    {{ block.features.header.description }}
-                </div>
-            {% endif %}
-        </div>
-        <!-- Section Title End -->
+            <!-- Section Title Start -->
+            <div class="section--title mbottom--60">
+                <h2 class="h2">{{ block.features.header.title }}</h2>
+                {% if block.features.header.description %}
+                    <div class="section--description">
+                        {{ block.features.header.description }}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Section Title End -->
 
             <div class="row AdjustRow section-col__clearfix">
-             {% for feature in block.features.data %}
-                <div class="{{ block.features.settings.bootstrap_column }} col-xs-6 col-xxs-12">
-                    <!-- Feature Item Start -->
-                    <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
-                        {% if block.features.settings.picture_type == 'image' %}
-                           <img src="{{ feature.image }}" alt="" class="img-responsive">
-                        {% else %}
-                          <div class="icon">
-                              <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
-                          </div>
-                        {% endif %}
+                {% for feature in block.features.data %}
+                    <div class="{{ block.features.settings.bootstrap_column }} col-xs-6 col-xxs-12">
+                        <!-- Feature Item Start -->
+                        <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
+                            {% if block.features.settings.picture_type == 'image' %}
+                                <div class="image">
+                                    <img src="{{ feature.image }}" alt="" class="img-responsive">
+                                </div>
+                            {% else %}
+                                <div class="icon">
+                                    <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+                                </div>
+                            {% endif %}
 
-                        <div class="title">
-                            <h3 class="h4">{{ feature.title }}</h3>
-                        </div>
+                            <div class="title">
+                                <h3 class="h4">{{ feature.title }}</h3>
+                            </div>
 
-                        <div class="content">
-                            <p>{{ feature.description }}</p>
+                            <div class="content">
+                                <p>{{ feature.description }}</p>
+                            </div>
                         </div>
+                        <!-- Feature Item End -->
                     </div>
-                    <!-- Feature Item End -->
-                </div>
                 {% endfor %}
-                </div>
+            </div>
 
-            </div>
-            </div>
-        <!-- Features Section End -->
+        </div>
+    </div>
+    <!-- Features Section End -->
 {% endif %}

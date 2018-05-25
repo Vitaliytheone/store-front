@@ -4778,6 +4778,11 @@ body.isTawkMobile #backToTop {
 .cart-button__checkout{
     text-align: right;
 }
+.owl-carousel .owl-item img{
+    max-width: 100%!important;
+    width: auto!important;
+    margin: 0 auto;
+}
 
 /*------------------------------------*\
     1. MEDIA QUERIES
