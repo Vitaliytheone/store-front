@@ -81,7 +81,7 @@ class Orders extends ActiveRecord
      */
     public function getPayment()
     {
-        return $this->hasOne(Payments::class, ['id' => 'checkout_id'])->via('checkout');
+        return $this->hasOne(Payments::class, ['checkout_id' => 'id'])->via('checkout');
     }
 
     /**

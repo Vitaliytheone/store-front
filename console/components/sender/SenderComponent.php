@@ -1,9 +1,11 @@
 <?php
 namespace console\components\sender;
 
+use common\models\store\Orders;
 use common\models\store\Packages;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
+use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
 use common\models\store\Suborders;
@@ -36,6 +38,12 @@ class SenderComponent extends Component
      * @var Connection
      */
     private $_db;
+
+    /**
+     * Current store
+     * @var Stores
+     */
+    private $_store;
 
     /**
      * Suborders table name
@@ -72,6 +80,14 @@ class SenderComponent extends Component
         $this->_tableProviders = Providers::tableName();
     }
 
+    /**
+     * Set current store
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
 
     /**
      * Set current DB connection

@@ -1,5 +1,5 @@
 <?php
-namespace sommerce\mail\mailers;
+namespace common\mail\mailers\store;
 
 use common\models\stores\Stores;
 use yii\helpers\ArrayHelper;
@@ -7,7 +7,7 @@ use common\mail\mailers\BaseMailer;
 
 /**
  * Class ContactFormMailer
- * @package app\mail\mailers
+ * @package common\mail\mailers\store
  */
 class ContactFormMailer extends BaseMailer {
 

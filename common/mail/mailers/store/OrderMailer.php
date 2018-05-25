@@ -1,5 +1,5 @@
 <?php
-namespace sommerce\mail\mailers;
+namespace common\mail\mailers\store;
 
 use common\models\store\Orders;
 use common\models\store\Payments;
@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderMailer
- * @package sommerce\mail\mailers\admin
+ * @package common\mail\mailers\store
  */
 class OrderMailer extends BaseNotificationMailer {
 
@@ -33,6 +33,7 @@ class OrderMailer extends BaseNotificationMailer {
 
         $data = [];
         $total = 0;
+
         /**
          * @var $suborder Suborders
          */

@@ -2,6 +2,7 @@
 
 namespace common\models\store;
 
+use common\models\stores\NotificationDefaultTemplates;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -23,6 +24,11 @@ class NotificationTemplates extends ActiveRecord
 {
     const STATUS_DISABLED = 0;
     const STATUS_ENABLED = 1;
+
+    /**
+     * @var static[]
+     */
+    public static $notifications;
 
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
@@ -125,5 +131,30 @@ class NotificationTemplates extends ActiveRecord
     public function getStatusName()
     {
         return static::getStatusNameString($this->status);
+    }
+
+    /**
+     * Get notifications
+     * @return null|static[]
+     */
+    public static function getNotifications()
+    {
+        if (null !== static::$notifications) {
+            return static::$notifications;
+        }
+
+        static::$notifications = ArrayHelper::index(static::find()->all(),  'notification_code');
+
+        return static::$notifications;
+    }
+
+    /**
+     * Get notification by code
+     * @param string $code
+     * @return null|static
+     */
+    public static function getNotificationByCode($code)
+    {
+        return ArrayHelper::getValue(static::getNotifications(), $code);
     }
 }

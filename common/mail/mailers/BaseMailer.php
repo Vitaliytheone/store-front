@@ -1,11 +1,9 @@
 <?php
 namespace common\mail\mailers;
 
+use libs\premailer\HtmlString;
 use Yii;
 
-require_once(Yii::getAlias("@libs/premailer/Premailer.php"));
-
-use Premailer;
 use common\components\email\Mailgun;
 use common\tasks\Client;
 use yii\helpers\ArrayHelper;
@@ -70,7 +68,11 @@ abstract class BaseMailer {
     public function __construct($options)
     {
         $this->options = $options;
-        $this->to = ArrayHelper::getValue($options, 'to');
+        $to = ArrayHelper::getValue($options, 'to');
+
+        if (is_string($to)) {
+            $this->to = $to;
+        }
 
         if (isset(Yii::$app->params['mailer.status'])) {
             $this->now = (boolean)Yii::$app->params['mailer.status'];
@@ -121,9 +123,17 @@ abstract class BaseMailer {
             $to = Yii::$app->params['debugEmail'];
         }
 
+        if ($html) {
+            $preMailer = new HtmlString($html);
+            $preMailer->setOption($preMailer::OPTION_HTML_COMMENTS, $preMailer::OPTION_HTML_COMMENTS_REMOVE);
+            $preMailer->setOption($preMailer::OPTION_HTML_CLASSES, $preMailer::OPTION_HTML_CLASSES_REMOVE);
+
+            $html = $preMailer->getHtml();
+        }
+
         return (bool)Mailgun::send($to, $subject, [
             'text' => $text,
-            'html' => $html ? (new Premailer($html))->getConvertedHtml() : null
+            'html' => $html
         ]);
     }
 

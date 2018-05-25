@@ -1,5 +1,5 @@
 <?php
-namespace sommerce\mail\mailers;
+namespace common\mail\mailers\store;
 
 use common\models\store\NotificationTemplates;
 use Yii;
@@ -10,7 +10,7 @@ use common\mail\mailers\BaseMailer;
 
 /**
  * Class BaseNotificationMailer
- * @package app\mail\mailers
+ * @package common\mail\mailers\store
  */
 class BaseNotificationMailer extends BaseMailer {
 

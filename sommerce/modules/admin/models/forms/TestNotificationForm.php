@@ -6,7 +6,7 @@ use common\models\store\NotificationTemplates;
 use common\models\store\Orders;
 use common\models\store\Suborders;
 use common\models\stores\Stores;
-use sommerce\mail\mailers\OrderMailer;
+use common\mail\mailers\store\OrderMailer;
 use Yii;
 use yii\base\Model;
 use Faker\Factory;
@@ -76,7 +76,7 @@ class TestNotificationForm extends Model {
             return '';
         }
 
-        return ArrayHelper::getValue($mailer->getData(), 'message');
+        return ArrayHelper::getValue($mailer->getData(), 'html', 'No preview');
     }
 
     /**

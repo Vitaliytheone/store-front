@@ -63,7 +63,6 @@ class PaymentsController extends CustomController
 
         return $this->render('payment_result.twig', [
             'payment_result' => $paymentMethod::getPaymentResult($checkoutId),
-
         ]);
     }
 }

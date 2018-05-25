@@ -27,7 +27,9 @@
         "guzzlehttp/psr7": "^1.4",
         "yiisoft/yii2": "^2.0.15",
         "yiisoft/yii2-gii": "2.0.6",
-        "pagseguro/php": "^2.7"
+        "pagseguro/php": "^2.7",
+        "symfony/css-selector": "^4.0",
+        "crossjoin/css": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

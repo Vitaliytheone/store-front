@@ -11,10 +11,12 @@ use common\models\stores\NotificationDefaultTemplates;
  */
 class NotificationDefaultTemplatesQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'status' => NotificationDefaultTemplates::STATUS_ENABLED
+        ]);
+    }
 
     /**
      * @inheritdoc

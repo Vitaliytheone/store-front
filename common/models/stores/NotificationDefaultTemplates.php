@@ -29,6 +29,20 @@ class NotificationDefaultTemplates extends ActiveRecord
     const RECIPIENT_ADMIN = 1;
     const RECIPIENT_CUSTOMER = 2;
 
+    const CODE_ORDER_CONFIRMATION  = 'order_confirmation';
+    const CODE_ORDER_IN_PROGRESS  = 'order_in_progress';
+    const CODE_ORDER_COMPLETED  = 'order_completed';
+    const CODE_ORDER_ABANDONED_CHECKOUT  = 'abandoned_checkout';
+    const CODE_ORDER_NEW_AUTO  = 'new_auto_order';
+    const CODE_ORDER_NEW_MANUAL  = 'new_manual_order';
+    const CODE_ORDER_FAIL  = 'order_fail';
+    const CODE_ORDER_ERROR  = 'order_error';
+
+    /**
+     * @var static[]
+     */
+    public static $notifications;
+
     /**
      * @inheritdoc
      */
@@ -154,5 +168,30 @@ class NotificationDefaultTemplates extends ActiveRecord
     public function getRecipientName()
     {
         return static::getRecipientNameString($this->recipient);
+    }
+
+    /**
+     * Get notifications
+     * @return null|static[]
+     */
+    public static function getNotifications()
+    {
+        if (null !== static::$notifications) {
+            return static::$notifications;
+        }
+
+        static::$notifications = ArrayHelper::index(static::find()->all(),  'code');
+
+        return static::$notifications;
+    }
+
+    /**
+     * Get notification by code
+     * @param string $code
+     * @return null|static
+     */
+    public static function getNotificationByCode($code)
+    {
+        return ArrayHelper::getValue(static::getNotifications(), $code);
     }
 }
