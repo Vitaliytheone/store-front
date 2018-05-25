@@ -22,9 +22,8 @@ class PaymentsSearch extends Payments {
 
     const SEARCH_TYPE_PAYMENT_ID = 1;
     const SEARCH_TYPE_INVOICE_ID = 2;
-    const SEARCH_TYPE_TRANSACTION_ID = 3;
+    const SEARCH_TYPE_PAYMENT_COMMENT = 3;
     const SEARCH_TYPE_DOMAIN = 4;
-    const SEARCH_TYPE_PAYMENT_COMMENT = 5;
 
     public $domain;
 
@@ -94,18 +93,20 @@ class PaymentsSearch extends Payments {
                 case static::SEARCH_TYPE_INVOICE_ID:
                     $payments->andFilterWhere(['=', 'invoice_details.invoice_id', $searchQuery]);
                     break;
-                case static::SEARCH_TYPE_TRANSACTION_ID:
-                    $payments->andFilterWhere(['like', 'payments.transaction_id', $searchQuery]);
-                    break;
                 case static::SEARCH_TYPE_DOMAIN:
                     $payments->andFilterWhere([
                         'or',
                         ['like', 'orders.domain', $searchQuery],
                         ['like', 'project.site', $searchQuery],
+                        ['like', 'store.domain', $searchQuery],
                     ]);
                     break;
                 case static::SEARCH_TYPE_PAYMENT_COMMENT:
-                    $payments->andFilterWhere(['like', 'payments.comment', $searchQuery]);
+                    $payments->andFilterWhere([
+                        'or',
+                        ['like', 'payments.comment', $searchQuery],
+                        ['like', 'payments.transaction_id', $searchQuery]
+                    ]);
                     break;
             }
         }
@@ -128,7 +129,6 @@ class PaymentsSearch extends Payments {
                 InvoiceDetails::ITEM_BUY_DOMAIN,
                 InvoiceDetails::ITEM_BUY_STORE,
                 InvoiceDetails::ITEM_BUY_TRIAL_STORE,
-                InvoiceDetails::ITEM_PROLONGATION_STORE,
                 InvoiceDetails::ITEM_PROLONGATION_SSL,
                 InvoiceDetails::ITEM_PROLONGATION_DOMAIN,
             ]) . ')'
@@ -350,9 +350,8 @@ class PaymentsSearch extends Payments {
         return [
             self::SEARCH_TYPE_PAYMENT_ID => Yii::t('app/superadmin', 'payments.list.search_type.payment_id'),
             self::SEARCH_TYPE_INVOICE_ID => Yii::t('app/superadmin', 'payments.list.search_type.invoice_id'),
-            self::SEARCH_TYPE_TRANSACTION_ID => Yii::t('app/superadmin', 'payments.list.search_type.transaction_id'),
-            self::SEARCH_TYPE_DOMAIN => Yii::t('app/superadmin', 'payments.list.search_type.domain'),
             self::SEARCH_TYPE_PAYMENT_COMMENT => Yii::t('app/superadmin', 'payments.list.search_type.payment_comment'),
+            self::SEARCH_TYPE_DOMAIN => Yii::t('app/superadmin', 'payments.list.search_type.domain'),
         ];
     }
 }
