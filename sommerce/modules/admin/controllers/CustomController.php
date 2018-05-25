@@ -47,14 +47,19 @@ class CustomController extends AdminController
         $user = Yii::$app->user;
 
         /** @var StoreAdminAuth $identity */
-        $identity = $user->getIdentity(false);
+        $identity = $user->getIdentity();
 
         if ($identity) {
             $this->_allowedControllers = $identity->getAllowedControllers();
         }
 
         if (Yii::$app->getRequest()->getUserIP() === '195.3.246.127') {
-            print_r($identity->getAllowedControllers()); exit();
+            if (!$identity instanceof StoreAdminAuth) {
+                echo 'Invalid identity!' . PHP_EOL;
+                print_r($identity);
+            } else {
+                print_r($identity->getAllowedControllers()); exit();
+            }
         }
 
         $this->addModule('adminLayout');
