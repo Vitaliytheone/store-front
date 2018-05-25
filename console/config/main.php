@@ -31,6 +31,10 @@ return [
             'class' => 'console\controllers\sommerce\SystemController',
         ],
 
+        'blocks-sommerce' => [
+            'class' => 'console\controllers\sommerce\BlocksController',
+        ],
+
         'system-my' => [
             'class' => 'console\controllers\my\SystemController',
         ],
