@@ -1882,6 +1882,9 @@ textarea.form-control {
     margin-bottom: 52px;
     text-align: center;
 }
+.service--item img{
+    margin: 0 auto;
+}
 .service--item .title{
     margin-top: 5px;
 }
@@ -1905,11 +1908,17 @@ textarea.form-control {
     vertical-align: top;
     width: 30%;
 }
+.block-left .image{
+    display: table-cell;
+    vertical-align: top;
+    width: 30%;
+}
 .block-left .title{
     display: table-cell;
     vertical-align: top;
     width: 80%;
     text-align: left;
+    padding-left: 10px;
 }
 .block-left .icon + .title{
     margin-bottom: 10px;
@@ -3397,6 +3406,11 @@ textarea.form-control {
 }
 
 .testimonial--item .header .info .rating .fa {
+    margin: 0 7.5px;
+    font-size: 14px;
+    line-height: 24px;
+}
+.testimonial--item .header .info .rating span {
     margin: 0 7.5px;
     font-size: 14px;
     line-height: 24px;
