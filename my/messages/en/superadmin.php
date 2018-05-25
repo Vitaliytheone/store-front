@@ -211,7 +211,11 @@ return [
     'payments.list.refund_modal_text_3' => 'This action can not be canceled after pressing the "Refund" button.',
     'payments.list.refund_modal_btn_cancel' => 'Cancel',
     'payments.list.refund_modal_btn_submit' => 'Refund',
-
+    'payments.list.search_type.payment_id' => 'Payment ID',
+    'payments.list.search_type.invoice_id' => 'Invoice ID',
+    'payments.list.search_type.transaction_id' => 'Transaction ID',
+    'payments.list.search_type.domain' => 'Domain',
+    'payments.list.search_type.payment_comment' => 'Memo',
 
     'pages.settings.menu_payments' => 'Payments',
     'pages.settings.menu_staff' => 'Staff',
