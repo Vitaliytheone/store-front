@@ -164,4 +164,14 @@ class StoreHelper {
             'json' => $json
         ]);
     }
+
+    /**
+     * Terminate one first old store
+     * @param $date
+     */
+    public static function terminateStore($date)
+    {
+        $store = Stores::find()
+            ->leftJoin()
+    }
 }

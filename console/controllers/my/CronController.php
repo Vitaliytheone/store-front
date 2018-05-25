@@ -19,6 +19,7 @@ use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
+use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
@@ -201,6 +202,17 @@ class CronController extends CustomController
             $transaction->commit();
         }
     }
+
+    /**
+     * Terminate old stores
+     */
+    public function actionTerminateStore()
+    {
+        $date = strtotime("-1 month", time()); // + 1 месяц
+
+        StoreHelper::terminateStore($date);
+    }
+
 
     /**
      * Freeze panel
