@@ -457,6 +457,13 @@ class Project extends ActiveRecord implements ProjectInterface
                     }
                 }
             break;
+
+            case static::STATUS_TERMINATED:
+                if (static::STATUS_FROZEN == $this->act) {
+                    $this->act = static::STATUS_TERMINATED;
+                    $this->terminate();
+                }
+            break;
         }
 
         return $this->save(false);

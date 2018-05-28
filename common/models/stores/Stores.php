@@ -464,12 +464,18 @@ class Stores extends ActiveRecord implements ProjectInterface
                 if (static::STATUS_FROZEN == $this->status) {
                     $this->status = static::STATUS_ACTIVE;
                 }
-
             break;
 
             case static::STATUS_FROZEN:
                 if (static::STATUS_ACTIVE == $this->status) {
                     $this->status = static::STATUS_FROZEN;
+                }
+            break;
+
+            case static::STATUS_TERMINATED:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_TERMINATED;
+                    $this->terminate();
                 }
             break;
         }
@@ -839,6 +845,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function disableMainDomain()
     {
+        // Check if main domain is not belong to our zone
         $storeDomain = StoreDomains::findOne([
             'domain' => $this->domain,
             'store_id' => $this->id,
@@ -856,7 +863,8 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * @inheritdoc
+     * Terminate store main domain and linked invoices
+     * @return bool
      */
     public function terminate()
     {
@@ -876,7 +884,7 @@ class Stores extends ActiveRecord implements ProjectInterface
         // Cancel unpaid invoices
         $invoices = Invoices::find()
             ->innerJoin('invoice_details', 'invoice_details.invoice_id = invoices.id AND invoice_details.item = :item', [
-                InvoiceDetails::ITEM_PROLONGATION_STORE,
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
             ])
             ->andWhere([
                 'invoices.status' => Invoices::STATUS_UNPAID,

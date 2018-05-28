@@ -459,4 +459,5 @@ return [
     'stores.change_domain.column_subdomain' => 'Is subdomain',
     'stores.modal.change_domain_modal_header' => 'Change domain',
     'stores.list.action_sign_in_as_admin' => 'Sign in as admin',
+    'stores.list.action_terminate' => 'Terminate store',
 ];
