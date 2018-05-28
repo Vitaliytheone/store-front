@@ -10,10 +10,10 @@ use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class OrderMailer
+ * Class OrderWithItemsMailer
  * @package common\mail\mailers\store
  */
-class OrderMailer extends BaseNotificationMailer {
+class OrderWithItemsMailer extends BaseNotificationMailer {
 
     /**
      * @var Orders

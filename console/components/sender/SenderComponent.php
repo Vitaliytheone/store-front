@@ -1,7 +1,7 @@
 <?php
 namespace console\components\sender;
 
-use common\models\store\Orders;
+use common\events\Events;
 use common\models\store\Packages;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
@@ -188,7 +188,15 @@ class SenderComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
+        $newStatus = ArrayHelper::getValue($values, 'status');
 
+        if (Suborders::STATUS_FAILED == $newStatus) {
+            // Event fail order
+            Events::add(Events::EVENT_STORE_ORDER_FAIL, [
+                'suborderId' => $orderInfo['suborder_id'],
+                'storeId' => $orderInfo['store_id']
+            ]);
+        }
 
         $defaultValues = [
             ':status' => null,

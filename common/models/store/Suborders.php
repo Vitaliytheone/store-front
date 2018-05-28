@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models\store;
 
 use common\models\stores\Providers;

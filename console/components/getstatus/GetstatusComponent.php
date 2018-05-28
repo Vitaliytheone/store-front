@@ -210,7 +210,7 @@ class GetstatusComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-        $newStatus = ArrayHelper::getValue($values, 'status');
+        $newStatus = ArrayHelper::getValue($values, ':status');
         $oldStatus = ArrayHelper::getValue($orderInfo, 'status');
 
         if ($newStatus != $oldStatus) {
@@ -222,9 +222,17 @@ class GetstatusComponent extends Component
                 ]);
             }
 
-            if (Suborders::STATUS_FAILED == $newStatus) {
-                // Event error order
-                Events::add(Events::EVENT_STORE_ORDER_FAIL, [
+            if (Suborders::STATUS_IN_PROGRESS == $newStatus) {
+                // Event in progress order
+                Events::add(Events::EVENT_STORE_ORDER_IN_PROGRESS, [
+                    'suborderId' => $orderInfo['suborder_id'],
+                    'storeId' => $orderInfo['store_id']
+                ]);
+            }
+
+            if (Suborders::STATUS_COMPLETED == $newStatus) {
+                // Event completed order
+                Events::add(Events::EVENT_STORE_ORDER_COMPLETED, [
                     'suborderId' => $orderInfo['suborder_id'],
                     'storeId' => $orderInfo['store_id']
                 ]);

@@ -3,6 +3,7 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\mail\mailers\store\AbandonedCheckoutMailer;
 use common\mail\mailers\store\OrderAdminMailer;
+use common\mail\mailers\store\OrderWithItemsMailer;
 use common\models\store\Checkouts;
 use common\models\store\Packages;
 use common\models\store\Payments;
@@ -110,9 +111,6 @@ class TestNotificationForm extends Model {
 
         switch ($this->_notification->notification_code) {
             case 'order_confirmation':
-            case 'order_in_progress':
-            case 'order_completed':
-
                 $order = new Orders([
                     'id' => $faker->numberBetween()
                 ]);
@@ -132,10 +130,24 @@ class TestNotificationForm extends Model {
                     'method' => 'paypal'
                 ]);
 
-                $mailer = new OrderMailer([
+                $mailer = new OrderWithItemsMailer([
                     'order' => $order,
                     'suborders' => $suborders,
                     'payment' => $payment,
+                    'template' => $this->_notification,
+                    'store' => $this->_store,
+                    'to' => $this->_email ? $this->_email : $faker->email
+                ]);
+            break;
+
+            case 'order_in_progress':
+            case 'order_completed':
+                $order = new Orders([
+                    'id' => $faker->numberBetween()
+                ]);
+
+                $mailer = new OrderMailer([
+                    'order' => $order,
                     'template' => $this->_notification,
                     'store' => $this->_store,
                     'to' => $this->_email ? $this->_email : $faker->email

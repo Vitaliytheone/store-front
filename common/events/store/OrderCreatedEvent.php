@@ -1,8 +1,8 @@
 <?php
 namespace common\events\store;
 
-use common\mail\mailers\store\OrderMailer;
 use common\mail\mailers\store\OrderAdminMailer;
+use common\mail\mailers\store\OrderWithItemsMailer;
 use common\models\store\Orders;
 use common\models\store\NotificationTemplates;
 use common\models\store\Suborders;
@@ -56,7 +56,7 @@ class OrderCreatedEvent extends BaseOrderEvent {
             return;
         }
 
-        $mailer = new OrderMailer([
+        $mailer = new OrderWithItemsMailer([
             'to' => $this->_order->customer,
             'order' => $this->_order,
             'suborders' => $this->_suborders,
