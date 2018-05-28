@@ -135,6 +135,10 @@
                                 'class' => 'dropdown-item',
                                 'target' => '_blank',
                             ])?>
+
+                            <?php if (Project::STATUS_FROZEN == $panel['act']): ?>
+                                <?= Html::a('Terminate panel', Url::toRoute(['/panels/change-status', 'id' => $panel['id'], 'status' => Project::STATUS_TERMINATED]), ['class' => 'dropdown-item'])?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </td>

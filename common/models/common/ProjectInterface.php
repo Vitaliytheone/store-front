@@ -36,4 +36,16 @@ interface ProjectInterface
      * @param $isActive bool
      */
     public function setSslMode($isActive);
+
+    /**
+     * Terminate project
+     * @return bool
+     */
+    public function terminate();
+
+    /**
+     * Restore project
+     * @return mixed
+     */
+    public function restore();
 }

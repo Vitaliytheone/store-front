@@ -3,6 +3,7 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
+use common\models\common\ProjectInterface;
 use common\models\panel\PaymentsLog;
 use common\models\panels\Logs;
 use common\models\panels\MyCustomersHash;
@@ -19,6 +20,7 @@ use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
+use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
@@ -167,7 +169,8 @@ class CronController extends CustomController
 
         // Берем по 1 панели на обработку
         $project = Project::find()
-            ->leftJoin('logs', 'logs.panel_id = project.id AND logs.type = :type AND logs.created_at > :date', [
+            ->leftJoin('logs', 'logs.panel_id = project.id AND logs.project_type = :project_type AND logs.type = :type AND logs.created_at > :date', [
+                ':project_type' => ProjectInterface::PROJECT_TYPE_PANEL,
                 ':date' => $date,
                 ':type' => Logs::TYPE_RESTORED
             ])
@@ -182,7 +185,6 @@ class CronController extends CustomController
         /**
          * @var Project $project
          */
-
         if ($project) {
             $transaction = Yii::$app->db->beginTransaction();
 
@@ -200,6 +202,8 @@ class CronController extends CustomController
 
             $transaction->commit();
         }
+
+        StoreHelper::terminateOneStore($date);
     }
 
     /**
