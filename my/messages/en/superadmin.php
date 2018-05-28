@@ -367,7 +367,8 @@ return [
     'referrals.list.referrals_customer_paid' => 'Paid',
 
     'logs.status.list.column_id' => 'ID',
-    'logs.status.list.column_panel' => 'Panel',
+    'logs.status.list.column_project_type' => 'Project type',
+    'logs.status.list.column_panel' => 'Domain',
     'logs.status.list.column_status' => 'Status',
     'logs.status.list.column_date' => 'Date',
     'logs.providers.list.search' => 'Search log',
