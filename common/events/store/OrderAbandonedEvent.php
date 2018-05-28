@@ -2,6 +2,7 @@
 namespace common\events\store;
 
 use common\mail\mailers\store\OrderMailer;
+use common\models\store\Checkouts;
 use common\models\store\NotificationTemplates;
 use common\models\stores\NotificationDefaultTemplates;
 use Yii;
@@ -13,18 +14,32 @@ use Yii;
 class OrderAbandonedEvent extends BaseOrderEvent {
 
     /**
+     * @var Checkouts
+     */
+    protected $_checkout;
+
+    /**
+     * OrderAbandonedEvent constructor.
+     * @param Checkouts $checkout
+     */
+    public function __construct(Checkouts $checkout)
+    {
+        $this->_checkout = $checkout;
+    }
+
+    /**
      * Run method
      * @return void
      */
     public function run():void
     {
-        if (empty($this->_order)) {
-            Yii::error('Empty ' . static::class . ' order parameter');
+        if (empty($this->_checkout)) {
+            Yii::error('Empty ' . static::class . ' checkout parameter');
             return;
         }
 
         $this->_suborders = $this->_order->suborders;
-        $this->_payment = $this->_order->payment;
+        $this->_payment = $this->_checkout->payment;
 
         $this->customerNotify();
     }

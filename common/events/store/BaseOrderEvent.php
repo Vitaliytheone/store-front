@@ -42,17 +42,6 @@ abstract class BaseOrderEvent {
     protected $_payment;
 
     /**
-     * OrderConfirmEvent constructor.
-     * @param Stores $store
-     * @param Orders $order
-     */
-    public function __construct(Stores $store, Orders $order)
-    {
-        $this->_order = $order;
-        $this->_store = $store;
-    }
-
-    /**
      * @return array|NotificationAdminEmails[]
      */
     protected function getAdmins()
@@ -66,6 +55,21 @@ abstract class BaseOrderEvent {
             ->all();
 
         return $this->_admins;
+    }
+
+    /**
+     * @param string $code
+     * @return NotificationTemplates
+     */
+    protected static function getTemplate($code)
+    {
+        $template = static::getCrossNotificationByCode($code);
+
+        if (!$template || NotificationTemplates::STATUS_ENABLED !== $template->status) {
+            return null;
+        }
+
+        return $template;
     }
 
     /**

@@ -2,8 +2,9 @@
 namespace common\events\store;
 
 use common\mail\mailers\store\OrderAdminMailer;
-use common\models\store\NotificationTemplates;
+use common\models\store\Suborders;
 use common\models\stores\NotificationDefaultTemplates;
+use common\models\stores\Stores;
 use Yii;
 
 /**
@@ -13,16 +14,42 @@ use Yii;
 class OrderFailEvent extends BaseOrderEvent {
 
     /**
+     * OrderErrorEvent constructor.
+     * @param integer $storeId
+     * @param integer $suborderId
+     */
+    public function __construct($storeId, $suborderId)
+    {
+        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_FAIL)) {
+            return;
+        }
+
+        $this->_store = Stores::findOne($storeId);
+
+        if (empty($this->_store)) {
+            Yii::error('Empty ' . static::class . ' store parameter');
+            return;
+        }
+
+        Yii::$app->store->setInstance($this->_store);
+
+        $suborder = Suborders::findOne($suborderId);
+
+        if (empty($suborder)) {
+            Yii::error('Empty ' . static::class . ' suborder parameter');
+            return;
+        }
+
+        $this->_order = $suborder->order;
+
+    }
+
+    /**
      * Run method
      * @return void
      */
     public function run():void
     {
-        if (empty($this->_order)) {
-            Yii::error('Empty ' . static::class . ' order parameter');
-            return;
-        }
-
         $this->adminNotify();
     }
 
@@ -31,6 +58,15 @@ class OrderFailEvent extends BaseOrderEvent {
      */
     protected function adminNotify()
     {
+        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_FAIL))) {
+            return;
+        }
+
+        if (empty($this->_order)) {
+            Yii::error('Empty ' . static::class . ' order parameter');
+            return;
+        }
+
         // Берем активных админов
         $adminEmails = $this->getAdmins();
 
@@ -38,14 +74,7 @@ class OrderFailEvent extends BaseOrderEvent {
             return;
         }
 
-        $template = static::getCrossNotificationByCode(NotificationDefaultTemplates::CODE_ORDER_FAIL);
-
-        if (!$template || NotificationTemplates::STATUS_ENABLED !== $template->status) {
-            return;
-        }
-
         foreach ($adminEmails as $adminEmail) {
-
             $mailer = new OrderAdminMailer([
                 'to' => $adminEmail->email,
                 'order' => $this->_order,

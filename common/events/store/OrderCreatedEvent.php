@@ -3,9 +3,11 @@ namespace common\events\store;
 
 use common\mail\mailers\store\OrderMailer;
 use common\mail\mailers\store\OrderAdminMailer;
+use common\models\store\Orders;
 use common\models\store\NotificationTemplates;
 use common\models\store\Suborders;
 use common\models\stores\NotificationDefaultTemplates;
+use common\models\stores\Stores;
 use Yii;
 
 /**
@@ -13,6 +15,17 @@ use Yii;
  * @package common\events\store
  */
 class OrderCreatedEvent extends BaseOrderEvent {
+
+    /**
+     * OrderConfirmEvent constructor.
+     * @param Stores $store
+     * @param Orders $order
+     */
+    public function __construct(Stores $store, Orders $order)
+    {
+        $this->_order = $order;
+        $this->_store = $store;
+    }
 
     /**
      * Run method

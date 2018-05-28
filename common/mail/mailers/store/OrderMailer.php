@@ -6,6 +6,7 @@ use common\models\store\Payments;
 use common\models\store\Suborders;
 use common\models\stores\PaymentGateways;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -15,20 +16,30 @@ use yii\helpers\ArrayHelper;
 class OrderMailer extends BaseNotificationMailer {
 
     /**
+     * @var Orders
+     *
+     */
+    protected $_order;
+    /**
      * Init options
      */
     public function init()
     {
         parent::init();
 
+
+        $this->_order = ArrayHelper::getValue($this->options, 'order');
+
+        if (empty($this->_order)) {
+            throw new InvalidParamException();
+        }
+
         /**
-         * @var Orders $order
          * @var $suborder Suborders
          * @var $payment Payments
          */
-        $order = ArrayHelper::getValue($this->options, 'order');
-        $suborders = ArrayHelper::getValue($this->options, 'suborders', $order->suborders);
-        $payment = ArrayHelper::getValue($this->options, 'payment', $order->payment);
+        $suborders = ArrayHelper::getValue($this->options, 'suborders', $this->_order->suborders);
+        $payment = ArrayHelper::getValue($this->options, 'payment', $this->_order->payment);
         $options = $this->getGlobalVars();
 
         $data = [];
@@ -46,12 +57,13 @@ class OrderMailer extends BaseNotificationMailer {
 
             $total += $suborder->amount;
         }
+
         $options['order'] = [
-            'id' => $order->id,
+            'id' => $this->_order->id,
             'data' => $data,
             'sub_total' => $total,
             'total' => $total,
-            'url' => $this->store->getSite() . '/order/' . $order->id,
+            'url' => $this->store->getSite() . '/order/' . $this->_order->id,
             'payment_method' => $payment ? PaymentGateways::getMethodName($payment->method) : null
         ];
 

@@ -1,6 +1,10 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
+use common\mail\mailers\store\AbandonedCheckoutMailer;
+use common\mail\mailers\store\OrderAdminMailer;
+use common\models\store\Checkouts;
+use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\NotificationTemplates;
 use common\models\store\Orders;
@@ -108,11 +112,6 @@ class TestNotificationForm extends Model {
             case 'order_confirmation':
             case 'order_in_progress':
             case 'order_completed':
-            case 'abandoned_checkout':
-            case 'new_auto_order':
-            case 'new_manual_order':
-            case 'order_fail':
-            case 'order_error':
 
                 $order = new Orders([
                     'id' => $faker->numberBetween()
@@ -141,6 +140,57 @@ class TestNotificationForm extends Model {
                     'store' => $this->_store,
                     'to' => $this->_email ? $this->_email : $faker->email
                 ]);
+            break;
+
+            case 'new_auto_order':
+            case 'new_manual_order':
+            case 'order_fail':
+            case 'order_error':
+
+                $order = new Orders([
+                    'id' => $faker->numberBetween()
+                ]);
+
+                $mailer = new OrderAdminMailer([
+                    'order' => $order,
+                    'template' => $this->_notification,
+                    'store' => $this->_store,
+                    'to' => $this->_email ? $this->_email : $faker->email
+                ]);
+            break;
+
+            case 'abandoned_checkout':
+                $checkout = new Checkouts([
+                    'id' => $faker->numberBetween(),
+                ]);
+                $suborders = [];
+
+                $packages = ArrayHelper::index(Packages::find()->all(), 'id');
+
+                for ($i = 0; $i < rand(1, 10); $i++) {
+                    $suborders[] = [
+                        'id' => $faker->numberBetween(),
+                        'link' => $faker->url,
+                        'package_id' => array_rand($packages),
+                    ];
+                }
+
+                $checkout->setDetails($suborders);
+
+                $payment = new Payments([
+                    'id' => $faker->numberBetween(),
+                    'method' => 'paypal'
+                ]);
+
+                $mailer = new AbandonedCheckoutMailer([
+                    'checkout' => $checkout,
+                    'payment' => $payment,
+                    'template' => $this->_notification,
+                    'store' => $this->_store,
+                    'to' => $this->_email ? $this->_email : $faker->email
+                ]);
+
+            break;
         }
 
         return $mailer;

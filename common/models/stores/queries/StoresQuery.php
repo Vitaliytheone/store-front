@@ -1,22 +1,27 @@
 <?php
-
 namespace common\models\stores\queries;
 
+use yii\db\ActiveQuery;
+use common\models\stores\Stores;
+
 /**
- * This is the ActiveQuery class for [[\common\models\stores\Stores]].
+ * This is the ActiveQuery class for [[Stores]].
  *
- * @see \common\models\stores\Stores
+ * @see Stores
  */
-class StoresQuery extends \yii\db\ActiveQuery
+class StoresQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+                'status' => Stores::STATUS_ACTIVE
+            ])
+            ->andWhere('db_name IS NOT NULL');
+    }
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\Stores[]|array
+     * @return Stores[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +30,7 @@ class StoresQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\stores\Stores|array|null
+     * @return Stores|array|null
      */
     public function one($db = null)
     {
