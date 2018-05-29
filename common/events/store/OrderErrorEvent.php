@@ -14,6 +14,11 @@ use Yii;
 class OrderErrorEvent extends BaseOrderEvent {
 
     /**
+     * @var Suborders
+     */
+    protected $_suborder;
+
+    /**
      * OrderErrorEvent constructor.
      * @param integer $storeId
      * @param integer $suborderId
@@ -33,15 +38,14 @@ class OrderErrorEvent extends BaseOrderEvent {
 
         Yii::$app->store->setInstance($this->_store);
 
-        $suborder = Suborders::findOne($suborderId);
+        $this->_suborder = Suborders::findOne($suborderId);
 
-        if (empty($suborder)) {
+        if (empty($this->_suborder)) {
             Yii::error('Empty ' . static::class . ' suborder parameter');
             return;
         }
 
-        $this->_order = $suborder->order;
-
+        $this->_order = $this->_suborder->order;
     }
 
     /**
@@ -50,6 +54,12 @@ class OrderErrorEvent extends BaseOrderEvent {
      */
     public function run():void
     {
+        if (!$this->_suborder || Suborders::find()->andWhere([
+            'status' => Suborders::STATUS_IN_PROGRESS
+        ])->andWhere('id <> ' . $this->_suborder->id)->exists()) {
+            return;
+        }
+
         $this->adminNotify();
     }
 

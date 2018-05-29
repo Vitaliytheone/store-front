@@ -55,7 +55,7 @@ class OrderCompletedEvent extends BaseOrderEvent {
      */
     public function run():void
     {
-        if (Suborders::find()->notCompleted()->andWhere('id <> ' . $this->_suborder->id)->exists()) {
+        if (!$this->_suborder || Suborders::find()->notCompleted()->andWhere('id <> ' . $this->_suborder->id)->exists()) {
             return;
         }
 

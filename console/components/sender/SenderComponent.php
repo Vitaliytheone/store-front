@@ -167,12 +167,12 @@ class SenderComponent extends Component
             $ordersIds = implode(',', array_column($storeOrders, 'suborder_id'));
 
             $this->_db->createCommand("
-                UPDATE $storeDb.$this->_tableSuborders 
-                SET 
-                send = :send,
-                updated_at = :updated_at
-                WHERE id IN ($ordersIds)
-            ")
+                    UPDATE $storeDb.$this->_tableSuborders 
+                    SET 
+                    send = :send,
+                    updated_at = :updated_at
+                    WHERE id IN ($ordersIds)
+                ")
                 ->bindValue(':send', $sendStatus)
                 ->bindValue(':updated_at', time())
                 ->execute();
