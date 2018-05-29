@@ -88,6 +88,10 @@ $now = time();
                                 'data-expired' => $store['expired_datetime']
                             ])?>
                             <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_sign_in_as_admin'), Url::toRoute(['/stores/sign-in-as-admin', 'id' => $store['id']]), ['class' => 'dropdown-item', 'target' => '_blank'])?>
+
+                            <?php if(Stores::STATUS_FROZEN == $store['status']): ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_terminate'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_TERMINATED]), ['class' => 'dropdown-item'])?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </td>

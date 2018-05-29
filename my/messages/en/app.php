@@ -611,4 +611,8 @@ return [
     'error.stores.staff.can_not_edit' => 'Can not edit staff',
     'error.stores.staff.can_not_create' => 'Can not create staff',
     'error.stores.staff.already_exist' => 'Account already exist',
+
+    'project.type.panel' => 'Panel',
+    'project.type.store' => 'Store',
+
 ];
