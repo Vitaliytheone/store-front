@@ -38,7 +38,10 @@ class OrderErrorEvent extends BaseOrderEvent {
 
         Yii::$app->store->setInstance($this->_store);
 
-        $this->_suborder = Suborders::findOne($suborderId);
+        $this->_suborder = Suborders::findOne([
+            'id' => $suborderId,
+            'status' => Suborders::STATUS_ERROR
+        ]);
 
         if (empty($this->_suborder)) {
             Yii::error('Empty ' . static::class . ' suborder parameter');
@@ -55,7 +58,8 @@ class OrderErrorEvent extends BaseOrderEvent {
     public function run():void
     {
         if (!$this->_suborder || Suborders::find()->andWhere([
-            'status' => Suborders::STATUS_IN_PROGRESS
+            'order_id' => $this->_suborder->order_id,
+            'status' => Suborders::STATUS_ERROR
         ])->andWhere('id <> ' . $this->_suborder->id)->exists()) {
             return;
         }

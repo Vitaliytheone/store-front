@@ -2,6 +2,7 @@
 use common\events\Events;
 use common\events\store\OrderCreatedEvent;
 use common\events\store\OrderErrorEvent;
+use common\events\store\OrderFailEvent;
 use common\events\store\OrderAbandonedEvent;
 use common\events\store\OrderCompletedEvent;
 use common\events\store\OrderInProgressEvent;
@@ -48,7 +49,7 @@ Event::on(
          */
         $sender = $event->sender;
 
-        Yii::$container->get(OrderErrorEvent::class, [
+        Yii::$container->get(OrderFailEvent::class, [
             $sender['storeId'],
             $sender['suborderId'],
         ])->run();

@@ -38,7 +38,10 @@ class OrderCompletedEvent extends BaseOrderEvent {
 
         Yii::$app->store->setInstance($this->_store);
 
-        $this->_suborder = Suborders::findOne($suborderId);
+        $this->_suborder = Suborders::findOne([
+            'id' => $suborderId,
+            'status' => Suborders::STATUS_COMPLETED
+        ]);
 
         if (empty($this->_suborder)) {
             Yii::error('Empty ' . static::class . ' suborder parameter');
@@ -55,7 +58,11 @@ class OrderCompletedEvent extends BaseOrderEvent {
      */
     public function run():void
     {
-        if (!$this->_suborder || Suborders::find()->notCompleted()->andWhere('id <> ' . $this->_suborder->id)->exists()) {
+        if (!$this->_suborder || Suborders::find()
+            ->notCompleted()
+            ->andWhere([
+                'order_id' => $this->_suborder->order_id,
+            ])->exists()) {
             return;
         }
 

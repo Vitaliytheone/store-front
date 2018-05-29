@@ -2,8 +2,6 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\events\Events;
-use common\models\store\Orders;
 use Yii;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
@@ -32,12 +30,6 @@ class PaymentsController extends CustomController
      */
     public function actionIndex()
     {
-        // Event confirm
-        Events::add(Events::EVENT_STORE_ORDER_CONFIRM, [
-            'order' => Orders::findOne(166),
-            'store' => Yii::$app->store->getInstance()
-        ]);
-        exit();
         $this->view->title = Yii::t('admin', 'payments.page_title');
 
         $searchModel = new PaymentsSearch();

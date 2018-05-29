@@ -190,14 +190,6 @@ class SenderComponent extends Component
         $storeDb = $orderInfo['store_db'];
         $newStatus = ArrayHelper::getValue($values, 'status');
 
-        if (Suborders::STATUS_FAILED == $newStatus) {
-            // Event fail order
-            Events::add(Events::EVENT_STORE_ORDER_FAIL, [
-                'suborderId' => $orderInfo['suborder_id'],
-                'storeId' => $orderInfo['store_id']
-            ]);
-        }
-
         $defaultValues = [
             ':status' => null,
             ':send' => null,
@@ -227,6 +219,14 @@ class SenderComponent extends Component
             ->bindValues($values)
             ->bindValue(':id', $orderId)
             ->execute();
+
+        if (Suborders::STATUS_FAILED == $newStatus) {
+            // Event fail order
+            Events::add(Events::EVENT_STORE_ORDER_FAIL, [
+                'suborderId' => $orderInfo['suborder_id'],
+                'storeId' => $orderInfo['store_id']
+            ]);
+        }
     }
 
     /**

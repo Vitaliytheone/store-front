@@ -213,6 +213,29 @@ class GetstatusComponent extends Component
         $newStatus = ArrayHelper::getValue($values, ':status');
         $oldStatus = ArrayHelper::getValue($orderInfo, 'status');
 
+        $defaultValues = [
+            ':status' => null,
+            ':provider_charge' => null,
+            ':provider_response' => null,
+            ':provider_response_code' => null,
+            ':updated_at' => time(),
+        ];
+
+        $values = array_intersect_key(array_merge($defaultValues, $values), $defaultValues);
+
+        $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
+              SET 
+              `status` = COALESCE(:status, `status`),
+              `provider_charge` = COALESCE(:provider_charge, `provider_charge`),
+              `provider_response` = COALESCE(:provider_response, `provider_response`),
+              `provider_response_code` = COALESCE(:provider_response_code, `provider_response_code`),
+              `updated_at` = :updated_at
+              WHERE `id` = :id
+            ")
+            ->bindValues($values)
+            ->bindValue(':id', $orderId)
+            ->execute();
+
         if ($newStatus != $oldStatus) {
             if (Suborders::STATUS_ERROR == $newStatus) {
                 // Event error order
@@ -238,30 +261,6 @@ class GetstatusComponent extends Component
                 ]);
             }
         }
-
-
-        $defaultValues = [
-            ':status' => null,
-            ':provider_charge' => null,
-            ':provider_response' => null,
-            ':provider_response_code' => null,
-            ':updated_at' => time(),
-        ];
-
-        $values = array_intersect_key(array_merge($defaultValues, $values), $defaultValues);
-
-        $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
-              SET 
-              `status` = COALESCE(:status, `status`),
-              `provider_charge` = COALESCE(:provider_charge, `provider_charge`),
-              `provider_response` = COALESCE(:provider_response, `provider_response`),
-              `provider_response_code` = COALESCE(:provider_response_code, `provider_response_code`),
-              `updated_at` = :updated_at
-              WHERE `id` = :id
-            ")
-            ->bindValues($values)
-            ->bindValue(':id', $orderId)
-            ->execute();
     }
 
     /**

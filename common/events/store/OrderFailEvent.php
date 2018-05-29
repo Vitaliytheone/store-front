@@ -14,6 +14,11 @@ use Yii;
 class OrderFailEvent extends BaseOrderEvent {
 
     /**
+     * @var Suborders
+     */
+    protected $_suborder;
+
+    /**
      * OrderErrorEvent constructor.
      * @param integer $storeId
      * @param integer $suborderId
@@ -33,14 +38,17 @@ class OrderFailEvent extends BaseOrderEvent {
 
         Yii::$app->store->setInstance($this->_store);
 
-        $suborder = Suborders::findOne($suborderId);
+        $this->_suborder = Suborders::findOne([
+            'id' => $suborderId,
+            'status' => Suborders::STATUS_FAILED
+        ]);
 
-        if (empty($suborder)) {
+        if (empty($this->_suborder)) {
             Yii::error('Empty ' . static::class . ' suborder parameter');
             return;
         }
 
-        $this->_order = $suborder->order;
+        $this->_order = $this->_suborder->order;
 
     }
 
@@ -50,6 +58,13 @@ class OrderFailEvent extends BaseOrderEvent {
      */
     public function run():void
     {
+        if (!$this->_suborder || Suborders::find()->andWhere([
+                'order_id' => $this->_suborder->order_id,
+                'status' => Suborders::STATUS_FAILED
+            ])->andWhere('id <> ' . $this->_suborder->id)->exists()) {
+            return;
+        }
+
         $this->adminNotify();
     }
 
