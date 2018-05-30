@@ -50,7 +50,7 @@ class BackgroundTasks extends ActiveRecord
             [['data', 'response'], 'string'],
             [['updated_at'], 'integer'],
             [['key', 'code'], 'string', 'max' => 300],
-            [['type', 'status'], 'string', 'max' => 1],
+            [['type', 'status'], 'integer'],
             [['status'], 'default', 'value' => static::STATUS_PENDING]
         ];
     }
