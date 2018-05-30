@@ -37,7 +37,7 @@ class BackgroundTasks extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%background_tasks}}';
+        return DB_PANELS . '.background_tasks';
     }
 
     /**
