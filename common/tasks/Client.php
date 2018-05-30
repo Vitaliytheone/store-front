@@ -43,14 +43,14 @@ class Client {
     {
         $client = static::getInstance();
 
+        $unique = md5(microtime() . microtime() . microtime());
+
+        BackgroundTasks::add($type, $code, $unique, $data);
+
         $jobHandle = $client->doBackground(Yii::$app->params['gearmanPrefix'] . 'worker', Json::encode([
             'code' => $code,
             'data' => $data
-        ]));
-
-        $client->setCreatedCallback(function(GearmanTask $task) use ($type, $code, $data) {
-            BackgroundTasks::add($type, $code, $task->unique(), $data);
-        });
+        ]), $unique);
 
         $client->setCompleteCallback(function(GearmanTask $task) {
             BackgroundTasks::setStatus($task->unique(), BackgroundTasks::STATUS_COMPLETED);
