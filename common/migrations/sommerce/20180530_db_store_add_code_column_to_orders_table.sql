@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD `code` varchar(64) NOT NULL AFTER `id`;

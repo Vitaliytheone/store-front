@@ -56,6 +56,7 @@ return [
     'orders.modal_cancel_cancel' => 'No',
 
     'orders.f_id' => 'ID',
+    'orders.f_code' => 'Code',
     'orders.f_checkout_id' => 'Checkout ID',
     'orders.f_customer' => 'Customer',
     'orders.f_created_at' => 'Created at',
