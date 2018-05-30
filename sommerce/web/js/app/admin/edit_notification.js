@@ -101,6 +101,7 @@ customModule.adminEditNotification = {
         $(document).on('click', '#sendTestNotificationButton', function(e) {
             e.preventDefault();
             var btn = $(this);
+            var modal = $('#sendTestNotificationModal');
             var form = $('#sendTestNotificationForm');
 
             custom.sendFrom(btn, form, {
@@ -125,12 +126,20 @@ customModule.adminEditNotification = {
             var link = $(this);
             var modal = $('#notificationPreviewModal');
             var iframe = $('iframe', modal);
+            var container = $('.modal-body', modal);
 
             iframe.attr('src', link.attr('href'));
+
+            container.addClass('image-loader');
 
             modal.modal('show');
 
             return false;
+        });
+
+        $('#notificationPreviewModal iframe').on('load', function() {
+            var modal = $('#notificationPreviewModal');
+            $('.modal-body', modal).removeClass('image-loader');
         });
     }
 };
