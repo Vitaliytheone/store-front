@@ -1,6 +1,7 @@
 <?php
 namespace common\mail\mailers\store;
 
+use common\models\panels\BackgroundTasks;
 use common\models\store\NotificationTemplates;
 use Yii;
 use common\models\stores\Stores;
@@ -29,6 +30,7 @@ class BaseNotificationMailer extends BaseMailer {
      */
     public function init()
     {
+        $this->type = BackgroundTasks::TYPE_STORES;
         $this->store = ArrayHelper::getValue($this->options, 'store');
         $this->template = ArrayHelper::getValue($this->options, 'template');
 

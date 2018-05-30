@@ -1,6 +1,7 @@
 <?php
 namespace common\tasks;
 
+use common\models\panels\BackgroundTasks;
 use Yii;
 use GearmanWorker;
 use GearmanJob;
@@ -29,6 +30,8 @@ class Worker {
             static::$_worker = new GearmanWorker();
             static::$_worker->addServer(Yii::$app->params['gearmanIp'], Yii::$app->params['gearmanPort']);
             static::$_worker->addFunction(Yii::$app->params['gearmanPrefix'] . 'worker', function(GearmanJob $job) {
+                BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_IN_PROGRESS);
+
                 try {
                     $content = $job->workload();
                     $content = Json::decode($content);
@@ -38,6 +41,7 @@ class Worker {
                     $job->sendData($job->workload());
                 } catch (Exception $e) {
                     Yii::error($e->getMessage());
+                    BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, $e->getMessage());
                 }
             });
         }

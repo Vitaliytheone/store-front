@@ -1,6 +1,7 @@
 <?php
 namespace common\mail\mailers;
 
+use common\models\panels\BackgroundTasks;
 use libs\premailer\HtmlString;
 use Yii;
 
@@ -13,6 +14,11 @@ use yii\helpers\ArrayHelper;
  * @package app\mail\mailers
  */
 abstract class BaseMailer {
+
+    /**
+     * @var integer
+     */
+    public $type;
 
     /**
      * @var string
@@ -47,7 +53,7 @@ abstract class BaseMailer {
     /**
      * @var bool - Is send email now or use gearman
      */
-    public $now = true;
+    public $now = false;
 
     /**
      * @var array
@@ -67,6 +73,7 @@ abstract class BaseMailer {
      */
     public function __construct($options)
     {
+        $this->type = BackgroundTasks::TYPE_PANELS;
         $this->options = $options;
         $to = ArrayHelper::getValue($options, 'to');
 
@@ -103,7 +110,7 @@ abstract class BaseMailer {
         if ($this->now) {
             return static::sendNow($this->getData());
         } else {
-            return (bool)Client::addTask('mail', $this->getData());
+            return (bool)Client::addTask($this->type, 'mail', $this->getData());
         }
     }
 

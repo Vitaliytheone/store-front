@@ -83,4 +83,6 @@ return [
     'store.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление магазин
 
     'store.paywant_proxy' => 'http://37.1.207.99/scr/paywant.php',
+
+    'mailer.status' => true,
 ];
