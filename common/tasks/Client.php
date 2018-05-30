@@ -37,13 +37,14 @@ class Client {
      * @param int $type
      * @param string $code
      * @param mixed $data
+     * @param string $unique
      * @return mixed
      */
-    public static function addTask($type, $code, $data)
+    public static function addTask($type, $code, $data, $unique = null)
     {
         $client = static::getInstance();
 
-        $unique = md5(microtime() . microtime() . microtime());
+        $unique = $unique ? md5(microtime() . microtime() . microtime()) : $unique;
 
         BackgroundTasks::add($type, $code, $unique, $data);
 
