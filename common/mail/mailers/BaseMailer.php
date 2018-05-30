@@ -28,6 +28,11 @@ abstract class BaseMailer {
     /**
      * @var string
      */
+    public $from;
+
+    /**
+     * @var string
+     */
     public $to;
 
     /**
@@ -95,6 +100,7 @@ abstract class BaseMailer {
     public function getData()
     {
         return [
+            'from' => $this->from,
             'to' => $this->to,
             'html' => $this->html,
             'text' => $this->text,
@@ -122,6 +128,7 @@ abstract class BaseMailer {
     public static function sendNow($data)
     {
         $to = ArrayHelper::getValue($data, 'to');
+        $from = ArrayHelper::getValue($data, 'from');
         $subject = ArrayHelper::getValue($data, 'subject');
         $text = ArrayHelper::getValue($data, 'text');
         $html = ArrayHelper::getValue($data, 'html');
@@ -141,7 +148,7 @@ abstract class BaseMailer {
         return (bool)Mailgun::send($to, $subject, [
             'text' => $text,
             'html' => $html
-        ]);
+        ], $from);
     }
 
     /**

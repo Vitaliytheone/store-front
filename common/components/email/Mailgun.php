@@ -41,13 +41,16 @@ class Mailgun
      * @param string $toEmail
      * @param string $subject
      * @param mixed $content
+     * @param string $fromEmail
      * @param mixed $result
      * @return bool
      */
-    public static function send($toEmail, $subject, $content, &$result = [])
+    public static function send($toEmail, $subject, $content, $fromEmail = null, &$result = [])
     {
+        $fromEmail = $fromEmail ? $fromEmail : static::$_fromEmail;
         $result = static::_send([
             'to' => $toEmail,
+            'from' => $fromEmail,
             'subject' => $subject,
             'content' => is_string($content) ? ['text' => $content] : $content // По умолчанию текст
         ]);
@@ -86,7 +89,7 @@ class Mailgun
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => [
-                'from' => static::$_fromEmail,
+                'from' => ArrayHelper::getValue($options, 'from', static::$_fromEmail),
                 'to' => ArrayHelper::getValue($options, 'to'),
                 'subject' => ArrayHelper::getValue($options, 'subject'),
                 'text' => ArrayHelper::getValue($content, 'text'),

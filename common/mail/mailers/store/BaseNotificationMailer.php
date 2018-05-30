@@ -41,6 +41,8 @@ class BaseNotificationMailer extends BaseMailer {
         if (!($this->template instanceof NotificationTemplates)) {
             throw new InvalidParamException();
         }
+
+        $this->from = $this->store->getAdminEmail();
     }
 
     /**

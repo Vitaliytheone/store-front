@@ -70,6 +70,8 @@ use yii\helpers\ArrayHelper;
  */
 class Stores extends ActiveRecord implements ProjectInterface
 {
+    static $adminEmail;
+
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
@@ -206,7 +208,12 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function getAdminEmail()
     {
-        return ArrayHelper::getValue(NotificationAdminEmails::findOne(['primary' => 1, 'status' => NotificationAdminEmails::STATUS_ENABLED]), 'email');
+        if (null !== static::$adminEmail) {
+            return static::$adminEmail;
+        }
+        static::$adminEmail = ArrayHelper::getValue(NotificationAdminEmails::findOne(['primary' => 1, 'status' => NotificationAdminEmails::STATUS_ENABLED]), 'email');
+
+        return static::$adminEmail;
     }
 
     /**
