@@ -6,6 +6,7 @@ use Yii;
 use common\models\panels\BackgroundTasks;
 use common\tasks\Client;
 use common\tasks\Worker;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 
 /**
@@ -14,6 +15,15 @@ use yii\helpers\Console;
  */
 class WorkerController extends MainController
 {
+    public $key;
+
+    public $status;
+
+    public function options($actionID)
+    {
+        return ['key', 'status'];
+    }
+
     public function init()
     {
         $this->frontendPath = Yii::getAlias('@sommerce/config');
@@ -45,6 +55,41 @@ class WorkerController extends MainController
         Worker::stop();
 
         Worker::start();
+    }
+
+    /**
+     * Restart tasks
+     */
+    public function actionRestartTasks()
+    {
+        $status = ArrayHelper::getValue($this, 'status', [
+            BackgroundTasks::STATUS_PENDING,
+            BackgroundTasks::STATUS_ERROR,
+            BackgroundTasks::STATUS_IN_PROGRESS
+        ]);
+
+        $query = BackgroundTasks::find();
+
+        if (!empty($status)) {
+            $query->andWhere([
+                'status' => $status
+            ]);
+        }
+
+        if (!empty($this->key)) {
+            $query->andWhere([
+                'key' => $this->key
+            ]);
+        }
+
+        /**
+         * @var BackgroundTasks $task
+         */
+        foreach ($query->batch() as $tasks) {
+            foreach ($tasks as $task) {
+                Client::addTask($task->type, $task->code, $task->getData());
+            }
+        }
     }
 
     /**

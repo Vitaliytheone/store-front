@@ -168,6 +168,12 @@ class BackgroundTasks extends ActiveRecord
      */
     public static function add(int $type, string $code, string $key, $data): void
     {
+        if (static::findOne([
+            'key' => $key
+        ])) {
+            return;
+        }
+
         $model = (new static([
             'key' => $key,
             'type' => $type,
