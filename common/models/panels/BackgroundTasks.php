@@ -166,7 +166,7 @@ class BackgroundTasks extends ActiveRecord
      * @param string $key
      * @param mixed $data
      */
-    public static function add(int $type, string $code, string $key, mixed $data): void
+    public static function add(int $type, string $code, string $key, $data): void
     {
         $model = (new static([
             'key' => $key,
@@ -184,7 +184,7 @@ class BackgroundTasks extends ActiveRecord
      * @param int $status
      * @param mixed $response
      */
-    public static function setStatus(string $key, int $status, mixed $response = null): void
+    public static function setStatus(string $key, int $status, $response = null): void
     {
         static::updateAll([
             'status' => $status,
