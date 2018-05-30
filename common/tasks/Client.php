@@ -47,11 +47,6 @@ class Client {
 
         BackgroundTasks::add($type, $code, $unique, $data);
 
-        $jobHandle = $client->doBackground(Yii::$app->params['gearmanPrefix'] . 'worker', Json::encode([
-            'code' => $code,
-            'data' => $data
-        ]), $unique);
-
         $client->setCompleteCallback(function(GearmanTask $task) {
             BackgroundTasks::setStatus($task->unique(), BackgroundTasks::STATUS_COMPLETED);
         });
@@ -63,6 +58,11 @@ class Client {
         $client->setFailCallback(function(GearmanTask $task) {
             BackgroundTasks::setStatus($task->unique(), BackgroundTasks::STATUS_ERROR);
         });
+
+        $jobHandle = $client->doBackground(Yii::$app->params['gearmanPrefix'] . 'worker', Json::encode([
+            'code' => $code,
+            'data' => $data
+        ]), $unique);
 
         return $jobHandle;
     }
