@@ -93,6 +93,7 @@ trait NotificationsTrait {
 
         $notification->subject = $this->_defaultTemplate->subject;
         $notification->body = $this->_defaultTemplate->body;
+        $notification->save(false);
 
         UiHelper::message(Yii::t('admin', 'settings.notification_has_been_updated'));
 
