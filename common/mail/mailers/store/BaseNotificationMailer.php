@@ -43,6 +43,10 @@ class BaseNotificationMailer extends BaseMailer {
         }
 
         $this->from = $this->store->getAdminEmail();
+
+        if ($this->from == $this->to) {
+            $this->from = null;
+        }
     }
 
     /**
