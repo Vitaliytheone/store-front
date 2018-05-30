@@ -27,6 +27,7 @@ class m180530_135349_add_code_column_to_orders_table extends Migration
 
             $this->execute("
                 ALTER TABLE `{$db}`.`orders` ADD `code` varchar(64) NOT NULL AFTER `id`;
+                ALTER TABLE `{$db}`.`orders` ADD INDEX `idx_code` (`code`);
             ");
         }
 
