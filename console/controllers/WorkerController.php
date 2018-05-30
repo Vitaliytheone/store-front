@@ -62,11 +62,15 @@ class WorkerController extends MainController
      */
     public function actionRestartTasks()
     {
-        $status = ArrayHelper::getValue($this, 'status', [
-            BackgroundTasks::STATUS_PENDING,
-            BackgroundTasks::STATUS_ERROR,
-            BackgroundTasks::STATUS_IN_PROGRESS
-        ]);
+        $status = ArrayHelper::getValue($this, 'status');
+
+        if (empty($status)) {
+            $status = [
+                BackgroundTasks::STATUS_PENDING,
+                BackgroundTasks::STATUS_ERROR,
+                BackgroundTasks::STATUS_IN_PROGRESS
+            ];
+        }
 
         $query = BackgroundTasks::find();
 
