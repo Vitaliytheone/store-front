@@ -10,20 +10,25 @@ use common\tasks\workers\TestWorker;
  */
 class Listener {
 
-    /*
+    /**
      * Run workers
-     * @return void
+     * @param string $code
+     * @param mixed $data
+     * @return null|mixed
      */
     public static function run($code, $data)
     {
+        $result = null;
         switch ($code) {
             case 'test':
-                TestWorker::run($data);
+                $result = TestWorker::run($data);
             break;
 
             case 'mail':
-                MailerWorker::run($data);
+                $result = MailerWorker::run($data);
             break;
         }
+
+        return $result;
     }
 }

@@ -11,6 +11,6 @@ class MailerWorker extends BaseWorker {
 
     public static function run($data)
     {
-        BaseMailer::sendNow($data);
+        return BaseMailer::sendNow($data);
     }
 }

@@ -6,7 +6,6 @@ use Yii;
 use GearmanWorker;
 use GearmanJob;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use Exception;
 
 /**
@@ -30,15 +29,17 @@ class Worker {
             static::$_worker = new GearmanWorker();
             static::$_worker->addServer(Yii::$app->params['gearmanIp'], Yii::$app->params['gearmanPort']);
             static::$_worker->addFunction(Yii::$app->params['gearmanPrefix'] . 'worker', function(GearmanJob $job) {
-                BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_IN_PROGRESS);
-
                 try {
-                    $content = $job->workload();
-                    $content = Json::decode($content);
+                    BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_IN_PROGRESS);
 
-                    Listener::run(ArrayHelper::getValue($content, 'code'), ArrayHelper::getValue($content, 'data'));
+                    $content = $job->workload();
+                    $content = json_decode($content);
+
+                    $result = Listener::run(ArrayHelper::getValue($content, 'code'), ArrayHelper::getValue($content, 'data'));
 
                     $job->sendData($job->workload());
+
+                    BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_COMPLETED, $result);
                 } catch (Exception $e) {
                     Yii::error($e->getMessage());
                     BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, $e->getMessage());
