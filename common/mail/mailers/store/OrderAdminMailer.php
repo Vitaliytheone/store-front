@@ -29,7 +29,7 @@ class OrderAdminMailer extends BaseNotificationMailer {
 
         $options['order'] = [
             'id' => $order->id,
-            'url' => $this->store->getSite() . '/order/' . $order->id,
+            'url' => $this->store->getSite() . '/admin/orders?query=' . $order->id,
         ];
 
         $this->html = $this->renderTwig((string)$this->template->body, $options);
