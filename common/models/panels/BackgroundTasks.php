@@ -136,7 +136,7 @@ class BackgroundTasks extends ActiveRecord
      * Get data
      * @return  array|mixed $data
      */
-    public function getData():mixed
+    public function getData()
     {
         return json_decode($this->data, true);
     }
@@ -154,7 +154,7 @@ class BackgroundTasks extends ActiveRecord
      * Get response
      * @return  array|mixed $data
      */
-    public function getResponse():mixed
+    public function getResponse()
     {
         return json_decode($this->response, true);
     }
