@@ -188,7 +188,7 @@ class BackgroundTasks extends ActiveRecord
     {
         static::updateAll([
             'status' => $status,
-            'response' => json_encode($response)
+            'response' => $response ? json_encode($response) : null
         ], 'key = :key', [
             ':key' => $key
         ]);
