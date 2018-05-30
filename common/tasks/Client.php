@@ -44,7 +44,7 @@ class Client {
     {
         $client = static::getInstance();
 
-        $unique = $unique ? md5(microtime() . microtime() . microtime()) : $unique;
+        $unique = $unique ? $unique : md5(microtime() . microtime() . microtime());
 
         BackgroundTasks::add($type, $code, $unique, $data);
 
