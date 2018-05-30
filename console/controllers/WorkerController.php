@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers;
 
+use common\models\panels\BackgroundTasks;
 use common\tasks\Client;
 use yii\console\Controller;
 use common\tasks\Worker;
@@ -43,7 +44,7 @@ class WorkerController extends Controller
      */
     public function actionTest()
     {
-        $result = Client::addTask('test', [
+        $result = Client::addTask(BackgroundTasks::TYPE_PANELS, 'test', [
             'time' => time(),
             'message' => 'Hello world'
         ]);
