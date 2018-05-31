@@ -437,19 +437,7 @@ class SenderComponent extends Component
             }
 
             // Provider service resend
-            $responseProtocol = parse_url($requestInfo['url'], PHP_URL_SCHEME);
-            if (
-                $protocol == Providers::PROTOCOL_HTTP &&
-                ArrayHelper::getValue($responseResult, 'error') == 'Incorrect request' &&
-                $responseProtocol == 'https'
-            ) {
-                $this->_resendOrder($orderInfo);
-
-                $sendResults['resend']++;
-
-                curl_multi_remove_handle($mh, $ch);
-                continue;
-            }
+            // * Resend orders routine removed according #ID-551
 
             // Success
             if (isset($responseResult['order'])) {
