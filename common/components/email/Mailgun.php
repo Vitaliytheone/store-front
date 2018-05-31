@@ -47,7 +47,7 @@ class Mailgun
      */
     public static function send($toEmail, $subject, $content, $fromEmail = null, &$response = [])
     {
-        $fromEmail = $fromEmail ? $fromEmail : static::$_fromEmail;
+        $fromEmail = !empty($fromEmail) ? $fromEmail : static::$_fromEmail;
         $response = static::_send([
             'to' => $toEmail,
             'from' => $fromEmail,
