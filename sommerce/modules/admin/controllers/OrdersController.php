@@ -109,15 +109,14 @@ class OrdersController extends CustomController
         }
 
         if (!$model->changeStatus($status)) {
-
-            Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
-                'suborderId' => $id,
-                'storeId' => $store->id,
-                'status' => $status
-            ]);
-
             $this->redirect(Url::toRoute(["/orders"]));
         }
+
+        Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+            'suborderId' => $id,
+            'storeId' => $store->id,
+            'status' => $status
+        ]);
 
         /** @var StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
