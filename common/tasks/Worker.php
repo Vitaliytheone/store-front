@@ -39,7 +39,11 @@ class Worker {
 
                     $job->sendData($job->workload());
 
-                    BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_COMPLETED, $result);
+                    if ($result) {
+                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_COMPLETED, $result);
+                    } else {
+                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, 'Empty worker result');
+                    }
                 } catch (Exception $e) {
                     Yii::error($e->getMessage());
                     BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, $e->getMessage());
