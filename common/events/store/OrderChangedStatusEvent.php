@@ -34,9 +34,9 @@ class OrderChangedStatusEvent extends BaseOrderEvent {
      */
     public function __construct($storeId, $suborderId, $status)
     {
-        $this->_storeId = $storeId;
-        $this->_suborderId = $suborderId;
-        $this->_status = $status;
+        $this->_storeId = (int)$storeId;
+        $this->_suborderId = (int)$suborderId;
+        $this->_status = (int)$status;
     }
 
     /**
