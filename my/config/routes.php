@@ -89,7 +89,6 @@ $routes = [
     'domains/order' => '/domains/order',
     '/activitylog/<id:>' => '/activity/index',
 
-
     'paypal/ipn' => '/system/ppip',
     'paypal/ipn/' => '/system/ppip',
     'sysmail' => '/system/sysmail',
@@ -118,6 +117,10 @@ $routes = [
 
     'stores' => '/store/stores',
     'stores/order' => '/store/order',
+    'stores/staff/<id:>' => '/store/staff',
+    'stores/staff/create/<id:>' => '/store/staff-create',
+    'stores/staff/edit/<id:>' => '/store/staff-edit',
+    'stores/staff/password/<id:>' => '/store/staff-password',
 ];
 
 return array_merge($routes, $superadmin);

@@ -57,6 +57,12 @@ class MyActivityLog extends ActiveRecord
     const E_SUPER_USER_AUTHORIZATION = 603;
     const E_CUSTOMER_REGISTRATION = 604;
 
+    const E_STORE_CREATE_STAFF_ACCOUNT = 701;
+    const E_STORE_UPDATE_STAFF_ACCOUNT_NAME = 702;
+    const E_STORE_UPDATE_STAFF_ACCOUNT_STATUS = 703;
+    const E_STORE_UPDATE_STAFF_ACCOUNT_RULES = 704;
+    const E_STORE_UPDATE_STAFF_ACCOUNT_PASSWORD = 705;
+
     /** @var  Customers */
     private $_customer;
 

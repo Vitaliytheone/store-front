@@ -469,6 +469,7 @@ return [
     'settings.themes_editing_save' => 'Save theme',
     'settings.themes_editing_cancel' => 'Cancel',
     'settings.themes_editing_reset' => 'Reset file',
+    'settings.themes_modified' => 'Modified',
 
     'settings.themes_modal_submit_close_message' => 'All unsaved data will be lost!',
     'settings.themes_modal_submit_close_submit' => 'Yes, close!',

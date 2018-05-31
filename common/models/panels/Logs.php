@@ -2,7 +2,10 @@
 
 namespace common\models\panels;
 
+use common\models\common\ProjectInterface;
+use common\models\stores\Stores;
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\panels\queries\LogsQuery;
@@ -11,6 +14,7 @@ use common\models\panels\queries\LogsQuery;
  * This is the model class for table "{{%logs}}".
  *
  * @property integer $id
+ * @property integer $project_type
  * @property integer $panel_id
  * @property string $data
  * @property integer $type
@@ -35,8 +39,8 @@ class Logs extends ActiveRecord
     public function rules()
     {
         return [
-            [['panel_id', 'type'], 'required'],
-            [['panel_id', 'type', 'created_at'], 'integer'],
+            [['project_type', 'panel_id', 'type'], 'required'],
+            [['project_type', 'panel_id', 'type', 'created_at'], 'integer'],
             [['data'], 'string', 'max' => 1000],
         ];
     }
@@ -48,6 +52,7 @@ class Logs extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'project_type' => Yii::t('app', 'Project type'),
             'panel_id' => Yii::t('app', 'Panel ID'),
             'data' => Yii::t('app', 'Data'),
             'type' => Yii::t('app', 'Type'),
@@ -102,15 +107,21 @@ class Logs extends ActiveRecord
 
     /**
      * Log
-     * @param int $panelId
+     * @param Project|Stores $project
      * @param int $type
      * @param string $data
      * @return bool
+     * @throws Exception
      */
-    public static function log($panelId, $type, $data = '')
+    public static function log($project, $type, $data = '')
     {
+        if (!$project instanceof ProjectInterface) {
+            throw new Exception('Type mismatch exception! The $project must implement an ProjectInterface interface!');
+        }
+
         $model = new static();
-        $model->panel_id = $panelId;
+        $model->project_type = $project::getProjectType();
+        $model->panel_id = $project->id;
         $model->type = $type;
         $model->data = $data;
 

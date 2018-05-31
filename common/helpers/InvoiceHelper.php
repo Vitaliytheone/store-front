@@ -13,6 +13,7 @@ use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
+use yii\db\Query;
 
 /**
  * Class InvoiceHelper
@@ -53,6 +54,24 @@ class InvoiceHelper
                 continue;
             }
 
+            $invoiceDetailsAttributes = [
+                'item_id' => $project->id,
+                'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
+            ];
+
+            if ($project->child_panel) {
+                $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
+            }
+
+            // Проверяем наличие уже созданного инвойса на продление
+            if ((new Query())
+                ->from(InvoiceDetails::tableName() . ' as id')
+                ->innerJoin(Invoices::tableName() . ' as i', 'i.id = id.invoice_id AND i.status = ' . Invoices::STATUS_UNPAID)
+                ->andWhere($invoiceDetailsAttributes)
+                ->exists()) {
+                continue;
+            }
+
             $transaction = Yii::$app->db->beginTransaction();
 
             $invoice = new Invoices();
@@ -63,16 +82,12 @@ class InvoiceHelper
 
             if ($invoice->save()) {
                 $invoiceDetailsModel = new InvoiceDetails();
+                $invoiceDetailsModel->attributes = $invoiceDetailsAttributes;
                 $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $project->id;
                 $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_PANEL;
-
-                if ($project->child_panel) {
-                    $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
-                }
 
                 if (!$invoiceDetailsModel->save()) {
+                    $transaction->rollBack();
                     continue;
                 }
 
@@ -86,10 +101,14 @@ class InvoiceHelper
                 }
 
                 $mail = new InvoiceCreated([
-                    'project' => $projects
+                    'project' => $project
                 ]);
                 $mail->send();
+
+                continue;
             }
+
+            $transaction->rollBack();
         }
     }
 

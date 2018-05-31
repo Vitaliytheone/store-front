@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.language }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,11 @@
     <title>{{ site.page_title }}</title>
     <meta name="keywords" content="{{ site.meta.keywords }}">
     <meta name="description" content="{{ site.meta.description }}">
-	{% if site.favicon %}
-      <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
-	{% endif %}
+    {% if site.favicon %}
+        <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
+    {% endif %}
     <!-- CDN Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/frontend/fontawesome.css">
     <!-- Custom styles -->
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/swiper.css') }}">
@@ -39,39 +39,39 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
 
-                                <!-- User's menu -->
-                                {% for menu_first_level in site.menu %}
-                                    {% if menu_first_level.submenu %}
-                                        <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
-                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_first_level.name }} <span class="caret"></span></a>
+                <!-- User's menu -->
+                {% for menu_first_level in site.menu %}
+                    {% if menu_first_level.submenu %}
+                        <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
+                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_first_level.name }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu multi-level">
+                                {% for menu_second_level in menu_first_level.submenu %}
+                                    {% if menu_second_level.submenu %}
+                                        <li class="dropdown-submenu">
+                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_second_level.name }}</a>
                                             <ul class="dropdown-menu multi-level">
-                                                {% for menu_second_level in menu_first_level.submenu %}
-                                                    {% if menu_second_level.submenu %}
-                                                        <li class="dropdown-submenu">
-                                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_second_level.name }}</a>
-                                                            <ul class="dropdown-menu multi-level">
-                                                                {% for menu_third_level in menu_second_level.submenu %}
-                                                                    <li>
-                                                                        <a href="{{ menu_third_level.link }}">{{ menu_third_level.name }}</a>
-                                                                    </li>
-                                                                {% endfor %}
-                                                            </ul>
-                                                        </li>
-                                                    {% else %}
-                                                        <li>
-                                                            <a href="{{ menu_second_level.link }}">{{ menu_second_level.name }}</a>
-                                                        </li>
-                                                    {% endif %}
+                                                {% for menu_third_level in menu_second_level.submenu %}
+                                                    <li>
+                                                        <a href="{{ menu_third_level.link }}">{{ menu_third_level.name }}</a>
+                                                    </li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
                                     {% else %}
-                                        <li class="{% if menu_first_level.active %}active{% endif %}">
-                                            <a href="{{ menu_first_level.link }}">{{ menu_first_level.name }}</a>
+                                        <li>
+                                            <a href="{{ menu_second_level.link }}">{{ menu_second_level.name }}</a>
                                         </li>
                                     {% endif %}
                                 {% endfor %}
-                                <!--/ User's menu -->
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="{% if menu_first_level.active %}active{% endif %}">
+                            <a href="{{ menu_first_level.link }}">{{ menu_first_level.name }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <!--/ User's menu -->
 
                 <li {% if 'cart' == site.active_menu %} class="active" {% endif %}><a href="/cart" class="bold">({{ site.cart.item_count }}) {{ lang('cart.title') }}</a></li>
             </ul>
@@ -91,7 +91,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                   &copy; {{ site.store_name }} {{ "now"|date("Y") }} 
+                    &copy; {{ site.store_name }} {{ "now"|date("Y") }}
                 </div>
                 <div class="col-md-8">
                     <ul class="footer-links">
@@ -107,7 +107,7 @@
 <!-- Footer block End -->
 
 <!-- CDN Scripts -->
-<script src="https://www.google.com/recaptcha/api.js?hl=en"></script>
+<script src="https://www.google.com/recaptcha/api.js?hl={{ site.language }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Custom Scripts -->
 <script src="{{ asset('/js/bootstrap.js') }}"></script>

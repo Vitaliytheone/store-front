@@ -5,6 +5,8 @@ namespace common\helpers;
 use common\models\common\ProjectInterface;
 use common\models\panels\Project;
 use common\models\stores\Stores;
+use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class ProjectHelper
@@ -36,4 +38,25 @@ class ProjectHelper
         return $project;
     }
 
+    /**
+     * Return project types
+     * @return array
+     */
+    public static function getProjectTypes()
+    {
+        return [
+            ProjectInterface::PROJECT_TYPE_PANEL => Yii::t('app', 'project.type.panel'),
+            ProjectInterface::PROJECT_TYPE_STORE => Yii::t('app', 'project.type.store'),
+        ];
+    }
+
+    /**
+     * Return project type name by project_type
+     * @param $type
+     * @return mixed
+     */
+    public static function getProjectTypeName($type)
+    {
+        return ArrayHelper::getValue(static::getProjectTypes(), $type, null);
+    }
 }

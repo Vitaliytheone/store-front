@@ -1,6 +1,9 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
+use common\helpers\ProjectHelper;
+use common\models\common\ProjectInterface;
+use common\models\stores\Stores;
 use Yii;
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\Logs;
@@ -38,15 +41,22 @@ class StatusLogsSearch
      */
     public function search()
     {
-        $query = (new Query())
+        $query = Logs::find()
             ->select([
-                'id', 'panel_id', 'data', 'type', 'created_at',
+                '`logs`.*',
+                'domain' => 'COALESCE(panel.site, store.domain)'
             ])
-            ->from($this->_logsTable)
-            ->indexBy('id')
+            ->leftJoin(['panel' => Project::tableName()], 'logs.project_type = :project_panel AND logs.panel_id = panel.id', [
+                ':project_panel' => ProjectInterface::PROJECT_TYPE_PANEL
+            ])
+            ->leftJoin(['store' => Stores::tableName()], 'logs.project_type = :project_store AND logs.panel_id = store.id', [
+                ':project_store' => ProjectInterface::PROJECT_TYPE_STORE
+            ])
             ->orderBy([
-                'id' => SORT_DESC,
-            ]);
+                'id' => SORT_DESC
+            ])
+            ->indexBy('id')
+            ->asArray();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -70,27 +80,16 @@ class StatusLogsSearch
             return [];
         }
 
+        $projectStatuses = Logs::getTypes();
+
         $models = $this->_dataProvider->getModels();
-        $panelsIds = array_column($models, 'panel_id');
-        $panelStatuses = Logs::getTypes();
 
-        $panelsData = (new Query())
-            ->select(['id', 'site', 'name'])
-            ->from($this->_projectTable)
-            ->indexBy('id')
-            ->where(['in', 'id', $panelsIds])
-            ->all();
-
-        array_walk($models, function(&$model) use ($panelsData, $panelStatuses){
-
-            $panelStatusName = ArrayHelper::getValue($panelStatuses, $model['type']);
-
-            $modelData = $panelsData[$model['panel_id']];
+        array_walk($models, function(&$model) use ($projectStatuses){
             $model = [
                 'id' => $model['id'],
-                'panel_id' => $model['panel_id'],
-                'panel' => ArrayHelper::getValue($modelData, 'site'),
-                'status' => $panelStatusName,
+                'project_type' => ProjectHelper::getProjectTypeName($model['project_type']),
+                'domain' => ArrayHelper::getValue($model, 'domain'),
+                'status' => ArrayHelper::getValue($projectStatuses, $model['type']),
                 'date' => static::formatDate($model['created_at']),
             ];
         });

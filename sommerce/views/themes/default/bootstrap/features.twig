@@ -2,38 +2,42 @@
     <!-- Features block Start -->
     <section class="border-bottom">
         <div class="container">
-        <div class="row section-header">
-            <div class="col-lg-12">
-                <h2 class="text-center">{{ block.features.header.title }}</h2>
-                {% if block.features.header.description %}
-                    <div class="section-description">
-                        {{ block.features.header.description }}
-                    </div>
-                {% endif %}
+            <div class="row section-header">
+                <div class="col-lg-12">
+                    <h2 class="text-center">{{ block.features.header.title }}</h2>
+                    {% if block.features.header.description %}
+                        <div class="section-description">
+                            {{ block.features.header.description }}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        <div class="row section-content section-col__clearfix">
-        {% for feature in block.features.data %}
-        <div class="col-lg-{{ block.features.settings.column }}">
-            <div class="feature {% if block.features.settings.align == 'left' %} block-left {% endif %}">
-                 <div class="feature-body {% if block.features.settings.align == 'left' %} text-left {% else %} text-center {% endif %}">
-                        <div class="icon">
-                            <div class="feature-icon">
-                                <span class="fa {{ feature.icon }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+            <div class="row section-content section-col__clearfix">
+                {% for feature in block.features.data %}
+                    <div class="{{ block.features.settings.bootstrap_column }}">
+                        <div class="feature {% if block.features.settings.align == 'left' %} block-left {% endif %}">
+                            <div class="feature-body {% if block.features.settings.align == 'left' %} text-left {% else %} text-center {% endif %}">
+                                <div class="icon">
+                                    {% if block.features.settings.picture_type == 'image' %}
+                                        <img src="{{ feature.image }}" alt="" class="img-responsive">
+                                    {% else %}
+                                        <div class="feature-icon">
+                                            <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="title">
+                                    <h3 class="feature-title">{{ feature.title }}</h3>
+                                </div>
+                                <div class="description">
+                                    <div class="feature-text">{{ feature.description }}</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="title">
-                            <h3 class="feature-title">{{ feature.title }}</h3>
-                        </div>
-                        <div class="description">
-                            <div class="feature-text">{{ feature.description }}</div>
-                        </div>
                     </div>
-                </div>
-              </div>
-            {% endfor %}
-         </div>
-         </div>
+                {% endfor %}
+            </div>
+        </div>
     </section>
     <!-- Features block End -->
 {% endif %}

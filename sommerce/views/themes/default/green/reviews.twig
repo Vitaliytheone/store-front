@@ -14,7 +14,7 @@
             <!-- Section Title End -->
 
             <!-- Reviews Slider Start -->
-            <div class="testimonial--slider owl-carousel" data-owl-margin="30" data-owl-items="{{ block.reviews.settings.column }}" data-owl-dots="true">
+            <div class="testimonial--slider owl-carousel" data-owl-margin="30" data-owl-responsive="true" data-owl-items="{{ block.reviews.settings.column }}" data-owl-dots="true">
 
 
                 {% for review in block.reviews.data %}
@@ -36,9 +36,9 @@
                             <p class="subtitle">
                                 {% for i in 0..4 %}
                                     {% if i < review.rating %}
-                                        <span class="fa fa-star"></span>
+                                        <span class="fas fa-star"></span>
                                     {% else %}
-                                        <span class="fa fa-star-o"></span>
+                                        <span class="fal fa-star"></span>
                                     {% endif %}
                                 {% endfor %}
                             </p>

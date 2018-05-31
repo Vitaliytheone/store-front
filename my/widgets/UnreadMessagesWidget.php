@@ -14,7 +14,7 @@ class UnreadMessagesWidget extends Widget {
 
     /**
      * Run method
-     * @return string|void
+     * @return string|null
      */
     public function run()
     {
@@ -24,12 +24,11 @@ class UnreadMessagesWidget extends Widget {
         ])->count();
 
         if (!$count) {
-            return;
+            return null;
         }
 
         return Html::tag('span', $count, [
-            'class' => 'badge',
-            'style' => 'background-color: #f0ad4e'
+            'class' => 'sidebar-tooltip sidebar-tooltip__warning',
         ]);
     }
 }

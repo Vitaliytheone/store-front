@@ -7,8 +7,10 @@ use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
+use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
+use common\models\panels\Logs;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
 use common\models\store\Languages;
@@ -86,6 +88,10 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_PROLONG = 3;
     const CAN_ACTIVITY_LOG = 4;
     const CAN_DOMAIN_CONNECT = 5;
+    const CAN_STAFF_VIEW = 6;
+    const CAN_STAFF_CREATE = 7;
+    const CAN_STAFF_EDIT = 8;
+    const CAN_STAFF_UPDATE_PASSWORD = 9;
 
     const STORE_DB_NAME_PREFIX = 'store_';
 
@@ -474,12 +480,18 @@ class Stores extends ActiveRecord implements ProjectInterface
                 if (static::STATUS_FROZEN == $this->status) {
                     $this->status = static::STATUS_ACTIVE;
                 }
-
             break;
 
             case static::STATUS_FROZEN:
                 if (static::STATUS_ACTIVE == $this->status) {
                     $this->status = static::STATUS_FROZEN;
+                }
+            break;
+
+            case static::STATUS_TERMINATED:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_TERMINATED;
+                    $this->terminate();
                 }
             break;
         }
@@ -559,6 +571,50 @@ class Stores extends ActiveRecord implements ProjectInterface
             break;
 
             case self::CAN_ACTIVITY_LOG:
+                return true;
+            break;
+
+            case self::CAN_STAFF_VIEW:
+                return self::STATUS_ACTIVE == $status;
+            break;
+
+            case self::CAN_STAFF_CREATE:
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if (self::STATUS_ACTIVE != $status) {
+                    return false;
+                }
+
+                if (Yii::$app->params['store.staff_users.limit'] <= $store->getStoreAdmins()->count()) {
+                    return false;
+                }
+
+                return true;
+            break;
+
+            case self::CAN_STAFF_EDIT:
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if (self::STATUS_ACTIVE != $status) {
+                    return false;
+                }
+
+                return true;
+            break;
+
+            case self::CAN_STAFF_UPDATE_PASSWORD:
+                if ($customer && $customer->id != $customerId) {
+                    return false;
+                }
+
+                if (self::STATUS_ACTIVE != $status) {
+                    return false;
+                }
+
                 return true;
             break;
         }
@@ -797,5 +853,79 @@ class Stores extends ActiveRecord implements ProjectInterface
         }
 
         return null;
+    }
+
+    /**
+     * Disable main domain (remove store domain and remove domain from dns servers)
+     * @return bool
+     */
+    public function disableMainDomain()
+    {
+        // Check if main domain is not belong to our zone
+        $storeDomain = StoreDomains::findOne([
+            'domain' => $this->domain,
+            'store_id' => $this->id,
+            StoreDomains::DOMAIN_TYPE_DEFAULT,
+        ]);
+
+        if (!$storeDomain) {
+            return false;
+        }
+
+        $storeDomain->delete();
+        DnsHelper::removeMainDns($this);
+
+        return true;
+    }
+
+    /**
+     * Terminate store main domain and linked invoices
+     * @return bool
+     */
+    public function terminate()
+    {
+        $domain = $this->domain;
+
+        // Delete domain if it is not in our zone
+        if (!Domains::findOne(
+            ['domain' => $domain]) &&
+            StoreDomains::findOne([
+                'domain' => $domain,
+                'store_id' => $this->id,
+                'type' => StoreDomains::DOMAIN_TYPE_DEFAULT])
+        ) {
+            $this->disableMainDomain();
+        }
+
+        // Cancel unpaid invoices
+        $invoices = Invoices::find()
+            ->innerJoin('invoice_details', 'invoice_details.invoice_id = invoices.id AND invoice_details.item = :item', [
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
+            ])
+            ->andWhere([
+                'invoices.status' => Invoices::STATUS_UNPAID,
+                'invoice_details.item_id' => $this->id
+            ])
+            ->all();
+
+        /**
+         * @var Invoices $invoice
+         */
+        foreach ($invoices as $invoice) {
+            $invoice->status = Invoices::STATUS_CANCELED;
+            $invoice->save(false);
+        }
+
+        Logs::log($this, Logs::TYPE_TERMINATED);
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function restore()
+    {
+        return true;
     }
 }

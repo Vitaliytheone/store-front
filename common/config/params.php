@@ -3,6 +3,8 @@
 $serverIp = "54.37.92.228";
 
 return [
+    'time' => '10800',
+    
     'config.db' => DB_CONFIG,
     'config.proxy' => PROXY_CONFIG,
     'panelNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
@@ -76,6 +78,8 @@ return [
         'block_reviews' => 1,
         'block_process' => 1,
     ],
+
+    'store.staff_users.limit' => 10,
 
     'project.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели
     'domain.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели

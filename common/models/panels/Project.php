@@ -457,6 +457,13 @@ class Project extends ActiveRecord implements ProjectInterface
                     }
                 }
             break;
+
+            case static::STATUS_TERMINATED:
+                if (static::STATUS_FROZEN == $this->act) {
+                    $this->act = static::STATUS_TERMINATED;
+                    $this->terminate();
+                }
+            break;
         }
 
         return $this->save(false);
@@ -500,7 +507,7 @@ class Project extends ActiveRecord implements ProjectInterface
             return false;
         }
 
-        Logs::log($this->id, Logs::TYPE_RESTORED);
+        Logs::log($this, Logs::TYPE_RESTORED);
 
         return true;
     }
@@ -534,7 +541,7 @@ class Project extends ActiveRecord implements ProjectInterface
             $invoice->save(false);
         }
 
-        Logs::log($this->id, Logs::TYPE_TERMINATED);
+        Logs::log($this, Logs::TYPE_TERMINATED);
 
         return true;
     }

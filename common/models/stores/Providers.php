@@ -28,6 +28,7 @@ class Providers extends ActiveRecord
 
     const API_ACTION_ADD = 'add';
     const API_ACTION_STATUS = 'status';
+    const API_ACTION_PRIVATE = 'private';
 
     /**
      * @inheritdoc

@@ -277,4 +277,12 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
     {
         return (bool)static::getHash($this->getId())->super_user;
     }
+
+    /**
+     * Admin logout admin
+     */
+    public function logout()
+    {
+        StoreAdminsHash::deleteByUser($this->id);
+    }
 }

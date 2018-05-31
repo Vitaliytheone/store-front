@@ -1,6 +1,7 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
+use common\models\stores\Stores;
 use Yii;
 use common\models\panels\Customers;
 use yii\helpers\ArrayHelper;
@@ -11,6 +12,7 @@ use yii\helpers\ArrayHelper;
  */
 class CustomersSearch extends Customers {
 
+    public $countStores;
     public $countProjects;
     public $countChild;
     public $countDomains;
@@ -75,12 +77,16 @@ class CustomersSearch extends Customers {
 
         $customers->select([
             'customers.*',
+            'COUNT(DISTINCT stores.id) AS countStores',
             'COUNT(DISTINCT project.id) AS countProjects',
             'COUNT(DISTINCT child_project.id) AS countChild',
             'COUNT(DISTINCT domains.id) AS countDomains',
             'COUNT(DISTINCT ssl_cert.id) AS countSslCerts'
         ]);
 
+        $customers->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [
+            ':projectChildPanel' => 0
+        ]);
         $customers->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [
             ':projectChildPanel' => 0
         ]);

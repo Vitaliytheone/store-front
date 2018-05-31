@@ -211,7 +211,10 @@ return [
     'payments.list.refund_modal_text_3' => 'This action can not be canceled after pressing the "Refund" button.',
     'payments.list.refund_modal_btn_cancel' => 'Cancel',
     'payments.list.refund_modal_btn_submit' => 'Refund',
-
+    'payments.list.search_type.payment_id' => 'Payment ID',
+    'payments.list.search_type.invoice_id' => 'Invoice ID',
+    'payments.list.search_type.domain' => 'Domain',
+    'payments.list.search_type.payment_comment' => 'Memo',
 
     'pages.settings.menu_payments' => 'Payments',
     'pages.settings.menu_staff' => 'Staff',
@@ -367,7 +370,8 @@ return [
     'referrals.list.referrals_customer_paid' => 'Paid',
 
     'logs.status.list.column_id' => 'ID',
-    'logs.status.list.column_panel' => 'Panel',
+    'logs.status.list.column_project_type' => 'Project type',
+    'logs.status.list.column_panel' => 'Domain',
     'logs.status.list.column_status' => 'Status',
     'logs.status.list.column_date' => 'Date',
     'logs.providers.list.search' => 'Search log',
@@ -458,4 +462,5 @@ return [
     'stores.change_domain.column_subdomain' => 'Is subdomain',
     'stores.modal.change_domain_modal_header' => 'Change domain',
     'stores.list.action_sign_in_as_admin' => 'Sign in as admin',
+    'stores.list.action_terminate' => 'Terminate store',
 ];

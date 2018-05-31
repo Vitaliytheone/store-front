@@ -13,6 +13,7 @@
         <tr>
             <th>ID</th>
             <th>Email</th>
+            <th>Stores</th>
             <th>Panels</th>
             <th>Child</th>
             <th>Domains</th>
@@ -30,7 +31,17 @@
             <?php foreach ($customers['models'] as $customer) : ?>
                 <tr id="<?= $customer->id ?>">
                     <td><?= $customer->id ?></td>
-                    <td><?= $customer->email ?> <?= ($customer->referrer_id ? '(r)' : '')?></td>
+                    <td>
+                        <div class="pull-left">
+                            <?= $customer->email ?> <?= ($customer->referrer_id ? '(r)' : '')?>
+                        </div>
+                        <div class="pull-right">
+                            <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="login-key-link" target="_blank"><i class="fa fa-key fa-flip-horizontal" aria-hidden="true"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <?= Html::a($customer->countStores, Url::toRoute(['/stores', 'customer_id' => $customer->id])); ?>
+                    </td>
                     <td>
                         <?= Html::a($customer->countProjects, Url::toRoute(['/panels', 'customer_id' => $customer->id])); ?>
                     </td>
