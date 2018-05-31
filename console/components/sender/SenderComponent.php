@@ -26,6 +26,12 @@ class SenderComponent extends Component
     public $ordersLimit;
 
     /**
+     * Sender API endpoint
+     * @var
+     */
+    public $apiEndPoint;
+
+    /**
      * Current Send Orders list limited by $ordersLimit
      * @var array
      */
@@ -320,18 +326,22 @@ class SenderComponent extends Component
                 continue;
             }
 
-            $apiUrl = ($provider['protocol'] == Providers::PROTOCOL_HTTPS ? 'https://' : 'http://') . $provider['site'] . '/api/v2';
+//          В соотв. с #ID-551
+//          Убираем проверку http/https, все отпарвляем на локальный домен $this->apiEndPoint
+//          $apiUrl = ($provider['protocol'] == Providers::PROTOCOL_HTTPS ? 'https://' : 'http://') . $provider['site'] . '/api/v2';
+//          Добавляем параметр `domain`, в котором передаем домен провайдера
 
             $requestParams = array(
                 'key' => $provider['api_key'],
-                'action' => Providers::API_ACTION_ADD,
+                'action' => Providers::API_ACTION_PRIVATE,
                 'service' => $orderPackage['provider_service'],
                 'link' => $order['link'],
                 'quantity' => $order['quantity'],
+                'domain' => $provider['site'],
             );
 
             $curlOptions = array(
-                CURLOPT_URL => $apiUrl,
+                CURLOPT_URL => $this->apiEndPoint,
                 CURLOPT_VERBOSE => false,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,

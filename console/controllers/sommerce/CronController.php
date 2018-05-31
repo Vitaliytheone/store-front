@@ -29,6 +29,7 @@ class CronController extends CustomController
     {
        $sender = new SenderComponent([
            'ordersLimit' => Yii::$app->params['senderOrdersLimit'],
+           'apiEndPoint' => Yii::$app->params['localApiDomain'],
        ]);
        $sender->setConnection(Yii::$app->storeDb);
        $sender->run();

@@ -30,6 +30,7 @@ return [
 
     'senderOrdersLimit' => 100,
     'getstatusOrdersLimit' => 100,
+    'localApiDomain' => 'http://localapi2/api/v2', //Sender API point
 
     'iconFileSizeLimit' => 0.512e6,     // Bytes
     'logoFileSizeLimit' => 2.097152e6,  // Bytes
