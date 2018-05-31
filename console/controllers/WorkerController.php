@@ -94,6 +94,8 @@ class WorkerController extends MainController
         foreach ($query->batch() as $tasks) {
             foreach ($tasks as $task) {
                 Client::addTask($task->type, $task->code, $task->getData(), $task->key);
+
+                $this->stderr('Restarted: ' . $task->key . "\n", Console::FG_GREEN);
             }
         }
     }
