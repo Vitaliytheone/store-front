@@ -35,5 +35,7 @@ class OrderAdminMailer extends BaseNotificationMailer {
         $this->html = $this->renderTwig((string)$this->template->body, $options);
 
         $this->subject = $this->renderTwig((string)$this->template->subject, $options);
+
+        $this->from = null;
     }
 }
