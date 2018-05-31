@@ -9,8 +9,11 @@ use common\mail\mailers\BaseMailer;
  */
 class MailerWorker extends BaseWorker {
 
-    public static function run($data)
+    /**
+     * @return bool
+     */
+    public function run(): bool
     {
-        return BaseMailer::sendNow($data);
+        return (boolean)BaseMailer::sendNow($this->_data, $this->_error);
     }
 }

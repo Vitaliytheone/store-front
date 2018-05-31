@@ -42,20 +42,20 @@ class Mailgun
      * @param string $subject
      * @param mixed $content
      * @param string $fromEmail
-     * @param mixed $result
+     * @param mixed $response
      * @return bool
      */
-    public static function send($toEmail, $subject, $content, $fromEmail = null, &$result = [])
+    public static function send($toEmail, $subject, $content, $fromEmail = null, &$response = [])
     {
         $fromEmail = $fromEmail ? $fromEmail : static::$_fromEmail;
-        $result = static::_send([
+        $response = static::_send([
             'to' => $toEmail,
             'from' => $fromEmail,
             'subject' => $subject,
             'content' => is_string($content) ? ['text' => $content] : $content // По умолчанию текст
         ]);
 
-        if (!is_array($result) || empty($result['id'])) {
+        if (!is_array($response) || empty($response['id'])) {
             return false;
         }
 

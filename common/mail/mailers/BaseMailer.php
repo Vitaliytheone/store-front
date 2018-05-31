@@ -122,10 +122,11 @@ abstract class BaseMailer {
 
     /**
      * Send now
-     * @param $data
+     * @param mixed $data
+     * @param mixed $response
      * @return bool
      */
-    public static function sendNow($data)
+    public static function sendNow($data, &$response = null)
     {
         $to = ArrayHelper::getValue($data, 'to');
         $from = ArrayHelper::getValue($data, 'from');
@@ -148,7 +149,7 @@ abstract class BaseMailer {
         return (bool)Mailgun::send($to, $subject, [
             'text' => $text,
             'html' => $html
-        ], $from);
+        ], $from, $response);
     }
 
     /**

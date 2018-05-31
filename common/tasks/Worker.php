@@ -5,6 +5,7 @@ use common\models\panels\BackgroundTasks;
 use Yii;
 use GearmanWorker;
 use GearmanJob;
+use yii\base\InvalidCallException;
 use yii\helpers\ArrayHelper;
 use Exception;
 
@@ -35,14 +36,14 @@ class Worker {
                     $content = $job->workload();
                     $content = json_decode($content);
 
-                    $result = Listener::run(ArrayHelper::getValue($content, 'code'), ArrayHelper::getValue($content, 'data'));
+                    $result = Listener::run(ArrayHelper::getValue($content, 'code'), ArrayHelper::getValue($content, 'data'), $response);
 
                     $job->sendData($job->workload());
 
                     if ($result) {
-                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_COMPLETED, $result);
+                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_COMPLETED, $response);
                     } else {
-                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, 'Empty worker result');
+                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, $response);
                     }
                 } catch (Exception $e) {
                     Yii::error($e->getMessage());
