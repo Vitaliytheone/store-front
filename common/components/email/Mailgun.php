@@ -26,7 +26,7 @@ class Mailgun
      */
     private static $_fromEmail;
 
-    public function init()
+    public static function init()
     {
         if (!static::$_mailgunKey) {
             static::$_mailgunKey = ArrayHelper::getValue(Yii::$app->params, 'mailgun.key');
@@ -47,6 +47,7 @@ class Mailgun
      */
     public static function send($toEmail, $subject, $content, $fromEmail = null, &$response = [])
     {
+        static::init();
         $fromEmail = !empty($fromEmail) ? $fromEmail : static::$_fromEmail;
         $response = static::_send([
             'to' => $toEmail,
@@ -70,8 +71,6 @@ class Mailgun
      */
     private static function _send($options)
     {
-        static::init();
-
         if (!static::$_mailgunKey || !static::$_mailgunDomain) {
             throw new Exception('Mailgun is not yet configured! Check your app config params!');
         }

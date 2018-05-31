@@ -86,9 +86,10 @@ class TestNotificationForm extends Model {
 
     /**
      * Send notification message with test data
+     * @param mixed $response
      * @return bool
      */
-    public function send()
+    public function send(&$response = null)
     {
         $mailer = $this->getMailer();
 
@@ -96,7 +97,7 @@ class TestNotificationForm extends Model {
             return false;
         }
 
-        return $mailer->send();
+        return $mailer->send($response);
     }
 
     /**

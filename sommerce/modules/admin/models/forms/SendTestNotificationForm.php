@@ -41,7 +41,7 @@ class SendTestNotificationForm extends Model {
     public function rules()
     {
         return [
-            [['admin_email_id'], 'integer'],
+            [['admin_email_id'], 'integer', 'message' => Yii::t('admin', 'settings.message_send_test_email_error')],
         ];
     }
 
@@ -80,7 +80,13 @@ class SendTestNotificationForm extends Model {
         $testMail->setStore($this->_store);
         $testMail->setEmail($notificationAdmin->email);
 
-        return $testMail->send();
+        $result = $testMail->send($response);
+
+        if (!$result) {
+            $this->addError('admin_email_id', Yii::t('admin', 'settings.message_send_test_email_error'));
+        }
+
+        return $result;
     }
 
     /**

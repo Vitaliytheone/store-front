@@ -237,27 +237,15 @@ class GetstatusComponent extends Component
             ->execute();
 
         if ($newStatus != $oldStatus) {
-            if (Suborders::STATUS_ERROR == $newStatus) {
-                // Event error order
-                Events::add(Events::EVENT_STORE_ORDER_ERROR, [
+            if (in_array($newStatus, [
+                Suborders::STATUS_ERROR,
+                Suborders::STATUS_IN_PROGRESS,
+                Suborders::STATUS_COMPLETED,
+            ])) {
+                Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
                     'suborderId' => $orderInfo['suborder_id'],
-                    'storeId' => $orderInfo['store_id']
-                ]);
-            }
-
-            if (Suborders::STATUS_IN_PROGRESS == $newStatus) {
-                // Event in progress order
-                Events::add(Events::EVENT_STORE_ORDER_IN_PROGRESS, [
-                    'suborderId' => $orderInfo['suborder_id'],
-                    'storeId' => $orderInfo['store_id']
-                ]);
-            }
-
-            if (Suborders::STATUS_COMPLETED == $newStatus) {
-                // Event completed order
-                Events::add(Events::EVENT_STORE_ORDER_COMPLETED, [
-                    'suborderId' => $orderInfo['suborder_id'],
-                    'storeId' => $orderInfo['store_id']
+                    'storeId' => $orderInfo['store_id'],
+                    'status' => $newStatus
                 ]);
             }
         }

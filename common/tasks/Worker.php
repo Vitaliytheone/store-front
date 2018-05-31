@@ -5,7 +5,6 @@ use common\models\panels\BackgroundTasks;
 use Yii;
 use GearmanWorker;
 use GearmanJob;
-use yii\base\InvalidCallException;
 use yii\helpers\ArrayHelper;
 use Exception;
 

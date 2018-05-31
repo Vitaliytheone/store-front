@@ -110,11 +110,13 @@ abstract class BaseMailer {
 
     /**
      * Send
+     * @param mixed $response
+     * @return boolean
      */
-    public function send()
+    public function send(&$response = null)
     {
         if ($this->now) {
-            return static::sendNow($this->getData());
+            return static::sendNow($this->getData(), $response);
         } else {
             return (bool)Client::addTask($this->type, 'mail', $this->getData());
         }

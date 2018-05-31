@@ -7,6 +7,8 @@ use yii\base\Event;
  * @package common\events
  */
 class Events {
+    const EVENT_STORE_ORDER_CHANGED_STATUS = 'store_order_changed_status';
+
     const EVENT_STORE_ORDER_CONFIRM = 'store_order_confirm';
     const EVENT_STORE_ORDER_IN_PROGRESS = 'store_order_in_progress';
     const EVENT_STORE_ORDER_COMPLETED = 'store_order_completed';

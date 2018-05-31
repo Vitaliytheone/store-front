@@ -2,8 +2,10 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use common\events\Events;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
+use common\models\stores\Stores;
 use sommerce\helpers\UiHelper;
 use Yii;
 use sommerce\modules\admin\components\Url;
@@ -88,21 +90,32 @@ class OrdersController extends CustomController
     /**
      * Suborder `change status`  action
      * Accepted only allowed new statuses.
-     * @param $id
-     * @param $status
+     * @param integer $id
+     * @param integer $status
      * @throws Yii\web\BadRequestHttpException
      * @throws Yii\web\NotFoundHttpException
      * @throws Yii\web\NotAcceptableHttpException
      */
     public function actionChangeStatus($id, $status)
     {
+        /**
+         * @var Stores $store
+         */
         $model = SuborderForm::findOne($id);
+        $store = Yii::$app->store->getInstance();
 
         if (!$model) {
             throw new NotFoundHttpException();
         }
 
         if (!$model->changeStatus($status)) {
+
+            Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                'suborderId' => $id,
+                'storeId' => $store->id,
+                'status' => $status
+            ]);
+
             $this->redirect(Url::toRoute(["/orders"]));
         }
 

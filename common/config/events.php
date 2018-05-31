@@ -6,6 +6,7 @@ use common\events\store\OrderFailEvent;
 use common\events\store\OrderAbandonedEvent;
 use common\events\store\OrderCompletedEvent;
 use common\events\store\OrderInProgressEvent;
+use common\events\store\OrderChangedStatusEvent;
 use yii\base\Event;
 
 Event::on(
@@ -100,6 +101,23 @@ Event::on(
         Yii::$container->get(OrderCompletedEvent::class, [
             $sender['storeId'],
             $sender['suborderId'],
+        ])->run();
+    }
+);
+
+Event::on(
+    Events::class,
+    Events::EVENT_STORE_ORDER_CHANGED_STATUS,
+    function ($event) {
+        /**
+         * @var array $sender
+         */
+        $sender = $event->sender;
+
+        Yii::$container->get(OrderChangedStatusEvent::class, [
+            $sender['storeId'],
+            $sender['suborderId'],
+            $sender['status']
         ])->run();
     }
 );

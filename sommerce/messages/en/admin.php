@@ -587,6 +587,7 @@ return [
     'settings.send_test_m_confirm' => 'Send',
     'settings.send_test_m_header' => 'Send test',
     'settings.message_send_test_email_success' => 'Notification has been sent',
+    'settings.message_send_test_email_error' => 'Can not send test notification',
 
     'settings.notification_preview_m_header' => 'Preview',
     'settings.notification_preview_m_cancel' => 'Cancel',

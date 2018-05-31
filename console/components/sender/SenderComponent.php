@@ -221,10 +221,10 @@ class SenderComponent extends Component
             ->execute();
 
         if (Suborders::STATUS_FAILED == $newStatus) {
-            // Event fail order
-            Events::add(Events::EVENT_STORE_ORDER_FAIL, [
+            Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
                 'suborderId' => $orderInfo['suborder_id'],
-                'storeId' => $orderInfo['store_id']
+                'storeId' => $orderInfo['store_id'],
+                'status' => $newStatus
             ]);
         }
     }
