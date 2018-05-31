@@ -316,6 +316,14 @@ trait NotificationsTrait {
             }
         }
 
+        if (null == $this->_storeTemplate->subject) {
+            $this->_storeTemplate->subject = $this->_defaultTemplate->subject;
+        }
+
+        if (null == $this->_storeTemplate->body) {
+            $this->_storeTemplate->body = $this->_defaultTemplate->body;
+        }
+
         return $this->_storeTemplate;
     }
 
