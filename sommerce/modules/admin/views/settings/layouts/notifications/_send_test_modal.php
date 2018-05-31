@@ -35,12 +35,13 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal"><?= Yii::t('admin', 'settings.send_test_m_cancel') ?></button>
                     <?= Html::submitButton(Yii::t('admin', 'settings.send_test_m_confirm'), [
-                        'class' => 'btn btn-secondary',
+                        'class' => 'btn btn-primary',
                         'name' => 'send-test-notification-button',
                         'id' => 'sendTestNotificationButton'
                     ]) ?>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= Yii::t('admin', 'settings.send_test_m_cancel') ?></button>
                 </div>
 
             <?php ActiveForm::end(); ?>

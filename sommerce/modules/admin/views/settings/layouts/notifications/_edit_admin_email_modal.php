@@ -38,11 +38,11 @@
             </div>
             <div class="modal-footer">
                 <?= Html::submitButton(Yii::t('admin', 'settings.emails_m_add'), [
-                    'class' => 'btn btn-secondary',
+                    'class' => 'btn btn-primary',
                     'name' => 'create-admin-email-button',
                     'id' => 'createAdminEmailButton'
                 ]) ?>
-                <button type="button" class="btn btn-primary" data-dismiss="modal"><?= Yii::t('admin', 'settings.emails_m_cancel') ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= Yii::t('admin', 'settings.emails_m_cancel') ?></button>
             </div>
         <?php ActiveForm::end(); ?>
     </div>
