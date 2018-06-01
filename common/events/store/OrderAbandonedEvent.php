@@ -38,7 +38,7 @@ class OrderAbandonedEvent extends BaseOrderEvent {
             return;
         }
 
-        $this->_suborders = $this->_order->suborders;
+        $this->_suborders = $this->_checkout->suborders;
         $this->_payment = $this->_checkout->payment;
 
         $this->customerNotify();
