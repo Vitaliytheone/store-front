@@ -127,7 +127,7 @@ class BackgroundTasks extends ActiveRecord
      * Set data
      * @param array|mixed $data
      */
-    public function setData($data):void
+    public function setData($data)
     {
         $this->data = json_encode($data);
     }
@@ -145,7 +145,7 @@ class BackgroundTasks extends ActiveRecord
      * Set response
      * @param array|mixed $response
      */
-    public function setResponse($response):void
+    public function setResponse($response)
     {
         $this->response = json_encode($response);
     }
@@ -190,7 +190,7 @@ class BackgroundTasks extends ActiveRecord
      * @param int $status
      * @param mixed $response
      */
-    public static function setStatus(string $key, int $status, $response = null): void
+    public static function setStatus(string $key, int $status, $response = null)
     {
         static::updateAll([
             'status' => $status,
