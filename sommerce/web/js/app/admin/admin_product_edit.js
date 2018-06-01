@@ -611,12 +611,12 @@ customModule.adminProductEdit = {
              * Modal Show Events
              */
             $modal.on('show.bs.modal', function (event) {
-                $modalLoader.removeClass('hidden');
+                // $modalLoader.removeClass('hidden');
                 resetForm();
             });
 
             $modal.on('shown.bs.modal', function (event) {
-                $modalLoader.addClass('hidden');
+                // $modalLoader.addClass('hidden');
 
                 // Define if pressed "Add Service" or "Edit" exiting
                 var button = $(event.relatedTarget);
