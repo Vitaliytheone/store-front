@@ -88,7 +88,7 @@ return [
 
     'store.paywant_proxy' => 'http://37.1.207.99/scr/paywant.php',
 
-    'mailer.status' => true,
+    'mailer.sendNow' => true,
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,

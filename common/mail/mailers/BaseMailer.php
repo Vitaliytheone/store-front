@@ -96,8 +96,8 @@ abstract class BaseMailer {
             $this->to = $to;
         }
 
-        if (isset(Yii::$app->params['mailer.status'])) {
-            $this->now = (boolean)Yii::$app->params['mailer.status'];
+        if (isset(Yii::$app->params['mailer.sendNow'])) {
+            $this->now = (boolean)Yii::$app->params['mailer.sendNow'];
         }
 
         $this->init();
