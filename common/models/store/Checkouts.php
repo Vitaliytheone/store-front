@@ -35,6 +35,7 @@ class Checkouts extends ActiveRecord
 {
     const STATUS_PENDING = 0;
     const STATUS_PAID = 1;
+    const STATUS_EXPIRED = 2;
 
     public static function getDb()
     {
