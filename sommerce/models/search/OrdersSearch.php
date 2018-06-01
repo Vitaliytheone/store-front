@@ -183,7 +183,7 @@ class OrdersSearch {
                 'link' => $item['link'],
                 'quantity' => $item['quantity'],
                 'price' => $item['amount'],
-                'status' => Suborders::getStatusName($item['status']),
+                'status' => Suborders::getStatusName($item['status'], false),
             ];
         }
 
