@@ -1,5 +1,4 @@
 <?php
-
 namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\ActivityLog;
@@ -110,9 +109,7 @@ class EditStoreSettingsForm extends Stores
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['seo_description', 'seo_title', 'admin_email'], 'trim'],
-            ['admin_email', 'required'],
-            ['admin_email', 'email'],
+            [['seo_description', 'seo_title'], 'trim'],
             [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
             ['timezone', 'filter', 'filter' => function($value) { return (int)$value; }],
 
@@ -219,10 +216,6 @@ class EditStoreSettingsForm extends Stores
 
         if (isset($changedAttributes['timezone'])) {
             ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_TIMEZONE_CHANGED);
-        }
-
-        if (isset($changedAttributes['admin_email'])) {
-            ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_ADMIN_EMAIL_CHANGED);
         }
 
         if (isset($changedAttributes['seo_title'])) {

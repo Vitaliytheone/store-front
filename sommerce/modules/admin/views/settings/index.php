@@ -134,14 +134,6 @@ $storeUrl = $store->getBaseSite();
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="admin_email">
-                            <?= Yii::t('admin', 'settings.general_admin_email') ?>
-                        </label>
-                        <input type="email" id="admin_email" class="form-control" name="SettingsGeneralForm[admin_email]" value="<?= $store->admin_email ?>" autofocus="" aria-required="true"
-                               placeholder="<?= Yii::t('admin', 'settings.general_admin_email_placeholder') ?>">
-                    </div>
-
-                    <div class="form-group">
                         <label for="custom_header">
                             <?= Yii::t('admin', 'settings.general_custom_header') ?>
                         </label>

@@ -26,6 +26,7 @@ use common\models\store\queries\CheckoutsQuery;
  *
  * @property Orders $order
  * @property Orders[] $orders
+ * @property Payments $payment
  * @property Payments[] $payments
  * @property PaymentsLog[] $paymentsLogs
  * @property Suborders[] $suborders
@@ -98,6 +99,14 @@ class Checkouts extends ActiveRecord
     public function getOrder()
     {
         return $this->hasOne(Orders::class, ['checkout_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPayment()
+    {
+        return $this->hasOne(Payments::class, ['checkout_id' => 'id']);
     }
 
     /**

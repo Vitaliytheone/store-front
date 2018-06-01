@@ -1,0 +1,41 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section pd--70-0" data-bg-img="/img/themes/smm24/bg_header.jpg">
+    <div class="container">
+        <h1 class="h1">{{ lang('vieworder.title', {'id': vieworder.id}) }}</h1>
+        <span>{{ vieworder.customer_email }}</span>
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Vieworder Section Start -->
+<div class="cart--section pd--100-0">
+    <div class="container">
+        <!-- Vieworder Items Start -->
+        <div class="cart--items pbottom--100">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>{{ lang('vieworder.package') }}</th>
+                        <th>{{ lang('vieworder.details') }}</th>
+                        <th>{{ lang('vieworder.quantity') }}</th>
+                        <th>{{ lang('vieworder.price') }}</th>
+                        <th>{{ lang('vieworder.status') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in vieworder.orders %}
+                        <tr>
+                            <td data-title="{{ lang('vieworder.package') }}">{{ item.name }}</td>
+                            <td data-title="{{ lang('vieworder.details') }}">{{ item.link }}</td>
+                            <td data-title="{{ lang('vieworder.quantity') }}">{{ item.quantity }}</td>
+                            <td data-title="{{ lang('vieworder.price') }}">{{ item.price|money }}</td>
+                            <td data-title="{{ lang('vieworder.status') }}">{{ item.status }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        <!-- Vieworder Items End -->
+    </div>
+</div>
+<!-- Vieworder Section End -->

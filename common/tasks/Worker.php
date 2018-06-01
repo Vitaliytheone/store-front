@@ -1,11 +1,11 @@
 <?php
 namespace common\tasks;
 
+use common\models\panels\BackgroundTasks;
 use Yii;
 use GearmanWorker;
 use GearmanJob;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use Exception;
 
 /**
@@ -30,14 +30,23 @@ class Worker {
             static::$_worker->addServer(Yii::$app->params['gearmanIp'], Yii::$app->params['gearmanPort']);
             static::$_worker->addFunction(Yii::$app->params['gearmanPrefix'] . 'worker', function(GearmanJob $job) {
                 try {
-                    $content = $job->workload();
-                    $content = Json::decode($content);
+                    BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_IN_PROGRESS);
 
-                    Listener::run(ArrayHelper::getValue($content, 'code'), ArrayHelper::getValue($content, 'data'));
+                    $content = $job->workload();
+                    $content = json_decode($content);
+
+                    $result = Listener::run(ArrayHelper::getValue($content, 'code'), ArrayHelper::getValue($content, 'data'), $response);
 
                     $job->sendData($job->workload());
+
+                    if ($result) {
+                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_COMPLETED, $response);
+                    } else {
+                        BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, $response);
+                    }
                 } catch (Exception $e) {
                     Yii::error($e->getMessage());
+                    BackgroundTasks::setStatus($job->unique(), BackgroundTasks::STATUS_ERROR, $e->getMessage());
                 }
             });
         }

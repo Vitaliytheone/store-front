@@ -1,22 +1,27 @@
 <?php
-
 namespace common\models\store\queries;
 
+use yii\db\ActiveQuery;
+use common\models\store\Checkouts;
+
 /**
- * This is the ActiveQuery class for [[\common\models\store\Checkouts]].
+ * This is the ActiveQuery class for [[Checkouts]].
  *
- * @see \common\models\store\Checkouts
+ * @see Checkouts
  */
-class CheckoutsQuery extends \yii\db\ActiveQuery
+class CheckoutsQuery extends ActiveQuery
 {
-    /*public function active()
+    public function abandoned()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'status' => Checkouts::STATUS_PENDING
+        ])
+        ->andWhere('created_at < ' . (time() - (24 * 60 * 60)));
+    }
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Checkouts[]|array
+     * @return Checkouts[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +30,7 @@ class CheckoutsQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Checkouts|array|null
+     * @return Checkouts|array|null
      */
     public function one($db = null)
     {

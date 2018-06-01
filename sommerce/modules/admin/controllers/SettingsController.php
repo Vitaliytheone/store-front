@@ -9,6 +9,7 @@ use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
 use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
+use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
@@ -33,6 +34,7 @@ class SettingsController extends CustomController
     use PaymentsTrait;
     use PagesTrait;
     use LanguageTrait;
+    use NotificationsTrait;
 
     /**
      * @inheritdoc
@@ -66,7 +68,9 @@ class SettingsController extends CustomController
 
         /** @var \common\models\stores\Stores $store */
         $store = Yii::$app->store->getInstance();
+
         $storeForm = EditStoreSettingsForm::findOne($store->id);
+
 
         $storeForm->setUser(Yii::$app->user);
 
@@ -76,7 +80,6 @@ class SettingsController extends CustomController
         }
 
         $filesLimits = $storeForm->getUploadedFilesLimits();
-
         return $this->render('index', [
             'store' => $storeForm,
             'timezones' => Yii::$app->params['timezone'],

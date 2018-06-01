@@ -17,19 +17,15 @@ return [
 
     'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
 
-    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
-    'mailgun.domain' => 'perfectpanel.net',
-
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
     'gearmanPrefix' => 'sommerce_',
-    'support_email' => 'mailgun@perfectpanel.net',
 
     'debugEmail' => null,
-    'mailer.status' => true,
 
     'senderOrdersLimit' => 100,
     'getstatusOrdersLimit' => 100,
+    'localApiDomain' => 'http://localapi2/api/v2', //Sender API point
 
     'iconFileSizeLimit' => 0.512e6,     // Bytes
     'logoFileSizeLimit' => 2.097152e6,  // Bytes

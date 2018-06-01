@@ -1,0 +1,53 @@
+<!-- Page Header Section Start -->
+<div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header--title">
+                    <h1 class="h1">{{ lang('vieworder.title', {'id': vieworder.id}) }}</h1>
+                </div>
+            </div>
+            <div class="col-md-6 page-header__customer-email">
+                <span>{{ vieworder.customer_email }}</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Vieworder Section Start -->
+<div id="cart" class="pd--100-0">
+    <div class="container">
+        <!-- Vieworder Items Start -->
+        <div class="cart--form">
+            <form action="#">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>{{ lang('vieworder.package') }}</th>
+                        <th>{{ lang('vieworder.details') }}</th>
+                        <th>{{ lang('vieworder.quantity') }}</th>
+                        <th>{{ lang('vieworder.price') }}</th>
+                        <th>{{ lang('vieworder.status') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in vieworder.orders %}
+                        <tr>
+                            <td data-title="{{ lang('vieworder.package') }}">{{ item.name }}</td>
+                            <td data-title="{{ lang('vieworder.details') }}">{{ item.link }}</td>
+                            <td data-title="{{ lang('vieworder.quantity') }}">{{ item.quantity }}</td>
+                            <td data-title="{{ lang('vieworder.price') }}">{{ item.price|money }}</td>
+                            <td data-title="{{ lang('vieworder.status') }}">{{ item.status }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </form>
+        </div>
+        <!-- Vieworder Items End -->
+    </div>
+</div>
+<!-- Vieworder Section End -->

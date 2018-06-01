@@ -1,22 +1,24 @@
 <?php
-
 namespace common\models\store\queries;
 
+use yii\db\ActiveQuery;
+use common\models\store\Suborders;
+
 /**
- * This is the ActiveQuery class for [[\common\models\store\Suborders]].
+ * This is the ActiveQuery class for [[Suborders]].
  *
- * @see \common\models\store\Suborders
+ * @see Suborders
  */
-class SubordersQuery extends \yii\db\ActiveQuery
+class SubordersQuery extends ActiveQuery
 {
-    /*public function active()
+    public function notCompleted()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere('status <> ' . Suborders::STATUS_COMPLETED);
+    }
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Suborders[]|array
+     * @return Suborders[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +27,7 @@ class SubordersQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Suborders|array|null
+     * @return Suborders|array|null
      */
     public function one($db = null)
     {

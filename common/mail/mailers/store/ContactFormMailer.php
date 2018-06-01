@@ -1,5 +1,5 @@
 <?php
-namespace sommerce\mail\mailers;
+namespace common\mail\mailers\store;
 
 use common\models\stores\Stores;
 use yii\helpers\ArrayHelper;
@@ -7,7 +7,7 @@ use common\mail\mailers\BaseMailer;
 
 /**
  * Class ContactFormMailer
- * @package app\mail\mailers
+ * @package common\mail\mailers\store
  */
 class ContactFormMailer extends BaseMailer {
 
@@ -27,7 +27,7 @@ class ContactFormMailer extends BaseMailer {
         $email = (string)ArrayHelper::getValue($this->options, 'email');
         $message = (string)ArrayHelper::getValue($this->options, 'message');
 
-        $this->message =
+        $this->text =
             "Name: $name" .       PHP_EOL .
             "Subject: $subject" . PHP_EOL .
             "E-mail: $email" .    PHP_EOL . PHP_EOL .
@@ -38,6 +38,6 @@ class ContactFormMailer extends BaseMailer {
             "Browser: $clientBrowser" . PHP_EOL;
 
         $this->subject = $subject;
-        $this->to = $store->admin_email;
+        $this->to = $store->getAdminEmail();
     }
 }

@@ -1,9 +1,11 @@
 <?php
 namespace console\components\sender;
 
+use common\events\Events;
 use common\models\store\Packages;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
+use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
 use common\models\store\Suborders;
@@ -26,6 +28,12 @@ class SenderComponent extends Component
     public $ordersLimit;
 
     /**
+     * Sender API endpoint
+     * @var
+     */
+    public $apiEndPoint;
+
+    /**
      * Current Send Orders list limited by $ordersLimit
      * @var array
      */
@@ -36,6 +44,12 @@ class SenderComponent extends Component
      * @var Connection
      */
     private $_db;
+
+    /**
+     * Current store
+     * @var Stores
+     */
+    private $_store;
 
     /**
      * Suborders table name
@@ -72,6 +86,14 @@ class SenderComponent extends Component
         $this->_tableProviders = Providers::tableName();
     }
 
+    /**
+     * Set current store
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
 
     /**
      * Set current DB connection
@@ -151,12 +173,12 @@ class SenderComponent extends Component
             $ordersIds = implode(',', array_column($storeOrders, 'suborder_id'));
 
             $this->_db->createCommand("
-                UPDATE $storeDb.$this->_tableSuborders 
-                SET 
-                send = :send,
-                updated_at = :updated_at
-                WHERE id IN ($ordersIds)
-            ")
+                    UPDATE $storeDb.$this->_tableSuborders 
+                    SET 
+                    send = :send,
+                    updated_at = :updated_at
+                    WHERE id IN ($ordersIds)
+                ")
                 ->bindValue(':send', $sendStatus)
                 ->bindValue(':updated_at', time())
                 ->execute();
@@ -172,7 +194,7 @@ class SenderComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-
+        $newStatus = ArrayHelper::getValue($values, ':status');
 
         $defaultValues = [
             ':status' => null,
@@ -203,6 +225,14 @@ class SenderComponent extends Component
             ->bindValues($values)
             ->bindValue(':id', $orderId)
             ->execute();
+
+        if (Suborders::STATUS_FAILED == $newStatus) {
+            Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                'suborderId' => $orderInfo['suborder_id'],
+                'storeId' => $orderInfo['store_id'],
+                'status' => $newStatus
+            ]);
+        }
     }
 
     /**
@@ -320,18 +350,22 @@ class SenderComponent extends Component
                 continue;
             }
 
-            $apiUrl = ($provider['protocol'] == Providers::PROTOCOL_HTTPS ? 'https://' : 'http://') . $provider['site'] . '/api/v2';
+//          В соотв. с #ID-551
+//          Убираем проверку http/https, все отпарвляем на локальный домен $this->apiEndPoint
+//          $apiUrl = ($provider['protocol'] == Providers::PROTOCOL_HTTPS ? 'https://' : 'http://') . $provider['site'] . '/api/v2';
+//          Добавляем параметр `domain`, в котором передаем домен провайдера
 
             $requestParams = array(
                 'key' => $provider['api_key'],
-                'action' => Providers::API_ACTION_ADD,
+                'action' => Providers::API_ACTION_PRIVATE,
                 'service' => $orderPackage['provider_service'],
                 'link' => $order['link'],
                 'quantity' => $order['quantity'],
+                'domain' => $provider['site'],
             );
 
             $curlOptions = array(
-                CURLOPT_URL => $apiUrl,
+                CURLOPT_URL => $this->apiEndPoint,
                 CURLOPT_VERBOSE => false,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
@@ -427,19 +461,7 @@ class SenderComponent extends Component
             }
 
             // Provider service resend
-            $responseProtocol = parse_url($requestInfo['url'], PHP_URL_SCHEME);
-            if (
-                $protocol == Providers::PROTOCOL_HTTP &&
-                ArrayHelper::getValue($responseResult, 'error') == 'Incorrect request' &&
-                $responseProtocol == 'https'
-            ) {
-                $this->_resendOrder($orderInfo);
-
-                $sendResults['resend']++;
-
-                curl_multi_remove_handle($mh, $ch);
-                continue;
-            }
+            // * Resend orders routine removed according #ID-551
 
             // Success
             if (isset($responseResult['order'])) {

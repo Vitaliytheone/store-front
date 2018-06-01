@@ -20,7 +20,7 @@ $routers = require(__DIR__ . '/routers.php');
 $config = [
     'id' => 'app-sommerce',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'store'],
+    'bootstrap' => ['log', 'store', 'view'],
     'controllerNamespace' => 'sommerce\controllers',
     'sourceLanguage' => 'esperanto',
     'components' => [
@@ -91,9 +91,11 @@ $config = [
                 'admin*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => dirname(__DIR__) . '/messages',
+                    'sourceLanguage' => 'en',
                     'fileMap' => [
                         'admin' => 'admin.php',
                     ],
+                    'on missingTranslation' => ['sommerce\components\i18n\TranslationEventHandler', 'handleMissingTranslation']
                 ],
                 'app*' => [
                     'class' => 'sommerce\components\i18n\CustomDbMessageSource',

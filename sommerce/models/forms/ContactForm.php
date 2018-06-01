@@ -3,7 +3,7 @@
 namespace sommerce\models\forms;
 
 use common\models\stores\Stores;
-use sommerce\mail\mailers\ContactFormMailer;
+use common\mail\mailers\store\ContactFormMailer;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
@@ -44,8 +44,8 @@ class ContactForm extends Model
     public function rules()
     {
         return [
-            ['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
-            ['recaptcha', 'required', 'message' => 'Please solve captcha.'],
+            //['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
+            //['recaptcha', 'required', 'message' => 'Please solve captcha.'],
             [['subject', 'name', 'email', 'message'], 'required'],
             [['subject', 'name', 'message'], 'string'],
             ['email', 'emailValidator'],
