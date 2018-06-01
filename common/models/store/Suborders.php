@@ -84,7 +84,7 @@ class Suborders extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%suborders}}';
+        return 'suborders';
     }
 
     /**

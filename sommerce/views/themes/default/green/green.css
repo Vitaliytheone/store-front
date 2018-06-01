@@ -1462,7 +1462,13 @@ body.isTawkMobile #backToTop {
 .page-header--breadcrumb ul li.active {
     color: #82b440;
 }
-
+.page-header__customer-email {
+    text-align: right;
+}
+.page-header__customer-email span {
+    display: inline-block;
+    padding: 12px 0px;
+}
 /*------------------------------------*\
     6. PAGE WRAPPER SECTION
 \*------------------------------------*/
@@ -4832,6 +4838,10 @@ body.isTawkMobile #backToTop {
 
 /* 1.2. MEDIUM DEVICES, DESKTOPS */
 @media screen and (max-width: 991px) {
+    /* Vieworder */
+    .page-header__customer-email {
+        text-align: left;
+    }
     /* NAV WIDGET */
     .nav--widget ul li a:before {
         display: none;
