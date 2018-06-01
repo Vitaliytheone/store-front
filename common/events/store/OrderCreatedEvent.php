@@ -3,6 +3,7 @@ namespace common\events\store;
 
 use common\mail\mailers\store\OrderAdminMailer;
 use common\mail\mailers\store\OrderWithItemsMailer;
+use common\models\store\NotificationAdminEmails;
 use common\models\store\Orders;
 use common\models\store\NotificationTemplates;
 use common\models\store\Suborders;
@@ -91,14 +92,18 @@ class OrderCreatedEvent extends BaseOrderEvent {
             }
         }
 
-        // Берем активные шаблоны для оповещения
-        foreach ($adminEmails as $adminEmail) {
-            foreach ($codes as $code) {
-                $template = static::getCrossNotificationByCode($code);
+        /**
+         * @var NotificationAdminEmails $adminEmail
+         */
+        foreach ($codes as $code) {
+            $template = static::getCrossNotificationByCode($code);
 
-                if (!$template || NotificationTemplates::STATUS_ENABLED !== $template->status) {
-                    continue;
-                }
+            if (!$template || NotificationTemplates::STATUS_ENABLED !== $template->status) {
+                continue;
+            }
+
+            // Берем активные шаблоны для оповещения
+            foreach ($adminEmails as $adminEmail) {
                 $mailer = new OrderAdminMailer([
                     'to' => $adminEmail->email,
                     'order' => $this->_order,
