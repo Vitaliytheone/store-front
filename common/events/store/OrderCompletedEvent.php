@@ -58,7 +58,7 @@ class OrderCompletedEvent extends BaseOrderEvent {
      */
     public function run():void
     {
-        if (!$this->_suborder || Suborders::find()
+        if (!$this->_suborder || !Suborders::find()
             ->notCompleted()
             ->andWhere([
                 'order_id' => $this->_suborder->order_id,
