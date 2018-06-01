@@ -2,7 +2,7 @@
 <div class="page-header--section bg--color-theme pd--80-0">
     <div class="container">
         <div class="title">
-            <h1 class="h1">{{ lang('vieworder.title') }} #{{ vieworder.id }}</h1>
+            <h1 class="h1">{{ lang('vieworder.title', {'id': vieworder.id}) }}</h1>
             <div class="page-header--customer-email">{{ vieworder.customer_email }}</div>
         </div>
     </div>
