@@ -194,7 +194,7 @@ class SenderComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-        $newStatus = ArrayHelper::getValue($values, 'status');
+        $newStatus = ArrayHelper::getValue($values, ':status');
 
         $defaultValues = [
             ':status' => null,
