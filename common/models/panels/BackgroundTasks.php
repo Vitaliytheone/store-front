@@ -166,7 +166,7 @@ class BackgroundTasks extends ActiveRecord
      * @param string $key
      * @param mixed $data
      */
-    public static function add(int $type, string $code, string $key, $data): void
+    public static function add(int $type, string $code, string $key, $data)
     {
         if (static::findOne([
             'key' => $key
