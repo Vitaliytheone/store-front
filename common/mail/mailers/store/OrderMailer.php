@@ -27,7 +27,6 @@ class OrderMailer extends BaseNotificationMailer {
     {
         parent::init();
 
-
         $this->_order = ArrayHelper::getValue($this->options, 'order');
 
         if (empty($this->_order)) {
