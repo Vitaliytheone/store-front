@@ -94,8 +94,7 @@ $config = [
                     'sourceLanguage' => 'en',
                     'fileMap' => [
                         'admin' => 'admin.php',
-                    ],
-                    'on missingTranslation' => ['sommerce\components\i18n\TranslationEventHandler', 'handleMissingTranslation']
+                    ]
                 ],
                 'app*' => [
                     'class' => 'sommerce\components\i18n\CustomDbMessageSource',
