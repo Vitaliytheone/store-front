@@ -68,7 +68,9 @@ class SettingsController extends CustomController
 
         /** @var \common\models\stores\Stores $store */
         $store = Yii::$app->store->getInstance();
+
         $storeForm = EditStoreSettingsForm::findOne($store->id);
+
 
         $storeForm->setUser(Yii::$app->user);
 
@@ -78,7 +80,6 @@ class SettingsController extends CustomController
         }
 
         $filesLimits = $storeForm->getUploadedFilesLimits();
-
         return $this->render('index', [
             'store' => $storeForm,
             'timezones' => Yii::$app->params['timezone'],
