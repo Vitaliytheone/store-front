@@ -25,10 +25,6 @@ class OrderErrorEvent extends BaseOrderEvent {
      */
     public function __construct($storeId, $suborderId)
     {
-        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_ERROR)) {
-            return;
-        }
-
         $this->_store = Stores::findOne($storeId);
 
         if (empty($this->_store)) {
@@ -37,6 +33,10 @@ class OrderErrorEvent extends BaseOrderEvent {
         }
 
         Yii::$app->store->setInstance($this->_store);
+
+        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_ERROR)) {
+            return;
+        }
 
         $this->_suborder = Suborders::findOne([
             'id' => $suborderId,
