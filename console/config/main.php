@@ -64,6 +64,19 @@ return [
         'store' => [
             'class' => 'common\components\stores\StoreComponent'
         ],
+
+        'view' => [
+            'class' => 'common\components\View',
+            'renderers' => [
+                'twig' => [
+                    'class' => 'common\components\twig\ViewRenderer',
+                    'cachePath' => null,
+                    'options' => [
+                        'autoescape' => false
+                    ],
+                ],
+            ],
+        ],
     ],
     'params' => array_merge(
         require(__DIR__ . '/../../common/config/params.php'),

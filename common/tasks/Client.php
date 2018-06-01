@@ -1,8 +1,10 @@
 <?php
 namespace common\tasks;
 
+use common\models\panels\BackgroundTasks;
 use Yii;
 use GearmanClient;
+use GearmanTask;
 use yii\helpers\Json;
 
 /**
@@ -22,7 +24,7 @@ class Client {
      */
     public static function getInstance()
     {
-        if (null == static::$_client) {
+        if (null === static::$_client) {
             static::$_client = new GearmanClient();
             static::$_client->addServer(Yii::$app->params['gearmanIp'], Yii::$app->params['gearmanPort']);
         }
@@ -32,17 +34,37 @@ class Client {
 
     /**
      * Add task to queue
+     * @param int $type
      * @param string $code
      * @param mixed $data
+     * @param string $unique
      * @return mixed
      */
-    public static function addTask($code, $data)
+    public static function addTask($type, $code, $data, $unique = null)
     {
+        $unique = $unique ? $unique : md5(microtime() . microtime() . microtime());
+
+        BackgroundTasks::add($type, $code, $unique, $data);
+
         $client = static::getInstance();
 
-        return $client->doBackground(Yii::$app->params['gearmanPrefix'] . 'worker', Json::encode([
+        $client->setCompleteCallback(function(GearmanTask $task) {
+            BackgroundTasks::setStatus($task->unique(), BackgroundTasks::STATUS_COMPLETED);
+        });
+
+        $client->setExceptionCallback(function(GearmanTask $task) {
+            BackgroundTasks::setStatus($task->unique(), BackgroundTasks::STATUS_ERROR);
+        });
+
+        $client->setFailCallback(function(GearmanTask $task) {
+            BackgroundTasks::setStatus($task->unique(), BackgroundTasks::STATUS_ERROR);
+        });
+
+        $jobHandle = $client->doBackground(Yii::$app->params['gearmanPrefix'] . 'worker', Json::encode([
             'code' => $code,
             'data' => $data
-        ]));
+        ]), $unique);
+
+        return $jobHandle;
     }
 }

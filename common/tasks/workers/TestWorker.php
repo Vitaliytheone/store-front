@@ -7,8 +7,13 @@ namespace common\tasks\workers;
  */
 class TestWorker extends BaseWorker {
 
-    public static function run($data)
+    /**
+     * @return bool
+     */
+    public function run(): bool
     {
-        @file_put_contents(\Yii::getAlias('@runtime') . '/test_worker_' . time(), "test " . "\r\n" . var_export($data, true) . "\r\n");
+        @file_put_contents(\Yii::getAlias('@runtime') . '/test_worker_' . time(), "test " . "\r\n" . var_export($this->_data, true) . "\r\n");
+
+        return true;
     }
 }

@@ -29,6 +29,7 @@ use common\models\store\queries\PaymentsQuery;
  * @property string $currency
  *
  * @property Checkouts $checkout
+ * @property Order $order
  */
 class Payments extends ActiveRecord
 {
@@ -95,6 +96,14 @@ class Payments extends ActiveRecord
     public function getCheckout()
     {
         return $this->hasOne(Checkouts::class, ['id' => 'checkout_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Orders::class, ['checkout_id' => 'id'])->via('checkout');
     }
 
     /**

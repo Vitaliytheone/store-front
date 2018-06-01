@@ -178,4 +178,25 @@ class SystemController extends CustomController
 
         $this->stderr("Finished sync messages\n", Console::FG_GREEN);
     }
+    
+    public function actionMigrateAdminEmails()
+    {
+        foreach ((new \yii\db\Query())->select([
+            'db_name',
+            'admin_email'
+        ])->from(DB_STORES . '.stores')->all() as $store) {
+            $db = $store['db_name'];
+            $adminEmail = $store['admin_email'];
+
+            $isDbExist = Yii::$app->db
+                ->createCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$db'")
+                ->queryScalar();
+
+            if (!$isDbExist) {
+                continue;
+            }
+
+            Yii::$app->db->createCommand("INSERT INTO `{$db}`.`notification_admin_emails` (`email`, `status`, `primary`) VALUES ('{$adminEmail}', 1, 1)")->execute();
+        }
+    }
 }

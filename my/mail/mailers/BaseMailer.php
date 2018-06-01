@@ -53,8 +53,8 @@ abstract class BaseMailer {
     {
         $this->options = $options;
 
-        if (isset(Yii::$app->params['mailer.status'])) {
-            $this->now = (boolean)Yii::$app->params['mailer.status'];
+        if (isset(Yii::$app->params['mailer.sendNow'])) {
+            $this->now = (boolean)Yii::$app->params['mailer.sendNow'];
         }
 
         $this->notificationEmail = NotificationEmail::findOne([

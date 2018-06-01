@@ -42,8 +42,8 @@ class Extension extends \Twig_Extension {
     public function getFunctions()
     {
         $functions = [
-            new Twig_SimpleFunction('lang', function($value) {
-                return Yii::t('app', $value, static::getTemplateVariables());
+            new Twig_SimpleFunction('lang', function($value, $options = []) {
+                return Yii::t('app', $value, array_merge(static::getTemplateVariables(), $options));
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
             new Twig_SimpleFunction('asset', function($value) {

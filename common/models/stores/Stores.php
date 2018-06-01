@@ -14,6 +14,7 @@ use common\models\panels\Logs;
 use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
 use common\models\store\Languages;
+use common\models\store\NotificationAdminEmails;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
@@ -71,6 +72,8 @@ use yii\helpers\ArrayHelper;
  */
 class Stores extends ActiveRecord implements ProjectInterface
 {
+    static $adminEmail;
+
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
@@ -120,7 +123,6 @@ class Stores extends ActiveRecord implements ProjectInterface
             [['currency', 'language'], 'string', 'max' => 10],
             [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
-            [['admin_email'], 'string', 'max' => 300],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
         ];
     }
@@ -204,6 +206,20 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'customer_id']);
+    }
+
+    /**
+     * Get admin email
+     * @return string|null
+     */
+    public function getAdminEmail()
+    {
+        if (null !== static::$adminEmail) {
+            return static::$adminEmail;
+        }
+        static::$adminEmail = ArrayHelper::getValue(NotificationAdminEmails::findOne(['primary' => 1, 'status' => NotificationAdminEmails::STATUS_ENABLED]), 'email');
+
+        return static::$adminEmail;
     }
 
     /**

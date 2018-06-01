@@ -1,9 +1,11 @@
 <?php
 namespace console\components\sender;
 
+use common\events\Events;
 use common\models\store\Packages;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
+use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
 use common\models\store\Suborders;
@@ -44,6 +46,12 @@ class SenderComponent extends Component
     private $_db;
 
     /**
+     * Current store
+     * @var Stores
+     */
+    private $_store;
+
+    /**
      * Suborders table name
      * @var
      */
@@ -78,6 +86,14 @@ class SenderComponent extends Component
         $this->_tableProviders = Providers::tableName();
     }
 
+    /**
+     * Set current store
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
 
     /**
      * Set current DB connection
@@ -157,12 +173,12 @@ class SenderComponent extends Component
             $ordersIds = implode(',', array_column($storeOrders, 'suborder_id'));
 
             $this->_db->createCommand("
-                UPDATE $storeDb.$this->_tableSuborders 
-                SET 
-                send = :send,
-                updated_at = :updated_at
-                WHERE id IN ($ordersIds)
-            ")
+                    UPDATE $storeDb.$this->_tableSuborders 
+                    SET 
+                    send = :send,
+                    updated_at = :updated_at
+                    WHERE id IN ($ordersIds)
+                ")
                 ->bindValue(':send', $sendStatus)
                 ->bindValue(':updated_at', time())
                 ->execute();
@@ -178,7 +194,7 @@ class SenderComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-
+        $newStatus = ArrayHelper::getValue($values, ':status');
 
         $defaultValues = [
             ':status' => null,
@@ -209,6 +225,14 @@ class SenderComponent extends Component
             ->bindValues($values)
             ->bindValue(':id', $orderId)
             ->execute();
+
+        if (Suborders::STATUS_FAILED == $newStatus) {
+            Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                'suborderId' => $orderInfo['suborder_id'],
+                'storeId' => $orderInfo['store_id'],
+                'status' => $newStatus
+            ]);
+        }
     }
 
     /**

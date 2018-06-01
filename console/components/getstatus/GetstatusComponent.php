@@ -1,6 +1,7 @@
 <?php
 namespace console\components\getstatus;
 
+use common\events\Events;
 use Yii;
 use common\models\store\Suborders;
 use common\models\stores\Providers;
@@ -209,6 +210,8 @@ class GetstatusComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
+        $newStatus = ArrayHelper::getValue($values, ':status');
+        $oldStatus = ArrayHelper::getValue($orderInfo, 'status');
 
         $defaultValues = [
             ':status' => null,
@@ -232,6 +235,20 @@ class GetstatusComponent extends Component
             ->bindValues($values)
             ->bindValue(':id', $orderId)
             ->execute();
+
+        if (null !== $newStatus && ($newStatus != $oldStatus)) {
+            if (in_array($newStatus, [
+                Suborders::STATUS_ERROR,
+                Suborders::STATUS_IN_PROGRESS,
+                Suborders::STATUS_COMPLETED,
+            ])) {
+                Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                    'suborderId' => $orderInfo['suborder_id'],
+                    'storeId' => $orderInfo['store_id'],
+                    'status' => $newStatus
+                ]);
+            }
+        }
     }
 
     /**
@@ -298,6 +315,7 @@ class GetstatusComponent extends Component
                     'store_id' => $order['store_id'],
                     'store_db' => $order['store_db'],
                     'suborder_id' => $order['id'],
+                    'status' => $order['status'],
                     'provider_id' => $order['provider_id'],
                     'protocol' => $order['provider_protocol']
                 ]),
@@ -338,6 +356,7 @@ class GetstatusComponent extends Component
                 $sendResults['err_curl']++;
 
                 curl_multi_remove_handle($mh, $ch);
+
                 continue;
             }
 

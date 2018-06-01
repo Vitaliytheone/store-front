@@ -5,6 +5,7 @@ use common\helpers\ThemesHelper;
 use Yii;
 use yii\base\InvalidCallException;
 use yii\base\ViewContextInterface;
+use yii\base\ViewRenderer;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -78,5 +79,30 @@ class View extends \yii\web\View {
         $viewsPath = Yii::getAlias('@sommerce' . DIRECTORY_SEPARATOR . 'views');
 
         return $viewsPath . $view;
+    }
+
+    /**
+     * Render content
+     * @param string $content
+     * @param array $params
+     * @param string $ext
+     * @return string
+     */
+    public function renderContent($content, $params = [], $ext = 'twig'): string
+    {
+        $output = '';
+        if (isset($this->renderers[$ext])) {
+            if (is_array($this->renderers[$ext]) || is_string($this->renderers[$ext])) {
+                $this->renderers[$ext] = Yii::createObject($this->renderers[$ext]);
+            }
+            /* @var $renderer ViewRenderer */
+            $renderer = $this->renderers[$ext];
+
+            if (method_exists($renderer, 'renderContent')) {
+                $output = $renderer->renderContent($content, $params);
+            }
+        }
+
+        return $output;
     }
 }

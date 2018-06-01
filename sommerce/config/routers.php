@@ -6,6 +6,7 @@ return [
     '/index' => 'site/index',
     '/cart' => 'cart/index',
     '/order/<id:\d+>' => 'cart/order',
+    '/vieworder/<code:[\d\w]+>' => 'order/view',
     '/delete/<key:[\w\d-]+>' => 'cart/delete',
     '/frozen' => 'site/frozen',
 

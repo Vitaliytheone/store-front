@@ -4,6 +4,7 @@ namespace common\models\store;
 
 use common\components\behaviors\IpBehavior;
 use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\store\queries\OrdersQuery;
@@ -12,11 +13,13 @@ use common\models\store\queries\OrdersQuery;
  * This is the model class for table "{{%orders}}".
  *
  * @property integer $id
+ * @property string $code
  * @property integer $checkout_id
  * @property string $customer
  * @property integer $created_at
  *
  * @property Checkouts $checkout
+ * @property Payments $payment
  * @property Suborders[] $suborders
  */
 class Orders extends ActiveRecord
@@ -41,6 +44,7 @@ class Orders extends ActiveRecord
     {
         return [
             [['id', 'checkout_id', 'created_at'], 'integer'],
+            [['code'], 'string', 'max' => 64],
             [['customer'], 'string', 'max' => 255],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::class, 'targetAttribute' => ['checkout_id' => 'id']],
         ];
@@ -53,6 +57,7 @@ class Orders extends ActiveRecord
     {
         return [
             'id' => Yii::t('admin', 'orders.f_id'),
+            'code' => Yii::t('admin', 'orders.f_code'),
             'checkout_id' => Yii::t('admin', 'orders.f_checkout_id'),
             'customer' => Yii::t('admin', 'orders.f_customer'),
             'created_at' => Yii::t('admin', 'orders.f_created_at'),
@@ -76,6 +81,14 @@ class Orders extends ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPayment()
+    {
+        return $this->hasOne(Payments::class, ['checkout_id' => 'id'])->via('checkout');
+    }
+
+    /**
      * @inheritdoc
      * @return OrdersQuery the active query used by this AR class.
      */
@@ -95,7 +108,24 @@ class Orders extends ActiveRecord
                 'value' => function() {
                     return time();
                 },
+            ],
+            'code' => [
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'code',
+                ],
+                'value' => function() {
+                    return static::generateCodeString();
+                },
             ]
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public static function generateCodeString()
+    {
+        return md5(bin2hex(random_bytes(32))) . md5(bin2hex(random_bytes(32)));
     }
 }

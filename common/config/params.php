@@ -87,4 +87,15 @@ return [
     'store.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление магазин
 
     'store.paywant_proxy' => 'http://37.1.207.99/scr/paywant.php',
+
+    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
+    'mailgun.domain' => 'mail-smm.com',
+    'mailgun.timeout' => 25, // В секундах
+    'mailer.sendNow' => true,
+
+    'gearmanIp' => '127.0.0.1',
+    'gearmanPort' => 4730,
+    'gearmanPrefix' => 'stores_',
+
+    'support_email' => 'noreply@mail-smm.com',
 ];

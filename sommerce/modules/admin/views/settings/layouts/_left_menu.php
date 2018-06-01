@@ -68,6 +68,14 @@
                 </span>
             </a>
         </li>
+        <li class="m-nav__item <?=('notifications' == $active ? 'm-nav__item--active' : '') ?>">
+            <a href="<?= Url::toRoute('/settings/notifications')?>" class="m-nav__link">
+                <i class="flaticon-alert-2 m-nav__link-icon"></i>
+                <span class="m-nav__link-text">
+                    <?= Yii::t('admin', 'settings.left_menu_notifications') ?>
+                </span>
+            </a>
+        </li>
         <li class="m-nav__item <?=('languages' == $active ? 'm-nav__item--active' : '') ?>">
             <a href="<?= Url::toRoute('/settings/languages')?>" class="m-nav__link">
                 <i class="m-nav__link-icon fa fa-language"></i>

@@ -5,6 +5,7 @@ use Yii;
 use yii\base\View;
 use yii\base\ViewRenderer as BaseViewRenderer;
 use Twig_Environment;
+use Twig_Loader_Array;
 use Twig_Loader_Filesystem;
 use yii\helpers\FileHelper;
 
@@ -30,6 +31,11 @@ class ViewRenderer extends BaseViewRenderer
      * @var \Twig_Environment twig environment object that renders twig templates
      */
     public $twig;
+
+    /**
+     * @var \Twig_Environment twig environment object that renders twig templates
+     */
+    public $twigContent;
 
     /**
      * @var string twig namespace to use in templates
@@ -65,7 +71,17 @@ class ViewRenderer extends BaseViewRenderer
 
     public function init()
     {
-        $loader = new Twig_Loader_Filesystem();
+        $this->getTwig();
+    }
+
+    /**
+     * @return Twig_Environment
+     */
+    protected function getTwig()
+    {
+        if (null !== $this->twig) {
+            return $this->twig;
+        }
 
         $options = [
             'charset' => Yii::$app->charset,
@@ -81,9 +97,35 @@ class ViewRenderer extends BaseViewRenderer
             $options['cache'] = new TwigCache($path);
         }
 
-        $this->twig = new Twig_Environment($loader, array_merge($options, $this->options));
+        $this->twig = new Twig_Environment(new Twig_Loader_Filesystem(), array_merge($options, $this->options));
 
-        $this->addExtensions([new Extension($this->options)]);
+        $this->addExtensions($this->twig, [
+            new Extension($this->options),
+        ]);
+
+        return $this->twig;
+    }
+
+    /**
+     * @return Twig_Environment
+     */
+    protected function getTwigContent()
+    {
+        if (null !== $this->twigContent) {
+            return $this->twigContent;
+        }
+
+        $options = [
+            'charset' => Yii::$app->charset,
+        ];
+
+        $this->twigContent = new Twig_Environment(new Twig_Loader_Array(), array_merge($options, $this->options));
+
+        $this->addExtensions($this->twigContent, [
+            new Extension($this->options),
+        ]);
+
+        return $this->twigContent;
     }
 
     /**
@@ -118,6 +160,17 @@ class ViewRenderer extends BaseViewRenderer
     }
 
     /**
+     * Render content by string template
+     * @param string $content
+     * @param array $params
+     * @return string
+     */
+    public function renderContent($content, $params = [])
+    {
+        return $this->getTwigContent()->createTemplate($content)->render($params);
+    }
+
+    /**
      * Adds aliases
      *
      * @param \Twig_Loader_Filesystem $loader
@@ -136,13 +189,30 @@ class ViewRenderer extends BaseViewRenderer
 
     /**
      * Adds custom extensions
+     * @param Twig_Environment $twig
      * @param array $extensions @see self::$extensions
      */
-    public function addExtensions($extensions)
+    public function addExtensions(&$twig, $extensions)
     {
         foreach ($extensions as $extName) {
-            $this->twig->addExtension(is_object($extName) ? $extName : Yii::createObject($extName));
+            $twig->addExtension(is_object($extName) ? $extName : Yii::createObject($extName));
         }
+    }
+
+    /**
+     * @return \Twig_ExtensionInterface[]
+     */
+    public function getExtensions()
+    {
+        return $this->twig->getExtensions();
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**

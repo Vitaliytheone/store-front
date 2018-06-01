@@ -6,6 +6,7 @@ Yii::setAlias('@backend', dirname(dirname(__DIR__)) . '/backend');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 Yii::setAlias('@project_root', dirname(dirname(__DIR__)));
 Yii::setAlias('@node_modules', dirname(dirname(__DIR__)) . '/node_modules');
+Yii::setAlias('@libs', dirname(dirname(__DIR__)) . '/libs');
 
 $configPath = __DIR__ . '/config.json';
 $configPath = file_exists($configPath) ? $configPath : '/var/www/cfg/config.json';

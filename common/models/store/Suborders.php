@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models\store;
 
 use common\models\stores\Providers;
@@ -85,7 +84,7 @@ class Suborders extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%suborders}}';
+        return 'suborders';
     }
 
     /**
@@ -176,18 +175,19 @@ class Suborders extends ActiveRecord
 
     /**
      * Return status names list
+     * @param boolean $admin
      * @return array
      */
-    public static function getStatusNames()
+    public static function getStatusNames($admin = true)
     {
         $names = [
-            self::STATUS_AWAITING => Yii::t('admin', 'orders.filter_status_awaiting'),
-            self::STATUS_PENDING => Yii::t('admin', 'orders.filter_status_pending'),
-            self::STATUS_IN_PROGRESS => Yii::t('admin', 'orders.filter_status_in_progress'),
-            self::STATUS_COMPLETED => Yii::t('admin', 'orders.filter_status_completed'),
-            self::STATUS_CANCELED => Yii::t('admin', 'orders.filter_status_canceled'),
-            self::STATUS_FAILED => Yii::t('admin', 'orders.filter_status_failed'),
-            self::STATUS_ERROR => Yii::t('admin', 'orders.filter_status_error'),
+            static::STATUS_AWAITING => $admin ? Yii::t('admin', 'orders.filter_status_awaiting') : Yii::t('app', 'orders.status_awaiting'),
+            static::STATUS_PENDING => $admin ? Yii::t('admin', 'orders.filter_status_pending') : Yii::t('app', 'orders.status_awaiting'),
+            static::STATUS_IN_PROGRESS => $admin ? Yii::t('admin', 'orders.filter_status_in_progress') : Yii::t('app', 'orders.status_awaiting'),
+            static::STATUS_COMPLETED => $admin ? Yii::t('admin', 'orders.filter_status_completed') : Yii::t('app', 'orders.status_awaiting'),
+            static::STATUS_CANCELED => $admin ? Yii::t('admin', 'orders.filter_status_canceled') : Yii::t('app', 'orders.status_awaiting'),
+            static::STATUS_FAILED => $admin ? Yii::t('admin', 'orders.filter_status_failed') : Yii::t('app', 'orders.status_awaiting'),
+            static::STATUS_ERROR => $admin ? Yii::t('admin', 'orders.filter_status_error') : Yii::t('app', 'orders.status_awaiting'),
         ];
 
         return $names;
@@ -195,12 +195,13 @@ class Suborders extends ActiveRecord
 
     /**
      * Return status name by status value
-     * @param $status
+     * @param integer $status
+     * @param boolean $admin
      * @return mixed
      */
-    public static function getStatusName($status)
+    public static function getStatusName($status, $admin = true)
     {
-        return ArrayHelper::getValue(static::getStatusNames(), $status, $status);
+        return ArrayHelper::getValue(static::getStatusNames($admin), $status, $status);
     }
 
     /**
