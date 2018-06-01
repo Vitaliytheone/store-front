@@ -34,7 +34,7 @@ INSERT INTO `store_default_messages` (`lang_code`, `section`, `name`, `value`)
 VALUES ('en', 'orders', 'status_canceled', 'Canceled');
 
 INSERT INTO `store_default_messages` (`lang_code`, `section`, `name`, `value`)
-VALUES ('en', 'orders', 'status_failed', 'Failed');
+VALUES ('en', 'orders', 'status_failed', '');
 
 INSERT INTO `store_default_messages` (`lang_code`, `section`, `name`, `value`)
-VALUES ('en', 'orders', 'status_error', 'Error');
+VALUES ('en', 'orders', 'status_error', '');
