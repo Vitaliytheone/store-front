@@ -33,6 +33,16 @@ abstract class BaseMailer {
     /**
      * @var string
      */
+    public $fromName;
+
+    /**
+     * @var string
+     */
+    public $replyTo;
+
+    /**
+     * @var string
+     */
     public $to;
 
     /**
@@ -101,6 +111,8 @@ abstract class BaseMailer {
     {
         return [
             'from' => $this->from,
+            'from_name' => $this->fromName,
+            'reply_to' => $this->replyTo,
             'to' => $this->to,
             'html' => $this->html,
             'text' => $this->text,
@@ -132,6 +144,8 @@ abstract class BaseMailer {
     {
         $to = ArrayHelper::getValue($data, 'to');
         $from = ArrayHelper::getValue($data, 'from');
+        $fromName = ArrayHelper::getValue($data, 'from_name');
+        $replyTo = ArrayHelper::getValue($data, 'reply_to');
         $subject = ArrayHelper::getValue($data, 'subject');
         $text = ArrayHelper::getValue($data, 'text');
         $html = ArrayHelper::getValue($data, 'html');
@@ -148,10 +162,17 @@ abstract class BaseMailer {
             $html = $preMailer->getHtml();
         }
 
-        return (bool)Mailgun::send($to, $subject, [
-            'text' => $text,
-            'html' => $html
-        ], $from, $response);
+        return (bool)Mailgun::send([
+            'to' => $to,
+            'subject' => $subject,
+            'content' => [
+                'text' => $text,
+                'html' => $html,
+            ],
+            'from' => $from,
+            'from_name' => $fromName,
+            'reply_to' => $replyTo
+        ], $response);
     }
 
     /**

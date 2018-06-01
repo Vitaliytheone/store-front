@@ -38,23 +38,13 @@ class Mailgun
 
     /**
      * Send contact form email
-     * @param string $toEmail
-     * @param string $subject
-     * @param mixed $content
-     * @param string $fromEmail
+     * @param array $options
      * @param mixed $response
      * @return bool
      */
-    public static function send($toEmail, $subject, $content, $fromEmail = null, &$response = [])
+    public static function send($options = [], &$response = [])
     {
-        static::init();
-        $fromEmail = !empty($fromEmail) ? $fromEmail : static::$_fromEmail;
-        $response = static::_send([
-            'to' => $toEmail,
-            'from' => $fromEmail,
-            'subject' => $subject,
-            'content' => is_string($content) ? ['text' => $content] : $content // По умолчанию текст
-        ]);
+        $response = static::_send($options);
 
         if (!is_array($response) || empty($response['id'])) {
             return false;
@@ -71,6 +61,8 @@ class Mailgun
      */
     private static function _send($options)
     {
+        static::init();
+
         if (!static::$_mailgunKey || !static::$_mailgunDomain) {
             throw new Exception('Mailgun is not yet configured! Check your app config params!');
         }
@@ -80,21 +72,39 @@ class Mailgun
         }
 
         $content = ArrayHelper::getValue($options, 'content');
+        $content = is_string($content) ? ['text' => $content] : $content;
+        $from = ArrayHelper::getValue($options, 'from');
+        $from = !empty($from) ? $from : static::$_fromEmail;
+        $fromName = ArrayHelper::getValue($options, 'from_name');
+        $replyTo = ArrayHelper::getValue($options, 'reply_to');
 
-        $ch = curl_init();
-        curl_setopt_array($ch, [
+        if (!empty($fromName)) {
+            $from = $fromName . ' <' . $from . '>';
+        }
+
+        $post = [
+            'from' => $from,
+            'to' => ArrayHelper::getValue($options, 'to'),
+            'subject' => ArrayHelper::getValue($options, 'subject'),
+            'text' => ArrayHelper::getValue($content, 'text'),
+            'html' => ArrayHelper::getValue($content, 'html'),
+        ];
+
+        if (!empty($replyTo)) {
+            $post['h:Reply-To'] = $replyTo;
+        }
+
+        $curlOptions = [
             CURLOPT_USERPWD => 'api:' . static::$_mailgunKey,
             CURLOPT_URL => "https://api.mailgun.net/v3/" . static::$_mailgunDomain . "/messages",
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => [
-                'from' => ArrayHelper::getValue($options, 'from', static::$_fromEmail),
-                'to' => ArrayHelper::getValue($options, 'to'),
-                'subject' => ArrayHelper::getValue($options, 'subject'),
-                'text' => ArrayHelper::getValue($content, 'text'),
-                'html' => ArrayHelper::getValue($content, 'html'),
-            ]
-        ]);
+            CURLOPT_POSTFIELDS => $post
+        ];
+
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $curlOptions);
 
         $response = curl_exec($ch);
 

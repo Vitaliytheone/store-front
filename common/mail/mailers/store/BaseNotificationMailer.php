@@ -42,11 +42,8 @@ class BaseNotificationMailer extends BaseMailer {
             throw new InvalidParamException();
         }
 
-        $this->from = $this->store->getAdminEmail();
-
-        if ($this->from == $this->to) {
-            $this->from = null;
-        }
+        $this->replyTo = $this->store->getAdminEmail();
+        $this->fromName = $this->store->name;
     }
 
     /**
