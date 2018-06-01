@@ -440,7 +440,11 @@ class Stores extends ActiveRecord implements ProjectInterface
             ->orderBy(['type' => SORT_DESC])
             ->one();
 
-        return ((bool)$domain->ssl ? 'https' : 'http') . '://' . $domain->domain;
+        if ($domain) {
+            return ((bool)$domain->ssl ? 'https' : 'http') . '://' . $domain->domain;
+        }
+        
+        return ((bool)$this->ssl ? 'https' : 'http') . '://' . $this->domain;
     }
 
     /**
