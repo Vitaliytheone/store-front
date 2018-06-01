@@ -88,6 +88,9 @@ return [
 
     'store.paywant_proxy' => 'http://37.1.207.99/scr/paywant.php',
 
+    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
+    'mailgun.domain' => 'perfectpanel.net',
+    'mailgun.timeout' => 25, // В секундах
     'mailer.sendNow' => true,
 
     'gearmanIp' => '127.0.0.1',

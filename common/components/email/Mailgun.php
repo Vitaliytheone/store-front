@@ -99,7 +99,8 @@ class Mailgun
             CURLOPT_URL => "https://api.mailgun.net/v3/" . static::$_mailgunDomain . "/messages",
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => $post
+            CURLOPT_POSTFIELDS => $post,
+            CURLOPT_CONNECTTIMEOUT => Yii::$app->params['mailgun.timeout']
         ];
 
 

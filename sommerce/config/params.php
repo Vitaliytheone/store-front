@@ -17,9 +17,6 @@ return [
 
     'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
 
-    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
-    'mailgun.domain' => 'perfectpanel.net',
-
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
     'gearmanPrefix' => 'sommerce_',
