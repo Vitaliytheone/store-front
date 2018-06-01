@@ -199,4 +199,27 @@ class SystemController extends CustomController
             Yii::$app->db->createCommand("INSERT INTO `{$db}`.`notification_admin_emails` (`email`, `status`, `primary`) VALUES ('{$adminEmail}', 1, 1)")->execute();
         }
     }
+
+    public function actionAddOrderCode()
+    {
+        foreach ((new \yii\db\Query())->select([
+            'db_name',
+        ])->from(DB_STORES . '.stores')->all() as $store) {
+            $db = $store['db_name'];
+
+            $isDbExist = Yii::$app->db
+                ->createCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$db'")
+                ->queryScalar();
+
+            if (!$isDbExist) {
+                continue;
+            }
+
+            foreach ((new \yii\db\Query())->select([
+                'id',
+            ])->from($db . '.orders')->all() as $order) {
+                Yii::$app->db->createCommand("UPDATE `{$db}`.`orders` SET `code` = '" . Orders::generateCodeString(). "' WHERE `id` = '" . $order['id'] . "';")->execute();
+            }
+        }
+    }
 }
