@@ -56,8 +56,8 @@ class OrderAbandonedEvent extends BaseOrderEvent {
         }
 
         $mailer = new OrderMailer([
-            'to' => $this->_order->customer,
-            'order' => $this->_order,
+            'to' => $this->_checkout->customer,
+            'order' => $this->_checkout,
             'suborders' => $this->_suborders,
             'payment' => $this->_payment,
             'template' => $template,
