@@ -57,12 +57,17 @@ class OrderMailer extends BaseNotificationMailer {
             $total += $suborder->amount;
         }
 
+        $url = null;
+        if (($this->_order instanceof Orders)) {
+            $url = $this->store->getSite() . '/vieworder/' . $this->_order->code;
+        }
+
         $options['order'] = [
             'id' => $this->_order->id,
             'data' => $data,
             'sub_total' => $total,
             'total' => $total,
-            'url' => $this->store->getSite() . '/vieworder/' . $this->_order->code,
+            'url' => $url,
             'payment_method' => $payment ? PaymentGateways::getMethodName($payment->method) : null
         ];
 
