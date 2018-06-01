@@ -59,7 +59,6 @@ use yii\helpers\ArrayHelper;
  * @property string $block_features
  * @property string $block_reviews
  * @property string $block_process
- * @property string $admin_email
  * @property string $custom_header
  * @property string $custom_footer
  *
@@ -162,7 +161,6 @@ class Stores extends ActiveRecord implements ProjectInterface
             'block_features' => Yii::t('app', 'Block Features'),
             'block_reviews' => Yii::t('app', 'Block Reviews'),
             'block_process' => Yii::t('app', 'Block Process'),
-            'admin_email' => Yii::t('app', 'Admin e-mail'),
             'custom_header' => Yii::t('app', 'Custom header'),
             'custom_footer' => Yii::t('app', 'Custom footer'),
         ];
