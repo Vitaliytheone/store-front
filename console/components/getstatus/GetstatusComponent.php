@@ -236,7 +236,7 @@ class GetstatusComponent extends Component
             ->bindValue(':id', $orderId)
             ->execute();
 
-        if ($newStatus != $oldStatus) {
+        if (null !== $newStatus && ($newStatus != $oldStatus)) {
             if (in_array($newStatus, [
                 Suborders::STATUS_ERROR,
                 Suborders::STATUS_IN_PROGRESS,
