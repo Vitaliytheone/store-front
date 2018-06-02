@@ -2,6 +2,7 @@
 namespace common\events\store;
 
 use common\mail\mailers\store\OrderMailer;
+use common\models\store\Orders;
 use common\models\store\Suborders;
 use common\models\stores\NotificationDefaultTemplates;
 use common\models\stores\Stores;
@@ -58,6 +59,15 @@ class OrderInProgressEvent extends BaseOrderEvent {
      */
     public function run():void
     {
+        if (empty($this->_order)) {
+            Yii::error('Empty ' . static::class . ' order parameter');
+            return;
+        }
+
+        if (Orders::IN_PROGRESS_ENABLED === $this->_order->in_progress) {
+            return;
+        }
+        
         if (!$this->_suborder || Suborders::find()->andWhere([
             'order_id' => $this->_suborder->order_id,
             'status' => Suborders::STATUS_IN_PROGRESS
@@ -77,11 +87,6 @@ class OrderInProgressEvent extends BaseOrderEvent {
             return;
         }
 
-        if (empty($this->_order)) {
-            Yii::error('Empty ' . static::class . ' order parameter');
-            return;
-        }
-
         $mailer = new OrderMailer([
             'to' => $this->_order->customer,
             'order' => $this->_order,
@@ -89,5 +94,8 @@ class OrderInProgressEvent extends BaseOrderEvent {
             'store' => $this->_store,
         ]);
         $mailer->send();
+
+        $this->_order->in_progress = Orders::IN_PROGRESS_ENABLED;
+        $this->_order->save(false);
     }
 }
