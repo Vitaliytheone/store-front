@@ -641,6 +641,7 @@ class OrderHelper {
     public static function store(Orders $order)
     {
         $orderDetails = $order->getDetails();
+        $adminEmail = ArrayHelper::getValue($orderDetails, 'admin_email');
         $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
 
         $projectDefaults = Yii::$app->params['store.defaults'];
@@ -649,7 +650,6 @@ class OrderHelper {
         $store->setAttributes($projectDefaults);
 
         $store->customer_id = $order->cid;
-        $store->admin_email = ArrayHelper::getValue($orderDetails, 'admin_email');
         $store->currency = ArrayHelper::getValue($orderDetails,'currency');
         $store->domain = DomainsHelper::idnToUtf8($order->domain);
         $store->subdomain = 0;
@@ -735,8 +735,13 @@ class OrderHelper {
         // Change status
         if (Orders::STATUS_ADDED != $order->status) {
             $order->save(false);
-
             return false;
+        }
+
+        if (DbHelper::existDatabase($store->db_name) && !empty($adminEmail)) {
+            Yii::$app->db->createCommand("
+                INSERT INTO `{$store->db_name}`.`notification_admin_emails` (`email`, `status`, `primary`) VALUES ('{$adminEmail}', 1, 1);
+            ")->execute();
         }
 
         return true;
