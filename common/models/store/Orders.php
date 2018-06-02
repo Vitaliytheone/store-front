@@ -16,6 +16,7 @@ use common\models\store\queries\OrdersQuery;
  * @property string $code
  * @property integer $checkout_id
  * @property string $customer
+ * @property integer $in_progress
  * @property integer $created_at
  *
  * @property Checkouts $checkout
@@ -24,6 +25,9 @@ use common\models\store\queries\OrdersQuery;
  */
 class Orders extends ActiveRecord
 {
+    const IN_PROGRESS_ENABLED = 1;
+    const IN_PROGRESS_DISABLED = 0;
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -43,7 +47,8 @@ class Orders extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'checkout_id', 'created_at'], 'integer'],
+            [['id', 'checkout_id', 'created_at', 'in_progress'], 'integer'],
+            [['in_progress'], 'default', 'value' => static::IN_PROGRESS_DISABLED],
             [['code'], 'string', 'max' => 64],
             [['customer'], 'string', 'max' => 255],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::class, 'targetAttribute' => ['checkout_id' => 'id']],
