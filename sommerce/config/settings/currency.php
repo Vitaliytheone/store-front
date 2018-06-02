@@ -75,6 +75,10 @@ return [
         'name' => 'Pound Sterling',
         'money_format' => '£{{number}}',
     ),
+    'KRW' => array(
+        'name' => 'South Korean Won',
+        'money_format' => '₩ {{number}}',
+    ),
     'RUB' => array(
         'name' => 'Russian Ruble',
         'money_format' => '{{number}}₽',
