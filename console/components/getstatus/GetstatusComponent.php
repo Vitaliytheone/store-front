@@ -238,7 +238,6 @@ class GetstatusComponent extends Component
 
         if (null !== $newStatus && ($newStatus != $oldStatus)) {
             if (in_array($newStatus, [
-                Suborders::STATUS_ERROR,
                 Suborders::STATUS_IN_PROGRESS,
                 Suborders::STATUS_COMPLETED,
             ])) {
@@ -424,6 +423,14 @@ class GetstatusComponent extends Component
             ];
 
             $this->_updateOrder($orderInfo, $values);
+
+            if (Suborders::STATUS_ERROR !== ArrayHelper::getValue($orderInfo, 'status')) {
+                Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                    'suborderId' => $orderInfo['suborder_id'],
+                    'storeId' => $orderInfo['store_id'],
+                    'status' => Suborders::STATUS_ERROR
+                ]);
+            }
 
             $sendResults['err_other']++;
 
