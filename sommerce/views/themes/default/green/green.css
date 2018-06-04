@@ -811,7 +811,7 @@ body.isTawkMobile #backToTop {
     right: 15px;
     margin-top: -15px;
     color: #fff;
-    font-family: "FontAwesome";
+    font-family: 'Font Awesome 5 Pro';
     opacity: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     -webkit-transition: right .25s ease-in-out, opacity .25s ease-in-out;
@@ -1572,7 +1572,7 @@ body.isTawkMobile #backToTop {
 .page--content blockquote p:before {
     content: "\f10d";
     margin-right: 8px;
-    font-family: "FontAwesome";
+    font-family: 'Font Awesome 5 Pro';
     font-size: 30px;
 }
 
@@ -1634,7 +1634,7 @@ body.isTawkMobile #backToTop {
 .ssl-certificate-single .page--content ul li:before {
     content: "\f046";
     margin-right: 10px;
-    font-family: "FontAwesome";
+    font-family: 'Font Awesome 5 Pro';
 }
 .ssl-certificate-single .page--content ul li:last-child {
     margin-bottom: 0;
@@ -4183,7 +4183,7 @@ body.isTawkMobile #backToTop {
     top: 50%;
     right: 25px;
     margin-top: -9px;
-    font-family: "FontAwesome";
+    font-family: 'Font Awesome 5 Pro';
     -webkit-transition: -webkit-transform .25s ease-in-out;
     transition: -webkit-transform .25s ease-in-out;
     transition: transform .25s ease-in-out;
@@ -4340,7 +4340,7 @@ body.isTawkMobile #backToTop {
     margin-top: -7.5px;
     color: #ccc;
     border: 1px solid #eee;
-    font-family: "FontAwesome", sans-serif;
+    font-family: "Font Awesome 5 Pro", sans-serif;
     font-size: 8px;
     line-height: 13px;
     text-align: center;
