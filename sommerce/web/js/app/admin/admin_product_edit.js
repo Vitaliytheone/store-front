@@ -313,7 +313,8 @@ customModule.adminProductEdit = {
                     popover: {
                         image: [['float', ['floatLeft', 'floatRight', 'floatNone']], ['remove', ['removeMedia']]]
                     },
-                    dialogsFade: true
+                    dialogsFade: true,
+                    dialogsInBody: true
                 });
 
                 /* fix summernote submit form on Enter bug */
