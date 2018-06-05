@@ -26,6 +26,8 @@ class Messages extends ActiveRecord
     const SECTION_ORDER = 'order';
     const SECTION_PAYMENT_RESULT = 'payment_result';
     const SECTION_PRODUCT = 'product';
+    const SECTION_VIEW_ORDER = 'vieworder';
+    const SECTION_ORDERS = 'orders';
 
     /**
      * @return Connection the database connection used by this AR class.
@@ -94,6 +96,8 @@ class Messages extends ActiveRecord
             static::SECTION_ORDER => Yii::t('admin', 'settings.languages_section_order'),
             static::SECTION_PAYMENT_RESULT => Yii::t('admin', 'settings.languages_section_result'),
             static::SECTION_PRODUCT => Yii::t('admin', 'settings.languages_section_product'),
+            static::SECTION_ORDERS => Yii::t('admin', 'settings.languages_section_orders'),
+            static::SECTION_VIEW_ORDER => Yii::t('admin', 'settings.languages_section_view_order'),
         ];
     }
 

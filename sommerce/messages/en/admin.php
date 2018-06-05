@@ -505,6 +505,9 @@ return [
     'settings.languages_section_payment_result' => 'Payment result',
     'settings.languages_section_product' => 'Product',
     'settings.languages_section_result' => 'Result',
+    'settings.languages_section_view_order' => 'View order',
+    'settings.languages_section_orders' => 'Orders',
+
     'settings.languages_message_created' => 'Language was successfully created!',
     'settings.languages_message_updated' => 'Language was successfully updated!',
 
