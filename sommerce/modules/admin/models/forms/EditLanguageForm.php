@@ -169,6 +169,8 @@ class EditLanguageForm extends Model
             Messages::SECTION_FOOTER,
             Messages::SECTION_PAYMENT_RESULT,
             Messages::SECTION_404,
+            Messages::SECTION_ORDERS,
+            Messages::SECTION_VIEW_ORDER,
         ];
 
         $this->_mesagesBySection = array_flip($sectionOrder);
@@ -186,8 +188,6 @@ class EditLanguageForm extends Model
             $this->_mesagesBySection[$section]['messages'][$messageKey]['message'] = $messageValue;
             $this->_mesagesBySection[$section]['messages'][$messageKey]['default'] = ArrayHelper::getValue($this->getDefaultMessages(), $messageKey, '');
         }
-
-        error_log(print_r($this->_mesagesBySection,1));
 
         return true;
     }
