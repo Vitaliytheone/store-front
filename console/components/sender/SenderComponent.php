@@ -315,7 +315,7 @@ class SenderComponent extends Component
             $storeDb = $sendOrder['store_db'];
 
             $order = $this->_db->createCommand("
-                SELECT `id`, `order_id`, `package_id`, `link`, `quantity`
+                SELECT `id`, `order_id`, `package_id`, `link`, `quantity`, `overflow_quantity`
                 FROM $storeDb.$this->_tableSuborders
                 WHERE id = :id
             ")
@@ -360,7 +360,7 @@ class SenderComponent extends Component
                 'action' => Providers::API_ACTION_PRIVATE,
                 'service' => $orderPackage['provider_service'],
                 'link' => $order['link'],
-                'quantity' => $order['quantity'],
+                'quantity' => $order['overflow_quantity'],
                 'domain' => $provider['site'],
             );
 

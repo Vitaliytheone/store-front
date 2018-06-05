@@ -162,6 +162,7 @@ return [
     'products.package_name' => 'Package name *',
     'products.package_price' => 'Price',
     'products.package_quantity' => 'Quantity',
+    'products.package_quantity_overflow' => 'Overflow, %',
     'products.package_best' => 'Best package',
     'products.package_best_enabled' => 'Enabled',
     'products.package_best_disabled' => 'Disabled',

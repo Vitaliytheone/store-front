@@ -19,6 +19,7 @@ use common\models\store\queries\SubordersQuery;
  * @property string $amount
  * @property integer $package_id
  * @property integer $quantity
+ * @property integer $overflow_quantity
  * @property integer $status
  * @property integer $updated_at
  * @property integer $mode
@@ -93,7 +94,7 @@ class Suborders extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'checkout_id', 'package_id', 'quantity', 'status', 'updated_at', 'mode', 'send', 'provider_id'], 'integer'],
+            [['order_id', 'checkout_id', 'package_id', 'quantity', 'overflow_quantity', 'status', 'updated_at', 'mode', 'send', 'provider_id'], 'integer'],
             [['amount', 'provider_charge'], 'number'],
             [['provider_response'], 'string'],
             [['link'], 'string', 'max' => 1000],

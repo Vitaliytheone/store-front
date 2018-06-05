@@ -14,6 +14,7 @@ use common\models\store\queries\PackagesQuery;
  * @property string $name
  * @property string $price
  * @property integer $quantity
+ * @property integer $overflow
  * @property integer $link_type
  * @property integer $product_id
  * @property integer $visibility
@@ -61,6 +62,7 @@ class Packages extends ActiveRecord
             [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],
+            ['overflow', 'integer', 'min' => -100, 'max' => 100],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::class, 'targetAttribute' => ['product_id' => 'id']],
         ];
     }
@@ -75,6 +77,7 @@ class Packages extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'price' => Yii::t('app', 'Price'),
             'quantity' => Yii::t('app', 'Quantity'),
+            'overflow' => Yii::t('app', 'Overflow, %'),
             'link_type' => Yii::t('app', 'Link Type'),
             'product_id' => Yii::t('app', 'Product ID'),
             'visibility' => Yii::t('app', 'Visibility'),
