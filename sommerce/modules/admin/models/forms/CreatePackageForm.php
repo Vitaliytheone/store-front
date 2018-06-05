@@ -76,8 +76,9 @@ class CreatePackageForm extends Packages
     {
         return [
             [['product_id', 'name', 'price', 'quantity',], 'required'],
-            [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
+            [['id', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             ['quantity', 'integer', 'min' => 1],
+            ['overflow', 'integer', 'min' => -100, 'max' => 100],
             ['price', 'number', 'min' => 0.01],
             [['name', 'provider_service'], 'string', 'max' => 255],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'id']],

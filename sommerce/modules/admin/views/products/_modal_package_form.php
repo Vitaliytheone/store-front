@@ -49,6 +49,14 @@ $linkTypes = Yii::$app->params['orderLinks'];
                                name="PackageForm[quantity]" value="">
                     </div>
                     <div class="form-group">
+                        <label for="package-overflow">
+                            <?= Yii::t('admin', 'products.package_quantity_overflow') ?>
+                        </label>
+                        <input type="number" min="-100" max="100" step="1"
+                               class="form-control form_field__overflow" id="package-overflow"
+                               name="PackageForm[overflow]" value="0">
+                    </div>
+                    <div class="form-group">
                         <label for="package-best">
                             <?= Yii::t('admin', 'products.package_best') ?>
                         </label>
