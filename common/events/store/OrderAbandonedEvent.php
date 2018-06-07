@@ -1,7 +1,7 @@
 <?php
 namespace common\events\store;
 
-use common\mail\mailers\store\OrderMailer;
+use common\mail\mailers\store\OrderAbandonedMailer;
 use common\models\store\Checkouts;
 use common\models\store\NotificationTemplates;
 use common\models\stores\NotificationDefaultTemplates;
@@ -68,11 +68,9 @@ class OrderAbandonedEvent extends BaseOrderEvent {
             return;
         }
 
-        $mailer = new OrderMailer([
+        $mailer = new OrderAbandonedMailer([
             'to' => $this->_checkout->customer,
-            'order' => $this->_checkout,
-            'suborders' => $this->_suborders,
-            'payment' => $this->_payment,
+            'checkout' => $this->_checkout,
             'template' => $template,
             'store' => $this->_store,
         ]);
