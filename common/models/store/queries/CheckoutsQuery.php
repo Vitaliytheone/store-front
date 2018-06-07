@@ -15,6 +15,10 @@ class CheckoutsQuery extends ActiveQuery
     {
         return $this->andWhere([
             'status' => Checkouts::STATUS_PENDING
+        ]);
+
+        return $this->andWhere([
+            'status' => Checkouts::STATUS_PENDING
         ])
         ->andWhere(['between', 'created_at', (time() - (48 * 60 * 60)), (time() - (24 * 60 * 60))]);
     }
