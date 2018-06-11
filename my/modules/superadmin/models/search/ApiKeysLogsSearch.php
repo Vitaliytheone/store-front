@@ -144,6 +144,15 @@ class ApiKeysLogsSearch
                     ]);
                 }
             }
+
+            if ($searchType == 4) {
+                $query->andFilterWhere([
+                    'or',
+                    ['like', 'lt.login',  $this->getQuery()],
+                    ['like', 'lt.passwd',  $this->getQuery()],
+                    ['like', 'lt.apiKey',  $this->getQuery()],
+                ]);
+            }
         }
 
         if ($status == 1) {

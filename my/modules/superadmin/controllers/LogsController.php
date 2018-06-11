@@ -84,6 +84,7 @@ class LogsController extends CustomController
             '1' => 'Panel',
             '2' => 'Provider',
             '3' => 'In use',
+            '4' => 'Key',
         ];
 
         return $this->render('api_keys', [
