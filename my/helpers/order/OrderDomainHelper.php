@@ -194,7 +194,9 @@ class OrderDomainHelper {
             throw new Exception("Domain [$order->item_id] domainGetInfo returned an incorrect result!");
         }
 
-        $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
+        $expiryDateTime = ArrayHelper::getValue($domainInfoResult, 'expires');
+
+        $expiry = date('Y-m-d', strtotime($expiryDateTime));
 
         if (empty($expiry)) {
             throw new Exception("Domain [$order->item_id] `expiry` info is not defined!");
