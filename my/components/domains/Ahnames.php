@@ -196,6 +196,8 @@ class Ahnames {
             'domain' => $domain,
             'expires' => $expires,
             'period' => $period,
+            'auth_login' => Yii::$app->params['ahnames.login'],
+            'auth_password' => Yii::$app->params['ahnames.password'],
         ];
 
         $url = Yii::$app->params['ahnames.url'];

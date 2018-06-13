@@ -592,7 +592,7 @@ class OrderHelper {
 
         $domainRenewResult = OrderDomainHelper::domainRenew($order);
 
-        if (empty($domainRenewResult) || !empty($domainInfoResult['_error'])) {
+        if (empty($domainRenewResult) || !empty($domainRenewResult['_error'])) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
                 'error' => 'Invalid API domainRenew result',
                 'api_response' => $domainRenewResult,

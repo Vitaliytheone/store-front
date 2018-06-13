@@ -4,6 +4,8 @@ use my\helpers\Url;
 
 /** @var \yii\data\Pagination $pagination */
 /** @var array $logs */
+/** @var array $filters */
+/** @var array $searchType */
 
 ?>
 
