@@ -58,14 +58,14 @@ use my\helpers\Url;
                 <td>
                     <?php if($log['admin_login'] === 0): ?>
                     <?php elseif($log['admin_id'] > 99999990): ?>superadmin-id <?= $log['admin_id'] ?>
-                    <?php else: ?><?= $log['admin_login'] ?>
+                    <?php else: ?><?= htmlspecialchars($log['admin_login']) ?>
                     <?php endif; ?>
                 </td>
                 <td><?= $log['provider'] ?></td>
                 <td class="break-all">
-                    <?php if(!empty($log['login'])): ?> <?= $log['login'] ?> <br> <?php endif; ?>
-                    <?php if(!empty($log['passwd'])): ?> <?= $log['passwd'] ?> <br> <?php endif; ?>
-                    <?php if(!empty($log['apiKey'])): ?> <?= $log['apiKey'] ?> <br> <?php endif; ?>
+                    <?php if(!empty($log['login'])): ?> <?= htmlspecialchars($log['login']) ?> <br> <?php endif; ?>
+                    <?php if(!empty($log['passwd'])): ?> <?= htmlspecialchars($log['passwd']) ?> <br> <?php endif; ?>
+                    <?php if(!empty($log['apiKey'])): ?> <?= htmlspecialchars($log['apiKey']) ?> <br> <?php endif; ?>
                 </td>
                 <td>
                     <?php foreach ($log['matched_projects'] as $project): ?>
