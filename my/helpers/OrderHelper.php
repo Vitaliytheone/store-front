@@ -601,18 +601,29 @@ class OrderHelper {
             throw new Exception("Domain [$order->item_id] domainRenew action failed! [$order->item_id]");
         }
 
-        $expiry = strtotime(ArrayHelper::getValue($domainRenewResult, 'expires'));
+        // Get domain info after renew action
+        $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
 
-        if (empty($expiry) || $expiry < time()) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, [
-                'error' => 'Invalid domain expiry value',
-                'expiry' => $expiry,
-            ], 'cron.prolong.domain.e_expiry');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.prolong.domain_info_after');
 
-            throw new Exception("Domain [$order->item_id] new expiry date [$expiry] is invalid!");
+        if (empty($domainInfoResult) || !empty($domainInfoResult['_error'])) {
+            throw new Exception("Domain [$order->item_id] domainGetInfo returned an incorrect result!");
         }
 
-        $domain->expiry = $expiry;
+        $expiryDt = ArrayHelper::getValue($domainInfoResult, 'expires');
+
+        if (empty($expiryDt)) {
+            throw new Exception("Domain [$order->item_id] `expiry` is not exist in domain info result after domain renew!");
+        }
+
+        $expiryTs = strtotime($expiryDt);
+
+        if (empty($expiryTs)) {
+            throw new Exception("Domain [$order->item_id] `expiry` has invalid format!");
+        }
+
+        // Renew domain data
+        $domain->expiry = $expiryTs;
         $domain->setItemDetails($domainRenewResult, 'domain_renew_info');
 
         if (!$domain->save(false)) {

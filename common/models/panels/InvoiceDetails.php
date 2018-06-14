@@ -196,7 +196,11 @@ class InvoiceDetails extends ActiveRecord
                     $order = Orders::findOne($this->item_id);
                     $domain = Domains::findOne($order->item_id);
 
-                    $this->description = $domain->zone->zone . ' domain renewal for 1 year';
+                    $this->description = Yii::t('app', 'invoice_details.description.prolongation_domain', [
+                        'zone' => $domain->zone->zone,
+                        'domain' => $domain->getDomain(),
+                    ]);
+
                     break;
 
                 case static::ITEM_BUY_SSL:

@@ -211,6 +211,10 @@ class OrderDomainHelper {
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainRenewResult, 'cron.prolong.renew_domain');
 
+        if (empty($domainRenewResult) || !empty($domainRenewResult['_error'])) {
+            throw new Exception("Domain [$order->item_id] ! domainRenew return error!");
+        }
+
         return $domainRenewResult;
     }
 }

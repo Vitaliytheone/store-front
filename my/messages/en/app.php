@@ -301,7 +301,7 @@ return [
     'invoice_details.description.prolongation_panel' => 'One month maintenance for {domain}',
     'invoice_details.description.prolongation_child_panel' => 'One month maintenance for {domain}',
     'invoice_details.description.buy_domain' => '{zone} domain registration for 1 year',
-    'invoice_details.description.prolongation_domain' => '{zone} domain renewal for 1 year',
+    'invoice_details.description.prolongation_domain' => '{zone} domain renewal for 1 year ({domain})',
     'invoice_details.description.buy_ssl' =>  '{name} for 1 year ({domain})',
     'invoice_details.description.prolongation_ssl' => '{name} for 1 year ({domain})',
     'invoice_details.description.custom' => 'Custom',
