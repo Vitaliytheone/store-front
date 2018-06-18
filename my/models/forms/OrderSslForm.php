@@ -110,7 +110,7 @@ class OrderSslForm extends Model
 
         $allowedSslItems = array_keys($this->getSslItems());
 
-        if (in_array($sslCertItemId, $allowedSslItems)) {
+        if (!in_array($sslCertItemId, $allowedSslItems)) {
             $this->addError($attribute, Yii::t('app', 'error.ssl.can_not_order_ssl'));
 
             return false;
