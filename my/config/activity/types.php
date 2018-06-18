@@ -83,6 +83,16 @@ return [
     '93' => 'Open unread ticket',
     '94' => 'Delete ticket',
 
+    '1001' => 'Create user',
+    '1002' => 'Update user',
+    '1003' => 'Generate user API key',
+    '1004' => 'Activate user',
+    '1005' => 'Deactivate user',
+    '1006' => 'Update password',
+    '1007' => 'Update custom rates',
+    '1008' => 'Copy custom rates',
+    '1009' => 'Reset custom rates',
+    '1010' => 'Superadmin sign in as user',
 
 //    '' => 'Add custom rates',
 //    '' => 'Reset all custom rates',
