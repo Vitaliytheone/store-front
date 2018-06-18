@@ -35,42 +35,45 @@ class m180618_124543_db_panel__panel_activity_log_converter extends Migration
     public function up()
     {
 
-        foreach ($this->panelDbs as $db) {
-            $this->execute("
-                USE `" . $db . "`;
-                UPDATE `activity_log` SET `event` =
-                CASE
-                  WHEN `event` = 1 THEN 1003
-                  WHEN `event` = 2 THEN 1004
-                  WHEN `event` = 3 THEN 1005
-                  WHEN `event` = 4 THEN 1001
-                  WHEN `event` = 5 THEN 1006
-                  WHEN `event` = 6 THEN 1002
-                  WHEN `event` = 7 THEN 1007
-                  ELSE `event`
-                END;
-            ");
-        }
+//TODO:: Uncommit if all panels ActivityLog conversions needed.
+//        foreach ($this->panelDbs as $db) {
+//            $this->execute("
+//                USE `" . $db . "`;
+//                UPDATE `activity_log` SET `event` =
+//                CASE
+//                  WHEN `event` = 1 THEN 1003
+//                  WHEN `event` = 2 THEN 1004
+//                  WHEN `event` = 3 THEN 1005
+//                  WHEN `event` = 4 THEN 1001
+//                  WHEN `event` = 5 THEN 1006
+//                  WHEN `event` = 6 THEN 1002
+//                  WHEN `event` = 7 THEN 1007
+//                  ELSE `event`
+//                END;
+//            ");
+//        }
     }
 
     /** @inheritdoc */
     public function down()
     {
-        foreach ($this->panelDbs as $db) {
-            $this->execute("
-                USE `" . $db . "`;
-                UPDATE `activity_log` SET `event` =
-                CASE
-                  WHEN `event` = 1003 THEN 1
-                  WHEN `event` = 1004 THEN 2
-                  WHEN `event` = 1005 THEN 3
-                  WHEN `event` = 1001 THEN 4
-                  WHEN `event` = 1006 THEN 5
-                  WHEN `event` = 1002 THEN 6
-                  WHEN `event` = 1007 THEN 7
-                  ELSE `event`
-                END;
-            ");
-        }
+
+//TODO:: Uncommit if all panels ActivityLog conversions needed.
+//        foreach ($this->panelDbs as $db) {
+//            $this->execute("
+//                USE `" . $db . "`;
+//                UPDATE `activity_log` SET `event` =
+//                CASE
+//                  WHEN `event` = 1003 THEN 1
+//                  WHEN `event` = 1004 THEN 2
+//                  WHEN `event` = 1005 THEN 3
+//                  WHEN `event` = 1001 THEN 4
+//                  WHEN `event` = 1006 THEN 5
+//                  WHEN `event` = 1002 THEN 6
+//                  WHEN `event` = 1007 THEN 7
+//                  ELSE `event`
+//                END;
+//            ");
+//        }
     }
 }
