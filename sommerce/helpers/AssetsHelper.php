@@ -11,6 +11,8 @@ use yii\helpers\ArrayHelper;
  */
 class AssetsHelper {
 
+    static $customScriptFiles = [];
+
     /**
      * Get unique file url
      * @param string $path
@@ -61,8 +63,23 @@ class AssetsHelper {
             $scripts[] = $asset[1];
         }
 
+        foreach (static::$customScriptFiles as $scriptFile) {
+            $scripts[] =  [
+                'src' => $scriptFile
+            ];
+        }
+
         $scripts[] = AssetsHelper::getFileUrl('/js/frontend.js');
 
         return $scripts;
+    }
+
+    /**
+     * Add custom script file path or url
+     * @param string $file
+     */
+    public static function addCustomScriptFile($file)
+    {
+        static::$customScriptFiles[] = $file;
     }
 }

@@ -29,7 +29,8 @@
         "yiisoft/yii2-gii": "2.0.6",
         "pagseguro/php": "^2.7",
         "symfony/css-selector": "^4.0",
-        "crossjoin/css": "^1.0"
+        "crossjoin/css": "^1.0",
+        "authorizenet/authorizenet": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
