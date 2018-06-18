@@ -1,13 +1,17 @@
 <?php
 
 return [
-    '1' => 'Generate API key',
-    '2' => 'Activate user',
-    '3' => 'Suspend user',
-    '4' => 'Add user',
-    '5' => 'Set password',
-    '6' => 'Edit user',
-    '7' => 'Edit custom rates',
+    '1001' => 'Create user',
+    '1002' => 'Update user',
+    '1003' => 'Generate user API key',
+    '1004' => 'Activate user',
+    '1005' => 'Deactivate user',
+    '1006' => 'Update password',
+    '1007' => 'Update custom rates',
+    '1008' => 'Copy custom rates',
+    '1009' => 'Reset custom rates',
+    '1010' => 'Superadmin sign in as user',
+
     '8' => 'Resend order',
     '9' => 'Change status',
     '10' => 'Cancel and refund',
@@ -82,17 +86,6 @@ return [
     '92' => 'Edit payment',
     '93' => 'Open unread ticket',
     '94' => 'Delete ticket',
-
-    '1001' => 'Create user',
-    '1002' => 'Update user',
-    '1003' => 'Generate user API key',
-    '1004' => 'Activate user',
-    '1005' => 'Deactivate user',
-    '1006' => 'Update password',
-    '1007' => 'Update custom rates',
-    '1008' => 'Copy custom rates',
-    '1009' => 'Reset custom rates',
-    '1010' => 'Superadmin sign in as user',
 
 //    '' => 'Add custom rates',
 //    '' => 'Reset all custom rates',
