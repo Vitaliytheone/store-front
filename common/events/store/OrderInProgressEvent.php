@@ -71,7 +71,7 @@ class OrderInProgressEvent extends BaseOrderEvent {
         if (!$this->_suborder || Suborders::find()->andWhere([
             'order_id' => $this->_suborder->order_id,
             'status' => Suborders::STATUS_IN_PROGRESS
-        ])->andWhere('id <> ' . $this->_suborder->id)->exists()) {
+        ])->exists()) {
             return;
         }
 
