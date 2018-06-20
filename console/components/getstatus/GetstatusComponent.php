@@ -223,19 +223,6 @@ class GetstatusComponent extends Component
 
         $values = array_intersect_key(array_merge($defaultValues, $values), $defaultValues);
 
-        $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
-              SET 
-              `status` = COALESCE(:status, `status`),
-              `provider_charge` = COALESCE(:provider_charge, `provider_charge`),
-              `provider_response` = COALESCE(:provider_response, `provider_response`),
-              `provider_response_code` = COALESCE(:provider_response_code, `provider_response_code`),
-              `updated_at` = :updated_at
-              WHERE `id` = :id
-            ")
-            ->bindValues($values)
-            ->bindValue(':id', $orderId)
-            ->execute();
-
         if (null !== $newStatus && ($newStatus != $oldStatus)) {
             if (in_array($newStatus, [
                 Suborders::STATUS_IN_PROGRESS,
@@ -248,6 +235,19 @@ class GetstatusComponent extends Component
                 ]);
             }
         }
+
+        $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
+              SET 
+              `status` = COALESCE(:status, `status`),
+              `provider_charge` = COALESCE(:provider_charge, `provider_charge`),
+              `provider_response` = COALESCE(:provider_response, `provider_response`),
+              `provider_response_code` = COALESCE(:provider_response_code, `provider_response_code`),
+              `updated_at` = :updated_at
+              WHERE `id` = :id
+            ")
+            ->bindValues($values)
+            ->bindValue(':id', $orderId)
+            ->execute();
     }
 
     /**
@@ -422,15 +422,15 @@ class GetstatusComponent extends Component
                 ':provider_response_code' => $responseCode,
             ];
 
-            $this->_updateOrder($orderInfo, $values);
-
-            if (Suborders::STATUS_ERROR !== ArrayHelper::getValue($orderInfo, 'status')) {
+            if (Suborders::STATUS_ERROR != ArrayHelper::getValue($orderInfo, 'status')) {
                 Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
                     'suborderId' => $orderInfo['suborder_id'],
                     'storeId' => $orderInfo['store_id'],
                     'status' => Suborders::STATUS_ERROR
                 ]);
             }
+
+            $this->_updateOrder($orderInfo, $values);
 
             $sendResults['err_other']++;
 
