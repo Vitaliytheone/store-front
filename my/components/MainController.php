@@ -2,26 +2,12 @@
 namespace my\components;
 
 use Yii;
-use yii\helpers\Json;
-use yii\web\Controller;
-use yii\web\View;
 
 /**
  * MainController controller
  */
-class MainController extends Controller
+class MainController extends \common\components\MainController
 {
-
-    /**
-     * Activate js module
-     * @param string $name
-     * @param array $options
-     */
-    public function addModule($name, $options = [])
-    {
-        $this->getView()->registerJs('window.modules.' . $name . ' = ' . Json::encode($options) . ';', View::POS_END);
-    }
-
     public function beforeAction($action)
     {
         if (0 === strpos(Yii::$app->request->url, '/' . Yii::$app->params['superadminUrl'] . '/')) {
