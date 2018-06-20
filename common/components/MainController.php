@@ -13,6 +13,11 @@ use yii\web\View;
 class MainController extends Controller
 {
     /**
+     * @var bool whether to enable domain validation for the post actions in this controller.
+     */
+    public $enableDomainValidation = true;
+
+    /**
      * Activate js module
      * @param string $name
      * @param array $options
@@ -25,7 +30,7 @@ class MainController extends Controller
     public function beforeAction($action)
     {
         // Validate post requests
-        if (Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost && $this->enableDomainValidation) {
             $refererDomain = !empty($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : null;
             if ($refererDomain !== $_SERVER['SERVER_NAME']) {
                 throw new BadRequestHttpException(Yii::t('yii', 'Unable to verify your data submission.'));

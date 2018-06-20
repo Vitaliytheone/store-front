@@ -22,7 +22,9 @@ use yii\helpers\ArrayHelper;
 
 class PaymentsController extends CustomController
 {
-	public function init()
+	public $enableDomainValidation = false;
+	
+    public function init()
     {
 
     }
