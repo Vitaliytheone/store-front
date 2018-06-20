@@ -19,6 +19,8 @@ class PaymentsController extends CustomController
 {
     public $enableCsrfValidation = false;
 
+    public $enableDomainValidation = false;
+
     /**
      * Process payment method
      * @param $method

@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\controllers;
 
-use sommerce\helpers\UiHelper;
+use common\models\store\Products;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -59,7 +59,7 @@ class ProductController extends CustomController
     /**
      * Find product or return exception
      * @param int $id
-     * @return ProductViewForm
+     * @return ProductViewForm|Products
      * @throws NotFoundHttpException
      */
     protected function _findProduct(int $id)
