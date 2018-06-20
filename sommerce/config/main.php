@@ -31,6 +31,7 @@ $config = [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser'
             ],
+            'enableCsrfCookie' => false
         ],
         'devMailer' => [
             'class' => 'yii\swiftmailer\Mailer',
