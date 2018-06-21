@@ -92,9 +92,33 @@ class OrderSslForm extends Model
             [['admin_email'], 'email'],
             [['admin_phone'], 'integer'],
             [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::class, 'targetAttribute' => ['item_id' => 'id']],
+            ['item_id', 'checkAllowSslCertItem', 'skipOnError' => true,],
             [['pid'], 'isDomainAllowedValidator'],
         ];
     }
+
+    /**
+     * Check is passed cert item id in allowed list
+     * @param $attribute
+     * @param $params
+     * @return bool
+     */
+    public function checkAllowSslCertItem($attribute, $params)
+    {
+        /** @var SslCertItem $sslCertItem */
+        $sslCertItemId = $this->$attribute;
+
+        $allowedSslItems = array_keys($this->getSslItems());
+
+        if (!in_array($sslCertItemId, $allowedSslItems)) {
+            $this->addError($attribute, Yii::t('app', 'error.ssl.can_not_order_ssl'));
+
+            return false;
+        }
+
+        return true;
+    }
+
 
     /**
      * Set customer
@@ -115,6 +139,16 @@ class OrderSslForm extends Model
         }
 
         $this->initLastSslDetails();*/
+    }
+
+
+    /**
+     * Return current customer
+     * @return Customers|null
+     */
+    public function getCustomer()
+    {
+        return $this->_customer;
     }
 
     /**
@@ -392,10 +426,15 @@ class OrderSslForm extends Model
         $products = [];
 
         foreach (SslCertItem::find()->all() as $item) {
-            $products[$item->id] = Yii::t('app', 'form.order_ssl.ssl_item', [
-                'price' => $item->price,
-                'name' => $item->name
-            ]);
+
+            $allowIdList = $item->getAllow();
+
+            if (empty($allowIdList) || (is_array($allowIdList) and in_array($this->getCustomer()->id, $allowIdList))) {
+                $products[$item->id] = Yii::t('app', 'form.order_ssl.ssl_item', [
+                    'price' => $item->price,
+                    'name' => $item->name
+                ]);
+            }
         }
 
         return $products;
