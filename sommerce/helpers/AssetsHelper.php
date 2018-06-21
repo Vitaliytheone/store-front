@@ -64,9 +64,7 @@ class AssetsHelper {
         }
 
         foreach (static::$customScriptFiles as $scriptFile) {
-            $scripts[] =  [
-                'src' => $scriptFile
-            ];
+            $scripts[] =  $scriptFile;
         }
 
         $scripts[] = AssetsHelper::getFileUrl('/js/frontend.js');

@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\components\payments\methods;
 
+use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
@@ -49,11 +50,19 @@ class Authorize extends BasePayment {
         $this->action = ANetEnvironment::PRODUCTION;
 
         if (!empty(Yii::$app->params['testAuthorize'])) {
-            $this->action = ANetEnvironment::SANDBOX;
-            $this->script = 'https://jstest.authorize.net/v3/AcceptUI.js';
+            $this->initTestMode();
         }
 
         return parent::__construct($config);
+    }
+
+    /**
+     * Init test mode settings
+     */
+    protected function initTestMode()
+    {
+        $this->action = ANetEnvironment::SANDBOX;
+        $this->script = 'https://jstest.authorize.net/v3/AcceptUI.js';
     }
 
     /**
@@ -68,6 +77,10 @@ class Authorize extends BasePayment {
     {
         $paymentMethodOptions = $details->getDetails();
         $options = $checkout->getUserDetails();
+
+        if (!empty($paymentMethodOptions['test_mode'])) {
+            $this->initTestMode();
+        }
 
         $merchantLoginId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_login_id');
         $merchantTransactionKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_transaction_id');
@@ -111,30 +124,27 @@ class Authorize extends BasePayment {
          * @var $response ANetApiResponseType
          */
         if (empty($response)) {
-            $this->log([
-                'result' => 2,
+            return static::returnError([
+                'result' => 3,
                 'content' => 'bad data'
             ]);
-            return static::returnError();
         }
 
         $responseMessage = $response->getMessages();
         if ('Ok' != $responseMessage->getResultCode()) {
-            $this->log([
-                'result' => 2,
+            return static::returnError([
+                'result' => 3,
                 'content' => 'bad status'
             ]);
-            return static::returnError();
         }
 
         $response = $response->getTransactionResponse();
 
         if ($response === null || $response->getMessages() === null) {
-            $this->log([
-                'result' => 2,
+            return static::returnError([
+                'result' => 3,
                 'content' => 'bad response data'
             ]);
-            return static::returnError();
         }
 
         // заносим запись в таблицу payments_log
@@ -143,11 +153,10 @@ class Authorize extends BasePayment {
         $transactionId = $response->getTransId();
 
         if (empty($transactionId)) {
-            $this->log([
-                'result' => 2,
+            return static::returnError([
+                'result' => 3,
                 'content' => 'bad response data'
             ]);
-            return static::returnError();
         }
 
         if (!($this->_payment = Payments::findOne([
@@ -164,14 +173,16 @@ class Authorize extends BasePayment {
         $this->_payment->transaction_id = $transactionId;
         $this->_payment->save(false);
 
+        // Clear cart after payment will be create
+        Carts::clearCheckoutItems($checkout);
+
         $response = $this->getTransactionDetails($transactionId, $this->_payment, $details);
 
         if (null == $response) {
-            $this->log([
-                'result' => 2,
-                'content' => 'bad transaction response data'
+            return static::returnError([
+                'result' => 3,
+                'content' => 'bad transaction response data',
             ]);
-            return static::returnError();
         }
 
         /**
@@ -185,11 +196,12 @@ class Authorize extends BasePayment {
             'settledsuccessfully',
             'capturedpendingsettlement'
         ]) || 1 !== $responseCode) {
-            $this->log([
-                'result' => 2,
-                'content' => 'no final status'
+
+            return static::returnError([
+                'result' => 3,
+                'content' => 'no final status',
+                'refresh' => 1
             ]);
-            return static::returnError();
         }
 
         $this->_payment->status = Payments::STATUS_AWAITING;
@@ -209,7 +221,7 @@ class Authorize extends BasePayment {
 
         static::success($this->_payment, $result, $store);
 
-        return static::returnRedirect('/addfunds');
+        return static::returnRedirect('/cart');
     }
 
     /**
@@ -225,17 +237,21 @@ class Authorize extends BasePayment {
         $clientKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_client_key');
         $loginId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_login_id');
 
+        if (!empty($paymentMethodOptions['test_mode'])) {
+            $this->initTestMode();
+        }
+
         AssetsHelper::addCustomScriptFile($this->script);
 
         return [
-            'type' => PaymentMethods::METHOD_BILLPLZ,
+            'type' => $details->id,
             'configure' => [
                 'type' => 'button',
                 'class' => 'AcceptUI',
                 'data-billingAddressOptions' => ['show' => true, 'required' => false],
                 'data-apiLoginID' => $loginId,
                 'data-clientKey' => $clientKey,
-                'data-acceptUIFormBtnTxt' => Yii::t('app', 'addfunds.button'),
+                'data-acceptUIFormBtnTxt' => Yii::t('app', 'cart.button.checkout'),
                 'data-acceptUIFormHeaderTxt' => $store->name,
                 'data-responseHandler' => 'responseAuthorizeHandler',
             ],
@@ -264,6 +280,10 @@ class Authorize extends BasePayment {
         }
 
         $paymentMethodOptions = $details->getDetails();
+
+        if (!empty($paymentMethodOptions['test_mode'])) {
+            $this->initTestMode();
+        }
 
         $merchantLoginId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_login_id');
         $merchantTransactionKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_transaction_id');
@@ -343,5 +363,22 @@ class Authorize extends BasePayment {
                 'content' => 'OK'
             ], $store);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function fields()
+    {
+        return [
+            'data_descriptor' => [
+                'name' => 'data_descriptor',
+                'type' => 'hidden',
+            ],
+            'data_value' => [
+                'name' => 'data_value',
+                'type' => 'hidden',
+            ],
+        ];
     }
 }

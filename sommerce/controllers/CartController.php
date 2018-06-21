@@ -39,7 +39,7 @@ class CartController extends CustomController
         $searchModel = new CartSearch();
         $searchModel->setStore($store);
 
-        $items = $searchModel->getItemsForView();;
+        $items = $searchModel->getItemsForView();
 
         $model = new OrderForm();
         $model->setStore($store);
@@ -48,6 +48,9 @@ class CartController extends CustomController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if ($model->redirect) {
                 return $this->redirect($model->redirect);
+            }
+            if ($model->refresh) {
+                return $this->refresh();
             }
             return $this->renderPartial('checkout', $model->formData);
         }
