@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use my\components\ssl\Ssl;
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\panels\queries\SslCertItemQuery;
@@ -14,11 +15,15 @@ use common\models\panels\queries\SslCertItemQuery;
  * @property integer $product_id
  * @property string $price
  * @property string $allow
+ * @property string $generator
  *
  * @property SslCert[] $sslCerts
  */
 class SslCertItem extends ActiveRecord
 {
+    const GENERATOR_COMODO = 1;
+    const GENERATOR_RAPIDSSL = 2;
+
     /**
      * @inheritdoc
      */
@@ -38,6 +43,7 @@ class SslCertItem extends ActiveRecord
             [['price'], 'number'],
             [['name'], 'string', 'max' => 250],
             ['allow', 'string'],
+            ['generator', 'integer']
         ];
     }
 
@@ -52,6 +58,7 @@ class SslCertItem extends ActiveRecord
             'product_id' => Yii::t('app', 'Product ID'),
             'price' => Yii::t('app', 'Price'),
             'allow' => Yii::t('app', 'Allow'),
+            'generator' => Yii::t('app', 'Generator'),
         ];
     }
 
@@ -88,5 +95,27 @@ class SslCertItem extends ActiveRecord
     public function getAllow()
     {
         return json_decode($this->allow, true);
+    }
+
+    /**
+     * Return DCV SSL method by generator
+     * @param $isSslRenew bool
+     * @return string
+     */
+    public function getDcvMethod($isSslRenew = false)
+    {
+        switch ($this->generator) {
+            case SslCertItem::GENERATOR_COMODO:
+                $dcvMethod = $isSslRenew ? Ssl::DCV_METHOD_HTTPS : Ssl::DCV_METHOD_HTTP;
+                break;
+            case SslCertItem::GENERATOR_RAPIDSSL:
+                $dcvMethod = Ssl::DCV_METHOD_EMAIL;
+                break;
+            default:
+                $dcvMethod = $isSslRenew ? Ssl::DCV_METHOD_HTTPS : Ssl::DCV_METHOD_HTTP;
+                break;
+        }
+
+        return $dcvMethod;
     }
 }
