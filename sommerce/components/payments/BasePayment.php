@@ -301,13 +301,18 @@ abstract class BasePayment extends Component {
 
     /**
      * Return checkout error
+     * @param array|null $result
      * @return array
      */
-    protected static function returnError()
+    protected static function returnError($result = null)
     {
-        return [
-            'result' => 3,
-        ];
+        if (empty($result)) {
+            return [
+                'result' => 3,
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -352,13 +357,14 @@ abstract class BasePayment extends Component {
     protected function log($data)
     {
         $filePath = Yii::getAlias('@paymentsLog') . '/' . $this->_method . '.log';
+
         $data = implode("\r\n", [
             SiteHelper::host(),
             date('Y-m-d H:i:s'),
             '',
             $this->_method . '-' . $this->_token,
             '',
-            $data
+            is_string($data) ? $data : var_export($data, true)
         ]);
         @file_put_contents($filePath, $data . "\r\n\r\n", FILE_APPEND);
     }

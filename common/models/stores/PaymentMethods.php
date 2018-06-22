@@ -31,6 +31,7 @@ class PaymentMethods extends ActiveRecord
     const METHOD_PAYTR = 'paytr';
     const METHOD_PAYWANT = 'paywant';
     const METHOD_BILLPLZ = 'billplz';
+    const METHOD_AUTHORIZE = 'authorize';
 
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;
@@ -133,5 +134,4 @@ class PaymentMethods extends ActiveRecord
     {
         return !empty($this->details) ? json_decode($this->details, true) : [];
     }
-
 }

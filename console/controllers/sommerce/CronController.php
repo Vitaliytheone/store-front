@@ -3,13 +3,19 @@
 namespace console\controllers\sommerce;
 
 use common\events\Events;
+use common\helpers\CurrencyHelper;
 use common\models\store\Checkouts;
+use common\models\store\Payments;
+use common\models\stores\PaymentMethods;
 use common\models\stores\StoreAdminsHash;
 use common\models\stores\Stores;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
+use sommerce\components\payments\methods\Authorize;
+use sommerce\components\payments\Payment;
 use sommerce\helpers\StoresHelper;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class CronController
@@ -87,6 +93,60 @@ class CronController extends CustomController
                         $checkout->save(false);
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Cron to check payments status with status pending
+     */
+    public function actionCheckPayments()
+    {
+        $storeQuery = Stores::find()->active();
+
+        foreach ($storeQuery->batch() as $stores) {
+            foreach ($stores as $store) {
+
+                // Init store
+                Yii::$app->store->setInstance($store);
+
+                $this->_checkAuthorize($store);
+            }
+        }
+    }
+
+    /**
+     * @param Stores $store
+     */
+    protected function _checkAuthorize(Stores $store)
+    {
+        $currencies = ArrayHelper::index(CurrencyHelper::getPaymentsByCurrency($store->currency), 'code');
+        $method = ArrayHelper::getValue($currencies, PaymentMethods::METHOD_AUTHORIZE);
+
+        if (!$method) {
+            return;
+        }
+
+        $paymentMethod = PaymentMethods::findOne([
+            'method' => PaymentMethods::METHOD_AUTHORIZE,
+            'store_id' => $store->id,
+            'active' => PaymentMethods::ACTIVE_ENABLED,
+        ]);
+
+        if (!$paymentMethod) {
+            return;
+        }
+
+        /**
+         * @var Authorize $component
+         */
+        $component = Payment::getPayment(PaymentMethods::METHOD_AUTHORIZE);
+
+        foreach (Payments::find()->andWhere([
+            'payments.status' => Payments::STATUS_AWAITING,
+        ])->batch() as $payments) {
+            foreach ($payments as $payment) {
+                $component->checkStatus($payment, $store, $paymentMethod);
             }
         }
     }

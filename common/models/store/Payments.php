@@ -29,7 +29,7 @@ use common\models\store\queries\PaymentsQuery;
  * @property string $currency
  *
  * @property Checkouts $checkout
- * @property Order $order
+ * @property Orders $order
  */
 class Payments extends ActiveRecord
 {
@@ -62,6 +62,7 @@ class Payments extends ActiveRecord
             [['method', 'customer', 'transaction_id', 'memo', 'response_status', 'name', 'email', 'country'], 'string', 'max' => 255],
             [['currency'], 'string', 'max' => 10],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::class, 'targetAttribute' => ['checkout_id' => 'id']],
+            [['status'], 'default', 'value' => static::STATUS_AWAITING],
         ];
     }
 
