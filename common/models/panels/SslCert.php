@@ -370,4 +370,23 @@ class SslCert extends ActiveRecord
         ]);
         $mailer->send();
     }
+
+    /**
+     * Return ssl approver email by passed domain name
+     * @param $domain string
+     * @return string;
+     */
+    public static function approverEmailByDomain($domain)
+    {
+        return "ssladmin@" . $domain;
+    }
+
+    /**
+     * Return ssl approver email
+     * @return string
+     */
+    public function getApproverEmail()
+    {
+        return static::approverEmailByDomain($this->getDomain());
+    }
 }

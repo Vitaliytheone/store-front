@@ -19,7 +19,7 @@ class m180618_085954_20180618_db_panels__table_ssl_cert_item__allow_field_added 
     {
         $this->execute("
             USE `" . DB_PANELS . "`;
-            DROP TABLE `ssl_cert_item`;
+            ALTER TABLE `ssl_cert_item` DROP `allow`;
         ");
     }
 }
