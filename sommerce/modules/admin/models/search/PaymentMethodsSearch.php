@@ -62,6 +62,10 @@ class PaymentMethodsSearch extends PaymentMethods
                 'icon' => '/img/pg/billplz.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_BILLPLZ),
             ],
+            PaymentMethods::METHOD_AUTHORIZE => [
+                'icon' => '/img/pg/authorize.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_AUTHORIZE),
+            ],
         ];
 
         return ArrayHelper::getValue($methodItemsData, "$method.$methodName", $methodName);

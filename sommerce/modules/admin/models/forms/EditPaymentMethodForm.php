@@ -178,6 +178,15 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'text', 'id' => 'billplz_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret]', 'value' => $getDetailsField('secret'), 'label' => Yii::t('admin', 'settings.payments_billplz_secret')],
                 ]
             ],
+            PaymentMethods::METHOD_AUTHORIZE => [
+                'icon' => '/img/pg/authorize.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'authorize_merchant_login_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_login_id]', 'value' => $getDetailsField('merchant_login_id'), 'label' => Yii::t('admin', 'settings.payments_authorize_merchant_login_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'authorize_merchant_transaction_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_transaction_id]', 'value' => $getDetailsField('merchant_transaction_id'), 'label' => Yii::t('admin', 'settings.payments_authorize_merchant_transaction_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'authorize_merchant_client_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_client_key]', 'value' => $getDetailsField('merchant_client_key'), 'label' => Yii::t('admin', 'settings.payments_authorize_merchant_client_key')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_authorize_test_mode')],
+                ]
+            ],
         ];
 
         return ArrayHelper::getValue($paymentsFormData, $method);

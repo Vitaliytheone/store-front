@@ -57,6 +57,7 @@ php yii worker/start > /dev/null 2>&1 & - запуск воркера в фон�
 	php yii cron-sommerce/sender
 	php yii cron-sommerce/getstatus
     php yii cron-sommerce/clear-auth
+    php yii cron-sommerce/check-payments
 
 ###My
 

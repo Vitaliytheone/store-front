@@ -56,6 +56,11 @@ class OrderForm extends Model {
     public $redirect;
 
     /**
+     * @var boolean
+     */
+    public $refresh = false;
+
+    /**
      * @var array
      */
     public $formData;
@@ -244,8 +249,10 @@ class OrderForm extends Model {
             ])->store($this->_store)->active()->one();
 
         $result = Payment::getPayment($paymentMethod->method)->checkout($checkout, $this->_store, $this->email, $paymentMethod);
-
-        if (2 == $result['result']) {
+        if (3 == $result['result'] && !empty($result['refresh'])) {
+            $this->refresh = true;
+            return true;
+        } else if (2 == $result['result']) {
             $this->redirect = $result['redirect'];
             return true;
         } else if (1 == $result['result']) {

@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\store\queries\CartsQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%carts}}".
@@ -112,5 +113,23 @@ class Carts extends ActiveRecord
         }
 
         return $item->delete();
+    }
+
+    /**
+     * Remove all checkout items
+     * @param Checkouts $checkout
+     * @return void
+     */
+    public static function clearCheckoutItems(Checkouts $checkout)
+    {
+        $items = $checkout->getDetails();
+
+        if (empty($items)) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            static::removeItemByKey($item['cart_key']);
+        }
     }
 }
