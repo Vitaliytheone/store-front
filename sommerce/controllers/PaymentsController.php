@@ -57,7 +57,10 @@ class PaymentsController extends CustomController
             }
         }
 
-        if (PaymentMethods::METHOD_PAYPAL !== $method) {
+        if (!in_array($method, [
+            PaymentMethods::METHOD_AUTHORIZE,
+            PaymentMethods::METHOD_PAYPAL
+        ])) {
             return $this->redirect('/cart');
         }
 

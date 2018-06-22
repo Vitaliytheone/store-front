@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\components\payments\methods;
 
+use common\helpers\SiteHelper;
 use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
@@ -109,7 +110,7 @@ class Authorize extends BasePayment {
 
         //create a transaction
         $transactionRequestType = new TransactionRequestType();
-        $transactionRequestType->setTransactionType( "authCaptureTransaction");
+        $transactionRequestType->setTransactionType("authCaptureTransaction");
         $transactionRequestType->setAmount($checkout->price);
         $transactionRequestType->setCallId(time());
         $transactionRequestType->setPayment($paymentOne);
@@ -202,9 +203,9 @@ class Authorize extends BasePayment {
         ]) || 1 !== $responseCode) {
 
             return static::returnError([
-                'result' => 3,
+                'result' => 2,
+                'redirect' => SiteHelper::hostUrl() . '/' . PaymentMethods::METHOD_AUTHORIZE . '?checkout_id=' . $checkout->id,
                 'content' => 'no final status',
-                'refresh' => 1
             ]);
         }
 
@@ -221,7 +222,7 @@ class Authorize extends BasePayment {
 
         static::success($this->_payment, $result, $store);
 
-        return static::returnRedirect('/cart');
+        return static::returnRedirect(SiteHelper::hostUrl() . '/' . PaymentMethods::METHOD_AUTHORIZE . '?checkout_id=' . $checkout->id);
     }
 
     /**
@@ -265,7 +266,10 @@ class Authorize extends BasePayment {
      */
     public function processing($store)
     {
-
+        return [
+            'result' => 2,
+            'checkout_id' => ArrayHelper::getValue($_GET, 'checkout_id')
+        ];
     }
 
     /**
