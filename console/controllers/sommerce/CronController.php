@@ -12,6 +12,7 @@ use common\models\stores\Stores;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
 use sommerce\components\payments\methods\Authorize;
+use sommerce\components\payments\methods\Paypal;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\StoresHelper;
 use Yii;
@@ -111,6 +112,7 @@ class CronController extends CustomController
                 Yii::$app->store->setInstance($store);
 
                 $this->_checkAuthorize($store);
+                $this->_checkPaypalPayment($store);
             }
         }
     }
@@ -143,6 +145,38 @@ class CronController extends CustomController
         $component = Payment::getPayment(PaymentMethods::METHOD_AUTHORIZE);
 
         foreach (Payments::find()->andWhere([
+            'method' => PaymentMethods::METHOD_AUTHORIZE,
+            'payments.status' => Payments::STATUS_AWAITING,
+        ])->batch() as $payments) {
+            foreach ($payments as $payment) {
+                $component->checkStatus($payment, $store, $paymentMethod);
+            }
+        }
+    }
+
+    /**
+     * @param Stores $store
+     */
+    protected function _checkPaypalPayment(Stores $store)
+    {
+        $paymentMethod = PaymentMethods::findOne([
+            'method' => PaymentMethods::METHOD_PAYPAL,
+            'store_id' => $store->id,
+            'active' => PaymentMethods::ACTIVE_ENABLED,
+        ]);
+
+        // Only for express checkout
+        if (!$paymentMethod) {
+            return;
+        }
+
+        /**
+         * @var $component Paypal
+         */
+        $component = Payment::getPayment('paypal');
+
+        foreach (Payments::find()->andWhere([
+            'method' => PaymentMethods::METHOD_PAYPAL,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {

@@ -556,4 +556,59 @@ class Paypal extends BasePayment {
             return $responseArray;
         }
     }
+
+    /**
+     * Check payment status
+     * @param Payments $payment
+     * @param Stores $store
+     * @param PaymentMethods $details
+     * @return boolean
+     */
+    public function checkStatus($payment, $store, $details)
+    {
+        $paymentMethodOptions = $details->getDetails();
+
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
+
+        $credentials = [
+            'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
+            'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
+            'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
+        ];
+
+        $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
+            'TRANSACTIONID' => $payment->transaction_id
+        ]);
+
+        // заносим запись в таблицу payments_log
+        PaymentsLog::log($payment->checkout_id, [
+            'Cron.GetTransactionDetails' => $GetTransactionDetails
+        ]);
+
+        $status = (string)ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS', '');
+        $status = strtolower(trim($status));
+        $amount = ArrayHelper::getValue($GetTransactionDetails, 'AMT');
+        $currency = ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE');
+
+        // если стаутс не Completed и не Pending и не In-Progress тогда переводим invoice_status = 4
+        if (!empty($status) && !in_array($status, ['completed', 'pending', 'in-progress'])) {
+            $payment->status = Payments::STATUS_FAILED;
+            $payment->save(false);
+        }
+
+        // Проверяемстатус, сумму и валюту
+        if ($status != 'completed' || $amount != $payment->amount || $currency != $store->currency) {
+            return false;
+        }
+
+        static::success($payment, [
+            'result' => 1,
+            'transaction_id' => $payment->transaction_id,
+            'amount' => $payment->amount,
+            'checkout_id' => $payment->checkout_id,
+            'content' => 'Ok'
+        ], $store);
+    }
 }
