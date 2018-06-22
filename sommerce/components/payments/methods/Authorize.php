@@ -192,6 +192,10 @@ class Authorize extends BasePayment {
         $status = $transaction->getTransactionStatus();
         $responseCode = (int)$transaction->getResponseCode();
 
+        $this->_payment->status = Payments::STATUS_AWAITING;
+        $this->_payment->response_status = $status;
+        $this->_payment->save(false);
+
         if (!in_array(strtolower($status), [
             'settledsuccessfully',
             'capturedpendingsettlement'
@@ -203,10 +207,6 @@ class Authorize extends BasePayment {
                 'refresh' => 1
             ]);
         }
-
-        $this->_payment->status = Payments::STATUS_AWAITING;
-        $this->_payment->response_status = $status;
-        $this->_payment->save(false);
 
         $result = [
             'result' => 1,
@@ -346,12 +346,11 @@ class Authorize extends BasePayment {
 
             if (!in_array(strtolower($status), [
                 'settledsuccessfully',
-                'capturedpendingsettlement'
+                'capturedpendingsettlement',
             ]) || 1 !== $responseCode) {
                 return false;
             }
 
-            $payment->status = Payments::STATUS_AWAITING;
             $payment->response_status = $status;
             $payment->save(false);
 
