@@ -382,6 +382,12 @@ return [
     'settings.payments_webmoney_guide_4-4-7-1' => 'SHA256',
     'settings.payments_webmoney_guide_5' => 'Enter your WebMoney details below.',
 
+    'settings.payments_edit_authorize' => 'Edit Authorize',
+    'settings.payments_authorize_merchant_login_id' => 'Merchant login ID',
+    'settings.payments_authorize_merchant_transaction_id' => 'Merchant transaction ID',
+    'settings.payments_authorize_merchant_client_key' => 'Merchant client key',
+    'settings.payments_authorize_test_mode' => 'Use test mode',
+
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
     'settings.providers_save' => 'Save changes',
