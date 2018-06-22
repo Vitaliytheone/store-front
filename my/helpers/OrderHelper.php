@@ -63,10 +63,17 @@ class OrderHelper {
         }
 
         // Add ssl order
-        $orderSsl = OrderSslHelper::addSSLOrder($order, [
+        $sslOrderData = [
             'product_id' => $sslItem->product_id,
             'csr' => $csr['csr_code'],
-        ]);
+            'dcv_method' => $sslItem->getDcvMethod(),
+        ];
+
+        if ($sslItem->getDcvMethod() === Ssl::DCV_METHOD_EMAIL) {
+            $sslOrderData['approver_email'] = SslCert::approverEmailByDomain($order->getDomain());
+        }
+
+        $orderSsl = OrderSslHelper::addSSLOrder($order, $sslOrderData);
 
         if (empty($orderSsl['success'])) {
             // Change order status to error

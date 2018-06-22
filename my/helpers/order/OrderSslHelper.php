@@ -110,7 +110,6 @@ class OrderSslHelper {
             'period' => SslCert::SSL_CERT_PERIOD,
             'server_count' => '-1',
             'webserver_type' => 1,
-            'dcv_method' => Ssl::DCV_METHOD_HTTP,
             'signature_hash' => 'SHA2',
         ], $data);
 
@@ -160,6 +159,8 @@ class OrderSslHelper {
             throw new Exception('Invalid SslCert data!');
         }
 
+        $sslDcvMethod = $ssl->item->getDcvMethod(true);
+
         $data = [
             'csr' => $ssl->csr_code,
             'product_id' => $sslOrderStatus['product_id'],
@@ -190,9 +191,13 @@ class OrderSslHelper {
             'period' => SslCert::SSL_CERT_PERIOD,
             'server_count' => '-1',
             'webserver_type' => 1,
-            'dcv_method' => Ssl::DCV_METHOD_HTTPS,
             'signature_hash' => 'SHA2',
+            'dcv_method' => $sslDcvMethod,
         ];
+
+        if ($sslDcvMethod === Ssl::DCV_METHOD_EMAIL) {
+            $data['approver_email'] = $ssl->getApproverEmail();
+        }
 
         $orderRenewSsl = Ssl::addSSLRenewOrder($data);
 
