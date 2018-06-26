@@ -12,7 +12,6 @@ $this->title = 'Admin';
 
 ?>
 
-
 <div class="admin-form-wrapper">
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
@@ -28,7 +27,7 @@ $this->title = 'Admin';
     <?= $form->field($model, 'password')->passwordInput() ?>
 
     <?php if ($model->isCheckCaptcha()) : ?>
-        <?= ReCaptcha::widget(['name' => 're_captcha']) ?>
+        <?= $form->field($model, 're_captcha')->widget(ReCaptcha::class) ?>
         <br />
     <?php endif; ?>
 
