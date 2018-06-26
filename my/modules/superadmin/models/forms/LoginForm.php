@@ -22,7 +22,7 @@ class LoginForm extends Model
 
     public $username;
     public $password;
-    public $re_сaptcha;
+    public $re_captcha;
 
     /**
      * @var bool|SuperAdmin
@@ -43,15 +43,17 @@ class LoginForm extends Model
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->isCheckCaptcha()) {
-            $rules[] = [['re_сaptcha'], ReCaptchaValidator::className(), 'uncheckedMessage' => 'Please confirm that you are not a bot.'];
+            $rules[] = [['re_captcha'], ReCaptchaValidator::class, 'uncheckedMessage' => 'Please confirm that you are not a bot.'];
         }
 
-        $rules = [
+        $rules = array_merge($rules, [
             [['username', 'password'], 'required'],
             ['password', 'validatePassword'],
             ['username', 'validateStatus'],
-        ];
+        ]);
 
         return $rules;
     }

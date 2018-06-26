@@ -591,6 +591,14 @@ class Paypal extends BasePayment {
         $status = strtolower(trim($status));
         $amount = ArrayHelper::getValue($GetTransactionDetails, 'AMT');
         $currency = ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE');
+        $errorCode = ArrayHelper::getValue($GetTransactionDetails, 'L_ERRORCODE0');
+
+        // [L_ERRORCODE0] => 10007 для этой ошибки переносим платеж в failed
+        if (10007 == $errorCode) {
+            $payment->status = Payments::STATUS_FAILED;
+            $payment->save(false);
+            return false;
+        }
 
         // если стаутс не Completed и не Pending и не In-Progress тогда переводим invoice_status = 4
         if (!empty($status) && !in_array($status, ['completed', 'pending', 'in-progress'])) {
