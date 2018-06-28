@@ -400,6 +400,10 @@ class GoGetSSLApi
             $queryData = $isFile ? $postData : http_build_query($postData);
             curl_setopt($c, CURLOPT_POSTFIELDS, $queryData);
         }
+
+        //connection timeout
+        curl_setopt($c, CURLOPT_CONNECTTIMEOUT, Yii::$app->params['curl.timeout']);
+
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);

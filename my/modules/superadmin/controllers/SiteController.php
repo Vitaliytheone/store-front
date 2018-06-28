@@ -61,11 +61,13 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
+
         if (!Yii::$app->superadmin->isGuest) {
             return $this->goAdmin();
         }
 
         $this->layout = 'guest';
+
 
         $model = new LoginForm();
 
@@ -73,7 +75,6 @@ class SiteController extends CustomController
             $redirect = Yii::$app->request->get('r', Url::toRoute('/'));
             return $this->redirect($redirect);
         }
-
         return $this->render('index', [
             'model' => $model,
         ]);

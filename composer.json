@@ -30,7 +30,7 @@
         "pagseguro/php": "^2.7",
         "symfony/css-selector": "^4.0",
         "crossjoin/css": "^1.0",
-        "authorizenet/authorizenet": "dev-master"
+        "opensrs/osrs-toolkit-php": "^4.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

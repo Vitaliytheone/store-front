@@ -1,0 +1,22 @@
+<% _.each(items, function(item,key,arr) { %>
+<tr>
+    <td data-title="<%= titles.id %>">
+        <%= item['id'] %>
+    </td>
+    <td data-title="<%= titles.domain %>">
+        <%= item['domain'] %>
+    </td>
+    <td data-title="<%= titles.customer %>">
+        <a href="#" ><%= item['customer'] %> </a>
+    </td>
+    <td data-title="<%= titles.status %>">
+        <%= item['status'] %>
+    </td>
+    <td data-title="<%= titles.creted %>">
+        <%= item['created'] %>
+    </td>
+    <td data-title="<%= titles.expity %>">
+        <%= item['expired'] %>
+    </td>
+</tr>
+<% }); %>
