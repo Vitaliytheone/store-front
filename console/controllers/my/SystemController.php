@@ -12,7 +12,7 @@ use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
 use common\models\panels\Tickets;
 use Faker\Factory;
-use my\components\dns\Dns;
+use common\components\dns\Dns;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
