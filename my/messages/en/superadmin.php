@@ -25,6 +25,7 @@ return [
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
+    'header.nav.dashboard' => 'Dashboard',
 
     'pages.title.edit_panel' => 'Edit {domain} panel',
     'pages.title.panels' => 'Panels',
@@ -51,6 +52,7 @@ return [
     'pages.title.tools.levopanel' => 'Levopanel scanner',
     'pages.title.tools.smmfire' => 'Panelfire scanner',
     'pages.title.stores' => 'Stores',
+    'pages.title.dashboard' => 'Dashboard',
 
     'panels.edit.header' => 'Edit {domain} panel',
     'panels.edit.btn_submit' => 'Save changes',
@@ -312,6 +314,9 @@ return [
     'error.provider.can_not_edit_provider' => 'Can not edit provider',
     'error.invoices.incorrect_invoice_customer' => 'Incorrect invoice customer',
     'error.invoices.can_not_create_invoice' => 'Can not create invoice',
+    'error.service.not_found' => 'Service not found',
+    'error' => 'Error',
+    'error.result_is_null' => 'Result is null',
 
     'pages.settings.content' => 'Content',
     'settings.content.column_name' => 'Name',
@@ -463,4 +468,25 @@ return [
     'stores.modal.change_domain_modal_header' => 'Change domain',
     'stores.list.action_sign_in_as_admin' => 'Sign in as admin',
     'stores.list.action_terminate' => 'Terminate store',
+
+    'dashboard.child_panels' => 'Child panels',
+    'dashboard.panels' => 'Panels',
+    'dashboard.stores' => 'Stores',
+    'dashboard.domains' => 'Domains',
+    'dashboard.ssl' => 'SSL',
+    'dashboard.hosted_email' => 'Hosted email',
+    'dashboard.table.id' => 'ID',
+    'dashboard.table.domain' => 'Domain',
+    'dashboard.table.customer' => 'Customer',
+    'dashboard.table.status' => 'Status',
+    'dashboard.table.created' => 'Created',
+    'dashboard.table.expiry' => 'Expiry',
+    'dashboard.services.ahnames' => 'AHnames',
+    'dashboard.services.ggssl' => 'GGSSL',
+    'dashboard.services.whoisapi' => 'WhoisAPI',
+    'dashboard.services.dnslytics' => 'DNSlytics',
+    'dashboard.services.opensrs' => 'OpenSRS'
+
+
+
 ];
