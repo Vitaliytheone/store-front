@@ -6,6 +6,7 @@ use my\components\MainController;
 use my\components\SuperAccessControl;
 use my\helpers\Url;
 use Yii;
+use yii\web\Controller;
 use yii\web\Response;
 
 /**
@@ -14,7 +15,13 @@ use yii\web\Response;
 class CustomController extends MainController
 {
     public $activeTab;
-    public $layout = '@my/modules/superadmin/views/layouts/superadmin.php';
+
+    public $layout = 'superadmin.php';
+
+    public function beforeAction($action)
+    {
+        return Controller::beforeAction($action);
+    }
 
     /**
      * @return mixed|\yii\web\User
@@ -34,7 +41,7 @@ class CustomController extends MainController
             return $this->redirect(Url::toRoute('/'));
         }
 
-        return $this->redirect(Url::toRoute('/panels'));
+        return $this->redirect(Url::toRoute('/dashboard'));
     }
 
     /**

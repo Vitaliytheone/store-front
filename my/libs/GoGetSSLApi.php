@@ -8,6 +8,12 @@ require_once(Yii::getAlias('@my/libs/GoGetSSL/GoGetSSLApi.php'));
 use GoGetSSLApi as BaseGoGetSSLApi;
 
 class GoGetSSLApi extends BaseGoGetSSLApi {
+
+    /**
+     * @var string - curl connection timeout
+     */
+    protected $timeout;
+
     /**
      * @var string - last url to api query
      */
@@ -22,6 +28,11 @@ class GoGetSSLApi extends BaseGoGetSSLApi {
      * @var string - result from api query
      */
     protected $lastResult;
+
+    public function __construct($sandbox = false, $key = null, $timeout = null)
+    {
+        parent::__construct($sandbox, $key);
+    }
 
     protected function call($uri, $getData = array(), $postData = array(), $forcePost = false, $isFile = false)
     {
@@ -48,6 +59,13 @@ class GoGetSSLApi extends BaseGoGetSSLApi {
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
+
+        //connection timeout
+        if ($this->timeout) {
+            curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        }
+
+
         $this->lastResult = curl_exec($c);
         $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
         curl_close($c);

@@ -4,6 +4,8 @@ $superadmin = [];
 
 foreach ([
      '' => '/site',
+     '/dashboard' => '/dashboard',
+     '/dashboard/index' => '/dashboard',
      '/account' => '/account',
      '/settings' => '/settings',
      '/settings/email' => '/settings/email',
