@@ -33,7 +33,7 @@ $this->context->addModule('superadminDashboardController', [
             <div class="col" data-panel = "hosted-email">
                 <div class="dashboard2-card">
                     <div class="dashboard2-card__value">
-                        1
+                        0
                     </div>
                     <div class="dashboard2-card__title"><?= Yii::t('app/superadmin', 'dashboard.hosted_email') ?></div>
                 </div>
