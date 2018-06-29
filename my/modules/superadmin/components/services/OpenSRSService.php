@@ -29,6 +29,18 @@ class OpenSRSService extends BaseService
     }
 
     /**
+     * @return bool
+     */
+    public function isValidConfiguration()
+    {
+        if (empty($this->registrantIp)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get account balance of service
      * @return mixed
      */
@@ -42,19 +54,26 @@ class OpenSRSService extends BaseService
         ];
 
         try {
+
+            if (!$this->isValidConfiguration()) {
+                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+            }
+
             $request = new Request();
             $response = $request->process('array', $data);
 
-            $result  = [
-                'balance' => '$' . $response->resultRaw['balance'],
-            ];
+            if (empty($response->resultRaw['balance'])) {
+                throw new Exception(Yii::t('app/superadmin', 'error.result_is_null'));
+            }
 
         } catch (Exception $e){
             $this->error = $e;
             return 0;
         }
 
-        return $result;
+        return [
+            'balance' => '$' . $response->resultRaw['balance'],
+        ];
 
     }
 

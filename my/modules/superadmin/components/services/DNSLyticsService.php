@@ -18,19 +18,31 @@ class DNSLyticsService extends BaseService
     /**
      * @var string
      */
-    private $balanceUrl;
+    private $url;
 
     /**
      * DNSLyticsService constructor.
      * @param string $apiKey
-     * @param string $balanceUrl
+     * @param string $url
      * @param mixed $timeout
      */
-    public function __construct($apiKey, $balanceUrl, $timeout)
+    public function __construct($apiKey, $url, $timeout)
     {
         parent::__construct($timeout);
         $this->apiKey = $apiKey;
-        $this->balanceUrl = $balanceUrl;
+        $this->url = $url;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValidConfiguration()
+    {
+        if (empty($this->apiKey) || empty($this->url)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -39,13 +51,18 @@ class DNSLyticsService extends BaseService
      */
     public function getBalance()
     {
-        $getData = [
-            'apikey' => $this->apiKey,
-        ];
         try {
-            $result = json_decode($this->call($this->balanceUrl, $getData),true);
+            if (!$this->isValidConfiguration()) {
+                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+            }
 
-            if (!$result) {
+            $getData = [
+                'apikey' => $this->apiKey,
+            ];
+
+            $result = @json_decode($this->call($this->url . '/accountinfo', $getData),true);
+
+            if (!$result && is_array($result)) {
                 throw new Exception(Yii::t('app/superadmin', 'error.result_is_null'));
             }
 

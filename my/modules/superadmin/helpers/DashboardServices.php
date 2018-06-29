@@ -76,7 +76,7 @@ class DashboardServices
                 'name' => Yii::t('app/superadmin', 'dashboard.services.dnslytics'),
                 'params' => [
                     $dnslyticsParams['dnslytics.apiKey'],
-                    $dnslyticsParams['dnslytics.balanceUrl'],
+                    $dnslyticsParams['dnslytics.url'],
                     Yii::$app->params['curl.timeout'],
                 ]
             ]
