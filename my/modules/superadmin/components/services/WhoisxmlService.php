@@ -60,13 +60,15 @@ class WhoisxmlService extends BaseService
     public function getBalance()
     {
         $getData = [
-            'servicetype' => '',
+            'servicetype' => 'accountBalance',
             'username' => $this->user,
             'password' => $this->password,
         ];
         try {
             if (!$this->isValidConfiguration()) {
-                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+                return [
+                    'balance' => '',
+                ];
             }
 
             $result = $this->call($this->url . '/accountServices.php', $getData);
