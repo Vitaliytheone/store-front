@@ -24,6 +24,14 @@ abstract class BaseService  {
     abstract public function getBalance();
 
     /**
+     * Check service configuration
+     * @return boolean
+     */
+    public function isValidConfiguration() {
+        return true;
+    }
+
+    /**
      * @return bool
      */
     public function hasError()

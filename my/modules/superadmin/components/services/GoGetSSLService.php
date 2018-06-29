@@ -1,6 +1,7 @@
 <?php
 namespace my\modules\superadmin\components\services;
 
+use Yii;
 use Exception;
 use my\libs\GoGetSSLApi;
 
@@ -42,14 +43,37 @@ class GoGetSSLService extends BaseService
     }
 
     /**
+     * @return bool
+     */
+    public function isValidConfiguration()
+    {
+        if (empty($this->user) || empty($this->password)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get account balance of service
      * @return mixed
      */
     public function getBalance()
     {
-        $this->api->auth($this->user, $this->password);
+
         try {
+            if (!$this->isValidConfiguration()) {
+                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+            }
+
+            $this->api->auth($this->user, $this->password);
+
             $result = $this->api->getAccountBalance();
+
+            if (empty($result['balance'])) {
+                throw new Exception(Yii::t('app/superadmin', 'error.result_is_null'));
+            }
+
         } catch(Exception $exception) {
             $this->error = $exception;
             return 0;

@@ -317,6 +317,7 @@ return [
     'error.service.not_found' => 'Service not found',
     'error' => 'Error',
     'error.result_is_null' => 'Result is null',
+    'error.incorrect_service_settings' => 'Incorrect service settings',
 
     'pages.settings.content' => 'Content',
     'settings.content.column_name' => 'Name',

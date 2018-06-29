@@ -40,6 +40,17 @@ class AHnamesService extends BaseService
         $this->password = $password;
     }
 
+    /**
+     * @return bool
+     */
+    public function isValidConfiguration()
+    {
+        if (empty($this->url) || empty($this->user) || empty($this->password)) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Get account balance of service
@@ -47,17 +58,24 @@ class AHnamesService extends BaseService
      */
     public function getBalance()
     {
-        $getData = [
-            'auth_login' => $this->user,
-            'auth_password' => $this->password,
-        ];
-
         try {
-            $result =  $this->call($this->url . '/clientGetBalance', $getData);
+            if (!$this->isValidConfiguration()) {
+                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+            }
+
+            $getData = [
+                'auth_login' => $this->user,
+                'auth_password' => $this->password,
+            ];
+
+            $result = $this->call($this->url . '/clientGetBalance', $getData);
+
             if (!$result) {
                 throw new Exception(Yii::t('app/superadmin', 'error.result_is_null'));
             }
-            $result = json_decode($result, true);
+
+            $result = @json_decode($result, true);
+
             return [
                 'balance' => '$' . $result['balance']
             ];
