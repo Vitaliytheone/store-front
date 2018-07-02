@@ -66,7 +66,9 @@ class WhoisxmlService extends BaseService
         ];
         try {
             if (!$this->isValidConfiguration()) {
-                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+                return [
+                    'balance' => '',
+                ];
             }
 
             $result = $this->call($this->url . '/accountServices.php', $getData);

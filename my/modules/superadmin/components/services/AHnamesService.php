@@ -60,7 +60,9 @@ class AHnamesService extends BaseService
     {
         try {
             if (!$this->isValidConfiguration()) {
-                throw new Exception(Yii::t('app/superadmin', 'error.incorrect_service_settings'));
+                return [
+                    'balance' => '',
+                ];
             }
 
             $getData = [
