@@ -2,7 +2,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use yii\bootstrap\Nav;
+use my\modules\superadmin\widgets\SuperAdminNav;
 use my\modules\superadmin\widgets\SuperAdminNavBar;
 use my\modules\superadmin\widgets\UnreadMessagesWidgetV2;
 use my\modules\superadmin\widgets\ErrorOrdersWidgetV2;
@@ -120,17 +120,17 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SETTINGS)) {
     $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.settings'), 'url' => Url::toRoute('/settings'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']];
 }
 
-echo Nav::widget([
+echo SuperAdminNav::widget([
     'options' => ['class' => 'navbar-nav mr-auto'],
     'encodeLabels' => false,
     'items' => $optionsLeft,
 ]);
 
-echo Nav::widget([
-    'options' => ['class' => 'navbar-nav'],
+echo SuperAdminNav::widget([
+    'options' => ['class' => ' navbar-nav'],
     'encodeLabels' => false,
     'items' => [
-        ['label' => Yii::t('app/superadmin', 'header.nav.account'), 'url' => Url::toRoute('/account'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']],
+        ['label' => Yii::$app->superadmin->getIdentity()->getFullName(), 'url' => Url::toRoute('/account'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']],
         ['label' => Yii::t('app/superadmin', 'header.nav.logout'), 'url' => Url::toRoute('/logout'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']],
     ]
 ]);

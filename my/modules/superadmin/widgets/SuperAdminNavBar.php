@@ -49,6 +49,11 @@ class SuperAdminNavBar extends NavBar
         $options = $this->options;
         $tag = ArrayHelper::remove($options, 'tag', 'nav');
         echo Html::beginTag($tag, $options);
+
+        echo Html::beginTag('button', $this->toggleOptions);
+        echo"<span class=\"navbar-toggler-icon\"></span>";
+        echo Html::endTag('button');
+
         if ($this->renderInnerContainer) {
             if (!isset($this->innerContainerOptions['class'])) {
                 Html::addCssClass($this->innerContainerOptions, 'container');
@@ -56,9 +61,6 @@ class SuperAdminNavBar extends NavBar
             echo Html::beginTag('div', $this->innerContainerOptions);
         }
 
-        echo Html::beginTag('button', $this->toggleOptions);
-        echo"<span class=\"navbar-toggler-icon\"></span>";
-        echo Html::endTag('button');
 
         Html::addCssClass($this->containerOptions, ['collapse' => 'collapse', 'widget' => 'navbar-collapse']);
         $options = $this->containerOptions;
