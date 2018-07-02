@@ -60,7 +60,7 @@ class WhoisxmlService extends BaseService
     public function getBalance()
     {
         $getData = [
-            'servicetype' => '',
+            'servicetype' => 'accountBalance',
             'username' => $this->user,
             'password' => $this->password,
         ];
