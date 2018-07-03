@@ -1,6 +1,13 @@
 <?php
 
-return [
+$params = array_merge(
+    require(__DIR__ . '/../../common/config/params.php'),
+    file_exists(__DIR__ . '/../../common/config/params-local.php') ? require(__DIR__ . '/../../common/config/params-local.php') : [],
+    require(__DIR__ . '/params.php'),
+    file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
+);
+
+$config = [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -77,11 +84,42 @@ return [
                 ],
             ],
         ],
+
+        'mailerSwift' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            
+            // раскомментировать если использовать smtp отправку и наоборот
+            /*'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => $params['swift.host'], //вставляем имя или адрес почтового сервера
+                'username' => $params['swift.username'],
+                'password' => $params['swift.password'],
+                'port' => $params['swift.port'],
+            ],*/
+            'transport' => [
+                'class' => 'Swift_MailTransport',
+            ],
+            'viewPath' => '@my/mail/views',
+        ],
     ],
-    'params' => array_merge(
-        require(__DIR__ . '/../../common/config/params.php'),
-        file_exists(__DIR__ . '/../../common/config/params-local.php') ? require(__DIR__ . '/../../common/config/params-local.php') : [],
-        require(__DIR__ . '/params.php'),
-        file_exists(__DIR__ . '/params-local.php') ? require(__DIR__ . '/params-local.php') : []
-    ),
+    'params' => $params,
 ];
+
+if (!empty($params['devEmail'])) {
+    $config['components']['log']['targets'][] = [
+        'class' => 'yii\log\EmailTarget',
+        'mailer' => 'mailerSwift',
+        'levels' => ['error'],
+        'message' => [
+            'from' => ['yii2errorlog@13.uz'],
+            'to' =>  $params['devEmail'],
+            'subject' => 'Error sommerce console app',
+        ],
+        'except' => [
+            'yii\i18n\PhpMessageSource::loadMessages',
+            'yii\i18n\PhpMessageSource::loadFallbackMessages'
+        ],
+    ];
+}
+
+return $config;
