@@ -1,5 +1,4 @@
-                var templates = {};
-                
+var templates = {};
 
 templates['dashboard/entity_table'] = _.template("<% _.each(items, function(item,key,arr) { %>\n<tr>\n    <td data-title=\"<%= titles.id %>\">\n        <%= item[\'id\'] %>\n    <\/td>\n    <td data-title=\"<%= titles.domain %>\">\n        <%= item[\'domain\'] %>\n    <\/td>\n    <td data-title=\"<%= titles.customer %>\">\n        <a href=\"#\" ><%= item[\'customer\'] %> <\/a>\n    <\/td>\n    <td data-title=\"<%= titles.status %>\">\n        <%= item[\'status\'] %>\n    <\/td>\n    <td data-title=\"<%= titles.creted %>\">\n        <%= item[\'created\'] %>\n    <\/td>\n    <td data-title=\"<%= titles.expity %>\">\n        <%= item[\'expired\'] %>\n    <\/td>\n<\/tr>\n<% }); %>");
 
