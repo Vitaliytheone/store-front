@@ -98,4 +98,13 @@ return [
     'gearmanPrefix' => 'stores_',
 
     'support_email' => 'noreply@mail-smm.com',
+
+    // Swift mailer
+    'swift.host' => 'ssl://smtp.yandex.ru',
+    'swift.username' => 'noreply@perfectpanel.com',
+    'swift.password' => 'aD213kfio34',
+    'swift.port' => '465',
+
+    'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
+    'failsEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем неудачные действия - пока не используется нигде
 ];
