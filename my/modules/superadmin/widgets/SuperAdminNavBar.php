@@ -6,6 +6,7 @@ use ReflectionClass;
 use yii\bootstrap\NavBar;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Html;
+use yii\bootstrap\BootstrapPluginAsset;
 
 /**
  * SuperAdminNavBar renders a navbar HTML component in super admin module.
@@ -54,18 +55,25 @@ class SuperAdminNavBar extends NavBar
         echo"<span class=\"navbar-toggler-icon\"></span>";
         echo Html::endTag('button');
 
-        if ($this->renderInnerContainer) {
-            if (!isset($this->innerContainerOptions['class'])) {
-                Html::addCssClass($this->innerContainerOptions, 'container');
-            }
-            echo Html::beginTag('div', $this->innerContainerOptions);
-        }
-
-
         Html::addCssClass($this->containerOptions, ['collapse' => 'collapse', 'widget' => 'navbar-collapse']);
         $options = $this->containerOptions;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         echo Html::beginTag($tag, $options);
+    }
+
+    /**
+     * Renders the widget.
+     */
+    public function run()
+    {
+        $tag = ArrayHelper::remove($this->containerOptions, 'tag', 'div');
+        echo Html::endTag($tag);
+        /*if ($this->renderInnerContainer) {
+            echo Html::endTag('div');
+        }*/
+        $tag = ArrayHelper::remove($this->options, 'tag', 'nav');
+        echo Html::endTag($tag);
+        BootstrapPluginAsset::register($this->getView());
     }
 
     /**

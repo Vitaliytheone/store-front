@@ -9,7 +9,6 @@ class SuperAdminV2Asset extends AssetBundle
     public $baseUrl = '@web';
 
     public $css = [
-        'themes/css/superadmin/bootstrap.min.css',
         'themes/css/font-awesome.min.css',
         'themes/css/superadmin/style.css',
     ];

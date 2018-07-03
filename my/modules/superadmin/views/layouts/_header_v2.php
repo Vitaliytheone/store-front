@@ -23,11 +23,10 @@ SuperAdminNavBar::begin([
         'aria-expanded' => 'false',
         'aria-label' => 'Toggle navigation'
     ],
-    'innerContainerOptions' => ['class' => 'collapse navbar-collapse', 'id' => 'navbarsExample09'],
+    'containerOptions' => ['class' => 'collapse navbar-collapse', 'id' => 'navbarsExample09'],
     'options' => [
         'class' => 'navbar navbar-expand-lg navbar-light bg-light fixed-top',
-    ],
-
+    ]
 ]);
 
 $optionsLeft = [];
