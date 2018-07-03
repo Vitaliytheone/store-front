@@ -35,7 +35,7 @@ customModule.superadminDashboardController = {
                 },
                 complete: function() {
                     $('#loader').hide();
-                    //$('.table-mobile').show();
+                    $('.table-mobile').show();
                 }
             });
         }
