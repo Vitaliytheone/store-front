@@ -238,6 +238,7 @@ class SiteController extends CustomController
      */
     public function actionInvoice($id)
     {
+        /** @var $invoice Invoices */
         $invoice = Invoices::find()
             ->andWhere(['code' => $id])
             ->joinWith([
@@ -270,7 +271,7 @@ class SiteController extends CustomController
             'paymentsList' => $paymentsList,
             'payWait' => !!$payWait,
             'pgid' => $payWait ? $payWait->type : key($paymentsList),
-            'verificationWait' => $invoice->isVerificationWait() ? Content::getContent('paypal_verify_note') : null,
+            'verificationWait' => $invoice->emailVerification() ? Content::getContent('paypal_verify_note', ['email' => $invoice->emailVerification()]) : null,
         ]);
     }
 
