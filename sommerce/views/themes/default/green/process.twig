@@ -3,7 +3,7 @@
   <div id="steps" class="pd--100-0-40">
       <div class="container">
           <!-- Section Title Start -->
-          <div class="section--title text-center">
+          <div class="section--title text-center {% if site.rtl %} rtl-content {% endif %}">
               <h2 class="h2">{{ block.process.header.title }}</h2>
               <!-- Section Title Start -->
               <div class="section--description text-center">
@@ -19,7 +19,7 @@
 
               {% for process in block.process.data %}
                 <!-- Step Item Start -->
-                <div class="step--item {{ block.process.settings.bootstrap_column }}">
+                <div class="step--item {{ block.process.settings.bootstrap_column }} {% if site.rtl %} rtl-content {% endif %}">
                     <div class="icon">
                     
                         <div class="step--icon">

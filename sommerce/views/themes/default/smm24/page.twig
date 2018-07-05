@@ -1,7 +1,7 @@
 <!-- Page Header Section Start -->
 <div class="page-header--section pd--70-0" data-bg-img="/img/themes/smm24/bg_header.jpg">
     <div class="container">
-        <h1 class="title h1">{{ page.title }}</h1>
+        <h1 class="title h1 {% if site.rtl %} rtl-direction {% endif %}">{{ page.title }}</h1>
     </div>
 </div>
 <!-- Page Header Section End -->
@@ -13,7 +13,7 @@
           <div class="col-md-12">
            <!-- Page Content Start -->
             <div class="about--content pbottom--60">
-                <div class="body">
+                <div class="body {% if site.rtl %} rtl-direction {% endif %}">
                     {{ page.content }}
                 </div>
             </div>

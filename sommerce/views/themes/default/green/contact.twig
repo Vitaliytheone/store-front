@@ -2,7 +2,7 @@
 <div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
     <div class="container">
         <!-- Page Header Title Start -->
-        <div class="page-header--title pull-left">
+        <div class="page-header--title pull-left {% if site.rtl %} page-header-rtl {% endif %}">
             <h1 class="h1">{{ page.title }}</h1>
         </div>
         <!-- Page Header Title End -->
@@ -19,7 +19,7 @@
         <div class="container">
             <div class="row">
                 <!-- Contact Info Item Start -->
-                <div class="contact--info-item">
+                <div class="contact--info-item {% if site.rtl %} rtl-content {% endif %}">
                     {{ page.content }}
                 </div>
                 <!-- Contact Info Item End -->
@@ -54,8 +54,7 @@
                             <!-- Contact Form Status End -->
 
                             <div class="row">
-                                <div class="col-sm-6">
-
+                                <div class="col-sm-6 {% if site.rtl %} rtl-content {% endif %}">
                                     <div class="form-group">
                                         <label for="contactSubject">{{ lang('contact.subject') }} *</label>
                                         <input type="text" name="subject" id="contactSubject" class="form-control" value="{{ contact.form.subject }}" required>
@@ -73,7 +72,7 @@
 									<div class="g-recaptcha" data-sitekey="{{ captcha_key }}"></div>
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 {% if site.rtl %} rtl-content {% endif %}">
                                     <div class="form-group">
                                         <label for="contactMessage">{{ lang('contact.message') }} *</label>
                                         <textarea name="message" id="contactMessage" class="form-control" required>{{ contact.form.message }}</textarea>

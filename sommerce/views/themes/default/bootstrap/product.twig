@@ -2,19 +2,19 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-title">{{ product.title }}</h1>
+                <h1 class="page-title {% if site.rtl %} rtl-content {% endif %}">{{ product.title }}</h1>
             </div>
         </div>
         {% if product.content %}
         <div class="row">
             <div class="col-md-12">
-                <div class="content">
+                <div class="content {% if site.rtl %} rtl-content {% endif %}">
                     {{ product.content }}
                 </div>
             </div>
         </div>
         {% endif %}
-        <div class="row products">
+        <div class="row products {% if site.rtl %} rtl-products {% endif %}">
             {% for package in product.packages %}
                 <div class="col-lg-3">
                     <div class="product-card text-center" {% if product.color %} style="background-color: {{ product.color }}; border: 1px solid {{ product.color }};" {% endif %}>

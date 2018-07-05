@@ -3356,6 +3356,7 @@ textarea.form-control {
 /* 18.1. TESTIMONIAL SLIDER */
 .testimonial--slider .owl-dots {
     margin: 19px -5px 0;
+    text-align: center;
 }
 
 .testimonial--slider .owl-dots > div {
@@ -4411,9 +4412,91 @@ body.isScrolling .back-to-top-btn {
 }
 
 
+
+/*------------------------------------*\
+    RTL
+\*------------------------------------*/
+
+.rtl-direction{
+	direction: rtl;
+}
+.rtl-text{
+	text-align: right!important;
+}
+.navbar-nav-rtl{
+	direction: rtl;
+}
+.navbar-nav-rtl li{
+	float: right;
+}
+.rtl-col-md-6 .col-md-6{
+	float: right;
+}
+.rtl-col-md-6 .col-md-6:first-child{
+	text-align: right;
+}
+.rtl-col-md-6 .col-md-6:last-child{
+	text-align: left;
+}
+.rtl-col-sm-6 .col-sm-6{
+	float: right;
+}
+.rtl-col-sm-6 .col-sm-6 .pull-right{
+	float: left!important;
+}
+.rtl-col-sm-6 .col-sm-6:first-child{
+	text-align: right;
+}
+.rtl-col-sm-6 .col-sm-6:last-child{
+	text-align: left;
+}
+.rtl-testimonial{
+	direction: rtl;
+}
+.rtl-testimonial .float--left{
+	float: right;
+}
+.rtl-testimonial .header .img{
+	margin-right: 0px;
+    margin-left: 15px;
+}
+.rtl-table{
+	direction: rtl;
+}
+.navbar-nav-rtl > li:first-child{
+	margin-left: 25px;
+}
+.navbar-nav-rtl > li > a:before{
+	left: auto;
+    right: -21px;
+}
+.navbar-nav-rtl .dropdown-menu li{
+	float: none;
+}
+.navbar-nav-rtl .dropdown-menu li{
+	text-align: right;
+}
+.footer--rtl li{
+	float: right!important;
+    text-align: right;
+}
+.footer--rtl li:first-child{
+    margin-left: 15px;
+    padding-left: 17px;
+}
+.footer--rtl li:before{
+    left: auto!important;
+    right: -19px!important;
+}
+
 /*------------------------------------*\
     1. MEDIA QUERIES
 \*------------------------------------*/
+@media screen and (min-width: 991px) {     
+  .rtl-products .col-md-3{
+      float: right;
+  }
+}
 /* 1.1. LARGE DEVICES, WIDE SCREENS */
 @media screen and (max-width: 1199px) {
     /* HEADER SECTION */
@@ -4779,6 +4862,9 @@ body.isScrolling .back-to-top-btn {
 
     .footer--copyright .nav {
         display: inline-block;
+    }
+    .dropdown-submenu>a:before{
+    	right: -20px;
     }
 }
 

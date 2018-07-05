@@ -1,7 +1,7 @@
 <!-- Page Header Section Start -->
 <div class="page-header--section pd--70-0"  data-bg-img="/img/themes/smm24/bg_header.jpg">
     <div class="container">
-        <h1 class="title h1">{{ page.title }}</h1>
+        <h1 class="title h1 {% if site.rtl %} rtl-direction {% endif %}">{{ page.title }}</h1>
     </div>
 </div>
 <!-- Page Header Section End -->
@@ -14,12 +14,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="content">{{ page.content }}</div>
+                    <div class="content {% if site.rtl %} rtl-direction {% endif %}">{{ page.content }}</div>
                 </div>
                 <div class="col-sm-6">
                     <form action="" method="post">
 
-                        <div class="title">
+                        <div class="title {% if site.rtl %} rtl-direction {% endif %}">
                             <h2 class="h3">{{ lang('contact.header') }}</h2>
                         </div>
 
@@ -28,7 +28,7 @@
                         {% if error %}
                             <!-- Alert Start -->
                             <div class="checkout--info checkout--info-error pbottom--30">
-                                <div class="title">
+                                <div class="title {% if site.rtl %} rtl-direction {% endif %}">
                                     <p><i class="fa fa-info-circle"></i> {{ error_message }}</p>
                                 </div>
                             </div>
@@ -38,14 +38,14 @@
                         {% if success %}
                             <!-- Alert Start -->
                             <div class="checkout--info pbottom--30">
-                                <div class="title">
+                                <div class="title {% if site.rtl %} rtl-direction {% endif %}">
                                     <p><i class="fa fa-info-circle"></i> {{ lang('contact.form.message.success') }}</p>
                                 </div>
                             </div>
                             <!-- Alert End -->
                         {% endif %}
 
-                        <div class="row">
+                        <div class="row {% if site.rtl %} rtl-direction {% endif %}">
 
                             <div class="col-xs-12 col-xxs-12">
                                 <div class="form-group">

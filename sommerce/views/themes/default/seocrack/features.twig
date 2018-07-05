@@ -3,13 +3,13 @@
     <div class="services--section pd--80-0 bg--overlay-95" data-bg-img="http://themelooks.us/demo/seocrack/html/preview/img/gallery-img/bg@2x.jpg">
         <div class="container">
         <!-- Section Title Start -->
-        <div class="section--title">
+        <div class="section--title {% if site.rtl %} rtl-direction {% endif %}">
             <h2 class="h2">{{ block.features.header.title }}</h2>
         </div>
         <!-- Section Title End -->
         {% if block.features.header.description %}
             <!--Description Block Start-->
-            <div class="section--description">
+            <div class="section--description {% if site.rtl %} rtl-direction {% endif %}">
                 <p>{{ block.features.header.description }}</p>
             </div>
             <!--Description Block End-->
@@ -19,7 +19,7 @@
         {% for feature in block.features.data %}
                 <div class="{{ block.features.settings.bootstra_column }} col-xs-6 col-xxs-12">
                     <!-- Service Item Start -->
-                    <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
+                    <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %} {% if site.rtl %} rtl-direction {% endif %}">
                         <div class="header">
                              {% if block.features.settings.picture_type == 'image' %}
                                  <img src="{{ feature.image }}" alt="" class="img-responsive">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
 
-                        <div class="body">
+                        <div class="body {% if site.rtl %} rtl-direction rtl-text {% endif %}">
                             <p>{{ feature.description }}</p>
                         </div>
                     </div>
