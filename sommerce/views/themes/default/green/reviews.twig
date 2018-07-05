@@ -3,7 +3,7 @@
     <div id="testimonial" class="pd--100-0-40">
         <div class="container">
             <!-- Section Title Start -->
-            <div class="section--title text-center">
+            <div class="section--title text-center {% if site.rtl %} rtl-content {% endif %}">
                 <h2 class="h2">{{ block.reviews.header.title }}</h2>
                 {% if block.reviews.header.description %}
                     <!-- Section description Start -->
@@ -19,7 +19,7 @@
 
                 {% for review in block.reviews.data %}
                     <!-- Reviews Item Start -->
-                    <div class="testimonial--item">
+                    <div class="testimonial--item {% if site.rtl %} rtl-content {% endif %}">
                         <div class="testimonial--img">
                             <figure>
                                 <div class="avatar" style="background-image: url('{{ review.image }}');"></div>

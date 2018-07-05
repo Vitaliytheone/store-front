@@ -4790,6 +4790,101 @@ body.isTawkMobile #backToTop {
     margin: 0 auto;
 }
 
+
+
+/*------------------------------------*\
+    RTL
+\*------------------------------------*/
+.rtl-content{
+	direction: rtl;
+}
+.rtl-text{
+	text-align: right;
+}
+.rtl-content .block-left{
+	text-align: right;
+}
+.rtl-row-6 .col-md-6{
+	float: right;
+}
+.rtl-row-6 .col-md-6:first-child{
+	text-align: right;
+}
+.rtl-row-6 .col-md-6:last-child{
+	text-align: left;
+}
+.rtl-content .block-left .title{
+	padding-left: 0px;
+    padding-right: 5px;
+}
+.navbar-rtl > li{
+	float: right!important;
+    direction: rtl;
+}
+.rtl-content .fm{
+	margin-left: 8px;
+    margin-right: 0px;
+}
+.navbar-rtl .dropdown-menu{
+	text-align: right;
+}
+.navbar-rtl .dropdown-submenu .dropdown-menu{
+	right: auto!important;
+    left: -102%!important;
+}
+.navbar-rtl .dropdown-submenu>a:before {
+    display: block;
+    content: "\f0d9";
+    position: absolute;
+    top: 4px;
+    right: auto;
+    left: 9px;
+    font-family: Font Awesome\ 5 Pro;
+    font-weight: 900;
+}
+.navbar-right-rtl{
+	float: left !important;
+    margin-right: 10px;
+    margin-left: -15px;
+}
+.navbar-right-rtl > li > a{
+	border-left: none!important;
+    border-right: 1px solid rgba(255, 255, 255, 0.35);
+  	padding-right: 31px!important;
+    padding-left: 14px!important;
+}
+.footer-rtl{
+	direction: rtl;
+}
+.footer-rtl ul li:last-child a {
+    border-left: none;
+   
+}
+.footer-rtl ul li a {
+	border-right: none;
+	border-left: 2px solid rgba(255, 255, 255, 0.9);
+}
+.page-header-rtl{
+	direction: rtl;
+	float: right!important;
+}
+.rtl-table{
+	direction: rtl;
+}
+.rtl-table tr th:first-child{
+	text-align: right!important;
+}
+
+.rtl-table tr td:first-child{
+	text-align: right!important;
+}
+.rtl-products .col-md-3{
+	float: right;
+}
+.rtl-products .col-xs-6{
+	float: right;
+}
+
 /*------------------------------------*\
     1. MEDIA QUERIES
 \*------------------------------------*/
@@ -4896,6 +4991,7 @@ body.isTawkMobile #backToTop {
     }
     .header--nav-links > li {
         float: none;
+        width: 100%;
     }
     .header--nav-links > li.dropdown > a:before {
         top: 26px;
@@ -5063,6 +5159,9 @@ body.isTawkMobile #backToTop {
     .cart-button__checkout{
         text-align: left;
         margin-top: 10px;
+    }
+    .navbar-rtl{
+    	text-align: right;
     }
 }
 

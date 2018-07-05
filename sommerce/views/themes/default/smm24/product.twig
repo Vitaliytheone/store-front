@@ -1,7 +1,7 @@
 <!-- Page Header Section Start -->
 <div class="page-header--section pd--70-0" data-bg-img="/img/themes/smm24/bg_header.jpg">
     <div class="container">
-        <h1 class="title h1">{{ product.title }}</h1>
+        <h1 class="title h1 {% if site.rtl %} rtl-direction {% endif %}">{{ product.title }}</h1>
     </div>
 </div>
 <!-- Page Header Section End -->
@@ -9,7 +9,7 @@
 {% if product.content %}
     <!-- Page Header Section Start -->
     <div class="page-header--section ptop--60">
-        <div class="container">
+        <div class="container {% if site.rtl %} rtl-direction {% endif %}">
             {{ product.content }}
         </div>
     </div>
@@ -19,7 +19,7 @@
 <!-- Product Table Section Start -->
 <div class="pricing-table--section pd--60-0">
     <div class="container">
-        <div class="row reset--gutter">
+        <div class="row reset--gutter {% if site.rtl %} rtl-products {% endif %}">
 
             {% for package in product.packages %}
                 <!-- Product Table Item Start -->

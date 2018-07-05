@@ -2,7 +2,7 @@
 <div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
     <div class="container">
         <!-- Page Header Title Start -->
-        <div class="page-header--title pull-left">
+        <div class="page-header--title pull-left {% if site.rtl %} page-header-rtl {% endif %}">
             <h1 class="h1">{{ lang('cart.title') }}</h1>
         </div>
         <!-- Page Header Title End -->
@@ -15,7 +15,7 @@
     <div class="container">
         <!-- Cart Items Start -->
         <div class="cart--form">
-            <table class="table">
+            <table class="table {% if site.rtl %} rtl-table {% endif %}">
                 <thead>
                 <tr>
                     <th>{{ lang('cart.package') }}</th>
@@ -52,23 +52,24 @@
             <!-- Cart Total Start -->
             <div class="cart--total pt--100">
                 <form id="orderForm" class="form" method="POST" action="/cart">
-                    <div class="row">
+                    <div class="row {% if site.rtl %} rtl-content {% endif %}">
 
-                        <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                        <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
 
                             <h2 class="h4">{{ lang('cart.total') }}</h2>
 
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>{{ lang('cart.total_price') }}</th>
+                                    <th class="{% if site.rtl %} rtl-text {% endif %}">{{ lang('cart.total_price') }}</th>
                                     <td>{{ cart.total_price|money }}</td>
                                 </tr>
                             </table>
 
                         </div>
+                        <div class="clearfix"></div>
                         {% if cart.payments %}
                             <!-- Payment method Start -->
-                            <div class="checkout--order-info col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                            <div class="checkout--order-info col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
                                 <h2 class="h4">{{ lang('cart.payment_method') }}</h2>
 
                                 {% if error %}
@@ -94,8 +95,8 @@
                             </div>
                             <!-- Payment method End -->
                         {% endif %}
-
-                        <div class="checkout--billing-info col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                      	<div class="clearfix"></div>
+                        <div class="checkout--billing-info col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
                             <h2 class="h4">{{ lang('cart.email') }}</h2>
                             <div class="form-group">
                                 <label>
@@ -103,9 +104,10 @@
                                 </label>
                             </div>
                         </div>
+                      <div class="clearfix"></div>
 
                     </div>
-                    <div class="row">
+                    <div class="row {% if site.rtl %} rtl-row-6 {% endif %}">
                         <div class="col-md-6">
                             <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
                         </div>

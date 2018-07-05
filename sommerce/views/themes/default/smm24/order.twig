@@ -1,7 +1,7 @@
 <!-- Page Header Section Start -->
 <div class="page-header--section pd--70-0" data-bg-img="img/bg2@2x.jpg">
     <div class="container">
-        <h1 class="title h1">{{ lang('order.title') }}</h1>
+        <h1 class="title h1 {% if site.rtl %} rtl-direction {% endif %}">{{ lang('order.title') }}</h1>
     </div>
 </div>
 <!-- Page Header Section End -->
@@ -17,7 +17,7 @@
                     <!-- Alert Start -->
                     <div class="checkout--info checkout--info-error pbottom--30">
                         <div class="title">
-                            <p><i class="fa fa-info-circle"></i> {{ error_message }}</p>
+                            <p><i class="fa fa-info-circle {% if site.rtl %} rtl-direction {% endif %}"></i> {{ error_message }}</p>
                         </div>
                     </div>
                     <!-- Alert End -->
@@ -30,7 +30,7 @@
                                 <h2 class="h4">{{ lang('order.info') }}</h2>
                             </div>
 
-                            <table class="table">
+                            <table class="table {% if site.rtl %} rtl-direction {% endif %}">
                                 <tbody>
                                 <tr>
                                     <th class="col-lg-3">{{ lang('order.package') }}</th>
@@ -51,7 +51,7 @@
 
                         <div class="row">
                             <div class="col-xs-12 col-xxs-12">
-                                <div class="form-group">
+                                <div class="form-group {% if site.rtl %} rtl-direction {% endif %}">
                                     <label>
                                         <span>{{ lang('order.link') }} *</span>
                                         <input type="text"  name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
@@ -62,15 +62,14 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row {% if site.rtl %} rtl-col-sm-6 {% endif %}">
                     <div class="col-sm-6">
                         <a class="btn btn-default" href="{{ order.back_url }}">{{ lang('order.button.back_url') }}</a>
                     </div>
                     <div class="col-sm-6">
                         <button type="submit" id="addToCartButton" name="add-to-cart-button" class="btn btn-default active pull-right">{{ lang('order.button.add_to_cart') }}</button>
+                      <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
                     </div>
-                    <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
-
                 </div>
 
             </form>

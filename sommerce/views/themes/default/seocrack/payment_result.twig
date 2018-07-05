@@ -10,7 +10,7 @@
                       <div class="panel-body__content">
                           <div class="panel-body__content-title">{{ lang('payment_result.completed.title') }}</div>
                           <div class="panel-body__content-message">
-                              <div class="alert alert-success">
+                              <div class="alert alert-success {% if site.rtl %} rtl-direction {% endif %}">
                                   {{ lang('payment_result.completed.description') }}
                               </div>
                           </div>
@@ -31,7 +31,7 @@
                       <div class="panel-body__content">
                           <div class="panel-body__content-title">{{ lang('payment_result.failed.title') }}</div>
                           <div class="panel-body__content-message">
-                              <div class="alert alert-danger">
+                              <div class="alert alert-danger {% if site.rtl %} rtl-direction {% endif %}">
                                   {{ lang('payment_result.failed.description') }}
                               </div>
                           </div>
@@ -52,7 +52,7 @@
                       <div class="panel-body__content">
                           <div class="panel-body__content-title">{{ lang('payment_result.awaiting.title') }}</div>
                           <div class="panel-body__content-message">
-                              <div class="alert alert-success">
+                              <div class="alert alert-success {% if site.rtl %} rtl-direction {% endif %}">
                                   {{ lang('payment_result.awaiting.description') }}
                               </div>
                           </div>

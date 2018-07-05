@@ -14,7 +14,7 @@
         <!-- Cart Items Start -->
         <div class="cart--items pbottom--30">
 
-            <table class="table table-bordered">
+            <table class="table table-bordered {% if site.rtl %} rtl-table {% endif %}">
                 <thead>
                 <tr>
                     <th>{{ lang('cart.package') }}</th>
@@ -49,9 +49,9 @@
             <form id="orderForm" class="form" method="POST" action="/cart">
                 <!-- Cart Items End -->
                 <div class="row">
-                    <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                    <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
                         <!-- Cart Total Start -->
-                        <div class="cart--total">
+                        <div class="cart--total {% if site.rtl %} rtl-direction {% endif %}">
                             <div class="title">
                                 <h2 class="h4">{{ lang('cart.total') }}</h2>
                             </div>
@@ -71,9 +71,9 @@
 
                 {% if cart.payments %}
                     <div class="row">
-                        <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                        <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
                             <!-- Cart Total Start -->
-                            <div class="cart--total">
+                            <div class="cart--total {% if site.rtl %} rtl-direction {% endif %}">
                                 <div class="title">
                                     <h2 class="h4">{{ lang('cart.payment_method') }}</h2>
                                 </div>
@@ -116,9 +116,9 @@
                 {% endif %}
 
                 <div class="row">
-                    <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                    <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
                         <!-- Cart Total Start -->
-                        <div class="cart--total">
+                        <div class="cart--total {% if site.rtl %} rtl-direction {% endif %}">
                             <div class="title">
                                 <h2 class="h4">{{ lang('cart.email') }}</h2>
                             </div>
@@ -136,7 +136,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row {% if site.rtl %} rtl-col-md-6 {% endif %}">
                     <div class="col-md-6">
                         <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
                     </div>
