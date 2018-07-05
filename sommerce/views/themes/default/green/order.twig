@@ -2,7 +2,7 @@
 <div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
     <div class="container">
         <!-- Page Header Title Start -->
-        <div class="page-header--title pull-left">
+        <div class="page-header--title pull-left {% if site.rtl %} page-header-rtl {% endif %}">
             <h1 class="h1">{{ lang('order.title') }}</h1>
         </div>
         <!-- Page Header Title End -->
@@ -18,9 +18,9 @@
         <!-- Checkout Form Start -->
         <div class="checkout--form" data-form-validation="true">
             <form id="addToCardForm" class="form" action="" method="post">
-                <div class="row pt--80">
-                    <div class="checkout--order-info col-md-6">
-                        <h2 class="checkout--form-title h4">{{ lang('order.title') }}</h2>
+                <div class="row pt--80 {% if site.rtl %} rtl-row-6 {% endif %}">
+                    <div class="checkout--order-info col-md-6 {% if site.rtl %} rtl-content {% endif %}">
+                        <h2 class="checkout--form-title h4 {% if site.rtl %} rtl-text {% endif %}">{{ lang('order.title') }}</h2>
 
                         <table class="table table-bordered">
                             <tbody>
@@ -36,12 +36,12 @@
                         </table>
 
                     </div>
-                    <div class="checkout--billing-info col-md-6">
+                    <div class="checkout--billing-info col-md-6 {% if site.rtl %} rtl-content {% endif %}">
                         <h2 class="checkout--form-title h4">{{ lang('order.details') }}</h2>
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="form-group {% if site.rtl %} rtl-text {% endif %}">
                                     <label>
                                         <span>{{ lang('order.link') }} <em>*</em></span>
                                         <input type="text" name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
@@ -53,14 +53,15 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row {% if site.rtl %} rtl-row-6 {% endif %}">
                     <div class="col-md-6">
                         <a href="{{ order.back_url }}" class="btn btn-default">{{ lang('order.button.back_url') }}</a>
                     </div>
                     <div class="col-md-6">
-                        <button type="submit" id="addToCartButton" name="add-to-cart-button" class="btn btn-default pull-right">{{ lang('order.button.add_to_cart') }}</button>
+                        <button type="submit" id="addToCartButton" name="add-to-cart-button" class="btn btn-default {% if site.rtl == '0' %}pull-right {% endif %}">{{ lang('order.button.add_to_cart') }}</button>
+                            <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
                     </div>
-                    <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+             
                 </div>
             </form>
         </div>
