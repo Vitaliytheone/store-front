@@ -143,7 +143,6 @@ class CustomController extends CommonController
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
-                'rtl' => 1,
                 'page_title' => $this->pageTitle ? $this->pageTitle : $store->seo_title,
                 'menu' => (new NavigationSearch())->getSiteMenuTree(Yii::$app->request->url),
                 'cart' => [
