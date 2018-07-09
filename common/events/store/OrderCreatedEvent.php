@@ -35,7 +35,7 @@ class OrderCreatedEvent extends BaseOrderEvent {
     public function run():void
     {
         if (empty($this->_order)) {
-            Yii::error('Empty ' . static::class . ' order parameter');
+            Yii::info('Empty ' . static::class . ' order parameter');
             return;
         }
 
