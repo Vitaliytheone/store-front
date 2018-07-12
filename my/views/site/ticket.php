@@ -11,12 +11,12 @@
 <div class="form-group" id="htmlText" data-action="<?= Url::toRoute("/ticket/ ". $ticket->id . '?clear=1')?>">
     <ul class="chat">
         <?php foreach ($ticketMessages as $message) : ?>
-            <?php if ($message->cid != 0): ?>
+            <?php if ($message->customer_id != 0): ?>
                 <li class="left clearfix">
                 <div class="chat-body clearfix text-right">
                     <div class="header">
                         <strong class="primary-font"><?= $message->customer->getFullName() ?></strong>
-                    <small class="text-muted"><i class="fa fa-clock-o fa-fw"></i>  <?= $message->getFormattedDate('date') ?></small>
+                    <small class="text-muted"><i class="fa fa-clock-o fa-fw"></i>  <?= $message->getFormattedDate('created_at') ?></small>
                     </div>
                     <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
                 </div>
@@ -26,7 +26,7 @@
                     <div class="chat-body clearfix">
                         <div class="header">
                             <strong class="primary-font"><?= $message->admin->getFullName() ?></strong>
-                            <small class="text-muted"><i class="fa fa-clock-o fa-fw"></i>  <?= $message->getFormattedDate('date') ?></small>
+                            <small class="text-muted"><i class="fa fa-clock-o fa-fw"></i>  <?= $message->getFormattedDate('created_at') ?></small>
                         </div>
                         <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
                     </div>

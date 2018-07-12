@@ -29,7 +29,7 @@ class OrderInProgressEvent extends BaseOrderEvent {
         $this->_store = Stores::findOne($storeId);
 
         if (empty($this->_store)) {
-            Yii::error('Empty ' . static::class . ' store parameter.');
+            Yii::info('Empty ' . static::class . ' store parameter.');
             return;
         }
 
@@ -45,14 +45,14 @@ class OrderInProgressEvent extends BaseOrderEvent {
         ]);
 
         if (empty($this->_suborder)) {
-            Yii::error('Empty ' . static::class . ' suborder parameter.');
+            Yii::info('Empty ' . static::class . ' suborder parameter.');
             return;
         }
 
         $this->_order = $this->_suborder->order;
 
         if (empty($this->_order)) {
-            Yii::error('Empty ' . static::class . ' order parameter.');
+            Yii::info('Empty ' . static::class . ' order parameter.');
             return;
         }
     }

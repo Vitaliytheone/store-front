@@ -7,22 +7,24 @@ use Yii;
 use common\components\traits\UnixTimeFormatTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use my\components\behaviors\UserAgentBehavior;
 
 /**
  * This is the model class for table "tickets".
  *
  * @property integer $id
- * @property integer $cid
- * @property integer $pid
+ * @property integer $customer_id
  * @property string $subject
- * @property integer $admin
- * @property integer $user
+ * @property integer $is_admin
+ * @property integer $is_user
  * @property integer $status
- * @property integer $date
- * @property integer $date_update
+ * @property integer $assigned_admin_id
+ * @property string $user_agent
+ * @property integer $created_at
+ * @property integer $updated_at
  * @property integer $ip
- *
  * @property Customers $customer
+ * @property SuperAdmin $assigned
  * @property TicketMessages[] $messages
  */
 class Tickets extends ActiveRecord
@@ -49,10 +51,18 @@ class Tickets extends ActiveRecord
     public function rules()
     {
         return [
-            [['cid', 'subject'], 'required'],
-            [['cid', 'pid', 'admin', 'user', 'status', 'date', 'date_update'], 'integer'],
+            [['customer_id', 'subject'], 'required'],
+            [['customer_id', 'is_admin', 'is_user', 'status', 'created_at', 'updated_at', 'assigned_admin_id'], 'integer'],
             [['subject'], 'string', 'max' => 300],
-            ['ip', 'string']
+            ['ip', 'string'],
+            [['user_agent'], 'string', 'max' => 300],
+            ['status', 'in', 'range' => [
+                self::STATUS_PENDING,
+                self::STATUS_RESPONDED,
+                self::STATUS_CLOSED,
+                self::STATUS_IN_PROGRESS,
+                self::STATUS_SOLVED
+            ]],
         ];
     }
 
@@ -62,7 +72,7 @@ class Tickets extends ActiveRecord
             'timestamp' => [
                 'class' => TimestampBehavior::class,
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['date', 'date_update'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                 ],
                 'value' => function() {
                     return time();
@@ -74,6 +84,12 @@ class Tickets extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'ip',
                 ]
             ],
+            'user_agent' => [
+                'class' => UserAgentBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'user_agent'
+                ]
+            ]
         ];
     }
 
@@ -83,16 +99,16 @@ class Tickets extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'cid' => 'Cid',
-            'pid' => 'Pid',
-            'subject' => 'Subject',
-            'admin' => 'Admin',
-            'user' => 'User',
-            'status' => 'Status',
-            'date' => 'Date',
-            'date_update' => 'Date Update',
-            'ip' => 'Ip',
+            'id' =>  Yii::t('app', 'ID'),
+            'customer_id' => Yii::t('app', 'Customer id'),
+            'subject' => Yii::t('app', 'Subject'),
+            'is_admin' => Yii::t('app', 'Is admin'),
+            'is_user' => Yii::t('app', 'Is user'),
+            'status' => Yii::t('app', 'Status'),
+            'created_at' => Yii::t('app', 'Created at'),
+            'updated_at' => Yii::t('app', 'Updated at'),
+            'user_agent' => Yii::t('app', 'User agent'),
+            'ip' => Yii::t('app', 'Ip'),
         ];
     }
 
@@ -101,7 +117,7 @@ class Tickets extends ActiveRecord
      */
     public function getMessages()
     {
-        return $this->hasMany(TicketMessages::class, ['tid' => 'id']);
+        return $this->hasMany(TicketMessages::class, ['ticket_id' => 'id']);
     }
 
     /**
@@ -109,7 +125,15 @@ class Tickets extends ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customers::class, ['id' => 'cid']);
+        return $this->hasOne(Customers::class, ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAssigned()
+    {
+        return $this->hasOne(SuperAdmin::class, ['id' => 'assigned_admin_id']);
     }
 
     /**
@@ -141,7 +165,7 @@ class Tickets extends ActiveRecord
      */
     public function makeUnreaded()
     {
-        $this->admin = 1;
+        $this->is_admin = 1;
         return $this->save(false);
     }
 
@@ -151,7 +175,7 @@ class Tickets extends ActiveRecord
      */
     public function makeReaded()
     {
-        $this->admin = 0;
+        $this->is_admin = 0;
         return $this->save(false);
     }
 
@@ -163,7 +187,7 @@ class Tickets extends ActiveRecord
     public static function canCreate($customerId)
     {
         return Yii::$app->params['pending_tickets'] > static::find()->andWhere([
-                'cid' => $customerId,
+                'customer_id' => $customerId,
                 'status' => static::STATUS_PENDING
             ])->count();
     }

@@ -42,6 +42,7 @@ class SslSearch extends SslCert {
     public function buildQuery($status = null)
     {
         $searchQuery = $this->getQuery();
+        $id = ArrayHelper::getValue($this->params, 'id');
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
 
         $sslList = static::find();
@@ -71,6 +72,12 @@ class SslSearch extends SslCert {
         if ($customerId) {
             $sslList->andWhere([
                 'ssl_cert.cid' => $customerId
+            ]);
+        }
+
+        if ($id) {
+            $sslList->andWhere([
+                'ssl_cert.id' => $id
             ]);
         }
 

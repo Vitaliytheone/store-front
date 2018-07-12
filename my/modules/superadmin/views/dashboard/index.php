@@ -81,7 +81,7 @@ $this->context->addModule('superadminDashboardController', [
                                        </td>
                                        <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.status') ?>">
                                            <?= $row['status'] ?></td>
-                                       <td data-title="Yii::t('app/superadmin', 'dashboard.table.created')">
+                                       <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.created') ?>">
                                            <?= $row['created'] ?>
                                        </td>
                                        <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.expiry') ?>">

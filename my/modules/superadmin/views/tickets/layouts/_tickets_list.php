@@ -2,21 +2,40 @@
     /* @var $this yii\web\View */
     /* @var $tickets \my\modules\superadmin\models\search\TicketsSearch */
     /* @var $ticket \common\models\panels\Tickets */
+    /* @var $superAdmins */
+    /* @var $superAdminCount */
+    /* @var $filters */
+    /* @var $assignee */
 
     use my\helpers\Url;
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
 
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'tickets.list.column_id')?></th>
-        <th><?= Yii::t('app/superadmin', 'tickets.list.column_customer')?></th>
+        <th class="table-custom__customer-th"><?= Yii::t('app/superadmin', 'tickets.list.column_customer')?></th>
         <th><?= Yii::t('app/superadmin', 'tickets.list.column_subject')?></th>
         <th><?= Yii::t('app/superadmin', 'tickets.list.column_status')?></th>
-        <th class="text-nowrap"><?= Yii::t('app/superadmin', 'tickets.list.column_created')?></th>
-        <th class="text-nowrap"><?= Yii::t('app/superadmin', 'tickets.list.column_updated')?></th>
+        <th>
+            <div class="dropdown">
+                <button class="btn table-custom__filter-button dropdown-toggle" data-toggle="dropdown">
+                    <?= Yii::t('app/superadmin', 'tickets.assignee') ?>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item <?= (is_numeric($assignee) ? '' : 'active') ?>" href="<?= Url::toRoute(array_merge($filters, ['/tickets', 'assignee' => null])) ?>">All (<?= $superAdminCount ?>)</a>
+                    <?php foreach ($superAdmins as $admin) : ?>
+                        <?php if (isset($admin['username'])) : ?>
+                            <a class="dropdown-item <?= ($admin['assigned_admin_id'] == $assignee ? 'active' : '') ?>" href=" <?= Url::toRoute(array_merge($filters, ['/tickets', 'assignee' => $admin['assigned_admin_id']])) ?>"><?= $admin['username'] ?>(<?= $admin['count'] ?>)</a>
+                        <?php endif ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </th>
+        <th><?= Yii::t('app/superadmin', 'tickets.list.column_created')?></th>
+        <th><?= Yii::t('app/superadmin', 'tickets.list.column_updated')?></th>
     </tr>
     </thead>
     <tbody>
@@ -27,10 +46,10 @@
                         <?= $ticket->id ?>
                     </td>
                     <td>
-                        <a href="<?= Url::toRoute('/customers#' . $ticket->cid); ?>" target="_blank"><?= $ticket->customer_email ?></a>
+                        <a href="<?= Url::toRoute(['/customers', 'query' => $ticket->customer_email]); ?>" target="_blank"><?= $ticket->customer_email ?></a>
                     </td>
                     <td>
-                        <?php if ($ticket->user) : ?>
+                        <?php if ($ticket->is_user) : ?>
                             <b>
                                 <?= Html::a(htmlspecialchars($ticket->subject), Url::toRoute(['/tickets/view', 'id' => $ticket->id])) ?>
                             </b>
@@ -42,16 +61,19 @@
                         <?= $ticket->getStatusName() ?>
                     </td>
                     <td>
-                        <span class="text-nowrap">
-                            <?= $ticket->getFormattedDate('date', 'php:Y-m-d') ?>
-                        </span>
-                        <?= $ticket->getFormattedDate('date', 'php:H:i:s') ?>
+                        <?= $ticket->getAssignedName() ?>
                     </td>
                     <td>
                         <span class="text-nowrap">
-                            <?= $ticket->getFormattedDate('date_update', 'php:Y-m-d') ?>
+                            <?= $ticket->getFormattedDate('created_at', 'php:Y-m-d') ?>
                         </span>
-                        <?= $ticket->getFormattedDate('date_update', 'php:H:i:s') ?>
+                        <?= $ticket->getFormattedDate('created_at', 'php:H:i:s') ?>
+                    </td>
+                    <td>
+                        <span class="text-nowrap">
+                            <?= $ticket->getFormattedDate('updated_at', 'php:Y-m-d') ?>
+                        </span>
+                        <?= $ticket->getFormattedDate('updated_at', 'php:H:i:s') ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

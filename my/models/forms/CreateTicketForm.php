@@ -96,8 +96,8 @@ class CreateTicketForm extends Model
 
         $model = new Tickets();
         $model->subject = $this->subject;
-        $model->cid = $this->_customer->id;
-        $model->user = 1;
+        $model->customer_id = $this->_customer->id;
+        $model->is_user = 1;
         if (!$model->save()) {
             $this->addErrors($model->getErrors());
             return false;
@@ -105,9 +105,9 @@ class CreateTicketForm extends Model
 
         $ticketModel = new TicketMessages();
         $ticketModel->message = $this->message;
-        $ticketModel->cid = $this->_customer->id;
-        $ticketModel->tid = $model->id;
-        $ticketModel->date = time();
+        $ticketModel->customer_id = $this->_customer->id;
+        $ticketModel->ticket_id = $model->id;
+        $ticketModel->created_at = time();
         $ticketModel->ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
 
         if (!$ticketModel->save()) {
