@@ -144,6 +144,13 @@ class CustomersSearch extends Customers {
         ];
     }
 
+    public static function ajaxSelectSearch($email) {
+        return Customers::find()
+            ->andWhere(['status' => Customers::STATUS_ACTIVE])
+            ->andFilterWhere(['like', 'email', trim($email)])
+            ->limit(10)->asArray()->all();
+    }
+
     /**
      * Get navs
      * @return array

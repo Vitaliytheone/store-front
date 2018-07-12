@@ -41,14 +41,14 @@
                 <tbody>
                     <?php foreach ($tickets['models'] as $ticket): ?>
                         <?php
-                            if ($ticket->date_update == 0) {
-                                $ticket->date_update = $ticket->date;
+                            if ($ticket->updated_at == 0) {
+                                $ticket->updated_at = $ticket->created_at;
                             }
                         ?>
                         <tr>
                             <td><?= $ticket->id; ?></td>
                             <td>
-                                <?php if ($ticket->admin == 1) : ?>
+                                <?php if ($ticket->is_admin == 1) : ?>
                                     <?= Html::a('<b>'.htmlspecialchars($ticket->subject).'</b>', '/ticket/' . $ticket->id, [
                                         'data-subject' => htmlspecialchars($ticket->subject),
                                         'style' => 'cursor:pointer;',
@@ -63,8 +63,8 @@
                                 <?php endif; ?>
                             </td>
                             <td><?= $ticket->getStatusName(); ?></td>
-                            <td><?= $ticket->getFormattedDate('date'); ?></td>
-                            <td><?= $ticket->getFormattedDate('date_update'); ?></td>
+                            <td><?= $ticket->getFormattedDate('created_at'); ?></td>
+                            <td><?= $ticket->getFormattedDate('updated_at'); ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

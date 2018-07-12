@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\search;
 
 use Yii;
 use common\models\panels\Tickets;
+use common\models\panels\SuperAdmin;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 use yii\db\Query;
@@ -17,7 +18,6 @@ class TicketsSearch extends Tickets
     use SearchTrait;
 
     protected $pageSize = 100;
-
     public $rows;
     public $customer_email;
 
@@ -25,8 +25,27 @@ class TicketsSearch extends Tickets
      * Cached counts tickets by status
      * @var array
      */
-    private $_counts_by_status = [];
+    private $_counts_by_status = null;
 
+    /**
+     * Cached superadmins admin
+     * @var array
+     */
+    private $_superadmins = null;
+
+
+    /**
+     * Cached counts tickets by assigned admin
+     * @var array
+     */
+    private $_counts_by_assignee = [];
+
+    public function getAssignedName()
+    {
+        $superAdmins = $this->getSuperAdmins();
+        return isset($superAdmins[$this->assigned_admin_id]['username'])
+            ? $superAdmins[$this->assigned_admin_id]['username'] : '';
+    }
     /**
      * Get parameters
      * @return array
@@ -36,15 +55,17 @@ class TicketsSearch extends Tickets
         return [
             'query' => $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all',
+            'assignee' => isset($this->params['assignee']) ? $this->params['assignee'] : 'all'
         ];
     }
 
     /**
      * Build main search query
      * @param int $status
+     * @param int $assignee
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
-    private function buildQuery($status = null)
+    private function buildQuery($status = null, $assignee = null)
     {
         $searchQuery = $this->getQuery();
 
@@ -65,17 +86,18 @@ class TicketsSearch extends Tickets
 
             if ($customerId) {
                 $query->andWhere([
-                    'tickets.cid' => $customerId
+                    'tickets.customer_id' => $customerId
                 ]);
             } else {
                 $ticketsIds = (new Query())
-                    ->select(['tid'])
+                    ->select(['ticket_id'])
                     ->from('ticket_messages')
+                    ->andWhere(['is_system' => 0])
                     ->andWhere([
                         'or',
                         ['like', 'ticket_messages.message', $searchQuery],
                     ])
-                    ->groupBy('tid')
+                    ->groupBy('ticket_id')
                     ->column();
 
                 $query->groupBy('tickets.id');
@@ -95,17 +117,12 @@ class TicketsSearch extends Tickets
             ]);
         }
 
-        $query->select([
-            'tickets.id',
-            'tickets.user',
-            'tickets.subject',
-            'tickets.status',
-            'tickets.date',
-            'tickets.date_update',
-            'tickets.cid',
-            'customers.email AS customer_email'
-        ]);
-        $query->leftJoin('customers', 'tickets.cid = customers.id');
+        if ('all' !== $assignee && null !== $assignee) {
+            $query->andWhere([
+                'tickets.assigned_admin_id' => $assignee
+            ]);
+        }
+
 
         return $query;
     }
@@ -135,11 +152,94 @@ class TicketsSearch extends Tickets
      */
     public function getCountByStatus($status = null)
     {
+        if ($this->_counts_by_status === null) {
+            $this->setCountsByStatus();
+        }
         if ($status === null || $status === 'all') {
             return array_sum($this->_counts_by_status);
         }
 
         return ArrayHelper::getValue($this->_counts_by_status, $status);
+    }
+
+
+    /**
+     * Get super admins
+     * @return array|SuperAdmin[]
+     */
+    public function getSuperAdmins()
+    {
+        if ($this->_superadmins == null) {
+            $this->setSuperadmins();
+        }
+        return $this->_superadmins;
+    }
+
+    /**
+     * set super admins
+     */
+    public function setSuperadmins()
+    {
+        $this->_superadmins = SuperAdmin::find()
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * @return array
+     */
+    public function getCountsByAssignee()
+    {
+        if ($this->_counts_by_assignee == null) {
+            $status = isset($this->params['status']) ? $this->params['status'] : 'all';
+            $query = clone $this->buildQuery($status);
+            $query = $query->select([
+                'count' => 'COUNT(DISTINCT tickets.id)',
+                'assigned_admin_id' => 'assigned_admin_id'
+            ]);
+            $query->groupBy('assigned_admin_id');
+            $query->indexBy('assigned_admin_id');
+            $query->asArray();
+            $stat = $query->all();
+            $admins = $this->getSuperAdmins();
+            $sum = 0;
+            foreach ($stat as $key =>  $admin) {
+                $sum += $admin['count'];
+            }
+            foreach ($admins as $key => $admin) {
+                if (!isset($stat[$key])) {
+                    $stat[$key] = [
+                        'count' => 0,
+                        'assigned_admin_id' => $key,
+                        'username' => $admin['username']
+                    ];
+                } else {
+                    $stat[$key]['username'] = $admins[$key]['username'];
+                }
+            }
+
+            $this->_counts_by_assignee = $stat;
+        }
+
+        return $this->_counts_by_assignee;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSuperadminsCount()
+    {
+        $count = null;
+
+        if ($this->_counts_by_assignee) {
+            $count = 0;
+            foreach ($this->_counts_by_assignee as $admin) {
+                $count += $admin['count'];
+            }
+        }
+
+        return $count;
     }
 
     /**
@@ -148,6 +248,9 @@ class TicketsSearch extends Tickets
      */
     public function getCountsByStatuses()
     {
+        if ($this->_counts_by_status === null) {
+            $this->setCountsByStatus();
+        }
         return $this->_counts_by_status;
     }
 
@@ -157,13 +260,26 @@ class TicketsSearch extends Tickets
      */
     public function search()
     {
-        $this->setCountsByStatus();
-
         $status = isset($this->params['status']) ? $this->params['status'] : 'all';
+        $assignee = isset($this->params['assignee']) ? $this->params['assignee'] : 'all';
 
-        $query = clone $this->buildQuery($status);
+        $query = clone $this->buildQuery($status, $assignee);
 
-        $pages = new Pagination(['totalCount' => $this->getCountByStatus($status)]);
+        $query->select([
+            'tickets.id',
+            'tickets.is_user',
+            'tickets.subject',
+            'tickets.status',
+            'tickets.assigned_admin_id',
+            'tickets.created_at',
+            'tickets.updated_at',
+            'tickets.customer_id',
+            'customers.email AS customer_email'
+        ]);
+        $query->leftJoin('customers', 'tickets.customer_id = customers.id');
+
+        $queryCount = clone $query;
+        $pages = new Pagination(['totalCount' => $queryCount->count()]);
         $pages->setPageSize($this->pageSize);
         $pages->defaultPageSize = $this->pageSize;
 
@@ -175,7 +291,7 @@ class TicketsSearch extends Tickets
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
-                'date_update' => SORT_DESC
+                'updated_at' => SORT_DESC
             ])
             ->all();
 

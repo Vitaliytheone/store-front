@@ -19,8 +19,8 @@ class UnreadMessagesWidget extends Widget {
     public function run()
     {
         $count = Tickets::find()->andWhere([
-            'cid' => Yii::$app->user->identity->id,
-            'admin' => 1
+            'customer_id' => Yii::$app->user->identity->id,
+            'is_admin' => 1
         ])->count();
 
         if (!$count) {

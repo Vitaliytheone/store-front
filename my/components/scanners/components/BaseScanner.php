@@ -249,7 +249,7 @@ abstract class BaseScanner extends Component
                     echo ' ---> Skipped ';
                 }
 
-                echo '[' . $status . ']' .  PHP_EOL;
+                echo '[' . SuperToolsScanner::statusesLabels()[$status] . ']' .  PHP_EOL;
 
                 $domainsProcessedCount++;
             }

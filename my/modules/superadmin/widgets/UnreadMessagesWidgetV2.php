@@ -23,7 +23,7 @@ class UnreadMessagesWidgetV2 extends Widget {
             ->select('COUNT(*)')
             ->from('tickets')
             ->andWhere([
-                'user' => 1
+                'is_user' => 1
             ])
             ->scalar();
 

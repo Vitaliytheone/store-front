@@ -5,6 +5,7 @@ use my\components\scanners\components\BasePanelInfo;
 use my\components\scanners\components\info\LevopanelInfo;
 use my\components\scanners\components\info\PanelfireInfo;
 use common\models\panels\SuperToolsScanner;
+use my\components\scanners\components\info\RentapanelInfo;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -61,6 +62,9 @@ class PanelsScannerAddDomainForm extends Model
                 break;
             case SuperToolsScanner::PANEL_PANELFIRE :
                 $this->_panelInfo = PanelfireInfo::className();
+                break;
+            case SuperToolsScanner::PANEL_RENTALPANEL :
+                $this->_panelInfo = RentapanelInfo::className();
                 break;
             default :
                 exit('Unresolved panel type' . $panelType);

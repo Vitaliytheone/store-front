@@ -4,9 +4,7 @@ namespace my\modules\superadmin\controllers;
 
 use my\components\ActiveForm;
 use my\helpers\Url;
-use my\helpers\UserHelper;
 use common\models\panels\Customers;
-use common\models\panels\MyActivityLog;
 use my\modules\superadmin\models\forms\CustomerPasswordForm;
 use my\modules\superadmin\models\forms\EditCustomerForm;
 use my\modules\superadmin\models\search\CustomersSearch;
@@ -14,6 +12,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\AjaxFilter;
 
 /**
  * CustomersController for the `superadmin` module
@@ -21,6 +20,17 @@ use yii\web\Response;
 class CustomersController extends CustomController
 {
     public $activeTab = 'customers';
+
+    public function behaviors()
+    {
+        return [
+
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['ajax-customers']
+            ],
+        ];
+    }
 
     /**
      * Renders the index view for the module
@@ -172,6 +182,14 @@ class CustomersController extends CustomController
         $customer->activateStores();
 
         return $this->redirect(Url::toRoute('/customers'));
+    }
+
+
+    public function actionAjaxCustomers()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $params = Yii::$app->request->get();
+        return CustomersSearch::ajaxSelectSearch($params['email']);
     }
 
     /**
