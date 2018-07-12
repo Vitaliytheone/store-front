@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $id
  * @property string $code
+ * @property integer $rtl
  * @property integer $created_at
  * @property integer $updated_at
  *
@@ -66,7 +67,7 @@ class Languages extends ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at'], 'integer'],
+            [['rtl', 'created_at', 'updated_at'], 'integer'],
             [['code'], 'string', 'max' => 5],
         ];
     }
@@ -79,6 +80,7 @@ class Languages extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'code' => Yii::t('app', 'Language code in IETF lang format'),
+            'rtl' => Yii::t('app', 'RTL'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
@@ -107,6 +109,6 @@ class Languages extends ActiveRecord
      */
     public function getName()
     {
-        return ArrayHelper::getValue(LanguagesHelper::getAllLanguagesList(true), $this->code);
+        return ArrayHelper::getValue(LanguagesHelper::getConfigLanguagesList(true), $this->code);
     }
 }

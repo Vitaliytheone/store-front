@@ -59,7 +59,7 @@
 
                 <div id="headerNav" class="navbar-collapse collapse float--left">
                     <!-- Header Nav Links Start -->
-                    <ul class="header--nav-links nav navbar-nav">
+                    <ul class="header--nav-links nav navbar-nav {% if site.rtl %} navbar-nav-rtl {% endif %}">
                         <!-- User's menu -->
                         {% for menu_first_level in site.menu %}
                             {% if menu_first_level.submenu %}
@@ -117,8 +117,8 @@
         <!-- Footer Copyright Start -->
         <div class="footer--copyright">
             <div class="container">
-                <p class="float--left">&copy; {{ "now"|date("Y") }} {{ site.store_name }}</p>
-                <ul class="nav float--right">
+                <p class="float--left {% if site.rtl %} rtl-direction {% endif %}">&copy; {{ "now"|date("Y") }} {{ site.store_name }}</p>
+                <ul class="nav float--right {% if site.rtl %} footer--rtl {% endif %}">
                     <li><a href="{{ page_url(3) }}">{{ lang('footer.policy') }}</a></li>
                     <li><a href="{{ page_url(2) }}">{{ lang('footer.terms') }}</a></li>
                     <li><a href="{{ page_url(1) }}">{{ lang('footer.contact') }}</a></li>

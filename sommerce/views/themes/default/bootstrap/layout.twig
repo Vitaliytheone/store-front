@@ -37,7 +37,7 @@
             </a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right {% if site.rtl %} navbar-nav-rtl {% endif %}">
 
                 <!-- User's menu -->
                 {% for menu_first_level in site.menu %}
@@ -94,7 +94,7 @@
                     &copy; {{ site.store_name }} {{ "now"|date("Y") }}
                 </div>
                 <div class="col-md-8">
-                    <ul class="footer-links">
+                    <ul class="footer-links {% if site.rtl %} rtl-content {% endif %}">
                         <li><a href="{{ page_url(3) }}">{{ lang('footer.policy') }}</a></li>
                         <li><a href="{{ page_url(2) }}">{{ lang('footer.terms') }}</a></li>
                         <li><a href="{{ page_url(1) }}">{{ lang('footer.contact') }}</a></li>

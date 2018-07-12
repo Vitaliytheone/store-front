@@ -8,6 +8,7 @@ use sommerce\helpers\AssetsHelper;
 use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\helpers\LanguagesHelper;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
@@ -148,6 +149,7 @@ class CustomController extends CommonController
                     'item_count' => (int)(new CartSearch())->setStore($store)->getCount(),
                 ],
                 'language' => Yii::$app->language,
+                'rtl' => LanguagesHelper::getLanguageRtl($store),
                 'store_name' => $store->name,
                 'favicon' => $store->favicon,
                 'logo' => $store->logo,

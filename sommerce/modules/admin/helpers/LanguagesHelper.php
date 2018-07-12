@@ -7,6 +7,7 @@ use common\models\stores\StoreDefaultMessages;
 use common\models\stores\Stores;
 use Yii;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class LanguagesHelper
@@ -16,14 +17,32 @@ class LanguagesHelper
 {
     /**
      * Return all languages list
-     * @param $withNames bool Return lang_code => lang_name arrays if true
+     * @param $withNamesOnly bool Return lang_code => lang_name arrays if true
      * @return array
      */
-    public static function getAllLanguagesList($withNames = false)
+    public static function getConfigLanguagesList($withNamesOnly = false)
     {
         $languages =  Yii::$app->params['languages'];
 
-        return $withNames ? $languages : array_keys($languages);
+        return $withNamesOnly ? ArrayHelper::getColumn($languages, 'name', true) : array_keys($languages);
+    }
+
+    /**
+     * Return config language params (`rtl`, `name`)  or single param (i.e. `rtl`)
+     * @param $langCode string language code
+     * @param $param string language param
+     * @return mixed
+     */
+    public static function getConfigLanguageParams($langCode, $param = null) {
+        $languages = Yii::$app->params['languages'];
+
+        $path[] = $langCode;
+
+        if ($param) {
+            $path[] = $param;
+        }
+
+        return ArrayHelper::getValue($languages, $path, null);
     }
 
     /**
@@ -36,6 +55,18 @@ class LanguagesHelper
             ->select(['lang_code'])
             ->groupBy(['lang_code'])
             ->column();
+    }
+
+    /**
+     * Return Store language RTL
+     * @param Stores $store
+     * @return string
+     */
+    public static function getLanguageRtl(Stores $store)
+    {
+        $storeLanguage = Languages::findOne(['code' => $store->language]);
+
+        return $storeLanguage ? $storeLanguage->rtl : static::getConfigLanguageParams($store->language, 'rtl');
     }
 
     /**
@@ -66,7 +97,7 @@ class LanguagesHelper
             return null;
         }
 
-        $configLanguages = static::getAllLanguagesList();
+        $configLanguages = static::getConfigLanguagesList();
 
         if (!in_array($languageCode, array_keys($configLanguages))) {
             return null;
@@ -78,6 +109,7 @@ class LanguagesHelper
 
         $language = new Languages();
         $language->code = $languageCode;
+        $language->rtl = static::getConfigLanguageParams($languageCode, 'rtl');
 
         if (!$language->save(false)) {
             return null;

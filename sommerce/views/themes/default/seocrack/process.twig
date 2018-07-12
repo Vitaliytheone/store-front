@@ -3,13 +3,13 @@
     <div class="features--section pd--80-0">
         <div class="container">
             <!-- Section Title Start -->
-            <div class="section--title">
+            <div class="section--title {% if site.rtl %} rtl-direction {% endif %}">
                 <h2 class="h2">{{ block.process.header.title }}</h2>
             </div>
             <!-- Section Title End -->
             {% if block.process.header.description %}
                 <!--Description Block Start-->
-                <div class="section--description">
+                <div class="section--description {% if site.rtl %} rtl-direction {% endif %}">
                     <p>{{ block.process.header.description }}</p>
                 </div>
                 <!--Description Block End-->

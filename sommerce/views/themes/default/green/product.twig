@@ -2,7 +2,7 @@
 <div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
     <div class="container">
         <!-- Page Header Title Start -->
-        <div class="page-header--title pull-left">
+        <div class="page-header--title pull-left {% if site.rtl %} page-header-rtl {% endif %}">
             <h1 class="h1">{{ product.title }}</h1>
         </div>
         <!-- Page Header Title End -->
@@ -16,7 +16,7 @@
     <div class="container">
         <div class="row">
             <!-- Contact Info Item Start -->
-            <div class="contact--info-item">
+            <div class="contact--info-item {% if site.rtl %} rtl-content {% endif %}">
                 {{ product.content }}
             </div>
             <!-- Contact Info Item End -->
@@ -30,7 +30,7 @@
 <div id="pricing" class="pd--100-0-0">
     <div class="container">
 
-        <div class="row AdjustRow">
+        <div class="row {% if site.rtl %} rtl-products {% endif %} AdjustRow">
             {% for package in product.packages %}
             <div class="col-md-3 col-xs-6">
                 <!-- Pricing Item Start -->

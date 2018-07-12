@@ -1,7 +1,7 @@
 <!-- Page Header Section Start -->
 <div class="page-header--section pd--70-0" data-bg-img="/img/themes/smm24/bg_header.jpg">
     <div class="container">
-        <h1 class="title h1">{{ lang('cart.title') }}</h1>
+        <h1 class="title h1 {% if site.rtl %} rtl-direction {% endif %}">{{ lang('cart.title') }}</h1>
 
     </div>
 </div>
@@ -14,7 +14,7 @@
         {% if error %}
             <!-- Alert Start -->
             <div class="checkout--info checkout--info-error pbottom--30">
-                <div class="title">
+                <div class="title {% if site.rtl %} rtl-direction {% endif %}">
                     <p><i class="fa fa-info-circle"></i> {{ error_message }}</p>
                 </div>
             </div>
@@ -24,7 +24,7 @@
         <!-- Cart Items Start -->
         <div class="cart--items pbottom--100">
 
-            <table class="table table-bordered">
+            <table class="table table-bordered {% if site.rtl %} rtl-table {% endif %}">
                 <thead>
                 <tr>
                     <th>{{ lang('cart.package') }}</th>
@@ -58,9 +58,9 @@
 
         {% if cart.orders %}
             <div class="row">
-                <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
                     <!-- Cart Total Start -->
-                    <div class="cart--total pbottom--30">
+                    <div class="cart--total pbottom--30 {% if site.rtl %} rtl-direction {% endif %}">
                         <div class="title">
                             <h2 class="h4">{{ lang('cart.total') }}</h2>
                         </div>
@@ -76,11 +76,13 @@
                     </div>
                     <!-- Cart Total End -->
                 </div>
+              
+              	<div class="clearfix"></div>
 
                 {% if cart.payments %}
                     <!-- Payment method Start -->
-                    <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
-                        <div class="checkout--order-info pbottom--30">
+                    <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
+                        <div class="checkout--order-info pbottom--30 {% if site.rtl %} rtl-direction {% endif %}">
 
                             <div class="title">
                                 <h2 class="h4">{{ lang('cart.payment_method') }}</h2>
@@ -110,10 +112,11 @@
                     </div>
                     <!-- Payment method  End -->
                 {% endif %}
+                <div class="clearfix"></div>
 
                 <!-- Email Start -->
-                <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
-                    <div class="checkout--order-info pbottom--30">
+                <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
+                    <div class="checkout--order-info pbottom--30 {% if site.rtl %} rtl-direction {% endif %}">
 
                         <div class="title">
                             <h2 class="h4">{{ lang('cart.email') }}</h2>
@@ -128,9 +131,10 @@
                     </div>
                 </div>
                 <!-- Email  End -->
+              <div class="clearfix"></div>
             </div>
 
-            <div class="row">
+            <div class="row {% if site.rtl %} rtl-col-sm-6 {% endif %}">
                 <div class="col-sm-6">
                     <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
                 </div>

@@ -13,13 +13,13 @@
     <div class="container">
         {% if product.content %}
         <!--Description Block Start-->
-        <div class="section--description">
+        <div class="section--description {% if site.rtl %} rtl-direction {% endif %}">
             <p>{{ product.content }}</p>
         </div>
         <!--Description Block End-->
         {% endif %}
 
-        <div class="row">
+        <div class="row {% if site.rtl %} rtl-products {% endif %}">
             {% for package in product.packages %}
                 <div class="col-md-4 col-md-offset-0 col-xs-8 col-xs-offset-2 col-xxs-12">
                     <!-- Pricing Item Start -->

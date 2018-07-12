@@ -50,7 +50,7 @@ class EditLanguageForm extends Model
             [['code','messages'], 'required'],
 
             ['code', 'string', 'max' => 5],
-            ['code', 'in', 'range' => LanguagesHelper::getAllLanguagesList()],
+            ['code', 'in', 'range' => LanguagesHelper::getConfigLanguagesList()],
 
             ['messages', 'filter', 'filter' => function($messages){
                 array_walk($messages, function(&$message){

@@ -11,7 +11,7 @@
                           <div class="panel-body__content-title">{{ lang('payment_result.completed.title') }}</div>
                           <div class="panel-body__content-message">
                             <!-- Alert Start -->
-                            <div class="checkout--info pbottom--30">
+                            <div class="checkout--info pbottom--30 {% if site.rtl %} rtl-direction {% endif %}">
                                 <div class="title">
                                     <p><i class="fa fa-info-circle"></i> {{ lang('payment_result.completed.description') }}</p>
                                 </div>
@@ -36,7 +36,7 @@
                           <div class="panel-body__content-title">{{ lang('payment_result.failed.title') }}</div>
                           <div class="panel-body__content-message">
                             <!-- Alert Start -->
-                            <div class="checkout--info checkout--info-error pbottom--30">
+                            <div class="checkout--info checkout--info-error pbottom--30 {% if site.rtl %} rtl-direction {% endif %}">
                                 <div class="title">
                                     <p><i class="fa fa-info-circle"></i> {{ lang('payment_result.failed.description') }}</p>
                                 </div>
@@ -61,7 +61,7 @@
                           <div class="panel-body__content-title">{{ lang('payment_result.awaiting.title') }}</div>
                           <div class="panel-body__content-message">
                             <!-- Alert Start -->
-                            <div class="checkout--info pbottom--30">
+                            <div class="checkout--info pbottom--30 {% if site.rtl %} rtl-direction {% endif %}">
                                 <div class="title">
                                     <p><i class="fa fa-info-circle"></i> {{ lang('payment_result.awaiting.description') }}</p>
                                 </div>

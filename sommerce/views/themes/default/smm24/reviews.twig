@@ -19,7 +19,7 @@
                     <div class="testimonial--slider owl-carousel" data-owl-dots="true" data-owl-responsive='{"0": {"items": "1"}, "768": {"items": "{{ block.reviews.settings.column }}"}}'>
                         {% for review in block.reviews.data %}
                             <!-- Reviews Item Start -->
-                            <div class="testimonial--item">
+                            <div class="testimonial--item {% if site.rtl %} rtl-testimonial {% endif %}">
                                 <div class="header clearfix">
                                     <div class="img float--left">
                                         <div class="avatar" style="background-image: url('{{ review.image }}')"></div>
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
 
-                                <div class="body">
+                                <div class="body {% if site.rtl %} rtl-direction {% endif %}">
                                     <blockquote>
                                         <p>{{ review.description }}</p>
                                     </blockquote>
