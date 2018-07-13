@@ -59,6 +59,10 @@ class EditInvoiceCreditForm extends Model {
             return false;
         }
 
+        if (0 == $this->_invoice->getPaymentAmount()) {
+            $this->_invoice->paid(null);
+        }
+
         $creditLog = new SuperCreditsLog();
         $creditLog->super_admin_id = Yii::$app->superadmin->id;
         $creditLog->invoice_id = $this->_invoice->id;
