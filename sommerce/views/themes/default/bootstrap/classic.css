@@ -615,44 +615,44 @@ body {
 /* ------ RTL ------ */
 
 .rtl-content{
-	direction: rtl;
+    direction: rtl;
 }
 .rtl-text{
-	text-align: right;
+    text-align: right;
 }
 .navbar-nav-rtl{
-	direction: rtl;
+    direction: rtl;
     padding: 0px;
 }
 .navbar-nav-rtl > li{
-	float: right;
+    float: right;
 }
 .navbar-nav-rtl > li a{
-	text-align: right;
+    text-align: right;
 }
 .table-rtl{
-	direction: rtl;
+    direction: rtl;
 }
 .table-rtl>thead>tr>th{
-	text-align: right;
+    text-align: right;
 }
 .table-rtl tbody tr td:last-child{
-	text-align: left!important;
+    text-align: left!important;
 }
 .rtl-payments{
-	direction: rtl;
+    direction: rtl;
 }
 .rtl-payments .radio-inline, .rtl-payments .checkbox-inline{
-	padding-right: 15px;
+    padding-right: 15px;
 }
 .rtl-payments .radio-inline input[type="radio"]{
-	right: 0;
+    right: 0;
 }
 .rtl-total-price{
-	direction: rtl;
+    direction: rtl;
 }
 .rtl-total-price .pull-right{
-	float: left!important;
+    float: left!important;
 }
 
 
@@ -666,14 +666,20 @@ body {
     .section-col__clearfix .col-lg-6:nth-child(2n+1) {
         clear: left
     }
-  	.rtl-col-lg-6 .col-lg-6{
-		float: right;
+    .rtl-col-lg-6 .col-lg-6{
+        float: right;
     }
     .rtl-col-lg-6 .col-lg-6:first-child{
         text-align: right;
     }
     .rtl-col-lg-6 .col-lg-6:last-child{
         text-align: left;
+    }
+    .rtl-col-lg-6 .col-lg-push-6{
+        left: 0px;
+    }
+    .rtl-col-lg-6 .col-lg-pull-6{
+        right: 0px;
     }
     .rtl-products .col-lg-3{
         float: right;
@@ -695,12 +701,12 @@ body {
     }
     .cart-button__checkout{
         text-align: left;
-        margin-top: 10px;
+        margin-bottom: 10px;
     }
     .rtl-products .col-lg-3{
-    	float: none;
+        float: none;
     }
-  
+
 }
 
 @media (max-width: 768px) {
@@ -761,9 +767,9 @@ body {
         border-left: 4px solid transparent;
     }
     .navbar-nav-rtl > li{
-  		width: 100%;
+        width: 100%;
     }
     .navbar-nav-rtl .dropdown-submenu .dropdown-menu{
-    	right: 0;
+        right: 0;
     }
 }
