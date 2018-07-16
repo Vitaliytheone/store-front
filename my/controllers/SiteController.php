@@ -541,7 +541,7 @@ class SiteController extends CustomController
     /**
      * Checkout
      * @param string $id
-     * @return string|Response|void
+     * @return Response|string
      */
     public function actionCheckout($id)
     {
@@ -552,23 +552,25 @@ class SiteController extends CustomController
             if (!empty($_POST['pgid'])) {
                 $paymentGateway = PaymentGateway::findOne(['pgid' => $_POST['pgid'], 'visibility' => 1, 'pid' => -1]);
                 if ($paymentGateway !== null) {
-
                     $invoiceDetails = $invoice->invoiceDetails;
                     $paymentAmount = $invoice->getPaymentAmount();
                     $description = Yii::t('app', 'invoices.checkout.description', [
                         'invoice' => $invoice->id
                     ]);
 
-                    if (empty($invoiceDetails) || !$paymentAmount) {
+                    if (empty($invoiceDetails) || 0 > $paymentAmount) {
                         return $this->redirect('/');
                     }
 
                     $invoiceDetails = array_shift($invoiceDetails);
 
                     $panel = $invoiceDetails->panel;
-                    $panelDomain = $invoiceDetails->domain;
-
                     if (!$panel) {
+                        return $this->redirect('/');
+                    }
+
+                    if (0 == $paymentAmount) {
+                        $invoice->paid($_POST['pgid']);
                         return $this->redirect('/');
                     }
 
