@@ -87,7 +87,7 @@ class SiteController extends CustomController
      */
     public function actionLogout()
     {
-        Yii::$app->superadmin->logout();
+        Yii::$app->superadmin->logout(false);
 
         return $this->goAdmin();
     }
