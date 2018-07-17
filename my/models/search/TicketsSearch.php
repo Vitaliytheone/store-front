@@ -39,7 +39,7 @@ class TicketsSearch extends Tickets
         $customer = ArrayHelper::getValue($this->params, 'customer_id');
 
         if ($customer) {
-            $query->andWhere('cid = :customer_id', [':customer_id' => $customer]);
+            $query->andWhere('customer_id = :customer_id', [':customer_id' => $customer]);
         }
 
         return $query;
@@ -76,7 +76,7 @@ class TicketsSearch extends Tickets
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
-                'date_update' => SORT_DESC
+                'updated_at' => SORT_DESC
             ])
             ->all();
 

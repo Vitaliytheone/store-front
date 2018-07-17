@@ -108,11 +108,26 @@ class Content extends ActiveRecord
 
     /**
      * Get content by name
+     * Content string can contains replacement placeholders:
+     * 'Hello, {username}!'
+     *
      * @param string $name
+     * @param $params array replacements key => value pairs
      * @return string|null
      */
-    public static function getContent($name)
+    public static function getContent($name, $params = [])
     {
-        return (string)ArrayHelper::getValue(static::getContents(), $name, '');
+        $message = (string)ArrayHelper::getValue(static::getContents(), $name, '');
+
+        if (empty($message) || empty($params)) {
+            return $message;
+        }
+
+        $placeholders = [];
+        foreach ((array) $params as $key => $value) {
+            $placeholders['{{' . $key . '}}'] = $value;
+        }
+
+        return ($placeholders === []) ? $message : strtr($message, $placeholders);
     }
 }

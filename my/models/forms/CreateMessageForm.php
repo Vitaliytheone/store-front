@@ -92,8 +92,8 @@ class CreateMessageForm extends Model
             return false;
         }
 
-        $this->_ticket->user = 1;
-        $this->_ticket->date_update = time();
+        $this->_ticket->is_user = 1;
+        $this->_ticket->updated_at = time();
         $this->_ticket->status = Tickets::STATUS_PENDING;
 
         if (!$this->_ticket->save(false)) {
@@ -103,9 +103,9 @@ class CreateMessageForm extends Model
 
         $ticketModel = new TicketMessages();
         $ticketModel->message = $this->message;
-        $ticketModel->cid = $this->_customer->id;
-        $ticketModel->tid = $this->_ticket->id;
-        $ticketModel->date = time();
+        $ticketModel->customer_id = $this->_customer->id;
+        $ticketModel->ticket_id = $this->_ticket->id;
+        $ticketModel->created_at = time();
         $ticketModel->ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
 
         if (!$ticketModel->save()) {

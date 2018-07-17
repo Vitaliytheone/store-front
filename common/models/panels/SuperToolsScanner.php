@@ -26,6 +26,7 @@ class SuperToolsScanner extends ActiveRecord
     // Panels
     const PANEL_LEVOPANEL = 1;
     const PANEL_PANELFIRE = 2;
+    const PANEL_RENTALPANEL = 3;
 
     // Panel statuses
     const PANEL_STATUS_ACTIVE = 1;
@@ -40,6 +41,7 @@ class SuperToolsScanner extends ActiveRecord
     public static $panels = [
         self::PANEL_LEVOPANEL,
         self::PANEL_PANELFIRE,
+        self::PANEL_RENTALPANEL
     ];
 
     /**

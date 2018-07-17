@@ -1,0 +1,13 @@
+<?php
+
+/* @var $message \common\models\panels\TicketMessages */
+
+use yii\helpers\Html;
+?>
+
+<?= Html::a( Yii::t('app/superadmin', 'tickets.modal.delete') , '#', [
+        'class' => 'ticket-message__card-link delete-link',
+        'data-toggle' => 'popover',
+        'data-trigger' => 'focus',
+        'data-content' => $this->render('_check_popover', ['message' => $message]),
+]) ?>

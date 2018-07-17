@@ -39,6 +39,7 @@ class DomainsSearch extends Domains {
     {
         $searchQuery = $this->getQuery();
         $customerId = ArrayHelper::getValue($this->params, 'customer_id');
+        $id = ArrayHelper::getValue($this->params, 'id');
 
         $domains = static::find();
 
@@ -70,6 +71,11 @@ class DomainsSearch extends Domains {
         if ($customerId) {
             $domains->andWhere([
                 'domains.customer_id' => $customerId
+            ]);
+        }
+        if ($id) {
+            $domains->andWhere([
+                'domains.id' => $id
             ]);
         }
 

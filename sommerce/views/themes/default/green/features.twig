@@ -3,7 +3,7 @@
     <div id="services" class="pd--100-0-40">
         <div class="container">
             <!-- Section Title Start -->
-            <div class="section--title text-center">
+            <div class="section--title text-center {% if site.rtl %} rtl-content {% endif %}">
                 <h2 class="h2">{{ block.features.header.title }}</h2>
                 {% if block.features.header.description %}
                     <!-- Section description Start -->
@@ -15,7 +15,7 @@
 
             <div class="row section-col__clearfix">
                 {% for feature in block.features.data %}
-                    <div class="{{ block.features.settings.bootstrap_column }} col-xs-6 col-xxs-12">
+                    <div class="{{ block.features.settings.bootstrap_column }} col-xs-6 col-xxs-12 {% if site.rtl %} rtl-content {% endif %}">
                         <!-- Service Item Start -->
                         <div class="service--item {% if block.features.settings.align == 'left' %} block-left {% endif %}">
                             {% if block.features.settings.picture_type == 'image' %}

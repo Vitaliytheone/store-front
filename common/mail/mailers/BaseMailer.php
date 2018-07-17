@@ -7,6 +7,8 @@ use Yii;
 
 use common\components\email\Mailgun;
 use common\tasks\Client;
+use yii\base\ErrorException;
+use Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -155,11 +157,19 @@ abstract class BaseMailer {
         }
 
         if ($html) {
-            $preMailer = new HtmlString($html);
-            $preMailer->setOption($preMailer::OPTION_HTML_COMMENTS, $preMailer::OPTION_HTML_COMMENTS_REMOVE);
-            $preMailer->setOption($preMailer::OPTION_HTML_CLASSES, $preMailer::OPTION_HTML_CLASSES_REMOVE);
+            try {
+                $preMailer = new HtmlString($html);
+                $preMailer->setOption($preMailer::OPTION_HTML_COMMENTS, $preMailer::OPTION_HTML_COMMENTS_REMOVE);
+                $preMailer->setOption($preMailer::OPTION_HTML_CLASSES, $preMailer::OPTION_HTML_CLASSES_REMOVE);
 
-            $html = $preMailer->getHtml();
+                $html = $preMailer->getHtml();
+            } catch (ErrorException $e) {
+                Yii::error($e->getMessage() . "\r\n" . $e->getTraceAsString() . "\r\n html: \r\n" . $html);
+                return false;
+            } catch (Exception $e) {
+                Yii::error($e->getMessage() . "\r\n" . $e->getTraceAsString() . "\r\n html: \r\n" . $html);
+                return false;
+            }
         }
 
         return (bool)Mailgun::send([

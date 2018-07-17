@@ -148,9 +148,9 @@ class Invoices extends ActiveRecord
 
     /**
      * Get is this invoice payment payer verification needed
-     * @return bool
+     * @return bool|string
      */
-    public function isVerificationWait()
+    public function emailVerification()
     {
         if (static::STATUS_UNPAID == $this->status) {
             $payment = Payments::findOne([
@@ -159,7 +159,8 @@ class Invoices extends ActiveRecord
             ]);
 
             if ($payment) {
-                return true;
+                $verify = MyVerifiedPaypal::findOne(['payment_id' => $payment->id]);
+                return $verify ? $verify->paypal_payer_email : false;
             }
         }
 

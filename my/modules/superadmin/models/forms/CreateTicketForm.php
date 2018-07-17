@@ -45,8 +45,9 @@ class CreateTicketForm extends Model
 
         $model = new Tickets();
         $model->subject = $this->subject;
-        $model->cid = $this->customer_id;
-        $model->admin = 1;
+        $model->customer_id = $this->customer_id;
+        $model->is_admin = 1;
+        $model->is_user = 0;
         $model->status = Tickets::STATUS_RESPONDED;
         
         if (!$model->save()) {
@@ -56,10 +57,10 @@ class CreateTicketForm extends Model
 
         $ticketModel = new TicketMessages();
         $ticketModel->message = $this->message;
-        $ticketModel->uid = $this->_user->id;
-        $ticketModel->tid = $model->id;
-        $ticketModel->date = time();
-        $ticketModel->ip = Yii::$app->request->userIP;
+        $ticketModel->admin_id = $this->_user->id;
+        $ticketModel->ticket_id = $model->id;
+        $ticketModel->customer_id = 0;
+
 
         if (!$ticketModel->save()) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));
@@ -101,6 +102,6 @@ class CreateTicketForm extends Model
     {
         return Customers::find()->andWhere([
             'status' => Customers::STATUS_ACTIVE
-        ])->all();
+        ])->limit(10)->all();
     }
 }

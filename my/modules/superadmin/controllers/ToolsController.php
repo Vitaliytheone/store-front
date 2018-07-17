@@ -48,6 +48,28 @@ class ToolsController extends CustomController
         ]);
     }
 
+
+    /**
+     * Render Retalpanel domains list
+     * @param null $status
+     * @return string
+     */
+    public function actionRetalpanel($status = null)
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.rentalpanel');
+        $this->addModule('superadminToolsControllerLevopanelAction');
+
+        $search = new PanelsScannerSearch();
+        $search->setPanel(SuperToolsScanner::PANEL_RENTALPANEL);
+
+        return $this->render('panels_scanner', [
+            'panels' => $search->searchPanels($status),
+            'statusButtons' => $search->getStatusButtons(),
+            'status' => $status,
+            'panelType' => $search->getPanel(),
+        ]);
+    }
+
     /**
      * Render Panelfire domains list
      * @param null $status

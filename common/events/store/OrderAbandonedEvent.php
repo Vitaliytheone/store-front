@@ -42,12 +42,12 @@ class OrderAbandonedEvent extends BaseOrderEvent {
     public function run():void
     {
         if (empty($this->_checkout)) {
-            Yii::error('Empty ' . static::class . ' checkout parameter');
+            Yii::info('Empty ' . static::class . ' checkout parameter');
             return;
         }
 
         if (empty($this->_store)) {
-            Yii::error('Empty ' . static::class . ' checkout parameter');
+            Yii::info('Empty ' . static::class . ' checkout parameter');
             return;
         }
 

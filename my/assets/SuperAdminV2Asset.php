@@ -11,23 +11,24 @@ class SuperAdminV2Asset extends AssetBundle
     public $css = [
         'themes/css/font-awesome.min.css',
         'themes/css/superadmin/style.css',
+        'themes/css/superadmin/superadminV2.css',
+        'https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css'
     ];
 
     public $js = [
-        'https://code.jquery.com/jquery-3.2.1.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
         'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js',
+        'https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+        'https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js',
         'themes/js/superadmin/main.js',
         'themes/js/script.js'
     ];
 
     public $depends = [
         'my\assets\YiiAsset',
-        'my\assets\UnderscoreAsset',
-        'my\assets\BootstrapSelectAsset',
-        'my\assets\ClipboardAsset',
-        'my\assets\TableSortAsset'
+        'my\assets\UnderscoreAsset'
     ];
 }

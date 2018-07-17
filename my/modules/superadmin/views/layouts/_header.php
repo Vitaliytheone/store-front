@@ -94,6 +94,7 @@
             'items' => [
                 ['label' => Yii::t('app/superadmin', 'header.nav.levopanel_scanner'), 'url' => Url::toRoute('/tools/levopanel')],
                 ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'url' => Url::toRoute('/tools/panelfire')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/retalpanel')]
             ]
         ];
     }
@@ -134,22 +135,5 @@
             'options' => ['class' => 'navbar-nav'],
             'items' => $optionsRight,
         ]);?>
-        <?php /*<ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="'" href="panels.html">Panels</a></li>
-            <li class="nav-item"><a class="nav-link" href="domains.html">Domains</a></li>
-            <li class="nav-item"><a class="nav-link" href="ssl.html">SSL</a></li>
-            <li class="nav-item"><a class="nav-link" href="customers.html">Customers</a></li>
-            <li class="nav-item"><a class="nav-link" href="invoices.html">Invoices</a></li>
-            <li class="nav-item"><a class="nav-link" href="payments.html">Payments</a></li>
-            <li class="nav-item"><a class="nav-link" href="tickets.html">Tickets</a></li>
-            <li class="nav-item"><a class="nav-link" href="providers.html">Providers</a></li>
-            <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
-            <li class="nav-item"><a class="nav-link" href="logs.html">Logs</a></li>
-            <li class="nav-item"><a class="nav-link" href="settings.html">Settings</a></li>
-        </ul>
-        <ul class="navbar-nav">
-            <li class="nav-item active"><a class="nav-link" href="account.html">Account</a></li>
-            <li class="nav-item"><a class="nav-link" href="">Logout</a></li>
-        </ul> */ ?>
     </div>
 </nav>

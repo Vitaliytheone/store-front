@@ -28,6 +28,10 @@ SuperAdminV2Asset::register($this);
         <?= $content ?>
     </div>
 
+    <?php if (isset($this->blocks['modals'])): ?>
+        <?= $this->blocks['modals'] ?>
+    <?php endif; ?>
+
     <?php $this->endBody() ?>
     </body>
 </html>
