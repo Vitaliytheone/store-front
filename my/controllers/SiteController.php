@@ -153,12 +153,15 @@ class SiteController extends CustomController
      */
     public function actionTicket($id, $clear = false)
     {
+        /**
+         * @var Tickets $ticket
+         */
         $ticket = $this->findModel($id, 'Tickets');
         $ticket->makeReaded();
 
-        $ticketMessages = TicketMessages::find()->where([
-            'ticket_id' => $ticket->id
-        ])->joinWith(['customer', 'admin'])->orderBy(['created_at' => SORT_ASC])->all();
+        $ticketMessages = TicketMessages::find()
+            ->ticketView($ticket->id)
+            ->all();
 
         return $this->renderPartial('ticket', [
             'ticketMessages' => $ticketMessages,
