@@ -27,7 +27,7 @@ use common\models\panels\Project;
                 </a>
             </div>
             <div class="ticket-info__block-autorization">
-                <a href="<?= Url::toRoute(['/customers/auth', 'id' => $ticket->customer->id])?>" target="_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_customer')?>">
+                <a href="<?= Url::toRoute(['/customers/auth', 'id' => $ticket->customer->id])?>" target="_blank" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_customer')?>">
                     <span class="my-icons my-icons-autorization"></span>
                 </a>
             </div>
@@ -147,7 +147,7 @@ use common\models\panels\Project;
                             </a>
                         </td>
                         <td class="text-right">
-                            <a href="<?=$loginUrl?>" target="_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                            <a href="<?=$loginUrl?>" target="_blank" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
@@ -181,7 +181,7 @@ use common\models\panels\Project;
                             </a>
                         </td>
                         <td class="text-right">
-                            <a href="<?= $loginUrl ?>" data-toggle="tooltip" data-placement="top" title="" target="_blank" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                            <a href="<?= $loginUrl ?>" data-placement="top" title="" target="_blank" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
@@ -215,7 +215,7 @@ use common\models\panels\Project;
                             </a>
                         </td>
                         <td class="text-right">
-                            <a href="<?= $loginUrl ?>" data-toggle="tooltip" data-placement="top" target="_blank" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                            <a href="<?= $loginUrl ?>" data-placement="top" target="_blank" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
