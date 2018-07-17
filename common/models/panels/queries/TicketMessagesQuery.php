@@ -9,10 +9,15 @@ namespace common\models\panels\queries;
  */
 class TicketMessagesQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
+    public function ticketView($ticketId)
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'ticket_id' => $ticketId,
+            'is_system' => 0
+        ])
+            ->joinWith(['customer', 'admin'])
+            ->orderBy(['created_at' => SORT_ASC]);
+    }
 
     /**
      * @inheritdoc
