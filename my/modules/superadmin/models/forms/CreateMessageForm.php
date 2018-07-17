@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\AdminUsers;
+use common\models\panels\SuperAdmin;
 use Yii;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
@@ -13,6 +14,9 @@ use yii\base\Model;
  */
 class CreateMessageForm extends Model
 {
+    /**
+     * @var string
+     */
     public $message;
 
     /**
@@ -44,8 +48,7 @@ class CreateMessageForm extends Model
 
 
         $this->_ticket->status = Tickets::STATUS_RESPONDED;
-        $this->_ticket->admin = 1;
-        $this->_ticket->date_update = time();
+        $this->_ticket->is_admin = 1;
 
         if (!$this->_ticket->save(false)) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));
@@ -54,10 +57,9 @@ class CreateMessageForm extends Model
 
         $ticketModel = new TicketMessages();
         $ticketModel->message = $this->message;
-        $ticketModel->uid = $this->_user->id;
-        $ticketModel->tid = $this->_ticket->id;
-        $ticketModel->date = time();
-        $ticketModel->ip = Yii::$app->request->userIP;
+        $ticketModel->admin_id = $this->_user->id;
+        $ticketModel->ticket_id = $this->_ticket->id;
+        $ticketModel->customer_id = 0;
 
         if (!$ticketModel->save()) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));
@@ -84,14 +86,13 @@ class CreateMessageForm extends Model
     public function setTicket(Tickets $ticket)
     {
         $this->_ticket = $ticket;
-
-        $this->_ticket->user = 0;
+        $this->_ticket->is_user = 0;
         $this->_ticket->save(false);
     }
 
     /**
      * Set ticket
-     * @param AdminUsers $user
+     * @param SuperAdmin $user
      */
     public function setUser($user)
     {
@@ -105,10 +106,10 @@ class CreateMessageForm extends Model
     public function getMessages()
     {
         return TicketMessages::find()->where([
-                'tid' => $this->_ticket->id
+                'ticket_id' => $this->_ticket->id
             ])
             ->joinWith(['customer', 'admin', 'customer.actualProjects'])
-            ->orderBy(['date' => SORT_ASC])
+            ->orderBy(['created_at' => SORT_ASC])
             ->all();
     }
 }

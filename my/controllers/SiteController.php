@@ -153,12 +153,15 @@ class SiteController extends CustomController
      */
     public function actionTicket($id, $clear = false)
     {
+        /**
+         * @var Tickets $ticket
+         */
         $ticket = $this->findModel($id, 'Tickets');
         $ticket->makeReaded();
 
-        $ticketMessages = TicketMessages::find()->where([
-            'tid' => $ticket->id
-        ])->joinWith(['customer', 'admin'])->orderBy(['date' => SORT_ASC])->all();
+        $ticketMessages = TicketMessages::find()
+            ->ticketView($ticket->id)
+            ->all();
 
         return $this->renderPartial('ticket', [
             'ticketMessages' => $ticketMessages,
@@ -528,7 +531,7 @@ class SiteController extends CustomController
     private function findModel($id, $class)
     {
         if (!($model = ('\common\models\panels\\' . $class)::findOne([
-            'cid' => Yii::$app->user->identity->id,
+            'customer_id' => Yii::$app->user->identity->id,
             'id' => $id
         ]))) {
             $this->redirect('/');

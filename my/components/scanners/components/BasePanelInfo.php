@@ -3,6 +3,7 @@
 namespace my\components\scanners\components;
 
 use common\models\panels\SuperToolsScanner;
+use DOMDocument;
 use yii\helpers\ArrayHelper;
 use yii\base\Component;
 use yii\base\Exception;
@@ -109,6 +110,7 @@ abstract class BasePanelInfo extends Component
         if (empty($content) || ArrayHelper::getValue($panelData, 'info.http_code') != self::HTTP_STATUS_200) {
             return false;
         }
+        new domDocument();
 
         return boolval(stripos($content, '<!--Hello,_world!-->'));
     }
@@ -135,6 +137,8 @@ abstract class BasePanelInfo extends Component
         $panelsStatuses = [];
 
         $panelsData = $this->getUrlsInfo($urls);
+
+
 
         foreach ($panelsData as $panelData) {
 
@@ -300,6 +304,7 @@ abstract class BasePanelInfo extends Component
                 CURLOPT_PRIVATE => $host,
             ];
 
+
             $proxyOptions = [
                 CURLOPT_PROXYTYPE => $this->proxy['type'],
                 CURLOPT_PROXY => $this->proxy['ip'] . ':' . $this->proxy['port'],
@@ -319,9 +324,6 @@ abstract class BasePanelInfo extends Component
         /** Do batch request */
         $running = null;
         do {
-
-            echo '.';
-
             curl_multi_exec($mh, $running);
         } while ($running > 0);
 
@@ -332,6 +334,7 @@ abstract class BasePanelInfo extends Component
         foreach ($connectionHandlers as $ch)
         {
             $host = curl_getinfo($ch, CURLINFO_PRIVATE);
+
 
             // System Errors
             if (curl_errno($ch)) {
@@ -357,11 +360,13 @@ abstract class BasePanelInfo extends Component
                 continue;
             }
 
+
             $panelsData[] = [
                 'host' => $host,
                 'content' => curl_multi_getcontent($ch),
                 'info' => curl_getinfo($ch),
             ];
+
 
             curl_multi_remove_handle($mh, $ch);
             continue;
