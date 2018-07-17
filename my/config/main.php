@@ -48,7 +48,7 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'common\models\panels\Auth',
-            'enableAutoLogin' => false,
+            'enableAutoLogin' => true,
             'loginUrl' => ['/signin'],
             'on afterLogin' => function($event) {
                 /**
@@ -82,7 +82,7 @@ $config = [
         'superadmin' => [
             'class' => 'my\components\User',
             'identityClass' => 'common\models\panels\SuperAdmin',
-            'enableAutoLogin' => false,
+            'enableAutoLogin' => true,
             'loginUrl' => ['/' . $params['superadminUrl']],
             'idParam' => '__superadmin_id',
             'identityCookie' => [
