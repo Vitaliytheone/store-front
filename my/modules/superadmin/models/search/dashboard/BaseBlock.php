@@ -51,7 +51,7 @@ abstract class BaseBlock
      */
     protected static function _getFilterTime()
     {
-        return strtotime('today midnight') - (int) Yii::$app->params['time'];
+        return strtotime('today midnight') + (int) Yii::$app->params['time'];
     }
 
     /**
