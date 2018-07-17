@@ -22,7 +22,7 @@ use common\models\panels\Project;
 
         <div class="ticket-info__header">
             <div class="ticket-info__block-username">
-                <a href=" <?= Url::toRoute(['/customers', 'query' => $ticket->customer->email]); ?>">
+                <a href="<?= Url::toRoute(['/customers', 'query' => $ticket->customer->email]); ?>" target="_blank">
                     <?= $ticket->customer->email ?>
                 </a>
             </div>

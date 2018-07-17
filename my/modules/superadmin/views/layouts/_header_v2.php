@@ -247,7 +247,7 @@ echo SuperAdminNav::widget([
     'options' => ['class' => ' navbar-nav'],
     'encodeLabels' => false,
     'items' => [
-        ['label' => Yii::$app->superadmin->getIdentity()->getFullName(), 'url' => Url::toRoute('/account'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']],
+        ['label' => Yii::t('app/superadmin', 'header.nav.account'), 'url' => Url::toRoute('/account'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']],
         ['label' => Yii::t('app/superadmin', 'header.nav.logout'), 'url' => Url::toRoute('/logout'), 'options' => ['class' => 'nav-item'], 'linkOptions' => ['class' => 'nav-link']],
     ]
 ]);
