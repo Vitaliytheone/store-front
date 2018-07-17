@@ -998,6 +998,9 @@ a {
 .dropdown-item__notification-block:hover .dropdown-item__notification {
     display: block; }
 
+.navbar-light .navbar-nav .nav-link {
+    white-space: nowrap; }
+
 .table-custom {
     border-collapse: collapse;
     -webkit-border-radius: 4px;
