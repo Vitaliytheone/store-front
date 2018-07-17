@@ -58,13 +58,13 @@ class PanelsScannerAddDomainForm extends Model
     {
         switch ($panelType) {
             case SuperToolsScanner::PANEL_LEVOPANEL :
-                $this->_panelInfo = LevopanelInfo::className();
+                $this->_panelInfo = LevopanelInfo::class;
                 break;
             case SuperToolsScanner::PANEL_PANELFIRE :
-                $this->_panelInfo = PanelfireInfo::className();
+                $this->_panelInfo = PanelfireInfo::class;
                 break;
             case SuperToolsScanner::PANEL_RENTALPANEL :
-                $this->_panelInfo = RentapanelInfo::className();
+                $this->_panelInfo = RentapanelInfo::class;
                 break;
             default :
                 exit('Unresolved panel type' . $panelType);

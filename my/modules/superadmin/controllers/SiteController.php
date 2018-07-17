@@ -20,7 +20,7 @@ class SiteController extends CustomController
     {
         return [
             'access' => [
-                'class' => SuperAccessControl::className(),
+                'class' => SuperAccessControl::class,
                 'only' => ['logout'],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class SiteController extends CustomController
                 ],
             ],
             /*'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
                 ],
