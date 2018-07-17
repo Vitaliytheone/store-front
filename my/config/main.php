@@ -84,6 +84,7 @@ $config = [
             'identityClass' => 'common\models\panels\SuperAdmin',
             'enableAutoLogin' => true,
             'loginUrl' => ['/' . $params['superadminUrl']],
+            'idParam' => '__superadmin_id',
             'identityCookie' => [
                 'name' => '_identity_superadmin',
                 'httpOnly' => true
