@@ -142,7 +142,7 @@ use common\models\panels\Project;
                             <?php if (Stores::STATUS_ACTIVE != $item->status) : ?>
                                 <span class="badge badge-primary"><?= Stores::getStatuses()[$item->status] ?></span>
                             <?php endif; ?>
-                            <a href="<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
+                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->domain ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
@@ -176,7 +176,7 @@ use common\models\panels\Project;
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
-                            <a href="<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
+                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
@@ -210,7 +210,7 @@ use common\models\panels\Project;
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
-                            <a href="<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
+                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
