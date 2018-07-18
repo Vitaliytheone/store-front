@@ -32,7 +32,7 @@ class PanelScannerController extends CustomController
 
 
         $after = Yii::$app->db->createCommand('SHOW VARIABLES LIKE \'%timeout%\'')->queryAll();
-        $this->stderr('Before set timeout: ' .  print_r($after,1) . "\n", Console::FG_YELLOW);
+        $this->stderr('After set timeout: ' .  print_r($after,1) . "\n", Console::FG_YELLOW);
     }
 
     /**
