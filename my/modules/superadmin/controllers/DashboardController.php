@@ -24,7 +24,7 @@ class DashboardController extends CustomController
     {
         return [
             'access' => [
-                'class' => SuperAccessControl::className(),
+                'class' => SuperAccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -37,7 +37,7 @@ class DashboardController extends CustomController
                 'only' => ['block', 'balance']
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'block'=> ['GET'],

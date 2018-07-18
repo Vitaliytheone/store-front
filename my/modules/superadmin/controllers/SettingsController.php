@@ -42,7 +42,7 @@ class SettingsController extends CustomController
     {
         return [
             'access' => [
-                'class' => SuperAccessControl::className(),
+                'class' => SuperAccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,

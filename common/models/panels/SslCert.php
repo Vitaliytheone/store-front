@@ -228,10 +228,12 @@ class SslCert extends ActiveRecord
             $this->expiry = ArrayHelper::getValue($orderDetails, 'valid_till');
             $this->checked = static::CHECKED_YES;
 
-            $this->project->setSslMode(ProjectInterface::SSL_MODE_ON);
-            $this->project->save(false);
+            $project = $this->project;
 
-            switch ($this->project::getProjectType()) {
+            $project->setSslMode(ProjectInterface::SSL_MODE_ON);
+            $project->save(false);
+
+            switch ($project::getProjectType()) {
                 case ProjectInterface::PROJECT_TYPE_PANEL:
                     $messagePrefix = 'my';
                     break;
@@ -243,23 +245,25 @@ class SslCert extends ActiveRecord
                     break;
             }
 
-            $isProlonged = Orders::findOne(['item' => Orders::ITEM_PROLONGATION_SSL, 'item_id' => $this->id]);
+            $isProlonged = Orders::find()->andWhere(['item' => Orders::ITEM_PROLONGATION_SSL, 'item_id' => $this->id])->exists();
 
             // Create new unreaded ticket after activate ssl cert.
             // Not for SSL prolongation
             if(!$isProlonged) {
                 $ticket = new Tickets();
-                $ticket->cid = $this->cid;
-                $ticket->admin = 1;
+                $ticket->customer_id = $this->cid;
+                $ticket->is_admin = 1;
                 $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
                 if ($ticket->save(false)) {
                     $ticketMessage = new TicketMessages();
-                    $ticketMessage->tid = $ticket->id;
-                    $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
-                    $ticketMessage->date = time();
+                    $ticketMessage->ticket_id = $ticket->id;
+                    $ticketMessage->admin_id = SuperAdmin::DEFAULT_ADMIN;
+                    $ticketMessage->created_at = time();
                     $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
                         'domain' => $this->project->getBaseDomain()
                     ]);
+                    $ticketMessage->ip = ' ';
+                    $ticketMessage->user_agent = ' ';
                     $ticketMessage->save(false);
                 }
             }

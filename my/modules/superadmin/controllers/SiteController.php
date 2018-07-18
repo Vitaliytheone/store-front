@@ -20,7 +20,7 @@ class SiteController extends CustomController
     {
         return [
             'access' => [
-                'class' => SuperAccessControl::className(),
+                'class' => SuperAccessControl::class,
                 'only' => ['logout'],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class SiteController extends CustomController
                 ],
             ],
             /*'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
                 ],
@@ -68,7 +68,6 @@ class SiteController extends CustomController
 
         $this->layout = 'guest';
 
-
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -87,7 +86,7 @@ class SiteController extends CustomController
      */
     public function actionLogout()
     {
-        Yii::$app->superadmin->logout();
+        Yii::$app->superadmin->logout(false);
 
         return $this->goAdmin();
     }

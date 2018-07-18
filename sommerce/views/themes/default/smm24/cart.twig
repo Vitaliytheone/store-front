@@ -135,14 +135,14 @@
             </div>
 
             <div class="row {% if site.rtl %} rtl-col-sm-6 {% endif %}">
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-sm-push-6 cart-button__checkout">
+                    <button type="submit" class="btn btn-default active">{{ lang('cart.button.checkout') }}</button>
+                    <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+                </div>
+                <div class="col-sm-6 col-sm-pull-6">
                     <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
                 </div>
-                <div class="col-sm-6 cart-button__checkout">
-                    <button type="submit" class="btn btn-default active">{{ lang('cart.button.checkout') }}</button>
-                </div>
             </div>
-            <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
         {% endif %}
     </div>
 </form>

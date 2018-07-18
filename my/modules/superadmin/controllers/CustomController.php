@@ -51,7 +51,7 @@ class CustomController extends MainController
     {
         return [
             'access' => [
-                'class' => SuperAccessControl::className(),
+                'class' => SuperAccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
