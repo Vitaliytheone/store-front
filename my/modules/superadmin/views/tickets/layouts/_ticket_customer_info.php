@@ -27,7 +27,7 @@ use common\models\panels\Project;
                 </a>
             </div>
             <div class="ticket-info__block-autorization">
-                <a href="<?= Url::toRoute(['/customers/auth', 'id' => $ticket->customer->id])?>" target="_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_customer')?>">
+                <a href="<?= Url::toRoute(['/customers/auth', 'id' => $ticket->customer->id])?>" target="_blank" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_customer')?>">
                     <span class="my-icons my-icons-autorization"></span>
                 </a>
             </div>
@@ -142,12 +142,12 @@ use common\models\panels\Project;
                             <?php if (Stores::STATUS_ACTIVE != $item->status) : ?>
                                 <span class="badge badge-primary"><?= Stores::getStatuses()[$item->status] ?></span>
                             <?php endif; ?>
-                            <a href="<?= BaseUrl::toRoute(["/redirect", 'url' => $item->domain]) ?>" target="_blank">
+                            <a href="<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
                         <td class="text-right">
-                            <a href="<?=$loginUrl?>" target="_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                            <a href="<?=$loginUrl?>" target="_blank" data-placement="top" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
@@ -176,12 +176,12 @@ use common\models\panels\Project;
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
-                            <a href="<?=  BaseUrl::toRoute(["/redirect", 'url' => $item->site]) ?>" target="_blank">
+                            <a href="<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
                         <td class="text-right">
-                            <a href="<?= $loginUrl ?>" data-toggle="tooltip" data-placement="top" title="" target="_blank" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                            <a href="<?= $loginUrl ?>" data-placement="top" title="" target="_blank" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
@@ -210,12 +210,12 @@ use common\models\panels\Project;
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
-                            <a href="<?=  BaseUrl::toRoute(["/redirect", 'url' => $item->site]) ?>" target="_blank">
+                            <a href="<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
                         <td class="text-right">
-                            <a href="<?= $loginUrl ?>" data-toggle="tooltip" data-placement="top" target="_blank" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                            <a href="<?= $loginUrl ?>" data-placement="top" target="_blank" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
