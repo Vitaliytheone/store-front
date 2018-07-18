@@ -1,7 +1,7 @@
 <?php
-
 namespace my\components\behaviors;
 
+use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
 
@@ -37,7 +37,15 @@ class UserAgentBehavior extends AttributeBehavior {
         if (is_string($this->value)) {
             return $this->value;
         } else {
-            return $this->value !== null ? call_user_func($this->value, $event) : \Yii::$app->request->userAgent;
+            if ($this->value !== null) {
+                return call_user_func($this->value, $event);
+            }
+
+            if (!empty(Yii::$app->request->userAgent)) {
+                return Yii::$app->request->userAgent;
+            }
+
+            return null;
         }
     }
 }
