@@ -51,6 +51,7 @@ class RentalpanelScanner extends BaseScanner
 
         // Take only those domains that we do not have in DB
         $newDomains = $this->getNewDomains($domains);
+
         shuffle($newDomains);
 
         return $newDomains;

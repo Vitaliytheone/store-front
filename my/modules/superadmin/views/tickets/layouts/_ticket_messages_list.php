@@ -45,7 +45,7 @@
                 <div class="ticket-message__card-footer">
                     <ul>
                         <li>
-                            <a href="#" data-content="<?= nl2br(htmlspecialchars($message->message)) ?>" data-ticket="<?= $message->ticket_id ?>" data-id="<?= $message->id ?>"  class="ticket-message__card-link open-edit-modal" data-toggle="modal" data-target="#edit-message-modal">
+                            <a href="#" data-content="<?= htmlspecialchars($message->message) ?>" data-ticket="<?= $message->ticket_id ?>" data-id="<?= $message->id ?>"  class="ticket-message__card-link open-edit-modal" data-toggle="modal" data-target="#edit-message-modal">
                                 <?= Yii::t('app/superadmin', 'tickets.modal.edit') ?>
                             </a></li>
                         <li>

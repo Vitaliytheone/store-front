@@ -19,16 +19,16 @@ class RentapanelInfo extends BasePanelInfo
         $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
 
-        if (empty($content) || ArrayHelper::getValue($panelData, 'info.http_code') != self::HTTP_STATUS_200) {
+        if (!boolval(stripos($content, '<a href="api_docs">Api</a>'))
+            || !boolval(strpos($content, '<a href="services">Services</a>'))) {
             return false;
         }
 
-        if ($this->_isValid()) {
-            $val = boolval(stripos($content,"window.top.location=\"login\";</script>"));
-            return $val;
+        if (empty($content) || ArrayHelper::getValue($panelData, 'info.http_code') != self::HTTP_STATUS_200 || $this->checkStatusDisabled()) {
+            return false;
         }
 
-        return false;
+        return $this->_isValid();
     }
 
     /**
@@ -37,8 +37,7 @@ class RentapanelInfo extends BasePanelInfo
      */
     public function checkStatusDisabled()
     {
-        $host = parse_url(ArrayHelper::getValue($this->currentPanelData, 'info.url'), PHP_URL_HOST);
-        $panelData = $this->getUrlInfo($host . '/api_docs');
+        $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
 
         if (empty($content) || (ArrayHelper::getValue($panelData, 'info.http_code') != self::HTTP_STATUS_200
@@ -63,7 +62,7 @@ class RentapanelInfo extends BasePanelInfo
         if (!$host) {
             return false;
         }
-
+        echo PHP_EOL . "get url info with curl: ". $host . '/api_docs' . PHP_EOL;
         $panelData = $this->getUrlInfo($host . '/api_docs');
         $content = ArrayHelper::getValue($panelData, 'content');
 
@@ -87,3 +86,5 @@ class RentapanelInfo extends BasePanelInfo
         return true;
     }
 }
+
+
