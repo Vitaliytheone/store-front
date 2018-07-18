@@ -18,8 +18,7 @@ class RentalpanelScanner extends BaseScanner
     public $panelInfoClass = RentapanelInfo::class;
 
     public $nameserversList = [
-        'chris.ns.cloudflare.com',
-        'tani.ns.cloudflare.com'
+        'chris.ns.cloudflare.com'
     ];
 
     public static $scannerName = 'rentalpanel';
@@ -29,23 +28,32 @@ class RentalpanelScanner extends BaseScanner
     /** @inheritdoc */
     protected function fetchDomains()
     {
-        if (count($this->nameserversList) < 2) {
-            throw new Exception('Invalid sources number! Must be 2 or more!');
+
+        if (count($this->nameserversList) < 1) {
+            throw new Exception('Invalid sources number! Must be 1 or more!');
         }
 
-        $nameserversDomains = [];
+        if (count($this->nameserversList) > 1) {
 
-        // Scan each nameserver for hosted domains
-        foreach ($this->nameserversList as $nameserver) {
-            $nameserversDomains[] = $this->searchNSNeighbors($nameserver);
+            $nameserversDomains = [];
+
+            // Scan each nameserver for hosted domains
+            foreach ($this->nameserversList as $nameserver) {
+                $nameserversDomains[] = $this->searchNSNeighbors($nameserver);
+            }
+
+            // Intersect 2 domains lists
+            $domains = call_user_func_array('array_intersect', $nameserversDomains);
+
+        }  else {
+            $domains = $this->searchNSNeighbors($this->nameserversList[0]);
         }
-
-        // Intersect 2 domains lists
-        $intersectedDomains = call_user_func_array('array_intersect', $nameserversDomains);
-        $intersectedDomains = array_reverse($intersectedDomains);
 
         // Take only those domains that we do not have in DB
-        return $this->getNewDomains($intersectedDomains);
+        $newDomains = $this->getNewDomains($domains);
+        shuffle($newDomains);
+
+        return $newDomains;
     }
 }
 
