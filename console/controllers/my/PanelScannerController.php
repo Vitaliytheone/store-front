@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers\my;
 
+use my\components\scanners\components\info\RentapanelInfo;
 use my\components\scanners\Scanner;
 use Yii;
 use yii\helpers\ArrayHelper;
