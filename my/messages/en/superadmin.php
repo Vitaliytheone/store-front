@@ -22,7 +22,7 @@ return [
     'header.nav.tools' => 'Tools',
     'header.nav.levopanel_scanner' => 'Levopanel scanner',
     'header.nav.panelfire_scanner' => 'Panelfire scanner',
-    'header.nav.rentalpanel_scanner' => 'Retalpanel scanner',
+    'header.nav.rentalpanel_scanner' => 'Rentalpanel scanner',
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
