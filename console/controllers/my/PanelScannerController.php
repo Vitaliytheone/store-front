@@ -21,6 +21,8 @@ class PanelScannerController extends CustomController
             'mysqli' => '\my\components\db\Command',
             'mysql' => '\my\components\db\Command'
         ]);
+
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
     }
 
     /**
