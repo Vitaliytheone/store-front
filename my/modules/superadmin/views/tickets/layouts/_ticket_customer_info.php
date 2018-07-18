@@ -172,7 +172,7 @@ use common\models\panels\Project;
                     ?>
                     <tr>
                         <td>
-                            <?= Html::a($item->site, Url::toRoute(['/panels', 'id' => $item['id']]))?>
+                            <?= Html::a($item->site, Url::toRoute(['/panels', 'id' => $item['id']]), ['target' => '_blank'])?>
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
