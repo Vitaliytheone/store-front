@@ -139,7 +139,6 @@ abstract class BasePanelInfo extends Component
         $panelsData = $this->getUrlsInfo($urls);
 
 
-
         foreach ($panelsData as $panelData) {
 
             $this->currentPanelData = $panelData;
@@ -260,7 +259,10 @@ abstract class BasePanelInfo extends Component
 
         $info = curl_getinfo($ch);
 
+
+
         curl_close($ch);
+
 
         return [
             'host' => $host,
@@ -321,14 +323,14 @@ abstract class BasePanelInfo extends Component
             $connectionHandlers[] = $ch;
         }
 
+        echo "before request sent\n";
         /** Do batch request */
         $running = null;
         do {
-
-            echo '.';
-
             curl_multi_exec($mh, $running);
         } while ($running > 0);
+
+        echo "request sent\n";
 
         /** Process results */
 
@@ -363,19 +365,20 @@ abstract class BasePanelInfo extends Component
                 continue;
             }
 
-
             $panelsData[] = [
                 'host' => $host,
                 'content' => curl_multi_getcontent($ch),
                 'info' => curl_getinfo($ch),
             ];
 
-
             curl_multi_remove_handle($mh, $ch);
             continue;
         }
 
         curl_multi_close($mh);
+
+
+        echo "return curl result\n";
 
         return $panelsData;
     }

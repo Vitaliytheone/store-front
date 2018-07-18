@@ -218,7 +218,9 @@ abstract class BaseScanner extends Component
         while (count($newDomains)) {
             $domains = array_splice($newDomains, 0, static::$pageSize);
 
+            echo '1';
             $panelsInfo = $panelInfoComponent->getPanelsInfo($domains);
+            echo '2';
 
             foreach ($panelsInfo as $panelInfo) {
 
