@@ -249,14 +249,14 @@ class SslCert extends ActiveRecord
             // Not for SSL prolongation
             if(!$isProlonged) {
                 $ticket = new Tickets();
-                $ticket->cid = $this->cid;
-                $ticket->admin = 1;
+                $ticket->customer_id = $this->cid;
+                $ticket->is_admin = 1;
                 $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
                 if ($ticket->save(false)) {
                     $ticketMessage = new TicketMessages();
-                    $ticketMessage->tid = $ticket->id;
-                    $ticketMessage->uid = SuperAdmin::DEFAULT_ADMIN;
-                    $ticketMessage->date = time();
+                    $ticketMessage->ticket_id = $ticket->id;
+                    $ticketMessage->admin_id = SuperAdmin::DEFAULT_ADMIN;
+                    $ticketMessage->created_at = time();
                     $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
                         'domain' => $this->project->getBaseDomain()
                     ]);
