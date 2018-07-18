@@ -17,7 +17,7 @@
         <div class="ticket-message__card ticket-message__client">
             <div class="ticket-message__card-header">
                 <div class="ticket-message__card-username"><?= $customer->getFullName() ?> </div>
-                <div class="ticket-message__card-date"><?= $message->getFormattedDate('date') ?></div>
+                <div class="ticket-message__card-date"><?= $message->getFormattedDate('created_at') ?></div>
             </div>
             <div class="ticket-message__card-text">
                 <?= nl2br(htmlspecialchars($message->message)) ?>

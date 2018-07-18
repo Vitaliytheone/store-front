@@ -3,6 +3,7 @@
 namespace my\components\behaviors;
 
 use Yii;
+use yii\base\Event;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
