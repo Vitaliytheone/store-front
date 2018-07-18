@@ -97,11 +97,11 @@
             </div>
 
             <div class="row {% if site.rtl %} rtl-col-lg-6 {% endif %}">
-                <div class="col-lg-6">
-                    <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
-                </div>
-                <div class="col-lg-6 cart-button__checkout">
+                <div class="col-lg-6 col-lg-push-6 cart-button__checkout">
                     <button type="submit" id="orderButton" class="btn btn-primary" name="order-button">{{ lang('cart.button.checkout') }}</button>
+                </div>
+               <div class="col-lg-6 col-lg-pull-6">
+                    <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
                 </div>
             </div>
 

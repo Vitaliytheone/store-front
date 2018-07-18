@@ -68,7 +68,6 @@ class SiteController extends CustomController
 
         $this->layout = 'guest';
 
-
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {

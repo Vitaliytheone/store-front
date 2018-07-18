@@ -1,8 +1,10 @@
 <?php
-
 namespace my\components\behaviors;
 
+use Yii;
+use yii\base\Event;
 use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
 
 class UserAgentBehavior extends AttributeBehavior {
@@ -30,6 +32,35 @@ class UserAgentBehavior extends AttributeBehavior {
             ];
         }
     }
+
+    /**
+     * Evaluates the attribute value and assigns it to the current attributes.
+     * @param Event $event
+     */
+    public function evaluateAttributes($event)
+    {
+        if ($this->skipUpdateOnClean
+            && $event->name == ActiveRecord::EVENT_BEFORE_UPDATE
+            && empty($this->owner->dirtyAttributes)
+        ) {
+            return;
+        }
+
+        if (!empty($this->attributes[$event->name])) {
+            $attributes = (array) $this->attributes[$event->name];
+            $value = $this->getValue($event);
+            foreach ($attributes as $attribute) {
+                // ignore attribute names which are not string (e.g. when set by TimestampBehavior::updatedAtAttribute)
+                if (is_string($attribute)) {
+                    if ($event->name == ActiveRecord::EVENT_BEFORE_INSERT && $this->owner->$attribute) {
+                        continue;
+                    }
+                    $this->owner->$attribute = $value;
+                }
+            }
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -37,7 +68,15 @@ class UserAgentBehavior extends AttributeBehavior {
         if (is_string($this->value)) {
             return $this->value;
         } else {
-            return $this->value !== null ? call_user_func($this->value, $event) : \Yii::$app->request->userAgent;
+            if ($this->value !== null) {
+                return call_user_func($this->value, $event);
+            }
+
+            if (!empty(Yii::$app->request->userAgent)) {
+                return Yii::$app->request->userAgent;
+            }
+
+            return null;
         }
     }
 }

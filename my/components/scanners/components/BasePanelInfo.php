@@ -324,6 +324,9 @@ abstract class BasePanelInfo extends Component
         /** Do batch request */
         $running = null;
         do {
+
+            echo '.';
+
             curl_multi_exec($mh, $running);
         } while ($running > 0);
 

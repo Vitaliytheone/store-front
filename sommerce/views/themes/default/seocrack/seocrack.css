@@ -6755,7 +6755,7 @@ body.isScrolling .back-to-top-btn {
 
     .cart-button__checkout{
         text-align: left;
-        margin-top: 10px;
+        margin-bottom: 10px;
     }
 }
 
@@ -9755,43 +9755,43 @@ body.isScrolling .back-to-top-btn {
     RTL
 \*------------------------------------*/
 .rtl-direction{
-	direction: rtl;
+    direction: rtl;
 }
 .rtl-text{
-	text-align: right;
+    text-align: right;
 }
 .nav-rtl{
-	direction: rtl;
+    direction: rtl;
 }
 .nav-rtl li{
-	float: right;
+    float: right;
 }
 .nav-rtl .multi-level{
-	right: 100%;
+    right: 100%;
 }
 .nav-rtl .multi-level li{
-	text-align: right;
+    text-align: right;
 }
 .nav-rtl .dropdown-menu li{
-	float: none;
+    float: none;
     text-align: right;
 }
 .nav-rtl .dropdown-submenu>a:before{
-	content: "\f0d9";
-	right: auto;
+    content: "\f0d9";
+    right: auto;
     left: 10px;
 }
 .navbar-header-rtl{
-	float: right;
+    float: right;
 }
 .footer-links li{
-	float: right!important;
+    float: right!important;
 }
 .footer-links li:first-child{
-	padding-left: 25px;
+    padding-left: 25px;
 }
 .rtl-table{
-	direction: rtl;
+    direction: rtl;
 }
 
 /*------------------------------------*\
@@ -9816,14 +9816,20 @@ body.isScrolling .back-to-top-btn {
     .section-col__clearfix .col-md-6:nth-child(2n+1) {
         clear: left
     }
-  	.rtl-col-md-6 .col-md-6{
-		float: right;
+    .rtl-col-md-6 .col-md-6{
+        float: right;
     }
     .rtl-col-md-6 .col-md-6:first-child{
         text-align: right;
     }
     .rtl-col-md-6 .col-md-6:last-child{
         text-align: left;
+    }
+    .rtl-col-md-6 .col-md-push-6{
+        left: 0px;
+    }
+    .rtl-col-md-6 .col-md-pull-6{
+        right: 0px;
     }
     .rtl-products .col-md-4{
         float: right;
@@ -9980,13 +9986,13 @@ body.isScrolling .back-to-top-btn {
         text-align: left;
         margin-top: 10px;
     }
-  
+
     .nav-rtl .dropdown-menu li{
-    	float: none!important;
+        float: none!important;
     }
     .dropdown-submenu .dropdown-menu{
-    	right: auto;
-      	position: relative;
+        right: auto;
+        position: relative;
         box-shadow: none;
         width: 100%;
     }
