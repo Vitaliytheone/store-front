@@ -262,6 +262,8 @@ class SslCert extends ActiveRecord
                     $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
                         'domain' => $this->project->getBaseDomain()
                     ]);
+                    $ticketMessage->ip = ' ';
+                    $ticketMessage->user_agent = ' ';
                     $ticketMessage->save(false);
                 }
             }
