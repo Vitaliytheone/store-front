@@ -123,7 +123,8 @@ class TicketsController extends CustomController
         $blocks = TicketBlocksSearch::search($ticket->customer_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
+            $ticket->updated_at = time();
+            $ticket->save();
             $this->refresh();
         }
 
@@ -263,6 +264,7 @@ class TicketsController extends CustomController
     {
         $params = Yii::$app->request->post();
         if (!empty($params['ticketId']) && isset($params['message'])) {
+            $ticket = $this->findModel($params['ticketId']);
             $ticketId = $params['ticketId'];
             $id = $params['messageId'];
             $message = $this->findMessage($id);
@@ -273,6 +275,8 @@ class TicketsController extends CustomController
                 $model->message = $message->message;
                 if ($model->validate()) {
                     $message->save();
+                    $ticket->updated_at = time();
+                    $ticket->save();
                 }  else {
                     return [
                         'status' => 'error',
