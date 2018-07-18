@@ -49,7 +49,7 @@ class TicketsController extends CustomController
                 'only' => ['create', 'edit-message']
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'view'=> ['GET', 'POST'],
