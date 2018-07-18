@@ -23,6 +23,7 @@ class PanelScannerController extends CustomController
         ]);
 
         Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
     }
 
     /**
