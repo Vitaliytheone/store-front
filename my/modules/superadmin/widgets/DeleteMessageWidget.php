@@ -1,7 +1,6 @@
 <?php
 namespace my\modules\superadmin\widgets;
 
-
 use yii\base\Widget;
 
 class DeleteMessageWidget extends Widget

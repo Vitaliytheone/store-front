@@ -48,6 +48,24 @@ customModule.superadminSelectCustomerController = {
             fetchData($select.data('action'), '', $select, true);
         });
 
+
+        $("select.customers-select" ).on( "customers:add", function( event, data ) {
+            var $select = $(this);
+            var options = $select.find('option');
+            if (options.length == 10) {
+                options.eq(9).remove();
+            }
+            $select.append($("<option></option>")
+                .attr({
+                    'data-tokens': data.email,
+                    'value': data.id
+                })
+                .text(data.email)
+            );
+            $select.val(data.id);
+            $('.selectpicker.customers-select').selectpicker('refresh');
+        });
+
         $('.bootstrap-select').on('click','.dropdown-menu li', function(e) {
             var $select = $('select.customers-select');
             $select.find('option').removeAttr('selected');

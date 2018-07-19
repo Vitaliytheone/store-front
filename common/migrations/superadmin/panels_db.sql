@@ -447,5 +447,65 @@ CREATE TABLE `user_services` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `iid` int(11) NOT NULL,
+  `comment` varchar(1000) NOT NULL,
+  `transaction_id` varchar(300) NOT NULL DEFAULT '',
+  `date` int(11) NOT NULL,
+  `date_update` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `amount` decimal(10,5) NOT NULL,
+  `status` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `response` int(11) NOT NULL,
+  `mode` tinyint(4) NOT NULL,
+  `response_status` varchar(300) NOT NULL,
+  `options` text NOT NULL,
+  `verification_code` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `payments_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `response` varchar(10000) NOT NULL,
+  `logs` varchar(10000) NOT NULL,
+  `date` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `order_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
+  `domain` varchar(300) NOT NULL,
+  `date` int(11) NOT NULL,
+  `log` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `getstatus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date_create` int(11) NOT NULL DEFAULT '0',
+  `pid` int(11) NOT NULL DEFAULT '0',
+  `oid` int(11) NOT NULL DEFAULT '0',
+  `roid` varchar(1000) NOT NULL DEFAULT '',
+  `login` varchar(1000) NOT NULL DEFAULT '',
+  `passwd` varchar(1000) NOT NULL DEFAULT '',
+  `apikey` varchar(1000) NOT NULL DEFAULT '',
+  `proxy` varchar(1000) NOT NULL DEFAULT '',
+  `res` int(11) NOT NULL DEFAULT '0',
+  `reid` varchar(1000) NOT NULL DEFAULT '',
+  `page_id` varchar(1000) NOT NULL DEFAULT '',
+  `count` int(11) NOT NULL DEFAULT '0',
+  `start_count` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `hash` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- 2018-07-06 11:20:43

@@ -3,154 +3,142 @@
     /* @var $panels \my\modules\superadmin\models\search\PanelsSearch */
     /* @var $panel \my\modules\superadmin\models\search\PanelsSearch */
     /* @var $plans */
+    /* @var $pageSizes array */
+    /* @var $filters array */
+    /* @var $action string */
 
     use my\helpers\Url;
-    use yii\helpers\Html;
-    use common\models\panels\Project;
-    use yii\helpers\Json;
     use yii\widgets\LinkPager;
+    use my\modules\superadmin\widgets\CountPagination;
 
+    $pageSize = $panels['pages']->pageSize;
     $now = time();
 ?>
-<table class="table table-border">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Domain</th>
-        <th></th>
-        <th></th>
-        <th>Customer</th>
-        <th class="text-nowrap">
-            <div class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan</a>
-                <div class="dropdown-menu">
-                    <?php foreach ($plans as $plan => $label) : ?>
-                        <?php $plan = is_numeric($plan) ? (int)$plan : null ?>
-                        <a class="dropdown-item <?=($plan === $filters['plan'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/panels'], $filters, ['plan' => $plan]))?>"><?= $label ?></a>
-                    <?php endforeach; ?>
+<div class="tab-pane fade show active" id="status-all" role="tabpanel">
+    <table class="table table-sm table-custom">
+        <thead>
+        <tr>
+            <th><?= Yii::t('app/superadmin', 'panels.table.title.id')?></th>
+            <th><?= Yii::t('app/superadmin', 'panels.table.title.domain')?></th>
+            <th><?= Yii::t('app/superadmin', 'panels.table.title.currency')?></th>
+            <th class="table-custom__languages-th"><?= Yii::t('app/superadmin', 'panels.table.title.language')?></th>
+            <th class="table-custom__customer-th"><?= Yii::t('app/superadmin', 'panels.table.title.customer')?></th>
+            <th class="table-custom__dropdown">
+                <div class="dropdown">
+                    <a class="btn btn-sm btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <strong><?= Yii::t('app/superadmin', 'panels.plan')?></strong>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu__max" aria-labelledby="dropdownMenuLink">
+                        <?php foreach ($plans as $plan => $label) : ?>
+                            <?php $plan = is_numeric($plan) ? (int)$plan : null ?>
+                            <a class="dropdown-item <?=($plan === $filters['plan'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/panels'], $filters, ['plan' => $plan, 'page_size' => $pageSize]))?>"><?= $label ?></a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-            </div>
-        </th>
-        <th>Prev</th>
-        <th>Curr</th>
-        <th>Abt</th>
-        <th>Status</th>
-        <th class="text-nowrap">Created</th>
-        <th class="text-nowrap">Expiry</th>
-        <th class="w-1"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php if (!empty($panels['models'])) : ?>
-        <?php foreach ($panels['models'] as $panel) : ?>
-            <?php
-                $can = $panel['can'];
-                $forecastColor = '';
+            </th>
+            <th><?= Yii::t('app/superadmin', 'panels.table.title.orders')?></th>
+            <th><?= Yii::t('app/superadmin', 'panels.table.title.status')?></th>
+            <th class="text-nowrap"><?= Yii::t('app/superadmin', 'panels.table.title.created')?></th>
+            <th class="text-nowrap"><?= Yii::t('app/superadmin', 'panels.table.title.expiry')?></th>
+            <th class="w-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (!empty($panels['models'])) : ?>
+            <?php foreach ($panels['models'] as $panel) : ?>
+                <?php
+                    $forecastColor = '';
+                    $forecastPlanColor = '';
+                    if ($panel['forecast_count'] > $panel['before_orders']) {
+                        $forecastColor = 'text-warning';
+                        $forecastPlanColor = 'table-custom__forecast-plan-bottom';
+                    } else if ($panel['forecast_count'] < $panel['of_orders']) {
+                        $forecastColor = 'text-success';
+                        $forecastPlanColor = 'table-custom__forecast-plan-bottom';
+                    }
 
-                if ($panel['forecast_count'] > $panel['before_orders']) {
-                    $forecastColor = 'text-danger';
-                } else if ($panel['forecast_count'] < $panel['of_orders']) {
-                    $forecastColor = 'text-orange';
-                }
+                    $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
+                ?>
+                <tr>
+                    <td><?= $panel['id'] ?></td>
+                    <td class="table-no-wrap table-custom__customer-td">
+                        <?= $panel['site'] ?>
+                        <?php if ($panel['referrer_id']) :?>
+                            <a href="<?= Url::toRoute(['/customers', 'id' => $panel['referrer_id']]) ?>" target="_blank">
+                                <span class="my-icons my-icons-referral" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.referral')?>"></span>
+                            </a>
+                        <?php endif; ?>
+                        <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.list.sign_in_as_admin')?>">
+                            <span class="my-icons my-icons-autorization"></span>
+                        </a>
+                    </td>
+                    <td><?= $panel['currency_code'] ?></td>
+                    <td class="text-nowrap"><?= strtoupper($panel['lang']) ?></td>
+                    <td>
+                        <?php if ($panel['cid']) : ?>
+                            <a href="<?= Url::toRoute(['/customers', 'id' => $panel['cid']]); ?>" target="_blank"><?= $panel['customer_email'] ?></a>
+                        <?php endif; ?>
+                    </td>
+                    <td class="text-nowrap">
+                        <div class="table-custom__current-plan"><?= $panel['tariff'] ?></div>
+                        <div class="<?= $forecastPlanColor ?>"><?= $panel['futureTariff'] ?></div>
+                    </td>
 
-                $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
-            ?>
-            <tr>
-                <td><?= $panel['id'] ?></td>
-                <td>
-                    <div class="pull-left">
-                        <?= $panel['site'] ?> <?= ($panel['referrer_id'] ? '(' . Html::a('r', Url::toRoute(['/customers', 'id' => $panel['referrer_id']]), ['target' => '_blank']) . ')' : '')?>
-                    </div>
-                    <div class="pull-right">
-                        <a href="<?= $loginUrl ?>" class="login-key-link" target="_blank"><i class="fa fa-key fa-flip-horizontal" aria-hidden="true"></i></a>
-                    </div>
-                </td>
-                <td><?= $panel['currency'] ?></td>
-                <td class="text-nowrap"><?= strtoupper($panel['lang']) ?></td>
-                <td>
-                    <?php if ($panel['cid']) : ?>
-                        <a href="<?= Url::toRoute(['/customers', 'id' => $panel['cid']]); ?>" target="_blank"><?= $panel['customer_email'] ?></a>
-                    <?php endif; ?>
-                </td>
-                <td class="text-nowrap"><?= $panel['tariff'] ?></td>
-                <td><?= $panel['last_count'] ?></td>
-                <td <?=( $forecastColor ? 'class="' . $forecastColor . '"'  : '')?>>
-                    <?= $panel['current_count'] ?>
-                </td>
-                <td <?= ( $forecastColor ? 'class="' . $forecastColor . '"'  : '') ?>>
-                    <?= $panel['forecast_count'] ?>
-                </td>
-                <td><?= $panel['status'] ?></td>
-                <td>
+
+                    <td class="table-no-wrap"><?= $panel['last_count'] ?> /
+                        <span class="<?= $forecastColor ?>"><?= $panel['current_count'] ?></span> /
+                        <span class="<?= $forecastColor ?>"> <?= $panel['forecast_count'] ?></span>
+                    </td>
+
+                    <td><?= $panel['status'] ?></td>
+                    <td>
+                            <span class="text-nowrap">
+                                <?= $panel['created_date'] ?>
+                            </span>
+                        <?= $panel['created_time'] ?>
+                    </td>
+                    <td <?= ($now > $panel['expired'] ? 'class="text-danger"' : '') ?>>
                         <span class="text-nowrap">
-                            <?= $panel['created_date'] ?>
+                            <?= $panel['expired_date'] ?>
                         </span>
-                    <?= $panel['created_time'] ?>
-                </td>
-                <td <?= ($now > $panel['expired'] ? 'class="text-danger"' : '') ?>>
-                    <span class="text-nowrap">
-                        <?= $panel['expired_date'] ?>
-                    </span>
-                    <?= $panel['expired_time'] ?>
-                    <?php if ($panel['no_invoice']) : ?>
-                        <i class="fa fa-ban" aria-hidden="true"></i>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <?= Html::a('Edit details', Url::toRoute(['/panels/edit', 'id' => $panel['id']]), [
-                                'class' => 'dropdown-item',
-                            ])?>
-                            <?= Html::a('Edit providers', Url::toRoute(['/panels/edit-providers', 'id' => $panel['id']]), [
-                                'class' => 'dropdown-item edit-providers',
-                                'data-providers' => Json::encode($panel['providers'])
-                            ])?>
-                            <?= Html::a('Edit expiry date', Url::toRoute(['/panels/edit-expiry', 'id' => $panel['id']]), [
-                                'class' => 'dropdown-item edit-expiry',
-                                'data-expired' => $panel['expired_datetime']
-                            ])?>
-                            <?= Html::a('Change domain', Url::toRoute(['/panels/change-domain', 'id' => $panel['id']]), [
-                                'class' => 'dropdown-item change-domain',
-                                'data-domain' => $panel['site'],
-                                'data-subdomain' => $panel['subdomain']
-                            ])?>
-                            <?php if (Project::STATUS_ACTIVE == $panel['act']) : ?>
-                                <?= Html::a('Freeze panel', Url::toRoute(['/panels/change-status', 'id' => $panel['id'], 'status' => Project::STATUS_FROZEN]), ['class' => 'dropdown-item'])?>
-                            <?php elseif (Project::STATUS_FROZEN == $panel['act']) : ?>
-                                <?= Html::a('Activate panel', Url::toRoute(['/panels/change-status', 'id' => $panel['id'], 'status' => Project::STATUS_ACTIVE]), ['class' => 'dropdown-item'])?>
-                            <?php elseif (Project::STATUS_TERMINATED == $panel['act']) : ?>
-                                <?= Html::a('Restore panel', Url::toRoute(['/panels/change-status', 'id' => $panel['id'], 'status' => Project::STATUS_FROZEN]), ['class' => 'dropdown-item'])?>
-                            <?php endif; ?>
-
-                            <?php if ($can['downgrade']) : ?>
-                                <?= Html::a(Yii::t('app/superadmin', 'panels.list.action_downgrade'), Url::toRoute(['/panels/downgrade', 'id' => $panel['id']]), [
-                                    'class' => 'dropdown-item downgrade',
-                                    'data-providersurl' => Url::toRoute(['/panels/providers', 'id' => $panel['id']])
-                                ])?>
-                            <?php endif; ?>
-
-                            <?= Html::a(Yii::t('app/superadmin', 'panels.list.sign_in_as_admin'), $loginUrl, [
-                                'class' => 'dropdown-item',
-                                'target' => '_blank',
-                            ])?>
-
-                            <?php if (Project::STATUS_FROZEN == $panel['act']): ?>
-                                <?= Html::a('Terminate panel', Url::toRoute(['/panels/change-status', 'id' => $panel['id'], 'status' => Project::STATUS_TERMINATED]), ['class' => 'dropdown-item'])?>
-                            <?php endif; ?>
+                        <?= $panel['expired_time'] ?>
+                        <?php if ($panel['no_invoice']) : ?>
+                            <i class="fa fa-ban" aria-hidden="true"></i>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <?= Yii::t('app/superadmin', 'panels.list.actions')?>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <?php if ($action == 'panels') : ?>
+                                    <?= $this->render('_panels_actions', ['panel' => $panel]) ?>
+                                <?php else : ?>
+                                    <?= $this->render('_child_panels_actions', ['panel' => $panel]) ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<div class="text-align-center pager">
-    <?= LinkPager::widget([
-        'pagination' => $panels['pages'],
-    ]); ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= LinkPager::widget([
+                'pagination' => $panels['pages'],
+            ]); ?>
+        </div>
+        <div class="col-md-6 text-md-right">
+            <?= CountPagination::widget([
+                'pages' => $panels['pages'],
+                'params' => array_merge($filters, ['page_size' => null])
+            ]) ?>
+        </div>
+    </div>
 </div>
+

@@ -35,6 +35,10 @@ class CreateTicketForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     * @throws \yii\db\Exception
+     */
     public function save()
     {
         if (!$this->validate()) {

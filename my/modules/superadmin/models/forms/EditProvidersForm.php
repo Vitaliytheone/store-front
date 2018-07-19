@@ -100,7 +100,10 @@ class EditProvidersForm extends Model {
         $providers = [];
 
         foreach ($this->_getProviders() as $provider) {
-            $providers[$provider->res] = $provider->name . (AdditionalServices::TYPE_INTERNAL == $provider->type ? ' [pp]' : '');
+            $providers[$provider->res] = [
+                'name' => $provider->name,
+                'internal' => (AdditionalServices::TYPE_INTERNAL == $provider->type) ? true : false
+            ];
         }
 
         return $providers;

@@ -17,8 +17,13 @@ use yii\helpers\ArrayHelper;
  * @package my\modules\superadmin\models\search
  */
 class PanelsSearch {
+    const PAGE_SIZE_100 = 100;
+    const PAGE_SIZE_500 = 500;
+    const PAGE_SIZE_1000 = 1000;
+    const PAGE_SIZE_5000 = 5000;
+    const PAGE_SIZE_ALL = 'All';
 
-    protected $pageSize = 100;
+    protected $pageSize = self::PAGE_SIZE_100;
 
     /**
      * @var array
@@ -33,6 +38,19 @@ class PanelsSearch {
     use SearchTrait;
 
     /**
+     * @return array
+     */
+    public static function getPageSizes() {
+        return [
+            self::PAGE_SIZE_100,
+            self::PAGE_SIZE_500,
+            self::PAGE_SIZE_1000,
+            self::PAGE_SIZE_5000,
+            self::PAGE_SIZE_ALL
+        ];
+    }
+
+    /**
      * Get parameters
      * @return array
      */
@@ -41,6 +59,7 @@ class PanelsSearch {
         return [
             'query' => $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all',
+            'page_size' => isset($this->params['page_size']) ? $this->params['page_size'] : self::PAGE_SIZE_100,
             'plan' => isset($this->params['plan']) ? (int)$this->params['plan'] : null
         ];
     }
@@ -122,10 +141,11 @@ class PanelsSearch {
         $projects->select([
             'project.id',
             'project.site',
-            'project.currency',
+            'project.currency_code',
             'project.lang',
             'project.cid',
             'project.plan',
+            'project.tariff',
             'project.last_count',
             'project.current_count',
             'project.forecast_count',
@@ -136,7 +156,30 @@ class PanelsSearch {
             'project.no_invoice',
             'customers.email AS customer_email',
             'customers.referrer_id AS referrer_id',
-            'COUNT(DISTINCT pr2.id) as panels'
+            'COUNT(DISTINCT pr2.id) as panels',
+            'project.name',
+            'project.skype',
+            'project.skype',
+            'project.auto_order',
+            'project.theme',
+            'project.currency',
+            'project.utc',
+            'project.package',
+            'project.seo',
+            'project.comments',
+            'project.mentions_wo_hashtag',
+            'project.mentions',
+            'project.mentions_custom',
+            'project.mentions_hashtag',
+            'project.mentions_follower',
+            'project.mentions_likes',
+            'project.writing',
+            'project.drip_feed',
+            'project.captcha',
+            'project.name_modal',
+            'project.custom',
+            'project.start_count',
+            'project.apikey'
         ]);
         $projects->leftJoin('project as pr2', 'pr2.cid = project.cid AND pr2.child_panel = project.child_panel');
         $projects->leftJoin('customers', 'customers.id = project.cid');
@@ -201,14 +244,17 @@ class PanelsSearch {
         $pages->setPageSize($this->pageSize);
         $pages->defaultPageSize = $this->pageSize;
 
-        if (!empty($this->params['pageSize'])) {
-            $pages->setPageSize($this->params['pageSize']);
+        if (!empty($this->params['page_size'])
+            && array_search($this->params['page_size'], static::getPageSizes()) !== false) {
+            $pages->setPageSize($this->params['page_size']);
         }
 
-        $panels = $query
-            ->offset($pages->offset)
-            ->limit($pages->limit)
-            ->groupBy('project.id')
+        if (empty($this->params['page_size']) || !$this->params['page_size'] != self::PAGE_SIZE_ALL) {
+            $query = $query->offset($pages->offset)
+                ->limit($pages->limit);
+        }
+
+        $panels = $query->groupBy('project.id')
             ->orderBy([
                 'project.id' => SORT_DESC
             ]);
@@ -267,13 +313,16 @@ class PanelsSearch {
 
         foreach ($panels as $panel) {
             $tariff = ArrayHelper::getValue($tariffs, $panel['plan']);
+            $futureTariff = ArrayHelper::getValue($tariffs, $panel['tariff']);
             $returnPanels[] = [
                 'id' => $panel['id'],
+                'plan' =>  $panel['plan'],
                 'site' => DomainsHelper::idnToUtf8($panel['site']),
-                'currency' => CurrencyHelper::getCurrencyCodeById($panel['currency']),
+                'currency' => $panel['currency'],
                 'lang' => strtoupper($panel['lang']),
                 'cid' => $panel['cid'],
                 'tariff' => ArrayHelper::getValue($tariff, 'title'),
+                'futureTariff' => ArrayHelper::getValue($futureTariff, 'title'),
                 'before_orders' => ArrayHelper::getValue($tariff, 'before_orders'),
                 'of_orders' => ArrayHelper::getValue($tariff, 'of_orders'),
                 'last_count' => $panel['last_count'],
@@ -295,7 +344,29 @@ class PanelsSearch {
                 'no_invoice' => $panel['no_invoice'],
                 'can' => [
                     'downgrade' => 1 < $panel['panels']
-                ]
+                ],
+                'name' => $panel['name'],
+                'skype' => $panel['skype'],
+                'auto_order' => $panel['auto_order'],
+                'theme' => $panel['theme'],
+                'currency_code' => $panel['currency_code'],
+                'utc' => $panel['utc'],
+                'package' => $panel['package'],
+                'seo' => $panel['seo'],
+                'comments' => $panel['comments'],
+                'mentions_wo_hashtag' => $panel['mentions_wo_hashtag'],
+                'mentions' => $panel['mentions'],
+                'mentions_custom' => $panel['mentions_custom'],
+                'mentions_hashtag' => $panel['mentions_hashtag'],
+                'mentions_follower' => $panel['mentions_follower'],
+                'mentions_likes' => $panel['mentions_likes'],
+                'writing' => $panel['writing'],
+                'drip_feed' => $panel['drip_feed'],
+                'captcha' => $panel['captcha'],
+                'name_modal' => $panel['name_modal'],
+                'custom' => $panel['custom'],
+                'start_count' => $panel['start_count'],
+                'apikey' => $panel['apikey'],
             ];
         }
 

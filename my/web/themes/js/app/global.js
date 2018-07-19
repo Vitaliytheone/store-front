@@ -17,6 +17,7 @@ var custom = new function() {
 
         $(window.document.body).append(confirmPopupHtml);
         $('#confirmModal').modal({});
+        $('#confirmModal').addClass('show');
 
         $('#confirmModal').on('hidden.bs.modal', function (e) {
             $('#confirmModal').remove();
