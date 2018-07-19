@@ -11,6 +11,7 @@ use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
 use common\models\panels\Tickets;
+use console\components\payments\PaymentsFee;
 use Faker\Factory;
 use common\components\dns\Dns;
 use my\helpers\DnsHelper;
@@ -493,5 +494,13 @@ class SystemController extends CustomController
     public function actionTestMessage()
     {
         echo Yii::t('app', 'ssl.created.ticket_subject');
+    }
+
+    public function actionPaymentsFee()
+    {
+        Yii::$container->get(PaymentsFee::class, [
+            null, // days
+            '2018-01-01'
+        ])->run();
     }
 }
