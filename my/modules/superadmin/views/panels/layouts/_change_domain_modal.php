@@ -1,6 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
+    /* @var $action string */
     /* @var $modal \my\modules\superadmin\models\forms\ChangeDomainForm */
 
     use my\components\ActiveForm;
@@ -13,14 +14,14 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Change domain</h5>
+                <h5 class="modal-title"><?= Yii::t('app/superadmin', 'panels.edit.change_domain') ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <?php $form = ActiveForm::begin([
                 'id' => 'changeDomainForm',
-                'action' => Url::toRoute('/panels/change-domain'),
+                'action' => Url::toRoute("/$action/change-domain"),
                 'options' => [
                     'class' => "form",
                 ],

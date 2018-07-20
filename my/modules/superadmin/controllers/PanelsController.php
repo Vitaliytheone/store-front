@@ -19,6 +19,10 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use my\components\SuperAccessControl;
+use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
+use \yii\filters\VerbFilter;
 
 /**
  * Account PanelsController for the `superadmin` module
@@ -26,6 +30,61 @@ use yii\web\Response;
 class PanelsController extends CustomController
 {
     public $activeTab = 'panels';
+    public $layout = 'superadmin_v2.php';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => SuperAccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => [
+                    'change-domain',
+                    'edit-expiry',
+                    'edit-providers',
+                    'edit',
+                    'generate-apikey',
+                    'downgrade',
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'change-domain' => ['POST'],
+                    'edit-expiry' => ['POST'],
+                    'edit-providers' => ['POST'],
+                    'edit' => ['POST'],
+                    'generate-apikey' => ['GET'],
+                    'downgrade' => ['POST'],
+                    'change-status' => ['POST']
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
+                    'change-domain',
+                    'edit-expiry',
+                    'edit-providers',
+                    'generate-apikey',
+                    'providers',
+                    'downgrade',
+                    'edit'
+                ],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
 
     /**
      * Renders the index view for the module
@@ -40,34 +99,29 @@ class PanelsController extends CustomController
 
         $filters = $panelsSearch->getParams();
         $status = ArrayHelper::getValue($filters, 'status');
+        $pageSize = Yii::$app->request->get('page_size');
 
         return $this->render('index', [
             'panels' => $panelsSearch->search(),
+            'pageSizes' => PanelsSearch::getPageSizes(),
             'navs' => $panelsSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
             'plans' => $panelsSearch->getAggregatedPlans(),
-            'filters' => $panelsSearch->getParams()
+            'filters' => $filters,
+            'pageSize' => $pageSize
         ]);
     }
 
     /**
-     * Change project status
-     * @param $id
-     * @param $status
      * @throws NotFoundHttpException
      */
-    public function actionChangeStatus($id, $status)
+    public function actionChangeStatus()
     {
-        $project =  Project::findOne($id);
-
-        if (!$project) {
-            throw new NotFoundHttpException();
-        }
-
-
+        $id = Yii::$app->request->post('id');
+        $status = Yii::$app->request->post('status');
+        $project = Project::findOne($id);
         $project->changeStatus($status);
-
-        $this->redirect(Url::toRoute('/panels'));
+        $this->redirect(Url::toRoute('/'. $this->activeTab));
     }
 
     /**
@@ -76,15 +130,11 @@ class PanelsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionChangeDomain($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+        $project = Project::findOne($id);
         $model = new ChangeDomainForm();
         $model->setProject($project);
 
@@ -106,15 +156,11 @@ class PanelsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditExpiry($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+        $project = $this->findModel($id);
         $model = new EditExpiryForm();
         $model->setProject($project);
 
@@ -136,15 +182,11 @@ class PanelsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditProviders($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+        $project = $this->findModel($id);
         $model = new EditProvidersForm();
         $model->setProject($project);
 
@@ -166,27 +208,24 @@ class PanelsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEdit($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        $this->view->title = Yii::t('app/superadmin', 'pages.title.edit_panel', [
-            'domain' => $project->getSite()
-        ]);
-
+        $project = $this->findModel($id);
         $model = new EditProjectForm();
         $model->setProject($project);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->redirect(Url::toRoute('/panels'));
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
         }
-
-        return $this->render('edit', [
-            'model' => $model
-        ]);
     }
 
     /**
@@ -195,8 +234,6 @@ class PanelsController extends CustomController
      */
     public function actionGenerateApikey()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $key = StringHelper::randomString(64, 'abcdefghijklmnopqrstuwxyz0123456789');
 
         do {
@@ -213,15 +250,12 @@ class PanelsController extends CustomController
     /**
      * Get providers
      * @param integer $id
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionProviders($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+        $project = $this->findModel($id);
         $model = new DowngradePanelForm();
         $model->setProject($project);
 
@@ -236,19 +270,23 @@ class PanelsController extends CustomController
      * @access public
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDowngrade($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+        $project = $this->findModel($id);
         $model = new DowngradePanelForm();
         $model->setProject($project);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (!$model->load(Yii::$app->request->post())) {
+            $model->validate();
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+
+        if ($model->save()) {
             return [
                 'status' => 'success',
             ];
@@ -266,13 +304,11 @@ class PanelsController extends CustomController
      * @access public
      * @param int $id
      * @return Response
+     * @throws NotFoundHttpException
      */
     public function actionSignInAsAdmin($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
+        $project = $this->findModel($id);
         if (!($panelDomain = PanelDomains::find()->andWhere([
             'panel_id' => $project->id,
             'type' => PanelDomains::TYPE_SUBDOMAIN
@@ -290,6 +326,22 @@ class PanelsController extends CustomController
         $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_PANELS, $project->id);
 
         return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token);
+    }
+
+
+    /**
+     * @param $id
+     * @return null|Project
+     * @throws NotFoundHttpException
+     */
+    protected function findModel($id)
+    {
+        $project = Project::findOne($id);
+
+        if (!$project) {
+            throw new NotFoundHttpException();
+        }
+        return $project;
     }
 
 }

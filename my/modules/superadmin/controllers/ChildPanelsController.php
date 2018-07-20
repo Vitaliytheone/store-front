@@ -2,34 +2,84 @@
 
 namespace my\modules\superadmin\controllers;
 
-use common\models\panels\PanelDomains;
-use common\models\panels\SuperAdmin;
-use common\models\panels\SuperAdminToken;
 use my\components\ActiveForm;
-use my\helpers\StringHelper;
-use my\helpers\Url;
 use common\models\panels\Project;
-use my\modules\superadmin\models\forms\ChangeDomainForm;
-use my\modules\superadmin\models\forms\EditExpiryForm;
-use my\modules\superadmin\models\forms\EditProjectForm;
-use my\modules\superadmin\models\forms\EditProvidersForm;
 use my\modules\superadmin\models\forms\UpgradePanelForm;
 use my\modules\superadmin\models\search\PanelsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use my\components\SuperAccessControl;
+use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
+use \yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 
 /**
  * Account ChildPanelsController for the `superadmin` module
  */
-class ChildPanelsController extends CustomController
+class ChildPanelsController extends PanelsController
 {
     public $activeTab = 'child-panels';
 
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => SuperAccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => [
+                    'change-domain',
+                    'edit-expiry',
+                    'edit-providers',
+                    'edit',
+                    'generate-apikey',
+                    'upgrade',
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'change-domain' => ['POST'],
+                    'edit-expiry' => ['POST'],
+                    'edit-providers' => ['POST'],
+                    'edit' => ['POST'],
+                    'generate-apikey' => ['GET'],
+                    'upgrade' => ['POST'],
+                    'change-status' => ['POST']
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
+                    'change-domain',
+                    'edit-expiry',
+                    'edit-providers',
+                    'generate-apikey',
+                    'providers',
+                    'upgrade',
+                    'edit'
+                ],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
+
     public function getViewPath()
     {
-        return Yii::getAlias('@my/modules/superadmin/views/child_panels');
+        return Yii::getAlias('@superadmin/views/panels');
     }
 
     /**
@@ -39,182 +89,25 @@ class ChildPanelsController extends CustomController
     public function actionIndex()
     {
         $this->view->title = Yii::t('app/superadmin', 'pages.title.child_panels');
-
         $params = Yii::$app->request->get();
         $params['child'] = 1;
         $panelsSearch = new PanelsSearch();
         $panelsSearch->setParams($params);
+        $pageSize = Yii::$app->request->get('page_size');
 
         $filters = $panelsSearch->getParams();
         $status = ArrayHelper::getValue($filters, 'status');
 
         return $this->render('index', [
             'panels' => $panelsSearch->search(),
+            'pageSizes' => PanelsSearch::getPageSizes(),
             'navs' => $panelsSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
             'plans' => $panelsSearch->getAggregatedPlans(),
-            'filters' => $panelsSearch->getParams()
+            'filters' => $filters,
+            'pageSize' => $pageSize
+
         ]);
-    }
-
-    /**
-     * Change project status
-     * @param $id
-     * @param $status
-     * @throws NotFoundHttpException
-     */
-    public function actionChangeStatus($id, $status)
-    {
-        $project =  Project::findOne($id);
-
-        if (!$project) {
-            throw new NotFoundHttpException();
-        }
-
-
-        $project->changeStatus($status);
-
-        $this->redirect(Url::toRoute('/child-panels'));
-    }
-
-    /**
-     * Change panel domain.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
-     */
-    public function actionChangeDomain($id)
-    {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new ChangeDomainForm();
-        $model->setProject($project);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return [
-                'status' => 'success',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
-        }
-    }
-
-    /**
-     * Change panel expired.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
-     */
-    public function actionEditExpiry($id)
-    {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new EditExpiryForm();
-        $model->setProject($project);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return [
-                'status' => 'success',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
-        }
-    }
-
-    /**
-     * Change panel providers.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
-     */
-    public function actionEditProviders($id)
-    {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new EditProvidersForm();
-        $model->setProject($project);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return [
-                'status' => 'success',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
-        }
-    }
-
-    /**
-     * Edit panel.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
-     */
-    public function actionEdit($id)
-    {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        $this->view->title = Yii::t('app/superadmin', 'pages.title.edit_panel', [
-            'domain' => $project->getSite()
-        ]);
-
-        $model = new EditProjectForm();
-        $model->setProject($project);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->redirect(Url::toRoute('/panels'));
-        }
-
-        return $this->render('edit', [
-            'model' => $model
-        ]);
-    }
-
-    /**
-     * Generate uniq project apikey
-     * @return array
-     */
-    public function actionGenerateApikey()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $key = StringHelper::randomString(32, 'abcdefghijklmnopqrstuwxyz0123456789');
-
-        do {
-            if (!Project::find()->andWhere([
-                'apikey' => $key
-            ])->exists()) {
-                return [
-                    'key' => $key
-                ];
-            }
-        } while(true);
     }
 
     /**
@@ -223,15 +116,11 @@ class ChildPanelsController extends CustomController
      * @access public
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionUpgrade($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+        $project = $this->findModel($id);
         $model = new UpgradePanelForm();
         $model->setProject($project);
 
@@ -248,34 +137,12 @@ class ChildPanelsController extends CustomController
     }
 
     /**
-     * Sign in as admin panel
-     *
-     * @access public
      * @param int $id
-     * @return Response
+     * @return array|void
+     * @throws ForbiddenHttpException
      */
-    public function actionSignInAsAdmin($id)
+    public function actionDowngrade($id)
     {
-        if (!($project = Project::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!($panelDomain = PanelDomains::find()->andWhere([
-            'panel_id' => $project->id,
-            'type' => PanelDomains::TYPE_SUBDOMAIN
-        ])->andFilterWhere([
-            'AND',
-            ['like', 'domain', '.' . Yii::$app->params['panelDomain']],
-        ])->one())) {
-            throw new NotFoundHttpException();
-        }
-
-        /**
-         * @var SuperAdmin $superUser
-         */
-        $superUser = Yii::$app->superadmin->getIdentity();
-        $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_PANELS, $project->id);
-
-        return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token);
+        throw new ForbiddenHttpException();
     }
 }

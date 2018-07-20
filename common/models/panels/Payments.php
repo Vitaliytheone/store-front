@@ -24,6 +24,7 @@ use yii\base\Security;
  * @property integer $date_update
  * @property integer $type
  * @property string $amount
+ * @property string $fee
  * @property integer $status
  * @property string $ip
  * @property integer $response
@@ -70,7 +71,7 @@ class Payments extends ActiveRecord
         return [
             [['pid', 'iid', 'date', 'type', 'amount', 'ip'], 'required'],
             [['pid', 'iid', 'date', 'date_update', 'type', 'status', 'response', 'mode'], 'integer'],
-            [['amount'], 'number'],
+            [['amount', 'fee'], 'number'],
             [['comment'], 'string', 'max' => 1000],
             [['ip', 'transaction_id'], 'string', 'max' => 300],
             [['mode'], 'default', 'value' => static::MODE_AUTO],
@@ -94,6 +95,7 @@ class Payments extends ActiveRecord
             'date_update' => Yii::t('app', 'Date Update'),
             'type' => Yii::t('app', 'Type'),
             'amount' => Yii::t('app', 'Amount'),
+            'fee' => Yii::t('app', 'Fee'),
             'status' => Yii::t('app', 'Status'),
             'ip' => Yii::t('app', 'Ip'),
             'response' => Yii::t('app', 'Response'),

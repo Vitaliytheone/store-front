@@ -3,6 +3,8 @@ var custom = new function() {
 
     self.request = null;
 
+    $('#datetimepicker').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+
     self.confirm = function (title, text, callback, options) {
         var confirmPopupHtml;
         var compiled = templates['modal/confirm'];
@@ -17,6 +19,7 @@ var custom = new function() {
 
         $(window.document.body).append(confirmPopupHtml);
         $('#confirmModal').modal({});
+        $('#confirmModal').addClass('show');
 
         $('#confirmModal').on('hidden.bs.modal', function (e) {
             $('#confirmModal').remove();

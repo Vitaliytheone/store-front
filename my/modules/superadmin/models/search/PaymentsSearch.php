@@ -2,11 +2,10 @@
 namespace my\modules\superadmin\models\search;
 
 use common\models\panels\Project;
-use common\models\store\Orders;
+use common\models\panels\Orders;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
-use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use Yii;
 use yii\data\Pagination;

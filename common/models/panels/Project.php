@@ -50,6 +50,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $type
  * @property string $lang
  * @property integer $currency
+ * @property string $currency_code
  * @property integer $seo
  * @property integer $comments
  * @property integer $mentions
@@ -153,6 +154,7 @@ class Project extends ActiveRecord implements ProjectInterface
             [['theme_path'], 'string', 'max' => 500],
             [['apikey'], 'string', 'max' => 64],
             [['lang'], 'string', 'max' => 32],
+            [['currency_code'], 'string', 'max' => 3],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
@@ -233,6 +235,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
             'no_invoice' => Yii::t('app', 'No Invoice'),
+            'currency_code' => Yii::t('app', 'Currency code')
         ];
     }
 
@@ -396,6 +399,23 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->expired = ExpiryHelper::month($time);
 
         return $this->save(false);
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        if (!$this->currency_code) {
+            $this->currency_code = CurrencyHelper::getCurrencyCodeById($this->currency);
+        }
+
+        return true;
     }
 
     public function behaviors()

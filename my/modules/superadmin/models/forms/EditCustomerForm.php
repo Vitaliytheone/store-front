@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\Customers;
 use yii\base\Model;
+use Yii;
 
 /**
  * EditCustomerForm is the model behind the Edit Customer form.
@@ -10,8 +11,7 @@ use yii\base\Model;
 class EditCustomerForm extends Model
 {
     public $email;
-    public $first_name;
-    public $last_name;
+    public $referral_status;
 
     /**
      * @var Customers
@@ -24,9 +24,22 @@ class EditCustomerForm extends Model
     public function rules()
     {
         return [
-            [['email', 'last_name', 'first_name'], 'required'],
+            ['email', 'trim'],
+            [['email', 'referral_status'], 'required'],
+            ['referral_status', 'in', 'range' => array_keys($this->getReferrals())],
             [['email'], 'email'],
-            [['first_name', 'last_name'], 'string', 'max' => 250],
+        ];
+    }
+
+    /**
+     * Get values and labels of referral status
+     * @return array
+     */
+    public function getReferrals()
+    {
+        return [
+            Customers::REFERRAL_ACTIVE => Yii::t('app/superadmin', 'customers.edit.referral_enabled'),
+            Customers::REFERRAL_NOT_ACTIVE => Yii::t('app/superadmin', 'customers.edit.referral_disabled'),
         ];
     }
 
@@ -50,9 +63,8 @@ class EditCustomerForm extends Model
         }
 
         $this->_customer->email = $this->email;
-        $this->_customer->first_name = $this->first_name;
-        $this->_customer->last_name = $this->last_name;
-
+        $this->_customer->referral_status = $this->referral_status;
+        $this->_customer->scenario = Customers::SCENARIO_UPDATE;
 
         if (!$this->_customer->save()) {
             $this->addErrors($this->_customer->getErrors());
@@ -68,9 +80,8 @@ class EditCustomerForm extends Model
     public function attributeLabels()
     {
         return [
-            'email' => 'Email',
-            'first_name' => 'First name',
-            'last_name' => 'Last name',
+            'email' => Yii::t('app/superadmin', 'customers.edit.email_label'),
+            'referral_status' => Yii::t('app/superadmin', 'customers.edit.referral_status_label'),
         ];
     }
 }
