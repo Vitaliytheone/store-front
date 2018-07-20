@@ -39,5 +39,6 @@ class ContactFormMailer extends BaseMailer {
 
         $this->subject = $subject;
         $this->to = $store->getAdminEmail();
+        $this->fromName = $store->name;
     }
 }
