@@ -47,10 +47,10 @@
                                         'data-placement' => 'top',
                                         'title' => Yii::t('app/superadmin', 'customers.list.tooltip_referral_label'),
                                     ]
-                                ), Url::toRoute(['/customers', 'id' => $customer->id, 'query' => $customer->email])
+                                ), Url::toRoute(['/customers', 'query' => $customer->email]), ['target' => '_blank']
                             );  ?>
                             <?= $customer->email ?> <?= ($customer->referrer_id ? ' ' . $referralView : '')?>
-                            <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app/superadmin', 'customers.list.tooltip_sign_in_label'); ?>">
+                            <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="table-custom__customer-button" target="_blank" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app/superadmin', 'customers.list.tooltip_sign_in_label'); ?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
@@ -121,6 +121,7 @@
 
                                     <?= Html::a(Yii::t('app/superadmin', 'customers.dropdown.sign_btn'), Url::toRoute(['/customers/auth', 'id' => $customer->id]), [
                                         'class' => 'dropdown-item',
+                                        'target' => '_blank'
                                     ])?>
                                 </div>
                             </div>

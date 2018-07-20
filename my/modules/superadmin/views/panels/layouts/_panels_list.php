@@ -71,7 +71,7 @@
                                 <span class="my-icons my-icons-referral" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.referral')?>"></span>
                             </a>
                         <?php endif; ?>
-                        <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.list.sign_in_as_admin')?>">
+                        <a href="<?= $loginUrl ?>" target="_blank" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.list.sign_in_as_admin')?>">
                             <span class="my-icons my-icons-autorization"></span>
                         </a>
                     </td>

@@ -1,8 +1,6 @@
 customModule.superadminSelectCustomerController = {
     run : function(params) {
-        console.log('superadminSelectCustomerController');
-        $('div.customers-select').on("keyup", "input", function (e) {
-            console.log('customers-select');
+        $(document).on("keyup", '.customers-select input', function (e) {
             if (e.which !== 0 || e.keyCode == '8') {
                 console.log('e.which' + e.which);
                 var $input = $(this);
@@ -15,7 +13,6 @@ customModule.superadminSelectCustomerController = {
         });
 
         function fetchData(action, query, $select, refresh) {
-            console.log('fetchData ' + action);
             $.ajax({
                 url: action,
                 type: 'GET',
@@ -28,7 +25,6 @@ customModule.superadminSelectCustomerController = {
         }
 
         function updateSelect(dataList, $select, refresh) {
-            console.log('updateSelect ');
             var options = $select.find('option:not(:selected)');
             var count = options.length;
             options.remove();

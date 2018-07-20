@@ -49,10 +49,10 @@ $now = time();
                                 'data-placement' => 'top',
                                 'title' => Yii::t('app/superadmin', 'stores.list.tooltip_title_referral'),
                             ]
-                        ), Url::toRoute(['/customers', 'query' => $store['customer_email']])
+                        ), Url::toRoute(['/customers', 'query' => $store['customer_email']]), ['target' => '_blank']
                     );  ?>
                     <?= $store['domain'] ?> <?= ($store['referrer_id'] ? ' ' . $referralView : '')?>
-                    <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app/superadmin', 'stores.list.tooltip_title_sign_as_admin') ?>">
+                    <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" target="_blank" title="<?= Yii::t('app/superadmin', 'stores.list.tooltip_title_sign_as_admin') ?>">
                         <span class="my-icons my-icons-autorization"></span>
                     </a>
                 </td>
@@ -64,7 +64,7 @@ $now = time();
                 </td>
                 <td class="table-custom__customer-td">
                     <?php if ($store['customer_id']) : ?>
-                        <a href="<?= Url::toRoute(['/customers', 'query' => $store['customer_email']]); ?>"><?= $store['customer_email'] ?></a>
+                        <a href="<?= Url::toRoute(['/customers', 'query' => $store['customer_email']]); ?>" target="_blank"><?= $store['customer_email'] ?></a>
                     <?php endif; ?>
                 </td>
                 <td><?= $store['last_count'] . ' / ' . $store['current_count'] ?></td>

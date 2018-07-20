@@ -25,7 +25,6 @@ customModule.superadminStoresController = {
             errorBlock.html('');
 
             $('#editstoreform-name', form).val(details.name);
-            console.log(details.currency);
             $('#editstoreform-currency_option option[value='+ details.currency +']').attr('selected', 'true');
 
             var $select = $('select.customers-select');
