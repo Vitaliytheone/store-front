@@ -1,6 +1,6 @@
 customModule.superadminSelectCustomerController = {
     run : function(params) {
-        $('.customers-select').on("keyup", 'input', function (e) {
+        $(document).on("keyup", '.customers-select input', function (e) {
             if (e.which !== 0 || e.keyCode == '8') {
                 console.log('e.which' + e.which);
                 var $input = $(this);
