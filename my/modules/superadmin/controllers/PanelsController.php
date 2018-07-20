@@ -99,6 +99,7 @@ class PanelsController extends CustomController
 
         $filters = $panelsSearch->getParams();
         $status = ArrayHelper::getValue($filters, 'status');
+        $pageSize = Yii::$app->request->get('page_size');
 
         return $this->render('index', [
             'panels' => $panelsSearch->search(),
@@ -106,7 +107,8 @@ class PanelsController extends CustomController
             'navs' => $panelsSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
             'plans' => $panelsSearch->getAggregatedPlans(),
-            'filters' => $filters
+            'filters' => $filters,
+            'pageSize' => $pageSize
         ]);
     }
 

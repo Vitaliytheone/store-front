@@ -79,7 +79,7 @@ customModule.superadminStoresController = {
 
             var expired = link.data('expired');
 
-            $('#editstoreexpiryform-expired').val(expired);
+            $('#editexpiryform-expired').val(expired);
             $('#datetimepicker').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
 
             modal.modal('show');
@@ -159,6 +159,19 @@ customModule.superadminStoresController = {
             });
 
             return false;
+        });
+
+        $('.stores-change-status').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            custom.confirm(link.data('title'), '', function() {
+                $.ajax({
+                    url: link.attr('href'),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: link.data('params')
+                });
+            });
         });
     }
 };

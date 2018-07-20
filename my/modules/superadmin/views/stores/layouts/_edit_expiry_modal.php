@@ -6,6 +6,7 @@
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
+    use my\modules\superadmin\widgets\DateTimePicker;
 
     $model = new \my\modules\superadmin\models\forms\EditStoreExpiryForm();
 ?>
@@ -37,18 +38,10 @@
                     <?= $form->errorSummary($model, [
                         'id' => 'editExpiryError'
                     ]); ?>
-
-                    <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                        <?= $form->field($model, 'expired')
-                            ->textInput([
-                                    'class' => 'form-control datetimepicker-input',
-                                'data-target' => '#datetimepicker',
-                                'id' => 'editstoreexpiryform-expired',
-                            ]) ?>
-                        <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
+                    <?= DateTimePicker::widget([
+                            'model' => $model,
+                            'attribute' => 'expired',
+                    ]) ?>
                 </div>
             </div>
             <div class="modal-footer">

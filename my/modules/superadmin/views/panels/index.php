@@ -6,23 +6,24 @@
     /* @var $plans array*/
     /* @var $filters array */
     /* @var $pageSizes array */
+    /* @var $pageSize  */
+
 
     use my\helpers\Url;
 
     $this->context->addModule('superadminPanelsController');
     $action = $this->context->activeTab;
-    $pageSize = $panels['pages']->pageSize;
 ?>
     <ul class="nav mb-3 nav-pills" role="tablist">
         <li class="mr-auto">
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
-                    <li class="nav-item"><a class="nav-link <?= ($code === $status ? 'active' : '') ?>" role="tab" href="<?= Url::toRoute($code === 'all' ? ["/$action", 'pageSize' => $pageSize] : ["/$action", 'status' => $code, 'pageSize' => $pageSize]) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link <?= ($code === $status ? 'active' : '') ?>" role="tab" href="<?= Url::toRoute($code === 'all' ? ["/$action", 'page_size' => $pageSize] : ["/$action", 'status' => $code, 'page_size' => $pageSize]) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>
         <li class="ml-auto">
-            <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(["/$action"], $filters, ['query' => null]))?>">
+            <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(["/$action"], $filters, ['query' => null, 'page_size' => $pageSize]))?>">
                 <div class="input-group">
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'panels.search')?>" value="<?=$filters['query']?>">
                     <div class="input-group-append">
@@ -38,6 +39,7 @@
             'plans' => $plans,
             'filters' => $filters,
             'pageSizes' =>  $pageSizes,
+            'pageSize' => $pageSize,
             'action' => $action
         ])?>
     </div>

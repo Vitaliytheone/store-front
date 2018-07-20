@@ -93,6 +93,7 @@ class ChildPanelsController extends PanelsController
         $params['child'] = 1;
         $panelsSearch = new PanelsSearch();
         $panelsSearch->setParams($params);
+        $pageSize = Yii::$app->request->get('page_size');
 
         $filters = $panelsSearch->getParams();
         $status = ArrayHelper::getValue($filters, 'status');
@@ -103,7 +104,9 @@ class ChildPanelsController extends PanelsController
             'navs' => $panelsSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
             'plans' => $panelsSearch->getAggregatedPlans(),
-            'filters' => $filters
+            'filters' => $filters,
+            'pageSize' => $pageSize
+
         ]);
     }
 

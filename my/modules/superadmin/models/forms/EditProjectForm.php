@@ -315,7 +315,13 @@ class EditProjectForm extends Model {
      */
     public function getPlans()
     {
-        return ArrayHelper::map(Tariff::find()->all(), 'id', 'title');
+        return ArrayHelper::map(
+            Tariff::find()
+               ->where([
+                    '>',
+                    'id', 0,
+                ])
+                ->all(), 'id', 'title');
     }
 
     /**

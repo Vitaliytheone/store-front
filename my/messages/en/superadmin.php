@@ -67,6 +67,7 @@ return [
     'panels.edit.plan' => 'Plan',
     'panels.edit.name' => 'Title',
     'panels.edit.customer' => 'Customer',
+    'panels.edit.expiry' => 'Edit expiry',
     'panels.edit.skype' => 'Skype',
     'panels.edit.auto_order' => 'Subscriptions',
     'panels.edit.lang' => 'Lang',
@@ -105,6 +106,7 @@ return [
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
+    'panels.edit.expiry' => 'Edit expiry date',
 
     'panels.table.title.id' => 'ID',
     'panels.table.title.domain' => 'Domain',
@@ -114,7 +116,7 @@ return [
     'panels.table.title.orders' => 'Orders',
     'panels.table.title.status' => 'Status',
     'panels.table.title.created' => 'Created',
-    'panels.table.title.expiry' => 'Expity',
+    'panels.table.title.expiry' => 'Expiry',
     'panels.pagination.show' => 'Show',
     'panels.plan' => 'Plan',
     'panels.search'  => 'Search panels',
@@ -582,6 +584,8 @@ return [
     'stores.list.tooltip_title_referral' => 'Referral',
     'stores.list.tooltip_title_sign_as_admin' => 'Sign in as Admin',
     'stores.modal.edit_store_title' => 'Edit store',
+    'stores.modal.confirm_freeze' => 'Freeze store?',
+    'stores.modal.confirm_terminate' => 'Terminate store?',
 
     'dashboard.child_panels' => 'Child panels',
     'dashboard.panels' => 'Panels',

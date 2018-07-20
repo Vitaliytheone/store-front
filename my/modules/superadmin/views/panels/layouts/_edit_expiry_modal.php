@@ -7,11 +7,12 @@
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
+    use my\modules\superadmin\widgets\DateTimePicker;
 
     $model = new \my\modules\superadmin\models\forms\EditExpiryForm();
 ?>
 <div class="modal fade" id="editExpiryModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><?= Yii::t('app/superadmin', 'panels.edit.expiry')?></h5>
@@ -35,19 +36,10 @@
                     <?= $form->errorSummary($model, [
                         'id' => 'editExpiryError'
                     ]); ?>
-                    <div class="input-group date" id="expired-time" data-target-input="nearest">
-                        <?= $form->field($model, 'expired', [
-                            'options' => [
-                                'tag' => false,
-                            ]
-                        ])->textInput([
-                            'class' => 'form-control datetimepicker-input',
-                            'data-target' => '#expired-time'
-                        ])->label(false) ?>
-                        <div class="input-group-append" data-target="#expired-time" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
+                    <?= DateTimePicker::widget([
+                            'model' => $model,
+                            'attribute' => 'expired',
+                    ]) ?>
                 </div>
             </div>
             <div class="modal-footer">

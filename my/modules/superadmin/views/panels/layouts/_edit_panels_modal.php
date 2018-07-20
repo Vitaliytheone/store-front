@@ -54,10 +54,12 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                 <?= $form->field($model, 'name', ['options' => ['id' => 'form-name', 'class' => 'form-group']])->label(Yii::t('app/superadmin', 'panels.edit.panel_name')) ?>
                 <?= $form->field($model, 'skype', ['options' =>['id' => 'form-skype', 'class' => 'form-group']]) ?>
 
-                <?= $form->field($model, 'plan', ['options' => ['id' => 'form-plan', 'class' => 'form-group']])->dropDownList($model->getPlans(), [
-                    'class' => 'selectpicker w-100',
-                    'data-live-search' => 'true'
-                ]) ?>
+                <?php if ($action == 'panels') : ?>
+                    <?= $form->field($model, 'plan', ['options' => ['id' => 'form-plan', 'class' => 'form-group']])->dropDownList($model->getPlans(), [
+                        'class' => 'selectpicker w-100',
+                        'data-live-search' => 'true'
+                    ]) ?>
+                <?php endif; ?>
 
                 <div class="form-group field-editprojectform-cid">
                     <label class="control-label" for="editprojectform-cid"><?= $model->getAttributeLabel('cid')?></label>

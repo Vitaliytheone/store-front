@@ -13,7 +13,6 @@ customModule.superadminPanelsController = {
 
             var form = $('#panelsSearch');
             var link = form.attr('action');
-
             window.location.href = link + (link.match(/\?/) ? '&' : '?') + form.serialize();
         });
 
@@ -73,6 +72,7 @@ customModule.superadminPanelsController = {
             var expired = link.data('expired');
 
             $('#editexpiryform-expired').val(expired);
+            $('#editexpiry').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
             modal.modal('show');
             return false;
         });
@@ -152,8 +152,13 @@ customModule.superadminPanelsController = {
             var form = $('#edit-panel-form');
             var inputs = form.data('inputs');
             var checkboxes =  inputs['checkboxes'];
+
             for (var prop in checkboxes) {
-                if (panel[checkboxes[prop]] == 1) {
+                var value = 1;
+                if (checkboxes[prop] == 'captcha') {
+                   value = 0;
+                }
+                if (panel[checkboxes[prop]] == value) {
                     $('#form-' + checkboxes[prop]).prop('checked', true);
                 }
             }

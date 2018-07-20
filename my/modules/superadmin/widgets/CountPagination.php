@@ -30,13 +30,13 @@ class CountPagination extends Widget
     {
         parent::init();
         if ($this->pages->pageCount > 1 && $this->pages->page + 1 != $this->pages->pageCount) {
-            $this->content = $this->pages->offset
+            $this->content = strval($this->pages->offset + 1)
                 . Yii::t('app/superadmin', 'pages.pagination.to')
                 . strval($this->pages->offset + $this->pages->limit)
                 . Yii::t('app/superadmin', 'pages.pagination.of')
                 .$this->pages->totalCount;
         } else {
-            $this->content = $this->pages->offset
+            $this->content = strval($this->pages->offset + 1)
                 . Yii::t('app/superadmin', 'pages.pagination.to')
                 . $this->pages->totalCount
                 . Yii::t('app/superadmin', 'pages.pagination.of')

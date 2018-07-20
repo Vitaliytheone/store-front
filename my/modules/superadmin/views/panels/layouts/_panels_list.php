@@ -6,12 +6,13 @@
     /* @var $pageSizes array */
     /* @var $filters array */
     /* @var $action string */
+    /* @var $pageSize */
 
     use my\helpers\Url;
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
 
-    $pageSize = $panels['pages']->pageSize;
+    //$pageSize = $panels['pages']->pageSize;
     $now = time();
 ?>
 <div class="tab-pane fade show active" id="status-all" role="tabpanel">
@@ -23,19 +24,21 @@
             <th><?= Yii::t('app/superadmin', 'panels.table.title.currency')?></th>
             <th class="table-custom__languages-th"><?= Yii::t('app/superadmin', 'panels.table.title.language')?></th>
             <th class="table-custom__customer-th"><?= Yii::t('app/superadmin', 'panels.table.title.customer')?></th>
-            <th class="table-custom__dropdown">
-                <div class="dropdown">
-                    <a class="btn btn-sm btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <strong><?= Yii::t('app/superadmin', 'panels.plan')?></strong>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu__max" aria-labelledby="dropdownMenuLink">
-                        <?php foreach ($plans as $plan => $label) : ?>
-                            <?php $plan = is_numeric($plan) ? (int)$plan : null ?>
-                            <a class="dropdown-item <?=($plan === $filters['plan'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/panels'], $filters, ['plan' => $plan, 'page_size' => $pageSize]))?>"><?= $label ?></a>
-                        <?php endforeach; ?>
+            <?php if ($action == 'panels') : ?>
+                <th class="table-custom__dropdown">
+                    <div class="dropdown">
+                        <a class="btn btn-sm btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <strong><?= Yii::t('app/superadmin', 'panels.plan')?></strong>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu__max" aria-labelledby="dropdownMenuLink">
+                            <?php foreach ($plans as $plan => $label) : ?>
+                                <?php $plan = is_numeric($plan) ? (int)$plan : null ?>
+                                <a class="dropdown-item <?=($plan === $filters['plan'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/panels'], $filters, ['plan' => $plan, 'page_size' => $pageSize]))?>"><?= $label ?></a>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                </div>
-            </th>
+                </th>
+            <?php endif; ?>
             <th><?= Yii::t('app/superadmin', 'panels.table.title.orders')?></th>
             <th><?= Yii::t('app/superadmin', 'panels.table.title.status')?></th>
             <th class="text-nowrap"><?= Yii::t('app/superadmin', 'panels.table.title.created')?></th>
@@ -54,7 +57,7 @@
                         $forecastPlanColor = 'table-custom__forecast-plan-bottom';
                     } else if ($panel['forecast_count'] < $panel['of_orders']) {
                         $forecastColor = 'text-success';
-                        $forecastPlanColor = 'table-custom__forecast-plan-bottom';
+                        $forecastPlanColor = 'text-success';
                     }
 
                     $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
@@ -79,10 +82,12 @@
                             <a href="<?= Url::toRoute(['/customers', 'id' => $panel['cid']]); ?>" target="_blank"><?= $panel['customer_email'] ?></a>
                         <?php endif; ?>
                     </td>
-                    <td class="text-nowrap">
-                        <div class="table-custom__current-plan"><?= $panel['tariff'] ?></div>
-                        <div class="<?= $forecastPlanColor ?>"><?= $panel['futureTariff'] ?></div>
-                    </td>
+                    <?php if ($action == 'panels') : ?>
+                        <td class="text-nowrap">
+                            <div class="table-custom__current-plan"><?= $panel['tariff'] ?></div>
+                            <div class="<?= $forecastPlanColor ?>"><?= $panel['futureTariff'] ?></div>
+                        </td>
+                    <?php endif;  ?>
 
 
                     <td class="table-no-wrap"><?= $panel['last_count'] ?> /

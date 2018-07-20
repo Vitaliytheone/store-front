@@ -36,7 +36,7 @@ CREATE TABLE `additional_services` (
   `send_method` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - perfectpanel, 1 - default sender, 2 - multicurl sender, 3 - multiaddorder',
   PRIMARY KEY (`id`),
   KEY `res` (`res`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `customers` (
@@ -65,7 +65,7 @@ CREATE TABLE `customers` (
   PRIMARY KEY (`id`),
   KEY `referrer_id` (`referrer_id`),
   KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `domains` (
@@ -85,7 +85,7 @@ CREATE TABLE `domains` (
   KEY `customer_id` (`customer_id`),
   KEY `zone_id` (`zone_id`),
   KEY `idx_status_created_at` (`status`,`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `expired_log` (
@@ -96,7 +96,7 @@ CREATE TABLE `expired_log` (
   `created_at` int(11) NOT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `invoices` (
@@ -112,7 +112,7 @@ CREATE TABLE `invoices` (
   `credit` decimal(10,2) NOT NULL DEFAULT '0.00',
   `status` int(11) NOT NULL COMMENT '0 - unpaid; 1 - paid; 2 - canceled',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `invoice_details` (
@@ -126,7 +126,7 @@ CREATE TABLE `invoice_details` (
   PRIMARY KEY (`id`),
   KEY `invoice_id` (`invoice_id`),
   CONSTRAINT `invoice_details_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `orders` (
@@ -143,7 +143,7 @@ CREATE TABLE `orders` (
   `item_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `domain` (`domain`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `panel_domains` (
@@ -156,7 +156,7 @@ CREATE TABLE `panel_domains` (
   UNIQUE KEY `uniq_domain` (`domain`),
   KEY `fk_domains__stores` (`panel_id`),
   CONSTRAINT `fk_domains__stores` FOREIGN KEY (`panel_id`) REFERENCES `project` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 
 SET NAMES utf8mb4;
@@ -194,7 +194,7 @@ CREATE TABLE `payment_gateway` (
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`),
   KEY `pid_2` (`pid`,`pgid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `payment_gateway` (`id`, `pid`, `pgid`, `name`, `minimal`, `maximal`, `new_users`, `visibility`, `fee`, `options`, `type`, `dev_options`, `position`) VALUES
 (2161,	-1,	1,	'PayPal',	0.00,	0.00,	1,	1,	0,	'{\"email\":\"\",\"username\":\"\",\"password\":\"\",\"signature\":\"\"}',	0,	'',	2),
@@ -290,7 +290,7 @@ CREATE TABLE `project` (
   KEY `act` (`act`),
   KEY `idx_cid` (`cid`),
   KEY `idx_act_date_child_panel` (`act`,`date`,`child_panel`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `ssl_cert` (
@@ -311,7 +311,7 @@ CREATE TABLE `ssl_cert` (
   KEY `item_id` (`item_id`),
   KEY `fk_ssl_cert__customers` (`cid`),
   KEY `idx_status_created_at` (`status`,`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `super_admin` (
@@ -327,7 +327,7 @@ CREATE TABLE `super_admin` (
   `rules` varchar(1000) DEFAULT NULL,
   `status` tinyint(4) NOT NULL COMMENT '0 – suspended; 1 - active',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `super_admin` (`id`, `username`, `password`, `created_at`, `first_name`, `last_name`, `last_login`, `last_ip`, `auth_key`, `rules`, `status`) VALUES
 (1,	'account',	'db8fdd9fc4015a183dba173bff7ed15d17ced79b63f6963cb8cb0de839eb6dc9',	1494255109,	'firstname',	'lastname',	'1530876002',	'::1',	'tTLdtO2omV7euKD_Q2Yy6lO6oVQVWfmg',	'{\"panels\":\"1\",\"orders\":\"1\",\"domains\":\"1\",\"ssl\":\"1\",\"customers\":\"1\",\"invoices\":\"1\",\"payments\":\"1\",\"tickets\":\"1\",\"providers\":\"1\",\"reports\":\"1\",\"logs\":0,\"staffs\":\"1\",\"settings\":\"1\",\"referrals\":\"1\",\"logs\":\"1\",\"tools\":\"1\"}',	1);
@@ -353,7 +353,7 @@ CREATE TABLE `super_log` (
   `created_at` int(11) NOT NULL,
   KEY `admin_id` (`admin_id`),
   CONSTRAINT `super_log_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `super_admin` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `super_tools_scanner` (
@@ -367,7 +367,7 @@ CREATE TABLE `super_tools_scanner` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `tariff` (
@@ -380,7 +380,7 @@ CREATE TABLE `tariff` (
   `up` int(11) NOT NULL,
   `down` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `tariff` (`id`, `title`, `price`, `description`, `of_orders`, `before_orders`, `up`, `down`) VALUES
 (-1,	'Plan Child',	25.00,	'Child panel',	0,	999999999,	0,	0),
@@ -400,7 +400,7 @@ CREATE TABLE `third_party_log` (
   `details` text NOT NULL,
   `created_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `tickets` (
@@ -434,7 +434,7 @@ CREATE TABLE `ticket_messages` (
   `created_at` int(11) NOT NULL,
   `ip` varchar(300) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `user_services` (
@@ -465,7 +465,7 @@ CREATE TABLE `payments` (
   `options` text NOT NULL,
   `verification_code` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `payments_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -475,7 +475,7 @@ CREATE TABLE `payments_log` (
   `date` int(11) NOT NULL,
   `ip` varchar(300) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `order_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -484,7 +484,7 @@ CREATE TABLE `order_logs` (
   `date` int(11) NOT NULL,
   `log` varchar(1000) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `getstatus` (
@@ -505,6 +505,44 @@ CREATE TABLE `getstatus` (
   `status` int(11) NOT NULL DEFAULT '0',
   `hash` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `super_credits_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `super_admin_id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `credit` decimal(10,2) NOT NULL,
+  `memo` varchar(300) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `referral_earnings` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) unsigned NOT NULL,
+  `earnings` decimal(20,5) NOT NULL,
+  `invoice_id` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 - completed, 2 - rejected',
+  `created_at` int(11) unsigned NOT NULL,
+  `updated_at` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `invoice_id` (`invoice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+SET NAMES utf8mb4;
+
+CREATE TABLE `referral_visits` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) unsigned NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `user_agent` varchar(300) NOT NULL,
+  `http_referer` varchar(300) NOT NULL,
+  `request_data` text NOT NULL,
+  `created_at` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

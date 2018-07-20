@@ -100,7 +100,11 @@ $now = time();
                             <?php if (Stores::STATUS_ACTIVE == $store['status']) : ?>
                                 <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_freeze_store'),
                                     Url::toRoute(['/stores/change-status']),
-                                    ['class' => 'dropdown-item', 'data-method' => 'POST', 'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_FROZEN]])?>
+                                    [
+                                        'class' => 'dropdown-item stores-change-status',
+                                        'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_FROZEN],
+                                        'data-title' => Yii::t('app/superadmin', 'stores.modal.confirm_freeze')
+                                    ])?>
                             <?php elseif (Stores::STATUS_FROZEN == $store['status']) : ?>
                                 <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_activate_store'),
                                     Url::toRoute(['/stores/change-status']),
@@ -114,7 +118,11 @@ $now = time();
                             <?php if(Stores::STATUS_FROZEN == $store['status']): ?>
                                 <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_terminate'),
                                     Url::toRoute(['/stores/change-status']),
-                                    ['class' => 'dropdown-item', 'data-method' => 'POST', 'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_TERMINATED]])?>
+                                    [
+                                        'class' => 'dropdown-item stores-change-status',
+                                        'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_TERMINATED],
+                                        'data-title' => Yii::t('app/superadmin', 'stores.modal.confirm_terminate')
+                                    ])?>
                             <?php endif; ?>
                         </div>
                     </div>
