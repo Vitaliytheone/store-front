@@ -15,9 +15,12 @@
         <!-- Checkout Billing Info Start -->
         <div class="checkout--billing-info">
             <form id="addToCardForm" class="form" action="" method="post">
-
+             {% if error %}
+                 <div class="error-summary alert alert-danger {% if site.rtl %} rtl-direction {% endif %}">{{ error_message }}</div>
+              {% endif %}
                 <!-- Checkout Order Info Start -->
                 <div class="checkout--order-info">
+                                                            
                     <div class="row {% if site.rtl %} rtl-col-md-6 {% endif %}">
                         <div class="col-md-6 pbottom--60">
                             <div class="title">
@@ -46,10 +49,6 @@
 
                             <div class="row">
                                 <div class="col-xs-12 col-xxs-12">
-
-                                    {% if error %}
-                                        <div class="error-summary alert alert-danger {% if site.rtl %} rtl-direction {% endif %}">{{ error_message }}</div>
-                                    {% endif %}
 
                                     <div class="form-group {% if site.rtl %} rtl-direction {% endif %}">
                                         <label>
