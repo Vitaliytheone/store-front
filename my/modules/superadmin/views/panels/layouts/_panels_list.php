@@ -52,14 +52,15 @@
                 <?php
                     $forecastColor = '';
                     $forecastPlanColor = '';
-                    if ($panel['forecast_count'] > $panel['before_orders']) {
-                        $forecastColor = 'text-warning';
-                        $forecastPlanColor = 'table-custom__forecast-plan-bottom';
-                    } else if ($panel['forecast_count'] < $panel['of_orders']) {
-                        $forecastColor = 'text-success';
-                        $forecastPlanColor = 'text-success';
+                    if ($panel['plan']!= $panel['tariffId']) {
+                        if ($panel['forecast_count'] > $panel['before_orders'] && $panel['plan'] > 0) {
+                            $forecastColor = 'text-warning';
+                            $forecastPlanColor = 'table-custom__forecast-plan-bottom';
+                        } else if ($panel['forecast_count'] < $panel['of_orders'] && $panel['plan'] > 0) {
+                            $forecastColor = 'text-success';
+                            $forecastPlanColor = 'text-success';
+                        }
                     }
-
                     $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
                 ?>
                 <tr>
@@ -79,13 +80,15 @@
                     <td class="text-nowrap"><?= strtoupper($panel['lang']) ?></td>
                     <td>
                         <?php if ($panel['cid']) : ?>
-                            <a href="<?= Url::toRoute(['/customers', 'id' => $panel['cid']]); ?>" target="_blank"><?= $panel['customer_email'] ?></a>
+                            <a href="<?= Url::toRoute(['/customers', 'query' => $panel['customer_email']]); ?>" target="_blank"><?= $panel['customer_email'] ?></a>
                         <?php endif; ?>
                     </td>
                     <?php if ($action == 'panels') : ?>
                         <td class="text-nowrap">
                             <div class="table-custom__current-plan"><?= $panel['tariff'] ?></div>
-                            <div class="<?= $forecastPlanColor ?>"><?= $panel['futureTariff'] ?></div>
+                            <?php if ($panel['plan'] != 0 && $panel['plan']!= $panel['tariffId']) : ?>
+                                <div class="<?= $forecastPlanColor ?>"><?= $panel['futureTariff'] ?></div>
+                            <?php endif; ?>
                         </td>
                     <?php endif;  ?>
 

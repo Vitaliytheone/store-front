@@ -25,7 +25,7 @@
         <li class="ml-auto">
             <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(["/$action"], $filters, ['query' => null, 'page_size' => $pageSize]))?>">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'panels.search')?>" value="<?=$filters['query']?>">
+                    <input type="text" class="form-control" name="query" placeholder="<?= $action == 'panels' ? Yii::t('app/superadmin', 'panels.search') : Yii::t('app/superadmin', 'child_panels.search')?>" value="<?=$filters['query']?>">
                     <div class="input-group-append">
                         <button class="btn btn-light" id="submitSearch" type="button"><span class="fa fa-search" ></span></button>
                     </div>

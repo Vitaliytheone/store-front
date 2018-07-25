@@ -318,9 +318,10 @@ class EditProjectForm extends Model {
         return ArrayHelper::map(
             Tariff::find()
                ->where([
-                    '>',
+                    '>=',
                     'id', 0,
                 ])
+                ->orderBy('id ASC')
                 ->all(), 'id', 'title');
     }
 

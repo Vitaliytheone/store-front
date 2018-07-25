@@ -120,6 +120,7 @@ return [
     'panels.pagination.show' => 'Show',
     'panels.plan' => 'Plan',
     'panels.search'  => 'Search panels',
+
     'panels.referral' => 'Referral',
     'panels.list.actions' => 'Actions',
     'panels.list.details' => 'Edit details',
@@ -138,6 +139,7 @@ return [
     'child_panels.list.action_upgrade' => 'Upgrade to panel',
     'child_panels.list.sign_in_as_admin' => 'Sign in as admin',
     'child_panels.upgrade.invoice_description' => 'Upgrade {panel}',
+    'child_panels.search'  => 'Search child panels',
 
     'panels.downgrade.header' => 'Downgrade panel',
     'panels.downgrade.submit_btn' => 'Save changes',

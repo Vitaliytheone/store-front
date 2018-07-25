@@ -125,7 +125,12 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'panels.edit.close') ?></button>
-                <button type="button" id="editprojectform-save" class="btn btn-primary"><?= Yii::t('app/superadmin', 'panels.edit.save') ?></button>
+                <?= Html::submitButton(Yii::t('app/superadmin', 'panels.edit.save'), [
+                    'class' => 'btn  btn-primary',
+                    'name' => 'edit-providers-button',
+                    'id' => 'editprojectform-save',
+                    'data-dismiss' => 'modal'
+                ]) ?>
             </div>
             <?php ActiveForm::end(); ?>
         </div>
