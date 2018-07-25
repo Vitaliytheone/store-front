@@ -68,11 +68,11 @@
                     <td class="table-no-wrap table-custom__customer-td">
                         <?= $panel['site'] ?>
                         <?php if ($panel['referrer_id']) :?>
-                            <a href="<?= Url::toRoute(['/customers', 'id' => $panel['referrer_id']]) ?>" target="_blank">
-                                <span class="my-icons my-icons-referral" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.referral')?>"></span>
+                            <a href="<?= Url::toRoute(['/customers', 'query' => $panel['referrer_email']]) ?>" target="_blank">
+                                <span class="my-icons my-icons-referral" data-placement="top" title=""></span>
                             </a>
                         <?php endif; ?>
-                        <a href="<?= $loginUrl ?>" target="_blank" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= Yii::t('app/superadmin', 'panels.list.sign_in_as_admin')?>">
+                        <a href="<?= $loginUrl ?>" target="_blank" class="table-custom__customer-button"  data-placement="top" title="">
                             <span class="my-icons my-icons-autorization"></span>
                         </a>
                     </td>
@@ -86,9 +86,9 @@
                     <?php if ($action == 'panels') : ?>
                         <td class="text-nowrap">
                             <div class="table-custom__current-plan"><?= $panel['tariff'] ?></div>
-                            <?php if ($panel['plan'] != 0 && $panel['plan']!= $panel['tariffId']) : ?>
+                            <?php if ($panel['plan'] != 0 && $panel['plan']!= $panel['tariffId'] && $panel['tariffId'] > 0) : ?>
                                 <div class="<?= $forecastPlanColor ?>"><?= $panel['futureTariff'] ?></div>
-                            <?php endif; ?>
+                            <?php endif ?>
                         </td>
                     <?php endif;  ?>
 

@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use common\helpers\CurrencyHelper;
+use common\models\panels\Customers;
 use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Project;
@@ -314,6 +315,11 @@ class PanelsSearch {
         foreach ($panels as $panel) {
             $tariff = ArrayHelper::getValue($tariffs, $panel['plan']);
             $futureTariff = ArrayHelper::getValue($tariffs, $panel['tariff']);
+            $referrer = null;
+            if ($panel['referrer_id']) {
+                $referrer = Customers::find()->select('email')->where(['id' => $panel['referrer_id']])->asArray()->one()['email'];
+            }
+
             $returnPanels[] = [
                 'id' => $panel['id'],
                 'plan' =>  $panel['plan'],
@@ -341,6 +347,7 @@ class PanelsSearch {
                 'date' => $panel['date'],
                 'customer_email' => $panel['customer_email'],
                 'referrer_id' => $panel['referrer_id'],
+                'referrer_email' => $referrer,
                 'providers' => ArrayHelper::getValue($providers, $panel['id'], []),
                 'no_invoice' => $panel['no_invoice'],
                 'can' => [
