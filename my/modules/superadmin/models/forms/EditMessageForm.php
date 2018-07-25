@@ -70,15 +70,13 @@ class EditMessageForm extends Model
         $this->_ticketMessage->message = $this->message;
 
         if (!$this->_ticketMessage->save()) {
-            Yii::error(var_export($this->_ticketMessage->getErrors(), true));
-            $this->addError('message', Yii::t('app', 'error.ticket.can_not_edit_message').' 1');
+            $this->addError('message', Yii::t('app', 'error.ticket.can_not_edit_message'));
             return false;
         }
 
         $this->_ticket->updated_at = time();
         if (!$this->_ticket->save(false)) {
-            Yii::error(var_export($this->_ticketMessage->getErrors(), true));
-            $this->addError('message', Yii::t('app', 'error.ticket.can_not_edit_message') . ' 2');
+            $this->addError('message', Yii::t('app', 'error.ticket.can_not_edit_message'));
             $transaction->rollBack();
             return false;
         }
