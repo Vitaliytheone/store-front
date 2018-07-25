@@ -18,6 +18,9 @@
         <!-- Checkout Form Start -->
         <div class="checkout--form" data-form-validation="true">
             <form id="addToCardForm" class="form" action="" method="post">
+             {% if error %}
+                 <div class="error-summary alert alert-danger">{{ error_message }}</div>
+             {% endif %}
                 <div class="row pt--80 {% if site.rtl %} rtl-row-6 {% endif %}">
                     <div class="checkout--order-info col-md-6 {% if site.rtl %} rtl-content {% endif %}">
                         <h2 class="checkout--form-title h4 {% if site.rtl %} rtl-text {% endif %}">{{ lang('order.title') }}</h2>

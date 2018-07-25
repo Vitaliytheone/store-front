@@ -20,6 +20,7 @@ use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
+use my\mail\mailers\PaypalVerificationNeeded;
 use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\ErrorException;
@@ -360,6 +361,25 @@ class CronController extends CustomController
 
                     // Проверяемстатус, сумму и валюту
                     if ($status != 'completed' || $amount != $payment->amount || $currency != 'USD') {
+                        continue;
+                    }
+
+                    $payerId =  ArrayHelper::getValue($GetTransactionDetails, 'PAYERID');
+                    $payerEmail = ArrayHelper::getValue($GetTransactionDetails, 'EMAIL');
+
+                    // Paypal payment email verification
+                    if (!PaymentsHelper::validatePaypalPayment($payment, $payerId, $payerEmail)) {
+                        $code = $payment->verification($payerId, $payerEmail);
+
+                        if ($code && filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {
+                            $mail = new PaypalVerificationNeeded([
+                                'payment' => $payment,
+                                'email' => $payerEmail,
+                                'code' => $code
+                            ]);
+                            $mail->send();
+                        }
+
                         continue;
                     }
                 }
