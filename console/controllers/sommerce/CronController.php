@@ -103,6 +103,9 @@ class CronController extends CustomController
      */
     public function actionCheckPayments()
     {
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
+        
         $storeQuery = Stores::find()->active();
 
         foreach ($storeQuery->batch() as $stores) {

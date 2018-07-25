@@ -317,6 +317,7 @@ class PanelsSearch {
             $returnPanels[] = [
                 'id' => $panel['id'],
                 'plan' =>  $panel['plan'],
+                'tariffId' => $panel['tariff'],
                 'site' => DomainsHelper::idnToUtf8($panel['site']),
                 'currency' => $panel['currency'],
                 'lang' => strtoupper($panel['lang']),

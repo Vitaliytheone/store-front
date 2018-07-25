@@ -11,6 +11,7 @@ use common\models\panels\Tickets;
 use my\modules\superadmin\helpers\SystemMessages;
 use my\modules\superadmin\models\forms\CreateMessageForm;
 use my\modules\superadmin\models\forms\CreateTicketForm;
+use my\modules\superadmin\models\forms\EditMessageForm;
 use my\modules\superadmin\models\search\TicketBlocksSearch;
 use my\modules\superadmin\models\search\TicketMessagesSearch;
 use my\modules\superadmin\models\search\TicketsSearch;
@@ -244,13 +245,12 @@ class TicketsController extends CustomController
     {
         $params = Yii::$app->request->post();
         if (!empty($params['ticketId']) && !empty($params['messageId'])) {
-            $id = $params['messageId'];
-            $ticketId = $params['ticketId'];
-            $message = $this->findMessage($id);
+            $message = $this->findMessage($params['messageId']);
             if ($message->canAdminEdit()) {
                 $message->delete();
             }
-            return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $ticketId]));
+
+            return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $params['ticketId']]));
         }
 
         throw new ForbiddenHttpException();
@@ -263,29 +263,32 @@ class TicketsController extends CustomController
     public function actionEditMessage()
     {
         $params = Yii::$app->request->post();
-        if (!empty($params['ticketId']) && isset($params['message'])) {
+        if (!empty($params['ticketId']) && !empty($params['message']) && !empty($params['messageId'])) {
             $ticket = $this->findModel($params['ticketId']);
-            $ticketId = $params['ticketId'];
-            $id = $params['messageId'];
-            $message = $this->findMessage($id);
+            $message = $this->findMessage($params['messageId']);
             $message->message = $params['message'];
 
-            if ($message->canAdminEdit()) {
-                $model = new CreateMessageForm();
-                $model->message = $message->message;
-                if ($model->validate()) {
-                    $message->save();
-                    $ticket->updated_at = time();
-                    $ticket->save();
-                }  else {
-                    return [
-                        'status' => 'error',
-                        'message' => ActiveForm::firstError($model)
-                    ];
-                }
+            if (!$message->canAdminEdit()) {
+                return [
+                    'status' => 'error',
+                    'message' => Yii::t('app', 'error.ticket.can_not_edit_message')
+                ];
             }
 
-            return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $ticketId]));
+            $model = new EditMessageForm();
+            $model->setMessage($message);
+            $model->setTicket($ticket);
+            $model->message = $params['message'];
+            if (!$model->save()) {
+                return [
+                    'status' => 'error',
+                    'message' => ActiveForm::firstError($model)
+                ];
+            }
+
+            return [
+                'status' => 'success'
+            ];
         }
 
         throw new ForbiddenHttpException();

@@ -75,11 +75,11 @@ class Mailgun
         $content = is_string($content) ? ['text' => $content] : $content;
         $from = ArrayHelper::getValue($options, 'from');
         $from = !empty($from) ? $from : static::$_fromEmail;
-        $fromName = ArrayHelper::getValue($options, 'from_name');
+        $fromName = trim(ArrayHelper::getValue($options, 'from_name'));
         $replyTo = ArrayHelper::getValue($options, 'reply_to');
 
         if (!empty($fromName)) {
-            $from = $fromName . ' <' . $from . '>';
+            $from = "\"$fromName\"" . ' <' . $from . '>';
         }
 
         $post = [

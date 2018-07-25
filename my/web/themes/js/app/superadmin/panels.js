@@ -336,6 +336,7 @@ customModule.superadminPanelsController = {
                     data: link.data('params')
                 });
             });
+            return false;
         });
 
         $('.upgrade').click(function(e) {
