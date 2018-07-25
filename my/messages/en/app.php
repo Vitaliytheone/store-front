@@ -408,6 +408,7 @@ return [
     'error.login.incorrect_captcha' => 'Incorrect captcha',
     'error.login.incorrect_email_or_password' => 'Incorrect email or password.',
     'error.ticket.can_not_create_message' => 'Can not create message',
+    'error.ticket.can_not_edit_message' => 'Can not edit message',
     'error.ticket.tickets_limit_exceeded' => 'Tickets limit exceeded.',
     'error.customer.can_not_change_email' => 'Can not change email',
     'error.customer.can_not_change_password' => 'Can not change password',
