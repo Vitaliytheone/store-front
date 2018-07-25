@@ -269,6 +269,7 @@ class TicketsController extends CustomController
             $message->message = $params['message'];
 
             if (!$message->canAdminEdit()) {
+                Yii::error('$message->canAdminEdit() = false');
                 return [
                     'status' => 'error',
                     'message' => Yii::t('app', 'error.ticket.can_not_edit_message')

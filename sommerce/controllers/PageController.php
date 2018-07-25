@@ -20,7 +20,6 @@ class PageController extends CustomController
     public function actionIndex($id)
     {
         $page = $this->_findPage($id);
-
         $this->pageTitle = $page->seo_title;
         $this->seoDescription = $page->seo_description;
         $this->seoKeywords = $page->seo_keywords;
