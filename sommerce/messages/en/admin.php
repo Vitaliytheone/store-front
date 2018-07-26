@@ -398,6 +398,7 @@ return [
     'settings.providers_m_cancel' => 'Cancel',
 
     'settings.blocks_page_title' => 'Blocks',
+    'settings.customize_theme_pagetitle' => 'Customize {theme} theme ',
     'settings.edit_block_page_title' => 'Edit {block} block',
 
     'settings.message_provider_updated' => 'Provider successfully updated',
