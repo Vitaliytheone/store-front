@@ -61,6 +61,7 @@ use yii\helpers\ArrayHelper;
  * @property string $block_process
  * @property string $custom_header
  * @property string $custom_footer
+ * @property int $no_referral
  *
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
@@ -111,7 +112,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             [[
                 'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
                 'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl',
-                'trial', 'hide',
+                'trial', 'hide', 'no_referral'
             ], 'integer'],
             [[
                 'block_slider', 'block_features', 'block_reviews', 'block_process',
@@ -161,6 +162,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             'block_process' => Yii::t('app', 'Block Process'),
             'custom_header' => Yii::t('app', 'Custom header'),
             'custom_footer' => Yii::t('app', 'Custom footer'),
+            'no_referral' => Yii::t('app', 'No Referral'),
         ];
     }
 
