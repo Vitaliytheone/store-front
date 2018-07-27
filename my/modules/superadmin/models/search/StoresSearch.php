@@ -36,7 +36,7 @@ class StoresSearch {
     public function getParams()
     {
         return [
-            'query' => $this->getQuery(),
+            'query' => quotemeta($this->getQuery()),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all',
         ];
     }

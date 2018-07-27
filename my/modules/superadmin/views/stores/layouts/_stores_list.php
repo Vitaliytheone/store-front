@@ -45,14 +45,12 @@ $now = time();
                             '',
                             [
                                 'class' => 'my-icons my-icons-referral',
-                                'data-toggle' => 'tooltip',
                                 'data-placement' => 'top',
-                                'title' => Yii::t('app/superadmin', 'stores.list.tooltip_title_referral'),
                             ]
                         ), Url::toRoute(['/customers', 'query' => $store['customer_email']]), ['target' => '_blank']
                     );  ?>
                     <?= $store['domain'] ?> <?= ($store['referrer_id'] ? ' ' . $referralView : '')?>
-                    <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-toggle="tooltip" data-placement="top" target="_blank" title="<?= Yii::t('app/superadmin', 'stores.list.tooltip_title_sign_as_admin') ?>">
+                    <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-placement="top" target="_blank">
                         <span class="my-icons my-icons-autorization"></span>
                     </a>
                 </td>

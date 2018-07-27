@@ -186,6 +186,21 @@ class CustomersController extends CustomController
     }
 
     /**
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionActivateDomain()
+    {
+        $request = Yii::$app->request;
+
+        $customer = $this->findModel($request->post('id'));
+
+        $customer->activateDomains();
+
+        return $this->redirect(Url::toRoute('/customers'));
+    }
+
+    /**
      * @return array|\yii\db\ActiveRecord[]
      */
     public function actionAjaxCustomers()

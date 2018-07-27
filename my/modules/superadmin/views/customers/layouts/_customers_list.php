@@ -43,14 +43,12 @@
                                     '',
                                     [
                                         'class' => 'my-icons my-icons-referral',
-                                        'data-toggle' => 'tooltip',
                                         'data-placement' => 'top',
-                                        'title' => Yii::t('app/superadmin', 'customers.list.tooltip_referral_label'),
                                     ]
-                                ), Url::toRoute(['/customers', 'query' => $customer->email]), ['target' => '_blank']
+                                ), Url::toRoute(['/customers', 'id' => $customer->referrer_id]), ['target' => '_blank']
                             );  ?>
                             <?= $customer->email ?> <?= ($customer->referrer_id ? ' ' . $referralView : '')?>
-                            <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="table-custom__customer-button" target="_blank" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app/superadmin', 'customers.list.tooltip_sign_in_label'); ?>">
+                            <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="table-custom__customer-button" target="_blank" data-placement="top">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>
@@ -72,7 +70,15 @@
                             <?= Html::a($customer->countChild, Url::toRoute(['/child-panels', 'customer_id' => $customer->id])); ?>
                         </td>
                         <td>
-                            <?= Html::a($customer->countDomains, Url::toRoute(['/domains', 'customer_id' => $customer->id])); ?>
+                            <?php if ($customer->buy_domain == 0) : ?>
+                                <?= Html::a(Html::tag('span', Yii::t('app/superadmin', 'customers.list.activate_stores'),
+                                    ['class' => 'badge badge-light']),
+                                    Url::toRoute(['/customers/activate-domain']),
+                                    ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
+                                )?>
+                            <?php else : ?>
+                                <?= Html::a($customer->countDomains, Url::toRoute(['/domains', 'customer_id' => $customer->id])); ?>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <?= Html::a($customer->countSslCerts, Url::toRoute(['/ssl', 'customer_id' => $customer->id])); ?>
