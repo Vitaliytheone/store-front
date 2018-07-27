@@ -54,11 +54,11 @@
                     $forecastPlanColor = '';
                     if ($panel['plan']!= $panel['tariffId']) {
                         if ($panel['forecast_count'] > $panel['before_orders'] && $panel['plan'] > 0) {
-                            $forecastColor = 'text-warning';
-                            $forecastPlanColor = 'table-custom__forecast-plan-bottom';
-                        } else if ($panel['forecast_count'] < $panel['of_orders'] && $panel['plan'] > 0) {
                             $forecastColor = 'text-success';
                             $forecastPlanColor = 'text-success';
+                        } else if ($panel['forecast_count'] < $panel['of_orders'] && $panel['plan'] > 0) {
+                            $forecastColor = 'text-warning';
+                            $forecastPlanColor = 'table-custom__forecast-plan-bottom';
                         }
                     }
                     $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
