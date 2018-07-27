@@ -16,7 +16,7 @@ use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use console\components\payments\PaymentsFee;
-use my\components\Paypal;
+use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
@@ -344,6 +344,7 @@ class CronController extends CustomController
                     ];
                     $paymentsLogModel->save(false);
 
+                    $payment->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
                     $amount = ArrayHelper::getValue($GetTransactionDetails, 'AMT');
                     $currency = ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE');
                     $status = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS');

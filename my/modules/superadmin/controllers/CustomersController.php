@@ -46,6 +46,7 @@ class CustomersController extends CustomController
                     'change-status'=> ['POST'],
                     'edit' => ['POST'],
                     'set-password' => ['POST'],
+                    'activate-domain' => ['POST'],
                 ],
             ],
             'ajax' => [
@@ -181,6 +182,21 @@ class CustomersController extends CustomController
         $customer = $this->findModel($request->post('id'));
 
         $customer->activateStores();
+
+        return $this->redirect(Url::toRoute('/customers'));
+    }
+
+    /**
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionActivateDomain()
+    {
+        $request = Yii::$app->request;
+
+        $customer = $this->findModel($request->post('id'));
+
+        $customer->activateDomains();
 
         return $this->redirect(Url::toRoute('/customers'));
     }

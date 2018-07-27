@@ -39,6 +39,7 @@
                     <?= DateTimePicker::widget([
                             'model' => $model,
                             'attribute' => 'expired',
+                            'context' => $this->context,
                     ]) ?>
                 </div>
             </div>
