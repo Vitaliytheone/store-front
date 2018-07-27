@@ -7,7 +7,6 @@
 
 namespace my\assets;
 
-use yii\helpers\ArrayHelper;
 use yii\web\AssetBundle;
 
 /**
