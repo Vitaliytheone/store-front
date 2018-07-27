@@ -12,7 +12,6 @@
     use my\modules\superadmin\widgets\CountPagination;
 ?>
 
-
         <table class="table table-sm table-custom">
             <thead class="">
             <tr>
@@ -45,7 +44,7 @@
                                         'class' => 'my-icons my-icons-referral',
                                         'data-placement' => 'top',
                                     ]
-                                ), Url::toRoute(['/customers', 'id' => $customer->referrer_id]), ['target' => '_blank']
+                                ), Url::toRoute(['/customers', 'query' => $customer->referrer_email]), ['target' => '_blank']
                             );  ?>
                             <?= $customer->email ?> <?= ($customer->referrer_id ? ' ' . $referralView : '')?>
                             <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="table-custom__customer-button" target="_blank" data-placement="top">
@@ -70,7 +69,7 @@
                             <?= Html::a($customer->countChild, Url::toRoute(['/child-panels', 'customer_id' => $customer->id])); ?>
                         </td>
                         <td>
-                            <?php if ($customer->buy_domain == 0) : ?>
+                            <?php if (!$customer->can('domains')) : ?>
                                 <?= Html::a(Html::tag('span', Yii::t('app/superadmin', 'customers.list.activate_stores'),
                                     ['class' => 'badge badge-light']),
                                     Url::toRoute(['/customers/activate-domain']),

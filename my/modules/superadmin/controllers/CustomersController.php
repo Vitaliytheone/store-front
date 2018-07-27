@@ -46,6 +46,7 @@ class CustomersController extends CustomController
                     'change-status'=> ['POST'],
                     'edit' => ['POST'],
                     'set-password' => ['POST'],
+                    'activate-domain' => ['POST'],
                 ],
             ],
             'ajax' => [
