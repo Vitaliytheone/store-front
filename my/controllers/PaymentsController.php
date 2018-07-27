@@ -17,7 +17,7 @@ use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use common\models\panel\PaymentsLog;
 use common\models\panels\PaymentHash;
-use my\components\Paypal;
+use my\components\payments\Paypal;
 use yii\helpers\ArrayHelper;
 
 class PaymentsController extends CustomController

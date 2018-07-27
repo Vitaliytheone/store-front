@@ -4,7 +4,7 @@ namespace my\controllers;
 
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
-use my\components\Paypal;
+use my\components\payments\Paypal;
 use my\helpers\CurlHelper;
 use common\models\panels\Content;
 use my\models\forms\ChangeEmailForm;
