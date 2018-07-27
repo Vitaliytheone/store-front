@@ -100,6 +100,7 @@ class PaymentsController extends CustomController
                         $payments = Payments::findOne(['id' => $payment->id]);
                         $payments->comment = $GetTransactionDetails['EMAIL'].'; '.$response['PAYMENTINFO_0_TRANSACTIONID'];
                         $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
+                        $payments->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
                         $getTransactionDetailsStatus = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS', '');
                         $doExpressCheckoutPaymentStatus = ArrayHelper::getValue($response, 'PAYMENTINFO_0_PAYMENTSTATUS', $getTransactionDetailsStatus);
                         $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
