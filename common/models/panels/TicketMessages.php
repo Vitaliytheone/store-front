@@ -141,7 +141,10 @@ class TicketMessages extends ActiveRecord
             '<>',
             'admin_id', $this->admin_id,
         ]);
-
+        $query->andWhere([
+            '=',
+            'ticket_id', $this->ticket_id,
+        ]);
         $query->limit(1);
         $result = $query->one();
 

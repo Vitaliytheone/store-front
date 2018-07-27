@@ -344,6 +344,7 @@ class CronController extends CustomController
                     ];
                     $paymentsLogModel->save(false);
 
+                    $payment->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
                     $amount = ArrayHelper::getValue($GetTransactionDetails, 'AMT');
                     $currency = ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE');
                     $status = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS');
