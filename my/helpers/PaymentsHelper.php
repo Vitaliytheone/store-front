@@ -7,7 +7,7 @@ use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use common\models\panels\PaymentsLog;
 use common\models\panels\ThirdPartyLog;
-use my\components\Paypal;
+use my\components\payments\Paypal;
 use yii\helpers\ArrayHelper;
 use Yii;
 
