@@ -21,7 +21,8 @@ class ThemesCustomizerAsset extends AssetBundle
     ];
 
     public $js = [
-        'static/js/main.js',
+        'static/js/init.js',
+        'static/js/main.js'
     ];
 
     public $depends = [

@@ -4,6 +4,7 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\models\stores\Stores;
 use Yii;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
 trait ThemesCustomizerTrait
@@ -25,14 +26,23 @@ trait ThemesCustomizerTrait
         $store = Yii::$app->store->getInstance();
 
 
-        $this->addModule('adminBlocks');
+        $this->addModule('adminCustomizeTheme');
 
         return $this->render('customize_theme');
     }
 
 
-    public function actionThemeGetStyle($theme)
+    public function actionThemeGetResource($theme, $type)
     {
+        $resource = '';
+        if ($type == 'style') {
+            $resource = 'style.css';
+        } else if ($type == 'data') {
+            $resource = 'config.json';
+        }
+        if (!$resource) {
+            throw new BadRequestHttpException();
+        }
         $dir= Yii::getAlias('@defaultThemes/' . $theme);
         if (!is_dir($dir)) {
             $file = Yii::getAlias('@customThemes/' . $theme);
@@ -40,11 +50,11 @@ trait ThemesCustomizerTrait
                throw new NotFoundHttpException();
             }
         }
-        $style = require($dir .  '/style.css');
-        if (!$style) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $content = file_get_contents($dir .  '/' . $resource);
+        if (!$content) {
             throw new NotFoundHttpException();
         }
-        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-        return $style;
+        return $content;
     }
 }

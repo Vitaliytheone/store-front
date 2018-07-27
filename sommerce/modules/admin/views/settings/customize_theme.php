@@ -8,4 +8,4 @@ ThemesCustomizerAsset::register($this);
 
 ?>
 
-<div id="root"></div>
+<div data-customizer="{}" id="root"></div>

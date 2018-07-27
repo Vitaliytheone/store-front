@@ -3,7 +3,6 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\store\Files;
-use common\models\stores\StoreAdminAuth;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -19,8 +18,6 @@ use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
-use yii\helpers\ArrayHelper;
-use yii\validators\FileValidator;
 use yii\web\Response;
 
 /**
