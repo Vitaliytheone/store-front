@@ -309,7 +309,9 @@ class Invoices extends ActiveRecord
                         continue;
                     }
 
-                    if (!$customer->can('pay_referral')) {
+                    if (!$customer->can('pay_referral', [
+                        'item' => $detail->getPanel()
+                    ])) {
                         continue;
                     }
 
