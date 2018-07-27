@@ -45,10 +45,10 @@ class SettingsController extends CustomController
             'update-blocks',
             'block-upload',
             'update-theme',
+            'theme-update-style'
         ])) {
             $this->enableCsrfValidation = false;
         }
-
         // Add custom JS modules
         // $this->addModule('settings');
         return parent::beforeAction($action);

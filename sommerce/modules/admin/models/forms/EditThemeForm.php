@@ -303,11 +303,19 @@ class EditThemeForm extends Model
      * @param $postData
      * @return false|string
      */
-    public function updateThemeFile($postData)
+    public function updateThemeFile($postData, $isPost = true)
     {
-        if (!$this->load($postData)) {
+        if ($isPost) {
+            if (!$this->load($postData)) {
+                return false;
+            }
+        } elseif (!isset($postData['file_content'])) {
             return false;
+        } else {
+            $this->file_content = $postData['file_content'];
         }
+
+        $this->file_content;
 
         $pathToFile = $this->getPathToFile();
         $path = dirname($pathToFile);
@@ -315,6 +323,7 @@ class EditThemeForm extends Model
         if (!file_exists($path)) {
             mkdir($path, 0766, true);
         }
+
 
         if (!file_put_contents($pathToFile, $this->file_content)) {
             return false;
