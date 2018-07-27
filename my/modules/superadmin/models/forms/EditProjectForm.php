@@ -97,8 +97,85 @@ class EditProjectForm extends Model {
     }
 
     /**
+     * @return array
+     */
+    public function getInputAttrs()
+    {
+        return [
+            'site',
+            'name',
+            'skype',
+            'apikey'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDropDownAttrs()
+    {
+        return [
+            'currency',
+            'plan',
+            'utc',
+            'cid'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getServiceTypes()
+    {
+        return [
+            'package',
+            'seo',
+            'comments',
+            'mentions_wo_hashtag',
+            'mentions',
+            'mentions_custom',
+            'mentions_hashtag',
+            'mentions_follower',
+            'mentions_likes',
+            'writing',
+            'drip_feed',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdvanced()
+    {
+        return [
+            'captcha',
+            'name_modal',
+            'no_invoice',
+            'custom',
+            'start_count'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputs()
+    {
+        return [
+            'checkboxes' => array_merge(
+                ['subdomain'],
+                $this->getAdvanced(),
+                $this->getServiceTypes()
+            ),
+            'dropdowns' => $this->getDropDownAttrs(),
+            'textInputs' => $this->getInputAttrs()
+        ];
+    }
+
+    /**
      * Validate apikey
      * @param $attribute
+     * @return bool
      */
     public function uniqApikey($attribute)
     {
@@ -238,7 +315,14 @@ class EditProjectForm extends Model {
      */
     public function getPlans()
     {
-        return ArrayHelper::map(Tariff::find()->all(), 'id', 'title');
+        return ArrayHelper::map(
+            Tariff::find()
+               ->where([
+                    '>=',
+                    'id', 0,
+                ])
+                ->orderBy('id ASC')
+                ->all(), 'id', 'title');
     }
 
     /**
@@ -282,9 +366,10 @@ class EditProjectForm extends Model {
         return Yii::$app->params['timezones'];
     }
 
+
     /**
-     * Get customers
-     * @return Customers[]
+     * @param int|null $limit
+     * @return array|Customers[]
      */
     public function getCustomers()
     {
@@ -292,7 +377,9 @@ class EditProjectForm extends Model {
            return $this->_customers;
         }
 
-        $this->_customers = ArrayHelper::index(Customers::find()->all(), 'id');
+        $query = Customers::find();
+
+        $this->_customers = ArrayHelper::index($query->all(), 'id');
 
         return $this->_customers;
     }

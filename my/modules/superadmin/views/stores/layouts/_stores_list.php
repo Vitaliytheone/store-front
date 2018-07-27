@@ -1,27 +1,31 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $stores \my\modules\superadmin\models\search\StoresSearch */
+/* @var $filters array */
 
 use my\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use common\models\stores\Stores;
+use yii\helpers\Json;
+use my\modules\superadmin\widgets\CountPagination;
 
 $now = time();
 
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'stores.list.column_id')?></th>
         <th><?= Yii::t('app/superadmin', 'stores.list.column_domain')?></th>
         <th><?= Yii::t('app/superadmin', 'stores.list.column_currency')?></th>
         <th><?= Yii::t('app/superadmin', 'stores.list.column_language')?></th>
-        <th><?= Yii::t('app/superadmin', 'stores.list.column_customer')?></th>
+        <th class="table-custom__customer-th"><?= Yii::t('app/superadmin', 'stores.list.column_customer')?></th>
+        <th><?= Yii::t('app/superadmin', 'stores.list.column_orders') ?></th>
         <th><?= Yii::t('app/superadmin', 'stores.list.column_status')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'stores.list.column_created')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'stores.list.column_expiry')?></th>
-        <th><?= Yii::t('app/superadmin', 'stores.list.column_actions')?></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -34,13 +38,21 @@ $now = time();
                 <td>
                     <?= $store['id'] ?>
                 </td>
-                <td>
-                    <div class="pull-left">
-                        <?= $store['domain'] ?> <?= ($store['referrer_id'] ? '(' . Html::a('r', Url::toRoute(['/customers', 'id' => $store['referrer_id']]), ['target' => '_blank']) . ')' : '')?>
-                    </div>
-                    <div class="pull-right">
-                        <a href="<?= $loginUrl ?>" class="login-key-link" target="_blank"><i class="fa fa-key fa-flip-horizontal" aria-hidden="true"></i></a>
-                    </div>
+                <td class="table-custom__customer-td">
+                    <?php $referralView = Html::a(
+                        Html::tag(
+                            'span',
+                            '',
+                            [
+                                'class' => 'my-icons my-icons-referral',
+                                'data-placement' => 'top',
+                            ]
+                        ), Url::toRoute(['/customers', 'query' => $store['customer_email']]), ['target' => '_blank']
+                    );  ?>
+                    <?= $store['domain'] ?> <?= ($store['referrer_id'] ? ' ' . $referralView : '')?>
+                    <a href="<?= $loginUrl ?>" class="table-custom__customer-button" data-placement="top" target="_blank">
+                        <span class="my-icons my-icons-autorization"></span>
+                    </a>
                 </td>
                 <td>
                     <?= $store['currency'] ?>
@@ -48,11 +60,12 @@ $now = time();
                 <td>
                     <?= $store['language'] ?>
                 </td>
-                <td>
+                <td class="table-custom__customer-td">
                     <?php if ($store['customer_id']) : ?>
-                        <a href="<?= Url::toRoute(['/customers', 'id' => $store['customer_id']]); ?>" target="_blank"><?= $store['customer_email'] ?></a>
+                        <a href="<?= Url::toRoute(['/customers', 'query' => $store['customer_email']]); ?>" target="_blank"><?= $store['customer_email'] ?></a>
                     <?php endif; ?>
                 </td>
+                <td><?= $store['last_count'] . ' / ' . $store['current_count'] ?></td>
                 <td>
                     <?= $store['status_name'] ?>
                 </td>
@@ -70,7 +83,7 @@ $now = time();
                 </td>
                 <td>
                     <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'stores.list.column_actions')?></button>
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><?= Yii::t('app/superadmin', 'stores.list.column_actions')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <?= Html::a(!empty($store['store_domain']) ? Yii::t('app/superadmin', 'stores.list.action_change_domain') : Yii::t('app/superadmin', 'stores.list.action_add_domain'), Url::toRoute(['/stores/change-domain', 'id' => $store['id']]), [
                                 'class' => 'dropdown-item change-domain',
@@ -78,19 +91,36 @@ $now = time();
                                 'data-subdomain' => $store['subdomain'],
                                 'data-title' => !empty($store['store_domain']) ? Yii::t('app/superadmin', 'stores.list.action_change_domain') : Yii::t('app/superadmin', 'stores.list.action_add_domain')
                             ])?>
+                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_edit_store'), Url::toRoute(['/stores/edit-store', 'id' => $store['id']]), [
+                                'class' => 'dropdown-item edit-store',
+                                'data-details' => Json::encode(['name' => $store['name'], 'customer_id' => $store['customer_id'], 'customer_email' => $store['customer_email'], 'currency' => $store['currency']])
+                            ])?>
                             <?php if (Stores::STATUS_ACTIVE == $store['status']) : ?>
-                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_freeze_store'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_FROZEN]), ['class' => 'dropdown-item'])?>
+                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_freeze_store'),
+                                    Url::toRoute(['/stores/change-status']),
+                                    [
+                                        'class' => 'dropdown-item stores-change-status',
+                                        'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_FROZEN],
+                                        'data-title' => Yii::t('app/superadmin', 'stores.modal.confirm_freeze')
+                                    ])?>
                             <?php elseif (Stores::STATUS_FROZEN == $store['status']) : ?>
-                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_activate_store'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_ACTIVE]), ['class' => 'dropdown-item'])?>
+                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_activate_store'),
+                                    Url::toRoute(['/stores/change-status']),
+                                    ['class' => 'dropdown-item',  'data-method' => 'POST', 'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_ACTIVE]])?>
                             <?php endif; ?>
                             <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_edit_expiry'), Url::toRoute(['/stores/edit-expiry', 'id' => $store['id']]), [
                                 'class' => 'dropdown-item edit-expiry',
-                                'data-expired' => $store['expired_datetime']
+                                'data-expired' => $store['expired_datetime'],
                             ])?>
-                            <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_sign_in_as_admin'), Url::toRoute(['/stores/sign-in-as-admin', 'id' => $store['id']]), ['class' => 'dropdown-item', 'target' => '_blank'])?>
 
                             <?php if(Stores::STATUS_FROZEN == $store['status']): ?>
-                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_terminate'), Url::toRoute(['/stores/change-status', 'id' => $store['id'], 'status' => Stores::STATUS_TERMINATED]), ['class' => 'dropdown-item'])?>
+                                <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_terminate'),
+                                    Url::toRoute(['/stores/change-status']),
+                                    [
+                                        'class' => 'dropdown-item stores-change-status',
+                                        'data-params' => ['id' => $store['id'], 'status' => Stores::STATUS_TERMINATED],
+                                        'data-title' => Yii::t('app/superadmin', 'stores.modal.confirm_terminate')
+                                    ])?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -102,8 +132,22 @@ $now = time();
     </tbody>
 </table>
 
-<div class="text-align-center pager">
-    <?= LinkPager::widget([
-        'pagination' => $stores['pages'],
-    ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <!-- Pagination Start -->
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget([
+                    'pagination' => $stores['pages'],
+                ]); ?>
+            </ul>
+        </nav>
+        <!-- Pagination End -->
+    </div>
+    <div class="col-md-6 text-md-right">
+        <?= CountPagination::widget([
+            'pages' => $stores['pages'],
+            'params' => $filters,
+        ]) ?>
+    </div>
 </div>

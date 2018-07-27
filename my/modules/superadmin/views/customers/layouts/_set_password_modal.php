@@ -11,12 +11,14 @@
     $model = new CustomerPasswordForm();
 ?>
 
-<div class="modal fade" id="setPasswordModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog">
+<div class="modal fade" id="setPasswordModal" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Set password</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title"><?= Yii::t('app/superadmin', 'customers.set_password.title') ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
 
             <?php $form = ActiveForm::begin([
@@ -37,24 +39,22 @@
                 ]); ?>
 
                 <div class="form-group">
-                    <label for=""><?= $model->getAttributeLabel('password') ?></label>
-                    <div class="input-group">
-                        <?= Html::textInput('CustomerPasswordForm[password]', '', ['class' => 'form-control password'])?>
-                        <span class="input-group-addon">
-                            <span class="btn btn-default random-password pointer">
-                                <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="Generate password"></i>
-                            </span>
-                        </span>
+                    <label for="form-apikey"><?= $model->getAttributeLabel('password') ?></label>
+                    <div class="input-group mb-3">
+                        <?= Html::textInput('CustomerPasswordForm[password]', '', ['class' => 'form-control password', 'id' => 'copyTarget'])?>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary random-password" data-clipboard-target="#copyTarget" type="button"><?= Yii::t('app/superadmin', 'customers.set_password.btn_generate') ?></button>
+                        </div>
                     </div>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <?= Html::submitButton('Set password', [
-                    'class' => 'btn btn-outline btn-primary',
+                <button type="button" class="btn btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'customers.set_password.btn_cancel') ?></button>
+                <?= Html::submitButton(Yii::t('app/superadmin', 'customers.set_password.btn_save'), [
+                    'class' => 'btn btn-primary',
                     'name' => 'set-password-button',
-                    'id' => 'setPasswordButton'
+                    'id' => 'setPasswordButton',
                 ]) ?>
             </div>
 

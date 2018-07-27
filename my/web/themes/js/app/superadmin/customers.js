@@ -16,6 +16,7 @@ customModule.superadminCustomersController = {
             $('#editcustomerform-email', form).val(details.email);
             $('#editcustomerform-first_name', form).val(details.first_name);
             $('#editcustomerform-last_name', form).val(details.last_name);
+            $('#edit-customer-referral option[value='+ details.referral_status +']').attr('selected', 'true');
 
             form.attr('action', link.attr('href'));
 
@@ -46,16 +47,19 @@ customModule.superadminCustomersController = {
             return false;
         });
 
+        new Clipboard('.random-password', {
+            container: document.getElementById('#setPasswordModal'),
+        });
+
         $('.random-password').click(function(e) {
             e.preventDefault();
 
             var btn = $(this);
-
             var form = btn.parents('form');
+            var input = $('.password', form);
+            var password = custom.generatePassword();
 
-            $('.password', form).val(custom.generatePassword());
-
-            return false;
+            input.val(password);
         });
 
         $(document).on('click', '#editCustomerButton', function(e) {

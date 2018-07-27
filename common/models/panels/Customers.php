@@ -58,6 +58,7 @@ class Customers extends ActiveRecord
 
     const SCENARIO_SETTINGS = 'settings';
     const SCENARIO_REGISTER = 'register';
+    const SCENARIO_UPDATE = 'update';
     const SCENARIO_DEFAULT = 'default';
 
     const REFERRAL_NOT_ACTIVE = 0;
@@ -106,6 +107,10 @@ class Customers extends ActiveRecord
             ['email', 'validateEmail', 'on' => self::SCENARIO_REGISTER],
             ['email', 'email', 'on' => self::SCENARIO_REGISTER],
             ['password', 'passwordValidator', 'on' => self::SCENARIO_REGISTER],
+            ['email', 'trim', 'on' => self::SCENARIO_UPDATE],
+            ['email', 'email', 'on' => self::SCENARIO_UPDATE],
+            ['email', 'unique', 'on' => self::SCENARIO_UPDATE],
+            ['email', 'required', 'on' => self::SCENARIO_UPDATE],
         ];
     }
 
@@ -246,6 +251,7 @@ class Customers extends ActiveRecord
     {
         return [
             self::SCENARIO_SETTINGS => ['first_name','last_name'],
+            self::SCENARIO_UPDATE => ['email', 'referrer_id'],
             self::SCENARIO_REGISTER => ['password_confirm', 'email', 'password','first_name','last_name'],
             self::SCENARIO_DEFAULT => ['password'],
         ];
@@ -437,6 +443,16 @@ class Customers extends ActiveRecord
             case 'pay_referral':
                 if (!$this->referrer_id) {
                     return false;
+                }
+
+                if (!empty($params['item'])) {
+                    if (($params['item'] instanceof Project) && $params['item']->no_referral) {
+                        return false;
+                    }
+
+                    if (($params['item'] instanceof Stores) && $params['item']->no_referral) {
+                        return false;
+                    }
                 }
                 $referrer = $this->referrer;
 

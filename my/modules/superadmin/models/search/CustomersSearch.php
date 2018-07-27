@@ -4,7 +4,9 @@ namespace my\modules\superadmin\models\search;
 use common\models\stores\Stores;
 use Yii;
 use common\models\panels\Customers;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\data\Pagination;
 
 /**
  * Class CustomersSearch
@@ -17,10 +19,34 @@ class CustomersSearch extends Customers {
     public $countChild;
     public $countDomains;
     public $countSslCerts;
+    public $referrer_email;
+
+    /**
+     * @var Pagination
+     */
+    public $pages;
 
     protected static $_customers;
 
+    /**
+     * @var array
+     */
+    public static $pageSizeList = [
+        100 => 100,
+        500 => 500,
+        1000 => 1000,
+        5000 => 5000,
+    ];
+
     use SearchTrait;
+
+    /**
+     * Set label for 'All'
+     */
+    private function setAllPageLabel()
+    {
+        static::$pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
+    }
 
     /**
      * Get parameters
@@ -29,15 +55,24 @@ class CustomersSearch extends Customers {
     public function getParams()
     {
         return [
-            'query' => $this->getQuery(),
-            'status' => isset($this->params['status']) ? $this->params['status'] : Customers::STATUS_ACTIVE
+            'query' => quotemeta($this->getQuery()),
+            'status' => isset($this->params['status']) ? $this->params['status'] : 'all'
         ];
     }
 
     /**
+     * Set value of page size
+     */
+    public function getPageSize()
+    {
+        $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
+        return array_key_exists($pageSize, static::$pageSizeList) ? $pageSize : 100;
+    }
+
+    /**
      * Build sql query
-     * @param int $status
-     * @return $this
+     * @param int|null $status
+     * @return \yii\db\ActiveQuery
      */
     public function buildQuery($status = null)
     {
@@ -75,60 +110,36 @@ class CustomersSearch extends Customers {
             ]);
         }
 
-        $customers->select([
-            'customers.*',
-            'COUNT(DISTINCT stores.id) AS countStores',
-            'COUNT(DISTINCT project.id) AS countProjects',
-            'COUNT(DISTINCT child_project.id) AS countChild',
-            'COUNT(DISTINCT domains.id) AS countDomains',
-            'COUNT(DISTINCT ssl_cert.id) AS countSslCerts'
-        ]);
-
-        $customers->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [
-            ':projectChildPanel' => 0
-        ]);
-        $customers->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [
-            ':projectChildPanel' => 0
-        ]);
-        $customers->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [
-            ':childPanel' => 1
-        ]);
-        $customers->leftJoin('domains', 'domains.customer_id = customers.id');
-        $customers->leftJoin('ssl_cert', 'ssl_cert.cid = customers.id');
-
-        $customers->orderBy([
-            'customers.id' => SORT_DESC
-        ])->groupBy('customers.id');
-
         return $customers;
     }
 
     /**
-     * Get customers
-     * @param string|integer $status
-     * @return array
+     * @param $status
+     * @return array|\yii\db\ActiveRecord[]
      */
     protected function getCustomers($status)
     {
-        if (empty(static::$_customers)) {
-            static::$_customers = $this->buildQuery()->all();
-        }
-
-        if ('all' === $status || null === $status) {
-            return static::$_customers;
-        }
-
-        $customers = [];
-
-        foreach (static::$_customers as $customer) {
-            if ($customer->status != $status) {
-                continue;
-            }
-
-            $customers[] = $customer;
-        }
-
-        return $customers;
+        return $this->buildQuery($status)
+            ->select([
+                'customers.*',
+                'referral.email AS referrer_email',
+                'COUNT(DISTINCT stores.id) AS countStores',
+                'COUNT(DISTINCT project.id) AS countProjects',
+                'COUNT(DISTINCT child_project.id) AS countChild',
+                'COUNT(DISTINCT domains.id) AS countDomains',
+                'COUNT(DISTINCT ssl_cert.id) AS countSslCerts',
+            ])
+            ->leftJoin(['referral' => Customers::tableName()], 'referral.id = customers.referrer_id')
+            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [':projectChildPanel' => 0])
+            ->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [':projectChildPanel' => 0])
+            ->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [':childPanel' => 1])
+            ->leftJoin('domains', 'domains.customer_id = customers.id')
+            ->leftJoin('ssl_cert', 'ssl_cert.cid = customers.id')
+            ->orderBy(['customers.id' => SORT_DESC])
+            ->groupBy('customers.id')
+            ->offset($this->pages->offset)
+            ->limit($this->pages->limit)
+            ->all();
     }
 
     /**
@@ -137,16 +148,32 @@ class CustomersSearch extends Customers {
      */
     public function search()
     {
-        $status = ArrayHelper::getValue($this->params, 'status', Customers::STATUS_ACTIVE);
+        $status = ArrayHelper::getValue($this->params, 'status', 'all');
+
+        $countQuery = $this->buildQuery($status)->count();
+        $this->setAllPageLabel();
+        $pageSize = $this->getPageSize();
+        if ($pageSize == 'all') {
+            $pageSize = $countQuery;
+        }
+        $pages = new Pagination(['totalCount' => $countQuery, 'pageSize' => $pageSize]);
+        $this->pages = $pages;
 
         return [
-            'models' => $this->getCustomers($status)
+            'models' => $this->getCustomers($status),
+            'pages' => $this->pages,
         ];
     }
 
-    public static function ajaxSelectSearch($email) {
+    public static function ajaxSelectSearch($email, $status) {
+        if ($status === 'all') {
+            return Customers::find()
+                ->andFilterWhere(['like', 'email', trim($email)])
+                ->limit(10)->asArray()->all();
+        }
+
         return Customers::find()
-            ->andWhere(['status' => Customers::STATUS_ACTIVE])
+            ->andWhere(['status' => $status])
             ->andFilterWhere(['like', 'email', trim($email)])
             ->limit(10)->asArray()->all();
     }
@@ -158,9 +185,15 @@ class CustomersSearch extends Customers {
     public function navs()
     {
         return [
-            'all' => 'All (' . count($this->getCustomers('all')) . ')',
-            Customers::STATUS_ACTIVE => 'Active (' . count($this->getCustomers(Customers::STATUS_ACTIVE)) . ')',
-            Customers::STATUS_SUSPENDED => 'Suspended (' . count($this->getCustomers(Customers::STATUS_SUSPENDED)) . ')',
+            'all' => Yii::t('app/superadmin', 'customers.list.tab_all', [
+                'count' => $this->buildQuery()->count()
+            ]),
+            Customers::STATUS_ACTIVE => Yii::t('app/superadmin', 'customers.list.tab_active', [
+                'count' => $this->buildQuery(Customers::STATUS_ACTIVE)->count()
+            ]),
+            Customers::STATUS_SUSPENDED => Yii::t('app/superadmin', 'customers.list.tab_suspended', [
+                'count' => $this->buildQuery(Customers::STATUS_SUSPENDED)->count()
+            ]),
         ];
     }
 }

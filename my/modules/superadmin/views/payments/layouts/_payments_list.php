@@ -18,6 +18,7 @@
         <th><?= Yii::t('app/superadmin', 'payments.list.column_invoice')?></th>
         <th><?= Yii::t('app/superadmin', 'payments.list.column_domain')?></th>
         <th><?= Yii::t('app/superadmin', 'payments.list.column_amount')?></th>
+        <th><?= Yii::t('app/superadmin', 'payments.list.column_fee')?></th>
         <th><?= Yii::t('app/superadmin', 'payments.list.column_memo')?></th>
         <th class="text-nowrap">
             <div class="dropdown">
@@ -63,6 +64,9 @@
                 </td>
                 <td>
                     <?= PriceHelper::prepare($payment->amount) ?>
+                </td>
+                <td>
+                    <?= isset($payment->fee) ? PriceHelper::prepare($payment->fee) : '' ?>
                 </td>
                 <td>
                     <?= $payment->comment ?>

@@ -7,12 +7,13 @@
     use my\helpers\Url;
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
+    use my\modules\superadmin\widgets\SelectCustomer;
 
     $model = new CreateTicketForm();
     $this->context->addModule('superadminSelectCustomerController');
 ?>
 
-<div class="modal fade" id="create-ticket" data-backdrop="static" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+<div class="modal fade" id="create-ticket" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -36,13 +37,11 @@
                 <div class="form-group">
                     <label><?= Yii::t('app/superadmin', 'tickets.create.column_customer') ?> </label>
                     <div>
-                        <select data-action="<?= Url::toRoute(['/customers/ajax-customers']) ?>" id="createticketform-customer_id" class="selectpicker w-100 customers-select" name="CreateTicketForm[customer_id]" data-live-search="true">
-                            <?php foreach ($model->getCustomers() as $customer) : ?>
-                                <option data-tokens="<?= $customer->email ?>" value="<?= $customer->id ?>" <?= ($customer->id == $model->customer_id ? 'selected' : '') ?>>
-                                    <?= $customer->email ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?= SelectCustomer::widget([
+                            'context' => $this->context,
+                            'name' => 'CreateTicketForm[customer_id]',
+                            'selectedCustomerId' => $model->customer_id,
+                        ]) ?>
                     </div>
                 </div>
 

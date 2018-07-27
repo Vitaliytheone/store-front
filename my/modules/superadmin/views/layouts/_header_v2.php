@@ -74,32 +74,23 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
 }
 
 
-$serviceItems = [];
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
-    $serviceItems[] = [
+    $optionsLeft[] = [
         'label' => Yii::t('app/superadmin', 'header.nav.domains'),
         'url' => Url::toRoute('/domains'),
-        'linkOptions' => ['class' => 'dropdown-item'],
+        'options' => ['class' => 'nav-item'],
+        'linkOptions' => ['class' => 'nav-link'],
         'active' => 'domains' == $activeTab
     ];
 
 }
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SSL)) {
-    $serviceItems[] = [
+    $optionsLeft[] = [
         'label' => Yii::t('app/superadmin', 'header.nav.ssl'),
         'url' => Url::toRoute('/ssl'),
-        'linkOptions' => ['class' => 'dropdown-item'],
-        'active' => 'ssl' == $activeTab
-    ];
-}
-
-if (count($serviceItems) > 0) {
-    $optionsLeft[] = [
-        'label' => 'Services',
         'options' => ['class' => 'nav-item'],
         'linkOptions' => ['class' => 'nav-link'],
-        'items' => $serviceItems,
-        'active' => 'ssl' == $activeTab || 'domains' == $activeTab
+        'active' => 'ssl' == $activeTab
     ];
 }
 
@@ -222,7 +213,7 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_TOOLS)) {
         'items' => [
             ['label' => Yii::t('app/superadmin', 'header.nav.levopanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/levopanel')],
             ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/panelfire')],
-            ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/retalpanel')]
+            ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')]
         ]
     ];
 }

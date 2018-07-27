@@ -10,7 +10,7 @@
     $model = new \my\modules\superadmin\models\forms\ChangeStoreDomainForm();
 ?>
 <div class="modal fade" id="changeDomainModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><?= Yii::t('app/superadmin', 'stores.modal.change_domain_modal_header') ?></h5>
@@ -27,21 +27,26 @@
                 'fieldClass' => 'yii\bootstrap\ActiveField',
                 'fieldConfig' => [
                     'template' => "{label}\n{input}",
+                    'options' => ['tag' => false],
                 ],
             ]); ?>
                 <div class="modal-body">
-                    <?= $form->errorSummary($model, [
-                        'id' => 'changeDomainError'
-                    ]); ?>
+                    <div class="form-group">
+                        <?= $form->errorSummary($model, [
+                            'id' => 'changeDomainError'
+                        ]); ?>
 
-                    <?= $form->field($model, 'domain') ?>
-
-                    <?= $form->field($model, 'subdomain')->checkbox() ?>
+                        <?= $form->field($model, 'domain') ?>
+                        <div class="custom-control custom-checkbox mt-2">
+                            <input type="checkbox" id="form-subdomain" class="custom-control-input">
+                            <label class="custom-control-label" for="form-subdomain"><?= $model->getAttributeLabel('subdomain') ?></label>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'stores.btn.modal_close') ?></button>
+                    <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'stores.btn.modal_close') ?></button>
                     <?= Html::submitButton(Yii::t('app/superadmin', 'stores.btn.submit'), [
-                        'class' => 'btn btn-outline btn-primary',
+                        'class' => 'btn btn-primary',
                         'name' => 'change-domain-button',
                         'id' => 'changeDomainButton'
                     ]) ?>

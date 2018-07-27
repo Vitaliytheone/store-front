@@ -2,41 +2,56 @@
     /* @var $this yii\web\View */
     /* @var $panels \my\modules\superadmin\models\search\PanelsSearch */
     /* @var $navs \my\modules\superadmin\models\search\PanelsSearch */
-    /* @var $status */
-    /* @var $plans */
-    /* @var $filters */
+    /* @var $status string*/
+    /* @var $plans array*/
+    /* @var $filters array */
+    /* @var $pageSizes array */
+    /* @var $pageSize  */
+
 
     use my\helpers\Url;
 
     $this->context->addModule('superadminPanelsController');
+    $action = $this->context->activeTab;
 ?>
-<div class="container-fluid mt-3">
-    <ul class="nav mb-3">
+    <ul class="nav mb-3 nav-pills" role="tablist">
         <li class="mr-auto">
             <ul class="nav nav-pills">
                 <?php foreach ($navs as $code => $label) : ?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute($code === 'all' ? '/panels' : ['/panels', 'status' => $code]) ?>"><?= $label ?></a></li>
+                    <li class="nav-item"><a class="nav-link <?= ($code === $status ? 'active' : '') ?>" role="tab" href="<?= Url::toRoute($code === 'all' ? ["/$action", 'page_size' => $pageSize] : ["/$action", 'status' => $code, 'page_size' => $pageSize]) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </li>
-        <li>
-            <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(['/panels'], $filters, ['query' => null]))?>">
+        <li class="ml-auto">
+            <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(array_merge(["/$action"], $filters, ['query' => null, 'page_size' => $pageSize]))?>">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="Search panels" value="<?=$filters['query']?>">
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
-                    </span>
+                    <input type="text" class="form-control" name="query" placeholder="<?= $action == 'panels' ? Yii::t('app/superadmin', 'panels.search') : Yii::t('app/superadmin', 'child_panels.search')?>" value="<?= htmlspecialchars($filters['query'], ENT_QUOTES)?>">
+                    <div class="input-group-append">
+                        <button class="btn btn-light" id="submitSearch" type="button"><span class="fa fa-search" ></span></button>
+                    </div>
                 </div>
             </form>
         </li>
     </ul>
-    <?= $this->render('layouts/_panels_list', [
-        'panels' => $panels,
-        'plans' => $plans,
-        'filters' => $filters
-    ])?>
-</div>
-<?= $this->render('layouts/_downgrade_modal') ?>
-<?= $this->render('layouts/_change_domain_modal') ?>
-<?= $this->render('layouts/_edit_expiry_modal') ?>
-<?= $this->render('layouts/_edit_providers_modal') ?>
+    <div class="tab-content">
+        <?= $this->render('layouts/_panels_list', [
+            'panels' => $panels,
+            'plans' => $plans,
+            'filters' => $filters,
+            'pageSizes' =>  $pageSizes,
+            'pageSize' => $pageSize,
+            'action' => $action
+        ])?>
+    </div>
+
+<?php $this->beginBlock('modals'); ?>
+<?php if ($action == 'panels') : ?>
+    <?= $this->render('layouts/_downgrade_modal') ?>
+<?php else : ?>
+    <?= $this->render('layouts/_upgrade_modal') ?>
+<?php endif; ?>
+<?= $this->render('layouts/_change_domain_modal', ['action' => $action]) ?>
+<?= $this->render('layouts/_edit_expiry_modal', ['action' => $action]) ?>
+<?= $this->render('layouts/_edit_providers_modal', ['action' => $action]) ?>
+<?= $this->render('layouts/_edit_panels_modal', ['action' => $action]) ?>
+<?= $this->endBlock();?>

@@ -13,21 +13,52 @@ use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\AjaxFilter;
+use my\components\SuperAccessControl;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
 
 /**
  * CustomersController for the `superadmin` module
  */
 class CustomersController extends CustomController
 {
+    public $layout = 'superadmin_v2.php';
+
     public $activeTab = 'customers';
 
     public function behaviors()
     {
         return [
-
+            'access' => [
+                'class' => SuperAccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'activate-stores'=> ['POST'],
+                    'change-status'=> ['POST'],
+                    'edit' => ['POST'],
+                    'set-password' => ['POST'],
+                    'activate-domain' => ['POST'],
+                ],
+            ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['ajax-customers']
+                'only' => ['ajax-customers', 'edit', 'set-password']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['edit', 'set-password', 'ajax-customers'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
             ],
         ];
     }
@@ -38,7 +69,7 @@ class CustomersController extends CustomController
      */
     public function actionIndex()
     {
-        $this->view->title = 'Customers';
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.customers');
 
         $customersSearch = new CustomersSearch();
         $customersSearch->setParams(Yii::$app->request->get());
@@ -50,17 +81,20 @@ class CustomersController extends CustomController
             'customers' => $customersSearch->search(),
             'navs' => $customersSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
-            'filters' => $customersSearch->getParams()
+            'filters' => $customersSearch->getParams(),
         ]);
     }
 
     /**
      * Change order status
-     * @param int $id
-     * @param int $status
+     * @return Response
+     * @throws NotFoundHttpException
      */
-    public function actionChangeStatus($id, $status)
+    public function actionChangeStatus()
     {
+        $params = Yii::$app->request;
+        $id = $params->post('id');
+        $status = $params->post('status');
         $order = $this->findModel($id);
 
         $order->changeStatus($status);
@@ -73,13 +107,12 @@ class CustomersController extends CustomController
      *
      * @access public
      * @param int $id
-     * @return mixed
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEdit($id)
     {
         $customer = $this->findModel($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new EditCustomerForm();
         $model->setCustomer($customer);
@@ -100,12 +133,11 @@ class CustomersController extends CustomController
      * Change customer password action
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionSetPassword($id)
     {
         $customer = $this->findModel($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new CustomerPasswordForm();
         $model->setCustomer($customer);
@@ -125,7 +157,7 @@ class CustomersController extends CustomController
     /**
      * Auth uses customer
      * @param int $id
-     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionAuth($id)
     {
@@ -139,57 +171,44 @@ class CustomersController extends CustomController
     }
 
     /**
-     * Enable referral
-     * @param int $id
-     */
-    public function actionEnableReferral($id)
-    {
-        $customer = $this->findModel($id);
-
-        if ($customer->can('enable_referral')) {
-            $customer->referral_status = Customers::REFERRAL_ACTIVE;
-            $customer->save(false);
-        }
-
-        return $this->redirect(Url::toRoute('/customers'));
-    }
-
-    /**
-     * Disable referral
-     * @param int $id
-     */
-    public function actionDisableReferral($id)
-    {
-        $customer = $this->findModel($id);
-
-        if ($customer->can('disable_referral')) {
-            $customer->referral_status = Customers::REFERRAL_NOT_ACTIVE;
-            $customer->save(false);
-        }
-
-        return $this->redirect(Url::toRoute('/customers'));
-    }
-
-    /**
      * Activate stores feature
-     * @param $id
      * @return Response
+     * @throws NotFoundHttpException
      */
-    public function actionActivateStores($id)
+    public function actionActivateStores()
     {
-        $customer = $this->findModel($id);
+        $request = Yii::$app->request;
+
+        $customer = $this->findModel($request->post('id'));
 
         $customer->activateStores();
 
         return $this->redirect(Url::toRoute('/customers'));
     }
 
+    /**
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionActivateDomain()
+    {
+        $request = Yii::$app->request;
 
+        $customer = $this->findModel($request->post('id'));
+
+        $customer->activateDomains();
+
+        return $this->redirect(Url::toRoute('/customers'));
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public function actionAjaxCustomers()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
         $params = Yii::$app->request->get();
-        return CustomersSearch::ajaxSelectSearch($params['email']);
+        $params['status'] = isset($params['status']) ? $params['status'] : Customers::STATUS_ACTIVE;
+        return CustomersSearch::ajaxSelectSearch($params['email'], $params['status']);
     }
 
     /**

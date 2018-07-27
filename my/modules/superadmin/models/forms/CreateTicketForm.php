@@ -35,6 +35,10 @@ class CreateTicketForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     * @throws \yii\db\Exception
+     */
     public function save()
     {
         if (!$this->validate()) {
@@ -92,16 +96,5 @@ class CreateTicketForm extends Model
     public function setUser($user)
     {
         $this->_user = $user;
-    }
-
-    /**
-     * Get active customers
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getCustomers()
-    {
-        return Customers::find()->andWhere([
-            'status' => Customers::STATUS_ACTIVE
-        ])->limit(10)->all();
     }
 }

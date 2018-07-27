@@ -50,6 +50,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $type
  * @property string $lang
  * @property integer $currency
+ * @property string $currency_code
  * @property integer $seo
  * @property integer $comments
  * @property integer $mentions
@@ -89,6 +90,7 @@ use yii\helpers\ArrayHelper;
  * @property string $notification_email
  * @property int $forgot_password
  * @property int $no_invoice
+ * @property int $no_referral
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -146,13 +148,14 @@ class Project extends ActiveRecord implements ProjectInterface
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
                 'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password',
-                'name_fields', 'name_modal', 'no_invoice'
+                'name_fields', 'name_modal', 'no_invoice', 'no_referral'
             ], 'integer'],
             [['site', 'name', 'skype'], 'string', 'max' => 1000],
             [['theme_custom', 'theme_default', 'db', 'logo', 'favicon', 'notification_email'], 'string', 'max' => 300],
             [['theme_path'], 'string', 'max' => 500],
             [['apikey'], 'string', 'max' => 64],
             [['lang'], 'string', 'max' => 32],
+            [['currency_code'], 'string', 'max' => 3],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
@@ -233,6 +236,8 @@ class Project extends ActiveRecord implements ProjectInterface
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
             'no_invoice' => Yii::t('app', 'No Invoice'),
+            'currency_code' => Yii::t('app', 'Currency code'),
+            'no_referral' => Yii::t('app', 'No Referral'),
         ];
     }
 
@@ -396,6 +401,23 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->expired = ExpiryHelper::month($time);
 
         return $this->save(false);
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        if (!$this->currency_code) {
+            $this->currency_code = CurrencyHelper::getCurrencyCodeById($this->currency);
+        }
+
+        return true;
     }
 
     public function behaviors()

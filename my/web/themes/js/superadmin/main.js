@@ -65,9 +65,10 @@
 /************************************************************************/
 /******/ ([
     /* 0 */
+
     /***/ (function(module, exports) {
 
-        eval("$('[data-toggle=\"tooltip\"]').tooltip();\n$('[data-toggle=\"popover\"]').popover({html: true});\n\n$('#datetimepicker1').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});\n$(document).on('click', '.table-ticket .dropdown-menu', function (e) {\n    e.stopPropagation();\n});\n$(document).ready(function () {\n    if($('.selectpicker').length) {\n        $('.selectpicker').selectpicker();\n    }\n});\n\n\n//////////////////\n// WEBPACK FOOTER\n// ./app/js/main.js\n// module id = 0\n// module chunks = 0\n\n//# sourceURL=webpack:///./app/js/main.js?");
+        eval("$('[data-toggle=\"tooltip\"]').tooltip();\n$('[data-toggle=\"popover\"]').popover({html: true});\n\n\n$('#datetimepicker1').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});\n$(document).on('click', '.table-ticket .dropdown-menu', function (e) {\n    e.stopPropagation();\n});\n\nconst mobileCollapse = function () {\n    const screenWidth = $(window).width();\n    if(screenWidth < 768){\n        $('.ticket-info__block-header').addClass('collapsed');\n        $('.ticket-info__block').removeClass('show');\n    }\n};\n\n$( window ).resize(function() {\n    mobileCollapse();\n});\n\n\n//////////////////\n// WEBPACK FOOTER\n// ./app/js/main.js\n// module id = 0\n// module chunks = 0\n\n//# sourceURL=webpack:///./app/js/main.js?");
 
         /***/ })
     /******/ ]);

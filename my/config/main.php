@@ -163,6 +163,9 @@ $config = [
                 'yii\bootstrap\BootstrapAsset' => [
                     'css' => [],
                 ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js' => [],
+                ],
                 'yii\web\JqueryAsset' => [
                     'js' => []
                 ],

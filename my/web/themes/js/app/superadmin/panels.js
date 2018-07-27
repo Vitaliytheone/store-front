@@ -1,17 +1,23 @@
 customModule.superadminPanelsController = {
     run : function(params) {
-        $('#panelsSearch').on('submit', function(e) {
+
+        $('#search-providers').on('keyup', function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                $('#modal-search-providers').click();
+            }
+        });
+
+        $('#submitSearch').on('click', function(e) {
             e.preventDefault();
 
             var form = $('#panelsSearch');
             var link = form.attr('action');
-
             window.location.href = link + (link.match(/\?/) ? '&' : '?') + form.serialize();
         });
 
         $('.change-domain').click(function(e) {
             e.preventDefault();
-
             var link = $(this);
             var action = link.attr('href');
             var form = $('#changeDomainForm');
@@ -27,9 +33,7 @@ customModule.superadminPanelsController = {
 
             $('#changedomainform-domain', form).val(domain);
             $('#changedomainform-subdomain', form).prop('checked', subdomain);
-
             modal.modal('show');
-
             return false;
         });
 
@@ -68,9 +72,8 @@ customModule.superadminPanelsController = {
             var expired = link.data('expired');
 
             $('#editexpiryform-expired').val(expired);
-
+            $('#editexpiry').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
             modal.modal('show');
-
             return false;
         });
 
@@ -92,11 +95,15 @@ customModule.superadminPanelsController = {
 
         $('.edit-providers').click(function(e) {
             e.preventDefault();
-
             var link = $(this);
             var action = link.attr('href');
+            modal = $('#editProvidersModal');
+            searchFilter = false;
+            $('#show-selected-checkbox').prop('checked', false);
+            $('#perfect-panel-checkbox').prop('checked', false);
+            $('#search-providers').val('');
+
             var form = $('#editProvidersForm');
-            var modal = $('#editProvidersModal');
             var errorBlock = $('#editProvidersError', form);
 
             form.attr('action', action);
@@ -113,8 +120,136 @@ customModule.superadminPanelsController = {
                     $('input[value="' + value + '"]', form).prop('checked', true);
                 });
             }
-
             modal.modal('show');
+            return false;
+        });
+
+
+        $('.edit-panels').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var form = $('#edit-panel-form');
+            var errorBlock = $('#edit-panel-error', form);
+            var modal = $('#editPanelsModal');
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $('input[type="checkbox"]', form).prop('checked', false);
+
+            var panel = link.data('panels');
+            setForm(panel);
+            modal.modal('show');
+            return false;
+        });
+
+        function setForm(panel) {
+            if (!panel) {
+                return;
+            }
+            var form = $('#edit-panel-form');
+            var inputs = form.data('inputs');
+            var checkboxes =  inputs['checkboxes'];
+
+            for (var prop in checkboxes) {
+                var value = 1;
+                if (checkboxes[prop] == 'captcha') {
+                   value = 0;
+                }
+                if (panel[checkboxes[prop]] == value) {
+                    $('#form-' + checkboxes[prop]).prop('checked', true);
+                }
+            }
+            var textInputs =  inputs['textInputs'];
+            for (var prop in textInputs) {
+                $('#editprojectform-' + textInputs[prop]).val(panel[textInputs[prop]]);
+            }
+            var dropdowns =  inputs['dropdowns'];
+
+            for (var prop in dropdowns) {
+                $('#editprojectform-' + dropdowns[prop]).val(panel[dropdowns[prop]]);
+            }
+
+            $('.selectpicker.customers-select').trigger('customers:add', {
+                'id': panel['cid'] ,
+                'email': panel['customer_email']
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        }
+
+        new Clipboard('.copy', {
+            container: document.getElementById('#editPanelsModal')
+        });
+
+        $('#generate-api-key').click(function(e){
+            e.preventDefault();
+            var input = $('#editprojectform-apikey');
+            $.ajax({
+                url: input.data('action'),
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    input.val(data['key']);
+                }
+            });
+        });
+
+        $('#show-selected-checkbox, #perfect-panel-checkbox').change(function(e){
+            filterProviders();
+        });
+        $('#modal-search-providers').click(function(e){
+            searchFilter = true;
+            filterProviders();
+        });
+
+
+        var searchFilter = false;
+
+        function filterProviders()
+        {
+            var showSelected = $('#show-selected-checkbox').prop('checked');
+            var showInternal = $('#perfect-panel-checkbox').prop('checked');
+            var searchInput = $('#search-providers').val();
+            if (!searchInput) {
+                searchFilter = false;
+            }
+            $('.providers-filter-result .custom-checkbox').each(function (index, el) {
+                var item = $(el);
+                var checkbox = item.find('input[type ="checkbox"]');
+                var filter = true;
+                if (showSelected && !checkbox.prop('checked'))  {
+                    filter = false;
+                }
+                if (showInternal && !item.find('.fa-check-circle-o').length)  {
+                    filter = false;
+                }
+                if (searchFilter && item.find('.custom-control-label').text().search(searchInput) < 0) {
+                    filter = false;
+                }
+                if (filter) {
+                    item.show();
+                } else {
+                    item.hide();
+                }
+
+            });
+        }
+
+        $('#editprojectform-save').click(function(e){
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#edit-panel-form');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    location.reload();
+                }
+            });
 
             return false;
         });
@@ -164,10 +299,8 @@ customModule.superadminPanelsController = {
                             .attr("value", key)
                             .text(value));
                 });
-
-                modal.modal('show');
             });
-
+            modal.modal('show');
             return false;
         });
 
@@ -176,14 +309,33 @@ customModule.superadminPanelsController = {
             var btn = $(this);
             var form = $('#downgradePanelForm');
 
-            custom.sendFrom(btn, form, {
-                data: form.serialize(),
-                callback : function(response) {
-                    $('#downgradePanelModal').modal('hide');
-                    location.reload();
-                }
-            });
+            $('#downgradePanelModal').modal('hide');
 
+            custom.confirm(btn.data('title'), '', function() {
+                custom.sendFrom(btn, form, {
+                    data: form.serialize(),
+                    callback : function(response) {
+                        $('#downgradePanelModal').modal('hide');
+                        location.reload();
+                    },
+                    errorCallback : function() {
+                        $('#downgradePanelModal').modal('show');
+                    }
+                });
+            });
+        });
+
+        $('.panels-change-status').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            custom.confirm(link.data('title'), '', function() {
+                $.ajax({
+                    url: link.attr('href'),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: link.data('params')
+                });
+            });
             return false;
         });
 
@@ -206,9 +358,7 @@ customModule.superadminPanelsController = {
 
             errorBlock.addClass('hidden');
             errorBlock.html('');
-
             modal.modal('show');
-
             return false;
         });
 

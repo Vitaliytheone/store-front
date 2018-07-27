@@ -87,6 +87,7 @@ php yii worker/start > /dev/null 2>&1 & - запуск воркера в фон�
 	php yii cron-my/terminate-panel
 	php yii cron-my/freeze-panel
 	php yii cron-my/refund-payments
+	php yii cron-my/payments-fee
 
 ####Panel-Scanners
 	php yii	panel-scanner-my/scan-new {levopanel|smmfire}

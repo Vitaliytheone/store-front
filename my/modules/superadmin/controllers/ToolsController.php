@@ -54,7 +54,7 @@ class ToolsController extends CustomController
      * @param null $status
      * @return string
      */
-    public function actionRetalpanel($status = null)
+    public function actionRentalpanel($status = null)
     {
         $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.rentalpanel');
         $this->addModule('superadminToolsControllerLevopanelAction');

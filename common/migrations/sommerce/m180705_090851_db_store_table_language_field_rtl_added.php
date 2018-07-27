@@ -45,14 +45,13 @@ class m180705_090851_db_store_table_language_field_rtl_added extends Migration
     public function up()
     {
         foreach ($this->databases as $db) {
-
             // Add rtl field
             $this->execute("
                 ALTER TABLE  `{$db}`.`languages` ADD `rtl` TINYINT(1)  NOT NULL  AFTER `code`;
             ");
 
             // Update rtl for each store languages
-            $storeLanguages = \common\models\store\Languages::find()
+            $storeLanguages = (new \yii\db\Query())
                 ->select('code')
                 ->from("`{$db}`.`languages`")
                 ->column();

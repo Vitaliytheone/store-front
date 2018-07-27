@@ -10,9 +10,10 @@ class SuperAdminV2Asset extends AssetBundle
 
     public $css = [
         'themes/css/font-awesome.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css',
+        'https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
         'themes/css/superadmin/style.css',
         'themes/css/superadmin/superadminV2.css',
-        'https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css'
     ];
 
     public $js = [
@@ -29,6 +30,8 @@ class SuperAdminV2Asset extends AssetBundle
 
     public $depends = [
         'my\assets\YiiAsset',
-        'my\assets\UnderscoreAsset'
+        'my\assets\UnderscoreAsset',
+        'my\assets\ClipboardAsset',
+        'my\assets\DatetimepickerAssets'
     ];
 }

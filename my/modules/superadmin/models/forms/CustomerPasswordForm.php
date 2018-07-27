@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\Customers;
 use yii\base\Model;
+use Yii;
 
 /**
  * Class CustomerPasswordForm
@@ -23,6 +24,8 @@ class CustomerPasswordForm extends Model
     public function rules()
     {
         return [
+            ['password', 'trim'],
+            ['password', 'string', 'min' => 6],
             [['password'], 'required'],
         ];
     }
@@ -62,7 +65,7 @@ class CustomerPasswordForm extends Model
     public function attributeLabels()
     {
         return [
-            'password' => 'Password'
+            'password' => Yii::t('app/superadmin', 'customers.set_password.password_label'),
         ];
     }
 }

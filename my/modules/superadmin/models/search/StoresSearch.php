@@ -1,13 +1,11 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
-use common\helpers\CurrencyHelper;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use Yii;
 use yii\data\Pagination;
-use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -22,7 +20,7 @@ class StoresSearch {
     /** Store trial mode key name */
     const TRIAL_MODE_KEY = 'trial';
 
-    protected $pageSize = 100;
+    public static $pageSizeList = [100, 500, 1000, 5000, 'all'];
 
     /**
      * @var array
@@ -38,9 +36,19 @@ class StoresSearch {
     public function getParams()
     {
         return [
-            'query' => $this->getQuery(),
+            'query' => quotemeta($this->getQuery()),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all',
         ];
+    }
+
+    /**
+     * Set value of page size
+     * @return int|string
+     */
+    public function setPageSize()
+    {
+        $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
+        return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
     }
 
     /**
@@ -109,10 +117,13 @@ class StoresSearch {
             'stores.subdomain',
             'stores.currency',
             'stores.language',
+            'stores.name',
             'stores.customer_id',
             'stores.status',
             'stores.created_at',
             'stores.expired',
+            'stores.last_count',
+            'stores.current_count',
             'customers.email AS customer_email',
             'customers.referrer_id AS referrer_id',
             'store_domains.domain AS store_domain',
@@ -132,15 +143,13 @@ class StoresSearch {
      */
     public function search()
     {
-        $this->setCountsByStatus();
-
         $status = isset($this->params['status']) ? $this->params['status'] : 'all';
 
         $query = clone $this->buildQuery($status);
 
-        $pages = new Pagination(['totalCount' => $this->getCountByStatus($status)]);
-        $pages->setPageSize($this->pageSize);
-        $pages->defaultPageSize = $this->pageSize;
+        $pages = new Pagination(['totalCount' => $query->count()]);
+        $pages->setPageSize($this->setPageSize());
+        $pages->defaultPageSize = static::$pageSizeList[0];
 
         if (!empty($this->params['pageSize'])) {
             $pages->setPageSize($this->params['pageSize']);
@@ -190,6 +199,9 @@ class StoresSearch {
                 'customer_email' => $store['customer_email'],
                 'referrer_id' => $store['referrer_id'],
                 'store_domain' => $store['store_domain'],
+                'last_count' => $store['last_count'],
+                'current_count' => $store['current_count'],
+                'name' => $store['name'],
             ];
         }
 
@@ -202,84 +214,22 @@ class StoresSearch {
      */
     public function navs()
     {
-        $countsByStatus = $this->getCountsByStatuses();
-
         return [
             'all' => Yii::t('app/superadmin', 'stores.list.navs_all', [
-                'count' => array_sum($countsByStatus)
+                'count' => $this->buildQuery()->count()
             ]),
             Stores::STATUS_ACTIVE => Yii::t('app/superadmin', 'stores.list.navs_active', [
-                'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_ACTIVE, 0)
+                'count' => $this->buildQuery(Stores::STATUS_ACTIVE)->count()
             ]),
             self::TRIAL_MODE_KEY => Yii::t('app/superadmin', 'stores.list.navs_trial', [
-                'count' => ArrayHelper::getValue($countsByStatus, self::TRIAL_MODE_KEY, 0)
+                'count' => $this->buildQuery(self::TRIAL_MODE_KEY)->count()
             ]),
             Stores::STATUS_FROZEN => Yii::t('app/superadmin', 'stores.list.navs_frozen', [
-                'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_FROZEN, 0)
+                'count' => $this->buildQuery(Stores::STATUS_FROZEN)->count()
             ]),
             Stores::STATUS_TERMINATED => Yii::t('app/superadmin', 'stores.list.navs_terminated', [
-                'count' => ArrayHelper::getValue($countsByStatus, Stores::STATUS_TERMINATED, 0)
+                'count' => $this->buildQuery(Stores::STATUS_TERMINATED)->count()
             ]),
         ];
-    }
-
-    /**
-     * Return topics count for status or all
-     * @param null $status
-     * @return float|int|mixed
-     */
-    public function getCountByStatus($status = null)
-    {
-        if ($status === null || $status === 'all') {
-            return array_sum($this->_counts_by_status);
-        }
-
-        return ArrayHelper::getValue($this->_counts_by_status, $status);
-    }
-
-    /**
-     * Return cached counted tickets for statuses
-     * considering search query string
-     * @return array
-     */
-    public function setCountsByStatus()
-    {
-        $query = clone $this->buildQuery(null);
-
-        $stores = $query
-            ->select(['id' => 'stores.id', 'status' => 'stores.status', 'trial' => 'stores.trial'])
-            ->groupBy('id')
-            ->all();
-
-        $this->_counts_by_status = [
-            Stores::STATUS_ACTIVE => count(array_filter($stores, function($store){
-                return
-                    $store['status'] == Stores::STATUS_ACTIVE &&
-                    $store['trial'] == Stores::TRIAL_MODE_OFF;
-            })),
-            Stores::STATUS_FROZEN => count(array_filter($stores, function($store){
-                return $store['status'] == Stores::STATUS_FROZEN;
-            })),
-            Stores::STATUS_TERMINATED => count(array_filter($stores, function($store){
-                return $store['status'] == Stores::STATUS_TERMINATED;
-            })),
-
-            self::TRIAL_MODE_KEY => count(array_filter($stores, function($store){
-                return
-                    $store['status'] == Stores::STATUS_ACTIVE &&
-                    $store['trial'] == Stores::TRIAL_MODE_ON;
-            })),
-        ];
-
-        return $this->_counts_by_status;
-    }
-
-    /**
-     * Return topics counts for each status
-     * @return array
-     */
-    public function getCountsByStatuses()
-    {
-        return $this->_counts_by_status;
     }
 }

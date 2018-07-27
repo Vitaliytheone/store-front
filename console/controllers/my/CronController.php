@@ -15,7 +15,8 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
-use my\components\Paypal;
+use console\components\payments\PaymentsFee;
+use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
@@ -343,6 +344,7 @@ class CronController extends CustomController
                     ];
                     $paymentsLogModel->save(false);
 
+                    $payment->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
                     $amount = ArrayHelper::getValue($GetTransactionDetails, 'AMT');
                     $currency = ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE');
                     $status = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS');
@@ -420,5 +422,15 @@ class CronController extends CustomController
     public function actionRefundPayments()
     {
         PaymentsHelper::refundPaypalVerifyExpiredPayments();
+    }
+
+    /**
+     * Add fee to all payments by 2 days
+     */
+    public function actionPaymentsFee()
+    {
+        Yii::$container->get(PaymentsFee::class, [
+            Yii::$app->params['cron.check_payments_fee_days'], // days
+        ])->run();
     }
 }
