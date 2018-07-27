@@ -97,15 +97,4 @@ class CreateTicketForm extends Model
     {
         $this->_user = $user;
     }
-
-    /**
-     * Get active customers
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getCustomers()
-    {
-        return Customers::find()->andWhere([
-            'status' => Customers::STATUS_ACTIVE
-        ])->limit(10)->all();
-    }
 }

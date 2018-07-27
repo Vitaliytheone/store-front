@@ -19,9 +19,9 @@ class SelectCustomer extends Widget
     public function run()
     {
         $query  = Customers::find();
-        if ($this->status != null) {
+        if ($this->status == null) {
             $query->where([
-                'status' => $this->status
+                'status' => Customers::STATUS_ACTIVE
             ]);
         }
 
