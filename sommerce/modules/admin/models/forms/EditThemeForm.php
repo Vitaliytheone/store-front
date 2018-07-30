@@ -49,6 +49,7 @@ class EditThemeForm extends Model
         ],
         'JS' => [],
         'CSS' => [],
+        'Settings' => [],
     ];
 
     /** @var   */
@@ -206,6 +207,10 @@ class EditThemeForm extends Model
             }
             if ($extension === 'css') {
                 $this->_filesTree['CSS'][] = $fileName;
+            }
+
+            if ($fileName === 'data.json' || $fileName === 'settings.json') {
+                $this->_filesTree['Settings'][] = $fileName;
             }
         }
 

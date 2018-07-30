@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use sommerce\modules\admin\components\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
+use sommerce\modules\admin\models\forms\EditThemeForm;
 
 trait ThemesCustomizerTrait
 {
@@ -35,52 +36,47 @@ trait ThemesCustomizerTrait
 
     public function actionThemeGetStyle($theme)
     {
-        $resource = 'custom.css';
-        $dir= Yii::getAlias('@defaultThemes/' . $theme);
-        if (!is_dir($dir)) {
-            $file = Yii::getAlias('@customThemes/' . $theme);
-            if (!is_dir($file)) {
-               throw new NotFoundHttpException();
-            }
+        $request = Yii::$app->getRequest();
+        if (!$request->isAjax) {
+            throw new BadRequestHttpException();
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-        $content = file_get_contents($dir .  '/' . $resource);
-        if (!$content) {
-            throw new NotFoundHttpException();
-        }
-        return $content;
+        $editStyleForm = EditThemeForm::make($theme, "template.css");
+        return $editStyleForm->fetchFileContent();
     }
 
     public function actionThemeUpdateStyle($theme)
     {
-        $request = Yii::$app->request;
+        $request = Yii::$app->getRequest();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (!$request->isAjax || !$request->isPost) {
-            throw new BadRequestHttpException('Ajax request expected!');
+        if (!$request->isAjax) {
+            throw new BadRequestHttpException();
         }
+
+        $editStyleForm = EditThemeForm::make($theme, "style.css");
+        $editTemplateForm = EditThemeForm::make($theme, "template.css");
+        $editDataForm = EditThemeForm::make($theme, "data.json");
+        $editDataForm->setUser(Yii::$app->user);
         $data = $request->post();
-        $resource = 'custom.css.template';
-        $dir= Yii::getAlias('@defaultThemes/' . $theme);
-        if (!is_dir($dir)) {
-            $file = Yii::getAlias('@customThemes/' . $theme);
-            if (!is_dir($file)) {
-                throw new NotFoundHttpException();
-            }
+        $params = [
+            'file_content' =>  stripslashes(
+                json_encode(['data' => $data], JSON_PRETTY_PRINT)
+            )
+        ];
+        if (!$modifiedAt = $editDataForm->updateThemeFile($params, false)) {
+            throw new BadRequestHttpException();
         }
-        $content = file_get_contents($dir .  '/' . $resource);
+        $editStyleForm->setUser(Yii::$app->user);
+        if (!$editStyleForm) {
+            throw new NotFoundHttpException();
+        }
+        $content = $editTemplateForm->fetchFileContent();
         foreach ($data as $key => $value) {
             $content = str_replace('{{ settings.' . $key . ' }}',  $value, $content);
         }
-        $path = $dir .  '/style.css';
-
-        if (!file_put_contents($path, $content)) {
-           return false;
-        }
-        $path = $dir .  '/data.json';
-        $dataContent = JSON::encode(['data' => $data]);
-        if (!file_put_contents($path, $dataContent)) {
-            return false;
+        if (!$modifiedAt = $editStyleForm->updateThemeFile(['file_content' => $content], false)) {
+            throw new BadRequestHttpException();
         }
         return [
             "success" => true,
@@ -90,27 +86,23 @@ trait ThemesCustomizerTrait
 
     public function actionThemeGetData($theme)
     {
-        $data = 'data.json';
-        $settings = 'settings.json';
-
-        $dir= Yii::getAlias('@defaultThemes/' . $theme);
-        if (!is_dir($dir)) {
-            $file = Yii::getAlias('@customThemes/' . $theme);
-            if (!is_dir($file)) {
-                throw new NotFoundHttpException();
-            }
+        $request = Yii::$app->getRequest();
+        if (!$request->isAjax) {
+            throw new BadRequestHttpException();
         }
-
         Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $editDataForm = EditThemeForm::make($theme, "data.json");
+        $editSettingsForm = EditThemeForm::make($theme, "settings.json");
+        $contentData = $editDataForm->fetchFileContent();
 
-        $contentData = file_get_contents($dir .  '/' . $data);
-        $contentSettings = file_get_contents($dir .  '/' . $settings);
+        $contentSettings = $editSettingsForm->fetchFileContent();
 
         $result = array_merge(JSON::decode($contentSettings, true), JSON::decode($contentData, true));
 
         if (!$contentData || !$contentSettings) {
             throw new NotFoundHttpException();
         }
+
         return JSON::encode($result);
     }
 }
