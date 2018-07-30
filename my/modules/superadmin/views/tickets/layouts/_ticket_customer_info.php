@@ -138,11 +138,11 @@ use common\models\panels\Project;
                     ?>
                     <tr>
                         <td>
-                            <?= Html::a($item->domain, Url::toRoute(['/stores', 'id' => $item->id]), ['target' => '_blank'])?>
+                            <?= Html::a($item->getDomain(), Url::toRoute(['/stores', 'id' => $item->id]), ['target' => '_blank'])?>
                             <?php if (Stores::STATUS_ACTIVE != $item->status) : ?>
                                 <span class="badge badge-primary"><?= Stores::getStatuses()[$item->status] ?></span>
                             <?php endif; ?>
-                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->domain ?>" target="_blank">
+                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getDomain() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
@@ -172,7 +172,7 @@ use common\models\panels\Project;
                     ?>
                     <tr>
                         <td>
-                            <?= Html::a($item->site, Url::toRoute(['/panels', 'id' => $item['id']]), ['target' => '_blank'])?>
+                            <?= Html::a($item->getSite(), Url::toRoute(['/panels', 'id' => $item['id']]), ['target' => '_blank'])?>
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
@@ -206,7 +206,7 @@ use common\models\panels\Project;
 
                     <tr>
                         <td>
-                            <?= Html::a($item->site, Url::toRoute(['/child-panels/', 'id' => $item['id']]), ['target' => '_blank'])?>
+                            <?= Html::a($item->getSite(), Url::toRoute(['/child-panels/', 'id' => $item['id']]), ['target' => '_blank'])?>
                             <?php if (Project::STATUS_ACTIVE != $item->act) : ?>
                                 <span class="badge badge-primary"><?= Project::getStatuses()[$item->act] ?></span>
                             <?php endif; ?>
@@ -237,7 +237,7 @@ use common\models\panels\Project;
                 <?php foreach ($domains as $domain) : ?>
                     <tr>
                         <td>
-                            <?= Html::a($domain->domain, Url::toRoute(['/domains', 'id' => $domain->id]),['target' => '_blank'])?>
+                            <?= Html::a($domain->getDomain(), Url::toRoute(['/domains', 'id' => $domain->id]),['target' => '_blank'])?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -257,7 +257,7 @@ use common\models\panels\Project;
                 <?php foreach ($ssl as $item) : ?>
                     <tr>
                         <td>
-                            <?= Html::a($item->domain, Url::toRoute(['/ssl', 'id' => $item->id]),['target' => '_blank'])?>
+                            <?= Html::a($item->getDomain(), Url::toRoute(['/ssl', 'id' => $item->id]),['target' => '_blank'])?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
