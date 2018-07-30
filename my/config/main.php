@@ -29,15 +29,9 @@ $config = [
         ],
         'mailerSwift' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // раскомментировать если использовать smtp отправку и наоборот
             'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => $params['swift.host'], //вставляем имя или адрес почтового сервера
-                'username' => $params['swift.username'],
-                'password' => $params['swift.password'],
-                'port' => $params['swift.port'],
+                'class' => 'Swift_MailTransport',
             ],
-            'viewPath' => '@my/mail/views',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
