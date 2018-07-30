@@ -26,6 +26,7 @@ class SuperAdminAsset extends AssetBundle
         'my\assets\UnderscoreAsset',
         'my\assets\BootstrapSelectAsset',
         'my\assets\ClipboardAsset',
-        'my\assets\TableSortAsset'
+        'my\assets\TableSortAsset',
+        'my\assets\DatetimepickerAssets'
     ];
 }
