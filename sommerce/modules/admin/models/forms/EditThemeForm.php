@@ -14,6 +14,7 @@ use yii\base\Exception;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\web\User;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class EditThemeForm
@@ -49,7 +50,7 @@ class EditThemeForm extends Model
         ],
         'JS' => [],
         'CSS' => [],
-        'Settings' => [],
+        'configs' => [],
     ];
 
     /** @var   */
@@ -97,6 +98,38 @@ class EditThemeForm extends Model
     public function getUser()
     {
         return $this->_user;
+    }
+
+
+    /**
+     * @param $themeEditFileName
+     * @return bool
+     * @throws NotFoundHttpException
+     */
+    public function setFile($themeEditFileName)
+    {
+        if (!$this->_theme_model) {
+            return false;
+        }
+        $fileName = ltrim(str_replace('../', '', $themeEditFileName), '/');
+
+        /** Check is filename is allowed */
+        if (strpos(json_encode($this->getFilesTree()), $fileName) === false) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->_file = $fileName;
+
+        /**
+         * For Custom theme — save file to theme path
+         * For Default theme — save file to custom themes path
+         */
+        if ($this->_theme_model::getThemeType() === $this->_theme_model::THEME_TYPE_CUSTOM) {
+            $this->_path_to_file = $this->_theme_model->getThemePath() . '/' . $this->_file;
+        } else {
+            $this->_path_to_file = $this->_theme_model->getSaveToPath() . '/' . $this->_file;
+        }
+        return true;
     }
 
     /**
@@ -210,7 +243,7 @@ class EditThemeForm extends Model
             }
 
             if ($fileName === 'data.json' || $fileName === 'settings.json') {
-                $this->_filesTree['Settings'][] = $fileName;
+                $this->_filesTree['configs'][] = $fileName;
             }
         }
 

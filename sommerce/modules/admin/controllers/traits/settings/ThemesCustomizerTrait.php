@@ -54,8 +54,6 @@ trait ThemesCustomizerTrait
             throw new BadRequestHttpException();
         }
 
-        $editStyleForm = EditThemeForm::make($theme, "style.css");
-        $editTemplateForm = EditThemeForm::make($theme, "template.css");
         $editDataForm = EditThemeForm::make($theme, "data.json");
         $editDataForm->setUser(Yii::$app->user);
         $data = $request->post();
@@ -67,15 +65,14 @@ trait ThemesCustomizerTrait
         if (!$modifiedAt = $editDataForm->updateThemeFile($params, false)) {
             throw new BadRequestHttpException();
         }
-        $editStyleForm->setUser(Yii::$app->user);
-        if (!$editStyleForm) {
-            throw new NotFoundHttpException();
-        }
-        $content = $editTemplateForm->fetchFileContent();
+
+        $editDataForm->setFile('template.css');
+        $content = $editDataForm->fetchFileContent();
         foreach ($data as $key => $value) {
             $content = str_replace('{{ settings.' . $key . ' }}',  $value, $content);
         }
-        if (!$modifiedAt = $editStyleForm->updateThemeFile(['file_content' => $content], false)) {
+        $editDataForm->setFile('style.css');
+        if (!$modifiedAt = $editDataForm->updateThemeFile(['file_content' => $content], false)) {
             throw new BadRequestHttpException();
         }
         return [
@@ -92,13 +89,10 @@ trait ThemesCustomizerTrait
         }
         Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
         $editDataForm = EditThemeForm::make($theme, "data.json");
-        $editSettingsForm = EditThemeForm::make($theme, "settings.json");
         $contentData = $editDataForm->fetchFileContent();
-
-        $contentSettings = $editSettingsForm->fetchFileContent();
-
+        $editDataForm->setFile('settings.json');
+        $contentSettings = $editDataForm->fetchFileContent();
         $result = array_merge(JSON::decode($contentSettings, true), JSON::decode($contentData, true));
-
         if (!$contentData || !$contentSettings) {
             throw new NotFoundHttpException();
         }
