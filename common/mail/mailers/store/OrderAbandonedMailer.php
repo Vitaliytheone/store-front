@@ -55,7 +55,7 @@ class OrderAbandonedMailer extends BaseNotificationMailer {
          */
         foreach ($checkoutDetails as $checkoutItem) {
             $data[] = [
-                'title' => $checkoutItem['link'],
+                'title' => htmlspecialchars($checkoutItem['link']),
                 'quantity' => $checkoutItem['quantity'],
                 'price' => $checkoutItem['price'],
             ];

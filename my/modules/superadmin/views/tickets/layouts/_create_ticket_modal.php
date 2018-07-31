@@ -38,7 +38,6 @@
                     <label><?= Yii::t('app/superadmin', 'tickets.create.column_customer') ?> </label>
                     <div>
                         <?= SelectCustomer::widget([
-                            'models' => $model->getCustomers(),
                             'context' => $this->context,
                             'name' => 'CreateTicketForm[customer_id]',
                             'selectedCustomerId' => $model->customer_id,

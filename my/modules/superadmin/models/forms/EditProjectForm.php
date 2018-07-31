@@ -371,17 +371,13 @@ class EditProjectForm extends Model {
      * @param int|null $limit
      * @return array|Customers[]
      */
-    public function getCustomers($limit = null)
+    public function getCustomers()
     {
         if (null !== $this->_customers) {
            return $this->_customers;
         }
 
         $query = Customers::find();
-
-        if ($limit) {
-            $query->limit($limit);
-        }
 
         $this->_customers = ArrayHelper::index($query->all(), 'id');
 

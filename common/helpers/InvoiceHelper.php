@@ -246,11 +246,11 @@ class InvoiceHelper
             $order->cid = $ssl->cid;
             $order->item = Orders::ITEM_PROLONGATION_SSL;
             $order->item_id = $ssl->id;
-            $order->domain = $ssl->getDomain();
+            $order->domain = $ssl->domain;
             $order->setDetails([
                 'pid' => $ssl->pid,
                 'project_type' => $project::getProjectType(),
-                'domain' => $ssl->getDomain(),
+                'domain' => $ssl->domain,
                 'item_id' => $ssl->item_id,
                 'details' => $ssl->getAttributes(),
             ]);

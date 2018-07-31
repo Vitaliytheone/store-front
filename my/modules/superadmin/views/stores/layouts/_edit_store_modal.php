@@ -40,7 +40,6 @@
                     <label><?= $model->getAttributeLabel('customer_id') ?></label>
                     <div>
                         <?= SelectCustomer::widget([
-                                'models' => $model->getCustomers(),
                                 'context' => $this->context,
                                 'name' => 'EditStoreForm[customer_id]',
                                 'selectedCustomerId' => $model->customer_id,

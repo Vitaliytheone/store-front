@@ -5,9 +5,11 @@ use yii\helpers\Html;
 /* @var $form \my\components\ActiveForm */
 /* @var $model yii\base\Model */
 /* @var $attribute string */
+/* @var $format string */
+
 ?>
 
-<div class="input-group date" id="datetimepicker" data-target-input="nearest">
+<div class="input-group date" id="datetimepicker"  data-target-input="nearest" data-format="<?= $format ?>">
     <?= Html::activeInput('text', $model, $attribute, [
         'class' => 'form-control datetimepicker-input',
         'data-target' => '#datetimepicker',
