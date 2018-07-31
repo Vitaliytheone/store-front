@@ -86,6 +86,7 @@ return [
     '92' => 'Edit payment',
     '93' => 'Open unread ticket',
     '94' => 'Delete ticket',
+    '95' => 'View provider list',
 
 //    '' => 'Add custom rates',
 //    '' => 'Reset all custom rates',

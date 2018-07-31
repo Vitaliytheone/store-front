@@ -4,6 +4,7 @@ namespace my\modules\superadmin\models\search;
 use common\helpers\CurrencyHelper;
 use common\models\panels\Customers;
 use my\helpers\DomainsHelper;
+use my\helpers\SpecialCharsHelper;
 use Yii;
 use common\models\panels\Project;
 use common\models\panels\Tariff;

@@ -9,6 +9,7 @@
     use common\models\panels\Orders;
     use my\helpers\Url;
     use yii\widgets\LinkPager;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border">
     <thead>
@@ -34,7 +35,7 @@
     </thead>
     <tbody>
         <?php if (!empty($orders['models'])) : ?>
-            <?php foreach ($orders['models'] as $order) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($orders['models']) as $order) : ?>
                 <?php $invoice = $order->invoice; ?>
                 <tr>
                     <td><?= $order->id ?></td>

@@ -41,6 +41,8 @@ foreach ([
      '/tickets' => '/tickets',
      '/providers' => '/providers',
      '/reports' => '/reports',
+     '/statuses' => '/statuses',
+     '/statuses/getstatus' => '/statuses/getstatus',
      '/logs' => '/logs',
  ] as $key => $value) {
     $superadmin[$params['superadminUrl'] . $key] = "/" . $params['superadminUrl'] . $value;
