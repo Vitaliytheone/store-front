@@ -42,6 +42,10 @@ class PaymentMethodsSearch extends PaymentMethods
                 'icon' => '/img/pg/yandex_money.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_YANDEX_MONEY),
             ],
+            PaymentMethods::METHOD_YANDEX_CARDS => [
+                'icon' => '/img/pg/yandex_money.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_YANDEX_CARDS),
+            ],
             PaymentMethods::METHOD_FREE_KASSA => [
                 'icon' => '/img/pg/free_kassa.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_FREE_KASSA),

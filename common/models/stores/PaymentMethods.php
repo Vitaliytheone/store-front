@@ -27,6 +27,7 @@ class PaymentMethods extends ActiveRecord
     const METHOD_PAGSEGURO = 'pagseguro';
     const METHOD_WEBMONEY = 'webmoney';
     const METHOD_YANDEX_MONEY = 'yandexmoney';
+    const METHOD_YANDEX_CARDS = 'yandexcards';
     const METHOD_FREE_KASSA = 'freekassa';
     const METHOD_PAYTR = 'paytr';
     const METHOD_PAYWANT = 'paywant';
