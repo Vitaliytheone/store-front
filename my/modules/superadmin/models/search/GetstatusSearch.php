@@ -7,6 +7,7 @@ use common\models\panels\AdditionalServices;
 use Yii;
 use yii\base\DynamicModel;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class GetstatusSearch
@@ -14,10 +15,24 @@ use yii\db\Query;
  */
 class GetstatusSearch extends Getstatus
 {
+    /**
+     * @var string
+     */
+    private $_url;
 
+    /**
+     * @var array
+     */
     private $_data = [];
 
     use SearchTrait;
+
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->_url = Yii::$app->params['getstatus_info_url'];
+    }
 
     /**
      * @param $option string
@@ -41,17 +56,19 @@ class GetstatusSearch extends Getstatus
     }
 
     /**
-     * Set json by response from url
+     * Get data
      */
     private function getData()
     {
+        if (!empty($this->_data) || empty($this->_url)) {
+            return $this->_data;
+        }
+
         $datetime = $this->getDatetime();
 
-        $createUrl = '?from=' . strtotime($datetime['from']) . '&to=' . strtotime($datetime['to']);
+        $url = $this->_url . '?from=' . strtotime($datetime['from']) . '&to=' . strtotime($datetime['to']);
 
-        $url = Yii::$app->params['getstatus_info_url'] . $createUrl;
-
-        $data = file_get_contents($url);
+        $data = @file_get_contents($url);
         $data = $data ? json_decode($data, true) : [];
 
         if (json_last_error() === JSON_ERROR_NONE) {
@@ -90,6 +107,10 @@ class GetstatusSearch extends Getstatus
     public function getStatuses()
     {
         $data = $this->getData();
+        
+        if (empty($data)) {
+            return [];
+        }
 
         $statuses = AdditionalServices::find()
             ->select(['res', 'name'])
@@ -97,17 +118,12 @@ class GetstatusSearch extends Getstatus
             ->groupBy('res')
             ->all();
 
-        $countsList = array();
-
-        $counts = (new Query())
+        $countsList = (new Query())
             ->select(['res', 'COUNT(*) AS count'])
             ->from('getstatus')
             ->groupBy('res')
             ->all();
-
-        foreach ($counts as $count) {
-            $countsList[$count['res']] = $count['count'];
-        }
+        $countsList = ArrayHelper::map($countsList, 'res', 'count');
 
         for ($i = 0; $i < count($data); $i++ ) {
             $data[$statuses[$i]->res]['provider'] = $statuses[$i]->name;
