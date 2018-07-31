@@ -98,6 +98,7 @@ use yii\helpers\ArrayHelper;
  * @property Tariff $newTariffDetails
  * @property Customers $customer
  * @property UserServices[] $userServices
+ * @property string $domain
  */
 class Project extends ActiveRecord implements ProjectInterface
 {
@@ -262,6 +263,14 @@ class Project extends ActiveRecord implements ProjectInterface
     public static function getProjectType()
     {
         return ProjectInterface::PROJECT_TYPE_PANEL;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->site;
     }
 
     /**

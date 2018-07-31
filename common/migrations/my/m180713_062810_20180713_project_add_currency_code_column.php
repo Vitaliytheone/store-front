@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m180713_062810_20180713_project_add_column
+ * Class m180713_062810_20180713_project_add_currency_code_column
  */
-class m180713_062810_20180713_project_add_column extends Migration
+class m180713_062810_20180713_project_add_currency_code_column extends Migration
 {
     /**
      * {@inheritdoc}

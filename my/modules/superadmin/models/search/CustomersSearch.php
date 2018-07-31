@@ -4,6 +4,7 @@ namespace my\modules\superadmin\models\search;
 use common\models\stores\Stores;
 use Yii;
 use common\models\panels\Customers;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
 
@@ -18,6 +19,7 @@ class CustomersSearch extends Customers {
     public $countChild;
     public $countDomains;
     public $countSslCerts;
+    public $referrer_email;
 
     /**
      * @var Pagination
@@ -53,7 +55,7 @@ class CustomersSearch extends Customers {
     public function getParams()
     {
         return [
-            'query' => $this->getQuery(),
+            'query' => quotemeta($this->getQuery()),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all'
         ];
     }
@@ -117,15 +119,18 @@ class CustomersSearch extends Customers {
      */
     protected function getCustomers($status)
     {
-        return $customers = $this->buildQuery($status)
+        return $this->buildQuery($status)
             ->select([
                 'customers.*',
+                'referral.email AS referrer_email',
                 'COUNT(DISTINCT stores.id) AS countStores',
                 'COUNT(DISTINCT project.id) AS countProjects',
                 'COUNT(DISTINCT child_project.id) AS countChild',
                 'COUNT(DISTINCT domains.id) AS countDomains',
-                'COUNT(DISTINCT ssl_cert.id) AS countSslCerts'
-            ])->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [':projectChildPanel' => 0])
+                'COUNT(DISTINCT ssl_cert.id) AS countSslCerts',
+            ])
+            ->leftJoin(['referral' => Customers::tableName()], 'referral.id = customers.referrer_id')
+            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [':projectChildPanel' => 0])
             ->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [':projectChildPanel' => 0])
             ->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [':childPanel' => 1])
             ->leftJoin('domains', 'domains.customer_id = customers.id')
