@@ -207,12 +207,12 @@ class OrderSslForm extends Model
         $orderModel->date = time();
         $orderModel->cid = $this->_customer->id;
         $orderModel->item = Orders::ITEM_BUY_SSL;
-        $orderModel->domain = $project->getBaseDomain();
+        $orderModel->domain = $project->domain;
         $orderModel->ip = $this->_ip;
         $orderModel->setDetails([
             'pid' => $project->id,
             'project_type' => $project::getProjectType(),
-            'domain' => $project->getBaseDomain(),
+            'domain' => $project->domain,
             'item_id' => $this->item_id,
             'details' => $this->getAttributes($this->getDetails()),
         ]);

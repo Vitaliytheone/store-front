@@ -444,6 +444,16 @@ class Customers extends ActiveRecord
                 if (!$this->referrer_id) {
                     return false;
                 }
+
+                if (!empty($params['item'])) {
+                    if (($params['item'] instanceof Project) && $params['item']->no_referral) {
+                        return false;
+                    }
+
+                    if (($params['item'] instanceof Stores) && $params['item']->no_referral) {
+                        return false;
+                    }
+                }
                 $referrer = $this->referrer;
 
                 return static::REFERRAL_ACTIVE == $referrer->referral_status && (time() <= $this->referral_expired_at);

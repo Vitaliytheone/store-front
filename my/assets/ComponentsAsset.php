@@ -7,7 +7,6 @@
 
 namespace my\assets;
 
-use yii\helpers\ArrayHelper;
 use yii\web\AssetBundle;
 
 /**
@@ -40,5 +39,6 @@ class ComponentsAsset extends AssetBundle
         'my\assets\UnderscoreAsset',
         'my\assets\BootstrapAsset',
         'my\assets\BootstrapSelectAsset',
+        'my\assets\DatetimepickerAssets'
     ];
 }

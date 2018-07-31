@@ -173,7 +173,7 @@ class OrderHelper {
 
             // $crt + $ca code
             if (!(OrderSslHelper::addDdos($ssl, [
-                'site' => $project->getBaseDomain(),
+                'site' => $project->domain,
                 'crt' => $crtKey,
                 'key' => $ssl->csr_key,
             ]))) {
@@ -181,14 +181,14 @@ class OrderHelper {
             }
 
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
-                'domain' => $project->getBaseDomain(),
+                'domain' => $project->domain,
                 'crt_cert' => $crtKey,
                 'key_cert' => $ssl->csr_key,
                 'key' => Yii::$app->params['system.sslScriptKey']
             ], 'cron.ssl_status.send_ssl_config');
 
             if (!(OrderSslHelper::addConfig($ssl, [
-                'domain' => $project->getBaseDomain(),
+                'domain' => $project->domain,
                 'crt_cert' => $crtKey,
                 'key_cert' => $ssl->csr_key,
             ]))) {
