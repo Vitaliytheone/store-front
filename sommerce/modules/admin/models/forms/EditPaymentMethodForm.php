@@ -141,6 +141,13 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'text', 'id' => 'yandex_money_secret_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_yandex_money_secret_word')],
                 ]
             ],
+            PaymentMethods::METHOD_YANDEX_CARDS => [
+                'icon' => '/img/pg/yandex_money.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'yandex_money_wallet_number', 'placeholder' => '', 'name' => 'PaymentsForm[details][wallet_number]', 'value' => $getDetailsField('wallet_number'), 'label' => Yii::t('admin', 'settings.payments_yandex_money_wallet_number')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'yandex_money_secret_word', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_word]', 'value' => $getDetailsField('secret_word'), 'label' => Yii::t('admin', 'settings.payments_yandex_money_secret_word')],
+                ]
+            ],
             PaymentMethods::METHOD_PAGSEGURO => [
                 'icon' => '/img/pg/pagseguro.png',
                 'form_fields' => [
