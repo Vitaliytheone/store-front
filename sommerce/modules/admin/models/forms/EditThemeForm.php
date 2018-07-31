@@ -15,6 +15,7 @@ use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\web\User;
 use yii\web\NotFoundHttpException;
+use common\models\common\ThemesInterface;
 
 /**
  * Class EditThemeForm
@@ -53,10 +54,10 @@ class EditThemeForm extends Model
         'configs' => [],
     ];
 
-    /** @var   */
+    /** @var  string */
     public $file_content;
 
-    /** @var  */
+    /** @var ThemesInterface | CustomThemes | DefaultThemes*/
     private $_theme_model;
 
     /** @var string Relative to theme folder filepath */
@@ -111,14 +112,13 @@ class EditThemeForm extends Model
         if (!$this->_theme_model) {
             return false;
         }
-        $fileName = ltrim(str_replace('../', '', $themeEditFileName), '/');
 
         /** Check is filename is allowed */
-        if (strpos(json_encode($this->getFilesTree()), $fileName) === false) {
+        if (strpos(json_encode($this->getFilesTree()), $themeEditFileName) === false) {
             throw new NotFoundHttpException();
         }
 
-        $this->_file = $fileName;
+        $this->_file = $themeEditFileName;
 
         /**
          * For Custom theme — save file to theme path
@@ -139,7 +139,6 @@ class EditThemeForm extends Model
      * @return bool|static
      */
     public static function make($themeFolderName, $themeEditFileName) {
-
         $themeModel = (new ThemesSearch())->searchByFolder($themeFolderName);
         $fileName = ltrim(str_replace('../', '', $themeEditFileName), '/');
 
@@ -337,23 +336,18 @@ class EditThemeForm extends Model
     }
 
     /**
-     * Update theme file
-     * @param $postData
-     * @return false|string
+     * @param array|string $data
+     * @return bool|string
      */
-    public function updateThemeFile($postData, $isPost = true)
+    public function updateThemeFile($data)
     {
-        if ($isPost) {
-            if (!$this->load($postData)) {
+        if (is_string($data)) {
+            $this->file_content = $data;
+        } else {
+            if (!$this->load($data)) {
                 return false;
             }
-        } elseif (!isset($postData['file_content'])) {
-            return false;
-        } else {
-            $this->file_content = $postData['file_content'];
         }
-
-        $this->file_content;
 
         $pathToFile = $this->getPathToFile();
         $path = dirname($pathToFile);

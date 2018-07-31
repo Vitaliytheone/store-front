@@ -47,7 +47,7 @@ use sommerce\modules\admin\components\Url;
                                         <div>
                                             <?php if ($theme['active']): ?>
                                                 <a href="<?= Url::toRoute(['/settings/edit-theme', 'theme' => $theme['folder']]) ?>"><?= Yii::t('admin', 'settings.themes_edit_code') ?></a>
-                                                <?php if ($theme['customize']): ?>
+                                                <?php if ($theme['customize_js']): ?>
                                                     <br/><br/>
                                                     <a href="<?= Url::toRoute(['/settings/customize-theme', 'theme' => $theme['folder']]) ?>"><?= Yii::t('admin', 'settings.themes_customize') ?></a>
                                                 <?php endif; ?>
