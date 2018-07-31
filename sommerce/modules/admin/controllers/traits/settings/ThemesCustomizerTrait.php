@@ -9,7 +9,13 @@ use sommerce\modules\admin\components\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
 use sommerce\modules\admin\models\forms\EditThemeForm;
+use yii\web\Controller;
 
+/**
+ * Class ThemesCustomizerTrait
+ * @property Controller $this
+ * @package sommerce\modules\admin\controllers
+ */
 trait ThemesCustomizerTrait
 {
     /**
@@ -33,7 +39,11 @@ trait ThemesCustomizerTrait
         return $this->render('customize_theme', ['urls' => $urls]);
     }
 
-
+    /**
+     * @param $theme
+     * @return string
+     * @throws BadRequestHttpException
+     */
     public function actionThemeGetStyle($theme)
     {
         $request = Yii::$app->getRequest();
@@ -45,6 +55,11 @@ trait ThemesCustomizerTrait
         return $editStyleForm->fetchFileContent();
     }
 
+    /**
+     * @param $theme
+     * @return array
+     * @throws BadRequestHttpException
+     */
     public function actionThemeUpdateStyle($theme)
     {
         $request = Yii::$app->getRequest();
@@ -81,6 +96,12 @@ trait ThemesCustomizerTrait
         ];
     }
 
+    /**
+     * @param $theme
+     * @return string
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     */
     public function actionThemeGetData($theme)
     {
         $request = Yii::$app->getRequest();
