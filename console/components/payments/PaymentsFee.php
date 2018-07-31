@@ -3,7 +3,8 @@ namespace console\components\payments;
 
 use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
-use my\components\Paypal;
+use my\components\payments\Paypal;
+use my\components\payments\TwoCheckout;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -120,6 +121,19 @@ class PaymentsFee {
      */
     public function twoCheckout(Payments $payment)
     {
+        $twoCheckout = new TwoCheckout();
 
+        $getFee = $twoCheckout->detailSale(array(
+           'sale_id' => $payment->transaction_id
+        ));
+
+        $fee = (float)$getFee;
+
+        if (empty($fee)) {
+            return;
+        }
+
+        $payment->fee = $fee;
+        $payment->save(false);
     }
 }

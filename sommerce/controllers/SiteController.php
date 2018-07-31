@@ -58,7 +58,6 @@ class SiteController extends CustomController
                 $blocks[$block->code] = $block->getContent(BlockHelper::getDefaultBlock($block->code));
             }
         }
-
         return $this->render('index.twig', [
             'block' => $blocks
         ]);

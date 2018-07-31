@@ -98,6 +98,7 @@ class CartController extends CustomController
      */
     public function actionOrder($id)
     {
+
         $package = $this->_findPackage($id);
 
         $this->pageTitle = $package->name;

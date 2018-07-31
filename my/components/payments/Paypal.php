@@ -1,9 +1,13 @@
 <?php 
   
-namespace my\components;
+namespace my\components\payments;
 
 use Yii;
 
+/**
+ * Class Paypal
+ * @package my\components\payments
+ */
 class Paypal{
    /**
     * Последние сообщения об ошибках

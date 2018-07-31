@@ -17,7 +17,7 @@ use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use common\models\panel\PaymentsLog;
 use common\models\panels\PaymentHash;
-use my\components\Paypal;
+use my\components\payments\Paypal;
 use yii\helpers\ArrayHelper;
 
 class PaymentsController extends CustomController
@@ -100,6 +100,7 @@ class PaymentsController extends CustomController
                         $payments = Payments::findOne(['id' => $payment->id]);
                         $payments->comment = $GetTransactionDetails['EMAIL'].'; '.$response['PAYMENTINFO_0_TRANSACTIONID'];
                         $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
+                        $payments->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
                         $getTransactionDetailsStatus = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS', '');
                         $doExpressCheckoutPaymentStatus = ArrayHelper::getValue($response, 'PAYMENTINFO_0_PAYMENTSTATUS', $getTransactionDetailsStatus);
                         $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
