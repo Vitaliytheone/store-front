@@ -72,7 +72,7 @@ customModule.superadminPanelsController = {
             var expired = link.data('expired');
 
             $('#editexpiryform-expired').val(expired);
-            $('#editexpiry').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
+            $('#datetimepicker').datetimepicker({format:'YYYY-MM-DD HH:mm:ss'});
             modal.modal('show');
             return false;
         });

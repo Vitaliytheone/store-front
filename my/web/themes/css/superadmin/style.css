@@ -927,6 +927,13 @@ a {
 .modal-footer__padding-10 {
     padding: 10px; }
 
+.modal-dialog__center {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto; }
+
 .dropdown-menu__max {
     max-height: 305px;
     overflow-y: auto; }

@@ -9,13 +9,13 @@ use yii\helpers\Html;
 
 ?>
 
-<div class="input-group date datetimepicker" data-target-input="nearest" data-format="<?= $format ?>">
+<div class="input-group date" id="datetimepicker"  data-target-input="nearest" data-format="<?= $format ?>">
     <?= Html::activeInput('text', $model, $attribute, [
         'class' => 'form-control datetimepicker-input',
-        'data-target' => '.datetimepicker',
+        'data-target' => '#datetimepicker',
         'id' => 'editexpiryform-expired',
     ]) ?>
-    <div class="input-group-append" data-target=".datetimepicker" data-toggle="datetimepicker">
+    <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
     </div>
 </div>

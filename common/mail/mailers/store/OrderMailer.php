@@ -49,7 +49,7 @@ class OrderMailer extends BaseNotificationMailer {
          */
         foreach ($suborders as $suborder) {
             $data[] = [
-                'title' => $suborder->link,
+                'title' => htmlspecialchars($suborder->link),
                 'quantity' => $suborder->quantity,
                 'price' => $suborder->amount,
             ];

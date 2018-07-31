@@ -53,7 +53,7 @@ class AbandonedCheckoutMailer extends BaseNotificationMailer {
 
             $price = ArrayHelper::getValue($package, 'price');
             $data[] = [
-                'title' => ArrayHelper::getValue($item, 'link'),
+                'title' => htmlspecialchars((string)ArrayHelper::getValue($item, 'link')),
                 'quantity' => ArrayHelper::getValue($item, 'quantity'),
                 'price' => $price,
             ];

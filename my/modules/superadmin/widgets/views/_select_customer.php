@@ -7,6 +7,7 @@ use my\helpers\Url;
 /* @var $status string|int */
 /* @var $name string */
 /* @var $selectedCustomerId int */
+/* @var $context */
 
 
 $context->addModule('superadminSelectCustomerController');

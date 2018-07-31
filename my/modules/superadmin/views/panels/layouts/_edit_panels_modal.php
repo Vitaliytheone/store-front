@@ -64,7 +64,6 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                 <div class="form-group field-editprojectform-cid">
                     <label class="control-label" for="editprojectform-cid"><?= $model->getAttributeLabel('cid')?></label>
                     <?= SelectCustomer::widget([
-                        'models' => $model->getCustomers(10),
                         'context' => $this->context,
                         'name' => 'EditProjectForm[cid]',
                     ]) ?>
