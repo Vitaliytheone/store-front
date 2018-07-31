@@ -8,8 +8,8 @@
     use my\helpers\Url;
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
-    use common\models\panels\Payments;
     use my\helpers\PriceHelper;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border">
     <thead>
@@ -51,7 +51,7 @@
     </thead>
     <tbody>
     <?php if (!empty($payments['models'])) : ?>
-        <?php foreach ($payments['models'] as $payment) : ?>
+        <?php foreach (SpecialCharsHelper::multiPurifier($payments['models']) as $key => $payment) : ?>
             <tr>
                 <td>
                     <?= $payment->id ?>

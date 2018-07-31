@@ -7,8 +7,8 @@
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
     use common\models\panels\Invoices;
-    use yii\helpers\ArrayHelper;
     use my\helpers\PriceHelper;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border">
     <thead>
@@ -25,7 +25,7 @@
     </thead>
     <tbody>
     <?php if (!empty($invoices['models'])) : ?>
-        <?php foreach ($invoices['models'] as $invoice) : ?>
+        <?php foreach (SpecialCharsHelper::multiPurifier($invoices['models']) as $key => $invoice) : ?>
             <tr>
                 <td>
                     <?= $invoice->id ?>

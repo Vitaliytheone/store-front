@@ -183,6 +183,22 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_REPORTS)) {
     ];
 }
 
+if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_STATUSES)) {
+    $optionsLeft[] = [
+        'label' => Yii::t('app/superadmin', 'header.nav.statuses'),
+        'options' => ['class' => 'nav-item'],
+        'linkOptions' => ['class' => 'nav-link'],
+        'active' => 'statuses' === $activeTab,
+        'items' => [
+            [
+                'label' => Yii::t('app/superadmin', 'header.nav.getstatus'),
+                'url' => Url::toRoute('/statuses/getstatus'),
+                'linkOptions' => ['class' => 'dropdown-item'],
+            ],
+        ]
+    ];
+}
+
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_LOGS)) {
     $optionsLeft[] = [
         'label' => Yii::t('app/superadmin', 'header.nav.logs'),

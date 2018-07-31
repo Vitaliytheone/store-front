@@ -74,6 +74,16 @@
         $optionsLeft[] = ['label' => Yii::t('app/superadmin', 'header.nav.reports'), 'url' => Url::toRoute('/reports'), 'active' => 'reports' == $activeTab];
     }
 
+    if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_STATUSES)) {
+        $optionsLeft[] = [
+            'label' => Yii::t('app/superadmin', 'header.nav.statuses'),
+            'active' => 'statuses' === $activeTab,
+            'items' => [
+                ['label' => Yii::t('app/superadmin', 'header.nav.getstatus'), 'url' => Url::toRoute('statuses/getstatus')],
+            ]
+        ];
+    }
+
     if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_LOGS)) {
         $optionsLeft[] = [
             'label' => Yii::t('app/superadmin', 'header.nav.logs'),

@@ -9,6 +9,7 @@
 /* @var $assignee int */
 
 use my\helpers\Url;
+use my\helpers\SpecialCharsHelper;
 
 $this->context->addModule('superadminTicketsController');
 ?>
@@ -23,7 +24,7 @@ $this->context->addModule('superadminTicketsController');
                 <a href="<?= Url::toRoute('/tickets/create')?>" class="btn btn-link" id="new-ticket" data-toggle="modal" data-target="#create-ticket">
                     <?= Yii::t('app/superadmin', 'tickets.btn.create_new')?>
                 </a>
-                <input name="query" type="text" class="form-control" placeholder="<?= Yii::t('app/superadmin', 'tickets.list.search')?>" value="<?=$filters['query']?>">
+                <input name="query" type="text" class="form-control" placeholder="<?= Yii::t('app/superadmin', 'tickets.list.search')?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
                 <div class="input-group-append">
                     <button id="search" class="btn btn-light" type="button"><span class="fa fa-search"></span></button>
                 </div>

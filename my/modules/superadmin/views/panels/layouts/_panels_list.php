@@ -11,8 +11,8 @@
     use my\helpers\Url;
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
+    use my\helpers\SpecialCharsHelper;
 
-    //$pageSize = $panels['pages']->pageSize;
     $now = time();
 ?>
 <div class="tab-pane fade show active" id="status-all" role="tabpanel">
@@ -48,7 +48,7 @@
         </thead>
         <tbody>
         <?php if (!empty($panels['models'])) : ?>
-            <?php foreach ($panels['models'] as $panel) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($panels['models']) as $key => $panel) : ?>
                 <?php
                     $forecastColor = '';
                     $forecastPlanColor = '';
@@ -121,9 +121,9 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <?php if ($action == 'panels') : ?>
-                                    <?= $this->render('_panels_actions', ['panel' => $panel]) ?>
+                                    <?= $this->render('_panels_actions', ['panel' => $panels['models'][$key]]) ?>
                                 <?php else : ?>
-                                    <?= $this->render('_child_panels_actions', ['panel' => $panel]) ?>
+                                    <?= $this->render('_child_panels_actions', ['panel' => $panels['models'][$key]]) ?>
                                 <?php endif; ?>
                             </div>
                         </div>

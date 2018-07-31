@@ -8,6 +8,7 @@ use Yii;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use my\helpers\SpecialCharsHelper;
 
 /**
  * Class StoresSearch
@@ -36,7 +37,7 @@ class StoresSearch {
     public function getParams()
     {
         return [
-            'query' => quotemeta($this->getQuery()),
+            'query' => $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all',
         ];
     }
@@ -165,7 +166,7 @@ class StoresSearch {
             ->all();
 
         return [
-            'models' => $this->prepareStoresData($stores),
+            'models' => SpecialCharsHelper::multiPurifier($this->prepareStoresData($stores)),
             'pages' => $pages,
         ];
     }

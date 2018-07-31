@@ -10,6 +10,7 @@
     use yii\helpers\Json;
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
+    use my\helpers\SpecialCharsHelper;
 ?>
 
         <table class="table table-sm table-custom">
@@ -32,11 +33,12 @@
             </thead>
             <tbody>
             <?php if (!empty($customers['models'])) : ?>
-                <?php foreach ($customers['models'] as $customer) : ?>
+                <?php foreach (SpecialCharsHelper::multiPurifier($customers['models']) as $key => $customer) : ?>
                     <tr id="<?= $customer->id ?>">
                         <td><?= $customer->id ?></td>
                         <td class="table-custom__customer-td">
-                            <?php $referralView = Html::a(
+                            <?php
+                            $referralView = Html::a(
                                 Html::tag(
                                     'span',
                                     '',
@@ -82,8 +84,8 @@
                         <td>
                             <?= Html::a($customer->countSslCerts, Url::toRoute(['/ssl', 'customer_id' => $customer->id])); ?>
                         </td>
-                        <td><?= htmlspecialchars($customer->first_name) ?></td>
-                        <td><?= htmlspecialchars($customer->last_name) ?></td>
+                        <td><?= $customer->first_name ?></td>
+                        <td><?= $customer->last_name ?></td>
                         <td><?= $customer->getStatusName() ?></td>
                         <td>
                         <span class="table-custom__date">
@@ -110,7 +112,10 @@
                                     ])?>
                                     <?= Html::a(Yii::t('app/superadmin', 'customers.dropdown.edit_customer_modal'), Url::toRoute(['/customers/edit', 'id' => $customer->id]), [
                                         'class' => 'dropdown-item edit',
-                                        'data-details' => Json::encode($customer->getAttributes(['email', 'referral_status']))
+                                        'data-details' => Json::encode([
+                                                'email' => SpecialCharsHelper::multiPurifierDecode($customer->email),
+                                                'referral_status' => SpecialCharsHelper::multiPurifierDecode($customer->referral_status),
+                                            ])
                                     ])?>
                                     <?php if (Customers::STATUS_ACTIVE == $customer->status) : ?>
                                         <?= Html::a(Yii::t('app/superadmin', 'customers.dropdown.suspend_btn'),

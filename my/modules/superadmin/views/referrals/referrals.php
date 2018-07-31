@@ -1,6 +1,9 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $referrals \my\modules\superadmin\models\search\ReferralsPaymentsSearch[] */
+
+    use my\helpers\SpecialCharsHelper;
+
 ?>
 <div class="container-fluid mt-3">
     <table class="table table-border">
@@ -14,7 +17,7 @@
         </thead>
         <tbody>
             <?php if (!empty($referrals['models'])) : ?>
-                <?php foreach ($referrals['models'] as $referral) : ?>
+                <?php foreach (SpecialCharsHelper::multiPurifier($referrals['models']) as $referral) : ?>
                     <tr>
                         <td>
                             <?= $referral['id'] ?>

@@ -4,6 +4,7 @@
 
     use my\helpers\Url;
     use yii\bootstrap\Html;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border tablesorter-bootstrap" id="referralsTable">
     <thead>
@@ -20,7 +21,7 @@
     </thead>
     <tbody>
         <?php if (!empty($referrals['models'])) : ?>
-            <?php foreach ($referrals['models'] as $referral) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($referrals['models']) as $referral) : ?>
                 <tr>
                     <td>
                         <?= $referral['id'] ?>

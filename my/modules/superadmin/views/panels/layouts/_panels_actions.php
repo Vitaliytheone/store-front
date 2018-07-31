@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use common\models\panels\Project;
 use yii\helpers\Json;
 use my\helpers\Url;
+use my\helpers\SpecialCharsHelper;
 
 $can = $panel['can'];
 $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);

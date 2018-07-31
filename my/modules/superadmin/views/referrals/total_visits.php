@@ -3,6 +3,7 @@
     /* @var $customer \common\models\panels\Customers */
 
     use common\models\panels\ReferralVisits;
+    use my\helpers\SpecialCharsHelper;
 
     $referralVisits = $customer->referralVisits;
 
@@ -19,7 +20,7 @@
         </thead>
         <tbody>
         <?php if (!empty($referralVisits)) : ?>
-            <?php foreach ($referralVisits as $referralVisit) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($referralVisits) as $referralVisit) : ?>
                 <tr>
                     <td>
                         <?= $referralVisit->ip ?>
