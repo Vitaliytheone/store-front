@@ -10,6 +10,7 @@
     use my\helpers\Url;
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
+    use my\helpers\SpecialCharsHelper;
 
 ?>
 <table class="table table-sm table-custom">
@@ -40,7 +41,7 @@
     </thead>
     <tbody>
         <?php if (!empty($tickets['models'])) : ?>
-            <?php foreach ($tickets['models'] as $ticket) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($tickets['models']) as $key => $ticket) : ?>
                 <tr>
                     <td>
                         <?= $ticket->id ?>
@@ -51,10 +52,10 @@
                     <td>
                         <?php if ($ticket->is_user) : ?>
                             <b>
-                                <?= Html::a(htmlspecialchars($ticket->subject), Url::toRoute(['/tickets/view', 'id' => $ticket->id])) ?>
+                                <?= Html::a($ticket->subject, Url::toRoute(['/tickets/view', 'id' => $ticket->id])) ?>
                             </b>
                         <?php else : ?>
-                            <?= Html::a(htmlspecialchars($ticket->subject), Url::toRoute(['/tickets/view', 'id' => $ticket->id])) ?>
+                            <?= Html::a($ticket->subject, Url::toRoute(['/tickets/view', 'id' => $ticket->id])) ?>
                         <?php endif; ?>
                     </td>
                     <td>

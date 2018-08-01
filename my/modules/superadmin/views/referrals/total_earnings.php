@@ -4,6 +4,7 @@
 
     use yii\bootstrap\Html;
     use my\helpers\Url;
+    use my\helpers\SpecialCharsHelper;
 
 ?>
 <div class="container-fluid mt-3">
@@ -20,7 +21,7 @@
         </thead>
         <tbody>
         <?php if (!empty($referralEarnings['models'])) : ?>
-            <?php foreach ($referralEarnings['models'] as $referralEarning) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($referralEarnings['models']) as $referralEarning) : ?>
                 <tr>
                     <td>
                         <?= $referralEarning['id'] ?>
