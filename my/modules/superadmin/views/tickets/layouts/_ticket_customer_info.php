@@ -138,11 +138,11 @@ use common\models\panels\Project;
                     ?>
                     <tr>
                         <td>
-                            <?= Html::a($item->getSite(), Url::toRoute(['/stores', 'id' => $item->id]), ['target' => '_blank'])?>
+                            <?= Html::a($item->getBaseDomain(), Url::toRoute(['/stores', 'id' => $item->id]), ['target' => '_blank'])?>
                             <?php if (Stores::STATUS_ACTIVE != $item->status) : ?>
                                 <span class="badge badge-primary"><?= Stores::getStatuses()[$item->status] ?></span>
                             <?php endif; ?>
-                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getSite() ?>" target="_blank">
+                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getBaseDomain() ?>" target="_blank">
                                 <span class="fa fa-external-link"></span>
                             </a>
                         </td>
