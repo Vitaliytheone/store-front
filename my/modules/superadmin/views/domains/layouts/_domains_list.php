@@ -6,6 +6,7 @@
     use my\helpers\Url;
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border">
     <thead>
@@ -23,7 +24,7 @@
     </thead>
     <tbody>
         <?php if (!empty($domains['models'])) : ?>
-            <?php foreach ($domains['models'] as $domain) : ?>
+            <?php foreach (SpecialCharsHelper::multiPurifier($domains['models']) as $key => $domain) : ?>
                 <?php
                     $customer = $domain->customer;
                 ?>

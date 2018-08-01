@@ -545,5 +545,15 @@ CREATE TABLE `referral_visits` (
   KEY `customer_id` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `sender_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `panel_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `send_method` int(11) DEFAULT NULL,
+  `result` text,
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `send_method` (`send_method`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 2018-07-06 11:20:43

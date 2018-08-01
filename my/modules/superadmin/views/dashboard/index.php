@@ -8,6 +8,7 @@
 use yii\helpers\Html;
 use \my\modules\superadmin\helpers\DashboardBlocks;
 use my\helpers\Url;
+use my\helpers\SpecialCharsHelper;
 
 $this->context->addModule('superadminDashboardController', [
     'error' => Yii::t('app/superadmin', 'error'),
@@ -68,7 +69,7 @@ $this->context->addModule('superadminDashboardController', [
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($dashboardBlocks[$activePanel]->getEntities() as $row) : ?>
+                                <?php foreach (SpecialCharsHelper::multiPurifier($dashboardBlocks[$activePanel]->getEntities()) as $row) : ?>
                                    <tr>
                                        <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.id') ?>">
                                            <?= $row['id'] ?>
@@ -80,7 +81,8 @@ $this->context->addModule('superadminDashboardController', [
                                            <?= Html::tag('a', $row['customer'], ['href' => '#']); ?>
                                        </td>
                                        <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.status') ?>">
-                                           <?= $row['status'] ?></td>
+                                           <?= $row['status'] ?>
+                                       </td>
                                        <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.created') ?>">
                                            <?= $row['created'] ?>
                                        </td>
