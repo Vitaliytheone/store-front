@@ -433,7 +433,8 @@ class Paypal extends BasePayment {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-
+        curl_setopt($ch,  CURLOPT_PROXYTYPE,CURLPROXY_HTTP);
+        curl_setopt($ch,  CURLOPT_PROXY ,PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
 
