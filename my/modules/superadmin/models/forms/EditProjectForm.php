@@ -10,7 +10,7 @@ use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
-
+use common\helpers\CurrencyHelper;
 /**
  * Class EditProjectForm
  * @package my\modules\superadmin\models\forms
@@ -45,6 +45,7 @@ class EditProjectForm extends Model {
     public $start_count;
     public $apikey;
     public $no_invoice;
+    public $currency_code;
 
     /**
      * @var Project
@@ -236,7 +237,7 @@ class EditProjectForm extends Model {
         }
 
         if ($isChangedCurrency) {
-            $this->updateCurrencies();
+           $this->updateCurrencies();
         }
 
         if ($isChangedCustomer) {

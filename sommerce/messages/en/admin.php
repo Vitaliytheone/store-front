@@ -319,6 +319,7 @@ return [
     'settings.payments_coinpayments_guide_3' => 'Enter your Merchant ID and IPN Secret bellow',
 
     'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
+    'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
     'settings.payments_yandex_money_wallet_number' => 'Wallet number',
     'settings.payments_yandex_money_secret_word' => 'Secret word',
     'settings.payments_yandex_money_guide_1' => 'Go to',
