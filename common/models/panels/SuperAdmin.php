@@ -45,6 +45,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
     const CAN_WORK_WITH_TICKETS = 'tickets';
     const CAN_WORK_WITH_PROVIDERS = 'providers';
     const CAN_WORK_WITH_REPORTS = 'reports';
+    const CAN_WORK_WITH_STATUSES = 'statuses';
     const CAN_WORK_WITH_REFERRALS = 'referrals';
     const CAN_WORK_WITH_LOGS = 'logs';
     const CAN_WORK_WITH_STAFFS = 'staffs';
@@ -149,6 +150,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_PROVIDERS => 0,
             static::CAN_WORK_WITH_REFERRALS => 0,
             static::CAN_WORK_WITH_REPORTS => 0,
+            static::CAN_WORK_WITH_STATUSES => 0,
             static::CAN_WORK_WITH_LOGS => 0,
             static::CAN_WORK_WITH_STAFFS => 0,
             static::CAN_WORK_WITH_SETTINGS => 0,
@@ -193,6 +195,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_PROVIDERS => 1,
             static::CAN_WORK_WITH_REFERRALS => 1,
             static::CAN_WORK_WITH_REPORTS => 1,
+            static::CAN_WORK_WITH_STATUSES => 1,
             static::CAN_WORK_WITH_LOGS => 1,
             static::CAN_WORK_WITH_STAFFS => 1,
             static::CAN_WORK_WITH_SETTINGS => 1,
@@ -218,6 +221,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_PROVIDERS => Yii::t('app', 'super_admin.can_work_with.providers'),
             static::CAN_WORK_WITH_REFERRALS => Yii::t('app', 'super_admin.can_work_with.referrals'),
             static::CAN_WORK_WITH_REPORTS => Yii::t('app', 'super_admin.can_work_with.reports'),
+            static::CAN_WORK_WITH_STATUSES => Yii::t('app', 'super_admin.can_work_with.statuses'),
             static::CAN_WORK_WITH_LOGS => Yii::t('app', 'super_admin.can_work_with.logs'),
             static::CAN_WORK_WITH_STAFFS => Yii::t('app', 'super_admin.can_work_with.staffs'),
             static::CAN_WORK_WITH_SETTINGS => Yii::t('app', 'super_admin.can_work_with.settings'),

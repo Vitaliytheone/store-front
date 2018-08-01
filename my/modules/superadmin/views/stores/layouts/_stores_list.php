@@ -87,13 +87,18 @@ $now = time();
                         <div class="dropdown-menu dropdown-menu-right">
                             <?= Html::a(!empty($store['store_domain']) ? Yii::t('app/superadmin', 'stores.list.action_change_domain') : Yii::t('app/superadmin', 'stores.list.action_add_domain'), Url::toRoute(['/stores/change-domain', 'id' => $store['id']]), [
                                 'class' => 'dropdown-item change-domain',
-                                'data-domain' => $store['store_domain'],
+                                'data-domain' => htmlspecialchars_decode($store['store_domain']),
                                 'data-subdomain' => $store['subdomain'],
                                 'data-title' => !empty($store['store_domain']) ? Yii::t('app/superadmin', 'stores.list.action_change_domain') : Yii::t('app/superadmin', 'stores.list.action_add_domain')
                             ])?>
                             <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_edit_store'), Url::toRoute(['/stores/edit-store', 'id' => $store['id']]), [
                                 'class' => 'dropdown-item edit-store',
-                                'data-details' => Json::encode(['name' => $store['name'], 'customer_id' => $store['customer_id'], 'customer_email' => $store['customer_email'], 'currency' => $store['currency']])
+                                'data-details' => Json::encode([
+                                        'name' => htmlspecialchars_decode($store['name']),
+                                    'customer_id' => $store['customer_id'],
+                                    'customer_email' => htmlspecialchars_decode($store['customer_email']),
+                                    'currency' => htmlspecialchars_decode($store['currency'])
+                                ])
                             ])?>
                             <?php if (Stores::STATUS_ACTIVE == $store['status']) : ?>
                                 <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_freeze_store'),
@@ -110,7 +115,7 @@ $now = time();
                             <?php endif; ?>
                             <?= Html::a(Yii::t('app/superadmin', 'stores.list.action_edit_expiry'), Url::toRoute(['/stores/edit-expiry', 'id' => $store['id']]), [
                                 'class' => 'dropdown-item edit-expiry',
-                                'data-expired' => $store['expired_datetime'],
+                                'data-expired' => htmlspecialchars_decode($store['expired_datetime']),
                             ])?>
 
                             <?php if(Stores::STATUS_FROZEN == $store['status']): ?>

@@ -7,6 +7,7 @@
 
 use my\helpers\Url;
 use my\components\ActiveForm;
+use my\helpers\SpecialCharsHelper;
 
 $this->context->addModule('superadminStoresController');
 ?>
@@ -26,7 +27,7 @@ $this->context->addModule('superadminStoresController');
             ],
         ]); ?>
         <div class="input-group">
-            <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'stores.list.search')?>" value="<?=$filters['query']?>">
+            <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'stores.list.search')?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
             <div class="input-group-append">
                 <button class="btn btn-light" type="submit"><span class="fa fa-search"></span></button>
             </div>

@@ -14,6 +14,8 @@ return [
     'header.nav.tickets' => 'Tickets',
     'header.nav.providers' => 'Providers',
     'header.nav.reports' => 'Reports',
+    'header.nav.statuses' => 'Statuses',
+    'header.nav.getstatus' => 'Getstatus',
     'header.nav.logs' => 'Logs',
     'header.nav.status_log' => 'Status log',
     'header.nav.providers_log' => 'Providers log',
@@ -605,8 +607,22 @@ return [
     'dashboard.services.ggssl' => 'GGSSL',
     'dashboard.services.whoisapi' => 'WhoisAPI',
     'dashboard.services.dnslytics' => 'DNSlytics',
-    'dashboard.services.opensrs' => 'OpenSRS'
+    'dashboard.services.opensrs' => 'OpenSRS',
 
-
+    'statuses.list.column_id' => 'ID',
+    'statuses.list.column_provider' => 'Provider',
+    'statuses.list.column_all_orders' => 'All orders',
+    'statuses.list.column_orders' => 'Orders',
+    'statuses.list.column_requests' => 'Requests',
+    'statuses.list.column_good' => 'Good',
+    'statuses.list.column_status_error' => 'Status Error',
+    'statuses.list.column_curl_error' => 'Curl Error',
+    'statuses.list.column_min' => 'Min',
+    'statuses.list.column_max' => 'Max',
+    'statuses.list.column_avg' => 'Avg',
+    'statuses.datetimepicker.from' => 'From',
+    'statuses.datetimepicker.to' => 'To',
+    'statuses.datetimepicker.submit_btn' => 'Submit',
+    'statuses.search.search_label' => 'Search:',
 
 ];
