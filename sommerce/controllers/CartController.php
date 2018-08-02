@@ -2,7 +2,6 @@
 namespace sommerce\controllers;
 
 use common\components\ActiveForm;
-use common\helpers\PriceHelper;
 use common\models\store\Carts;
 use common\models\store\Packages;
 use common\models\stores\Stores;
@@ -14,12 +13,40 @@ use Yii;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
+use yii\filters\ContentNegotiator;
+use yii\web\Response;
+use yii\filters\AjaxFilter;
+use \yii\filters\VerbFilter;
+
 
 /**
  * Cart controller
  */
 class CartController extends CustomController
 {
+    public function behaviors()
+    {
+        return [
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['validate']
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'index' => ['GET', 'POST'],
+                    'validate'=> ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['validate'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
     /**
      * Displays homepage.
      *
@@ -74,6 +101,24 @@ class CartController extends CustomController
             'error' => $model->hasErrors(),
             'error_message' => ActiveForm::firstError($model)
         ]);
+    }
+
+
+    public function actionValidate() {
+        $store = Yii::$app->store->getInstance();
+        $searchModel = new CartSearch();
+        $searchModel->setStore($store);
+        $model = new OrderForm();
+        $model->setStore($store);
+        $model->setSearchItems($searchModel);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return [
+                'status' => 'success'
+            ];
+        }
+        return [
+            'status' => 'error'
+        ];
     }
 
     /**

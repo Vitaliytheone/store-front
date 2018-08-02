@@ -10,6 +10,9 @@ customModule.cartFrontend = {
             if ('undefined' != typeof params.options.authorize) {
                 self.initAuthorize(params.options.authorize);
             }
+            if ('undefined' != typeof params.options.stripe) {
+                self.initStripe(params.options.stripe);
+            }
         }
 
         $(document).on('change', 'input[name="OrderForm[method]"]', function() {
@@ -21,6 +24,7 @@ customModule.cartFrontend = {
         $('input[name="OrderForm[method]"]:checked').trigger('change');
     },
     updateFields: function (method) {
+        console.log('updateFields');
         var self = this;
 
         $('button[type=submit]', self.fieldsContainer).show();
@@ -45,6 +49,7 @@ customModule.cartFrontend = {
             }
 
             if ('hidden' == field.type) {
+                console.log('field add');
                 fieldContent.push(hiddenTemplate(field));
             }
         });
@@ -75,6 +80,53 @@ customModule.cartFrontend = {
 
                 return false;
             }
+        });
+    },
+    initStripe: function(params)
+    {
+        var self = this;
+        var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
+            token: function(token) {
+                $("#field-token").val(token.id);
+                $("#field-email").val(token.email);
+                self.fieldsContainer.submit();
+            }
+        }));
+
+        $('button', self.fieldsContainer).on('click', function(e) {
+            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+                return true;
+            }
+            var isValid = false;
+            $.ajax({
+                url: self.fieldsContainer.attr('action') + '/validate',
+                data: self.fieldsContainer.serialize(),
+                async: false,
+                method: "POST",
+                success: function(response) {
+                    if ('success' == response.status) {
+                        isValid = true;
+                    }
+                }
+            });
+
+            if (!isValid) {
+               return true;
+            }
+
+            // Open Checkout with further options
+            var openOptions = $.extend({}, true, params.open);
+            openOptions.amount = $('#amount').val() * 100;
+
+            handler.open(openOptions);
+
+            e.preventDefault();
+            return false;
+        });
+
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+            handler.close();
         });
     },
     responseAuthorizeHandler: function(response)
