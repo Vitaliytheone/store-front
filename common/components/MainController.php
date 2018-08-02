@@ -34,7 +34,7 @@ class MainController extends Controller
             $refererDomain = !empty($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : null;
 
             if (empty($refererDomain) || mb_strtolower($refererDomain) !== mb_strtolower($_SERVER['HTTP_HOST'])) {
-                //throw new ForbiddenHttpException(Yii::t('yii', 'Unable to verify your data submission.'));
+                throw new ForbiddenHttpException(Yii::t('yii', 'Unable to verify your data submission.'));
             }
         }
 
