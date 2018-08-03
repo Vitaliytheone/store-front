@@ -24,7 +24,6 @@ customModule.cartFrontend = {
         $('input[name="OrderForm[method]"]:checked').trigger('change');
     },
     updateFields: function (method) {
-        console.log('updateFields');
         var self = this;
 
         $('button[type=submit]', self.fieldsContainer).show();
@@ -49,7 +48,6 @@ customModule.cartFrontend = {
             }
 
             if ('hidden' == field.type) {
-                console.log('field add');
                 fieldContent.push(hiddenTemplate(field));
             }
         });

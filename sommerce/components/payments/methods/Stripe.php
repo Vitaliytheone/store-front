@@ -21,7 +21,7 @@ use common\models\store\Carts;
 
 /**
  * Class Stripe
- * @package app\components\payments\methods
+ * @package sommerce\components\payments\methods
  */
 class Stripe extends BasePayment {
 
@@ -92,7 +92,13 @@ class Stripe extends BasePayment {
     }
 
 
-    public function getJsEnvironments($panel, $user, $details)
+    /**
+     * @param Stores $store
+     * @param string $user
+     * @param PaymentMethods $details
+     * @return array
+     */
+    public function getJsEnvironments($store, $user, $details)
     {
         $paymentMethodOptions = $details->getDetails();
         $key = ArrayHelper::getValue($paymentMethodOptions, 'public_key');
@@ -110,8 +116,7 @@ class Stripe extends BasePayment {
                 'locale' => 'auto'
             ],
             'open' => [
-                'name' => $panel->name,
-                //'description' => static::getDescription($user),
+                'name' => $store->name,
             ]
         ];
     }
@@ -143,7 +148,6 @@ class Stripe extends BasePayment {
         StripeBase::setApiKey($secretKey);
 
         $payload = file_get_contents("php://input");
-
 
         $sigHeader = ArrayHelper::getValue($_SERVER, "HTTP_STRIPE_SIGNATURE");
 
@@ -220,16 +224,17 @@ class Stripe extends BasePayment {
             ];
         }
 
-        if (!($this->_payment = Payments::findOne([
+        if (!$this->_payment = Payments::findOne([
             'checkout_id' => $this->_checkout->id,
-        ]))) {
-            $this->_payment = new Payments();
-            $this->_payment->method = $this->_method;
-            $this->_payment->checkout_id = $this->_checkout->id;
-            $this->_payment->amount = $this->_checkout->price;
-            $this->_payment->customer = $this->_checkout->customer;
-            $this->_payment->currency = $this->_checkout->currency;
-        } else if ($this->_payment->method != $this->_method) {
+        ])) {
+            return [
+                'checkout_id' => $checkoutId,
+                'result' => 2,
+                'content' => 'payment not found'
+            ];
+        }
+
+         if ($this->_payment->method != $this->_method) {
             // no invoice
             return [
                 'checkout_id' => $checkoutId,
