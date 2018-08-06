@@ -69,6 +69,31 @@ customModule.superadminInvoicesController = {
             return false;
         });
 
+        $('.add-earnings').click(function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var action = link.attr('href');
+            var form = $('#addEarningsForm');
+            var modal = $('#addEarningsModal');
+            var errorBlock = $('#addEarningsError', form);
+            var details = link.data('details');
+
+            $('input[type="text"]', form).val('');
+            $('select', form).prop('selectedIndex', 0);
+
+            $('#addinvoiceearningsform-credit', form).val(details.credit);
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            modal.modal('show');
+
+            return false;
+        });
+
         $('.edit-invoice').click(function(e) {
             e.preventDefault();
 
@@ -136,6 +161,22 @@ customModule.superadminInvoicesController = {
                 data: form.serialize(),
                 callback : function(response) {
                     $('#editCreditModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
+        $(document).on('click', '#addEarningsButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#addEarningsForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#addEarningsModal').modal('hide');
                     location.reload();
                 }
             });

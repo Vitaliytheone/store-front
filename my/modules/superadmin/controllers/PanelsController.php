@@ -113,7 +113,7 @@ class PanelsController extends CustomController
     }
 
     /**
-     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionChangeStatus()
     {

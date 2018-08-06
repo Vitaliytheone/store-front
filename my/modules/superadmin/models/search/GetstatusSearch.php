@@ -25,11 +25,15 @@ class GetstatusSearch extends Getstatus
      */
     private $_data = [];
 
+    private $_correctiveTime;
+
     use SearchTrait;
 
     public function __construct(array $config = [])
     {
         parent::__construct($config);
+
+        $this->_correctiveTime = Yii::$app->params['time'];
 
         $this->_url = Yii::$app->params['getstatus_info_url'];
     }
@@ -40,7 +44,7 @@ class GetstatusSearch extends Getstatus
      */
     private function getDefaultDate($option)
     {
-        return $option == 'to' ? date('Y-m-d H:i:s', time()) : date('Y-m-d H:i:s', time() - 1 * 60 * 60);
+        return $option == 'to' ? date('Y-m-d H:i:s', time() + $this->_correctiveTime) : date('Y-m-d H:i:s', time() + $this->_correctiveTime - 1 * 60 * 60);
     }
 
     /**
@@ -57,6 +61,9 @@ class GetstatusSearch extends Getstatus
 
     /**
      * Get data
+     *
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
      */
     private function getData()
     {
@@ -64,7 +71,7 @@ class GetstatusSearch extends Getstatus
             return $this->_data;
         }
 
-        $datetime = $this->getDatetime();
+        $datetime = $this->getDatetime(false);
 
         $url = $this->_url . '?from=' . strtotime($datetime['from']) . '&to=' . strtotime($datetime['to']);
 
@@ -80,10 +87,11 @@ class GetstatusSearch extends Getstatus
 
     /**
      * Get the date-time parameters
+     * @param $render bool
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getDatetime()
+    public function getDatetime($render = true)
     {
         $datetime = $this->getParams();
 
@@ -98,11 +106,21 @@ class GetstatusSearch extends Getstatus
             $datetime['from'] = $this->getDefaultDate('from');
         }
 
+        /* If method is used for render the data add params['time'] */
+        if ($render == true) {
+            return $datetime;
+        }
+
+        /* Take away params['time'] if data receive from the user */
+        $datetime['to'] = date('Y-m-d H:i:s', strtotime($datetime['to']) - $this->_correctiveTime);
+        $datetime['from'] = date('Y-m-d H:i:s', strtotime($datetime['from']) - $this->_correctiveTime);
+
         return $datetime;
     }
 
     /**
-     * @return array
+     * @return array|mixed
+     * @throws \yii\base\InvalidConfigException
      */
     public function getStatuses()
     {
