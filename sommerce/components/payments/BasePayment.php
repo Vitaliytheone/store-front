@@ -15,6 +15,7 @@ use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
 use yii\base\Component;
+use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -142,7 +143,12 @@ abstract class BasePayment extends Component {
         $result = $this->processing($store);
         $this->_checkout && $this->_checkout->save(false);
         $this->log(var_export($result, true));
-        static::success($this->_payment, $result, $store);
+        try {
+            static::success($this->_payment, $result, $store);
+        } catch (Exception $e) {
+            $this->log('Error '. $e->getMessage());
+        }
+
 
         return $result;
     }
@@ -171,6 +177,8 @@ abstract class BasePayment extends Component {
         $checkout = Checkouts::findOne($result['checkout_id']);
 
         if (Checkouts::STATUS_PAID == $checkout->status) {
+            $obj = new static();
+            $obj->log('$checkout->status = ' .  Checkouts::STATUS_PAID);
             return;
         }
 
@@ -249,6 +257,7 @@ abstract class BasePayment extends Component {
             'order' => $order,
             'store' => $store
         ]);
+
     }
 
     /**
