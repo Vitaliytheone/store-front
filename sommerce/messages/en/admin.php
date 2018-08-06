@@ -264,6 +264,11 @@ return [
     'settings.message_settings_saved' => 'Changes successfully saved!',
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 
+    'settings.payments_stripe_guide_1' => 'Publishable key and Secret key you may find on {signup_url}',
+    'settings.payments_stripe_guide_2' => 'Go to {url}',
+    'settings.payments_stripe_guide_3' => ' and add endpoint for <code>http://test.myperfectpanel.com/stripe</code>',
+    'settings.payments_stripe_guide_4' => 'Click on created webhook to get Signing secret',
+
     'settings.payments_2checkout_guide_1' => 'Login to your 2Checkout account.',
     'settings.payments_2checkout_guide_2' => 'Go to',
     'settings.payments_2checkout_guide_2-1-1' => 'Global URL:',
