@@ -105,7 +105,7 @@ class ReferralsController extends CustomController
                 'paid_referrals' => $paidReferrals,
                 'conversion_rate' => $conversionRate,
                 'total_earnings' => (float)$this->_customer->totalEarnings,
-                'unpaid_earnings' => (float)$this->_customer->unpaid_earnings,
+                'unpaid_earnings' => (float)$this->_customer->getUnpaidEarnings(),
             ]
         ]);
     }

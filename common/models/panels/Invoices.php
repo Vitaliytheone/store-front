@@ -205,6 +205,7 @@ class Invoices extends ActiveRecord
      * Paid invoice
      * @param $method
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function paid($method)
     {
@@ -264,6 +265,9 @@ class Invoices extends ActiveRecord
                 }
             };
 
+            $payment = Payments::findOne([
+                'iid' => $this->id,
+            ]);
 
             foreach ($invoiceDetails as $detail) {
 
@@ -315,16 +319,19 @@ class Invoices extends ActiveRecord
                         continue;
                     }
 
+                    if (!$payment) {
+                        continue;
+                    }
+
                     $earnings = ($detail->amount / 100) * Yii::$app->params['referral_percent'];
 
                     $referralEarning = new ReferralEarnings();
                     $referralEarning->customer_id = $referrer->id;
                     $referralEarning->earnings = $earnings;
                     $referralEarning->invoice_id = $this->id;
+                    $referralEarning->status = ReferralEarnings::STATUS_COMPLETED;
                     $referralEarning->save(false);
 
-                    $referrer->unpaid_earnings += $earnings;
-                    $referrer->save(false);
                 }
             }
         }

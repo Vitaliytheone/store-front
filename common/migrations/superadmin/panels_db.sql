@@ -556,4 +556,53 @@ CREATE TABLE `sender_log` (
   KEY `send_method` (`send_method`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_type` tinyint(1) DEFAULT NULL COMMENT '1-Panel, 2-Store',
+  `panel_id` int(11) NOT NULL COMMENT 'panel_id, store_id',
+  `data` varchar(1000) NOT NULL,
+  `type` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `super_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 - restart nginx',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - pending, 1 - completed, 3 - error',
+  `item_id` int(11) DEFAULT NULL,
+  `comment` varchar(3000) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `done_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `auto_orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL DEFAULT '0',
+  `aid` int(11) NOT NULL DEFAULT '0',
+  `link` varchar(1000) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '0',
+  `created_at` int(11) NOT NULL DEFAULT '0',
+  `delay` int(11) NOT NULL,
+  `hash` varchar(32) NOT NULL,
+  `message` tinyint(4) NOT NULL COMMENT '1 - Sorry, that page doesn’t exist! 2 - Sorry, this page isn’t available. 3 - This account’s Tweets are protected. 4 - This Account is Private 0 - Ok',
+  `reason` int(11) NOT NULL COMMENT '1 - user, 2 - admin, 3 - system',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hash` (`hash`),
+  KEY `status` (`status`),
+  KEY `created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `auto_orders_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `aid` int(11) NOT NULL,
+  `link` varchar(1000) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 2018-07-06 11:20:43
