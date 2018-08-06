@@ -1,12 +1,4 @@
 <?php
-$hosts = [];
-$handle = fopen(__DIR__. "/fb.txt", "r");
-while (!feof($handle)) {
-    $buffer = fgets($handle, 4096);
-    $hosts[] = $buffer;
-}
-fclose($handle);
-
 if (!isset($argv[1])) {
     echo "Invalid arguments";
     exit;
