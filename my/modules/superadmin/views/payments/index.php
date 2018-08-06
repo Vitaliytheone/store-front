@@ -9,6 +9,7 @@
     /* @var $searchType array */
 
     use my\helpers\Url;
+    use my\helpers\SpecialCharsHelper;
 
     $this->context->addModule('superadminPaymentsController');
 ?>
@@ -25,7 +26,7 @@
         <li>
             <form class="form-inline" method="GET" id="paymentsSearch" action="<?=Url::toRoute(array_merge(['/payments'], $filters, ['search-type' => null, 'query' => null]))?>">
                 <div class="input-group input-group__select">
-                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'payments.list.search') ?>" value="<?=$filters['query']?>">
+                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'payments.list.search') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
                     <div class="form-group__select">
                         <select  name="search-type">
                             <?php foreach ($searchType as $key => $type): ?>

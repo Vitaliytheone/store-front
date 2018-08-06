@@ -7,6 +7,7 @@
     use yii\helpers\Html;
     use yii\helpers\Json;
     use common\models\panels\AdditionalServices;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border tablesorter-bootstrap" id="providersTable">
     <thead>
@@ -29,7 +30,7 @@
     </thead>
     <tbody>
     <?php if (!empty($providers['models'])) : ?>
-        <?php foreach ($providers['models'] as $provider) : ?>
+        <?php foreach (SpecialCharsHelper::multiPurifier($providers['models']) as $key => $provider) : ?>
             <?php
                 $count = count($provider['projects']);
                 $use = count($provider['usedProjects']);
@@ -97,8 +98,8 @@
                             <?= Html::a(Yii::t('app/superadmin', 'providers.list.action_edit'), Url::toRoute(['/providers/edit', 'id' => $provider['id']]), [
                                 'class' => 'dropdown-item edit-provider',
                                 'data-details' => Json::encode([
-                                    'skype' => $provider['skype'],
-                                    'name' => $provider['name']
+                                    'skype' => $providers['models'][$key]['skype'],
+                                    'name' => $providers['models'][$key]['name']
                                 ]),
                             ])?>
                             <h6 class="dropdown-header"><?= Yii::t('app/superadmin', 'providers.list.action_change_status') ?></h6>

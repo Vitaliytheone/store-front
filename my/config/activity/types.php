@@ -11,6 +11,8 @@ return [
     '1008' => 'Copy custom rates',
     '1009' => 'Reset custom rates',
     '1010' => 'Superadmin sign in as user',
+    '1011' => 'Export users',
+    '1012' => 'Download export users',
 
     '8' => 'Resend order',
     '9' => 'Change status',
@@ -86,6 +88,7 @@ return [
     '92' => 'Edit payment',
     '93' => 'Open unread ticket',
     '94' => 'Delete ticket',
+    '95' => 'View provider list',
 
 //    '' => 'Add custom rates',
 //    '' => 'Reset all custom rates',

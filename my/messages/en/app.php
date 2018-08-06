@@ -379,6 +379,7 @@ return [
     'super_admin.can_work_with.tickets' => 'Tickets',
     'super_admin.can_work_with.providers' => 'Providers',
     'super_admin.can_work_with.reports' => 'Reports',
+    'super_admin.can_work_with.statuses' => 'Statuses',
     'super_admin.can_work_with.referrals' => 'Referrals',
     'super_admin.can_work_with.logs' => 'Logs',
     'super_admin.can_work_with.staffs' => 'Staffs',

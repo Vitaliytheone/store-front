@@ -19,11 +19,11 @@ $loginUrl = Url::toRoute(['/child-panels/sign-in-as-admin', 'id' => $panel['id']
 ])?>
 <?= Html::a(Yii::t('app/superadmin', 'panels.list.expiry_date'), Url::toRoute(['/child-panels/edit-expiry', 'id' => $panel['id']]), [
     'class' => 'dropdown-item edit-expiry',
-    'data-expired' => $panel['expired_datetime']
+    'data-expired' => htmlspecialchars_decode($panel['expired_datetime'])
 ])?>
 <?= Html::a(Yii::t('app/superadmin', 'panels.list.chage_domain'), Url::toRoute(['/child-panels/change-domain', 'id' => $panel['id']]), [
     'class' => 'dropdown-item change-domain',
-    'data-domain' => $panel['site'],
+    'data-domain' => htmlspecialchars_decode($panel['site']),
     'data-subdomain' => $panel['subdomain']
 ])?>
 <?php if (Project::STATUS_ACTIVE == $panel['act']) : ?>

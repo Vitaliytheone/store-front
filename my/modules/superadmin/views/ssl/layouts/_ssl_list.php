@@ -6,6 +6,7 @@
     use my\helpers\Url;
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
+    use my\helpers\SpecialCharsHelper;
 ?>
 <table class="table table-border">
     <thead>
@@ -21,7 +22,7 @@
     </thead>
     <tbody>
     <?php if (!empty($sslList['models'])) : ?>
-        <?php foreach ($sslList['models'] as $ssl) : ?>
+        <?php foreach (SpecialCharsHelper::multiPurifier($sslList['models']) as $ssl) : ?>
             <tr>
                 <td>
                     <?= $ssl->id ?>
