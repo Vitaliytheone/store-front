@@ -1,8 +1,9 @@
 <?php
 namespace my\modules\superadmin\models\forms;
 
+use common\models\panels\Customers;
 use common\models\panels\Invoices;
-use common\models\panels\SuperCreditsLog;
+use common\models\panels\ReferralEarnings;
 use Yii;
 use yii\base\Model;
 
@@ -10,7 +11,7 @@ use yii\base\Model;
  * Class EditInvoiceCreditForm
  * @package my\modules\superadmin\models\forms
  */
-class EditInvoiceCreditForm extends Model {
+class AddInvoiceEarningsForm extends Model {
 
     public $credit;
     public $memo;
@@ -19,6 +20,11 @@ class EditInvoiceCreditForm extends Model {
      * @var Invoices
      */
     private $_invoice;
+
+    /**
+     * @var Customers
+     */
+    private $_customer;
 
     /**
      * @return array the validation rules.
@@ -42,6 +48,11 @@ class EditInvoiceCreditForm extends Model {
         $this->_invoice = $invoice;
     }
 
+    public function setCustomer(Customers $customer)
+    {
+        $this->_customer = $customer;
+    }
+
     /**
      * Save invoice credit value
      * @return bool
@@ -49,13 +60,16 @@ class EditInvoiceCreditForm extends Model {
      */
     public function save()
     {
+        $transaction = Yii::$app->db->beginTransaction();
         if (!$this->validate()) {
+            $transaction->rollBack();
             return false;
         }
 
         $this->_invoice->credit = $this->credit;
 
         if (!$this->_invoice->save(false)) {
+            $transaction->rollBack();
             $this->addError('method', Yii::t('app/superadmin', 'error.invoices.can_not_edit_credit'));
             return false;
         }
@@ -64,28 +78,37 @@ class EditInvoiceCreditForm extends Model {
             $this->_invoice->paid(null);
         }
 
-        $creditLog = new SuperCreditsLog();
-        $creditLog->super_admin_id = Yii::$app->superadmin->id;
-        $creditLog->invoice_id = $this->_invoice->id;
-        $creditLog->memo = $this->memo;
-        $creditLog->credit = $this->credit;
-        $creditLog->save(false);
+        $referralEarnings = new ReferralEarnings();
+        $referralEarnings->customer_id = $this->_customer->id;
+        $referralEarnings->earnings = $this->credit;
+        $referralEarnings->invoice_id = $this->_invoice->id;
+        $referralEarnings->status = ReferralEarnings::STATUS_DEBIT;
+
+        if ($referralEarnings->save(false)) {
+            $transaction->commit();
+        } else {
+            $transaction->rollBack();
+        }
 
         return true;
     }
 
     /**
-     * Validate invoice credit
      * @param $attribute
      * @return bool
      */
-    public function validateCredit($attribute) {
+    public function validateCredit($attribute)
+    {
         if ($this->hasErrors()) {
             return false;
         }
 
         if (0 > $this->credit || $this->credit > $this->_invoice->total) {
             $this->addError($attribute, Yii::t('app/superadmin', 'error.invoices.incorrect_invoice_credit'));
+        }
+
+        if ($this->_customer->getUnpaidEarnings() < $this->credit) {
+            $this->addError('method', Yii::t('app/superadmin', 'error.invoices.not_enough_funds'));
         }
 
         return true;
@@ -96,7 +119,8 @@ class EditInvoiceCreditForm extends Model {
      * @param $attribute
      * @return bool
      */
-    public function validateInvoice($attribute) {
+    public function validateInvoice($attribute)
+    {
         if ($this->hasErrors()) {
             return false;
         }

@@ -2,17 +2,12 @@
 
 namespace my\modules\superadmin\controllers;
 
-use my\helpers\Url;
 use common\models\panels\Customers;
-use common\models\panels\Orders;
-use common\models\panels\ThirdPartyLog;
-use my\modules\superadmin\models\search\OrdersSearch;
 use my\modules\superadmin\models\search\ReferralEarningsSearch;
 use my\modules\superadmin\models\search\ReferralsPaymentsSearch;
 use my\modules\superadmin\models\search\ReferralsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 /**
  * ReferralsController for the `superadmin` module
@@ -42,6 +37,7 @@ class ReferralsController extends CustomController
      * Render total visits
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionTotalVisits($id)
     {
@@ -58,6 +54,7 @@ class ReferralsController extends CustomController
      * Render total visits
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionTotalEarnings($id)
     {
@@ -79,6 +76,7 @@ class ReferralsController extends CustomController
      * Render paid referrals
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionPaidReferrals($id)
     {
@@ -101,6 +99,7 @@ class ReferralsController extends CustomController
      * Render paid referrals
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionUnpaidReferrals($id)
     {

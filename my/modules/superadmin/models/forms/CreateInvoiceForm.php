@@ -5,6 +5,7 @@ use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Project;
+use my\helpers\SpecialCharsHelper;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -152,7 +153,7 @@ class CreateInvoiceForm extends Model {
             return $this->_customers;
         }
 
-        $this->_customers = ArrayHelper::index(Customers::find()->all(), 'id');
+        $this->_customers = ArrayHelper::index(SpecialCharsHelper::multiPurifier(Customers::find()->all()), 'id');
 
         return $this->_customers;
     }
