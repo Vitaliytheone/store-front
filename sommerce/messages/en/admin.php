@@ -320,8 +320,12 @@ return [
 
     'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
     'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
+    'settings.payments_edit_stripe' => 'Edit Stripe',
     'settings.payments_yandex_money_wallet_number' => 'Wallet number',
     'settings.payments_yandex_money_secret_word' => 'Secret word',
+    'settings.payments_stripe_secret_key' => 'Secret key',
+    'settings.payments_stripe_public_key' => 'Public key',
+    'settings.payments_stripe_webhook_secret' => 'Webhook secret',
     'settings.payments_yandex_money_guide_1' => 'Go to',
     'settings.payments_yandex_money_guide_2' => 'Enter login details.',
     'settings.payments_yandex_money_guide_2-1' => 'Secret word: set strong password',
