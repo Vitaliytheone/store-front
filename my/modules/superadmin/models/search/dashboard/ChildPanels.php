@@ -4,6 +4,7 @@ namespace my\modules\superadmin\models\search\dashboard;
 
 use common\models\panels\Project;
 use common\models\panels\Customers;
+use my\helpers\SpecialCharsHelper;
 
 /*
  * Source class for dashboard services
@@ -63,7 +64,7 @@ class ChildPanels extends BaseBlock
             $item['created'] = static::_formatDate($item['created']);
             $item['expired'] = static::_formatDate($item['expired']);
         }
-        return $items;
+        return SpecialCharsHelper::multiPurifier($items);
     }
 
     /**

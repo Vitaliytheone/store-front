@@ -69,7 +69,7 @@ $this->context->addModule('superadminDashboardController', [
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (SpecialCharsHelper::multiPurifier($dashboardBlocks[$activePanel]->getEntities()) as $row) : ?>
+                                <?php foreach ($dashboardBlocks[$activePanel]->getEntities() as $row) : ?>
                                    <tr>
                                        <td data-title="<?= Yii::t('app/superadmin', 'dashboard.table.id') ?>">
                                            <?= $row['id'] ?>

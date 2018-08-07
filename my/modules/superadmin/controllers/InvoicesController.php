@@ -2,9 +2,11 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\Customers;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\Invoices;
+use my\modules\superadmin\models\forms\AddInvoiceEarningsForm;
 use my\modules\superadmin\models\forms\AddInvoicePaymentForm;
 use my\modules\superadmin\models\forms\CreateInvoiceForm;
 use my\modules\superadmin\models\forms\EditInvoiceCreditForm;
@@ -14,6 +16,9 @@ use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use my\components\SuperAccessControl;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
 
 /**
  * InvoicesController for the `superadmin` module
@@ -21,6 +26,46 @@ use yii\web\Response;
 class InvoicesController extends CustomController
 {
     public $activeTab = 'invoices';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => SuperAccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'edit' => ['POST'],
+                    'create' => ['POST'],
+                    'add-payment' => ['POST'],
+                    'edit-credit' => ['POST'],
+                    'add-earnings' => ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
+                    'edit',
+                    'create',
+                    'add-payment',
+                    'edit-credit',
+                    'add-earnings',
+                    'cancel',
+                ],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
 
     /**
      * Renders the index view for the module
@@ -49,11 +94,11 @@ class InvoicesController extends CustomController
      * @access public
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
     public function actionEdit($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $invoice = $this->findModel($id);
 
         if (!$invoice->can('editTotal')) {
@@ -83,8 +128,6 @@ class InvoicesController extends CustomController
      */
     public function actionCreate()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new CreateInvoiceForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -105,11 +148,10 @@ class InvoicesController extends CustomController
      * @access public
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionAddPayment($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $invoice = $this->findModel($id);
 
         $model = new AddInvoicePaymentForm();
@@ -133,15 +175,43 @@ class InvoicesController extends CustomController
      * @access public
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionEditCredit($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $invoice = $this->findModel($id);
 
         $model = new EditInvoiceCreditForm();
         $model->setInvoice($invoice);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * @param $invoice_id
+     * @param $customer_id
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
+     */
+    public function actionAddEarnings($invoice_id, $customer_id)
+    {
+        $invoice = $this->findModel($invoice_id);
+        $customer = $this->findCustomer($customer_id);
+
+        $model = new AddInvoiceEarningsForm();
+        $model->setInvoice($invoice);
+        $model->setCustomer($customer);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [
@@ -161,11 +231,10 @@ class InvoicesController extends CustomController
      * @access public
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionCancel($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $invoice = $this->findModel($id);
 
         if (Invoices::STATUS_UNPAID == $invoice->status) {
@@ -185,6 +254,23 @@ class InvoicesController extends CustomController
     protected function findModel($id)
     {
         $model = Invoices::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
+    }
+
+    /**
+     * Find customers model
+     * @param $id
+     * @return Customers|null
+     * @throws NotFoundHttpException
+     */
+    protected function findCustomer($id)
+    {
+        $model = Customers::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();

@@ -457,6 +457,7 @@ class Project extends ActiveRecord implements ProjectInterface
      * Change project status
      * @param int $status
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function changeStatus($status)
     {
@@ -502,6 +503,8 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Restore project
+     * @return boolean
+     * @throws \yii\base\Exception
      */
     public function restore()
     {
@@ -513,7 +516,7 @@ class Project extends ActiveRecord implements ProjectInterface
         SuperTaskHelper::setTasksNginx($this);
 
         $invoiceModel = new Invoices();
-        $invoiceModel->total = Yii::$app->params['panelDeployPrice'];
+        $invoiceModel->total = $this->child_panel == 1 ? Yii::$app->params['childPanelDeployPrice'] : Yii::$app->params['panelDeployPrice'];
         $invoiceModel->cid = $this->cid;
         $invoiceModel->generateCode();
         $invoiceModel->daysExpired(Yii::$app->params['invoice.domainDuration']);
