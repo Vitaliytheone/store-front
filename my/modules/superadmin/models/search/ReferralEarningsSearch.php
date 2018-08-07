@@ -43,12 +43,9 @@ class ReferralEarningsSearch {
             'COALESCE (project.site, orders.domain) as site',
         ]);
 
-        $referralEarnings->leftJoin('invoice_details', 'invoice_details.invoice_id = referral_earnings.invoice_id AND item IN (' . implode(",", [
-            InvoiceDetails::ITEM_BUY_PANEL,
-            InvoiceDetails::ITEM_PROLONGATION_PANEL
-        ]).')');
-        $referralEarnings->leftJoin('orders', 'orders.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_BUY_PANEL);
-        $referralEarnings->leftJoin('project', 'project.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL);
+        $referralEarnings->leftJoin('invoice_details', 'invoice_details.invoice_id = referral_earnings.invoice_id');
+        $referralEarnings->leftJoin('orders', 'orders.id = invoice_details.item_id');
+        $referralEarnings->leftJoin('project', 'project.id = invoice_details.item_id');
 
         return $referralEarnings->orderBy([
                 'referral_earnings.id' => SORT_DESC
