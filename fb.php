@@ -3,17 +3,16 @@ if (!isset($argv[1])) {
     echo "Invalid arguments";
     exit;
 }
-
 $url = $argv[1];
-
-
 $url = preg_replace_callback("/(www)(\.facebook)/",  function ($matches) {
     return 'm'.$matches[2];
 }, $url);
 $u = $url;
-
 getStartCount($u);
 
+/**
+ * @param $u
+ */
 function getStartCount($u) {
     $value = -1;
     $ch = curl_init();
@@ -37,27 +36,14 @@ function getStartCount($u) {
     curl_close($ch);
 }
 
+/**
+ * @param $str
+ * @param null $encoding
+ * @return mixed
+ */
 function unicodeString($str, $encoding=null) {
     if (is_null($encoding)) $encoding = ini_get('mbstring.internal_encoding');
     return preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/u', create_function('$match', 'return mb_convert_encoding(pack("H*", $match[1]), '.var_export($encoding, true).', "UTF-16BE");'), $str);
-}
-
-/**
- * @param array $parts
- * @return string
- */
-function build_url(array $parts)
-{
-    $scheme   = isset($parts['scheme']) ? ($parts['scheme'] . '://') : '';
-    $host     = ($parts['host'] ?? '');
-    $port     = isset($parts['port']) ? (':' . $parts['port']) : '';
-    $user     = ($parts['user'] ?? '');
-    $pass     = isset($parts['pass']) ? (':' . $parts['pass'])  : '';
-    $pass     = ($user || $pass) ? "$pass@" : '';
-    $path     = ($parts['path'] ?? '');
-    $query    = isset($parts['query']) ? ('?' . $parts['query']) : '';
-    $fragment = isset($parts['fragment']) ? ('#' . $parts['fragment']) : '';
-    return implode('', [$scheme, $user, $pass, $host, $port, $path, $query, $fragment]);
 }
 
 
