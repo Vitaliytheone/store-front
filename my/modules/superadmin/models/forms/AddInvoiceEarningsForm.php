@@ -6,6 +6,7 @@ use common\models\panels\Invoices;
 use common\models\panels\ReferralEarnings;
 use Yii;
 use yii\base\Model;
+use common\models\panels\SuperCreditsLog;
 
 /**
  * Class EditInvoiceCreditForm
@@ -83,6 +84,13 @@ class AddInvoiceEarningsForm extends Model {
         $referralEarnings->earnings = $this->credit;
         $referralEarnings->invoice_id = $this->_invoice->id;
         $referralEarnings->status = ReferralEarnings::STATUS_DEBIT;
+
+        $creditLog = new SuperCreditsLog();
+        $creditLog->super_admin_id = Yii::$app->superadmin->id;
+        $creditLog->invoice_id = $this->_invoice->id;
+        $creditLog->memo = $this->memo;
+        $creditLog->credit = $this->credit;
+        $creditLog->save(false);
 
         if ($referralEarnings->save(false)) {
             $transaction->commit();
