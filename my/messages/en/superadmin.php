@@ -250,6 +250,7 @@ return [
     'payments.list.column_mode' => 'Mode',
     'payments.list.column_created' => 'Created',
     'payments.list.column_updated' => 'Updated',
+    'payments.list.column_ip' => 'IP',
     'payments.list.navs_mode_all' => 'All ({count})',
     'payments.list.navs_mode_manual' => 'Manual ({count})',
     'payments.list.navs_mode_auto' => 'Auto ({count})',
