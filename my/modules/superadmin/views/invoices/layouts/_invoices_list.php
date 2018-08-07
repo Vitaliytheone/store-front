@@ -88,18 +88,19 @@
                                         ]
                                     ])?>
 
+                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_earnings'), Url::toRoute(['/invoices/add-earnings', 'invoice_id' => $invoice->id, 'customer_id' => $invoice->cid]), [
+                                        'class' => 'dropdown-item add-earnings',
+                                        'data-details' => [
+                                            'credit' => PriceHelper::prepare($invoice->credit)
+                                        ],
+                                    ])?>
+
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_cancel'), Url::toRoute(['/invoices/cancel', 'id' => $invoice->id]), [
                                         'class' => 'dropdown-item cancel-menu',
                                         'data-confirm-message' => Yii::t('app/superadmin', 'invoices.list.action_cancel_confirm_message')
                                     ])?>
                                 <?php endif; ?>
 
-                                <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_earnings'), Url::toRoute(['/invoices/add-earnings', 'invoice_id' => $invoice->id, 'customer_id' => $invoice->cid]), [
-                                    'class' => 'dropdown-item add-earnings',
-                                    'data-details' => [
-                                        'credit' => PriceHelper::prepare($invoice->credit)
-                                    ],
-                                ])?>
                             </div>
                         </div>
 

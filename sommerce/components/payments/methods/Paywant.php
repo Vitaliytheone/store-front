@@ -66,7 +66,7 @@ class Paywant extends BasePayment {
         );
 
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        $curlOptions = array(
             CURLOPT_URL => $this->action,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
@@ -75,9 +75,17 @@ class Paywant extends BasePayment {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => http_build_query($postData),
-        ));
+        );
 
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $proxyOptions = [
+                CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port'],
+            ];
+            $curlOptions += $proxyOptions;
+        }
 
+        curl_setopt_array($curl, $curlOptions);
         $response = curl_exec($curl);
         $err = curl_error($curl);
 

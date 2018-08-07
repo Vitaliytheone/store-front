@@ -86,6 +86,7 @@ class ReferralsSearch {
         $referrals->leftJoin('(' . $referralEarningsSum->createCommand()->rawSql .') as re', 'customers.id = re.customer_id');
         $referrals->leftJoin('(' . $unpaidQuery->createCommand()->rawSql .') as unp', 'customers.id = unp.customer_id');
         $referrals->leftJoin('customers as referrer', 'customers.id = referrer.referrer_id');
+        $referrals->having('total_visits > 0');
 
         return $referrals->orderBy([
                 're.total_earnings' => SORT_DESC
@@ -126,8 +127,7 @@ class ReferralsSearch {
     {
         $returnReferrals = [];
 
-        foreach ($referrals as $referral) {
-
+        foreach ($referrals as $key => $referral) {
             $totalVisits = $referral['total_visits'];
             $unpaidReferrals = $referral['unpaid_referrals'];
             $paidReferrals = $referral['paid_referrals'];
