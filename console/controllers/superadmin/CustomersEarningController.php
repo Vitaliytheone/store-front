@@ -13,6 +13,8 @@ use common\models\panels\ReferralEarnings;
 use console\controllers\my\CustomController;
 use common\models\panels\Customers;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Console;
 
 /**
  * Class CustomersEarningController
@@ -23,35 +25,26 @@ class CustomersEarningController extends CustomController
 
     public function actionCompare()
     {
-        $completedEarnings = (new Query())
-            ->select(['customer_id', 'SUM(earnings) as total'])
-            ->from('referral_earnings')
-            ->where(['status' => ReferralEarnings::STATUS_COMPLETED])
-            ->groupBy('customer_id');
-
-        $debitEarnings = (new Query())
-            ->select(['customer_id', 'SUM(earnings) as debit'])
-            ->from('referral_earnings')
-            ->where(['status' => ReferralEarnings::STATUS_DEBIT])
-            ->groupBy('customer_id');
-
         $unpaidEarnings = (new Query())
             ->select([
-                'customers.id',
-                'IF (unpaid_earnings IS NULL, 0, unpaid_earnings) as unpaid_earnings',
-                'IF ((complete.total - debit.debit) IS NULL, 0, (complete.total - debit.debit)) as getUnpaidEarnings'
+                'id',
+                'unpaid_earnings',
             ])
             ->from('customers')
-            ->leftJoin('(' . $completedEarnings->createCommand()->rawSql .') as complete', 'customers.id = complete.customer_id')
-            ->leftJoin('(' . $debitEarnings->createCommand()->rawSql .') as debit', 'customers.id = debit.customer_id')
             ->all();
 
-        foreach ($unpaidEarnings as $key => $customer) {
-            if ($customer['unpaid_earnings'] == $customer['getUnpaidEarnings']) {
-                unset($unpaidEarnings[$key]);
+        $customers = ArrayHelper::index(Customers::find()->all(), 'id');
+
+        foreach ($unpaidEarnings as $key => $value) {
+            $unpaidByMethod = $customers[$value['id']]->getUnpaidEarnings();
+
+            if ($value['unpaid_earnings'] != $unpaidByMethod) {
+                $this->stderr('Incorrect value: ' .  print_r([
+                    'id' => $value['id'],
+                    'unpaid_earnings' => $value['unpaid_earnings'],
+                    'counted_unpaid_earnings' => $unpaidByMethod
+                ], 1) . "\n", Console::FG_YELLOW);
             }
         }
-
-        print_r($unpaidEarnings);
     }
 }
