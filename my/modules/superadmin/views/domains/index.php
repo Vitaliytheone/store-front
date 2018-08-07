@@ -5,6 +5,7 @@
 /* @var $status */
 
 use my\helpers\Url;
+use my\helpers\SpecialCharsHelper;
 
 $this->context->addModule('superadminDomainsController');
 ?>
@@ -21,7 +22,7 @@ $this->context->addModule('superadminDomainsController');
         <li>
             <form class="form-inline" method="GET" id="domainsSearch" action="<?=Url::toRoute(array_merge(['/domains'], $filters, ['query' => null]))?>">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'domains.list.search')?>" value="<?=$filters['query']?>">
+                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'domains.list.search')?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
                     </span>

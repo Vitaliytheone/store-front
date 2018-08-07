@@ -4,6 +4,8 @@
 /* @var $filters */
 
 use my\helpers\Url;
+use my\helpers\SpecialCharsHelper;
+
     $this->context->addModule('superadminReferralsController');
 ?>
 <div class="container-fluid mt-3">
@@ -14,7 +16,7 @@ use my\helpers\Url;
         <li>
             <form class="form-inline" method="GET" id="referralsSearch" action="<?=Url::toRoute(array_merge(['/referrals'], $filters, ['query' => null]))?>">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'referrals.list.search') ?>" value="<?=$filters['query']?>">
+                    <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'referrals.list.search') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
                     </span>

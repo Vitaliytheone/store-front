@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use common\models\stores\Stores;
+use my\helpers\SpecialCharsHelper;
 use Yii;
 use common\models\panels\Customers;
 use yii\db\Query;
@@ -55,7 +56,7 @@ class CustomersSearch extends Customers {
     public function getParams()
     {
         return [
-            'query' => quotemeta($this->getQuery()),
+            'query' => $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : 'all'
         ];
     }

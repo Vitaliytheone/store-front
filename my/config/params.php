@@ -135,4 +135,5 @@ return [
 
     'payment_verification_time' => 1 * 24 * 60 * 60,
     'curl.timeout' => '20',
+    'getstatus_info_url' => ''
 ];

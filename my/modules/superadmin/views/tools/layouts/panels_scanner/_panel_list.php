@@ -3,6 +3,8 @@
 /* @var $this yii\web\View */
 /* @var $panels array */
 
+use my\helpers\SpecialCharsHelper;
+
 ?>
 
 <table class="table table-border">
@@ -16,7 +18,7 @@
     </tr>
     </thead>
     <tbody>
-        <?php foreach ($panels as $panel) : ?>
+        <?php foreach (SpecialCharsHelper::multiPurifier($panels) as $panel) : ?>
             <tr>
                 <td>
                     <?= $panel['panel_id'] ?>
