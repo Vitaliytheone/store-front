@@ -91,7 +91,7 @@
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_earnings'), Url::toRoute(['/invoices/add-earnings', 'invoice_id' => $invoice->id, 'customer_id' => $invoice->cid]), [
                                         'class' => 'dropdown-item add-earnings',
                                         'data-details' => [
-                                            'credit' => PriceHelper::prepare($invoice->credit)
+                                            'credit' => PriceHelper::prepare($invoice->total)
                                         ],
                                     ])?>
 
