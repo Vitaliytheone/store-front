@@ -40,7 +40,7 @@
                 <tr>
                     <td><?= $order->id ?></td>
                     <td>
-                        <?= Html::a($order->customer->email, Url::toRoute("/customers#" . $order->customer->id)); ?>
+                        <?= Html::a(SpecialCharsHelper::multiPurifier($order->customer->email), Url::toRoute("/customers#" . $order->customer->id)); ?>
                     </td>
                     <td>
                         <?php if (!empty($invoice)) : ?>

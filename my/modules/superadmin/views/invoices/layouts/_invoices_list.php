@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $invoices \my\modules\superadmin\models\search\InvoicesSearch */
-    /* @var $invoice \common\models\panels\Invoices */
+    /* @var $invoices \my\modules\superadmin\models\search\InvoicesSearch[] */
+    /* @var $invoice \my\modules\superadmin\models\search\InvoicesSearch */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -81,7 +81,7 @@
 
                                 <?php if (Invoices::STATUS_UNPAID == $invoice->status) : ?>
 
-                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_edit_credit'), Url::toRoute(['/invoices/edit-credit', 'id' => $invoice->id]), [
+                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_credit'), Url::toRoute(['/invoices/edit-credit', 'id' => $invoice->id]), [
                                         'class' => 'dropdown-item edit-credit',
                                         'data-details' => [
                                             'credit' => PriceHelper::prepare($invoice->credit)
@@ -93,6 +93,13 @@
                                         'data-confirm-message' => Yii::t('app/superadmin', 'invoices.list.action_cancel_confirm_message')
                                     ])?>
                                 <?php endif; ?>
+
+                                <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_earnings'), Url::toRoute(['/invoices/add-earnings', 'invoice_id' => $invoice->id, 'customer_id' => $invoice->cid]), [
+                                    'class' => 'dropdown-item add-earnings',
+                                    'data-details' => [
+                                        'credit' => PriceHelper::prepare($invoice->credit)
+                                    ],
+                                ])?>
                             </div>
                         </div>
 
