@@ -77,7 +77,7 @@ class Paywant extends BasePayment {
             CURLOPT_POSTFIELDS => http_build_query($postData),
         );
 
-        if (PROXY_CONFIG['main']['ip']) {
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
             $proxyOptions = [
                 CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
                 CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port'],

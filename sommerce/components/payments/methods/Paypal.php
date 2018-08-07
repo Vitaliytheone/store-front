@@ -433,8 +433,12 @@ class Paypal extends BasePayment {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-        curl_setopt($ch,  CURLOPT_PROXYTYPE,CURLPROXY_HTTP);
-        curl_setopt($ch,  CURLOPT_PROXY ,PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+        }
+
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
 
@@ -539,6 +543,13 @@ class Paypal extends BasePayment {
             CURLOPT_POST            => 1,
             CURLOPT_POSTFIELDS      => $request,
         ];
+
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $curlOptions += [
+                CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']
+            ];
+        }
 
         $ch = curl_init();
         curl_setopt_array($ch, $curlOptions);

@@ -101,8 +101,12 @@ class Paytr extends BasePayment {
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-        curl_setopt($ch,  CURLOPT_PROXYTYPE,CURLPROXY_HTTP);
-        curl_setopt($ch,  CURLOPT_PROXY ,PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+        }
+
         $result = @curl_exec($ch);
 
         if (curl_errno($ch)) {
