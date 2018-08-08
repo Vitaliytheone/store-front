@@ -416,11 +416,19 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, '', 'cron.order.db');
         }
 
-        // Deploy panel tables
+        $sqlPanelPath = Yii::$app->params['panelSqlPath'];
+
+        // Make Sql dump from panel template db
+        if (!DbHelper::makeSqlDump(Yii::$app->params['panelDefaultDatabase'], $sqlPanelPath)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $sqlPanelPath, 'cron.order.make_sql_dump');
+        }
+
         if (DbHelper::existDatabase($project->db)) {
-            $sqlPanelPath = Yii::$app->params['panelSqlPath'];
-            if (file_exists($sqlPanelPath)) {
-                DbHelper::dumpSql($project->db, $sqlPanelPath);
+            // Deploy Sql dump to panel db
+            if (!DbHelper::dumpSql($project->db, $sqlPanelPath)) {
+                $order->status = Orders::STATUS_ERROR;
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $sqlPanelPath, 'cron.order.deploy_sql_dump');
             }
         }
 
