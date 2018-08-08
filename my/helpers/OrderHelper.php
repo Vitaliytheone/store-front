@@ -750,7 +750,6 @@ class OrderHelper {
 
         // Deploy Sql dump to store db
         if (!DbHelper::dumpSql($store->db_name, $storeSqlPath)) {
-            exit;
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
