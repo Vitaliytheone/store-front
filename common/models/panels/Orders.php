@@ -321,6 +321,8 @@ class Orders extends ActiveRecord
                         'cid' => $customerId,
                     ])->andWhere('act <> :status', [
                         ':status' => Project::STATUS_TERMINATED
+                    ])->andWhere('act <> :status', [
+                        ':status' => Project::STATUS_FROZEN
                     ])->exists();
             break;
 

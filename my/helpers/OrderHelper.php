@@ -676,6 +676,8 @@ class OrderHelper {
         $store->trial = $isTrial;
         $store->generateExpired($isTrial);
 
+
+
         if (!$store->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
             return false;
@@ -696,6 +698,8 @@ class OrderHelper {
             'created_at' => time(),
             'type' => ExpiredLog::TYPE_CREATE_STORE_EXPIRY
         ]);
+
+
         $expiredLog->save(false);
 
         $order->status = Orders::STATUS_ADDED;
@@ -746,9 +750,11 @@ class OrderHelper {
 
         // Deploy Sql dump to store db
         if (!DbHelper::dumpSql($store->db_name, $storeSqlPath)) {
+            exit;
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
+
 
         // Change status
         if (Orders::STATUS_ADDED != $order->status) {

@@ -26,6 +26,7 @@ class InvoiceHelper
      */
     public static function prolongPanels()
     {
+
         $date = time() + (Yii::$app->params['project.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         /**
@@ -44,8 +45,8 @@ class InvoiceHelper
                 ':expired' => $date
             ])
             ->groupBy('project.id')
-            ->having("COUNT(invoices.id) = 0")
             ->all();
+
 
         foreach ($projects as $project) {
             $tariff = Tariff::findOne($project->tariff);
@@ -58,22 +59,36 @@ class InvoiceHelper
                 'item_id' => $project->id,
                 'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
             ];
+            $provider = null;
 
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
+                $provider = Project::findOne($project->provider_id);
             }
 
             // Проверяем наличие уже созданного инвойса на продление
-            if ((new Query())
+            if ($invoice = (new Query())
                 ->from(InvoiceDetails::tableName() . ' as id')
                 ->innerJoin(Invoices::tableName() . ' as i', 'i.id = id.invoice_id AND i.status = ' . Invoices::STATUS_UNPAID)
                 ->andWhere($invoiceDetailsAttributes)
-                ->exists()) {
+                ->one()) {
+
+                if ($project->child_panel) {
+                    if ($provider->act == Project::STATUS_FROZEN) {
+                        InvoiceDetails::deleteAll('invoice_id = :invoice_id', [':invoice_id' => $invoice['invoice_id']]);
+                        Invoices::deleteAll('id = :id', [':id' => $invoice['invoice_id']]);
+                    };
+                }
                 continue;
             }
 
-            $transaction = Yii::$app->db->beginTransaction();
+            if ($project->child_panel) {
+                if ($provider->act == Project::STATUS_FROZEN) {
+                    continue;
+                }
+            }
 
+            $transaction = Yii::$app->db->beginTransaction();
             $invoice = new Invoices();
             $invoice->cid = $project->cid;
             $invoice->total = $tariff->price;
