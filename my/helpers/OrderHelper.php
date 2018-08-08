@@ -382,6 +382,8 @@ class OrderHelper {
         $additionalService->type = AdditionalServices::TYPE_INTERNAL;
         $additionalService->auto_order = 1;
         $additionalService->string_name = 1;
+        $additionalService->service_view = 1;
+        $additionalService->store = 1;
         $additionalService->auto_services = 1;
         $additionalService->sc = 1;
         $additionalService->generateApiHelp($domain);
