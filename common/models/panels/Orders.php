@@ -319,10 +319,10 @@ class Orders extends ActiveRecord
 
                 return Project::find()->andWhere([
                         'cid' => $customerId,
-                    ])->andWhere('act <> :status', [
-                        ':status' => Project::STATUS_TERMINATED
-                    ])->andWhere('act <> :status', [
-                        ':status' => Project::STATUS_FROZEN
+                        'child_panel' => 0
+                    ])->andWhere([
+                        'NOT IN', 'act',
+                        [Project::STATUS_TERMINATED, Project::STATUS_FROZEN]
                     ])->exists();
             break;
 

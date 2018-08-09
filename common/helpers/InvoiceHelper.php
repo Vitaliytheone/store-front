@@ -33,20 +33,20 @@ class InvoiceHelper
          * @var Project $project
          */
         $projects = Project::find()
+            ->joinWith('provider provider')
             ->leftJoin('invoice_details', 'invoice_details.item_id = project.id AND invoice_details.item IN (' . implode(",", [
                     InvoiceDetails::ITEM_PROLONGATION_PANEL,
                     InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
                 ]) . ')')
             ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->where(['in', 'project.act', [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
             ->andWhere([
-                'project.act' => Project::STATUS_ACTIVE,
                 'project.no_invoice' => Project::NO_INVOICE_DISABLED
             ])->andWhere('project.expired < :expired', [
                 ':expired' => $date
             ])
             ->groupBy('project.id')
             ->all();
-
 
         foreach ($projects as $project) {
             $tariff = Tariff::findOne($project->tariff);
@@ -63,7 +63,7 @@ class InvoiceHelper
 
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
-                $provider = Project::findOne($project->provider_id);
+                $provider = $project->provider;
             }
 
             // Проверяем наличие уже созданного инвойса на продление
@@ -75,10 +75,15 @@ class InvoiceHelper
 
                 if ($project->child_panel) {
                     if ($provider->act == Project::STATUS_FROZEN) {
-                        InvoiceDetails::deleteAll('invoice_id = :invoice_id', [':invoice_id' => $invoice['invoice_id']]);
-                        Invoices::deleteAll('id = :id', [':id' => $invoice['invoice_id']]);
+                        $invoice = Invoices::findOne($invoice['invoice_id']);
+                        $invoice->status = Invoices::STATUS_CANCELED;
+                        $invoice->save(false);
                     };
                 }
+                continue;
+            }
+
+            if ($project->act != Project::STATUS_ACTIVE) {
                 continue;
             }
 
