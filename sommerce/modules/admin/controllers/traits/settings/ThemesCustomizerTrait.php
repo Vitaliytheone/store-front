@@ -67,7 +67,7 @@ trait ThemesCustomizerTrait
         if (!$customizeForm->save($request->post())) {
             return [
                 "success" => false,
-                "error_meassages" => Yii::t('admin', 'settings.themes_can_not_customize')
+                "error_messages" => Yii::t('admin', 'settings.themes_can_not_customize')
             ];
         }
         return [
