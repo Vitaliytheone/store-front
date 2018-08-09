@@ -4,7 +4,6 @@ namespace sommerce\modules\admin\models\forms;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
-use yii\helpers\Json;
 
 /**
  * Class CustomizeThemeForm
@@ -65,8 +64,8 @@ class CustomizeThemeForm
         if (!$contentData || !$contentSettings) {
             throw new NotFoundHttpException();
         }
-        $result =  array_merge(JSON::decode($contentSettings, true), JSON::decode($contentData, true));
-        return JSON::encode($result);
+        $result = array_merge(json_decode($contentSettings, true), json_decode($contentData, true));
+        return json_encode($result);
     }
 
     /**

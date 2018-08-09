@@ -4,11 +4,9 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 
 use sommerce\modules\admin\models\forms\CustomizeThemeForm;
 use Yii;
-use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use sommerce\modules\admin\components\Url;
 use yii\web\BadRequestHttpException;
-use sommerce\modules\admin\models\forms\EditThemeForm;
 use yii\web\Controller;
 
 /**
@@ -18,9 +16,11 @@ use yii\web\Controller;
  */
 trait ThemesCustomizerTrait
 {
+
     /**
      * Customize theme page
-     * @return string
+     * @param $theme
+     * @return mixed
      */
     public function actionCustomizeTheme($theme)
     {
@@ -38,6 +38,7 @@ trait ThemesCustomizerTrait
 
         return $this->render('customize_theme', ['urls' => $urls]);
     }
+
 
     /**
      * @param $theme
@@ -77,8 +78,7 @@ trait ThemesCustomizerTrait
 
     /**
      * @param $theme
-     * @return string
-     * @throws BadRequestHttpException
+     * @return null|string
      * @throws NotFoundHttpException
      */
     public function actionThemeGetData($theme)
