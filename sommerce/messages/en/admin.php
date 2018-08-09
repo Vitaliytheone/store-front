@@ -264,6 +264,12 @@ return [
     'settings.message_settings_saved' => 'Changes successfully saved!',
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 
+    'settings.payments_stripe_guide_1' => 'Publishable key and Secret key you may find on {signup_url}',
+    'settings.payments_stripe_guide_2' => 'Go to {url}',
+
+    'settings.payments_stripe_guide_3' => ' and add endpoint for ',
+    'settings.payments_stripe_guide_4' => 'Click on created webhook to get Signing secret',
+
     'settings.payments_2checkout_guide_1' => 'Login to your 2Checkout account.',
     'settings.payments_2checkout_guide_2' => 'Go to',
     'settings.payments_2checkout_guide_2-1-1' => 'Global URL:',
@@ -320,8 +326,12 @@ return [
 
     'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
     'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
+    'settings.payments_edit_stripe' => 'Edit Stripe',
     'settings.payments_yandex_money_wallet_number' => 'Wallet number',
     'settings.payments_yandex_money_secret_word' => 'Secret word',
+    'settings.payments_stripe_secret_key' => 'Secret key',
+    'settings.payments_stripe_public_key' => 'Public key',
+    'settings.payments_stripe_webhook_secret' => 'Webhook secret',
     'settings.payments_yandex_money_guide_1' => 'Go to',
     'settings.payments_yandex_money_guide_2' => 'Enter login details.',
     'settings.payments_yandex_money_guide_2-1' => 'Secret word: set strong password',

@@ -460,7 +460,8 @@ return [
 
     'referral_earnings.status.completed' => 'Completed',
     'referral_earnings.status.rejected' => 'Rejected',
-    'referral_earnings.status.reversed' => 'Reversed',
+    'referral_earnings.status.cancel' => 'Cancel',
+    'referral_earnings.status.debit' => 'Debit',
 
     'child_panels.list.header' => 'Child panels',
     'child_panels.list.order_panel' => 'Order new child panel',

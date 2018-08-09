@@ -30,6 +30,7 @@
             <th>Domain</th>
             <th>Status</th>
             <th class="text-nowrap">Created</th>
+            <th class="text-nowrap">IP</th>
             <th class="w-1"></th>
         </tr>
     </thead>
@@ -40,7 +41,7 @@
                 <tr>
                     <td><?= $order->id ?></td>
                     <td>
-                        <?= Html::a($order->customer->email, Url::toRoute("/customers#" . $order->customer->id)); ?>
+                        <?= Html::a(SpecialCharsHelper::multiPurifier($order->customer->email), Url::toRoute("/customers#" . $order->customer->id)); ?>
                     </td>
                     <td>
                         <?php if (!empty($invoice)) : ?>
@@ -55,6 +56,9 @@
                             <?= $order->getFormattedDate('date', 'php:Y-m-d') ?>
                         </span>
                         <?= $order->getFormattedDate('date', 'php:H:i:s') ?>
+                    </td>
+                    <td>
+                        <?= $order->ip ?>
                     </td>
                     <td>
                         <?php

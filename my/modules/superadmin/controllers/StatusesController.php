@@ -54,7 +54,7 @@ class StatusesController extends CustomController
 
         return $this->render('getstatus', [
             'statuses' => $customersSearch->getStatuses(),
-            'datetime' => $customersSearch->getDatetime(),
+            'datetime' => $customersSearch->getDatetime(true),
         ]);
     }
 }

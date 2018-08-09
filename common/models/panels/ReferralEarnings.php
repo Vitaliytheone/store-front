@@ -26,7 +26,8 @@ class ReferralEarnings extends ActiveRecord
 {
     const STATUS_COMPLETED = 1;
     const STATUS_REJECTED = 2;
-    const STATUS_REVERSED = 3;
+    const STATUS_CANCEL = 3;
+    const STATUS_DEBIT = 4;
 
     use UnixTimeFormatTrait;
 
@@ -88,7 +89,8 @@ class ReferralEarnings extends ActiveRecord
         return [
             static::STATUS_COMPLETED => Yii::t('app', 'referral_earnings.status.completed'),
             static::STATUS_REJECTED => Yii::t('app', 'referral_earnings.status.rejected'),
-            static::STATUS_REVERSED => Yii::t('app', 'referral_earnings.status.reversed'),
+            static::STATUS_CANCEL => Yii::t('app', 'referral_earnings.status.cancel'),
+            static::STATUS_DEBIT => Yii::t('app', 'referral_earnings.status.debit'),
         ];
     }
 

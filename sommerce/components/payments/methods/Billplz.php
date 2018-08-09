@@ -215,6 +215,12 @@ class Billplz extends BasePayment {
         curl_setopt($ch, CURLOPT_USERPWD, $secret . ":");
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            curl_setopt($ch,  CURLOPT_PROXYTYPE,CURLPROXY_HTTP);
+            curl_setopt($ch,  CURLOPT_PROXY ,PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+        }
+
         if (!empty($post)) {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);

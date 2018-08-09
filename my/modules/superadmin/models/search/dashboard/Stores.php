@@ -4,6 +4,7 @@ namespace my\modules\superadmin\models\search\dashboard;
 
 use common\models\panels\Customers;
 use common\models\stores\Stores as StoresModel;
+use my\helpers\SpecialCharsHelper;
 
 /*
  * Source class for dashboard services
@@ -56,7 +57,7 @@ class Stores extends  BaseBlock
             $store['created'] = static::_formatDate($store['created']);
             $store['expired'] = static::_formatDate($store['expired']);
         }
-        return $stores;
+        return SpecialCharsHelper::multiPurifier($stores);
     }
 
     /**

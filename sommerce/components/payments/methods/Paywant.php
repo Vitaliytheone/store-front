@@ -64,9 +64,9 @@ class Paywant extends BasePayment {
                 'extraData' => $checkout->id
             )
         );
-
+        //Метод работает без proxy напрямую
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        $curlOptions = array(
             CURLOPT_URL => $this->action,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
@@ -75,9 +75,9 @@ class Paywant extends BasePayment {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => http_build_query($postData),
-        ));
+        );
 
-
+        curl_setopt_array($curl, $curlOptions);
         $response = curl_exec($curl);
         $err = curl_error($curl);
 

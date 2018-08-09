@@ -27,6 +27,7 @@ class PaymentsController extends CustomController
      */
     public function actionResult($method)
     {
+
         /**
          * @var $store Stores
          */
@@ -59,13 +60,16 @@ class PaymentsController extends CustomController
 
         if (!in_array($method, [
             PaymentMethods::METHOD_AUTHORIZE,
+            PaymentMethods::METHOD_STRIPE,
             PaymentMethods::METHOD_PAYPAL
         ])) {
             return $this->redirect('/cart');
         }
 
         $checkoutId = ArrayHelper::getValue($result, 'checkout_id');
-
+        if (!$checkoutId) {
+            $checkoutId = ArrayHelper::getValue($_GET, 'checkout_id');
+        }
         return $this->render('payment_result.twig', [
             'payment_result' => $paymentMethod::getPaymentResult($checkoutId),
         ]);
