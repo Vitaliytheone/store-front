@@ -37,13 +37,6 @@ use yii\helpers\ArrayHelper;
  * @property integer $string_name
  * @property string $params
  * @property string $type_services
- * @property string $provider_service_settings
- * @property string $provider_service_error
- * @property int $service_view
- * @property string $service_options
- * @property int $provider_service_id_label
- * @property int $store
- *
  * @property string $date
  *
  * @property UserServices[] $userServices
@@ -76,8 +69,8 @@ class AdditionalServices extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
-            [['res', 'type', 'status', 'search', 'sc', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],            [['content'], 'string'],
+            [['name', 'apihelp', 'type', 'status'], 'required'],
+            [['res', 'type', 'status', 'search', 'sc', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name'], 'integer'],            [['content'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],
@@ -118,12 +111,6 @@ class AdditionalServices extends ActiveRecord
             'params' => Yii::t('app', 'Params'),
             'type_services' => Yii::t('app', 'Type Services'),
             'date' => Yii::t('app', 'Date'),
-            'provider_service_settings' => Yii::t('app', 'Provider Service Settings'),
-            'service_view' => Yii::t('app', 'Service View'),
-            'provider_service_error' => Yii::t('app', 'Provider Service error'),
-            'service_options' => Yii::t('app', 'Service option'),
-            'provider_service_id_label' => Yii::t('app', 'Provider Service Id Label'),
-            'store' => Yii::t('app', 'Store'),
         ];
     }
 

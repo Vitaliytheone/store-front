@@ -382,8 +382,6 @@ class OrderHelper {
         $additionalService->type = AdditionalServices::TYPE_INTERNAL;
         $additionalService->auto_order = 1;
         $additionalService->string_name = 1;
-        $additionalService->service_view = 1;
-        $additionalService->store = 1;
         $additionalService->auto_services = 1;
         $additionalService->sc = 1;
         $additionalService->generateApiHelp($domain);
@@ -416,19 +414,11 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, '', 'cron.order.db');
         }
 
-        $sqlPanelPath = Yii::$app->params['panelSqlPath'];
-
-        // Make Sql dump from panel template db
-        if (!DbHelper::makeSqlDump(Yii::$app->params['panelDefaultDatabase'], $sqlPanelPath)) {
-            $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $sqlPanelPath, 'cron.order.make_sql_dump');
-        }
-
+        // Deploy panel tables
         if (DbHelper::existDatabase($project->db)) {
-            // Deploy Sql dump to panel db
-            if (!DbHelper::dumpSql($project->db, $sqlPanelPath)) {
-                $order->status = Orders::STATUS_ERROR;
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $sqlPanelPath, 'cron.order.deploy_sql_dump');
+            $sqlPanelPath = Yii::$app->params['panelSqlPath'];
+            if (file_exists($sqlPanelPath)) {
+                DbHelper::dumpSql($project->db, $sqlPanelPath);
             }
         }
 
@@ -686,8 +676,6 @@ class OrderHelper {
         $store->trial = $isTrial;
         $store->generateExpired($isTrial);
 
-
-
         if (!$store->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
             return false;
@@ -708,8 +696,6 @@ class OrderHelper {
             'created_at' => time(),
             'type' => ExpiredLog::TYPE_CREATE_STORE_EXPIRY
         ]);
-
-
         $expiredLog->save(false);
 
         $order->status = Orders::STATUS_ADDED;
@@ -763,7 +749,6 @@ class OrderHelper {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
-
 
         // Change status
         if (Orders::STATUS_ADDED != $order->status) {

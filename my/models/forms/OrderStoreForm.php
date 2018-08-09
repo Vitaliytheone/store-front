@@ -156,7 +156,7 @@ class OrderStoreForm extends Model
         asort($currencies);
 
         $usd = ArrayHelper::getValue($currencies, 'USD');
-        
+
         if ($usd) {
             unset($currencies['USD']);
             $currencies = array_merge(['USD' => $usd], $currencies);
@@ -239,6 +239,7 @@ class OrderStoreForm extends Model
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
         ]);
+
         if (!$order->save()) {
             return false;
         }
@@ -297,7 +298,6 @@ class OrderStoreForm extends Model
 
         $order = $this->createOrder();
 
-
         if (!$order) {
             $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
 
@@ -320,6 +320,7 @@ class OrderStoreForm extends Model
         } else {
             if (!OrderHelper::store($order)) {
                 $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+
                 return false;
             }
         }

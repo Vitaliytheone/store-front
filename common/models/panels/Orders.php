@@ -266,14 +266,14 @@ class Orders extends ActiveRecord
         switch ($status) {
             case static::STATUS_ADDED:
                 $this->status = static::STATUS_ADDED;
-            break;
+                break;
 
             case static::STATUS_PAID:
                 if (static::STATUS_ERROR == $this->status) {
                     $this->processing = 0;
                 }
                 $this->status = static::STATUS_PAID;
-            break;
+                break;
         }
 
         return $this->save(false);
@@ -310,7 +310,7 @@ class Orders extends ActiveRecord
                         'status' => static::STATUS_PENDING,
                         'item' => static::ITEM_BUY_PANEL
                     ])->count();
-            break;
+                break;
 
             case 'create_child_panel':
                 if (empty($customerId)) {
@@ -318,13 +318,11 @@ class Orders extends ActiveRecord
                 }
 
                 return Project::find()->andWhere([
-                        'cid' => $customerId,
-                    ])->andWhere('act <> :status', [
-                        ':status' => Project::STATUS_TERMINATED
-                    ])->andWhere('act <> :status', [
-                        ':status' => Project::STATUS_FROZEN
-                    ])->exists();
-            break;
+                    'cid' => $customerId,
+                ])->andWhere('act <> :status', [
+                    ':status' => Project::STATUS_TERMINATED
+                ])->exists();
+                break;
 
             // TODO:: Dummy rules. Populate it for real conditions.
             case 'create_store':

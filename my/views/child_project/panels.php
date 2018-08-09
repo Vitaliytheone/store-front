@@ -35,10 +35,10 @@
     <div class="col-lg-12">
         <h2 class="page-header">
             <?= Yii::t('app', 'child_panels.list.header')?>
-            <a href="/childpanels/order" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="' . Yii::t('app', 'child_panels.order_can_not_create') . '"' ?>>
+            <a href="/childpanels/order" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
                 <?= Yii::t('app', 'child_panels.list.order_panel')?>
             </a>
-            <div class="alert alert-danger error-hint hidden" role="alert" style="margin-top: 10px">
+            <div class="alert alert-danger error-hint hidden" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <span class="content"></span>
             </div>
@@ -59,17 +59,17 @@
         <div class="col-lg-12">
             <table class="table table-bordered table-hover">
                 <thead>
-                    <tr>
-                        <th><?= Yii::t('app', 'child_panels.list.column_domain')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.column_provider')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.column_created')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.column_expiry')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.order_status')?></th>
-                        <th></th>
-                    </tr>
+                <tr>
+                    <th><?= Yii::t('app', 'child_panels.list.column_domain')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.column_provider')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.column_created')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.column_expiry')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.order_status')?></th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($panels as $panel): ?>
+                <?php foreach ($panels as $panel): ?>
                     <tr>
                         <td><?= $panel['domain'] ?></td>
                         <td><?= $panel['provider']; ?></td>
@@ -112,7 +112,7 @@
                             <?php endif; ?>
                         </td>
                     </tr>
-                    <?php endforeach ?>
+                <?php endforeach ?>
                 </tbody>
             </table>
         </div>

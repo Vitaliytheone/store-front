@@ -2,9 +2,7 @@
 
 namespace common\helpers;
 
-use common\models\panels\AdditionalServices;
 use common\models\stores\StoreProviders;
-
 use function GuzzleHttp\Psr7\build_query;
 use Yii;
 use yii\base\Exception;

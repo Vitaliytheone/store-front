@@ -155,13 +155,7 @@ class DbHelper
 
         $mysqlExecPath = ArrayHelper::getValue(Yii::$app->params, 'mysql_exec_path', 'mysql');
 
-        $cmd = "($mysqlExecPath -h{$host} -u{$username} ";
-
-        if ($password) {
-            $cmd .= "-p{$password} ";
-        }
-
-        $cmd .= "{$db}  < {$path}) 2>&1";
+        $cmd = "$mysqlExecPath -h{$host} -u{$username} -p{$password} {$db}  < {$path}";
 
         exec($cmd, $output, $result);
 
@@ -198,12 +192,13 @@ class DbHelper
         if (!file_exists($dirname) && !mkdir($dirname, 0777)) {
             throw new Exception('Сan not create sql dump directory!');
         }
+
         // Remove old dump
         if (file_exists($filePath) && is_file($filePath) && !unlink($filePath)) {
             throw new Exception('Сan not delete old sql dump file!');
         }
 
-        $cmd = "$mysqldumpExecPath --user=$username --password=$password --host=$host --protocol=tcp --port=3306 $db > $filePath 2>&1";
+        $cmd = "$mysqldumpExecPath --user=$username --password=$password --host=$host --protocol=tcp --port=3306 $db > $filePath";
 
         exec($cmd, $output, $result);
 

@@ -473,7 +473,6 @@ return [
     'child_panels.list.action_domain' => 'Change domain',
     'child_panels.list.action_staff' => 'Staff',
     'child_panels.list.action_dashboard' => 'Dashboard',
-    'child_panels.order_can_not_create' => 'Can not create child panel',
 
     'child_panels.staff.create_new_account' => 'Create new account',
     'child_panels.staff.header' => '{site} staff',

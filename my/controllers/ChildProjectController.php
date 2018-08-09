@@ -104,7 +104,7 @@ class ChildProjectController extends CustomController
         if (!Orders::can('create_child_panel', [
             'customerId' => $user->id
         ])) {
-            return $this->redirect('/childpanels');
+            return $this->redirect('/child-panels');
         }
 
         $this->view->title = Yii::t('app', 'pages.title.child_order');

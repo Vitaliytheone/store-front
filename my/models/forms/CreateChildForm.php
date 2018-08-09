@@ -368,7 +368,8 @@ class CreateChildForm extends Model
         }
 
         $this->_providers = ChildHelper::getProviders($this->_user->id, [
-            Project::STATUS_ACTIVE
+            Project::STATUS_ACTIVE,
+            Project::STATUS_FROZEN
         ]);
 
         return $this->_providers;
