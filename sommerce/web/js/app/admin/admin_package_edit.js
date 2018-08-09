@@ -117,6 +117,7 @@ customModule.adminPackageEdit = {
                         return;
                     }
                     $modalLoader.removeClass('hidden');
+                    console.log(actionUrl);
                     $.ajax({
                         url: actionUrl,
                         type: "GET",

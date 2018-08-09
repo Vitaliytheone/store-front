@@ -22,7 +22,6 @@ class ProductController extends CustomController
     public function actionIndex($id)
     {
         Url::remember();
-
         $product = $this->_findProduct($id);
 
         $this->pageTitle = $product->seo_title;

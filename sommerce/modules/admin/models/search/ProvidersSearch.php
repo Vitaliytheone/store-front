@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
+use common\models\panels\AdditionalServices;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
@@ -26,16 +27,16 @@ class ProvidersSearch extends BaseSearch
         $store = Yii::$app->store->getInstance();
 
         $storeProvidersTable = StoreProviders::tableName();
-        $providersTable = Providers::tableName();
+        $providersTable = AdditionalServices::tableName();
 
         $query = (new Query())
             ->select([
-                'p.id',
-                'p.site',
+                'p.res as id',
+                'p.name as site',
                 'sp.apikey',
             ])
             ->from("$storeProvidersTable sp")
-            ->leftJoin("$providersTable p", 'p.id = sp.provider_id')
+            ->leftJoin("$providersTable p", 'p.res = sp.provider_id')
             ->andWhere([
                 'sp.store_id' => $store->id
             ]);

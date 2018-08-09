@@ -1,9 +1,13 @@
 <?php
 namespace console\controllers\sommerce;
 
+use common\models\panels\AdditionalServices;
 use common\models\store\Languages;
 use common\models\store\Messages;
+use common\models\store\Packages;
+use common\models\store\Suborders;
 use common\models\stores\StoreAdmins;
+use common\models\stores\StoreProviders;
 use sommerce\helpers\MessagesHelper;
 use yii\db\Query;
 use yii\helpers\Console;
@@ -219,6 +223,41 @@ class SystemController extends CustomController
                 'id',
             ])->from($db . '.orders')->all() as $order) {
                 Yii::$app->db->createCommand("UPDATE `{$db}`.`orders` SET `code` = '" . Orders::generateCodeString(). "' WHERE `id` = '" . $order['id'] . "';")->execute();
+            }
+        }
+    }
+
+
+    public function actionChangeProvidersId()
+    {
+        $stores = (new \yii\db\Query())->select([
+            'db_name',
+        ])->from(DB_STORES . '.stores')->all();
+
+        foreach ((new \yii\db\Query())->select([
+                'id',
+                'site'
+        ])->from(DB_STORES . '.providers')->all() as $provider) {
+            $res = (new \yii\db\Query())
+                ->select(['res'])->from(AdditionalServices::tableName())
+                ->where([
+                    'name' => $provider['site'],
+                    'store' => 1,
+                    'status' =>  0
+                ])->one()['res'];
+
+            $store_tables = [
+                'suborders',
+                'packages'
+            ];
+
+            $StoreProvidersTable = StoreProviders::tableName();
+
+            Yii::$app->db->createCommand("UPDATE {$StoreProvidersTable} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+            foreach ($stores as $store) {
+                foreach ($store_tables as $table) {
+                    Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                }
             }
         }
     }

@@ -62,7 +62,6 @@ class ProductsController extends CustomController
             ]
         ]);
         $this->addModule('adminPackageEdit');
-
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),
             'products' => $search->getProductsPackages(),
