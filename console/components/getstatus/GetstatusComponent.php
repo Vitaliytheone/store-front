@@ -2,9 +2,10 @@
 namespace console\components\getstatus;
 
 use common\events\Events;
+use common\models\panels\AdditionalServices;
+use common\models\panels\Project;
 use Yii;
 use common\models\store\Suborders;
-use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use yii\base\Component;
@@ -68,7 +69,7 @@ class GetstatusComponent extends Component
 
         $this->_tableStores = Stores::tableName();
         $this->_tableSuborders = Suborders::tableName();
-        $this->_tableProviders = Providers::tableName();
+        $this->_tableProviders = AdditionalServices::tableName();
         $this->_tableStoreProviders = StoreProviders::tableName();
     }
 
@@ -83,13 +84,12 @@ class GetstatusComponent extends Component
 
     /**
      * Run Getstatus
-     * @return array
      */
     public function run()
     {
         $this->_orders = $this->_getOrders();
 
-        return $this->_getStatus();
+        return $this->_updateStatus();
     }
 
     /**
@@ -120,13 +120,12 @@ class GetstatusComponent extends Component
             $storeProviders = (new Query())
                 ->select([
                     'id' => 'pr.id',
-                    'site' => 'pr.site',
-                    'protocol' => 'pr.protocol',
+                    'site' => 'pr.name',
                     'type' => 'pr.type',
                     'apikey' => 'sp.apikey',
                 ])
                 ->from(['sp' => $this->_tableStoreProviders])
-                ->leftJoin(['pr' => $this->_tableProviders], 'pr.id = sp.provider_id')
+                ->leftJoin(['pr' => $this->_tableProviders], 'pr.res = sp.provider_id')
                 ->andWhere(['store_id' => $storeId])
                 ->indexBy('id')
                 ->all();
@@ -153,11 +152,9 @@ class GetstatusComponent extends Component
             //Populate each order by store and provider data
             foreach ($newOrders as $order) {
                 $providerId = $order['provider_id'];
-
                 $order['store_id'] = $storeId;
                 $order['store_db'] = $store['db_name'];
-                $order['provider_site'] = $storeProviders[$providerId]['site'];
-                $order['provider_protocol'] = $storeProviders[$providerId]['protocol'];
+                $order['provider_site'] = $storeProviders[$providerId]['name'];
                 $order['provider_apikey'] = $storeProviders[$providerId]['apikey'];
 
                 $orders[] = $order;
@@ -171,33 +168,6 @@ class GetstatusComponent extends Component
         return $orders;
     }
 
-    /**
-     * Return Sommerce order status by Panel order status
-     * @param $panelStatus string
-     * @return int
-     * @throws Exception
-     */
-    static function getSommerceStatusByPanelStatus($panelStatus)
-    {
-        $panelStatus = mb_strtolower($panelStatus);
-
-        $statusMatching = [
-            'pending' => Suborders::STATUS_PENDING,
-            'in progress' => Suborders::STATUS_IN_PROGRESS,
-            'partial' => Suborders::STATUS_ERROR,
-            'canceled' => Suborders::STATUS_CANCELED,
-            'processing' => Suborders::STATUS_IN_PROGRESS,
-            'completed' => Suborders::STATUS_COMPLETED,
-        ];
-
-        $sommerceStatus = ArrayHelper::getValue($statusMatching, $panelStatus, null);
-
-        if (is_null($sommerceStatus)) {
-            throw new Exception('Unknown panel status ' . $panelStatus);
-        }
-
-        return $sommerceStatus;
-    }
 
     /**
      * Update suborder by values
@@ -250,195 +220,41 @@ class GetstatusComponent extends Component
             ->execute();
     }
 
-    /**
-     * Change provider protocol from http to https
-     * @param $providerId
-     */
-    private function _switchProviderProtocol($providerId)
-    {
-        Yii::$app->db
-            ->createCommand("
-              UPDATE $this->_tableProviders
-              SET `protocol` = :protocol
-              WHERE `id` = :id
-            ")
-            ->bindValues([
-                ':protocol' => Providers::PROTOCOL_HTTPS,
-                ':id' => $providerId,
-            ])
-            ->execute();
-    }
 
     /**
-     * Get provider order status
-     * @return array
+     * Update provider order status
      */
-    private function _getStatus()
+    private function _updateStatus()
     {
-        $sendResults = [
-            'total' => count($this->_orders),
-            'success' => 0,
-
-            'err_curl' => 0,
-            'err_https' => 0,
-            'err_http' => 0,
-            'err_json' => 0,
-            'err_other' => 0
-        ];
-
-        $mh = curl_multi_init();
-        $connectionHandlers = [];
-
         /**
          * Make request pull
          */
         foreach ($this->_orders as $order) {
+            $panel_db = (new Query())->select('db')
+                ->from(Project::tableName())
+                ->where(['site' => $order['provider_site']])
+                ->one()['db'];
 
-            $apiUrl = ($order['provider_protocol'] == Providers::PROTOCOL_HTTPS ? 'https://' : 'http://') . $order['provider_site'] . '/api/v2';
+            $newStatus = (new Query())->select('status')
+                ->from($panel_db . '.order')
+                ->where(['id' => $order['provider_order_id']])->one()['status'];
 
-            $requestParams = array(
-                'key' => $order['provider_apikey'],
-                'action' => Providers::API_ACTION_STATUS,
-                'order' => $order['provider_order_id'],
-            );
-
-            $curlOptions = array(
-                CURLOPT_URL => $apiUrl,
-                CURLOPT_VERBOSE => false,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query($requestParams),
-
-                CURLOPT_PRIVATE => json_encode([
-                    'store_id' => $order['store_id'],
-                    'store_db' => $order['store_db'],
-                    'suborder_id' => $order['id'],
-                    'status' => $order['status'],
-                    'provider_id' => $order['provider_id'],
-                    'protocol' => $order['provider_protocol']
-                ]),
-            );
-
-            $ch = curl_init();
-            curl_setopt_array($ch, $curlOptions);
-            curl_multi_add_handle($mh, $ch);
-            $connectionHandlers[] = $ch;
-        }
-
-        /**
-         * Make request pull
-         */
-        $running = null;
-        do {
-            curl_multi_exec($mh, $running);
-        } while ($running > 0);
-
-        /**
-         * Process results
-         */
-        foreach ($connectionHandlers as $ch) {
-            $orderInfo = json_decode(curl_getinfo($ch, CURLINFO_PRIVATE), true);
-            $protocol = $orderInfo['protocol'];
-
-            // System Errors
-            if (curl_errno($ch)) {
-                $error = json_encode(curl_error($ch));
-                $values = [
-                    ':status' => Suborders::STATUS_ERROR,
-                    ':provider_response' => $error,
-                    ':provider_response_code' => 0,
-                ];
-
-                $this->_updateOrder($orderInfo, $values);
-
-                $sendResults['err_curl']++;
-
-                curl_multi_remove_handle($mh, $ch);
-
-                continue;
-            }
-
-            $requestInfo = curl_getinfo($ch);
-            $responseRawResult = curl_multi_getcontent($ch);
-            $responseResult = json_decode($responseRawResult, true);
-            $responseCode = $requestInfo['http_code'];
-
-            // Non HTTP 200 error
-            if ($responseCode != 200) {
-                $values = [
-                    ':status' => Suborders::STATUS_ERROR,
-                    ':provider_response' => $responseRawResult,
-                    ':provider_response_code' => $responseCode,
-                ];
-
-                $this->_updateOrder($orderInfo, $values);
-
-                $sendResults['err_http']++;
-
-                curl_multi_remove_handle($mh, $ch);
-                continue;
-            }
-
-            // Protocol error
-            $responseProtocol = parse_url($requestInfo['url'], PHP_URL_SCHEME);
-            if (
-                $protocol == Providers::PROTOCOL_HTTP &&
-                ArrayHelper::getValue($responseResult, 'error') == 'Incorrect request' &&
-                $responseProtocol == 'https'
-            ) {
-                $this->_switchProviderProtocol($orderInfo['provider_id']);
-
-                $sendResults['err_https']++;
-
-                curl_multi_remove_handle($mh, $ch);
-                continue;
-            }
-
-            // Success
-            if (isset(
-                $responseResult['status'],
-                $responseResult['charge'])
-            ) {
-                $values = [
-                    ':status' => static::getSommerceStatusByPanelStatus($responseResult['status']),
-                    ':provider_charge' => $responseResult['charge'],
-                    ':provider_response' => $responseRawResult,
-                    ':provider_response_code' => $responseCode,
-                ];
-
-                $this->_updateOrder($orderInfo, $values);
-
-                $sendResults['success']++;
-
-                curl_multi_remove_handle($mh, $ch);
-                continue;
-            }
-
-            // All other situation
             $values = [
-                ':status' => Suborders::STATUS_ERROR,
-                ':provider_response' => $responseRawResult,
-                ':provider_response_code' => $responseCode,
+                ':status' => $newStatus,
+                ':provider_charge' => '',
+                ':provider_response' => '',
+                ':provider_response_code' => '',
             ];
 
-            if (Suborders::STATUS_ERROR != ArrayHelper::getValue($orderInfo, 'status')) {
-                Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
-                    'suborderId' => $orderInfo['suborder_id'],
-                    'storeId' => $orderInfo['store_id'],
-                    'status' => Suborders::STATUS_ERROR
-                ]);
-            }
+            $orderInfo = [
+                'store_id' => $order['store_id'],
+                'store_db' => $order['store_db'],
+                'suborder_id' => $order['id'],
+                'status' => $order['status'],
+                'provider_id' => $order['provider_id'],
+            ];
 
             $this->_updateOrder($orderInfo, $values);
-
-            $sendResults['err_other']++;
-
-            curl_multi_remove_handle($mh, $ch);
         }
-        
-        curl_multi_close($mh);
-
-        return $sendResults;
     }
 }
