@@ -22,6 +22,10 @@ class InvoicesSearch extends Invoices {
 
     protected $pageSize = 100;
 
+    const SEARCH_TYPE_INVOICE_ID = 1;
+    const SEARCH_TYPE_DOMAIN = 2;
+    const SEARCH_TYPE_CUSTOMER = 3;
+
     use SearchTrait;
 
     /**
@@ -33,6 +37,7 @@ class InvoicesSearch extends Invoices {
         return [
             'query' => $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : null,
+            'search-type' => isset($this->params['search_type']) ? $this->params['search_type'] : null,
         ];
     }
 
@@ -44,6 +49,7 @@ class InvoicesSearch extends Invoices {
     public function buildQuery($status = null)
     {
         $searchQuery = $this->getQuery();
+        $searchType = isset($this->params['search_type']) && is_numeric($this->params['search_type']) ? $this->params['search_type'] : null;
         $id = ArrayHelper::getValue($this->params, 'id');
 
         $invoices = static::find();
@@ -56,13 +62,28 @@ class InvoicesSearch extends Invoices {
 
         $invoices->leftJoin(DB_PANELS . '.invoice_details', 'invoice_details.invoice_id = invoices.id');
 
-        if ($searchQuery) {
-            $invoices->andFilterWhere([
-                'or',
-                ['=', 'invoices.id', $searchQuery],
-                ['like', 'orders.domain', $searchQuery],
-                ['like', 'project.site', $searchQuery],
-            ]);
+        if ($searchQuery && !empty($searchType)) {
+            switch ($searchType) {
+                case static::SEARCH_TYPE_INVOICE_ID:
+                    $searchValues = array();
+                    preg_match_all('/(\d+)(,?)/', $searchQuery, $matches, PREG_SET_ORDER);
+
+                    foreach ($matches as $key => $value) {
+                        $searchValues[] = $value[1];
+                    }
+                    $invoices->andWhere(['invoices.id' => $searchValues]);
+                    break;
+                case  static::SEARCH_TYPE_DOMAIN:
+                    $invoices->andFilterWhere([
+                        'like', 'orders.domain', $searchQuery
+                    ]);
+                    break;
+                case static::SEARCH_TYPE_CUSTOMER:
+                    $invoices->andFilterWhere([
+                        'like', 'invoices.cid', $searchQuery
+                    ]);
+                    break;
+            }
         }
 
         if ($id) {
@@ -190,5 +211,14 @@ class InvoicesSearch extends Invoices {
     public function getDomain()
     {
         return $this->domain ? DomainsHelper::idnToUtf8($this->domain) : '';
+    }
+
+    public function getSearchTypes()
+    {
+        return [
+            static::SEARCH_TYPE_INVOICE_ID => Yii::t('app/superadmin', 'invoices.list.search_type_invoice_id'),
+            static::SEARCH_TYPE_DOMAIN => Yii::t('app/superadmin', 'invoices.list.search_type_domain'),
+            static::SEARCH_TYPE_CUSTOMER => Yii::t('app/superadmin', 'invoices.list.search_type_customer'),
+        ];
     }
 }
