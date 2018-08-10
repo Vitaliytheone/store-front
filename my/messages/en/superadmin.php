@@ -210,6 +210,7 @@ return [
     'invoices.list.search_type_customer' => 'Customer',
     'invoices.list.column_id' => 'ID',
     'invoices.list.column_domain' => 'Domain',
+    'invoices.list.column_customer' => 'Customer',
     'invoices.list.column_total' => 'Total',
     'invoices.list.column_credit' => 'Credit',
     'invoices.list.column_status' => 'Status',

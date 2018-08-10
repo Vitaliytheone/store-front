@@ -80,7 +80,7 @@ class InvoicesSearch extends Invoices {
                     break;
                 case static::SEARCH_TYPE_CUSTOMER:
                     $invoices->andFilterWhere([
-                        'like', 'invoices.cid', $searchQuery
+                        'like', 'customer_email.email', $searchQuery
                     ]);
                     break;
             }
@@ -122,6 +122,7 @@ class InvoicesSearch extends Invoices {
                 InvoiceDetails::ITEM_PROLONGATION_STORE,
         ]) . ')');
         $query->leftJoin(DB_PANELS . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
+        $query->leftJoin(DB_PANELS . '.customers as customer_email', 'customer_email.id = invoices.cid');
 
         return $query;
     }
@@ -148,6 +149,7 @@ class InvoicesSearch extends Invoices {
 
         $invoices = $query->select([
                 'invoices.*',
+                'customer_email.email as email',
                 'COALESCE(orders.domain, project.site, stores.domain, customers.email) as domain',
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
