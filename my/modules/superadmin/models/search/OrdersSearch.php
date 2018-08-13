@@ -1,11 +1,11 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
-use common\models\panels\InvoiceDetails;
 use common\models\panels\Orders;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class OrdersSearch
@@ -164,12 +164,24 @@ class OrdersSearch extends Orders {
         ]);
 
         return [
-            null => 'All (' . $this->count() . ')',
-            Orders::STATUS_ADDED => 'Completed (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_ADDED, 0) . ')',
-            Orders::STATUS_PAID => 'Ready (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_PAID, 0) . ')',
-            Orders::STATUS_PENDING => 'Pending (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_PENDING, 0) . ')',
-            Orders::STATUS_ERROR => 'Error (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_ERROR, 0) . ')',
-            Orders::STATUS_CANCELED => 'Canceled (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_CANCELED, 0) . ')',
+            null => Yii::t('app/superadmin', 'orders.nav.all', [
+                'count' => $this->count(),
+            ]),
+            Orders::STATUS_ADDED => Yii::t('app/superadmin', 'orders.nav.completed', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_ADDED, 0)
+            ]),
+            Orders::STATUS_PAID => Yii::t('app/superadmin', 'orders.nav.ready', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_PAID, 0)
+            ]),
+            Orders::STATUS_PENDING => Yii::t('app/superadmin', 'orders.nav.pending', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_PENDING, 0)
+            ]),
+            Orders::STATUS_ERROR => Yii::t('app/superadmin', 'orders.nav.error', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_ERROR, 0)
+            ]),
+            Orders::STATUS_CANCELED => Yii::t('app/superadmin', 'orders.nav.canceled', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_CANCELED, 0)
+            ]),
         ];
     }
 
@@ -188,12 +200,24 @@ class OrdersSearch extends Orders {
         ]);
 
         $items = [
-            0 => 'All (' . $this->count($status) . ')',
-            Orders::ITEM_BUY_PANEL => 'Panels (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_PANEL, 0) . ')',
-            Orders::ITEM_BUY_CHILD_PANEL => 'Child Panels (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_CHILD_PANEL, 0) . ')',
-            Orders::ITEM_BUY_DOMAIN => 'Domains (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_DOMAIN, 0) . ')',
-            Orders::ITEM_BUY_SSL => 'Certificates (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0) . ')',
-            Orders::ITEM_BUY_STORE => 'Stores (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0) . ')',
+            0 => Yii::t('app/superadmin', 'orders.list.item_all', [
+                'count' => $this->count($status)
+            ]),
+            Orders::ITEM_BUY_PANEL => Yii::t('app/superadmin', 'orders.list.item_panels', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_PANEL, 0)
+            ]),
+            Orders::ITEM_BUY_CHILD_PANEL => Yii::t('app/superadmin', 'orders.list.item_child_panels', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_CHILD_PANEL, 0)
+            ]),
+            Orders::ITEM_BUY_DOMAIN => Yii::t('app/superadmin', 'orders.list.item_domains', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_DOMAIN, 0)
+            ]),
+            Orders::ITEM_BUY_SSL => Yii::t('app/superadmin', 'orders.list.item_domains', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0)
+            ]),
+            Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_domains', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0)
+            ]),
         ];
 
         return $items;

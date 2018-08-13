@@ -11,15 +11,15 @@
     use yii\widgets\LinkPager;
     use my\helpers\SpecialCharsHelper;
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Customer</th>
-            <th>Invoice</th>
+            <th><?= Yii::t('app/superadmin', 'orders.list.column_id') ?></th>
+            <th><?= Yii::t('app/superadmin', 'orders.list.column_customer') ?></th>
+            <th><?= Yii::t('app/superadmin', 'orders.list.column_invoice') ?></th>
             <th class="text-nowrap">
                 <div class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Item</a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'orders.list.column_item') ?></a>
                     <div class="dropdown-menu">
                         <?php foreach ($items as $item => $label) : ?>
                             <a class="dropdown-item <?=($item === (int)$filters['item'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/orders'], $filters, ['item' => $item]))?>"><?= $label ?></a>
@@ -27,11 +27,11 @@
                     </div>
                 </div>
             </th>
-            <th>Domain</th>
-            <th>Status</th>
-            <th class="text-nowrap">Created</th>
-            <th class="text-nowrap">IP</th>
-            <th class="w-1"></th>
+            <th><?= Yii::t('app/superadmin', 'orders.list.column_domain') ?></th>
+            <th><?= Yii::t('app/superadmin', 'orders.list.column_status') ?></th>
+            <th class="text-nowrap"><?= Yii::t('app/superadmin', 'orders.list.column_created') ?></th>
+            <th class="text-nowrap"><?= Yii::t('app/superadmin', 'orders.list.column_ip') ?></th>
+            <th class="table-custom__action-th"></th>
         </tr>
     </thead>
     <tbody>
@@ -68,20 +68,20 @@
                             ]);
                         ?>
                         <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'orders.list.dropdown_actions') ?></button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <?= Html::a('Order details', Url::toRoute(['/orders/details', 'id' => $order->id]), [
+                                <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_order_details'), Url::toRoute(['/orders/details', 'id' => $order->id]), [
                                     'class' => 'dropdown-item order-details',
                                 ])?>
 
                                 <?php if ($showMark) : ?>
-                                    <?= Html::a('Mark as Ready', Url::toRoute(['/orders/change-status', 'id' => $order->id, 'status' => Orders::STATUS_PAID]), [
+                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_ready'), Url::toRoute(['/orders/change-status', 'id' => $order->id, 'status' => Orders::STATUS_PAID]), [
                                         'class' => 'dropdown-item order-status',
                                     ])?>
                                 <?php endif; ?>
 
                                 <?php if (Orders::STATUS_ERROR == $order->status) : ?>
-                                    <?= Html::a('Mark as Сompleted', Url::toRoute(['/orders/change-status', 'id' => $order->id, 'status' => Orders::STATUS_ADDED]), [
+                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_completed'), Url::toRoute(['/orders/change-status', 'id' => $order->id, 'status' => Orders::STATUS_ADDED]), [
                                         'class' => 'dropdown-item order-status',
                                     ])?>
                                 <?php endif; ?>

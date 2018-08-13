@@ -15,6 +15,8 @@ use yii\web\Response;
  */
 class OrdersController extends CustomController
 {
+    public $layout = 'superadmin_v2.php';
+
     public $activeTab = 'orders';
 
     /**
