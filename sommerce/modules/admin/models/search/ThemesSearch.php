@@ -50,7 +50,7 @@ class ThemesSearch extends Model
     public function search()
     {
         $defaultThemes = (new Query())
-           ->select(['id', 'name', 'folder', 'thumbnail', 'js_customize'])
+           ->select(['id', 'name', 'folder', 'thumbnail', 'is_customize'])
             ->from($this->_defaultThemesTable)
             ->orderBy(['position' => SORT_ASC])
             ->all();
@@ -68,7 +68,7 @@ class ThemesSearch extends Model
         // Mark active theme
         foreach ($themes as $idx => &$theme) {
             $active = $theme['folder'] === $currentThemeFolder;
-            $theme['js_customize'] = (boolean)ArrayHelper::getValue($theme, 'js_customize');
+            $theme['is_customize'] = (boolean)ArrayHelper::getValue($theme, 'is_customize');
             $theme['active'] = $active;
             $theme['thumbnail'] = ArrayHelper::getValue($theme, 'thumbnail', CustomThemes::THEME_THUMBNAIL_URL);
         }
