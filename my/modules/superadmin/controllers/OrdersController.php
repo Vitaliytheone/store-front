@@ -2,10 +2,12 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\Invoices;
 use my\helpers\Url;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use my\modules\superadmin\models\search\OrdersSearch;
+use Stripe\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -45,12 +47,22 @@ class OrdersController extends CustomController
      * Change order status
      * @param int $id
      * @param int $status
+     * @return Response
+     * @throws NotFoundHttpException
      */
     public function actionChangeStatus($id, $status)
     {
         $order = $this->findModel($id);
 
         $order->changeStatus($status);
+
+        if ($status == Orders::STATUS_CANCELED) {
+            $invoice_id = Yii::$app->request->get('invoice_id');
+            $invoice = Invoices::findOne($invoice_id);
+
+            $invoice->status = Invoices::STATUS_CANCELED;
+            $invoice->save(false);
+        }
 
         return $this->redirect(Url::toRoute('/orders'));
     }
@@ -59,6 +71,7 @@ class OrdersController extends CustomController
      * Get order details
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDetails($id)
     {

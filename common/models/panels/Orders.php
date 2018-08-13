@@ -274,6 +274,11 @@ class Orders extends ActiveRecord
                 }
                 $this->status = static::STATUS_PAID;
             break;
+
+            case static::STATUS_CANCELED:
+                $this->status = static::STATUS_CANCELED;
+                break;
+
         }
 
         return $this->save(false);

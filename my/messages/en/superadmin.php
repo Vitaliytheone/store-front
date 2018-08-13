@@ -656,4 +656,8 @@ return [
     'orders.list.dropdown_item_order_details' => 'Order details',
     'orders.list.dropdown_item_mark_as_ready' => 'Mark as Ready',
     'orders.list.dropdown_item_mark_as_completed' => 'Mark as Сompleted',
+    'orders.list.dropdown_item_cancel' => 'Cancel',
+    'orders.modal.btn_close' => 'Close',
+    'orders.modal.header_details' => 'Details',
+    'orders.modal.header_logs' => 'Logs',
 ];

@@ -10,6 +10,7 @@
     use my\helpers\Url;
     use yii\widgets\LinkPager;
     use my\helpers\SpecialCharsHelper;
+    use common\models\panels\Invoices;
 ?>
 <table class="table table-sm table-custom">
     <thead>
@@ -83,6 +84,18 @@
                                 <?php if (Orders::STATUS_ERROR == $order->status) : ?>
                                     <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_completed'), Url::toRoute(['/orders/change-status', 'id' => $order->id, 'status' => Orders::STATUS_ADDED]), [
                                         'class' => 'dropdown-item order-status',
+                                    ])?>
+                                <?php endif; ?>
+
+                                <?php if (isset($invoice['status']) && $invoice['status'] == Invoices::STATUS_UNPAID) : ?>
+                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_cancel'), Url::toRoute([
+                                            '/orders/change-status',
+                                        'id' => $order->id,
+                                        'status' => Orders::STATUS_CANCELED,
+                                        'invoice_id' => $invoice['id'],
+                                    ]), [
+                                        'class' => 'dropdown-item cancel-menu',
+                                        'data-confirm-message' => Yii::t('app/superadmin', 'invoices.list.action_cancel_confirm_message')
                                     ])?>
                                 <?php endif; ?>
                             </div>
