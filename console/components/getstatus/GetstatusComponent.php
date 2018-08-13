@@ -4,12 +4,10 @@ namespace console\components\getstatus;
 use common\events\Events;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
-use Yii;
 use common\models\store\Suborders;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use yii\base\Component;
-use yii\base\Exception;
 use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -165,6 +163,9 @@ class GetstatusComponent extends Component
             }
         }
 
+        print_r($orders);
+        exit;
+
         return $orders;
     }
 
@@ -222,6 +223,30 @@ class GetstatusComponent extends Component
 
 
     /**
+     * Get sommerce status from panel
+     * @param int|string $panelStatus
+     * @return int
+     */
+    private function _convertStatus($panelStatus)
+    {
+        $statuses = [
+            '0' => Suborders::STATUS_PENDING,
+            '8' => Suborders::STATUS_PENDING,
+            '1' => Suborders::STATUS_IN_PROGRESS,
+            '3' => Suborders::STATUS_ERROR,
+            '4' => Suborders::STATUS_CANCELED,
+            '5' => Suborders::STATUS_IN_PROGRESS,
+            '6' => Suborders::STATUS_IN_PROGRESS,
+            '7' => Suborders::STATUS_IN_PROGRESS,
+            '2' => Suborders::STATUS_COMPLETED
+        ];
+
+        return $panelStatus[(string)$panelStatus];
+
+    }
+
+
+    /**
      * Update provider order status
      */
     private function _updateStatus()
@@ -236,11 +261,11 @@ class GetstatusComponent extends Component
                 ->one()['db'];
 
             $newStatus = (new Query())->select('status')
-                ->from($panel_db . '.order')
+                ->from($panel_db . '.orders')
                 ->where(['id' => $order['provider_order_id']])->one()['status'];
 
             $values = [
-                ':status' => $newStatus,
+                ':status' => $this->_convertStatus($newStatus),
                 ':provider_charge' => '',
                 ':provider_response' => '',
                 ':provider_response_code' => '',

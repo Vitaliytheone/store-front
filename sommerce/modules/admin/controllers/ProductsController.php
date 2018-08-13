@@ -364,6 +364,9 @@ class ProductsController extends CustomController
 
         $providerServices = $providerApi->services(['Default']);
 
+        print_r($providerServices);
+        exit;
+
         return $providerServices;
     }
 
