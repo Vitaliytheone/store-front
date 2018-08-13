@@ -4,6 +4,7 @@ namespace console\controllers\sommerce;
 use common\models\panels\AdditionalServices;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreProviders;
+use common\models\stores\StoresSendOrders;
 use sommerce\helpers\MessagesHelper;
 use yii\db\Query;
 use yii\helpers\Console;
@@ -230,6 +231,16 @@ class SystemController extends CustomController
             'db_name',
         ])->from(DB_STORES . '.stores')->all();
 
+        $store_tables = [
+            'suborders',
+            'packages'
+        ];
+
+        $stores_tables = [
+            StoreProviders::tableName(),
+            StoresSendOrders::tableName()
+        ];
+
         foreach ((new \yii\db\Query())->select([
                 'id',
                 'site'
@@ -242,14 +253,11 @@ class SystemController extends CustomController
                     'status' =>  0
                 ])->one()['res'];
 
-            $store_tables = [
-                'suborders',
-                'packages'
-            ];
 
-            $StoreProvidersTable = StoreProviders::tableName();
+            foreach ($stores_tables as $table) {
+                Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+            }
 
-            Yii::$app->db->createCommand("UPDATE {$StoreProvidersTable} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
             foreach ($stores as $store) {
                 foreach ($store_tables as $table) {
                     Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
