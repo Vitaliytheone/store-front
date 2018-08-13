@@ -128,6 +128,7 @@ class GetstatusComponent extends Component
                 ->indexBy('id')
                 ->all();
 
+
             $db = $store['db_name'];
 
             $newOrders = (new Query())
@@ -146,13 +147,12 @@ class GetstatusComponent extends Component
                 ->orderBy(['updated_at' => SORT_ASC])
                 ->limit($requestLimit)
                 ->all();
-
             //Populate each order by store and provider data
             foreach ($newOrders as $order) {
                 $providerId = $order['provider_id'];
                 $order['store_id'] = $storeId;
                 $order['store_db'] = $store['db_name'];
-                $order['provider_site'] = $storeProviders[$providerId]['name'];
+                $order['provider_site'] = $storeProviders[$providerId]['site'];
                 $order['provider_apikey'] = $storeProviders[$providerId]['apikey'];
 
                 $orders[] = $order;
@@ -162,9 +162,6 @@ class GetstatusComponent extends Component
                 break;
             }
         }
-
-        print_r($orders);
-        exit;
 
         return $orders;
     }
@@ -181,7 +178,7 @@ class GetstatusComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-        $newStatus = ArrayHelper::getValue($values, ':status');
+        $newStatus = ArrayHelper::getValue($values, ':status');ta
         $oldStatus = ArrayHelper::getValue($orderInfo, 'status');
 
         $defaultValues = [
@@ -206,6 +203,8 @@ class GetstatusComponent extends Component
                 ]);
             }
         }
+
+
 
         $this->_db->createCommand("UPDATE $storeDb.$this->_tableSuborders
               SET 
@@ -241,7 +240,7 @@ class GetstatusComponent extends Component
             '2' => Suborders::STATUS_COMPLETED
         ];
 
-        return $panelStatus[(string)$panelStatus];
+        return $statuses[(string)$panelStatus];
 
     }
 
@@ -260,15 +259,15 @@ class GetstatusComponent extends Component
                 ->where(['site' => $order['provider_site']])
                 ->one()['db'];
 
-            $newStatus = (new Query())->select('status')
+            $providerOrder = (new Query())->select('status', 'charge')
                 ->from($panel_db . '.orders')
-                ->where(['id' => $order['provider_order_id']])->one()['status'];
+                ->where(['id' => $order['provider_order_id']])->one();
 
             $values = [
-                ':status' => $this->_convertStatus($newStatus),
-                ':provider_charge' => '',
+                ':status' => $this->_convertStatus($providerOrder['status']),
+                ':provider_charge' => $providerOrder['charge'],
                 ':provider_response' => '',
-                ':provider_response_code' => '',
+                ':provider_response_code' => '200'
             ];
 
             $orderInfo = [
