@@ -178,7 +178,7 @@ class GetstatusComponent extends Component
     {
         $orderId = $orderInfo['suborder_id'];
         $storeDb = $orderInfo['store_db'];
-        $newStatus = ArrayHelper::getValue($values, ':status');ta
+        $newStatus = ArrayHelper::getValue($values, ':status');
         $oldStatus = ArrayHelper::getValue($orderInfo, 'status');
 
         $defaultValues = [

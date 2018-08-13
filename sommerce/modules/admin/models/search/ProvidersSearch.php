@@ -3,7 +3,6 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\panels\AdditionalServices;
-use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use Yii;

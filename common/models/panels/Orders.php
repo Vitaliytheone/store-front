@@ -260,6 +260,7 @@ class Orders extends ActiveRecord
     /**
      * Change status
      * @param int $status
+     * @return bool
      */
     public function changeStatus($status)
     {
