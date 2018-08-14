@@ -6,7 +6,7 @@
     use yii\bootstrap\Html;
     use my\helpers\SpecialCharsHelper;
 ?>
-<table class="table table-border tablesorter-bootstrap" id="referralsTable">
+<table class="table table-sm table-custom" id="referralsTable">
     <thead>
         <tr>
             <th><?= Yii::t('app/superadmin', 'referrals.list.customer_id')?></th>
