@@ -71,7 +71,6 @@ class OrdersSearch extends Orders {
         }
 
         $orders->leftJoin('customers', 'customers.id = orders.cid');
-        $orders->leftJoin('invoices', 'invoices.cid = orders.cid AND invoices.date = orders.date');
 
         $orders->select([
             'orders.*',
@@ -113,6 +112,7 @@ class OrdersSearch extends Orders {
         }
 
         $orders = $query
+            ->leftJoin('invoices', 'invoices.cid = orders.cid AND invoices.date = orders.date')
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
