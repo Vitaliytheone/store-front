@@ -12,14 +12,14 @@
 <table class="table table-sm table-custom">
     <thead>
         <tr>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.customer_id')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.customer_email')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.total_visits')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.unpaid_referrals')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.paid_referrals')?></th>
+            <th><?= $referrals['sort']->link('customers.id', ['class' => 'sort_link']) ?></th>
+            <th><?= $referrals['sort']->link('customers.email', ['class' => 'sort_link'])?></th>
+            <th><?= $referrals['sort']->link('total_visits', ['class' => 'sort_link'])?></th>
+            <th><?= $referrals['sort']->link('unpaid_referrals', ['class' => 'sort_link'])?></th>
+            <th><?= $referrals['sort']->link('paid_referrals', ['class' => 'sort_link'])?></th>
             <th><?= Yii::t('app/superadmin', 'referrals.list.conversion_rate')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.total_earnings')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.unpaid_earnings')?></th>
+            <th><?= $referrals['sort']->link('total_earnings', ['class' => 'sort_link'])?></th>
+            <th><?= $referrals['sort']->link('unpaid_earnings', ['class' => 'sort_link'])?></th>
         </tr>
     </thead>
     <tbody>

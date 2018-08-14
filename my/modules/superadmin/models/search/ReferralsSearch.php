@@ -4,7 +4,9 @@ namespace my\modules\superadmin\models\search;
 use common\models\panels\Customers;
 use common\models\panels\ReferralEarnings;
 use yii\data\Pagination;
+use yii\data\Sort;
 use yii\db\Query;
+use Yii;
 
 /**
  * Class ReferralsSearch
@@ -119,9 +121,7 @@ class ReferralsSearch extends ReferralEarnings
         $referrals->leftJoin('customers as referrer', 'customers.id = referrer.referrer_id');
         $referrals->having('total_visits > 0');
 
-        return $referrals->orderBy([
-                're.total_earnings' => SORT_DESC
-            ])->groupBy('customers.id');
+        return $referrals->groupBy('customers.id');
     }
 
     /**
@@ -147,7 +147,35 @@ class ReferralsSearch extends ReferralEarnings
         $pages->setPageSize($this->setPageSize());
         $pages->defaultPageSize = static::$pageSizeList[0];
 
+        $sort = new Sort([
+            'attributes' => [
+                'total_earnings' => [
+                    'default' => SORT_DESC,
+                    'label' => Yii::t('app/superadmin', 'referrals.list.total_earnings'),
+                ],
+                'customers.id' => [
+                    'label' => Yii::t('app/superadmin', 'referrals.list.customer_id'),
+                ],
+                'customers.email' => [
+                    'label' => Yii::t('app/superadmin', 'referrals.list.customer_email'),
+                ],
+                'total_visits' => [
+                    'label' => Yii::t('app/superadmin', 'referrals.list.total_visits'),
+                ],
+                'unpaid_referrals' => [
+                    'label' => Yii::t('app/superadmin', 'referrals.list.unpaid_referrals'),
+                ],
+                'paid_referrals' => [
+                    'label' => Yii::t('app/superadmin', 'referrals.list.paid_referrals'),
+                ],
+                'unpaid_earnings' => [
+                    'label' => Yii::t('app/superadmin', 'referrals.list.unpaid_earnings'),
+                ],
+            ],
+        ]);
+
         $model = $this->getReferrals()
+            ->orderBy($sort->orders)
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
@@ -155,6 +183,7 @@ class ReferralsSearch extends ReferralEarnings
         return [
             'models' => $this->prepareReferralsData($model),
             'pages' => $pages,
+            'sort' => $sort,
         ];
     }
 

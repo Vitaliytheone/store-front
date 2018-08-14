@@ -1,5 +1,6 @@
 customModule.superadminReferralsController = {
     run : function(params) {
-        $("#referralsTable").tablesorter();
+        var sortItem = $('.sort_link');
+        sortItem.css('color', 'inherit');
     }
 };
