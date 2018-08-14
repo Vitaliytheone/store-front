@@ -33,4 +33,5 @@ use my\components\ActiveForm;
 </ul>
 <?= $this->render('layouts/_referrals_list', [
         'referrals' => $referrals,
+        'filters' => $filters
 ])?>

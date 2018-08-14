@@ -3,18 +3,22 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\panels\Customers;
 use common\models\panels\ReferralEarnings;
+use yii\data\Pagination;
 use yii\db\Query;
 
 /**
  * Class ReferralsSearch
  * @package my\modules\superadmin\models\search
  */
-class ReferralsSearch {
+class ReferralsSearch extends ReferralEarnings
+{
 
     /**
      * @var array
      */
     protected $_referrals = [];
+
+    public static $pageSizeList = [100, 500, 1000, 5000, 'all'];
 
     use SearchTrait;
 
@@ -29,11 +33,13 @@ class ReferralsSearch {
         ];
     }
 
-    /**
-     * Build sql query
-     * @return array
-     */
-    public function _getReferrals()
+    public function setPageSize()
+    {
+        $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
+        return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
+    }
+
+    private function buildQuery()
     {
         $searchQuery = $this->getQuery();
 
@@ -46,7 +52,6 @@ class ReferralsSearch {
                 ]
             ]);
 
-
         if (!empty($searchQuery)) {
             $referrals->andFilterWhere([
                 'or',
@@ -54,6 +59,32 @@ class ReferralsSearch {
                 ['like', 'customers.email', $searchQuery],
             ]);
         }
+
+        return $referrals;
+
+    }
+
+    private function queryCount()
+    {
+        return $this->buildQuery()
+            ->select([
+                'customers.id',
+                'customers.email',
+                'COUNT(DISTINCT referral_visits.id) as total_visits',
+            ])
+            ->leftJoin('referral_visits', 'customers.id = referral_visits.customer_id')
+            ->having('total_visits > 0')
+            ->groupBy('customers.id')
+            ->count();
+    }
+
+    /**
+     * Build sql query
+     * @return array
+     */
+    public function _getReferrals()
+    {
+        $referrals = $this->buildQuery();
 
         $referralEarningsSum = (new Query())
             ->select([
@@ -90,8 +121,7 @@ class ReferralsSearch {
 
         return $referrals->orderBy([
                 're.total_earnings' => SORT_DESC
-            ])->groupBy('customers.id')
-            ->all();
+            ])->groupBy('customers.id');
     }
 
     /**
@@ -113,8 +143,18 @@ class ReferralsSearch {
      */
     public function search()
     {
+        $pages = new Pagination(['totalCount' => $this->queryCount()]);
+        $pages->setPageSize($this->setPageSize());
+        $pages->defaultPageSize = static::$pageSizeList[0];
+
+        $model = $this->getReferrals()
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
         return [
-            'models' => $this->prepareReferralsData($this->getReferrals())
+            'models' => $this->prepareReferralsData($model),
+            'pages' => $pages,
         ];
     }
 

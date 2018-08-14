@@ -7,12 +7,15 @@ use yii\helpers\Url;
 /* @var $params array */
 /* @var $content string */
 /* @var $pages yii\data\Pagination */
+
+$pageSizeList = CustomersSearch::$pageSizeList;
+$pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
 ?>
 <?= $content ?>
 <span class="ml-3">
     <?= Yii::t('app/superadmin', 'customers.pagination.show') ?>
     <select class="pagination-select" onchange="location = this.value;">
-        <?php foreach (CustomersSearch::$pageSizeList as $pageSize => $label) : ?>
+        <?php foreach ($pageSizeList as $pageSize => $label) : ?>
             '<option value="<?= Url::current(array_merge(['page_size' => $pageSize], $params)) ?>"
                 <?= ($pages->pageSize == $pageSize) ? 'selected' : '' ?>>
             <?= $label ?></option>
