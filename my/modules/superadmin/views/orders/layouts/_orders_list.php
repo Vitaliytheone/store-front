@@ -18,10 +18,10 @@
             <th><?= Yii::t('app/superadmin', 'orders.list.column_id') ?></th>
             <th><?= Yii::t('app/superadmin', 'orders.list.column_customer') ?></th>
             <th><?= Yii::t('app/superadmin', 'orders.list.column_invoice') ?></th>
-            <th class="text-nowrap">
+            <th class="table-custom__dropdown">
                 <div class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'orders.list.column_item') ?></a>
-                    <div class="dropdown-menu">
+                    <a class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'orders.list.column_item') ?></a>
+                    <div class="dropdown-menu dropdown-menu__max">
                         <?php foreach ($items as $item => $label) : ?>
                             <a class="dropdown-item <?=($item === (int)$filters['item'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/orders'], $filters, ['item' => $item]))?>"><?= $label ?></a>
                         <?php endforeach; ?>

@@ -254,10 +254,10 @@ class OrdersSearch extends Orders {
             Orders::ITEM_BUY_DOMAIN => Yii::t('app/superadmin', 'orders.list.item_domains', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_DOMAIN, 0)
             ]),
-            Orders::ITEM_BUY_SSL => Yii::t('app/superadmin', 'orders.list.item_domains', [
+            Orders::ITEM_BUY_SSL => Yii::t('app/superadmin', 'orders.list.item_certificates', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0)
             ]),
-            Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_domains', [
+            Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_stores', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0)
             ]),
         ];
