@@ -8,6 +8,8 @@
     use yii\helpers\Json;
     use common\models\panels\AdditionalServices;
     use my\helpers\SpecialCharsHelper;
+    use yii\widgets\LinkPager;
+    use my\modules\superadmin\widgets\CountPagination;
 ?>
 <table class="table table-border tablesorter-bootstrap" id="providersTable">
     <thead>
@@ -20,11 +22,10 @@
         <th><?= Yii::t('app/superadmin', 'providers.list.column_refill')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_cancel')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_autolist')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_sender')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_type')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_status')?></th>
+        <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link']); ?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_created')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_skype')?></th>
         <th class="w-1"></th>
     </tr>
     </thead>
@@ -89,19 +90,9 @@
                     <?= $provider['date'] > 0 ? $provider['date'] : '' ?>
                 </td>
                 <td>
-                    <?= $provider['skype'] ?>
-                </td>
-                <td>
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'providers.list.actions_label')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <?= Html::a(Yii::t('app/superadmin', 'providers.list.action_edit'), Url::toRoute(['/providers/edit', 'id' => $provider['id']]), [
-                                'class' => 'dropdown-item edit-provider',
-                                'data-details' => Json::encode([
-                                    'skype' => $providers['models'][$key]['skype'],
-                                    'name' => $providers['models'][$key]['name']
-                                ]),
-                            ])?>
                             <h6 class="dropdown-header"><?= Yii::t('app/superadmin', 'providers.list.action_change_status') ?></h6>
 
                             <?php if (AdditionalServices::STATUS_ACTIVE != $provider['status']) : ?>
@@ -148,3 +139,22 @@
 
     </tbody>
 </table>
+<!-- Delete <br> after update ccs to v.2 -->
+<br>
+<!-- -->
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $providers['pages'],]); ?>
+            </ul>
+        </nav>
+        <!-- Pagination End -->
+    </div>
+    <div class="col-md-6 text-md-right">
+        <?= CountPagination::widget([
+            'pages' => $providers['pages'],
+            'params' => $filters
+        ]) ?>
+    </div>
+</div>
