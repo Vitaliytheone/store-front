@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use common\models\panels\Orders;
+use my\helpers\DomainsHelper;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -43,8 +44,8 @@ class OrdersSearch extends Orders {
     {
         $searchQuery = $this->getQuery();
 
-        $orders = static::find();
-
+        $orders = new Query();
+        $orders->from('orders');
         if (null === $status || '' === $status) {
             if (empty($searchQuery)) {
                 $orders->andWhere([
@@ -69,7 +70,16 @@ class OrdersSearch extends Orders {
             ]);
         }
 
-        $orders->joinWith(['customer', 'invoice']);
+        $orders->leftJoin('customers', 'customers.id = orders.cid');
+        $orders->leftJoin('invoices', 'invoices.cid = orders.cid AND invoices.date = orders.date');
+
+        $orders->select([
+            'orders.*',
+            'invoices.id as invoice_id',
+            'invoices.status as invoice_status',
+            'customers.email as customer_email',
+            'customers.id customer_id',
+        ]);
 
         if (!empty($searchQuery)) {
             $orders->andFilterWhere([
@@ -79,10 +89,6 @@ class OrdersSearch extends Orders {
                 ['like', 'customers.email', $searchQuery],
             ]);
         }
-
-        $orders->orderBy([
-            'orders.id' => SORT_DESC
-        ]);
 
         return $orders;
     }
@@ -109,12 +115,48 @@ class OrdersSearch extends Orders {
         $orders = $query
             ->offset($pages->offset)
             ->limit($pages->limit)
+            ->orderBy([
+                'orders.id' => SORT_DESC
+            ])
             ->groupBy('orders.id');
 
+        $models = static::queryAllCache($orders);
+
         return [
-            'models' => static::queryAllCache($orders),
+            'models' => $this->prepareData($models),
             'pages' => $pages,
         ];
+    }
+
+    /**
+     * @param $data array
+     * @return array
+     */
+    private function prepareData($data)
+    {
+        $resultData = array();
+
+        foreach ($data as $key => $value) {
+
+            $resultData[$key]['id'] = $value['id'];
+            $resultData[$key]['cid'] = $value['cid'];
+            $resultData[$key]['status'] = Orders::getStatuses()[$value['status']];
+            $resultData[$key]['hide'] = $value['hide'];
+            $resultData[$key]['processing'] = $value['processing'];
+            $resultData[$key]['date'] = date('Y-m-d', $value['date']);
+            $resultData[$key]['time'] = date('H:i:s', $value['date']);
+            $resultData[$key]['ip'] = $value['ip'];
+            $resultData[$key]['domain'] = $value['domain'] ? DomainsHelper::idnToUtf8($value['domain']) : '';
+            $resultData[$key]['details'] = $value['details'];
+            $resultData[$key]['item'] = Orders::getItems()[$value['item']];
+            $resultData[$key]['item_id'] = $value['item_id'];
+            $resultData[$key]['invoice_id'] = $value['invoice_id'];
+            $resultData[$key]['invoice_status'] = $value['invoice_status'];
+            $resultData[$key]['customer_email'] = $value['customer_email'];
+            $resultData[$key]['customer_id'] = $value['customer_id'];
+        }
+
+        return $resultData;
     }
 
     /**
