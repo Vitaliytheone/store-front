@@ -610,6 +610,7 @@ return [
     'dashboard.services.dnslytics' => 'DNSlytics',
     'dashboard.services.opensrs' => 'OpenSRS',
 
+    'getstatus.title' => 'Getstatus',
     'statuses.list.column_id' => 'ID',
     'statuses.list.column_provider' => 'Provider',
     'statuses.list.column_all_orders' => 'All orders',
@@ -626,6 +627,7 @@ return [
     'statuses.datetimepicker.submit_btn' => 'Submit',
     'statuses.search.search_label' => 'Search:',
 
+    'subscription.title' => 'Subscription',
     'subscription.list.column_id' => 'ID',
     'subscription.list.column_panel' => 'Panel',
     'subscription.list.column_all' => 'All',

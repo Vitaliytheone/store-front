@@ -48,7 +48,7 @@ class StatusesController extends CustomController
      */
     public function actionGetstatus()
     {
-        $this->view->title = 'Getstatus';
+        $this->view->title = Yii::t('app/superadmin', 'getstatus.title');
 
         $customersSearch = new GetstatusSearch();
         $customersSearch->setParams(Yii::$app->request->get());
@@ -61,7 +61,7 @@ class StatusesController extends CustomController
 
     public function actionSubscription()
     {
-        $this->view->title = 'Subscription';
+        $this->view->title = Yii::t('app/superadmin', 'subscription.title');
 
         $model = new SubscriptionSearch();
 
