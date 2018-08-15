@@ -10,6 +10,7 @@ class m180808_114708_20180808_additional_services_table extends Migration
     public function up()
     {
         $this->execute("
+            USE `" . DB_PANELS . "`;
             ALTER TABLE `additional_services` ADD `service_view` TINYINT(1)  NOT NULL  COMMENT '0 - простой провайдер, 1 - PP, 2 - сложный провайдер'  AFTER `provider_rate`;
             ALTER TABLE `additional_services` ADD `service_options` TEXT  NULL  COMMENT '[], key — id услуги провайдера, value – параметры услуги (refill, cancel, shown_fields). Для service_view=[0,2]'  AFTER `service_view`;
             ALTER TABLE `additional_services` ADD `provider_service_id_label` SMALLINT(3)  NULL COMMENT 'индекс label для поля формы provider_service_id' AFTER `service_options`;
@@ -22,6 +23,7 @@ class m180808_114708_20180808_additional_services_table extends Migration
     public function down()
     {
         $this->execute("
+            USE `" . DB_PANELS . "`;
             ALTER TABLE `additional_services` DROP `provider_service_settings`;
             ALTER TABLE `additional_services` DROP `provider_service_api_error`;
             ALTER TABLE `additional_services` DROP `service_view`;

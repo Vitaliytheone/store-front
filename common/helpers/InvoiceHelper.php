@@ -67,15 +67,15 @@ class InvoiceHelper
             }
 
             // Проверяем наличие уже созданного инвойса на продление
-            if ($invoice = (new Query())
-                ->from(InvoiceDetails::tableName() . ' as id')
-                ->innerJoin(Invoices::tableName() . ' as i', 'i.id = id.invoice_id AND i.status = ' . Invoices::STATUS_UNPAID)
-                ->andWhere($invoiceDetailsAttributes)
+            if ($invoiceDetails = InvoiceDetails::find()
+                ->joinWith('invoice')
+                ->where($invoiceDetailsAttributes)
+                ->andWhere(['status' => Invoices::STATUS_UNPAID])
                 ->one()) {
 
                 if ($project->child_panel) {
                     if ($provider->act == Project::STATUS_FROZEN) {
-                        $invoice = Invoices::findOne($invoice['invoice_id']);
+                        $invoice = $invoiceDetails->invoice;
                         $invoice->status = Invoices::STATUS_CANCELED;
                         $invoice->save(false);
                     };
