@@ -550,7 +550,7 @@ class OrderHelper {
             $domainModel->refresh();
             $domainModel->setItemDetails($setNss, 'domain_nss');
             $domainModel->save(false);
-        } else {
+        } else if (!empty($setNss)) {
             $orderStatus = Orders::STATUS_ERROR;
         }
 

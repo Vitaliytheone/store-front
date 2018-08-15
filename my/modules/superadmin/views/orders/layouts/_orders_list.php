@@ -30,6 +30,7 @@
             <th>Domain</th>
             <th>Status</th>
             <th class="text-nowrap">Created</th>
+            <th class="text-nowrap">IP</th>
             <th class="w-1"></th>
         </tr>
     </thead>
@@ -55,6 +56,9 @@
                             <?= $order->getFormattedDate('date', 'php:Y-m-d') ?>
                         </span>
                         <?= $order->getFormattedDate('date', 'php:H:i:s') ?>
+                    </td>
+                    <td>
+                        <?= $order->ip ?>
                     </td>
                     <td>
                         <?php

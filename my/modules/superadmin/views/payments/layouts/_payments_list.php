@@ -46,6 +46,7 @@
 
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'payments.list.column_created')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'payments.list.column_updated')?></th>
+        <th class="text-nowrap"><?= Yii::t('app/superadmin', 'payments.list.column_ip')?></th>
         <th class="w-1"></th>
     </tr>
     </thead>
@@ -92,7 +93,9 @@
                     </span>
                     <?= $payment->getFormattedDate('date_update', 'php:H:i:s') ?>
                 </td>
-
+                <td>
+                    <?= $payment->ip ?>
+                </td>
                 <td>
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'payments.list.actions_label')?></button>
