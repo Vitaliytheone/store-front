@@ -104,7 +104,8 @@
             'items' => [
                 ['label' => Yii::t('app/superadmin', 'header.nav.levopanel_scanner'), 'url' => Url::toRoute('/tools/levopanel')],
                 ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'url' => Url::toRoute('/tools/panelfire')],
-                ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')]
+                ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.db_helper'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/db-helper')],
             ]
         ];
     }
