@@ -7,10 +7,12 @@ use my\helpers\Url;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use my\modules\superadmin\models\search\OrdersSearch;
-use Stripe\Order;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\ContentNegotiator;
+use my\components\SuperAccessControl;
+use yii\filters\VerbFilter;
 
 /**
  * OrdersController for the `superadmin` module
@@ -20,6 +22,36 @@ class OrdersController extends CustomController
     public $layout = 'superadmin_v2.php';
 
     public $activeTab = 'orders';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => SuperAccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'change-status'=> ['POST'],
+                    'details' => ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['details'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
 
     /**
      * Renders the index view for the module
@@ -50,14 +82,16 @@ class OrdersController extends CustomController
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionChangeStatus($id, $status)
+    public function actionChangeStatus()
     {
+        $id = Yii::$app->request->post('id');
+        $status = Yii::$app->request->post('status');
         $order = $this->findModel($id);
 
         $order->changeStatus($status);
 
         if ($status == Orders::STATUS_CANCELED) {
-            $invoice_id = Yii::$app->request->get('invoice_id');
+            $invoice_id = Yii::$app->request->post('invoice_id');
             $invoice = Invoices::findOne($invoice_id);
 
             $invoice->status = Invoices::STATUS_CANCELED;
@@ -115,7 +149,6 @@ class OrdersController extends CustomController
             break;
         }
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
         $logs = $logs->all();
         
         return [

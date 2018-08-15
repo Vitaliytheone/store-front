@@ -141,6 +141,7 @@ class OrdersSearch extends Orders {
             $resultData[$key]['id'] = $value['id'];
             $resultData[$key]['cid'] = $value['cid'];
             $resultData[$key]['status'] = Orders::getStatuses()[$value['status']];
+            $resultData[$key]['check_status'] = $value['status'];
             $resultData[$key]['hide'] = $value['hide'];
             $resultData[$key]['processing'] = $value['processing'];
             $resultData[$key]['date'] = date('Y-m-d', $value['date']);

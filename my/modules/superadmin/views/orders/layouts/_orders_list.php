@@ -62,7 +62,7 @@
                     </td>
                     <td>
                         <?php
-                            $showMark = in_array($order['status'], [
+                            $showMark = in_array($order['check_status'], [
                                 Orders::STATUS_ERROR,
                                 Orders::STATUS_PENDING,
                             ]);
@@ -75,25 +75,30 @@
                                 ])?>
 
                                 <?php if ($showMark) : ?>
-                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_ready'), Url::toRoute(['/orders/change-status', 'id' => $order['id'], 'status' => Orders::STATUS_PAID]), [
+                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_ready'), Url::toRoute('/orders/change-status'), [
                                         'class' => 'dropdown-item order-status',
+                                        'data-method' => 'POST',
+                                        'data-params' => ['id' => $order['id'], 'status' => Orders::STATUS_PAID],
                                     ])?>
                                 <?php endif; ?>
 
-                                <?php if (Orders::STATUS_ERROR == $order['status']) : ?>
-                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_completed'), Url::toRoute(['/orders/change-status', 'id' => $order['id'], 'status' => Orders::STATUS_ADDED]), [
+                                <?php if (Orders::STATUS_ERROR == $order['check_status']) : ?>
+                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_mark_as_completed'), Url::toRoute('/orders/change-status'), [
                                         'class' => 'dropdown-item order-status',
+                                        'data-method' => 'POST',
+                                        'data-params' => ['id' => $order['id'], 'status' => Orders::STATUS_ADDED],
                                     ])?>
                                 <?php endif; ?>
 
                                 <?php if (isset($order['invoice_status']) && $order['invoice_status'] == Invoices::STATUS_UNPAID) : ?>
-                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_cancel'), Url::toRoute([
-                                            '/orders/change-status',
-                                        'id' => $order['id'],
-                                        'status' => Orders::STATUS_CANCELED,
-                                        'invoice_id' => $order['invoice_id'],
-                                    ]), [
+                                    <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_cancel'), Url::toRoute('/orders/change-status'), [
                                         'class' => 'dropdown-item cancel-menu',
+                                        'data-method' => 'POST',
+                                        'data-params' => [
+                                            'id' => $order['id'],
+                                            'status' => Orders::STATUS_CANCELED,
+                                            'invoice_id' => $order['invoice_id'],
+                                        ],
                                         'data-confirm-message' => Yii::t('app/superadmin', 'invoices.list.action_cancel_confirm_message')
                                     ])?>
                                 <?php endif; ?>
