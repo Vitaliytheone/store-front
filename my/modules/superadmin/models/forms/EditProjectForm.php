@@ -228,6 +228,15 @@ class EditProjectForm extends Model {
             $isChangedNoInvoice = true;
         }
 
+        if (
+            $this->_project->child_panel == 1
+            && $this->cid != $this->_project->cid
+            && ($this->_project->act == Project::STATUS_ACTIVE || $this->_project->act == Project::STATUS_FROZEN)
+        ) {
+            $this->addError('cid', Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
+            return false;
+        }
+
         $this->_project->attributes = $this->attributes;
         $this->_project->captcha = !$this->captcha;
 
