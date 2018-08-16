@@ -322,9 +322,9 @@ class Orders extends ActiveRecord
                         'child_panel' => 0
                     ])->andWhere([
                         'act' => Project::STATUS_ACTIVE,
-                    ])->asArray()->all();
-                    Yii::error(var_export($flag));
-                return (boolean) $flag;
+                    ])->exists();
+                
+                return $flag;
             break;
 
             // TODO:: Dummy rules. Populate it for real conditions.
