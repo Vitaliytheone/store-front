@@ -321,8 +321,7 @@ class Orders extends ActiveRecord
                         'cid' => $customerId,
                         'child_panel' => 0
                     ])->andWhere([
-                        'NOT IN', 'act',
-                        [Project::STATUS_TERMINATED, Project::STATUS_FROZEN]
+                        'status' => Project::STATUS_ACTIVE,
                     ])->exists();
             break;
 
