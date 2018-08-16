@@ -47,10 +47,13 @@ class SubscriptionSearch
                 ->select([
                     'auto_orders.status',
                     'COUNT(auto_orders.id) as count',
-                    'AVG(' . $currentTime . ' - avg.updated_at) as avg',
+                    'AVG(' . $currentTime . ' - updated_date.updated_at) as avg',
                 ])
-                ->from($model['db'] . '.auto_orders')
-                ->leftJoin($model['db'] . '.auto_orders as avg', 'avg.id = auto_orders.id AND avg.updated_at > 0 AND avg.status = ' . static::AUTO_ORDERS_STATUS_ACTIVE)
+                ->from('`' . $model['db'] . '`.auto_orders')
+                ->leftJoin(
+                    '`' . $model['db'] . '`.auto_orders as updated_date',
+                    'updated_date.id = auto_orders.id AND updated_date.updated_at > 0 AND updated_date.status = ' . static::AUTO_ORDERS_STATUS_ACTIVE
+                )
                 ->groupBy('auto_orders.status')
                 ->all();
 
