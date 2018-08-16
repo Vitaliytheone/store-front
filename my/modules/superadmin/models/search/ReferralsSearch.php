@@ -70,8 +70,6 @@ class ReferralsSearch extends ReferralEarnings
     {
         return $this->buildQuery()
             ->select([
-                'customers.id',
-                'customers.email',
                 'COUNT(DISTINCT referral_visits.id) as total_visits',
             ])
             ->leftJoin('referral_visits', 'customers.id = referral_visits.customer_id')
