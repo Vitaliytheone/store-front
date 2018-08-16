@@ -81,7 +81,6 @@
             'items' => [
                 ['label' => Yii::t('app/superadmin', 'header.nav.getstatus'), 'url' => Url::toRoute('statuses/getstatus')],
                 ['label' => Yii::t('app/superadmin', 'header.nav.subscription'), 'url' => Url::toRoute('statuses/subscription')],
-                ['label' => Yii::t('app/superadmin', 'header.nav.sender'), 'url' => Url::toRoute('statuses/sender')],
             ]
         ];
     }
