@@ -323,8 +323,6 @@ class Orders extends ActiveRecord
                     ])->andWhere([
                         'act' => Project::STATUS_ACTIVE,
                     ])->exists();
-
-                Yii::error('can ' . $flag);
                 return $flag;
             break;
 
