@@ -35,12 +35,19 @@ class ReferralsSearch extends ReferralEarnings
         ];
     }
 
+    /**
+     * @return int
+     */
     public function setPageSize()
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
         return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
     }
 
+    /**
+     * Build main query
+     * @return Query
+     */
     private function buildQuery()
     {
         $searchQuery = $this->getQuery();
@@ -66,11 +73,15 @@ class ReferralsSearch extends ReferralEarnings
 
     }
 
+    /**
+     * Query for counting the number of data
+     * @return int|string
+     */
     private function queryCount()
     {
         return $this->buildQuery()
             ->select([
-                'COUNT(DISTINCT referral_visits.id) as total_visits',
+                'COUNT(referral_visits.id) as total_visits',
             ])
             ->leftJoin('referral_visits', 'customers.id = referral_visits.customer_id')
             ->having('total_visits > 0')
@@ -148,7 +159,6 @@ class ReferralsSearch extends ReferralEarnings
         $sort = new Sort([
             'attributes' => [
                 'total_earnings' => [
-                    'default' => SORT_DESC,
                     'label' => Yii::t('app/superadmin', 'referrals.list.total_earnings'),
                 ],
                 'customers.id' => [
@@ -171,6 +181,10 @@ class ReferralsSearch extends ReferralEarnings
                 ],
             ],
         ]);
+
+        $sort->defaultOrder = [
+            'total_earnings' => SORT_DESC,
+        ];
 
         $model = $this->getReferrals()
             ->orderBy($sort->orders)

@@ -12,14 +12,14 @@
 <table class="table table-sm table-custom">
     <thead>
         <tr>
-            <th><?= $referrals['sort']->link('customers.id', ['class' => 'sort_link']) ?></th>
-            <th><?= $referrals['sort']->link('customers.email', ['class' => 'sort_link'])?></th>
-            <th><?= $referrals['sort']->link('total_visits', ['class' => 'sort_link'])?></th>
-            <th><?= $referrals['sort']->link('unpaid_referrals', ['class' => 'sort_link'])?></th>
-            <th><?= $referrals['sort']->link('paid_referrals', ['class' => 'sort_link'])?></th>
+            <th><?= $referrals['sort']->link('customers.id', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+            <th><?= $referrals['sort']->link('customers.email', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('total_visits', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('unpaid_referrals', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('paid_referrals', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
             <th><?= Yii::t('app/superadmin', 'referrals.list.conversion_rate')?></th>
-            <th><?= $referrals['sort']->link('total_earnings', ['class' => 'sort_link'])?></th>
-            <th><?= $referrals['sort']->link('unpaid_earnings', ['class' => 'sort_link'])?></th>
+            <th><?= $referrals['sort']->link('total_earnings', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('unpaid_earnings', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
         </tr>
     </thead>
     <tbody>
