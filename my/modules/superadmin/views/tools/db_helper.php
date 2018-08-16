@@ -17,20 +17,8 @@ $this->context->addModule('superadminDbHelperController');
                 <div class="card-block">
                     <div class="row">
                         <div class="col-lg-6">
-                            <?php $form = ActiveForm::begin([
-                                'id' => 'dbHelperForm',
-                                'action' => Url::toRoute('/tools/apply-query'),
-                                'options' => [
-                                    'class' => "form",
-                                ],
-                                'fieldClass' => 'yii\bootstrap\ActiveField',
-                                'fieldConfig' => [
-                                    'template' => "{label}\n{input}",
-                                ],
-                            ]) ?>
-
-                            <select class="form-control db_name">
-                                <option></option>
+                            <select class="form-control db_name" name="db_name">
+                                <option>db_name</option>
                                 <?php foreach ($models['panels'] as $panel) : ?>
                                     <option><?= $panel['panel'] ?></span></option>
                                 <?php endforeach; ?>
@@ -45,7 +33,6 @@ $this->context->addModule('superadminDbHelperController');
                                 'name' => 'db-helper-button',
                                 'id' => 'dbHelperButton'
                             ]) ?>
-                            <?php ActiveForm::end(); ?>
 
                         </div>
                         <div class="col-lg-6">
