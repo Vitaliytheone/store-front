@@ -22,6 +22,8 @@ class InvoicesSearch extends Invoices {
 
     protected $pageSize = 100;
 
+    private $invoiceIdQuery = [];
+
     const SEARCH_TYPE_INVOICE_ID = 1;
     const SEARCH_TYPE_DOMAIN = 2;
     const SEARCH_TYPE_CUSTOMER = 3;
@@ -35,9 +37,10 @@ class InvoicesSearch extends Invoices {
     public function getParams()
     {
         return [
-            'query' => $this->getQuery(),
+            'query' => isset($this->params['search_type']) && $this->params['search_type'] == static::SEARCH_TYPE_INVOICE_ID
+                ? implode(',', $this->invoiceIdQuery) : $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : null,
-            'search-type' => isset($this->params['search_type']) ? $this->params['search_type'] : null,
+            'search_type' => isset($this->params['search_type']) ? $this->params['search_type'] : null,
         ];
     }
 
@@ -65,22 +68,23 @@ class InvoicesSearch extends Invoices {
         if ($searchQuery && !empty($searchType)) {
             switch ($searchType) {
                 case static::SEARCH_TYPE_INVOICE_ID:
-                    $searchValues = array();
-                    preg_match_all('/(\d+)(,?)/', $searchQuery, $matches, PREG_SET_ORDER);
+                    $searchValues = explode(',', $searchQuery);
 
-                    foreach ($matches as $key => $value) {
-                        $searchValues[] = $value[1];
+                    foreach ($searchValues as $key => $value) {
+                        $searchValues[$key] = (int)trim($value);
                     }
+                    $searchValues = array_unique($searchValues);
+                    $this->invoiceIdQuery = $searchValues;
                     $invoices->andWhere(['invoices.id' => $searchValues]);
                     break;
                 case  static::SEARCH_TYPE_DOMAIN:
                     $invoices->andFilterWhere([
-                        'like', 'orders.domain', $searchQuery
+                        'like', 'orders.domain', (string)$searchQuery
                     ]);
                     break;
                 case static::SEARCH_TYPE_CUSTOMER:
                     $invoices->andFilterWhere([
-                        'like', 'customer_email.email', $searchQuery
+                        'like', 'customer_email.email', (string)$searchQuery
                     ]);
                     break;
             }
@@ -215,6 +219,10 @@ class InvoicesSearch extends Invoices {
         return $this->domain ? DomainsHelper::idnToUtf8($this->domain) : '';
     }
 
+    /**
+     * Get labels of search types
+     * @return array
+     */
     public function getSearchTypes()
     {
         return [

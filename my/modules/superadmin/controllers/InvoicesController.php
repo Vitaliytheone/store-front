@@ -85,7 +85,7 @@ class InvoicesController extends CustomController
             'navs' => $invoicesSearch->navs(),
             'status' => is_numeric($status) ? (int)$status : $status,
             'filters' => $invoicesSearch->getParams(),
-            'searchType' => $invoicesSearch->getSearchTypes(),
+            'searchTypes' => $invoicesSearch->getSearchTypes(),
         ]);
     }
 

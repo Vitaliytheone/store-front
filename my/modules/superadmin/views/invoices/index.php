@@ -4,7 +4,7 @@
     /* @var $navs \my\modules\superadmin\models\search\InvoicesSearch */
     /* @var $filters */
     /* @var $status */
-    /* @var $searchType array */
+    /* @var $searchTypes array */
 
     use my\helpers\Url;
     use my\helpers\SpecialCharsHelper;
@@ -30,8 +30,8 @@
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'invoices.list.search') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
                     <div class="form-group__select">
                         <select  name="search_type">
-                            <?php foreach ($searchType as $key => $type): ?>
-                                <option value="<?= $key ?>"<?= ($filters['search-type'] == $key) ? ' selected' : '' ?>><?= $type ?></option>
+                            <?php foreach ($searchTypes as $key => $type): ?>
+                                <option value="<?= $key ?>"<?= ($filters['search_type'] == $key) ? ' selected' : '' ?>><?= $type ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
