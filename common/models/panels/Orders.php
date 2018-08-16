@@ -317,12 +317,15 @@ class Orders extends ActiveRecord
                     return false;
                 }
 
-                return Project::find()->andWhere([
+                $flag = Project::find()->andWhere([
                         'cid' => $customerId,
                         'child_panel' => 0
                     ])->andWhere([
                         'act' => Project::STATUS_ACTIVE,
                     ])->exists();
+
+                Yii::error('can ' . $flag);
+                return $flag;
             break;
 
             // TODO:: Dummy rules. Populate it for real conditions.
