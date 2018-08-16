@@ -88,14 +88,11 @@ class OrdersController extends CustomController
         $status = Yii::$app->request->post('status');
         $order = $this->findModel($id);
 
-        $order->changeStatus($status);
-
         if ($status == Orders::STATUS_CANCELED) {
-            $invoice_id = Yii::$app->request->post('invoice_id');
-            $invoice = Invoices::findOne($invoice_id);
-
-            $invoice->status = Invoices::STATUS_CANCELED;
-            $invoice->save(false);
+            $invoiceId = Yii::$app->request->post('invoice_id');
+            $order->changeStatus($status, $invoiceId);
+        } else {
+            $order->changeStatus($status);
         }
 
         return $this->redirect(Url::toRoute('/orders'));

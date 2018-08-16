@@ -90,7 +90,7 @@
                                     ])?>
                                 <?php endif; ?>
 
-                                <?php if (isset($order['invoice_status']) && $order['invoice_status'] == Invoices::STATUS_UNPAID) : ?>
+                                <?php if (isset($order['invoice_status']) && Orders::STATUS_PENDING == $order['check_status']) : ?>
                                     <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_cancel'), Url::toRoute('/orders/change-status'), [
                                         'class' => 'dropdown-item cancel-menu',
                                         'data-method' => 'POST',

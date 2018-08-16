@@ -112,7 +112,8 @@ class OrdersSearch extends Orders {
         }
 
         $orders = $query
-            ->leftJoin('invoices', 'invoices.cid = orders.cid AND invoices.date = orders.date')
+            ->leftJoin('invoice_details', 'invoice_details.item_id = orders.id')
+            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id')
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
