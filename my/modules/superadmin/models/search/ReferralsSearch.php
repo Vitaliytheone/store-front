@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\panels\Customers;
 use common\models\panels\ReferralEarnings;
+use my\modules\superadmin\widgets\CountPagination;
 use yii\data\Pagination;
 use yii\data\Sort;
 use yii\db\Query;
@@ -19,8 +20,6 @@ class ReferralsSearch extends ReferralEarnings
      * @var array
      */
     protected $_referrals = [];
-
-    public static $pageSizeList = [100, 500, 1000, 5000, 'all'];
 
     use SearchTrait;
 
@@ -41,7 +40,10 @@ class ReferralsSearch extends ReferralEarnings
     public function setPageSize()
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
-        return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
+        if (isset($this->params['page_size']) && $this->params['page_size'] ==  'all') {
+            return $this->queryCount();
+        }
+        return in_array($pageSize, CountPagination::$pageSizeList) ? $pageSize : 100;
     }
 
     /**
@@ -81,7 +83,7 @@ class ReferralsSearch extends ReferralEarnings
     {
         return $this->buildQuery()
             ->select([
-                'COUNT(referral_visits.id) as total_visits',
+                'referral_visits.id as total_visits',
             ])
             ->leftJoin('referral_visits', 'customers.id = referral_visits.customer_id')
             ->having('total_visits > 0')
@@ -91,7 +93,7 @@ class ReferralsSearch extends ReferralEarnings
 
     /**
      * Build sql query
-     * @return array
+     * @return Query
      */
     public function _getReferrals()
     {
@@ -154,7 +156,7 @@ class ReferralsSearch extends ReferralEarnings
     {
         $pages = new Pagination(['totalCount' => $this->queryCount()]);
         $pages->setPageSize($this->setPageSize());
-        $pages->defaultPageSize = static::$pageSizeList[0];
+        $pages->defaultPageSize = CountPagination::$pageSizeList[100];
 
         $sort = new Sort([
             'attributes' => [

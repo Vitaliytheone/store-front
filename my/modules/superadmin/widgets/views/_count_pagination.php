@@ -1,6 +1,6 @@
 <?php
 
-use my\modules\superadmin\models\search\CustomersSearch;
+use my\modules\superadmin\widgets\CountPagination;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
@@ -8,7 +8,7 @@ use yii\helpers\Url;
 /* @var $content string */
 /* @var $pages yii\data\Pagination */
 
-$pageSizeList = CustomersSearch::$pageSizeList;
+$pageSizeList = CountPagination::$pageSizeList;
 $pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
 ?>
 <?= $content ?>
