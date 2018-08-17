@@ -9,6 +9,7 @@ use common\models\panels\Tariff;
 use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\helpers\CurrencyHelper;
 /**
@@ -206,6 +207,30 @@ class EditProjectForm extends Model {
     }
 
     /**
+     * Check panel to owned of child panel
+     * @return bool
+     */
+    private function checkOwnedChildPanel()
+    {
+        $query = (new Query())
+            ->select([
+                'project.id',
+            ])
+            ->from('project')
+            ->leftJoin('additional_services', 'additional_services.name = project.site')
+            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
+            ->where(['project.site' => $this->_project->site])
+            ->andWhere(['child_panel.act' => [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
+            ->all();
+
+        if (empty($query)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Save project changes
      * @return bool
      */
@@ -228,11 +253,7 @@ class EditProjectForm extends Model {
             $isChangedNoInvoice = true;
         }
 
-        if (
-            $this->_project->child_panel == 1
-            && $this->cid != $this->_project->cid
-            && ($this->_project->act == Project::STATUS_ACTIVE || $this->_project->act == Project::STATUS_FROZEN)
-        ) {
+        if ($this->cid != $this->_project->cid && !$this->checkOwnedChildPanel()) {
             $this->addError('cid', Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
             return false;
         }
