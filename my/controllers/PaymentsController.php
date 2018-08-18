@@ -97,6 +97,10 @@ class PaymentsController extends CustomController
 			                'GetTransactionDetails' => $GetTransactionDetails
                         ], $payment->id);
 
+                        if (empty($GetTransactionDetails['EMAIL'])) {
+                            $GetTransactionDetails['EMAIL'] = '';
+                        }
+
                         $payments = Payments::findOne(['id' => $payment->id]);
                         $payments->comment = $GetTransactionDetails['EMAIL'].'; '.$response['PAYMENTINFO_0_TRANSACTIONID'];
                         $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
@@ -105,10 +109,6 @@ class PaymentsController extends CustomController
                         $doExpressCheckoutPaymentStatus = ArrayHelper::getValue($response, 'PAYMENTINFO_0_PAYMENTSTATUS', $getTransactionDetailsStatus);
                         $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
                         $doExpressCheckoutPaymentStatus = strtolower($doExpressCheckoutPaymentStatus);
-
-                        if (empty($GetTransactionDetails['EMAIL'])) {
-                            $GetTransactionDetails['EMAIL'] = '';
-                        }
 
 			            if ($getTransactionDetailsStatus == 'completed' && $getTransactionDetailsStatus == $doExpressCheckoutPaymentStatus) {
 			            	$hash = PaymentHash::findOne(['hash' => $response['PAYMENTINFO_0_TRANSACTIONID']]);
