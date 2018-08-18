@@ -24,14 +24,10 @@ class PaymentsController extends CustomController
     /**
      * Process payment method
      * @param $method
+     * @return string|\yii\web\Response
      */
     public function actionResult($method)
     {
-
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
 
         // if ($_SERVER['REMOTE_ADDR'] == '') {
         //     $json = json_decode('', 1);
@@ -41,7 +37,7 @@ class PaymentsController extends CustomController
         // }
 
         $paymentMethod = Payment::getPayment($method);
-        $result = $paymentMethod->process($store);
+        $result = $paymentMethod->process($this->store);
 
         if (!empty($result['content']) && !$paymentMethod->redirectProcessing) {
 

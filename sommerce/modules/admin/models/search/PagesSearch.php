@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
+use common\models\stores\Stores;
 use Yii;
 use common\models\store\Pages;
 use yii\db\Query;
@@ -13,14 +14,12 @@ class PagesSearch extends Pages
     private $_pagesTable;
 
     /**
-     * @inheritdoc
+     * @param Stores $store
      */
-    public function init()
+    public function setStore(Stores $store)
     {
-        $this->_db = Yii::$app->store->getInstance()->db_name;
+        $this->_db = $store->db_name;
         $this->_pagesTable = $this->_db . "." . Pages::tableName();
-
-        parent::init();
     }
 
     /**

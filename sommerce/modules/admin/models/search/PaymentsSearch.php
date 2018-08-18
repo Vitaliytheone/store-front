@@ -3,6 +3,7 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\stores\PaymentGateways;
+use common\models\stores\Stores;
 use Yii;
 use yii\base\Model;
 use yii\db\Query;
@@ -39,13 +40,14 @@ class PaymentsSearch extends Model
 
     const PAGE_SIZE = 100;
 
-    public function init()
+    /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
     {
-        $this->_db = yii::$app->store->getInstance()->db_name;
+        $this->_db = $store->db_name;
         $this->_paymentsTable = $this->_db . "." . Payments::tableName();
         $this->_paymentMethodsTable = PaymentMethods::tableName();
-
-            parent::init();
     }
 
     /**

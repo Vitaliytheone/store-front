@@ -3,7 +3,6 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\store\Files;
-use common\models\stores\StoreAdminAuth;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -18,8 +17,6 @@ use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
-use yii\helpers\ArrayHelper;
-use yii\validators\FileValidator;
 use yii\web\Response;
 
 /**
@@ -66,10 +63,9 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.page_title');
         $this->addModule('adminGeneral');
 
-        /** @var \common\models\stores\Stores $store */
-        $store = Yii::$app->store->getInstance();
+        
 
-        $storeForm = EditStoreSettingsForm::findOne($store->id);
+        $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
 
         $storeForm->setUser(Yii::$app->user);
@@ -121,6 +117,7 @@ class SettingsController extends CustomController
         }
 
         $searchModel = new LinksSearch();
+        $searchModel->setStore($this->store);
 
         return ['links' => $searchModel->searchLinksByType($link_type|0)];
     }
