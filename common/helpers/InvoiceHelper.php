@@ -102,7 +102,6 @@ class InvoiceHelper
                 }
                 continue;
             }
-            echo "000000";
 
             if ($project->act != Project::STATUS_ACTIVE) {
                 continue;
