@@ -3,6 +3,7 @@
 namespace my\modules\superadmin\controllers;
 
 use my\helpers\Url;
+use my\modules\superadmin\models\search\SenderSearch;
 use my\modules\superadmin\models\search\SubscriptionSearch;
 use Yii;
 use my\components\SuperAccessControl;
@@ -67,6 +68,23 @@ class StatusesController extends CustomController
 
         return $this->render('subscription', [
             'model' => $model->search(),
+        ]);
+    }
+
+    /**
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionSender()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'sender.title');
+
+        $model = new SenderSearch();
+        $model->setParams(Yii::$app->request->get());
+
+        return $this->render('sender', [
+            'senders' => $model->search(),
+            'datetime' => $model->getDatetime(true)
         ]);
     }
 }
