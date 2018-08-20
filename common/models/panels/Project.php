@@ -97,7 +97,6 @@ use yii\helpers\ArrayHelper;
  * @property Tariff $tariffDetails
  * @property Tariff $newTariffDetails
  * @property Customers $customer
- * @property Customers $provider
  * @property UserServices[] $userServices
  * @property string $domain
  */
@@ -363,14 +362,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'cid']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvider()
-    {
-        return $this->hasOne(Project::class, ['id' => 'provider_id']);
     }
 
     /**
