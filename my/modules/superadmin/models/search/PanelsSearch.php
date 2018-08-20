@@ -121,6 +121,7 @@ class PanelsSearch {
                 ['=', 'project.id', $searchQuery],
                 ['like', 'project.name', $searchQuery],
                 ['like', 'project.site', $searchQuery],
+                ['like', 'cust1.email', $searchQuery],
             ]);
         }
 
