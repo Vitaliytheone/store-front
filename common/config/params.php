@@ -14,6 +14,7 @@ return [
 
     'panelSqlPath' => Yii::getAlias('@sommerce/runtime/sql/panel_template.sql'), // Путь к дампу базы данных соззданной панели
     'storeSqlPath' => Yii::getAlias('@sommerce/runtime/sql/store_template.sql'), // Путь к дампу базы данных созданного магазина
+    'mysql_exec_path' =>'mysqldump',
 
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
     'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых магазинов
