@@ -207,25 +207,26 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item', [
-                ':order_item' => Orders::ITEM_PROLONGATION_SSL,
-            ])
-            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
-                ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_SSL
-            ])
-            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
-                ':status' => Invoices::STATUS_UNPAID
-            ])
-            ->andWhere([
-                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
-            ])
-            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
-                ':expiry' => $date
-            ])
-            ->groupBy('ssl_cert.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->all();
-
+        ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item ', [
+            ':order_item' => Orders::ITEM_PROLONGATION_SSL
+        ])
+        ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
+            ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_SSL
+        ])
+        ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
+            ':status' => Invoices::STATUS_UNPAID
+        ])
+        ->andWhere(['<>','orders.status', Orders::STATUS_ERROR])
+        ->andWhere([
+            'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+        ])
+        ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
+            ':expiry' => $date
+        ])
+        ->groupBy('ssl_cert.id')
+        ->having("COUNT(invoices.id) = 0")
+        ->all();
+        
         foreach ($sslCerts as $ssl) {
 
             /** @var ProjectInterface $project */
