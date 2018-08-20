@@ -39,6 +39,7 @@ class InvoiceHelper
              return null;
          }
 
+
         return Project::findOne(['site' => $site]);
     }
     /**
@@ -53,7 +54,6 @@ class InvoiceHelper
          * @var Project $project
          */
         $projects = Project::find()
-            ->joinWith('provider provider')
             ->leftJoin('invoice_details', 'invoice_details.item_id = project.id AND invoice_details.item IN (' . implode(",", [
                     InvoiceDetails::ITEM_PROLONGATION_PANEL,
                     InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
@@ -68,6 +68,7 @@ class InvoiceHelper
             ->groupBy('project.id')
             ->all();
 
+
         foreach ($projects as $project) {
             $tariff = Tariff::findOne($project->tariff);
 
@@ -81,8 +82,6 @@ class InvoiceHelper
             ];
             $provider = null;
 
-
-
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
                 $provider = self::getOwnerChildPanel($project);
@@ -94,7 +93,6 @@ class InvoiceHelper
                 ->where($invoiceDetailsAttributes)
                 ->andWhere(['status' => Invoices::STATUS_UNPAID])
                 ->one()) {
-
                 if ($project->child_panel) {
                     if ($provider->act == Project::STATUS_FROZEN) {
                         $invoice = $invoiceDetails->invoice;
@@ -104,6 +102,7 @@ class InvoiceHelper
                 }
                 continue;
             }
+            echo "000000";
 
             if ($project->act != Project::STATUS_ACTIVE) {
                 continue;
