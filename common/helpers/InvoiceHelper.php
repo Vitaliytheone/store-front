@@ -21,6 +21,26 @@ use yii\db\Query;
  */
 class InvoiceHelper
 {
+
+    /**
+     * @param $project
+     * @return Project
+     */
+    private static function getOwnerChildPanel(Project $project)
+    {
+        $site = (new Query())
+            ->select(['additional_services.name as site'])
+            ->from('project')
+            ->leftJoin('additional_services', 'additional_services.res = project.provider_id')
+            ->andWhere(['project.site' =>  $project->site])
+            ->one()['site'];
+
+         if (empty($site)) {
+             return null;
+         }
+
+        return Project::findOne(['site' => $site]);
+    }
     /**
      * Create invoices to prolong panels
      */
@@ -61,9 +81,11 @@ class InvoiceHelper
             ];
             $provider = null;
 
+
+
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
-                $provider = $project->provider;
+                $provider = self::getOwnerChildPanel($project);
             }
 
             // Проверяем наличие уже созданного инвойса на продление
