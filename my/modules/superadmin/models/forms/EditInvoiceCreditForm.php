@@ -45,6 +45,7 @@ class EditInvoiceCreditForm extends Model {
     /**
      * Save invoice credit value
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -76,6 +77,7 @@ class EditInvoiceCreditForm extends Model {
     /**
      * Validate invoice credit
      * @param $attribute
+     * @return bool
      */
     public function validateCredit($attribute) {
         if ($this->hasErrors()) {
@@ -92,6 +94,7 @@ class EditInvoiceCreditForm extends Model {
     /**
      * Validate invoice
      * @param $attribute
+     * @return bool
      */
     public function validateInvoice($attribute) {
         if ($this->hasErrors()) {

@@ -3,6 +3,7 @@
 namespace my\modules\superadmin\controllers;
 
 use my\helpers\Url;
+use my\modules\superadmin\models\search\SubscriptionSearch;
 use Yii;
 use my\components\SuperAccessControl;
 use my\modules\superadmin\models\forms\DatetimepickerForm;
@@ -47,7 +48,7 @@ class StatusesController extends CustomController
      */
     public function actionGetstatus()
     {
-        $this->view->title = 'Getstatus';
+        $this->view->title = Yii::t('app/superadmin', 'getstatus.title');
 
         $customersSearch = new GetstatusSearch();
         $customersSearch->setParams(Yii::$app->request->get());
@@ -55,6 +56,17 @@ class StatusesController extends CustomController
         return $this->render('getstatus', [
             'statuses' => $customersSearch->getStatuses(),
             'datetime' => $customersSearch->getDatetime(),
+        ]);
+    }
+
+    public function actionSubscription()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'subscription.title');
+
+        $model = new SubscriptionSearch();
+
+        return $this->render('subscription', [
+            'model' => $model->search(),
         ]);
     }
 }

@@ -81,11 +81,18 @@
 
                                 <?php if (Invoices::STATUS_UNPAID == $invoice->status) : ?>
 
-                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_edit_credit'), Url::toRoute(['/invoices/edit-credit', 'id' => $invoice->id]), [
+                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_credit'), Url::toRoute(['/invoices/edit-credit', 'id' => $invoice->id]), [
                                         'class' => 'dropdown-item edit-credit',
                                         'data-details' => [
                                             'credit' => PriceHelper::prepare($invoice->credit)
                                         ]
+                                    ])?>
+
+                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_earnings'), Url::toRoute(['/invoices/add-earnings', 'invoice_id' => $invoice->id, 'customer_id' => $invoice->cid]), [
+                                        'class' => 'dropdown-item add-earnings',
+                                        'data-details' => [
+                                            'credit' => PriceHelper::prepare($invoice->total)
+                                        ],
                                     ])?>
 
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_cancel'), Url::toRoute(['/invoices/cancel', 'id' => $invoice->id]), [
@@ -93,6 +100,7 @@
                                         'data-confirm-message' => Yii::t('app/superadmin', 'invoices.list.action_cancel_confirm_message')
                                     ])?>
                                 <?php endif; ?>
+
                             </div>
                         </div>
 

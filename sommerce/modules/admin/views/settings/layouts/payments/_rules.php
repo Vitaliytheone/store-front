@@ -27,6 +27,10 @@
             echo $this->render('rules/_yandex_money', ['store' => $store]);
             break;
 
+        case EditPaymentMethodForm::METHOD_STRIPE:
+            echo $this->render('rules/_stripe', ['store' => $store]);
+            break;
+
         case EditPaymentMethodForm::METHOD_YANDEX_CARDS:
             echo $this->render('rules/_yandex_money', ['store' => $store]);
             break;

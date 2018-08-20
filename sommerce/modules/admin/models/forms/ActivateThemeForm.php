@@ -65,6 +65,8 @@ class ActivateThemeForm
         /** @var Stores $storeModel */
         $storeModel = Yii::$app->store->getInstance();
 
+
+
         $storeModel->setAttributes([
             'theme_name' => $themeModel->name,
             'theme_folder' => $themeModel->folder,

@@ -16,6 +16,7 @@ return [
     'header.nav.reports' => 'Reports',
     'header.nav.statuses' => 'Statuses',
     'header.nav.getstatus' => 'Getstatus',
+    'header.nav.subscription' => 'Subscription',
     'header.nav.logs' => 'Logs',
     'header.nav.status_log' => 'Status log',
     'header.nav.providers_log' => 'Providers log',
@@ -246,6 +247,7 @@ return [
     'payments.list.column_mode' => 'Mode',
     'payments.list.column_created' => 'Created',
     'payments.list.column_updated' => 'Updated',
+    'payments.list.column_ip' => 'IP',
     'payments.list.navs_mode_all' => 'All ({count})',
     'payments.list.navs_mode_manual' => 'Manual ({count})',
     'payments.list.navs_mode_auto' => 'Auto ({count})',
@@ -609,6 +611,7 @@ return [
     'dashboard.services.dnslytics' => 'DNSlytics',
     'dashboard.services.opensrs' => 'OpenSRS',
 
+    'getstatus.title' => 'Getstatus',
     'statuses.list.column_id' => 'ID',
     'statuses.list.column_provider' => 'Provider',
     'statuses.list.column_all_orders' => 'All orders',
@@ -624,5 +627,16 @@ return [
     'statuses.datetimepicker.to' => 'To',
     'statuses.datetimepicker.submit_btn' => 'Submit',
     'statuses.search.search_label' => 'Search:',
+
+    'subscription.title' => 'Subscription',
+    'subscription.list.column_id' => 'ID',
+    'subscription.list.column_panel' => 'Panel',
+    'subscription.list.column_all' => 'All',
+    'subscription.list.column_active' => 'Active',
+    'subscription.list.column_paused' => 'Paused',
+    'subscription.list.column_completed' => 'Completed',
+    'subscription.list.column_expired' => 'Expired',
+    'subscription.list.column_canceled' => 'Canceled',
+    'subscription.list.column_avg' => 'Avg',
 
 ];

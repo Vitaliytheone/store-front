@@ -32,7 +32,8 @@
         "crossjoin/css": "^1.0",
         "opensrs/osrs-toolkit-php": "^4.0",
         "yiisoft/yii2-faker": "^2.0",
-        "authorizenet/authorizenet": "dev-master"
+        "authorizenet/authorizenet": "dev-master",
+        "stripe/stripe-php": "^6.13"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

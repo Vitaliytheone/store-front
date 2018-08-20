@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\search;
 
 use common\models\panels\Customers;
+use common\models\panels\ReferralEarnings;
 use yii\db\Query;
 
 /**
@@ -60,6 +61,16 @@ class ReferralsSearch {
                 'SUM(earnings) as total_earnings'
             ])
             ->from('referral_earnings')
+            ->where(['status' => ReferralEarnings::STATUS_COMPLETED])
+            ->groupBy('customer_id');
+
+        $unpaidQuery = (new Query())
+            ->select([
+                'customer_id',
+                'SUM(earnings) as unpaid_earnings'
+            ])
+            ->from('referral_earnings')
+            ->where(['status' => ReferralEarnings::STATUS_DEBIT])
             ->groupBy('customer_id');
 
         $referrals->select([
@@ -69,11 +80,13 @@ class ReferralsSearch {
             'COUNT(DISTINCT IF(referrer.paid = 0, referrer.id, NULL)) as unpaid_referrals',
             'COUNT(DISTINCT IF(referrer.paid = 1, referrer.id, NULL)) as paid_referrals',
             're.total_earnings as total_earnings',
-            'customers.unpaid_earnings',
+            'IF (unp.unpaid_earnings IS NULL, re.total_earnings, re.total_earnings - unp.unpaid_earnings) as unpaid_earnings',
         ]);
         $referrals->leftJoin('referral_visits', 'customers.id = referral_visits.customer_id');
         $referrals->leftJoin('(' . $referralEarningsSum->createCommand()->rawSql .') as re', 'customers.id = re.customer_id');
+        $referrals->leftJoin('(' . $unpaidQuery->createCommand()->rawSql .') as unp', 'customers.id = unp.customer_id');
         $referrals->leftJoin('customers as referrer', 'customers.id = referrer.referrer_id');
+        $referrals->having('total_visits > 0');
 
         return $referrals->orderBy([
                 're.total_earnings' => SORT_DESC
@@ -114,8 +127,7 @@ class ReferralsSearch {
     {
         $returnReferrals = [];
 
-        foreach ($referrals as $referral) {
-
+        foreach ($referrals as $key => $referral) {
             $totalVisits = $referral['total_visits'];
             $unpaidReferrals = $referral['unpaid_referrals'];
             $paidReferrals = $referral['paid_referrals'];

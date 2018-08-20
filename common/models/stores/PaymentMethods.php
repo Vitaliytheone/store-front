@@ -33,6 +33,7 @@ class PaymentMethods extends ActiveRecord
     const METHOD_PAYWANT = 'paywant';
     const METHOD_BILLPLZ = 'billplz';
     const METHOD_AUTHORIZE = 'authorize';
+    const METHOD_STRIPE = 'stripe';
 
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;
