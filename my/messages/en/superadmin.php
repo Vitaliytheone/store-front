@@ -30,6 +30,7 @@ return [
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
     'header.nav.dashboard' => 'Dashboard',
+    'header.nav.sender' => 'Sender',
 
     'pages.title.edit_panel' => 'Edit {domain} panel',
     'pages.title.panels' => 'Panels',
@@ -640,7 +641,28 @@ return [
     'subscription.list.column_avg' => 'Avg',
 
     'sender.title' => 'Sender',
+    'sender.send_method.local' => 'Local',
+    'sender.send_method.last' => 'Last',
+    'sender.send_method.multi' => 'Multi',
+    'sender.send_method.mass' => 'Mass',
     'statuses.list.column_send_method' => 'Send method',
     'statuses.list.column_all' => 'All',
     'statuses.list.column_error' => 'Error',
+
+    'providers.services_list.auto_services_manual' => 'Manual',
+    'providers.services_list.auto_services_auto' => 'Auto',
+    'providers.services_list.auto_services_custom' => 'Custom',
+    'providers.auto_order.local' => 'Local',
+    'providers.auto_order.last' => 'Last',
+    'providers.auto_order.multi' => 'Multi',
+    'providers.auto_order.mass' => 'Mass',
+    'providers.list.no' => 'No',
+    'providers.list.yes' => 'Yes',
+
+    'error.invoices.not_enough_funds' => 'Not enough funds.',
+    'invoices.list.action_add_earnings' => 'Add earnings',
+    'invoices.add_earnings.header' => 'Add earnings',
+    'invoices.add_earnings.close_btn' => 'Close',
+    'invoices.add_earnings.submit_btn' => 'Add earnings',
+
 ];
