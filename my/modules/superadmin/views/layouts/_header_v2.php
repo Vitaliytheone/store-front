@@ -191,6 +191,11 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_STATUSES)) {
                 'url' => Url::toRoute('/statuses/subscription'),
                 'linkOptions' => ['class' => 'dropdown-item'],
             ],
+            [
+                'label' => Yii::t('app/superadmin', 'header.nav.sender'),
+                'url' => Url::toRoute('/statuses/sender'),
+                'linkOptions' => ['class' => 'dropdown-item'],
+            ],
         ]
     ];
 }
