@@ -77,7 +77,7 @@ class StatusesController extends CustomController
      */
     public function actionSender()
     {
-        $this->view->title = Yii::t('app/superadmin', 'subscription.title');
+        $this->view->title = Yii::t('app/superadmin', 'sender.title');
 
         $model = new SenderSearch();
         $model->setParams(Yii::$app->request->get());

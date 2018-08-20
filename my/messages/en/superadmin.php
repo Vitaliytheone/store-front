@@ -639,4 +639,8 @@ return [
     'subscription.list.column_canceled' => 'Canceled',
     'subscription.list.column_avg' => 'Avg',
 
+    'sender.title' => 'Sender',
+    'statuses.list.column_send_method' => 'Send method',
+    'statuses.list.column_all' => 'All',
+    'statuses.list.column_error' => 'Error',
 ];
