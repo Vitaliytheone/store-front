@@ -163,9 +163,11 @@ class DbHelper
 
         $cmd .= "{$db}  < {$path}) 2>&1";
 
-        exec($cmd, $output, $result);
 
+
+        exec($cmd, $output, $result);
         $connection->close();
+        print_r($output);
 
         return (int)$result === 0; // 0 — without errors
     }
