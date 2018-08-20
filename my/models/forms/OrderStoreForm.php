@@ -239,7 +239,6 @@ class OrderStoreForm extends Model
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
         ]);
-
         if (!$order->save()) {
             return false;
         }
@@ -298,6 +297,7 @@ class OrderStoreForm extends Model
 
         $order = $this->createOrder();
 
+
         if (!$order) {
             $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
 
@@ -320,7 +320,6 @@ class OrderStoreForm extends Model
         } else {
             if (!OrderHelper::store($order)) {
                 $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
-
                 return false;
             }
         }

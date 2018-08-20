@@ -80,6 +80,7 @@
             'active' => 'statuses' === $activeTab,
             'items' => [
                 ['label' => Yii::t('app/superadmin', 'header.nav.getstatus'), 'url' => Url::toRoute('statuses/getstatus')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.subscription'), 'url' => Url::toRoute('statuses/subscription')],
             ]
         ];
     }
