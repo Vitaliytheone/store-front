@@ -103,7 +103,7 @@ class ProvidersSearch
     /**
      * Get providers
      * @param integer $type
-     * @return array
+     * @return Query
      */
     protected function getProviders($type = null)
     {
@@ -143,13 +143,28 @@ class ProvidersSearch
                 'status' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_status'),
                 ],
+                'sc' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_start_count'),
+                ],
+                'refill' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_refill'),
+                ],
+                'cancel' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_cancel'),
+                ],
+                'auto_services' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_autolist'),
+                ],
+                'date' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_created'),
+                ],
             ],
         ]);
         $sort->defaultOrder = [
             'res' => SORT_DESC,
         ];
 
-        $providers = $this->getProviders($type)
+        $providers = $this->buildQuery($type)
             ->orderBy($sort->orders)
             ->all();
 
