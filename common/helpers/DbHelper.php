@@ -153,7 +153,7 @@ class DbHelper
         $username = $dbConfig['user'];
         $password = $dbConfig['password'];
         $mysqlExecPath = ArrayHelper::getValue(Yii::$app->params, 'mysql_exec_path', 'mysql');
-        $cmd = "$mysqlExecPath -h{$host} -u{$username} -p {$password} {$db}  < {$path}";
+        $cmd = "$mysqlExecPath -h{$host} -u{$username} -p{$password} {$db}  < {$path}";
 
         exec($cmd, $output, $result);
         $connection->close();
