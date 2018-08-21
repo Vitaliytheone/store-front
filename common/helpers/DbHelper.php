@@ -157,9 +157,6 @@ class DbHelper
 
         exec($cmd, $output, $result);
         $connection->close();
-        print_r($output);
-
-        echo $cmd;
 
         return (int)$result === 0; // 0 — without errors
     }
