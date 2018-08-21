@@ -642,7 +642,7 @@ return [
 
     'sender.title' => 'Sender',
     'sender.send_method.local' => 'Local',
-    'sender.send_method.last' => 'Last',
+    'sender.send_method.simple' => 'Simple',
     'sender.send_method.multi' => 'Multi',
     'sender.send_method.mass' => 'Mass',
     'statuses.list.column_send_method' => 'Send method',
@@ -653,7 +653,7 @@ return [
     'providers.services_list.auto_services_auto' => 'Auto',
     'providers.services_list.auto_services_custom' => 'Custom',
     'providers.auto_order.local' => 'Local',
-    'providers.auto_order.last' => 'Last',
+    'providers.auto_order.simple' => 'Simple',
     'providers.auto_order.multi' => 'Multi',
     'providers.auto_order.mass' => 'Mass',
     'providers.list.no' => 'No',
