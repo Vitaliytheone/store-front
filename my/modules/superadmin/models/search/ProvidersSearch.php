@@ -129,15 +129,19 @@ class ProvidersSearch
             'attributes' => [
                 'res' => [
                     'default' => SORT_DESC,
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
+                ],
+                'name' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_name'),
                 ],
                 'auto_order' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_sender')
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_sender'),
                 ],
                 'type' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_type')
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_type'),
                 ],
                 'status' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_status')
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_status'),
                 ],
             ],
         ]);
@@ -186,7 +190,6 @@ class ProvidersSearch
                 'sc' => AdditionalServices::getStartCountName($provider['sc']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
                 'cancel' => AdditionalServices::getCancelName($provider['cancel']),
-                //'auto_order' => $provider['auto_order'],
                 'type' => AdditionalServices::getTypeNameString($provider['type']),
                 'status' => $provider['status'],
                 'date' => $provider['date'],
