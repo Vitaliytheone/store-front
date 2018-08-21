@@ -48,7 +48,7 @@ class ProvidersSearch
 
     /**
      * Build sql query
-     * @return ActiveRecord
+     * @return Query
      */
     public function buildQuery($type = null)
     {
@@ -127,6 +127,9 @@ class ProvidersSearch
 
         $sort = new Sort([
             'attributes' => [
+                'res' => [
+                    'default' => SORT_DESC,
+                ],
                 'auto_order' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_sender')
                 ],
@@ -138,6 +141,9 @@ class ProvidersSearch
                 ],
             ],
         ]);
+        $sort->defaultOrder = [
+            'res' => SORT_DESC,
+        ];
 
         $providers = $this->getProviders($type)
             ->orderBy($sort->orders)
@@ -180,7 +186,7 @@ class ProvidersSearch
                 'sc' => AdditionalServices::getStartCountName($provider['sc']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
                 'cancel' => AdditionalServices::getCancelName($provider['cancel']),
-                'auto_order' => $provider['auto_order'],
+                //'auto_order' => $provider['auto_order'],
                 'type' => AdditionalServices::getTypeNameString($provider['type']),
                 'status' => $provider['status'],
                 'date' => $provider['date'],
