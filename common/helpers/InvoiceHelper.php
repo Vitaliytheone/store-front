@@ -45,7 +45,6 @@ class InvoiceHelper
                 ':expired' => $date
             ])
             ->groupBy('project.id')
-            ->having("COUNT(invoices.id) = 0")
             ->all();
 
         foreach ($projects as $project) {
@@ -59,12 +58,12 @@ class InvoiceHelper
                 'item_id' => $project->id,
                 'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
             ];
-
+            $provider = null;
+            
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
+                $provider = $project->provider;
             }
-
-            $provider = $project->provider;
 
             // Проверяем наличие уже созданного инвойса на продление
             if ($invoiceDetails = InvoiceDetails::find()
