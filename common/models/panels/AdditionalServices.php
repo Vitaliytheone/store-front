@@ -227,7 +227,7 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             static::SEND_METHOD_LOCAL => Yii::t('app/superadmin', 'providers.auto_order.local'),
-            static::SEND_METHOD_LAST => Yii::t('app/superadmin', 'providers.auto_order.last'),
+            static::SEND_METHOD_LAST => Yii::t('app/superadmin', 'providers.auto_order.simple'),
             static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'providers.auto_order.multi'),
             static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'providers.auto_order.mass'),
         ];

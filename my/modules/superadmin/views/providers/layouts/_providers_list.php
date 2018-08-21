@@ -22,11 +22,11 @@
         <th><?= Yii::t('app/superadmin', 'providers.list.column_refill')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_cancel')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_autolist')?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_created')?></th>
-        <th class="w-1"></th>
+        <th class="w-1 no_sort"></th>
     </tr>
     </thead>
     <tbody>
