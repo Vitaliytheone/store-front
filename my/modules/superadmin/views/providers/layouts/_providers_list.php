@@ -14,18 +14,18 @@
 <table class="table table-border tablesorter-bootstrap" id="providersTable">
     <thead>
     <tr>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_id')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_name')?></th>
+        <th class="query-sort"><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_count')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_in_use')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_start_count')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_refill')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_cancel')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_autolist')?></th>
+        <th class="query-sort"><?= $providers['sort']->link('sc', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
         <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_created')?></th>
+        <th class="query-sort"><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="w-1 no_sort"></th>
     </tr>
     </thead>
@@ -142,19 +142,4 @@
 <!-- Delete <br> after update ccs to v.2 -->
 <br>
 <!-- -->
-<div class="row">
-    <div class="col-md-6">
-        <nav>
-            <ul class="pagination">
-                <?= LinkPager::widget(['pagination' => $providers['pages'],]); ?>
-            </ul>
-        </nav>
-        <!-- Pagination End -->
-    </div>
-    <div class="col-md-6 text-md-right">
-        <?= CountPagination::widget([
-            'pages' => $providers['pages'],
-            'params' => $filters
-        ]) ?>
-    </div>
-</div>
+<!-- Add pagination widgets -->
