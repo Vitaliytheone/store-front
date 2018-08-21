@@ -16,6 +16,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -240,6 +241,42 @@ class Project extends ActiveRecord implements ProjectInterface
             'currency_code' => Yii::t('app', 'Currency code'),
             'no_referral' => Yii::t('app', 'No Referral'),
         ];
+    }
+
+    /**
+    
+     * @return Project
+     */
+    public function getOwnerChildPanel()
+    {
+        $site = (new Query())
+            ->select(['additional_services.name as site'])
+            ->from('project')
+            ->leftJoin('additional_services', 'additional_services.res = project.provider_id')
+            ->andWhere(['project.site' =>  $this->site])
+            ->one()['site'];
+
+        if (empty($site)) {
+            return null;
+        }
+
+
+        return Project::findOne(['site' => $site]);
+    }
+
+    
+    public function cancelChildInvoices()
+    {
+        $query = (new Query())
+            ->select([
+                'project.id',
+            ])
+            ->from('project')
+            ->innerJoin('additional_services', 'additional_services.name = project.site')
+            ->innerJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
+            ->where(['project.site' => $this->site]);
+
+        echo $query->createCommand()->sql;
     }
 
     /**

@@ -28,7 +28,9 @@
         } else {
             return $projectColors[$panel['status']];
         }
-    }
+    };
+
+    $this->context->addModule('panelsController');
 ?>
 
 <div class="row">
