@@ -4,6 +4,7 @@ namespace my\helpers;
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
+use common\models\panels\Languages;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -398,6 +399,16 @@ class OrderHelper {
             $userService->aid = $project->provider_id;
             $userService->save(false);
         }
+
+        // Create default panel language
+        $panelLanguage = new Languages();
+        $panelLanguage->panel_id = $project->id;
+        $panelLanguage->language_code = 'en';
+        $panelLanguage->name = Yii::$app->params['languages']['en'];
+        $panelLanguage->position = 1;
+        $panelLanguage->visibility = Languages::VISIBILITY_ON;
+        $panelLanguage->edited = Languages::EDITED_OFF;
+        $panelLanguage->save(false);
 
         // Create nginx config
         SuperTaskHelper::setTasksNginx($project, [
