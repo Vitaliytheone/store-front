@@ -143,11 +143,7 @@ class GetstatusSearch extends Getstatus
             ->all();
         $countsList = ArrayHelper::map($countsList, 'res', 'count');
 
-        for ($i = 0; $i < count($data); $i++ ) {
-            if (!isset($statuses[$i]->res)) {
-                continue;
-            }
-
+        for ($i = 0; $i < count($statuses); $i++ ) {
             $data[$statuses[$i]->res]['provider'] = $statuses[$i]->name;
             $data[$statuses[$i]->res]['all_orders'] = isset($countsList[$statuses[$i]->res]) ? $countsList[$statuses[$i]->res] : 0;
             $data[$statuses[$i]->res]['good'] = $data[$statuses[$i]->res]['requests'] - $data[$statuses[$i]->res]['status_error'] - $data[$statuses[$i]->res]['curl_error'];
