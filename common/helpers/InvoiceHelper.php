@@ -21,6 +21,27 @@ use yii\db\Query;
  */
 class InvoiceHelper
 {
+
+    /**
+     * @param $project
+     * @return Project
+     */
+    private static function getOwnerChildPanel(Project $project)
+    {
+        $site = (new Query())
+            ->select(['additional_services.name as site'])
+            ->from('project')
+            ->leftJoin('additional_services', 'additional_services.res = project.provider_id')
+            ->andWhere(['project.site' =>  $project->site])
+            ->one()['site'];
+
+         if (empty($site)) {
+             return null;
+         }
+
+
+        return Project::findOne(['site' => $site]);
+    }
     /**
      * Create invoices to prolong panels
      */
@@ -33,7 +54,6 @@ class InvoiceHelper
          * @var Project $project
          */
         $projects = Project::find()
-            ->joinWith('provider provider')
             ->leftJoin('invoice_details', 'invoice_details.item_id = project.id AND invoice_details.item IN (' . implode(",", [
                     InvoiceDetails::ITEM_PROLONGATION_PANEL,
                     InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
@@ -47,6 +67,7 @@ class InvoiceHelper
             ])
             ->groupBy('project.id')
             ->all();
+
 
         foreach ($projects as $project) {
             $tariff = Tariff::findOne($project->tariff);
@@ -63,7 +84,7 @@ class InvoiceHelper
 
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
-                $provider = $project->provider;
+                $provider = self::getOwnerChildPanel($project);
             }
 
             // Проверяем наличие уже созданного инвойса на продление
@@ -72,7 +93,6 @@ class InvoiceHelper
                 ->where($invoiceDetailsAttributes)
                 ->andWhere(['status' => Invoices::STATUS_UNPAID])
                 ->one()) {
-
                 if ($project->child_panel) {
                     if ($provider->act == Project::STATUS_FROZEN) {
                         $invoice = $invoiceDetails->invoice;
