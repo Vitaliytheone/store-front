@@ -27,7 +27,8 @@
         } else {
             return $projectColors[$panel['status']];
         }
-    }
+    };
+
 ?>
 
 <div class="row">

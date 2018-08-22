@@ -152,19 +152,10 @@ class DbHelper
         $host = $dbConfig['host'];
         $username = $dbConfig['user'];
         $password = $dbConfig['password'];
-
         $mysqlExecPath = ArrayHelper::getValue(Yii::$app->params, 'mysql_exec_path', 'mysql');
-
-        $cmd = "($mysqlExecPath -h{$host} -u{$username} ";
-
-        if ($password) {
-            $cmd .= "-p{$password} ";
-        }
-
-        $cmd .= "{$db}  < {$path}) 2>&1";
+        $cmd = "$mysqlExecPath -h{$host} -u{$username} -p{$password} {$db}  < {$path}";
 
         exec($cmd, $output, $result);
-
         $connection->close();
 
         return (int)$result === 0; // 0 — without errors
@@ -203,7 +194,7 @@ class DbHelper
             throw new Exception('Сan not delete old sql dump file!');
         }
 
-        $cmd = "$mysqldumpExecPath --user=$username --password=$password --host=$host --protocol=tcp --port=3306 $db > $filePath 2>&1";
+        $cmd = "$mysqldumpExecPath --user=$username --password=$password --host=$host --protocol=tcp --port=3306 $db > $filePath";
 
         exec($cmd, $output, $result);
 

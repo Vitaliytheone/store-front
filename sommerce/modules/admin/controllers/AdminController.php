@@ -20,11 +20,10 @@ class AdminController extends CommonController
         /** @var User $user */
         $user = Yii::$app->user;
 
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
+
 
         // Frozen/terminated store routine
-        if ($store->isInactive() && !$user->isGuest) {
+        if ($this->store->isInactive() && !$user->isGuest) {
 
             /** @var StoreAdminAuth $identity */
             $identity = $user->getIdentity();
