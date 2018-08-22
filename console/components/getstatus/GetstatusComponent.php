@@ -7,6 +7,7 @@ use common\models\panels\Project;
 use common\models\store\Suborders;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
+use Yii;
 use yii\base\Component;
 use yii\db\Connection;
 use yii\db\Query;
@@ -229,8 +230,15 @@ class GetstatusComponent extends Component
     private function _convertStatus($panelStatus)
     {
         $statuses = [
-            '0' => Suborders::STATUS_PENDING,
-            '8' => Suborders::STATUS_PENDING,
+            '0' =>
+                [
+                    'value' => Suborders::STATUS_PENDING, 
+                    'title' => 'Pending'
+                ],
+            '8' => [
+                'value' => Suborders::STATUS_PENDING,
+                'title' => 'Pending'
+            ],
             '1' => Suborders::STATUS_IN_PROGRESS,
             '3' => Suborders::STATUS_ERROR,
             '4' => Suborders::STATUS_CANCELED,
@@ -259,14 +267,30 @@ class GetstatusComponent extends Component
                 ->where(['site' => $order['provider_site']])
                 ->one()['db'];
 
-            $providerOrder = (new Query())->select('status', 'charge')
+            $providerOrder = (new Query())->select(['status', 'charge', 'start_count', 'charge_currency', 'result'])
                 ->from($panel_db . '.orders')
                 ->where(['id' => $order['provider_order_id']])->one();
+
+
+
+            $response = [
+                'charge' => $providerOrder['charge'],
+                'start_count' => $providerOrder['start_count'],
+                'status' => Suborders::getStatusName(
+                    $this->_convertStatus($providerOrder['status']),
+                    false
+                ),
+                'remains' => $providerOrder['result'],
+                'currency' => $providerOrder['charge_currency']
+            ];
+
+            echo json_encode($response)."\n";
+            echo Yii::t('admin', 'orders.filter_status_pending');
 
             $values = [
                 ':status' => $this->_convertStatus($providerOrder['status']),
                 ':provider_charge' => $providerOrder['charge'],
-                ':provider_response' => '',
+                ':provider_response' =>  json_encode($response),
                 ':provider_response_code' => '200'
             ];
 
