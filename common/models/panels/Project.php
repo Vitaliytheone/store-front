@@ -242,27 +242,25 @@ class Project extends ActiveRecord implements ProjectInterface
             'no_referral' => Yii::t('app', 'No Referral'),
         ];
     }
-
-
+    
     /**
-     * @param $site
+     * @param $provider
      * @return null|static
      */
-    public static function getOwnerChildPanel($site)
+    public static function getOwnerChildPanel($provider)
     {
         $owner = (new Query())
-            ->select(['additional_services.name as site'])
-            ->from('project')
-            ->leftJoin('additional_services', 'additional_services.res = project.provider_id')
-            ->andWhere(['project.site' =>  $site])
-            ->one()['site'];
+            ->select(['additional_services.name'])
+            ->from('additional_services')
+            ->andWhere(['res' =>  $provider])
+            ->one()['name'];
 
         if (empty($owner)) {
             return null;
         }
 
 
-        return Project::findOne(['site' => $site]);
+        return Project::findOne(['site' => $owner]);
     }
     
     /**
