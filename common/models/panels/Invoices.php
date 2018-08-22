@@ -358,27 +358,25 @@ class Invoices extends ActiveRecord
      * @return bool
      */
     public function isDisabled() {
+        return false;
         $details = $this->invoiceDetails;
         $detail = null;
         foreach ($details as $item) {
             if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL || $item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
                 $detail = $item;
-                Yii::error('detail');
             }
         }
 
         if ($this->status == Invoices::STATUS_UNPAID && $detail) {
-            if ($detail->order) {
+            if ($detail->order ) {
                 $orderDetails = $detail->order->getDetails();
                 $providerId = ArrayHelper::getValue($orderDetails, 'provider');
-                Yii::error('order');
             } else {
                 $providerId = $project = Project::findOne([
                     'id'  => $detail->item_id
                 ])->provider_id;
             }
             $owner = Project::getOwnerChildPanel($providerId);
-            Yii::error(var_export($owner, true));
             if ($owner && $owner->act == Project::STATUS_FROZEN) {
                return true;
             }
