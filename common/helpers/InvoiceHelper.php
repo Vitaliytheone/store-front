@@ -227,8 +227,10 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-        ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item ', [
-            ':order_item' => Orders::ITEM_PROLONGATION_SSL
+        ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item 
+            AND orders.status <>> :order_statuses', [
+            ':order_item' => Orders::ITEM_PROLONGATION_SSL,
+            ':order_statuses' => [Orders::STATUS_ADDED, Orders::STATUS_CANCELED]
         ])
         ->andWhere([
             'ssl_cert.status' => SslCert::STATUS_ACTIVE,
@@ -237,9 +239,15 @@ class InvoiceHelper
             ':expiry' => $date
         ])
         ->groupBy('ssl_cert.id')
-        ->having("COUNT(orders.id) = 0")
-        ->all();
-        
+        ->having("COUNT(orders.id) = 0");
+
+        echo $sslCerts->createCommand()->getRawSql();
+        exit;
+        //->all();
+
+
+        var_dump(count($sslCerts));
+
         foreach ($sslCerts as $ssl) {
 
             /** @var ProjectInterface $project */
