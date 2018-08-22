@@ -43,6 +43,8 @@ use yii\helpers\ArrayHelper;
  * @property string $service_options
  * @property int $provider_service_id_label
  * @property int $store
+ * @property int $service_count
+ * @property int $service_inuse_count
  *
  * @property string $date
  *
@@ -140,6 +142,8 @@ class AdditionalServices extends ActiveRecord
             'service_options' => Yii::t('app', 'Service option'),
             'provider_service_id_label' => Yii::t('app', 'Provider Service Id Label'),
             'store' => Yii::t('app', 'Store'),
+            'service_count' => Yii::t('app', 'Count'),
+            'service_inuse_count' => Yii::t('app', 'In use'),
         ];
     }
 

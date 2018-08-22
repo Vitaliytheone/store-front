@@ -40,7 +40,14 @@ customModule.superadminProvidersController = {
 
         $('.query-sort').data("sorter", false);
         $('.no_sort').data("sorter", false);
+        $('.sort_asc').css('background-image', 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBkPSJNMTQgOS41TDExLjUgMTIgNyA3LjUgMi41IDEyIDAgOS41bDctN3oiLz48L3N2Zz4=);');
+        $('.sort_desc').css('background-image', 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBkPSJNMTQgNWwtMi41LTIuNS00LjUgNC41LTQuNS00LjVMMCA1IDcgMTJ6Ii8+PC9zdmc+);');
+//tablesorter-header tablesorter-headerDesc
+        //desc  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBkPSJNMTQgNWwtMi41LTIuNS00LjUgNC41LTQuNS00LjVMMCA1IDcgMTJ6Ii8+PC9zdmc+);
+        //asc   background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBkPSJNMTQgOS41TDExLjUgMTIgNyA3LjUgMi41IDEyIDAgOS41bDctN3oiLz48L3N2Zz4=);
+        //no    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE0IDIwIj48cGF0aCBkPSJNMTQgMTNsLTIuNS0yLjVMNyAxNWwtNC41LTQuNUwwIDEzbDcgN3pNMTQgNy41TDExLjUgMTAgNyA1LjUgMi41IDEwIDAgNy41bDctN3oiLz48L3N2Zz4=)
+        //$("#providersTable").tablesorter();
 
-        $("#providersTable").tablesorter();
+        console.log($('.test1').data('sort'));
     }
 };
