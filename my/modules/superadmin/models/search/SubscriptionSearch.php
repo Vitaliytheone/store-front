@@ -77,7 +77,7 @@ class SubscriptionSearch
                 $models[$key]['completedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_COMPLETED ? $value['count'] : $models[$key]['completedCount'];
                 $models[$key]['expiredCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_EXPIRED ? $value['count'] : $models[$key]['expiredCount'];
                 $models[$key]['canceledCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_CANCELED ? $value['count'] : $models[$key]['canceledCount'];
-                $models[$key]['avg'] = !empty($countQuery[0]['avg']) ? $countQuery[0]['avg'] : $models[$key]['avg'];
+                $models[$key]['avg'] = !empty($countQuery[0]['avg']) ? round($countQuery[0]['avg']) : $models[$key]['avg'];
             }
 
 
