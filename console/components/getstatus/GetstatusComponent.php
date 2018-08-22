@@ -3,6 +3,7 @@ namespace console\components\getstatus;
 
 use common\events\Events;
 use common\models\panels\AdditionalServices;
+use common\models\panels\Getstatus;
 use common\models\panels\Project;
 use common\models\store\Suborders;
 use common\models\stores\StoreProviders;
@@ -107,7 +108,7 @@ class GetstatusComponent extends Component
             ->indexBy('id')
             ->all();
 
-        $fromDate = time() - 30 * 24 * 60 * 60; // 30 Days ago
+
         $orders = [];
 
         // Get orders from all shops.
@@ -144,7 +145,7 @@ class GetstatusComponent extends Component
                         Suborders::STATUS_IN_PROGRESS,
                         Suborders::STATUS_ERROR,
                     ]])
-                ->andWhere(['>', 'updated_at', $fromDate])
+                //->andWhere(['>', 'updated_at', $fromDate])
                 ->orderBy(['updated_at' => SORT_ASC])
                 ->limit($requestLimit)
                 ->all();
@@ -230,22 +231,42 @@ class GetstatusComponent extends Component
     private function _convertStatus($panelStatus)
     {
         $statuses = [
-            '0' =>
-                [
-                    'value' => Suborders::STATUS_PENDING, 
-                    'title' => 'Pending'
-                ],
+            '0' => [
+                'value' => Suborders::STATUS_PENDING,
+                'title' => 'Pending'
+            ],
             '8' => [
                 'value' => Suborders::STATUS_PENDING,
                 'title' => 'Pending'
             ],
-            '1' => Suborders::STATUS_IN_PROGRESS,
-            '3' => Suborders::STATUS_ERROR,
-            '4' => Suborders::STATUS_CANCELED,
-            '5' => Suborders::STATUS_IN_PROGRESS,
-            '6' => Suborders::STATUS_IN_PROGRESS,
-            '7' => Suborders::STATUS_IN_PROGRESS,
-            '2' => Suborders::STATUS_COMPLETED
+            '1' => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            '5' => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            '6' => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            '3' => [
+                'value' => Suborders::STATUS_ERROR,
+                'title' => 'Error'
+            ],
+            '4' => [
+                'value' => Suborders::STATUS_COMPLETED,
+                'title' => 'Canceled'
+            ],
+            '7' => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            '2' => [
+                'value' => Suborders::STATUS_COMPLETED,
+                'title' => 'Completed'
+            ]
         ];
 
         return $statuses[(string)$panelStatus];
@@ -262,6 +283,26 @@ class GetstatusComponent extends Component
          * Make request pull
          */
         foreach ($this->_orders as $order) {
+            $getstatus = (new Query())->select('id')
+                ->from(DB_PANELS . 'getstatus')
+                ->where(['oid' => $order['id']])->one();
+
+            $fromDate = time() - Yii::$app->params['orderExpiry'] * 24 * 60 * 60; // 30 Days ago
+            
+            if ($order['updated_at' >  $fromDate]) {
+                if ($getstatus) {
+                    $this->_db->createCommand()
+                        ->delete(DB_PANELS . 'getstatus', "id = :id")
+                        ->bindParam(':id', $getstatus['id'])
+                        ->execute();
+                    $getstatus = null;
+                }
+            }
+
+            if (empty($getstatus)) {
+                continue;
+            }
+            
             $panel_db = (new Query())->select('db')
                 ->from(Project::tableName())
                 ->where(['site' => $order['provider_site']])
@@ -272,23 +313,16 @@ class GetstatusComponent extends Component
                 ->where(['id' => $order['provider_order_id']])->one();
 
 
-
             $response = [
                 'charge' => $providerOrder['charge'],
                 'start_count' => $providerOrder['start_count'],
-                'status' => Suborders::getStatusName(
-                    $this->_convertStatus($providerOrder['status']),
-                    false
-                ),
+                'status' => $this->_convertStatus($providerOrder['status'])['title'],
                 'remains' => $providerOrder['result'],
                 'currency' => $providerOrder['charge_currency']
             ];
 
-            echo json_encode($response)."\n";
-            echo Yii::t('admin', 'orders.filter_status_pending');
-
             $values = [
-                ':status' => $this->_convertStatus($providerOrder['status']),
+                ':status' => $this->_convertStatus($providerOrder['status'])['value'],
                 ':provider_charge' => $providerOrder['charge'],
                 ':provider_response' =>  json_encode($response),
                 ':provider_response_code' => '200'
