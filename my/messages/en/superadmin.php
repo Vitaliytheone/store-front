@@ -661,6 +661,7 @@ return [
 
     'error.invoices.not_enough_funds' => 'Not enough funds.',
     'invoices.list.action_add_earnings' => 'Add earnings',
+    'invoices.list.action_add_credit' => 'Add credit',
     'invoices.add_earnings.header' => 'Add earnings',
     'invoices.add_earnings.close_btn' => 'Close',
     'invoices.add_earnings.submit_btn' => 'Add earnings',
