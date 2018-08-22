@@ -355,6 +355,31 @@ class Invoices extends ActiveRecord
     }
 
     /**
+     * @return bool
+     */
+    public function isDisabled() {
+        $details = $this->invoiceDetails;
+        $detail = null;
+        foreach ($details as $item) {
+            if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL) {
+                $detail = $item;
+            }
+        }
+
+        if ($this->status == Invoices::STATUS_UNPAID && $detail) {
+            $project = Project::findOne([
+                'id'  => $detail->item_id
+            ]);
+            $owner = $project->getOwnerChildPanel();
+            if ($owner && $owner->act == Project::STATUS_FROZEN) {
+               return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check access by code
      * @param string $code
      * @return bool
