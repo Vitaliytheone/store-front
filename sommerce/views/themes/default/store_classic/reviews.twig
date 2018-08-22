@@ -1,0 +1,48 @@
+{% if block.reviews %}
+<div class="block-reviews">
+    <div class="block-shapes block-reviews-shape"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="block-reviews__title">{{ block.reviews.header.title }}</h2>
+                {% if block.reviews.header.description %}
+                    <p class="block-reviews__description">
+                        {{ block.reviews.header.description }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="block-reviews__wrapper">
+
+                {% for review in block.reviews.data %}
+                    <div class="block-review__block-slide">
+                        <div class="block-review__block">
+                            <div class="block-review__avatar-block">
+                                <div class="block-review__avatar" style="background-image: url('{{ review.image }}')"></div>
+                            </div>
+                            <div class="block-review__name">{{ review.name }}</div>
+                            <div class="block-review__rating">
+                                {% for i in 0..4 %}
+                                    {% if i < review.rating %}
+                                        <span class="fas fa-star"></span>
+                                    {% else %}
+                                        <span class="fal fa-star"></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="block-review__text">
+                                {{ review.description }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

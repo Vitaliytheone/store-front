@@ -317,13 +317,16 @@ class Orders extends ActiveRecord
                 if (empty($customerId)) {
                     return false;
                 }
-
-                return Project::find()->andWhere([
-                    'cid' => $customerId,
-                ])->andWhere('act <> :status', [
-                    ':status' => Project::STATUS_TERMINATED
-                ])->exists();
-                break;
+                
+                $flag = Project::find()->andWhere([
+                        'cid' => $customerId,
+                        'child_panel' => 0
+                    ])->andWhere([
+                        'act' => Project::STATUS_ACTIVE,
+                    ])->exists();
+                
+                return $flag;
+            break;
 
             // TODO:: Dummy rules. Populate it for real conditions.
             case 'create_store':
