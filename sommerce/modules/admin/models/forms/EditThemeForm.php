@@ -7,6 +7,7 @@ use common\models\store\ActivityLog;
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
 use common\models\stores\StoreAdminAuth;
+use common\models\stores\Stores;
 use console\helpers\ConsoleHelper;
 use sommerce\helpers\CustomFilesHelper;
 use sommerce\modules\admin\models\search\ThemesSearch;
@@ -69,6 +70,9 @@ class EditThemeForm extends Model
     /** @var  User */
     protected $_user;
 
+    /** @var  Stores */
+    protected $_store;
+
     public function formName()
     {
         return 'ThemeForm';
@@ -124,7 +128,7 @@ class EditThemeForm extends Model
          * For Custom theme — save file to theme path
          * For Default theme — save file to custom themes path
          */
-        if ($this->_theme_model::getThemeType() === $this->_theme_model::THEME_TYPE_CUSTOM) {
+        if (($this->_theme_model)::getThemeType() === ($this->_theme_model)::THEME_TYPE_CUSTOM) {
             $this->_path_to_file = $this->_theme_model->getThemePath() . '/' . $this->_file;
         } else {
             $this->_path_to_file = $this->_theme_model->getSaveToPath() . '/' . $this->_file;
@@ -136,7 +140,8 @@ class EditThemeForm extends Model
      * Create Form model
      * @param $themeFolderName
      * @param $themeEditFileName
-     * @return bool|static
+     * @param Stores $store
+     * @return bool|EditThemeForm
      */
     public static function make($themeFolderName, $themeEditFileName) {
         $themeModel = (new ThemesSearch())->searchByFolder($themeFolderName);

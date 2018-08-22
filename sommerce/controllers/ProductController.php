@@ -2,7 +2,7 @@
 namespace sommerce\controllers;
 
 use common\models\store\Products;
-use Yii;
+use sommerce\models\search\ProductSearch;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
@@ -23,12 +23,11 @@ class ProductController extends CustomController
     {
         Url::remember();
         $product = $this->_findProduct($id);
-
         $this->pageTitle = $product->seo_title;
         $this->seoDescription = $product->seo_description;
         $this->seoKeywords = $product->seo_keywords;
-
         $this->view->title = $product->name;
+        $data = (new ProductSearch($product))->search();
 
         return $this->render('product.twig', [
             'product' => [
@@ -36,22 +35,7 @@ class ProductController extends CustomController
                 'title' => Html::encode($product->name),
                 'content' => $product->description,
                 'color' => Html::encode($product->color),
-                'packages' => array_map(function ($package) {
-                    return [
-                        'id' => $package->id,
-                        'best' => $package->best,
-                        'quantity' => $package->quantity,
-                        'name' => Html::encode($package->name),
-                        'price' => $package->price,
-                        'button' => [
-                            'url_buy_now' => Url::toRoute("/order/$package->id"),
-                        ],
-                    ];
-                }, $product->packages),
-                'properties' => array_map(function ($property) {
-                    return Html::encode($property);
-                }, $product->properties),
-            ],
+            ] + $data
         ]);
     }
 

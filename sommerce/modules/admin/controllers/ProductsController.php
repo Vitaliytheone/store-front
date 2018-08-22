@@ -47,6 +47,7 @@ class ProductsController extends CustomController
         $this->view->title = Yii::t('admin', 'products.page_title');
 
         $search = new ProductsSearch();
+        $search->setStore($this->store);
 
         $this->addModule('adminProductsList');
         $this->addModule('adminProductEdit', [
@@ -65,7 +66,7 @@ class ProductsController extends CustomController
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),
             'products' => $search->getProductsPackages(),
-            'store' => Yii::$app->store->getInstance(),
+            'store' => $this->store,
         ]);
     }
 
@@ -346,14 +347,11 @@ class ProductsController extends CustomController
         if (!$request->isAjax) {
             exit;
         }
-
-        /* @var $store Stores */
+        
         /* @var $storeProviders \common\models\stores\StoreProviders[] */
-        $store = yii::$app->store->getInstance();
-
         $storeProvider = StoreProviders::findOne([
             'provider_id' => $provider_id,
-            'store_id' => $store->id
+            'store_id' => $this->store->id
         ]);
 
         if (!$storeProvider) {

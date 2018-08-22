@@ -46,11 +46,7 @@ class PageController extends CustomController
         $request = Yii::$app->getRequest();
         $contactForm = new ContactForm();
 
-        if (
-            $contactForm->load($request->post()) &&
-            $contactForm->validate() &&
-            $contactForm->contact()
-        ) {
+        if ($contactForm->load($request->post()) && $contactForm->contact()) {
             return $this->refresh();
         }
 

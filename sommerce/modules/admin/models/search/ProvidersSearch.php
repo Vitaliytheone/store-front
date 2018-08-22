@@ -5,7 +5,6 @@ namespace sommerce\modules\admin\models\search;
 use common\models\panels\AdditionalServices;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
-use Yii;
 use yii\db\Query;
 
 /**
@@ -14,17 +13,22 @@ use yii\db\Query;
  */
 class ProvidersSearch extends BaseSearch
 {
+    protected $_store;
+
+    /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
     /**
      * Build sql query
      * @return Query
      */
     public function buildQuery()
     {
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-
+        
         $storeProvidersTable = StoreProviders::tableName();
         $providersTable = AdditionalServices::tableName();
 
@@ -37,7 +41,7 @@ class ProvidersSearch extends BaseSearch
             ->from("$storeProvidersTable sp")
             ->leftJoin("$providersTable p", 'p.res = sp.provider_id')
             ->andWhere([
-                'sp.store_id' => $store->id
+                'sp.store_id' => $this->_store->id
             ]);
 
         return $query;

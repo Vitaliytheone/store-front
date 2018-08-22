@@ -33,6 +33,7 @@ class PaymentsController extends CustomController
         $this->view->title = Yii::t('admin', 'payments.page_title');
 
         $searchModel = new PaymentsSearch();
+        $searchModel->setStore($this->store);
         $dataProvider = $searchModel->search(Yii::$app->request->get());
 
         return $this->render('index', [
