@@ -2,6 +2,8 @@
 
 namespace my\controllers;
 
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Project;
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
 use my\components\payments\Paypal;
@@ -27,6 +29,7 @@ use common\models\panels\Invoices;
 use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use my\helpers\PaymentsHelper;
@@ -245,13 +248,15 @@ class SiteController extends CustomController
         $invoice = Invoices::find()
             ->andWhere(['code' => $id])
             ->joinWith([
-                'lastPayment'
+                'lastPayment',
+                'invoiceDetails'
             ])
             ->one();
 
         if (!$invoice) {
             return $this->redirect('/');
         }
+
 
         $this->view->title = Yii::t('app', 'pages.title.invoice', [
             'id' => $invoice->id
@@ -272,6 +277,7 @@ class SiteController extends CustomController
             'invoice' => $invoice,
             'customer' => $invoice->customer,
             'paymentsList' => $paymentsList,
+            'disabled' => $invoice->isDisabled(),
             'payWait' => !!$payWait,
             'pgid' => $payWait ? $payWait->type : key($paymentsList),
             'verificationWait' => $invoice->emailVerification() ? Content::getContent('paypal_verify_note', ['email' => $invoice->emailVerification()]) : null,
@@ -544,12 +550,18 @@ class SiteController extends CustomController
     /**
      * Checkout
      * @param string $id
-     * @return Response|string
+     * @return string|Response
+     * @throws ForbiddenHttpException
      */
     public function actionCheckout($id)
     {
         $this->view->title = Yii::t('app', 'pages.title.checkout');
         $invoice = Invoices::findOne(['code' => $id]);
+        
+       if ($invoice->isDisabled()) {
+           throw new ForbiddenHttpException();
+       }
+        
         if ($invoice !== null) {
 
             if (!empty($_POST['pgid'])) {

@@ -16,6 +16,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -242,6 +243,27 @@ class Project extends ActiveRecord implements ProjectInterface
         ];
     }
 
+    /**
+    
+     * @return Project
+     */
+    public function getOwnerChildPanel()
+    {
+        $site = (new Query())
+            ->select(['additional_services.name as site'])
+            ->from('project')
+            ->leftJoin('additional_services', 'additional_services.res = project.provider_id')
+            ->andWhere(['project.site' =>  $this->site])
+            ->one()['site'];
+
+        if (empty($site)) {
+            return null;
+        }
+
+
+        return Project::findOne(['site' => $site]);
+    }
+    
     /**
      * Get statuses labels
      * @return array

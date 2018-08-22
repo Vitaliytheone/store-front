@@ -21,33 +21,11 @@ use yii\db\Query;
  */
 class InvoiceHelper
 {
-
-    /**
-     * @param $project
-     * @return Project
-     */
-    private static function getOwnerChildPanel(Project $project)
-    {
-        $site = (new Query())
-            ->select(['additional_services.name as site'])
-            ->from('project')
-            ->leftJoin('additional_services', 'additional_services.res = project.provider_id')
-            ->andWhere(['project.site' =>  $project->site])
-            ->one()['site'];
-
-         if (empty($site)) {
-             return null;
-         }
-
-
-        return Project::findOne(['site' => $site]);
-    }
     /**
      * Create invoices to prolong panels
      */
     public static function prolongPanels()
     {
-
         $date = time() + (Yii::$app->params['project.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         /**
@@ -59,15 +37,15 @@ class InvoiceHelper
                     InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
                 ]) . ')')
             ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
-            ->where(['in', 'project.act', [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
             ->andWhere([
+                'project.act' => Project::STATUS_ACTIVE,
                 'project.no_invoice' => Project::NO_INVOICE_DISABLED
             ])->andWhere('project.expired < :expired', [
                 ':expired' => $date
             ])
             ->groupBy('project.id')
+            ->having("COUNT(invoices.id) = 0")
             ->all();
-
 
         foreach ($projects as $project) {
             $tariff = Tariff::findOne($project->tariff);
@@ -80,40 +58,22 @@ class InvoiceHelper
                 'item_id' => $project->id,
                 'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
             ];
-            $provider = null;
 
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
-                $provider = self::getOwnerChildPanel($project);
             }
 
             // Проверяем наличие уже созданного инвойса на продление
-            if ($invoiceDetails = InvoiceDetails::find()
-                ->joinWith('invoice')
-                ->where($invoiceDetailsAttributes)
-                ->andWhere(['status' => Invoices::STATUS_UNPAID])
-                ->one()) {
-                if ($project->child_panel) {
-                    if ($provider->act == Project::STATUS_FROZEN) {
-                        $invoice = $invoiceDetails->invoice;
-                        $invoice->status = Invoices::STATUS_CANCELED;
-                        $invoice->save(false);
-                    };
-                }
+            if ((new Query())
+                ->from(InvoiceDetails::tableName() . ' as id')
+                ->innerJoin(Invoices::tableName() . ' as i', 'i.id = id.invoice_id AND i.status = ' . Invoices::STATUS_UNPAID)
+                ->andWhere($invoiceDetailsAttributes)
+                ->exists()) {
                 continue;
-            }
-
-            if ($project->act != Project::STATUS_ACTIVE) {
-                continue;
-            }
-
-            if ($project->child_panel) {
-                if ($provider->act == Project::STATUS_FROZEN) {
-                    continue;
-                }
             }
 
             $transaction = Yii::$app->db->beginTransaction();
+
             $invoice = new Invoices();
             $invoice->cid = $project->cid;
             $invoice->total = $tariff->price;
