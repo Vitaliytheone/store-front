@@ -1,0 +1,48 @@
+<div class="product-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="product-page__title {% if site.rtl %} rtl-direction {% endif %}">{{ product.title }}</h1>
+                {% if product.content %}
+                    <div class="product-page__content {% if site.rtl %} rtl-direction {% endif %}">
+                        {{ product.content }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="product-page__packages {% if site.rtl %} product-rtl {% endif %}">
+                {% for package in product.packages %}
+                    <div class="col-md-4">
+                        <div class="block-products__card">
+                            {% if package.best %}<div class="best-product">{{ lang('product.best') }}</div>{% endif %}
+                            <div class="block-products__card-header">
+                                {{ package.quantity }} {{ package.name}}
+                                <div class="block-products__card-header-shape"></div>
+                            </div>
+                            <div class="block-products__card-body">
+                                <ul class="block-products__card-properties">
+                                    {% for property in product.properties %}
+                                        <li>{{ property }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="block-products__card-price">
+                                    {{ package.price|money }}
+                                </div>
+                            </div>
+                            <div class="block-products__card-footer">
+                                <a href="{{ package.button.url_buy_now }}" class="block-products__card-button">
+                                    {{ lang('product.button.buy_now') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if loop.index is divisible by(3) %}
+                        <div class="clearfix"></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

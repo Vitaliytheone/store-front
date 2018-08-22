@@ -14,6 +14,8 @@ use yii\base\Exception;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\web\User;
+use yii\web\NotFoundHttpException;
+use common\models\common\ThemesInterface;
 
 /**
  * Class EditThemeForm
@@ -49,12 +51,13 @@ class EditThemeForm extends Model
         ],
         'JS' => [],
         'CSS' => [],
+        'configs' => [],
     ];
 
-    /** @var   */
+    /** @var  string */
     public $file_content;
 
-    /** @var  */
+    /** @var ThemesInterface | CustomThemes | DefaultThemes*/
     private $_theme_model;
 
     /** @var string Relative to theme folder filepath */
@@ -98,6 +101,37 @@ class EditThemeForm extends Model
         return $this->_user;
     }
 
+
+    /**
+     * @param $themeEditFileName
+     * @return bool
+     * @throws NotFoundHttpException
+     */
+    public function setFile($themeEditFileName)
+    {
+        if (!$this->_theme_model) {
+            return false;
+        }
+
+        /** Check is filename is allowed */
+        if (strpos(json_encode($this->getFilesTree()), $themeEditFileName) === false) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->_file = $themeEditFileName;
+
+        /**
+         * For Custom theme — save file to theme path
+         * For Default theme — save file to custom themes path
+         */
+        if ($this->_theme_model::getThemeType() === $this->_theme_model::THEME_TYPE_CUSTOM) {
+            $this->_path_to_file = $this->_theme_model->getThemePath() . '/' . $this->_file;
+        } else {
+            $this->_path_to_file = $this->_theme_model->getSaveToPath() . '/' . $this->_file;
+        }
+        return true;
+    }
+
     /**
      * Create Form model
      * @param $themeFolderName
@@ -105,7 +139,6 @@ class EditThemeForm extends Model
      * @return bool|static
      */
     public static function make($themeFolderName, $themeEditFileName) {
-
         $themeModel = (new ThemesSearch())->searchByFolder($themeFolderName);
         $fileName = ltrim(str_replace('../', '', $themeEditFileName), '/');
 
@@ -207,6 +240,10 @@ class EditThemeForm extends Model
             if ($extension === 'css') {
                 $this->_filesTree['CSS'][] = $fileName;
             }
+
+            if ($fileName === 'data.json' || $fileName === 'settings.json') {
+                $this->_filesTree['configs'][] = $fileName;
+            }
         }
 
         foreach ($this->_filesTree as $key=>&$folder)
@@ -299,14 +336,17 @@ class EditThemeForm extends Model
     }
 
     /**
-     * Update theme file
-     * @param $postData
-     * @return false|string
+     * @param array|string $data
+     * @return bool|string
      */
-    public function updateThemeFile($postData)
+    public function updateThemeFile($data)
     {
-        if (!$this->load($postData)) {
-            return false;
+        if (is_string($data)) {
+            $this->file_content = $data;
+        } else {
+            if (!$this->load($data)) {
+                return false;
+            }
         }
 
         $pathToFile = $this->getPathToFile();
@@ -315,6 +355,7 @@ class EditThemeForm extends Model
         if (!file_exists($path)) {
             mkdir($path, 0766, true);
         }
+
 
         if (!file_put_contents($pathToFile, $this->file_content)) {
             return false;

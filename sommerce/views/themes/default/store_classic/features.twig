@@ -1,0 +1,60 @@
+{% if block.features %}
+<div class="block-features">
+    <div class="block-shapes block-features-shape"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="block-features__title">{{ block.features.header.title }}</h2>
+                {% if block.features.header.description %}
+                    <p class="block-features__description">{{ block.features.header.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row bootstrap-column-clearfix">
+            {% for feature in block.features.data %}
+                <div class="{{ block.features.settings.bootstrap_column }}">
+                    <div class="block-features__card {% if block.features.settings.align == 'center' %} text-center {% endif %}">
+                      {% if block.features.settings.align == 'left' %}
+                       <div class="row">
+                          <div class="col-md-4">
+ 							<div class="block-features__card-image">
+                                {% if block.features.settings.picture_type == 'image' %}
+                                    <img src="{{ feature.image }}" alt="" class="img-responsive">
+                                {% else %}
+                                    <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+                                {% endif %}
+                            </div>
+                          </div>
+                          <div class="col-md-8">
+                            <div class="block-features__card-title">
+                            	{{ feature.title }}
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                          	 <div class="block-features__card-description">
+                            	{{ feature.description }}
+                             </div>
+                          </div>
+                       </div>
+                      {% else %}
+                        <div class="block-features__card-image">
+                            {% if block.features.settings.picture_type == 'image' %}
+                                <img src="{{ feature.image }}" alt="" class="img-responsive">
+                            {% else %}
+                                <span class="{{ feature.icon_class }}" style="font-size: {{ block.features.settings.icon_size }}px;"></span>
+                            {% endif %}
+                        </div>
+                        <div class="block-features__card-title">
+                            {{ feature.title }}
+                        </div>
+                        <div class="block-features__card-description">
+                            {{ feature.description }}
+                        </div>
+                      {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -37,6 +37,13 @@ use yii\helpers\ArrayHelper;
  * @property integer $string_name
  * @property string $params
  * @property string $type_services
+ * @property string $provider_service_settings
+ * @property string $provider_service_error
+ * @property int $service_view
+ * @property string $service_options
+ * @property int $provider_service_id_label
+ * @property int $store
+ *
  * @property string $date
  *
  * @property UserServices[] $userServices
@@ -55,6 +62,22 @@ class AdditionalServices extends ActiveRecord
     const AUTO_SERVICE_AUTO_LIST = 1;
     const AUTO_SERVICE_CUSTOM = 2;
 
+    const REFILL_NO = 0;
+    const REFILL_YES = 1;
+    const REFILL_YES_SECOND = 2;
+
+    const CANCEL_NO = 0;
+    const CANCEL_YES = 1;
+    const CANCEL_YES_SECOND = 2;
+
+    const START_COUNT_NO = 0;
+    const START_COUNT_YES = 1;
+
+    const SEND_METHOD_LOCAL = 0;
+    const SEND_METHOD_LAST = 1;
+    const SEND_METHOD_MULTI = 2;
+    const SEND_METHOD_MASS = 3;
+
     /**
      * @inheritdoc
      */
@@ -69,8 +92,8 @@ class AdditionalServices extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'apihelp', 'type', 'status'], 'required'],
-            [['res', 'type', 'status', 'search', 'sc', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name'], 'integer'],            [['content'], 'string'],
+            [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
+            [['res', 'type', 'status', 'search', 'sc', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],            [['content'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],
@@ -111,6 +134,12 @@ class AdditionalServices extends ActiveRecord
             'params' => Yii::t('app', 'Params'),
             'type_services' => Yii::t('app', 'Type Services'),
             'date' => Yii::t('app', 'Date'),
+            'provider_service_settings' => Yii::t('app', 'Provider Service Settings'),
+            'service_view' => Yii::t('app', 'Service View'),
+            'provider_service_error' => Yii::t('app', 'Provider Service error'),
+            'service_options' => Yii::t('app', 'Service option'),
+            'provider_service_id_label' => Yii::t('app', 'Provider Service Id Label'),
+            'store' => Yii::t('app', 'Store'),
         ];
     }
 
@@ -175,6 +204,116 @@ class AdditionalServices extends ActiveRecord
             static::TYPE_EXTERNAL => Yii::t('app', 'additional_service.type.external'),
             static::TYPE_INTERNAL => Yii::t('app', 'additional_service.type.internal'),
         ];
+    }
+
+    /**
+     * Get auto_service values
+     * @return array
+     */
+    public static function getAutoServices()
+    {
+        return [
+            static::AUTO_SERVICE_NOT_AUTO_LIST => Yii::t('app/superadmin', 'providers.services_list.auto_services_manual'),
+            static::AUTO_SERVICE_AUTO_LIST => Yii::t('app/superadmin', 'providers.services_list.auto_services_auto'),
+            static::AUTO_SERVICE_CUSTOM => Yii::t('app/superadmin', 'providers.services_list.auto_services_custom'),
+        ];
+    }
+
+    /**
+     * Get auto_orders values
+     * @return array
+     */
+    public static function getAutoOrders()
+    {
+        return [
+            static::SEND_METHOD_LOCAL => Yii::t('app/superadmin', 'providers.auto_order.local'),
+            static::SEND_METHOD_LAST => Yii::t('app/superadmin', 'providers.auto_order.last'),
+            static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'providers.auto_order.multi'),
+            static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'providers.auto_order.mass'),
+        ];
+    }
+
+    /**
+     * Get start_count values
+     * @return array
+     */
+    public static function getStartCounts()
+    {
+        return [
+            static::START_COUNT_NO => Yii::t('app/superadmin', 'providers.list.no'),
+            static::START_COUNT_YES => Yii::t('app/superadmin', 'providers.list.yes'),
+        ];
+    }
+
+    /**
+     * Get refill values
+     * @return array
+     */
+    public static function getRefill()
+    {
+        return [
+            static::REFILL_NO => Yii::t('app/superadmin', 'providers.list.no'),
+            static::REFILL_YES => Yii::t('app/superadmin', 'providers.list.yes'),
+            static::REFILL_YES_SECOND => Yii::t('app/superadmin', 'providers.list.yes'),
+        ];
+    }
+
+    /**
+     * Get cancel values
+     * @return array
+     */
+    public static function getCancel()
+    {
+        return [
+            static::CANCEL_NO => Yii::t('app/superadmin', 'providers.list.no'),
+            static::CANCEL_YES => Yii::t('app/superadmin', 'providers.list.yes'),
+            static::CANCEL_YES_SECOND => Yii::t('app/superadmin', 'providers.list.yes'),
+        ];
+    }
+
+    /**
+     * Get start_count string name
+     * @param $sc
+     * @return mixed
+     */
+    public static function getStartCountName($sc)
+    {
+        return ArrayHelper::getValue(static::getStartCounts(), $sc, '');
+    }
+
+    /**
+     * Get refill string name
+     * @param $refill
+     * @return mixed
+     */
+    public static function getRefillName($refill)
+    {
+        return ArrayHelper::getValue(static::getRefill(), $refill, '');
+    }
+
+    public static function getCancelName($cancel)
+    {
+        return ArrayHelper::getValue(static::getCancel(), $cancel, '');
+    }
+
+    /**
+     * Get auto_order string name
+     * @param $autoOrder
+     * @return mixed
+     */
+    public static function getAutoOrderName($autoOrder)
+    {
+        return ArrayHelper::getValue(static::getAutoOrders(), $autoOrder, '');
+    }
+
+    /**
+     * Get auto_service string name
+     * @param $autoService
+     * @return mixed
+     */
+    public static function getAutoServiceName($autoService)
+    {
+        return ArrayHelper::getValue(static::getAutoServices(), $autoService, '');
     }
 
     /**
