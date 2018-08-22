@@ -47,7 +47,7 @@ class InvoicesSearch extends Invoices {
     /**
      * Build sql query
      * @param int $status
-     * @return ActiveRecord
+     * @return Query
      */
     public function buildQuery($status = null)
     {
@@ -68,12 +68,7 @@ class InvoicesSearch extends Invoices {
         if ($searchQuery && !empty($searchType)) {
             switch ($searchType) {
                 case static::SEARCH_TYPE_INVOICE_ID:
-                    $searchValues = explode(',', $searchQuery);
-
-                    foreach ($searchValues as $key => $value) {
-                        $searchValues[$key] = (int)trim($value);
-                    }
-                    $searchValues = array_unique($searchValues);
+                    $searchValues = array_unique(array_map(function($value) {return (int)trim($value);}, explode(',', (string)$searchQuery)));
                     $this->invoiceIdQuery = $searchValues;
                     $invoices->andWhere(['invoices.id' => $searchValues]);
                     break;
@@ -101,7 +96,7 @@ class InvoicesSearch extends Invoices {
 
     /**
      * Add join query
-     * @param $query
+     * @param Query $query
      * @return mixed
      */
     protected function addDomainJoinQuery($query)
