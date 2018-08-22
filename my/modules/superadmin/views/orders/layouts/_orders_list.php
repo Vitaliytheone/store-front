@@ -90,14 +90,13 @@
                                     ])?>
                                 <?php endif; ?>
 
-                                <?php if (isset($order['invoice_status']) && Orders::STATUS_PENDING == $order['check_status']) : ?>
+                                <?php if (Orders::STATUS_PENDING == $order['check_status']) : ?>
                                     <?= Html::a(Yii::t('app/superadmin', 'orders.list.dropdown_item_cancel'), Url::toRoute('/orders/change-status'), [
                                         'class' => 'dropdown-item cancel-menu',
                                         'data-method' => 'POST',
                                         'data-params' => [
                                             'id' => $order['id'],
                                             'status' => Orders::STATUS_CANCELED,
-                                            'invoice_id' => $order['invoice_id'],
                                         ],
                                         'data-confirm-message' => Yii::t('app/superadmin', 'invoices.list.action_cancel_confirm_message')
                                     ])?>

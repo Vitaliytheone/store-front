@@ -263,7 +263,7 @@ class Orders extends ActiveRecord
      * @param int $invoice_id
      * @return bool
      */
-    public function changeStatus($status, $invoice_id = null)
+    public function changeStatus($status)
     {
         switch ($status) {
             case static::STATUS_ADDED:
@@ -278,7 +278,8 @@ class Orders extends ActiveRecord
             break;
 
             case static::STATUS_CANCELED:
-                $invoice = Invoices::findOne($invoice_id);
+                $invoiceDetails = InvoiceDetails::find()->where(['item_id' => $this->id])->one();
+                $invoice = Invoices::find()->where(['id' => $invoiceDetails->invoice_id])->one();
 
                 $invoice->status = Invoices::STATUS_CANCELED;
                 $invoice->save(false);
