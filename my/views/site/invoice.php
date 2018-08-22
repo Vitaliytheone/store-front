@@ -7,6 +7,8 @@
     /* @var $pgid integer */
     /* @var $payWait boolean */
     /* @var $verificationWait null|string payment verification needed */
+    /* @var $disabled boolean */
+
 
     use common\models\panels\Invoices;
 
@@ -56,7 +58,7 @@
                                             <option value="<?= $key ?>" <?= ($key == $pgid ? 'selected' : '') ?>><?= $value ?></option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <button type="submit" <?= ($payWait ? 'disabled' : '') ?> class="btn btn-default"><?= Yii::t('app', 'invoices.view.btn_pay'); ?></button>
+                                    <button <?= $disabled ? 'disabled' : ''?> type="submit" <?= ($payWait ? 'disabled' : '') ?> class="btn btn-default <?= $disabled ? 'disabled' : ''?>"><?= Yii::t('app', 'invoices.view.btn_pay'); ?></button>
                                 </div>
                             </form>
                         <?php endif ?>

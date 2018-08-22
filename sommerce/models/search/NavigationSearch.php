@@ -7,6 +7,7 @@ use Yii;
 use yii\base\Model;
 use yii\db\Connection;
 use yii\db\Query;
+use common\models\stores\Stores;
 
 
 class NavigationSearch extends Model
@@ -15,16 +16,14 @@ class NavigationSearch extends Model
     private $_navigationsTable;
 
     /**
-     * @inheritdoc
+     * @param Stores $store
      */
-    public function init()
+    public function setStore($store)
     {
-        $this->_storeDb = Yii::$app->store->getInstance()->db_name;
+        $this->_storeDb = $store->db_name;
         $this->_navigationsTable = $this->_storeDb . "." . Navigation::tableName();
-
-        parent::init();
     }
-
+    
     /**
      * Return all non deleted navigation items
      * @return array

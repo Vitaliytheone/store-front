@@ -26,6 +26,20 @@ class ActivateThemeForm
     protected $_user;
 
     /**
+     * @var Stores
+     */
+    protected $_store;
+
+    /**
+     * Set current store
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
+
+    /**
      * Set current user
      * @param User $user
      */
@@ -51,7 +65,9 @@ class ActivateThemeForm
      */
     public function activate($themeFolder)
     {
-        $themeModel = (new ThemesSearch())->searchByFolder($themeFolder);
+        $search = new ThemesSearch();
+        $search->setStore($this->_store);
+        $themeModel = $search->searchByFolder($themeFolder);
         if (!$themeModel) {
             throw new Exception('Theme does not exist in DB!');
         }
@@ -62,17 +78,12 @@ class ActivateThemeForm
             throw new Exception('Theme folder does not exist in filesystem!');
         }
 
-        /** @var Stores $storeModel */
-        $storeModel = Yii::$app->store->getInstance();
-
-
-
-        $storeModel->setAttributes([
+        $this->_store->setAttributes([
             'theme_name' => $themeModel->name,
             'theme_folder' => $themeModel->folder,
         ]);
 
-        if (!$storeModel->save()) {
+        if (!$this->_store->save()) {
             throw new Exception('Could not update active theme settings!');
         }
 

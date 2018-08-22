@@ -93,7 +93,6 @@ class PanelsController extends CustomController
     public function actionIndex()
     {
         $this->view->title = Yii::t('app/superadmin', 'pages.title.panels');
-
         $panelsSearch = new PanelsSearch();
         $panelsSearch->setParams(Yii::$app->request->get());
 

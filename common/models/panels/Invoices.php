@@ -355,6 +355,37 @@ class Invoices extends ActiveRecord
     }
 
     /**
+     * @return bool
+     */
+    public function isDisabled() {
+        return false;
+        $details = $this->invoiceDetails;
+        $detail = null;
+        foreach ($details as $item) {
+            if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL || $item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
+                $detail = $item;
+            }
+        }
+
+        if ($this->status == Invoices::STATUS_UNPAID && $detail) {
+            if ($detail->order ) {
+                $orderDetails = $detail->order->getDetails();
+                $providerId = ArrayHelper::getValue($orderDetails, 'provider');
+            } else {
+                $providerId = $project = Project::findOne([
+                    'id'  => $detail->item_id
+                ])->provider_id;
+            }
+            $owner = Project::getOwnerChildPanel($providerId);
+            if ($owner && $owner->act == Project::STATUS_FROZEN) {
+               return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check access by code
      * @param string $code
      * @return bool

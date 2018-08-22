@@ -95,10 +95,9 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.page_title');
         $this->addModule('adminGeneral');
 
-        /** @var \common\models\stores\Stores $store */
-        $store = Yii::$app->store->getInstance();
+        
 
-        $storeForm = EditStoreSettingsForm::findOne($store->id);
+        $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
 
         $storeForm->setUser(Yii::$app->user);
@@ -150,6 +149,7 @@ class SettingsController extends CustomController
         }
 
         $searchModel = new LinksSearch();
+        $searchModel->setStore($this->store);
 
         return ['links' => $searchModel->searchLinksByType($link_type|0)];
     }

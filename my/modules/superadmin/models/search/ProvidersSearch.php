@@ -48,7 +48,7 @@ class ProvidersSearch
 
     /**
      * Build sql query
-     * @return ActiveRecord
+     * @return Query
      */
     public function buildQuery($type = null)
     {
@@ -103,7 +103,7 @@ class ProvidersSearch
     /**
      * Get providers
      * @param integer $type
-     * @return array
+     * @return Query
      */
     protected function getProviders($type = null)
     {
@@ -127,19 +127,44 @@ class ProvidersSearch
 
         $sort = new Sort([
             'attributes' => [
+                'res' => [
+                    'default' => SORT_DESC,
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
+                ],
+                'name' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_name'),
+                ],
                 'auto_order' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_sender')
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_sender'),
                 ],
                 'type' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_type')
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_type'),
                 ],
                 'status' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_status')
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_status'),
+                ],
+                'sc' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_start_count'),
+                ],
+                'refill' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_refill'),
+                ],
+                'cancel' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_cancel'),
+                ],
+                'auto_services' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_autolist'),
+                ],
+                'date' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_created'),
                 ],
             ],
         ]);
+        $sort->defaultOrder = [
+            'res' => SORT_DESC,
+        ];
 
-        $providers = $this->getProviders($type)
+        $providers = $this->buildQuery($type)
             ->orderBy($sort->orders)
             ->all();
 
@@ -180,7 +205,6 @@ class ProvidersSearch
                 'sc' => AdditionalServices::getStartCountName($provider['sc']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
                 'cancel' => AdditionalServices::getCancelName($provider['cancel']),
-                'auto_order' => $provider['auto_order'],
                 'type' => AdditionalServices::getTypeNameString($provider['type']),
                 'status' => $provider['status'],
                 'date' => $provider['date'],
