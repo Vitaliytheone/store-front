@@ -17,14 +17,17 @@ $this->context->addModule('superadminDbHelperController');
                 <div class="card-block">
                     <div class="row">
                         <div class="col-lg-6">
+                            <?php $form = ActiveForm::begin([
+                                'action' => Url::toRoute(['tools/db-helper']),
+                                'id' => 'dbHelperForm',
+                                'fieldClass' => 'yii\bootstrap\ActiveField',
+                                'fieldConfig' => [
+                                    'labelOptions' => ['class' => 'form'],
+                                ]]); ?>
                             <select class="form-control db_name" name="db_name">
-                                <option>db_name</option>
-                                <?php foreach ($models['panels'] as $panel) : ?>
-                                    <option><?= $panel['panel'] ?></span></option>
-                                <?php endforeach; ?>
-                                <?php foreach ($models['stores'] as $store) : ?>
-                                    <option><?= $store['store'] ?></option>
-                                <?php endforeach; ?>
+                                <option <?= ($selectedOption != 'Panels' && $selectedOption != 'Stores') ? 'selected' : '' ?>><?= Yii::t('app/superadmin', 'db_helper.select.select_source') ?></option>
+                                <option <?= $selectedOption == 'Panels' ? 'selected' : '' ?>><?= Yii::t('app/superadmin', 'db_helper.select.panels') ?></option>
+                                <option <?= $selectedOption == 'Stores' ? 'selected' : '' ?>><?= Yii::t('app/superadmin', 'db_helper.select.stores') ?></option>
                             </select><br>
                             <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '7']); ?>
                             <br>
@@ -33,10 +36,14 @@ $this->context->addModule('superadminDbHelperController');
                                 'name' => 'db-helper-button',
                                 'id' => 'dbHelperButton'
                             ]) ?>
-
+                            <?php ActiveForm::end(); ?>
                         </div>
                         <div class="col-lg-6">
-                            <pre class="query_content">UPDATE `db_name`.`services` SET `provider_id` = `res`, `provider_service_id` = `reid`, `provider_service_params` = `params`;
+                            <pre class="query_content">
+                                <?php foreach ($models as $model) : ?>
+                                <?= $model ?>
+                                <br>
+                                <?php endforeach; ?>
                             </pre>
                         </div>
                     </div>

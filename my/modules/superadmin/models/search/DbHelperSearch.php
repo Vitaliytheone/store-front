@@ -10,43 +10,74 @@ use yii\db\Query;
 class DbHelperSearch
 {
 
-    private static $query = 'UPDATE `db_name`.`services` SET `provider_id` = `res`, `provider_service_id` = `reid`, `provider_service_params` = `params`;';
+    const DEFAULT_QUERY = 'UPDATE `db_name`.`services` SET `provider_id` = `res`, `provider_service_id` = `reid`, `provider_service_params` = `params`;';
+
+    use SearchTrait;
+
+    /**
+     * Get query for textarea
+     * @return string
+     */
+    public function getQueryForInput()
+    {
+        return isset($this->params['query']) ? $this->params['query'] : static::DEFAULT_QUERY;
+    }
 
     /**
      * Get default query string
-     * @return string
+     * @param $dbNames array
+     * @return array
      */
-    public function getQueryString()
+    public function getQueryString($dbNames)
     {
-        return static::$query;
+        $query = $this->getQueryForInput();
+        $array = [];
+
+        if (empty($dbNames)) {
+            $array[] = $query;
+            return $array;
+        }
+
+        foreach ($dbNames as $dbName) {
+            $array[] = str_replace('db_name', $dbName['db_name'], $query);
+        }
+
+        return $array;
     }
 
     /**
      * Get query
      * @return array
      */
-    private function buildQuery()
+    private function buildQuery($params = null)
     {
-        $panels = (new Query())
-            ->select([
-                'db as panel'
-            ])
-            ->from('project')
-            ->where('db != ""')
-            ->all();
+        if ($params == null) {
+            return [];
+        }
 
-        $stores = (new Query())
-            ->select([
-                'db_name as store'
-            ])
-            ->from(DB_STORES . '.stores')
-            ->where('db_name != ""')
-            ->all();
+        $models = [];
 
-        return [
-            'panels' => $panels,
-            'stores' => $stores
-        ];
+        if ($params == 'Panels') {
+            $models = (new Query())
+                ->select([
+                    'db as db_name'
+                ])
+                ->from('project')
+                ->where('db != ""')
+                ->orderBy(['orders' => SORT_ASC])
+                ->all();
+        } elseif ($params == 'Stores') {
+            $models = (new Query())
+                ->select([
+                    'db_name as db_name'
+                ])
+                ->from('`' . DB_STORES . '`.stores')
+                ->where('db_name != ""')
+                ->orderBy(['id' => SORT_ASC])
+                ->all();
+        }
+
+        return $models;
     }
 
     /**
@@ -54,6 +85,9 @@ class DbHelperSearch
      */
     public function search()
     {
-        return $this->buildQuery();
+        $params = isset($this->params['db_name']) ? $this->params['db_name'] : null;
+        $model = $this->buildQuery($params);
+
+        return $this->getQueryString($model);
     }
 }

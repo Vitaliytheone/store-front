@@ -101,10 +101,12 @@ class ToolsController extends CustomController
         $this->view->title = Yii::t('app/superadmin', 'db_helper.title');
 
         $search = new DbHelperSearch();
+        $search->setParams(Yii::$app->request->post());
 
         return $this->render('db_helper', [
             'models' => $search->search(),
-            'query' => $search->getQueryString(),
+            'query' => $search->getQueryForInput(),
+            'selectedOption' => Yii::$app->request->post('db_name'),
         ]);
     }
 

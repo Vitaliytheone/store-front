@@ -668,4 +668,8 @@ return [
     'invoices.add_earnings.close_btn' => 'Close',
     'invoices.add_earnings.submit_btn' => 'Add earnings',
 
+    'db_helper.select.select_source' => 'Select source',
+    'db_helper.select.panels' => 'Panels',
+    'db_helper.select.stores' => 'Stores',
+
 ];
