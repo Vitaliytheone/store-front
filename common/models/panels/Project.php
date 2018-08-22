@@ -263,22 +263,7 @@ class Project extends ActiveRecord implements ProjectInterface
 
         return Project::findOne(['site' => $site]);
     }
-
     
-    public function cancelChildInvoices()
-    {
-        $query = (new Query())
-            ->select([
-                'project.id',
-            ])
-            ->from('project')
-            ->innerJoin('additional_services', 'additional_services.name = project.site')
-            ->innerJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
-            ->where(['project.site' => $this->site]);
-
-        echo $query->createCommand()->sql;
-    }
-
     /**
      * Get statuses labels
      * @return array

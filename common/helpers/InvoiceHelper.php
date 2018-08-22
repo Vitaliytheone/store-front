@@ -49,9 +49,6 @@ class InvoiceHelper
             ->groupBy('project.id')
             ->all();
 
-        var_dump(count($projects));
-
-
         foreach ($projects as $project) {
             $tariff = Tariff::findOne($project->tariff);
 
