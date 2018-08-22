@@ -361,7 +361,7 @@ class Invoices extends ActiveRecord
         $details = $this->invoiceDetails;
         $detail = null;
         foreach ($details as $item) {
-            if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL) {
+            if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL || $item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
                 $detail = $item;
             }
         }
