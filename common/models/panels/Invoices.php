@@ -363,6 +363,7 @@ class Invoices extends ActiveRecord
         foreach ($details as $item) {
             if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL || $item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
                 $detail = $item;
+                Yii::error('detail');
             }
         }
 
@@ -370,12 +371,14 @@ class Invoices extends ActiveRecord
             if ($detail->order) {
                 $orderDetails = $detail->order->getDetails();
                 $providerId = ArrayHelper::getValue($orderDetails, 'provider');
+                Yii::error('order');
             } else {
                 $providerId = $project = Project::findOne([
                     'id'  => $detail->item_id
                 ])->provider_id;
             }
             $owner = Project::getOwnerChildPanel($providerId);
+            Yii::error(var_export($owner, true));
             if ($owner && $owner->act == Project::STATUS_FROZEN) {
                return true;
             }
