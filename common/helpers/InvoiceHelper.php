@@ -228,9 +228,10 @@ class InvoiceHelper
 
         $sslCerts = SslCert::find()
         ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item 
-            AND orders.status <>> :order_statuses', [
+            AND orders.status <> :canceled  AND orders.status <> :added', [
             ':order_item' => Orders::ITEM_PROLONGATION_SSL,
-            ':order_statuses' => [Orders::STATUS_ADDED, Orders::STATUS_CANCELED]
+            ':canceled' => Orders::STATUS_CANCELED,
+            ':added' => Orders::STATUS_ADDED
         ])
         ->andWhere([
             'ssl_cert.status' => SslCert::STATUS_ACTIVE,
@@ -239,14 +240,8 @@ class InvoiceHelper
             ':expiry' => $date
         ])
         ->groupBy('ssl_cert.id')
-        ->having("COUNT(orders.id) = 0");
-
-        echo $sslCerts->createCommand()->getRawSql();
-        exit;
-        //->all();
-
-
-        var_dump(count($sslCerts));
+        ->having("COUNT(orders.id) = 0")
+        ->all();
 
         foreach ($sslCerts as $ssl) {
 
