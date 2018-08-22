@@ -20,14 +20,13 @@ class OrderController extends CustomController
     public function actionView($code)
     {
         $order = $this->_findOrder($code);
-        $store = Yii::$app->store->getInstance();
 
         $this->pageTitle = Yii::t('app', 'vieworder.title', [
             'id' => $order->id
         ]);
 
         $search = new OrdersSearch();
-        $search->setStore($store);
+        $search->setStore($this->store);
         $search->setOrder($order);
 
         return $this->render('vieworder.twig', [

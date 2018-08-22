@@ -45,6 +45,7 @@ class ApiController extends Controller
     public function actionGetUrlList()
     {
         $urlsModel = new UrlsSearch();
+        $urlsModel->setStore(Yii::$app->store->getInstance());
         $urls = $urlsModel->searchUrls();
 
         return $urls;

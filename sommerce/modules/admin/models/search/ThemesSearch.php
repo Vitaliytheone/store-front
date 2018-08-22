@@ -5,7 +5,6 @@ namespace sommerce\modules\admin\models\search;
 use common\models\store\CustomThemes;
 use common\models\stores\DefaultThemes;
 use common\models\stores\Stores;
-use Yii;
 use yii\base\Model;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -31,16 +30,15 @@ class ThemesSearch extends Model
      */
     private $_defaultThemesTable;
 
-    public function init()
+    /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
     {
-        $this->_store = Yii::$app->store->getInstance();
-
+        $this->_store = $store;
         $storeDb = $this->_store->db_name;
-
         $this->_defaultThemesTable = DefaultThemes::tableName();
         $this->_customThemesTable = $storeDb . "." . CustomThemes::tableName();
-
-        parent::init();
     }
 
     /**

@@ -5,7 +5,7 @@ namespace sommerce\modules\admin\models\search;
 use common\models\store\Navigation;
 use common\models\store\Pages;
 use common\models\store\Products;
-use Yii;
+use common\models\stores\Stores;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\db\Query;
@@ -22,16 +22,15 @@ class LinksSearch extends Model
     ];
 
     /**
-     * @inheritdoc
+     * @param Stores $stores
      */
-    public function init()
+    public function setStore(Stores $stores)
     {
-        $this->_storeDb = Yii::$app->store->getInstance()->db_name;
+        $this->_storeDb = $stores->db_name;
         $this->_productsTable = $this->_storeDb . "." . Products::tableName();
         $this->_pagesTable = $this->_storeDb . "." . Pages::tableName();
-
-        parent::init();
     }
+    
 
     /**
      * Return array of `pages` links

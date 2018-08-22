@@ -3,7 +3,6 @@
 namespace sommerce\controllers;
 
 use common\helpers\ThemesHelper;
-use common\models\stores\Stores;
 use sommerce\helpers\AssetsHelper;
 use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
@@ -82,11 +81,8 @@ class CustomController extends CommonController
     /** @inheritdoc */
     public function beforeAction($action)
     {
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
-
         // Redirect frozen store to `frozen page`
-        if ($store->isInactive() && $action->id !== 'frozen') {
+        if ($this->store->isInactive() && $action->id !== 'frozen') {
             $this->redirect(Url::to('/frozen'));
         }
 
@@ -118,11 +114,6 @@ class CustomController extends CommonController
             return $this->_globalParams;
         }
 
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-
         $this->endContent = [];
 
         if (!empty($this->customJs)) {
@@ -138,30 +129,32 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
+        $search =  new NavigationSearch();
+        $search->setStore($this->store);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
-                'page_title' => $this->pageTitle ? $this->pageTitle : $store->seo_title,
-                'menu' => (new NavigationSearch())->getSiteMenuTree(Yii::$app->request->url),
+                'page_title' => $this->pageTitle ? $this->pageTitle : $this->store->seo_title,
+                'menu' => $search->getSiteMenuTree(Yii::$app->request->url),
                 'cart' => [
-                    'item_count' => (int)(new CartSearch())->setStore($store)->getCount(),
+                    'item_count' => (int)(new CartSearch())->setStore($this->store)->getCount(),
                 ],
                 'language' => Yii::$app->language,
-                'rtl' => LanguagesHelper::getLanguageRtl($store),
-                'store_name' => $store->name,
-                'favicon' => $store->favicon,
-                'logo' => $store->logo,
+                'rtl' => LanguagesHelper::getLanguageRtl($this->store),
+                'store_name' => $this->store->name,
+                'favicon' => $this->store->favicon,
+                'logo' => $this->store->logo,
                 'meta' => [
-                    'keywords' => $this->seoKeywords ? $this->seoKeywords : $store->seo_keywords,
-                    'description' => $this->seoDescription ? $this->seoDescription : $store->seo_description,
+                    'keywords' => $this->seoKeywords ? $this->seoKeywords : $this->store->seo_keywords,
+                    'description' => $this->seoDescription ? $this->seoDescription : $this->store->seo_description,
                 ],
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
                 'story_name' => Yii::$app->store->getInstance()->name,
                 'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => $store->custom_header,
-                'custom_footer' => $store->custom_footer,
+                'custom_header' => $this->store->custom_header,
+                'custom_footer' => $this->store->custom_footer,
             ]
         ];
 

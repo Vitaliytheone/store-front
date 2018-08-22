@@ -2,9 +2,7 @@
 namespace sommerce\controllers;
 
 use common\models\panels\SslValidation;
-use common\models\store\Blocks;
-use common\models\stores\Stores;
-use sommerce\helpers\BlockHelper;
+use sommerce\models\search\BlocksSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -30,10 +28,8 @@ class SiteController extends CustomController
      */
     public function actionFrozen()
     {
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
 
-        if (!$store->isInactive()) {
+        if (!$this->store->isInactive()) {
             return $this->redirect('/');
         }
 
@@ -47,19 +43,10 @@ class SiteController extends CustomController
      */
     public function actionIndex()
     {
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
+        $this->pageTitle = $this->store->seo_title;
 
-        $this->pageTitle = $store->seo_title;
-
-        $blocks = [];
-        foreach (Blocks::find()->all() as $block) {
-            if ($store->isEnableBlock($block->code)) {
-                $blocks[$block->code] = $block->getContent(BlockHelper::getDefaultBlock($block->code));
-            }
-        }
         return $this->render('index.twig', [
-            'block' => $blocks
+            'block' => BlocksSearch::search($this->store)
         ]);
     }
 
@@ -82,11 +69,8 @@ class SiteController extends CustomController
      */
     public function actionSsl($filename)
     {
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
-
         $model = SslValidation::findOne([
-            'pid' => $store->id,
+            'pid' => $this->store->id,
             'file_name' => $filename . '.txt'
         ]);
 
