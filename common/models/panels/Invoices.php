@@ -367,10 +367,7 @@ class Invoices extends ActiveRecord
         }
 
         if ($this->status == Invoices::STATUS_UNPAID && $detail) {
-            $project = Project::findOne([
-                'id'  => $detail->item_id
-            ]);
-            $owner = $project->getOwnerChildPanel();
+            $owner = Project::getOwnerChildPanel($detail->order->domain);
             if ($owner && $owner->act == Project::STATUS_FROZEN) {
                return true;
             }
