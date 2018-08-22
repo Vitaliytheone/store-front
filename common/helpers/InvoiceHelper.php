@@ -45,7 +45,6 @@ class InvoiceHelper
                 ':expired' => $date
             ])
             ->groupBy('project.id')
-            ->having("COUNT(invoices.id) = 0")
             ->all();
 
         foreach ($projects as $project) {
@@ -59,7 +58,8 @@ class InvoiceHelper
                 'item_id' => $project->id,
                 'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
             ];
-
+            $provider = null;
+            
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
 
@@ -92,7 +92,7 @@ class InvoiceHelper
                     continue;
                 }
             }
-            
+
             $transaction = Yii::$app->db->beginTransaction();
 
             $invoice = new Invoices();
