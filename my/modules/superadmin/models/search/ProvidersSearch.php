@@ -4,21 +4,26 @@ namespace my\modules\superadmin\models\search;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
 use Yii;
+use yii\data\Sort;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\data\Pagination;
 
 /**
  * Class ProvidersSearch
  * @package my\modules\superadmin\models\search
  */
-class ProvidersSearch {
-
-    use SearchTrait;
+class ProvidersSearch
+{
 
     protected $_providers = [];
     protected $_projects = [];
     protected $_providerPanels = [];
+
+    private static $pageSizeList = [100, 500, 1000, 5000, 'all'];
+
+    use SearchTrait;
 
     /**
      * Get parameters
@@ -33,10 +38,19 @@ class ProvidersSearch {
     }
 
     /**
-     * Build sql query
-     * @return ActiveRecord
+     * Set value of page size
      */
-    public function buildQuery()
+    public function getPageSize()
+    {
+        $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
+        return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
+    }
+
+    /**
+     * Build sql query
+     * @return Query
+     */
+    public function buildQuery($type = null)
     {
         $searchQuery = $this->getQuery();
 
@@ -53,7 +67,6 @@ class ProvidersSearch {
                 'type',
                 'status',
                 'date',
-                'skype',
             ])
             ->from('additional_services');
 
@@ -65,36 +78,41 @@ class ProvidersSearch {
             ]);
         }
 
+        if (null !== $type) {
+            $providers->andFilterWhere(['type' => $type]);
+        }
+
         return $providers;
+    }
+
+    /**
+     * @param null|string $type
+     * @return Pagination
+     */
+    private function setPagination($type = null)
+    {
+        $query = clone $this->buildQuery($type);
+
+        $pages = new Pagination(['totalCount' => $query->count()]);
+        $pages->setPageSize($this->getPageSize());
+        $pages->defaultPageSize = static::$pageSizeList[0];
+
+        return $pages;
     }
 
     /**
      * Get providers
      * @param integer $type
-     * @return array
+     * @return Query
      */
     protected function getProviders($type = null)
     {
-        if (empty($this->_providers)) {
-            $query = clone $this->buildQuery();
+        $query = clone $this->buildQuery($type);
+        $pages = $this->setPagination($type);
 
-            $this->_providers = $query
-                ->orderBy([
-                    'id' => SORT_DESC
-                ])
-                ->all();
-        }
-
-        if (null !== $type) {
-            $providers = [];
-            foreach ($this->_providers as $provider) {
-                if ($provider['type'] == $type) {
-                    $providers[] = $provider;
-                }
-            }
-
-            return $providers;
-        }
+        $this->_providers = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit);
 
         return $this->_providers;
     }
@@ -107,10 +125,53 @@ class ProvidersSearch {
     {
         $type = ArrayHelper::getValue($this->params, 'type', null);
 
-        $providers = $this->getProviders($type);
+        $sort = new Sort([
+            'attributes' => [
+                'res' => [
+                    'default' => SORT_DESC,
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
+                ],
+                'name' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_name'),
+                ],
+                'auto_order' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_sender'),
+                ],
+                'type' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_type'),
+                ],
+                'status' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_status'),
+                ],
+                'sc' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_start_count'),
+                ],
+                'refill' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_refill'),
+                ],
+                'cancel' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_cancel'),
+                ],
+                'auto_services' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_autolist'),
+                ],
+                'date' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_created'),
+                ],
+            ],
+        ]);
+        $sort->defaultOrder = [
+            'res' => SORT_DESC,
+        ];
+
+        $providers = $this->buildQuery($type)
+            ->orderBy($sort->orders)
+            ->all();
 
         return [
             'models' => $this->prepareRowData($providers),
+            'pages' => $this->setPagination($type),
+            'sort' => $sort,
         ];
     }
 
@@ -141,16 +202,15 @@ class ProvidersSearch {
                 'name' => $provider['name'],
                 'projects' => array_values($projects),
                 'usedProjects' => array_values($usedProjects),
-                'sc' => $provider['sc'],
-                'refill' => $provider['refill'],
-                'cancel' => $provider['cancel'],
-                'auto_services' => $provider['auto_services'],
-                'auto_order' => $provider['auto_order'],
+                'sc' => AdditionalServices::getStartCountName($provider['sc']),
+                'refill' => AdditionalServices::getRefillName($provider['refill']),
+                'cancel' => AdditionalServices::getCancelName($provider['cancel']),
                 'type' => AdditionalServices::getTypeNameString($provider['type']),
                 'status' => $provider['status'],
                 'date' => $provider['date'],
-                'skype' => $provider['skype'],
                 'statusName' => AdditionalServices::getStatusNameString($provider['status']),
+                'auto_services' => AdditionalServices::getAutoServiceName($provider['auto_services']),
+                'auto_order' => AdditionalServices::getAutoOrderName($provider['auto_order']),
             ];
         }
 
@@ -190,14 +250,14 @@ class ProvidersSearch {
 
             foreach ((new Query())
                 ->select([
-                    'res'
+                    'provider_id'
                 ])
                 ->from($project['db'] . '.services')
                 ->andWhere([
                     'act' => 1
                 ])
                 ->all() as $service) {
-                $providers[$service['res']] = $service['res'];
+                $providers[$service['provider_id']] = $service['provider_id'];
             }
 
             $this->_projects[$project['id']]['providers'] = $providers;
@@ -243,13 +303,13 @@ class ProvidersSearch {
     {
         return [
             null => Yii::t('app/superadmin', 'providers.list.navs_all', [
-                'count' => count($this->getProviders())
+                'count' => $this->buildQuery()->count()
             ]),
             AdditionalServices::TYPE_INTERNAL => Yii::t('app/superadmin', 'providers.list.navs_internal', [
-                'count' => count($this->getProviders(AdditionalServices::TYPE_INTERNAL))
+                'count' => $this->buildQuery(AdditionalServices::TYPE_INTERNAL)->count()
             ]),
             AdditionalServices::TYPE_EXTERNAL => Yii::t('app/superadmin', 'providers.list.navs_external', [
-                'count' => count($this->getProviders(AdditionalServices::TYPE_EXTERNAL))
+                'count' => $this->buildQuery(AdditionalServices::TYPE_EXTERNAL)->count()
             ])
         ];
     }

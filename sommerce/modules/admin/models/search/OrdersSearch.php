@@ -5,6 +5,7 @@ namespace sommerce\modules\admin\models\search;
 use common\models\store\Orders;
 use common\models\store\Packages;
 use common\models\store\Products;
+use common\models\stores\Stores;
 use Yii;
 use yii\base\Model;
 use yii\base\Exception;
@@ -81,17 +82,18 @@ class OrdersSearch extends Model
         Suborders::STATUS_CANCELED,
     ];
 
-    public function init()
+    /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
     {
-        $this->_db = yii::$app->store->getInstance()->db_name;
-        
+        $this->_db = $store->db_name;
         $this->_ordersTable = $this->_db . "." . Orders::tableName();
         $this->_subordersTable = $this->_db . "." . Suborders::tableName();
         $this->_packagesTable = $this->_db . "." . Packages::tableName();
         $this->_productsTable = $this->_db . "." . Products::tableName();
-
-        parent::init();
     }
+
 
     /**
      * Apply query filters to specified query object

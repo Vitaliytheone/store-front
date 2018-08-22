@@ -5,6 +5,7 @@ use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
+use sommerce\controllers\CommonController;
 use sommerce\helpers\BlockHelper;
 use sommerce\modules\admin\models\forms\BlockUploadForm;
 use sommerce\modules\admin\models\forms\UpdateBlocksForm;
@@ -18,7 +19,7 @@ use yii\web\Response;
 
 /**
  * Class BlocksTrait
- * @property Controller $this
+ * @property CommonController $this
  * @package sommerce\modules\admin\controllers
  */
 trait BlocksTrait {
@@ -76,8 +77,10 @@ trait BlocksTrait {
         if (!Yii::$app->request->isAjax) {
             throw new BadRequestHttpException('Ajax request expected!');
         }
+        $search = new LinksSearch();
+        $search->setStore($this->store);
 
-        return (new LinksSearch())->searchLinks4Blocks();
+        return $search->searchLinks4Blocks();
     }
 
     /**

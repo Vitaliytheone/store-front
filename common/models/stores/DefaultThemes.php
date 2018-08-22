@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property string $folder
  * @property integer $position
+ * @property integer $is_customize
  * @property string $thumbnail
  */
 class DefaultThemes extends ActiveRecord implements ThemesInterface
@@ -48,6 +49,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
             [['name', 'folder', 'position'], 'required'],
             [['position'], 'integer'],
             [['name', 'folder', 'thumbnail'], 'string', 'max' => 300],
+            ['is_customize', 'integer', 'min' => 0, 'max' => 1],
         ];
     }
 
@@ -62,6 +64,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
             'folder' => Yii::t('app', 'Folder'),
             'position' => Yii::t('app', 'Position'),
             'thumbnail' => Yii::t('app', 'Thumbnail'),
+            'is_customize' => Yii::t('app', 'Is customize'),
         ];
     }
 
