@@ -3,7 +3,6 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\store\Files;
-use common\models\stores\StoreAdminAuth;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -14,13 +13,15 @@ use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
 use sommerce\modules\admin\controllers\traits\settings\ThemesTrait;
+use sommerce\modules\admin\controllers\traits\settings\ThemesCustomizerTrait;
 use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
-use yii\helpers\ArrayHelper;
-use yii\validators\FileValidator;
 use yii\web\Response;
+use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
+use \yii\filters\VerbFilter;
 
 /**
  * Settings controller for the `admin` module
@@ -35,6 +36,34 @@ class SettingsController extends CustomController
     use PagesTrait;
     use LanguageTrait;
     use NotificationsTrait;
+    use ThemesCustomizerTrait;
+
+    public function behaviors()
+    {
+        $parentBehaviors = parent::behaviors();
+        return $parentBehaviors + [
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style']
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'customize-theme' => ['GET'],
+                    'theme-get-style' => ['GET'],
+                    'theme-get-data' => ['GET'],
+                    'theme-update-style' => ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['theme-update-style'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -46,10 +75,10 @@ class SettingsController extends CustomController
             'update-blocks',
             'block-upload',
             'update-theme',
+            'theme-update-style'
         ])) {
             $this->enableCsrfValidation = false;
         }
-
         // Add custom JS modules
         // $this->addModule('settings');
         return parent::beforeAction($action);
@@ -66,10 +95,9 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.page_title');
         $this->addModule('adminGeneral');
 
-        /** @var \common\models\stores\Stores $store */
-        $store = Yii::$app->store->getInstance();
+        
 
-        $storeForm = EditStoreSettingsForm::findOne($store->id);
+        $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
 
         $storeForm->setUser(Yii::$app->user);
@@ -121,6 +149,7 @@ class SettingsController extends CustomController
         }
 
         $searchModel = new LinksSearch();
+        $searchModel->setStore($this->store);
 
         return ['links' => $searchModel->searchLinksByType($link_type|0)];
     }

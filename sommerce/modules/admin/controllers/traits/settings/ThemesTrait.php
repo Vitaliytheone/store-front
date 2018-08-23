@@ -4,6 +4,7 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 use common\models\store\ActivityLog;
 use common\models\stores\DefaultThemes;
 use common\models\stores\StoreAdminAuth;
+use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\ActivateThemeForm;
@@ -13,13 +14,12 @@ use sommerce\modules\admin\models\search\ThemesSearch;
 use Yii;
 use yii\helpers\Html;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
  * Class ThemesTrait
- * @property Controller $this
+ * @property CommonController $this
  * @package sommerce\modules\admin\controllers
  */
 trait ThemesTrait {
@@ -31,9 +31,11 @@ trait ThemesTrait {
     public function actionThemes()
     {
         $this->view->title = Yii::t('admin', "settings.themes_page_title");
+        $search = new ThemesSearch();
+        $search->setStore($this->store);
 
         return $this->render('themes', [
-            'themes' => (new ThemesSearch())->search(),
+            'themes' => $search->search(),
         ]);
     }
 
@@ -48,6 +50,7 @@ trait ThemesTrait {
 
         $themeModel = new CreateThemeForm();
         $themeModel->setUser(Yii::$app->user);
+        $themeModel->setStore($this->store);
 
         if($themeModel->create($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.themes_message_created'));
@@ -69,7 +72,7 @@ trait ThemesTrait {
 
         $activatedThemeForm = new ActivateThemeForm();
         $activatedThemeForm->setUser(Yii::$app->user);
-
+        $activatedThemeForm->setStore($this->store);
 
         UiHelper::message(Yii::t('admin', 'settings.themes_message_activated', [
             'theme_name' => $activatedThemeForm->activate($theme)->name,
@@ -93,7 +96,7 @@ trait ThemesTrait {
             'extension' => pathinfo($file, PATHINFO_EXTENSION)
         ]);
 
-        $editThemeForm = EditThemeForm::make($theme, $file);
+        $editThemeForm = EditThemeForm::make($theme, $file, $this->store);
 
         if (!$editThemeForm) {
             return $this->redirect(Url::toRoute('/settings/themes'));
@@ -127,7 +130,7 @@ trait ThemesTrait {
             throw new BadRequestHttpException();
         }
 
-        $editThemeForm = EditThemeForm::make($theme, $file);
+        $editThemeForm = EditThemeForm::make($theme, $file, $this->store);
         $editThemeForm->setUser(Yii::$app->user);
 
 

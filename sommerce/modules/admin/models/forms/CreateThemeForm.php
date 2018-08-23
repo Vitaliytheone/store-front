@@ -22,17 +22,19 @@ class CreateThemeForm extends CustomThemes
     private $_store;
 
     /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
+    
+
+    /**
      * @var User
      */
     protected $_user;
-
-    public function init()
-    {
-        $this->_store = Yii::$app->store->getInstance();
-
-        parent::init();
-    }
-
+    
     /**
      * @inheritdoc
      */

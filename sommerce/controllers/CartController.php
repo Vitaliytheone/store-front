@@ -4,7 +4,6 @@ namespace sommerce\controllers;
 use common\components\ActiveForm;
 use common\models\store\Carts;
 use common\models\store\Packages;
-use common\models\stores\Stores;
 use sommerce\helpers\UserHelper;
 use sommerce\models\forms\AddToCartForm;
 use sommerce\models\forms\OrderForm;
@@ -57,19 +56,15 @@ class CartController extends CustomController
         $this->pageTitle = Yii::t('app', 'cart.title');
 
         Url::remember();
-
-        /**
-         * @var Stores $store
-         */
-        $store = Yii::$app->store->getInstance();
+        
 
         $searchModel = new CartSearch();
-        $searchModel->setStore($store);
+        $searchModel->setStore($this->store);
 
         $items = $searchModel->getItemsForView();
 
         $model = new OrderForm();
-        $model->setStore($store);
+        $model->setStore($this->store);
         $model->setSearchItems($searchModel);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -103,21 +98,25 @@ class CartController extends CustomController
         ]);
     }
 
-
-    public function actionValidate() {
-        $store = Yii::$app->store->getInstance();
+    /**
+     * Validate cart
+     * @return array
+     */
+    public function actionValidate()
+    {
         $searchModel = new CartSearch();
-        $searchModel->setStore($store);
+        $searchModel->setStore($this->store);
         $model = new OrderForm();
-        $model->setStore($store);
+        $model->setStore($this->store);
         $model->setSearchItems($searchModel);
+
+        $status = 'error';
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return [
-                'status' => 'success'
-            ];
+            $status = 'success';
         }
+
         return [
-            'status' => 'error'
+            'status' => $status
         ];
     }
 
@@ -150,7 +149,7 @@ class CartController extends CustomController
 
         $model = new AddToCartForm();
         $model->setPackage($package);
-        $model->setStore(Yii::$app->store->getInstance());
+        $model->setStore($this->store);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->redirect('/cart');
