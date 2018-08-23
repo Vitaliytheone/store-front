@@ -18,7 +18,6 @@ use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use yii\db\Query;
 
 /**
  * This is the model class for table "{{%project}}".
@@ -904,13 +903,12 @@ class Project extends ActiveRecord implements ProjectInterface
         return $this->save(false);
     }
 
+    /**
+     * @return array|ActiveRecord[]
+     */
     public function getChildPanels()
     {
-        return (new Query())
-            ->select([
-                'child_panel.*',
-            ])
-            ->from('project')
+        return Project::find()
             ->leftJoin('additional_services', 'additional_services.name = project.site')
             ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
             ->where(['project.site' => $this->site])
