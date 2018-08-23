@@ -1,51 +1,15 @@
 <?php
 
-namespace console\controllers\superadmin;
+namespace console\helpers;
 
-
-use console\controllers\my\CustomController;
 use yii\db\Query;
 use common\models\panels\Project;
-use yii\helpers\ArrayHelper;
-use common\models\panels\AdditionalServices;
 
-/**
- * Class UpdateServicesCount
- * @package console\controllers\superadmin
- */
-class UpdateServicesCountController extends CustomController
+class UpdateServicesCountHelper
 {
-    protected $_providers = [];
-    protected $_projects = [];
-    protected $_providerPanels = [];
-
-    /**
-     * Update service_count & service_inuse_count in additional_services
-     */
-    public function actionUpdate()
-    {
-        $providers = $this->buildQuery();
-
-        $providersPanels = $this->getProviderPanels();
-
-        foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
-            $usedProjects = [];
-
-            foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
-                    $usedProjects[] = $project;
-                }
-            }
-
-            $service = AdditionalServices::find()
-                ->where(['res' => $provider['res']])
-                ->one();
-            $service->service_count = count(array_values($projects));
-            $service->service_inuse_count = count(array_values($usedProjects));
-            $service->update();
-        }
-    }
+    public $_providers = [];
+    public $_projects = [];
+    public $_providerPanels = [];
 
     /**
      * @return array

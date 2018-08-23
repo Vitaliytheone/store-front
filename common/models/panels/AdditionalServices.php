@@ -101,6 +101,7 @@ class AdditionalServices extends ActiveRecord
             [['apihelp'], 'string', 'max' => 2000],
             [['username', 'password', 'skype', 'type_name'], 'string', 'max' => 300],
             [['proxy'], 'string', 'max' => 1000],
+            [['service_inuse_count', 'service_count'], 'integer'],
         ];
     }
 
