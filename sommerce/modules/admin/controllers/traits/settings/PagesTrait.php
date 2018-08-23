@@ -5,7 +5,7 @@ use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Pages;
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
+use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditPageForm;
@@ -13,13 +13,12 @@ use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
  * Class PagesTrait
- * @property Controller $this
+ * @property CommonController $this
  * @package sommerce\modules\admin\controllers
  */
 trait PagesTrait {
@@ -32,8 +31,9 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_page_title");
         $this->addModule('adminPages');
-
-        $pages = (new PagesSearch())->searchPages();
+        $search = new PagesSearch();
+        $search->setStore($this->store);
+        $pages = $search->searchPages();
 
         return $this->render('pages', [
             'pages' => $pages,
@@ -53,6 +53,7 @@ trait PagesTrait {
         $pageForm->setPage(new Pages());
 
         $urlsModel = new UrlsSearch();
+        $urlsModel->setStore($this->store);
         $exitingUrls = $urlsModel->searchUrls();
 
         $this->addModule('adminPageEdit', [

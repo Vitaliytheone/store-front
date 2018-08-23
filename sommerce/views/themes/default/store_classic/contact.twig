@@ -1,0 +1,56 @@
+<div class="contact-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="contact-page__title {% if site.rtl %} rtl-direction {% endif %}">{{ page.title }}</h1>
+            </div>
+        </div>
+        {% if error %}
+           <div class="row">
+              <div class="col-md-12">
+                 <div class="alert alert-error {% if site.rtl %} rtl-direction {% endif %}">
+                    <span class="fal fa-exclamation-triangle alert-icon"></span> {{ error_message }}
+                 </div>
+              </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="contact-page__form {% if site.rtl %} rtl-direction {% endif %}">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="inputSubject">{{ lang('contact.subject') }}</label>
+                            <input type="text" class="form-control" id="inputSubject" name="subject" value="{{ contact.form.subject }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">{{ lang('contact.name') }}</label>
+                            <input type="text" class="form-control" id="inputName" name="name" value="{{ contact.form.name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail">{{ lang('contact.email') }}</label>
+                            <input type="email" class="form-control" id="inputEmail" name="email" value="{{ contact.form.email }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputMessage">{{ lang('contact.message') }}</label>
+                            <textarea class="form-control" id="inputMessage" rows="3" name="message" required>{{ contact.form.message }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="g-recaptcha" data-sitekey="{{ captcha_key }}"></div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">{{ lang('contact.button.submit') }}</button>
+                        </div>
+                        <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {% if page.content %}
+                    <div class="contact-page__content {% if site.rtl %} rtl-direction {% endif %}">
+                        {{ page.content }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
