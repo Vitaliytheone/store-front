@@ -107,6 +107,13 @@ class Bitcoin {
             CURLOPT_POST            => $isPost
         ];
 
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $curlData += [
+                CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']
+            ];
+        }
+
         curl_setopt_array($ch, $curlData);
 
         if (!$result = curl_exec($ch)) {

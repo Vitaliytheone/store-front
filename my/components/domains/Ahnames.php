@@ -35,8 +35,9 @@ class Ahnames {
             'auth_password' => Yii::$app->params['ahnames.password'],
             'domains' => implode(",", $domains)
         ];
-
-        $result = @file_get_contents($url . '/domainsCheck?' . http_build_query($options));
+        
+        
+        $result = CurlHelper::getContents($url . '/domainsCheck?' . http_build_query($options));
 
         return static::_processResult($result, false);
     }

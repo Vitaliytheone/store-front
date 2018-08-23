@@ -5,6 +5,27 @@ namespace my\helpers;
 class CurlHelper {
 
     /**
+     * @param $url
+     * @return bool|string
+     */
+    public static function getContents($url)
+    {
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $aContext = array(
+                'http' => array(
+                    'proxy' => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port'],
+                    'request_fulluri' => true,
+                ),
+            );
+            $cxContext = stream_context_create($aContext);
+           return @file_get_contents($url, false, $cxContext);
+        }
+
+        return @file_get_contents($url);
+    }
+
+
+    /**
      * Curl request
      * @param $url
      * @param string $post
@@ -28,6 +49,11 @@ class CurlHelper {
         curl_setopt($ch, CURLOPT_POST, (int)!empty($post));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+        }
 
         if (is_array($post)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, join('&', $_post));
