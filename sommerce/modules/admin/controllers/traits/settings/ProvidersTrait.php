@@ -26,6 +26,7 @@ trait ProvidersTrait {
         $this->view->title = 'Settings providers';
 
         $search = new ProvidersSearch();
+        $search->setStore($this->store);
 
         $this->addModule('adminProviders');
 
