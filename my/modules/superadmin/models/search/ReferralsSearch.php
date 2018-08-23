@@ -81,16 +81,13 @@ class ReferralsSearch extends ReferralEarnings
      */
     private function queryCount()
     {
-        $models = $this->buildQuery()
+        return $this->buildQuery()
             ->select([
-                'COUNT(DISTINCT referral_visits.id) as total_visits',
+                'COUNT(DISTINCT referral_visits.customer_id)',
             ])
-            ->leftJoin('referral_visits', 'customers.id = referral_visits.customer_id')
-            ->having('total_visits > 0')
-            ->groupBy('customers.id')
-            ->all();
-
-        return count($models);
+            ->from('referral_visits')
+            ->leftJoin('customers', 'customers.id = referral_visits.customer_id')
+            ->scalar();
     }
 
     /**
