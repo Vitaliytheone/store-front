@@ -1,10 +1,10 @@
 <?php
 namespace my\components\domains;
 
+use common\helpers\Request;
 use my\helpers\CurlHelper;
 use Yii;
 use yii\base\InvalidParamException;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 /**
@@ -37,7 +37,7 @@ class Ahnames {
         ];
         
         
-        $result = CurlHelper::getContents($url . '/domainsCheck?' . http_build_query($options));
+        $result = Request::getContents($url . '/domainsCheck?' . http_build_query($options));
 
         return static::_processResult($result, false);
     }
