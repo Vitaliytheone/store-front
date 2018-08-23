@@ -93,6 +93,7 @@ class EditProjectForm extends Model {
                 'apikey',
                 'no_invoice'
             ], 'safe'],
+            ['cid', 'checkOwnedChildPanel'],
             [['apikey'], 'string'],
             [['apikey'], 'uniqApikey'],
         ];
@@ -210,24 +211,18 @@ class EditProjectForm extends Model {
      * Check panel to owned of child panel
      * @return bool
      */
-    private function checkOwnedChildPanel()
+    public function checkOwnedChildPanel()
     {
-        $query = (new Query())
-            ->select([
-                'project.id',
-            ])
-            ->from('project')
-            ->leftJoin('additional_services', 'additional_services.name = project.site')
-            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
-            ->where(['project.site' => $this->_project->site])
-            ->andWhere(['child_panel.act' => [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
-            ->all();
+        $childPanels = $this->_project->getChildPanels();
 
-        if (empty($query)) {
-            return true;
+        foreach ($childPanels as $panel) {
+            if (
+                $this->cid != $this->_project->cid
+                && ($panel['act'] === (string)Project::STATUS_ACTIVE || $panel['act'] === (string)Project::STATUS_FROZEN)
+            ) {
+                $this->addError('cid', Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
+            }
         }
-
-        return false;
     }
 
     /**
@@ -251,11 +246,6 @@ class EditProjectForm extends Model {
 
         if ($this->no_invoice != $this->_project->no_invoice) {
             $isChangedNoInvoice = true;
-        }
-
-        if ($this->cid != $this->_project->cid && !$this->checkOwnedChildPanel()) {
-            $this->addError('cid', Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
-            return false;
         }
 
         $this->_project->attributes = $this->attributes;
