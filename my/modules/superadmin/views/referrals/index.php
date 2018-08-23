@@ -7,7 +7,6 @@ use my\helpers\Url;
 use my\helpers\SpecialCharsHelper;
 use my\components\ActiveForm;
 
-    $this->context->addModule('superadminReferralsController');
 ?>
 <ul class="nav nav-pills mb-3">
     <li class="mr-auto">
