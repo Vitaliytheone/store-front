@@ -904,11 +904,13 @@ class Project extends ActiveRecord implements ProjectInterface
     }
 
     /**
+     * Get array of Project-objects which are child panels
      * @return array|ActiveRecord[]
      */
     public function getChildPanels()
     {
         return Project::find()
+            ->select('child_panel.*')
             ->leftJoin('additional_services', 'additional_services.name = project.site')
             ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
             ->where(['project.site' => $this->site])

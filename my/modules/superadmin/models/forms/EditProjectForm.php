@@ -209,18 +209,18 @@ class EditProjectForm extends Model {
 
     /**
      * Check panel to owned of child panel
-     * @return bool
+     * @param string
      */
-    public function checkOwnedChildPanel()
+    public function checkOwnedChildPanel($attribute)
     {
         $childPanels = $this->_project->getChildPanels();
 
         foreach ($childPanels as $panel) {
             if (
                 $this->cid != $this->_project->cid
-                && ($panel['act'] === (string)Project::STATUS_ACTIVE || $panel['act'] === (string)Project::STATUS_FROZEN)
+                && ($panel->act === Project::STATUS_ACTIVE || $panel->act === Project::STATUS_FROZEN)
             ) {
-                $this->addError('cid', Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
+                $this->addError($attribute, Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
             }
         }
     }
