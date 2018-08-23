@@ -5,6 +5,7 @@ use common\models\panels\AdditionalServices;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreProviders;
 use common\models\stores\StoresSendOrders;
+use console\components\getstatus\GetstatusComponent;
 use sommerce\helpers\MessagesHelper;
 use yii\db\Query;
 use yii\helpers\Console;
@@ -223,8 +224,10 @@ class SystemController extends CustomController
             }
         }
     }
-
-
+    
+    /**
+     * Change provider Id
+     */
     public function actionChangeProvidersId()
     {
         $stores = (new \yii\db\Query())->select([
@@ -265,4 +268,16 @@ class SystemController extends CustomController
             }
         }
     }
+
+    /**
+     * Fill getstatus
+     */
+    public function actionFillGetstatus()
+    {
+        $getstatus = new GetstatusComponent();
+        $getstatus->setConnection(Yii::$app->storeDb);
+        $getstatus->FillGetstatus();
+    }
+    
+    
 }

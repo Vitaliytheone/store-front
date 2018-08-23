@@ -24,7 +24,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $page_id
  * @property int $count
  * @property int $start_count
- * @property int $statu
+ * @property int $status
  * @property int type
  * @property int updated_at
  * @property string $hash
@@ -41,7 +41,7 @@ class Getstatus extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'getstatus';
+        return DB_PANELS . '.getstatus';
     }
 
     /**
