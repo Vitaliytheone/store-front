@@ -2,6 +2,10 @@
 
 namespace common\helpers;
 
+/**
+ * Class Request
+ * @package common\helpers
+ */
 class Request
 {
     /**
