@@ -119,12 +119,8 @@ class SiteController extends AdminController
 
         $form = new LoginForm();
 
-        if ($form->load(Yii::$app->getRequest()->post()) && $form->login()
-        ) {
-            /** @var Stores $store */
-            $store = Yii::$app->store->getInstance();
-
-            if ($store->isInactive()) {
+        if ($form->load(Yii::$app->getRequest()->post()) && $form->login()) {
+            if ($this->store->isInactive()) {
                 return $this->redirect(Url::toRoute('/frozen'));
             }
 
@@ -158,10 +154,8 @@ class SiteController extends AdminController
      */
     public function actionFrozen()
     {
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
 
-        if (!$store->isInactive()) {
+        if (!$this->store->isInactive()) {
             return $this->redirect(Url::toRoute('/'));
         }
 

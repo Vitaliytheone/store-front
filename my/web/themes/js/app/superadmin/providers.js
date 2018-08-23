@@ -38,47 +38,8 @@ customModule.superadminProvidersController = {
             return false;
         });
 
-        $('.edit-provider').click(function(e) {
-            e.preventDefault();
-
-            var link = $(this);
-            var action = link.attr('href');
-            var form = $('#editProviderForm');
-            var modal = $('#editProviderModal');
-            var errorBlock = $('#editProviderError', form);
-
-            form.attr('action', action);
-
-            errorBlock.addClass('hidden');
-            errorBlock.html('');
-
-            $('input[type="text"]', form).val('');
-
-            var details = link.data('details');
-
-            $('#editproviderform-skype').val(details.skype);
-            $('#editproviderform-name').val(details.name);
-
-            modal.modal('show');
-
-            return false;
-        });
-
-        $(document).on('click', '#editProviderButton', function(e) {
-            e.preventDefault();
-            var btn = $(this);
-            var form = $('#editProviderForm');
-
-            custom.sendFrom(btn, form, {
-                data: form.serialize(),
-                callback : function(response) {
-                    $('#editProviderModal').modal('hide');
-                    location.reload();
-                }
-            });
-
-            return false;
-        });
+        $('.query-sort').data("sorter", false);
+        $('.no_sort').data("sorter", false);
 
         $("#providersTable").tablesorter();
     }

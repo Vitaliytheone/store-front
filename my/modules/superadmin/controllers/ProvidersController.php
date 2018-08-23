@@ -5,9 +5,7 @@ namespace my\modules\superadmin\controllers;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\AdditionalServices;
-use my\modules\superadmin\models\forms\EditProviderForm;
 use my\modules\superadmin\models\search\ProvidersSearch;
-use my\modules\superadmin\models\search\ProviderLogsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -38,41 +36,15 @@ class ProvidersController extends CustomController
             'providers' => $providersSearch->search(),
             'navs' => $providersSearch->navs(),
             'type' => is_numeric($type) ? (int)$type : $type,
-            'filters' => $providersSearch->getParams()
+            'filters' => $providersSearch->getParams(),
         ]);
-    }
-
-    /**
-     * Edit provider action
-     * @param integer $id
-     * @return array
-     */
-    public function actionEdit($id)
-    {
-        $provider = $this->findModel($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new EditProviderForm();
-        $model->setProvider($provider);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return [
-                'status' => 'success',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
-        }
     }
 
     /**
      * Change provider status action
      * @param integer $id
      * @param integer $status
-     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionChangeStatus($id, $status)
     {
@@ -97,6 +69,7 @@ class ProvidersController extends CustomController
      * Get provider panels
      * @param $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionGetPanels($id)
     {

@@ -2,20 +2,18 @@
 
 namespace common\models\panels;
 
-use common\components\traits\UnixTimeFormatTrait;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\panels\queries\SenderLogQuery;
+use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "{{%sender_log}}".
+ * This is the model class for table "sender_log".
  *
  * @property int $id
  * @property int $panel_id
  * @property int $provider_id
  * @property int $send_method
- * @property integer $status
+ * @property int $status 1 - Success; 2 - Error; 3 - Curl error
  * @property string $result
  * @property int $created_at
  */
@@ -25,29 +23,33 @@ class SenderLog extends ActiveRecord
     const STATUS_ERROR = 2;
     const STATUS_CURL_ERROR = 3;
 
-    use UnixTimeFormatTrait;
+    const SEND_METHOD_LOCAL = 0;
+    const SEND_METHOD_LAST = 1;
+    const SEND_METHOD_MULTI = 2;
+    const SEND_METHOD_MASS = 3;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%sender_log}}';
+        return 'sender_log';
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['panel_id', 'provider_id', 'send_method', 'created_at', 'status'], 'integer'],
+            [['panel_id', 'provider_id', 'send_method', 'created_at'], 'integer'],
             [['result'], 'string'],
+            [['status'], 'string', 'max' => 1],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function attributeLabels()
     {
@@ -63,67 +65,26 @@ class SenderLog extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     * @return SenderLogQuery the active query used by this AR class.
+     * Get send_method values
+     * @return array
      */
-    public static function find()
-    {
-        return new SenderLogQuery(get_called_class());
-    }
-
-    public function behaviors()
+    public static function getSendMethods()
     {
         return [
-            'timestamp' => [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                ],
-                'value' => function() {
-                    return time();
-                },
-            ],
+            static::SEND_METHOD_LOCAL => Yii::t('app/superadmin', 'sender.send_method.local'),
+            static::SEND_METHOD_LAST => Yii::t('app/superadmin', 'sender.send_method.simple'),
+            static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'sender.send_method.multi'),
+            static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'sender.send_method.mass'),
         ];
     }
 
     /**
-     * @param $result
-     */
-    public function setResult($result)
-    {
-        $this->result = json_encode($result);
-    }
-
-    /**
-     * @return array|mixed
-     */
-    public function getResult()
-    {
-        return $this->result ? json_decode($this->result) : [];
-    }
-
-    /**
-     * Log method
-     * @param integer $panelId
-     * @param integer $providerId
-     * @param mixed $result
-     * @param integer $senderMethod
+     * Get send_method string name
+     * @param $sendMethod
      * @return mixed
      */
-    public static function log($panelId, $providerId, $result = null, $senderMethod = 0)
+    public static function getSendMethodName($sendMethod)
     {
-        $status = static::STATUS_SUCCESS;
-
-        if (empty($result['success'])) {
-            $status = static::STATUS_ERROR;
-        }
-
-        return (new static([
-            'panel_id' => (integer)$panelId,
-            'provider_id' => (integer)$providerId,
-            'send_method' => $senderMethod,
-            'status' => $status,
-            'result' => json_encode($result)
-        ]))->save();
+        return ArrayHelper::getValue(static::getSendMethods(), $sendMethod, '');
     }
 }

@@ -16,6 +16,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
 
@@ -242,7 +243,27 @@ class Project extends ActiveRecord implements ProjectInterface
             'no_referral' => Yii::t('app', 'No Referral'),
         ];
     }
+    
+    /**
+     * @param $provider
+     * @return null|static
+     */
+    public static function getOwnerChildPanel($provider)
+    {
+        $owner = (new Query())
+            ->select(['additional_services.name'])
+            ->from('additional_services')
+            ->andWhere(['res' =>  $provider])
+            ->one()['name'];
 
+        if (empty($owner)) {
+            return null;
+        }
+
+
+        return Project::findOne(['site' => $owner]);
+    }
+    
     /**
      * Get statuses labels
      * @return array

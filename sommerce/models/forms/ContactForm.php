@@ -76,6 +76,10 @@ class ContactForm extends Model
      */
     public function contact()
     {
+        if (!$this->validate()) {
+            return false;
+        }
+
         $mail = new ContactFormMailer([
             'store' => $this->_store,
             'clientIp' => Yii::$app->getRequest()->userIP,
