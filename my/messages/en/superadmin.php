@@ -111,6 +111,7 @@ return [
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
     'panels.edit.expiry' => 'Edit expiry date',
+    'panels.edit.error_have_active_cp' => 'Panel have active child panel',
 
     'panels.table.title.id' => 'ID',
     'panels.table.title.domain' => 'Domain',
