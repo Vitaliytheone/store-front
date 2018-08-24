@@ -107,6 +107,7 @@ class ToolsController extends CustomController
             'models' => $search->search(),
             'query' => $search->getQueryForInput(),
             'selectedOption' => Yii::$app->request->post('db_name'),
+            'selectList' => $search->getSelectList(),
         ]);
     }
 

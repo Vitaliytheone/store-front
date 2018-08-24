@@ -1,7 +1,9 @@
 <?php
 
 namespace my\modules\superadmin\models\search;
+
 use yii\db\Query;
+use Yii;
 
 /**
  * Class DbHelperSearch
@@ -10,9 +12,23 @@ use yii\db\Query;
 class DbHelperSearch
 {
 
-    const DEFAULT_QUERY = 'UPDATE `db_name`.`services` SET `provider_id` = `res`, `provider_service_id` = `reid`, `provider_service_params` = `params`;';
+    const SELECT_DEFAULT = 0;
+    const SELECT_PANELS = 1;
+    const SELECT_STORES = 2;
 
     use SearchTrait;
+
+    /**
+     * @return array
+     */
+    public function getSelectList(): array
+    {
+        return [
+            static::SELECT_DEFAULT => Yii::t('app/superadmin', 'db_helper.select.select_source'),
+            static::SELECT_PANELS => Yii::t('app/superadmin', 'db_helper.select.panels'),
+            static::SELECT_STORES => Yii::t('app/superadmin', 'db_helper.select.stores'),
+        ];
+    }
 
     /**
      * Get query for textarea
@@ -20,7 +36,7 @@ class DbHelperSearch
      */
     public function getQueryForInput()
     {
-        return isset($this->params['query']) ? $this->params['query'] : static::DEFAULT_QUERY;
+        return isset($this->params['query']) ? $this->params['query'] : null;
     }
 
     /**
@@ -57,7 +73,7 @@ class DbHelperSearch
 
         $models = [];
 
-        if ($params == 'Panels') {
+        if ($params == $this->getSelectList()[static::SELECT_PANELS]) {
             $models = (new Query())
                 ->select([
                     'db as db_name'
@@ -66,7 +82,7 @@ class DbHelperSearch
                 ->where('db != ""')
                 ->orderBy(['orders' => SORT_ASC])
                 ->all();
-        } elseif ($params == 'Stores') {
+        } elseif ($params == $this->getSelectList()[static::SELECT_STORES]) {
             $models = (new Query())
                 ->select([
                     'db_name as db_name'

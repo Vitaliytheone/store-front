@@ -1,12 +1,14 @@
 <?php
 /* @var $models array */
 /* @var $query string */
+/* @var $selectList array */
+/* @var $selectedOption string */
 
 use my\components\ActiveForm;
 use my\helpers\Url;
 use yii\helpers\Html;
 
-
+$query = isset($query) ? $query : 'UPDATE `db_name`.`services` SET `provider_id` = `res`, `provider_service_id` = `reid`, `provider_service_params` = `params`;';
 $this->context->addModule('superadminDbHelperController');
 ?>
 
@@ -25,9 +27,9 @@ $this->context->addModule('superadminDbHelperController');
                                     'labelOptions' => ['class' => 'form'],
                                 ]]); ?>
                             <select class="form-control db_name" name="db_name">
-                                <option <?= ($selectedOption != 'Panels' && $selectedOption != 'Stores') ? 'selected' : '' ?>><?= Yii::t('app/superadmin', 'db_helper.select.select_source') ?></option>
-                                <option <?= $selectedOption == 'Panels' ? 'selected' : '' ?>><?= Yii::t('app/superadmin', 'db_helper.select.panels') ?></option>
-                                <option <?= $selectedOption == 'Stores' ? 'selected' : '' ?>><?= Yii::t('app/superadmin', 'db_helper.select.stores') ?></option>
+                                <?php foreach ($selectList as $option) : ?>
+                                    <option <?= $selectedOption == $option ? 'selected' : '' ?>><?= $option ?></option>
+                                <?php endforeach; ?>
                             </select><br>
                             <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '7']); ?>
                             <br>
@@ -41,7 +43,7 @@ $this->context->addModule('superadminDbHelperController');
                         <div class="col-lg-6">
                             <pre class="query_content">
                                 <?php foreach ($models as $model) : ?>
-                                <?= $model ?>
+                                <?= isset($model) ? $model : $query ?>
                                 <br>
                                 <?php endforeach; ?>
                             </pre>
