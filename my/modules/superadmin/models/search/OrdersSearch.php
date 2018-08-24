@@ -114,16 +114,7 @@ class OrdersSearch extends Orders {
 
         $orders = $query
             ->leftJoin(
-                'invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", [
-                InvoiceDetails::ITEM_BUY_PANEL,
-                InvoiceDetails::ITEM_BUY_SSL,
-                InvoiceDetails::ITEM_BUY_DOMAIN,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                InvoiceDetails::ITEM_BUY_STORE,
-                InvoiceDetails::ITEM_BUY_TRIAL_STORE,
-                InvoiceDetails::ITEM_PROLONGATION_SSL,
-                InvoiceDetails::ITEM_PROLONGATION_DOMAIN,
-            ]) . ')'
+                'invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
             )
             ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id')
             ->offset($pages->offset)

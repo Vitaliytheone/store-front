@@ -81,16 +81,8 @@ class InvoicesSearch extends Invoices {
      */
     protected function addDomainJoinQuery($query)
     {
-        $query->leftJoin(DB_PANELS . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
-                InvoiceDetails::ITEM_BUY_PANEL,
-                InvoiceDetails::ITEM_BUY_SSL,
-                InvoiceDetails::ITEM_BUY_DOMAIN,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                InvoiceDetails::ITEM_BUY_STORE,
-                InvoiceDetails::ITEM_BUY_TRIAL_STORE,
-                InvoiceDetails::ITEM_PROLONGATION_SSL,
-                InvoiceDetails::ITEM_PROLONGATION_DOMAIN,
-            ]) . ')'
+        $query->leftJoin(
+            DB_PANELS . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
         );
         $query->leftJoin(DB_PANELS . '.project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_PROLONGATION_PANEL,
