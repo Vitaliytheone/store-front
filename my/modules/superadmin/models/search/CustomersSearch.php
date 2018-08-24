@@ -30,25 +30,7 @@ class CustomersSearch extends Customers {
 
     protected static $_customers;
 
-//    /**
-//     * @var array
-//     */
-//    public static $pageSizeList = [
-//        100 => 100,
-//        500 => 500,
-//        1000 => 1000,
-//        5000 => 5000,
-//    ];
-
     use SearchTrait;
-
-//    /**
-//     * Set label for 'All'
-//     */
-//    private function setAllPageLabel()
-//    {
-//        static::$pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
-//    }
 
     /**
      * Get parameters
