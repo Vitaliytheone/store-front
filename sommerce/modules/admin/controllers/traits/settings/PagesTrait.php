@@ -12,7 +12,7 @@ use sommerce\modules\admin\models\forms\EditPageForm;
 use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
-use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -132,12 +132,13 @@ trait PagesTrait {
             'id' => $pageForm->getPage()->id,
         ];
     }
-
+    
+    
     /**
      * Virtual deleting `page`
      * @param $id
      * @return array
-     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
     public function actionDeletePage($id)
@@ -153,6 +154,10 @@ trait PagesTrait {
         $pageModel = Pages::findOne($id);
         if (!$pageModel) {
             throw new NotFoundHttpException();
+        }
+        
+        if (!Pages::canDelete($pageModel)) {
+            throw new ForbiddenHttpException();
         }
 
         $pageModel->deleteVirtual();
