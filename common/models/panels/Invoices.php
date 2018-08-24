@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\models\panels\services\GetParentPanelService;
 use my\helpers\CustomerHelper;
 use my\helpers\StringHelper;
 use Yii;
@@ -355,33 +356,20 @@ class Invoices extends ActiveRecord
     }
 
     /**
-     * @return bool
+     * @param $allowTypes
+     * @return InvoiceDetails|null
      */
-    public function isDisabled() {
+    public function searchDetails($allowTypes)
+    {
         $details = $this->invoiceDetails;
-        $detail = null;
+
         foreach ($details as $item) {
-            if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL || $item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
-                $detail = $item;
+            if (ArrayHelper::isIn($item->item, $allowTypes)) {
+              return $item;
             }
         }
 
-        if ($this->status == Invoices::STATUS_UNPAID && $detail) {
-            if ($item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
-                $orderDetails = $detail->order->getDetails();
-                $providerId = ArrayHelper::getValue($orderDetails, 'provider');
-            } else {
-                $providerId = $project = Project::findOne([
-                    'id'  => $detail->item_id
-                ])->provider_id;
-            }
-            $owner = Project::getOwnerChildPanel($providerId);
-            if ($owner && $owner->act == Project::STATUS_FROZEN) {
-               return true;
-            }
-        }
-
-        return false;
+        return null;
     }
 
     /**
@@ -414,9 +402,35 @@ class Invoices extends ActiveRecord
             break;
 
             case 'pay':
+
+                $detail = $this->searchDetails(array(
+                    InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                    InvoiceDetails::ITEM_BUY_CHILD_PANEL
+                ));
+
+
+
+
+                if ($this->status == Invoices::STATUS_UNPAID && $detail) {
+                    if ($detail->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
+                        $orderDetails = $detail->order->getDetails();
+                        $providerId = ArrayHelper::getValue($orderDetails, 'provider');
+                    } else {
+                        $providerId = $project = Project::findOne([
+                            'id'  => $detail->item_id
+                        ])->provider_id;
+                    }
+                    $owner = Yii::$container->get(GetParentPanelService::class, [$providerId])->get();
+
+                    if ($owner && $owner->act == Project::STATUS_FROZEN) {
+                        return false;
+                    }
+                }
+                
                 if (static::STATUS_UNPAID == $this->status) {
                     return true;
                 }
+                
             break;
         }
 
