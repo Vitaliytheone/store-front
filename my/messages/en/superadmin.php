@@ -25,6 +25,7 @@ return [
     'header.nav.levopanel_scanner' => 'Levopanel scanner',
     'header.nav.panelfire_scanner' => 'Panelfire scanner',
     'header.nav.rentalpanel_scanner' => 'Rentalpanel scanner',
+    'header.nav.db_helper' => 'DB helper',
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
@@ -108,7 +109,6 @@ return [
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
-    'panels.edit.expiry' => 'Edit expiry date',
     'panels.edit.error_have_active_cp' => 'Panel have active child panel',
 
     'panels.table.title.id' => 'ID',
@@ -153,7 +153,6 @@ return [
     'panels.upgrade.cancel_btn' => 'Cancel',
     'child_panels.upgrade.submit_not_invoice' => 'Save without invoice',
     'child_panels.upgrade.submit_invoice' => 'Save with {price} invoice',
-    'child_panels.search' => 'Search child panels',
 
     'domains.list.column_id' => 'ID',
     'domains.list.column_customer' => 'Customer',
@@ -565,6 +564,8 @@ return [
     'tools.levopanel.error.invalid_domain_name' => 'Invalid domain name!',
     'tools.levopanel.error.domain_exist' => 'Domain {domain} already exist!',
 
+    'db_helper.title' => 'DB helper',
+
     'stores.list.navs_all' => 'All ({count})',
     'stores.list.navs_active' => 'Active ({count})',
     'stores.list.navs_frozen' => 'Frozen ({count})',
@@ -665,4 +666,38 @@ return [
     'orders.modal.btn_close' => 'Close',
     'orders.modal.header_details' => 'Details',
     'orders.modal.header_logs' => 'Logs',
+
+    'subscription.title' => 'Subscription',
+    'subscription.list.column_id' => 'ID',
+    'subscription.list.column_panel' => 'Panel',
+    'subscription.list.column_all' => 'All',
+    'subscription.list.column_active' => 'Active',
+    'subscription.list.column_paused' => 'Paused',
+    'subscription.list.column_completed' => 'Completed',
+    'subscription.list.column_expired' => 'Expired',
+    'subscription.list.column_canceled' => 'Canceled',
+    'subscription.list.column_avg' => 'Avg',
+
+    'sender.title' => 'Sender',
+    'sender.send_method.local' => 'Local',
+    'sender.send_method.simple' => 'Simple',
+    'sender.send_method.multi' => 'Multi',
+    'sender.send_method.mass' => 'Mass',
+    'statuses.list.column_send_method' => 'Send method',
+    'statuses.list.column_all' => 'All',
+    'statuses.list.column_error' => 'Error',
+
+    'providers.services_list.auto_services_manual' => 'Manual',
+    'providers.services_list.auto_services_auto' => 'Auto',
+    'providers.services_list.auto_services_custom' => 'Custom',
+    'providers.auto_order.local' => 'Local',
+    'providers.auto_order.simple' => 'Simple',
+    'providers.auto_order.multi' => 'Multi',
+    'providers.auto_order.mass' => 'Mass',
+    'providers.list.no' => 'No',
+    'providers.list.yes' => 'Yes',
+
+    'db_helper.select.select_source' => 'Select source',
+    'db_helper.select.panels' => 'Panels',
+    'db_helper.select.stores' => 'Stores',
 ];

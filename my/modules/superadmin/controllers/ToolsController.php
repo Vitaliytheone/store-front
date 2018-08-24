@@ -5,6 +5,7 @@ namespace my\modules\superadmin\controllers;
 use my\components\ActiveForm;
 use common\models\panels\SuperToolsScanner;
 use my\modules\superadmin\models\forms\PanelsScannerAddDomainForm;
+use my\modules\superadmin\models\search\DbHelperSearch;
 use my\modules\superadmin\models\search\PanelsScannerSearch;
 use Yii;
 use yii\web\Response;
@@ -88,6 +89,25 @@ class ToolsController extends CustomController
             'statusButtons' => $search->getStatusButtons(),
             'status' => $status,
             'panelType' => $search->getPanel(),
+        ]);
+    }
+
+    /**
+     * Render DB helper page
+     * @return string
+     */
+    public function actionDbHelper()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'db_helper.title');
+
+        $search = new DbHelperSearch();
+        $search->setParams(Yii::$app->request->post());
+
+        return $this->render('db_helper', [
+            'models' => $search->search(),
+            'query' => $search->getQueryForInput(),
+            'selectedOption' => Yii::$app->request->post('db_name'),
+            'selectList' => $search->getSelectList(),
         ]);
     }
 
