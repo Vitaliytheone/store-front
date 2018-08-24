@@ -39,7 +39,7 @@ customModule.superadminProvidersController = {
         });
 
         $('.query-sort').data("sorter", false);
-        $('.sort_link').css('color', 'inherit');
+        $('.no_sort').data("sorter", false);
 
         $("#providersTable").tablesorter();
     }

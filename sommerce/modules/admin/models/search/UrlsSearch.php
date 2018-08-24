@@ -4,7 +4,7 @@ namespace sommerce\modules\admin\models\search;
 
 use common\models\store\Pages;
 use common\models\store\Products;
-use Yii;
+use common\models\stores\Stores;
 use yii\base\Model;
 use yii\db\Query;
 
@@ -13,17 +13,15 @@ class UrlsSearch extends Model
     private $_storeDb;
     private $_productsTable;
     private $_pagesTable;
-
+    
     /**
-     * @inheritdoc
+     * @param Stores $store
      */
-    public function init()
+    public function setStore(Stores $store)
     {
-        $this->_storeDb = Yii::$app->store->getInstance()->db_name;
+        $this->_storeDb = $store->db_name;
         $this->_productsTable = $this->_storeDb . "." . Products::tableName();
         $this->_pagesTable = $this->_storeDb . "." . Pages::tableName();
-
-        parent::init();
     }
 
     /**

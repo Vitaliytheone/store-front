@@ -16,6 +16,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -97,7 +98,6 @@ use yii\helpers\ArrayHelper;
  * @property Tariff $tariffDetails
  * @property Tariff $newTariffDetails
  * @property Customers $customer
- * @property Customers $provider
  * @property UserServices[] $userServices
  * @property string $domain
  */
@@ -242,7 +242,27 @@ class Project extends ActiveRecord implements ProjectInterface
             'no_referral' => Yii::t('app', 'No Referral'),
         ];
     }
+    
+    /**
+     * @param $provider
+     * @return null|static
+     */
+    public static function getOwnerChildPanel($provider)
+    {
+        $owner = (new Query())
+            ->select(['additional_services.name'])
+            ->from('additional_services')
+            ->andWhere(['res' =>  $provider])
+            ->one()['name'];
 
+        if (empty($owner)) {
+            return null;
+        }
+
+
+        return Project::findOne(['site' => $owner]);
+    }
+    
     /**
      * Get statuses labels
      * @return array
@@ -363,14 +383,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'cid']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvider()
-    {
-        return $this->hasOne(Project::class, ['id' => 'provider_id']);
     }
 
     /**
