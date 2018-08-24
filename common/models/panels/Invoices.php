@@ -2,7 +2,7 @@
 
 namespace common\models\panels;
 
-use common\models\panels\services\Owner;
+use common\models\panels\services\GetParentPanelService;
 use my\helpers\CustomerHelper;
 use my\helpers\StringHelper;
 use Yii;
@@ -418,7 +418,7 @@ class Invoices extends ActiveRecord
                         ])->provider_id;
                     }
 
-                    $owner = Yii::$container->get(Owner::class, [$providerId])->get();
+                    $owner = Yii::$container->get(GetParentPanelService::class, [$providerId])->get();
 
                     if ($owner && $owner->act == Project::STATUS_FROZEN) {
                         return false;

@@ -5,6 +5,7 @@ namespace common\models\panels;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
+use common\models\panels\services\GetParentPanelService;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -248,21 +249,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function getParent()
     {
-        if (empty($this->provider_id)) {
-            return null;
-        }
-
-        $owner = (new Query())
-            ->select(['additional_services.name'])
-            ->from('additional_services')
-            ->andWhere(['res' =>  $this->provider_id])
-            ->one()['name'];
-
-        if (empty($owner)) {
-            return null;
-        }
-
-        return Project::findOne(['site' => $owner]);
+        return Yii::$container->get(GetParentPanelService::class, [$this->provider_id])->get();
     }
     
     /**
