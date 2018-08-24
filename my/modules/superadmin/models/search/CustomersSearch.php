@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\stores\Stores;
 use my\helpers\SpecialCharsHelper;
+use my\modules\superadmin\widgets\CountPagination;
 use Yii;
 use common\models\panels\Customers;
 use yii\db\Query;
@@ -29,25 +30,7 @@ class CustomersSearch extends Customers {
 
     protected static $_customers;
 
-    /**
-     * @var array
-     */
-    public static $pageSizeList = [
-        100 => 100,
-        500 => 500,
-        1000 => 1000,
-        5000 => 5000,
-    ];
-
     use SearchTrait;
-
-    /**
-     * Set label for 'All'
-     */
-    private function setAllPageLabel()
-    {
-        static::$pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
-    }
 
     /**
      * Get parameters
@@ -67,7 +50,7 @@ class CustomersSearch extends Customers {
     public function getPageSize()
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
-        return array_key_exists($pageSize, static::$pageSizeList) ? $pageSize : 100;
+        return array_key_exists($pageSize, CountPagination::$pageSizeList) ? $pageSize : 100;
     }
 
     /**
@@ -152,7 +135,7 @@ class CustomersSearch extends Customers {
         $status = ArrayHelper::getValue($this->params, 'status', 'all');
 
         $countQuery = $this->buildQuery($status)->count();
-        $this->setAllPageLabel();
+        //$this->setAllPageLabel();
         $pageSize = $this->getPageSize();
         if ($pageSize == 'all') {
             $pageSize = $countQuery;
