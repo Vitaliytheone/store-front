@@ -73,7 +73,7 @@ class DbHelperSearch
 
         $models = [];
 
-        if ($params == $this->getSelectList()[static::SELECT_PANELS]) {
+        if ($params == static::SELECT_PANELS) {
             $models = (new Query())
                 ->select([
                     'db as db_name'
@@ -82,7 +82,7 @@ class DbHelperSearch
                 ->where('db != ""')
                 ->orderBy(['orders' => SORT_ASC])
                 ->all();
-        } elseif ($params == $this->getSelectList()[static::SELECT_STORES]) {
+        } elseif ($params == static::SELECT_STORES) {
             $models = (new Query())
                 ->select([
                     'db_name as db_name'

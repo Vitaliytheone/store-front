@@ -27,8 +27,8 @@ $this->context->addModule('superadminDbHelperController');
                                     'labelOptions' => ['class' => 'form'],
                                 ]]); ?>
                             <select class="form-control db_name" name="db_name">
-                                <?php foreach ($selectList as $option) : ?>
-                                    <option <?= $selectedOption == $option ? 'selected' : '' ?>><?= $option ?></option>
+                                <?php foreach ($selectList as $key => $option) : ?>
+                                    <option <?= $selectedOption == $key ? 'selected' : '' ?> value="<?= $key ?>"><?= $option ?></option>
                                 <?php endforeach; ?>
                             </select><br>
                             <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '7']); ?>
