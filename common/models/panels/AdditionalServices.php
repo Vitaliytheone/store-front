@@ -43,6 +43,8 @@ use yii\helpers\ArrayHelper;
  * @property string $service_options
  * @property int $provider_service_id_label
  * @property int $store
+ * @property int $service_count
+ * @property int $service_inuse_count
  *
  * @property string $date
  *
@@ -99,6 +101,7 @@ class AdditionalServices extends ActiveRecord
             [['apihelp'], 'string', 'max' => 2000],
             [['username', 'password', 'skype', 'type_name'], 'string', 'max' => 300],
             [['proxy'], 'string', 'max' => 1000],
+            [['service_inuse_count', 'service_count'], 'integer'],
         ];
     }
 
@@ -140,6 +143,8 @@ class AdditionalServices extends ActiveRecord
             'service_options' => Yii::t('app', 'Service option'),
             'provider_service_id_label' => Yii::t('app', 'Provider Service Id Label'),
             'store' => Yii::t('app', 'Store'),
+            'service_count' => Yii::t('app', 'Count'),
+            'service_inuse_count' => Yii::t('app', 'In use'),
         ];
     }
 

@@ -2,6 +2,7 @@
     /* @var $this yii\web\View */
     /* @var $providers \my\modules\superadmin\models\search\ProvidersSearch */
     /* @var $provider \common\models\panels\AdditionalServices */
+    /* @var $filters array */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -11,31 +12,27 @@
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
 ?>
-<table class="table table-border tablesorter-bootstrap" id="providersTable">
+<table class="table table-border" id="providersTable">
     <thead>
     <tr>
-        <th class="query-sort"><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_count')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_in_use')?></th>
-        <th class="query-sort"><?= $providers['sort']->link('sc', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('res') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('res') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('res', ['class' => 'test1 sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('name') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('name') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('service_count') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('service_count') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('service_count', ['class' => 'sort_link', 'style' => 'color:inherit;']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('service_inuse_count') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('service_inuse_count') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('service_inuse_count', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('sc') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('sc') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('sc', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('refill') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('refill') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('cancel') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('cancel') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('auto_services') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('auto_services') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('auto_order') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('auto_order') == 3 ? 'sort_asc' : 'sort_desc' ?>"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('type') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('type') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('status') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('status') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('date') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('date') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="w-1 no_sort"></th>
     </tr>
     </thead>
     <tbody>
     <?php if (!empty($providers['models'])) : ?>
         <?php foreach (SpecialCharsHelper::multiPurifier($providers['models']) as $key => $provider) : ?>
-            <?php
-                $count = count($provider['projects']);
-                $use = count($provider['usedProjects']);
-            ?>
             <tr>
                 <td>
                     <?= $provider['res'] ?>
@@ -44,25 +41,25 @@
                     <?= $provider['name'] ?>
                 </td>
                 <td>
-                    <?php if ($count) : ?>
-                        <?= Html::a($count, Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
+                    <?php if ($provider['projects']) : ?>
+                        <?= Html::a($provider['projects'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
                     <?php else : ?>
-                        <?= $count ?>
+                        <?= $provider['projects'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if ($use) : ?>
-                        <?= Html::a($use, Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
+                    <?php if ($provider['usedProjects']) : ?>
+                        <?= Html::a($provider['usedProjects'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
                     <?php else : ?>
-                        <?= $use ?>
+                        <?= $provider['usedProjects'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
@@ -142,4 +139,19 @@
 <!-- Delete <br> after update ccs to v.2 -->
 <br>
 <!-- -->
-<!-- Add pagination widgets -->
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $providers['pages'],]); ?>
+            </ul>
+        </nav>
+        <!-- Pagination End -->
+    </div>
+    <div class="col-md-6 text-md-right">
+        <?= CountPagination::widget([
+            'pages' => $providers['pages'],
+            'params' => $filters
+        ]) ?>
+    </div>
+</div>
