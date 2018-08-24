@@ -2,6 +2,7 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\Invoices;
 use my\helpers\Url;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
@@ -9,13 +10,48 @@ use my\modules\superadmin\models\search\OrdersSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\ContentNegotiator;
+use my\components\SuperAccessControl;
+use yii\filters\VerbFilter;
 
 /**
  * OrdersController for the `superadmin` module
  */
 class OrdersController extends CustomController
 {
+    public $layout = 'superadmin_v2.php';
+
     public $activeTab = 'orders';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => SuperAccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'change-status'=> ['POST'],
+                    'details' => ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['details'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
 
     /**
      * Renders the index view for the module
@@ -43,9 +79,13 @@ class OrdersController extends CustomController
      * Change order status
      * @param int $id
      * @param int $status
+     * @return Response
+     * @throws NotFoundHttpException
      */
-    public function actionChangeStatus($id, $status)
+    public function actionChangeStatus()
     {
+        $id = Yii::$app->request->post('id');
+        $status = Yii::$app->request->post('status');
         $order = $this->findModel($id);
 
         $order->changeStatus($status);
@@ -57,6 +97,7 @@ class OrdersController extends CustomController
      * Get order details
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDetails($id)
     {
@@ -100,7 +141,6 @@ class OrdersController extends CustomController
             break;
         }
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
         $logs = $logs->all();
         
         return [

@@ -4,13 +4,13 @@
     /* @var $logs \common\models\panels\ThirdPartyLog */
     /* @var $log \common\models\panels\ThirdPartyLog */
 ?>
-<strong>Details</strong><br />
+<strong><?= Yii::t('app/superadmin', 'orders.modal.header_details') ?></strong><br />
 <pre>
 <?php print_r($order->getDetails()); ?>
 </pre>
 
 <?php if (!empty($logs)) : ?>
-<strong>Logs</strong><br />
+<strong><?= Yii::t('app/superadmin', 'orders.modal.header_logs') ?></strong><br />
 
 <?php foreach ($logs as $log) : ?>
 <pre>
