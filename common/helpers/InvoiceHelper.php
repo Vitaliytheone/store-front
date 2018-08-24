@@ -207,12 +207,13 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-        ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item 
-            AND orders.status <> :canceled  AND orders.status <> :added', [
-            ':order_item' => Orders::ITEM_PROLONGATION_SSL,
-            ':canceled' => Orders::STATUS_CANCELED,
-            ':added' => Orders::STATUS_ADDED
-        ])
+
+       ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item 
+            AND orders.status NOT IN (:added, :canceled) ', [
+           ':order_item' => Orders::ITEM_PROLONGATION_SSL,
+           ':added' => Orders::STATUS_ADDED,
+           ':canceled' => Orders::STATUS_CANCELED
+       ])
         ->andWhere([
             'ssl_cert.status' => SslCert::STATUS_ACTIVE,
         ])
