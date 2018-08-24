@@ -244,21 +244,23 @@ class Project extends ActiveRecord implements ProjectInterface
     }
     
     /**
-     * @param $provider
      * @return null|static
      */
-    public static function getOwnerChildPanel($provider)
+    public function getParent()
     {
+        if (empty($this->provider_id)) {
+            return null;
+        }
+
         $owner = (new Query())
             ->select(['additional_services.name'])
             ->from('additional_services')
-            ->andWhere(['res' =>  $provider])
+            ->andWhere(['res' =>  $this->provider_id])
             ->one()['name'];
 
         if (empty($owner)) {
             return null;
         }
-
 
         return Project::findOne(['site' => $owner]);
     }
