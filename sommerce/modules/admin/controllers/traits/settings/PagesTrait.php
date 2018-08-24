@@ -132,7 +132,8 @@ trait PagesTrait {
             'id' => $pageForm->getPage()->id,
         ];
     }
-
+    
+    
     /**
      * Virtual deleting `page`
      * @param $id
@@ -154,8 +155,8 @@ trait PagesTrait {
         if (!$pageModel) {
             throw new NotFoundHttpException();
         }
-
-        if ($pageModel->template != Pages::TEMPLATE_PAGE) {
+        
+        if (!Pages::canDelete($pageModel)) {
             throw new ForbiddenHttpException();
         }
 
