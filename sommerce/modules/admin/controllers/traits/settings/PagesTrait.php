@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use Codeception\PHPUnit\Constraint\Page;
 use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Pages;
@@ -13,6 +14,7 @@ use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -137,7 +139,7 @@ trait PagesTrait {
      * Virtual deleting `page`
      * @param $id
      * @return array
-     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
     public function actionDeletePage($id)
@@ -153,6 +155,10 @@ trait PagesTrait {
         $pageModel = Pages::findOne($id);
         if (!$pageModel) {
             throw new NotFoundHttpException();
+        }
+
+        if ($pageModel->template != Pages::TEMPLATE_PAGE) {
+            throw new ForbiddenHttpException();
         }
 
         $pageModel->deleteVirtual();
