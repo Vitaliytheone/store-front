@@ -358,7 +358,6 @@ class Invoices extends ActiveRecord
      * @return bool
      */
     public function isDisabled() {
-        return false;
         $details = $this->invoiceDetails;
         $detail = null;
         foreach ($details as $item) {
@@ -368,7 +367,7 @@ class Invoices extends ActiveRecord
         }
 
         if ($this->status == Invoices::STATUS_UNPAID && $detail) {
-            if ($detail->order ) {
+            if ($item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
                 $orderDetails = $detail->order->getDetails();
                 $providerId = ArrayHelper::getValue($orderDetails, 'provider');
             } else {

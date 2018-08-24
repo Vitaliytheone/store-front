@@ -14,6 +14,8 @@ use yii\web\NotFoundHttpException;
  */
 class ReferralsController extends CustomController
 {
+    public $layout = 'superadmin_v2.php';
+
     public $activeTab = 'referrals';
 
     /**
