@@ -1,7 +1,6 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
-use Codeception\PHPUnit\Constraint\Page;
 use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Pages;
@@ -13,7 +12,6 @@ use sommerce\modules\admin\models\forms\EditPageForm;
 use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
-use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
