@@ -4,6 +4,10 @@ namespace common\models\panels\services;
 use common\models\panels\Project;
 use yii\db\Query;
 
+/**
+ * Class GetParentPanelService
+ * @package common\models\panels\services
+ */
 class GetParentPanelService
 {
     private $provider_id;

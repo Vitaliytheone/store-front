@@ -408,6 +408,9 @@ class Invoices extends ActiveRecord
                     InvoiceDetails::ITEM_BUY_CHILD_PANEL
                 ));
 
+
+
+
                 if ($this->status == Invoices::STATUS_UNPAID && $detail) {
                     if ($detail->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
                         $orderDetails = $detail->order->getDetails();
@@ -417,7 +420,6 @@ class Invoices extends ActiveRecord
                             'id'  => $detail->item_id
                         ])->provider_id;
                     }
-
                     $owner = Yii::$container->get(GetParentPanelService::class, [$providerId])->get();
 
                     if ($owner && $owner->act == Project::STATUS_FROZEN) {

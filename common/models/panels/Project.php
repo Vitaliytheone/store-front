@@ -17,7 +17,6 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
