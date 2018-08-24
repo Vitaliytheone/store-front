@@ -7,14 +7,11 @@ use common\models\panels\Project;
 
 class UpdateServicesCountHelper
 {
-    public $_providers = [];
-    public $_projects = [];
-    public $_providerPanels = [];
 
     /**
      * @return array
      */
-    public function buildQuery()
+    public static function buildQuery()
     {
         $providers = (new Query())
             ->select([
@@ -30,13 +27,14 @@ class UpdateServicesCountHelper
      * Get all user services data
      * @return array
      */
-    public function getProviderPanels()
+    public static function getProviderPanels()
     {
-        if (!empty($this->_providerPanels)) {
-            return $this->_providerPanels;
+        $providerPanels = [];
+        if (!empty($providerPanels)) {
+            return $providerPanels;
         }
 
-        $projects = $this->getProjects();
+        $projects = static::getProjects();
 
         foreach ((new Query())
                      ->select(['aid', 'pid'])
@@ -48,21 +46,22 @@ class UpdateServicesCountHelper
                     continue;
                 }
 
-                $this->_providerPanels[$userService['aid']][$userService['pid']] = $projects[$userService['pid']];
+                $providerPanels[$userService['aid']][$userService['pid']] = $projects[$userService['pid']];
             }
         }
 
-        return $this->_providerPanels;
+        return $providerPanels;
     }
 
     /**
      * Get all projects
      * @return array
      */
-    public function getProjects()
+    public static function getProjects()
     {
-        if (!empty($this->_projects)) {
-            return $this->_projects;
+        $projects = [];
+        if (!empty($projects)) {
+            return $projects;
         }
 
         foreach ((new Query())
@@ -80,7 +79,7 @@ class UpdateServicesCountHelper
                      ->andWhere("db <>''")
                      ->all() as $project) {
 
-            $this->_projects[$project['id']] = array_merge($project, [
+            $projects[$project['id']] = array_merge($project, [
                 'providers' => []
             ]);
 
@@ -98,9 +97,9 @@ class UpdateServicesCountHelper
                 $providers[$service['provider_id']] = $service['provider_id'];
             }
 
-            $this->_projects[$project['id']]['providers'] = $providers;
+            $projects[$project['id']]['providers'] = $providers;
         }
 
-        return $this->_projects;
+        return $projects;
     }
 }

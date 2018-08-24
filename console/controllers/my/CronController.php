@@ -441,10 +441,9 @@ class CronController extends CustomController
      */
     public function actionUpdateServicesCount()
     {
-        $helper = new UpdateServicesCountHelper();
-        $providers = $helper->buildQuery();
+        $providers = UpdateServicesCountHelper::buildQuery();
 
-        $providersPanels = $helper->getProviderPanels();
+        $providersPanels = UpdateServicesCountHelper::getProviderPanels();
 
         foreach ($providers as $key => $provider) {
             $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
