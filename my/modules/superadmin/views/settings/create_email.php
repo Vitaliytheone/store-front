@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div class="col-lg-8">
-            <h3>Create email</h3>
+            <h3><?= Yii::t('app/superadmin', 'settings.create_email.header') ?></h3>
             <div class="card">
                 <div class="card-block">
                     <?php $form = ActiveForm::begin([
@@ -50,7 +50,7 @@
 
                         <?= $form->field($model, 'enabled')->checkbox() ?>
 
-                        <?= Html::submitButton('Save', [
+                        <?= Html::submitButton(Yii::t('app/superadmin', 'settings.create_email.save'), [
                             'class' => 'btn btn-outline btn-primary',
                             'name' => 'create-email-button',
                             'id' => 'createEmailButton'

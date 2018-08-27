@@ -33,7 +33,7 @@ $this->context->addModule('superadminDbHelperController');
                             </select><br>
                             <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '7']); ?>
                             <br>
-                            <?= Html::submitButton(Yii::t('app/superadmin', 'Apply'), [
+                            <?= Html::submitButton(Yii::t('app/superadmin', Yii::t('app/superadmin', 'db_helper.apply_btn')), [
                                 'class' => 'btn btn-outline btn-primary',
                                 'name' => 'db-helper-button',
                                 'id' => 'dbHelperButton'
