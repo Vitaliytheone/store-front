@@ -73,6 +73,11 @@ abstract class BaseService  {
         //connection timeout
         curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $this->connectionTimeout);
 
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            curl_setopt($c, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_setopt($c, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+        }
+
         if (!empty($postData)) {
             $queryData = http_build_query($postData);
             curl_setopt($c, CURLOPT_POSTFIELDS, $queryData);

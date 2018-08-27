@@ -21,7 +21,7 @@ class PagesSearch extends Pages
         $this->_db = $store->db_name;
         $this->_pagesTable = $this->_db . "." . Pages::tableName();
     }
-
+    
     /**
      * Return array of Pages data
      * @return array
@@ -29,7 +29,7 @@ class PagesSearch extends Pages
     public function searchPages()
     {
         $pages = (new Query())
-            ->select(['id', 'title', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at'])
+            ->select(['id', 'title', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at', 'template'])
             ->from($this->_pagesTable)
             ->where(['deleted' => self::DELETED_NO])
             ->indexBy('id')

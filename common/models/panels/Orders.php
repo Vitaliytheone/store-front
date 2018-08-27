@@ -50,6 +50,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_STORE = 5;
     const ITEM_PROLONGATION_SSL = 6;
     const ITEM_PROLONGATION_DOMAIN = 7;
+    const ITEM_BUY_TRIAL_STORE = 8;
 
     use UnixTimeFormatTrait;
 
@@ -161,6 +162,7 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_STORE => Yii::t('app', 'orders.item.buy_store'),
             static::ITEM_PROLONGATION_SSL => Yii::t('app', 'orders.item.prolongation_ssl'),
             static::ITEM_PROLONGATION_DOMAIN => Yii::t('app', 'orders.item.prolongation_domain'),
+            static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'orders.item.trial_store'),
         ];
     }
 
@@ -260,6 +262,8 @@ class Orders extends ActiveRecord
     /**
      * Change status
      * @param int $status
+     * @param int $invoice_id
+     * @return bool
      */
     public function changeStatus($status)
     {
@@ -273,6 +277,11 @@ class Orders extends ActiveRecord
                     $this->processing = 0;
                 }
                 $this->status = static::STATUS_PAID;
+
+            break;
+
+            case static::STATUS_CANCELED:
+                $this->cancel();
                 break;
         }
 
@@ -355,15 +364,12 @@ class Orders extends ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
 
-        $invoiceDetails = InvoiceDetails::findOne([
-            'item_id' => $this->id,
-            'item' => [
-                InvoiceDetails::ITEM_BUY_PANEL,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                InvoiceDetails::ITEM_BUY_DOMAIN,
-                InvoiceDetails::ITEM_BUY_SSL
-            ]
-        ]);
+        $invoiceDetails = InvoiceDetails::find()
+            ->where([
+                'item_id' => $this->id
+            ])
+            ->orders()
+        ->one();
 
         // При отмене инвойса проверить. Есть ли платежы в статусе wait, если есть инвойс не отменяем
         if (!empty($invoiceDetails)) {
