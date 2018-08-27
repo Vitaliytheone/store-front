@@ -117,6 +117,10 @@ return [
     'panels.downgrade.error' => 'Can not downgrade.',
     'panels.change_domain.domain' => 'Domain',
     'panels.change_domain.subdomain' => 'Is subdomain',
+    'panels.list.nav_all' => 'All ({count})',
+    'panels.list.nav_active' => 'Active ({count})',
+    'panels.list.nav_frozen' => 'Frozen ({count})',
+    'panels.list.nav_terminated' => 'Terminated ({count})',
 
     'panels.table.title.id' => 'ID',
     'panels.table.title.domain' => 'Domain',
