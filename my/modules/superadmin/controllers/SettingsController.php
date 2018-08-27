@@ -59,7 +59,7 @@ class SettingsController extends CustomController
      */
     public function actionIndex()
     {
-        $this->view->title = 'Payments';
+        $this->view->title = Yii::t('app/superadmin', 'settings.payments.title');
 
         $payments = new PaymentGatewaySearch();
 
@@ -74,7 +74,7 @@ class SettingsController extends CustomController
      */
     public function actionStaff()
     {
-        $this->view->title = 'Staff';
+        $this->view->title = Yii::t('app/superadmin', 'settings.staff.title');
 
         $staffs = new StaffSearch();
 
@@ -89,7 +89,7 @@ class SettingsController extends CustomController
      */
     public function actionEmail()
     {
-        $this->view->title = 'Email';
+        $this->view->title = Yii::t('app/superadmin', 'settings.email.title');
 
         $emails = new NotificationEmailSearch();
 

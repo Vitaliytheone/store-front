@@ -37,8 +37,8 @@
                 <?= $form->field($model, 'skype') ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <?= Html::submitButton('Save changes', [
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'providers.edit.modal_close_btn') ?></button>
+                <?= Html::submitButton(Yii::t('app/superadmin', 'providers.edit.modal_save_changes'), [
                     'class' => 'btn btn-outline btn-primary',
                     'name' => 'edit-provider-button',
                     'id' => 'editProviderButton'

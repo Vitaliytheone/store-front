@@ -107,7 +107,7 @@ use common\models\panels\Project;
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <textarea name="comment" class="form-control" placeholder="Comment" rows="7"></textarea>
+                                    <textarea name="comment" class="form-control" placeholder="<?= Yii::t('app/superadmin', 'tickets.customer_info.textarea_placeholder') ?>" rows="7"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <button id="assigned" class="btn btn-block btn-primary"><?= Yii::t('app/superadmin', 'tickets.submit') ?></button>

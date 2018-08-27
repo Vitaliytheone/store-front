@@ -70,7 +70,7 @@ class DowngradePanelForm extends Model {
 
         try {
             if (!$this->_project->downgrade()) {
-                $this->addError('mode', 'Can not downgrade.');
+                $this->addError('mode', Yii::t('app/superadmin', 'panels.downgrade.error'));
                 return false;
             }
 
@@ -114,7 +114,7 @@ class DowngradePanelForm extends Model {
                 $invoiceDetails->item = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
 
                 if (!$invoice->save(false) || !$invoiceDetails->save(false)) {
-                    $this->addError('mode', 'Can not downgrade.');
+                    $this->addError('mode', Yii::t('app/superadmin', 'panels.downgrade.error'));
                     return false;
                 }
             }
@@ -124,7 +124,7 @@ class DowngradePanelForm extends Model {
 
             Yii::error($exception->getMessage() . $exception->getTraceAsString());
 
-            $this->addError('mode', 'Can not downgrade.');
+            $this->addError('mode', Yii::t('app/superadmin', 'panels.downgrade.error'));
             return false;
         }
 
