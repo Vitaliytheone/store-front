@@ -1,11 +1,12 @@
 <?php
 namespace console\controllers\sommerce;
 
-use common\models\store\Languages;
-use common\models\store\Messages;
+use common\models\panels\AdditionalServices;
 use common\models\stores\StoreAdmins;
+use common\models\stores\StoreProviders;
+use common\models\stores\StoresSendOrders;
+use console\components\getstatus\GetstatusComponent;
 use sommerce\helpers\MessagesHelper;
-use yii\db\Query;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -222,4 +223,60 @@ class SystemController extends CustomController
             }
         }
     }
+    
+    /**
+     * Change provider Id
+     */
+    public function actionChangeProvidersId()
+    {
+        $stores = (new \yii\db\Query())->select([
+            'db_name',
+        ])->from(DB_STORES . '.stores')->all();
+
+        $store_tables = [
+            'suborders',
+            'packages'
+        ];
+
+        $stores_tables = [
+            StoreProviders::tableName(),
+            StoresSendOrders::tableName()
+        ];
+
+        foreach ((new \yii\db\Query())->select([
+                'id',
+                'site'
+        ])->from(DB_STORES . '.providers')->all() as $provider) {
+            $res = (new \yii\db\Query())
+                ->select(['res'])->from(AdditionalServices::tableName())
+                ->where([
+                    'name' => $provider['site'],
+                    'store' => 1,
+                    'status' =>  0
+                ])->one()['res'];
+
+
+            foreach ($stores_tables as $table) {
+                Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+            }
+
+            foreach ($stores as $store) {
+                foreach ($store_tables as $table) {
+                    Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                }
+            }
+        }
+    }
+
+    /**
+     * Fill getstatus
+     */
+    public function actionFillGetstatus()
+    {
+        $getstatus = new GetstatusComponent();
+        $getstatus->setConnection(Yii::$app->storeDb);
+        $getstatus->fillGetstatus();
+    }
+    
+    
 }

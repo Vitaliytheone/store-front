@@ -17,7 +17,6 @@ use yii\web\NotAcceptableHttpException;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\models\forms\CreateProductForm;
 use sommerce\modules\admin\models\forms\CreatePackageForm;
-use common\models\stores\Stores;
 use common\models\stores\StoreProviders;
 use common\helpers\ApiProviders;
 use sommerce\modules\admin\models\forms\MoveProductForm;
@@ -63,7 +62,6 @@ class ProductsController extends CustomController
             ]
         ]);
         $this->addModule('adminPackageEdit');
-
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),
             'products' => $search->getProductsPackages(),

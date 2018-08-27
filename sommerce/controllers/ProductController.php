@@ -32,11 +32,11 @@ class ProductController extends CustomController
 
         return $this->render('product.twig', [
             'product' => [
-                'id' => $product->id,
-                'title' => Html::encode($product->name),
-                'content' => $product->description,
-                'color' => Html::encode($product->color),
-            ] + $data
+                    'id' => $product->id,
+                    'title' => Html::encode($product->name),
+                    'content' => $product->description,
+                    'color' => Html::encode($product->color),
+                ] + $data
         ]);
     }
 

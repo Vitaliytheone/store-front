@@ -2,6 +2,8 @@
 
 namespace common\models\store;
 
+use common\models\panels\AdditionalServices;
+use common\models\stores\StoreProviders;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;
@@ -26,6 +28,7 @@ use common\models\store\queries\PackagesQuery;
  * @property integer $position
  *
  * @property Products $product
+ * @property AdditionalServices $provider
  * @property Suborders[] $suborders
  */
 class Packages extends ActiveRecord
@@ -104,6 +107,14 @@ class Packages extends ActiveRecord
     public function getSuborders()
     {
         return $this->hasMany(Suborders::class, ['package_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvider()
+    {
+        return $this->hasOne(AdditionalServices::class, ['res' => 'provider_id']);
     }
 
     /**

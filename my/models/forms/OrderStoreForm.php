@@ -156,7 +156,7 @@ class OrderStoreForm extends Model
         asort($currencies);
 
         $usd = ArrayHelper::getValue($currencies, 'USD');
-        
+
         if ($usd) {
             unset($currencies['USD']);
             $currencies = array_merge(['USD' => $usd], $currencies);

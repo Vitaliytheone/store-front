@@ -117,7 +117,7 @@ class Paypal extends BasePayment {
             ];
 
             $response = $this->request('SetExpressCheckout', $credentials + $requestParams + $orderParams + $item);
-
+            
             if (is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
                 $token = $response['TOKEN'];
 
