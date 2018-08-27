@@ -260,7 +260,6 @@ class Orders extends ActiveRecord
     /**
      * Change status
      * @param int $status
-     * @return bool
      */
     public function changeStatus($status)
     {
@@ -317,16 +316,16 @@ class Orders extends ActiveRecord
                 if (empty($customerId)) {
                     return false;
                 }
-                
+
                 $flag = Project::find()->andWhere([
-                        'cid' => $customerId,
-                        'child_panel' => 0
-                    ])->andWhere([
-                        'act' => Project::STATUS_ACTIVE,
-                    ])->exists();
-                
+                    'cid' => $customerId,
+                    'child_panel' => 0
+                ])->andWhere([
+                    'act' => Project::STATUS_ACTIVE,
+                ])->exists();
+
                 return $flag;
-            break;
+                break;
 
             // TODO:: Dummy rules. Populate it for real conditions.
             case 'create_store':

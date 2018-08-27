@@ -1,46 +1,46 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $panels[] \common\models\panels\Project */
-    /* @var $panel \common\models\panels\Project */
-    /* @var $note */
-    /* @var $accesses */
+/* @var $this yii\web\View */
+/* @var $panels[] \common\models\panels\Project */
+/* @var $panel \common\models\panels\Project */
+/* @var $note */
+/* @var $accesses */
 
-    use common\models\panels\Project;
-    use common\models\panels\Orders;
-    use yii\bootstrap\Html;
+use common\models\panels\Project;
+use common\models\panels\Orders;
+use yii\bootstrap\Html;
 
-    $projectColors = [
-        Project::STATUS_FROZEN => 'text-danger',
-        Project::STATUS_ACTIVE => 'text-success',
-        Project::STATUS_TERMINATED => 'text-muted',
-    ];
+$projectColors = [
+    Project::STATUS_FROZEN => 'text-danger',
+    Project::STATUS_ACTIVE => 'text-success',
+    Project::STATUS_TERMINATED => 'text-muted',
+];
 
-    $orderColors = [
-        Orders::STATUS_PAID => '',
-        Orders::STATUS_ERROR => '',
-        Orders::STATUS_PENDING => '',
-        Orders::STATUS_CANCELED => 'text-muted',
-    ];
+$orderColors = [
+    Orders::STATUS_PAID => '',
+    Orders::STATUS_ERROR => '',
+    Orders::STATUS_PENDING => '',
+    Orders::STATUS_CANCELED => 'text-muted',
+];
 
-    $colors = function($panel) use ($projectColors, $orderColors) {
-        if ('order' == $panel['type']) {
-            return $orderColors[$panel['status']];
-        } else {
-            return $projectColors[$panel['status']];
-        }
-    };
+$colors = function($panel) use ($projectColors, $orderColors) {
+    if ('order' == $panel['type']) {
+        return $orderColors[$panel['status']];
+    } else {
+        return $projectColors[$panel['status']];
+    }
+};
 
-    $this->context->addModule('panelsController');
+$this->context->addModule('panelsController');
 ?>
 
 <div class="row">
     <div class="col-lg-12">
         <h2 class="page-header">
             <?= Yii::t('app', 'child_panels.list.header')?>
-            <a href="/childpanels/order" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
+            <a href="/childpanels/order" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="' . Yii::t('app', 'child_panels.order_can_not_create') . '"' ?>>
                 <?= Yii::t('app', 'child_panels.list.order_panel')?>
             </a>
-            <div class="alert alert-danger error-hint hidden" role="alert">
+            <div class="alert alert-danger error-hint hidden" role="alert" style="margin-top: 10px">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <span class="content"></span>
             </div>

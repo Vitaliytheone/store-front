@@ -81,7 +81,7 @@ class CartController extends CustomController
             'fieldOptions' => $model->getPaymentsFields(),
             'options' => $model->getJsOptions()
         ]);
-
+        
         return $this->render('cart.twig', [
             'cart' => [
                 'orders' => $items,

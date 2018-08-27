@@ -14,13 +14,5 @@ return [
         'username' => DB_CONFIG[1]['user'],
         'password' => DB_CONFIG[1]['password'],
         'charset' => 'utf8mb4',
-    ],
-    
-    'panelsDb' => [
-        'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host=' . DB_CONFIG[0]['host'] . ';dbname=' . DB_PANELS,
-        'username' => DB_CONFIG[0]['user'],
-        'password' => DB_CONFIG[0]['password'],
-        'charset' => 'utf8'
-    ],
+    ]
 ];

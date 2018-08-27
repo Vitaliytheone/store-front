@@ -20,6 +20,15 @@ use yii\helpers\ArrayHelper;
  */
 class GetstatusComponent extends Component
 {
+    const PROVIDER_ORDER_STATUS_PENDING = '0';
+    const PROVIDER_ORDER_STATUS_IN_PROGRESS = '1';
+    const PROVIDER_ORDER_STATUS_COMPLETED = '2';
+    const PROVIDER_ORDER_STATUS_PARTIAL = '3';
+    const PROVIDER_ORDER_STATUS_CANCELED = '4';
+    const PROVIDER_ORDER_STATUS_PROCESSING = '5';
+    const PROVIDER_ORDER_STATUS_FAIL = '6';
+    const PROVIDER_ORDER_STATUS_ERROR = '7';
+    
     /**
      * One-time orders sample limit
      * @var integer
@@ -106,7 +115,7 @@ class GetstatusComponent extends Component
     /**
      * Fill getstatus
      */
-    public function FillGetstatus()
+    public function fillGetstatus()
     {
         $params = [
             'allStores' => true,
@@ -204,7 +213,7 @@ class GetstatusComponent extends Component
                 ]);
 
             if ($params['expiry']) {
-                $fromDate = time() - Yii::$app->params['orderExpiry'] * 24 * 60 * 60;
+                $fromDate = time() - Yii::$app->params['cron.orderExpiry'] * 24 * 60 * 60;
                 $query->andWhere(['>', 'suborders.updated_at', $fromDate]);
             }
 
@@ -297,42 +306,42 @@ class GetstatusComponent extends Component
     private function _convertStatus($panelStatus)
     {
         $statuses = [
-            '0' => [
+            self::PROVIDER_ORDER_STATUS_PENDING => [
                 'value' => Suborders::STATUS_PENDING,
                 'title' => 'Pending'
+            ],
+            self::PROVIDER_ORDER_STATUS_IN_PROGRESS => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            self::PROVIDER_ORDER_STATUS_PROCESSING => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            self::PROVIDER_ORDER_STATUS_FAIL => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            self::PROVIDER_ORDER_STATUS_PARTIAL => [
+                'value' => Suborders::STATUS_ERROR,
+                'title' => 'Error'
+            ],
+            self::PROVIDER_ORDER_STATUS_CANCELED => [
+                'value' => Suborders::STATUS_CANCELED,
+                'title' => 'Canceled'
+            ],
+            self::PROVIDER_ORDER_STATUS_ERROR => [
+                'value' => Suborders::STATUS_IN_PROGRESS,
+                'title' => 'In Progress'
+            ],
+            self::PROVIDER_ORDER_STATUS_COMPLETED => [
+                'value' => Suborders::STATUS_COMPLETED,
+                'title' => 'Completed'
             ],
             '8' => [
                 'value' => Suborders::STATUS_PENDING,
                 'title' => 'Pending'
             ],
-            '1' => [
-                'value' => Suborders::STATUS_IN_PROGRESS,
-                'title' => 'In Progress'
-            ],
-            '5' => [
-                'value' => Suborders::STATUS_IN_PROGRESS,
-                'title' => 'In Progress'
-            ],
-            '6' => [
-                'value' => Suborders::STATUS_IN_PROGRESS,
-                'title' => 'In Progress'
-            ],
-            '3' => [
-                'value' => Suborders::STATUS_ERROR,
-                'title' => 'Error'
-            ],
-            '4' => [
-                'value' => Suborders::STATUS_CANCELED,
-                'title' => 'Canceled'
-            ],
-            '7' => [
-                'value' => Suborders::STATUS_IN_PROGRESS,
-                'title' => 'In Progress'
-            ],
-            '2' => [
-                'value' => Suborders::STATUS_COMPLETED,
-                'title' => 'Completed'
-            ]
         ];
 
         return $statuses[(string)$panelStatus];
@@ -349,7 +358,7 @@ class GetstatusComponent extends Component
          * Make request pull
          */
         foreach ($this->_orders as $order) {
-            $fromDate = time() - Yii::$app->params['orderExpiry'] * 24 * 60 * 60;
+            $fromDate = time() - Yii::$app->params['cron.orderExpiry'] * 24 * 60 * 60;
             
             if ($fromDate > $order['updated_at']) {
                 Getstatus::deleteAll(['id' => $order['getstatus_id']]);
@@ -360,7 +369,6 @@ class GetstatusComponent extends Component
                 ->from(Project::tableName())
                 ->where(['site' => $order['provider_site']])
                 ->one()['db'];
-            var_dump($panel_db);
 
             $providerOrder = (new Query())->select(['status', 'charge', 'start_count', 'charge_currency', 'result'])
                 ->from($panel_db . '.orders')
@@ -373,9 +381,6 @@ class GetstatusComponent extends Component
                 'remains' => $providerOrder['result'],
                 'currency' => $providerOrder['charge_currency']
             ];
-
-            var_dump($response);
-            var_dump($providerOrder['status']);
 
             $values = [
                 ':status' => $this->_convertStatus($providerOrder['status'])['value'],
@@ -394,7 +399,7 @@ class GetstatusComponent extends Component
 
             $this->_updateOrder($orderInfo, $values);
 
-            if ($providerOrder['status'] == '3') {
+            if ($providerOrder['status'] == self::PROVIDER_ORDER_STATUS_PARTIAL) {
                 Getstatus::deleteAll(['id' => $order['getstatus_id']]);
             }
         }

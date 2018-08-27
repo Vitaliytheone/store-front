@@ -173,7 +173,6 @@ abstract class BasePayment extends Component {
                 $payment->save(false);
 
             }
-
             return;
         }
         $checkout = Checkouts::findOne($result['checkout_id']);
@@ -192,9 +191,20 @@ abstract class BasePayment extends Component {
         $order->save(false);
 
         $items = $checkout->getDetails();
-        $packages = ArrayHelper::index(Packages::find()->andWhere([
-            'id' => ArrayHelper::getColumn($items, 'package_id')
-        ])->all(), 'id');
+
+        $packages = ArrayHelper::index(Packages::find()
+            ->select(['packages.*', 'store_providers.apikey'])
+            ->andWhere([
+                'packages.id' => ArrayHelper::getColumn($items, 'package_id')
+            ])
+            ->leftJoin(StoreProviders::tableName(), 'store_providers.provider_id = packages.provider_id
+            and store_providers.store_id = :store_id', [
+                ':store_id' => $store->id
+            ])
+            ->asArray()
+            ->all(), 'id'
+        );
+
         foreach ($items as $item) {
             /**
              * @var Packages $package
@@ -204,18 +214,18 @@ abstract class BasePayment extends Component {
             $orderItem->checkout_id = $checkout->id;
             $orderItem->order_id = $order->id;
             $orderItem->link = $item['link'];
-            $orderItem->quantity = $package->quantity;
-            $orderItem->overflow_quantity = $package->quantity + floor($package->quantity * $package->overflow / 100);
-            $orderItem->package_id = $package->id;
+            $orderItem->quantity = $package['quantity'];
+            $orderItem->overflow_quantity = $package['quantity']+ floor($package['quantity']* $package['overflow'] / 100);
+            $orderItem->package_id = $package['id'];
             $orderItem->currency = $checkout->currency;
-            $orderItem->amount = $package->price;
-            $orderItem->mode = $package->mode;
-            $orderItem->provider_id = $package->provider_id;
-            $orderItem->provider_service = $package->provider_service;
+            $orderItem->amount = $package['price'];
+            $orderItem->mode = $package['mode'];
+            $orderItem->provider_id = $package['provider_id'];
+            $orderItem->provider_service = $package['provider_service'];
 
             $orderItem->status = Suborders::STATUS_PENDING;
 
-            if (Packages::MODE_AUTO == $package->mode) {
+            if (Packages::MODE_AUTO == $package['mode']) {
                 $orderItem->status = Suborders::STATUS_AWAITING;
                 $orderItem->send = Suborders::SEND_STATUS_AWAITING;
             }
@@ -226,9 +236,7 @@ abstract class BasePayment extends Component {
             $getstatus->pid = $store->id;
             $getstatus->oid = $orderItem->id;
             $getstatus->roid = $orderItem->provider_order_id;
-            $storeProvider = StoreProviders::findOne(['provider_id' => $package->provider_id]);
-
-            $getstatus->login = $storeProvider->apikey;
+            $getstatus->login = $package['apikey'];
             $getstatus->res =  $orderItem->provider_id;;
             $getstatus->reid = $orderItem->provider_service;
             $getstatus->page_id = $orderItem->link;
@@ -243,7 +251,7 @@ abstract class BasePayment extends Component {
                 $sendOrder = new StoresSendOrders();
                 $sendOrder->store_id = $store->id;
                 $sendOrder->store_db = $store->db_name;
-                $sendOrder->provider_id = $package->provider_id;
+                $sendOrder->provider_id = $package['provider_id'];
                 $sendOrder->suborder_id = $orderItem->id;
                 $sendOrder->save(false);
             }

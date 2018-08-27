@@ -22,6 +22,7 @@ class ProductController extends CustomController
     public function actionIndex($id)
     {
         Url::remember();
+
         $product = $this->_findProduct($id);
         $this->pageTitle = $product->seo_title;
         $this->seoDescription = $product->seo_description;
@@ -31,11 +32,11 @@ class ProductController extends CustomController
 
         return $this->render('product.twig', [
             'product' => [
-                'id' => $product->id,
-                'title' => Html::encode($product->name),
-                'content' => $product->description,
-                'color' => Html::encode($product->color),
-            ] + $data
+                    'id' => $product->id,
+                    'title' => Html::encode($product->name),
+                    'content' => $product->description,
+                    'color' => Html::encode($product->color),
+                ] + $data
         ]);
     }
 

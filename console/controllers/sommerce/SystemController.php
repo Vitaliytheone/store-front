@@ -7,7 +7,6 @@ use common\models\stores\StoreProviders;
 use common\models\stores\StoresSendOrders;
 use console\components\getstatus\GetstatusComponent;
 use sommerce\helpers\MessagesHelper;
-use yii\db\Query;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -276,7 +275,7 @@ class SystemController extends CustomController
     {
         $getstatus = new GetstatusComponent();
         $getstatus->setConnection(Yii::$app->storeDb);
-        $getstatus->FillGetstatus();
+        $getstatus->fillGetstatus();
     }
     
     
