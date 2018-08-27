@@ -23,6 +23,7 @@ class ApiProviders
     public $api_url;
     public $api_key;
 
+
     /**
      * ApiProviders constructor.
      * @param StoreProviders $storeProvider
@@ -30,7 +31,7 @@ class ApiProviders
     public function __construct(StoreProviders $storeProvider)
     {
         $provider = $storeProvider->provider;
-        $this->api_url = str_replace('{{api_host}}', $provider->getSite(), self::COMMON_API_URL_TPL);
+        $this->api_url = str_replace('{{api_host}}', 'http://' . $provider->getName(), self::COMMON_API_URL_TPL);
         $this->api_key = $storeProvider->apikey;
     }
 

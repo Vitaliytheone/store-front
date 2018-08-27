@@ -4,6 +4,7 @@ namespace sommerce\components\payments;
 
 use common\events\Events;
 use common\helpers\SiteHelper;
+use common\models\panels\Getstatus;
 use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\store\Orders;
@@ -11,6 +12,7 @@ use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\Suborders;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
@@ -171,7 +173,6 @@ abstract class BasePayment extends Component {
                 $payment->save(false);
 
             }
-
             return;
         }
         $checkout = Checkouts::findOne($result['checkout_id']);
@@ -190,47 +191,70 @@ abstract class BasePayment extends Component {
         $order->save(false);
 
         $items = $checkout->getDetails();
-        $packages = ArrayHelper::index(Packages::find()->andWhere([
-            'id' => ArrayHelper::getColumn($items, 'package_id')
-        ])->all(), 'id');
+
+        $packages = ArrayHelper::index(Packages::find()
+            ->select(['packages.*', 'store_providers.apikey'])
+            ->andWhere([
+                'packages.id' => ArrayHelper::getColumn($items, 'package_id')
+            ])
+            ->leftJoin(StoreProviders::tableName(), 'store_providers.provider_id = packages.provider_id
+            and store_providers.store_id = :store_id', [
+                ':store_id' => $store->id
+            ])
+            ->asArray()
+            ->all(), 'id'
+        );
+
         foreach ($items as $item) {
             /**
              * @var Packages $package
              */
             $package = $packages[$item['package_id']];
-
             $orderItem = new Suborders();
             $orderItem->checkout_id = $checkout->id;
             $orderItem->order_id = $order->id;
             $orderItem->link = $item['link'];
-            $orderItem->quantity = $package->quantity;
-            $orderItem->overflow_quantity = $package->quantity + floor($package->quantity * $package->overflow / 100);
-            $orderItem->package_id = $package->id;
+            $orderItem->quantity = $package['quantity'];
+            $orderItem->overflow_quantity = $package['quantity']+ floor($package['quantity']* $package['overflow'] / 100);
+            $orderItem->package_id = $package['id'];
             $orderItem->currency = $checkout->currency;
-            $orderItem->amount = $package->price;
-            $orderItem->mode = $package->mode;
-            $orderItem->provider_id = $package->provider_id;
-            $orderItem->provider_service = $package->provider_service;
+            $orderItem->amount = $package['price'];
+            $orderItem->mode = $package['mode'];
+            $orderItem->provider_id = $package['provider_id'];
+            $orderItem->provider_service = $package['provider_service'];
 
             $orderItem->status = Suborders::STATUS_PENDING;
 
-            if (Packages::MODE_AUTO == $package->mode) {
+            if (Packages::MODE_AUTO == $package['mode']) {
                 $orderItem->status = Suborders::STATUS_AWAITING;
                 $orderItem->send = Suborders::SEND_STATUS_AWAITING;
             }
 
             $orderItem->save(false);
 
+            $getstatus = new Getstatus();
+            $getstatus->pid = $store->id;
+            $getstatus->oid = $orderItem->id;
+            $getstatus->roid = $orderItem->provider_order_id;
+            $getstatus->login = $package['apikey'];
+            $getstatus->res =  $orderItem->provider_id;;
+            $getstatus->reid = $orderItem->provider_service;
+            $getstatus->page_id = $orderItem->link;
+            $getstatus->count = $orderItem->overflow_quantity;
+            $getstatus->start_count = 0;
+            $getstatus->status = $orderItem->status;
+            $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
+            $getstatus->save(false);
+
             // Make queue for sender
             if (Suborders::MODE_AUTO == $orderItem->mode) {
                 $sendOrder = new StoresSendOrders();
                 $sendOrder->store_id = $store->id;
                 $sendOrder->store_db = $store->db_name;
-                $sendOrder->provider_id = $package->provider_id;
+                $sendOrder->provider_id = $package['provider_id'];
                 $sendOrder->suborder_id = $orderItem->id;
                 $sendOrder->save(false);
             }
-
             // Remove paid items from cart
             Carts::removeItemByKey($item['cart_key']);
         }
@@ -251,6 +275,7 @@ abstract class BasePayment extends Component {
         }
 
         $payment->save(false);
+
 
         // Event confirm
         Events::add(Events::EVENT_STORE_ORDER_CONFIRM, [

@@ -16,7 +16,7 @@ return [
     'storeSqlPath' => Yii::getAlias('@sommerce/runtime/sql/store_template.sql'), // Путь к дампу базы данных созданного магазина
 
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
-    'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых магазинов
+    'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых панелей
 
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
     'storeDomain' => 'sommerce.net', // Домен нашего сайта
@@ -110,5 +110,6 @@ return [
     'failsEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем неудачные действия - пока не используется нигде
 
 
-    'cron.check_payments_fee_days' => 2
+    'cron.check_payments_fee_days' => 2,
+    'cron.orderExpiry' => 30 //days
 ];

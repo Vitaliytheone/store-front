@@ -1,36 +1,36 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $panels[] \common\models\panels\Project */
-    /* @var $panel \common\models\panels\Project */
-    /* @var $note */
-    /* @var $accesses */
+/* @var $this yii\web\View */
+/* @var $panels[] \common\models\panels\Project */
+/* @var $panel \common\models\panels\Project */
+/* @var $note */
+/* @var $accesses */
 
-    use common\models\panels\Project;
-    use common\models\panels\Orders;
-    use yii\bootstrap\Html;
+use common\models\panels\Project;
+use common\models\panels\Orders;
+use yii\bootstrap\Html;
 
-    $projectColors = [
-        Project::STATUS_FROZEN => 'text-danger',
-        Project::STATUS_ACTIVE => 'text-success',
-        Project::STATUS_TERMINATED => 'text-muted',
-    ];
+$projectColors = [
+    Project::STATUS_FROZEN => 'text-danger',
+    Project::STATUS_ACTIVE => 'text-success',
+    Project::STATUS_TERMINATED => 'text-muted',
+];
 
-    $orderColors = [
-        Orders::STATUS_PAID => '',
-        Orders::STATUS_ERROR => '',
-        Orders::STATUS_PENDING => '',
-        Orders::STATUS_CANCELED => 'text-muted',
-    ];
+$orderColors = [
+    Orders::STATUS_PAID => '',
+    Orders::STATUS_ERROR => '',
+    Orders::STATUS_PENDING => '',
+    Orders::STATUS_CANCELED => 'text-muted',
+];
 
-    $colors = function($panel) use ($projectColors, $orderColors) {
-        if ('order' == $panel['type']) {
-            return $orderColors[$panel['status']];
-        } else {
-            return $projectColors[$panel['status']];
-        }
-    };
+$colors = function($panel) use ($projectColors, $orderColors) {
+    if ('order' == $panel['type']) {
+        return $orderColors[$panel['status']];
+    } else {
+        return $projectColors[$panel['status']];
+    }
+};
 
-    $this->context->addModule('panelsController');
+$this->context->addModule('panelsController');
 ?>
 
 <div class="row">
@@ -61,17 +61,17 @@
         <div class="col-lg-12">
             <table class="table table-bordered table-hover">
                 <thead>
-                    <tr>
-                        <th><?= Yii::t('app', 'child_panels.list.column_domain')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.column_provider')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.column_created')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.column_expiry')?></th>
-                        <th><?= Yii::t('app', 'child_panels.list.order_status')?></th>
-                        <th></th>
-                    </tr>
+                <tr>
+                    <th><?= Yii::t('app', 'child_panels.list.column_domain')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.column_provider')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.column_created')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.column_expiry')?></th>
+                    <th><?= Yii::t('app', 'child_panels.list.order_status')?></th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($panels as $panel): ?>
+                <?php foreach ($panels as $panel): ?>
                     <tr>
                         <td><?= $panel['domain'] ?></td>
                         <td><?= $panel['provider']; ?></td>
@@ -114,7 +114,7 @@
                             <?php endif; ?>
                         </td>
                     </tr>
-                    <?php endforeach ?>
+                <?php endforeach ?>
                 </tbody>
             </table>
         </div>

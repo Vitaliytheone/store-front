@@ -2,15 +2,14 @@
 
 namespace sommerce\modules\admin\models\search;
 
+use common\models\panels\AdditionalServices;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use yii;
 use yii\db\Query;
-use common\helpers\DbHelper;
 use yii\base\Model;
 use common\models\store\Products;
 use common\models\store\Packages;
-use common\models\stores\Providers;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -23,7 +22,6 @@ class ProductsSearch extends Model
     private $_productsTable;
     private $_packagesTable;
     private $_providersTable;
-
 
     /**
      * Cached Store providers
@@ -40,7 +38,7 @@ class ProductsSearch extends Model
         $this->_db = $store->db_name;
         $this->_productsTable = $this->_db . "." . Products::tableName();
         $this->_packagesTable = $this->_db . "." . Packages::tableName();
-        $this->_providersTable = Providers::tableName();
+        $this->_providersTable = AdditionalServices::tableName();
     }
 
     /**
@@ -55,12 +53,12 @@ class ProductsSearch extends Model
 
             $this->_store_providers = (new Query())
                 ->select([
-                    'pr.id', 'pr.site',
+                    'pr.res as id', 'pr.name as site',
                     'sp.store_id'
                 ])
                 ->from(['sp' => StoreProviders::tableName()])
                 ->where(['sp.store_id' => $store->id])
-                ->leftJoin(['pr' => Providers::tableName()], 'pr.id = sp.provider_id')
+                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.res = sp.provider_id')
                 ->indexBy('id')
                 ->all();
         }

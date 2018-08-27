@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\models\panels\AdditionalServices;
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\StoreProvidersQuery;
@@ -14,7 +15,7 @@ use common\models\stores\queries\StoreProvidersQuery;
  * @property integer $store_id
  * @property string $apikey
  *
- * @property Providers $provider
+ * @property AdditionalServices $provider
  * @property Stores $store
  */
 class StoreProviders extends ActiveRecord
@@ -35,7 +36,7 @@ class StoreProviders extends ActiveRecord
         return [
             [['provider_id', 'store_id'], 'integer'],
             [['apikey'], 'string', 'max' => 255],
-            [['provider_id'], 'exist', 'skipOnError' => true, 'targetClass' => Providers::class, 'targetAttribute' => ['provider_id' => 'id']],
+            [['provider_id'], 'exist', 'skipOnError' => true, 'targetClass' => AdditionalServices::class, 'targetAttribute' => ['provider_id' => 'res']],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
@@ -58,7 +59,7 @@ class StoreProviders extends ActiveRecord
      */
     public function getProvider()
     {
-        return $this->hasOne(Providers::class, ['id' => 'provider_id']);
+        return $this->hasOne(AdditionalServices::class, ['res' => 'provider_id']);
     }
 
     /**
