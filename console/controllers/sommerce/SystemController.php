@@ -256,8 +256,10 @@ class SystemController extends CustomController
                     'status' =>  0
                 ])->one()['res'];
 
+             print_r($res);
 
             foreach ($stores_tables as $table) {
+                echo Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->getRawSql();
                 Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
             }
 
