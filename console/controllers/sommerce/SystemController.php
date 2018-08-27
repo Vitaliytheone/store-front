@@ -7,6 +7,7 @@ use common\models\stores\StoreProviders;
 use common\models\stores\StoresSendOrders;
 use console\components\getstatus\GetstatusComponent;
 use sommerce\helpers\MessagesHelper;
+use yii\db\Exception;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -262,7 +263,11 @@ class SystemController extends CustomController
 
             foreach ($stores as $store) {
                 foreach ($store_tables as $table) {
-                    Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                    try {
+                        Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res . "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                    } catch (Exception $e) {
+                        print_r($e->getMessage());
+                    }
                 }
             }
         }
