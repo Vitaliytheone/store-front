@@ -229,6 +229,8 @@ class GetstatusComponent extends Component
                     ->limit($requestLimit);
             }
 
+            echo $query->createCommand()->getRawSql();
+
             $newOrders = $query->all();
 
             print_r($newOrders);
