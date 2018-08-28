@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use my\components\ActiveForm;
 use himiklab\yii2\recaptcha\ReCaptcha;
 
-$this->title = 'Admin';
+$this->title = Yii::t('app/superadmin', 'site.title');
 
 ?>
 

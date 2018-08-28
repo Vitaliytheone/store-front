@@ -396,14 +396,22 @@ class PanelsSearch {
         ]);
 
         return [
-            'all' => 'All (' . $this->count('all', null, [
-                'skip' => [
-                    'plan' => 0
-                ]
-            ]) . ')',
-            Project::STATUS_ACTIVE => 'Active (' . ArrayHelper::getValue($statusCounters, Project::STATUS_ACTIVE, 0) . ')',
-            Project::STATUS_FROZEN => 'Frozen (' . ArrayHelper::getValue($statusCounters, Project::STATUS_FROZEN, 0) . ')',
-            Project::STATUS_TERMINATED => 'Terminated (' . ArrayHelper::getValue($statusCounters, Project::STATUS_TERMINATED, 0) . ')',
+            'all' => Yii::t('app/superadmin', 'panels.list.nav_all', [
+                'count' => $this->count('all', null, [
+                    'skip' => [
+                        'plan' => 0
+                    ]
+                ])
+            ]),
+            Project::STATUS_ACTIVE => Yii::t('app/superadmin', 'panels.list.nav_active', [
+                'count' => ArrayHelper::getValue($statusCounters, Project::STATUS_ACTIVE, 0),
+            ]),
+            Project::STATUS_FROZEN => Yii::t('app/superadmin', 'panels.list.nav_frozen', [
+                'count' => ArrayHelper::getValue($statusCounters, Project::STATUS_FROZEN, 0),
+            ]),
+            Project::STATUS_TERMINATED => Yii::t('app/superadmin', 'panels.list.nav_terminated', [
+                'count' => ArrayHelper::getValue($statusCounters, Project::STATUS_TERMINATED, 0)
+            ]),
         ];
     }
 

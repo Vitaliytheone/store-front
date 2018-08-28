@@ -59,7 +59,7 @@ class OrdersController extends CustomController
      */
     public function actionIndex()
     {
-        $this->view->title = 'Orders';
+        $this->view->title = Yii::t('app/superadmin', 'orders.title');
 
         $ordersSearch = new OrdersSearch();
         $ordersSearch->setParams(Yii::$app->request->get());
