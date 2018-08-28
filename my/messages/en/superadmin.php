@@ -660,4 +660,5 @@ return [
     'orders.modal.btn_close' => 'Close',
     'orders.modal.header_details' => 'Details',
     'orders.modal.header_logs' => 'Logs',
+    'orders.title' => 'Orders',
 ];
