@@ -106,6 +106,16 @@
                                 <?= Html::tag('span', '<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'child_panels.list.action_staff'), [
                                     'class' => 'btn btn-outline btn-info btn-xs disabled',
                                 ])?>
+
+                                <?php if ($panel['access']['isActivityLog']) : ?>
+                                    <?= Html::a('<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), '/activitylog/' . $panel['id'], [
+                                        'class' => 'btn btn-outline btn-warning btn-xs',
+                                    ])?>
+                                <?php else : ?>
+                                    <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), [
+                                        'class' => 'btn btn-outline btn-warning btn-xs disabled',
+                                    ])?>
+                                <?php endif; ?>
                                 <?php /*
                                 <?= Html::tag('span', '<i class="fa fa fa-globe fa-fw"></i> ' . Yii::t('app', 'child_panels.list.action_domain'), [
                                     'class' => 'btn btn-outline btn-info btn-xs disabled',
