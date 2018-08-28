@@ -186,7 +186,8 @@ class GetstatusComponent extends Component
                 ->indexBy('sp.provider_id')
                 ->all();
 
-
+            print_r($storeProviders);
+            
             $db = $store['db_name'];
             $query = (new Query());
             $selection = ['suborders.*'];
