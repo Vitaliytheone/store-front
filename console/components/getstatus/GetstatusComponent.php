@@ -179,11 +179,12 @@ class GetstatusComponent extends Component
                     'site' => 'pr.name',
                     'type' => 'pr.type',
                     'apikey' => 'sp.apikey',
+                    'provider_id' => 'sp.provider_id',
                 ])
                 ->from(['sp' => $this->_tableStoreProviders])
                 ->leftJoin(['pr' => $this->_tableProviders], 'pr.res = sp.provider_id')
                 ->andWhere(['store_id' => $storeId])
-                ->indexBy('sp.provider_id')
+                ->indexBy('provider_id')
                 ->all();
 
             print_r($storeProviders);
