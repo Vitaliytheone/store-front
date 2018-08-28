@@ -229,12 +229,7 @@ class GetstatusComponent extends Component
                     ->limit($requestLimit);
             }
 
-            echo $query->createCommand()->getRawSql();
-
             $newOrders = $query->all();
-
-            print_r($newOrders);
-
 
             //Populate each order by store and provider data
             foreach ($newOrders as $order) {
