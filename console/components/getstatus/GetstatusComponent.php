@@ -198,7 +198,9 @@ class GetstatusComponent extends Component
             ]);
 
             if ($params['withGetstatus']) {
-                $query->innerJoin($this->_tableGetstatus, 'test_panels.getstatus.oid = suborders.id and test_panels.getstatus.pid = :store_id', [
+                $query->innerJoin($this->_tableGetstatus,
+                    $this->_tableGetstatus . '.oid = suborders.id and '
+                    . $this->_tableGetstatus . '.pid = :store_id', [
                     ':store_id' => $store['id']
                 ]);
             }
