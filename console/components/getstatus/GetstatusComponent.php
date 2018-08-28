@@ -126,21 +126,23 @@ class GetstatusComponent extends Component
 
         $this->_orders = $this->_getOrders($params);
         foreach ($this->_orders as $order) {
-            $getstatus = new Getstatus();
-            $getstatus->pid = $order['store_id'];
-            $getstatus->oid = $order['id'];
-            $getstatus->roid = $order['provider_order_id'];
-            $getstatus->login = $order['provider_apikey'];
-            $getstatus->res = $order['provider_id'];
-            $getstatus->apikey = '';
-            $getstatus->passwd = '';
-            $getstatus->reid = $order['provider_service'];
-            $getstatus->page_id = $order['link'];
-            $getstatus->count = $order['overflow_quantity'];
-            $getstatus->start_count = 0;
-            $getstatus->status = $order['status'];
-            $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
-            $getstatus->save(false);
+            if (!empty($order['provider_order_id'])) {
+                $getstatus = new Getstatus();
+                $getstatus->pid = $order['store_id'];
+                $getstatus->oid = $order['id'];
+                $getstatus->roid = $order['provider_order_id'];
+                $getstatus->login = $order['provider_apikey'];
+                $getstatus->res = $order['provider_id'];
+                $getstatus->apikey = '';
+                $getstatus->passwd = '';
+                $getstatus->reid = $order['provider_service'];
+                $getstatus->page_id = $order['link'];
+                $getstatus->count = $order['overflow_quantity'];
+                $getstatus->start_count = 0;
+                $getstatus->status = $order['status'];
+                $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
+                $getstatus->save(false);
+            }
         }
     }
 
