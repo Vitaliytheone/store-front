@@ -193,13 +193,8 @@ abstract class BasePayment extends Component {
         $items = $checkout->getDetails();
 
         $packages = ArrayHelper::index(Packages::find()
-            ->select(['packages.*', 'store_providers.apikey'])
             ->andWhere([
                 'packages.id' => ArrayHelper::getColumn($items, 'package_id')
-            ])
-            ->leftJoin(StoreProviders::tableName(), 'store_providers.provider_id = packages.provider_id
-            and store_providers.store_id = :store_id', [
-                ':store_id' => $store->id
             ])
             ->asArray()
             ->all(), 'id'
@@ -231,21 +226,7 @@ abstract class BasePayment extends Component {
             }
 
             $orderItem->save(false);
-
-            $getstatus = new Getstatus();
-            $getstatus->pid = $store->id;
-            $getstatus->oid = $orderItem->id;
-            $getstatus->roid = $orderItem->provider_order_id;
-            $getstatus->login = $package['apikey'];
-            $getstatus->res =  $orderItem->provider_id;;
-            $getstatus->reid = $orderItem->provider_service;
-            $getstatus->page_id = $orderItem->link;
-            $getstatus->count = $orderItem->overflow_quantity;
-            $getstatus->start_count = 0;
-            $getstatus->status = $orderItem->status;
-            $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
-            $getstatus->save(false);
-
+            
             // Make queue for sender
             if (Suborders::MODE_AUTO == $orderItem->mode) {
                 $sendOrder = new StoresSendOrders();

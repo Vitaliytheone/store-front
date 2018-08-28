@@ -132,6 +132,8 @@ class GetstatusComponent extends Component
             $getstatus->roid = $order['provider_order_id'];
             $getstatus->login = $order['provider_apikey'];
             $getstatus->res = $order['provider_id'];
+            $getstatus->apikey = '';
+            $getstatus->passwd = '';
             $getstatus->reid = $order['provider_service'];
             $getstatus->page_id = $order['link'];
             $getstatus->count = $order['overflow_quantity'];

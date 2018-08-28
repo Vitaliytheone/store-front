@@ -93,7 +93,7 @@ class ProvidersListForm extends Model {
                 $model->apikey = $apiKey;
 
                 if ($model->isAttributeChanged('apikey')) {
-                    ActivityLog::log($identity, ActivityLog::E_SETTINGS_PROVIDERS_PROVIDER_API_KEY_CHANGED, $model->id, $model->provider->site);
+                    ActivityLog::log($identity, ActivityLog::E_SETTINGS_PROVIDERS_PROVIDER_API_KEY_CHANGED, $model->id, $model->provider->name);
                 }
 
                 $model->save();

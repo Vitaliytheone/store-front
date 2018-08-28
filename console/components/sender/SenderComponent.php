@@ -2,6 +2,7 @@
 namespace console\components\sender;
 
 use common\events\Events;
+use common\models\panels\Getstatus;
 use common\models\store\Packages;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
@@ -208,6 +209,7 @@ class SenderComponent extends Component
         ];
 
         $values = array_intersect_key(array_merge($defaultValues, $values), $defaultValues);
+        static::addGetstatus($orderInfo, $values);
 
         $this->_db->createCommand("
               UPDATE $storeDb.$this->_tableSuborders 
@@ -234,6 +236,50 @@ class SenderComponent extends Component
             ]);
         }
     }
+
+    /**
+     * @param $orderInfo
+     * @param $values
+     */
+    public static function addGetstatus($orderInfo, $values)
+    {
+        $orderId = $orderInfo['suborder_id'];
+        $storeDb = $orderInfo['store_db'];
+
+        if (!empty($values[':provider_order_id'])) {
+
+            $storeId = (new Query())->select('id')
+                ->from(Stores::tableName())
+                ->where(['db_name' => $storeDb])
+                ->one()['id'];
+
+            $suborder = (new Query())->select(['apikey', 'link', 'overflow_quantity'])
+                ->from($storeDb . ".suborders as s")
+                ->leftJoin(['sp' => StoreProviders::tableName()], 'sp.provider_id = s.provider_id 
+                    and sp.store_id = :store_id', [
+                    ':store_id' => $storeId
+                ])
+                ->where(['s.id' => $orderId])
+                ->one();
+
+            $getstatus = new Getstatus();
+            $getstatus->pid = $storeId;
+            $getstatus->oid = $orderId;
+            $getstatus->roid = $values[':provider_id'];
+            $getstatus->login = $suborder['apikey'];
+            $getstatus->apikey = '';
+            $getstatus->passwd = '';
+            $getstatus->res =  $values[':provider_order_id'];
+            $getstatus->reid = $values[':provider_service'];
+            $getstatus->page_id = $suborder['link'];
+            $getstatus->count = $suborder['overflow_quantity'];
+            $getstatus->start_count = 0;
+            $getstatus->status = $values[':status'];
+            $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
+            $getstatus->save(false);
+        }
+    }
+
 
     /**
      * Resend order errored by protocol
