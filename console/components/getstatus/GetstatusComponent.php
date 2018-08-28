@@ -187,8 +187,6 @@ class GetstatusComponent extends Component
                 ->indexBy('provider_id')
                 ->all();
 
-            print_r($storeProviders);
-            
             $db = $store['db_name'];
             $query = (new Query());
             $selection = ['suborders.*'];
@@ -232,6 +230,8 @@ class GetstatusComponent extends Component
             }
 
             $newOrders = $query->all();
+
+            print_r($newOrders);
 
 
             //Populate each order by store and provider data
