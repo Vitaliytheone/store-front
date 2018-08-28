@@ -69,9 +69,9 @@ class OrdersSearch extends Orders {
             ]);
         }
 
-        $orders->joinWith(['customer', 'invoice']);
-
         if (!empty($searchQuery)) {
+            $orders->joinWith(['customer', 'invoice']);
+
             $orders->andFilterWhere([
                 'or',
                 ['=', 'orders.id', $searchQuery],
@@ -79,10 +79,6 @@ class OrdersSearch extends Orders {
                 ['like', 'customers.email', $searchQuery],
             ]);
         }
-
-        $orders->orderBy([
-            'orders.id' => SORT_DESC
-        ]);
 
         return $orders;
     }
@@ -98,7 +94,7 @@ class OrdersSearch extends Orders {
 
         $query = clone $this->buildQuery($status, $item);
 
-        $pages = new Pagination(['totalCount' => $this->count($status, $item)]);
+        $pages = new Pagination(['totalCount' => $this->buildQuery($status, $item)->count()]);
         $pages->setPageSize($this->pageSize);
         $pages->defaultPageSize = $this->pageSize;
 
@@ -109,6 +105,9 @@ class OrdersSearch extends Orders {
         $orders = $query
             ->offset($pages->offset)
             ->limit($pages->limit)
+            ->orderBy([
+                'orders.id' => SORT_DESC
+            ])
             ->groupBy('orders.id');
 
         return [
