@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
  * Class TwoCheckout
  * @package my\components\payments
  */
-class TwoCheckout
+class TwoCheckout extends BasePayment
 {
     /**
      * Последние сообщения об ошибках
@@ -42,10 +42,16 @@ class TwoCheckout
     }
 
     /**
-     * @param $params array
+     * @param $params array | false
      * @return string
      */
     public function detailSale($params) {
+
+        if (!$this->_validateParams($params))  {
+            $this ->_errors = array('invalid params');
+            return false;
+        }
+
         $this->_endPoint .= 'sales/detail_sale';
 
         $response = $this->request($this->_endPoint, http_build_query($params));
