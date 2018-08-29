@@ -76,9 +76,7 @@ class OrdersSearch extends Orders {
         $orders->select([
             'orders.*',
             'invoices.id as invoice_id',
-            'invoices.status as invoice_status',
             'customers.email as customer_email',
-            'customers.id customer_id',
         ]);
 
         if (!empty($searchQuery)) {
@@ -148,17 +146,15 @@ class OrdersSearch extends Orders {
             $resultData[$key]['check_status'] = $value['status'];
             $resultData[$key]['hide'] = $value['hide'];
             $resultData[$key]['processing'] = $value['processing'];
-            $resultData[$key]['date'] = date('Y-m-d', $value['date']);
-            $resultData[$key]['time'] = date('H:i:s', $value['date']);
+            $resultData[$key]['date'] = Orders::formatDate($value['date'], 'php:Y-m-d');
+            $resultData[$key]['time'] = Orders::formatDate($value['date'], 'php:H:i:s');
             $resultData[$key]['ip'] = $value['ip'];
             $resultData[$key]['domain'] = $value['domain'] ? DomainsHelper::idnToUtf8($value['domain']) : '';
             $resultData[$key]['details'] = $value['details'];
             $resultData[$key]['item'] = Orders::getItems()[$value['item']];
             $resultData[$key]['item_id'] = $value['item_id'];
             $resultData[$key]['invoice_id'] = $value['invoice_id'];
-            $resultData[$key]['invoice_status'] = $value['invoice_status'];
             $resultData[$key]['customer_email'] = $value['customer_email'];
-            $resultData[$key]['customer_id'] = $value['customer_id'];
         }
 
         return $resultData;

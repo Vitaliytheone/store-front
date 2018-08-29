@@ -40,7 +40,7 @@ class OrdersController extends CustomController
                 'actions' => [
                     'index' => ['GET'],
                     'change-status'=> ['POST'],
-                    'details' => ['POST'],
+                    'details' => ['GET'],
                 ],
             ],
             'content' => [
