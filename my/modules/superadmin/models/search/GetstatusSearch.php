@@ -143,18 +143,16 @@ class GetstatusSearch extends Getstatus
             ->all();
         $countsList = ArrayHelper::map($countsList, 'res', 'count');
 
-        for ($i = 0; $i < count($data); $i++ ) {
-            $data[$statuses[$i]->res]['provider'] = $statuses[$i]->name;
-            $data[$statuses[$i]->res]['all_orders'] = isset($countsList[$statuses[$i]->res]) ? $countsList[$statuses[$i]->res] : 0;
-            $data[$statuses[$i]->res]['good'] = $data[$statuses[$i]->res]['requests'] - $data[$statuses[$i]->res]['status_error'] - $data[$statuses[$i]->res]['curl_error'];
-            $data[$statuses[$i]->res]['avg'] = round($data[$statuses[$i]->res]['avg'], 0);
-
-            if (!isset($data[$i]['provider'])) {
-                unset($data[$i]);
-            }
+        $result = [];
+        for ($i = 0; $i < count($statuses); $i++ ) {
+            $result[$statuses[$i]->res] = $data[$statuses[$i]->res];
+            $result[$statuses[$i]->res]['provider'] = $statuses[$i]->name;
+            $result[$statuses[$i]->res]['all_orders'] = isset($countsList[$statuses[$i]->res]) ? $countsList[$statuses[$i]->res] : 0;
+            $result[$statuses[$i]->res]['good'] = $data[$statuses[$i]->res]['requests'] - $data[$statuses[$i]->res]['status_error'] - $data[$statuses[$i]->res]['curl_error'];
+            $result[$statuses[$i]->res]['avg'] = round($data[$statuses[$i]->res]['avg'], 0);
         }
 
-        return $data;
+        return $result;
     }
 
 }

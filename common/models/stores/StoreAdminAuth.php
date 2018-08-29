@@ -67,7 +67,7 @@ class StoreAdminAuth extends StoreAdmins implements IdentityInterface
 
             static::$_identity = static::_getSuperadminIdentity($id);
 
-        } else {
+        } else if ($store) {
 
             static::$_identity = static::findOne([
                 'id' => $id,

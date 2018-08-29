@@ -409,6 +409,7 @@ return [
     'settings.providers_m_cancel' => 'Cancel',
 
     'settings.blocks_page_title' => 'Blocks',
+    'settings.customize_theme_pagetitle' => 'Customize {theme} theme ',
     'settings.edit_block_page_title' => 'Edit {block} block',
 
     'settings.message_provider_updated' => 'Provider successfully updated',
@@ -610,6 +611,7 @@ return [
     'settings.send_test_m_header' => 'Send test',
     'settings.message_send_test_email_success' => 'Notification has been sent',
     'settings.message_send_test_email_error' => 'Can not send test notification',
+    'settings.themes_can_not_customize' => 'Can not customize theme',
 
     'settings.notification_preview_m_header' => 'Preview',
     'settings.notification_preview_m_cancel' => 'Cancel',

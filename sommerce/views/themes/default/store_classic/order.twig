@@ -1,0 +1,55 @@
+<div class="order-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="order-page__title {% if site.rtl %} rtl-direction {% endif %}">{{ lang('order.title') }}</h1>
+            </div>
+        </div>
+        <form class="form" action="" method="post">
+ 		{% if error %}
+          <div class="row">
+          	<div class="col-md-12">
+          		<div class="alert alert-error {% if site.rtl %} rtl-direction {% endif %}">
+          			<span class="fal fa-exclamation-triangle alert-icon"></span> {{ error_message }}
+          		</div>
+          	</div>
+          </div>
+        {% endif %}
+        <div class="row {% if site.rtl %} rtl-col-md-6 {% endif %}">
+            <div class="col-md-6">
+                <div class="order-page__detail-title">{{ lang('order.info') }}</div>
+                <div class="order-page__block">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>{{ lang('order.package') }}</td>
+                            <td>{{ order.quantity }} {{ order.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ lang('order.price') }}</td>
+                            <td>{{ order.price|money }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="order-page__detail-title">{{ lang('order.details') }}</div>
+                <div class="order-page__block">
+                    <label for="">{{ lang('order.link') }}:</label>
+                    <input type="text" name="AddToCartForm[link]" class="form-control" value="{{ order.form.link }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3 {% if site.rtl %} rtl-col-md-6 {% endif %}">
+            <div class="col-md-6 row-inline__buttons">
+                <a href="{{ order.back_url }}" class="btn btn-default">{{ lang('order.button.back_url') }}</a>
+            </div>
+            <div class="col-md-6 text-md-right">
+                <button type="submit" name="add-to-cart-button" class="btn btn-primary">{{ lang('order.button.add_to_cart') }}</button>
+            </div>
+        </div>
+            <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+        </form>
+    </div>
+</div>

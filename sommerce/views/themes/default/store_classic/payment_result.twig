@@ -1,0 +1,51 @@
+<div class="payment-result-page">
+    <div class="container">
+        {% if payment_result.completed %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="payment-result-page__block {% if site.rtl %} rtl-direction {% endif %}">
+                    <div class="payment-result-page__block-icon pull-left">
+                        <i class="far fa-check"></i>
+                    </div>
+                    <div>
+                        <div class="payment-result-page__block-title">{{ lang('payment_result.completed.title') }}</div>
+                        <p>{{ lang('payment_result.completed.description') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if payment_result.failed %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="payment-result-page__block {% if site.rtl %} rtl-direction {% endif %}">
+                    <div class="payment-result-page__block-icon pull-left">
+                        <i class="far fa-times"></i>
+                    </div>
+                    <div>
+                        <div class="payment-result-page__block-title">{{ lang('payment_result.failed.title') }}</div>
+                        <p>{{ lang('payment_result.failed.description') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if payment_result.awaiting %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="payment-result-page__block {% if site.rtl %} rtl-direction {% endif %}">
+                    <div class="payment-result-page__block-icon pull-left">
+                        <i class="far fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="payment-result-page__block-title">{{ lang('payment_result.awaiting.title') }}</div>
+                        <p>{{ lang('payment_result.awaiting.description') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
