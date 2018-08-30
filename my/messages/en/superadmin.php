@@ -25,6 +25,7 @@ return [
     'header.nav.levopanel_scanner' => 'Levopanel scanner',
     'header.nav.panelfire_scanner' => 'Panelfire scanner',
     'header.nav.rentalpanel_scanner' => 'Rentalpanel scanner',
+    'header.nav.db_helper' => 'DB helper',
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
@@ -564,6 +565,12 @@ return [
     'tools.levopanel.error.status_not_allowed' => 'Panel with the `{status}` status can not be added!',
     'tools.levopanel.error.invalid_domain_name' => 'Invalid domain name!',
     'tools.levopanel.error.domain_exist' => 'Domain {domain} already exist!',
+
+    'db_helper.title' => 'DB helper',
+    'db_helper.select.select_source' => 'Select source',
+    'db_helper.select.panels' => 'Panels',
+    'db_helper.select.stores' => 'Stores',
+    'db_helper.apply_btn' => 'Apply',
 
     'stores.list.navs_all' => 'All ({count})',
     'stores.list.navs_active' => 'Active ({count})',
