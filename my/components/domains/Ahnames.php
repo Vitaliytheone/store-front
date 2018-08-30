@@ -1,10 +1,10 @@
 <?php
 namespace my\components\domains;
 
+use common\helpers\Request;
 use my\helpers\CurlHelper;
 use Yii;
 use yii\base\InvalidParamException;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 /**
@@ -35,8 +35,9 @@ class Ahnames {
             'auth_password' => Yii::$app->params['ahnames.password'],
             'domains' => implode(",", $domains)
         ];
-
-        $result = @file_get_contents($url . '/domainsCheck?' . http_build_query($options));
+        
+        
+        $result = Request::getContents($url . '/domainsCheck?' . http_build_query($options));
 
         return static::_processResult($result, false);
     }
