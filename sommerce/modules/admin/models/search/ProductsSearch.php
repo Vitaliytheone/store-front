@@ -31,15 +31,16 @@ class ProductsSearch extends Model
      */
     private $_store_providers;
 
-    /** @inheritdoc */
-    public function init()
+
+    /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
     {
-        $this->_db = yii::$app->store->getInstance()->db_name;
+        $this->_db = $store->db_name;
         $this->_productsTable = $this->_db . "." . Products::tableName();
         $this->_packagesTable = $this->_db . "." . Packages::tableName();
         $this->_providersTable = Providers::tableName();
-
-        parent::init();
     }
 
     /**

@@ -11,6 +11,11 @@ use Yii;
 class CommonController extends MainController
 {
     /**
+     * @var $store Stores
+     */
+    public $store = null;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -24,5 +29,6 @@ class CommonController extends MainController
         }
 
         $store->checkExpired();
+        $this->store = $store;
     }
 }

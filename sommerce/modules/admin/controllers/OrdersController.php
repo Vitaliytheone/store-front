@@ -46,6 +46,7 @@ class OrdersController extends CustomController
         $this->view->title = Yii::t('admin', 'orders.page_title');
 
         $searchModel = new OrdersSearch();
+        $searchModel->setStore($this->store);
         $ordersDataProvider = $searchModel->search(Yii::$app->request->get());
 
         return $this->render('index', [
@@ -102,7 +103,6 @@ class OrdersController extends CustomController
          * @var Stores $store
          */
         $model = SuborderForm::findOne($id);
-        $store = Yii::$app->store->getInstance();
 
         if (!$model) {
             throw new NotFoundHttpException();
@@ -114,7 +114,7 @@ class OrdersController extends CustomController
 
         Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
             'suborderId' => $id,
-            'storeId' => $store->id,
+            'storeId' => $this->store->id,
             'status' => $status
         ]);
 
@@ -172,7 +172,7 @@ class OrdersController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        $model->setStore(Yii::$app->store->getInstance());
+        $model->setStore($this->store);
 
         if (!$model->resend()) {
             $this->redirect(Url::toRoute(["/orders"]));
