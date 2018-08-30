@@ -78,6 +78,13 @@ class TwoCheckout
             CURLOPT_USERPWD => $auth,
         );
 
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $curlOptions += [
+                CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']
+            ];
+        }
+
         $ch = curl_init();
         curl_setopt_array($ch,$curlOptions);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
