@@ -42,23 +42,23 @@ class DbHelperSearch
     /**
      * Get default query string
      * @param $dbNames array
-     * @return array
+     * @return string
      */
     public function getQueryString($dbNames)
     {
         $query = $this->getQueryForInput();
-        $array = [];
+        $resultString = '';
 
         if (empty($dbNames)) {
-            $array[] = $query;
-            return $array;
+            return null;
         }
 
         foreach ($dbNames as $dbName) {
-            $array[] = str_replace('db_name', $dbName['db_name'], $query);
+            $resultString .= str_replace('db_name', $dbName['db_name'], $query);
+            $resultString .= "\n";
         }
 
-        return $array;
+        return $resultString;
     }
 
     /**
@@ -97,7 +97,7 @@ class DbHelperSearch
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function search()
     {
