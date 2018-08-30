@@ -15,6 +15,7 @@
     <tr>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_id')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_domain')?></th>
+        <th><?= Yii::t('app/superadmin', 'invoices.list.column_customer')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_total')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_credit')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_status')?></th>
@@ -32,6 +33,9 @@
                 </td>
                 <td>
                     <?= $invoice->getDomain() ?>
+                </td>
+                <td>
+                    <?= $invoice->email ?>
                 </td>
                 <td>
                     <?= PriceHelper::prepare($invoice->total) ?>
