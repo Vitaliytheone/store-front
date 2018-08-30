@@ -8,7 +8,7 @@ return [
     'header.nav.domains' => 'Domains',
     'header.nav.ssl' => 'SSL',
     'header.nav.customers' => 'Customers',
-    'header.nav.referrals' => 'Refferals',
+    'header.nav.referrals' => 'Referrals',
     'header.nav.invoices' => 'Invoices',
     'header.nav.payments' => 'Payments',
     'header.nav.tickets' => 'Tickets',
