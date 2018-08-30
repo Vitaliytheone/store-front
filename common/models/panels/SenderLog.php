@@ -71,7 +71,7 @@ class SenderLog extends ActiveRecord
     public static function getSendMethods()
     {
         return [
-            static::SEND_METHOD_PERFECTPANEL => Yii::t('app/superadmin', 'sender.send_method.local'),
+            static::SEND_METHOD_PERFECTPANEL => Yii::t('app/superadmin', 'sender.send_method.perfectpanel'),
             static::SEND_METHOD_SIMPLE => Yii::t('app/superadmin', 'sender.send_method.simple'),
             static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'sender.send_method.multi'),
             static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'sender.send_method.mass'),

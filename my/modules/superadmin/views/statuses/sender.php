@@ -38,7 +38,7 @@ use my\components\ActiveForm;
             <div class="row">
                 <div class="col-sm-12">
                     <?= $this->render('layouts/sender/_sender_list', [
-                            'senders' => $senders,
+                            'model' => $model,
                     ]) ?>
                 </div>
             </div>

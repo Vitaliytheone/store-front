@@ -84,11 +84,39 @@ class SenderSearch extends SenderLog
             ->leftJoin('sender_log AS curl_error', 'curl_error.id = sender_log.id AND curl_error.status = ' . SenderLog::STATUS_CURL_ERROR)
             ->where('sender_log.created_at > ' . strtotime($datetime['from']))
             ->andWhere('sender_log.created_at < ' . strtotime($datetime['to']))
-            ->groupBy(['provider_id', 'sender_log.status'])
+            ->groupBy(['provider_id'])
         ->all();
 
-        return $this->prepareData($model);
+        $senders =  $this->prepareData($model);
 
+        return [
+            'senders' => $senders,
+            'total' => $this->getTotals($senders)
+        ];
+
+    }
+
+    /**
+     * @param $senders array
+     * @return array
+     */
+    private function getTotals(array $senders): array
+    {
+        $totals = [
+            'all' => 0,
+            'good' => 0,
+            'error' => 0,
+            'curl_error' => 0,
+        ];
+
+        foreach ($senders as $sender) {
+            $totals['all'] += $sender['all_status'];
+            $totals['good'] += $sender['good'];
+            $totals['error'] += $sender['error'];
+            $totals['curl_error'] += $sender['curl_error'];
+        }
+
+        return $totals;
     }
 
     /**

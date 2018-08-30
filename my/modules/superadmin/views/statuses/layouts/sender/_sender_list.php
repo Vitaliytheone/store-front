@@ -20,7 +20,7 @@ $this->context->addModule('superadminStatusesController');
     </tr>
     </thead>
     <tbody>
-    <?php foreach (SpecialCharsHelper::multiPurifier($senders) as $id => $sender) : ?>
+    <?php foreach (SpecialCharsHelper::multiPurifier($model['senders']) as $id => $sender) : ?>
         <tr role="row">
             <td><?= $sender['provider'] ?></td>
             <td><?= $sender['send_method'] ?></td>
@@ -30,5 +30,15 @@ $this->context->addModule('superadminStatusesController');
             <td><?= $sender['curl_error'] ?></td>
         </tr>
     <?php endforeach; ?>
+    <?php if (!empty($model['senders'])) : ?>
+        <tr role="row">
+            <td><strong><?= Yii::t('app/superadmin', 'statuses.list.total') ?></strong></td>
+            <td></td>
+            <td><?= $model['total']['all'] ?></td>
+            <td><?= $model['total']['good'] ?></td>
+            <td><?= $model['total']['error'] ?></td>
+            <td><?= $model['total']['curl_error'] ?></td>
+        </tr>
+    <?php endif; ?>
     </tbody>
 </table>
