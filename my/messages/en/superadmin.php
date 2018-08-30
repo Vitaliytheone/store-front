@@ -25,6 +25,7 @@ return [
     'header.nav.levopanel_scanner' => 'Levopanel scanner',
     'header.nav.panelfire_scanner' => 'Panelfire scanner',
     'header.nav.rentalpanel_scanner' => 'Rentalpanel scanner',
+    'header.nav.db_helper' => 'DB helper',
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
@@ -69,6 +70,7 @@ return [
     'panels.edit.plan' => 'Plan',
     'panels.edit.name' => 'Title',
     'panels.edit.customer' => 'Customer',
+    'panels.edit.expiry' => 'Edit expiry',
     'panels.edit.skype' => 'Skype',
     'panels.edit.auto_order' => 'Subscriptions',
     'panels.edit.lang' => 'Lang',
@@ -162,6 +164,7 @@ return [
     'panels.upgrade.cancel_btn' => 'Cancel',
     'child_panels.upgrade.submit_not_invoice' => 'Save without invoice',
     'child_panels.upgrade.submit_invoice' => 'Save with {price} invoice',
+    'child_panels.search' => 'Search child panels',
 
     'domains.list.column_id' => 'ID',
     'domains.list.column_customer' => 'Customer',
@@ -652,6 +655,11 @@ return [
     'tools.levopanel.error.invalid_domain_name' => 'Invalid domain name!',
     'tools.levopanel.error.domain_exist' => 'Domain {domain} already exist!',
 
+    'db_helper.title' => 'DB helper',
+    'db_helper.select.select_source' => 'Select source',
+    'db_helper.select.panels' => 'Panels',
+    'db_helper.select.stores' => 'Stores',
+    'db_helper.apply_btn' => 'Apply',
     'tools.panels_scanner.error.unresolved_type' => 'Unresolved panel type',
     'tools.panels_scanner.error.incorrect_value' => 'Incorrect {attribute} value',
     'tools.panels_scanner.error.bad_model_name' => 'Bad model class name!',
@@ -805,4 +813,7 @@ return [
     'orders.modal.header_details' => 'Details',
     'orders.modal.header_logs' => 'Logs',
     'orders.title' => 'Orders',
+
+    'header.nav.subscription' => 'Subscriptions',
+    'header.nav.sender' => 'Sender',
 ];
