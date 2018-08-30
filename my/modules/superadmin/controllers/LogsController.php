@@ -75,16 +75,16 @@ class LogsController extends CustomController
         $dataProvider = $searchModel->search();
 
         $navs = [
-            '0' => 'All',
-            '1' => 'Svoi',
-            '2' => 'Ne svoi',
+            '0' => Yii::t('app/superadmin', 'logs.api_keys.nav.all'),
+            '1' => Yii::t('app/superadmin', 'logs.api_keys.nav.svoi'),
+            '2' => Yii::t('app/superadmin', 'logs.api_keys.nav.ne_svoi'),
         ];
 
         $searchType = [
-            '1' => 'Panel',
-            '2' => 'Provider',
-            '3' => 'In use',
-            '4' => 'Key',
+            '1' => Yii::t('app/superadmin', 'logs.api_keys.search.type_panel'),
+            '2' => Yii::t('app/superadmin', 'logs.api_keys.search.type_provider'),
+            '3' => Yii::t('app/superadmin', 'logs.api_keys.search.type_in_use'),
+            '4' => Yii::t('app/superadmin', 'logs.api_keys.search.type_key'),
         ];
 
         return $this->render('api_keys', [
