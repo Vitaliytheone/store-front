@@ -23,10 +23,10 @@ class SenderLog extends ActiveRecord
     const STATUS_ERROR = 2;
     const STATUS_CURL_ERROR = 3;
 
-    const SEND_METHOD_LOCAL = 0;
-    const SEND_METHOD_LAST = 1;
+    const SEND_METHOD_SIMPLE = 0;
+    const SEND_METHOD_LOCAL = 1;
     const SEND_METHOD_MULTI = 2;
-    const SEND_METHOD_MASS = 3;
+    const SEND_METHOD_MASS = 4;
 
     /**
      * @inheritdoc
@@ -72,7 +72,7 @@ class SenderLog extends ActiveRecord
     {
         return [
             static::SEND_METHOD_LOCAL => Yii::t('app/superadmin', 'sender.send_method.local'),
-            static::SEND_METHOD_LAST => Yii::t('app/superadmin', 'sender.send_method.simple'),
+            static::SEND_METHOD_SIMPLE => Yii::t('app/superadmin', 'sender.send_method.simple'),
             static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'sender.send_method.multi'),
             static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'sender.send_method.mass'),
         ];
