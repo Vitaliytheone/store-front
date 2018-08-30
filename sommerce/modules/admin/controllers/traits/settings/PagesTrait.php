@@ -155,6 +155,10 @@ trait PagesTrait {
             throw new NotFoundHttpException();
         }
 
+        if (!Pages::canDelete($pageModel)) {
+            throw new ForbiddenHttpException();
+        }
+
         $pageModel->deleteVirtual();
 
         /** @var StoreAdminAuth $identity */

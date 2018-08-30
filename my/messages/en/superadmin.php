@@ -673,4 +673,7 @@ return [
     'orders.modal.header_details' => 'Details',
     'orders.modal.header_logs' => 'Logs',
     'orders.title' => 'Orders',
+
+    'header.nav.subscription' => 'Subscriptions',
+    'header.nav.sender' => 'Sender',
 ];
