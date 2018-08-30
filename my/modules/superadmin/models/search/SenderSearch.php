@@ -78,7 +78,7 @@ class SenderSearch extends SenderLog
                 'COUNT(error.id) AS error',
                 'COUNT(curl_error.id) AS curl_error'
             ])->from('sender_log')
-            ->leftJoin('additional_services', 'additional_services.id = sender_log.provider_id')
+            ->leftJoin('additional_services', 'additional_services.res = sender_log.provider_id')
             ->leftJoin('sender_log AS good', 'good.id = sender_log.id AND good.status = ' . SenderLog::STATUS_SUCCESS)
             ->leftJoin('sender_log AS error', 'error.id = sender_log.id AND error.status = ' . SenderLog::STATUS_ERROR)
             ->leftJoin('sender_log AS curl_error', 'curl_error.id = sender_log.id AND curl_error.status = ' . SenderLog::STATUS_CURL_ERROR)
