@@ -46,7 +46,7 @@ class LoginForm extends Model
         $rules = [];
 
         if ($this->isCheckCaptcha()) {
-            $rules[] = [['re_captcha'], ReCaptchaValidator::class, 'uncheckedMessage' => 'Please confirm that you are not a bot.'];
+            $rules[] = [['re_captcha'], ReCaptchaValidator::class, 'uncheckedMessage' => Yii::t('app/superadmin', 'site.login_form.captcha')];
         }
 
         $rules = array_merge($rules, [
@@ -71,7 +71,7 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, Yii::t('app/superadmin', 'site.login_form.incorrect_password'));
             }
         }
     }
@@ -88,7 +88,7 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if ($user && SuperAdmin::STATUS_ACTIVE != $user->status) {
-                $this->addError($attribute, 'User is not active.');
+                $this->addError($attribute, Yii::t('app/superadmin', 'site.login_form.user_is_not_active'));
             }
         }
     }
