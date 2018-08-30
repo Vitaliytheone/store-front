@@ -21,7 +21,7 @@ use my\helpers\Url;
         <li>
             <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(['/logs/api-keys'])?>">
                 <div class="input-group input-group__select">
-                    <input type="text" class="form-control" name="search" placeholder="Search" value="<?=$filters['search']?>">
+                    <input type="text" class="form-control" name="search" placeholder="<?= Yii::t('app/superadmin', 'logs.api_keys.search.placeholder') ?>" value="<?=$filters['search']?>">
 
                     <div class="form-group__select">
                         <select  name="search-type">

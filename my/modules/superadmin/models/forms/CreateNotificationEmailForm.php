@@ -58,10 +58,10 @@ class CreateNotificationEmailForm extends Model
     public function attributeLabels()
     {
         return [
-            'subject' => 'Subject',
-            'message' => 'Message',
-            'code' => 'Code',
-            'enabled' => 'Is Enabled',
+            'subject' => Yii::t('app/superadmin', 'email.create.subject'),
+            'message' => Yii::t('app/superadmin', 'email.create.message'),
+            'code' => Yii::t('app/superadmin', 'email.create.code'),
+            'enabled' => Yii::t('app/superadmin', 'email.create.is_enabled'),
         ];
     }
 }
