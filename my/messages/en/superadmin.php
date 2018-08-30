@@ -737,6 +737,8 @@ return [
     'statuses.datetimepicker.submit_btn' => 'Submit',
     'statuses.search.search_label' => 'Search:',
 
+    'getstatus.title' => 'Getstatus',
+
     'subscription.title' => 'Subscription',
     'subscription.list.column_id' => 'ID',
     'subscription.list.column_panel' => 'Panel',
@@ -749,13 +751,15 @@ return [
     'subscription.list.column_avg' => 'Avg',
 
     'sender.title' => 'Sender',
-    'sender.send_method.local' => 'Local',
+    'sender.list.provider_id' => 'Provider Id',
+    'sender.send_method.perfectpanel' => 'Perfectpanel',
     'sender.send_method.simple' => 'Simple',
     'sender.send_method.multi' => 'Multi',
     'sender.send_method.mass' => 'Mass',
     'statuses.list.column_send_method' => 'Send method',
     'statuses.list.column_all' => 'All',
     'statuses.list.column_error' => 'Error',
+    'statuses.list.total' => 'Total',
 
     'providers.services_list.auto_services_manual' => 'Manual',
     'providers.services_list.auto_services_auto' => 'Auto',
