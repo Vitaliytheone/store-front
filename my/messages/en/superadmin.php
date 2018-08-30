@@ -641,6 +641,7 @@ return [
     'subscription.list.column_avg' => 'Avg',
 
     'sender.title' => 'Sender',
+    'sender.list.total' => 'Total',
     'sender.send_method.local' => 'Local',
     'sender.send_method.simple' => 'Simple',
     'sender.send_method.multi' => 'Multi',
