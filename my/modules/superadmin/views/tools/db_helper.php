@@ -1,5 +1,5 @@
 <?php
-/* @var $models array */
+/* @var $model array */
 /* @var $query string */
 /* @var $selectList array */
 /* @var $selectedOption string */
@@ -31,7 +31,7 @@ $this->context->addModule('superadminDbHelperController');
                                     <option <?= $selectedOption == $key ? 'selected' : '' ?> value="<?= $key ?>"><?= $option ?></option>
                                 <?php endforeach; ?>
                             </select><br>
-                            <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '7']); ?>
+                            <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '15']); ?>
                             <br>
                             <?= Html::submitButton(Yii::t('app/superadmin', Yii::t('app/superadmin', 'db_helper.apply_btn')), [
                                 'class' => 'btn btn-outline btn-primary',
@@ -40,14 +40,7 @@ $this->context->addModule('superadminDbHelperController');
                             ]) ?>
                             <?php ActiveForm::end(); ?>
                         </div>
-                        <div class="col-lg-6">
-                            <pre class="query_content">
-                                <?php foreach ($models as $model) : ?>
-                                    <?= isset($model) ? $model : $query ?>
-                                    <br>
-                                <?php endforeach; ?>
-                            </pre>
-                        </div>
+                        <?= Html::textarea('query', isset($model) ? $model : $query, ['class' => 'query_content form-control col-lg-6', 'rows' => '15']); ?>
                     </div>
                 </div>
             </div>
