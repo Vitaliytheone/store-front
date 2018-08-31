@@ -5,6 +5,7 @@ namespace common\models\panels;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
+use common\models\panels\services\GetParentPanelService;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -16,7 +17,6 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -244,23 +244,11 @@ class Project extends ActiveRecord implements ProjectInterface
     }
     
     /**
-     * @param $provider
      * @return null|static
      */
-    public static function getOwnerChildPanel($provider)
+    public function getParent()
     {
-        $owner = (new Query())
-            ->select(['additional_services.name'])
-            ->from('additional_services')
-            ->andWhere(['res' =>  $provider])
-            ->one()['name'];
-
-        if (empty($owner)) {
-            return null;
-        }
-
-
-        return Project::findOne(['site' => $owner]);
+        return Yii::$container->get(GetParentPanelService::class, [$this->provider_id])->get();
     }
     
     /**
@@ -901,5 +889,19 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->tariff = Project::DEFAULT_TARIFF;
 
         return $this->save(false);
+    }
+
+    /**
+     * Get array of Project-objects which are child panels
+     * @return array|ActiveRecord[]
+     */
+    public function getChildPanels()
+    {
+        return Project::find()
+            ->select('child_panel.*')
+            ->leftJoin('additional_services', 'additional_services.name = project.site')
+            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
+            ->where(['project.site' => $this->site])
+            ->all();
     }
 }

@@ -53,7 +53,7 @@ class EditExpiryForm extends Model {
         $this->_project->expired = strtotime($this->expired) - Yii::$app->params['time'];
 
         if (!$this->_project->save(false)) {
-            $this->addError('expiry', 'Can not edit expired');
+            $this->addError('expiry', Yii::t('app/superadmin', 'panels.edit_expiry.error'));
             return false;
         }
 

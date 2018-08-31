@@ -10,8 +10,8 @@
 <table class="table mb-0">
     <thead>
         <tr>
-            <th class="border-0">Method</th>
-            <th class="border-0">Visibility</th>
+            <th class="border-0"><?= Yii::t('app/superadmin', 'payments.list.method') ?></th>
+            <th class="border-0"><?= Yii::t('app/superadmin', 'payments.list.visibility') ?></th>
             <th class="border-0"></th>
         </tr>
     </thead>
@@ -22,7 +22,7 @@
                     <td><?= $payment->name ?></td>
                     <td><?= $payment->getVisibilityName() ?></td>
                     <td class="text-right">
-                        <?= Html::a('Edit', Url::toRoute(['/settings/edit-payment', 'id' => $payment->id]), [
+                        <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment', 'id' => $payment->id]), [
                             'class' => 'btn btn-secondary btn-sm edit-payment'
                         ])?>
                     </td>
@@ -30,7 +30,7 @@
             <?php endforeach; ?>
         <?php else : ?>
             <tr>
-                <td colspan="3">No payments</td>
+                <td colspan="3"><?= Yii::t('app/superadmin', 'payments.list.no_payments') ?></td>
             </tr>
         <?php endif; ?>
     </tbody>
