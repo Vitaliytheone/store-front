@@ -40,12 +40,6 @@ class TicketsSearch extends Tickets
      */
     private $_counts_by_assignee = [];
 
-    public function getAssignedName()
-    {
-        $superAdmins = $this->getSuperAdmins();
-        return isset($superAdmins[$this->assigned_admin_id]['username'])
-            ? $superAdmins[$this->assigned_admin_id]['username'] : '';
-    }
     /**
      * Get parameters
      * @return array
@@ -187,6 +181,23 @@ class TicketsSearch extends Tickets
     }
 
     /**
+     * Prepare the data
+     * Set assigned name
+     * @param $data
+     * @return mixed
+     */
+    private function prepareData($data)
+    {
+        $superadmins = $this->getSuperAdmins();
+
+        foreach ($data as $key => $ticket) {
+            $data[$key]['assigned_name'] = $superadmins[$ticket['assigned_admin_id']]['username'];
+        }
+
+        return $data;
+    }
+
+    /**
      * @return array
      */
     public function getCountsByAssignee()
@@ -296,7 +307,7 @@ class TicketsSearch extends Tickets
             ->all();
 
         return [
-            'models' => $tickets,
+            'models' => $this->prepareData($tickets),
             'pages' => $pages,
         ];
     }

@@ -62,7 +62,7 @@
                         <?= $ticket->getStatusName() ?>
                     </td>
                     <td>
-                        <?= $ticket->getAssignedName() ?>
+                        <?= $ticket->assigned_name ?>
                     </td>
                     <td>
                         <span class="text-nowrap">
