@@ -3,9 +3,11 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Orders;
+use my\helpers\DomainsHelper;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * Class OrdersSearch
@@ -43,8 +45,8 @@ class OrdersSearch extends Orders {
     {
         $searchQuery = $this->getQuery();
 
-        $orders = static::find();
-
+        $orders = new Query();
+        $orders->from('orders');
         if (null === $status || '' === $status) {
             if (empty($searchQuery)) {
                 $orders->andWhere([
@@ -69,9 +71,15 @@ class OrdersSearch extends Orders {
             ]);
         }
 
-        if (!empty($searchQuery)) {
-            $orders->joinWith(['customer', 'invoice']);
+        $orders->leftJoin('customers', 'customers.id = orders.cid');
 
+        $orders->select([
+            'orders.*',
+            'invoices.id as invoice_id',
+            'customers.email as customer_email',
+        ]);
+
+        if (!empty($searchQuery)) {
             $orders->andFilterWhere([
                 'or',
                 ['=', 'orders.id', $searchQuery],
@@ -94,7 +102,7 @@ class OrdersSearch extends Orders {
 
         $query = clone $this->buildQuery($status, $item);
 
-        $pages = new Pagination(['totalCount' => $this->buildQuery($status, $item)->count()]);
+        $pages = new Pagination(['totalCount' => $this->count($status, $item)]);
         $pages->setPageSize($this->pageSize);
         $pages->defaultPageSize = $this->pageSize;
 
@@ -103,6 +111,10 @@ class OrdersSearch extends Orders {
         }
 
         $orders = $query
+            ->leftJoin(
+                'invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
+            )
+            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id')
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
@@ -110,10 +122,42 @@ class OrdersSearch extends Orders {
             ])
             ->groupBy('orders.id');
 
+        $models = static::queryAllCache($orders);
+
         return [
-            'models' => static::queryAllCache($orders),
+            'models' => $this->prepareData($models),
             'pages' => $pages,
         ];
+    }
+
+    /**
+     * @param $data array
+     * @return array
+     */
+    private function prepareData($data)
+    {
+        $resultData = array();
+
+        foreach ($data as $key => $value) {
+
+            $resultData[$key]['id'] = $value['id'];
+            $resultData[$key]['cid'] = $value['cid'];
+            $resultData[$key]['status'] = Orders::getStatuses()[$value['status']];
+            $resultData[$key]['check_status'] = $value['status'];
+            $resultData[$key]['hide'] = $value['hide'];
+            $resultData[$key]['processing'] = $value['processing'];
+            $resultData[$key]['date'] = Orders::formatDate($value['date'], 'php:Y-m-d');
+            $resultData[$key]['time'] = Orders::formatDate($value['date'], 'php:H:i:s');
+            $resultData[$key]['ip'] = $value['ip'];
+            $resultData[$key]['domain'] = $value['domain'] ? DomainsHelper::idnToUtf8($value['domain']) : '';
+            $resultData[$key]['details'] = $value['details'];
+            $resultData[$key]['item'] = Orders::getItems()[$value['item']];
+            $resultData[$key]['item_id'] = $value['item_id'];
+            $resultData[$key]['invoice_id'] = $value['invoice_id'];
+            $resultData[$key]['customer_email'] = $value['customer_email'];
+        }
+
+        return $resultData;
     }
 
     /**
@@ -163,12 +207,24 @@ class OrdersSearch extends Orders {
         ]);
 
         return [
-            null => 'All (' . $this->count() . ')',
-            Orders::STATUS_ADDED => 'Completed (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_ADDED, 0) . ')',
-            Orders::STATUS_PAID => 'Ready (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_PAID, 0) . ')',
-            Orders::STATUS_PENDING => 'Pending (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_PENDING, 0) . ')',
-            Orders::STATUS_ERROR => 'Error (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_ERROR, 0) . ')',
-            Orders::STATUS_CANCELED => 'Canceled (' . ArrayHelper::getValue($statusCounters, Orders::STATUS_CANCELED, 0) . ')',
+            null => Yii::t('app/superadmin', 'orders.nav.all', [
+                'count' => $this->count(),
+            ]),
+            Orders::STATUS_ADDED => Yii::t('app/superadmin', 'orders.nav.completed', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_ADDED, 0)
+            ]),
+            Orders::STATUS_PAID => Yii::t('app/superadmin', 'orders.nav.ready', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_PAID, 0)
+            ]),
+            Orders::STATUS_PENDING => Yii::t('app/superadmin', 'orders.nav.pending', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_PENDING, 0)
+            ]),
+            Orders::STATUS_ERROR => Yii::t('app/superadmin', 'orders.nav.error', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_ERROR, 0)
+            ]),
+            Orders::STATUS_CANCELED => Yii::t('app/superadmin', 'orders.nav.canceled', [
+                'count' => ArrayHelper::getValue($statusCounters, Orders::STATUS_CANCELED, 0)
+            ]),
         ];
     }
 
@@ -187,12 +243,24 @@ class OrdersSearch extends Orders {
         ]);
 
         $items = [
-            0 => 'All (' . $this->count($status) . ')',
-            Orders::ITEM_BUY_PANEL => 'Panels (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_PANEL, 0) . ')',
-            Orders::ITEM_BUY_CHILD_PANEL => 'Child Panels (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_CHILD_PANEL, 0) . ')',
-            Orders::ITEM_BUY_DOMAIN => 'Domains (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_DOMAIN, 0) . ')',
-            Orders::ITEM_BUY_SSL => 'Certificates (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0) . ')',
-            Orders::ITEM_BUY_STORE => 'Stores (' . ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0) . ')',
+            0 => Yii::t('app/superadmin', 'orders.list.item_all', [
+                'count' => $this->count($status)
+            ]),
+            Orders::ITEM_BUY_PANEL => Yii::t('app/superadmin', 'orders.list.item_panels', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_PANEL, 0)
+            ]),
+            Orders::ITEM_BUY_CHILD_PANEL => Yii::t('app/superadmin', 'orders.list.item_child_panels', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_CHILD_PANEL, 0)
+            ]),
+            Orders::ITEM_BUY_DOMAIN => Yii::t('app/superadmin', 'orders.list.item_domains', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_DOMAIN, 0)
+            ]),
+            Orders::ITEM_BUY_SSL => Yii::t('app/superadmin', 'orders.list.item_certificates', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0)
+            ]),
+            Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_stores', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0)
+            ]),
         ];
 
         return $items;

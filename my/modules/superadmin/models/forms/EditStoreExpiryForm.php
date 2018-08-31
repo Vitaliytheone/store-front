@@ -54,7 +54,7 @@ class EditStoreExpiryForm extends Model {
         $this->_store->expired = strtotime($this->expired) - Yii::$app->params['time'];
 
         if (!$this->_store->save(false)) {
-            $this->addError('expired', 'Can not edit expired');
+            $this->addError('expired', Yii::t('app/superadmin', 'stores.modal.error_edit_expiry'));
             return false;
         }
 

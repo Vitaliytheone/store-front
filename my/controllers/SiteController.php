@@ -277,7 +277,6 @@ class SiteController extends CustomController
             'invoice' => $invoice,
             'customer' => $invoice->customer,
             'paymentsList' => $paymentsList,
-            'disabled' => $invoice->isDisabled(),
             'payWait' => !!$payWait,
             'pgid' => $payWait ? $payWait->type : key($paymentsList),
             'verificationWait' => $invoice->emailVerification() ? Content::getContent('paypal_verify_note', ['email' => $invoice->emailVerification()]) : null,
@@ -558,7 +557,7 @@ class SiteController extends CustomController
         $this->view->title = Yii::t('app', 'pages.title.checkout');
         $invoice = Invoices::findOne(['code' => $id]);
         
-       if ($invoice->isDisabled()) {
+       if (!$invoice->can('pay')) {
            throw new ForbiddenHttpException();
        }
         

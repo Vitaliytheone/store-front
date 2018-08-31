@@ -56,6 +56,11 @@ class GoGetSSLApi extends BaseGoGetSSLApi {
             curl_setopt($c, CURLOPT_POSTFIELDS, $this->lastData);
         }
 
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            curl_setopt($c, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_setopt($c, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+        }
+
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);

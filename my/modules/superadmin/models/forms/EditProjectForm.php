@@ -9,6 +9,7 @@ use common\models\panels\Tariff;
 use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\helpers\CurrencyHelper;
 /**
@@ -92,6 +93,7 @@ class EditProjectForm extends Model {
                 'apikey',
                 'no_invoice'
             ], 'safe'],
+            ['cid', 'checkOwnedChildPanel'],
             [['apikey'], 'string'],
             [['apikey'], 'uniqApikey'],
         ];
@@ -203,6 +205,24 @@ class EditProjectForm extends Model {
         $this->site = $project->getSite();
         $this->attributes = $project->attributes;
         $this->captcha = !$project->captcha;
+    }
+
+    /**
+     * Check panel to owned of child panel
+     * @param string
+     */
+    public function checkOwnedChildPanel($attribute)
+    {
+        $childPanels = $this->_project->getChildPanels();
+
+        foreach ($childPanels as $panel) {
+            if (
+                $this->cid != $this->_project->cid
+                && ($panel->act === Project::STATUS_ACTIVE || $panel->act === Project::STATUS_FROZEN)
+            ) {
+                $this->addError($attribute, Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
+            }
+        }
     }
 
     /**

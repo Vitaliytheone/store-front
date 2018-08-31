@@ -27,5 +27,17 @@ customModule.superadminOrdersController = {
 
             return false;
         });
+
+        $(document).on('click', '.cancel-menu', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+
+            custom.confirm(link.data('confirm-message'), '', function() {
+                location.href = link.attr('href');
+            });
+
+            return false;
+        });
     }
 };
