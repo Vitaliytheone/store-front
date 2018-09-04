@@ -74,7 +74,11 @@ class InvoicesSearch extends Invoices {
                     break;
                 case  static::SEARCH_TYPE_DOMAIN:
                     $invoices->andFilterWhere([
-                        'like', 'orders.domain', (string)$searchQuery
+                        'or',
+                        ['like', 'orders.domain', (string)$searchQuery],
+                        ['like', 'project.site', (string)$searchQuery],
+                        ['like', 'stores.domain', (string)$searchQuery],
+                        ['like', 'customers.email', (string)$searchQuery],
                     ]);
                     break;
                 case static::SEARCH_TYPE_CUSTOMER:
@@ -172,7 +176,7 @@ class InvoicesSearch extends Invoices {
             $query = $this->addDomainJoinQuery($query);
         }
 
-        return $query->select('COUNT(*)')->scalar();
+        return $query->select('invoices.id')->groupBy('invoices.id')->count();
     }
 
     /**
