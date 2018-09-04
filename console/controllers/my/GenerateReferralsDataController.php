@@ -53,7 +53,6 @@ class GenerateReferralsDataController extends CustomController
             $visits->request_data = '123';
             $visits->created_at = time();
             $visits->insert();
-            print_r($visits->errors);
         }
 
         for ($i = $lastRefEarning['id'] + 1; $i < $lastRefEarning['id'] + 2001; $i++) {
@@ -67,7 +66,6 @@ class GenerateReferralsDataController extends CustomController
             $earnings->invoice_id = rand(0, $lastInvoice['id']);
             $earnings->created_at = time();
             $earnings->insert();
-            print_r($earnings->errors);
         }
     }
 
