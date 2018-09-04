@@ -49,7 +49,7 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
 
-        $pageForm = new EditPageForm();
+        $pageForm = new SavePageForm();
         $pageForm->setUser(Yii::$app->user);
         $pageForm->setPage(new Pages());
 

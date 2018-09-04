@@ -93,7 +93,7 @@ class EditPageForm extends Model
             [['title', 'visibility', 'url'], 'required'],
             [['title', 'seo_title'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
-            [['content', 'template'], 'string'],
+            [['content'], 'string'],
             [['title', 'seo_title', 'seo_description', 'url',], 'trim'],
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 

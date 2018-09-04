@@ -15,6 +15,7 @@ class SavePageForm extends EditPageForm
     {
         return array_merge (parent::rules(), [
             ['template', 'default', 'value' => Pages::TEMPLATE_PAGE],
+            [['template'], 'string'],
         ]);
     }
 }
