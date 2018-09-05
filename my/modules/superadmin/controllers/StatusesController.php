@@ -83,7 +83,7 @@ class StatusesController extends CustomController
         $model->setParams(Yii::$app->request->get());
 
         return $this->render('sender', [
-            'senders' => $model->search(),
+            'model' => $model->search(),
             'datetime' => $model->getDatetime(true)
         ]);
     }

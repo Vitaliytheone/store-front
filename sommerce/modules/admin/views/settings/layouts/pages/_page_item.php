@@ -23,4 +23,3 @@ use \common\models\store\Pages;
         </a>
     </td>
 </tr>
-

@@ -9,10 +9,11 @@ use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditPageForm;
+use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
-use yii\web\ForbiddenHttpException;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -48,7 +49,7 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
 
-        $pageForm = new EditPageForm();
+        $pageForm = new SavePageForm();
         $pageForm->setUser(Yii::$app->user);
         $pageForm->setPage(new Pages());
 
@@ -65,7 +66,7 @@ trait PagesTrait {
             'pageForm' => $pageForm,
             'isNewPage' => $pageForm->getPage()->isNewRecord,
             'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
-            'actionUrl' => Url::toRoute('/settings/edit-page'),
+            'actionUrl' => Url::toRoute('/settings/new-page'),
         ]);
     }
 
@@ -132,13 +133,46 @@ trait PagesTrait {
             'id' => $pageForm->getPage()->id,
         ];
     }
-    
-    
+
+
+    /**
+     * Create page AJAX action
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionNewPage($id = null)
+    {
+        $request = Yii::$app->getRequest();
+        $response = Yii::$app->getResponse();
+        $response->format = Response::FORMAT_JSON;
+
+        if (!$request->isAjax) {
+            exit;
+        }
+
+        $pageForm = new SavePageForm();
+        $pageForm->setUser(Yii::$app->user);
+
+        if (!$pageForm->edit($request->post(), $id)) {
+            return [
+                'success' => false,
+                'message' => ActiveForm::firstError($pageForm, true)
+            ];
+        };
+
+        return [
+            'success' => true,
+            'message' => Yii::t('admin', 'settings.pages_message_updated'),
+            'id' => $pageForm->getPage()->id,
+        ];
+    }
+
     /**
      * Virtual deleting `page`
      * @param $id
      * @return array
-     * @throws ForbiddenHttpException
+     * @throws BadRequestHttpException
      * @throws NotFoundHttpException
      */
     public function actionDeletePage($id)
@@ -155,7 +189,7 @@ trait PagesTrait {
         if (!$pageModel) {
             throw new NotFoundHttpException();
         }
-        
+
         if (!Pages::canDelete($pageModel)) {
             throw new ForbiddenHttpException();
         }

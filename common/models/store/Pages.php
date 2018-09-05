@@ -80,6 +80,19 @@ class Pages extends ActiveRecord
     }
 
     /**
+     * @param array|static $page
+     * @return bool
+     */
+    public static function canDelete($page)
+    {
+        if ($page['template'] == Pages::TEMPLATE_PAGE) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @inheritdoc
      */
     public function afterSave($insert, $changedAttributes)

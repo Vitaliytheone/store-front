@@ -104,7 +104,7 @@ class ToolsController extends CustomController
         $search->setParams(Yii::$app->request->post());
 
         return $this->render('db_helper', [
-            'models' => $search->search(),
+            'model' => $search->search(),
             'query' => $search->getQueryForInput(),
             'selectedOption' => Yii::$app->request->post('db_name'),
             'selectList' => $search->getSelectList(),

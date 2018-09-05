@@ -56,7 +56,7 @@ class CartController extends CustomController
         $this->pageTitle = Yii::t('app', 'cart.title');
 
         Url::remember();
-        
+
 
         $searchModel = new CartSearch();
         $searchModel->setStore($this->store);
@@ -81,7 +81,7 @@ class CartController extends CustomController
             'fieldOptions' => $model->getPaymentsFields(),
             'options' => $model->getJsOptions()
         ]);
-        
+
         return $this->render('cart.twig', [
             'cart' => [
                 'orders' => $items,
@@ -183,8 +183,8 @@ class CartController extends CustomController
         $package = null;
 
         if (empty($id) || !($package = Packages::find()->andWhere([
-            'id' => $id,
-        ])->active()->one())) {
+                'id' => $id,
+            ])->active()->one())) {
             throw new NotFoundHttpException();
         }
 
@@ -202,8 +202,8 @@ class CartController extends CustomController
         $cartItem = null;
 
         if (empty($key) || !($cartItem = Carts::findOne([
-            'key' => $key,
-        ]))) {
+                'key' => $key,
+            ]))) {
             throw new NotFoundHttpException();
         }
 

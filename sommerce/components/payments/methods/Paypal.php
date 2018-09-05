@@ -117,7 +117,7 @@ class Paypal extends BasePayment {
             ];
 
             $response = $this->request('SetExpressCheckout', $credentials + $requestParams + $orderParams + $item);
-            
+
             if (is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
                 $token = $response['TOKEN'];
 
@@ -254,8 +254,8 @@ class Paypal extends BasePayment {
         $transactionId = ArrayHelper::getValue($response, 'PAYMENTINFO_0_TRANSACTIONID');
 
         $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
-            'TRANSACTIONID' => $transactionId
-        ]);
+                'TRANSACTIONID' => $transactionId
+            ]);
 
         $this->log(json_encode($GetTransactionDetails, JSON_PRETTY_PRINT));
 
@@ -591,8 +591,8 @@ class Paypal extends BasePayment {
         ];
 
         $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
-            'TRANSACTIONID' => $payment->transaction_id
-        ]);
+                'TRANSACTIONID' => $payment->transaction_id
+            ]);
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($payment->checkout_id, [

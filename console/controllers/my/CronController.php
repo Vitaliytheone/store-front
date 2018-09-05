@@ -15,7 +15,6 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
-use common\models\panels\AdditionalServices;
 use console\components\payments\PaymentsFee;
 use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
@@ -29,7 +28,6 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\db\Exception as DbException;
-use console\helpers\UpdateServicesCountHelper;
 
 /**
  * Class CronController
@@ -77,19 +75,19 @@ class CronController extends CustomController
                 switch ($order->item) {
                     case Orders::ITEM_BUY_SSL:
                         OrderHelper::ssl($order);
-                    break;
+                        break;
 
                     case Orders::ITEM_BUY_PANEL:
                         OrderHelper::panel($order);
-                    break;
+                        break;
 
                     case Orders::ITEM_BUY_DOMAIN:
                         OrderHelper::domain($order);
-                    break;
+                        break;
 
                     case Orders::ITEM_BUY_CHILD_PANEL:
                         OrderHelper::panel($order, true);
-                    break;
+                        break;
 
                     case Orders::ITEM_BUY_STORE:
                         // Создаем триальный магазин сразу
@@ -99,15 +97,15 @@ class CronController extends CustomController
                         }
 
                         OrderHelper::store($order);
-                    break;
+                        break;
 
                     case Orders::ITEM_PROLONGATION_SSL:
                         OrderHelper::prolongationSsl($order);
-                    break;
+                        break;
 
                     case Orders::ITEM_PROLONGATION_DOMAIN:
                         OrderHelper::prolongationDomain($order);
-                    break;
+                        break;
                 }
             } catch (Exception $e) {
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $e->getMessage() . $e->getTraceAsString(), 'cron.order.exception');
@@ -434,33 +432,5 @@ class CronController extends CustomController
         Yii::$container->get(PaymentsFee::class, [
             Yii::$app->params['cron.check_payments_fee_days'], // days
         ])->run();
-    }
-
-    /**
-     * Update service_count & service_inuse_count in additional_services
-     */
-    public function actionUpdateServicesCount()
-    {
-        $providers = UpdateServicesCountHelper::buildQuery();
-
-        $providersPanels = UpdateServicesCountHelper::getProviderPanels();
-
-        foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
-            $usedProjects = [];
-
-            foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
-                    $usedProjects[] = $project;
-                }
-            }
-
-            $service = AdditionalServices::find()
-                ->where(['res' => $provider['res']])
-                ->one();
-            $service->service_count = count(array_values($projects));
-            $service->service_inuse_count = count(array_values($usedProjects));
-            $service->update();
-        }
     }
 }

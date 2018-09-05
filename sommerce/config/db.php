@@ -14,5 +14,5 @@ return [
         'username' => DB_CONFIG[1]['user'],
         'password' => DB_CONFIG[1]['password'],
         'charset' => 'utf8mb4',
-    ]
+    ],
 ];

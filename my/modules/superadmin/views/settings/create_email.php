@@ -50,7 +50,7 @@
 
                         <?= $form->field($model, 'enabled')->checkbox() ?>
 
-                        <?= Html::submitButton(Yii::t('app/superadmin', 'settings.create_email.save'), [
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'settings.create_email.save'), [
                             'class' => 'btn btn-outline btn-primary',
                             'name' => 'create-email-button',
                             'id' => 'createEmailButton'
