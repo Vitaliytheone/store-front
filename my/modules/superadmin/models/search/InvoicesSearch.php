@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\search;
 
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
+use phpDocumentor\Reflection\Types\Integer;
 use Yii;
 use common\models\panels\Invoices;
 use yii\data\Pagination;
@@ -95,7 +96,7 @@ class InvoicesSearch extends Invoices {
             ]);
         }
 
-        return $invoices;
+        return $invoices->groupBy('invoices.id');
     }
 
     /**
@@ -149,16 +150,49 @@ class InvoicesSearch extends Invoices {
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)
-            ->groupBy('invoices.id')
             ->orderBy([
                 'invoices.id' => SORT_DESC
             ])
             ->all();
 
         return [
-            'models' => $invoices,
+            'models' => $this->canEditTotal($invoices),
             'pages' => $pages,
         ];
+    }
+
+    /**
+     * @param $invoices
+     * @return array|object
+     */
+    private function canEditTotal($invoices)
+    {
+        $invoiceDetails = (new Query())
+            ->select([
+                'invoice_id',
+                'item'
+            ])
+            ->from('invoice_details')
+            ->indexBy('invoice_id')
+            ->all();
+
+        foreach ($invoices as $key => $invoice) {
+            if (!isset($invoiceDetails[$invoice->id])) {
+                $invoices[$key]->editTotal = 0;
+                continue;
+            }
+            if (!in_array($invoiceDetails[$invoice->id]['item'], [
+                InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+                InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+            ])) {
+                $invoices[$key]->editTotal = 0;
+                continue;
+            }
+            $invoices[$key]->editTotal = 1;
+        }
+
+        return $invoices;
     }
 
     /**
@@ -176,7 +210,7 @@ class InvoicesSearch extends Invoices {
             $query = $this->addDomainJoinQuery($query);
         }
 
-        return $query->select('invoices.id')->groupBy('invoices.id')->count();
+        return $query->count();
     }
 
     /**
