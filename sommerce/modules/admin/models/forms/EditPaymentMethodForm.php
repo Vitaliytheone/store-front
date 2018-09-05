@@ -233,6 +233,12 @@ class EditPaymentMethodForm extends PaymentMethods
      */
     public function changeSettings($postData)
     {
+        if (isset($postData['PaymentsForm'])) {
+            foreach ($postData['PaymentsForm']['details'] as $key => $elem) {
+                $postData['PaymentsForm']['details'][$key] = trim($elem);
+            }
+        }
+
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
