@@ -119,8 +119,7 @@ class SubscriptionSearch
             $totals['avg'] += $model['avg'];
         }
 
-        $avg = $totals['avg'] / count($models);
-        $totals['avg'] = $avg > 1 ? round($avg) : round($avg, 3);
+        $totals['avg'] = round($totals['avg'] / count($models));
 
         return $totals;
     }
