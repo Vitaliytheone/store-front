@@ -158,6 +158,26 @@ class InvoiceDetails extends ActiveRecord
         ];
     }
 
+    /**
+     * @return array
+     */
+    public static function getOrdersItem(): array
+    {
+        return [
+            static::ITEM_BUY_PANEL,
+            static::ITEM_BUY_SSL,
+            static::ITEM_BUY_DOMAIN,
+            static::ITEM_BUY_CHILD_PANEL,
+            static::ITEM_BUY_STORE,
+            static::ITEM_BUY_TRIAL_STORE,
+            static::ITEM_PROLONGATION_SSL,
+            static::ITEM_PROLONGATION_DOMAIN,
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function beforeSave($insert)
     {
         if ($insert) {

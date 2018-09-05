@@ -16,7 +16,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Create account</h4>
+                <h4 class="modal-title"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_header') ?></h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
 
@@ -45,7 +45,7 @@
                             <?= Html::textInput('CreateStaffForm[password]', '', ['class' => 'form-control password'])?>
                             <span class="input-group-addon">
                                 <span class="btn btn-default random-password pointer">
-                                    <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="Generate password"></i>
+                                    <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="<?= Yii::t('app/superadmin', 'staff.create_staff.modal_generate_password') ?>"></i>
                                 </span>
                             </span>
                         </div>
@@ -68,8 +68,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <?= Html::submitButton('Create account', [
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_cancel_btn') ?></button>
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'staff.create_staff.modal_create_account'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'create-staff-button',
                         'id' => 'createStaffButton'
