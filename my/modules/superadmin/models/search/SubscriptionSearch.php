@@ -105,6 +105,10 @@ class SubscriptionSearch
             'avg' => 0,
         ];
 
+        if (count($models) == 0) {
+            return $totals;
+        }
+
         foreach ($models as $model) {
             $totals['all'] += $model['allCount'];
             $totals['active'] += $model['activeCount'];
@@ -115,7 +119,7 @@ class SubscriptionSearch
             $totals['avg'] += $model['avg'];
         }
 
-        $totals['avg'] = $totals['avg']/count($models);
+        $totals['avg'] = $totals['avg'] / count($models);
 
         return $totals;
     }
