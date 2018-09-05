@@ -40,8 +40,8 @@
                     <?= $form->field($model, 'subdomain')->checkbox() ?>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <?= Html::submitButton('Save changes', [
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'panels.edit.close') ?></button>
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'panels.edit.save'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'change-domain-button',
                         'id' => 'changeDomainButton'
