@@ -3,11 +3,9 @@ namespace my\modules\superadmin\models\search;
 
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
-use phpDocumentor\Reflection\Types\Integer;
 use Yii;
 use common\models\panels\Invoices;
 use yii\data\Pagination;
-use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
