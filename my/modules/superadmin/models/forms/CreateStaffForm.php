@@ -90,12 +90,12 @@ class CreateStaffForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => 'Account',
-            'password' => 'Password',
-            'first_name' => 'First name',
-            'last_name' => 'Last name',
-            'status' => 'Status',
-            'access' => 'Access rules',
+            'username' => Yii::t('app/superadmin', 'staff.edit_staff.account'),
+            'password' => Yii::t('app/superadmin', 'staff.create_staff.password'),
+            'first_name' => Yii::t('app/superadmin', 'staff.edit_staff.first_name'),
+            'last_name' => Yii::t('app/superadmin', 'staff.edit_staff.last_name'),
+            'status' => Yii::t('app/superadmin', 'staff.edit_staff.status'),
+            'access' => Yii::t('app/superadmin', 'staff.edit_staff.access_rules'),
         ];
     }
 }

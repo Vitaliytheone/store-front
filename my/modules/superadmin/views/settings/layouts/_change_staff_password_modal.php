@@ -15,7 +15,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Change password</h4>
+                <h4 class="modal-title"><?= Yii::t('app/superadmin', 'staff.change_password.modal_header') ?></h4>
             </div>
             <?php $form = ActiveForm::begin([
                 'id' => 'changePasswordForm',
@@ -36,7 +36,7 @@
                         <?= Html::textInput('ChangeStaffPasswordForm[password]', '', ['class' => 'form-control password'])?>
                         <span class="input-group-addon">
                             <span class="btn btn-default random-password pointer">
-                                <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="Generate password"></i>
+                                <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="<?= Yii::t('app/superadmin', 'staff.change_password.modal_generate_btn') ?>"></i>
                             </span>
                         </span>
                     </div>
@@ -44,9 +44,9 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.change_password.modal_cancel_btn') ?></button>
 
-                <?= Html::submitButton('Change password', [
+                <?= Html::submitButton(Yii::t('app/superadmin', 'staff.change_password.modal_change_password'), [
                     'class' => 'btn btn-outline btn-primary',
                     'name' => 'change-password-button',
                     'id' => 'changePasswordButton'

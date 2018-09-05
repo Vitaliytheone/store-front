@@ -4,6 +4,7 @@ namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\SuperAdmin;
 use yii\base\Model;
+use Yii;
 
 /**
  * PasswordUpdateForm
@@ -59,9 +60,9 @@ class PasswordUpdateForm extends Model
     public function attributeLabels()
     {
         return [
-            'current_password' => 'Current password',
-            'password' => 'New password',
-            'password_repeat' => 'Confirm password'
+            'current_password' => Yii::t('app/superadmin', 'account.current_password'),
+            'password' => Yii::t('app/superadmin', 'account.new_password'),
+            'password_repeat' => Yii::t('app/superadmin', 'account.confirm_password'),
         ];
     }
 

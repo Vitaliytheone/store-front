@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div class="col-lg-8">
-            <h3>Edit email</h3>
+            <h3><?= Yii::t('app/superadmin', 'settings.edit_email.header') ?></h3>
             <div class="card">
                 <div class="card-block">
                     <?php $form = ActiveForm::begin([
@@ -50,7 +50,7 @@
                         'disabled' => 'disabled'
                     ]) ?>
 
-                    <?= Html::submitButton('Save changes', [
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'settings.edit_email.save_changes'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'create-email-button',
                         'id' => 'createEmailButton'

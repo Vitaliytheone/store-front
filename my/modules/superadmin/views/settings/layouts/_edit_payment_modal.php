@@ -7,15 +7,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalLabel">Edit payment method</h5>
+                <h5 class="modal-title" id="ModalLabel"><?= Yii::t('app/superadmin', 'payments.edit_modal.header') ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <?= Html::submitButton('Save changes', [
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= Yii::t('app/superadmin', 'payments.edit_modal.close_btn') ?></button>
+                <?= Html::submitButton(Yii::t('app/superadmin', 'payments.edit_modal.save_changes'), [
                     'class' => 'btn btn-primary',
                     'name' => 'edit-payment-button',
                     'id' => 'editPaymentButton'

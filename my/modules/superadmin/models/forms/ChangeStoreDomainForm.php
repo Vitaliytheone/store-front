@@ -65,7 +65,7 @@ class ChangeStoreDomainForm extends Model {
         }
 
         if (!$this->_store->disableDomain()) {
-            $this->addError('domain', 'Can not change domain');
+            $this->addError('domain', Yii::t('app/superadmin', 'stores.modal.error_change_domain'));
             return false;
         }
 
@@ -73,7 +73,7 @@ class ChangeStoreDomainForm extends Model {
         $this->_store->subdomain = $this->subdomain;
 
         if (!$this->_store->save(false)) {
-            $this->addError('domain', 'Can not change domain');
+            $this->addError('domain', Yii::t('app/superadmin', 'stores.modal.error_change_domain'));
             return false;
         }
 
