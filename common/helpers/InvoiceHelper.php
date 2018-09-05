@@ -123,7 +123,7 @@ class InvoiceHelper
 
             ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :order_item 
                 AND orders.status NOT IN (:added, :canceled) ', [
-                    ':order_item' => Orders::ITEM_PROLONGATION_SSL,
+                    ':order_item' => Orders::ITEM_PROLONGATION_DOMAIN,
                     ':added' => Orders::STATUS_ADDED,
                     ':canceled' => Orders::STATUS_CANCELED
             ])
