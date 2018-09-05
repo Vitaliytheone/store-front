@@ -189,7 +189,6 @@ class DbHelper
         if (!file_exists($dirname) && !mkdir($dirname, 0777)) {
             throw new Exception('Сan not create sql dump directory!');
         }
-
         // Remove old dump
         if (file_exists($filePath) && is_file($filePath) && !unlink($filePath)) {
             throw new Exception('Сan not delete old sql dump file!');

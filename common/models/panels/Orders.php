@@ -277,12 +277,12 @@ class Orders extends ActiveRecord
                     $this->processing = 0;
                 }
                 $this->status = static::STATUS_PAID;
-
-            break;
+                break;
 
             case static::STATUS_CANCELED:
                 $this->cancel();
                 break;
+
         }
 
         return $this->save(false);
@@ -369,7 +369,7 @@ class Orders extends ActiveRecord
                 'item_id' => $this->id
             ])
             ->orders()
-        ->one();
+            ->one();
 
         // При отмене инвойса проверить. Есть ли платежы в статусе wait, если есть инвойс не отменяем
         if (!empty($invoiceDetails)) {
