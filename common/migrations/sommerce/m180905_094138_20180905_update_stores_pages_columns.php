@@ -17,7 +17,7 @@ class m180905_094138_20180905_update_stores_pages_columns extends Migration
         $stores = $this->getStores();
 
         foreach ($stores as $key => $store) {
-            $this->addColumn($store['db_name'] . '.pages', 'is_default', $this->integer(1)->defaultValue(1));
+            $this->addColumn($store['db_name'] . '.pages', 'is_default', $this->integer(1)->defaultValue(0));
         }
     }
 

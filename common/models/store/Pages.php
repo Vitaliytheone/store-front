@@ -215,6 +215,10 @@ class Pages extends ActiveRecord
             return false;
         }
 
+        if ($this->is_default == static::DEFAULT_PAGE) {
+            return false;
+        }
+
         $this->setAttribute('deleted', self::DELETED_YES);
 
         return $this->save(false);

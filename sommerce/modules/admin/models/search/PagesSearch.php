@@ -29,7 +29,7 @@ class PagesSearch extends Pages
     public function searchPages()
     {
         $pages = (new Query())
-            ->select(['id', 'title', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at', 'template', 'is_default'])
+            ->select(['id', 'title', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at', 'is_default'])
             ->from($this->_pagesTable)
             ->where(['deleted' => self::DELETED_NO])
             ->indexBy('id')
