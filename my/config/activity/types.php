@@ -28,8 +28,8 @@ return [
     '2012' => 'Delete category',
     '2013' => 'Enable category',
     '2014' => 'Disable category',
-    '2016' => 'Sort Service',
-    '2017' => 'Sort Category',
+    '2016' => 'Move Service',
+    '2017' => 'Move Category',
 
     '8' => 'Resend order',
     '9' => 'Change status',
