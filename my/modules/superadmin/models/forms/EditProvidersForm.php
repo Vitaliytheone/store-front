@@ -26,6 +26,8 @@ class EditProvidersForm extends Model {
      */
     private $_providers;
 
+    const MODE_MANUAL = 0;
+
     /**
      * @return array the validation rules.
      */
@@ -48,6 +50,7 @@ class EditProvidersForm extends Model {
     /**
      * Save expied
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -84,8 +87,9 @@ class EditProvidersForm extends Model {
 
         if ($projectDbConnection && !empty($resIds)) {
             $projectDbConnection->createCommand()->update('services', [
-                'res' => Yii::$app->params['manualProviderId']
-            ], 'res IN (' . implode(",", $resIds) . ')')->execute();
+                'provider_id' => Yii::$app->params['manualProviderId'],
+                'mode' => static::MODE_MANUAL,
+            ], 'provider_id IN (' . implode(",", $resIds) . ')')->execute();
         }
 
         return true;
