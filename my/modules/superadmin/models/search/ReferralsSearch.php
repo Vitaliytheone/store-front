@@ -161,7 +161,7 @@ class ReferralsSearch extends ReferralEarnings
         return $earnings;
     }
 
-    private function prepareData($referrals, $pages = null): array
+    private function addTotalEarningsColumn($referrals, $pages = null): array
     {
         $earnings = $this->getTotalEarnings()->indexBy('customer_id')->all();
         $result = [];
@@ -175,11 +175,11 @@ class ReferralsSearch extends ReferralEarnings
 
         if (isset($this->params['sort']) && $this->params['sort'] == 'total_visits') {
             usort($result, function($a, $b){
-                return ($a['total_visits'] - $b['total_visits']);
+                return -($a['total_visits'] - $b['total_visits']);
             });
         } elseif (isset($this->params['sort']) && $this->params['sort'] == '-total_visits') {
             usort($result, function($a, $b){
-                return -($a['total_visits'] - $b['total_visits']);
+                return ($a['total_visits'] - $b['total_visits']);
             });
         }
 
@@ -200,24 +200,30 @@ class ReferralsSearch extends ReferralEarnings
             'attributes' => [
                 'total_earnings' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.total_earnings'),
+                    'default' => SORT_DESC,
                 ],
                 'customers.id' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.customer_id'),
+                    'default' => SORT_DESC,
                 ],
                 'customers.email' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.customer_email'),
+                    'default' => SORT_DESC,
                 ],
                 'total_visits' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.total_visits'),
                 ],
                 'unpaid_referrals' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.unpaid_referrals'),
+                    'default' => SORT_DESC,
                 ],
                 'paid_referrals' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.paid_referrals'),
+                    'default' => SORT_DESC,
                 ],
                 'unpaid_earnings' => [
                     'label' => Yii::t('app/superadmin', 'referrals.list.unpaid_earnings'),
+                    'default' => SORT_DESC,
                 ],
             ],
         ]);
@@ -231,7 +237,7 @@ class ReferralsSearch extends ReferralEarnings
             ->all();
 
         return [
-            'models' => $this->prepareReferralsData($this->prepareData($model, $pages)),
+            'models' => $this->prepareReferralsData($this->addTotalEarningsColumn($model, $pages)),
             'pages' => $pages,
             'sort' => $sort,
         ];
