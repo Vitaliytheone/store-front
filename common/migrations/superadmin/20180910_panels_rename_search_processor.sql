@@ -1,0 +1,1 @@
+RENAME TABLE `search_processor` TO `provider_search_log`;
