@@ -1,8 +1,9 @@
 <?php
 
-namespace common\models\panels;
+namespace common\models\panel;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "services".
@@ -43,10 +44,10 @@ use Yii;
  * @property int $provider_notify 1 – provider turned off the service 
  * @property int $deleted
  */
-class Services extends \yii\db\ActiveRecord
+class Services extends ActiveRecord
 {
     const MODE_DISABLED = 0;
-    const MODE_ENABLED = 0;
+    const MODE_ENABLED = 1;
 
     const TYPE_DEFAULT = 0;
     const TYPE_SEO = 1;
@@ -58,12 +59,11 @@ class Services extends \yii\db\ActiveRecord
     const ACT_ADMIN_AND_MEMBER_HIDE = 3;
 
     /**
-     * @param $db string
      * @inheritdoc
      */
-    public static function tableName($db)
+    public static function tableName()
     {
-        return $db . '.services';
+        return 'services';
     }
 
     /**

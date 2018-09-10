@@ -2,7 +2,7 @@
 namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\AdditionalServices;
-use common\models\panels\Services;
+use common\models\panel\Services;
 use common\models\panels\UserServices;
 use Yii;
 use common\models\panels\Project;
