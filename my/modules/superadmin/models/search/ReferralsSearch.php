@@ -41,7 +41,7 @@ class ReferralsSearch extends ReferralEarnings
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
         if (isset($this->params['page_size']) && $this->params['page_size'] ==  'all') {
-            return $this->queryCount();
+            return false;
         }
         return in_array($pageSize, CountPagination::$pageSizeList) ? $pageSize : 100;
     }
@@ -73,6 +73,21 @@ class ReferralsSearch extends ReferralEarnings
 
         return $referrals;
 
+    }
+
+    /**
+     * Query for counting the number of data
+     * @return int|string
+     */
+    private function queryCount()
+    {
+        return $this->buildQuery()
+            ->select([
+                'COUNT(DISTINCT referral_visits.customer_id)',
+            ])
+            ->from('referral_visits')
+            ->leftJoin('customers', 'customers.id = referral_visits.customer_id')
+            ->scalar();
     }
 
     /**
@@ -192,8 +207,9 @@ class ReferralsSearch extends ReferralEarnings
      */
     public function search()
     {
-        $pages = new Pagination(['totalCount' => $this->getTotalEarnings()->count()]);
-        $pages->setPageSize($this->setPageSize());
+        $total = $this->queryCount();
+        $pages = new Pagination(['totalCount' => $total]);
+        $pages->setPageSize($this->setPageSize() ? $this->setPageSize() : $total);
         $pages->defaultPageSize = CountPagination::$pageSizeList[100];
 
         $sort = new Sort([
