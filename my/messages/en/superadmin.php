@@ -392,6 +392,7 @@ return [
     'providers.list.column_skype' => 'Skype',
     'providers.list.actions_label' => 'Actions',
     'providers.list.action_edit' => 'Edit',
+    'providers.list.plan_all' => 'All',
     'providers.list.action_change_status' => 'Change status',
     'providers.btn.search_log' => 'Search Log',
     'providers.panels.modal_header' => 'Provider panels',

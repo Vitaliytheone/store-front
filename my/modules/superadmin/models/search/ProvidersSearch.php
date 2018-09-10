@@ -33,7 +33,8 @@ class ProvidersSearch
     {
         return [
             'query' => $this->getQuery(),
-            'type' => isset($this->params['type']) ? $this->params['type'] : null
+            'type' => isset($this->params['type']) ? $this->params['type'] : null,
+            'plan' => isset($this->params['plan']) ? $this->params['plan'] : null,
         ];
     }
 
@@ -48,11 +49,15 @@ class ProvidersSearch
 
     /**
      * Build sql query
+     * @param $type
+     * @param $plan
      * @return Query
      */
-    public function buildQuery($type = null)
+    public function buildQuery($type = null, $plan = null)
     {
         $searchQuery = $this->getQuery();
+        $plan = $plan == 'all' ? null : $plan;
+
 
         $providers = (new Query())
             ->select([
@@ -67,6 +72,7 @@ class ProvidersSearch
                 'type',
                 'status',
                 'date',
+                'name_script',
             ])
             ->from('additional_services');
 
@@ -75,7 +81,12 @@ class ProvidersSearch
                 'or',
                 ['=', 'res', $searchQuery],
                 ['like', 'name', $searchQuery],
+                ['like', 'name_script', $searchQuery],
             ]);
+        }
+
+        if (null !== $plan) {
+            $providers->andFilterWhere(['name_script' => $plan]);
         }
 
         if (null !== $type) {
@@ -89,9 +100,9 @@ class ProvidersSearch
      * @param null|string $type
      * @return Pagination
      */
-    private function setPagination($type = null)
+    private function setPagination($type = null, $plan = null)
     {
-        $query = clone $this->buildQuery($type);
+        $query = clone $this->buildQuery($type, $plan);
 
         $pages = new Pagination(['totalCount' => $query->count()]);
         $pages->setPageSize($this->getPageSize());
@@ -103,11 +114,12 @@ class ProvidersSearch
     /**
      * Get providers
      * @param integer $type
+     * @param $plan string
      * @return Query
      */
-    protected function getProviders($type = null)
+    protected function getProviders($type = null, $plan = null)
     {
-        $query = clone $this->buildQuery($type);
+        $query = clone $this->buildQuery($type, $plan);
         $pages = $this->setPagination($type);
 
         $this->_providers = $query
@@ -124,6 +136,7 @@ class ProvidersSearch
     public function search()
     {
         $type = ArrayHelper::getValue($this->params, 'type', null);
+        $plan = ArrayHelper::getValue($this->params, 'plan', null);
 
         $sort = new Sort([
             'attributes' => [
@@ -164,13 +177,13 @@ class ProvidersSearch
             'res' => SORT_DESC,
         ];
 
-        $providers = $this->buildQuery($type)
+        $providers = $this->buildQuery($type, $plan)
             ->orderBy($sort->orders)
             ->all();
 
         return [
             'models' => $this->prepareRowData($providers),
-            'pages' => $this->setPagination($type),
+            'pages' => $this->setPagination($type, $plan),
             'sort' => $sort,
         ];
     }
@@ -211,6 +224,7 @@ class ProvidersSearch
                 'statusName' => AdditionalServices::getStatusNameString($provider['status']),
                 'service_view' => AdditionalServices::getServiceViewName($provider['service_view']),
                 'auto_order' => AdditionalServices::getAutoOrderName($provider['auto_order']),
+                'name_script' => $provider['name_script'],
             ];
         }
 
@@ -222,6 +236,7 @@ class ProvidersSearch
      */
     public function getPlans(): array
     {
+        $type = ArrayHelper::getValue($this->params, 'type', null);
         $searchQuery = $this->getQuery();
 
         $plans = (new Query())
@@ -237,10 +252,19 @@ class ProvidersSearch
                 'or',
                 ['=', 'res', $searchQuery],
                 ['like', 'name', $searchQuery],
+                ['like', 'name_script', $searchQuery],
             ]);
         }
 
-        return $plans->all();
+        $allCount = $this->buildQuery($type)->count();
+        $returnArray = array_merge($plans->all(), ['all' =>
+            [
+                'label' => Yii::t('app/superadmin', 'providers.list.plan_all'),
+                'count' => $allCount,
+            ]
+        ]);
+
+        return $returnArray;
     }
 
     /**

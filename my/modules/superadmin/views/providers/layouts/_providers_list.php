@@ -30,8 +30,19 @@
                     <strong><?= Yii::t('app/superadmin', 'panels.plan')?></strong>
                 </a>
                 <div class="dropdown-menu dropdown-menu__max" aria-labelledby="dropdownMenuLink">
-                    <?php foreach ($plans as $plan => $label) : ?>
-                        <a class="dropdown-item <?//=($plan === $filters['plan'] ? 'active' : '')?>" href="<?//=Url::toRoute(array_merge(['/panels'], $filters, ['plan' => $plan, 'page_size' => $pageSize]))?>"><?= $label ?></a>
+                    <a class="dropdown-item <?=($filters['plan'] == 'all' || $filters['plan'] == null ? 'active' : '')?>" href="<?=Url::toRoute(
+                        array_merge(['/providers'], $filters, ['plan' => 'all'])
+                    )?>">
+                        <?= $plans['all']['label'] . ' (' . $plans['all']['count'] . ')'; ?>
+                    </a>
+                    <?php foreach ($plans as $key => $plan) : ?>
+                    <?php if (isset($plan['name_script'])) : ?>
+                        <a class="dropdown-item <?=($plan['name_script'] === $filters['plan'] ? 'active' : '')?>" href="<?=Url::toRoute(
+                                array_merge(['/providers'], $filters, ['plan' => $plan['name_script']])
+                        )?>">
+                            <?= $plan['name_script'] . ' (' . $plan['count'] . ')'; ?>
+                        </a>
+                    <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -96,7 +107,7 @@
                     <?= $provider['type'] ?>
                 </td>
                 <td>
-
+                    <?= $provider['name_script'] ?>
                 </td>
                 <td>
                     <?= $provider['statusName'] ?>
