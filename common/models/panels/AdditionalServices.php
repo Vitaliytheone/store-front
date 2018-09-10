@@ -24,7 +24,7 @@ use yii\helpers\ArrayHelper;
  * @property string $password
  * @property string $skype
  * @property string $type_name
- * @property integer $sc
+ * @property integer $start_count
  * @property integer $refill
  * @property integer $cancel
  * @property integer $auto_services
@@ -93,7 +93,7 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
-            [['res', 'type', 'status', 'search', 'sc', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],            [['content'], 'string'],
+            [['res', 'type', 'status', 'search', 'start_count', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],            [['content'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],
@@ -120,7 +120,7 @@ class AdditionalServices extends ActiveRecord
             'password' => Yii::t('app', 'Password'),
             'skype' => Yii::t('app', 'Skype'),
             'type_name' => Yii::t('app', 'Type Name'),
-            'sc' => Yii::t('app', 'Sc'),
+            'start_count' => Yii::t('app', 'Start Count'),
             'refill' => Yii::t('app', 'Refill'),
             'cancel' => Yii::t('app', 'Cancel'),
             'auto_services' => Yii::t('app', 'Auto Services'),
@@ -273,7 +273,7 @@ class AdditionalServices extends ActiveRecord
 
     /**
      * Get start_count string name
-     * @param $sc
+     * @param start_count
      * @return mixed
      */
     public static function getStartCountName($sc)

@@ -386,7 +386,7 @@ class OrderHelper {
         $additionalService->service_view = 1;
         $additionalService->store = 1;
         $additionalService->auto_services = 1;
-        $additionalService->sc = 1;
+        $additionalService->start_count = 1;
         $additionalService->generateApiHelp($domain);
         $additionalService->status = AdditionalServices::STATUS_ACTIVE;
 
