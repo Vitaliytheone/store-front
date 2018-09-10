@@ -11,7 +11,7 @@
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
 ?>
-<table class="table table-border tablesorter-bootstrap" id="providersTable">
+<table class="table table-sm table-custom" id="providersTable">
     <thead>
     <tr>
         <th class="query-sort"><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
@@ -26,7 +26,7 @@
         <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="w-1 no_sort"></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -91,7 +91,7 @@
                 </td>
                 <td>
                     <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'providers.list.actions_label')?></button>
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'providers.list.actions_label')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <h6 class="dropdown-header"><?= Yii::t('app/superadmin', 'providers.list.action_change_status') ?></h6>
 

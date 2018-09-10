@@ -7,28 +7,33 @@
 
     use my\helpers\Url;
     use my\helpers\SpecialCharsHelper;
+    use my\components\ActiveForm;
 
     $this->context->addModule('superadminProvidersController');
 ?>
-<div class="container-fluid mt-3">
-    <ul class="nav mb-3">
-        <li class="mr-auto">
-            <ul class="nav nav-pills">
-                <?php foreach ($navs as $code => $label) : ?>
-                    <?php $code = is_numeric($code) ? $code : null;?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $type ? 'active' : '') ?>" href="<?= Url::toRoute($code === null ? '/providers' : array_merge(['/providers'], $filters, ['type' => $code, 'page_size' => $providers['pages']->pageSize])) ?>"><?= $label ?></a></li>
-                <?php endforeach; ?>
-            </ul>
-        </li>
-        <li>
-            <form class="form-inline" method="GET" id="providersSearch" action="<?=Url::toRoute(array_merge(['/providers'], $filters, ['query' => null]))?>">
+
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <?php foreach ($navs as $code => $label) : ?>
+            <?php $code = is_numeric($code) ? $code : null;?>
+            <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $type ? 'active' : '') ?>" href="<?= Url::toRoute($code === null ? '/providers' : array_merge(['/providers'], $filters, ['type' => $code, 'page_size' => $providers['pages']->pageSize])) ?>"><?= $label ?></a></li>
+        <?php endforeach; ?>
+        <li class="ml-auto">
+            <?php $form = ActiveForm::begin([
+                'id' => 'providersSearch',
+                'method' => 'get',
+                'action' => Url::toRoute(array_merge(['/providers'], $filters, ['query' => null])),
+                'options' => [
+                    'class' => "form",
+                ],
+            ]) ?>
                 <div class="input-group">
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'providers.list.search') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
-                    <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
-                </span>
+
+                    <div class="input-group-append">
+                        <button class="btn btn-light" type="submit"><span class="fa fa-search" id="submitSearch"></span></button>
+                    </div>
                 </div>
-            </form>
+            <?php ActiveForm::end(); ?>
         </li>
     </ul>
 
@@ -36,6 +41,5 @@
         'providers' => $providers,
         'filters' => $filters,
     ])?>
-</div>
 
 <?= $this->render('layouts/_projects_modal')?>
