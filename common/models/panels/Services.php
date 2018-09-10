@@ -5,7 +5,7 @@ namespace common\models\panels;
 use Yii;
 
 /**
- * This is the model class for table "panel_andreyglobincom.services".
+ * This is the model class for table "services".
  *
  * @property int $id
  * @property string $reid
