@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\AdditionalServices;
+use common\models\panels\Services;
 use common\models\panels\UserServices;
 use Yii;
 use common\models\panels\Project;
@@ -25,8 +26,6 @@ class EditProvidersForm extends Model {
      * @var AdditionalServices
      */
     private $_providers;
-
-    const MODE_MANUAL = 0;
 
     /**
      * @return array the validation rules.
@@ -88,7 +87,7 @@ class EditProvidersForm extends Model {
         if ($projectDbConnection && !empty($resIds)) {
             $projectDbConnection->createCommand()->update('services', [
                 'provider_id' => Yii::$app->params['manualProviderId'],
-                'mode' => static::MODE_MANUAL,
+                'mode' => Services::MODE_DISABLED,
             ], 'provider_id IN (' . implode(",", $resIds) . ')')->execute();
         }
 
