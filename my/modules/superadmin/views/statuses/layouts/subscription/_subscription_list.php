@@ -23,7 +23,7 @@ $this->context->addModule('superadminStatusesController');
     </tr>
     </thead>
     <tbody>
-    <?php foreach (SpecialCharsHelper::multiPurifier($model) as $id => $subscription) : ?>
+    <?php foreach (SpecialCharsHelper::multiPurifier($model['models']) as $id => $subscription) : ?>
         <tr role="row">
             <td><?= $subscription['id'] ?></td>
             <td><?= $subscription['panel'] ?></td>
@@ -36,5 +36,18 @@ $this->context->addModule('superadminStatusesController');
             <td><?= $subscription['avg'] ?></td>
         </tr>
     <?php endforeach; ?>
+    <?php if (!empty($model['models'])) : ?>
+        <tr role="row">
+            <td><strong><?= Yii::t('app/superadmin', 'sender.list.total') ?></strong></td>
+            <td></td>
+            <td><?= $model['totals']['all'] ?></td>
+            <td><?= $model['totals']['active'] ?></td>
+            <td><?= $model['totals']['paused'] ?></td>
+            <td><?= $model['totals']['completed'] ?></td>
+            <td><?= $model['totals']['expired'] ?></td>
+            <td><?= $model['totals']['canceled'] ?></td>
+            <td><?= $model['totals']['avg'] ?></td>
+        </tr>
+    <?php endif; ?>
     </tbody>
 </table>
