@@ -6,7 +6,6 @@ use common\models\panels\InvoiceDetails;
 use Yii;
 use common\models\panels\Invoices;
 use yii\data\Pagination;
-use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -74,7 +73,11 @@ class InvoicesSearch extends Invoices {
                     break;
                 case  static::SEARCH_TYPE_DOMAIN:
                     $invoices->andFilterWhere([
-                        'like', 'orders.domain', (string)$searchQuery
+                        'or',
+                        ['like', 'orders.domain', (string)$searchQuery],
+                        ['like', 'project.site', (string)$searchQuery],
+                        ['like', 'stores.domain', (string)$searchQuery],
+                        ['like', 'customers.email', (string)$searchQuery],
                     ]);
                     break;
                 case static::SEARCH_TYPE_CUSTOMER:
@@ -91,7 +94,7 @@ class InvoicesSearch extends Invoices {
             ]);
         }
 
-        return $invoices;
+        return $invoices->groupBy('invoices.id');
     }
 
     /**
@@ -145,16 +148,49 @@ class InvoicesSearch extends Invoices {
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)
-            ->groupBy('invoices.id')
             ->orderBy([
                 'invoices.id' => SORT_DESC
             ])
             ->all();
 
         return [
-            'models' => $invoices,
+            'models' => $this->canEditTotal($invoices),
             'pages' => $pages,
         ];
+    }
+
+    /**
+     * @param $invoices
+     * @return array|object
+     */
+    private function canEditTotal($invoices)
+    {
+        $invoiceDetails = (new Query())
+            ->select([
+                'invoice_id',
+                'item'
+            ])
+            ->from('invoice_details')
+            ->indexBy('invoice_id')
+            ->all();
+
+        foreach ($invoices as $key => $invoice) {
+            if (!isset($invoiceDetails[$invoice->id])) {
+                $invoices[$key]->editTotal = 0;
+                continue;
+            }
+            if (!in_array($invoiceDetails[$invoice->id]['item'], [
+                InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
+                InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+            ])) {
+                $invoices[$key]->editTotal = 0;
+                continue;
+            }
+            $invoices[$key]->editTotal = 1;
+        }
+
+        return $invoices;
     }
 
     /**
@@ -172,7 +208,7 @@ class InvoicesSearch extends Invoices {
             $query = $this->addDomainJoinQuery($query);
         }
 
-        return $query->select('COUNT(*)')->scalar();
+        return $query->count();
     }
 
     /**
