@@ -41,7 +41,7 @@ class ReferralsSearch extends ReferralEarnings
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
         if (isset($this->params['page_size']) && $this->params['page_size'] ==  'all') {
-            return $this->queryCount();
+            return $this->getTotalEarnings()->count();
         }
         return in_array($pageSize, CountPagination::$pageSizeList) ? $pageSize : 100;
     }
