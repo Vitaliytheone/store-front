@@ -39,6 +39,7 @@ class ProvidersController extends CustomController
             'navs' => $providersSearch->navs(),
             'type' => is_numeric($type) ? (int)$type : $type,
             'filters' => $providersSearch->getParams(),
+            'plans' => $providersSearch->getPlans(),
         ]);
     }
 

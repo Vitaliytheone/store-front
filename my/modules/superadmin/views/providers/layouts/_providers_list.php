@@ -21,9 +21,21 @@
         <th class="query-sort"><?= $providers['sort']->link('sc', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
+        <th class="query-sort"><?= $providers['sort']->link('service_view', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
         <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="table-custom__dropdown">
+            <div class="dropdown">
+                <a class="btn btn-sm btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <strong><?= Yii::t('app/superadmin', 'panels.plan')?></strong>
+                </a>
+                <div class="dropdown-menu dropdown-menu__max" aria-labelledby="dropdownMenuLink">
+                    <?php foreach ($plans as $plan => $label) : ?>
+                        <a class="dropdown-item <?//=($plan === $filters['plan'] ? 'active' : '')?>" href="<?//=Url::toRoute(array_merge(['/panels'], $filters, ['plan' => $plan, 'page_size' => $pageSize]))?>"><?= $label ?></a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </th>
         <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="table-custom__action-th"></th>
@@ -75,13 +87,16 @@
                     <?= $provider['cancel'] ?>
                 </td>
                 <td>
-                    <?= $provider['auto_services'] ?>
+                    <?= $provider['service_view'] ?>
                 </td>
                 <td>
                     <?= $provider['auto_order'] ?>
                 </td>
                 <td>
                     <?= $provider['type'] ?>
+                </td>
+                <td>
+
                 </td>
                 <td>
                     <?= $provider['statusName'] ?>

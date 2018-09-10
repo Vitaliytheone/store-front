@@ -62,7 +62,7 @@ class ProvidersSearch
                 'sc',
                 'refill',
                 'cancel',
-                'auto_services',
+                'service_view',
                 'auto_order',
                 'type',
                 'status',
@@ -152,7 +152,7 @@ class ProvidersSearch
                 'cancel' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_cancel'),
                 ],
-                'auto_services' => [
+                'service_view' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_autolist'),
                 ],
                 'date' => [
@@ -209,12 +209,38 @@ class ProvidersSearch
                 'status' => $provider['status'],
                 'date' => $provider['date'],
                 'statusName' => AdditionalServices::getStatusNameString($provider['status']),
-                'auto_services' => AdditionalServices::getAutoServiceName($provider['auto_services']),
+                'service_view' => AdditionalServices::getServiceViewName($provider['service_view']),
                 'auto_order' => AdditionalServices::getAutoOrderName($provider['auto_order']),
             ];
         }
 
         return $returnProviders;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPlans(): array
+    {
+        $searchQuery = $this->getQuery();
+
+        $plans = (new Query())
+            ->select([
+                'name_script',
+                'COUNT(id) as count'
+            ])
+            ->from(DB_PANELS . '.additional_services')
+            ->groupBy('name_script');
+
+        if (!empty($searchQuery)) {
+            $plans->andFilterWhere([
+                'or',
+                ['=', 'res', $searchQuery],
+                ['like', 'name', $searchQuery],
+            ]);
+        }
+
+        return $plans->all();
     }
 
     /**

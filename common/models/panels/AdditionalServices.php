@@ -78,6 +78,11 @@ class AdditionalServices extends ActiveRecord
     const SEND_METHOD_MULTI = 2;
     const SEND_METHOD_MASS = 3;
 
+    const SERVICE_VIEW_SIMPLE = 0;
+    const SERVICE_VIEW_PERFECTPANEL = 1;
+    const SERVICE_VIEW_MULTI = 2;
+    const SERVICE_VIEW_UNIQUE = 3;
+
     /**
      * @inheritdoc
      */
@@ -184,7 +189,7 @@ class AdditionalServices extends ActiveRecord
      * Get available statuses values
      * @return array
      */
-    public static function getStatuses()
+    public static function getStatuses(): array
     {
         return [
             static::STATUS_ACTIVE => Yii::t('app', 'additional_service.status.ok'),
@@ -198,7 +203,7 @@ class AdditionalServices extends ActiveRecord
      * Get available types values
      * @return array
      */
-    public static function getTypes()
+    public static function getTypes(): array
     {
         return [
             static::TYPE_EXTERNAL => Yii::t('app', 'additional_service.type.external'),
@@ -210,7 +215,7 @@ class AdditionalServices extends ActiveRecord
      * Get auto_service values
      * @return array
      */
-    public static function getAutoServices()
+    public static function getAutoServices(): array
     {
         return [
             static::AUTO_SERVICE_NOT_AUTO_LIST => Yii::t('app/superadmin', 'providers.services_list.auto_services_manual'),
@@ -223,7 +228,7 @@ class AdditionalServices extends ActiveRecord
      * Get auto_orders values
      * @return array
      */
-    public static function getAutoOrders()
+    public static function getAutoOrders(): array
     {
         return [
             static::SEND_METHOD_LOCAL => Yii::t('app/superadmin', 'providers.auto_order.local'),
@@ -237,7 +242,7 @@ class AdditionalServices extends ActiveRecord
      * Get start_count values
      * @return array
      */
-    public static function getStartCounts()
+    public static function getStartCounts(): array
     {
         return [
             static::START_COUNT_NO => Yii::t('app/superadmin', 'providers.list.no'),
@@ -249,7 +254,7 @@ class AdditionalServices extends ActiveRecord
      * Get refill values
      * @return array
      */
-    public static function getRefill()
+    public static function getRefill(): array
     {
         return [
             static::REFILL_NO => Yii::t('app/superadmin', 'providers.list.no'),
@@ -262,13 +267,37 @@ class AdditionalServices extends ActiveRecord
      * Get cancel values
      * @return array
      */
-    public static function getCancel()
+    public static function getCancel(): array
     {
         return [
             static::CANCEL_NO => Yii::t('app/superadmin', 'providers.list.no'),
             static::CANCEL_YES => Yii::t('app/superadmin', 'providers.list.yes'),
             static::CANCEL_YES_SECOND => Yii::t('app/superadmin', 'providers.list.yes'),
         ];
+    }
+
+    /**
+     * Get service_view value
+     * @return array
+     */
+    public static function getServiceView(): array
+    {
+        return [
+            static::SERVICE_VIEW_SIMPLE => Yii::t('app/superadmin', 'providers.service_view.simple'),
+            static::SERVICE_VIEW_PERFECTPANEL => Yii::t('app/superadmin', 'providers.service_view.perfectpanel'),
+            static::SERVICE_VIEW_MULTI => Yii::t('app/superadmin', 'providers.service_view.multi'),
+            static::SERVICE_VIEW_UNIQUE => Yii::t('app/superadmin', 'providers.service_view.unique'),
+        ];
+    }
+
+    /**
+     * Get service_view string name
+     * @param $serviceView integer
+     * @return string
+     */
+    public static function getServiceViewName($serviceView): string
+    {
+        return ArrayHelper::getValue(static::getServiceView(), $serviceView, Yii::t('app/superadmin', 'providers.service_view.unique'));
     }
 
     /**

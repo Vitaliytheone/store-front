@@ -4,6 +4,7 @@
     /* @var $navs \my\modules\superadmin\models\search\ProvidersSearch */
     /* @var $filters */
     /* @var $type */
+    /* @var $plans */
 
     use my\helpers\Url;
     use my\helpers\SpecialCharsHelper;
@@ -40,6 +41,7 @@
     <?= $this->render('layouts/_providers_list', [
         'providers' => $providers,
         'filters' => $filters,
+        'plans' => $plans,
     ])?>
 
 <?= $this->render('layouts/_projects_modal')?>
