@@ -76,7 +76,7 @@
                                     ])?>
                                 <?php endif; ?>
 
-                                <?php if ($invoice->can('editTotal')) : ?>
+                                <?php if ($invoice->editTotal == 1) : ?>
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_edit'), Url::toRoute(['/invoices/edit', 'id' => $invoice->id]), [
                                         'class' => 'dropdown-item edit-invoice',
                                         'data-details' => $invoice->getAttributes(['total'])

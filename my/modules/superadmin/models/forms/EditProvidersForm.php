@@ -2,6 +2,7 @@
 namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\AdditionalServices;
+use common\models\panel\Services;
 use common\models\panels\UserServices;
 use Yii;
 use common\models\panels\Project;
@@ -48,6 +49,7 @@ class EditProvidersForm extends Model {
     /**
      * Save expied
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -84,8 +86,9 @@ class EditProvidersForm extends Model {
 
         if ($projectDbConnection && !empty($resIds)) {
             $projectDbConnection->createCommand()->update('services', [
-                'res' => Yii::$app->params['manualProviderId']
-            ], 'res IN (' . implode(",", $resIds) . ')')->execute();
+                'provider_id' => Yii::$app->params['manualProviderId'],
+                'mode' => Services::MODE_DISABLED,
+            ], 'provider_id IN (' . implode(",", $resIds) . ')')->execute();
         }
 
         return true;
