@@ -13,10 +13,10 @@
 <table class="table mb-0">
     <thead>
     <tr>
-        <th class="border-0">Account</th>
-        <th class="border-0">Status</th>
-        <th class="border-0">Access</th>
-        <th class="border-0 text-nowrap">Last auth</th>
+        <th class="border-0"><?= Yii::t('app/superadmin', 'staff.list.account') ?></th>
+        <th class="border-0"><?= Yii::t('app/superadmin', 'staff.list.status') ?></th>
+        <th class="border-0"><?= Yii::t('app/superadmin', 'staff.list.access') ?></th>
+        <th class="border-0 text-nowrap"><?= Yii::t('app/superadmin', 'staff.list.access') ?></th>
         <th class="border-0"></th>
     </tr>
     </thead>
@@ -35,7 +35,7 @@
                 <tr <?= (SuperAdmin::STATUS_SUSPENDED == $staff->status ? 'class="text-muted"' : '') ?>>
                     <td><?= $staff->username ?></td>
                     <td><?= $staff->getStatusName() ?></td>
-                    <td><?= (([] == array_diff($rulesList, $details['access'])) ? 'Full access' : 'Limited access') ?></td>
+                    <td><?= (([] == array_diff($rulesList, $details['access'])) ? Yii::t('app/superadmin', 'staff.list.access_full') : Yii::t('app/superadmin', 'staff.list.access_limited')) ?></td>
                     <td>
                         <span class="text-nowrap">
                             <?= $staff->getFormattedDate('last_login', 'php:Y-m-d') ?>
@@ -44,13 +44,13 @@
                     </td>
                     <td class="text-right">
                         <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'staff.list.dropdown_actions') ?></button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                <?= Html::a('Edit account' , Url::toRoute(['/settings/edit-staff', 'id' => $staff->id]), [
+                                <?= Html::a(Yii::t('app/superadmin', 'staff.list.dropdown_edit_account') , Url::toRoute(['/settings/edit-staff', 'id' => $staff->id]), [
                                     'class' => 'dropdown-item edit-account',
                                     'data-details' => json_encode($details)
                                 ])?>
-                                <?= Html::a('Set password' , Url::toRoute(['/settings/staff-password', 'id' => $staff->id]), [
+                                <?= Html::a(Yii::t('app/superadmin', 'staff.list.dropdown_set_password') , Url::toRoute(['/settings/staff-password', 'id' => $staff->id]), [
                                     'class' => 'dropdown-item change-password',
                                     'data-details' => json_encode($details)
                                 ])?>
@@ -61,7 +61,7 @@
             <?php endforeach; ?>
         <?php else : ?>
             <tr>
-                <td colspan="5">No staffs</td>
+                <td colspan="5"><?= Yii::t('app/superadmin', 'staff.list.no_staffs') ?></td>
             </tr>
         <?php endif; ?>
     </tbody>

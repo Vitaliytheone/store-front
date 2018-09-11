@@ -18,10 +18,10 @@ $this->title = $name;
             </div>
 
             <p>
-                The above error occurred while the Web server was processing your request.
+                <?= Yii::t('app/superadmin', 'site.error.first_part') ?>
             </p>
             <p>
-                Please contact us if you think this is a server error. Thank you.
+                <?= Yii::t('app/superadmin', 'site.error.second_part') ?>
             </p>
     </div>
     </div>

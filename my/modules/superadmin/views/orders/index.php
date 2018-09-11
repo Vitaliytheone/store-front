@@ -8,36 +8,44 @@
 
     use my\helpers\Url;
     use my\helpers\SpecialCharsHelper;
+    use my\components\ActiveForm;
 
     $this->context->addModule('superadminOrdersController');
 ?>
-<div class="container-fluid mt-3">
-    <ul class="nav mb-3">
-        <li class="mr-auto">
-            <ul class="nav nav-pills">
-                <?php foreach ($navs as $code => $label) : ?>
-                    <?php $code = is_numeric($code) ? $code : null;?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/orders', 'status' => $code]) ?>"><?= $label ?></a></li>
-                <?php endforeach; ?>
-            </ul>
-        </li>
-        <li>
-            <form class="form-inline" method="GET" id="ordersSearch" action="<?=Url::toRoute(array_merge(['/orders'], $filters, ['query' => null]))?>">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="Search orders" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
-                    </span>
-                </div>
-            </form>
-        </li>
-    </ul>
 
-    <?= $this->render('layouts/_orders_list', [
+<ul class="nav mb-3">
+    <li class="mr-auto">
+        <ul class="nav nav-pills">
+            <?php foreach ($navs as $code => $label) : ?>
+                <?php $code = is_numeric($code) ? $code : null;?>
+                <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/orders', 'status' => $code]) ?>"><?= $label ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+    </li>
+    <li>
+        <?php $form = ActiveForm::begin([
+                'id' => 'ordersSearch',
+                'method' => 'get',
+                'action' => Url::toRoute(array_merge(['/orders'], $filters, ['query' => null])),
+                'options' => [
+                    'class' => "form",
+                ],
+        ]); ?>
+            <div class="input-group">
+                <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'orders.search.placeholder') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
+                <div class="input-group-append">
+                    <button class="btn btn-light" type="submit"><span class="fa fa-search" id="submitSearch"></span></button>
+                </div>
+            </div>
+        <?php ActiveForm::end(); ?>
+    </li>
+</ul>
+
+<?= $this->render('layouts/_orders_list', [
         'orders' => $orders,
         'filters' => $filters,
         'items' => $items
-    ])?>
-</div>
+])?>
+
 
 <?= $this->render('layouts/_order_details_modal') ?>
