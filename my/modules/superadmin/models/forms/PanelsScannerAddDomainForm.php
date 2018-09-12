@@ -67,7 +67,7 @@ class PanelsScannerAddDomainForm extends Model
                 $this->_panelInfo = RentapanelInfo::class;
                 break;
             default :
-                exit('Unresolved panel type' . $panelType);
+                exit(Yii::t('app/superadmin', 'tools.panels_scanner.error.unresolved_type') . $panelType);
                 break;
         }
     }
@@ -152,7 +152,7 @@ class PanelsScannerAddDomainForm extends Model
         $value = parse_url('http://' . $value, PHP_URL_HOST);
 
         if (empty($value)) {
-            $this->addError($attribute, 'Incorrect ' . $attribute . ' value.');
+            $this->addError($attribute, Yii::t('app/superadmin', 'tools.panels_scanner.error.incorrect_value', ['attribute' => $attribute]));
             return false;
         }
 
@@ -170,7 +170,7 @@ class PanelsScannerAddDomainForm extends Model
         $panelInfoClassName = $this->getPanelInfo();
 
         if (empty($panelInfoClassName)) {
-            exit('Bad model class name!');
+            exit(Yii::t('app/superadmin', 'tools.panels_scanner.error.bad_model_name'));
         }
 
         /** @var BasePanelInfo $panelInfo */
