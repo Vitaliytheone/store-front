@@ -234,12 +234,12 @@ class SystemController extends CustomController
             'db_name',
         ])->from(DB_STORES . '.stores')->all();
 
-        $store_tables = [
+        $storeTables = [
             'suborders',
             'packages'
         ];
 
-        $stores_tables = [
+        $storesTables = [
             StoreProviders::tableName(),
             StoresSendOrders::tableName()
         ];
@@ -254,19 +254,26 @@ class SystemController extends CustomController
                     'name' => $provider['site'],
                     'store' => 1,
                     'status' =>  0
-                ])->one()['res'];
+                ])->scalar();
 
-            foreach ($stores_tables as $table) {
-                Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+            if (empty($res)) {
+                continue;
+            }
+
+            foreach ($storesTables as $table) {
+                $count = Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                echo "Changed providers in table $table, $count rows affected by the execution\n";
             }
 
             foreach ($stores as $store) {
-                foreach ($store_tables as $table) {
-                    try {
-                        Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res . "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
-                    } catch (Exception $e) {
-                        print_r($e->getMessage());
+                foreach ($storeTables as $table) {
+                    $tableSchema = Yii::$app->db->schema->getTableSchema("{$store['db_name']}.$table");
+                    if (!$tableSchema) {
+                        echo "shema {$store['db_name']}.$table not exist\n";
+                        break;
                     }
+                    $count = Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $res . "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                    echo "Changed providers in table `{$store['db_name']}`.`{$table}`, $count rows affected by the execution\n";
                 }
             }
         }

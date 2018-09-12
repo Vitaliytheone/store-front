@@ -2,9 +2,9 @@
 namespace console\components\sender;
 
 use common\events\Events;
+use common\models\panels\AdditionalServices;
 use common\models\panels\Getstatus;
 use common\models\store\Packages;
-use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
@@ -70,11 +70,6 @@ class SenderComponent extends Component
      */
     private $_tableStoresSendOrders;
 
-    /**
-     * Providers table name
-     * @var
-     */
-    private $_tableProviders;
 
     /** @inheritdoc */
     public function init()
@@ -84,7 +79,6 @@ class SenderComponent extends Component
         $this->_tablePackages = Packages::tableName();
         $this->_tableSuborders = Suborders::tableName();
         $this->_tableStoresSendOrders = StoresSendOrders::tableName();
-        $this->_tableProviders = Providers::tableName();
     }
 
     /**
@@ -127,11 +121,11 @@ class SenderComponent extends Component
         $sendOrders = (new Query())
             ->select([
                 'so.id', 'so.store_id', 'so.provider_id', 'so.suborder_id', 'so.store_db',
-                'pr.site', 'pr.protocol',
+                'pr.name as site',
                 'sprv.apikey'
             ])
             ->from(['so' => StoresSendOrders::tableName()])
-            ->leftJoin(['pr' => Providers::tableName()], 'pr.id = so.provider_id')
+            ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.res = so.provider_id')
             ->leftJoin(['sprv' => StoreProviders::tableName()], 'sprv.provider_id = so.provider_id AND sprv.store_id = so.store_id')
             ->limit($this->ordersLimit)
             ->all();
@@ -302,16 +296,6 @@ class SenderComponent extends Component
             return;
         }
 
-        Yii::$app->db->createCommand("
-            UPDATE $this->_tableProviders
-            SET `protocol` = :protocol
-            WHERE `id` = :id
-        ")
-            ->bindValues([
-                ':protocol' => Providers::PROTOCOL_HTTPS,
-                ':id' => $orderInfo['provider_id'],
-            ])
-            ->execute();
 
         Yii::$app->db
             ->createCommand("
@@ -380,12 +364,11 @@ class SenderComponent extends Component
                 ->select([
                     'id' => 'pr.id',
                     'api_key' => 'sprv.apiKey',
-                    'site' => 'pr.site',
-                    'protocol' => 'pr.protocol',
+                    'site' => 'pr.name',
                     'type' => 'pr.type',
                 ])
                 ->from(['sprv' => StoreProviders::tableName()])
-                ->leftJoin(['pr' => Providers::tableName()], 'pr.id = sprv.provider_id')
+                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.res = sprv.provider_id')
                 ->where([
                     'sprv.provider_id' => $orderPackage['provider_id'],
                     'sprv.store_id' => $sendOrder['store_id']
@@ -422,7 +405,6 @@ class SenderComponent extends Component
                     'store_id' => $sendOrder['store_id'],
                     'suborder_id' => $sendOrder['suborder_id'],
                     'store_db' => $sendOrder['store_db'],
-                    'protocol' => $provider['protocol'],
                     'provider_id' => $orderPackage['provider_id'],
                     'provider_service' => $orderPackage['provider_service'],
                 ]),
@@ -446,8 +428,6 @@ class SenderComponent extends Component
         foreach ($connectionHandlers as $ch)
         {
             $orderInfo = json_decode(curl_getinfo($ch, CURLINFO_PRIVATE), true);
-            $protocol = $orderInfo['protocol'];
-
             // System Errors
             if (curl_errno($ch)) {
                 $error = json_encode(curl_error($ch));
