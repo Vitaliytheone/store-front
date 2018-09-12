@@ -366,7 +366,7 @@ return [
     'ssl_cert.status.payment_needed' => 'Processing',
     'ssl_cert.status.canceled' => 'Cancel',
     'ssl_cert.status.incomplete' => 'Incomplete',
-    'ssl_cert.status.expired' => 'Expiry',
+    'ssl_cert.status.expired' => 'Expired',
     'ssl_cert.status.ddos_error' => 'Active',
     'super_admin.status.active' => 'Active',
     'super_admin.status.suspended' => 'Suspended',
