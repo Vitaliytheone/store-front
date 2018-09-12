@@ -29,7 +29,7 @@ class EditPaymentMethodForm extends PaymentMethods
     {
         return [
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_BEFORE_VALIDATE => 'details',
                 ],
@@ -38,6 +38,12 @@ class EditPaymentMethodForm extends PaymentMethods
                     /* @var $model $this */
                     $model = $event->sender;
                     $details = $model->getAttribute('details');
+
+                    foreach ($details as $key => $elem) {
+                        if (is_string($elem)) {
+                            $details[$key] = trim($elem);
+                        }
+                    }
 
                     // Prepare PayPal details
                     if ($model->method == $model::METHOD_PAYPAL) {
@@ -49,7 +55,7 @@ class EditPaymentMethodForm extends PaymentMethods
                 },
             ],
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_AFTER_FIND => 'details',
                 ],
@@ -233,12 +239,6 @@ class EditPaymentMethodForm extends PaymentMethods
      */
     public function changeSettings($postData)
     {
-        if (isset($postData['PaymentsForm']['details'])) {
-            foreach ($postData['PaymentsForm']['details'] as $key => $elem) {
-                $postData['PaymentsForm']['details'][$key] = trim($elem);
-            }
-        }
-
         if (!$this->load($postData) || !$this->save()) {
             return false;
         }
