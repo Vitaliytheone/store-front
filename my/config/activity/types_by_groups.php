@@ -46,19 +46,24 @@ return [
     [
         'title' => 'Services',
         'events' => [
-            17,
-            18,
-            19,
-            20,
-            23,
-            24,
-            21,
-            22,
-            67,
-            60,
-            57,
-            68,
-            69,
+            2001,
+            2002,
+            2003,
+            2004,
+            2005,
+            2006,
+            2007,
+            2008,
+            2009,
+            2010,
+            2011,
+            2012,
+            2013,
+            2014,
+            2016,
+            2017,
+            21, // Only for old events support, without new records
+            22, // Only for old events support, without new records
         ]
     ],
     [

@@ -112,7 +112,6 @@ class ActivityController extends CustomController
     private function _findModel($id)
     {
         $model = Project::findOne([
-            'child_panel' => 0,
             'cid' => Yii::$app->user->identity->id,
             'id' => $id,
         ]);
