@@ -54,170 +54,167 @@ class PaymentsController extends CustomController
     	$paymentSignature = md5(rand().rand().time().rand().rand());
 
 		$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), 'Paypalexpress', $paymentSignature);
+        try {
+            if (isset($_GET['token']) && !empty($_GET['token'])) {
+                $paypal = new Paypal;
 
-		if( isset($_GET['token']) && !empty($_GET['token']) ) {
-			$paypal = new Paypal;
+                $checkoutDetails = $paypal->request('GetExpressCheckoutDetails', array('TOKEN' => $_GET['token']));
 
-	        $checkoutDetails = $paypal->get(
-	            $paypal->request('GetExpressCheckoutDetails', array('TOKEN' => $_GET['token'])),
-                ['PAYMENTREQUEST_0_AMT', 'AMT']
-            );
+                BasePayment::validateResponse(
+                    $checkoutDetails,
+                    ['PAYMENTREQUEST_0_AMT', 'AMT']
+                );
 
-	        if (!$checkoutDetails) {
-                $this->Errorlogging("no data", "Paypalexpress", $paymentSignature);
-                return $this->_redirectWithInvoice($invoice);
-            }
-	        
-	        $requestParams = array(
-	           'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
-	           'PAYERID' => $_GET['PayerID'],
-	           'TOKEN' => $_GET['token'],
-	           'PAYMENTREQUEST_0_AMT' => $checkoutDetails['PAYMENTREQUEST_0_AMT'],
-	        );
+                $requestParams = array(
+                    'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+                    'PAYERID' => $_GET['PayerID'],
+                    'TOKEN' => $_GET['token'],
+                    'PAYMENTREQUEST_0_AMT' => $checkoutDetails['PAYMENTREQUEST_0_AMT'],
+                );
 
-	        $response = $paypal->request('DoExpressCheckoutPayment', $requestParams);
+                $response = $paypal->request('DoExpressCheckoutPayment', $requestParams);
 
-	        if (!$response) {
-                $this->Errorlogging("no data", "Paypalexpress", $paymentSignature);
-                return $this->_redirectWithInvoice($invoice);
-            }
+                BasePayment::validateResponse(
+                    $response,
+                    ['ACK', 'id', 'PAYMENTINFO_0_TRANSACTIONID']
+                );
 
-	        $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response), 'Paypalexpress', $paymentSignature);
+                $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response), 'Paypalexpress', $paymentSignature);
 
-	        $payment = Payments::findOne(['id' => $_GET['id']]);
+                $payment = Payments::findOne(['id' => $_GET['id']]);
 
-	        if ($payment !== null) {
+                if ($payment !== null) {
 
-	        	$this->paymentLog([
-	        	    'DoExpressCheckoutPayment' => $response
-                ], $payment->id);
+                    $this->paymentLog([
+                        'DoExpressCheckoutPayment' => $response
+                    ], $payment->id);
 
-	        	$payments = Payments::findOne(['id' => $_GET['id']]);
-                $payments->date_update = time();
-                $payments->response = 1;
-                $payments->update();
+                    $payments = Payments::findOne(['id' => $_GET['id']]);
+                    $payments->date_update = time();
+                    $payments->response = 1;
+                    $payments->update();
 
-                $invoice = Invoices::findOne(['id' => $payment->iid]);
+                    $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-                if ($invoice->status == 0 and $payment->status == 0) {
-                	if( is_array($response) && $response['ACK'] == 'Success' ) {
-
-			            $GetTransactionDetails = $paypal->get(
-			                $paypal->request('GetTransactionDetails', [
+                    if ($invoice->status == 0 and $payment->status == 0) {
+                        if (is_array($response) && $response['ACK'] == 'Success') {
+                            $GetTransactionDetails = $paypal->request('GetTransactionDetails', [
                                 'TRANSACTIONID' => $response['PAYMENTINFO_0_TRANSACTIONID']
-			                ]),
-                            ['FEEAMT', 'CURRENCYCODE', 'EMAIL', 'PAYERID']
-                        );
+                            ]);
 
-			            $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response, 'GetTransactionDetails' => $GetTransactionDetails), 'Paypalexpress', $paymentSignature);
+                            BasePayment::validateResponse(
+                                $GetTransactionDetails,
+                                ['FEEAMT', 'CURRENCYCODE', 'EMAIL', 'PAYERID']
+                            );
 
-			            $this->paymentLog([
-			                'GetTransactionDetails' => $GetTransactionDetails
-                        ], $payment->id);
+                            $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response, 'GetTransactionDetails' => $GetTransactionDetails), 'Paypalexpress', $paymentSignature);
 
-			            if (!$GetTransactionDetails) {
-                            $this->Errorlogging("no data", "Paypalexpress", $paymentSignature);
-                            return $this->_redirectWithInvoice($invoice);
-                        }
+                            $this->paymentLog([
+                                'GetTransactionDetails' => $GetTransactionDetails
+                            ], $payment->id);
 
-                        $payments = Payments::findOne(['id' => $payment->id]);
-                        $payments->comment = $GetTransactionDetails['EMAIL'].'; '.$response['PAYMENTINFO_0_TRANSACTIONID'];
-                        $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
-                        $payments->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
-                        $getTransactionDetailsStatus = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS', '');
-                        $doExpressCheckoutPaymentStatus = ArrayHelper::getValue($response, 'PAYMENTINFO_0_PAYMENTSTATUS', $getTransactionDetailsStatus);
-                        $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
-                        $doExpressCheckoutPaymentStatus = strtolower($doExpressCheckoutPaymentStatus);
+                            $payments = Payments::findOne(['id' => $payment->id]);
+                            $payments->comment = $GetTransactionDetails['EMAIL'] . '; ' . $response['PAYMENTINFO_0_TRANSACTIONID'];
+                            $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
+                            $payments->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
+                            $getTransactionDetailsStatus = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS', '');
+                            $doExpressCheckoutPaymentStatus = ArrayHelper::getValue($response, 'PAYMENTINFO_0_PAYMENTSTATUS', $getTransactionDetailsStatus);
+                            $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
+                            $doExpressCheckoutPaymentStatus = strtolower($doExpressCheckoutPaymentStatus);
 
-			            if ($getTransactionDetailsStatus == 'completed' && $getTransactionDetailsStatus == $doExpressCheckoutPaymentStatus) {
-			            	$hash = PaymentHash::findOne(['hash' => $response['PAYMENTINFO_0_TRANSACTIONID']]);
-			            	if ($hash === null) {
-                                if ($checkoutDetails['AMT'] == $payments->amount) {
+                            if ($getTransactionDetailsStatus == 'completed' && $getTransactionDetailsStatus == $doExpressCheckoutPaymentStatus) {
+                                $hash = PaymentHash::findOne(['hash' => $response['PAYMENTINFO_0_TRANSACTIONID']]);
+                                if ($hash === null) {
+                                    if ($checkoutDetails['AMT'] == $payments->amount) {
 
-                                    if ($GetTransactionDetails['CURRENCYCODE'] == 'USD') {
+                                        if ($GetTransactionDetails['CURRENCYCODE'] == 'USD') {
 
-	                				    $payerId = $GetTransactionDetails['PAYERID'];
-	                				    $payerEmail = $GetTransactionDetails['EMAIL'];
+                                            $payerId = $GetTransactionDetails['PAYERID'];
+                                            $payerEmail = $GetTransactionDetails['EMAIL'];
 
-                                        if (PaymentsHelper::validatePaypalPayment($payments, $payerId, $payerEmail)) {
+                                            if (PaymentsHelper::validatePaypalPayment($payments, $payerId, $payerEmail)) {
 
-                                            $payments->complete();
+                                                $payments->complete();
 
-                                            $paymentHashModel = new PaymentHash();
-                                            $paymentHashModel->load(array('PaymentHash' => array(
-                                                'hash' => $response['PAYMENTINFO_0_TRANSACTIONID'],
-                                            )));
-                                            $paymentHashModel->save();
+                                                $paymentHashModel = new PaymentHash();
+                                                $paymentHashModel->load(array('PaymentHash' => array(
+                                                    'hash' => $response['PAYMENTINFO_0_TRANSACTIONID'],
+                                                )));
+                                                $paymentHashModel->save();
 
-                                            // Send email notification
-                                            $mail = new PaypalPassed([
-                                                'payment' => $payments,
-                                                'customer' => $invoice->customer
-                                            ]);
-                                            $mail->send();
-                                        } else {
-
-                                            $code = $payments->verification($payerId, $payerEmail);
-
-                                            if ($code && filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {
-                                                $mail = new PaypalVerificationNeeded([
+                                                // Send email notification
+                                                $mail = new PaypalPassed([
                                                     'payment' => $payments,
-                                                    'email' => $payerEmail,
-                                                    'code' => $code
+                                                    'customer' => $invoice->customer
                                                 ]);
                                                 $mail->send();
+                                            } else {
+
+                                                $code = $payments->verification($payerId, $payerEmail);
+
+                                                if ($code && filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {
+                                                    $mail = new PaypalVerificationNeeded([
+                                                        'payment' => $payments,
+                                                        'email' => $payerEmail,
+                                                        'code' => $code
+                                                    ]);
+                                                    $mail->send();
+                                                }
                                             }
+                                        } else {
+                                            $this->Errorlogging("bad currency", "Paypalexpress", $paymentSignature);
                                         }
-	                				} else {
-	                					$this->Errorlogging("bad currency", "Paypalexpress", $paymentSignature);
-	                				}
-	                			} else {
-	                				$this->Errorlogging("bad amount", "Paypalexpress", $paymentSignature);
-	                			}
-			            	} else {
-			            		$this->Errorlogging("dublicate response", "Paypalexpress", $paymentSignature);
-			            	}
-			            } else {
-                            if ('pending' == $doExpressCheckoutPaymentStatus) {
-                                $payments->status = Payments::STATUS_WAIT;
-
-                                // Send email notification
-                                $mail = new PaypalReviewed([
-                                    'payment' => $payments,
-                                    'customer' => $invoice->customer
-                                ]);
-                                $mail->send();
-
-                            } elseif ('failed' == $doExpressCheckoutPaymentStatus) {
-                                $payments->status = Payments::STATUS_FAIL;
-                                $payments->makeNotActive();
-
-                                // Send email notification
-                                $mail = new PaypalFailed([
-                                    'payment' => $payments,
-                                    'customer' => $invoice->customer
-                                ]);
-                                $mail->send();
+                                    } else {
+                                        $this->Errorlogging("bad amount", "Paypalexpress", $paymentSignature);
+                                    }
+                                } else {
+                                    $this->Errorlogging("dublicate response", "Paypalexpress", $paymentSignature);
+                                }
                             } else {
-                                $payments->status = Payments::STATUS_PENDING;
+                                if ('pending' == $doExpressCheckoutPaymentStatus) {
+                                    $payments->status = Payments::STATUS_WAIT;
+
+                                    // Send email notification
+                                    $mail = new PaypalReviewed([
+                                        'payment' => $payments,
+                                        'customer' => $invoice->customer
+                                    ]);
+                                    $mail->send();
+
+                                } elseif ('failed' == $doExpressCheckoutPaymentStatus) {
+                                    $payments->status = Payments::STATUS_FAIL;
+                                    $payments->makeNotActive();
+
+                                    // Send email notification
+                                    $mail = new PaypalFailed([
+                                        'payment' => $payments,
+                                        'customer' => $invoice->customer
+                                    ]);
+                                    $mail->send();
+                                } else {
+                                    $payments->status = Payments::STATUS_PENDING;
+                                }
+
+                                $payments->update();
+
+                                $this->Errorlogging("no final status", "Paypalexpress", $paymentSignature);
                             }
-
-                            $payments->update();
-
-			            	$this->Errorlogging("no final status", "Paypalexpress", $paymentSignature);
-			            }
-			        } else {
-			        	$this->Errorlogging("bad response", "Paypalexpress", $paymentSignature);
-			        }
+                        } else {
+                            $this->Errorlogging("bad response", "Paypalexpress", $paymentSignature);
+                        }
+                    } else {
+                        $this->Errorlogging("bad invoice status", "Paypalexpress", $paymentSignature);
+                    }
                 } else {
-                	$this->Errorlogging("bad invoice status", "Paypalexpress", $paymentSignature);
+                    $this->Errorlogging("bad payment id", "Paypalexpress", $paymentSignature);
                 }
-	        } else {
-	        	$this->Errorlogging("bad payment id", "Paypalexpress", $paymentSignature);
-	        }
-		} else {
-			$this->Errorlogging("no data", "Paypalexpress", $paymentSignature);
-		}
+            } else {
+                $this->Errorlogging("no data", "Paypalexpress", $paymentSignature);
+            }
+        } catch(\Exception $e) {
+            $this->Errorlogging($e->getMessage(), "Paypalexpress", $paymentSignature);
+            return $this->_redirectWithInvoice($invoice);
+        }
 
         return $this->_redirectWithInvoice($invoice);
     }
@@ -265,90 +262,87 @@ class PaymentsController extends CustomController
 				echo "YES";
 			}
 		} else {
-		    $payment = new BasePayment();
+            try {
+                BasePayment::validateResponse($_POST, [
+                    'id',
+                    'LMI_PAYEE_PURSE',
+                    'LMI_PAYMENT_AMOUNT',
+                    'LMI_PAYMENT_NO',
+                    'LMI_MODE',
+                    'LMI_HASH',
+                    'LMI_SYS_INVS_NO',
+                    'LMI_SYS_TRANS_NO',
+                    'LMI_SYS_TRANS_DATE',
+                    'LMI_PAYER_PURSE',
+                    'LMI_PAYER_WM'
+                ]);
+                $payment = Payments::findOne(['id' => $_POST['id']]);
 
-		    $response = $payment->get($_POST, [
-		        'id',
-                'LMI_PAYEE_PURSE',
-                'LMI_PAYMENT_AMOUNT',
-                'LMI_PAYMENT_NO',
-                'LMI_MODE',
-                'LMI_HASH',
-                'LMI_SYS_INVS_NO',
-                'LMI_SYS_TRANS_NO',
-                'LMI_SYS_TRANS_DATE',
-                'LMI_PAYER_PURSE',
-                'LMI_PAYER_WM'
-            ]);
+                if ($payment !== null) {
 
-			if ($response) {
-				$payment = Payments::findOne(['id' => $_POST['id']]);
+                    $this->paymentLog($_POST, $payment->id);
 
-		        if ($payment !== null) {
+                    $payments = Payments::findOne(['id' => $_POST['id']]);
+                    $payments->date_update = time();
+                    $payments->response = 1;
+                    $payments->update();
 
-		        	$this->paymentLog($_POST, $payment->id);
+                    $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-		        	$payments = Payments::findOne(['id' => $_POST['id']]);
-	                $payments->date_update = time();
-	                $payments->response = 1;
-	                $payments->update();
+                    if ($invoice->status == 0 and $payment->status == 0) {
+                        $common_string = $_POST['LMI_PAYEE_PURSE'] .
+                        $_POST['LMI_PAYMENT_AMOUNT'] .
+                        $_POST['LMI_PAYMENT_NO'] .
+                        $_POST['LMI_MODE'] .
+                        $_POST['LMI_SYS_INVS_NO'] .
+                        $_POST['LMI_SYS_TRANS_NO'] .
+                        $_POST['LMI_SYS_TRANS_DATE'] .
+                        $secret_key .
+                        $_POST['LMI_PAYER_PURSE'] .
+                        $_POST['LMI_PAYER_WM'];
 
-	                $invoice = Invoices::findOne(['id' => $payment->iid]);
+                        $signature = strtoupper(hash('sha256', $common_string));
 
-	                if ($invoice->status == 0 and $payment->status == 0) {
-	                	$common_string = $_POST['LMI_PAYEE_PURSE'].
-                        $response['LMI_PAYMENT_AMOUNT'].
-                        $response['LMI_PAYMENT_NO'].
-                        $response['LMI_MODE'].
-                        $response['LMI_SYS_INVS_NO'].
-                        $response['LMI_SYS_TRANS_NO'].
-                        $response['LMI_SYS_TRANS_DATE'].
-            			$secret_key.
-                        $response['LMI_PAYER_PURSE'].
-                        $response['LMI_PAYER_WM'];
-
-            			$signature = strtoupper(hash('sha256', $common_string));
-
-            			if($signature == $response['LMI_HASH']) {
-            				if ($payments->amount == $response['LMI_PAYMENT_AMOUNT']) {
-            					$hash = PaymentHash::findOne(['hash' => $response['LMI_HASH']]);
-		            			if ($hash === null) {
+                        if ($signature == $_POST['LMI_HASH']) {
+                            if ($payments->amount == $_POST['LMI_PAYMENT_AMOUNT']) {
+                                $hash = PaymentHash::findOne(['hash' => $_POST['LMI_HASH']]);
+                                if ($hash === null) {
 
                                     // Mark invoice paid
                                     $invoice->paid(PaymentGateway::METHOD_WEBMONEY);
 
-					                $payments = Payments::findOne(['id' => $payment->id]);
-                                    $payments->transaction_id = $response['LMI_PAYER_PURSE'];
-						            $payments->comment = $response['LMI_PAYER_PURSE'];
+                                    $payments = Payments::findOne(['id' => $payment->id]);
+                                    $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
+                                    $payments->comment = $_POST['LMI_PAYER_PURSE'];
                                     $payments->status = Payments::STATUS_COMPLETED;
-						            $payments->update();
+                                    $payments->update();
 
-                					$paymentHashModel = new PaymentHash();
-									$paymentHashModel->load(array('PaymentHash' => array(
-										'hash' => $response['LMI_HASH'],
-									)));
-									$paymentHashModel->save();
+                                    $paymentHashModel = new PaymentHash();
+                                    $paymentHashModel->load(array('PaymentHash' => array(
+                                        'hash' => $_POST['LMI_HASH'],
+                                    )));
+                                    $paymentHashModel->save();
 
-									echo 'Ok';
-                  					exit;
-		            			} else {
-		            				$this->Errorlogging("dublicate response", "Webmoney", $paymentSignature);	
-		            			}
-            				} else {
-            					$this->Errorlogging("bad invoice amount", "Webmoney", $paymentSignature);	
-            				}
-            			} else {
-            				$this->Errorlogging("bad signature", "Webmoney", $paymentSignature);
-            			}
-	                } else {
-	                	$this->Errorlogging("bad invoice status", "Webmoney", $paymentSignature);
-	                }
-	            } else {
-	            	$this->Errorlogging("no invoice", "Webmoney", $paymentSignature);
-	            }
-			} else {
-				$this->Errorlogging("no data", "Webmoney", $paymentSignature);	
-			}
+                                    echo 'Ok';
+                                    exit;
+                                } else {
+                                    $this->Errorlogging("dublicate response", "Webmoney", $paymentSignature);
+                                }
+                            } else {
+                                $this->Errorlogging("bad invoice amount", "Webmoney", $paymentSignature);
+                            }
+                        } else {
+                            $this->Errorlogging("bad signature", "Webmoney", $paymentSignature);
+                        }
+                    } else {
+                        $this->Errorlogging("bad invoice status", "Webmoney", $paymentSignature);
+                    }
+                } else {
+                    $this->Errorlogging("no invoice", "Webmoney", $paymentSignature);
+                }
+            } catch (\Exception $e) {
+                $this->Errorlogging($e->getMessage(), "Webmoney", $paymentSignature);
+            }
 		}
     }
 
@@ -357,27 +351,26 @@ class PaymentsController extends CustomController
     	$paymentSignature = md5(rand().rand().time().rand().rand());
 
 		$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), 'Perfectmoney', $paymentSignature);
-        $paymentComponent = new BasePayment();
-        $response = $paymentComponent->get($_POST, [
-            'PAYMENT_ID',
-            'PAYEE_ACCOUNT',
-            'PAYMENT_AMOUNT',
-            'PAYMENT_UNITS',
-            'PAYMENT_BATCH_NUM',
-            'PAYER_ACCOUNT',
-            'TIMESTAMPGMT',
-            'V2_HASH',
-            'PAYMENT_AMOUNT'
-        ]);
+        try {
+            BasePayment::validateResponse($_POST, [
+                'PAYMENT_ID',
+                'PAYEE_ACCOUNT',
+                'PAYMENT_AMOUNT',
+                'PAYMENT_UNITS',
+                'PAYMENT_BATCH_NUM',
+                'PAYER_ACCOUNT',
+                'TIMESTAMPGMT',
+                'V2_HASH',
+                'PAYMENT_AMOUNT'
+            ]);
 
-		if ($response) {
-			$payment = Payments::findOne(['id' => $response['PAYMENT_ID']]);
+			$payment = Payments::findOne(['id' => $_POST['PAYMENT_ID']]);
 
 	        if ($payment !== null) {
 
-	        	$this->paymentLog($response, $payment->id);
+	        	$this->paymentLog($_POST, $payment->id);
 
-	        	$payments = Payments::findOne(['id' => $response['PAYMENT_ID']]);
+	        	$payments = Payments::findOne(['id' => $_POST['PAYMENT_ID']]);
 	            $payments->date_update = time();
 	            $payments->response = 1;
 	            $payments->update();
@@ -402,28 +395,28 @@ class PaymentsController extends CustomController
 					}
 
 
-	            	$string =   $response['PAYMENT_ID'].':'.$response['PAYEE_ACCOUNT'].':'.$response['PAYMENT_AMOUNT'].':'.$response['PAYMENT_UNITS'].':'.$response['PAYMENT_BATCH_NUM'].':'.$response['PAYER_ACCOUNT'].':'.$passphrase.':'.$response['TIMESTAMPGMT'];
+	            	$string =  $_POST['PAYMENT_ID'].':'.$_POST['PAYEE_ACCOUNT'].':'.$_POST['PAYMENT_AMOUNT'].':'.$_POST['PAYMENT_UNITS'].':'.$_POST['PAYMENT_BATCH_NUM'].':'.$_POST['PAYER_ACCOUNT'].':'.$passphrase.':'.$_POST['TIMESTAMPGMT'];
 
                     $signature=strtoupper(md5($string));
 
           			if ($signature == $_POST['V2_HASH']){ 
           				if($_POST['PAYMENT_UNITS'] == 'USD'){
-              				if ($payments->amount == $response['PAYMENT_AMOUNT']) {
-              					$hash = PaymentHash::findOne(['hash' => $response['V2_HASH']]);
+              				if ($payments->amount == $_POST['PAYMENT_AMOUNT']) {
+              					$hash = PaymentHash::findOne(['hash' => $_POST['V2_HASH']]);
 		            			if ($hash === null) {
 
                                     // Mark invoice paid
                                     $invoice->paid(PaymentGateway::METHOD_PERFECT_MONEY);
 
 					                $payments = Payments::findOne(['id' => $payment->id]);
-                                    $payments->transaction_id = $response['PAYER_ACCOUNT'];
-						            $payments->comment = $response['PAYER_ACCOUNT'];
+                                    $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
+						            $payments->comment = $_POST['PAYER_ACCOUNT'];
                                     $payments->status = Payments::STATUS_COMPLETED;
 						            $payments->update();
 
                 					$paymentHashModel = new PaymentHash();
 									$paymentHashModel->load(array('PaymentHash' => array(
-										'hash' => $response['V2_HASH'],
+										'hash' => $_POST['V2_HASH'],
 									)));
 									$paymentHashModel->save();
 
@@ -448,8 +441,8 @@ class PaymentsController extends CustomController
 	        } else {
 	        	$this->Errorlogging("no invoice", "Perfectmoney", $paymentSignature);
 	        }
-		} else {
-			$this->Errorlogging("no data", "Perfectmoney", $paymentSignature);
+		} catch(\Exception $e) {
+			$this->Errorlogging($e->getMessage(), "Perfectmoney", $paymentSignature);
 		}
     }
 
@@ -459,22 +452,20 @@ class PaymentsController extends CustomController
 
     	$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), 'Bitcoin', $paymentSignature);
 
-        $paymentComponent = new BasePayment();
-        $response = $paymentComponent->get($_GET, [
-            'callback_data',
-            'status',
-            'address',
-            'tid'
-        ]);
-
-      	if ($response) {
-      		$payment = Payments::findOne(['id' => $response['callback_data']]);
+      	try {
+            BasePayment::validateResponse($_GET, [
+                'callback_data',
+                'status',
+                'address',
+                'tid'
+            ]);
+      		$payment = Payments::findOne(['id' => $_GET['callback_data']]);
 
 	        if ($payment !== null) {
 
-	        	$this->paymentLog($response, $payment->id);
+	        	$this->paymentLog($_GET, $payment->id);
 
-	        	$payments = Payments::findOne(['id' => $response['callback_data']]);
+	        	$payments = Payments::findOne(['id' => $_GET['callback_data']]);
 	            $payments->date_update = time();
 	            $payments->response = 1;
 	            $payments->update();
@@ -493,16 +484,16 @@ class PaymentsController extends CustomController
                     $signature = Bitcoin::generateSignature($_SERVER['REQUEST_URI'], $secret);
 
                     $payments = Payments::findOne(['id' => $payment->id]);
-                    $payments->comment = $response['address'];
-                    $payments->transaction_id = $response['tid'];
+                    $payments->comment = $_GET['address'];
+                    $payments->transaction_id = $_GET['tid'];
 
 					if ($signature == $_SERVER['HTTP_X_SIGNATURE']) {
                         $amountPaid = ArrayHelper::getValue($_GET, 'amount_paid_in_btc', 0);
                         $amount = ArrayHelper::getValue($_GET, 'amount_in_btc', 0);
 
                         if ($amountPaid >= $amount) {
-                            if (in_array($response['status'], [2, 4])) {
-                                $hash = PaymentHash::findOne(['hash' => $response['tid']]);
+                            if (in_array($_GET['status'], [2, 4])) {
+                                $hash = PaymentHash::findOne(['hash' => $_GET['tid']]);
                                 if ($hash === null) {
 
                                     // Mark invoice paid
@@ -514,7 +505,7 @@ class PaymentsController extends CustomController
 
                                     $paymentHashModel = new PaymentHash();
                                     $paymentHashModel->load(array('PaymentHash' => array(
-                                        'hash' => $response['tid'],
+                                        'hash' => $_GET['tid'],
                                     )));
                                     $paymentHashModel->save();
 
@@ -543,8 +534,8 @@ class PaymentsController extends CustomController
 			} else {
 				$this->Errorlogging("no invoice", "Bitcoin", $paymentSignature);
 			}
-      	} else {
-      		$this->Errorlogging("no data", "Bitcoin", $paymentSignature);
+      	} catch(\Exception $e) {
+      		$this->Errorlogging($e->getMessage(), "Bitcoin", $paymentSignature);
       	}
     }
 
@@ -554,26 +545,23 @@ class PaymentsController extends CustomController
 
 		$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), '2Checkout', $paymentSignature);
 
-        $paymentComponent = new BasePayment();
-
-        $response = $paymentComponent->get($_POST, [
-            'sale_id',
-            'invoice_id',
-            'item_id_1',
-            'fraud_status',
-            'list_currency',
-            'hash',
-            'invoice_list_amount'
-        ]);
-
-		if ($response) {
-			$payment = Payments::findOne(['id' => $response['item_id_1']]);
+		try {
+            BasePayment::validateResponse($_POST, [
+                'sale_id',
+                'invoice_id',
+                'item_id_1',
+                'fraud_status',
+                'list_currency',
+                'hash',
+                'invoice_list_amount'
+            ]);
+			$payment = Payments::findOne(['id' => $_POST['item_id_1']]);
 
 	        if ($payment !== null) {
 
-	        	$this->paymentLog($response, $payment->id);
+	        	$this->paymentLog($_POST, $payment->id);
 
-	        	$payments = Payments::findOne(['id' => $response['item_id_1']]);
+	        	$payments = Payments::findOne(['id' => $_POST['item_id_1']]);
                 $payments->date_update = time();
                 $payments->response = 1;
                 $payments->update();
@@ -598,18 +586,18 @@ class PaymentsController extends CustomController
 					}
 
 					$hashSid = $account_number; #Input your seller ID (2Checkout account number)
-					$hashOrder = $response['sale_id'];
-					$hashInvoice = $response['invoice_id'];
+					$hashOrder = $_POST['sale_id'];
+					$hashInvoice = $_POST['invoice_id'];
 					$StringToHash = strtoupper(md5($hashOrder . $hashSid . $hashInvoice . $secret_word));
 
                     $payments = Payments::findOne(['id' => $payment->id]);
                     $payments->comment = $hashOrder . '; ' . $hashInvoice;
                     $payments->transaction_id = $hashOrder;
 
-					if ($StringToHash == $response['md5_hash']) {
-						if (strtolower($response['list_currency']) == "usd") {
-							if (strtolower($response['fraud_status']) == 'pass') {
-								if ($payments->amount == $response['invoice_list_amount']) {
+					if ($StringToHash == $_POST['md5_hash']) {
+						if (strtolower($_POST['list_currency']) == "usd") {
+							if (strtolower($_POST['fraud_status']) == 'pass') {
+								if ($payments->amount == $_POST['invoice_list_amount']) {
 									$hash = PaymentHash::findOne(['hash' => $hashOrder]);
 			            			if ($hash === null) {
 
@@ -617,7 +605,7 @@ class PaymentsController extends CustomController
 
 	                					$paymentHashModel = new PaymentHash();
 										$paymentHashModel->load(array('PaymentHash' => array(
-											'hash' => $response['sale_id'],
+											'hash' => $_POST['sale_id'],
 										)));
 										$paymentHashModel->save();
 
@@ -679,8 +667,8 @@ class PaymentsController extends CustomController
             } else {
             	$this->Errorlogging("no invoice", "2Checkout", $paymentSignature);
             }
-		} else {
-			$this->Errorlogging("no data", "2Checkout", $paymentSignature);
+		} catch(\Exception $e) {
+			$this->Errorlogging($e->getMessage(), "2Checkout", $paymentSignature);
 		}
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace my\components\payments;
 
+
 /**
  * Class BasePayment
  * @package my\components\payments
@@ -25,30 +26,19 @@ class BasePayment
      * @param array $response
      * @param array $requiredKeys
      * @return bool
+     * @throws \Exception
      */
-    protected function _validateResponse($response, $requiredKeys)
+    public static function validateResponse($response, $requiredKeys)
     {
         if (empty($response)) {
-            return false;
+            throw new \Exception('Bad response');
         }
 
         foreach ($requiredKeys as $item) {
            if (!isset($response[$item])) {
-               return false;
+               throw new \Exception('Bad response');
            }
         }
         return true;
-    }
-
-    /**
-     * @param array $response
-     * @param array $requiredKeys
-     * @return array|bool
-     */
-    public function get($response, $requiredKeys) {
-        if (!$this->_validateResponse($response, $requiredKeys)) {
-            return false;
-        }
-        return $response;
     }
 }
