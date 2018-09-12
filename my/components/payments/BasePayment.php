@@ -36,7 +36,7 @@ class BasePayment
 
         foreach ($requiredKeys as $item) {
            if (!isset($response[$item])) {
-               throw new \Exception('Bad response');
+               throw new \Exception('Bad response expected key: ' . $item);
            }
         }
         return true;

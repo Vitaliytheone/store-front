@@ -76,7 +76,7 @@ class PaymentsController extends CustomController
 
                 BasePayment::validateResponse(
                     $response,
-                    ['ACK', 'id', 'PAYMENTINFO_0_TRANSACTIONID']
+                    ['ACK', 'PAYMENTINFO_0_TRANSACTIONID']
                 );
 
                 $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response), 'Paypalexpress', $paymentSignature);
