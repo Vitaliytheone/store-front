@@ -836,7 +836,6 @@ class Project extends ActiveRecord implements ProjectInterface
                 if (in_array($status, [
                         Project::STATUS_ACTIVE,
                         Project::STATUS_FROZEN,
-                        Project::STATUS_TERMINATED
                     ]) && !empty($db)) {
                     return true;
                 }
