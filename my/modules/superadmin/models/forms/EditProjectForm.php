@@ -1,6 +1,7 @@
 <?php
 namespace my\modules\superadmin\models\forms;
 
+use common\models\panels\AdditionalServices;
 use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -463,5 +464,13 @@ class EditProjectForm extends Model {
 
             $model->save(false);
         }
+
+        $additionalServices = AdditionalServices::find()
+            ->where(['type' => 1])
+            ->andWhere(['name' => $this->_project->site])
+            ->one();
+
+        $additionalServices->currency = CurrencyHelper::getCurrencyCodeById($this->currency);
+        $additionalServices->save(false);
     }
 }
