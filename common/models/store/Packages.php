@@ -3,7 +3,6 @@
 namespace common\models\store;
 
 use common\models\panels\AdditionalServices;
-use common\models\stores\StoreProviders;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Query;

@@ -245,15 +245,15 @@ class SystemController extends CustomController
         ];
 
         foreach ((new \yii\db\Query())->select([
-                'id',
-                'site'
+            'id',
+            'site'
         ])->from(DB_STORES . '.providers')->all() as $provider) {
             $res = (new \yii\db\Query())
                 ->select(['res'])->from(AdditionalServices::tableName())
                 ->where([
                     'name' => $provider['site'],
                     'store' => 1,
-                    'status' =>  0
+                    'status' => 0
                 ])->scalar();
 
             if (empty($res)) {
@@ -261,7 +261,7 @@ class SystemController extends CustomController
             }
 
             foreach ($storesTables as $table) {
-                $count = Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
+                $count = Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $res . "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
                 echo "Changed providers in table $table, $count rows affected by the execution\n";
             }
 

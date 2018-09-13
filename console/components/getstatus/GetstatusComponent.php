@@ -170,11 +170,9 @@ class GetstatusComponent extends Component
             ->all();
 
         $orders = [];
-
         $fromDate = time() - Yii::$app->params['cron.orderExpiry'] * 24 * 60 * 60;
 
         // Get orders from all shops.
-        //Total orders count limited by $ordersLimit
         foreach ($stores as $storeId => $store) {
             $storeProviders = (new Query())
                 ->select([
@@ -196,37 +194,32 @@ class GetstatusComponent extends Component
 
             $db = $store['db_name'];
             $query = (new Query());
-
-            $selection = [
+            $query->select([
                 'suborders.mode',
                 'suborders.status',
                 'suborders.updated_at',
-                'suborders,provider_id',
-                'suborders,id',
+                'suborders.provider_id',
+                'suborders.id',
                 'suborders.provider_order_id',
                 'suborders.overflow_quantity',
                 'suborders.provider_service',
-                'suborders.link'
-            ];
-
-            if ($params['withGetstatus']) {
-                $selection[] = 'getstatus.id as getstatus_id';
-            }
-
-            $query->select($selection)->from([
-                'suborders' => "$db.$this->_tableSuborders"
+                'suborders.link',
+                'getstatus.id as getstatus_id'
             ]);
+            $query->from(['suborders' => "$db.$this->_tableSuborders"]);
+            $query->leftJoin($this->_tableGetstatus,
+                $this->_tableGetstatus . '.oid = suborders.id and '
+                . $this->_tableGetstatus . '.pid = :store_id', [':store_id' => $store['id']]
+            );
 
             if ($params['withGetstatus']) {
-                $query->innerJoin($this->_tableGetstatus,
-                    $this->_tableGetstatus . '.oid = suborders.id and '
-                    . $this->_tableGetstatus . '.pid = :store_id', [':store_id' => $store['id']]
-                );
+                $query->andWhere(['not', ['getstatus.id' => null]]);
+            } else {
+                $query->andWhere(['getstatus.id' => null]);
             }
 
+            $query->andWhere(['suborders.mode' => Suborders::MODE_AUTO]);
             $query->andWhere([
-                'suborders.mode' => Suborders::MODE_AUTO
-            ])->andWhere([
                 'suborders.status' => [
                     Suborders::STATUS_PENDING,
                     Suborders::STATUS_IN_PROGRESS,
@@ -239,11 +232,11 @@ class GetstatusComponent extends Component
             }
 
             if ($params['limit']) {
-                $query->orderBy(['suborders.updated_at' => SORT_ASC])->limit($requestedLimit);
+                $query->orderBy(['suborders.updated_at' => SORT_ASC]);
+                $query->limit($requestedLimit);
             }
 
             $newOrders = $query->all();
-
 
             //Populate each order by store and provider data
             foreach ($newOrders as $order) {
@@ -263,7 +256,6 @@ class GetstatusComponent extends Component
 
         return $orders;
     }
-
 
     /**
      * Update suborder by values
@@ -367,19 +359,14 @@ class GetstatusComponent extends Component
 
     }
 
-
     /**
      * Update provider order status
      */
     private function _updateStatus()
     {
-        /**
-         * Make request pull
-         */
         $fromDate = time() - Yii::$app->params['cron.orderExpiry'] * 24 * 60 * 60;
         $orders = ArrayHelper::index($this->_orders, 'id');
         $groups = ArrayHelper::map($this->_orders, 'id', 'provider_order_id', 'provider_site');
-
 
         foreach ($groups as $site => $group) {
 
@@ -399,13 +386,22 @@ class GetstatusComponent extends Component
                     continue;
                 }
 
-                $providerOrder = (new Query())->select(['status', 'charge', 'start_count', 'charge_currency', 'result'])
-                    ->from($panel_db . '.orders')
-                    ->where(['id' => $providerOrderId])->one();
+                $query = (new Query())->select([
+                    'status',
+                    'charge',
+                    'start_count',
+                    'charge_currency',
+                    'result'
+                ]);
+
+                $providerOrder = $query->from($panel_db . '.orders')
+                    ->where(['id' => $providerOrderId])
+                    ->one();
 
                 if (empty($providerOrder)) {
                     continue;
                 }
+
                 $response = [
                     'charge' => $providerOrder['charge'],
                     'start_count' => $providerOrder['start_count'],
