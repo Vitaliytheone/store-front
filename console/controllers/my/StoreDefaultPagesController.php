@@ -10,7 +10,7 @@ use Yii;
 class StoreDefaultPagesController extends CustomController
 {
     /**
-     *
+     * Set default pages
      */
     public function actionSetDefault()
     {
@@ -57,7 +57,11 @@ class StoreDefaultPagesController extends CustomController
                 ->andWhere(['!=', 'is_default', 1])
                 ->all();
 
-            //print_r($notDefault);
+            for ($i = 0; $i < count($notDefault); $i++) {
+                Yii::$app->db->createCommand()
+                    ->update($store['db_name'] . '.pages', ['is_default' => 1])
+                    ->execute();
+            }
         }
     }
 
