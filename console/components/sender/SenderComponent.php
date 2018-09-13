@@ -22,6 +22,8 @@ use yii\helpers\ArrayHelper;
  */
 class SenderComponent extends Component
 {
+    const API_ACTION_PRIVATE = 'private';
+
     /**
      * One-time orders sample limit
      * @var integer
@@ -386,7 +388,7 @@ class SenderComponent extends Component
 
             $requestParams = array(
                 'key' => $provider['api_key'],
-                'action' => Providers::API_ACTION_PRIVATE,
+                'action' => self::API_ACTION_PRIVATE,
                 'service' => $orderPackage['provider_service'],
                 'link' => $order['link'],
                 'quantity' => $order['overflow_quantity'],
