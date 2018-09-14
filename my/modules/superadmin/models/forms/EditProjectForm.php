@@ -465,12 +465,9 @@ class EditProjectForm extends Model {
             $model->save(false);
         }
 
-        $additionalServices = AdditionalServices::find()
-            ->where(['type' => 1])
-            ->andWhere(['name' => $this->_project->site])
-            ->one();
-
-        $additionalServices->currency = CurrencyHelper::getCurrencyCodeById($this->currency);
-        $additionalServices->save(false);
+        AdditionalServices::updateAll(
+            ['currency' => CurrencyHelper::getCurrencyCodeById($this->currency)],
+            ['type' => 1, 'name' => $this->_project->site]
+        );
     }
 }

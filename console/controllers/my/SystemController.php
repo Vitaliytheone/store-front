@@ -22,6 +22,8 @@ use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
+use common\models\panels\AdditionalServices;
+use common\helpers\CurrencyHelper;
 
 /**
  * Class SystemController
@@ -532,6 +534,30 @@ class SystemController extends CustomController
             $language->save(false);
 
             $this->stderr('Created language for panel  ' . '[' . $panel->id . ' ' . $panel->name . ']' . "\n", Console::FG_GREEN);
+        }
+    }
+
+    /**
+     * Change additional_services.currency
+     */
+    public function actionChangeCurrency()
+    {
+        $additionalServices = AdditionalServices::find()->where(['type' => 1])->all();
+
+        foreach ($additionalServices as $key => $service) {
+            $panel = (new Query())
+                ->select('currency')
+                ->from(DB_PANELS.'.project')
+                ->where(['site' => $service->name])
+                ->one();
+
+            if (empty($panel)) {
+                echo "Panel $service->name is not exist \n";
+            } else {
+                $service->currency = CurrencyHelper::getCurrencyCodeById($panel['currency']);
+                $service->save();
+                echo "Changed currency at $service->name panel \n";
+            }
         }
     }
 }
