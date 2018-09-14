@@ -1,5 +1,5 @@
 <?php
-namespace app\components\payments\methods;
+namespace sommerce\components\payments\methods;
 
 use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
@@ -59,11 +59,23 @@ class Mercadopago extends BasePayment {
 
         $amount = $checkout->price;
 
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
+            $this->_payment->save(false);
+        }
+
         if ('usd' === $currency && $course) {
             $amount = $checkout->price * (float)$course;
 
-            //$payment->amount_course = $amount;
-            //$payment->save(false);
+            $this->_payment->amount_course = $amount;
+            $this->_payment->save(false);
         }
 
         $clientData = [
@@ -75,8 +87,8 @@ class Mercadopago extends BasePayment {
                 [
                     "id" => $checkout->id,
                     "currency_id" => $store->currency,
-                    "title" => static::getDescription($user),
-                    "description" => static::getDescription($user),
+                    "title" => static::getDescription($email),
+                    "description" => static::getDescription($email),
                     "unit_price" => (float)$amount,
                     "quantity" => 1
                 ]
@@ -142,7 +154,7 @@ class Mercadopago extends BasePayment {
         }
 
         $paymentGateway = PaymentMethods::findOne([
-            'pgid' => PaymentMethods::METHOD_MERCADOPADO,
+            'method' => PaymentMethods::METHOD_MERCADOPAGO,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED
         ]);
@@ -203,7 +215,7 @@ class Mercadopago extends BasePayment {
         if (empty($paymentId)
             || !($this->_payment = Payments::findOne([
                 'id' => $paymentId,
-                'type' => PaymentGateway::METHOD_MERCADOPADO
+                'type' => PaymentMethods::METHOD_MERCADOPAGO
             ]))
             || in_array($this->_payment->invoice_status, [1, 2])) {
             // no invoice
@@ -222,14 +234,14 @@ class Mercadopago extends BasePayment {
         $this->_log->setResponse($response);
         $this->_log->save(false);
 
-        if (strtolower($currency) != strtolower($panel->getCurrencyCode())) {
+        if (strtolower($currency) != strtolower($store->currency)) {
             return [
                 'result' => 2,
                 'content' => 'Bad currency'
             ];
         }
 
-        if ('usd' == strtolower($panel->getCurrencyCode())) {
+        if ('usd' == strtolower($store->currency)) {
             $paymentAmount = $this->_payment->amount_course; // сумму оплаты payments.amount_course
         } else {
             $paymentAmount = $this->_payment->amount; // сумму оплаты payments.amount

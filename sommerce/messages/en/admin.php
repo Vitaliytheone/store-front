@@ -399,6 +399,12 @@ return [
     'settings.payments_authorize_merchant_client_key' => 'Merchant client key',
     'settings.payments_authorize_test_mode' => 'Use test mode',
 
+    'settings.payments_edit_mercadopago' => 'Edit MercadoPago',
+    'settings.payments_mercadopago_client_id' => 'Client ID',
+    'settings.payments_mercadopago_secret' => 'Secret Key',
+    'settings.payments_mercadopago_course' => 'Course',
+    'settings.payments_mercadopago_test_mode' => 'Use test mode',
+
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
     'settings.providers_save' => 'Save changes',

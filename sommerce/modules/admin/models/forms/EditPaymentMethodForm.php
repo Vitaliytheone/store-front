@@ -202,6 +202,15 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_authorize_test_mode')],
                 ]
             ],
+            PaymentMethods::METHOD_MERCADOPAGO => [
+                'icon' => '/img/pg/authorize.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'mercadopado_client_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][client_id]', 'value' => $getDetailsField('client_id'), 'label' => Yii::t('admin', 'settings.payments_mercadopago_client_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'mercadopado_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret]', 'value' => $getDetailsField('secret'), 'label' => Yii::t('admin', 'settings.payments_mercadopago_secret')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'mercadopado_course', 'placeholder' => '', 'name' => 'PaymentsForm[details][course]', 'value' => $getDetailsField('course'), 'label' => Yii::t('admin', 'settings.payments_mercadopago_course')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_mercadopago_test_mode')],
+                ]
+            ],
         ];
 
         return ArrayHelper::getValue($paymentsFormData, $method);
