@@ -1,6 +1,7 @@
 <?php
 
 use my\components\ActiveForm;
+use my\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $datetime array */
@@ -15,7 +16,7 @@ use my\components\ActiveForm;
         <?php $form = ActiveForm::begin([
             'id' => 'createTicketForm',
             'method' => 'get',
-            'action' => '/superadmin/statuses/sender',
+            'action' => Url::toRoute('/statuses/sender'),
             'fieldConfig' => [
                 'template' => "{label}\n{input}",
                 'labelOptions' => ['class' => 'control-label'],
