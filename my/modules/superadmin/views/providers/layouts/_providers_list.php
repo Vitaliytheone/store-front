@@ -18,7 +18,7 @@
         <th class="query-sort"><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_count')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_in_use')?></th>
-        <th class="query-sort"><?= $providers['sort']->link('sc', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('start_count', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
@@ -66,7 +66,7 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?= $provider['sc'] ?>
+                    <?= $provider['start_count'] ?>
                 </td>
                 <td>
                     <?= $provider['refill'] ?>
