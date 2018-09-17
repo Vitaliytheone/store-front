@@ -1,6 +1,7 @@
 <?php
 namespace my\helpers;
 
+use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
@@ -386,9 +387,12 @@ class OrderHelper {
         $additionalService->service_view = 1;
         $additionalService->store = 1;
         $additionalService->auto_services = 1;
-        $additionalService->sc = 1;
+        $additionalService->start_count = 1;
         $additionalService->generateApiHelp($domain);
         $additionalService->status = AdditionalServices::STATUS_ACTIVE;
+        $additionalService->service_description = 1;
+        $additionalService->import = 1;
+        $additionalService->currency = CurrencyHelper::getCurrencyCodeById($order->getCurrency());
 
         if (!$additionalService->save(false)) {
             $order->status = Orders::STATUS_ERROR;

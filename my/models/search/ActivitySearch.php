@@ -252,7 +252,7 @@ class ActivitySearch extends Model
         if (!Yii::$app->user->isGuest) {
             $timezone = Yii::$app->user->identity->timezone;
         }
-        return ((int)$timezone) + Yii::$app->params['time'];
+        return ((int)$timezone);
     }
 
     /**
