@@ -37,7 +37,7 @@ class EditPaymentMethodForm extends PaymentMethods
                     /* @var $event \yii\base\Event */
                     /* @var $model $this */
                     $model = $event->sender;
-                    $details = $model->getAttribute('details');
+                    $details = (array)$model->getAttribute('details');
 
                     foreach ($details as $key => $elem) {
                         if (is_string($elem)) {
