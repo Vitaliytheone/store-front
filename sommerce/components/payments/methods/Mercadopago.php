@@ -59,18 +59,6 @@ class Mercadopago extends BasePayment
 
         $amount = $checkout->price;
 
-        if (!($this->_payment = Payments::findOne([
-            'checkout_id' => $checkout->id,
-        ]))) {
-            $this->_payment = new Payments();
-            $this->_payment->method = $this->_method;
-            $this->_payment->checkout_id = $checkout->id;
-            $this->_payment->amount = $checkout->price;
-            $this->_payment->customer = $checkout->customer;
-            $this->_payment->currency = $checkout->currency;
-            $this->_payment->save(false);
-        }
-
         $clientData = [
             "external_reference" => $checkout->id,
             'customer' => [
@@ -87,7 +75,7 @@ class Mercadopago extends BasePayment
                 ]
             ],
             'back_urls' => [
-                'success' => SiteHelper::hostUrl($store->ssl) . '/mercadopago',
+                'success' => SiteHelper::hostUrl($store->ssl) . '/mercadopago?checkout_id=' . $checkout->id,
                 'failure' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
                 'pending' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
             ],
@@ -200,6 +188,21 @@ class Mercadopago extends BasePayment
             ];
         }
 
+        $this->_checkout = Checkouts::findOne([
+            'id' => $id
+        ]);
+
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
+        }
+
         $paymentId = $paymentInfoResponse['collection']['external_reference'];
         $status = $paymentInfoResponse['collection']['status'];
         $amount = $paymentInfoResponse['collection']['transaction_amount'];
@@ -221,12 +224,13 @@ class Mercadopago extends BasePayment
 
         $this->_payment->response_status = 1;
         $this->_payment->updated_at = time();
+        $this->_payment->transaction_id = $id;
+        $this->_payment->status = Payments::STATUS_AWAITING;
+        $this->_payment->response_status = $_POST['status'];
 
         // заносим запись в таблицу payments_log
-        $this->_log = new PaymentsLog();
-        $this->_log->pid = $this->_payment->id;
-        $this->_log->setResponse($response);
-        $this->_log->save(false);
+        PaymentsLog::log($this->_checkout->id, $_POST);
+        $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
 
         if (strtolower($currency) != strtolower($store->currency)) {
             return [
@@ -244,10 +248,6 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $this->_payment->transaction_id = $id;
-        $this->_payment->status = Payments::STATUS_AWAITING;
-        $this->_payment->response_status = $status;
-
         if ($status != 'approved') {
             return [
                 'result' => 2,
@@ -258,9 +258,8 @@ class Mercadopago extends BasePayment
         return [
             'result' => 1,
             'transaction_id' => $id,
-            'fee' => 0,
             'amount' => $this->_payment->amount,
-            'payment_id' => $this->_payment->id,
+            'checkout_id' => $this->_checkout->id,
             'content' => 'Ok'
         ];
     }
