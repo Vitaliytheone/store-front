@@ -25,7 +25,7 @@ class SubscriptionSearch
      * Get models array
      * @return array
      */
-    public function search()
+    public function search(): array
     {
         $currentTime = time();
 
@@ -83,6 +83,50 @@ class SubscriptionSearch
 
         }
 
-        return $models;
+        return [
+            'models' => $models,
+            'totals' => $this->getTotals($models),
+        ];
+    }
+
+    /**
+     * @param array $models
+     * @return array
+     */
+    private function getTotals(array $models): array
+    {
+        $totals = [
+            'all' => 0,
+            'active' => 0,
+            'paused' => 0,
+            'completed' => 0,
+            'expired' => 0,
+            'canceled' => 0,
+            'avg' => 0,
+        ];
+
+        if (count($models) == 0) {
+            return $totals;
+        }
+
+        $fieldCount = 0;
+
+        foreach ($models as $model) {
+            $totals['all'] += $model['allCount'];
+            $totals['active'] += $model['activeCount'];
+            $totals['paused'] += $model['pausedCount'];
+            $totals['completed'] += $model['completedCount'];
+            $totals['expired'] += $model['expiredCount'];
+            $totals['canceled'] += $model['canceledCount'];
+            $totals['avg'] += $model['avg'];
+
+            if ($model['avg'] != 0) {
+                $fieldCount++;
+            }
+        }
+
+        $totals['avg'] = round($totals['avg'] / $fieldCount);
+
+        return $totals;
     }
 }
