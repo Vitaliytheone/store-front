@@ -7,6 +7,7 @@ use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
 use yii\base\Model;
+use Yii;
 
 /**
  * Class ChangeDomainForm
@@ -70,7 +71,7 @@ class ChangeDomainForm extends Model {
 
         if ($isChangedDomain) {
             if (!$this->_project->disableDomain()) {
-                $this->addError('domain', 'Can not change domain');
+                $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
                 return false;
             }
 
@@ -82,7 +83,7 @@ class ChangeDomainForm extends Model {
                 $additionalService->generateApiHelp($domain);
 
                 if (!$additionalService->save(false)) {
-                    $this->addError('domain', 'Can not change domain');
+                    $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
                     return false;
                 }
             }
@@ -91,7 +92,7 @@ class ChangeDomainForm extends Model {
         }
 
         if (!$this->_project->save(false)) {
-            $this->addError('domain', 'Can not change domain');
+            $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
             return false;
         }
 
@@ -153,8 +154,8 @@ class ChangeDomainForm extends Model {
     public function attributeLabels()
     {
         return [
-            'domain' => 'Domain',
-            'subdomain' => 'Is subdomain'
+            'domain' => Yii::t('app/superadmin', 'panels.change_domain.domain'),
+            'subdomain' => Yii::t('app/superadmin', 'panels.change_domain.subdomain'),
         ];
     }
 }

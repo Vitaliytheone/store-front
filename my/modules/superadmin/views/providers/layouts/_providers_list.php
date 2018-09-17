@@ -19,7 +19,7 @@
         <th class="query-sort <?= $providers['sort']->getAttributeOrder('name') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('name') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort <?= $providers['sort']->getAttributeOrder('service_count') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('service_count') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('service_count', ['class' => 'sort_link', 'style' => 'color:inherit;']); ?></th>
         <th class="query-sort <?= $providers['sort']->getAttributeOrder('service_inuse_count') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('service_inuse_count') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('service_inuse_count', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort <?= $providers['sort']->getAttributeOrder('sc') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('sc') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('sc', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort <?= $providers['sort']->getAttributeOrder('start_count') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('start_count') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('start_count', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort <?= $providers['sort']->getAttributeOrder('refill') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('refill') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort <?= $providers['sort']->getAttributeOrder('cancel') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('cancel') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort <?= $providers['sort']->getAttributeOrder('auto_services') == null ? 'sort_default"' : '' ?> <?= $providers['sort']->getAttributeOrder('auto_services') == 3 ? 'sort_asc"' : 'sort_desc"' ?>><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
@@ -63,7 +63,7 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?= $provider['sc'] ?>
+                    <?= $provider['start_count'] ?>
                 </td>
                 <td>
                     <?= $provider['refill'] ?>

@@ -4,7 +4,6 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
-use Yii;
 use common\models\store\Products;
 use common\models\store\Pages;
 use yii\base\Model;
@@ -21,7 +20,6 @@ class EditPageForm extends Model
     public $seo_title;
     public $seo_description;
     public $seo_keywords;
-    public $template;
 
     /**
      * Current page
@@ -95,7 +93,7 @@ class EditPageForm extends Model
             [['title', 'visibility', 'url'], 'required'],
             [['title', 'seo_title'], 'string', 'max' => 255],
             [['visibility'], 'integer'],
-            [['content', 'template'], 'string'],
+            [['content'], 'string'],
             [['title', 'seo_title', 'seo_description', 'url',], 'trim'],
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 
@@ -107,9 +105,7 @@ class EditPageForm extends Model
                 if ($pageId) {
                     $query->andWhere('id <> :pageId', [':pageId' => $pageId]);
                 }
-            }],
-
-            ['template', 'default', 'value' => Pages::TEMPLATE_PAGE],
+            }]
         ];
     }
 

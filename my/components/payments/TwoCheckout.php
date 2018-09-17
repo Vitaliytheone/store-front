@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
  * Class TwoCheckout
  * @package my\components\payments
  */
-class TwoCheckout
+class TwoCheckout extends BasePayment
 {
     /**
      * Последние сообщения об ошибках
@@ -42,10 +42,16 @@ class TwoCheckout
     }
 
     /**
-     * @param $params array
+     * @param $params array | false
      * @return string
      */
     public function detailSale($params) {
+
+        if (!$this->_validateParams($params))  {
+            $this ->_errors = array('invalid params');
+            return false;
+        }
+
         $this->_endPoint .= 'sales/detail_sale';
 
         $response = $this->request($this->_endPoint, http_build_query($params));
@@ -77,6 +83,13 @@ class TwoCheckout
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERPWD => $auth,
         );
+
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $curlOptions += [
+                CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']
+            ];
+        }
 
         $ch = curl_init();
         curl_setopt_array($ch,$curlOptions);

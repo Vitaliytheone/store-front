@@ -8,7 +8,7 @@ use Yii;
  * Class Paypal
  * @package my\components\payments
  */
-class Paypal{
+class Paypal extends BasePayment {
    /**
     * Последние сообщения об ошибках
     * @var array
@@ -56,14 +56,21 @@ class Paypal{
        }
    }
 
+
     /**
     * Сформировываем запрос
     *
     * @param string $method Данные о вызываемом методе перевода
     * @param array $params Дополнительные параметры
-    * @return array / boolean Response array / boolean false on failure
+    * @return array | boolean Response array / boolean false on failure
     */
    public function request($method,$params = array()) {
+
+      if (!$this->_validateParams($params))  {
+          $this ->_errors = array('invalid params');
+          return false;
+      }
+
       $paypalInfo = \common\models\panels\PaymentGateway::findOne(['pgid' => 1, 'visibility' => 1, 'pid' => -1]);
 
       $username = '';
@@ -114,6 +121,13 @@ class Paypal{
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => $request,
       );
+
+       if (!empty(PROXY_CONFIG['main']['ip'])) {
+           $curlOptions += [
+               CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+               CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']
+           ];
+       }
 
       $ch = curl_init();
       curl_setopt_array($ch,$curlOptions);

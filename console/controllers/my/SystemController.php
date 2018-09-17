@@ -5,6 +5,7 @@ use common\models\panels\Customers;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
+use common\models\panels\Languages;
 use common\models\panels\Orders;
 use common\models\panels\PanelDomains;
 use common\models\panels\Project;
@@ -21,6 +22,8 @@ use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
+use common\models\panels\AdditionalServices;
+use common\helpers\CurrencyHelper;
 
 /**
  * Class SystemController
@@ -502,5 +505,59 @@ class SystemController extends CustomController
             null, // days
             '2018-01-01'
         ])->run();
+    }
+
+    /**
+     * Create default panel languages for active panels if its empty
+     */
+    public function actionCreatePanelLanguage()
+    {
+        $panels = Project::find()
+            ->where(['act' => Project::STATUS_ACTIVE])
+            ->all();
+
+        foreach ($panels as $panel) {
+
+            /** @var Project $panel */
+
+            if (Languages::findOne(['panel_id' => $panel->id])) {
+                continue;
+            }
+
+            $language = new Languages();
+            $language->panel_id = $panel->id;
+            $language->language_code = 'en';
+            $language->name = Yii::$app->params['languages']['en'];
+            $language->position = 1;
+            $language->visibility = Languages::VISIBILITY_ON;
+            $language->edited = Languages::EDITED_OFF;
+            $language->save(false);
+
+            $this->stderr('Created language for panel  ' . '[' . $panel->id . ' ' . $panel->name . ']' . "\n", Console::FG_GREEN);
+        }
+    }
+
+    /**
+     * Change additional_services.currency
+     */
+    public function actionChangeCurrency()
+    {
+        $additionalServices = AdditionalServices::find()->where(['type' => 1])->all();
+
+        foreach ($additionalServices as $key => $service) {
+            $panel = (new Query())
+                ->select('currency')
+                ->from(DB_PANELS.'.project')
+                ->where(['site' => $service->name])
+                ->one();
+
+            if (empty($panel)) {
+                echo "Panel $service->name is not exist \n";
+            } else {
+                $service->currency = CurrencyHelper::getCurrencyCodeById($panel['currency']);
+                $service->save();
+                echo "Changed currency at $service->name panel \n";
+            }
+        }
     }
 }

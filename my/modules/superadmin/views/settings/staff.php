@@ -29,7 +29,7 @@
             </ul>
         </div>
         <div class="col-lg-8">
-            <button type="button" class="btn btn-secondary mb-3" id="createStaff">Add account</button>
+            <button type="button" class="btn btn-secondary mb-3" id="createStaff"><?= Yii::t('app/superadmin', 'settings.staff.add_account') ?></button>
             <div class="card">
                 <div class="card-block">
                     <?= $this->render('layouts/_staffs_list', [

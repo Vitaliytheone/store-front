@@ -65,7 +65,7 @@ class ChangeStaffPasswordForm extends Model
     public function attributeLabels()
     {
         return [
-            'password' => 'New password',
+            'password' => Yii::t('app/superadmin', 'staff.change_password.new_password'),
         ];
     }
 }

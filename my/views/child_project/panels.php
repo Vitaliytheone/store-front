@@ -37,13 +37,11 @@
     <div class="col-lg-12">
         <h2 class="page-header">
             <?= Yii::t('app', 'child_panels.list.header')?>
-            <a href="/childpanels/order" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="' . Yii::t('app', 'child_panels.order_can_not_create') . '"' ?>>
-                <?= Yii::t('app', 'child_panels.list.order_panel')?>
-            </a>
-            <div class="alert alert-danger error-hint hidden" role="alert" style="margin-top: 10px">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <span class="content"></span>
-            </div>
+            <?php if ($accesses['canCreate']) :?>
+                <a href="/childpanels/order" class="btn btn-outline btn-success create-order">
+                    <?= Yii::t('app', 'child_panels.list.order_panel')?>
+                </a>
+            <?php endif; ?>
         </h2>
     </div>
 </div>
@@ -111,6 +109,15 @@
                                     'class' => 'btn btn-outline btn-info btn-xs disabled',
                                 ])?>
                                 */ ?>
+                            <?php endif; ?>
+                            <?php if ($panel['access']['isActivityLog']) : ?>
+                                <?= Html::a('<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), '/activitylog/' . $panel['id'], [
+                                    'class' => 'btn btn-outline btn-warning btn-xs',
+                                ])?>
+                            <?php else : ?>
+                                <?= Html::tag('span', '<i class="fa fa-clock-o fa-fw"></i> ' . Yii::t('app', 'panels.list.action_activity_log'), [
+                                    'class' => 'btn btn-outline btn-warning btn-xs disabled',
+                                ])?>
                             <?php endif; ?>
                         </td>
                     </tr>
