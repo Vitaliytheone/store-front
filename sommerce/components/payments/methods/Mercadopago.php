@@ -17,7 +17,8 @@ use common\models\store\PaymentsLog;
  * Class Mercadopago
  * @package app\components\payments\methods
  */
-class Mercadopago extends BasePayment {
+class Mercadopago extends BasePayment
+{
 
     /**
      * @var string - url action
@@ -37,11 +38,10 @@ class Mercadopago extends BasePayment {
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getOptions();
+        $paymentMethodOptions = $details->getDetails();
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
-        $course = ArrayHelper::getValue($paymentMethodOptions, 'course', 0);
         $currency = strtolower($store->currency);
 
         if (!$clientId || !$clientSecret) {
@@ -60,21 +60,14 @@ class Mercadopago extends BasePayment {
         $amount = $checkout->price;
 
         if (!($this->_payment = Payments::findOne([
-            'checkout_id' => $this->_checkout->id,
+            'checkout_id' => $checkout->id,
         ]))) {
             $this->_payment = new Payments();
             $this->_payment->method = $this->_method;
-            $this->_payment->checkout_id = $this->_checkout->id;
-            $this->_payment->amount = $this->_checkout->price;
-            $this->_payment->customer = $this->_checkout->customer;
-            $this->_payment->currency = $this->_checkout->currency;
-            $this->_payment->save(false);
-        }
-
-        if ('usd' === $currency && $course) {
-            $amount = $checkout->price * (float)$course;
-
-            $this->_payment->amount_course = $amount;
+            $this->_payment->checkout_id = $checkout->id;
+            $this->_payment->amount = $checkout->price;
+            $this->_payment->customer = $checkout->customer;
+            $this->_payment->currency = $checkout->currency;
             $this->_payment->save(false);
         }
 
@@ -217,7 +210,8 @@ class Mercadopago extends BasePayment {
                 'id' => $paymentId,
                 'type' => PaymentMethods::METHOD_MERCADOPAGO
             ]))
-            || in_array($this->_payment->invoice_status, [1, 2])) {
+            //|| in_array($this->_payment->invoice_status, [1, 2])
+        ) {
             // no invoice
             return [
                 'result' => 2,
@@ -225,8 +219,8 @@ class Mercadopago extends BasePayment {
             ];
         }
 
-        $this->_payment->response = 1;
-        $this->_payment->date_update = time();
+        $this->_payment->response_status = 1;
+        $this->_payment->updated_at = time();
 
         // заносим запись в таблицу payments_log
         $this->_log = new PaymentsLog();
@@ -241,11 +235,7 @@ class Mercadopago extends BasePayment {
             ];
         }
 
-        if ('usd' == strtolower($store->currency)) {
-            $paymentAmount = $this->_payment->amount_course; // сумму оплаты payments.amount_course
-        } else {
-            $paymentAmount = $this->_payment->amount; // сумму оплаты payments.amount
-        }
+        $paymentAmount = $this->_payment->amount; // сумму оплаты payments.amount
 
         if ($paymentAmount != $amount) {
             return [
@@ -255,7 +245,7 @@ class Mercadopago extends BasePayment {
         }
 
         $this->_payment->transaction_id = $id;
-        $this->_payment->status = Payments::STATUS_PENDING;
+        $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->response_status = $status;
 
         if ($status != 'approved') {
