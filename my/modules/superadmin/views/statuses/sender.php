@@ -16,7 +16,7 @@ use my\helpers\Url;
         <?php $form = ActiveForm::begin([
             'id' => 'createTicketForm',
             'method' => 'get',
-            'action' => Url::toRoute('/statuses/sender'),
+            'action' => Url::toRoute(['/statuses/sender']),
             'fieldConfig' => [
                 'template' => "{label}\n{input}",
                 'labelOptions' => ['class' => 'control-label'],
