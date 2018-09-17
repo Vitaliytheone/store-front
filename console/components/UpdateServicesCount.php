@@ -1,17 +1,45 @@
 <?php
 
-namespace console\helpers;
+namespace console\components;
 
 use yii\db\Query;
 use common\models\panels\Project;
+use common\models\panels\AdditionalServices;
+use yii\helpers\ArrayHelper;
 
-class UpdateServicesCountHelper
+class UpdateServicesCount
 {
+
+    /**
+     * Update counts
+     */
+    public function run()
+    {
+        $providers = $this->getProviders();
+
+        $providersPanels = $this->getProviderPanels();
+
+        foreach ($providers as $key => $provider) {
+            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
+            $usedProjects = [];
+
+            foreach ($projects as $project) {
+                if (!empty($project['providers'][$provider['res']])) {
+                    $usedProjects[] = $project;
+                }
+            }
+
+            AdditionalServices::updateAll(
+                ['service_count' => count(array_values($projects)), 'service_inuse_count' => count(array_values($usedProjects))],
+                ['res' => $provider['res']]
+            );
+        }
+    }
 
     /**
      * @return array
      */
-    public static function buildQuery()
+    public function getProviders()
     {
         $providers = (new Query())
             ->select([
@@ -27,14 +55,14 @@ class UpdateServicesCountHelper
      * Get all user services data
      * @return array
      */
-    public static function getProviderPanels()
+    public function getProviderPanels()
     {
         $providerPanels = [];
         if (!empty($providerPanels)) {
             return $providerPanels;
         }
 
-        $projects = static::getProjects();
+        $projects = $this->getProjects();
 
         foreach ((new Query())
                      ->select(['aid', 'pid'])
@@ -57,7 +85,7 @@ class UpdateServicesCountHelper
      * Get all projects
      * @return array
      */
-    public static function getProjects()
+    public function getProjects()
     {
         $projects = [];
         if (!empty($projects)) {

@@ -15,7 +15,6 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
-use common\models\panels\AdditionalServices;
 use console\components\payments\PaymentsFee;
 use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
@@ -29,7 +28,7 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\db\Exception as DbException;
-use console\helpers\UpdateServicesCountHelper;
+use console\components\UpdateServicesCount;
 
 /**
  * Class CronController
@@ -441,26 +440,6 @@ class CronController extends CustomController
      */
     public function actionUpdateServicesCount()
     {
-        $providers = UpdateServicesCountHelper::buildQuery();
-
-        $providersPanels = UpdateServicesCountHelper::getProviderPanels();
-
-        foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
-            $usedProjects = [];
-
-            foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
-                    $usedProjects[] = $project;
-                }
-            }
-
-            $service = AdditionalServices::find()
-                ->where(['res' => $provider['res']])
-                ->one();
-            $service->service_count = count(array_values($projects));
-            $service->service_inuse_count = count(array_values($usedProjects));
-            $service->update();
-        }
+        Yii::$container->get(UpdateServicesCount::class)->run();
     }
 }
