@@ -9,9 +9,9 @@ use MercadoPagoException;
 use yii\helpers\ArrayHelper;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
-use common\models\stores\PaymentGateways;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
+use common\models\store\Checkouts;
 
 /**
  * Class Mercadopago
@@ -42,7 +42,6 @@ class Mercadopago extends BasePayment
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
-        $currency = strtolower($store->currency);
 
         if (!$clientId || !$clientSecret) {
             return static::returnError();
@@ -67,11 +66,10 @@ class Mercadopago extends BasePayment
             'items' => [
                 [
                     "id" => $checkout->id,
-                    "currency_id" => $store->currency,
                     "title" => static::getDescription($email),
-                    "description" => static::getDescription($email),
+                    "quantity" => 1,
+                    "currency_id" => $store->currency,
                     "unit_price" => (float)$amount,
-                    "quantity" => 1
                 ]
             ],
             'back_urls' => [
@@ -79,7 +77,8 @@ class Mercadopago extends BasePayment
                 'failure' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
                 'pending' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
             ],
-            "notification_url" => SiteHelper::hostUrl($store->ssl) . '/mercadopago',
+            //"notification_url" => SiteHelper::hostUrl($store->ssl) . '/mercadopago',
+            "notification_url" => 'http://97762e25.ngrok.io/mercadopago?checkout_id=' . $checkout->id,
         ];
 
         $response = null;
@@ -119,6 +118,7 @@ class Mercadopago extends BasePayment
     {
         $id = ArrayHelper::getValue($_GET, 'id');
         $topic = ArrayHelper::getValue($_GET, 'topic');
+        $checkoutId = ArrayHelper::getValue($_GET, 'checkout_id');
 
         if (!$id || !$topic) {
             return [
@@ -132,6 +132,21 @@ class Mercadopago extends BasePayment
                 'result' => 2,
                 'content' => 'bad data'
             ];
+        }
+
+        $this->_checkout = Checkouts::findOne([
+            'id' => $checkoutId
+        ]);
+
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
         }
 
         $paymentGateway = PaymentMethods::findOne([
@@ -173,7 +188,7 @@ class Mercadopago extends BasePayment
         $response = null;
 
         try {
-            $response = $client->get_payment_info($id);
+            $response = $client->get_payment_info($_GET["id"]);
             $paymentInfoResponse = ArrayHelper::getValue($response, 'response', []);
         } catch (MercadoPagoException $e) {
             Yii::error($e->getTraceAsString());
@@ -188,35 +203,19 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $this->_checkout = Checkouts::findOne([
-            'id' => $id
-        ]);
-
-        if (!($this->_payment = Payments::findOne([
-            'checkout_id' => $this->_checkout->id,
-        ]))) {
-            $this->_payment = new Payments();
-            $this->_payment->method = $this->_method;
-            $this->_payment->checkout_id = $this->_checkout->id;
-            $this->_payment->amount = $this->_checkout->price;
-            $this->_payment->customer = $this->_checkout->customer;
-            $this->_payment->currency = $this->_checkout->currency;
-        }
-
-        $paymentId = $paymentInfoResponse['collection']['external_reference'];
         $status = $paymentInfoResponse['collection']['status'];
         $amount = $paymentInfoResponse['collection']['transaction_amount'];
         $currency = $paymentInfoResponse["collection"]["currency_id"];
 
-        if (empty($paymentId)
-            || !($this->_payment = Payments::findOne([
-                'id' => $paymentId,
-                'type' => PaymentMethods::METHOD_MERCADOPAGO
+        if (empty($checkoutId)
+            || !($this->_checkout = Checkouts::findOne([
+                'id' => $checkoutId,
+                'method_id' => $paymentGateway->id
             ]))
-            //|| in_array($this->_payment->invoice_status, [1, 2])
-        ) {
+            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
             return [
+                'checkout_id' => $checkoutId,
                 'result' => 2,
                 'content' => 'no invoice'
             ];
