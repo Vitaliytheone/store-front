@@ -36,9 +36,9 @@ class Payment {
          * @var Stores $store
          */
         $store = Yii::$app->store->getInstance();
-        $className = CurrencyHelper::getPaymentClass($method, $store->currency);
+        $className = (string)CurrencyHelper::getPaymentClass($method, $store->currency);
 
-        $className = '\sommerce\components\payments\methods\\' . $className;
+        $className = '\sommerce\components\payments\methods\\' . ucfirst($className);
 
         if (!class_exists($className)) {
             throw new UnknownClassException();
