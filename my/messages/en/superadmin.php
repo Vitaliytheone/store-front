@@ -756,8 +756,11 @@ return [
     'subscription.list.column_avg' => 'Avg',
 
     'sender.title' => 'Sender',
+    'sender.list.total' => 'Total',
+    'sender.send_method.local' => 'Local',
     'sender.list.provider_id' => 'Provider Id',
     'sender.send_method.perfectpanel' => 'Perfectpanel',
+
     'sender.send_method.simple' => 'Simple',
     'sender.send_method.multi' => 'Multi',
     'sender.send_method.mass' => 'Mass',

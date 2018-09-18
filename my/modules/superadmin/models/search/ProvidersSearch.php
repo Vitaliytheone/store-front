@@ -64,7 +64,7 @@ class ProvidersSearch
                 'id',
                 'name',
                 'res',
-                'sc',
+                'start_count',
                 'refill',
                 'cancel',
                 'service_view',
@@ -156,7 +156,7 @@ class ProvidersSearch
                 'status' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_status'),
                 ],
-                'sc' => [
+                'start_count' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_start_count'),
                 ],
                 'refill' => [
@@ -215,7 +215,7 @@ class ProvidersSearch
                 'name' => $provider['name'],
                 'projects' => array_values($projects),
                 'usedProjects' => array_values($usedProjects),
-                'sc' => AdditionalServices::getStartCountName($provider['sc']),
+                'start_count' => AdditionalServices::getStartCountName($provider['start_count']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
                 'cancel' => AdditionalServices::getCancelName($provider['cancel']),
                 'type' => AdditionalServices::getTypeNameString($provider['type']),

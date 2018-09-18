@@ -364,7 +364,7 @@ return [
     'settings.payments_paywant_apiSecret' => 'API Secret',
     'settings.payments_paywant_guide_1' => 'Store Site: ',
     'settings.payments_paywant_guide_2' => 'Ip address (Site): ',
-    'settings.payments_paywant_guide_2-1' => '54.37.81.176',
+    'settings.payments_paywant_guide_2-1' => '54.36.105.233',
     'settings.payments_paywant_guide_3' => 'API Return Address: ',
 
     'settings.payments_edit_billplz' => 'Edit Billplz',
