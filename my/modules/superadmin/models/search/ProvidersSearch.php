@@ -63,7 +63,7 @@ class ProvidersSearch
             ->select([
                 'id',
                 'name',
-                'res',
+                'provider_id',
                 'start_count',
                 'refill',
                 'cancel',
@@ -79,7 +79,7 @@ class ProvidersSearch
         if (!empty($searchQuery)) {
             $providers->andFilterWhere([
                 'or',
-                ['=', 'res', $searchQuery],
+                ['=', 'provider_id', $searchQuery],
                 ['like', 'name', $searchQuery],
                 ['like', 'name_script', $searchQuery],
             ]);
@@ -140,7 +140,7 @@ class ProvidersSearch
 
         $sort = new Sort([
             'attributes' => [
-                'res' => [
+                'provider_id' => [
                     'default' => SORT_DESC,
                     'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
                 ],
@@ -174,7 +174,7 @@ class ProvidersSearch
             ],
         ]);
         $sort->defaultOrder = [
-            'res' => SORT_DESC,
+            'provider_id' => SORT_DESC,
         ];
 
         $providers = $this->buildQuery($type, $plan)
@@ -200,18 +200,18 @@ class ProvidersSearch
         $providersPanels = $this->getProviderPanels();
 
         foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
+            $projects = ArrayHelper::getValue($providersPanels, $provider['provider_id'], []);
             $usedProjects = [];
 
             foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
+                if (!empty($project['providers'][$provider['provider_id']])) {
                     $usedProjects[] = $project;
                 }
             }
 
             $returnProviders[$key] = [
                 'id' => $provider['id'],
-                'res' => $provider['res'],
+                'provider_id' => $provider['provider_id'],
                 'name' => $provider['name'],
                 'projects' => array_values($projects),
                 'usedProjects' => array_values($usedProjects),
@@ -250,7 +250,7 @@ class ProvidersSearch
         if (!empty($searchQuery)) {
             $plans->andFilterWhere([
                 'or',
-                ['=', 'res', $searchQuery],
+                ['=', 'provider_id', $searchQuery],
                 ['like', 'name', $searchQuery],
                 ['like', 'name_script', $searchQuery],
             ]);

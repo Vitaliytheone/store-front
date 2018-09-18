@@ -14,7 +14,7 @@
 <table class="table table-sm table-custom" id="providersTable">
     <thead>
     <tr>
-        <th class="query-sort"><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('provider_id', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_count')?></th>
         <th><?= Yii::t('app/superadmin', 'providers.list.column_in_use')?></th>
@@ -61,7 +61,7 @@
             ?>
             <tr>
                 <td>
-                    <?= $provider['res'] ?>
+                    <?= $provider['provider_id'] ?>
                 </td>
                 <td>
                     <?= $provider['name'] ?>
