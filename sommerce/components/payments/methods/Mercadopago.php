@@ -77,8 +77,7 @@ class Mercadopago extends BasePayment
                 'failure' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
                 'pending' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
             ],
-            //"notification_url" => SiteHelper::hostUrl($store->ssl) . '/mercadopago',
-            "notification_url" => 'http://97762e25.ngrok.io/mercadopago?checkout_id=' . $checkout->id,
+            "notification_url" => SiteHelper::hostUrl($store->ssl) . '/mercadopago?checkout_id=' . $checkout->id,
         ];
 
         $response = null;
