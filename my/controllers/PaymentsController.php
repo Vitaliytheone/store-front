@@ -552,7 +552,7 @@ class PaymentsController extends CustomController
                 'item_id_1',
                 'fraud_status',
                 'list_currency',
-                'hash',
+                'md5_hash',
                 'invoice_list_amount'
             ]);
 			$payment = Payments::findOne(['id' => $_POST['item_id_1']]);
