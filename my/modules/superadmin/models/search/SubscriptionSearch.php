@@ -109,6 +109,8 @@ class SubscriptionSearch
             return $totals;
         }
 
+        $fieldCount = 0;
+
         foreach ($models as $model) {
             $totals['all'] += $model['allCount'];
             $totals['active'] += $model['activeCount'];
@@ -117,9 +119,13 @@ class SubscriptionSearch
             $totals['expired'] += $model['expiredCount'];
             $totals['canceled'] += $model['canceledCount'];
             $totals['avg'] += $model['avg'];
+
+            if ($model['avg'] != 0) {
+                $fieldCount++;
+            }
         }
 
-        $totals['avg'] = round($totals['avg'] / count($models));
+        $totals['avg'] = round($totals['avg'] / $fieldCount);
 
         return $totals;
     }

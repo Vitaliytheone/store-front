@@ -30,12 +30,6 @@ $config = [
             'migrationPath' => '@common/migrations/my/',
         ],
 
-        'migrate-superadmin' => [
-            'class' => 'console\controllers\superadmin\CustomMigrateController',
-            'migrationTable' => DB_PANELS . '.system_migrations',
-            'migrationPath' => '@common/migrations/superadmin/',
-        ],
-
         'cron-sommerce' => [
             'class' => 'console\controllers\sommerce\CronController',
         ],
