@@ -41,25 +41,25 @@
                     <?= $provider['name'] ?>
                 </td>
                 <td>
-                    <?php if ($provider['projects']) : ?>
-                        <?= Html::a($provider['projects'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
+                    <?php if ($provider['count']) : ?>
+                        <?= Html::a($provider['count'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
                     <?php else : ?>
-                        <?= $provider['projects'] ?>
+                        <?= $provider['count'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if ($provider['usedProjects']) : ?>
-                        <?= Html::a($provider['usedProjects'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
+                    <?php if ($provider['in_use']) : ?>
+                        <?= Html::a($provider['in_use'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
                     <?php else : ?>
-                        <?= $provider['usedProjects'] ?>
+                        <?= $provider['in_use'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
