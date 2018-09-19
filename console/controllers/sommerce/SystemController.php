@@ -262,7 +262,8 @@ class SystemController extends CustomController
                     && $storePages[$key]['is_default'] != 1
                 ) {
                     Yii::$app->db->createCommand()->update($store['db_name'].'.pages', [
-                        'is_default' => 1
+                        'is_default' => 1,
+                        'deleted' => 0
                     ], ['url' => $value['url'], 'template' => $value['template']])
                         ->execute();
                 }
