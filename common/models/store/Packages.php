@@ -113,7 +113,7 @@ class Packages extends ActiveRecord
      */
     public function getProvider()
     {
-        return $this->hasOne(AdditionalServices::class, ['res' => 'provider_id']);
+        return $this->hasOne(AdditionalServices::class, ['provider_id' => 'provider_id']);
     }
 
     /**

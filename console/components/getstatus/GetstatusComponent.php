@@ -183,7 +183,7 @@ class GetstatusComponent extends Component
                     'provider_id' => 'sp.provider_id',
                 ])
                 ->from(['sp' => $this->_tableStoreProviders])
-                ->leftJoin(['pr' => $this->_tableProviders], 'pr.res = sp.provider_id')
+                ->leftJoin(['pr' => $this->_tableProviders], 'pr.provider_id = sp.provider_id')
                 ->andWhere(['store_id' => $storeId])
                 ->indexBy('provider_id')
                 ->all();

@@ -127,7 +127,7 @@ class SenderComponent extends Component
                 'sprv.apikey'
             ])
             ->from(['so' => StoresSendOrders::tableName()])
-            ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.res = so.provider_id')
+            ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.provider_id = so.provider_id')
             ->leftJoin(['sprv' => StoreProviders::tableName()], 'sprv.provider_id = so.provider_id AND sprv.store_id = so.store_id')
             ->limit($this->ordersLimit)
             ->all();
@@ -370,7 +370,7 @@ class SenderComponent extends Component
                     'type' => 'pr.type',
                 ])
                 ->from(['sprv' => StoreProviders::tableName()])
-                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.res = sprv.provider_id')
+                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.provider_id = sprv.provider_id')
                 ->where([
                     'sprv.provider_id' => $orderPackage['provider_id'],
                     'sprv.store_id' => $sendOrder['store_id']

@@ -34,12 +34,12 @@ class ProvidersSearch extends BaseSearch
 
         $query = (new Query())
             ->select([
-                'p.res as id',
+                'p.provider_id as id',
                 'p.name as site',
                 'sp.apikey',
             ])
             ->from("$storeProvidersTable sp")
-            ->leftJoin("$providersTable p", 'p.res = sp.provider_id')
+            ->leftJoin("$providersTable p", 'p.provider_id = sp.provider_id')
             ->andWhere([
                 'sp.store_id' => $this->_store->id
             ]);

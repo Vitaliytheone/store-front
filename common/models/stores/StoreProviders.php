@@ -36,7 +36,7 @@ class StoreProviders extends ActiveRecord
         return [
             [['provider_id', 'store_id'], 'integer'],
             [['apikey'], 'string', 'max' => 255],
-            [['provider_id'], 'exist', 'skipOnError' => true, 'targetClass' => AdditionalServices::class, 'targetAttribute' => ['provider_id' => 'res']],
+            [['provider_id'], 'exist', 'skipOnError' => true, 'targetClass' => AdditionalServices::class, 'targetAttribute' => ['provider_id' => 'provider_id']],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
         ];
     }
@@ -59,7 +59,7 @@ class StoreProviders extends ActiveRecord
      */
     public function getProvider()
     {
-        return $this->hasOne(AdditionalServices::class, ['res' => 'provider_id']);
+        return $this->hasOne(AdditionalServices::class, ['provider_id' => 'provider_id']);
     }
 
     /**
