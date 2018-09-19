@@ -259,7 +259,6 @@ class SystemController extends CustomController
                 } elseif (
                     $storePages[$key]['template'] == $value['template']
                     && $storePages[$key]['url'] == $value['url']
-                    && $storePages[$key]['is_default'] != 1
                 ) {
                     Yii::$app->db->createCommand()->update($store['db_name'].'.pages', [
                         'is_default' => 1,
