@@ -6,6 +6,7 @@ use common\models\store\Messages;
 use common\models\stores\StoreAdmins;
 use sommerce\helpers\MessagesHelper;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -236,16 +237,11 @@ class SystemController extends CustomController
             ->andWhere(['!=', 'db_name', ''])
             ->all();
 
-        $template = $template =  (new Query())
+        $templates = (new Query())
             ->select('*')
-            ->from('store_template.pages')
+            ->from(Yii::$app->params['storeDefaultDatabase'] . '.pages')
             ->indexBy('url')
             ->all();
-
-        $titles = [];
-        for ($i = 0; $i < count($template); $i++) {
-            $titles[] = $template[$i]['title'];
-        }
 
         foreach ($stores as $store) {
             $storePages = (new Query())
@@ -255,7 +251,7 @@ class SystemController extends CustomController
                 ->all();
 
             $batchInsertData = [];
-            foreach ($template as $key => $value) {
+            foreach ($templates as $key => $value) {
                 if (!isset($storePages[$key])) {
                     $batchInsertData[] = array_values(array_slice($value, 1));
                 } elseif ($storePages[$key]['template'] != $value['template']) {
@@ -272,7 +268,7 @@ class SystemController extends CustomController
                 }
             }
 
-            Yii::$app->db->createCommand()->batchInsert($store['db_name'].'.pages', array_keys(array_slice($template['contacts'], 1)), $batchInsertData)->execute();
+            Yii::$app->db->createCommand()->batchInsert($store['db_name'].'.pages', array_keys(array_slice($templates['contacts'], 1)), $batchInsertData)->execute();
         }
     }
 }
