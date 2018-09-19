@@ -508,59 +508,6 @@ class SystemController extends CustomController
     }
 
     /**
-     * Set default pages at stores
-     * @throws \yii\db\Exception
-     */
-    public function actionSetDefaultPages()
-    {
-        $stores = (new Query())
-            ->select('db_name')
-            ->from(DB_STORES . '.stores')
-            ->where('db_name IS NOT NULL')
-            ->andWhere(['!=', 'db_name', ''])
-            ->all();
-
-        $template = $template =  (new Query())
-            ->select('*')
-            ->from('store_template.pages')
-            ->indexBy('url')
-            ->all();
-
-        $titles = [];
-        for ($i = 0; $i < count($template); $i++) {
-            $titles[] = $template[$i]['title'];
-        }
-
-        foreach ($stores as $store) {
-            $storePages = (new Query())
-                ->select('*')
-                ->from($store['db_name'] . '.pages')
-                ->indexBy('url')
-                ->all();
-
-            $batchInsertData = [];
-            foreach ($template as $key => $value) {
-                if (!isset($storePages[$key])) {
-                    $batchInsertData[] = array_values(array_slice($value, 1));
-                } elseif ($storePages[$key]['template'] != $value['template']) {
-                    $batchInsertData[] = array_values(array_slice($value, 1));
-                } elseif (
-                    $storePages[$key]['template'] == $value['template']
-                    && $storePages[$key]['url'] == $value['url']
-                    && $storePages[$key]['is_default'] != 1
-                ) {
-                    Yii::$app->db->createCommand()->update($store['db_name'].'.pages', [
-                        'is_default' => 1
-                    ], ['url' => $value['url'], 'template' => $value['template']])
-                        ->execute();
-                }
-            }
-
-            Yii::$app->db->createCommand()->batchInsert($store['db_name'].'.pages', array_keys(array_slice($template['contacts'], 1)), $batchInsertData)->execute();
-        }
-    }
-
-    /**
      * Create default panel languages for active panels if its empty
      */
     public function actionCreatePanelLanguage()
