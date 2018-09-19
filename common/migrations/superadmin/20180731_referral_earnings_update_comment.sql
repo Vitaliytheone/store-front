@@ -1,1 +1,0 @@
-ALTER TABLE `referral_earnings` MODIFY `status` tinyint(1) COMMENT '1 - completed, 2 - rejected, 3 - cancel, 4 - debit';
