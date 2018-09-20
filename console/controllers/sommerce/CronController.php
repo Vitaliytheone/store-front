@@ -176,7 +176,7 @@ class CronController extends CustomController
         /**
          * @var $component Paypal
          */
-        $component = Payment::getPayment('paypal');
+        $component = Payment::getPayment('Paypal');
 
         foreach (Payments::find()->andWhere([
             'method' => PaymentMethods::METHOD_PAYPAL,
