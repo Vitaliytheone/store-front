@@ -38,10 +38,6 @@ $config = [
             'class' => 'console\controllers\sommerce\SystemController',
         ],
 
-        'system-superadmin' => [
-            'class' => 'console\controllers\superadmin\SystemController',
-        ],
-
         'blocks-sommerce' => [
             'class' => 'console\controllers\sommerce\BlocksController',
         ],

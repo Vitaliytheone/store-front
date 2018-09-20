@@ -398,6 +398,8 @@ return [
     'providers.edit.column_skype' => 'Skype',
     'providers.edit.column_name' => 'Name',
     'providers.edit.modal_header' => 'Edit provider',
+    'providers.edit.modal_close_btn' => 'Close',
+    'providers.edit.modal_save_changes' => 'Save changes',
 
     'error.invoices.incorrect_invoice_credit' => 'Incorrect invoice credit value',
     'error.invoices.can_not_edit_credit' => 'Can not edit invoice credit',

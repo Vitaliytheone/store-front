@@ -2,6 +2,7 @@
     /* @var $this yii\web\View */
     /* @var $providers \my\modules\superadmin\models\search\ProvidersSearch */
     /* @var $provider \common\models\panels\AdditionalServices */
+    /* @var $filters array */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -11,31 +12,27 @@
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
 ?>
-<table class="table table-border tablesorter-bootstrap" id="providersTable">
+<table class="table table-border" id="providersTable">
     <thead>
     <tr>
-        <th class="query-sort"><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_count')?></th>
-        <th><?= Yii::t('app/superadmin', 'providers.list.column_in_use')?></th>
-        <th class="query-sort"><?= $providers['sort']->link('start_count', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="query-sort"><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
-        <th class="w-1 no_sort"></th>
+        <th><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('service_count', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('service_inuse_count', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('start_count', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('auto_services', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('status', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('date', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+ <th class="w-1 no_sort"></th>
     </tr>
     </thead>
     <tbody>
     <?php if (!empty($providers['models'])) : ?>
         <?php foreach (SpecialCharsHelper::multiPurifier($providers['models']) as $key => $provider) : ?>
-            <?php
-                $count = count($provider['projects']);
-                $use = count($provider['usedProjects']);
-            ?>
             <tr>
                 <td>
                     <?= $provider['res'] ?>
@@ -44,25 +41,25 @@
                     <?= $provider['name'] ?>
                 </td>
                 <td>
-                    <?php if ($count) : ?>
-                        <?= Html::a($count, Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
+                    <?php if ($provider['count']) : ?>
+                        <?= Html::a($provider['count'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
                     <?php else : ?>
-                        <?= $count ?>
+                        <?= $provider['count'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if ($use) : ?>
-                        <?= Html::a($use, Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
+                    <?php if ($provider['in_use']) : ?>
+                        <?= Html::a($provider['in_use'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
                     <?php else : ?>
-                        <?= $use ?>
+                        <?= $provider['in_use'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
@@ -142,4 +139,19 @@
 <!-- Delete <br> after update ccs to v.2 -->
 <br>
 <!-- -->
-<!-- Add pagination widgets -->
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $providers['pages'],]); ?>
+            </ul>
+        </nav>
+        <!-- Pagination End -->
+    </div>
+    <div class="col-md-6 text-md-right">
+        <?= CountPagination::widget([
+            'pages' => $providers['pages'],
+            'params' => $filters
+        ]) ?>
+    </div>
+</div>
