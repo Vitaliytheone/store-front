@@ -116,10 +116,6 @@ class StoreController extends CustomController
             ]);
         }
 
-        if ($model->getTrial()) {
-            return $this->redirect(Url::toRoute('/stores'));
-        }
-
         return $this->redirect('/invoices/' . $model->getInvoiceCode());
     }
 
