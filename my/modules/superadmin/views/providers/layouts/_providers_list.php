@@ -22,7 +22,7 @@
         <th class="query-sort"><?= $providers['sort']->link('refill', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('cancel', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('service_view', ['class' => 'sort_link', 'style' => 'color:inherit']);?></th>
-        <th class="query-sort"><?= $providers['sort']->link('auto_order', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
+        <th class="query-sort"><?= $providers['sort']->link('send_method', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="query-sort"><?= $providers['sort']->link('type', ['class' => 'sort_link', 'style' => 'color:inherit']); ?></th>
         <th class="table-custom__dropdown">
             <div class="dropdown">
@@ -101,7 +101,7 @@
                     <?= $provider['service_view'] ?>
                 </td>
                 <td>
-                    <?= $provider['auto_order'] ?>
+                    <?= $provider['send_method'] ?>
                 </td>
                 <td>
                     <?= $provider['type'] ?>
@@ -119,43 +119,19 @@
                     <div class="dropdown">
                         <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'providers.list.actions_label')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <h6 class="dropdown-header"><?= Yii::t('app/superadmin', 'providers.list.action_change_status') ?></h6>
 
-                            <?php if (AdditionalServices::STATUS_ACTIVE != $provider['status']) : ?>
-                                <?= Html::a(Yii::t('app', 'additional_service.status.ok'), Url::toRoute(['/providers/change-status',
-                                    'id' => $provider['id'],
-                                    'status' => AdditionalServices::STATUS_ACTIVE
-                                ]), [
-                                    'class' => 'dropdown-item',
-                                ])?>
-                            <?php endif; ?>
-
-                            <?php if (AdditionalServices::STATUS_FROZEN != $provider['status']) : ?>
-                                <?= Html::a(Yii::t('app', 'additional_service.status.broken'), Url::toRoute(['/providers/change-status',
-                                    'id' => $provider['id'],
-                                    'status' => AdditionalServices::STATUS_FROZEN
-                                ]), [
-                                    'class' => 'dropdown-item',
-                                ])?>
-                            <?php endif; ?>
-
-                            <?php if (AdditionalServices::STATUS_PROCESSING != $provider['status']) : ?>
-                                <?= Html::a(Yii::t('app', 'additional_service.status.send_only'), Url::toRoute(['/providers/change-status',
-                                    'id' => $provider['id'],
-                                    'status' => AdditionalServices::STATUS_PROCESSING
-                                ]), [
-                                    'class' => 'dropdown-item',
-                                ])?>
-                            <?php endif; ?>
-
-                            <?php if (AdditionalServices::STATUS_NOT_UPDATED != $provider['status']) : ?>
-                                <?= Html::a(Yii::t('app', 'additional_service.status.not_updated'), Url::toRoute(['/providers/change-status',
-                                    'id' => $provider['id'],
-                                    'status' => AdditionalServices::STATUS_NOT_UPDATED
-                                ]), [
-                                    'class' => 'dropdown-item',
-                                ])?>
-                            <?php endif; ?>
+                            <?= Html::a(Yii::t('app/superadmin', 'providers.modal_edit_provider'), Url::toRoute(['/providers/edit',
+                                'id' => $provider['id']
+                            ]), [
+                                'class' => 'dropdown-item edit',
+                                'data-details' => Json::encode($provider)
+                            ])?>
+                            <?= Html::a(Yii::t('app/superadmin', 'providers.modal_clone_provider'), Url::toRoute(['/providers/clone',
+                                'id' => $provider['id']
+                            ]), [
+                                'class' => 'dropdown-item clone',
+                                'data-details' => Json::encode($provider)
+                            ])?>
                         </div>
                     </div>
                 </td>

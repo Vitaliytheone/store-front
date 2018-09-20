@@ -45,3 +45,4 @@
     ])?>
 
 <?= $this->render('layouts/_projects_modal')?>
+<?= $this->render('layouts/_edit_provider_modal') ?>

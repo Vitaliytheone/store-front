@@ -47,6 +47,15 @@ use yii\helpers\ArrayHelper;
  * @property int $import
  * @property int $currency
  * @property int $provider_id
+ * @property int $name_script
+ * @property int $sender_params
+ * @property int $send_method
+ * @property int $provider_service_api_error
+ * @property int $service_auto_min
+ * @property int $service_auto_max
+ * @property int $provider_rate
+ * @property int $service_auto_rate
+ * @property int $getstatus_params
  *
  * @property string $date
  *
@@ -77,15 +86,18 @@ class AdditionalServices extends ActiveRecord
     const START_COUNT_NO = 0;
     const START_COUNT_YES = 1;
 
-    const SEND_METHOD_LOCAL = 0;
-    const SEND_METHOD_LAST = 1;
+    const SEND_METHOD_SIMPLE = 1;
+    const SEND_METHOD_PERFECTPANEL = 0;
     const SEND_METHOD_MULTI = 2;
-    const SEND_METHOD_MASS = 3;
+    const SEND_METHOD_MASS = 4;
 
     const SERVICE_VIEW_SIMPLE = 0;
     const SERVICE_VIEW_PERFECTPANEL = 1;
     const SERVICE_VIEW_MULTI = 2;
     const SERVICE_VIEW_UNIQUE = 3;
+
+    const DEFAULT_NO = 0;
+    const DEFAULT_YES = 1;
 
     /**
      * @inheritdoc
@@ -101,9 +113,9 @@ class AdditionalServices extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
+            //[['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
             [['res', 'type', 'status', 'search', 'start_count', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],
-            [['content'], 'string'],
+            [['content', 'name_script'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
             [['currency'], 'string', 'max' => 10],
@@ -155,6 +167,15 @@ class AdditionalServices extends ActiveRecord
             'import' => Yii::t('app', 'Import'),
             'currency' => Yii::t('app', 'Currency'),
             'provider_id' => Yii::t('app', 'Provider ID'),
+            'name_script' => Yii::t('app', 'Script Name'),
+            'sender_params' => Yii::t('app', 'Sender Params'),
+            'send_method' => Yii::t('app', 'Send Method'),
+            'provider_service_api_error' => Yii::t('app', 'Provider Service API Error'),
+            'service_auto_min' => Yii::t('app', 'Service Auto Min'),
+            'service_auto_max' => Yii::t('app', 'Service Auto Max'),
+            'provider_rate' => Yii::t('app', 'Provider Rate'),
+            'service_auto_rate' => Yii::t('app', 'Service Auto Rate'),
+            'getstatus_params' => Yii::t('app', 'Getstatus Params'),
         ];
     }
 
@@ -242,8 +263,22 @@ class AdditionalServices extends ActiveRecord
     public static function getAutoOrders(): array
     {
         return [
-            static::SEND_METHOD_LOCAL => Yii::t('app/superadmin', 'providers.auto_order.local'),
-            static::SEND_METHOD_LAST => Yii::t('app/superadmin', 'providers.auto_order.simple'),
+            static::SEND_METHOD_PERFECTPANEL => Yii::t('app/superadmin', 'providers.auto_order.perfectpanel'),
+            static::SEND_METHOD_SIMPLE => Yii::t('app/superadmin', 'providers.auto_order.simple'),
+            static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'providers.auto_order.multi'),
+            static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'providers.auto_order.mass'),
+        ];
+    }
+
+    /**
+     * Get auto_orders values
+     * @return array
+     */
+    public static function getSendMethods(): array
+    {
+        return [
+            static::SEND_METHOD_PERFECTPANEL => Yii::t('app/superadmin', 'providers.auto_order.perfectpanel'),
+            static::SEND_METHOD_SIMPLE => Yii::t('app/superadmin', 'providers.auto_order.simple'),
             static::SEND_METHOD_MULTI => Yii::t('app/superadmin', 'providers.auto_order.multi'),
             static::SEND_METHOD_MASS => Yii::t('app/superadmin', 'providers.auto_order.mass'),
         ];
@@ -302,6 +337,18 @@ class AdditionalServices extends ActiveRecord
     }
 
     /**
+     * Get default yes/no value
+     * @return array
+     */
+    public static function getDefaultBool(): array
+    {
+        return [
+            static::DEFAULT_NO => Yii::t('app/superadmin', 'providers.list.no'),
+            static::DEFAULT_YES => Yii::t('app/superadmin', 'providers.list.yes'),
+        ];
+    }
+
+    /**
      * Get service_view string name
      * @param $serviceView integer
      * @return string
@@ -344,6 +391,16 @@ class AdditionalServices extends ActiveRecord
     public static function getAutoOrderName($autoOrder)
     {
         return ArrayHelper::getValue(static::getAutoOrders(), $autoOrder, '');
+    }
+
+    /**
+     * Get send_method string name
+     * @param $autoOrder
+     * @return string
+     */
+    public static function getSendMethodName($autoOrder): string
+    {
+        return ArrayHelper::getValue(static::getSendMethods(), $autoOrder, '');
     }
 
     /**

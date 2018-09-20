@@ -68,11 +68,24 @@ class ProvidersSearch
                 'refill',
                 'cancel',
                 'service_view',
-                'auto_order',
+                'send_method',
                 'type',
                 'status',
                 'date',
                 'name_script',
+                'apihelp',
+                'sender_params',
+                'service_options',
+                'provider_service_id_label',
+                'provider_service_settings',
+                'provider_service_api_error',
+                'service_description',
+                'service_auto_min',
+                'service_auto_max',
+                'provider_rate',
+                'service_auto_rate',
+                'import',
+                'getstatus_params',
             ])
             ->from('additional_services');
 
@@ -147,7 +160,7 @@ class ProvidersSearch
                 'name' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_name'),
                 ],
-                'auto_order' => [
+                'send_method' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_send_method'),
                 ],
                 'type' => [
@@ -223,8 +236,21 @@ class ProvidersSearch
                 'date' => $provider['date'],
                 'statusName' => AdditionalServices::getStatusNameString($provider['status']),
                 'service_view' => AdditionalServices::getServiceViewName($provider['service_view']),
-                'auto_order' => AdditionalServices::getAutoOrderName($provider['auto_order']),
+                'send_method' => AdditionalServices::getAutoOrderName($provider['send_method']),
                 'name_script' => $provider['name_script'],
+                'apihelp' => $provider['apihelp'],
+                'sender_params' => $provider['sender_params'],
+                'service_options' => $provider['service_options'],
+                'provider_service_id_label' => $provider['provider_service_id_label'],
+                'provider_service_settings' => $provider['provider_service_settings'],
+                'provider_service_api_error' => $provider['provider_service_api_error'],
+                'service_description' => $provider['service_description'],
+                'service_auto_min' => $provider['service_auto_min'],
+                'service_auto_max' => $provider['service_auto_max'],
+                'provider_rate' => $provider['provider_rate'],
+                'service_auto_rate' => $provider['service_auto_rate'],
+                'import' => $provider['import'],
+                'getstatus_params' => $provider['getstatus_params'],
             ];
         }
 
