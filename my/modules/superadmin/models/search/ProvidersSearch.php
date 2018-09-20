@@ -148,7 +148,7 @@ class ProvidersSearch
                     'label' => Yii::t('app/superadmin', 'providers.list.column_name'),
                 ],
                 'auto_order' => [
-                    'label' => Yii::t('app/superadmin', 'providers.list.column_sender'),
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_send_method'),
                 ],
                 'type' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_type'),
