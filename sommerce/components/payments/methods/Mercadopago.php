@@ -67,6 +67,7 @@ class Mercadopago extends BasePayment
                 [
                     "id" => $checkout->id,
                     "title" => static::getDescription($email),
+                    "description" => static::getDescription($email),
                     "quantity" => 1,
                     "currency_id" => $store->currency,
                     "unit_price" => (float)$amount,
@@ -223,8 +224,8 @@ class Mercadopago extends BasePayment
         $this->_payment->response_status = 1;
         $this->_payment->updated_at = time();
         $this->_payment->transaction_id = $id;
-        $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->response_status = $_POST['status'];
+        $this->_payment->status = Payments::STATUS_AWAITING;
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
