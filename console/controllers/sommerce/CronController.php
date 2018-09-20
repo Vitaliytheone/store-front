@@ -125,15 +125,15 @@ class CronController extends CustomController
      */
     protected function _checkAuthorize(Stores $store)
     {
-        $currencies = ArrayHelper::index(CurrencyHelper::getPaymentsByCurrency($store->currency), 'code');
-        $method = ArrayHelper::getValue($currencies, PaymentMethods::METHOD_AUTHORIZE);
+        $method = PaymentMethods::METHOD_AUTHORIZE;
+        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
 
-        if (!$method) {
+        if (empty($availableMethods[$method])) {
             return;
         }
 
         $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_AUTHORIZE,
+            'method' => $method,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED,
         ]);
@@ -145,10 +145,10 @@ class CronController extends CustomController
         /**
          * @var Authorize $component
          */
-        $component = Payment::getPayment($paymentMethod->method);
+        $component = Payment::getPayment($method);
 
         foreach (Payments::find()->andWhere([
-            'method' => PaymentMethods::METHOD_AUTHORIZE,
+            'method' => $method,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {
@@ -162,8 +162,15 @@ class CronController extends CustomController
      */
     protected function _checkPaypalPayment(Stores $store)
     {
+        $method = PaymentMethods::METHOD_PAYPAL;
+        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
+
+        if (empty($availableMethods[$method])) {
+            return;
+        }
+
         $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYPAL,
+            'method' => $method,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED,
         ]);
@@ -173,13 +180,15 @@ class CronController extends CustomController
             return;
         }
 
+        CurrencyHelper::getCurrencyOptions($store->currency);
+
         /**
          * @var $component Paypal
          */
-        $component = Payment::getPayment($paymentMethod->method);
+        $component = Payment::getPayment($method);
 
         foreach (Payments::find()->andWhere([
-            'method' => PaymentMethods::METHOD_PAYPAL,
+            'method' => $method,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {
