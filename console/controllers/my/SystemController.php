@@ -560,4 +560,22 @@ class SystemController extends CustomController
             }
         }
     }
+
+    public function actionUpdateTimezones()
+    {
+        $customers = (new Query())
+            ->select(['id', 'timezone'])
+            ->from(DB_PANELS . '.customers')
+            ->all();
+
+        $timezoneList = Yii::$app->params['timezones'];
+        foreach ($customers as $customer) {
+            if (!isset($timezoneList[$customer['timezone']])) {
+                $newTimezone = round($customer['timezone'], -2);
+                if (isset($timezoneList[$newTimezone])) {
+                    Customers::updateAll(['timezone' => $newTimezone], ['id' => $customer['id']]);
+                }
+            }
+        }
+    }
 }
