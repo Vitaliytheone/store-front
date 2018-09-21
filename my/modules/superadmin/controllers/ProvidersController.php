@@ -45,7 +45,7 @@ class ProvidersController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['edit', 'get-panels'],
+                'only' => ['edit', 'get-panels', 'create'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -90,6 +90,25 @@ class ProvidersController extends CustomController
         $data = Yii::$app->request->post('EditProviderForm');
         $model = new EditProviderForm($data);
         $model->setProvider($provider);
+
+        if ($model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    public function actionCreate()
+    {
+        $model = new AdditionalServices();
+        $data = Yii::$app->request->post('EditProviderForm');
+        $model = $this->loadData($model, $data);
+        $model->beforeSave(true);
 
         if ($model->save()) {
             return [
@@ -167,5 +186,19 @@ class ProvidersController extends CustomController
         }
 
         return $model;
+    }
+
+    /**
+     * @param AdditionalServices $provider
+     * @param array $data
+     * @return AdditionalServices
+     */
+    protected function loadData(AdditionalServices $provider, array $data)
+    {
+        foreach ($data as $key => $value) {
+            $provider->$key = $value;
+        }
+
+        return $provider;
     }
 }

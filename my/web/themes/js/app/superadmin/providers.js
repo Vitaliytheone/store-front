@@ -9,7 +9,7 @@ customModule.superadminProvidersController = {
             window.location.href = link + (link.match(/\?/) ? '&' : '?') + form.serialize();
         });
 
-        $('.edit').click(function(e) {
+        $('.provider-form').click(function(e) {
             e.preventDefault();
 
             var link = $(this);
@@ -18,8 +18,19 @@ customModule.superadminProvidersController = {
             var errorBlock = $('#editProviderError', form);
             var details = link.data('details');
 
+            $('.modal-title').text(link.data('names').header);
+            $('#editProviderButton').text(link.data('names').save);
+
             errorBlock.addClass('hidden');
             errorBlock.html('');
+
+            if (link.data('clone') == 'clone') {
+                $('#editproviderform-provider_id', form).hide();
+                $('label').filter($('[for="editproviderform-provider_id"]')).hide();
+            } else {
+                $('#editproviderform-provider_id', form).show();
+                $('label').filter($('[for="editproviderform-provider_id"]')).show();
+            }
 
             $('#editproviderform-provider_id', form).val(details.provider_id);
             $('#editproviderform-name', form).val(details.name);

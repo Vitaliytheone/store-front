@@ -123,13 +123,20 @@
                             <?= Html::a(Yii::t('app/superadmin', 'providers.modal_edit_provider'), Url::toRoute(['/providers/edit',
                                 'id' => $provider['id']
                             ]), [
-                                'class' => 'dropdown-item edit',
+                                'class' => 'dropdown-item provider-form',
+                                'data-names' => Json::encode([
+                                    'header' => Yii::t('app/superadmin', 'providers.modal_edit_provider'),
+                                    'save' => Yii::t('app/superadmin', 'providers.modal.btn_save'),
+                                ]),
                                 'data-details' => Json::encode($provider)
                             ])?>
-                            <?= Html::a(Yii::t('app/superadmin', 'providers.modal_clone_provider'), Url::toRoute(['/providers/clone',
-                                'id' => $provider['id']
-                            ]), [
-                                'class' => 'dropdown-item clone',
+                            <?= Html::a(Yii::t('app/superadmin', 'providers.modal_clone_provider'), Url::toRoute(['/providers/create']), [
+                                'class' => 'dropdown-item provider-form',
+                                'data-clone' => 'clone',
+                                'data-names' => Json::encode([
+                                        'header' => Yii::t('app/superadmin', 'providers.modal_create.header'),
+                                        'save' => Yii::t('app/superadmin', 'providers.modal_create.create_btn'),
+                                ]),
                                 'data-details' => Json::encode($provider)
                             ])?>
                         </div>

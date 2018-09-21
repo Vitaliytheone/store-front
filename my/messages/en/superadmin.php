@@ -807,6 +807,8 @@ return [
     'providers.modal.close_btn' => 'Close',
     'providers.modal.btn_cancel' => 'Cancel',
     'providers.modal.btn_save' => 'Save changes',
+    'providers.modal_create.header' => 'Create provider',
+    'providers.modal_create.create_btn' => 'Create provider',
 
     'site.title' => 'Admin',
     'site.error.first_part' => 'The above error occurred while the Web server was processing your request.',

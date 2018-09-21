@@ -28,6 +28,9 @@
                 ],
             ]) ?>
                 <div class="input-group">
+                    <a href="<?= Url::toRoute('/providers/create')?>" class="btn btn-link" id="createProvider">
+                        <?= Yii::t('app/superadmin', 'providers.modal_create.header')?>
+                    </a>
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'providers.list.search') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
 
                     <div class="input-group-append">
