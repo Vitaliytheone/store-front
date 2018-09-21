@@ -70,21 +70,21 @@ $model = new EditProviderForm();
                 <div class="form-group">
                     <?= $form->field($model, 'refill')
                         ->dropDownList(
-                            AdditionalServices::getRefill(),
+                            AdditionalServices::getDefaultBool(),
                             ['class' => 'form-control', 'id' => 'edit-provider-refill']
                         ) ?>
                 </div>
                 <div class="form-group">
                     <?= $form->field($model, 'cancel')
                         ->dropDownList(
-                            AdditionalServices::getCancel(),
+                            AdditionalServices::getDefaultBool(),
                             ['class' => 'form-control', 'id' => 'edit-provider-cancel']
                         ) ?>
                 </div>
                 <div class="form-group">
                     <?= $form->field($model, 'sender_params')
                         ->textarea([
-                            //'style' => 'height:400px;width:955px',
+                            'style' => 'height:400px;',
                             'class' => 'form-control',
                             'id' => 'edit-provider-sender_params',
                         ]) ?>
@@ -106,7 +106,7 @@ $model = new EditProviderForm();
                 <div class="form-group">
                     <?= $form->field($model, 'service_options')
                         ->textarea([
-                            //'style' => 'height:400px;width:955px',
+                            'style' => 'height:400px;',
                             'class' => 'form-control',
                             'id' => 'edit-provider-service_options',
                         ]) ?>
@@ -121,7 +121,7 @@ $model = new EditProviderForm();
                 <div class="form-group">
                     <?= $form->field($model, 'provider_service_settings')
                         ->textarea([
-                            //'style' => 'height:400px;width:955px',
+                            'style' => 'height:400px;',
                             'class' => 'form-control',
                             'id' => 'edit-provider-provider_service_settings',
                         ]) ?>
@@ -129,7 +129,7 @@ $model = new EditProviderForm();
                 <div class="form-group">
                     <?= $form->field($model, 'provider_service_api_error')
                         ->textarea([
-                            //'style' => 'height:400px;width:955px',
+                            'style' => 'height:400px;',
                             'class' => 'form-control',
                             'id' => 'edit-provider-provider_service_api_error',
                         ]) ?>
@@ -179,8 +179,8 @@ $model = new EditProviderForm();
                 <div class="form-group">
                     <?= $form->field($model, 'getstatus_params')
                         ->textarea([
-                            'style' => 'height:400px;width:955px',
-                            //'class' => 'form-control',
+                            'style' => 'height:400px;',
+                            'class' => 'form-control',
                             'id' => 'edit-provider-getstatus_params',
                         ]) ?>
                 </div>

@@ -41,12 +41,22 @@ class EditProviderForm extends Model
      */
     private $_provider;
 
+    public function __construct($data = null, array $config = [])
+    {
+        parent::__construct($config);
+
+        foreach ((array)$data as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
     /**
      * @return array the validation rules.
      */
     public function rules()
     {
         return [
+            [['provider_id', 'name'], 'required'],
             [['provider_id', 'type', 'status', 'start_count', 'refill', 'cancel', 'provider_service_id_label'], 'integer'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],
@@ -71,7 +81,7 @@ class EditProviderForm extends Model
         if (!$this->validate()) {
             return false;
         }
-print_r($this->attributes);die;
+
         $this->_provider->provider_id = $this->provider_id;
         $this->_provider->name = $this->name;
         $this->_provider->apihelp = $this->apihelp;

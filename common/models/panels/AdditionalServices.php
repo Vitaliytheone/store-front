@@ -10,54 +10,59 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "{{%additional_services}}".
+ * This is the model class for table "additional_services".
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
- * @property integer $res
+ * @property int $res
+ * @property int $provider_id
  * @property string $apihelp
  * @property string $content
- * @property integer $type
- * @property integer $status
- * @property integer $search
+ * @property string $name_script
+ * @property string $currency
+ * @property int $type
+ * @property int $store
+ * @property int $status
+ * @property int $search
  * @property string $username
  * @property string $password
  * @property string $skype
  * @property string $type_name
- * @property integer $start_count
- * @property integer $refill
- * @property integer $cancel
- * @property integer $auto_services
- * @property integer $auto_order
- * @property integer $processing
- * @property integer $show_id
- * @property integer $input_type
+ * @property int $sc
+ * @property int $start_count
+ * @property int $callback
+ * @property int $refill
+ * @property int $cancel
+ * @property int $auto_services
+ * @property int $auto_order
+ * @property int $processing
+ * @property int $show_id
+ * @property int $input_type
  * @property string $proxy
- * @property integer $string_type
- * @property integer $string_name
+ * @property int $string_type
+ * @property int $string_name
  * @property string $params
+ * @property string $services_params
+ * @property string $sender_params
+ * @property string $getstatus_params
  * @property string $type_services
- * @property string $provider_service_settings
- * @property string $provider_service_error
- * @property int $service_view
- * @property string $service_options
- * @property int $provider_service_id_label
- * @property int $store
- * @property int $service_description
- * @property int $import
- * @property int $currency
- * @property int $provider_id
- * @property int $name_script
- * @property int $sender_params
+ * @property string $date
+ * @property int $default_order_status
+ * @property int $manual_order_status
  * @property int $send_method
- * @property int $provider_service_api_error
  * @property int $service_auto_min
  * @property int $service_auto_max
  * @property int $provider_rate
+ * @property int $service_view
+ * @property string $service_options
+ * @property int $provider_service_id_label
+ * @property string $provider_service_settings
+ * @property string $provider_service_api_error
+ * @property int $import
+ * @property int $service_description
  * @property int $service_auto_rate
- * @property int $getstatus_params
- *
- * @property string $date
+ * @property int $service_count
+ * @property int $service_inuse_count
  *
  * @property UserServices[] $userServices
  */
@@ -113,15 +118,16 @@ class AdditionalServices extends ActiveRecord
     public function rules()
     {
         return [
-            //[['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
-            [['res', 'type', 'status', 'search', 'start_count', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],
-            [['content', 'name_script'], 'string'],
+            [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
+            [['res', 'provider_id', 'type', 'status', 'search', 'sc', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'service_count', 'service_inuse_count'], 'integer'],
+            [['content', 'name_script', 'getstatus_params'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
-            [['currency'], 'string', 'max' => 10],
             [['apihelp'], 'string', 'max' => 2000],
-            [['username', 'password', 'skype', 'type_name'], 'string', 'max' => 300],
+            [['name_script', 'proxy'], 'string', 'max' => 1000],
+            [['currency'], 'string', 'max' => 10],
             [['proxy'], 'string', 'max' => 1000],
+            [['service_view'], 'string', 'max' => 3],
         ];
     }
 

@@ -25,11 +25,11 @@ customModule.superadminProvidersController = {
             $('#editproviderform-name', form).val(details.name);
             $('#editproviderform-apihelp', form).val(details.apihelp);
             $('#editproviderform-name_script', form).val(details.name_script);
-            $('#editproviderform-sender_params', form).val(details.sender_params);
-            $('#editproviderform-provider_service_settings', form).val(details.provider_service_settings);
-            $('#editproviderform-provider_service_api_error', form).val(details.provider_service_api_error);
+            $('#edit-provider-sender_params', form).val(details.sender_params);
+            $('#edit-provider-provider_service_settings', form).val(details.provider_service_settings);
+            $('#edit-provider-provider_service_api_error', form).val(details.provider_service_api_error);
             $('#editproviderform-service_options', form).val(details.service_options);
-            $('#editproviderform-getstatus_params', form).val(details.getstatus_params);
+            $('#edit-provider-getstatus_params', form).val(details.getstatus_params);
 
             $('#edit-provider-status option[value='+ details.status +']').attr('selected', 'true');
             $('#edit-provider-type option[value='+ details.type +']').attr('selected', 'true');

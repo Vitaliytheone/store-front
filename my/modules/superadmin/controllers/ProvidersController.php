@@ -87,12 +87,11 @@ class ProvidersController extends CustomController
     {
         $provider = $this->findModel($id);
 
-        $model = new EditProviderForm();
-        $model->setProvider($provider);
         $data = Yii::$app->request->post('EditProviderForm');
-        $model->name_script = $data['name_script'];
+        $model = new EditProviderForm($data);
+        $model->setProvider($provider);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->save()) {
             return [
                 'status' => 'success',
             ];
