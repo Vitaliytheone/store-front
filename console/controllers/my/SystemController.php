@@ -563,17 +563,54 @@ class SystemController extends CustomController
 
     public function actionUpdateTimezones()
     {
+        $timezoneList = Yii::$app->params['timezones'];
+
         $customers = (new Query())
             ->select(['id', 'timezone'])
             ->from(DB_PANELS . '.customers')
             ->all();
 
-        $timezoneList = Yii::$app->params['timezones'];
-        foreach ($customers as $customer) {
-            if (!isset($timezoneList[$customer['timezone']])) {
-                $newTimezone = round($customer['timezone'], -2);
-                if (isset($timezoneList[$newTimezone])) {
-                    Customers::updateAll(['timezone' => $newTimezone], ['id' => $customer['id']]);
+        $panels = (new Query())
+            ->select(['id', 'utc'])
+            ->from(DB_PANELS . '.project')
+            ->all();
+
+        $stores = (new Query())
+            ->select(['id', 'timezone'])
+            ->from(DB_STORES . '.stores')
+            ->all();
+
+        $models = [
+            'customers' => $customers,
+            'panels' => $panels,
+            'stores' => $stores,
+        ];
+
+        foreach ($models as $key => $value) {
+            $column = '';
+            $class = '';
+
+            switch ($key) {
+                case 'customers' :
+                    $column = 'timezone';
+                    $class = 'common\models\panels\Customers';
+                    break;
+                case 'panels' :
+                    $column = 'utc';
+                    $class = 'common\models\panels\Project';
+                    break;
+                case 'stores' :
+                    $column = 'timezone';
+                    $class = 'common\models\stores\Stores';
+                    break;
+            }
+
+            foreach ($value as $model) {
+                if (!isset($timezoneList[$model[$column]])) {
+                    $newTimezone = round($model[$column], -2);
+                    if (isset($timezoneList[$newTimezone])) {
+                        $class::updateAll([$column => $newTimezone], ['id' => $model['id']]);
+                    }
                 }
             }
         }
