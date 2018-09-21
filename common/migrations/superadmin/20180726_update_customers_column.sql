@@ -1,1 +1,0 @@
-ALTER TABLE `customers` DROP COLUMN `unpaid_earnings`;

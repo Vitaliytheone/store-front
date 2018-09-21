@@ -12,11 +12,7 @@
 ?>
 <div class="row">
   <div class="col-lg-12">
-      <?php if($hasStores): ?>
-            <h2 class="page-header"><?= Yii::t('app', 'stores.order.form.title') ?></small></h2>
-      <?php else: ?>
-            <h2 class="page-header"><?= Yii::t('app', 'stores.order.form.title_trial') ?></small></h2>
-      <?php endif; ?>
+      <h2 class="page-header"><?= Yii::t('app', 'stores.order.form.title') ?></small></h2>
   </div>
 </div>
 <div class="row">
