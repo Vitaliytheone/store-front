@@ -52,7 +52,7 @@ class Mercadopago extends BasePayment
          */
         $client = new MP($clientId, $clientSecret);
 
-        if (!empty(Yii::$app->params['testMercadopago'])) {
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $client->sandbox_mode(true);
         }
 
@@ -74,11 +74,11 @@ class Mercadopago extends BasePayment
                 ]
             ],
             'back_urls' => [
-                'success' => SiteHelper::hostUrl($store->ssl) . '/mercadopago?checkout_id=' . $checkout->id,
+                'success' => SiteHelper::hostUrl($store->ssl) . '/mercadopago',
                 'failure' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
                 'pending' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
             ],
-            "notification_url" => SiteHelper::hostUrl($store->ssl) . '/mercadopago?checkout_id=' . $checkout->id,
+            "notification_url" => SiteHelper::hostUrl($store->ssl) . '/mercadopago',
         ];
 
         $response = null;
@@ -118,7 +118,6 @@ class Mercadopago extends BasePayment
     {
         $id = ArrayHelper::getValue($_GET, 'id');
         $topic = ArrayHelper::getValue($_GET, 'topic');
-        $checkoutId = ArrayHelper::getValue($_GET, 'checkout_id');
 
         if (!$id || !$topic) {
             return [
@@ -132,21 +131,6 @@ class Mercadopago extends BasePayment
                 'result' => 2,
                 'content' => 'bad data'
             ];
-        }
-
-        $this->_checkout = Checkouts::findOne([
-            'id' => $checkoutId
-        ]);
-
-        if (!($this->_payment = Payments::findOne([
-            'checkout_id' => $this->_checkout->id,
-        ]))) {
-            $this->_payment = new Payments();
-            $this->_payment->method = $this->_method;
-            $this->_payment->checkout_id = $this->_checkout->id;
-            $this->_payment->amount = $this->_checkout->price;
-            $this->_payment->customer = $this->_checkout->customer;
-            $this->_payment->currency = $this->_checkout->currency;
         }
 
         $paymentGateway = PaymentMethods::findOne([
@@ -181,7 +165,7 @@ class Mercadopago extends BasePayment
          */
         $client = new MP($clientId, $clientSecret);
 
-        if (!empty(Yii::$app->params['testMercadopago'])) {
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $client->sandbox_mode(true);
         }
 
@@ -203,6 +187,7 @@ class Mercadopago extends BasePayment
             ];
         }
 
+        $checkoutId = $paymentInfoResponse['collection']['external_reference'];
         $status = $paymentInfoResponse['collection']['status'];
         $amount = $paymentInfoResponse['collection']['transaction_amount'];
         $currency = $paymentInfoResponse["collection"]["currency_id"];
@@ -221,10 +206,21 @@ class Mercadopago extends BasePayment
             ];
         }
 
+        if (!($this->_payment = Payments::findOne([
+            'checkout_id' => $this->_checkout->id,
+        ]))) {
+            $this->_payment = new Payments();
+            $this->_payment->method = $this->_method;
+            $this->_payment->checkout_id = $this->_checkout->id;
+            $this->_payment->amount = $this->_checkout->price;
+            $this->_payment->customer = $this->_checkout->customer;
+            $this->_payment->currency = $this->_checkout->currency;
+        }
+
         $this->_payment->response_status = 1;
         $this->_payment->updated_at = time();
         $this->_payment->transaction_id = $id;
-        $this->_payment->response_status = $_POST['status'];
+        $this->_payment->response_status = $status;
         $this->_payment->status = Payments::STATUS_AWAITING;
 
         // заносим запись в таблицу payments_log

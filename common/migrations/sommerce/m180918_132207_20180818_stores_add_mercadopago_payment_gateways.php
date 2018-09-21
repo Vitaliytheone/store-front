@@ -12,7 +12,7 @@ class m180918_132207_20180818_stores_add_mercadopago_payment_gateways extends Mi
      */
     public function safeUp()
     {
-        $this->insert(DB_STORES . 'payment_gateways', [
+        $this->insert(DB_STORES . '.payment_gateways', [
             'method' => 'mercadopago',
             'currencies' => '["BRL"]',
             'name' => 'MercadoPago',
@@ -27,6 +27,6 @@ class m180918_132207_20180818_stores_add_mercadopago_payment_gateways extends Mi
      */
     public function safeDown()
     {
-        $this->delete(DB_STORES . 'payment_gateways', ['method' => 'mercadopago']);
+        $this->delete(DB_STORES . '.payment_gateways', ['method' => 'mercadopago']);
     }
 }
