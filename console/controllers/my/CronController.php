@@ -154,7 +154,7 @@ class CronController extends CustomController
      * @access public
      * @return void
      */
-    public function actionTerminatePanel()
+    public function actionTerminate()
     {
         $date = time() - (7 * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
