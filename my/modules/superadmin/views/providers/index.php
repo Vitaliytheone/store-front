@@ -27,7 +27,7 @@
                     'class' => "form",
                 ],
             ]) ?>
-                <div class="input-group">
+                <div class="input-group input-group__buttons">
                     <a href="<?= Url::toRoute('/providers/create')?>" class="btn btn-link" id="createProvider">
                         <?= Yii::t('app/superadmin', 'providers.modal_create.header')?>
                     </a>
@@ -49,3 +49,4 @@
 
 <?= $this->render('layouts/_projects_modal')?>
 <?= $this->render('layouts/_edit_provider_modal') ?>
+<?= $this->render('layouts/_create_provider_modal') ?>

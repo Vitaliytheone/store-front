@@ -387,6 +387,7 @@ return [
     'providers.list.column_autolist' => 'Autolist',
     'providers.list.column_send_method' => 'Send method',
     'providers.list.column_type' => 'Type',
+    'providers.list.column_script' => 'Script',
     'providers.list.column_status' => 'Status',
     'providers.list.column_created' => 'Created',
     'providers.list.column_skype' => 'Skype',

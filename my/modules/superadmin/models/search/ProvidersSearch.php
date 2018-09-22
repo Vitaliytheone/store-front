@@ -95,6 +95,7 @@ class ProvidersSearch
                 ['=', 'provider_id', $searchQuery],
                 ['like', 'name', $searchQuery],
                 ['like', 'name_script', $searchQuery],
+                ['like', 'apihelp', $searchQuery],
             ]);
         }
 
@@ -309,7 +310,8 @@ class ProvidersSearch
                  'act',
                  'db',
                  'name',
-                 'site'
+                 'site',
+                 'child_panel'
              ])
              ->from('project')
              ->andWhere([
