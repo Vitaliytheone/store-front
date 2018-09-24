@@ -26,31 +26,28 @@ class ProvidersController extends CustomController
 
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => SuperAccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
+        return array_merge(parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'index' => ['GET'],
+                        'edit' => ['POST'],
+                        'create' => ['POST'],
+                    ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index' => ['GET'],
-                    'edit' => ['POST'],
+                'ajax' => [
+                    'class' => AjaxFilter::class,
+                    'only' => ['create', 'edit']
                 ],
-            ],
-            'content' => [
-                'class' => ContentNegotiator::class,
-                'only' => ['edit', 'get-panels', 'create'],
-                'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+                'content' => [
+                    'class' => ContentNegotiator::class,
+                    'only' => ['edit', 'get-panels', 'create'],
+                    'formats' => [
+                        'application/json' => Response::FORMAT_JSON,
+                    ],
                 ],
-            ],
-        ];
+            ]);
     }
 
     /**
@@ -73,7 +70,7 @@ class ProvidersController extends CustomController
             'navs' => $providersSearch->navs(),
             'type' => is_numeric($type) ? (int)$type : $type,
             'filters' => $providersSearch->getParams(),
-            'plans' => $providersSearch->getPlans(),
+            'scripts' => $providersSearch->getScripts(),
         ]);
     }
 
@@ -103,6 +100,10 @@ class ProvidersController extends CustomController
         }
     }
 
+    /**
+     * Create new provider
+     * @return array
+     */
     public function actionCreate()
     {
         $model = new AdditionalServices();
@@ -120,21 +121,6 @@ class ProvidersController extends CustomController
                 'message' => ActiveForm::firstError($model)
             ];
         }
-    }
-
-    /**
-     * Change provider status action
-     * @param integer $id
-     * @param integer $status
-     * @throws NotFoundHttpException
-     */
-    public function actionChangeStatus($id, $status)
-    {
-        $provider = $this->findModel($id);
-
-        $provider->changeStatus($status);
-
-        $this->redirect(Url::toRoute(['/providers']));
     }
 
     /**

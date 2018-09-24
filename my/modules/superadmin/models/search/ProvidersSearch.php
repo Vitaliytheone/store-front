@@ -34,7 +34,7 @@ class ProvidersSearch
         return [
             'query' => $this->getQuery(),
             'type' => isset($this->params['type']) ? $this->params['type'] : null,
-            'plan' => isset($this->params['plan']) ? $this->params['plan'] : null,
+            'script' => isset($this->params['script']) ? $this->params['script'] : null,
         ];
     }
 
@@ -50,13 +50,13 @@ class ProvidersSearch
     /**
      * Build sql query
      * @param $type
-     * @param $plan
+     * @param script
      * @return Query
      */
-    public function buildQuery($type = null, $plan = null)
+    public function buildQuery($type = null, $script = null)
     {
         $searchQuery = $this->getQuery();
-        $plan = $plan == 'all' ? null : $plan;
+        $script = $script == 'all' ? null : $script;
 
 
         $providers = (new Query())
@@ -86,6 +86,8 @@ class ProvidersSearch
                 'service_auto_rate',
                 'import',
                 'getstatus_params',
+                'service_count',
+                'service_inuse_count',
             ])
             ->from('additional_services');
 
@@ -99,8 +101,8 @@ class ProvidersSearch
             ]);
         }
 
-        if (null !== $plan) {
-            $providers->andFilterWhere(['name_script' => $plan]);
+        if (null !== $script) {
+            $providers->andFilterWhere(['name_script' => $script]);
         }
 
         if (null !== $type) {
@@ -114,9 +116,9 @@ class ProvidersSearch
      * @param null|string $type
      * @return Pagination
      */
-    private function setPagination($type = null, $plan = null)
+    private function setPagination($type = null, $script = null)
     {
-        $query = clone $this->buildQuery($type, $plan);
+        $query = clone $this->buildQuery($type, $script);
 
         $pages = new Pagination(['totalCount' => $query->count()]);
         $pages->setPageSize($this->getPageSize());
@@ -128,12 +130,12 @@ class ProvidersSearch
     /**
      * Get providers
      * @param integer $type
-     * @param $plan string
+     * @param $script string
      * @return Query
      */
-    protected function getProviders($type = null, $plan = null)
+    protected function getProviders($type = null, $script = null)
     {
-        $query = clone $this->buildQuery($type, $plan);
+        $query = clone $this->buildQuery($type, $script);
         $pages = $this->setPagination($type);
 
         $this->_providers = $query
@@ -150,7 +152,7 @@ class ProvidersSearch
     public function search()
     {
         $type = ArrayHelper::getValue($this->params, 'type', null);
-        $plan = ArrayHelper::getValue($this->params, 'plan', null);
+        $script = ArrayHelper::getValue($this->params, 'script', null);
 
         $sort = new Sort([
             'attributes' => [
@@ -185,19 +187,25 @@ class ProvidersSearch
                 'date' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_created'),
                 ],
+                'service_count' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_count'),
+                ],
+                'service_inuse_count' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_in_use'),
+                ],
             ],
         ]);
         $sort->defaultOrder = [
             'provider_id' => SORT_DESC,
         ];
 
-        $providers = $this->buildQuery($type, $plan)
+        $providers = $this->getProviders($type, $script)
             ->orderBy($sort->orders)
             ->all();
 
         return [
             'models' => $this->prepareRowData($providers),
-            'pages' => $this->setPagination($type, $plan),
+            'pages' => $this->setPagination($type, $script),
             'sort' => $sort,
         ];
     }
@@ -227,7 +235,9 @@ class ProvidersSearch
                 'id' => $provider['id'],
                 'provider_id' => $provider['provider_id'],
                 'name' => $provider['name'],
+                'count' => $provider['service_count'],
                 'projects' => array_values($projects),
+                'in_use' => $provider['service_inuse_count'],
                 'usedProjects' => array_values($usedProjects),
                 'start_count' => AdditionalServices::getStartCountName($provider['start_count']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
@@ -261,12 +271,12 @@ class ProvidersSearch
     /**
      * @return array
      */
-    public function getPlans(): array
+    public function getScripts(): array
     {
         $type = ArrayHelper::getValue($this->params, 'type', null);
         $searchQuery = $this->getQuery();
 
-        $plans = (new Query())
+        $scripts = (new Query())
             ->select([
                 'name_script',
                 'COUNT(id) as count'
@@ -275,7 +285,7 @@ class ProvidersSearch
             ->groupBy('name_script');
 
         if (!empty($searchQuery)) {
-            $plans->andFilterWhere([
+            $scripts->andFilterWhere([
                 'or',
                 ['=', 'provider_id', $searchQuery],
                 ['like', 'name', $searchQuery],
@@ -284,7 +294,7 @@ class ProvidersSearch
         }
 
         $allCount = $this->buildQuery($type)->count();
-        $returnArray = array_merge($plans->all(), ['all' =>
+        $returnArray = array_merge($scripts->all(), ['all' =>
             [
                 'label' => Yii::t('app/superadmin', 'providers.list.plan_all'),
                 'count' => $allCount,
@@ -327,14 +337,14 @@ class ProvidersSearch
             $providers = [];
 
             foreach ((new Query())
-                ->select([
-                    'provider_id'
-                ])
-                ->from($project['db'] . '.services')
-                ->andWhere([
-                    'act' => 1
-                ])
-                ->all() as $service) {
+                         ->select([
+                             'provider_id'
+                         ])
+                         ->from($project['db'] . '.services')
+                         ->andWhere([
+                             'act' => 1
+                         ])
+                         ->all() as $service) {
                 $providers[$service['provider_id']] = $service['provider_id'];
             }
 
@@ -357,9 +367,9 @@ class ProvidersSearch
         $projects = $this->getProjects();
 
         foreach ((new Query())
-            ->select(['aid', 'pid'])
-            ->from('user_services')
-            ->batch(100) as $userServices) {
+                     ->select(['aid', 'pid'])
+                     ->from('user_services')
+                     ->batch(100) as $userServices) {
 
             foreach ($userServices as $userService) {
                 if (empty($projects[$userService['pid']])) {

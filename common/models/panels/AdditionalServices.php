@@ -58,11 +58,11 @@ use yii\helpers\ArrayHelper;
  * @property int $provider_service_id_label
  * @property string $provider_service_settings
  * @property string $provider_service_api_error
- * @property int $import
- * @property int $service_description
- * @property int $service_auto_rate
  * @property int $service_count
  * @property int $service_inuse_count
+ * @property int $service_description
+ * @property int $import
+ * @property int $service_auto_rate
  *
  * @property UserServices[] $userServices
  */
@@ -128,6 +128,7 @@ class AdditionalServices extends ActiveRecord
             [['currency'], 'string', 'max' => 10],
             [['proxy'], 'string', 'max' => 1000],
             [['service_view'], 'string', 'max' => 3],
+            [['service_inuse_count', 'service_count'], 'integer'],
         ];
     }
 
@@ -169,6 +170,8 @@ class AdditionalServices extends ActiveRecord
             'service_options' => Yii::t('app', 'Service option'),
             'provider_service_id_label' => Yii::t('app', 'Provider Service Id Label'),
             'store' => Yii::t('app', 'Store'),
+            'service_count' => Yii::t('app', 'Count'),
+            'service_inuse_count' => Yii::t('app', 'In use'),
             'service_description' => Yii::t('app', 'Service Description'),
             'import' => Yii::t('app', 'Import'),
             'currency' => Yii::t('app', 'Currency'),

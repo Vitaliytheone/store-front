@@ -44,7 +44,7 @@
     <?= $this->render('layouts/_providers_list', [
         'providers' => $providers,
         'filters' => $filters,
-        'plans' => $plans,
+        'scripts' => $scripts,
     ])?>
 
 <?= $this->render('layouts/_projects_modal')?>

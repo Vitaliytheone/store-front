@@ -404,6 +404,8 @@ return [
     'providers.service_view.perfectpanel' => 'Perfectpanel',
     'providers.service_view.multi' => 'Multi',
     'providers.service_view.unique' => 'unique',
+    'providers.edit.modal_close_btn' => 'Close',
+    'providers.edit.modal_save_changes' => 'Save changes',
 
     'error.invoices.incorrect_invoice_credit' => 'Incorrect invoice credit value',
     'error.invoices.can_not_edit_credit' => 'Can not edit invoice credit',
