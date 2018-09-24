@@ -1379,7 +1379,7 @@ body.isTawkMobile #backToTop {
     -ms-transform: rotate(45deg);
     border-right: 2px solid #ccc;
     border-bottom: 2px solid #ccc;
-    z-index: 2;
+    z-index: 5;
 }
 .header--nav-links > li.dropdown > a:after {
     top: 47px;
@@ -1388,7 +1388,7 @@ body.isTawkMobile #backToTop {
     border-style: solid;
     border-width: 11px;
     border-color: #82b440 transparent transparent transparent;
-    z-index: 1;
+    z-index: 5;
 }
 .header--nav-links > li.dropdown.open > a:before,
 .header--nav-links > li.dropdown.open > a:after {
@@ -1400,7 +1400,7 @@ body.isTawkMobile #backToTop {
     margin-top: 11px;
     padding-top: 18px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .10);
-    z-index: 0;
+    z-index: 3;
 }
 .header--nav-links > .dropdown > .dropdown-menu > li.active > a,
 .header--nav-links > .dropdown > .dropdown-menu > li.active > a:hover,
@@ -4918,6 +4918,18 @@ body.isTawkMobile #backToTop {
         top: 0;
         left: 15px;
         right: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-nav {
+        max-width: 1010px;
+    }
+}
+
+@media(max-width: 1200px) {
+    .navbar-nav {
+        max-width: 810px;
     }
 }
 

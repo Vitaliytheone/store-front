@@ -22,6 +22,7 @@ use common\models\store\queries\PagesQuery;
  * @property bool $deleted
  * @property integer $created_at
  * @property integer $updated_at
+ * @property integer $is_default
  */
 class Pages extends ActiveRecord
 {
@@ -40,6 +41,9 @@ class Pages extends ActiveRecord
     const TEMPLATE_CONTACT = 'contact';
 
     const NEW_PAGE_URL_PREFIX = 'page-';
+
+    const DEFAULT_PAGE = 1;
+    const NOT_DEFAULT_PAGE = 0;
 
     /**
      * @return mixed
@@ -85,7 +89,7 @@ class Pages extends ActiveRecord
      */
     public static function canDelete($page)
     {
-        if ($page['template'] == Pages::TEMPLATE_PAGE) {
+        if ($page['is_default'] != static::DEFAULT_PAGE) {
             return true;
         }
 
@@ -148,6 +152,8 @@ class Pages extends ActiveRecord
         return [
             [['visibility', 'deleted', 'created_at', 'updated_at'], 'integer'],
             [['content', 'template'], 'string'],
+            ['is_default', 'integer', ],
+            ['is_default', 'in', 'range' => [static::NOT_DEFAULT_PAGE, static::DEFAULT_PAGE]],
             [['title', 'seo_title', 'url'], 'string', 'max' => 255],
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
         ];
@@ -169,6 +175,7 @@ class Pages extends ActiveRecord
             'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'url' => Yii::t('app', 'Url'),
             'deleted' => Yii::t('app', 'Deleted'),
+            'is_default' => Yii::t('app', 'Is Default'),
         ];
     }
 
@@ -205,6 +212,10 @@ class Pages extends ActiveRecord
     public function deleteVirtual()
     {
         if ($this->deleted == self::DELETED_YES) {
+            return false;
+        }
+
+        if ($this->is_default == static::DEFAULT_PAGE) {
             return false;
         }
 

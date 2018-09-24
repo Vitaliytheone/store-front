@@ -167,10 +167,5 @@ customModule.superadminProvidersController = {
 
             return false;
         });
-
-        $('.query-sort').data("sorter", false);
-        $('.no_sort').data("sorter", false);
-
-        $("#providersTable").tablesorter();
     }
 };
