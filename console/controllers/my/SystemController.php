@@ -605,20 +605,22 @@ class SystemController extends CustomController
                     break;
             }
 
-            echo "Started the update of $key \n";
-            $updatedColumns = 0;
+            $tabel = substr($key, 0, -1);
 
             foreach ($value as $model) {
                 if (!isset($timezoneList[$model[$column]])) {
                     $newTimezone = round($model[$column], -2);
                     if (isset($timezoneList[$newTimezone])) {
-                        $class::updateAll([$column => $newTimezone], ['id' => $model['id']]);
-                        $updatedColumns++;
+                        echo "Updating the $tabel ID = {$model['id']} \n";
+                        $updatedColumns = $class::updateAll([$column => $newTimezone], ['id' => $model['id']]);
+                        if ($updatedColumns == 0) {
+                            echo "Not updated \n";
+                        } else {
+                            echo "Successful update \n";
+                        }
                     }
                 }
             }
-
-            echo "Updated $updatedColumns columns \n";
         }
     }
 }
