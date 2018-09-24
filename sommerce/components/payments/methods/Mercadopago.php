@@ -217,12 +217,6 @@ class Mercadopago extends BasePayment
             $this->_payment->currency = $this->_checkout->currency;
         }
 
-        $this->_payment->response_status = 1;
-        $this->_payment->updated_at = time();
-        $this->_payment->transaction_id = $id;
-        $this->_payment->response_status = $status;
-        $this->_payment->status = Payments::STATUS_AWAITING;
-
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
         $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
@@ -242,6 +236,10 @@ class Mercadopago extends BasePayment
                 'content' => 'Bad amount'
             ];
         }
+
+        $this->_payment->transaction_id = $id;
+        $this->_payment->response_status = $status;
+        $this->_payment->status = Payments::STATUS_AWAITING;
 
         if ($status != 'approved') {
             return [

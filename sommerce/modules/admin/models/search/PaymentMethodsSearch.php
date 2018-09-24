@@ -76,7 +76,7 @@ class PaymentMethodsSearch extends PaymentMethods
                 'style' => 'margin:10px;'
             ],
             PaymentMethods::METHOD_MERCADOPAGO => [
-                'icon' => '/img/pg/mercado_pago',
+                'icon' => '/img/pg/mercado_pago.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_MERCADOPAGO),
             ],
         ];
