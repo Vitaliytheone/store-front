@@ -114,7 +114,7 @@ $model = new EditProviderForm();
                 <div class="form-group">
                     <?= $form->field($model, 'provider_service_id_label')
                         ->dropDownList(
-                            Yii::$app->params['provider_service_id_label_list'],
+                            isset(Yii::$app->params['provider_service_id_label_list']) ? Yii::$app->params['provider_service_id_label_list'] : [],
                             ['class' => 'form-control', 'id' => 'edit-provider-provider_service_id_label']
                         ) ?>
                 </div>

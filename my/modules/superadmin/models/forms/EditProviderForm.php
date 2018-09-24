@@ -82,29 +82,9 @@ class EditProviderForm extends Model
             return false;
         }
 
-        $this->_provider->provider_id = $this->provider_id;
-        $this->_provider->name = $this->name;
-        $this->_provider->apihelp = $this->apihelp;
-        $this->_provider->status = $this->status;
-        $this->_provider->type = $this->type;
-        $this->_provider->name_script = $this->name_script;
-        $this->_provider->start_count = $this->start_count;
-        $this->_provider->refill = $this->refill;
-        $this->_provider->cancel = $this->cancel;
-        $this->_provider->sender_params = $this->sender_params;
-        $this->_provider->send_method = $this->send_method;
-        $this->_provider->service_view = $this->service_view;
-        $this->_provider->service_options = $this->service_options;
-        $this->_provider->provider_service_id_label = $this->provider_service_id_label;
-        $this->_provider->provider_service_settings = $this->provider_service_settings;
-        $this->_provider->provider_service_api_error = $this->provider_service_api_error;
-        $this->_provider->service_description = $this->service_description;
-        $this->_provider->service_auto_min = $this->service_auto_min;
-        $this->_provider->service_auto_max = $this->service_auto_max;
-        $this->_provider->provider_rate = $this->provider_rate;
-        $this->_provider->service_auto_rate = $this->service_auto_rate;
-        $this->_provider->import = $this->import;
-        $this->_provider->getstatus_params = $this->getstatus_params;
+        foreach ($this->attributes as $key => $value) {
+            $this->_provider->$key = $value;
+        }
 
         if (!$this->_provider->save()) {
             $this->addErrors($this->_provider->getErrors());
