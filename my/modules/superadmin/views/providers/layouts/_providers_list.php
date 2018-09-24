@@ -2,7 +2,6 @@
     /* @var $this yii\web\View */
     /* @var $providers \my\modules\superadmin\models\search\ProvidersSearch */
     /* @var $provider \common\models\panels\AdditionalServices */
-    /* @var $filters array */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -56,6 +55,10 @@
     <tbody>
     <?php if (!empty($providers['models'])) : ?>
         <?php foreach (SpecialCharsHelper::multiPurifier($providers['models']) as $key => $provider) : ?>
+            <?php
+                $count = count($provider['projects']);
+                $use = count($provider['usedProjects']);
+            ?>
             <tr>
                 <td>
                     <?= $provider['provider_id'] ?>
@@ -64,27 +67,27 @@
                     <?= $provider['name'] ?>
                 </td>
                 <td>
-                    <?php if ($provider['count']) : ?>
-                        <?= Html::a($provider['count'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
+                    <?php if ($count) : ?>
+                        <?= Html::a($count, Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
                             'data-href' => $provider['projects'][0]['child_panel'] == 1 ? Url::toRoute(['/child-panels', 'id' => $provider['projects'][0]['id']]) : Url::toRoute(['/panels', 'id' => $provider['projects'][0]['id']]),
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
                     <?php else : ?>
-                        <?= $provider['count'] ?>
+                        <?= $count ?>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if ($provider['in_use']) : ?>
-                        <?= Html::a($provider['in_use'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
+                    <?php if ($use) : ?>
+                        <?= Html::a($use, Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
                             'data-href' => $provider['usedProjects'][0]['child_panel'] == 1 ? Url::toRoute(['/child-panels', 'id' => $provider['usedProjects'][0]['id']]) : Url::toRoute(['/panels', 'id' => $provider['usedProjects'][0]['id']]),
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
                     <?php else : ?>
-                        <?= $provider['in_use'] ?>
+                        <?= $use ?>
                     <?php endif; ?>
                 </td>
                 <td>
@@ -150,19 +153,4 @@
 <!-- Delete <br> after update ccs to v.2 -->
 <br>
 <!-- -->
-<div class="row">
-    <div class="col-md-6">
-        <nav>
-            <ul class="pagination">
-                <?= LinkPager::widget(['pagination' => $providers['pages'],]); ?>
-            </ul>
-        </nav>
-        <!-- Pagination End -->
-    </div>
-    <div class="col-md-6 text-md-right">
-        <?= CountPagination::widget([
-            'pages' => $providers['pages'],
-            'params' => $filters
-        ]) ?>
-    </div>
-</div>
+<!-- Add pagination widgets -->
