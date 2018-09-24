@@ -46,6 +46,7 @@ class ReferralEarnings extends ActiveRecord
     {
         return [
             [['customer_id', 'earnings', 'invoice_id', 'created_at'], 'required'],
+            [['invoice_id'], 'unique'],
             [['customer_id', 'invoice_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['earnings'], 'number'],
         ];
