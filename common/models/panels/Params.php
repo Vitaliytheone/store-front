@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
  * @property string $code
  * @property string $options
  * @property int $updated_at
+ * @property int $position
  */
 class Params extends ActiveRecord
 {
@@ -38,9 +39,8 @@ class Params extends ActiveRecord
         return [
             [['code', 'options', 'updated_at'], 'required'],
             [['options'], 'string'],
-            [['updated_at'], 'integer'],
+            [['updated_at', 'position'], 'integer'],
             [['code'], 'string', 'max' => 64],
-            [['code'], 'unique'],
         ];
     }
 
@@ -54,6 +54,7 @@ class Params extends ActiveRecord
             'code' => 'Code',
             'options' => 'Options',
             'updated_at' => 'Updated At',
+            'position' => 'Position',
         ];
     }
 

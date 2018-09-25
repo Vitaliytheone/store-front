@@ -8,6 +8,8 @@ use common\models\panels\Invoices;
 use common\models\panels\Languages;
 use common\models\panels\Orders;
 use common\models\panels\PanelDomains;
+use common\models\panels\Params;
+use common\models\panels\PaymentGateway;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
@@ -15,10 +17,12 @@ use common\models\panels\Tickets;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;
 use common\components\dns\Dns;
+use my\components\ActiveForm;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -557,6 +561,38 @@ class SystemController extends CustomController
                 $service->currency = CurrencyHelper::getCurrencyCodeById($panel['currency']);
                 $service->save();
                 echo "Changed currency at $service->name panel \n";
+            }
+        }
+    }
+
+    /**
+     * Transfer data from payment_gateway to params
+     */
+    public function actionTransferToParams()
+    {
+        $payments = PaymentGateway::find()->all();
+
+        foreach ($payments as $payment) {
+            echo "Transfer {$payment->name} \n";
+
+            $params = new Params();
+            $code = str_replace(' ', '_', $payment->name) . '.' . $payment->pgid;
+
+            $options = $payment->options == '[]' ? [] : json_decode($payment->options);
+            $options = array_merge((array)$options, $payment->attributes);
+            unset($options['options']);
+            unset($options['position']);
+            unset($options['id']);
+
+            $params->code = $code;
+            $params->options = json_encode($options);
+            $params->position = $payment->position;
+            $params->updated_at = time();
+            if (!$params->save()) {
+                print_r(ActiveForm::firstError($params));
+                echo "\n";
+            } else {
+                echo "Successful \n";
             }
         }
     }
