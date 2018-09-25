@@ -179,7 +179,7 @@ class ProvidersController extends CustomController
      * @param array $data
      * @return AdditionalServices
      */
-    protected function loadData(AdditionalServices $provider, array $data)
+    protected function loadData(AdditionalServices $provider, array $data): AdditionalServices
     {
         foreach ($data as $key => $value) {
             $provider->$key = $value;

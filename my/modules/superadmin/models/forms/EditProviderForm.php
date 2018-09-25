@@ -41,13 +41,11 @@ class EditProviderForm extends Model
      */
     private $_provider;
 
-    public function __construct($data = null, array $config = [])
+    public function __construct(array $data = null, array $config = [])
     {
         parent::__construct($config);
 
-        foreach ((array)$data as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->attributes = $data;
     }
 
     /**
@@ -57,7 +55,8 @@ class EditProviderForm extends Model
     {
         return [
             [['provider_id', 'name'], 'required'],
-            [['provider_id', 'type', 'status', 'start_count', 'refill', 'cancel', 'provider_service_id_label'], 'integer'],
+            [['provider_id', 'type', 'status', 'start_count', 'refill', 'cancel', 'provider_service_id_label', 'provider_rate', 'service_auto_rate', 'send_method', 'service_auto_max', 'service_view', 'service_description', 'service_auto_min', 'import'], 'integer'],
+            [['name_script', 'sender_params', 'service_options', 'provider_service_settings', 'provider_service_api_error', 'getstatus_params'], 'string'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],
         ];

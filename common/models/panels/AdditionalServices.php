@@ -119,15 +119,15 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             [['name', 'apihelp', 'type', 'status', 'service_view'], 'required'],
-            [['res', 'provider_id', 'type', 'status', 'search', 'sc', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'service_count', 'service_inuse_count'], 'integer'],
-            [['content', 'name_script', 'getstatus_params'], 'string'],
+            [['service_auto_rate', 'import', 'service_description', 'res', 'provider_id', 'type', 'status', 'search', 'sc', 'service_auto_min', 'provider_rate', 'service_auto_max', 'send_method', 'manual_order_status', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'service_count', 'service_inuse_count', 'default_order_status'], 'integer'],
+            [['content', 'name_script', 'getstatus_params', 'params', 'services_params', 'sender_params', 'type_services', 'service_options', 'provider_service_settings', 'provider_service_api_error'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],
             [['name_script', 'proxy'], 'string', 'max' => 1000],
             [['currency'], 'string', 'max' => 10],
             [['proxy'], 'string', 'max' => 1000],
-            [['service_view'], 'string', 'max' => 3],
+            [['service_view'], 'integer'],
             [['service_inuse_count', 'service_count'], 'integer'],
         ];
     }
