@@ -146,7 +146,7 @@ class CronController extends CustomController
         InvoiceHelper::prolongSsl();
         InvoiceHelper::prolongStores();
     }
-    
+
     /**
      * Update old frozen panel status
      * @access public

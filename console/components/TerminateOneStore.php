@@ -9,6 +9,10 @@ use yii\db\ActiveRecord;
 use yii\db\Exception as DbException;
 use Yii;
 
+/**
+ * Class TerminateOneStore
+ * @package console\components
+ */
 class TerminateOneStore
 {
 
