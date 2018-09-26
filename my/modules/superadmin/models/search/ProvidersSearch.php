@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
+use phpDocumentor\Reflection\Types\Integer;
 use Yii;
 use yii\data\Sort;
 use yii\db\ActiveRecord;
@@ -29,7 +30,7 @@ class ProvidersSearch
      * Get parameters
      * @return array
      */
-    public function getParams()
+    public function getParams(): array
     {
         return [
             'query' => $this->getQuery(),
@@ -40,8 +41,9 @@ class ProvidersSearch
 
     /**
      * Set value of page size
+     * @return int
      */
-    public function getPageSize()
+    public function getPageSize(): int
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
         return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
@@ -53,7 +55,7 @@ class ProvidersSearch
      * @param script
      * @return Query
      */
-    public function buildQuery($type = null, $script = null)
+    public function buildQuery($type = null, $script = null): Query
     {
         $searchQuery = $this->getQuery();
         $script = $script == 'all' ? null : $script;
@@ -116,7 +118,7 @@ class ProvidersSearch
      * @param null|string $type
      * @return Pagination
      */
-    private function setPagination($type = null, $script = null)
+    private function setPagination($type = null, $script = null): Pagination
     {
         $query = clone $this->buildQuery($type, $script);
 
@@ -133,7 +135,7 @@ class ProvidersSearch
      * @param $script string
      * @return Query
      */
-    protected function getProviders($type = null, $script = null)
+    protected function getProviders($type = null, $script = null): Query
     {
         $query = clone $this->buildQuery($type, $script);
         $pages = $this->setPagination($type);
@@ -149,7 +151,7 @@ class ProvidersSearch
      * Search providers
      * @return array
      */
-    public function search()
+    public function search(): array
     {
         $type = ArrayHelper::getValue($this->params, 'type', null);
         $script = ArrayHelper::getValue($this->params, 'script', null);
@@ -215,7 +217,7 @@ class ProvidersSearch
      * @param mixed $providers
      * @return array
      */
-    public function prepareRowData($providers)
+    public function prepareRowData($providers): array
     {
         $returnProviders = [];
 
@@ -293,13 +295,25 @@ class ProvidersSearch
             ]);
         }
 
+        $returnArray = [];
         $allCount = $this->buildQuery($type)->count();
-        $returnArray = array_merge($scripts->all(), ['all' =>
+        foreach ($scripts->all() as $script) {
+            $returnArray[] = [
+                'name_script' => $script['name_script'],
+                'string' => Yii::t('app/superadmin', 'providers.list.script', [
+                    'script' => $script['name_script'],
+                    'count' => $script['count'],
+                ])
+            ];
+        }
+        $returnArray = array_merge([count($returnArray) =>
             [
-                'label' => Yii::t('app/superadmin', 'providers.list.plan_all'),
-                'count' => $allCount,
+                'name_script' => 'all',
+                'string' => Yii::t('app/superadmin', 'providers.list.script_all', [
+                    'count' => $allCount,
+                ])
             ]
-        ]);
+        ], $returnArray);
 
         return $returnArray;
     }
@@ -308,7 +322,7 @@ class ProvidersSearch
      * Get all projects
      * @return array
      */
-    public function getProjects()
+    public function getProjects(): array
     {
         if (!empty($this->_projects)) {
             return $this->_projects;
@@ -358,7 +372,7 @@ class ProvidersSearch
      * Get all user services data
      * @return array
      */
-    public function getProviderPanels()
+    public function getProviderPanels(): array
     {
         if (!empty($this->_providerPanels)) {
             return $this->_providerPanels;
@@ -387,7 +401,7 @@ class ProvidersSearch
      * Get navs
      * @return array
      */
-    public function navs()
+    public function navs(): array
     {
         return [
             null => Yii::t('app/superadmin', 'providers.list.navs_all', [

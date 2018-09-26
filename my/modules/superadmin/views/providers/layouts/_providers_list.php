@@ -2,6 +2,7 @@
     /* @var $this yii\web\View */
     /* @var $providers \my\modules\superadmin\models\search\ProvidersSearch */
     /* @var $provider \common\models\panels\AdditionalServices */
+    /* @var $scripts array */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -30,19 +31,12 @@
                     <strong><?= Yii::t('app/superadmin', 'providers.list.column_script')?></strong>
                 </a>
                 <div class="dropdown-menu dropdown-menu__max" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item <?=($filters['script'] == 'all' || $filters['script'] == null ? 'active' : '')?>" href="<?=Url::toRoute(
-                        array_merge(['/providers'], $filters, ['script' => 'all'])
-                    )?>">
-                        <?= $scripts['all']['label'] . ' (' . $scripts['all']['count'] . ')'; ?>
-                    </a>
-                    <?php foreach (SpecialCharsHelper::multiPurifier($scripts) as $key => $script) : ?>
-                    <?php if (isset($script['name_script'])) : ?>
-                        <a class="dropdown-item <?=($script['name_script'] === $filters['script'] ? 'active' : '')?>" href="<?=Url::toRoute(
-                                array_merge(['/providers'], $filters, ['script' => $script['name_script']])
+                    <?php foreach (SpecialCharsHelper::multiPurifier($scripts) as $script) : ?>
+                        <a class="dropdown-item <?=($script['name_script'] === $filters['script'] || ($script['name_script'] == 'all' && $filters['script'] == null) ? 'active' : '')?>" href="<?=Url::toRoute(
+                            array_merge(['/providers'], $filters, ['script' => $script['name_script']])
                         )?>">
-                            <?= $script['name_script'] . ' (' . $script['count'] . ')'; ?>
+                            <?= $script['string']; ?>
                         </a>
-                    <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -55,10 +49,6 @@
     <tbody>
     <?php if (!empty($providers['models'])) : ?>
         <?php foreach (SpecialCharsHelper::multiPurifier($providers['models']) as $key => $provider) : ?>
-            <?php
-                $count = count($provider['projects']);
-                $use = count($provider['usedProjects']);
-            ?>
             <tr>
                 <td>
                     <?= $provider['provider_id'] ?>
@@ -67,27 +57,27 @@
                     <?= $provider['name'] ?>
                 </td>
                 <td>
-                    <?php if ($count) : ?>
-                        <?= Html::a($count, Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
+                    <?php if ($provider['count']) : ?>
+                        <?= Html::a($provider['count'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
                             'data-href' => $provider['projects'][0]['child_panel'] == 1 ? Url::toRoute(['/child-panels', 'id' => $provider['projects'][0]['id']]) : Url::toRoute(['/panels', 'id' => $provider['projects'][0]['id']]),
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
                     <?php else : ?>
-                        <?= $count ?>
+                        <?= $provider['count'] ?>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if ($use) : ?>
-                        <?= Html::a($use, Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
+                    <?php if ($provider['in_use']) : ?>
+                        <?= Html::a($provider['in_use'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
                             'data-href' => $provider['usedProjects'][0]['child_panel'] == 1 ? Url::toRoute(['/child-panels', 'id' => $provider['usedProjects'][0]['id']]) : Url::toRoute(['/panels', 'id' => $provider['usedProjects'][0]['id']]),
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
                     <?php else : ?>
-                        <?= $use ?>
+                        <?= $provider['in_use'] ?>
                     <?php endif; ?>
                 </td>
                 <td>

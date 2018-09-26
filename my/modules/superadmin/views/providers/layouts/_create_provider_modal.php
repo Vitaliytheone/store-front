@@ -4,11 +4,11 @@
 /* @var $form my\components\ActiveForm */
 
 use my\components\ActiveForm;
-use my\modules\superadmin\models\forms\EditProviderForm;
+use my\modules\superadmin\models\forms\CreateProviderForm;
 use yii\bootstrap\Html;
 use common\models\panels\AdditionalServices;
 
-$model = new EditProviderForm();
+$model = new CreateProviderForm();
 ?>
 
 <div class="modal fade" id="createProviderModal" data-backdrop="static" tabindex="-1" role="dialog">

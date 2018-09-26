@@ -5,12 +5,12 @@ namespace my\modules\superadmin\controllers;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\AdditionalServices;
+use my\modules\superadmin\models\forms\CreateProviderForm;
 use my\modules\superadmin\models\forms\EditProviderForm;
 use my\modules\superadmin\models\search\ProvidersSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use my\components\SuperAccessControl;
 use yii\filters\VerbFilter;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
@@ -106,10 +106,8 @@ class ProvidersController extends CustomController
      */
     public function actionCreate()
     {
-        $model = new AdditionalServices();
-        $data = Yii::$app->request->post('EditProviderForm');
-        $model = $this->loadData($model, $data);
-        $model->beforeSave(true);
+        $data = Yii::$app->request->post('CreateProviderForm');
+        $model = new CreateProviderForm($data);
 
         if ($model->save()) {
             return [
@@ -172,19 +170,5 @@ class ProvidersController extends CustomController
         }
 
         return $model;
-    }
-
-    /**
-     * @param AdditionalServices $provider
-     * @param array $data
-     * @return AdditionalServices
-     */
-    protected function loadData(AdditionalServices $provider, array $data): AdditionalServices
-    {
-        foreach ($data as $key => $value) {
-            $provider->$key = $value;
-        }
-
-        return $provider;
     }
 }

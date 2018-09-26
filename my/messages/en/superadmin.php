@@ -406,6 +406,8 @@ return [
     'providers.service_view.unique' => 'unique',
     'providers.edit.modal_close_btn' => 'Close',
     'providers.edit.modal_save_changes' => 'Save changes',
+    'providers.list.script_all' => 'All ({count})',
+    'providers.list.script' => '{script} ({count})',
 
     'error.invoices.incorrect_invoice_credit' => 'Incorrect invoice credit value',
     'error.invoices.can_not_edit_credit' => 'Can not edit invoice credit',
