@@ -34,6 +34,7 @@ return [
     '3001' => 'Add provider',
     '3002' => 'Edit provider',
     '3003' => 'Delete provider',
+    '3004' => 'View provider list',
 
     '3101' => 'Add bonus',
     '3102' => 'Edit bonus',
@@ -102,7 +103,6 @@ return [
     '92' => 'Edit payment',
     '93' => 'Open unread ticket',
     '94' => 'Delete ticket',
-    '95' => 'View provider list',
 
 //    '' => 'Add custom rates',
 //    '' => 'Reset all custom rates',
