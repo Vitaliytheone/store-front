@@ -57,7 +57,7 @@ class TerminateStore
     private function getStore($date)
     {
         return Stores::find()
-            ->leftJoin('logs', '
+            ->leftJoin(DB_PANELS . '.logs', '
             logs.panel_id = stores.id AND
             logs.project_type = :project_type AND
             logs.type = :type AND logs.created_at > :date', [
