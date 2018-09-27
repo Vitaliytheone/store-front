@@ -28,6 +28,7 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\db\Exception as DbException;
+use console\components\UpdateServicesCount;
 
 /**
  * Class CronController
@@ -432,5 +433,13 @@ class CronController extends CustomController
         Yii::$container->get(PaymentsFee::class, [
             Yii::$app->params['cron.check_payments_fee_days'], // days
         ])->run();
+    }
+
+    /**
+     * Update service_count & service_inuse_count in additional_services
+     */
+    public function actionUpdateServicesCount()
+    {
+        Yii::$container->get(UpdateServicesCount::class)->run();
     }
 }

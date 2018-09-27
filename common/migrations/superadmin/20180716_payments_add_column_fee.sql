@@ -1,1 +1,0 @@
-ALTER TABLE `payments` ADD `fee` decimal(10,5) DEFAULT NULL AFTER `amount`;
