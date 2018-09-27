@@ -22,7 +22,7 @@ use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
 use my\mail\mailers\PaypalVerificationNeeded;
-use opensrs\backwardcompatibility\dataconversion\trust\CancelOrder;
+use console\components\terminate\CancelOrder;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
