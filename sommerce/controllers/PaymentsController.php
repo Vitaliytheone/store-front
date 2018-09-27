@@ -57,7 +57,8 @@ class PaymentsController extends CustomController
         if (!in_array($method, [
             PaymentMethods::METHOD_AUTHORIZE,
             PaymentMethods::METHOD_STRIPE,
-            PaymentMethods::METHOD_PAYPAL
+            PaymentMethods::METHOD_PAYPAL,
+            PaymentMethods::METHOD_MERCADOPAGO,
         ])) {
             return $this->redirect('/cart');
         }

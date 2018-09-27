@@ -44,6 +44,9 @@ class MyRequest extends Request
                     $_GET = ArrayHelper::merge($_GET, ArrayHelper::getValue($options, 'options', []));
 
                     foreach ((array)ArrayHelper::getValue($options, 'match', []) as $key) {
+                        if (array_key_exists($key, $_GET)) {
+                            break;
+                        }
                         $_GET[$key] = ArrayHelper::getValue($match, $key);
                     }
 
