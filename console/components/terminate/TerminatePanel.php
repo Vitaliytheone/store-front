@@ -1,38 +1,37 @@
 <?php
 
-namespace console\components;
+namespace console\components\terminate;
 
-use common\models\panels\Orders;
 use common\models\panels\Project;
 use common\models\common\ProjectInterface;
 use common\models\panels\Logs;
-use yii\db\ActiveRecord;
 use yii\db\Exception as DbException;
 use Yii;
 
 /**
- * Class TerminateOnePanel
- * @package console\components
+ * Class TerminatePanel
+ * @package console\components\terminate
  */
-class TerminateOnePanel
+class TerminatePanel
 {
+    /**
+     * @var integer
+     */
+    protected $_date;
 
-    public function run($date)
+    /**
+     * CancelOrder constructor.
+     * @param integer $date
+     */
+    public function __construct($date)
     {
-        /**
-         * @var $order Orders
-         */
-        foreach (Orders::find()->andWhere('status = :pending AND date < :date', [
-            ':pending' => Orders::STATUS_PENDING,
-            ':date' => $date // 7 дней; 24 часа; 60 минут; 60 секунд
-        ])->all() as $order) {
-            $order->cancel();
-        }
+        $this->_date = $date;
+    }
 
-        $date = strtotime("-1 month", time()); // + 1 месяц
-
+    public function run()
+    {
         // Берем по 1 панели на обработку
-        $project = $this->getProject($date);
+        $project = $this->getProject($this->_date);
 
         /**
          * @var Project $project
@@ -58,7 +57,7 @@ class TerminateOnePanel
 
     /**
      * @param $date
-     * @return ActiveRecord|null
+     * @return Project|null
      */
     private function getProject($date)
     {

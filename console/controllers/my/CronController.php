@@ -14,19 +14,20 @@ use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use console\components\payments\PaymentsFee;
+use console\components\terminate\TerminatePanel;
+use console\components\terminate\TerminateStore;
 use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
 use my\mail\mailers\PaypalVerificationNeeded;
+use opensrs\backwardcompatibility\dataconversion\trust\CancelOrder;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use console\components\UpdateServicesCount;
-use console\components\TerminateOnePanel;
-use console\components\TerminateOneStore;
 
 /**
  * Class CronController
@@ -156,11 +157,15 @@ class CronController extends CustomController
      */
     public function actionTerminate()
     {
-        $date = time() - (7 * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
-
-        Yii::$container->get(TerminateOnePanel::class)->run($date);
-        Yii::$container->get(TerminateOneStore::class)->run($date);
-
+        Yii::$container->get(CancelOrder::class, [
+            time() - (7 * 24 * 60 * 60)
+        ])->run();
+        Yii::$container->get(TerminateStore::class, [
+            strtotime("-1 month", time())
+        ])->run();
+        Yii::$container->get(TerminatePanel::class, [
+            strtotime("-1 month", time())
+        ])->run();
     }
 
     /**

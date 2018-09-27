@@ -1,24 +1,36 @@
 <?php
 
-namespace console\components;
+namespace console\components\terminate;
 
 use common\models\stores\Stores;
 use common\models\common\ProjectInterface;
 use common\models\panels\Logs;
-use yii\db\ActiveRecord;
 use yii\db\Exception as DbException;
 use Yii;
 
 /**
- * Class TerminateOneStore
- * @package console\components
+ * Class TerminateStore
+ * @package console\components\terminate
  */
-class TerminateOneStore
+class TerminateStore
 {
+    /**
+     * @var integer
+     */
+    protected $_date;
 
-    public function run($date)
+    /**
+     * CancelOrder constructor.
+     * @param integer $date
+     */
+    public function __construct($date)
     {
-        $store = $this->getStore($date);
+        $this->_date = $date;
+    }
+
+    public function run()
+    {
+        $store = $this->getStore($this->_date);
 
         if (!$store) {
             return;
@@ -40,7 +52,7 @@ class TerminateOneStore
 
     /**
      * @param $date
-     * @return ActiveRecord|null
+     * @return Stores|null
      */
     private function getStore($date)
     {
