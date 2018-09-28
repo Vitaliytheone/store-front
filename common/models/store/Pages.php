@@ -39,6 +39,7 @@ class Pages extends ActiveRecord
     const TEMPLATE_CART = 'cart';
     const TEMPLATE_404 = '404';
     const TEMPLATE_CONTACT = 'contact';
+    const TEMPLATE_FILE = 'file';
 
     const NEW_PAGE_URL_PREFIX = 'page-';
 
