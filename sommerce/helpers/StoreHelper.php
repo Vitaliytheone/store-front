@@ -166,42 +166,4 @@ class StoreHelper {
             'json' => $json
         ]);
     }
-
-    /**
-     * Terminate one first old store
-     * @param $date integer
-     */
-    public static function terminateOneStore($date)
-    {
-        $store = Stores::find()
-            ->leftJoin('logs', '
-            logs.panel_id = stores.id AND
-            logs.project_type = :project_type AND
-            logs.type = :type AND logs.created_at > :date', [
-                ':project_type' => ProjectInterface::PROJECT_TYPE_STORE,
-                ':date' => $date,
-                ':type' => Logs::TYPE_RESTORED,
-            ])
-            ->andWhere(['stores.status' => Stores::STATUS_FROZEN])
-            ->andWhere(['<', 'stores.expired', $date])
-            ->andWhere('logs.id IS NULL')
-            ->one();
-
-        if (!$store) {
-            return;
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            $store->status = Stores::STATUS_TERMINATED;
-            if ($store->save(false)) {
-                $store->terminate();
-            }
-        } catch (DbException $e) {
-            $transaction->rollBack();
-            Yii::error($e->getMessage() . $e->getTraceAsString());
-            return;
-        }
-        $transaction->commit();
-    }
 }
