@@ -28,6 +28,11 @@ class PageController extends CustomController
             case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page); break;
         }
 
+        if ($page->template == Pages::TEMPLATE_FILE) {
+            $this->layout = false;
+            return $this->renderContent($page->content);
+        }
+
         return $this->render($page->template . '.twig', [
             'page' => [
                 'title' => $page->title,

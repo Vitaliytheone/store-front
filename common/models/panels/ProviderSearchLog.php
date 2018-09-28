@@ -6,22 +6,22 @@ use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\panels\queries\SearchProcessorQuery;
+use common\models\panels\queries\ProviderSearchLogQuery;
 
 /**
  * This is the model class for table "{{%search_processor}}".
  *
  * @property integer $id
- * @property integer $uid
- * @property integer $pid
+ * @property integer $admin_id
+ * @property integer $panel_id
  * @property integer $result
  * @property string $search
- * @property integer $date
+ * @property integer $created_at
  *
  * @property Project $project
  * @property ProjectAdmin $admin
  */
-class SearchProcessor extends ActiveRecord
+class ProviderSearchLog extends ActiveRecord
 {
     use UnixTimeFormatTrait;
 
@@ -30,7 +30,7 @@ class SearchProcessor extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_PANELS . '.search_processor';
+        return DB_PANELS . '.provider_search_log';
     }
 
     /**
@@ -39,8 +39,8 @@ class SearchProcessor extends ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'pid', 'result', 'search', 'date'], 'required'],
-            [['uid', 'pid', 'result', 'date'], 'integer'],
+            [['admin_id', 'panel_id', 'result', 'search', 'created_at'], 'required'],
+            [['admin_id', 'panel_id', 'result', 'created_at'], 'integer'],
             [['search'], 'string', 'max' => 300],
         ];
     }
@@ -52,21 +52,21 @@ class SearchProcessor extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'uid' => Yii::t('app', 'Uid'),
-            'pid' => Yii::t('app', 'Pid'),
+            'admin_id' => Yii::t('app', 'Admin id'),
+            'panel_id' => Yii::t('app', 'Panel id'),
             'result' => Yii::t('app', 'Result'),
             'search' => Yii::t('app', 'Search'),
-            'date' => Yii::t('app', 'Date'),
+            'created_at' => Yii::t('app', 'Created at'),
         ];
     }
 
     /**
      * @inheritdoc
-     * @return SearchProcessorQuery the active query used by this AR class.
+     * @return ProviderSearchLogQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new SearchProcessorQuery(get_called_class());
+        return new ProviderSearchLogQuery(get_called_class());
     }
 
     /**
@@ -74,7 +74,7 @@ class SearchProcessor extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::class, ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'panel_id']);
     }
 
     /**
@@ -82,7 +82,7 @@ class SearchProcessor extends ActiveRecord
      */
     public function getAdmin()
     {
-        return $this->hasOne(ProjectAdmin::class, ['id' => 'uid']);
+        return $this->hasOne(ProjectAdmin::class, ['id' => 'admin_id']);
     }
 
     /**
@@ -102,7 +102,7 @@ class SearchProcessor extends ActiveRecord
             'timestamp' => [
                 'class' => TimestampBehavior::class,
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'date',
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                 ],
                 'value' => function() {
                     return time();
