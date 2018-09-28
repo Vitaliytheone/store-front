@@ -87,7 +87,7 @@ class Mercadopago extends BasePayment
             $response = $client->create_preference($clientData);
             $responseDetails = ArrayHelper::getValue($response, 'response', []);
 
-            if (!empty(Yii::$app->params['testMercadopago'])) {
+            if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
                 $link = ArrayHelper::getValue($responseDetails, 'sandbox_init_point');
             } else {
                 $link = ArrayHelper::getValue($responseDetails, 'init_point');
