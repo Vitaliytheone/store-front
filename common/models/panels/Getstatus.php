@@ -26,6 +26,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $start_count
  * @property int $status
  * @property int type
+ * @property int store
  * @property int updated_at
  * @property string $hash
  */
@@ -50,7 +51,7 @@ class Getstatus extends ActiveRecord
     public function rules()
     {
         return [
-            [['date_create', 'pid', 'oid', 'res', 'count', 'start_count', 'status', 'type'], 'integer'],
+            [['date_create', 'pid', 'oid', 'res', 'count', 'start_count', 'status', 'type', 'store'], 'integer'],
             [['hash'], 'required'],
             [['roid', 'login', 'passwd', 'apikey', 'proxy', 'reid', 'page_id'], 'string', 'max' => 1000],
             [['hash'], 'string', 'max' => 32],
@@ -96,6 +97,7 @@ class Getstatus extends ActiveRecord
             'proxy' => Yii::t('app', 'Proxy'),
             'res' => Yii::t('app', 'Res'),
             'type' => Yii::t('app', 'Type'),
+            'store' => Yii::t('app', 'Store'),
             'reid' => Yii::t('app', 'Reid'),
             'page_id' => Yii::t('app', 'Page ID'),
             'count' => Yii::t('app', 'Count'),

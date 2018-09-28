@@ -7,7 +7,7 @@ namespace common\models\panels\queries;
  *
  * @see \my\models\searchProcessor
  */
-class SearchProcessorQuery extends \yii\db\ActiveQuery
+class ProviderSearchLogQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class SearchProcessorQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \my\models\searchProcessor[]|array
+     * @return \my\models\ProviderSearchLog[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class SearchProcessorQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \my\models\searchProcessor|array|null
+     * @return \my\models\ProviderSearchLog|array|null
      */
     public function one($db = null)
     {

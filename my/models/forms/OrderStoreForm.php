@@ -42,9 +42,6 @@ class OrderStoreForm extends Model
     /** @var string */
     private $_ip;
 
-    /** @var  bool Is order trial store */
-    private $_isTrial;
-
     /**
      * @return array the validation rules.
      */
@@ -112,24 +109,6 @@ class OrderStoreForm extends Model
     public function getIp()
     {
         return $this->_ip;
-    }
-
-    /**
-     * Set is orders trial store
-     * @param bool $isTrial
-     */
-    public function setTrial(bool $isTrial)
-    {
-        $this->_isTrial = $isTrial;
-    }
-
-    /**
-     * Get is order trial
-     * @return bool
-     */
-    public function getTrial()
-    {
-        return $this->_isTrial;
     }
 
     /**
@@ -229,9 +208,9 @@ class OrderStoreForm extends Model
         $order->item = Orders::ITEM_BUY_STORE;
         $order->domain = $this->storeDomain;
         $order->ip = $this->getIp();
-        $order->status = $this->getTrial() ? Orders::STATUS_PAID : Orders::STATUS_PENDING;
+        $order->status = Orders::STATUS_PENDING;
         $order->setDetails([
-            'trial' => $this->getTrial() ? 1 : 0,
+            'trial' => 0,
             'name' => $this->store_name,
             'domain' => $this->storeDomain,
             'currency' => $this->store_currency,
@@ -253,15 +232,13 @@ class OrderStoreForm extends Model
      */
     protected function createInvoice(Orders $order)
     {
-        $isTrial = $this->getTrial();
-
         // Make invoice
         $invoice = new Invoices();
         $invoice->cid = $this->_user->id;
         $invoice->generateCode();
         $invoice->daysExpired(Yii::$app->params['invoice.storeDuration']);
-        $invoice->total = $isTrial ? 0 : Yii::$app->params['storeDeployPrice'];
-        $invoice->status = $isTrial ? Invoices::STATUS_PAID : Invoices::STATUS_UNPAID;
+        $invoice->total = Yii::$app->params['storeDeployPrice'];
+        $invoice->status = Invoices::STATUS_UNPAID;
 
         if (!$invoice->save()) {
             return false;
@@ -271,7 +248,7 @@ class OrderStoreForm extends Model
         $invoiceDetails = new InvoiceDetails();
         $invoiceDetails->invoice_id = $invoice->id;
         $invoiceDetails->item_id = $order->id;
-        $invoiceDetails->item = $isTrial ? InvoiceDetails::ITEM_BUY_TRIAL_STORE : InvoiceDetails::ITEM_BUY_STORE;
+        $invoiceDetails->item = InvoiceDetails::ITEM_BUY_STORE;
         $invoiceDetails->amount = $invoice->total;
 
         if (!$invoiceDetails->save()) {
@@ -305,24 +282,15 @@ class OrderStoreForm extends Model
         }
 
         // Make Invoice for non-trial stores
-        // Create trial store immediately
-        if (!$this->getTrial()) {
             $invoice = $this->createInvoice($order);
 
-            if (!$invoice) {
-                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
+        if (!$invoice) {
+            $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
 
-                return false;
-            }
-
-            $this->_invoiceCode = $invoice->code;
-
-        } else {
-            if (!OrderHelper::store($order)) {
-                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
-                return false;
-            }
+            return false;
         }
+
+        $this->_invoiceCode = $invoice->code;
 
         $transaction->commit();
 

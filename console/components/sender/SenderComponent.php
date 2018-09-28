@@ -258,21 +258,24 @@ class SenderComponent extends Component
                 ->where(['s.id' => $orderId])
                 ->one();
 
-            $getstatus = new Getstatus();
-            $getstatus->pid = $storeId;
-            $getstatus->oid = $orderId;
-            $getstatus->roid = $values[':provider_id'];
-            $getstatus->login = $suborder['apikey'];
-            $getstatus->apikey = '';
-            $getstatus->passwd = '';
-            $getstatus->res =  $values[':provider_order_id'];
-            $getstatus->reid = $values[':provider_service'];
-            $getstatus->page_id = $suborder['link'];
-            $getstatus->count = $suborder['overflow_quantity'];
-            $getstatus->start_count = 0;
-            $getstatus->status = $values[':status'];
-            $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
-            $getstatus->save(false);
+            if ($storeId == 1) {
+                $getstatus = new Getstatus();
+                $getstatus->pid = $storeId;
+                $getstatus->oid = $orderId;
+                $getstatus->roid = $values[':provider_id'];
+                $getstatus->login = $suborder['apikey'];
+                $getstatus->apikey = '';
+                $getstatus->store = 1;
+                $getstatus->passwd = '';
+                $getstatus->res = $values[':provider_order_id'];
+                $getstatus->reid = $values[':provider_service'];
+                $getstatus->page_id = $suborder['link'];
+                $getstatus->count = $suborder['overflow_quantity'];
+                $getstatus->start_count = 0;
+                $getstatus->status = $values[':status'];
+                $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
+                $getstatus->save(false);
+            }
         }
     }
 

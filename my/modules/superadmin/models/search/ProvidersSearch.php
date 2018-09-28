@@ -67,6 +67,8 @@ class ProvidersSearch
                 'type',
                 'status',
                 'date',
+                'service_count',
+                'service_inuse_count',
             ])
             ->from('additional_services');
 
@@ -158,13 +160,19 @@ class ProvidersSearch
                 'date' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_created'),
                 ],
+                'service_count' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_count'),
+                ],
+                'service_inuse_count' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_in_use'),
+                ],
             ],
         ]);
         $sort->defaultOrder = [
             'res' => SORT_DESC,
         ];
 
-        $providers = $this->buildQuery($type)
+        $providers = $this->getProviders($type)
             ->orderBy($sort->orders)
             ->all();
 
@@ -200,7 +208,9 @@ class ProvidersSearch
                 'id' => $provider['id'],
                 'res' => $provider['res'],
                 'name' => $provider['name'],
+                'count' => $provider['service_count'],
                 'projects' => array_values($projects),
+                'in_use' => $provider['service_inuse_count'],
                 'usedProjects' => array_values($usedProjects),
                 'start_count' => AdditionalServices::getStartCountName($provider['start_count']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
@@ -215,84 +225,6 @@ class ProvidersSearch
         }
 
         return $returnProviders;
-    }
-
-    /**
-     * Get all projects
-     * @return array
-     */
-    public function getProjects()
-    {
-        if (!empty($this->_projects)) {
-            return $this->_projects;
-        }
-
-        foreach ((new Query())
-                     ->select([
-                         'id',
-                         'act',
-                         'db',
-                         'name',
-                         'site'
-                     ])
-                     ->from('project')
-                     ->andWhere([
-                         'act' => Project::STATUS_ACTIVE
-                     ])
-                     ->andWhere("db <>''")
-                     ->all() as $project) {
-
-            $this->_projects[$project['id']] = array_merge($project, [
-                'providers' => []
-            ]);
-
-            $providers = [];
-
-            foreach ((new Query())
-                         ->select([
-                             'provider_id'
-                         ])
-                         ->from($project['db'] . '.services')
-                         ->andWhere([
-                             'act' => 1
-                         ])
-                         ->all() as $service) {
-                $providers[$service['provider_id']] = $service['provider_id'];
-            }
-
-            $this->_projects[$project['id']]['providers'] = $providers;
-        }
-
-        return $this->_projects;
-    }
-
-    /**
-     * Get all user services data
-     * @return array
-     */
-    public function getProviderPanels()
-    {
-        if (!empty($this->_providerPanels)) {
-            return $this->_providerPanels;
-        }
-
-        $projects = $this->getProjects();
-
-        foreach ((new Query())
-                     ->select(['aid', 'pid'])
-                     ->from('user_services')
-                     ->batch(100) as $userServices) {
-
-            foreach ($userServices as $userService) {
-                if (empty($projects[$userService['pid']])) {
-                    continue;
-                }
-
-                $this->_providerPanels[$userService['aid']][$userService['pid']] = $projects[$userService['pid']];
-            }
-        }
-
-        return $this->_providerPanels;
     }
 
     /**

@@ -24,16 +24,8 @@ class PanelScannerController extends CustomController
             'mysql' => '\my\components\db\Command'
         ]);
 
-        $before = Yii::$app->db->createCommand('SHOW VARIABLES LIKE \'%timeout%\'')->queryAll();
-        $this->stderr('Before set timeout: ' .  print_r($before,1) . "\n", Console::FG_GREEN);
-
-
         Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
         Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
-
-
-        $after = Yii::$app->db->createCommand('SHOW VARIABLES LIKE \'%timeout%\'')->queryAll();
-        $this->stderr('After set timeout: ' .  print_r($after,1) . "\n", Console::FG_YELLOW);
     }
 
     /**
