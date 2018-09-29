@@ -6,6 +6,7 @@ use my\components\ActiveForm;
 use common\models\panels\SuperToolsScanner;
 use my\modules\superadmin\models\forms\PanelsScannerAddDomainForm;
 use my\modules\superadmin\models\search\DbHelperSearch;
+use my\modules\superadmin\models\search\FraudReportsSearch;
 use my\modules\superadmin\models\search\PanelsScannerSearch;
 use Yii;
 use yii\web\Response;
@@ -108,6 +109,24 @@ class ToolsController extends CustomController
             'query' => $search->getQueryForInput(),
             'selectedOption' => Yii::$app->request->post('db_name'),
             'selectList' => $search->getSelectList(),
+        ]);
+    }
+
+    /**
+     * Render Fraud Reports page
+     * @return string
+     */
+    public function actionFraudReports()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.customers');
+
+        $reports = new FraudReportsSearch();
+        $reports->setParams(Yii::$app->request->get());
+
+        return $this->render('fraud_reports', [
+            'reports' => $reports->search(),
+            'navs' => $reports->navs(),
+            'filters' => $reports->getParams(),
         ]);
     }
 

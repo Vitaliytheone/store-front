@@ -26,6 +26,7 @@ return [
     'header.nav.panelfire_scanner' => 'Panelfire scanner',
     'header.nav.rentalpanel_scanner' => 'Rentalpanel scanner',
     'header.nav.db_helper' => 'DB helper',
+    'header.nav.fraud_reports' => 'Fraud reports',
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
