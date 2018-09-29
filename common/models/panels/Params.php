@@ -18,6 +18,9 @@ use yii\helpers\ArrayHelper;
  */
 class Params extends ActiveRecord
 {
+    const VISIBILITY_ENABLED = 1;
+    const VISIBILITY_DISABLED = 0;
+
     /**
      * @var static[]
      */
@@ -99,7 +102,7 @@ class Params extends ActiveRecord
     /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return json_decode($this->options, true);
     }
@@ -124,6 +127,18 @@ class Params extends ActiveRecord
                     return time();
                 },
             ],
+        ];
+    }
+
+    /**
+     * Get visibility list with labels
+     * @return array
+     */
+    public static function getVisibilityList(): array
+    {
+        return [
+            static::VISIBILITY_ENABLED => Yii::t('app', 'payment_gateway.visibility.enabled'),
+            static::VISIBILITY_DISABLED => Yii::t('app', 'payment_gateway.visibility.disabled')
         ];
     }
 }

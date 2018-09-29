@@ -2,6 +2,7 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\Params;
 use my\components\ActiveForm;
 use my\components\SuperAccessControl;
 use my\helpers\Url;
@@ -218,7 +219,7 @@ class SettingsController extends CustomController
      */
     public function actionEditPayment($id)
     {
-        $payment = PaymentGateway::findOne($id);
+        $payment = Params::findOne($id);
 
         if (!$payment) {
             throw new NotFoundHttpException();

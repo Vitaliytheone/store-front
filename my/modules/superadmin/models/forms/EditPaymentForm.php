@@ -5,6 +5,7 @@ namespace my\modules\superadmin\models\forms;
 use Yii;
 use common\models\panels\PaymentGateway;
 use yii\base\Model;
+use common\models\panels\Params;
 
 /**
  * EditPaymentForm is the model behind the Edit Staff form.
@@ -17,7 +18,7 @@ class EditPaymentForm extends Model
     public $details = [];
 
     /**
-     * @var PaymentGateway
+     * @var Params
      */
     private $_payment;
 
@@ -27,24 +28,23 @@ class EditPaymentForm extends Model
     public function rules()
     {
         return [
-            [['name', 'visibility'], 'required'],
-            [['visibility'], 'in', 'range' => array_keys(PaymentGateway::getVisibilityList())],
             ['details', 'safe']
         ];
     }
 
     /**
      * Set super admin
-     * @param PaymentGateway $payment
+     * @param Params $payment
      */
-    public function setPayment(PaymentGateway $payment)
+    public function setPayment(Params $payment)
     {
         $this->_payment = $payment;
+        $details = $payment->getOptions();
 
-        $this->name = $payment->name;
-        $this->pgid = $payment->pgid;
-        $this->visibility = $payment->visibility;
-        $this->details = $payment->getOptionsData();
+        $this->name = $details['name'];
+        $this->pgid = (int)$details['pgid'];
+        $this->visibility = (int)$details['visibility'];
+        $this->details = $details;
     }
 
     /**
@@ -57,9 +57,11 @@ class EditPaymentForm extends Model
             return false;
         }
 
-        $this->_payment->name = $this->name;
-        $this->_payment->visibility = $this->visibility;
-        $this->_payment->setOptionsData($this->details);
+        if (!array_key_exists($this->visibility, PaymentGateway::getVisibilityList())) {
+            return false;
+        }
+
+        $this->_payment->setOption($this->details);
 
         if (!$this->_payment->save()) {
             $this->addErrors($this->_payment->getErrors());
