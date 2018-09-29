@@ -446,7 +446,7 @@ class ActivitySearch extends Model
             static::$_interval = static::DAY_TIME / 24;
             $dateTo += static::DAY_TIME;
 
-            $query->groupBy("(HOUR(FROM_UNIXTIME(`created_at`)))");
+            $query->groupBy('created_at');
 
             for ($point = $dateFrom; $point <= $dateTo; $point = $point + static::$_interval) {
                 $activity[$point] = [
@@ -508,12 +508,31 @@ class ActivitySearch extends Model
             }
         }
 
-        foreach ($this->queryAll($query) as $item) {
+        $queryResult = $this->queryAll($query);
+        $pointsList = [];
+
+        if (in_array($days, [1, 2])) {
+            foreach ($queryResult as $value) {
+                $date = date('Y-m-d H', $value['created_at']) . ':00:00';
+                $dateTimestamp = strtotime($date);
+
+                if (!array_key_exists($date, $pointsList)) {
+                    $pointsList[$date] = [
+                        'created_at' => $dateTimestamp,
+                        'rows' => 1,
+                    ];
+                } else {
+                    $pointsList[$date]['rows'] = $pointsList[$date]['rows'] + 1;
+                }
+            }
+        } else {
+            $pointsList = $queryResult;
+        }
+
+        foreach ($pointsList as $item) {
             $this->_dateTime->setTimestamp($item['created_at']);
 
-            if ('hour' == $type) {
-                $this->_dateTime->setTime($this->_dateTime->format('h'), 0, 0);
-            } else {
+            if ('hour' !== $type) {
                 $this->_dateTime->setTime(0, 0, 0);
             }
 
