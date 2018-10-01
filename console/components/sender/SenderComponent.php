@@ -258,7 +258,6 @@ class SenderComponent extends Component
                 ->where(['s.id' => $orderId])
                 ->one();
 
-            if ($storeId == 1) {
                 $getstatus = new Getstatus();
                 $getstatus->pid = $storeId;
                 $getstatus->oid = $orderId;
@@ -275,51 +274,7 @@ class SenderComponent extends Component
                 $getstatus->status = $values[':status'];
                 $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
                 $getstatus->save(false);
-            }
         }
-    }
-
-
-    /**
-     * Resend order errored by protocol
-     * @param $orderInfo
-     */
-    private function _resendOrder($orderInfo)
-    {
-        $orderExist = Yii::$app->db->createCommand("
-            SELECT COUNT(*)
-            FROM $this->_tableStoresSendOrders
-            WHERE `store_id` = :store_id AND `suborder_id` = :suborder_id
-        ")
-            ->bindValues([
-                ':store_id' => $orderInfo['store_id'],
-                ':suborder_id' => $orderInfo['suborder_id'],
-            ])
-            ->queryScalar();
-
-        if ($orderExist) {
-            return;
-        }
-
-
-        Yii::$app->db
-            ->createCommand("
-                  INSERT INTO $this->_tableStoresSendOrders 
-                  (`store_id`, `provider_id`, `suborder_id`, `store_db`) 
-                  VALUES (:store_id, :provider_id, :suborder_id, :store_db);
-             ")
-            ->bindValues([
-                ':store_id' => $orderInfo['store_id'],
-                ':provider_id' => $orderInfo['provider_id'],
-                ':suborder_id' => $orderInfo['suborder_id'],
-                ':store_db'=> $orderInfo['store_db'],
-            ])
-            ->execute();
-
-        $this->_updateOrder($orderInfo, [
-            ':status' => Suborders::STATUS_AWAITING,
-            ':send' => Suborders::SEND_STATUS_AWAITING,
-        ]);
     }
 
     /**
