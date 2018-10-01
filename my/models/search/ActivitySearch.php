@@ -519,7 +519,7 @@ class ActivitySearch extends Model
                 if (!array_key_exists($date, $pointsList)) {
                     $pointsList[$date] = [
                         'created_at' => $dateTimestamp,
-                        'rows' => 1,
+                        'rows' => $value['rows'],
                     ];
                 } else {
                     $pointsList[$date]['rows'] = $pointsList[$date]['rows'] + 1;
