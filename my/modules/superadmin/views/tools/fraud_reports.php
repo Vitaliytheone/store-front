@@ -16,7 +16,7 @@ use my\helpers\Url;
                     <ul class="nav nav-pills">
                         <?php foreach ($navs as $status => $nav) : ?>
                             <li class="nav-item">
-                                <a class="nav-link text-nowrap <?= ($filters['status'] == $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/tools/fraud-reports', 'status' => $status]) ?>">
+                                <a class="nav-link text-nowrap <?= $filters['status'] === (string)$status  ? 'active' : '' ?>" href="<?= Url::toRoute(['/tools/fraud-reports', 'status' => $status]) ?>">
                                     <?= $nav ?>
                                 </a>
                             </li>
