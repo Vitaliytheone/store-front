@@ -9,9 +9,14 @@ use common\models\panels\queries\UserServicesQuery;
 /**
  * This is the model class for table "{{%user_services}}".
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $aid
+/**
+ * This is the model class for table "{{%user_services}}".
+ *
+ * @property int $id
+ * @property int $pid
+ * @property int $panel_id - Дублирует поле pid
+ * @property int $aid
+ * @property int $provider_id - Дублирует поле aid
  * @property string $login
  * @property string $passwd
  * @property string $apikey
@@ -35,9 +40,7 @@ class UserServices extends ActiveRecord
     public function rules()
     {
         return [
-            [['pid', 'aid'], 'required'],
-            [['pid', 'aid'], 'integer'],
-            [['login', 'passwd', 'apikey'], 'default', 'value' => null],
+            [['pid', 'panel_id', 'aid', 'provider_id'], 'integer'],
             [['login', 'passwd', 'apikey'], 'string', 'max' => 300],
         ];
     }
@@ -49,11 +52,13 @@ class UserServices extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'pid' => Yii::t('app', 'Pid'),
-            'aid' => Yii::t('app', 'Aid'),
+            'pid' => Yii::t('app', 'Panel ID'),
+            'panel_id' => Yii::t('app', 'Panel ID'),
+            'aid' => Yii::t('app', 'Provider ID'),
+            'provider_id' => Yii::t('app', 'Provider ID'),
             'login' => Yii::t('app', 'Login'),
-            'passwd' => Yii::t('app', 'Passwd'),
-            'apikey' => Yii::t('app', 'Apikey'),
+            'passwd' => Yii::t('app', 'Password'),
+            'apikey' => Yii::t('app', 'API Key'),
         ];
     }
 
@@ -71,7 +76,7 @@ class UserServices extends ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::class, ['id' => 'pid']);
+        return $this->hasOne(Project::class, ['id' => 'panel_id']);
     }
 
     /**
@@ -79,6 +84,6 @@ class UserServices extends ActiveRecord
      */
     public function getAdditionalService()
     {
-        return $this->hasOne(AdditionalServices::class, ['id' => 'aid']);
+        return $this->hasOne(AdditionalServices::class, ['id' => 'provider_id']);
     }
 }
