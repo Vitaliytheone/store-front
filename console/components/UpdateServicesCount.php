@@ -20,18 +20,18 @@ class UpdateServicesCount
         $providersPanels = $this->getProviderPanels();
 
         foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
+            $projects = ArrayHelper::getValue($providersPanels, $provider['panel_id'], []);
             $usedProjects = [];
 
             foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
+                if (!empty($project['providers'][$provider['panel_id']])) {
                     $usedProjects[] = $project;
                 }
             }
 
             AdditionalServices::updateAll(
                 ['service_count' => count(array_values($projects)), 'service_inuse_count' => count(array_values($usedProjects))],
-                ['res' => $provider['res']]
+                ['panel_id' => $provider['panel_id']]
             );
         }
     }
@@ -43,7 +43,7 @@ class UpdateServicesCount
     {
         $providers = (new Query())
             ->select([
-                'res',
+                'panel_id',
             ])
             ->from('additional_services')
             ->all();
@@ -65,7 +65,7 @@ class UpdateServicesCount
         $projects = $this->getProjects();
 
         foreach ((new Query())
-                     ->select(['aid', 'pid'])
+                     ->select(['provider_id as aid', 'panel_id as pid'])
                      ->from('user_services')
                      ->batch(100) as $userServices) {
 

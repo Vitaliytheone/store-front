@@ -346,7 +346,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function getUserServices()
     {
-        return $this->hasMany(UserServices::class, ['pid' => 'id']);
+        return $this->hasMany(UserServices::class, ['panel_id' => 'id']);
     }
 
     /**

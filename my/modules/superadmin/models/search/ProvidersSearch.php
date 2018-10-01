@@ -58,7 +58,7 @@ class ProvidersSearch
             ->select([
                 'id',
                 'name',
-                'res',
+                'panel_id',
                 'start_count',
                 'refill',
                 'cancel',
@@ -75,7 +75,7 @@ class ProvidersSearch
         if (!empty($searchQuery)) {
             $providers->andFilterWhere([
                 'or',
-                ['=', 'res', $searchQuery],
+                ['=', 'panel_id', $searchQuery],
                 ['like', 'name', $searchQuery],
             ]);
         }
@@ -129,7 +129,7 @@ class ProvidersSearch
 
         $sort = new Sort([
             'attributes' => [
-                'res' => [
+                'panel_id' => [
                     'default' => SORT_DESC,
                     'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
                 ],
@@ -169,7 +169,7 @@ class ProvidersSearch
             ],
         ]);
         $sort->defaultOrder = [
-            'res' => SORT_DESC,
+            'panel_id' => SORT_DESC,
         ];
 
         $providers = $this->getProviders($type)
@@ -195,18 +195,18 @@ class ProvidersSearch
         $providersPanels = $this->getProviderPanels();
 
         foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
+            $projects = ArrayHelper::getValue($providersPanels, $provider['panel_id'], []);
             $usedProjects = [];
 
             foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
+                if (!empty($project['providers'][$provider['panel_id']])) {
                     $usedProjects[] = $project;
                 }
             }
 
             $returnProviders[$key] = [
                 'id' => $provider['id'],
-                'res' => $provider['res'],
+                'panel_id' => $provider['panel_id'],
                 'name' => $provider['name'],
                 'count' => $provider['service_count'],
                 'projects' => array_values($projects),
@@ -289,7 +289,7 @@ class ProvidersSearch
         $projects = $this->getProjects();
 
         foreach ((new Query())
-                     ->select(['aid', 'pid'])
+                     ->select(['provider_id as aid', 'panel_id as pid'])
                      ->from('user_services')
                      ->batch(100) as $userServices) {
 

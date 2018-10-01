@@ -131,9 +131,9 @@ class GetstatusSearch extends Getstatus
         }
 
         $statuses = AdditionalServices::find()
-            ->select(['res', 'name'])
-            ->where(['additional_services.res' => array_keys($data)])
-            ->groupBy('res')
+            ->select(['panel_id', 'name'])
+            ->where(['additional_services.panel_id' => array_keys($data)])
+            ->groupBy('panel_id')
             ->all();
 
         $countsList = (new Query())
@@ -145,11 +145,11 @@ class GetstatusSearch extends Getstatus
 
         $result = [];
         for ($i = 0; $i < count($statuses); $i++ ) {
-            $result[$statuses[$i]->res] = $data[$statuses[$i]->res];
-            $result[$statuses[$i]->res]['provider'] = $statuses[$i]->name;
-            $result[$statuses[$i]->res]['all_orders'] = isset($countsList[$statuses[$i]->res]) ? $countsList[$statuses[$i]->res] : 0;
-            $result[$statuses[$i]->res]['good'] = $data[$statuses[$i]->res]['requests'] - $data[$statuses[$i]->res]['status_error'] - $data[$statuses[$i]->res]['curl_error'];
-            $result[$statuses[$i]->res]['avg'] = round($data[$statuses[$i]->res]['avg'], 0);
+            $result[$statuses[$i]->panel_id] = $data[$statuses[$i]->panel_id];
+            $result[$statuses[$i]->panel_id]['provider'] = $statuses[$i]->name;
+            $result[$statuses[$i]->panel_id]['all_orders'] = isset($countsList[$statuses[$i]->panel_id]) ? $countsList[$statuses[$i]->panel_id] : 0;
+            $result[$statuses[$i]->panel_id]['good'] = $data[$statuses[$i]->panel_id]['requests'] - $data[$statuses[$i]->panel_id]['status_error'] - $data[$statuses[$i]->panel_id]['curl_error'];
+            $result[$statuses[$i]->panel_id]['avg'] = round($data[$statuses[$i]->panel_id]['avg'], 0);
         }
 
         return $result;

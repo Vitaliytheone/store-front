@@ -57,7 +57,7 @@ class EditProvidersForm extends Model {
             return false;
         }
 
-        $currentProviders = ArrayHelper::index($this->_project->userServices, 'aid');
+        $currentProviders = ArrayHelper::index($this->_project->userServices, 'provider_id');
         $this->providers = (array)ArrayHelper::getValue($this, 'providers', []);
         $this->providers = array_filter($this->providers);
 
@@ -69,8 +69,8 @@ class EditProvidersForm extends Model {
 
             $userService = new UserServices();
             $userService->attributes = [
-                'pid' => $this->_project->id,
-                'aid' => $provider,
+                'panel_id' => $this->_project->id,
+                'provider_id' => $provider,
             ];
 
             $userService->save(false);
@@ -103,7 +103,7 @@ class EditProvidersForm extends Model {
         $providers = [];
 
         foreach ($this->_getProviders() as $provider) {
-            $providers[$provider->res] = [
+            $providers[$provider->panel_id] = [
                 'name' => $provider->name,
                 'internal' => (AdditionalServices::TYPE_INTERNAL == $provider->type) ? true : false
             ];

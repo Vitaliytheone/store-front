@@ -113,12 +113,12 @@ class ApiKeysLogsSearch
             ->leftJoin(['pt' => $this->_projectTable], 'pt.id = lt.panel_id')
             ->leftJoin(['pat' => $this->_projectAdminTable], 'pat.id = lt.admin_id')
             ->leftJoin(['ct' => $this->_customersTable], 'ct.id = pt.cid')
-            ->leftJoin(['provt' => $this->_providersTable], 'lt.provider_id = provt.res')
+            ->leftJoin(['provt' => $this->_providersTable], 'lt.provider_id = provt.panel_id')
             ->leftJoin(['prvt' => (new Query())
-                ->select(['res', 'name'])
+                ->select(['panel_id', 'name'])
                 ->from($this->_providersTable)
-                ->groupBy('res')
-            ],'prvt.res = lt.provider_id')
+                ->groupBy('panel_id')
+            ],'prvt.panel_id = lt.provider_id')
             ->orderBy([
                 'id' => SORT_DESC,
             ])

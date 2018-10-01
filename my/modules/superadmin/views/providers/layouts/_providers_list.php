@@ -15,7 +15,7 @@
 <table class="table table-border" id="providersTable">
     <thead>
     <tr>
-        <th><?= $providers['sort']->link('res', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+        <th><?= $providers['sort']->link('panel_id', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
         <th><?= $providers['sort']->link('name', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
         <th><?= $providers['sort']->link('service_count', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
         <th><?= $providers['sort']->link('service_inuse_count', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
@@ -35,7 +35,7 @@
         <?php foreach (SpecialCharsHelper::multiPurifier($providers['models']) as $key => $provider) : ?>
             <tr>
                 <td>
-                    <?= $provider['res'] ?>
+                    <?= $provider['panel_id'] ?>
                 </td>
                 <td>
                     <?= $provider['name'] ?>

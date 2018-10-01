@@ -224,7 +224,7 @@ class PanelsSearch {
         }
 
         $query = (new Query())
-            ->select('pid, aid')
+            ->select('panel_id as pid, provider_id as aid')
             ->from('user_services');
 
         foreach (static::queryAllCache($query) as $provider) {
