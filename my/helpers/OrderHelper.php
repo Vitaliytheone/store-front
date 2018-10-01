@@ -403,6 +403,8 @@ class OrderHelper {
             $userService = new UserServices();
             $userService->pid = $project->id;
             $userService->aid = $project->provider_id;
+            $userService->panel_id = $project->id;
+            $userService->provider_id = $project->provider_id;
             $userService->save(false);
         }
 
