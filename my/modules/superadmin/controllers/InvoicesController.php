@@ -27,6 +27,8 @@ class InvoicesController extends CustomController
 {
     public $activeTab = 'invoices';
 
+    public $layout = 'superadmin_v2.php';
+
     public function behaviors()
     {
         return [
