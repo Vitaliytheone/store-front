@@ -8,7 +8,7 @@
     use yii\widgets\LinkPager;
     use my\helpers\SpecialCharsHelper;
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'ssl.list.column_id')?></th>
@@ -17,7 +17,7 @@
         <th><?= Yii::t('app/superadmin', 'ssl.list.column_status')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'ssl.list.column_created')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'ssl.list.column_expiry')?></th>
-        <th class="w-1"></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -47,7 +47,7 @@
                 </td>
                 <td>
                     <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'ssl.list.actions_label')?></button>
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'ssl.list.actions_label')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <?= Html::a(Yii::t('app/superadmin', 'ssl.list.action_details'), Url::toRoute(['/ssl/details', 'id' => $ssl->id]), [
                                 'class' => 'dropdown-item ssl-details',
@@ -62,8 +62,12 @@
     </tbody>
 </table>
 
-<div class="text-align-center pager">
-    <?= LinkPager::widget([
-        'pagination' => $sslList['pages'],
-    ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $sslList['pages'],]); ?>
+            </ul>
+        </nav>
+    </div>
 </div>

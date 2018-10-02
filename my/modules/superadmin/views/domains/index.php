@@ -10,10 +10,10 @@ use my\helpers\SpecialCharsHelper;
 $this->context->addModule('superadminDomainsController');
 ?>
     <ul class="nav nav-pills mb-3" role="tablist">
-                <?php foreach ($navs as $code => $label) : ?>
-                    <?php $code = is_numeric($code) ? $code : null;?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/domains', 'status' => $code]) ?>"><?= $label ?></a></li>
-                <?php endforeach; ?>
+        <?php foreach ($navs as $code => $label) : ?>
+            <?php $code = is_numeric($code) ? $code : null;?>
+            <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/domains', 'status' => $code]) ?>"><?= $label ?></a></li>
+        <?php endforeach; ?>
         <li class="ml-auto">
             <form class="form" method="GET" id="domainsSearch" action="<?=Url::toRoute(array_merge(['/domains'], $filters, ['query' => null]))?>">
                 <div class="input-group">
