@@ -8,6 +8,7 @@
 
     use my\helpers\Url;
     use my\helpers\SpecialCharsHelper;
+    use yii\helpers\Html;
 
     $this->context->addModule('superadminInvoicesController');
 ?>
@@ -18,14 +19,13 @@
         <?php endforeach; ?>
         <li class="ml-auto">
             <form class="form" method="GET" id="invoicesSearch" action="<?=Url::toRoute(array_merge(['/invoices'], $filters, ['query' => null]))?>">
-                <div class="input-group input-group__buttons">
+                <div class="input-group">
                     <a id="createInvoice" class="btn btn-primary" href="<?= Url::toRoute('/invoices/create')?>"><?= Yii::t('app/superadmin', 'invoices.btn.create_new')?></a>&nbsp;
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'invoices.list.search') ?>" value="<?= SpecialCharsHelper::multiPurifier($filters['query']) ?>">
-                    <select class="form-control" name="search_type">
-                        <?php foreach ($searchTypes as $key => $type): ?>
-                            <option value="<?= $key ?>"<?= ($filters['search_type'] == $key) ? ' selected' : '' ?>><?= $type ?></option>
-                        <?php endforeach ?>
-                    </select>
+
+                    <?= Html::dropDownList('search_type', $filters['search_type'], $searchTypes, [
+                            'class' => 'custom-select'
+                    ]) ?>
                     <div class="input-group-append">
                         <button class="btn btn-light" type="submit"><span class="fa fa-search"></span></button>
                     </div>
