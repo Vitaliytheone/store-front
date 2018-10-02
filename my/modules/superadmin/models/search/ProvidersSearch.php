@@ -41,9 +41,9 @@ class ProvidersSearch
 
     /**
      * Set value of page size
-     * @return int
+     * @return int|string
      */
-    public function getPageSize(): int
+    public function getPageSize()
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
         return in_array($pageSize, static::$pageSizeList) ? $pageSize : 100;
@@ -51,8 +51,8 @@ class ProvidersSearch
 
     /**
      * Build sql query
-     * @param $type
-     * @param script
+     * @param null|string $type
+     * @param null|string $script
      * @return Query
      */
     public function buildQuery($type = null, $script = null): Query
@@ -116,6 +116,7 @@ class ProvidersSearch
 
     /**
      * @param null|string $type
+     * @param null|string $script
      * @return Pagination
      */
     private function setPagination($type = null, $script = null): Pagination
@@ -131,8 +132,8 @@ class ProvidersSearch
 
     /**
      * Get providers
-     * @param integer $type
-     * @param $script string
+     * @param integer|null $type
+     * @param $script|null string
      * @return Query
      */
     protected function getProviders($type = null, $script = null): Query

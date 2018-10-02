@@ -7,7 +7,6 @@
     use my\helpers\Url;
     use yii\helpers\Html;
     use yii\helpers\Json;
-    use common\models\panels\AdditionalServices;
     use my\helpers\SpecialCharsHelper;
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
@@ -131,7 +130,19 @@
 
     </tbody>
 </table>
-<!-- Delete <br> after update ccs to v.2 -->
-<br>
-<!-- -->
-<!-- Add pagination widgets -->
+
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $providers['pages'],]); ?>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-6 text-md-right">
+        <?= CountPagination::widget([
+            'pages' => $providers['pages'],
+            'params' => $filters
+        ]) ?>
+    </div>
+</div>
