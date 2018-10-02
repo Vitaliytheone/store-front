@@ -16,6 +16,8 @@ class DomainsController extends CustomController
 {
     public $activeTab = 'domains';
 
+    public $layout = 'superadmin_v2.php';
+
     /**
      * Renders the index view for the module
      * @return string
@@ -41,6 +43,7 @@ class DomainsController extends CustomController
      * Get domain details
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDetails($id)
     {
