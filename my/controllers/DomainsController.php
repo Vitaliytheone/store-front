@@ -11,6 +11,9 @@ use my\models\search\DomainsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 
 
 /**
@@ -51,6 +54,13 @@ class DomainsController extends CustomController
                     ],
                 ],
             ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'index' => ['GET'],
+                    'order' => ['POST', 'GET'],
+                ],
+            ],
         ];
     }
 
@@ -74,7 +84,8 @@ class DomainsController extends CustomController
 
     /**
      * Create order
-     * @return string|\yii\web\Response
+     * @return array|string|Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {

@@ -18,10 +18,11 @@ use common\models\panels\ProjectAdmin;
 use my\models\search\PanelsSearch;
 use Yii;
 use common\models\panels\Project;
-use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
 
 /**
  * Class ProjectController
@@ -29,22 +30,27 @@ use yii\web\Response;
  */
 class ProjectController extends CustomController
 {
-    /**
-     * @inheritdoc
-     */
+
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
+        return array_merge(parent::behaviors(), [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'order-domain' => ['POST'],
+                    'staffpasswd' => ['POST'],
+                    'staffedit' => ['POST'],
+                    'staffcreate' => ['POST'],
                 ],
             ],
-        ];
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['order-domain', 'staffpasswd', 'staffedit', 'staffcreate'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -76,6 +82,7 @@ class ProjectController extends CustomController
     /**
      * Create order
      * @return string|\yii\web\Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {
@@ -107,13 +114,12 @@ class ProjectController extends CustomController
 
     /**
      * Create order
-     * @return string|\yii\web\Response
+     * @return array|string|\yii\web\Response
+     * @throws \Throwable
      */
     public function actionOrderDomain()
     {
         $this->view->title = Yii::t('app', 'pages.title.order');
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new CreateOrderForm();
         $model->scenario = CreateOrderForm::SCENARIO_CREATE_DOMAIN;
@@ -168,7 +174,8 @@ class ProjectController extends CustomController
     /**
      * Set staff password
      * @param int $id
-     * @return string|Response
+     * @return array|string|Response
+     * @throws \Throwable
      */
     public function actionStaffpasswd($id)
     {
@@ -179,8 +186,6 @@ class ProjectController extends CustomController
         }
 
         $this->findModel($staff->pid);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new SetStaffPasswordForm();
         $model->setStaff($staff);
@@ -208,7 +213,8 @@ class ProjectController extends CustomController
     /**
      * Edit staff
      * @param int $id
-     * @return string|Response
+     * @return array|string|Response
+     * @throws \Throwable
      */
     public function actionStaffedit($id)
     {
@@ -219,8 +225,6 @@ class ProjectController extends CustomController
         }
 
         $this->findModel($staff->pid);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new EditStaffForm();
         $model->setStaff($staff);
@@ -248,12 +252,12 @@ class ProjectController extends CustomController
     /**
      * Create project staff
      * @param int $id
+     * @return array
+     * @throws \Throwable
      */
     public function actionStaffcreate($id)
     {
         $project = $this->findModel($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new CreateStaffForm();
         $model->setProject($project);
@@ -341,6 +345,7 @@ class ProjectController extends CustomController
      * Find model by id and class name
      * @param int $id
      * @return Response|Project
+     * @throws \Throwable
      */
     private function findModel($id)
     {

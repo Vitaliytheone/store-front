@@ -18,10 +18,11 @@ use my\models\forms\SetStoreStaffPasswordForm;
 use my\models\search\StoresSearch;
 use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
 
 /**
  * Class StoreController
@@ -61,6 +62,22 @@ class StoreController extends CustomController
                     ],
                 ],
             ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'edit-domain' => ['POST'],
+                    'staff-create' => ['POST'],
+                    'staff-edit' => ['POST'],
+                    'staff-password' => ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['edit-domain', 'staff-create', 'staff-edit', 'staff-password'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
         ];
     }
 
@@ -95,7 +112,8 @@ class StoreController extends CustomController
 
     /**
      * Create store order
-     * @return string
+     * @return string|Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {
@@ -123,12 +141,13 @@ class StoreController extends CustomController
      * Edit store domain
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionEditDomain($id)
     {
         $store = $this->_findStore($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         /**
          * @var Customers $user
@@ -183,9 +202,12 @@ class StoreController extends CustomController
 
     /**
      * Prolongation store
-     * @param $id
+     * @param int $id
      * @return Response
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionProlong($id)
     {
@@ -213,8 +235,11 @@ class StoreController extends CustomController
 
     /**
      * Render store staff list
-     * @param $id
+     * @param int $id
      * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaff($id)
     {
@@ -238,14 +263,15 @@ class StoreController extends CustomController
 
     /**
      * Create store staff ajax action
-     * @param $id integer store id
+     * @param int $id
      * @return array
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaffCreate($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $store = $this->_findStore($id);
 
         if (!Stores::hasAccess($store, Stores::CAN_STAFF_CREATE, [
@@ -279,14 +305,15 @@ class StoreController extends CustomController
 
     /**
      * Edit store staff ajax action
-     * @param $id integer staff user id
+     * @param int $id
      * @return array
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaffEdit($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $staff = StoreAdminAuth::findOne([
             'id' => $id,
         ]);
@@ -328,14 +355,15 @@ class StoreController extends CustomController
 
     /**
      * Update store staff password ajax action
-     * @param $id
+     * @param int $id
      * @return array
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaffPassword($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $staff = StoreAdminAuth::findOne([
             'id' => $id,
         ]);
