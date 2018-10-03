@@ -64,7 +64,7 @@ class DowngradePanelForm extends Model {
         /**
          * @var UserServices $currentProviders
          */
-        $currentProviders = ArrayHelper::index($this->_project->userServices, 'aid');
+        $currentProviders = ArrayHelper::index($this->_project->userServices, 'provider_id');
 
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -79,8 +79,8 @@ class DowngradePanelForm extends Model {
             } else {
                 $userService = new UserServices();
                 $userService->attributes = [
-                    'pid' => $this->_project->id,
-                    'aid' => $this->provider,
+                    'panel_id' => $this->_project->id,
+                    'provider_id' => $this->provider,
                 ];
 
                 $userService->save(false);
