@@ -115,10 +115,10 @@ class ApiKeysLogsSearch
             ->leftJoin(['ct' => $this->_customersTable], 'ct.id = pt.cid')
             ->leftJoin(['provt' => $this->_providersTable], 'lt.provider_id = provt.panel_id')
             ->leftJoin(['prvt' => (new Query())
-                ->select(['panel_id', 'name'])
+                ->select(['provider_id', 'name'])
                 ->from($this->_providersTable)
-                ->groupBy('panel_id')
-            ],'prvt.panel_id = lt.provider_id')
+                ->groupBy('provider_id')
+            ],'prvt.provider_id = lt.provider_id')
             ->orderBy([
                 'id' => SORT_DESC,
             ])

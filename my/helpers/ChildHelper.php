@@ -18,7 +18,7 @@ class ChildHelper {
     public static function getProviders($userId, $statuses = [])
     {
         $providersQuery = (new Query())
-            ->select(['additional_services.res', 'additional_services.name'])
+            ->select(['additional_services.provider_id', 'additional_services.name'])
             ->from('additional_services')
             ->innerJoin('project', 'additional_services.name = project.site')
             ->andWhere([

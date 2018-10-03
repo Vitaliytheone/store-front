@@ -58,7 +58,7 @@ class ProvidersSearch
             ->select([
                 'id',
                 'name',
-                'panel_id',
+                'provider_id',
                 'start_count',
                 'refill',
                 'cancel',
@@ -75,7 +75,7 @@ class ProvidersSearch
         if (!empty($searchQuery)) {
             $providers->andFilterWhere([
                 'or',
-                ['=', 'panel_id', $searchQuery],
+                ['=', 'provider_id', $searchQuery],
                 ['like', 'name', $searchQuery],
             ]);
         }
@@ -129,7 +129,7 @@ class ProvidersSearch
 
         $sort = new Sort([
             'attributes' => [
-                'panel_id' => [
+                'provider_id' => [
                     'default' => SORT_DESC,
                     'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
                 ],
@@ -169,7 +169,7 @@ class ProvidersSearch
             ],
         ]);
         $sort->defaultOrder = [
-            'panel_id' => SORT_DESC,
+            'provider_id' => SORT_DESC,
         ];
 
         $providers = $this->getProviders($type)
@@ -195,18 +195,18 @@ class ProvidersSearch
         $providersPanels = $this->getProviderPanels();
 
         foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['panel_id'], []);
+            $projects = ArrayHelper::getValue($providersPanels, $provider['provider_id'], []);
             $usedProjects = [];
 
             foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['panel_id']])) {
+                if (!empty($project['providers'][$provider['provider_id']])) {
                     $usedProjects[] = $project;
                 }
             }
 
             $returnProviders[$key] = [
                 'id' => $provider['id'],
-                'panel_id' => $provider['panel_id'],
+                'provider_id' => $provider['provider_id'],
                 'name' => $provider['name'],
                 'count' => $provider['service_count'],
                 'projects' => array_values($projects),

@@ -899,7 +899,7 @@ class Project extends ActiveRecord implements ProjectInterface
         return Project::find()
             ->select('child_panel.*')
             ->leftJoin('additional_services', 'additional_services.name = project.site')
-            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
+            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.provider_id')
             ->where(['project.site' => $this->site])
             ->all();
     }
