@@ -45,7 +45,8 @@ class ReferralEarnings extends ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'earnings', 'invoice_id', 'created_at'], 'required'],
+            [['customer_id', 'earnings', 'invoice_id'], 'required'],
+            [['invoice_id'], 'unique'],
             [['customer_id', 'invoice_id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['earnings'], 'number'],
         ];
