@@ -130,6 +130,9 @@ class CronController extends CustomController
             'checked' => SslCert::CHECKED_NO
         ])->all();
 
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
+
         foreach ($sslList as $ssl) {
             OrderHelper::updateSslOrderStatus($ssl);
         }
