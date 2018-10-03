@@ -65,16 +65,16 @@ class UpdateServicesCount
         $projects = $this->getProjects();
 
         foreach ((new Query())
-                     ->select(['provider_id as aid', 'panel_id as pid'])
+                     ->select(['provider_id', 'panel_id'])
                      ->from('user_services')
                      ->batch(100) as $userServices) {
 
             foreach ($userServices as $userService) {
-                if (empty($projects[$userService['pid']])) {
+                if (empty($projects[$userService['panel_id']])) {
                     continue;
                 }
 
-                $providerPanels[$userService['aid']][$userService['pid']] = $projects[$userService['pid']];
+                $providerPanels[$userService['provider_id']][$userService['panel_id']] = $projects[$userService['panel_id']];
             }
         }
 

@@ -34,7 +34,7 @@ class ChildHelper {
 
         $providers = [];
         foreach ($providersQuery->all() as $provider) {
-            $providers[$provider['res']] = DomainsHelper::idnToUtf8($provider['name']);
+            $providers[$provider['provider_id']] = DomainsHelper::idnToUtf8($provider['name']);
         }
 
         return $providers;
