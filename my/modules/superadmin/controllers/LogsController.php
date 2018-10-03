@@ -17,6 +17,8 @@ class LogsController extends CustomController
 {
     public $activeTab = 'logs';
 
+    public $layout = 'superadmin_v2.php';
+
     /**
      * Renders the index view for the module
      * @return string

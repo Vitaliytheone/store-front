@@ -9,31 +9,23 @@ use my\helpers\Url;
 
 ?>
 
-<div class="container-fluid mt-3">
-    <ul class="nav mb-3">
-        <li class="mr-auto">
-            <ul class="nav nav-pills">
+    <ul class="nav nav-pills mb-3" role="tablist">
                 <?php foreach ($navs as $code => $label) : ?>
                     <li class="nav-item"><a class="nav-link text-nowrap <?= ($code == $filters['status'] ? 'active' : '') ?>" href="<?= ($code != 0 ? Url::toRoute(['/logs/api-keys', 'status' => $code, 'search' => $filters['search']]) : Url::toRoute(['/logs/api-keys'])) ?>"><?= $label ?></a></li>
                 <?php endforeach; ?>
-            </ul>
-        </li>
-        <li>
-            <form class="form-inline" method="GET" id="panelsSearch" action="<?=Url::toRoute(['/logs/api-keys'])?>">
-                <div class="input-group input-group__select">
+        <li class="ml-auto">
+            <form class="form" method="GET" id="panelsSearch" action="<?=Url::toRoute(['/logs/api-keys'])?>">
+                <div class="input-group">
                     <input type="text" class="form-control" name="search" placeholder="<?= Yii::t('app/superadmin', 'logs.api_keys.search.placeholder') ?>" value="<?=$filters['search']?>">
-
-                    <div class="form-group__select">
-                        <select  name="search-type">
-                            <?php foreach ($searchType as $key => $type): ?>
-                                <option value="<?php echo $key ?>"<?php if ($filters['search-type'] == $key) echo ' selected' ?>><?php echo $type ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
+                    <select class="custom-select" name="search-type">
+                        <?php foreach ($searchType as $key => $type): ?>
+                            <option value="<?php echo $key ?>"<?php if ($filters['search-type'] == $key) echo ' selected' ?>><?php echo $type ?></option>
+                        <?php endforeach ?>
+                    </select>
                     <input type="hidden" name="status" value="<?php echo $filters['status'] ?>">
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
-                    </span>
+                    <div class="input-group-append">
+                        <button class="btn btn-light" type="submit"><span id="submitSearch" class="fa fa-search"></span></button>
+                    </div>
                 </div>
             </form>
         </li>
@@ -83,5 +75,3 @@ use my\helpers\Url;
             'pagination' => $pagination,
         ]); ?>
     </div>
-
-</div>
