@@ -147,7 +147,7 @@ class GetstatusSearch extends Getstatus
         for ($i = 0; $i < count($statuses); $i++ ) {
             $result[$statuses[$i]->provider_id] = $data[$statuses[$i]->provider_id];
             $result[$statuses[$i]->provider_id]['provider'] = $statuses[$i]->name;
-            $result[$statuses[$i]->provider_id]['all_orders'] = isset($countsList[$statuses[$i]->panel_id]) ? $countsList[$statuses[$i]->provider_id] : 0;
+            $result[$statuses[$i]->provider_id]['all_orders'] = isset($countsList[$statuses[$i]->provider_id]) ? $countsList[$statuses[$i]->provider_id] : 0;
             $result[$statuses[$i]->provider_id]['good'] = $data[$statuses[$i]->provider_id]['requests'] - $data[$statuses[$i]->provider_id]['status_error'] - $data[$statuses[$i]->provider_id]['curl_error'];
             $result[$statuses[$i]->provider_id]['avg'] = round($data[$statuses[$i]->provider_id]['avg'], 0);
         }
