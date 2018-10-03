@@ -32,7 +32,6 @@ class PagesSearch extends Pages
             ->select(['id', 'title', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at', 'is_default'])
             ->from($this->_pagesTable)
             ->where(['deleted' => self::DELETED_NO])
-            ->andWhere(['!=', 'template', Pages::TEMPLATE_FILE])
             ->indexBy('id')
             ->orderBy(['id' => SORT_DESC])
             ->all();

@@ -47,7 +47,7 @@ use yii\helpers\ArrayHelper;
  * @property int $service_inuse_count
  * @property int $service_description
  * @property int $import
- * @property int $currency
+ * @property string $currency
  * @property int $provider_id
  *
  * @property string $date
