@@ -12,6 +12,9 @@
     <div class="col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
         <div class="card">
             <div class="card-block">
+                <br>
+                <div class="input-group">
+                    <div class="col-lg-12">
                 <?php $form = ActiveForm::begin([
                     'id' => 'password-update-form',
                     'fieldConfig' => [
@@ -31,6 +34,9 @@
 
                     <?= Html::submitButton('Change password', ['class' => 'btn btn-primary', 'name' => 'save-button']) ?>
                 <?php ActiveForm::end(); ?>
+                    </div>
+                </div>
+                <br>
             </div>
         </div>
     </div>
