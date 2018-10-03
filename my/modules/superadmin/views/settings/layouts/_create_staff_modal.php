@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_cancel_btn') ?></button>
+                    <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_cancel_btn') ?></button>
                     <?= Html::submitButton(Yii::t('app/superadmin', 'staff.create_staff.modal_create_account'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'create-staff-button',
