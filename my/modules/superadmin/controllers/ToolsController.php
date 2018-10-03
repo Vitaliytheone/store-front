@@ -19,6 +19,8 @@ class ToolsController extends CustomController
     /** @var string Active navigation tab */
     public $activeTab = 'tools';
 
+    public $layout = 'superadmin_v2.php';
+
     /**
      * Renders the index view for the module
      * @return string
