@@ -1,7 +1,6 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
-use Codeception\PHPUnit\Constraint\Page;
 use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Pages;
