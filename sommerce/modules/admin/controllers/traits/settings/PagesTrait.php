@@ -15,6 +15,7 @@ use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -199,7 +200,7 @@ trait PagesTrait {
             throw new NotFoundHttpException();
         }
 
-        if (!Pages::canDelete($pageModel)) {
+        if (!Pages::canDelete($pageModel->toArray())) {
             throw new ForbiddenHttpException();
         }
 
