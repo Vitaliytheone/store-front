@@ -11,6 +11,7 @@ use Yii;
 use common\models\panels\Customers;
 use yii\web\HttpException;
 use yii\web\Response;
+use yii\filters\ContentNegotiator;
 
 /**
  * Class SystemController
@@ -19,6 +20,19 @@ use yii\web\Response;
 class SystemController extends CustomController
 {
     public $enableCsrfValidation = false;
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['dns', 'dns-list'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ]);
+    }
 
     /**
      * System pip action
@@ -115,8 +129,6 @@ class SystemController extends CustomController
      */
     public function actionDns()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         return [
             'status' => 'Success'
         ];
@@ -128,8 +140,6 @@ class SystemController extends CustomController
      */
     public function actionDnsList()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         return [
             [
                 'id' => 1
@@ -140,6 +150,11 @@ class SystemController extends CustomController
         ];
     }
 
+    /**
+     * @param $key
+     * @param $id
+     * @return string|void
+     */
     public function actionPanelNotify($key, $id)
     {
         if (Yii::$app->params['gypAuth'] !== $key) {
