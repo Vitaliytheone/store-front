@@ -48,6 +48,10 @@ use yii\helpers\ArrayHelper;
  * @property int $service_description
  * @property int $import
  * @property string $currency
+ * @property int $service_auto_rate
+ * @property int $provider_rate
+ * @property int $service_auto_max
+ * @property int $service_auto_min
  *
  * @property string $date
  *
@@ -98,7 +102,7 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
-            [['provider_id', 'type', 'status', 'search', 'start_count', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],
+            [['service_auto_rate', 'provider_rate', 'service_auto_max', 'service_auto_min', 'provider_id', 'type', 'status', 'search', 'start_count', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],
             [['content'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
@@ -153,6 +157,10 @@ class AdditionalServices extends ActiveRecord
             'service_description' => Yii::t('app', 'Service Description'),
             'import' => Yii::t('app', 'Import'),
             'currency' => Yii::t('app', 'Currency'),
+            'service_auto_rate' => Yii::t('app', 'Service Auto Rate'),
+            'provider_rate' => Yii::t('app', 'Provider Rate'),
+            'service_auto_max' => Yii::t('app', 'Service Auto Max'),
+            'service_auto_min' => Yii::t('app', 'Service Auto Min'),
         ];
     }
 
