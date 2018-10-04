@@ -487,47 +487,51 @@ class PaymentsController extends CustomController
                     $payments->comment = $_GET['address'];
                     $payments->transaction_id = $_GET['tid'];
 
-					if ($signature == $_SERVER['HTTP_X_SIGNATURE']) {
-                        $amountPaid = ArrayHelper::getValue($_GET, 'amount_paid_in_btc', 0);
-                        $amount = ArrayHelper::getValue($_GET, 'amount_in_btc', 0);
+                    if ($signature != $_SERVER['HTTP_X_SIGNATURE']) {
+                        $this->Errorlogging("bad signature", "Bitcoin", $paymentSignature);
+                        $payments->update();
+                        exit;
+                    }
 
-                        if ($amountPaid >= $amount) {
-                            if (in_array($_GET['status'], [2, 4])) {
-                                $hash = PaymentHash::findOne(['hash' => $_GET['tid']]);
-                                if ($hash === null) {
+                    $amountPaid = ArrayHelper::getValue($_GET, 'amount_paid_in_btc', 0);
+                    $amount = ArrayHelper::getValue($_GET, 'amount_in_btc', 0);
 
-                                    // Mark invoice paid
-                                    $invoice->paid(PaymentGateway::METHOD_BITCOIN);
+                    if ($amountPaid < $amount) {
+                        $this->Errorlogging("bad amount", "Bitcoin", $paymentSignature);
+                        $payments->update();
+                        exit;
+                    }
 
-                                    $payments->status = Payments::STATUS_COMPLETED;
-                                    $payments->update();
+                    if (!in_array($_GET['status'], [2, 4])) {
+                        $payments->status = Payments::STATUS_PENDING;
+                        $payments->update();
+
+                        $this->Errorlogging("no final status", "Bitcoin", $paymentSignature);
+                        exit;
+                    }
+
+                    if (PaymentHash::findOne(['hash' => $_GET['tid']])) {
+                        $payments->update();
+                        $this->Errorlogging("bad hash", "Bitcoin", $paymentSignature);
+                        exit;
+                    }
+
+                    // Mark invoice paid
+                    $invoice->paid(PaymentGateway::METHOD_BITCOIN);
+
+                    $payments->status = Payments::STATUS_COMPLETED;
+                    $payments->update();
 
 
-                                    $paymentHashModel = new PaymentHash();
-                                    $paymentHashModel->load(array('PaymentHash' => array(
-                                        'hash' => $_GET['tid'],
-                                    )));
-                                    $paymentHashModel->save();
+                    $paymentHashModel = new PaymentHash();
+                    $paymentHashModel->load(array('PaymentHash' => array(
+                        'hash' => $_GET['tid'],
+                    )));
+                    $paymentHashModel->save();
 
-                                    echo 'Ok';
-                                    exit;
+                    echo 'Ok';
+                    exit;
 
-                                } else {
-                                    $this->Errorlogging("bad hash", "Perfectmoney", $paymentSignature);
-                                }
-                            } else {
-
-                                $payments->status = Payments::STATUS_PENDING;
-                                $payments->update();
-
-                                $this->Errorlogging("no final status", "Bitcoin", $paymentSignature);
-                            }
-                        } else {
-                            $this->Errorlogging("bad amount", "Bitcoin", $paymentSignature);
-                        }
-					} else {
-						$this->Errorlogging("bad signature", "Bitcoin", $paymentSignature);
-					}
 				} else {
 					$this->Errorlogging("dublicate response", "Bitcoin", $paymentSignature);
 				}

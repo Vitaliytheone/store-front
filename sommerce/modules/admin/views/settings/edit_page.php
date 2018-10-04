@@ -67,7 +67,18 @@ PagesAsset::register($this);
                     </div>
 
                     <div class="form-group">
-                        <textarea class="summernote form_field__content d-none" id="description" title="Description" name="PageForm[content]"><?= $page->content ?></textarea>
+                        <?php if ('file' == $page->template) : ?>
+                            <textarea class="form-control"
+                                rows="20"
+                                id="description"
+                                title="Description"
+                                name="PageForm[content]"><?= $page->content ?></textarea>
+                        <?php else : ?>
+                            <textarea class="summernote form_field__content d-none"
+                                id="description"
+                                title="Description"
+                                name="PageForm[content]"><?= $page->content ?></textarea>
+                        <?php endif; ?>
                     </div>
 
                     <div class="card card-white">

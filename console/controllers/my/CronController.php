@@ -3,9 +3,7 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
-use common\models\common\ProjectInterface;
 use common\models\panel\PaymentsLog;
-use common\models\panels\Logs;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
 use common\models\panels\PaymentGateway;
@@ -16,18 +14,19 @@ use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use console\components\payments\PaymentsFee;
+use console\components\terminate\TerminatePanel;
+use console\components\terminate\TerminateStore;
 use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
 use my\mail\mailers\PaypalVerificationNeeded;
-use sommerce\helpers\StoreHelper;
+use console\components\terminate\CancelOrder;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
-use yii\db\Exception as DbException;
 use console\components\UpdateServicesCount;
 
 /**
@@ -131,6 +130,9 @@ class CronController extends CustomController
             'checked' => SslCert::CHECKED_NO
         ])->all();
 
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
+
         foreach ($sslList as $ssl) {
             OrderHelper::updateSslOrderStatus($ssl);
         }
@@ -153,60 +155,20 @@ class CronController extends CustomController
      * Update old frozen panel status
      * @access public
      * @return void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
-    public function actionTerminatePanel()
+    public function actionTerminate()
     {
-        $date = time() - (7 * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
-
-        /**
-         * @var $order Orders
-         */
-        foreach (Orders::find()->andWhere('status = :pending AND date < :date', [
-            ':pending' => Orders::STATUS_PENDING,
-            ':date' => $date // 7 дней; 24 часа; 60 минут; 60 секунд
-        ])->all() as $order) {
-            $order->cancel();
-        }
-
-        $date = strtotime("-1 month", time()); // + 1 месяц
-
-        // Берем по 1 панели на обработку
-        $project = Project::find()
-            ->leftJoin('logs', 'logs.panel_id = project.id AND logs.project_type = :project_type AND logs.type = :type AND logs.created_at > :date', [
-                ':project_type' => ProjectInterface::PROJECT_TYPE_PANEL,
-                ':date' => $date,
-                ':type' => Logs::TYPE_RESTORED
-            ])
-            ->andWhere([
-                'project.act' => Project::STATUS_FROZEN
-            ])
-            ->andWhere('project.expired < :expired AND logs.id IS NULL', [
-                ':expired' => $date
-            ])
-            ->one();
-
-        /**
-         * @var Project $project
-         */
-        if ($project) {
-            $transaction = Yii::$app->db->beginTransaction();
-
-            try {
-                $project->act = Project::STATUS_TERMINATED;
-
-                if ($project->save(false)) {
-                    $project->terminate();
-                }
-            } catch (DbException $e) {
-                $transaction->rollBack();
-                Yii::error($e->getMessage() . $e->getTraceAsString());
-                return;
-            }
-
-            $transaction->commit();
-        }
-
-        StoreHelper::terminateOneStore($date);
+        Yii::$container->get(CancelOrder::class, [
+            time() - (7 * 24 * 60 * 60)
+        ])->run();
+        Yii::$container->get(TerminateStore::class, [
+            strtotime("-1 month", time())
+        ])->run();
+        Yii::$container->get(TerminatePanel::class, [
+            strtotime("-1 month", time())
+        ])->run();
     }
 
     /**

@@ -382,16 +382,16 @@ class ProvidersSearch
         $projects = $this->getProjects();
 
         foreach ((new Query())
-                     ->select(['aid', 'pid'])
+                     ->select(['provider_id', 'panel_id'])
                      ->from('user_services')
                      ->batch(100) as $userServices) {
 
             foreach ($userServices as $userService) {
-                if (empty($projects[$userService['pid']])) {
+                if (empty($projects[$userService['panel_id']])) {
                     continue;
                 }
 
-                $this->_providerPanels[$userService['aid']][$userService['pid']] = $projects[$userService['pid']];
+                $this->_providerPanels[$userService['provider_id']][$userService['panel_id']] = $projects[$userService['panel_id']];
             }
         }
 
