@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "params".
  *
  * @property int $id
+ * @property string $category
  * @property string $code
  * @property string $options
  * @property int $updated_at
@@ -43,7 +44,8 @@ class Params extends ActiveRecord
             [['code', 'options', 'updated_at'], 'required'],
             [['options'], 'string'],
             [['updated_at', 'position'], 'integer'],
-            [['code'], 'string', 'max' => 64],
+            [['code', 'category'], 'string', 'max' => 64],
+            [['code', 'category'], 'unique', 'targetAttribute' => ['code', 'category']],
         ];
     }
 

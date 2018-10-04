@@ -1,1 +1,0 @@
-DROP INDEX uniq_code ON params;

@@ -570,13 +570,14 @@ class SystemController extends CustomController
      */
     public function actionTransferToParams()
     {
-        $payments = PaymentGateway::find()->all();
+        $payments = PaymentGateway::find()->where(['pid' => -1])->all();
 
         foreach ($payments as $payment) {
             echo "Transfer {$payment->name} \n";
 
             $params = new Params();
-            $code = str_replace(' ', '_', $payment->name) . '.' . $payment->pgid;
+            $category = str_replace(' ', '_', $payment->name);
+            $code = (string)$payment->pgid;
 
             $options = $payment->options == '[]' ? [] : json_decode($payment->options);
             $options = array_merge((array)$options, $payment->attributes);
@@ -585,6 +586,7 @@ class SystemController extends CustomController
             unset($options['id']);
 
             $params->code = $code;
+            $params->category = $category;
             $params->options = json_encode($options);
             $params->position = $payment->position;
             $params->updated_at = time();
