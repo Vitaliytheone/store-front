@@ -9,20 +9,13 @@ customModule.superadminProvidersController = {
             window.location.href = link + (link.match(/\?/) ? '&' : '?') + form.serialize();
         });
 
-        function setInputs(method, details = false, form = false) {
+        function setInputs(method, details, form) {
 
             if (method == false) {
-                var inputs = $('.modal-body ~ input');
-                var textareas = $('.modal-body ~ textarea');
-                var selects = $('.modal-body ~ select options[value="0"]');
-                $.each(inputs, function(input) {
-                    input.val('');
-                    textareas.val('');
-                    selects.attr('selected', true);
-                });
+                $(':input').val('');
+                return false;
             }
 
-            $('#editproviderform-provider_id', form).val(details.provider_id);
             $.each(details, function(name, value) {
                 if (method == 'edit') {
                     $('#editproviderform-' + name, form).val(value);
@@ -80,8 +73,6 @@ customModule.superadminProvidersController = {
         $('#createProvider').click(function(e) {
             e.preventDefault();
 
-            setInputs(false);
-
             var link = $(this);
             var modal = $('#createProviderModal');
             var form = $('#createProviderForm');
@@ -91,6 +82,7 @@ customModule.superadminProvidersController = {
             errorBlock.html('');
 
             $(form).children().val('');
+            setInputs(false);
 
             form.attr('action', link.attr('href'));
 
@@ -176,17 +168,9 @@ customModule.superadminProvidersController = {
                 return false;
             }
 
-            var hrefPanel = link.data('href').panel;
-            var hrefChildPanel = link.data('href').childPanel;
-            var href = '';
             var content = [];
             $.each(projects, function (index, project) {
-                if (project.child_panel == '0') {
-                    href = hrefPanel + '?id=' + project.id
-                } else {
-                    href = hrefChildPanel + '?id=' + project.id
-                }
-                content.push('<div class="row"> <a href="' + href + '" target="_blank" class="col-md-12"> ' + project.site + ' </a> </div>');
+                content.push('<div class="row"> <div class="col-md-12"> ' + project.site + ' </div> </div>');
             });
 
             container.html(content.join(''));
