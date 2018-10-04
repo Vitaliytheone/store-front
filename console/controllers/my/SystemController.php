@@ -598,4 +598,70 @@ class SystemController extends CustomController
             }
         }
     }
+
+    /**
+     * Update timezone
+     */
+    public function actionUpdateTimezones()
+    {
+        $timezoneList = Yii::$app->params['timezones'];
+
+        $customers = (new Query())
+            ->select(['id', 'timezone'])
+            ->from(DB_PANELS . '.customers')
+            ->all();
+
+        $panels = (new Query())
+            ->select(['id', 'utc'])
+            ->from(DB_PANELS . '.project')
+            ->all();
+
+        $stores = (new Query())
+            ->select(['id', 'timezone'])
+            ->from(DB_STORES . '.stores')
+            ->all();
+
+        $models = [
+            'customers' => $customers,
+            'panels' => $panels,
+            'stores' => $stores,
+        ];
+
+        foreach ($models as $key => $value) {
+            $column = '';
+            $class = '';
+
+            switch ($key) {
+                case 'customers' :
+                    $column = 'timezone';
+                    $class = 'common\models\panels\Customers';
+                    break;
+                case 'panels' :
+                    $column = 'utc';
+                    $class = 'common\models\panels\Project';
+                    break;
+                case 'stores' :
+                    $column = 'timezone';
+                    $class = 'common\models\stores\Stores';
+                    break;
+            }
+
+            $tabel = substr($key, 0, -1);
+
+            foreach ($value as $model) {
+                if (!isset($timezoneList[$model[$column]])) {
+                    $newTimezone = round($model[$column], -2);
+                    if (isset($timezoneList[$newTimezone])) {
+                        echo "Updating the $tabel ID = {$model['id']} \n";
+                        $updatedColumns = $class::updateAll([$column => $newTimezone], ['id' => $model['id']]);
+                        if ($updatedColumns == 0) {
+                            echo "Not updated \n";
+                        } else {
+                            echo "Successful update \n";
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

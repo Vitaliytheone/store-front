@@ -33,7 +33,7 @@ class GetParentPanelService
         $owner = (new Query())
             ->select(['additional_services.name'])
             ->from('additional_services')
-            ->andWhere(['res' =>  $this->provider_id])
+            ->andWhere(['provider_id' =>  $this->provider_id])
             ->one()['name'];
 
         if (empty($owner)) {

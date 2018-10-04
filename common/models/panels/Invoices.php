@@ -331,8 +331,7 @@ class Invoices extends ActiveRecord
                     $referralEarning->earnings = $earnings;
                     $referralEarning->invoice_id = $this->id;
                     $referralEarning->status = ReferralEarnings::STATUS_COMPLETED;
-                    $referralEarning->save(false);
-
+                    $referralEarning->save();
                 }
             }
         }
