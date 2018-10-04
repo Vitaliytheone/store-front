@@ -41,13 +41,6 @@ class EditProviderForm extends Model
      */
     private $_provider;
 
-    public function __construct(array $data = null, array $config = [])
-    {
-        parent::__construct($config);
-
-        $this->attributes = $data;
-    }
-
     /**
      * @return array the validation rules.
      */
@@ -81,9 +74,7 @@ class EditProviderForm extends Model
             return false;
         }
 
-        foreach ($this->attributes as $key => $value) {
-            $this->_provider->$key = $value;
-        }
+        $this->_provider->attributes = $this->attributes;
 
         if (!$this->_provider->save()) {
             $this->addErrors($this->_provider->getErrors());

@@ -127,7 +127,7 @@ class AdditionalServices extends ActiveRecord
             [['name_script', 'proxy'], 'string', 'max' => 1000],
             [['currency'], 'string', 'max' => 10],
             [['proxy'], 'string', 'max' => 1000],
-            [['service_view'], 'integer'],
+            [['service_view', 'start_count', 'refill', 'cancel'], 'integer'],
             [['service_inuse_count', 'service_count'], 'integer'],
         ];
     }

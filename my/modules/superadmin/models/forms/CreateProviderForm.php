@@ -36,13 +36,6 @@ class CreateProviderForm extends Model
     public $import;
     public $getstatus_params;
 
-    public function __construct(array $data = null, array $config = [])
-    {
-        parent::__construct($config);
-
-        $this->attributes = $data;
-    }
-
     /**
      * @return array the validation rules.
      */
@@ -68,10 +61,7 @@ class CreateProviderForm extends Model
         }
 
         $provider = new AdditionalServices();
-
-        foreach ($this->attributes as $key => $value) {
-            $provider->$key = $value;
-        }
+        $provider->attributes = $this->attributes;
 
         if (!$provider->save()) {
             $this->addErrors($this->getErrors());

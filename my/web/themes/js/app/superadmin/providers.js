@@ -9,31 +9,30 @@ customModule.superadminProvidersController = {
             window.location.href = link + (link.match(/\?/) ? '&' : '?') + form.serialize();
         });
 
-        function setInputs(method, details, form) {
-            $('#editproviderform-provider_id', form).val(details.provider_id);
-            method == 'edit' ? $('#editproviderform-name', form).val(details.name) : $('#create-provider-name', form).val(details.name);
-            method == 'edit' ? $('#editproviderform-apihelp', form).val(details.apihelp) : $('#create-provider-apihelp', form).val(details.apihelp);
-            method == 'edit' ? $('#editproviderform-name_script', form).val(details.name_script) : $('#create-provider-name_script', form).val(details.name_script);
-            method == 'edit' ? $('#edit-provider-sender_params', form).val(details.sender_params) : $('#create-provider-sender_params', form).val(details.sender_params);
-            method == 'edit' ? $('#edit-provider-provider_service_settings', form).val(details.provider_service_settings) : $('#create-provider-provider_service_settings', form).val(details.provider_service_settings);
-            method == 'edit' ? $('#edit-provider-provider_service_api_error', form).val(details.provider_service_api_error) : $('#create-provider-provider_service_api_error', form).val(details.provider_service_api_error);
-            method == 'edit' ? $('#editproviderform-service_options', form).val(details.service_options) : $('#create-provider-service_options', form).val(details.service_options);
-            method == 'edit' ? $('#edit-provider-getstatus_params', form).val(details.getstatus_params) : $('#create-provider-getstatus_params', form).val(details.getstatus_params);
+        function setInputs(method, details = false, form = false) {
 
-            method == 'edit' ? $('#edit-provider-status option[value='+ details.status +']').attr('selected', 'true') : $('#create-provider-status option[value='+ details.status +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-type option[value='+ details.type +']').attr('selected', 'true') : $('#create-provider-type option[value='+ details.type +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-start_count option[value='+ details.start_count +']').attr('selected', 'true') : $('#create-provider-start_count option[value='+ details.start_count +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-refill option[value='+ details.refill +']').attr('selected', 'true') : $('#create-provider-refill option[value='+ details.refill +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-cancel option[value='+ details.cancel +']').attr('selected', 'true') : $('#create-provider-cancel option[value='+ details.cancel +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-send_method option[value='+ details.send_method +']').attr('selected', 'true') : $('#create-provider-send_method option[value='+ details.send_method +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-service_view option[value='+ details.service_view +']').attr('selected', 'true') : $('#create-provider-service_view option[value='+ details.service_view +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-provider_service_id_label option[value='+ details.provider_service_id_label +']').attr('selected', 'true') : $('#create-provider-provider_service_id_label option[value='+ details.provider_service_id_label +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-service_description option[value='+ details.service_description +']').attr('selected', 'true') : $('#create-provider-service_description option[value='+ details.service_description +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-service_auto_min option[value='+ details.service_auto_min +']').attr('selected', 'true') : $('#create-provider-service_auto_min option[value='+ details.service_auto_min +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-service_auto_max option[value='+ details.service_auto_max +']').attr('selected', 'true') : $('#create-provider-service_auto_max option[value='+ details.service_auto_max +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-provider_rate option[value='+ details.provider_rate +']').attr('selected', 'true') : $('#create-provider-provider_rate option[value='+ details.provider_rate +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-service_auto_rate option[value='+ details.service_auto_rate +']').attr('selected', 'true') : $('#create-provider-service_auto_rate option[value='+ details.service_auto_rate +']').attr('selected', 'true');
-            method == 'edit' ? $('#edit-provider-import option[value='+ details.import +']').attr('selected', 'true') : $('#create-provider-import option[value='+ details.import +']').attr('selected', 'true');
+            if (method == false) {
+                var inputs = $('.modal-body ~ input');
+                var textareas = $('.modal-body ~ textarea');
+                var selects = $('.modal-body ~ select options[value="0"]');
+                $.each(inputs, function(input) {
+                    input.val('');
+                    textareas.val('');
+                    selects.attr('selected', true);
+                });
+            }
+
+            $('#editproviderform-provider_id', form).val(details.provider_id);
+            $.each(details, function(name, value) {
+                if (method == 'edit') {
+                    $('#editproviderform-' + name, form).val(value);
+                    $('#edit-provider-' + name, form).val(value);
+                    $('#edit-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
+                } else {
+                    $('#create-provider-' + name, form).val(value);
+                    $('#create-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
+                }
+            });
         }
 
         $('.edit-provider').click(function(e) {
@@ -81,6 +80,8 @@ customModule.superadminProvidersController = {
         $('#createProvider').click(function(e) {
             e.preventDefault();
 
+            setInputs(false);
+
             var link = $(this);
             var modal = $('#createProviderModal');
             var form = $('#createProviderForm');
@@ -122,6 +123,8 @@ customModule.superadminProvidersController = {
                 }
             });
 
+            $('#editProviderModal').scrollTop(0);
+
             return false;
         });
 
@@ -149,6 +152,8 @@ customModule.superadminProvidersController = {
                 }
             });
 
+            $('#createProviderModal').scrollTop(0)
+
             return false;
         });
 
@@ -171,9 +176,16 @@ customModule.superadminProvidersController = {
                 return false;
             }
 
-            var href = link.data('href');
+            var hrefPanel = link.data('href').panel;
+            var hrefChildPanel = link.data('href').childPanel;
+            var href = '';
             var content = [];
             $.each(projects, function (index, project) {
+                if (project.child_panel == '0') {
+                    href = hrefPanel + '?id=' + project.id
+                } else {
+                    href = hrefChildPanel + '?id=' + project.id
+                }
                 content.push('<div class="row"> <a href="' + href + '" target="_blank" class="col-md-12"> ' + project.site + ' </a> </div>');
             });
 

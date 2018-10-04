@@ -84,11 +84,10 @@ class ProvidersController extends CustomController
     {
         $provider = $this->findModel($id);
 
-        $data = Yii::$app->request->post('EditProviderForm');
-        $model = new EditProviderForm($data);
+        $model = new EditProviderForm();
         $model->setProvider($provider);
 
-        if ($model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [
                 'status' => 'success',
             ];
@@ -106,10 +105,9 @@ class ProvidersController extends CustomController
      */
     public function actionCreate()
     {
-        $data = Yii::$app->request->post('CreateProviderForm');
-        $model = new CreateProviderForm($data);
+        $model = new CreateProviderForm();
 
-        if ($model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [
                 'status' => 'success',
             ];

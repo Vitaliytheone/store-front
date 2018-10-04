@@ -10,6 +10,7 @@
     use my\helpers\SpecialCharsHelper;
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
+    use common\models\panels\AdditionalServices;
 ?>
 <table class="table table-sm table-custom" id="providersTable">
     <thead>
@@ -59,7 +60,7 @@
                     <?php if ($provider['count']) : ?>
                         <?= Html::a($provider['count'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
-                            'data-href' => $provider['projects'][0]['child_panel'] == 1 ? Url::toRoute(['/child-panels', 'id' => $provider['projects'][0]['id']]) : Url::toRoute(['/panels', 'id' => $provider['projects'][0]['id']]),
+                            'data-href' => json_encode(['panel' => Url::toRoute(['/panels']), 'childPanel' => Url::toRoute(['/child-panels']),]),
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
@@ -71,7 +72,7 @@
                     <?php if ($provider['in_use']) : ?>
                         <?= Html::a($provider['in_use'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
-                            'data-href' => $provider['usedProjects'][0]['child_panel'] == 1 ? Url::toRoute(['/child-panels', 'id' => $provider['usedProjects'][0]['id']]) : Url::toRoute(['/panels', 'id' => $provider['usedProjects'][0]['id']]),
+                            'data-href' => json_encode(['panel' => Url::toRoute(['/panels']), 'childPanel' => Url::toRoute(['/child-panels']),]),
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
@@ -80,28 +81,28 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?= $provider['start_count'] ?>
+                    <?= AdditionalServices::getStartCountName($provider['start_count']) ?>
                 </td>
                 <td>
-                    <?= $provider['refill'] ?>
+                    <?= AdditionalServices::getRefillName($provider['refill']) ?>
                 </td>
                 <td>
-                    <?= $provider['cancel'] ?>
+                    <?= AdditionalServices::getCancelName($provider['cancel']) ?>
                 </td>
                 <td>
-                    <?= $provider['service_view'] ?>
+                    <?= AdditionalServices::getServiceViewName($provider['service_view']) ?>
                 </td>
                 <td>
-                    <?= $provider['send_method'] ?>
+                    <?= AdditionalServices::getAutoOrderName($provider['send_method']) ?>
                 </td>
                 <td>
-                    <?= $provider['type'] ?>
+                    <?= AdditionalServices::getTypeNameString($provider['type']) ?>
                 </td>
                 <td>
                     <?= $provider['name_script'] ?>
                 </td>
                 <td>
-                    <?= $provider['statusName'] ?>
+                    <?= AdditionalServices::getStatusNameString($provider['status']) ?>
                 </td>
                 <td>
                     <?= $provider['date'] > 0 ? $provider['date'] : '' ?>
