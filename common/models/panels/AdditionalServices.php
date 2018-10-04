@@ -157,6 +157,10 @@ class AdditionalServices extends ActiveRecord
             'service_description' => Yii::t('app', 'Service Description'),
             'import' => Yii::t('app', 'Import'),
             'currency' => Yii::t('app', 'Currency'),
+            'service_auto_rate' => Yii::t('app', 'Service Auto Rate'),
+            'provider_rate' => Yii::t('app', 'Provider Rate'),
+            'service_auto_max' => Yii::t('app', 'Service Auto Max'),
+            'service_auto_min' => Yii::t('app', 'Service Auto Min'),
         ];
     }
 
