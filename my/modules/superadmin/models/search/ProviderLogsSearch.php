@@ -1,8 +1,8 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
-use common\models\panels\queries\SearchProcessorQuery;
-use common\models\panels\SearchProcessor;
+use common\models\panels\ProviderSearchLog;
+use common\models\panels\queries\ProviderSearchLogQuery;
 use yii\data\Pagination;
 
 /**
@@ -28,19 +28,19 @@ class ProviderLogsSearch
 
     /**
      * Build sql query
-     * @return SearchProcessorQuery
+     * @return ProviderSearchLogQuery
      */
     public function buildQuery()
     {
         $searchQuery = $this->getQuery();
 
-        $logs = SearchProcessor::find();
+        $logs = ProviderSearchLog::find();
 
         if (!empty($searchQuery)) {
             $logs->andFilterWhere([
                 'or',
-                ['=', 'pid', $searchQuery],
-                ['=', 'uid', $searchQuery],
+                ['=', 'panel_id', $searchQuery],
+                ['=', 'admin_id', $searchQuery],
             ]);
         }
 

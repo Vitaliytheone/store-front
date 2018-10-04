@@ -58,8 +58,8 @@ class ProvidersSearch
             ->select([
                 'id',
                 'name',
-                'res',
-                'sc',
+                'provider_id',
+                'start_count',
                 'refill',
                 'cancel',
                 'auto_services',
@@ -67,13 +67,15 @@ class ProvidersSearch
                 'type',
                 'status',
                 'date',
+                'service_count',
+                'service_inuse_count',
             ])
             ->from('additional_services');
 
         if (!empty($searchQuery)) {
             $providers->andFilterWhere([
                 'or',
-                ['=', 'res', $searchQuery],
+                ['=', 'provider_id', $searchQuery],
                 ['like', 'name', $searchQuery],
             ]);
         }
@@ -127,7 +129,7 @@ class ProvidersSearch
 
         $sort = new Sort([
             'attributes' => [
-                'res' => [
+                'provider_id' => [
                     'default' => SORT_DESC,
                     'label' => Yii::t('app/superadmin', 'providers.list.column_id'),
                 ],
@@ -143,7 +145,7 @@ class ProvidersSearch
                 'status' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_status'),
                 ],
-                'sc' => [
+                'start_count' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_start_count'),
                 ],
                 'refill' => [
@@ -158,13 +160,19 @@ class ProvidersSearch
                 'date' => [
                     'label' => Yii::t('app/superadmin', 'providers.list.column_created'),
                 ],
+                'service_count' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_count'),
+                ],
+                'service_inuse_count' => [
+                    'label' => Yii::t('app/superadmin', 'providers.list.column_in_use'),
+                ],
             ],
         ]);
         $sort->defaultOrder = [
-            'res' => SORT_DESC,
+            'provider_id' => SORT_DESC,
         ];
 
-        $providers = $this->buildQuery($type)
+        $providers = $this->getProviders($type)
             ->orderBy($sort->orders)
             ->all();
 
@@ -187,22 +195,24 @@ class ProvidersSearch
         $providersPanels = $this->getProviderPanels();
 
         foreach ($providers as $key => $provider) {
-            $projects = ArrayHelper::getValue($providersPanels, $provider['res'], []);
+            $projects = ArrayHelper::getValue($providersPanels, $provider['provider_id'], []);
             $usedProjects = [];
 
             foreach ($projects as $project) {
-                if (!empty($project['providers'][$provider['res']])) {
+                if (!empty($project['providers'][$provider['provider_id']])) {
                     $usedProjects[] = $project;
                 }
             }
 
             $returnProviders[$key] = [
                 'id' => $provider['id'],
-                'res' => $provider['res'],
+                'provider_id' => $provider['provider_id'],
                 'name' => $provider['name'],
+                'count' => $provider['service_count'],
                 'projects' => array_values($projects),
+                'in_use' => $provider['service_inuse_count'],
                 'usedProjects' => array_values($usedProjects),
-                'sc' => AdditionalServices::getStartCountName($provider['sc']),
+                'start_count' => AdditionalServices::getStartCountName($provider['start_count']),
                 'refill' => AdditionalServices::getRefillName($provider['refill']),
                 'cancel' => AdditionalServices::getCancelName($provider['cancel']),
                 'type' => AdditionalServices::getTypeNameString($provider['type']),
@@ -228,19 +238,19 @@ class ProvidersSearch
         }
 
         foreach ((new Query())
-             ->select([
-                 'id',
-                 'act',
-                 'db',
-                 'name',
-                 'site'
-             ])
-             ->from('project')
-             ->andWhere([
-                 'act' => Project::STATUS_ACTIVE
-             ])
-            ->andWhere("db <>''")
-             ->all() as $project) {
+                     ->select([
+                         'id',
+                         'act',
+                         'db',
+                         'name',
+                         'site'
+                     ])
+                     ->from('project')
+                     ->andWhere([
+                         'act' => Project::STATUS_ACTIVE
+                     ])
+                     ->andWhere("db <>''")
+                     ->all() as $project) {
 
             $this->_projects[$project['id']] = array_merge($project, [
                 'providers' => []
@@ -249,14 +259,14 @@ class ProvidersSearch
             $providers = [];
 
             foreach ((new Query())
-                ->select([
-                    'provider_id'
-                ])
-                ->from($project['db'] . '.services')
-                ->andWhere([
-                    'act' => 1
-                ])
-                ->all() as $service) {
+                         ->select([
+                             'provider_id'
+                         ])
+                         ->from($project['db'] . '.services')
+                         ->andWhere([
+                             'act' => 1
+                         ])
+                         ->all() as $service) {
                 $providers[$service['provider_id']] = $service['provider_id'];
             }
 
@@ -279,16 +289,16 @@ class ProvidersSearch
         $projects = $this->getProjects();
 
         foreach ((new Query())
-            ->select(['aid', 'pid'])
-            ->from('user_services')
-            ->batch(100) as $userServices) {
+                     ->select(['provider_id', 'panel_id'])
+                     ->from('user_services')
+                     ->batch(100) as $userServices) {
 
             foreach ($userServices as $userService) {
-                if (empty($projects[$userService['pid']])) {
+                if (empty($projects[$userService['panel_id']])) {
                     continue;
                 }
 
-                $this->_providerPanels[$userService['aid']][$userService['pid']] = $projects[$userService['pid']];
+                $this->_providerPanels[$userService['provider_id']][$userService['panel_id']] = $projects[$userService['panel_id']];
             }
         }
 

@@ -109,16 +109,11 @@ class StoreController extends CustomController
         $model = new OrderStoreForm();
         $model->setUser($user);
         $model->setIp($request->getUserIP());
-        $model->setTrial(!$user->hasStores());
 
         if (!$model->load($request->post()) || !$model->orderStore()) {
             return $this->render('order', [
                 'model' => $model,
             ]);
-        }
-
-        if ($model->getTrial()) {
-            return $this->redirect(Url::toRoute('/stores'));
         }
 
         return $this->redirect('/invoices/' . $model->getInvoiceCode());

@@ -364,7 +364,7 @@ return [
     'settings.payments_paywant_apiSecret' => 'API Secret',
     'settings.payments_paywant_guide_1' => 'Store Site: ',
     'settings.payments_paywant_guide_2' => 'Ip address (Site): ',
-    'settings.payments_paywant_guide_2-1' => '54.37.81.176',
+    'settings.payments_paywant_guide_2-1' => '54.36.105.233',
     'settings.payments_paywant_guide_3' => 'API Return Address: ',
 
     'settings.payments_edit_billplz' => 'Edit Billplz',
@@ -398,6 +398,12 @@ return [
     'settings.payments_authorize_merchant_transaction_id' => 'Merchant transaction ID',
     'settings.payments_authorize_merchant_client_key' => 'Merchant client key',
     'settings.payments_authorize_test_mode' => 'Use test mode',
+
+    'settings.payments_edit_mercadopago' => 'Edit MercadoPago',
+    'settings.payments_mercadopago_client_id' => 'Client ID',
+    'settings.payments_mercadopago_secret' => 'Secret Key',
+    'settings.payments_mercadopago_course' => 'Course',
+    'settings.payments_mercadopago_test_mode' => 'Use test mode',
 
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',

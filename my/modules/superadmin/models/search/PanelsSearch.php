@@ -176,11 +176,11 @@ class PanelsSearch {
         }
 
         $query = (new Query())
-            ->select('pid, aid')
+            ->select('panel_id, provider_id')
             ->from('user_services');
 
         foreach (static::queryAllCache($query) as $provider) {
-            $this->_userServices[$provider['pid']][] = $provider['aid'];
+            $this->_userServices[$provider['panel_id']][] = $provider['provider_id'];
         }
 
         return $this->_userServices;

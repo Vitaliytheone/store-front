@@ -29,7 +29,7 @@ class EditPaymentMethodForm extends PaymentMethods
     {
         return [
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_BEFORE_VALIDATE => 'details',
                 ],
@@ -37,7 +37,13 @@ class EditPaymentMethodForm extends PaymentMethods
                     /* @var $event \yii\base\Event */
                     /* @var $model $this */
                     $model = $event->sender;
-                    $details = $model->getAttribute('details');
+                    $details = (array)$model->getAttribute('details');
+
+                    foreach ($details as $key => $elem) {
+                        if (is_string($elem)) {
+                            $details[$key] = trim($elem);
+                        }
+                    }
 
                     // Prepare PayPal details
                     if ($model->method == $model::METHOD_PAYPAL) {
@@ -49,7 +55,7 @@ class EditPaymentMethodForm extends PaymentMethods
                 },
             ],
             [
-                'class' => AttributeBehavior::className(),
+                'class' => AttributeBehavior::class,
                 'attributes' => [
                     self::EVENT_AFTER_FIND => 'details',
                 ],
@@ -200,6 +206,14 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'text', 'id' => 'authorize_merchant_transaction_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_transaction_id]', 'value' => $getDetailsField('merchant_transaction_id'), 'label' => Yii::t('admin', 'settings.payments_authorize_merchant_transaction_id')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'authorize_merchant_client_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][merchant_client_key]', 'value' => $getDetailsField('merchant_client_key'), 'label' => Yii::t('admin', 'settings.payments_authorize_merchant_client_key')],
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_authorize_test_mode')],
+                ]
+            ],
+            PaymentMethods::METHOD_MERCADOPAGO => [
+                'icon' => '/img/pg/mercado_pago.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'mercadopado_client_id', 'placeholder' => '', 'name' => 'PaymentsForm[details][client_id]', 'value' => $getDetailsField('client_id'), 'label' => Yii::t('admin', 'settings.payments_mercadopago_client_id')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'mercadopado_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret]', 'value' => $getDetailsField('secret'), 'label' => Yii::t('admin', 'settings.payments_mercadopago_secret')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_mercadopago_test_mode')],
                 ]
             ],
         ];

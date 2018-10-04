@@ -1,0 +1,1 @@
+ALTER TABLE `pages` ADD `is_default` int(1) DEFAULT 0;
