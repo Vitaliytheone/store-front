@@ -30,7 +30,7 @@ use my\helpers\Url;
             </form>
         </li>
     </ul>
-    <table class="table table-border">
+    <table class="table table-sm table-custom">
         <thead>
         <tr>
             <th><?= Yii::t('app/superadmin', 'logs.api_keys.list.column_id') ?></th>
@@ -75,3 +75,13 @@ use my\helpers\Url;
             'pagination' => $pagination,
         ]); ?>
     </div>
+
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $pagination,]); ?>
+            </ul>
+        </nav>
+    </div>
+</div>
