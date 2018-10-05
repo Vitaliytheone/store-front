@@ -13,8 +13,6 @@ class ReportsController extends CustomController
 {
     public $activeTab = 'reports';
 
-    public $layout = 'superadmin_v2.php';
-
     /**
      * Renders the index view for the module
      * @return string

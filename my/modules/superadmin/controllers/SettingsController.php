@@ -35,8 +35,6 @@ class SettingsController extends CustomController
 {
     public $activeTab = 'settings';
 
-    public $layout = 'superadmin_v2.php';
-
     /**
      * @inheritdoc
      */

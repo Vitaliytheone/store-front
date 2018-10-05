@@ -27,8 +27,6 @@ class StoresController extends CustomController
 {
     public $activeTab = 'stores';
 
-    public $layout = 'superadmin_v2.php';
-
     public function behaviors()
     {
         return [

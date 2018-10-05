@@ -16,8 +16,6 @@ class DomainsController extends CustomController
 {
     public $activeTab = 'domains';
 
-    public $layout = 'superadmin_v2.php';
-
     /**
      * Renders the index view for the module
      * @return string

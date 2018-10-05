@@ -17,8 +17,6 @@ class PaymentsController extends CustomController
 {
     public $activeTab = 'payments';
 
-    public $layout = 'superadmin_v2.php';
-
     /**
      * Renders the index view for the module
      * @return string

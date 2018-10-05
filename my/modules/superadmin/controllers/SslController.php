@@ -16,8 +16,6 @@ class SslController extends CustomController
 {
     public $activeTab = 'ssl';
 
-    public $layout = 'superadmin_v2.php';
-
     /**
      * Renders the index view for the module
      * @return string

@@ -13,8 +13,6 @@ class AccountController extends CustomController
 {
     public $activeTab = 'account';
 
-    public $layout = 'superadmin_v2.php';
-
     /**
      * Renders the index view for the module
      * @return string

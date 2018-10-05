@@ -43,11 +43,9 @@
                         <label for=""><?= $model->getAttributeLabel('password') ?></label>
                         <div class="input-group">
                             <?= Html::textInput('CreateStaffForm[password]', '', ['class' => 'form-control password'])?>
-                            <span class="input-group-addon">
-                                <span class="btn btn-default random-password pointer">
-                                    <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="<?= Yii::t('app/superadmin', 'staff.create_staff.modal_generate_password') ?>"></i>
-                                </span>
-                            </span>
+                            <div class="input-group-append random-password">
+                                <button class="btn btn-secondary" type="button"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_generate_password') ?></button>
+                            </div>
                         </div>
                     </div>
 
