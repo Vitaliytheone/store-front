@@ -235,6 +235,7 @@ class ProvidersSearch
             }
 
             $returnProviders[$key] = [
+                'form_data' => $provider,
                 'id' => $provider['id'],
                 'provider_id' => $provider['provider_id'],
                 'name' => $provider['name'],
@@ -242,15 +243,15 @@ class ProvidersSearch
                 'projects' => array_values($projects),
                 'in_use' => $provider['service_inuse_count'],
                 'usedProjects' => array_values($usedProjects),
-                'start_count' => $provider['start_count'],
-                'refill' => $provider['refill'],
-                'cancel' => $provider['cancel'],
-                'type' => $provider['type'],
-                'status' => $provider['status'],
+                'start_count' => AdditionalServices::getStartCountName($provider['start_count']),
+                'refill' => AdditionalServices::getRefillName($provider['refill']),
+                'cancel' => AdditionalServices::getCancelName($provider['cancel']),
+                'type' => AdditionalServices::getTypeNameString($provider['type']),
+                'status' => AdditionalServices::getStatusNameString($provider['status']),
                 'date' => $provider['date'],
                 'statusName' => $provider['status'],
-                'service_view' => $provider['service_view'],
-                'send_method' => $provider['send_method'],
+                'service_view' => AdditionalServices::getServiceViewName($provider['service_view']),
+                'send_method' => AdditionalServices::getAutoOrderName($provider['send_method']),
                 'name_script' => $provider['name_script'],
                 'apihelp' => $provider['apihelp'],
                 'sender_params' => $provider['sender_params'],
@@ -297,7 +298,7 @@ class ProvidersSearch
         }
 
         $returnArray = [];
-        $allCount = $this->buildQuery($type)->count();
+        $allCount = 0;
         foreach ($scripts->all() as $script) {
             $returnArray[] = [
                 'name_script' => $script['name_script'],
@@ -306,6 +307,7 @@ class ProvidersSearch
                     'count' => $script['count'],
                 ])
             ];
+            $allCount += $script['count'];
         }
         $returnArray = array_merge([count($returnArray) =>
             [

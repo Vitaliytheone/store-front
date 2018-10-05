@@ -118,9 +118,9 @@ class AdditionalServices extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'apihelp', 'type', 'status', 'service_view', 'store'], 'required'],
-            [['provider_id', 'type', 'status', 'search', 'start_count', 'refill', 'cancel', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'store'], 'integer'],
-            [['content'], 'string'],
+            [['name', 'apihelp', 'type', 'status', 'service_view'], 'required'],
+            [['service_auto_rate', 'import', 'service_description', 'res', 'provider_id', 'type', 'status', 'search', 'sc', 'service_auto_min', 'provider_rate', 'service_auto_max', 'send_method', 'manual_order_status', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'service_count', 'service_inuse_count', 'default_order_status'], 'integer'],
+            [['content', 'name_script', 'getstatus_params', 'params', 'services_params', 'sender_params', 'type_services', 'service_options', 'provider_service_settings', 'provider_service_api_error'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
             [['apihelp'], 'string', 'max' => 2000],

@@ -168,9 +168,17 @@ customModule.superadminProvidersController = {
                 return false;
             }
 
+            var hrefPanel = link.data('href').panel;
+            var hrefChildPanel = link.data('href').childPanel;
+            var href = '';
             var content = [];
             $.each(projects, function (index, project) {
-                content.push('<div class="row"> <div class="col-md-12"> ' + project.site + ' </div> </div>');
+                if (project.child_panel == '0') {
+                    href = hrefPanel + '?id=' + project.id
+                } else {
+                    href = hrefChildPanel + '?id=' + project.id
+                }
+                content.push('<div class="row"> <a href="' + href + '" target="_blank" class="col-md-12"> ' + project.site + ' </a> </div>');
             });
 
             container.html(content.join(''));

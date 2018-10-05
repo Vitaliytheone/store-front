@@ -10,7 +10,6 @@
     use my\helpers\SpecialCharsHelper;
     use yii\widgets\LinkPager;
     use my\modules\superadmin\widgets\CountPagination;
-    use common\models\panels\AdditionalServices;
 ?>
 <table class="table table-sm table-custom" id="providersTable">
     <thead>
@@ -81,28 +80,28 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getStartCountName($provider['start_count']) ?>
+                    <?= $provider['start_count'] ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getRefillName($provider['refill']) ?>
+                    <?= $provider['refill'] ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getCancelName($provider['cancel']) ?>
+                    <?= $provider['cancel'] ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getServiceViewName($provider['service_view']) ?>
+                    <?= $provider['service_view'] ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getAutoOrderName($provider['send_method']) ?>
+                    <?= $provider['send_method'] ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getTypeNameString($provider['type']) ?>
+                    <?= $provider['type'] ?>
                 </td>
                 <td>
                     <?= $provider['name_script'] ?>
                 </td>
                 <td>
-                    <?= AdditionalServices::getStatusNameString($provider['status']) ?>
+                    <?= $provider['status'] ?>
                 </td>
                 <td>
                     <?= $provider['date'] > 0 ? $provider['date'] : '' ?>
@@ -116,11 +115,11 @@
                                 'id' => $provider['id']
                             ]), [
                                 'class' => 'dropdown-item edit-provider',
-                                'data-details' => Json::encode($provider)
+                                'data-details' => Json::encode($provider['form_data'])
                             ])?>
                             <?= Html::a(Yii::t('app/superadmin', 'providers.modal_clone_provider'), Url::toRoute(['/providers/create']), [
                                 'class' => 'dropdown-item clone-provider',
-                                'data-details' => Json::encode($provider)
+                                'data-details' => Json::encode($provider['form_data'])
                             ])?>
                         </div>
                     </div>
