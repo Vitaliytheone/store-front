@@ -217,9 +217,9 @@ class SettingsController extends CustomController
      * Get payment edit form or save data
      * @param $id
      */
-    public function actionEditPayment($id)
+    public function actionEditPayment($category, $code)
     {
-        $payment = Params::findOne($id);
+        $payment = Params::findOne(['category' => $category, 'code' => $code]);
 
         if (!$payment) {
             throw new NotFoundHttpException();

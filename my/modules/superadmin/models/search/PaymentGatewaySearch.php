@@ -30,12 +30,7 @@ class PaymentGatewaySearch extends Params
      */
     private function buildQuery()
     {
-        $query = static::find()
-        ->andFilterWhere([
-            'or',
-            ['like', 'options', '"pid":-1'],
-            ['like', 'options', '"pid":"-1"'],
-        ]);
+        $query = static::find();
 
         return $query;
     }
@@ -50,8 +45,8 @@ class PaymentGatewaySearch extends Params
 
         foreach ($data as $key => $value) {
             $options = $value->getOptions();
-            $name = $options['name'];
-            $visibility = $options['visibility'];
+            $name = $value->category;
+            $visibility = isset($options['visibility']) ? $options['visibility'] : Params::VISIBILITY_DISABLED;
 
             $returnData[] = [
                 'name' => $name,
@@ -62,6 +57,7 @@ class PaymentGatewaySearch extends Params
                         Params::getVisibilityList()[Params::VISIBILITY_DISABLED],
                 'id' => $value->id,
                 'code' => $value->code,
+                'category' => $value->category,
                 'options' => $options,
                 'updated_at' => $value->updated_at,
                 'position' => $value->position,

@@ -565,6 +565,24 @@ class SystemController extends CustomController
         }
     }
 
+    public function actionUpdateParams()
+    {
+        $methods = (new Query())
+            ->select('*')
+            ->from(DB_PANELS . '.params')
+            ->where('category IS NULL')
+            ->all();
+
+        foreach ($methods as $method) {
+            $model = Params::findOne($method['id']);
+
+            $updateData = explode('.', $model->code);
+            $model->category = $updateData[0];
+            $model->code = $updateData[1];
+            $model->update(false);
+        }
+    }
+
     /**
      * Transfer data from payment_gateway to params
      */

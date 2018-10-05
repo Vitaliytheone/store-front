@@ -12,7 +12,6 @@ use common\models\panels\Params;
  */
 class EditPaymentForm extends Model
 {
-    public $name;
     public $visibility;
     public $pgid;
     public $details = [];
@@ -41,9 +40,8 @@ class EditPaymentForm extends Model
         $this->_payment = $payment;
         $details = $payment->getOptions();
 
-        $this->name = $details['name'];
-        $this->pgid = (int)$details['pgid'];
-        $this->visibility = (int)$details['visibility'];
+        $this->pgid = isset($details['pgid']) ? (int)$details['pgid'] : null;
+        $this->visibility = isset($details['visibility']) ? (int)$details['visibility'] : Params::VISIBILITY_DISABLED;
         $this->details = $details;
     }
 
@@ -77,7 +75,6 @@ class EditPaymentForm extends Model
     public function attributeLabels()
     {
         $labels = [
-            'name' => Yii::t('app/superadmin', 'payments.edit_modal.method_name'),
             'visibility' => Yii::t('app/superadmin', 'payments.edit_modal.visibility'),
         ];
 

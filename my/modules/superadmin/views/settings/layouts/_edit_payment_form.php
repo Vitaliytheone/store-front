@@ -12,7 +12,7 @@
 
 <?php $form = ActiveForm::begin([
     'id' => 'editPaymentForm',
-    'action' => Url::toRoute(['/settings/edit-payment', 'id' => $payment->id]),
+    'action' => Url::toRoute(['/settings/edit-payment', 'category' => $payment->category, 'code' => $payment->code]),
     'options' => [
         'class' => "form",
     ],
@@ -30,11 +30,11 @@
     <div class="form-group">
         <label for=""><?= $model->getAttributeLabel($name) ?></label>
         <?php if ($name == 'visibility') : ?>
-            <?= Html::dropDownList('EditPaymentForm[details][' . $name . ']', $value, Params::getVisibilityList(), [
+            <?= Html::dropDownList(Html::getInputName($model, "details[$name]"), $value, Params::getVisibilityList(), [
                 'class' => 'form-control'
             ]) ?>
         <?php else : ?>
-        <?= Html::textInput('EditPaymentForm[details][' . $name . ']', $value, [
+        <?= Html::textInput(Html::getInputName($model, "details[$name]"), $value, [
             'class' => 'form-control'
         ])?>
         <?php endif; ?>

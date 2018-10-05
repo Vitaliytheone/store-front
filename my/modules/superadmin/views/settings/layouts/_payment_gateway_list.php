@@ -22,7 +22,10 @@
                     <td><?= $payment['name'] ?></td>
                     <td><?= $payment['visibility_string'] ?></td>
                     <td class="text-right">
-                        <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment', 'id' => $payment['id']]), [
+                        <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment',
+                            'category' => $payment['category'],
+                            'code' => $payment['code']
+                        ]), [
                             'class' => 'btn btn-secondary btn-sm edit-payment'
                         ])?>
                     </td>
