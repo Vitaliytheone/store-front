@@ -3,10 +3,8 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
-use phpDocumentor\Reflection\Types\Integer;
 use Yii;
 use yii\data\Sort;
-use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
