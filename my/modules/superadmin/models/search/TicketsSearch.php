@@ -191,7 +191,7 @@ class TicketsSearch extends Tickets
         $superadmins = $this->getSuperAdmins();
 
         foreach ($data as $key => $ticket) {
-            $data[$key]['assigned_name'] = $superadmins[$ticket['assigned_admin_id']]['username'];
+            $data[$key]['assigned_name'] = ArrayHelper::getValue($superadmins, [$ticket['assigned_admin_id'], 'username']);
         }
 
         return $data;
