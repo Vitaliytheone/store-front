@@ -120,12 +120,17 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['domain.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $domains = Domains::find()
-
             ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :order_item 
                 AND orders.status NOT IN (:added, :canceled) ', [
                     ':order_item' => Orders::ITEM_PROLONGATION_DOMAIN,
                     ':added' => Orders::STATUS_ADDED,
                     ':canceled' => Orders::STATUS_CANCELED
+            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
+                ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
+                ':status' => Invoices::STATUS_UNPAID
             ])
             ->andWhere([
                 'domains.status' => Domains::STATUS_OK,
@@ -135,6 +140,7 @@ class InvoiceHelper
             ])
             ->groupBy('domains.id')
             ->having("COUNT(orders.id) = 0")
+            ->andHaving("COUNT(invoices.id) = 0")
             ->all();
 
         foreach ($domains as $domain) {
@@ -213,11 +219,19 @@ class InvoiceHelper
                    ':added' => Orders::STATUS_ADDED,
                    ':canceled' => Orders::STATUS_CANCELED
            ])
+            ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
+                ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_SSL
+            ])
+            ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
+                ':status' => Invoices::STATUS_UNPAID
+            ])
            ->andWhere(['ssl_cert.status' => SslCert::STATUS_ACTIVE])
            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [':expiry' => $date])
            ->groupBy('ssl_cert.id')
            ->having("COUNT(orders.id) = 0")
+           ->andHaving("COUNT(invoices.id) = 0")
            ->all();
+
 
         foreach ($sslCerts as $ssl) {
 
