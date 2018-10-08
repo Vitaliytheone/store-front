@@ -8,12 +8,14 @@ use common\models\stores\StoreAdminAuth;
 use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\models\forms\EditFilePageForm;
 use sommerce\modules\admin\models\forms\EditPageForm;
 use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\search\PagesSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -93,7 +95,9 @@ trait PagesTrait {
             'pageId' => $pageForm->getPage()->id,
         ]);
 
-        return $this->render('edit_page', [
+        $view = $pageForm->getPage()->template == 'file' ? 'edit_page_file' : 'edit_page';
+
+        return $this->render($view, [
             'pageForm' => $pageForm,
             'isNewPage' => $pageForm->getPage()->isNewRecord,
             'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
@@ -117,7 +121,13 @@ trait PagesTrait {
             exit;
         }
 
-        $pageForm = new EditPageForm();
+        $page = Pages::findOne($id);
+        if ($page->template == 'file') {
+            $pageForm = new EditFilePageForm();
+        } else {
+            $pageForm = new EditPageForm();
+        }
+
         $pageForm->setUser(Yii::$app->user);
 
         if (!$pageForm->edit($request->post(), $id)) {
@@ -190,7 +200,7 @@ trait PagesTrait {
             throw new NotFoundHttpException();
         }
 
-        if (!Pages::canDelete($pageModel)) {
+        if (!Pages::canDelete($pageModel->toArray())) {
             throw new ForbiddenHttpException();
         }
 

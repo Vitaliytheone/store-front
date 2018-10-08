@@ -392,6 +392,10 @@ class OrderHelper {
         $additionalService->status = AdditionalServices::STATUS_ACTIVE;
         $additionalService->service_description = 1;
         $additionalService->import = 1;
+        $additionalService->service_auto_rate = 1;
+        $additionalService->provider_rate = 1;
+        $additionalService->service_auto_max = 1;
+        $additionalService->service_auto_min = 1;
         $additionalService->currency = CurrencyHelper::getCurrencyCodeById($order->getCurrency());
 
         if (!$additionalService->save(false)) {
@@ -401,8 +405,6 @@ class OrderHelper {
 
         if ($child) {
             $userService = new UserServices();
-            $userService->pid = $project->id;
-            $userService->aid = $project->provider_id;
             $userService->panel_id = $project->id;
             $userService->provider_id = $project->provider_id;
             $userService->save(false);
