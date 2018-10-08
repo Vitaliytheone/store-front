@@ -3,6 +3,7 @@ namespace my\modules\superadmin\models\search;
 
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
+use my\helpers\Url;
 use phpDocumentor\Reflection\Types\Integer;
 use Yii;
 use yii\data\Sort;
@@ -228,10 +229,11 @@ class ProvidersSearch
             $projects = ArrayHelper::getValue($providersPanels, $provider['provider_id'], []);
             $usedProjects = [];
 
-            foreach ($projects as $project) {
+            foreach ($projects as $id => $project) {
                 if (!empty($project['providers'][$provider['provider_id']])) {
                     $usedProjects[] = $project;
                 }
+                $projects[$id]['url'] = $project['child_panel'] == 0 ? Url::toRoute(['/panels', 'id' => $project['id']]) : Url::toRoute(['/child-panels', 'id' => $project['id']]);
             }
 
             $returnProviders[$key] = [

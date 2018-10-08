@@ -59,7 +59,6 @@
                     <?php if ($provider['count']) : ?>
                         <?= Html::a($provider['count'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id']]), [
                             'class' => 'show-panels',
-                            'data-href' => json_encode(['panel' => Url::toRoute(['/panels']), 'childPanel' => Url::toRoute(['/child-panels']),]),
                             'data-projects' => Json::encode($provider['projects']),
                             'data-header' => $provider['name'] . ' - count'
                         ])?>
@@ -71,7 +70,6 @@
                     <?php if ($provider['in_use']) : ?>
                         <?= Html::a($provider['in_use'], Url::toRoute(['/providers/get-panels', 'id' => $provider['id'], 'use' => 1]), [
                             'class' => 'show-panels',
-                            'data-href' => json_encode(['panel' => Url::toRoute(['/panels']), 'childPanel' => Url::toRoute(['/child-panels']),]),
                             'data-projects' => Json::encode($provider['usedProjects']),
                             'data-header' => $provider['name'] . ' - in use'
                         ])?>
