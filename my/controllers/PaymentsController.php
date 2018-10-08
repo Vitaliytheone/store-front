@@ -2,6 +2,7 @@
 
 namespace my\controllers;
 
+use common\models\panels\Params;
 use my\components\bitcoin\Bitcoin;
 use my\components\payments\BasePayment;
 use my\helpers\PaymentsHelper;
@@ -14,7 +15,6 @@ use my\mail\mailers\TwoCheckoutPass;
 use my\mail\mailers\TwoCheckoutReview;
 use Yii;
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use common\models\panel\PaymentsLog;
 use common\models\panels\PaymentHash;
@@ -239,7 +239,7 @@ class PaymentsController extends CustomController
 
 		$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), 'Webmoney', $paymentSignature);
 
-		$paypalInfo = PaymentGateway::findOne(['pgid' => 3, 'visibility' => 1, 'pid' => -1]);
+		$paypalInfo = Params::findOne(['code' => Params::METHOD_WEBMONEY, 'category' => Params::CATEGORY_WEBMONEY]);
 
 		$purse = '';
 		$secret_key = '';
@@ -309,7 +309,7 @@ class PaymentsController extends CustomController
                                 if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(PaymentGateway::METHOD_WEBMONEY);
+                                    $invoice->paid(Params::METHOD_WEBMONEY);
 
                                     $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
@@ -379,7 +379,7 @@ class PaymentsController extends CustomController
 
 	            if ($invoice->status == 0 and $payment->status == 0) {
 
-	            	$paypalInfo = PaymentGateway::findOne(['pgid' => 2, 'visibility' => 1, 'pid' => -1]);
+	            	$paypalInfo = Params::findOne(['code' => Params::METHOD_PERFECT_MONEY, 'category' => Params::CATEGORY_PERFECT_MONEY]);
 
 					$account = '';
 					$passphrase = '';
@@ -406,7 +406,7 @@ class PaymentsController extends CustomController
 		            			if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(PaymentGateway::METHOD_PERFECT_MONEY);
+                                    $invoice->paid(Params::METHOD_PERFECT_MONEY);
 
 					                $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
@@ -474,7 +474,7 @@ class PaymentsController extends CustomController
 
 	            if ($invoice->status == 0 && in_array($payment->status, [0, 2])) {
 
-	            	$paypalInfo = PaymentGateway::findOne(['pgid' => 4, 'visibility' => 1, 'pid' => -1]);
+	            	$paypalInfo = Params::findOne(['code' => Params::METHOD_BITCOIN, 'category' => Params::CATEGORY_BITCOIN]);
 
 					$paypalInfo = json_decode($paypalInfo->options);
 
@@ -517,7 +517,7 @@ class PaymentsController extends CustomController
                     }
 
                     // Mark invoice paid
-                    $invoice->paid(PaymentGateway::METHOD_BITCOIN);
+                    $invoice->paid(Params::METHOD_BITCOIN);
 
                     $payments->status = Payments::STATUS_COMPLETED;
                     $payments->update();
@@ -574,7 +574,7 @@ class PaymentsController extends CustomController
 
                 if ($invoice->status == 0 and $payment->status != 1) {
                 	
-                	$paypalInfo = PaymentGateway::findOne(['pgid' => 5, 'visibility' => 1, 'pid' => -1]);
+                	$paypalInfo = Params::findOne(['code' => Params::METHOD_TWO_CHECKOUT, 'category' => Params::CATEGORY_TWO_CHECKOUT]);
 
 					$account_number = '';
 					$secret_word = '';
@@ -720,7 +720,7 @@ class PaymentsController extends CustomController
             exit;
         }
 
-        $pg = PaymentGateway::findOne(['pgid' => 6, 'visibility' => 1, 'pid' => -1]);
+        $pg = Params::findOne(['code' => Params::METHOD_COINPAYMENTS, 'category' => Params::CATEGORY_COINPAYMENTS]);
 
         $pgData = json_decode($pg->options);
         $pgMerchantId = ArrayHelper::getValue($pgData,'merchant_id', null);
@@ -754,7 +754,7 @@ class PaymentsController extends CustomController
         // Mark invoice paid
         if (in_array($ipnStatus, [100, 2])) {
 
-            $invoice->paid(PaymentGateway::METHOD_COINPAYMENTS);
+            $invoice->paid(Params::METHOD_COINPAYMENTS);
 
             $payments->status = Payments::STATUS_COMPLETED;
             $payments->update();

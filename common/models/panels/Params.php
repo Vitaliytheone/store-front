@@ -22,6 +22,22 @@ class Params extends ActiveRecord
     const VISIBILITY_ENABLED = 1;
     const VISIBILITY_DISABLED = 0;
 
+    const METHOD_PAYPAL = 1;
+    const METHOD_PERFECT_MONEY = 2;
+    const METHOD_WEBMONEY = 3;
+    const METHOD_TWO_CHECKOUT = 5;
+    const METHOD_BITCOIN = 4;
+    const METHOD_COINPAYMENTS = 6;
+
+    const CATEGORY_PAYPAL = 'PayPal';
+    const CATEGORY_PERFECT_MONEY = 'Perfect_Money';
+    const CATEGORY_WEBMONEY = 'WebMoney';
+    const CATEGORY_TWO_CHECKOUT = '2Checkout';
+    const CATEGORY_BITCOIN = 'Bitcoin';
+    const CATEGORY_COINPAYMENTS = 'CoinPayments';
+
+    const METHOD_OTHER = -1;
+
     /**
      * @var static[]
      */

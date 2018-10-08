@@ -6,7 +6,7 @@ use common\helpers\InvoiceHelper;
 use common\models\panel\PaymentsLog;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\PaymentHash;
 use common\models\panels\Payments;
 use common\models\panels\Project;
@@ -278,7 +278,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => PaymentGateway::METHOD_PAYPAL,
+            'type' => Params::METHOD_PAYPAL,
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,
@@ -289,7 +289,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (PaymentGateway::METHOD_PAYPAL == $payment->type) {
+                if (Params::METHOD_PAYPAL == $payment->type) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id

@@ -2,8 +2,8 @@
 
 namespace my\components\payments;
 
+use common\models\panels\Params;
 use Yii;
-use common\models\panels\PaymentGateway;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -116,7 +116,7 @@ class TwoCheckout extends BasePayment
      */
     private function getAuth()
     {
-        $twoCheckoutInfo = PaymentGateway::findOne(['pgid' => PaymentGateway::METHOD_TWO_CHECKOUT, 'visibility' => 1, 'pid' => -1]);
+        $twoCheckoutInfo = Params::findOne(['code' => Params::METHOD_TWO_CHECKOUT, 'category' => Params::CATEGORY_TWO_CHECKOUT]);
 
         if (empty($twoCheckoutInfo)) {
             return null;

@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\InvoiceDetails;
+use common\models\panels\Params;
 use common\models\panels\Project;
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
@@ -26,7 +27,6 @@ use yii\helpers\ArrayHelper;
 use common\models\panels\Customers;
 use my\models\forms\LoginForm;
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
@@ -262,16 +262,14 @@ class SiteController extends CustomController
             'id' => $invoice->id
         ]);
 
-        $paymentGateway = PaymentGateway::find()
-            ->active()
-            ->all();
+        $paymentGateway = Params::find()->all();
 
         $payWait = Payments::findOne([
             'iid' => $invoice->id,
             'status' => Payments::STATUS_WAIT
         ]);
 
-        $paymentsList = ArrayHelper::map($paymentGateway, 'pgid', 'name');
+        $paymentsList = ArrayHelper::map($paymentGateway, 'code', 'category');
 
         return $this->render('invoice', [
             'invoice' => $invoice,
@@ -564,7 +562,7 @@ class SiteController extends CustomController
         if ($invoice !== null) {
 
             if (!empty($_POST['pgid'])) {
-                $paymentGateway = PaymentGateway::findOne(['pgid' => $_POST['pgid'], 'visibility' => 1, 'pid' => -1]);
+                $paymentGateway = Params::findOne(['code' => $_POST['pgid']]);
                 if ($paymentGateway !== null) {
                     $invoiceDetails = $invoice->invoiceDetails;
                     $paymentAmount = $invoice->getPaymentAmount();

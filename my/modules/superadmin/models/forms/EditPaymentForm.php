@@ -3,7 +3,6 @@
 namespace my\modules\superadmin\models\forms;
 
 use Yii;
-use common\models\panels\PaymentGateway;
 use yii\base\Model;
 use common\models\panels\Params;
 
@@ -55,7 +54,7 @@ class EditPaymentForm extends Model
             return false;
         }
 
-        if (!array_key_exists($this->visibility, PaymentGateway::getVisibilityList())) {
+        if (!array_key_exists($this->visibility, Params::getVisibilityList())) {
             return false;
         }
 
@@ -79,28 +78,28 @@ class EditPaymentForm extends Model
         ];
 
         switch ($this->pgid) {
-            case PaymentGateway::METHOD_TWO_CHECKOUT:
+            case Params::METHOD_TWO_CHECKOUT:
                 $labels['account_number'] = Yii::t('app/superadmin', 'payments.2checkout.account_number');
                 $labels['secret_word'] = Yii::t('app/superadmin', 'payments.2checkout.secret_word');
                 break;
 
-            case PaymentGateway::METHOD_PAYPAL:
+            case Params::METHOD_PAYPAL:
                 $labels['username'] = Yii::t('app/superadmin', 'payments.paypal.api_username');
                 $labels['password'] = Yii::t('app/superadmin', 'payments.paypal.api_password');
                 $labels['signature'] = Yii::t('app/superadmin', 'payments.paypal.api_signature');
                 break;
 
-            case PaymentGateway::METHOD_PERFECT_MONEY:
+            case Params::METHOD_PERFECT_MONEY:
                 $labels['account'] = Yii::t('app/superadmin', 'payments.perfect_money.usd_account');
                 $labels['passphrase'] = Yii::t('app/superadmin', 'payments.perfect_money.passphrase');
                 break;
 
-            case PaymentGateway::METHOD_WEBMONEY:
+            case Params::METHOD_WEBMONEY:
                 $labels['purse'] = Yii::t('app/superadmin', 'payments.webmoney.wmz_purse');
                 $labels['secret_key'] = Yii::t('app/superadmin', 'payments.webmoney.secret_key');
                 break;
 
-            case PaymentGateway::METHOD_BITCOIN:
+            case Params::METHOD_BITCOIN:
                 $labels['id'] = Yii::t('app/superadmin', 'payments.bitcoin.api_gateway_id');
                 $labels['secret'] = Yii::t('app/superadmin', 'payments.bitcoin.gateway_secret');
                 break;

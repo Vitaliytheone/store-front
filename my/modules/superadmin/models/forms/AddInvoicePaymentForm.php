@@ -2,7 +2,7 @@
 namespace my\modules\superadmin\models\forms;
 
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\Payments;
 use Yii;
 use yii\base\Model;
@@ -83,9 +83,7 @@ class AddInvoicePaymentForm extends Model {
      */
     public function getMethods()
     {
-        $methods = ArrayHelper::map(PaymentGateway::find()->andWhere([
-            'pid' => '-1'
-        ])->all(), 'pgid', 'name');
+        $methods = ArrayHelper::map(Params::find()->all(), 'code', 'category');
         $methods[0] = Yii::t('app', 'payment_gateway.method.other');
         return $methods;
     }

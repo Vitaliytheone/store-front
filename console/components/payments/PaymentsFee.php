@@ -1,7 +1,7 @@
 <?php
 namespace console\components\payments;
 
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\Payments;
 use my\components\payments\Paypal;
 use my\components\payments\TwoCheckout;
@@ -37,8 +37,8 @@ class PaymentsFee {
      * @var array
      */
     protected static $availableTypes = [
-        PaymentGateway::METHOD_PAYPAL,
-        PaymentGateway::METHOD_TWO_CHECKOUT
+        Params::METHOD_PAYPAL,
+        Params::METHOD_TWO_CHECKOUT
     ];
 
     public function __construct($days = null, $from = null, $to = null, $types = [])
@@ -83,11 +83,11 @@ class PaymentsFee {
                  * @var Payments $payment
                  */
                 switch ($payment->type) {
-                    case PaymentGateway::METHOD_PAYPAL:
+                    case Params::METHOD_PAYPAL:
                         $this->paypal($payment);
                     break;
 
-                    case PaymentGateway::METHOD_TWO_CHECKOUT:
+                    case Params::METHOD_TWO_CHECKOUT:
                         $this->twoCheckout($payment);
                     break;
                 }

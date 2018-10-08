@@ -2,6 +2,7 @@
   
 namespace my\components\payments;
 
+use common\models\panels\Params;
 use Yii;
 
 /**
@@ -71,7 +72,7 @@ class Paypal extends BasePayment {
           return false;
       }
 
-      $paypalInfo = \common\models\panels\PaymentGateway::findOne(['pgid' => 1, 'visibility' => 1, 'pid' => -1]);
+      $paypalInfo = Params::findOne(['code' => Params::METHOD_PAYPAL, 'category' => Params::CATEGORY_PAYPAL]);
 
       $username = '';
       $password = '';

@@ -193,15 +193,12 @@ class PaymentsSearch extends Payments {
             static::$_methods = [];
             foreach((new Query())
                 ->select([
-                    'pgid',
-                    'name'
+                    'code',
+                    'category'
                 ])
-                ->from('payment_gateway')
-                ->andWhere([
-                    'pid' => '-1'
-                ])
+                ->from('params')
                 ->all() as $method) {
-                static::$_methods[$method['pgid']] = $method;
+                static::$_methods[$method['code']] = $method;
             }
         }
 
@@ -310,7 +307,7 @@ class PaymentsSearch extends Payments {
         $methods = static::getMethods();
 
         foreach ($methods as $method) {
-            $returnMethods[$method['pgid']] = $method['name'] . ' (' . $this->count($status, $mode, $method['pgid']) . ')';
+            $returnMethods[$method['code']] = $method['category'] . ' (' . $this->count($status, $mode, $method['code']) . ')';
         }
 
         $returnMethods[0] = Yii::t('app/superadmin', 'payments.list.navs_method_other', [
@@ -328,7 +325,7 @@ class PaymentsSearch extends Payments {
     {
         $methods = static::getMethods();
 
-        return ArrayHelper::getValue(ArrayHelper::getValue($methods, $this->type), 'name', Yii::t('app', 'payment_gateway.method.other'));
+        return ArrayHelper::getValue(ArrayHelper::getValue($methods, $this->type), 'category', Yii::t('app', 'payment_gateway.method.other'));
     }
 
     /**
