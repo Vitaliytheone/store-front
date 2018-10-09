@@ -20,10 +20,17 @@ customModule.superadminProvidersController = {
                 if (method == 'edit') {
                     $('#editproviderform-' + name, form).val(value);
                     $('#edit-provider-' + name, form).val(value);
-                    $('#edit-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
+
+                    if (typeof(value) == 'number') {
+                        $('#edit-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
+                    }
+                    //$('#edit-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
                 } else {
                     $('#create-provider-' + name, form).val(value);
-                    $('#create-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
+
+                    if (typeof(value) == 'number') {
+                        $('#create-provider-' + name + ' option[value="' + value + '"]').attr('selected', 'true');
+                    }
                 }
             });
         }
