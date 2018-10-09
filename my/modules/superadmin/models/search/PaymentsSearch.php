@@ -1,6 +1,7 @@
 <?php
 namespace my\modules\superadmin\models\search;
 
+use common\models\panels\Params;
 use common\models\panels\Project;
 use common\models\panels\Orders;
 use common\models\stores\Stores;
@@ -190,16 +191,7 @@ class PaymentsSearch extends Payments {
     public static function getMethods()
     {
         if (null == static::$_methods) {
-            static::$_methods = [];
-            foreach((new Query())
-                ->select([
-                    'code',
-                    'category'
-                ])
-                ->from('params')
-                ->all() as $method) {
-                static::$_methods[$method['code']] = $method;
-            }
+            static::$_methods = Params::indexByPgid();
         }
 
         return static::$_methods;
@@ -306,8 +298,8 @@ class PaymentsSearch extends Payments {
 
         $methods = static::getMethods();
 
-        foreach ($methods as $method) {
-            $returnMethods[$method['code']] = $method['category'] . ' (' . $this->count($status, $mode, $method['code']) . ')';
+        foreach ($methods as $key => $method) {
+            $returnMethods[$key] = $method . ' (' . $this->count($status, $mode, $key) . ')';
         }
 
         $returnMethods[0] = Yii::t('app/superadmin', 'payments.list.navs_method_other', [
@@ -325,7 +317,7 @@ class PaymentsSearch extends Payments {
     {
         $methods = static::getMethods();
 
-        return ArrayHelper::getValue(ArrayHelper::getValue($methods, $this->type), 'category', Yii::t('app', 'payment_gateway.method.other'));
+        return ArrayHelper::getValue($methods, $this->type, Yii::t('app', 'payment_gateway.method.other'));
     }
 
     /**

@@ -83,7 +83,7 @@ class AddInvoicePaymentForm extends Model {
      */
     public function getMethods()
     {
-        $methods = ArrayHelper::map(Params::find()->all(), 'code', 'category');
+        $methods = Params::indexByPgid();
         $methods[0] = Yii::t('app', 'payment_gateway.method.other');
         return $methods;
     }

@@ -239,19 +239,17 @@ class PaymentsController extends CustomController
 
 		$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), 'Webmoney', $paymentSignature);
 
-		$paypalInfo = Params::findOne(['code' => Params::METHOD_WEBMONEY, 'category' => Params::CATEGORY_WEBMONEY]);
+		$paypalInfo = Params::get(Params::CODE_WEBMONEY, Params::CATEGORY_PAYMENT);
 
 		$purse = '';
 		$secret_key = '';
 
-		$paypalInfo = json_decode($paypalInfo->options);
-
-		if (!empty($paypalInfo->purse)) {
-			$purse = $paypalInfo->purse;
+		if (!empty($paypalInfo['purse'])) {
+			$purse = $paypalInfo['purse'];
 		}
 
-		if (!empty($paypalInfo->secret_key)) {
-			$secret_key = $paypalInfo->secret_key;
+		if (!empty($paypalInfo['secret_key'])) {
+			$secret_key = $paypalInfo['secret_key'];
 		}
 
 		if(!empty($_POST['LMI_PREREQUEST'])) {
@@ -309,7 +307,7 @@ class PaymentsController extends CustomController
                                 if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(Params::METHOD_WEBMONEY);
+                                    $invoice->paid(Params::getPaymentPGID(Params::CODE_WEBMONEY));
 
                                     $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
@@ -379,19 +377,17 @@ class PaymentsController extends CustomController
 
 	            if ($invoice->status == 0 and $payment->status == 0) {
 
-	            	$paypalInfo = Params::findOne(['code' => Params::METHOD_PERFECT_MONEY, 'category' => Params::CATEGORY_PERFECT_MONEY]);
+	            	$paypalInfo = Params::get(Params::CODE_PERFECT_MONEY, Params::CATEGORY_PAYMENT);
 
 					$account = '';
 					$passphrase = '';
 
-					$paypalInfo = json_decode($paypalInfo->options);
-
-					if (!empty($paypalInfo->account)) {
-						$account = $paypalInfo->account;
+					if (!empty($paypalInfo['account'])) {
+						$account = $paypalInfo['account'];
 					}
 
-					if (!empty($paypalInfo->passphrase)) {
-						$passphrase = strtoupper(md5($paypalInfo->passphrase));
+					if (!empty($paypalInfo['passphrase'])) {
+						$passphrase = strtoupper(md5($paypalInfo['passphrase']));
 					}
 
 
@@ -406,7 +402,7 @@ class PaymentsController extends CustomController
 		            			if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(Params::METHOD_PERFECT_MONEY);
+                                    $invoice->paid(Params::getPaymentPGID(Params::CODE_PERFECT_MONEY));
 
 					                $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
@@ -474,9 +470,7 @@ class PaymentsController extends CustomController
 
 	            if ($invoice->status == 0 && in_array($payment->status, [0, 2])) {
 
-	            	$paypalInfo = Params::findOne(['code' => Params::METHOD_BITCOIN, 'category' => Params::CATEGORY_BITCOIN]);
-
-					$paypalInfo = json_decode($paypalInfo->options);
+	            	$paypalInfo = Params::get(Params::CODE_BITCOIN, Params::CATEGORY_PAYMENT);
 
                     $id = ArrayHelper::getValue($paypalInfo, 'id');
                     $secret = ArrayHelper::getValue($paypalInfo, 'secret');
@@ -517,7 +511,7 @@ class PaymentsController extends CustomController
                     }
 
                     // Mark invoice paid
-                    $invoice->paid(Params::METHOD_BITCOIN);
+                    $invoice->paid(Params::getPaymentPGID(Params::CODE_BITCOIN));
 
                     $payments->status = Payments::STATUS_COMPLETED;
                     $payments->update();
@@ -574,19 +568,17 @@ class PaymentsController extends CustomController
 
                 if ($invoice->status == 0 and $payment->status != 1) {
                 	
-                	$paypalInfo = Params::findOne(['code' => Params::METHOD_TWO_CHECKOUT, 'category' => Params::CATEGORY_TWO_CHECKOUT]);
+                	$paypalInfo = Params::get(Params::CODE_TWO_CHECKOUT, Params::CATEGORY_PAYMENT);
 
 					$account_number = '';
 					$secret_word = '';
 
-					$paypalInfo = json_decode($paypalInfo->options);
-
-					if (!empty($paypalInfo->account_number)) {
-						$account_number = $paypalInfo->account_number;
+					if (!empty($paypalInfo['account_number'])) {
+						$account_number = $paypalInfo['account_number'];
 					}
 
-					if (!empty($paypalInfo->secret_word)) {
-						$secret_word = $paypalInfo->secret_word;
+					if (!empty($paypalInfo['secret_word'])) {
+						$secret_word = $paypalInfo['secret_word'];
 					}
 
 					$hashSid = $account_number; #Input your seller ID (2Checkout account number)
@@ -720,9 +712,8 @@ class PaymentsController extends CustomController
             exit;
         }
 
-        $pg = Params::findOne(['code' => Params::METHOD_COINPAYMENTS, 'category' => Params::CATEGORY_COINPAYMENTS]);
+        $pgData = Params::get(Params::CODE_COINPAYMENTS, Params::CATEGORY_PAYMENT);
 
-        $pgData = json_decode($pg->options);
         $pgMerchantId = ArrayHelper::getValue($pgData,'merchant_id', null);
         $pgIpnSecret = ArrayHelper::getValue($pgData,'secret', null);
 
@@ -754,7 +745,7 @@ class PaymentsController extends CustomController
         // Mark invoice paid
         if (in_array($ipnStatus, [100, 2])) {
 
-            $invoice->paid(Params::METHOD_COINPAYMENTS);
+            $invoice->paid(Params::getPaymentPGID(Params::CODE_COINPAYMENTS));
 
             $payments->status = Payments::STATUS_COMPLETED;
             $payments->update();

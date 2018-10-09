@@ -591,11 +591,11 @@ class SystemController extends CustomController
         $payments = PaymentGateway::find()->where(['pid' => -1])->all();
 
         foreach ($payments as $payment) {
-            echo "Transfer {$payment->name} \n";
+            $this->stderr("Transfer {$payment->name} \n", Console::FG_BLACK);
 
             $params = new Params();
-            $category = str_replace(' ', '_', $payment->name);
-            $code = (string)$payment->pgid;
+            $category = 'payment';
+            $code = strtolower(str_replace(' ', '_', $payment->name));
 
             $options = $payment->options == '[]' ? [] : json_decode($payment->options);
             $options = array_merge((array)$options, $payment->attributes);
@@ -607,12 +607,10 @@ class SystemController extends CustomController
             $params->category = $category;
             $params->options = json_encode($options);
             $params->position = $payment->position;
-            $params->updated_at = time();
             if (!$params->save()) {
-                print_r(ActiveForm::firstError($params));
-                echo "\n";
+                $this->stderr(ActiveForm::firstError($params) . "\n", Console::FG_RED);
             } else {
-                echo "Successful \n";
+                $this->stderr("Successful \n", Console::FG_GREEN);
             }
         }
     }

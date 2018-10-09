@@ -72,24 +72,22 @@ class Paypal extends BasePayment {
           return false;
       }
 
-      $paypalInfo = Params::findOne(['code' => Params::METHOD_PAYPAL, 'category' => Params::CATEGORY_PAYPAL]);
+      $paypalInfo = Params::get(Params::CODE_PAYPAL, Params::CATEGORY_PAYMENT);
 
       $username = '';
       $password = '';
       $signature = '';
 
-      $paypalInfo = json_decode($paypalInfo->options);
-
-      if (!empty($paypalInfo->username)) {
-        $username = $paypalInfo->username;
+      if (!empty($paypalInfo['username'])) {
+        $username = $paypalInfo['username'];
       }
 
-      if (!empty($paypalInfo->password)) {
-        $password = $paypalInfo->password;
+      if (!empty($paypalInfo['password'])) {
+        $password = $paypalInfo['password'];
       }
 
-      if (!empty($paypalInfo->signature)) {
-        $signature = $paypalInfo->signature;
+      if (!empty($paypalInfo['signature'])) {
+        $signature = $paypalInfo['signature'];
       }
 
       $this->_credentials['USER'] = $username;

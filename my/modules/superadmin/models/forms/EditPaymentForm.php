@@ -78,28 +78,28 @@ class EditPaymentForm extends Model
         ];
 
         switch ($this->pgid) {
-            case Params::METHOD_TWO_CHECKOUT:
+            case Params::getPaymentPGID(Params::CODE_TWO_CHECKOUT):
                 $labels['account_number'] = Yii::t('app/superadmin', 'payments.2checkout.account_number');
                 $labels['secret_word'] = Yii::t('app/superadmin', 'payments.2checkout.secret_word');
                 break;
 
-            case Params::METHOD_PAYPAL:
+            case Params::getPaymentPGID(Params::CODE_PAYPAL):
                 $labels['username'] = Yii::t('app/superadmin', 'payments.paypal.api_username');
                 $labels['password'] = Yii::t('app/superadmin', 'payments.paypal.api_password');
                 $labels['signature'] = Yii::t('app/superadmin', 'payments.paypal.api_signature');
                 break;
 
-            case Params::METHOD_PERFECT_MONEY:
+            case Params::getPaymentPGID(Params::CODE_PERFECT_MONEY):
                 $labels['account'] = Yii::t('app/superadmin', 'payments.perfect_money.usd_account');
                 $labels['passphrase'] = Yii::t('app/superadmin', 'payments.perfect_money.passphrase');
                 break;
 
-            case Params::METHOD_WEBMONEY:
+            case Params::getPaymentPGID(Params::CODE_WEBMONEY):
                 $labels['purse'] = Yii::t('app/superadmin', 'payments.webmoney.wmz_purse');
                 $labels['secret_key'] = Yii::t('app/superadmin', 'payments.webmoney.secret_key');
                 break;
 
-            case Params::METHOD_BITCOIN:
+            case Params::getPaymentPGID(Params::CODE_BITCOIN):
                 $labels['id'] = Yii::t('app/superadmin', 'payments.bitcoin.api_gateway_id');
                 $labels['secret'] = Yii::t('app/superadmin', 'payments.bitcoin.gateway_secret');
                 break;

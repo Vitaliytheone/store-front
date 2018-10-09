@@ -257,19 +257,16 @@ class SiteController extends CustomController
             return $this->redirect('/');
         }
 
-
         $this->view->title = Yii::t('app', 'pages.title.invoice', [
             'id' => $invoice->id
         ]);
-
-        $paymentGateway = Params::find()->all();
 
         $payWait = Payments::findOne([
             'iid' => $invoice->id,
             'status' => Payments::STATUS_WAIT
         ]);
 
-        $paymentsList = ArrayHelper::map($paymentGateway, 'code', 'category');
+        $paymentsList = Params::indexByPgid();
 
         return $this->render('invoice', [
             'invoice' => $invoice,
@@ -562,7 +559,7 @@ class SiteController extends CustomController
         if ($invoice !== null) {
 
             if (!empty($_POST['pgid'])) {
-                $paymentGateway = Params::findOne(['code' => $_POST['pgid']]);
+                $paymentGateway = Params::findByPgid($_POST['pgid']);
                 if ($paymentGateway !== null) {
                     $invoiceDetails = $invoice->invoiceDetails;
                     $paymentAmount = $invoice->getPaymentAmount();

@@ -116,18 +116,17 @@ class TwoCheckout extends BasePayment
      */
     private function getAuth()
     {
-        $twoCheckoutInfo = Params::findOne(['code' => Params::METHOD_TWO_CHECKOUT, 'category' => Params::CATEGORY_TWO_CHECKOUT]);
+        $twoCheckoutInfo = Params::get(Params::CODE_TWO_CHECKOUT, Params::CATEGORY_PAYMENT);
 
         if (empty($twoCheckoutInfo)) {
             return null;
         }
-        $twoCheckoutInfo = json_decode($twoCheckoutInfo->options);
 
-        if (!empty($twoCheckoutInfo->username)) {
-            $this->_credentials['username'] = $twoCheckoutInfo->username;
+        if (!empty($twoCheckoutInfo['username'])) {
+            $this->_credentials['username'] = $twoCheckoutInfo['username'];
         }
-        if (!empty($twoCheckoutInfo->password)) {
-            $this->_credentials['password'] = $twoCheckoutInfo->password;
+        if (!empty($twoCheckoutInfo['password'])) {
+            $this->_credentials['password'] = $twoCheckoutInfo['password'];
         }
 
         return $this->_credentials['username'] . ':' . $this->_credentials['password'];

@@ -278,7 +278,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => Params::METHOD_PAYPAL,
+            'type' => Params::getPaymentPGID(Params::CODE_PAYPAL),
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,
@@ -289,7 +289,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (Params::METHOD_PAYPAL == $payment->type) {
+                if (Params::getPaymentPGID(Params::CODE_PAYPAL) == $payment->type) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id

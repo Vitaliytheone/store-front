@@ -22,21 +22,21 @@ class Params extends ActiveRecord
     const VISIBILITY_ENABLED = 1;
     const VISIBILITY_DISABLED = 0;
 
-    const METHOD_PAYPAL = 1;
-    const METHOD_PERFECT_MONEY = 2;
-    const METHOD_WEBMONEY = 3;
-    const METHOD_TWO_CHECKOUT = 5;
-    const METHOD_BITCOIN = 4;
-    const METHOD_COINPAYMENTS = 6;
+    const CATEGORY_SERVICE = 'service';
+    const CATEGORY_PAYMENT = 'payment';
 
-    const CATEGORY_PAYPAL = 'PayPal';
-    const CATEGORY_PERFECT_MONEY = 'Perfect_Money';
-    const CATEGORY_WEBMONEY = 'WebMoney';
-    const CATEGORY_TWO_CHECKOUT = '2Checkout';
-    const CATEGORY_BITCOIN = 'Bitcoin';
-    const CATEGORY_COINPAYMENTS = 'CoinPayments';
+    const CODE_PAYPAL = 'paypal';
+    const CODE_PERFECT_MONEY = 'perfect_money';
+    const CODE_WEBMONEY = 'webmoney';
+    const CODE_TWO_CHECKOUT = '2checkout';
+    const CODE_BITCOIN = 'bitcoin';
+    const CODE_COINPAYMENTS = 'coinpayments';
 
-    const METHOD_OTHER = -1;
+    const CODE_WHOISXML = 'whoisxml';
+    const CODE_DNSLYTICS = 'dnslytics';
+    const CODE_GOGETSSL = 'gogetssl';
+    const CODE_AHNAMES = 'ahnames';
+    const CODE_OPENSRS = 'opensrs';
 
     /**
      * @var static[]
@@ -76,6 +76,7 @@ class Params extends ActiveRecord
             'options' => 'Options',
             'updated_at' => 'Updated At',
             'position' => 'Position',
+            'category' => 'Category',
         ];
     }
 
@@ -97,6 +98,7 @@ class Params extends ActiveRecord
         if (null === static::$_params) {
             static::$_params = ArrayHelper::index(static::find()->select([
                 'code',
+                'category',
                 'options'
             ])->all(), 'code');
         }
@@ -106,15 +108,59 @@ class Params extends ActiveRecord
 
     /**
      * @param $code
+     * @param $category
      * @return null
      */
-    public static function get($code)
+    public static function get($code, $category)
     {
         $parameters = static::getAll();
-        if (isset($parameters[$code])) {
+        if (isset($parameters[$code]) && isset($parameters[$code]->category)) {
             return $parameters[$code]->getOptions();
         }
         return null;
+    }
+
+    /**
+     * @param $code
+     * @return int
+     */
+    public static function getPaymentPGID($code): int
+    {
+        $model = static::findOne(['category' => static::CATEGORY_PAYMENT, 'code' => $code]);
+        $options = $model->getOptions();
+
+        return $options['pgid'];
+    }
+
+    /**
+     * @param int $pgid
+     * @return array|Params|null
+     */
+    public static function findByPgid(int $pgid)
+    {
+        return static::find()
+            ->select('*')
+            ->andWhere(['or',
+                ['like', 'options', '"pgid":'.$pgid],
+                ['like', 'options', '"pgid":"'.$pgid.'"']
+            ])
+            ->one();
+    }
+
+    /**
+     * @return array
+     */
+    public static function indexByPgid(): array
+    {
+        $payments = Params::find()->where(['category' => Params::CATEGORY_PAYMENT])->all();
+
+        $paymentsList = [];
+        foreach ($payments as $key => $method) {
+            $options = $method->getOptions();
+            $paymentsList[$options['pgid']] = $options['name'];
+        }
+
+        return $paymentsList;
     }
 
     /**

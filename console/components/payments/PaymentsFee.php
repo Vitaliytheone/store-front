@@ -37,8 +37,8 @@ class PaymentsFee {
      * @var array
      */
     protected static $availableTypes = [
-        Params::METHOD_PAYPAL,
-        Params::METHOD_TWO_CHECKOUT
+//        Params::METHOD_PAYPAL,
+//        Params::METHOD_TWO_CHECKOUT
     ];
 
     public function __construct($days = null, $from = null, $to = null, $types = [])
@@ -46,7 +46,7 @@ class PaymentsFee {
         $this->from = (string)$from;
         $this->to = (string)$to;
         $this->days = (int)$days;
-        $this->types = empty($types) ? static::$availableTypes : $types;
+        $this->types = empty($types) ? static::getAvailableTypes() : $types;
     }
 
     public function run()
@@ -83,16 +83,28 @@ class PaymentsFee {
                  * @var Payments $payment
                  */
                 switch ($payment->type) {
-                    case Params::METHOD_PAYPAL:
+                    case Params::getPaymentPGID(Params::CODE_PAYPAL):
                         $this->paypal($payment);
                     break;
 
-                    case Params::METHOD_TWO_CHECKOUT:
+                    case Params::getPaymentPGID(Params::CODE_TWO_CHECKOUT):
                         $this->twoCheckout($payment);
                     break;
                 }
             }
         }
+    }
+
+    /**
+     * Get available types
+     * @return array
+     */
+    protected static function getAvailableTypes(): array
+    {
+        return [
+            Params::getPaymentPGID(Params::CODE_PAYPAL),
+            Params::getPaymentPGID(Params::CODE_TWO_CHECKOUT),
+        ];
     }
 
     /**

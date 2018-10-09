@@ -27,11 +27,11 @@ class DashboardServices
 
     private static function _getConfig()
     {
-        $whoisxmlParams = Params::get('service.whoisxml');
-        $ahnamesParams = Params::get('service.ahnames');
-        $gogetsslParams = Params::get('service.gogetssl');
-        $dnslyticsParams = Params::get('service.dnslytics');
-        $opensrsParams = Params::get('service.opensrs');
+        $whoisxmlParams = Params::get(Params::CODE_WHOISXML, Params::CATEGORY_SERVICE);
+        $ahnamesParams = Params::get(Params::CODE_AHNAMES, Params::CATEGORY_SERVICE);
+        $gogetsslParams = Params::get(Params::CODE_GOGETSSL, Params::CATEGORY_SERVICE);
+        $dnslyticsParams = Params::get(Params::CODE_DNSLYTICS, Params::CATEGORY_SERVICE);
+        $opensrsParams = Params::get(Params::CODE_OPENSRS, Params::CATEGORY_SERVICE);
 
         return [
             self::SERVICE_WHOISXML => [
