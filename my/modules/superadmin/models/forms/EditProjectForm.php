@@ -13,11 +13,13 @@ use yii\base\Model;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\helpers\CurrencyHelper;
+
 /**
  * Class EditProjectForm
  * @package my\modules\superadmin\models\forms
  */
-class EditProjectForm extends Model {
+class EditProjectForm extends Model
+{
 
     public $site;
     public $subdomain;
