@@ -91,6 +91,8 @@ class StoresSearch {
             }
         }
 
+        $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
+
         if (!empty($searchQuery)) {
             $stores->andFilterWhere([
                 'or',
@@ -121,6 +123,7 @@ class StoresSearch {
      */
     public function search()
     {
+        $searchQuery = $this->getQuery();
         $status = isset($this->params['status']) ? $this->params['status'] : 'all';
 
         $query = clone $this->buildQuery($status);
@@ -151,21 +154,20 @@ class StoresSearch {
                 'customers.referrer_id AS referrer_id',
                 'store_domains.domain AS store_domain',
             ])
-            ->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id')
             ->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
                 StoreDomains::DOMAIN_TYPE_SUBDOMAIN
-            ]). ')')
-            ->offset($pages->offset)
+            ]). ')');
+
+        $stores->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
                 'stores.id' => SORT_DESC
             ])
-            ->groupBy('stores.id')
-            ->all();
+            ->groupBy('stores.id');
 
         return [
-            'models' => SpecialCharsHelper::multiPurifier($this->prepareStoresData($stores)),
+            'models' => SpecialCharsHelper::multiPurifier($this->prepareStoresData($stores->all())),
             'pages' => $pages,
         ];
     }
