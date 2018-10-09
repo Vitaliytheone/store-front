@@ -112,29 +112,6 @@ class StoresSearch {
             ]);
         }
 
-        $stores->select([
-            'stores.id',
-            'stores.domain',
-            'stores.subdomain',
-            'stores.currency',
-            'stores.language',
-            'stores.name',
-            'stores.customer_id',
-            'stores.status',
-            'stores.created_at',
-            'stores.expired',
-            'stores.last_count',
-            'stores.current_count',
-            'customers.email AS customer_email',
-            'customers.referrer_id AS referrer_id',
-            'store_domains.domain AS store_domain',
-        ]);
-        $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
-        $stores->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
-            StoreDomains::DOMAIN_TYPE_DEFAULT,
-            StoreDomains::DOMAIN_TYPE_SUBDOMAIN
-        ]). ')');
-
         return $stores;
     }
 
@@ -157,6 +134,28 @@ class StoresSearch {
         }
 
         $stores = $query
+            ->select([
+                'stores.id',
+                'stores.domain',
+                'stores.subdomain',
+                'stores.currency',
+                'stores.language',
+                'stores.name',
+                'stores.customer_id',
+                'stores.status',
+                'stores.created_at',
+                'stores.expired',
+                'stores.last_count',
+                'stores.current_count',
+                'customers.email AS customer_email',
+                'customers.referrer_id AS referrer_id',
+                'store_domains.domain AS store_domain',
+            ])
+            ->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id')
+            ->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
+                StoreDomains::DOMAIN_TYPE_DEFAULT,
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+            ]). ')')
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
