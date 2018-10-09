@@ -28,7 +28,7 @@ error_log(print_r($reportData,1));
             <div class="d-flex justify-content-md-end">
                 <div class="btn-group mr-3 mb-3" role="group" aria-label="Basic example">
                     <?php foreach ($years as $year): ?>
-                        <a href="<?= $year['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'year' => $year['year']])) ?>" class="btn btn-secondary <?= $year['active'] ? 'active' : '' ?>"><?= $year['year'] ?></a>
+                        <a href="<?= $year['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'year' => $year['year']])) ?>" class="btn btn-light <?= $year['active'] ? 'active' : '' ?>"><?= $year['year'] ?></a>
                     <?php endforeach; ?>
                 </div>
                 <div class="dropdown">
