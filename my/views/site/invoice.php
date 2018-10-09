@@ -44,9 +44,6 @@
                             'date' => $invoice->getFormattedDate('date', 'php:Y-m-d H:i:s', $customer->timezone)
                         ]); ?>
                         <br />
-                        <?= Yii::t('app', 'invoices.view.due_date', [
-                            'date' => $invoice->getFormattedDate('expired', 'php:Y-m-d H:i:s', $customer->timezone)
-                        ]); ?>
 
                         <h3 class="<?= $colors[$invoice->status] ?>"><?= $invoice->getStatusName() ?></h3>
 
