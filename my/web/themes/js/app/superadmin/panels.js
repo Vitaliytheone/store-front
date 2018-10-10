@@ -1,5 +1,8 @@
 customModule.superadminPanelsController = {
     run : function(params) {
+        var self = this;
+
+        self.editPaymentMethods(params);
 
         $('#search-providers').on('keyup', function(e) {
             if (e.keyCode == 13) {
@@ -376,6 +379,47 @@ customModule.superadminPanelsController = {
                 callback : function(response) {
                     $('#upgradePanelModal').modal('hide');
                     location.reload();
+                }
+            });
+
+            return false;
+        });
+    },
+    editPaymentMethods: function (params) {
+        var self = this;
+
+        $('.edit-payment-methods').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var modal = $('#editPaymentMethodsModal');
+
+            $.get(link.attr('href'), function (response) {
+                if (response.content) {
+                    $('.modal-body', modal).html(response.content);
+                    modal.modal('show');
+                }
+            });
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('change', '.toggle-payment-method', function(e) {
+            e.preventDefault();
+
+            var element = $(this);
+
+            custom.ajax({
+                method: 'POST',
+                url: element.data('action'),
+                success: function(response) {
+                    if ('error' == response.status) {
+                        element.prop('checked', !element.prop('checked'));
+                        return false;
+                    }
+
+                    element.parents('tr').toggleClass('grey');
                 }
             });
 

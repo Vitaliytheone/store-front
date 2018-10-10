@@ -3,6 +3,7 @@
 namespace my\modules\superadmin\controllers;
 
 use common\models\panels\PanelDomains;
+use common\models\panels\PanelPaymentMethods;
 use common\models\panels\SuperAdmin;
 use common\models\panels\SuperAdminToken;
 use my\components\ActiveForm;
@@ -15,6 +16,7 @@ use my\modules\superadmin\models\forms\EditExpiryForm;
 use my\modules\superadmin\models\forms\EditProjectForm;
 use my\modules\superadmin\models\forms\EditProvidersForm;
 use my\modules\superadmin\models\search\PanelsSearch;
+use my\modules\superadmin\models\search\PaymentMethodsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -53,10 +55,12 @@ class PanelsController extends CustomController
                     'edit',
                     'generate-apikey',
                     'downgrade',
+                    'edit-payment-methods',
+                    'toggle-payment-method',
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'change-domain' => ['POST'],
@@ -65,7 +69,8 @@ class PanelsController extends CustomController
                     'edit' => ['POST'],
                     'generate-apikey' => ['GET'],
                     'downgrade' => ['POST'],
-                    'change-status' => ['POST']
+                    'change-status' => ['POST'],
+                    'toggle-payment-method' => ['POST'],
                 ],
             ],
             'content' => [
@@ -77,7 +82,9 @@ class PanelsController extends CustomController
                     'generate-apikey',
                     'providers',
                     'downgrade',
-                    'edit'
+                    'edit',
+                    'edit-payment-methods',
+                    'toggle-payment-method',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -298,6 +305,44 @@ class PanelsController extends CustomController
     }
 
     /**
+     * Get payment edit form or save data
+     * @param $id
+     */
+    public function actionEditPaymentMethods($id)
+    {
+        $project = $this->findModel($id);
+
+        $searchModel = new PaymentMethodsSearch();
+        $searchModel->setPanel($project);
+
+        return [
+            'content' => $this->renderPartial('layouts/_edit_payment_methods_form', [
+                'payments' => $searchModel->search()
+            ])
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function actionTogglePaymentMethod($id)
+    {
+        $paymentMethod = $this->findPaymentMethodModel($id);
+
+        if ($paymentMethod->updateAttributes([
+            'visibility' => !$paymentMethod->visibility
+        ])) {
+            return [
+                'status' => 'success',
+            ];
+        }
+        return [
+            'status' => 'error',
+        ];
+    }
+
+    /**
      * Sign in as admin panel
      *
      * @access public
@@ -343,4 +388,18 @@ class PanelsController extends CustomController
         return $project;
     }
 
+    /**
+     * @param $id
+     * @return null|PanelPaymentMethods
+     * @throws NotFoundHttpException
+     */
+    protected function findPaymentMethodModel($id)
+    {
+        $paymentMethod = PanelPaymentMethods::findOne($id);
+
+        if (!$paymentMethod) {
+            throw new NotFoundHttpException();
+        }
+        return $paymentMethod;
+    }
 }

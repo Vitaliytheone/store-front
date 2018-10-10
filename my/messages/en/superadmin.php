@@ -883,4 +883,12 @@ return [
 
     'header.nav.subscription' => 'Subscriptions',
     'header.nav.sender' => 'Sender',
+
+    'panels.list.edit_payment_methods' => 'Edit payment methods',
+    'panels.edit.payment_methods' => 'Edit panel payment methods',
+    'payments.index.list.field.name' => 'Name',
+    'payments.index.list.field.min' => 'Min',
+    'payments.index.list.field.max' => 'Max',
+    'payments.index.list.field.new_users' => 'New users',
+    'payments.index.list.field.visibility' => 'Visibility',
 ];

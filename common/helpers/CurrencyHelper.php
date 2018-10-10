@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use common\models\panels\services\GetPaymentMethodsService;
 use common\models\stores\PaymentGateways;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -10,6 +11,11 @@ use yii\helpers\ArrayHelper;
  * @package common\helpers
  */
 class CurrencyHelper {
+
+    /**
+     * @var array
+     */
+    protected static $_paymentMethods;
 
     protected static $currencyOptions = [];
 
@@ -121,5 +127,30 @@ class CurrencyHelper {
             $currencies[$currency['id']] = $code;
         }
         return ArrayHelper::getValue($currencies, (integer)$id);
+    }
+
+    /**
+     * Get payment methods for currency
+     * @param string $currency
+     * @return array
+     */
+    public static function getPaymentMethodsByCurrency(string $currency): array
+    {
+        return (array)array_filter(static::getPaymentMethods(), function ($method) use ($currency) {
+            return in_array($currency, $method['currency']) || in_array($currency, $method['multi_currency']);
+        });
+    }
+
+    /**
+     * Get all payment methods
+     * @return array
+     */
+    public static function getPaymentMethods(): array
+    {
+        if (null === static::$_paymentMethods) {
+            static::$_paymentMethods = Yii::$container->get(GetPaymentMethodsService::class)->get();
+        }
+
+        return (array)static::$_paymentMethods;
     }
 }
