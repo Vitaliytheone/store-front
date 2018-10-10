@@ -27,9 +27,6 @@
 ]); ?>
 
 <?= $form->field($model, 'name') ?>
-<?= $form->field($model, 'minimal') ?>
-<?= $form->field($model, 'maximal') ?>
-<?= $form->field($model, 'fee') ?>
 <?= $form->field($model, 'visibility')->dropDownList(Params::getVisibilityList()) ?>
 <?php foreach ((array)$model->credentials as $name => $value) : ?>
     <div class="form-group">

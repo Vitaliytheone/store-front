@@ -14,9 +14,6 @@ class EditPaymentForm extends Model
     public $code;
 
     public $name;
-    public $minimal;
-    public $maximal;
-    public $fee;
     public $visibility;
     public $credentials = [];
 
@@ -32,9 +29,8 @@ class EditPaymentForm extends Model
     {
         return [
             ['name', 'string'],
-            [['minimal', 'maximal'], 'number'],
             [['name'], 'string', 'max' => 100],
-            [['visibility', 'fee'], 'integer'],
+            [['visibility'], 'integer'],
             ['credentials', 'safe']
         ];
     }
@@ -80,9 +76,6 @@ class EditPaymentForm extends Model
     {
         $labels = [
             'name' => Yii::t('app/superadmin', 'payments.edit_modal.name'),
-            'minimal' => Yii::t('app/superadmin', 'payments.edit_modal.minimal'),
-            'maximal' => Yii::t('app/superadmin', 'payments.edit_modal.maximal'),
-            'fee' => Yii::t('app/superadmin', 'payments.edit_modal.fee'),
             'visibility' => Yii::t('app/superadmin', 'payments.edit_modal.visibility'),
         ];
 
