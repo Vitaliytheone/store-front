@@ -1,6 +1,7 @@
 <?php
 namespace console\components\payments;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\Params;
 use common\models\panels\Payments;
 use my\components\payments\Paypal;
@@ -37,8 +38,8 @@ class PaymentsFee {
      * @var array
      */
     protected static $availableTypes = [
-//        Params::METHOD_PAYPAL,
-//        Params::METHOD_TWO_CHECKOUT
+        PaymentHelper::TYPE_PAYPAL,
+        PaymentHelper::TYPE_TWO_CHECKOUT
     ];
 
     public function __construct($days = null, $from = null, $to = null, $types = [])
@@ -46,7 +47,7 @@ class PaymentsFee {
         $this->from = (string)$from;
         $this->to = (string)$to;
         $this->days = (int)$days;
-        $this->types = empty($types) ? static::getAvailableTypes() : $types;
+        $this->types = empty($types) ? static::$availableTypes : $types;
     }
 
     public function run()
@@ -82,29 +83,17 @@ class PaymentsFee {
                 /**
                  * @var Payments $payment
                  */
-                switch ($payment->type) {
-                    case Params::getPaymentPGID(Params::CODE_PAYPAL):
+                switch ($payment->getTypeCode()) {
+                    case Params::CODE_PAYPAL:
                         $this->paypal($payment);
                     break;
 
-                    case Params::getPaymentPGID(Params::CODE_TWO_CHECKOUT):
+                    case Params::CODE_TWO_CHECKOUT:
                         $this->twoCheckout($payment);
                     break;
                 }
             }
         }
-    }
-
-    /**
-     * Get available types
-     * @return array
-     */
-    protected static function getAvailableTypes(): array
-    {
-        return [
-            Params::getPaymentPGID(Params::CODE_PAYPAL),
-            Params::getPaymentPGID(Params::CODE_TWO_CHECKOUT),
-        ];
     }
 
     /**

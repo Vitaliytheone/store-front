@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $payments \my\modules\superadmin\models\search\PaymentGatewaySearch */
+    /* @var $payments \my\modules\superadmin\models\search\PaymentMethodsSearch */
     /* @var $payment \common\models\panels\Params */
 
     use my\helpers\Url;
@@ -23,7 +23,6 @@
                     <td><?= $payment['visibility_string'] ?></td>
                     <td class="text-right">
                         <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment',
-                            'category' => $payment['category'],
                             'code' => $payment['code']
                         ]), [
                             'class' => 'btn btn-secondary btn-sm edit-payment'

@@ -6,10 +6,10 @@ use common\models\panels\Params;
 use yii\db\ActiveQuery;
 
 /**
- * Class PaymentGatewaySearch
+ * Class PaymentMethodsSearch
  * @package my\modules\superadmin\models
  */
-class PaymentGatewaySearch extends Params
+class PaymentMethodsSearch extends Params
 {
     private $params;
 
@@ -32,8 +32,13 @@ class PaymentGatewaySearch extends Params
     {
         $query = static::find();
 
+        $query->andWhere([
+            'category' => static::CATEGORY_PAYMENT
+        ]);
+
         return $query;
     }
+
 
     /**
      * @param array $data
@@ -44,23 +49,22 @@ class PaymentGatewaySearch extends Params
         $returnData = [];
 
         foreach ($data as $key => $value) {
-            $options = $value->getOptions();
-            $name = $value->category;
+            $options = json_decode($value['options'], true);
             $visibility = isset($options['visibility']) ? $options['visibility'] : Params::VISIBILITY_DISABLED;
 
             $returnData[] = [
-                'name' => $name,
+                'name' => $options['name'],
                 'visibility' => $visibility,
                 'visibility_string' =>
                     array_key_exists($visibility, Params::getVisibilityList()) ?
                         Params::getVisibilityList()[$visibility] :
                         Params::getVisibilityList()[Params::VISIBILITY_DISABLED],
-                'id' => $value->id,
-                'code' => $value->code,
-                'category' => $value->category,
+                'id' => $value['id'],
+                'code' => $value['code'],
+                'category' => $value['category'],
                 'options' => $options,
-                'updated_at' => $value->updated_at,
-                'position' => $value->position,
+                'updated_at' => $value['updated_at'],
+                'position' => $value['position'],
             ];
         }
 
@@ -76,9 +80,9 @@ class PaymentGatewaySearch extends Params
         $query = clone $this->buildQuery();
 
         $models = $query->orderBy([
-                'position' => SORT_ASC
-            ]);
+            'position' => SORT_ASC
+        ])->asArray()->all();
 
-        return $this->prepareData($models->all());
+        return $this->prepareData($models);
     }
 }

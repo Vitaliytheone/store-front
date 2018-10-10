@@ -24,6 +24,12 @@ $config = [
             'migrationPath' => '@common/migrations/sommerce/',
         ],
 
+        'migrate' => [
+            'class' => 'console\controllers\my\CustomMigrateController',
+            'migrationTable' => DB_PANELS . '.system_migrations',
+            'migrationPath' => '@common/migrations/my/',
+        ],
+
         'migrate-my' => [
             'class' => 'console\controllers\my\CustomMigrateController',
             'migrationTable' => DB_PANELS . '.system_migrations',

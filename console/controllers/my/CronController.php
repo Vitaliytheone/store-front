@@ -3,6 +3,7 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
+use common\helpers\PaymentHelper;
 use common\models\panel\PaymentsLog;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
@@ -278,7 +279,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => Params::getPaymentPGID(Params::CODE_PAYPAL),
+            'type' => PaymentHelper::getTypeByCode(Params::CODE_PAYPAL),
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,
@@ -289,7 +290,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (Params::getPaymentPGID(Params::CODE_PAYPAL) == $payment->type) {
+                if (Params::CODE_PAYPAL == $payment->getTypeCode()) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id

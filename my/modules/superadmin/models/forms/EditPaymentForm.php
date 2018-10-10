@@ -7,13 +7,18 @@ use yii\base\Model;
 use common\models\panels\Params;
 
 /**
- * EditPaymentForm is the model behind the Edit Staff form.
+ * EditPaymentForm is the model behind the Edit Payment form.
  */
 class EditPaymentForm extends Model
 {
+    public $code;
+
+    public $name;
+    public $minimal;
+    public $maximal;
+    public $fee;
     public $visibility;
-    public $pgid;
-    public $details = [];
+    public $credentials = [];
 
     /**
      * @var Params
@@ -26,7 +31,11 @@ class EditPaymentForm extends Model
     public function rules()
     {
         return [
-            ['details', 'safe']
+            ['name', 'string'],
+            [['minimal', 'maximal'], 'number'],
+            [['name'], 'string', 'max' => 100],
+            [['visibility', 'fee'], 'integer'],
+            ['credentials', 'safe']
         ];
     }
 
@@ -37,11 +46,11 @@ class EditPaymentForm extends Model
     public function setPayment(Params $payment)
     {
         $this->_payment = $payment;
-        $details = $payment->getOptions();
+        $options = $payment->getOptions();
 
-        $this->pgid = isset($details['pgid']) ? (int)$details['pgid'] : null;
-        $this->visibility = isset($details['visibility']) ? (int)$details['visibility'] : Params::VISIBILITY_DISABLED;
-        $this->details = $details;
+        $this->code = $payment->code;
+        $this->visibility = isset($options['visibility']) ? (int)$options['visibility'] : Params::VISIBILITY_DISABLED;
+        $this->attributes = $options;
     }
 
     /**
@@ -54,11 +63,7 @@ class EditPaymentForm extends Model
             return false;
         }
 
-        if (!array_key_exists($this->visibility, Params::getVisibilityList())) {
-            return false;
-        }
-
-        $this->_payment->setOption($this->details);
+        $this->_payment->setOption($this->attributes);
 
         if (!$this->_payment->save()) {
             $this->addErrors($this->_payment->getErrors());
@@ -74,35 +79,39 @@ class EditPaymentForm extends Model
     public function attributeLabels()
     {
         $labels = [
+            'name' => Yii::t('app/superadmin', 'payments.edit_modal.name'),
+            'minimal' => Yii::t('app/superadmin', 'payments.edit_modal.minimal'),
+            'maximal' => Yii::t('app/superadmin', 'payments.edit_modal.maximal'),
+            'fee' => Yii::t('app/superadmin', 'payments.edit_modal.fee'),
             'visibility' => Yii::t('app/superadmin', 'payments.edit_modal.visibility'),
         ];
 
-        switch ($this->pgid) {
-            case Params::getPaymentPGID(Params::CODE_TWO_CHECKOUT):
+        switch ($this->code) {
+            case Params::CODE_TWO_CHECKOUT:
                 $labels['account_number'] = Yii::t('app/superadmin', 'payments.2checkout.account_number');
                 $labels['secret_word'] = Yii::t('app/superadmin', 'payments.2checkout.secret_word');
-                break;
+            break;
 
-            case Params::getPaymentPGID(Params::CODE_PAYPAL):
+            case Params::CODE_PAYPAL:
                 $labels['username'] = Yii::t('app/superadmin', 'payments.paypal.api_username');
                 $labels['password'] = Yii::t('app/superadmin', 'payments.paypal.api_password');
                 $labels['signature'] = Yii::t('app/superadmin', 'payments.paypal.api_signature');
-                break;
+            break;
 
-            case Params::getPaymentPGID(Params::CODE_PERFECT_MONEY):
+            case Params::CODE_PERFECT_MONEY:
                 $labels['account'] = Yii::t('app/superadmin', 'payments.perfect_money.usd_account');
                 $labels['passphrase'] = Yii::t('app/superadmin', 'payments.perfect_money.passphrase');
-                break;
+            break;
 
-            case Params::getPaymentPGID(Params::CODE_WEBMONEY):
+            case Params::CODE_WEBMONEY:
                 $labels['purse'] = Yii::t('app/superadmin', 'payments.webmoney.wmz_purse');
                 $labels['secret_key'] = Yii::t('app/superadmin', 'payments.webmoney.secret_key');
-                break;
+            break;
 
-            case Params::getPaymentPGID(Params::CODE_BITCOIN):
+            case Params::CODE_BITCOIN:
                 $labels['id'] = Yii::t('app/superadmin', 'payments.bitcoin.api_gateway_id');
                 $labels['secret'] = Yii::t('app/superadmin', 'payments.bitcoin.gateway_secret');
-                break;
+            break;
         }
 
         return $labels;

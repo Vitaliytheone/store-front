@@ -12,7 +12,7 @@
 
 <?php $form = ActiveForm::begin([
     'id' => 'editPaymentForm',
-    'action' => Url::toRoute(['/settings/edit-payment', 'category' => $payment->category, 'code' => $payment->code]),
+    'action' => Url::toRoute(['/settings/edit-payment', 'code' => $payment->code]),
     'options' => [
         'class' => "form",
     ],
@@ -26,18 +26,17 @@
     'id' => 'editPaymentError'
 ]); ?>
 
-<?php foreach ($model->details as $name => $value) : ?>
+<?= $form->field($model, 'name') ?>
+<?= $form->field($model, 'minimal') ?>
+<?= $form->field($model, 'maximal') ?>
+<?= $form->field($model, 'fee') ?>
+<?= $form->field($model, 'visibility')->dropDownList(Params::getVisibilityList()) ?>
+<?php foreach ((array)$model->credentials as $name => $value) : ?>
     <div class="form-group">
         <label for=""><?= $model->getAttributeLabel($name) ?></label>
-        <?php if ($name == 'visibility') : ?>
-            <?= Html::dropDownList(Html::getInputName($model, "details[$name]"), $value, Params::getVisibilityList(), [
-                'class' => 'form-control'
-            ]) ?>
-        <?php else : ?>
-        <?= Html::textInput(Html::getInputName($model, "details[$name]"), $value, [
+        <?= Html::textInput($model->formName() . "[credentials][$name]", $value, [
             'class' => 'form-control'
         ])?>
-        <?php endif; ?>
     </div>
 <?php endforeach; ?>
 

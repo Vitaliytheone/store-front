@@ -567,19 +567,20 @@ class SystemController extends CustomController
 
     public function actionUpdateParams()
     {
-        $methods = (new Query())
-            ->select('*')
-            ->from(DB_PANELS . '.params')
+        $methods = Params::find()
             ->where('category IS NULL')
             ->all();
 
-        foreach ($methods as $method) {
-            $model = Params::findOne($method['id']);
 
-            $updateData = explode('.', $model->code);
-            $model->category = $updateData[0];
-            $model->code = $updateData[1];
-            $model->update(false);
+        foreach ($methods as $method) {
+            $this->stderr("Updating {$method->code} \n", Console::FG_GREEN);
+
+            $updateData = explode('.', $method->code);
+            $method->category = $updateData[0];
+            $method->code = $updateData[1];
+            $method->update(false);
+
+            $this->stderr("Successful update {$method->code} \n", Console::FG_GREEN);
         }
     }
 
@@ -589,23 +590,27 @@ class SystemController extends CustomController
     public function actionTransferToParams()
     {
         $payments = PaymentGateway::find()->where(['pid' => -1])->all();
+        $category = 'payment';
 
         foreach ($payments as $payment) {
-            $this->stderr("Transfer {$payment->name} \n", Console::FG_BLACK);
+            $this->stderr("Transfer {$payment->name} \n", Console::FG_GREEN);
 
             $params = new Params();
-            $category = 'payment';
+
             $code = strtolower(str_replace(' ', '_', $payment->name));
-
-            $options = $payment->options == '[]' ? [] : json_decode($payment->options);
-            $options = array_merge((array)$options, $payment->attributes);
-            unset($options['options']);
-            unset($options['position']);
-            unset($options['id']);
-
+            $options = ['credentials' => $payment->getOptionsData()];
+            $options = array_merge((array)$options, $payment->getAttributes([
+                'name',
+                'minimal',
+                'maximal',
+                'visibility',
+                'fee',
+                'type',
+                'dev_options',
+            ]));
             $params->code = $code;
             $params->category = $category;
-            $params->options = json_encode($options);
+            $params->setOption($options);
             $params->position = $payment->position;
             if (!$params->save()) {
                 $this->stderr(ActiveForm::firstError($params) . "\n", Console::FG_RED);

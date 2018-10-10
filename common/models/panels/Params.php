@@ -19,24 +19,29 @@ use yii\helpers\ArrayHelper;
  */
 class Params extends ActiveRecord
 {
-    const VISIBILITY_ENABLED = 1;
-    const VISIBILITY_DISABLED = 0;
+    public const VISIBILITY_ENABLED = 1;
+    public const VISIBILITY_DISABLED = 0;
 
-    const CATEGORY_SERVICE = 'service';
-    const CATEGORY_PAYMENT = 'payment';
+    public const CATEGORY_SERVICE = 'service';
+    public const CATEGORY_PAYMENT = 'payment';
 
-    const CODE_PAYPAL = 'paypal';
-    const CODE_PERFECT_MONEY = 'perfect_money';
-    const CODE_WEBMONEY = 'webmoney';
-    const CODE_TWO_CHECKOUT = '2checkout';
-    const CODE_BITCOIN = 'bitcoin';
-    const CODE_COINPAYMENTS = 'coinpayments';
+    public const CODE_PAYPAL = 'paypal';
+    public const CODE_PERFECT_MONEY = 'perfect_money';
+    public const CODE_WEBMONEY = 'webmoney';
+    public const CODE_TWO_CHECKOUT = '2checkout';
+    public const CODE_BITCOIN = 'bitcoin';
+    public const CODE_COINPAYMENTS = 'coinpayments';
 
-    const CODE_WHOISXML = 'whoisxml';
-    const CODE_DNSLYTICS = 'dnslytics';
-    const CODE_GOGETSSL = 'gogetssl';
-    const CODE_AHNAMES = 'ahnames';
-    const CODE_OPENSRS = 'opensrs';
+    public const CODE_WHOISXML = 'whoisxml';
+    public const CODE_DNSLYTICS = 'dnslytics';
+    public const CODE_GOGETSSL = 'gogetssl';
+    public const CODE_AHNAMES = 'ahnames';
+    public const CODE_OPENSRS = 'opensrs';
+
+    /**
+     * After this time after payment refund paypal transaction impossible
+     */
+    public const PAYPAL_REFUND_EXPIRED_AFTER = 180 * 24 * 60 * 60;
 
     /**
      * @var static[]
@@ -57,7 +62,7 @@ class Params extends ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'options', 'updated_at'], 'required'],
+            [['code', 'options'], 'required'],
             [['options'], 'string'],
             [['updated_at', 'position'], 'integer'],
             [['code', 'category'], 'string', 'max' => 64],
@@ -96,55 +101,32 @@ class Params extends ActiveRecord
     public static function getAll():array
     {
         if (null === static::$_params) {
-            static::$_params = ArrayHelper::index(static::find()->select([
+            $params = static::find()->select([
                 'code',
                 'category',
                 'options'
-            ])->all(), 'code');
+            ])->asArray()->orderBy([
+                'position' => SORT_ASC
+            ])->all();
+
+            static::$_params = ArrayHelper::index(array_map(function($value) {
+                $value['options'] = json_decode($value['options'], true);
+                return $value;
+            }, $params), 'code', 'category');
         }
 
         return (array)static::$_params;
     }
 
     /**
-     * @param $code
-     * @param $category
-     * @return null
+     * Get parameter
+     * @param string $category
+     * @param string $code
+     * @return null|array
      */
-    public static function get($code, $category)
+    public static function get($category, $code)
     {
-        $parameters = static::getAll();
-        if (isset($parameters[$code]) && isset($parameters[$code]->category)) {
-            return $parameters[$code]->getOptions();
-        }
-        return null;
-    }
-
-    /**
-     * @param $code
-     * @return int
-     */
-    public static function getPaymentPGID($code): int
-    {
-        $model = static::findOne(['category' => static::CATEGORY_PAYMENT, 'code' => $code]);
-        $options = $model->getOptions();
-
-        return $options['pgid'];
-    }
-
-    /**
-     * @param int $pgid
-     * @return array|Params|null
-     */
-    public static function findByPgid(int $pgid)
-    {
-        return static::find()
-            ->select('*')
-            ->andWhere(['or',
-                ['like', 'options', '"pgid":'.$pgid],
-                ['like', 'options', '"pgid":"'.$pgid.'"']
-            ])
-            ->one();
+        return ArrayHelper::getValue(static::getAll(), [$category, $code, 'options']);
     }
 
     /**

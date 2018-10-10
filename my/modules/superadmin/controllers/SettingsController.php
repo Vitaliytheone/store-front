@@ -22,10 +22,13 @@ use my\modules\superadmin\models\forms\EditPlanForm;
 use my\modules\superadmin\models\forms\EditStaffForm;
 use my\modules\superadmin\models\search\ContentSearch;
 use my\modules\superadmin\models\search\NotificationEmailSearch;
-use my\modules\superadmin\models\search\PaymentGatewaySearch;
+use my\modules\superadmin\models\search\PaymentMethodsSearch;
 use my\modules\superadmin\models\search\PlanSearch;
 use my\modules\superadmin\models\search\StaffSearch;
 use Yii;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -36,9 +39,7 @@ class SettingsController extends CustomController
 {
     public $activeTab = 'settings';
 
-    /**
-     * @inheritdoc
-     */
+
     public function behaviors()
     {
         return [
@@ -49,6 +50,45 @@ class SettingsController extends CustomController
                         'allow' => true,
                         'roles' => [SuperAdmin::CAN_WORK_WITH_SETTINGS],
                     ]
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => [
+                    'edit-staff',
+                    'create-staff',
+                    'staff-password',
+                    'edit-payment',
+                    'edit-plan',
+                    'create-plan',
+                    'edit-content',
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'edit-staff' => ['POST'],
+                    'create-staff' => ['POST'],
+                    'staff-password' => ['POST'],
+                    'edit-payment' => ['POST', 'GET'],
+                    'edit-plan' => ['POST'],
+                    'create-plan' => ['POST'],
+                    'edit-content' => ['POST'],
+                ],
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
+                    'edit-staff',
+                    'create-staff',
+                    'staff-password',
+                    'edit-payment',
+                    'edit-plan',
+                    'create-plan',
+                    'edit-content',
+                ],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -62,7 +102,7 @@ class SettingsController extends CustomController
     {
         $this->view->title = Yii::t('app/superadmin', 'settings.payments.title');
 
-        $payments = new PaymentGatewaySearch();
+        $payments = new PaymentMethodsSearch();
 
         return $this->render('payments', [
             'payments' => $payments->search()
@@ -142,8 +182,6 @@ class SettingsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new EditStaffForm();
         $model->setStaff($superAdmin);
 
@@ -167,8 +205,6 @@ class SettingsController extends CustomController
      */
     public function actionCreateStaff()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new CreateStaffForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -196,8 +232,6 @@ class SettingsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new ChangeStaffPasswordForm();
         $model->setAdmin($admin);
 
@@ -215,17 +249,11 @@ class SettingsController extends CustomController
 
     /**
      * Get payment edit form or save data
-     * @param $id
+     * @param $code
      */
-    public function actionEditPayment($category, $code)
+    public function actionEditPayment($code)
     {
-        $payment = Params::findOne(['category' => $category, 'code' => $code]);
-
-        if (!$payment) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        $payment = $this->findPaymentMethod($code);
 
         $model = new EditPaymentForm();
         $model->setPayment($payment);
@@ -331,8 +359,6 @@ class SettingsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new EditPlanForm();
         $model->setTariff($tariff);
 
@@ -356,8 +382,6 @@ class SettingsController extends CustomController
      */
     public function actionCreatePlan()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new CreatePlanForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -385,8 +409,6 @@ class SettingsController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new EditContentForm();
         $model->setContent($content);
 
@@ -400,5 +422,25 @@ class SettingsController extends CustomController
                 'message' => ActiveForm::firstError($model)
             ];
         }
+    }
+
+    /**
+     * Find payment method
+     * @param $code
+     * @return null|Params
+     * @throws NotFoundHttpException
+     */
+    protected function findPaymentMethod($code)
+    {
+        $model = Params::findOne([
+            'category' => Params::CATEGORY_PAYMENT,
+            'code' => $code
+        ]);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
     }
 }

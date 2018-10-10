@@ -1,9 +1,11 @@
 <?php
 namespace my\modules\superadmin\models\forms;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\Invoices;
 use common\models\panels\Params;
 use common\models\panels\Payments;
+use common\models\panels\services\GetPaymentMethodsService;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -83,7 +85,9 @@ class AddInvoicePaymentForm extends Model {
      */
     public function getMethods()
     {
-        $methods = Params::indexByPgid();
+        $methods = ArrayHelper::map(Yii::$container->get(GetPaymentMethodsService::class)->get(), function($value) {
+            return PaymentHelper::getTypeByCode($value['code']);
+        }, 'name');
         $methods[0] = Yii::t('app', 'payment_gateway.method.other');
         return $methods;
     }

@@ -4,6 +4,7 @@ namespace my\components\payments;
 
 use common\models\panels\Params;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class Paypal
@@ -72,27 +73,9 @@ class Paypal extends BasePayment {
           return false;
       }
 
-      $paypalInfo = Params::get(Params::CODE_PAYPAL, Params::CATEGORY_PAYMENT);
-
-      $username = '';
-      $password = '';
-      $signature = '';
-
-      if (!empty($paypalInfo['username'])) {
-        $username = $paypalInfo['username'];
-      }
-
-      if (!empty($paypalInfo['password'])) {
-        $password = $paypalInfo['password'];
-      }
-
-      if (!empty($paypalInfo['signature'])) {
-        $signature = $paypalInfo['signature'];
-      }
-
-      $this->_credentials['USER'] = $username;
-      $this->_credentials['PWD'] = $password;
-      $this->_credentials['SIGNATURE'] = $signature;
+      $this->_credentials['USER'] = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PAYPAL), ['credentials', 'username']);
+      $this->_credentials['PWD'] = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PAYPAL), ['credentials', 'password']);
+      $this->_credentials['SIGNATURE'] = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PAYPAL), ['credentials', 'signature']);
       $this ->_errors = array();
 
       if( empty($method) ) { // Проверяем, указан ли способ платежа
