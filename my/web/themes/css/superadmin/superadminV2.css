@@ -77,3 +77,8 @@
     white-space: -o-pre-wrap;
     word-wrap: break-word;
 }
+
+.max-height-400 {
+    max-height: 400px;
+    overflow-y: auto;
+}
