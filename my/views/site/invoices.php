@@ -26,7 +26,6 @@
                     <tr>
                         <th><?= Yii::t('app', 'invoices.list.invoice_column')?></th>
                         <th><?= Yii::t('app', 'invoices.list.invoice_date_column')?></th>
-                        <th><?= Yii::t('app', 'invoices.list.due_date_column')?></th>
                         <th><?= Yii::t('app', 'invoices.list.total_column')?></th>
                         <th><?= Yii::t('app', 'invoices.list.status_column')?></th>
                         <th></th>
@@ -38,9 +37,6 @@
                             <td><?= $invoice->id ?></td>
                             <td>
                                 <?= $invoice->getFormattedDate('date', 'php:Y-m-d')?>
-                            </td>
-                            <td>
-                                <?= $invoice->getFormattedDate('expired', 'php:Y-m-d')?>
                             </td>
                             <td>$<?= $invoice->total ?></td>
                             <td class="<?= $colors[$invoice->status] ?>">
