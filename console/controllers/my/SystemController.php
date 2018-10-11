@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers\my;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\Customers;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
@@ -10,6 +11,7 @@ use common\models\panels\Orders;
 use common\models\panels\PanelDomains;
 use common\models\panels\Params;
 use common\models\panels\PaymentGateway;
+use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
@@ -565,6 +567,11 @@ class SystemController extends CustomController
         }
     }
 
+    /**
+     * Update the category column which it is empty
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionUpdateParams()
     {
         $methods = Params::find()
@@ -682,6 +689,25 @@ class SystemController extends CustomController
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Set code to payment_method column of payments table
+     */
+    public function actionSetPaymentMethods()
+    {
+        $payments = Payments::find()
+            ->where('payment_method IS NULL')
+            ->all();
+
+        foreach ($payments as $payment) {
+            $payment->payment_method = PaymentHelper::getCodeByType($payment->type);
+            if ($payment->save()) {
+                $this->stderr("Successful update the payment #{$payment->id} \n", Console::FG_GREEN);
+            } else {
+                $this->stderr("Payment #{$payment->id} : " . ActiveForm::firstError($payment) . "\n", Console::FG_RED);
             }
         }
     }

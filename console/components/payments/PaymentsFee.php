@@ -83,7 +83,7 @@ class PaymentsFee {
                 /**
                  * @var Payments $payment
                  */
-                switch ($payment->getTypeCode()) {
+                switch ($payment->payment_method) {
                     case Params::CODE_PAYPAL:
                         $this->paypal($payment);
                     break;

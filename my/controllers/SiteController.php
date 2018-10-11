@@ -271,7 +271,7 @@ class SiteController extends CustomController
             'customer' => $invoice->customer,
             'paymentsList' => $paymentsList,
             'payWait' => !!$payWait,
-            'code' => $payWait ? $payWait->getTypeCode() : key($paymentsList),
+            'code' => $payWait ? $payWait->payment_method : key($paymentsList),
             'verificationWait' => $invoice->emailVerification() ? Content::getContent('paypal_verify_note', ['email' => $invoice->emailVerification()]) : null,
         ]);
     }
@@ -588,6 +588,7 @@ class SiteController extends CustomController
             'iid' => $invoice->id,
             'date' => time(),
             'type' => $type,
+            'payment_method' => $code,
             'amount' => $paymentAmount,
             'ip' => $_SERVER['REMOTE_ADDR'],
         )));

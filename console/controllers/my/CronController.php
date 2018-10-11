@@ -290,7 +290,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (Params::CODE_PAYPAL == $payment->getTypeCode()) {
+                if (Params::CODE_PAYPAL == $payment->payment_method) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id

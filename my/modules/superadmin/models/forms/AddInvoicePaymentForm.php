@@ -62,6 +62,7 @@ class AddInvoicePaymentForm extends Model {
         $payment = new Payments();
         $payment->mode = Payments::MODE_MANUAL;
         $payment->type = $this->method;
+        $payment->payment_method = PaymentHelper::getCodeByType($this->method);
         $payment->comment = $this->memo;
         $payment->status = Payments::STATUS_COMPLETED;
         $payment->amount = $this->_invoice->total;

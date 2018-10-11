@@ -24,6 +24,7 @@ use yii\base\Security;
  * @property integer $date
  * @property integer $date_update
  * @property integer $type
+ * @property integer $payment_method
  * @property string $amount
  * @property string $fee
  * @property integer $status
@@ -77,7 +78,7 @@ class Payments extends ActiveRecord
             [['ip', 'transaction_id'], 'string', 'max' => 300],
             [['mode'], 'default', 'value' => static::MODE_AUTO],
             [['options'], 'string'],
-            [['verification_code'], 'string', 'max' => 64],
+            [['verification_code', 'payment_method'], 'string', 'max' => 64],
         ];
     }
 
@@ -95,6 +96,7 @@ class Payments extends ActiveRecord
             'date' => Yii::t('app', 'Date'),
             'date_update' => Yii::t('app', 'Date Update'),
             'type' => Yii::t('app', 'Type'),
+            'payment_method' => Yii::t('app', 'Payment Method'),
             'amount' => Yii::t('app', 'Amount'),
             'fee' => Yii::t('app', 'Fee'),
             'status' => Yii::t('app', 'Status'),
@@ -227,7 +229,7 @@ class Payments extends ActiveRecord
      */
     public function getTypeName()
     {
-        return ($name = Params::get(Params::CATEGORY_PAYMENT, $this->getTypeCode())) ? $name : Yii::t('app', 'payment_gateway.method.other');
+        return ($name = Params::get(Params::CATEGORY_PAYMENT, $this->payment_method)) ? $name : Yii::t('app', 'payment_gateway.method.other');
     }
 
     /**
@@ -266,7 +268,7 @@ class Payments extends ActiveRecord
     {
         switch ($code) {
             case 'makeActive':
-                if (in_array($this->getTypeCode(), [
+                if (in_array($this->payment_method, [
                     Params::CODE_TWO_CHECKOUT,
                     Params::CODE_PAYPAL
                 ])) {
@@ -279,7 +281,7 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeNotActive':
-                if (in_array($this->getTypeCode(), [
+                if (in_array($this->payment_method, [
                     Params::CODE_TWO_CHECKOUT,
                     Params::CODE_PAYPAL
                 ])) {
@@ -292,7 +294,7 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeAccepted':
-                if (in_array($this->getTypeCode(), [Params::CODE_PAYPAL]) &&
+                if (in_array($this->payment_method, [Params::CODE_PAYPAL]) &&
                     $this->status == self::STATUS_VERIFICATION
                 ) {
                     return true;
@@ -300,7 +302,7 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeRefunded':
-                if (in_array($this->getTypeCode(), [Params::CODE_PAYPAL]) &&
+                if (in_array($this->payment_method, [Params::CODE_PAYPAL]) &&
                     $this->status == self::STATUS_VERIFICATION &&
                     !empty($this->transaction_id) &&
                      time() < $this->date_update + Params::PAYPAL_REFUND_EXPIRED_AFTER
@@ -412,7 +414,7 @@ class Payments extends ActiveRecord
      */
     public function verification($payerId, $payerEmail)
     {
-        if ($this->getTypeCode() != Params::CODE_PAYPAL) {
+        if ($this->payment_method != Params::CODE_PAYPAL) {
             throw new Exception('This method for PayPal payments only!');
         }
 
@@ -444,7 +446,7 @@ class Payments extends ActiveRecord
      */
     public function verified()
     {
-        if ($this->getTypeCode() != Params::CODE_PAYPAL) {
+        if ($this->payment_method != Params::CODE_PAYPAL) {
             throw new Exception('This method for PayPal payments only!');
         }
 
@@ -467,7 +469,7 @@ class Payments extends ActiveRecord
      */
     public function refund()
     {
-        if ($this->getTypeCode() != Params::CODE_PAYPAL) {
+        if ($this->payment_method != Params::CODE_PAYPAL) {
             throw new Exception('This method for PayPal payments only!');
         }
 
@@ -475,13 +477,5 @@ class Payments extends ActiveRecord
             $this->status = Payments::STATUS_UNVERIFIED;
             $this->save(false);
         }
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTypeCode()
-    {
-        return PaymentHelper::getCodeByType($this->type);
     }
 }

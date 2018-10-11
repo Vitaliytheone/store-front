@@ -59,7 +59,7 @@ class PaymentsHelper {
      */
     public static function refundPaypalPayment(Payments $payment)
     {
-        if ($payment->getTypeCode() != Params::CODE_PAYPAL || empty($payment->transaction_id)) {
+        if ($payment->payment_method != Params::CODE_PAYPAL || empty($payment->transaction_id)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_REFUND_PAYPAL_PAYMENT, $payment->id, ['payment_attributes' => $payment->attributes], 'required_params_missed');
         }
 
