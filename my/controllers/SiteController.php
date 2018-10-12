@@ -4,7 +4,7 @@ namespace my\controllers;
 
 use common\helpers\PaymentHelper;
 use common\models\panels\Params;
-use common\models\panels\services\GetPaymentMethodsService;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
 use my\components\payments\Paypal;
@@ -264,7 +264,7 @@ class SiteController extends CustomController
             'status' => Payments::STATUS_WAIT
         ]);
 
-        $paymentsList = ArrayHelper::map(Yii::$container->get(GetPaymentMethodsService::class, [1])->get(), 'code', 'name');
+        $paymentsList = ArrayHelper::map(Yii::$container->get(GetGeneralPaymentMethodsService::class, [1])->get(), 'code', 'name');
 
         return $this->render('invoice', [
             'invoice' => $invoice,

@@ -5,10 +5,10 @@ use common\models\panels\Params;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class GetPaymentMethodsService
+ * Class GetGeneralPaymentMethodsService
  * @package common\models\panels\services
  */
-class GetPaymentMethodsService
+class GetGeneralPaymentMethodsService
 {
     /**
      * @var int|null

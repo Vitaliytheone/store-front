@@ -5,7 +5,7 @@ use common\helpers\PaymentHelper;
 use common\models\panels\Invoices;
 use common\models\panels\Params;
 use common\models\panels\Payments;
-use common\models\panels\services\GetPaymentMethodsService;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -86,7 +86,7 @@ class AddInvoicePaymentForm extends Model {
      */
     public function getMethods()
     {
-        $methods = ArrayHelper::map(Yii::$container->get(GetPaymentMethodsService::class)->get(), 'code', 'name');
+        $methods = ArrayHelper::map(Yii::$container->get(GetGeneralPaymentMethodsService::class)->get(), 'code', 'name');
         $methods[0] = Yii::t('app', 'payment_gateway.method.other');
         return $methods;
     }

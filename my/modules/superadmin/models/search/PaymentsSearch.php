@@ -6,7 +6,7 @@ use common\models\panels\Params;
 use common\models\panels\Project;
 use common\models\panels\Orders;
 use common\models\panels\queries\PaymentsQuery;
-use common\models\panels\services\GetPaymentMethodsService;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
@@ -194,7 +194,7 @@ class PaymentsSearch extends Payments {
     public static function getMethods()
     {
         if (null == static::$_methods) {
-            static::$_methods = ArrayHelper::map(Yii::$container->get(GetPaymentMethodsService::class)->get(), 'code', 'name');
+            static::$_methods = ArrayHelper::map(Yii::$container->get(GetGeneralPaymentMethodsService::class)->get(), 'code', 'name');
         }
 
         return static::$_methods;
