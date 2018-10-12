@@ -105,7 +105,7 @@ class PaymentsHelper {
 
         $payments = Payments::find()
             ->andWhere([
-                'type' => PaymentHelper::getTypeByCode(Params::CODE_PAYPAL),
+                'payment_method' => Params::CODE_PAYPAL,
                 'status' => Payments::STATUS_VERIFICATION,
             ])
             ->andWhere(['<', 'date_update', time() - $verificationTime])

@@ -398,7 +398,7 @@ class Payments extends ActiveRecord
         if (Payments::STATUS_REVIEW == $this->status) {
             $invoice->markPaid();
         } else {
-            $invoice->paid($this->type);
+            $invoice->paid($this->payment_method);
         }
 
         $this->status = static::STATUS_COMPLETED;

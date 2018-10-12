@@ -299,7 +299,7 @@ class PaymentsController extends CustomController
                                 if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(PaymentHelper::getTypeByCode(Params::CODE_WEBMONEY));
+                                    $invoice->paid(Params::CODE_WEBMONEY);
 
                                     $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
@@ -383,7 +383,7 @@ class PaymentsController extends CustomController
 		            			if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(PaymentHelper::getTypeByCode(Params::CODE_PERFECT_MONEY));
+                                    $invoice->paid(Params::CODE_PERFECT_MONEY);
 
 					                $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
@@ -490,7 +490,7 @@ class PaymentsController extends CustomController
                     }
 
                     // Mark invoice paid
-                    $invoice->paid(PaymentHelper::getTypeByCode(Params::CODE_BITCOIN));
+                    $invoice->paid(Params::CODE_BITCOIN);
 
                     $payments->status = Payments::STATUS_COMPLETED;
                     $payments->update();
@@ -712,7 +712,7 @@ class PaymentsController extends CustomController
         // Mark invoice paid
         if (in_array($ipnStatus, [100, 2])) {
 
-            $invoice->paid(PaymentHelper::getTypeByCode(Params::CODE_COINPAYMENTS));
+            $invoice->paid(Params::CODE_COINPAYMENTS);
 
             $payments->status = Payments::STATUS_COMPLETED;
             $payments->update();

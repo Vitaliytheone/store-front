@@ -61,8 +61,8 @@ class AddInvoicePaymentForm extends Model {
 
         $payment = new Payments();
         $payment->mode = Payments::MODE_MANUAL;
-        $payment->type = $this->method;
-        $payment->payment_method = PaymentHelper::getCodeByType($this->method);
+        $payment->type = PaymentHelper::getTypeByCode($this->method);
+        $payment->payment_method = $this->method;
         $payment->comment = $this->memo;
         $payment->status = Payments::STATUS_COMPLETED;
         $payment->amount = $this->_invoice->total;
@@ -75,7 +75,7 @@ class AddInvoicePaymentForm extends Model {
         }
 
         // Mark invoice paid
-        $this->_invoice->paid($this->method);
+        $this->_invoice->paid($payment->payment_method);
 
         return true;
     }
@@ -86,9 +86,7 @@ class AddInvoicePaymentForm extends Model {
      */
     public function getMethods()
     {
-        $methods = ArrayHelper::map(Yii::$container->get(GetPaymentMethodsService::class)->get(), function($value) {
-            return PaymentHelper::getTypeByCode($value['code']);
-        }, 'name');
+        $methods = ArrayHelper::map(Yii::$container->get(GetPaymentMethodsService::class)->get(), 'code', 'name');
         $methods[0] = Yii::t('app', 'payment_gateway.method.other');
         return $methods;
     }

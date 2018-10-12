@@ -578,7 +578,7 @@ class SiteController extends CustomController
         }
 
         if (0 == $paymentAmount) {
-            $invoice->paid($type);
+            $invoice->paid($code);
             return $this->redirect('/');
         }
 

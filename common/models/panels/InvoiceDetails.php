@@ -385,7 +385,7 @@ class InvoiceDetails extends ActiveRecord
 
     /**
      * Mark invoice details paid
-     * @param integer $method
+     * @param string $method
      * @return bool
      */
     public function paid($method)
@@ -428,7 +428,7 @@ class InvoiceDetails extends ActiveRecord
                     'expired_last' => $lastExpired,
                     'expired' => $project->expired,
                     'created_at' => time(),
-                    'type' => ExpiredLog::getTypeByGateway($method)
+                    'type' => ExpiredLog::getTypeByCode($method)
                 ];
                 $ExpiredLogModel->save(false);
 
@@ -454,7 +454,7 @@ class InvoiceDetails extends ActiveRecord
                     'expired_last' => $lastExpired,
                     'expired' => $store->expired,
                     'created_at' => time(),
-                    'type' => ExpiredLog::getTypeByGateway($method)
+                    'type' => ExpiredLog::getTypeByCode($method)
                 ];
                 $ExpiredLogModel->save(false);
 

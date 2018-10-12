@@ -698,16 +698,20 @@ class SystemController extends CustomController
      */
     public function actionSetPaymentMethods()
     {
-        $payments = Payments::find()
-            ->where('payment_method IS NULL')
-            ->all();
+        $paymentQuery = Payments::find()
+            ->where('payment_method IS NULL');
 
-        foreach ($payments as $payment) {
-            $payment->payment_method = PaymentHelper::getCodeByType($payment->type);
-            if ($payment->save()) {
-                $this->stderr("Successful update the payment #{$payment->id} \n", Console::FG_GREEN);
-            } else {
-                $this->stderr("Payment #{$payment->id} : " . ActiveForm::firstError($payment) . "\n", Console::FG_RED);
+        foreach ($paymentQuery->batch() as $payments) {
+            foreach ($payments as $payment) {
+                /**
+                 * @var Payments $payment
+                 */
+                $payment->payment_method = PaymentHelper::getCodeByType($payment->type);
+                if ($payment->save(false)) {
+                    $this->stderr("Successful update the payment #{$payment->id} \n", Console::FG_GREEN);
+                } else {
+                    $this->stderr("Payment #{$payment->id} : " . ActiveForm::firstError($payment) . "\n", Console::FG_RED);
+                }
             }
         }
     }

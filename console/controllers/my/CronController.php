@@ -279,7 +279,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => PaymentHelper::getTypeByCode(Params::CODE_PAYPAL),
+            'payment_method' => Params::CODE_PAYPAL,
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,

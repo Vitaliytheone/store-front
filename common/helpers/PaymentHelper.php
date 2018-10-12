@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
  */
 class PaymentHelper {
 
+    public const TYPE_OTHER = 0;
     public const TYPE_PAYPAL = 1;
     public const TYPE_PERFECT_MONEY = 2;
     public const TYPE_WEBMONEY = 3;
@@ -31,7 +32,7 @@ class PaymentHelper {
             Params::CODE_BITCOIN => static::TYPE_BITCOIN,
             Params::CODE_TWO_CHECKOUT => static::TYPE_TWO_CHECKOUT,
             Params::CODE_COINPAYMENTS => static::TYPE_COINPAYMENTS,
-        ], $code);
+        ], $code, static::TYPE_OTHER);
     }
 
     /**
@@ -48,6 +49,6 @@ class PaymentHelper {
             static::TYPE_BITCOIN => Params::CODE_BITCOIN,
             static::TYPE_TWO_CHECKOUT => Params::CODE_TWO_CHECKOUT,
             static::TYPE_COINPAYMENTS => Params::CODE_COINPAYMENTS,
-        ], $type);
+        ], $type, Params::CODE_OTHER);
     }
 }

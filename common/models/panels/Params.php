@@ -25,6 +25,7 @@ class Params extends ActiveRecord
     public const CATEGORY_SERVICE = 'service';
     public const CATEGORY_PAYMENT = 'payment';
 
+    public const CODE_OTHER = 'other';
     public const CODE_PAYPAL = 'paypal';
     public const CODE_PERFECT_MONEY = 'perfect_money';
     public const CODE_WEBMONEY = 'webmoney';
