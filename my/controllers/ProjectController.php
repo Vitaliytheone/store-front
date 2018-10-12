@@ -57,6 +57,7 @@ class ProjectController extends CustomController
      * Panel staffs list
      * @param $id
      * @return string|Response
+     * @throws \Throwable
      */
     public function actionStaff($id)
     {

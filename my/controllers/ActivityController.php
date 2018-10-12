@@ -18,7 +18,8 @@ class ActivityController extends CustomController
     /**
      * View panel activity log list
      * @param integer $id
-     * @return string
+     * @return array|string
+     * @throws \yii\base\ExitException
      */
     public function actionIndex($id)
     {

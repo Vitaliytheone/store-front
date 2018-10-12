@@ -12,8 +12,6 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use yii\filters\AjaxFilter;
-use yii\filters\ContentNegotiator;
 
 
 /**

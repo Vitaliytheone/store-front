@@ -131,6 +131,7 @@ class SiteController extends CustomController
      * Create ticket message
      * @param int $id
      * @return array
+     * @throws \yii\base\ExitException
      */
     public function actionMessage($id)
     {
@@ -165,6 +166,7 @@ class SiteController extends CustomController
      * @param int $id
      * @param bool $clear
      * @return string
+     * @throws \yii\base\ExitException
      */
     public function actionTicket($id, $clear = false)
     {
