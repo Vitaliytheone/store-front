@@ -562,7 +562,7 @@ class PaymentsController extends CustomController
 					if ($StringToHash == $_POST['md5_hash']) {
 						if (strtolower($_POST['list_currency']) == "usd") {
 							if (strtolower($_POST['fraud_status']) == 'pass') {
-								if ($payments->amount == $_POST['invoice_list_amount']) {
+								if ($payments->amount <= $_POST['invoice_list_amount']) {
 									$hash = PaymentHash::findOne(['hash' => $hashOrder]);
 			            			if ($hash === null) {
 
