@@ -29,6 +29,8 @@ use my\components\behaviors\UserAgentBehavior;
  */
 class Tickets extends ActiveRecord
 {
+    public $assigned_name;
+
     const STATUS_PENDING = 0;
     const STATUS_RESPONDED = 1;
     const STATUS_CLOSED = 4;
