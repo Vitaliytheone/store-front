@@ -9,7 +9,7 @@ use my\helpers\DomainsHelper;
 use common\models\panels\Auth;
 use common\models\panels\Content;
 use common\models\panels\DomainZones;
-use my\models\forms\CreateOrderForm;
+use my\models\forms\OrderPanelForm;
 use my\models\forms\CreateStaffForm;
 use my\models\forms\EditStaffForm;
 use my\models\forms\SetStaffPasswordForm;
@@ -91,7 +91,7 @@ class ProjectController extends CustomController
 
         $this->view->title = Yii::t('app', 'pages.title.order');
 
-        $model = new CreateOrderForm();
+        $model = new OrderPanelForm();
         $model->setUser($user);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -115,8 +115,8 @@ class ProjectController extends CustomController
 
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $model = new CreateOrderForm();
-        $model->scenario = CreateOrderForm::SCENARIO_CREATE_DOMAIN;
+        $model = new OrderPanelForm();
+        $model->scenario = OrderPanelForm::SCENARIO_CREATE_DOMAIN;
 
         /**
          * @var $customer Customers

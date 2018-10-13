@@ -1,11 +1,11 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\CreateOrderForm */
+    /* @var $model \my\models\forms\OrderPanelForm */
     /* @var $note string */
 
     use yii\bootstrap\Html;
-    use my\models\forms\CreateOrderForm;
+    use my\models\forms\OrderPanelForm;
 ?>
 <div class="panel-body">
 
@@ -16,7 +16,7 @@
             'value' => $model->getDomain(),
             'autofocus' => true,
             'class' => 'form-control',
-            'readonly' => CreateOrderForm::HAS_NOT_DOMAIN == $model->has_domain ? 'readonly' : null
+            'readonly' => OrderPanelForm::HAS_NOT_DOMAIN == $model->has_domain ? 'readonly' : null
         ]) ?>
     </div>
 

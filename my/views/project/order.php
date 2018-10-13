@@ -1,12 +1,12 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\CreateOrderForm */
+    /* @var $model \my\models\forms\OrderPanelForm */
     /* @var $note string */
     /* @var $user \common\models\panels\Customers */
 
     use my\components\ActiveForm;
-    use my\models\forms\CreateOrderForm;
+    use my\models\forms\OrderPanelForm;
     use yii\bootstrap\Html;
 
     $this->context->addModule('orderDomainController');
@@ -37,7 +37,7 @@
                         <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
                             <div class="radio">
                                 <label>
-                                    <?= Html::radio('CreateOrderForm[has_domain]', $id == $model->has_domain, [
+                                    <?= Html::radio('OrderPanelForm[has_domain]', $id == $model->has_domain, [
                                         'value' => $id,
                                         'class' => 'has_domain'
                                     ])?>
@@ -49,7 +49,7 @@
 
                     <?= $form->errorSummary($model); ?>
 
-                <div class="<?= (CreateOrderForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderPanelBlock">
+                <div class="<?= (OrderPanelForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderPanelBlock">
                     <?= $this->render('layouts/_order_panel_block', [
                         'form' => $form,
                         'model' => $model,
@@ -57,7 +57,7 @@
                     ])?>
                 </div>
 
-                <div class="<?= (CreateOrderForm::HAS_NOT_DOMAIN == $model->has_domain && !$model->hasErrors() ? '' : 'hidden') ?>" id="orderDomainBlock">
+                <div class="<?= (OrderPanelForm::HAS_NOT_DOMAIN == $model->has_domain && !$model->hasErrors() ? '' : 'hidden') ?>" id="orderDomainBlock">
                     <?= $this->render('layouts/_order_domain_block', [
                         'form' => $form,
                         'model' => $model
