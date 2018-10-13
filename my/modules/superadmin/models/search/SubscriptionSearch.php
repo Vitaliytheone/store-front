@@ -54,6 +54,7 @@ class SubscriptionSearch
                     '`' . $model['db'] . '`.auto_orders as updated_date',
                     'updated_date.id = auto_orders.id AND updated_date.updated_at > 0 AND updated_date.status = ' . static::AUTO_ORDERS_STATUS_ACTIVE
                 )
+                ->where(['auto_orders.not_checked' => 0])
                 ->groupBy('auto_orders.status')
                 ->all();
 
@@ -68,6 +69,11 @@ class SubscriptionSearch
 
             for ($i = 0; $i < count($countQuery); $i++) {
                 $allCount += $countQuery[$i]['count'];
+            }
+
+            if ($allCount == 0) {
+                unset($models[$key]);
+                continue;
             }
 
             foreach ($countQuery as $value) {
@@ -120,9 +126,7 @@ class SubscriptionSearch
             $totals['canceled'] += $model['canceledCount'];
             $totals['avg'] += $model['avg'];
 
-            if ($model['avg'] != 0) {
-                $fieldCount++;
-            }
+            $fieldCount++;
         }
 
         $totals['avg'] = round($totals['avg'] / $fieldCount);
