@@ -306,7 +306,7 @@ class ChildProjectController extends CustomController
             'child_panel' => 1
         ]);
 
-        if (!$model || !Project::hasAccess($model, 'canEdit')) {
+        if (!$model || !Project::hasAccess($model, 'canEdit') || $model->hide == 1) {
             $this->redirect('/');
             return Yii::$app->end();
         }

@@ -121,6 +121,11 @@ class ActivityController extends CustomController
             return Yii::$app->end();
         }
 
+        if ($model->child_panel == 1 && $model->hide == 1) {
+            $this->redirect('/');
+            return Yii::$app->end();
+        }
+
         return $model;
     }
 }
