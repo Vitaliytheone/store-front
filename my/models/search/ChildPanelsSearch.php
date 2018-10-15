@@ -76,6 +76,7 @@ class ChildPanelsSearch
                     Project::STATUS_TERMINATED,
                 ]
             ])
+            ->andFilterWhere(['!=', 'hide', 1])
             ->orderBy([
                 new Expression('FIELD (act, ' . implode(',', [
                         Project::STATUS_ACTIVE,
