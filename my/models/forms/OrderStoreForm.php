@@ -23,7 +23,6 @@ use yii\helpers\ArrayHelper;
  */
 class OrderStoreForm extends DomainForm
 {
-    public $store_name;
     public $store_currency;
     public $admin_email;
     public $admin_username;
@@ -51,11 +50,9 @@ class OrderStoreForm extends DomainForm
     {
         return array_merge(
             parent::rules(), [
-            [['store_name', 'store_currency', 'admin_email', 'admin_username', 'admin_password', 'confirm_password'], 'required'],
-            [['store_name', 'admin_username', 'admin_email'], 'trim'],
-            ['store_name', 'string', 'max' => 255,],
-            [['domain', 'currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
-            ['store_name', 'match', 'pattern' => '/^[a-zA-Z0-9 \-\s]+$/', 'message' => Yii::t('app', 'error.store.bad_name')],
+            [['store_currency', 'admin_email', 'admin_username', 'admin_password', 'confirm_password'], 'required'],
+            [['admin_username', 'admin_email'], 'trim'],
+            [['domain', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
             ['admin_email', 'email'],
             ['admin_username', 'string', 'max' => 255],
@@ -69,14 +66,15 @@ class OrderStoreForm extends DomainForm
      */
     public function attributeLabels()
     {
-        return [
-            'store_name' => Yii::t('app', 'stores.order.form.label.store_name'),
+        return array_merge(
+            parent::attributeLabels(), [
+            'domain' => Yii::t('app', 'stores.order.form.label.store_name'),
             'store_currency' => Yii::t('app', 'stores.order.form.label.store_currency'),
             'admin_email' => Yii::t('app', 'stores.order.form.label.admin_email'),
             'admin_username' => Yii::t('app', 'stores.order.form.label.admin_username'),
             'admin_password' => Yii::t('app', 'stores.order.form.label.admin_password'),
             'confirm_password' => Yii::t('app', 'stores.order.form.label.confirm_password'),
-        ];
+        ]);
     }
 
     /**
@@ -161,7 +159,7 @@ class OrderStoreForm extends DomainForm
             throw new Exception('Bad config-params: store_domain not configured yet!');
         }
 
-        $subdomain = str_replace(' ', '-', strtolower(trim($this->store_name)));
+        $subdomain = str_replace(' ', '-', strtolower(trim($this->domain)));
 
         $pendingOrders = (new Query())
             ->select('domain')
@@ -215,7 +213,7 @@ class OrderStoreForm extends DomainForm
         $order->status = Orders::STATUS_PENDING;
         $order->setDetails([
             'trial' => 0,
-            'name' => $this->store_name,
+            'name' => $this->domain,
             'domain' => $this->storeDomain,
             'currency' => $this->store_currency,
             'admin_email' => $this->admin_email,

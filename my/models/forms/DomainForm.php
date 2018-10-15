@@ -78,7 +78,6 @@ class DomainForm extends Model
     public function attributeLabels()
     {
         return [
-            'domain' => Yii::t('app', 'form.order_panel.domain'),
             'search_domain' => Yii::t('app', 'form.order_panel.search_domain'),
             'domain_lastname' => Yii::t('app', 'form.order_panel.domain_lastname'),
             'domain_firstname' => Yii::t('app', 'form.order_panel.domain_firstname'),

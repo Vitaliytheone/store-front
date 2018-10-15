@@ -10,7 +10,7 @@
     use yii\bootstrap\Html;
 
     $this->context->addModule('orderDomainController');
-    $this->context->addModule('orderPanelController');
+    $this->context->addModule('orderController');
 ?>
 <div class="row">
   <div class="col-lg-12">
@@ -49,7 +49,7 @@
 
                     <?= $form->errorSummary($model); ?>
 
-                <div class="<?= (OrderPanelForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderPanelBlock">
+                <div class="<?= (OrderPanelForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
                     <?= $this->render('layouts/_order_panel_block', [
                         'form' => $form,
                         'model' => $model,

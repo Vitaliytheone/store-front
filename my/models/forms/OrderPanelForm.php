@@ -155,6 +155,7 @@ class OrderPanelForm extends DomainForm
         return array_merge(
             parent::attributeLabels(),
             [
+                'domain' => Yii::t('app', 'form.order_panel.domain'),
                 'currency' => Yii::t('app', 'form.order_panel.currency'),
                 'username' => Yii::t('app', 'form.order_panel.username'),
                 'password' => Yii::t('app', 'form.order_panel.password'),

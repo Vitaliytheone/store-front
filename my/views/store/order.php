@@ -12,6 +12,7 @@
     $hasStores = $model->getUser()->hasStores();
 
     $this->context->addModule('orderDomainController');
+    $this->context->addModule('orderController');
 ?>
 <div class="row">
   <div class="col-lg-12">
@@ -51,7 +52,7 @@
 
                 <?= $form->errorSummary($model); ?>
 
-                <div class="<?= (OrderStoreForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderPanelBlock">
+                <div class="<?= (OrderStoreForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
                     <?= $this->render('layouts/_order_store_block', [
                         'form' => $form,
                         'model' => $model,
@@ -64,6 +65,13 @@
                         'model' => $model
                     ])?>
                 </div>
+
+                <?php //if ($user->can('domains')): TODO:: Temporary allowed buy domain with panel for new customer ?>
+                <?= $this->render('layouts/_order_domain_modal', [
+                    'form' => $form,
+                    'model' => $model
+                ])?>
+                <?php //endif; ?>
 
             <?php ActiveForm::end(); ?>
         </div>
