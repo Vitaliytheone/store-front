@@ -36,7 +36,8 @@ class OrderPanelForm extends DomainForm
      */
     public function rules()
     {
-        return [
+        return array_merge(
+            parent::rules(), [
             [['username', 'password'], 'filter', 'filter' => function($value) { // Trim input values
                 return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
             }],
@@ -45,7 +46,7 @@ class OrderPanelForm extends DomainForm
             [['domain'], PanelDomainValidator::class, 'child_panel' => false],
             ['password', 'compare', 'compareAttribute' => 'password_confirm'],
             [['username'], 'safe'],
-        ];
+        ]);
     }
 
     /**

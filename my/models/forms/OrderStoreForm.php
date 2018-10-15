@@ -21,7 +21,7 @@ use yii\helpers\ArrayHelper;
  * Class OrderStoreForm
  * @package my\models\forms
  */
-class OrderStoreForm extends Model
+class OrderStoreForm extends DomainForm
 {
     public $store_name;
     public $store_currency;
@@ -37,27 +37,31 @@ class OrderStoreForm extends Model
     private $_invoiceCode;
 
     /** @var Auth */
-    private $_user;
+    protected $_user;
 
     /** @var string */
     private $_ip;
+
+    const SCENARIO_CREATE_STORE = 'store';
 
     /**
      * @return array the validation rules.
      */
     public function rules()
     {
-        return [
+        return array_merge(
+            parent::rules(), [
             [['store_name', 'store_currency', 'admin_email', 'admin_username', 'admin_password', 'confirm_password'], 'required'],
             [['store_name', 'admin_username', 'admin_email'], 'trim'],
             ['store_name', 'string', 'max' => 255,],
+            [['domain', 'currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             ['store_name', 'match', 'pattern' => '/^[a-zA-Z0-9 \-\s]+$/', 'message' => Yii::t('app', 'error.store.bad_name')],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
             ['admin_email', 'email'],
             ['admin_username', 'string', 'max' => 255],
             ['admin_password', 'string', 'min' => 5],
             ['admin_password', 'compare', 'compareAttribute' => 'confirm_password'],
-        ];
+        ]);
     }
 
     /**
