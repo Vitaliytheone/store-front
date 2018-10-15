@@ -40,6 +40,8 @@ class SubscriptionSearch
             ->andWhere('db != ""')
             ->all();
 
+        $result = [];
+
         foreach ($models as $key => $model) {
             $allCount = 0;
 
@@ -58,40 +60,36 @@ class SubscriptionSearch
                 ->groupBy('auto_orders.status')
                 ->all();
 
-            // Set default values
-            $models[$key]['allCount'] = 0;
-            $models[$key]['activeCount'] = 0;
-            $models[$key]['pausedCount'] = 0;
-            $models[$key]['completedCount'] = 0;
-            $models[$key]['expiredCount'] = 0;
-            $models[$key]['canceledCount'] = 0;
-            $models[$key]['avg'] = 0;
+            if (!empty($countQuery)) {
+                // Set default values
+                $result[$key] = $model;
+                $result[$key]['allCount'] = 0;
+                $result[$key]['activeCount'] = 0;
+                $result[$key]['pausedCount'] = 0;
+                $result[$key]['completedCount'] = 0;
+                $result[$key]['expiredCount'] = 0;
+                $result[$key]['canceledCount'] = 0;
+                $result[$key]['avg'] = 0;
 
-            for ($i = 0; $i < count($countQuery); $i++) {
-                $allCount += $countQuery[$i]['count'];
+                for ($i = 0; $i < count($countQuery); $i++) {
+                    $allCount += $countQuery[$i]['count'];
+                }
+
+                foreach ($countQuery as $value) {
+                    $result[$key]['allCount'] = $allCount;
+                    $result[$key]['activeCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_ACTIVE ? $value['count'] : $result[$key]['activeCount'];
+                    $result[$key]['pausedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_PAUSED ? $value['count'] : $result[$key]['pausedCount'];
+                    $result[$key]['completedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_COMPLETED ? $value['count'] : $result[$key]['completedCount'];
+                    $result[$key]['expiredCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_EXPIRED ? $value['count'] : $result[$key]['expiredCount'];
+                    $result[$key]['canceledCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_CANCELED ? $value['count'] : $result[$key]['canceledCount'];
+                    $result[$key]['avg'] = !empty($countQuery[0]['avg']) ? round($countQuery[0]['avg']) : $result[$key]['avg'];
+                }
             }
-
-            if ($allCount == 0) {
-                unset($models[$key]);
-                continue;
-            }
-
-            foreach ($countQuery as $value) {
-                $models[$key]['allCount'] = $allCount;
-                $models[$key]['activeCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_ACTIVE ? $value['count'] : $models[$key]['activeCount'];
-                $models[$key]['pausedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_PAUSED ? $value['count'] : $models[$key]['pausedCount'];
-                $models[$key]['completedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_COMPLETED ? $value['count'] : $models[$key]['completedCount'];
-                $models[$key]['expiredCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_EXPIRED ? $value['count'] : $models[$key]['expiredCount'];
-                $models[$key]['canceledCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_CANCELED ? $value['count'] : $models[$key]['canceledCount'];
-                $models[$key]['avg'] = !empty($countQuery[0]['avg']) ? round($countQuery[0]['avg']) : $models[$key]['avg'];
-            }
-
-
         }
 
         return [
-            'models' => $models,
-            'totals' => $this->getTotals($models),
+            'models' => $result,
+            'totals' => $this->getTotals($result),
         ];
     }
 
