@@ -59,7 +59,6 @@ class ProvidersSearch
         $searchQuery = $this->getQuery();
         $script = $script == 'all' ? null : $script;
 
-
         $providers = (new Query())
             ->select([
                 'id',
@@ -229,7 +228,10 @@ class ProvidersSearch
 
             foreach ($projects as $id => $project) {
                 if (!empty($project['providers'][$provider['provider_id']])) {
-                    $usedProjects[] = $project;
+                    $usedProjects[] = array_merge(
+                        $project,
+                        ['url' => $project['child_panel'] == 0 ? Url::toRoute(['/panels', 'id' => $project['id']]) : Url::toRoute(['/child-panels', 'id' => $project['id']])]
+                    );
                 }
                 $projects[$id]['url'] = $project['child_panel'] == 0 ? Url::toRoute(['/panels', 'id' => $project['id']]) : Url::toRoute(['/child-panels', 'id' => $project['id']]);
             }
