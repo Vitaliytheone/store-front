@@ -10,36 +10,19 @@ customModule.superadminProvidersController = {
         });
 
         function setInputs(method, details, form) {
+            $('input', form).val('');
+            $('select', form).prop('selectedIndex', 0);
 
             if (method == false) {
-                $(':input').val('');
-                $('option[value="0"]').attr('selected', 'true');
                 return false;
             }
 
             $.each(details, function(name, value) {
-                if (method == 'edit') {
-                    $('#editproviderform-' + name, form).val(value);
-
-                    var elem = $('#edit-provider-' + name, form);
-
-                    if (elem[0] !== undefined) {
-                        if (elem[0].tagName == 'SELECT') {
-                            $('#edit-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
-                        } else {
-                            elem.val(value);
-                        }
-                    }
-                } else {
-                    var elem = $('#create-provider-' + name, form);
-
-                    if (elem[0] !== undefined) {
-                        if (elem[0].tagName == 'SELECT') {
-                            $('#create-provider-' + name + ' option[value="' + value + '"]').attr('selected', 'true');
-                        } else {
-                            elem.val(value);
-                        }
-                    }
+                if ($('input[id$="-' + name + '"]', form).length) {
+                    $('input[id$="-' + name + '"]', form).val(value);
+                }
+                if ($('select[id$="-' + name + '"]', form).length) {
+                    $('select[id$="-' + name + '"]', form).val(value);
                 }
             });
         }
