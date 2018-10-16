@@ -22,7 +22,7 @@
         <div class="panel panel-default">
 
             <?php $form = ActiveForm::begin([
-                'id' => 'order-panel-form',
+                'id' => 'order-form',
                 'fieldConfig' => [
                     'template' => "{label}{input}",
                     'options' => [

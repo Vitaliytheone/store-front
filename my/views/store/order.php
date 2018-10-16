@@ -24,8 +24,7 @@
         <div class="panel panel-default">
 
             <?php $form = ActiveForm::begin([
-                'id' => 'order-store-form',
-                'action' => Url::toRoute('stores/order'),
+                'id' => 'order-form',
                 'fieldConfig' => [
                     'template' => "{label}{input}",
                     'options' => [

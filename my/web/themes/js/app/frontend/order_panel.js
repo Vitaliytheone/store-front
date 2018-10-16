@@ -22,7 +22,7 @@ customModule.orderController = {
             return false;
         });
 
-        $('#order-panel-form').on('submit', function() {
+        $('#order-form').on('submit', function() {
             if ($("#orderBlock").hasClass('hidden')) {
                 $('#orderDomainModal').modal('hide');
                 $('#searchDomainSubmit').trigger('click');
