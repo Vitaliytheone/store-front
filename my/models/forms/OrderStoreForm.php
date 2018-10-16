@@ -163,7 +163,7 @@ class OrderStoreForm extends DomainForm
         $invoiceModel->total = 0;
         $invoiceModel->cid = $this->_user->id;
         $invoiceModel->generateCode();
-        $invoiceModel->daysExpired(Yii::$app->params['invoice.domainDuration']);
+        $invoiceModel->daysExpired(Yii::$app->params['invoice.storeDuration']);
 
         if (!$invoiceModel->save()) {
             return false;

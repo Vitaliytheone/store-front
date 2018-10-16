@@ -4,7 +4,6 @@
     /* @var $model \my\models\forms\OrderPanelForm */
     /* @var $note string */
 
-    use yii\bootstrap\Html;
     use my\models\forms\OrderPanelForm;
 ?>
 <div class="panel-body">

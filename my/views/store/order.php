@@ -2,14 +2,10 @@
     /* @var $this yii\web\View */
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\OrderStoreForm */
-    /* @var $hasStores bool */
 
     use my\components\ActiveForm;
-    use yii\helpers\Url;
     use my\models\forms\OrderStoreForm;
     use yii\helpers\Html;
-
-    $hasStores = $model->getUser()->hasStores();
 
     $this->context->addModule('orderDomainController');
     $this->context->addModule('orderController');
