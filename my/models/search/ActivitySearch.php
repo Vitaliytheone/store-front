@@ -175,15 +175,23 @@ class ActivitySearch extends Model
     }
 
     /**
+     * Check is hide child panel
+     * @return bool
+     */
+    public function isChildHidePanel(): bool
+    {
+        if ($this->_panel->child_panel == 1 && $this->_panel->hide == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Build sql query
      * @param null|array $event
      * @param null|array $account
      * @return Query
-     */
-    /**
-     * @param null $event
-     * @param null $account
-     * @return $this
      */
     public function buildQuery($event = null, $account = null)
     {
@@ -258,6 +266,8 @@ class ActivitySearch extends Model
     /**
      * Search panels
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function search()
     {
@@ -300,6 +310,8 @@ class ActivitySearch extends Model
      * Prepare log data
      * @param array $items
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function prepareData(array $items)
     {
@@ -324,6 +336,7 @@ class ActivitySearch extends Model
     /**
      * Get accounts
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getAccounts()
     {
@@ -353,6 +366,7 @@ class ActivitySearch extends Model
     /**
      * Get accounts
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getEvents()
     {
@@ -385,6 +399,7 @@ class ActivitySearch extends Model
     /**
      * Get events by group
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getEventsByGroups()
     {
@@ -416,6 +431,7 @@ class ActivitySearch extends Model
     /**
      * Get prepared activity data
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getActivity()
     {
@@ -556,6 +572,7 @@ class ActivitySearch extends Model
     /**
      * Get interval
      * @return int
+     * @throws \yii\db\Exception
      */
     public function getInterval()
     {
@@ -583,6 +600,7 @@ class ActivitySearch extends Model
      * Compare date validator
      * @param string $attribute
      * @param array $params
+     * @return bool
      */
     public function compareDateValidator($attribute, $params = [])
     {
@@ -600,6 +618,7 @@ class ActivitySearch extends Model
      * Query all and use cache 60 seconds
      * @param Query $query
      * @return array
+     * @throws \yii\db\Exception
      */
     public function queryAll(Query $query)
     {
