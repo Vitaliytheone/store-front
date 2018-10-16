@@ -8,13 +8,6 @@
 ?>
 
 <div class="panel-body">
-
-    <?= $form->errorSummary($model); ?>
-
-<!--    <div class="form-group">-->
-<!--        --><?//= $form->field($model, 'store_name')->textInput(['class' => 'form-control']) ?>
-<!--    </div>-->
-
     <div class="form-group">
         <?= $form->field($model, 'domain')->textInput([
             'id' => 'domain',

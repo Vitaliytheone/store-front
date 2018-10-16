@@ -84,7 +84,7 @@ $routes = [
     'ssl/order' => '/ssl/order',
 
     'order' => '/project/order',
-    'order-domain' => '/project/order-domain',
+    //'order-domain' => '/project/order-domain',
     'panels' => '/project/panels',
     'staff/create/<id:>' => '/project/staffcreate',
     'staff/passwd/<id:>' => '/project/staffpasswd',

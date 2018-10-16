@@ -173,7 +173,7 @@ use yii\helpers\Url;
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'panels.order.registrant_modal_btn_close') ?></button>
-                    <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute('/order-domain') ?>">
+                    <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute('/store/order-domain') ?>">
                         <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
                         <?= Yii::t('app', 'panels.order.registrant_modal_btn_submit') ?>
                     </button>

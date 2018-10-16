@@ -29,10 +29,10 @@ class CurlHelper {
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 
-        if (!empty(PROXY_CONFIG['main']['ip'])) {
-            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-            curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
-        }
+//        if (!empty(PROXY_CONFIG['main']['ip'])) {
+//            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+//            curl_setopt($ch, CURLOPT_PROXY, PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']);
+//        }
 
         if (is_array($post)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, join('&', $_post));

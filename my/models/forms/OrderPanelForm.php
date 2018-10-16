@@ -1,7 +1,7 @@
 <?php
 namespace my\models\forms;
 
-use my\components\validators\PanelDomainValidator;
+use my\components\validators\OrderDomainValidator;
 use my\helpers\UserHelper;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -43,7 +43,7 @@ class OrderPanelForm extends DomainForm
             }],
             [['domain', 'currency', 'username', 'password', 'password_confirm'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
-            [['domain'], PanelDomainValidator::class, 'child_panel' => false],
+            [['domain'], OrderDomainValidator::class, 'panel' => true, 'child_panel' => false],
             ['password', 'compare', 'compareAttribute' => 'password_confirm'],
             [['username'], 'safe'],
         ]);
@@ -85,6 +85,8 @@ class OrderPanelForm extends DomainForm
                 $this->addError('domain', Yii::t('app', 'error.panel.can_not_order_domain'));
                 return false;
             }
+        } else {
+            $this->preparedDomain = $this->domain;
         }
 
         $result = $this->orderPanel($invoiceModel);

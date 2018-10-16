@@ -110,13 +110,50 @@ class StoreController extends CustomController
         $model->setUser($user);
         $model->setIp($request->getUserIP());
 
-        if (!$model->load($request->post()) || !$model->orderStore()) {
+        if (!$model->load($request->post()) || !$model->save()) {
             return $this->render('order', [
                 'model' => $model,
             ]);
         }
 
         return $this->redirect('/invoices/' . $model->getInvoiceCode());
+    }
+
+    /**
+     * @return array
+     * @throws \Throwable
+     */
+    public function actionOrderDomain()
+    {
+        $this->view->title = Yii::t('app', 'pages.title.order');
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new OrderStoreForm();
+        $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
+
+        /**
+         * @var $customer Customers
+         */
+        $customer = Yii::$app->user->getIdentity();
+
+        // if ($customer->can('domains') && $model->load(Yii::$app->request->post())) { TODO:: Temporary allowed buy domain with panel for new customer
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->validate()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($model)
+                ];
+            }
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => 'Invalid form data'
+        ];
     }
 
     /**
