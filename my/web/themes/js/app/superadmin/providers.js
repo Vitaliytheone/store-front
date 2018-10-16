@@ -21,6 +21,9 @@ customModule.superadminProvidersController = {
                 if ($('input[id$="-' + name + '"]', form).length) {
                     $('input[id$="-' + name + '"]', form).val(value);
                 }
+                if ($('textarea[id$="-' + name + '"]', form).length) {
+                    $('textarea[id$="-' + name + '"]', form).val(value);
+                }
                 if ($('select[id$="-' + name + '"]', form).length) {
                     $('select[id$="-' + name + '"]', form).val(value);
                 }
