@@ -108,7 +108,7 @@ class StoreController extends CustomController
 
         $model = new OrderStoreForm();
         $model->setUser($user);
-        $model->setIp($request->getUserIP());
+        //$model->setIp($request->getUserIP());
 
         if (!$model->load($request->post()) || !$model->save()) {
             return $this->render('order', [
@@ -130,6 +130,7 @@ class StoreController extends CustomController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new OrderStoreForm();
+        //$model->setIp(Yii::$app->request->getUserIP());
         $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
 
         /**

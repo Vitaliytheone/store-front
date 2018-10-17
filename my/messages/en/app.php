@@ -560,6 +560,7 @@ return [
     'stores.order.form.title_trial' => 'Start your free 14-day trial',
     'stores.order.form.submit' => 'Submit order',
     'stores.order.form.label.store_name' => 'Store name',
+    'stores.order.form.label.store_domain' => 'Store domain',
     'stores.order.form.label.store_currency' => 'Store currency',
     'stores.order.form.label.admin_email' => 'Admin email',
     'stores.order.form.label.admin_username' => 'Admin username',

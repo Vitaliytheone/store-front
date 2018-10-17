@@ -190,28 +190,4 @@ class OrderPanelForm extends DomainForm
 
         return $returnCurrencies;
     }
-
-    /**
-     * Init previous order order details
-     */
-    protected function initLastOrderDetails()
-    {
-        /**
-         * @var Orders $lastOrder
-         */
-        $lastOrder = Orders::find()->andWhere([
-            'cid' => $this->_user->id,
-            'item' => Orders::ITEM_BUY_DOMAIN
-        ])->orderBy([
-            'id' => SORT_DESC
-        ])->one();
-
-        if (!$lastOrder) {
-            return ;
-        }
-
-        $details = ArrayHelper::getValue($lastOrder->getDetails(), 'details', []);
-
-        $this->setAttributes($details);
-    }
 }

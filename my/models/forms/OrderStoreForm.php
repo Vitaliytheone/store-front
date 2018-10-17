@@ -6,14 +6,10 @@ use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreAdmins;
-use common\models\stores\StoreDomains;
 use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
 use Yii;
-use yii\base\Exception;
 use common\models\panels\Auth;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use my\components\validators\OrderDomainValidator;
 
@@ -29,17 +25,11 @@ class OrderStoreForm extends DomainForm
     public $admin_password;
     public $confirm_password;
 
-    /** @var string */
-    public $storeDomain;
-
     /** @var string Generated invoice code */
     private $_invoiceCode;
 
-    /** @var Auth */
-    protected $_user;
-
     /** @var string */
-    private $_ip;
+    protected $_ip;
 
     const SCENARIO_CREATE_STORE = 'store';
 
@@ -50,7 +40,6 @@ class OrderStoreForm extends DomainForm
     {
         return array_merge(
             parent::rules(), [
-            [['store_currency', 'admin_email', 'admin_username', 'admin_password', 'confirm_password'], 'required'],
             [['admin_username', 'admin_email'], 'trim'],
             [['domain', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
@@ -69,31 +58,13 @@ class OrderStoreForm extends DomainForm
     {
         return array_merge(
             parent::attributeLabels(), [
-            'domain' => Yii::t('app', 'stores.order.form.label.store_name'),
+            'domain' => Yii::t('app', 'stores.order.form.label.store_domain'),
             'store_currency' => Yii::t('app', 'stores.order.form.label.store_currency'),
             'admin_email' => Yii::t('app', 'stores.order.form.label.admin_email'),
             'admin_username' => Yii::t('app', 'stores.order.form.label.admin_username'),
             'admin_password' => Yii::t('app', 'stores.order.form.label.admin_password'),
             'confirm_password' => Yii::t('app', 'stores.order.form.label.confirm_password'),
         ]);
-    }
-
-    /**
-     * Set current user
-     * @param Auth $user
-     */
-    public function setUser(Auth $user)
-    {
-        $this->_user = $user;
-    }
-
-    /**
-     * Get current user
-     * @return Auth
-     */
-    public function getUser()
-    {
-        return $this->_user;
     }
 
     /**
@@ -153,6 +124,10 @@ class OrderStoreForm extends DomainForm
      */
     public function save()
     {
+        if (strlen($this->domain_firstname) > 0) {
+            $this->has_domain = 2;
+        }
+
         if (!$this->validate()) {
             return false;
         }
