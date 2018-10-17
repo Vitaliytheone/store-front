@@ -190,6 +190,7 @@ class OrderStoreForm extends DomainForm
             'clean_domain' => $this->preparedDomain,
             'currency' => $this->store_currency,
             'admin_email' => $this->admin_email,
+            'name' => $this->domain,
         ]);
 
         if ($model->save()) {
