@@ -12,6 +12,7 @@ use my\modules\superadmin\helpers\SystemMessages;
 use my\modules\superadmin\models\forms\CreateMessageForm;
 use my\modules\superadmin\models\forms\CreateTicketForm;
 use my\modules\superadmin\models\forms\EditMessageForm;
+use my\modules\superadmin\models\forms\TicketNoteForm;
 use my\modules\superadmin\models\search\TicketBlocksSearch;
 use my\modules\superadmin\models\search\TicketMessagesSearch;
 use my\modules\superadmin\models\search\TicketsSearch;
@@ -144,7 +145,8 @@ class TicketsController extends CustomController
             'domains' => $blocks['domains'],
             'ssl' => $blocks['ssl'],
             'panels' => $blocks['panels'],
-            'childPanels' => $blocks['childPanels']
+            'childPanels' => $blocks['childPanels'],
+            'notes' => $blocks['notes'],
         ]);
     }
 
@@ -156,6 +158,54 @@ class TicketsController extends CustomController
     {
         $model = new CreateTicketForm();
         $model->setUser(Yii::$app->superadmin->getIdentity());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * @param $customerId
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionCreateNote($customerId)
+    {
+        $model = new TicketNoteForm();
+        $model->scenario = TicketNoteForm::SCENARIO_CREATE;
+        $model->setCustomerId($customerId);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * @param $customerId
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionEditNote($customerId)
+    {
+        $model = new TicketNoteForm();
+        $model->scenario = TicketNoteForm::SCENARIO_EDIT;
+        $model->setCustomerId($customerId);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [
