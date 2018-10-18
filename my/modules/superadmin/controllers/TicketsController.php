@@ -60,12 +60,14 @@ class TicketsController extends CustomController
                     'change-status' => ['POST'],
                     'change-assigned' => ['POST'],
                     'delete-message' => ['POST'],
-                    'edit-message' => ['POST']
+                    'edit-message' => ['POST'],
+                    'create-note' => ['POST'],
+                    'edit-note' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['create', 'edit-message'],
+                'only' => ['create', 'edit-message', 'create-note', 'edit-note'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -201,11 +203,12 @@ class TicketsController extends CustomController
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function actionEditNote($customerId)
+    public function actionEditNote($id, $customerId)
     {
         $model = new TicketNoteForm();
         $model->scenario = TicketNoteForm::SCENARIO_EDIT;
         $model->setCustomerId($customerId);
+        $model->setNoteId($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [

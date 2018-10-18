@@ -63,6 +63,7 @@
             ])?>
             <?= $this->render('layouts/_ticket_notes', [
                     'notes' => $notes,
+                    'ticket' => $ticket,
             ])?>
         </div>
     </div>

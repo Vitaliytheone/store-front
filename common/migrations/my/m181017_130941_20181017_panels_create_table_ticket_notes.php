@@ -18,7 +18,7 @@ class m181017_130941_20181017_panels_create_table_ticket_notes extends Migration
             'note' => $this->string(1000)->notNull(),
             'created_at' => $this->integer(11),
             'updated_at' => $this->integer(11),
-        ]);
+        ], 'ENGINE=InnoDB DEFAULT CHARSET=utf8');
     }
 
     /**

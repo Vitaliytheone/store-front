@@ -19,11 +19,21 @@ class TicketNoteForm extends Model
 
     protected $_customerId;
 
+    protected $_noteId;
+
     public function rules()
     {
         return [
             ['note', 'string'],
             [['note'], 'trim'],
+        ];
+    }
+
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE => ['note'],
+            self::SCENARIO_EDIT => ['note'],
         ];
     }
 
@@ -34,6 +44,14 @@ class TicketNoteForm extends Model
     public function setCustomerId($customerId)
     {
         $this->_customerId = $customerId;
+    }
+
+    /**
+     * @param $id
+     */
+    public function setNoteId($id)
+    {
+        $this->_noteId = $id;
     }
 
     /**
@@ -59,7 +77,10 @@ class TicketNoteForm extends Model
                 break;
 
             case self::SCENARIO_EDIT:
-                $ticketNote = TicketNotes::findOne(['customer_id' => $this->_customerId]);
+                $ticketNote = TicketNotes::findOne([
+                    'customer_id' => $this->_customerId,
+                    'id' => $this->_noteId,
+                ]);
 
                 if ($this->note == '') {
                      if (!$ticketNote->delete()) {

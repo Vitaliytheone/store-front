@@ -26,3 +26,5 @@ ALTER TABLE `ticket_notes`
 ALTER TABLE `ticket_notes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
+
+ALTER TABLE `ticket_notes` MODIFY note varchar(1000) CHARACTER SET utf8;
