@@ -3,6 +3,9 @@
 namespace common\models\panels;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "ticket_notes".
@@ -12,8 +15,10 @@ use Yii;
  * @property string $note
  * @property int $created_at
  * @property int $updated_at
+ * @property int $created_by
+ * @property int $updated_by
  */
-class TicketNotes extends \yii\db\ActiveRecord
+class TicketNotes extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -46,6 +51,31 @@ class TicketNotes extends \yii\db\ActiveRecord
             'note' => Yii::t('app', 'Note'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => function() {
+                    return time();
+                },
+            ],
+            'creator' => [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+                'value' => function() {
+                    return Yii::$app->superadmin->getId();
+                },
+            ],
         ];
     }
 }

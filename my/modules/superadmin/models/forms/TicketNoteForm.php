@@ -19,7 +19,10 @@ class TicketNoteForm extends Model
 
     protected $_customerId;
 
-    protected $_noteId;
+    /**
+     * @var TicketNotes
+     */
+    protected $_ticketNote;
 
     public function rules()
     {
@@ -41,17 +44,17 @@ class TicketNoteForm extends Model
      * Set ticket id
      * @param int $customerId
      */
-    public function setCustomerId($customerId)
+    public function setCustomerId(int $customerId)
     {
         $this->_customerId = $customerId;
     }
 
     /**
-     * @param $id
+     * @param $note
      */
-    public function setNoteId($id)
+    public function setNote(TicketNotes $note)
     {
-        $this->_noteId = $id;
+        $this->_ticketNote = $note;
     }
 
     /**
@@ -77,18 +80,13 @@ class TicketNoteForm extends Model
                 break;
 
             case self::SCENARIO_EDIT:
-                $ticketNote = TicketNotes::findOne([
-                    'customer_id' => $this->_customerId,
-                    'id' => $this->_noteId,
-                ]);
-
                 if ($this->note == '') {
-                     if (!$ticketNote->delete()) {
+                     if (!$this->_ticketNote->delete()) {
                          return false;
                      }
                 } else {
-                    $ticketNote->note = $this->note;
-                    if (!$ticketNote->save()) {
+                    $this->_ticketNote->note = $this->note;
+                    if (!$this->_ticketNote->save()) {
                         return false;
                     }
                 }
