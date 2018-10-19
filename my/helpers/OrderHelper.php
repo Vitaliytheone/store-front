@@ -9,8 +9,6 @@ use common\models\panels\Languages;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
-use my\components\ActiveForm;
-use my\components\domains\Ahnames;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Domains;
@@ -709,7 +707,6 @@ class OrderHelper {
 
 
         if (!$store->save(false)) {
-            print_r(ActiveForm::firstError($store));die;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
             return false;
         }

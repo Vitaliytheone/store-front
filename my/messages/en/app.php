@@ -437,6 +437,7 @@ return [
     'error.store.bad_currency' => 'Bad currency',
     'error.store.bad_name' => 'Wrong store name! Allowed symbols are: `A-Z`, `0-9`, `-`, and `space`',
     'error.store.can_not_order_store' => 'Can not order store',
+    'error.store.can_not_order_domain' => 'Can not order domain',
 
     'ssl.my.created.ticket_subject' => 'Attention',
     'ssl.my.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.

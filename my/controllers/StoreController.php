@@ -108,7 +108,7 @@ class StoreController extends CustomController
 
         $model = new OrderStoreForm();
         $model->setUser($user);
-        //$model->setIp($request->getUserIP());
+        $model->setIp($request->getUserIP());
 
         if (!$model->load($request->post()) || !$model->save()) {
             return $this->render('order', [
@@ -130,15 +130,9 @@ class StoreController extends CustomController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new OrderStoreForm();
-        //$model->setIp(Yii::$app->request->getUserIP());
+        $model->setIp(Yii::$app->request->getUserIP());
         $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
 
-        /**
-         * @var $customer Customers
-         */
-        $customer = Yii::$app->user->getIdentity();
-
-        // if ($customer->can('domains') && $model->load(Yii::$app->request->post())) { TODO:: Temporary allowed buy domain with panel for new customer
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->validate()) {
                 return [

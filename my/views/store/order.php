@@ -35,7 +35,7 @@
                 <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
                     <div class="radio">
                         <label>
-                            <?= Html::radio('OrderPanelForm[has_domain]', $id == $model->has_domain, [
+                            <?= Html::radio('OrderStoreForm[has_domain]', $id == $model->has_domain, [
                                 'value' => $id,
                                 'class' => 'has_domain'
                             ])?>

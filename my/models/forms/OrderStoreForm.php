@@ -124,10 +124,6 @@ class OrderStoreForm extends DomainForm
      */
     public function save()
     {
-        if (strlen($this->domain_firstname) > 0) {
-            $this->has_domain = 2;
-        }
-
         if (!$this->validate()) {
             return false;
         }
@@ -147,7 +143,7 @@ class OrderStoreForm extends DomainForm
         if (static::HAS_NOT_DOMAIN == $this->has_domain) {
 
             if (!$this->orderDomain($invoiceModel)) {
-                $this->addError('domain', Yii::t('app', 'error.panel.can_not_order_domain'));
+                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_domain'));
                 return false;
             }
         } else {
@@ -201,7 +197,7 @@ class OrderStoreForm extends DomainForm
             $invoiceDetailsModel->item = InvoiceDetails::ITEM_BUY_STORE;
 
             if (!$invoiceDetailsModel->save()) {
-                $this->addError('domain', Yii::t('app', 'error.panel.can_not_order_panel'));
+                $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));
                 return false;
             }
         } else {
