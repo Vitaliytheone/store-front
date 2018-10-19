@@ -28,6 +28,7 @@ class TicketNoteForm extends Model
     {
         return [
             ['note', 'string'],
+            [['note'], 'required', 'on' => self::SCENARIO_CREATE],
             [['note'], 'trim'],
         ];
     }

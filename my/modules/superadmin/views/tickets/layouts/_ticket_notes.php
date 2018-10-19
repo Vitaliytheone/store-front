@@ -15,7 +15,7 @@ use my\helpers\SpecialCharsHelper;
 
             <?php foreach (SpecialCharsHelper::multiPurifier($notes) as $note) : ?>
             <div class="tickets-notes__row">
-                <?= $note->note ?>
+                <?= nl2br($note->note) ?>
                 <div class="tickets-notes__row-edit">
                     <a href="<?= Url::toRoute(['/tickets/edit-note', 'id' => $note->id]) ?>" class="edit-note" data-note="<?= $note->note ?>" data-toggle="modal">
                         <span class="fa fa-pencil"></span>
