@@ -14,8 +14,10 @@ use my\components\behaviors\UserAgentBehavior;
  *
  * @property integer $id
  * @property integer $customer_id
+ * @property integer $admin_id
  * @property string $subject
  * @property integer $is_admin
+ * @property integer $pid
  * @property integer $is_user
  * @property integer $status
  * @property integer $assigned_admin_id
@@ -54,7 +56,7 @@ class Tickets extends ActiveRecord
     {
         return [
             [['customer_id', 'subject'], 'required'],
-            [['customer_id', 'is_admin', 'is_user', 'status', 'created_at', 'updated_at', 'assigned_admin_id'], 'integer'],
+            [['customer_id', 'is_admin', 'is_user', 'status', 'created_at', 'updated_at', 'assigned_admin_id', 'admin_id', 'pid'], 'integer'],
             [['subject'], 'string', 'max' => 300],
             ['ip', 'string'],
             [['user_agent'], 'string', 'max' => 300],
@@ -111,6 +113,9 @@ class Tickets extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated at'),
             'user_agent' => Yii::t('app', 'User agent'),
             'ip' => Yii::t('app', 'Ip'),
+            'assigned_admin_id' => Yii::t('app', 'Assigned Admin ID'),
+            'admin_id' => Yii::t('app', 'Admin ID'),
+            'pid' => Yii::t('app', 'PID'),
         ];
     }
 
