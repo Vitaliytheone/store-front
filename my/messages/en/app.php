@@ -567,6 +567,11 @@ return [
     'stores.order.form.label.admin_username' => 'Admin username',
     'stores.order.form.label.admin_password' => 'Admin password',
     'stores.order.form.label.confirm_password' => 'Confirm password',
+    'stores.order.registrant_modal_btn_close' => 'Close',
+    'stores.order.registrant_modal_btn_submit' => 'Continue',
+    'stores.order.registrant_modal_header' => 'Registrant information',
+    'stores.order.btn_domain_search' => 'Search',
+    'stores.order.btn_continue_domain_search' => 'Continue',
 
     'stores.edit_store_domain.domain' => 'Domain name',
     'stores.edit_store_domain.modal_submit' => 'Save changes',

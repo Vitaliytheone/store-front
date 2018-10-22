@@ -10,7 +10,7 @@ use yii\helpers\Url;
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><?= Yii::t('app', 'panels.order.registrant_modal_header')?></h4>
+                <h4 class="modal-title"><?= Yii::t('app', 'stores.order.registrant_modal_header')?></h4>
             </div>
                 <div class="form-horizontal">
                     <div class="modal-body">
@@ -172,10 +172,10 @@ use yii\helpers\Url;
                         ])->label(false)?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'panels.order.registrant_modal_btn_close') ?></button>
-                        <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute('/store/order-domain') ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'stores.order.registrant_modal_btn_close') ?></button>
+                        <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute('/domains/order-store-domain') ?>">
                             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                            <?= Yii::t('app', 'panels.order.registrant_modal_btn_submit') ?>
+                            <?= Yii::t('app', 'stores.order.registrant_modal_btn_submit') ?>
                         </button>
                     </div>
 

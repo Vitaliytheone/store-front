@@ -120,38 +120,6 @@ class StoreController extends CustomController
     }
 
     /**
-     * @return array
-     * @throws \Throwable
-     */
-    public function actionOrderDomain()
-    {
-        $this->view->title = Yii::t('app', 'pages.title.order');
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new OrderStoreForm();
-        $model->setIp(Yii::$app->request->getUserIP());
-        $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
-
-        if ($model->load(Yii::$app->request->post())) {
-            if (!$model->validate()) {
-                return [
-                    'status' => 'error',
-                    'error' => ActiveForm::firstError($model)
-                ];
-            }
-            return [
-                'status' => 'success'
-            ];
-        }
-
-        return [
-            'status' => 'error',
-            'error' => 'Invalid form data'
-        ];
-    }
-
-    /**
      * Edit store domain
      * @param int $id
      * @return array

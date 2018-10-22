@@ -31,11 +31,10 @@
 
             <div class="panel-body">
 
-                <?php //if ($user->can('domains')): TODO:: Temporary allowed buy domain with panel for new customer ?>
                 <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
                     <div class="radio">
                         <label>
-                            <?= Html::radio('OrderStoreForm[has_domain]', $id == $model->has_domain, [
+                            <?= Html::radio(Html::getInputName($model, 'has_domain'), $id == $model->has_domain, [
                                 'value' => $id,
                                 'class' => 'has_domain'
                             ])?>
@@ -43,7 +42,6 @@
                         </label>
                     </div>
                 <?php endforeach; ?>
-                <?php //endif; ?>
 
                 <?= $form->errorSummary($model); ?>
 
@@ -61,12 +59,10 @@
                     ])?>
                 </div>
 
-                <?php //if ($user->can('domains')): TODO:: Temporary allowed buy domain with panel for new customer ?>
                 <?= $this->render('layouts/_order_domain_modal', [
                     'form' => $form,
                     'model' => $model
                 ])?>
-                <?php //endif; ?>
 
             <?php ActiveForm::end(); ?>
         </div>

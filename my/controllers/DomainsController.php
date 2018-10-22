@@ -11,6 +11,10 @@ use my\models\search\DomainsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
+use my\models\forms\OrderStoreForm;
+use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 
 
 /**
@@ -49,6 +53,23 @@ class DomainsController extends CustomController
                             return true;
                         }
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'order-store-domain' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['order-store-domain']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['order-store-domain'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -117,5 +138,35 @@ class DomainsController extends CustomController
         return $this->render('order', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @return array
+     * @throws \Throwable
+     */
+    public function actionOrderStoreDomain()
+    {
+        $this->view->title = Yii::t('app', 'pages.title.order');
+
+        $model = new OrderStoreForm();
+        $model->setIp(Yii::$app->request->getUserIP());
+        $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
+
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->validate()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($model)
+                ];
+            }
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => 'Invalid form data'
+        ];
     }
 }
