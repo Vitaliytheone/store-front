@@ -50,6 +50,11 @@ class ActivityController extends CustomController
         $logsSearch->setPanel($panel);
         $logsSearch->setParams(Yii::$app->request->get());
 
+        if ($logsSearch->isChildHidePanel()) {
+            $this->redirect('/');
+            return Yii::$app->end();
+        }
+
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
