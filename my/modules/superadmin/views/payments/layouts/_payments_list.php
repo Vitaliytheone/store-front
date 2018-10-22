@@ -11,7 +11,7 @@
     use my\helpers\PriceHelper;
     use my\helpers\SpecialCharsHelper;
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'payments.list.column_id')?></th>
@@ -47,7 +47,7 @@
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'payments.list.column_created')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'payments.list.column_updated')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'payments.list.column_ip')?></th>
-        <th class="w-1"></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -98,7 +98,7 @@
                 </td>
                 <td>
                     <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'payments.list.actions_label')?></button>
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'payments.list.actions_label')?></button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_details'), Url::toRoute(['/payments/details', 'id' => $payment->id]), [
                                 'class' => 'dropdown-item payment-details',
@@ -133,8 +133,12 @@
     </tbody>
 </table>
 
-<div class="text-align-center pager">
-    <?= LinkPager::widget([
-        'pagination' => $payments['pages'],
-    ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $payments['pages'],]); ?>
+            </ul>
+        </nav>
+    </div>
 </div>

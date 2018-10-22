@@ -150,7 +150,6 @@
                         <?= LinkPager::widget(['pagination' => $customers['pages'],]); ?>
                     </ul>
                 </nav>
-                <!-- Pagination End -->
             </div>
             <div class="col-md-6 text-md-right">
                 <?= CountPagination::widget([

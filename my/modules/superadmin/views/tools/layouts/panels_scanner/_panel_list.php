@@ -7,7 +7,7 @@ use my\helpers\SpecialCharsHelper;
 
 ?>
 
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'tools.levopanel.list.column_id')?></th>

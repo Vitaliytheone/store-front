@@ -10,18 +10,12 @@ use my\helpers\Url;
 
 ?>
 
-<div class="container-fluid mt-3">
-
     <div class="row">
         <div class="col-md-8">
-            <ul class="nav mb-3">
-                <li class="mr-auto">
-                    <ul class="nav nav-pills">
-                        <?php foreach ($statusButtons as $button) : ?>
-                            <li class="nav-item"><a class="nav-link text-nowrap <?= ($button['status'] == $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/tools/' . $this->context->action->id, 'status' => $button['status']]) ?>"><?= $button['title'] ?> (<?= $button['count'] ?>)</a></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </li>
+            <ul class="nav nav-pills mb-3" role="tablist">
+                <?php foreach ($statusButtons as $button) : ?>
+                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($button['status'] == $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/tools/' . $this->context->action->id, 'status' => $button['status']]) ?>"><?= $button['title'] ?> (<?= $button['count'] ?>)</a></li>
+                <?php endforeach; ?>
             </ul>
         </div>
 
@@ -38,7 +32,6 @@ use my\helpers\Url;
         'panels' => $panels
     ])?>
 
-</div>
 
 
 <?= $this->render('layouts/panels_scanner/_add_domain_modal', [

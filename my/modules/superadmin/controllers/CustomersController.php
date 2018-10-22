@@ -22,8 +22,6 @@ use yii\filters\ContentNegotiator;
  */
 class CustomersController extends CustomController
 {
-    public $layout = 'superadmin_v2.php';
-
     public $activeTab = 'customers';
 
     public function behaviors()
