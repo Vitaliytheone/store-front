@@ -106,37 +106,6 @@ class ProjectController extends CustomController
     }
 
     /**
-     * Create order
-     * @return string|\yii\web\Response
-     */
-    public function actionOrderDomain()
-    {
-        $this->view->title = Yii::t('app', 'pages.title.order');
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new OrderPanelForm();
-        $model->scenario = OrderPanelForm::SCENARIO_CREATE_DOMAIN;
-
-        if ($model->load(Yii::$app->request->post())) {
-            if (!$model->validate()) {
-                return [
-                    'status' => 'error',
-                    'error' => ActiveForm::firstError($model)
-                ];
-            }
-            return [
-                'status' => 'success'
-            ];
-        }
-
-        return [
-            'status' => 'error',
-            'error' => 'Invalid form data'
-        ];
-    }
-
-    /**
      * View Panels list
      * @return string
      */

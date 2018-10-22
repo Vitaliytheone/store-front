@@ -573,6 +573,8 @@ return [
     'stores.order.btn_domain_search' => 'Search',
     'stores.order.btn_continue_domain_search' => 'Continue',
 
+    'domain.order.error_invalid_form_data' => 'Invalid form data',
+
     'stores.edit_store_domain.domain' => 'Domain name',
     'stores.edit_store_domain.modal_submit' => 'Save changes',
     'stores.edit_store_domain.modal_cancel' => 'Cancel',

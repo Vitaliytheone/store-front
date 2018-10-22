@@ -15,6 +15,7 @@ use my\models\forms\OrderStoreForm;
 use yii\filters\VerbFilter;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
+use my\models\forms\OrderPanelForm;
 
 
 /**
@@ -58,16 +59,16 @@ class DomainsController extends CustomController
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'order-store-domain' => ['POST'],
+                    'order-domain' => ['POST'],
                 ],
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['order-store-domain']
+                'only' => ['order-domain']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['order-store-domain'],
+                'only' => ['order-domain'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -141,15 +142,29 @@ class DomainsController extends CustomController
     }
 
     /**
+     * @param string $order
      * @return array
      * @throws \Throwable
      */
-    public function actionOrderStoreDomain()
+    public function actionOrderDomain($order)
     {
         $this->view->title = Yii::t('app', 'pages.title.order');
 
-        $model = new OrderStoreForm();
-        $model->setIp(Yii::$app->request->getUserIP());
+        switch ($order) {
+            case 'store':
+                $model = new OrderStoreForm();
+                $model->setIp(Yii::$app->request->getUserIP());
+                break;
+            case 'panel':
+                $model = new OrderPanelForm();
+                break;
+            default:
+                return [
+                    'status' => 'error',
+                    'error' => Yii::t('app', 'domain.order.error_invalid_form_data')
+                ];
+        }
+
         $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
 
         if ($model->load(Yii::$app->request->post())) {
@@ -166,7 +181,7 @@ class DomainsController extends CustomController
 
         return [
             'status' => 'error',
-            'error' => 'Invalid form data'
+            'error' => Yii::t('app', 'domain.order.error_invalid_form_data')
         ];
     }
 }
