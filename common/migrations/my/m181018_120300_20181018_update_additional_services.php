@@ -12,6 +12,8 @@ class m181018_120300_20181018_update_additional_services extends Migration
      */
     public function safeUp()
     {
+        $this->alterColumn('additional_services', 'res', $this->integer(11));
+        $this->alterColumn('additional_services', 'id', $this->integer(11));
         $this->dropPrimaryKey('PRIMARY', 'additional_services');
 
         $this->addPrimaryKey('', 'additional_services', 'id');
