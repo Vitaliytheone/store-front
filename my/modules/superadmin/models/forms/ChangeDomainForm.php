@@ -6,6 +6,7 @@ use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
+use my\helpers\ProvidersHelper;
 use yii\base\Model;
 use Yii;
 
@@ -75,16 +76,7 @@ class ChangeDomainForm extends Model {
                 return false;
             }
 
-            if (($additionalService = AdditionalServices::findOne([
-                'name' => $domain
-            ]))) {
-                AdditionalServices::updateAll([
-                    'name' =>  $additionalService->name . '_' . $additionalService->provider_id,
-                    'status' => AdditionalServices::STATUS_BROKEN,
-                ], [
-                    'name' => $domain
-                ]);
-            }
+            ProvidersHelper::makeProvidersOld($domain);
 
             if (($additionalService = AdditionalServices::findOne([
                 'name' => $oldDomain

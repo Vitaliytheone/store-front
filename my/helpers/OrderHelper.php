@@ -367,19 +367,7 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $projectAdmin->getErrors(), 'cron.order.admin');
         }
 
-        // При создании панели проверяем добавлена ли ранее запись additional_services.name = домен панели.
-        // Если хоть одна запись существует, то для всех существующих записей: добавляем к имени _{provider_id}, меняем additional_services.status = 1
-        $additionalService = AdditionalServices::findOne([
-            'name' => $domain
-        ]);
-        if ($additionalService) {
-            AdditionalServices::updateAll([
-                'name' =>  $additionalService->name . '_' . $additionalService->provider_id,
-                'status' => AdditionalServices::STATUS_BROKEN,
-            ], [
-                'name' => $domain
-            ]);
-        }
+        ProvidersHelper::makeProvidersOld($domain);
 
         $additionalService = new AdditionalServices();
         $additionalService->name = $domain;

@@ -5,6 +5,7 @@ namespace common\models\panels;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
+use my\helpers\ProvidersHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -425,17 +426,7 @@ class InvoiceDetails extends ActiveRecord
 
                 // If panel restored from `terminated`
                 if (time() > ExpiryHelper::days(30, $lastExpired)) {
-                    $additionalService = AdditionalServices::findOne([
-                        'name' => $project->site
-                    ]);
-                    if ($additionalService) {
-                        AdditionalServices::updateAll([
-                            'name' =>  $additionalService->name . '_' . $additionalService->provider_id,
-                            'status' => AdditionalServices::STATUS_BROKEN,
-                        ], [
-                            'name' => $project->site
-                        ]);
-                    }
+                    ProvidersHelper::makeProvidersOld($project->site);
                 }
 
                 $ExpiredLogModel = new ExpiredLog();
