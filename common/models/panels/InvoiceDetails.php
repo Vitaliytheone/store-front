@@ -4,6 +4,7 @@ namespace common\models\panels;
 
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
+use my\helpers\ExpiryHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -419,6 +420,21 @@ class InvoiceDetails extends ActiveRecord
 
                     if (!$customer || !$customer->activateDomains()) {
                         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_PANEL, $project->id, $project->getErrors(), 'paid.activate_domains_feature');
+                    }
+                }
+
+                // If panel restored from `terminated`
+                if (ExpiryHelper::days(30, $lastExpired) > time()) {
+                    $additionalService = AdditionalServices::findOne([
+                        'name' => $project->site
+                    ]);
+                    if ($additionalService) {
+                        AdditionalServices::updateAll([
+                            'name' =>  $additionalService->name . '_' . $additionalService->provider_id,
+                            'status' => AdditionalServices::STATUS_BROKEN,
+                        ], [
+                            'name' => $project->site
+                        ]);
                     }
                 }
 

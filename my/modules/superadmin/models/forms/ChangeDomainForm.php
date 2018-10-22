@@ -76,6 +76,17 @@ class ChangeDomainForm extends Model {
             }
 
             if (($additionalService = AdditionalServices::findOne([
+                'name' => $domain
+            ]))) {
+                AdditionalServices::updateAll([
+                    'name' =>  $additionalService->name . '_' . $additionalService->provider_id,
+                    'status' => AdditionalServices::STATUS_BROKEN,
+                ], [
+                    'name' => $domain
+                ]);
+            }
+
+            if (($additionalService = AdditionalServices::findOne([
                 'name' => $oldDomain
             ]))) {
 
