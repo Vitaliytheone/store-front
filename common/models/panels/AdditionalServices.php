@@ -72,9 +72,12 @@ class AdditionalServices extends ActiveRecord
     const TYPE_INTERNAL = 1;
 
     const STATUS_ACTIVE = 0;
-    const STATUS_FROZEN = 1;
+    const STATUS_BROKEN = 1;
     const STATUS_PROCESSING = 2;
     const STATUS_NOT_UPDATED = 3;
+
+    const SEARCH_ON = 1;
+    const SEARCH_OFF = 0;
 
     const AUTO_SERVICE_NOT_AUTO_LIST = 0;
     const AUTO_SERVICE_AUTO_LIST = 1;
@@ -232,7 +235,7 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             static::STATUS_ACTIVE => Yii::t('app', 'additional_service.status.ok'),
-            static::STATUS_FROZEN => Yii::t('app', 'additional_service.status.broken'),
+            static::STATUS_BROKEN => Yii::t('app', 'additional_service.status.broken'),
             static::STATUS_PROCESSING => Yii::t('app', 'additional_service.status.send_only'),
             static::STATUS_NOT_UPDATED => Yii::t('app', 'additional_service.status.not_updated'),
         ];
