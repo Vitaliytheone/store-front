@@ -424,7 +424,7 @@ class InvoiceDetails extends ActiveRecord
                 }
 
                 // If panel restored from `terminated`
-                if (ExpiryHelper::days(30, $lastExpired) > time()) {
+                if (time() > ExpiryHelper::days(30, $lastExpired)) {
                     $additionalService = AdditionalServices::findOne([
                         'name' => $project->site
                     ]);
