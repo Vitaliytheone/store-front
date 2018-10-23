@@ -53,7 +53,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'plan.edit.modal_cancel_btn')?></button>
+                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'plan.edit.modal_cancel_btn')?></button>
                 <?= Html::submitButton(Yii::t('app/superadmin', 'plan.edit.modal_submit_btn'), [
                     'class' => 'btn btn-outline btn-primary',
                     'name' => 'edit-plan-button',

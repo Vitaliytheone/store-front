@@ -19,8 +19,6 @@ use yii\filters\VerbFilter;
  */
 class OrdersController extends CustomController
 {
-    public $layout = 'superadmin_v2.php';
-
     public $activeTab = 'orders';
 
     public function behaviors()

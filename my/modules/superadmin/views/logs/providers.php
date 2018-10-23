@@ -10,21 +10,20 @@ use yii\widgets\LinkPager;
 
     $this->context->addModule('superadminProviderLogsController');
 ?>
-<div class="container-fluid mt-3">
-    <ul class="nav mb-3 justify-content-end">
-        <li>
-            <form class="form-inline" method="GET" id="logsSearch" action="<?=Url::toRoute(array_merge(['/logs/providers'], $filters, ['query' => null]))?>">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="ml-auto">
+            <form class="form" method="GET" id="logsSearch" action="<?=Url::toRoute(array_merge(['/logs/providers'], $filters, ['query' => null]))?>">
                 <div class="input-group">
                     <input type="text" class="form-control" name="query" placeholder="<?= Yii::t('app/superadmin', 'logs.providers.list.search') ?>" value="<?=$filters['query']?>">
-                    <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="submit"><i class="fa fa-search fa-fw" id="submitSearch"></i></button>
-                </span>
+                    <div class="input-group-append">
+                        <button class="btn btn-light" type="submit"><span id="submitSearch" class="fa fa-search"></span></button>
+                    </div>
                 </div>
             </form>
         </li>
     </ul>
 
-    <table class="table table-border">
+    <table class="table table-sm table-custom">
         <thead>
         <tr>
             <th><?= Yii::t('app/superadmin', 'logs.providers.list.column_site')?></th>
@@ -63,10 +62,13 @@ use yii\widgets\LinkPager;
         </tbody>
     </table>
 
-    <div class="text-align-center pager">
-        <?= LinkPager::widget([
-            'pagination' => $logs['pages'],
-        ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $logs['pages'],]); ?>
+            </ul>
+        </nav>
     </div>
-
 </div>
+

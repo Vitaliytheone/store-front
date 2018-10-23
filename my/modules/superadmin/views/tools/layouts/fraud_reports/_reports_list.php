@@ -10,7 +10,7 @@ use common\models\panels\PaypalFraudReports;
 
 ?>
 
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'fraud_reports.list.id') ?></th>
@@ -21,7 +21,7 @@ use common\models\panels\PaypalFraudReports;
         <th><?= Yii::t('app/superadmin', 'fraud_reports.list.status') ?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_reports.list.created') ?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_reports.list.updated') ?></th>
-        <th class="table-custom__action-th w-1"></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>

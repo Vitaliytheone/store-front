@@ -14,7 +14,7 @@
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= Yii::t('app/superadmin', 'payments.edit_modal.close_btn') ?></button>
+                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'payments.edit_modal.close_btn') ?></button>
                 <?= Html::submitButton(Yii::t('app/superadmin', 'payments.edit_modal.save_changes'), [
                     'class' => 'btn btn-primary',
                     'name' => 'edit-payment-button',

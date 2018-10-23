@@ -6,6 +6,7 @@ use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
+use my\helpers\ProvidersHelper;
 use yii\base\Model;
 use Yii;
 
@@ -74,6 +75,8 @@ class ChangeDomainForm extends Model {
                 $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
                 return false;
             }
+
+            ProvidersHelper::makeProvidersOld($domain);
 
             if (($additionalService = AdditionalServices::findOne([
                 'name' => $oldDomain
