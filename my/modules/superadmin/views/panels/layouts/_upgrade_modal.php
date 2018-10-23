@@ -1,12 +1,12 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
-    /* @var $modal \my\modules\superadmin\models\forms\UpgradePanelForm */
+    /* @var $modal \superadmin\models\forms\UpgradePanelForm */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
-    use my\modules\superadmin\models\forms\UpgradePanelForm;
+    use superadmin\models\forms\UpgradePanelForm;
 
     $model = new UpgradePanelForm();
 ?>

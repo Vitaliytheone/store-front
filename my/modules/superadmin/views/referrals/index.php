@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $referrals \my\modules\superadmin\models\search\PanelsSearch */
+/* @var $referrals \superadmin\models\search\PanelsSearch */
 /* @var $filters */
 
 use my\helpers\Url;

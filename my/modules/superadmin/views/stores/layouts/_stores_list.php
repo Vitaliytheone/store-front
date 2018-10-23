@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $stores \my\modules\superadmin\models\search\StoresSearch */
+/* @var $stores \superadmin\models\search\StoresSearch */
 /* @var $filters array */
 
 use my\helpers\Url;
@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use common\models\stores\Stores;
 use yii\helpers\Json;
-use my\modules\superadmin\widgets\CountPagination;
+use superadmin\widgets\CountPagination;
 
 $now = time();
 

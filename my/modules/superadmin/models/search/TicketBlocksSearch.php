@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Project;
 use common\models\panels\Domains;
@@ -10,7 +10,7 @@ use common\models\stores\Stores;
 /**
  * Search info by customer
  * Class TicketBlockSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class TicketBlocksSearch
 {

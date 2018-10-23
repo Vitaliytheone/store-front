@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin;
+namespace superadmin;
 
 use Yii;
 
@@ -12,7 +12,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'my\modules\superadmin\controllers';
+    public $controllerNamespace = 'superadmin\controllers';
 
     /**
      * @inheritdoc

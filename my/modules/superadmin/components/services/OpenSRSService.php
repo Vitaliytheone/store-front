@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\components\services;
+namespace superadmin\components\services;
 
 use opensrs\Request;
 use Exception;
@@ -9,7 +9,7 @@ require_once(Yii::getAlias('@my/config/services/open_srs.php'));
 
 /**
  * Class OpenSRSService
- * @package my\modules\superadmin\components\services
+ * @package superadmin\components\services
  */
 class OpenSRSService extends BaseService
 {

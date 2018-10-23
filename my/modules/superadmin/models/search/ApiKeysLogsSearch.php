@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\AdditionalServices;
@@ -23,7 +23,7 @@ use yii\db\Query;
  * In use   [project.site, …]
  * Date     panel_providers_log.created_at
  *
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ApiKeysLogsSearch
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
 use yii\base\Widget;
 use yii\data\Pagination;

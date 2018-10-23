@@ -4,10 +4,10 @@
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \my\modules\superadmin\models\forms\PanelsScannerAddDomainForm();
+    $model = new \superadmin\models\forms\PanelsScannerAddDomainForm();
 
     /* @var $this yii\web\View */
-    /* @var $model \my\modules\superadmin\models\forms\PanelsScannerAddDomainForm */
+    /* @var $model \superadmin\models\forms\PanelsScannerAddDomainForm */
     /* @var $panelType string */
 ?>
 

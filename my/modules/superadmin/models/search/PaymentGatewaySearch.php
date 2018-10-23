@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\PaymentGateway;
 use yii\db\ActiveQuery;
 
 /**
  * Class PaymentGatewaySearch
- * @package my\modules\superadmin\models
+ * @package superadmin\models
  */
 class PaymentGatewaySearch extends PaymentGateway
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use yii\base\Model;
 use common\models\panels\AdditionalServices;
@@ -8,7 +8,7 @@ use Yii;
 
 /**
  * Class CreateProviderForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class CreateProviderForm extends Model
 {

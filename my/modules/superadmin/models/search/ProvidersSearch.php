@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
@@ -12,7 +12,7 @@ use yii\data\Pagination;
 
 /**
  * Class ProvidersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ProvidersSearch
 {

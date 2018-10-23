@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -12,7 +12,7 @@ use my\helpers\SpecialCharsHelper;
 
 /**
  * Class StoresSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class StoresSearch {
 

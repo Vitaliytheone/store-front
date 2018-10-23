@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\AdditionalServices;
 use common\models\panel\Services;
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class EditProvidersForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditProvidersForm extends Model {
 
