@@ -2,10 +2,10 @@
 
 namespace my\modules\superadmin\models\search;
 
+use common\models\panels\CustomersNote;
 use common\models\panels\Project;
 use common\models\panels\Domains;
 use common\models\panels\SslCert;
-use common\models\panels\TicketNotes;
 use common\models\stores\Stores;
 
 /**
@@ -161,7 +161,7 @@ class TicketBlocksSearch
      * @return array|\yii\db\ActiveRecord[]
      */
     private static function _getNotes($customerId) {
-        $query = TicketNotes::find();
+        $query = CustomersNote::find();
 
         $query->where([
             '=',

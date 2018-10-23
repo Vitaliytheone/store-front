@@ -3,12 +3,11 @@
 namespace common\models\panels;
 
 use Yii;
-use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 
 /**
- * This is the model class for table "ticket_notes".
+ * This is the model class for table "customers_note".
  *
  * @property int $id
  * @property int $customer_id
@@ -17,15 +16,17 @@ use yii\behaviors\BlameableBehavior;
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
+ *
+ * @property Customers $customer
  */
-class TicketNotes extends ActiveRecord
+class CustomersNote extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'ticket_notes';
+        return 'customers_note';
     }
 
     /**
@@ -35,8 +36,11 @@ class TicketNotes extends ActiveRecord
     {
         return [
             [['customer_id', 'note'], 'required'],
-            [['customer_id', 'created_at', 'updated_at'], 'integer'],
+            [['customer_id', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['note'], 'string', 'max' => 1000],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => SuperAdmin::class, 'targetAttribute' => ['created_by' => 'id']],
+            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => SuperAdmin::class, 'targetAttribute' => ['updated_by' => 'id']],
         ];
     }
 
@@ -51,7 +55,33 @@ class TicketNotes extends ActiveRecord
             'note' => Yii::t('app', 'Note'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customers::class, ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNoteCreator()
+    {
+        return $this->hasOne(SuperAdmin::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNoteUpdater()
+    {
+        return $this->hasOne(SuperAdmin::class, ['id' => 'updated_by']);
     }
 
     /**

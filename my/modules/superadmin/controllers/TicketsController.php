@@ -2,9 +2,9 @@
 
 namespace my\modules\superadmin\controllers;
 
+use common\models\panels\CustomersNote;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
-use common\models\panels\TicketNotes;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use my\components\SuperAccessControl;
@@ -369,12 +369,12 @@ class TicketsController extends CustomController
 
     /**
      * @param int $id
-     * @return TicketNotes
+     * @return CustomersNote
      * @throws NotFoundHttpException
      */
-    protected function findNote(int $id): TicketNotes
+    protected function findNote(int $id): CustomersNote
     {
-        $model = TicketNotes::findOne($id);
+        $model = CustomersNote::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();

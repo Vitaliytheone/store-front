@@ -14,7 +14,7 @@ class m181022_133619_20181022_ticket_notes_rename_table extends Migration
     {
         $this->renameTable('ticket_notes', 'customers_note');
 
-        $this->addForeignKey('fk-notes-customer_id', 'customers_note', 'customer_id', 'customers', 'id', 'CASCADE');
+        $this->addForeignKey('fk_notes_customer_id', 'customers_note', 'customer_id', 'customers', 'id', 'CASCADE');
     }
 
     /**
@@ -22,7 +22,7 @@ class m181022_133619_20181022_ticket_notes_rename_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk-notes-customer_id', 'customers_note');
+        $this->dropForeignKey('fk_notes_customer_id', 'customers_note');
 
         $this->renameTable('customers_note', 'ticket_notes');
     }

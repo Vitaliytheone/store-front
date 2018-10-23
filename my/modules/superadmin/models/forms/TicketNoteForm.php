@@ -3,7 +3,7 @@
 namespace my\modules\superadmin\models\forms;
 
 
-use common\models\panels\TicketNotes;
+use common\models\panels\CustomersNote;
 use yii\base\Model;
 
 /**
@@ -20,7 +20,7 @@ class TicketNoteForm extends Model
     protected $_customerId;
 
     /**
-     * @var TicketNotes
+     * @var CustomersNote
      */
     protected $_ticketNote;
 
@@ -53,7 +53,7 @@ class TicketNoteForm extends Model
     /**
      * @param $note
      */
-    public function setNote(TicketNotes $note)
+    public function setNote(CustomersNote $note)
     {
         $this->_ticketNote = $note;
     }
@@ -71,7 +71,7 @@ class TicketNoteForm extends Model
 
         switch ($this->scenario) {
             case self::SCENARIO_CREATE:
-                $ticketNote = new TicketNotes();
+                $ticketNote = new CustomersNote();
                 $ticketNote->note = $this->note;
                 $ticketNote->customer_id = $this->_customerId;
 
