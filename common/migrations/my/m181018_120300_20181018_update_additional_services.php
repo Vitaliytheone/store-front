@@ -16,7 +16,7 @@ class m181018_120300_20181018_update_additional_services extends Migration
         $this->alterColumn('additional_services', 'id', $this->integer(11));
         $this->dropPrimaryKey('PRIMARY', 'additional_services');
 
-        $this->addPrimaryKey('', 'additional_services', 'id');
+        $this->addPrimaryKey('additional_services_pk', 'additional_services', 'id');
         $this->createIndex('res', 'additional_services', 'res');
         $this->alterColumn('additional_services', 'id', $this->integer(11).' NOT NULL AUTO_INCREMENT');
     }
