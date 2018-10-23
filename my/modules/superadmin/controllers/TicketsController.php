@@ -33,7 +33,6 @@ use \yii\filters\VerbFilter;
 class TicketsController extends CustomController
 {
     public $activeTab = 'tickets';
-    public $layout = 'superadmin_v2.php';
 
     public function behaviors()
     {

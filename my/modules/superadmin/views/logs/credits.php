@@ -6,9 +6,7 @@ use \my\helpers\Url;
 /** @var array $logs */
 ?>
 
-<div class="container-fluid mt-3">
-
-    <table class="table table-border">
+    <table class="table table-sm table-custom">
         <thead>
         <tr>
             <th><?= Yii::t('app/superadmin', 'logs.credits.list.column_id') ?></th>
@@ -33,10 +31,12 @@ use \my\helpers\Url;
         </tbody>
     </table>
 
-    <div class="text-align-center pager">
-        <?= LinkPager::widget([
-            'pagination' => $pagination,
-        ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $pagination,]); ?>
+            </ul>
+        </nav>
     </div>
-
 </div>

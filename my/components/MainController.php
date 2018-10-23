@@ -28,7 +28,7 @@ class MainController extends Controller
             if (Yii::$app->superadmin->isGuest) {
                 $this->layout = '@superadmin/views/layouts/guest.php';
             } else {
-                $this->layout = '@superadmin/views/layouts/superadmin.php';
+                $this->layout = '@superadmin/views/layouts/superadmin_v2.php';
             }
         }
 

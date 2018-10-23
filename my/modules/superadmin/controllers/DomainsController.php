@@ -41,6 +41,7 @@ class DomainsController extends CustomController
      * Get domain details
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDetails($id)
     {
