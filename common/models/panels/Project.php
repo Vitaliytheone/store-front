@@ -92,7 +92,8 @@ use yii\helpers\ArrayHelper;
  * @property int $forgot_password
  * @property int $no_invoice
  * @property int $no_referral
- *
+ * @property string $paypal_fraud_settings
+
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
  * @property Tariff $tariffDetails
@@ -126,6 +127,9 @@ class Project extends ActiveRecord implements ProjectInterface
 
     const NO_INVOICE_ENABLED = 1;
     const NO_INVOICE_DISABLED = 0;
+
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_HIGH = 'accept_high';
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_CRITICAL = 'accept_critical';
 
     use UnixTimeFormatTrait;
 
@@ -161,6 +165,11 @@ class Project extends ActiveRecord implements ProjectInterface
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
+            ['paypal_fraud_settings', 'string'],
+            ['paypal_fraud_settings', 'default', 'value' => json_encode([
+                self::CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_HIGH => 1,
+                self::CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_CRITICAL => 1,
+            ])],
         ];
     }
 
@@ -903,4 +912,23 @@ class Project extends ActiveRecord implements ProjectInterface
             ->where(['project.site' => $this->site])
             ->all();
     }
+
+    /**
+     * Get paypal_fraud_settings
+     * @return array
+     */
+    public function getPaypalFraudSettings()
+    {
+        return json_decode($this->paypal_fraud_settings, true);
+    }
+
+    /**
+     * Set paypal_fraud_settings
+     * @param array $settings
+     */
+    public function setPaypalFraudSettings(array $settings)
+    {
+        $this->paypal_fraud_settings = json_encode($settings);
+    }
+
 }
