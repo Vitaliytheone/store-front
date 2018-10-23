@@ -13,9 +13,9 @@
 ?>
 
     <ul class="nav nav-pills mb-3" role="tablist">
-                <?php foreach ($navs as $code => $label) : ?>
-                    <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/customers', 'status' => $code, 'page_size' => $customers['pages']->pageSize]) ?>"><?= $label ?></a></li>
-                <?php endforeach; ?>
+        <?php foreach ($navs as $code => $label) : ?>
+            <li class="nav-item"><a class="nav-link text-nowrap <?= ($code === $status ? 'active' : '') ?>" href="<?= Url::toRoute(['/customers', 'status' => $code, 'page_size' => $customers['pages']->pageSize]) ?>"><?= $label ?></a></li>
+        <?php endforeach; ?>
         <li class="ml-auto">
             <?php $form = ActiveForm::begin([
                 'id' => 'customersSearch',

@@ -8,25 +8,20 @@
     use my\components\ActiveForm;
 
 ?>
-<div class="container mt-3">
+<div class="container">
     <div class="row">
-        <div class="col-lg-2 offset-lg-1">
-            <ul class="nav nav-pills flex-column mb-3">
-                <li class="nav-item">
-                    <?= Html::a('Payments', Url::toRoute('/settings'), ['class' => 'nav-link'])?>
-                </li>
-                <li class="nav-item">
-                    <?= Html::a('Staff', Url::toRoute('/settings/staff'), ['class' => 'nav-link'])?>
-                </li>
-                <li class="nav-item">
-                    <?= Html::a('Email', Url::toRoute('/settings/email'), ['class' => 'nav-link bg-faded'])?>
-                </li>
-            </ul>
+        <div class="col-md-2">
+            <div class="list-group list-group__custom">
+                <a href="<?=Url::toRoute('/settings')?>" class="list-group-item list-group-item-action"><span class="fa fa-credit-card"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_payments')?></a>
+                <a href="<?=Url::toRoute('/settings/staff')?>" class="list-group-item list-group-item-action"><span class="fa fa-user"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_staff')?></a>
+                <a href="<?=Url::toRoute('/settings/email')?>" class="list-group-item list-group-item-action"><span class="fa fa-envelope-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_email')?></a>
+                <a href="<?=Url::toRoute('/settings/plan')?>" class="list-group-item list-group-item-action"><span class="fa fa-list-alt"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_plan')?></a>
+                <a href="<?=Url::toRoute('/settings/content')?>" class="list-group-item list-group-item-action active"><span class="fa fa-file-text-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.content')?></a>
+            </div>
         </div>
         <div class="col-lg-8">
             <h3><?= Yii::t('app/superadmin', 'settings.create_email.header') ?></h3>
-            <div class="card">
-                <div class="card-block">
+            <div class="form-gr">
                     <?php $form = ActiveForm::begin([
                         'id' => 'createEmailForm',
                         'options' => [

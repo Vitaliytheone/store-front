@@ -4,9 +4,9 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use my\assets\SuperAdminAsset;
+use my\assets\SuperAdminV2Asset;
 
-SuperAdminAsset::register($this);
+SuperAdminV2Asset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
