@@ -63,7 +63,7 @@ class StoreController extends CustomController
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'edit-domain' => ['POST'],
                     'staff-create' => ['POST'],

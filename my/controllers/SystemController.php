@@ -23,15 +23,18 @@ class SystemController extends CustomController
 
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            'content' => [
-                'class' => ContentNegotiator::class,
-                'only' => ['dns', 'dns-list'],
-                'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+        return array_merge(
+            parent::behaviors(),
+            [
+                'content' => [
+                    'class' => ContentNegotiator::class,
+                    'only' => ['dns', 'dns-list'],
+                    'formats' => [
+                        'application/json' => Response::FORMAT_JSON,
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
     }
 
     /**

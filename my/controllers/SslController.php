@@ -14,6 +14,11 @@ use Yii;
 class SslController extends CustomController
 {
 
+    public function behaviors()
+    {
+        return parent::behaviors();
+    }
+
     /**
      * Ssl page
      * @return string

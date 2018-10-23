@@ -45,7 +45,7 @@ class ProjectController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['order-domain', 'staffpasswd', 'staffedit', 'staffcreate'],
+                'only' => ['order-domain', 'staffpasswd', 'staffedit', 'staffcreate', 'search-domains'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -289,8 +289,6 @@ class ProjectController extends CustomController
      */
     public function actionSearchDomains()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $domain = trim(Yii::$app->request->get('search_domain'));
         $zone = trim(Yii::$app->request->get('zone'));
         $zones = ArrayHelper::index(DomainZones::find()->all(), 'id');

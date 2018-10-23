@@ -15,6 +15,11 @@ use yii\web\Response;
 class ActivityController extends CustomController
 {
 
+    public function behaviors()
+    {
+        return parent::behaviors();
+    }
+
     /**
      * View panel activity log list
      * @param integer $id
