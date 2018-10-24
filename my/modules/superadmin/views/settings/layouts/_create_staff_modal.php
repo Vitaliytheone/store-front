@@ -43,11 +43,9 @@
                         <label for=""><?= $model->getAttributeLabel('password') ?></label>
                         <div class="input-group">
                             <?= Html::textInput('CreateStaffForm[password]', '', ['class' => 'form-control password'])?>
-                            <span class="input-group-addon">
-                                <span class="btn btn-default random-password pointer">
-                                    <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="<?= Yii::t('app/superadmin', 'staff.create_staff.modal_generate_password') ?>"></i>
-                                </span>
-                            </span>
+                            <div class="input-group-append random-password">
+                                <button class="btn btn-secondary" type="button"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_generate_password') ?></button>
+                            </div>
                         </div>
                     </div>
 
@@ -68,7 +66,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_cancel_btn') ?></button>
+                    <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_cancel_btn') ?></button>
                     <?= Html::submitButton(Yii::t('app/superadmin', 'staff.create_staff.modal_create_account'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'create-staff-button',

@@ -324,7 +324,8 @@ class ChildProjectController extends CustomController
         $model = Project::findOne([
             'cid' => Yii::$app->user->identity->id,
             'id' => $id,
-            'child_panel' => 1
+            'child_panel' => 1,
+            'hide' => 0,
         ]);
 
         if (!$model || !Project::hasAccess($model, 'canEdit')) {

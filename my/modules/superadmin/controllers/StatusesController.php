@@ -16,7 +16,6 @@ use my\modules\superadmin\models\search\GetstatusSearch;
 class StatusesController extends CustomController
 {
     public $activeTab = 'statuses';
-    public $layout = 'superadmin_v2.php';
 
     public function behaviors()
     {

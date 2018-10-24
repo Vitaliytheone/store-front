@@ -11,7 +11,7 @@
     $model = new CreateInvoiceForm();
 ?>
 <div class="modal fade" id="createInvoiceModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><?= Yii::t('app/superadmin', 'invoices.create_invoice.header')?></h5>

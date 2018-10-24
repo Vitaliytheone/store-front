@@ -134,6 +134,7 @@ class SettingsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditStaff($id)
     {
@@ -186,6 +187,7 @@ class SettingsController extends CustomController
      * Change staff password action
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionStaffPassword($id)
     {
@@ -215,6 +217,8 @@ class SettingsController extends CustomController
     /**
      * Get payment edit form or save data
      * @param $id
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEditPayment($id)
     {
@@ -275,16 +279,17 @@ class SettingsController extends CustomController
      * Edit email.
      *
      * @access public
-     * @param int $id
-     * @return string
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEditEmail($id)
     {
-        $this->view->title = 'Edit email';
-
         if (!($email = NotificationEmail::findOne($id))) {
             throw new NotFoundHttpException();
         }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new EditNotificationEmailForm();
         $model->setEmail($email);
@@ -293,9 +298,16 @@ class SettingsController extends CustomController
             $this->redirect(Url::toRoute('/settings/email'));
         }
 
-        return $this->render('edit_email', [
-            'model' => $model
-        ]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**
@@ -305,6 +317,7 @@ class SettingsController extends CustomController
      * @param int $id
      * @param int $status
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionEmailStatus($id, $status)
     {
@@ -323,6 +336,7 @@ class SettingsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditPlan($id)
     {
@@ -377,6 +391,7 @@ class SettingsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditContent($id)
     {

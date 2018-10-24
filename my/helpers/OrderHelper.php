@@ -367,17 +367,7 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $projectAdmin->getErrors(), 'cron.order.admin');
         }
 
-        // проверяем добавлена ли ранее запись additional_services.name = домен панели, если да то добавляем к имени _old
-        // и меняем additional_services.status = 1 и additional_services.search = 1
-        $additionalService = AdditionalServices::findOne([
-            'name' => $domain
-        ]);
-        if ($additionalService) {
-            $additionalService->name = $additionalService->name . '_old';
-            $additionalService->search = 1;
-            $additionalService->status = 1;
-            $additionalService->save(false);
-        }
+        ProvidersHelper::makeProvidersOld($domain);
 
         $additionalService = new AdditionalServices();
         $additionalService->name = $domain;
@@ -392,6 +382,10 @@ class OrderHelper {
         $additionalService->status = AdditionalServices::STATUS_ACTIVE;
         $additionalService->service_description = 1;
         $additionalService->import = 1;
+        $additionalService->service_auto_rate = 1;
+        $additionalService->provider_rate = 1;
+        $additionalService->service_auto_max = 1;
+        $additionalService->service_auto_min = 1;
         $additionalService->currency = CurrencyHelper::getCurrencyCodeById($order->getCurrency());
 
         if (!$additionalService->save(false)) {

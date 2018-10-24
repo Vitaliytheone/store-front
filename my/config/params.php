@@ -29,6 +29,7 @@ return [
     'noreplyEmail' => 'noreply@getyourpanel.com', // Адрес почты для отправки писем (from)
     'supportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта
     'sysmailSupportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта для sysmail метода
+    'provider_service_id_label_list' => require(__DIR__ . '/services/provider_service_id_label_list.php'),
 
     // Параметры по умолчанию при создании панели
     'projectDefaults' => [

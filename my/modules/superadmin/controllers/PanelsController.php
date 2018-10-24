@@ -30,7 +30,6 @@ use \yii\filters\VerbFilter;
 class PanelsController extends CustomController
 {
     public $activeTab = 'panels';
-    public $layout = 'superadmin_v2.php';
 
     public function behaviors()
     {

@@ -8,13 +8,13 @@
     use my\helpers\PriceHelper;
 ?>
 
-<table class="table mb-0">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
-        <th class="border-0"><?= Yii::t('app/superadmin', 'settings.plan.column_name') ?></th>
-        <th class="border-0"><?= Yii::t('app/superadmin', 'settings.plan.column_rate') ?></th>
-        <th class="border-0"><?= Yii::t('app/superadmin', 'settings.plan.column_description') ?></th>
-        <th class="border-0"></th>
+        <th scope="col"><?= Yii::t('app/superadmin', 'settings.plan.column_name') ?></th>
+        <th scope="col"><?= Yii::t('app/superadmin', 'settings.plan.column_rate') ?></th>
+        <th scope="col"><?= Yii::t('app/superadmin', 'settings.plan.column_description') ?></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -27,7 +27,7 @@
 
                     <td class="text-right">
                         <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'settings.plan.actions_label') ?></button>
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'settings.plan.actions_label') ?></button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <?= Html::a(Yii::t('app/superadmin', 'settings.plan.action_edit_plan') , Url::toRoute(['/settings/edit-plan', 'id' => $plan->id]), [
                                     'class' => 'dropdown-item edit-plan',
