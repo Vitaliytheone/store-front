@@ -8,7 +8,7 @@
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \superadmin\models\forms\ChangeDomainForm();
+    $model = new superadmin\models\forms\ChangeDomainForm();
 ?>
 <div class="modal fade" id="changeDomainModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">

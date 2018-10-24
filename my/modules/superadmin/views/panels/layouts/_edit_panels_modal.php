@@ -4,7 +4,7 @@
 use my\components\ActiveForm;
 use my\helpers\Url;
 use yii\bootstrap\Html;
-use \superadmin\models\forms\EditProjectForm;
+use superadmin\models\forms\EditProjectForm;
 use yii\helpers\Json;
 use superadmin\widgets\SelectCustomer;
 

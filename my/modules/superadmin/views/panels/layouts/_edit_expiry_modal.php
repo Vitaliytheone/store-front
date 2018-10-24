@@ -9,7 +9,7 @@
     use yii\bootstrap\Html;
     use superadmin\widgets\DateTimePicker;
 
-    $model = new \superadmin\models\forms\EditExpiryForm();
+    $model = new superadmin\models\forms\EditExpiryForm();
 ?>
 <div class="modal fade" id="editExpiryModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">

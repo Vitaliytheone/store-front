@@ -7,7 +7,7 @@
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \superadmin\models\forms\EditProviderForm();
+    $model = new superadmin\models\forms\EditProviderForm();
 ?>
 <div class="modal fade" id="editProviderModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">
