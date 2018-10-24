@@ -33,6 +33,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class SiteController
@@ -68,6 +69,10 @@ class SiteController extends CustomController
                     'changeemail' => ['POST'],
                     'changepassword' => ['POST'],
                 ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,

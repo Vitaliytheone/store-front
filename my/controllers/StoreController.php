@@ -23,6 +23,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class StoreController
@@ -70,6 +71,10 @@ class StoreController extends CustomController
                     'staff-edit' => ['POST'],
                     'staff-password' => ['POST'],
                 ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['edit-domain', 'staff-create', 'staff-edit', 'staff-password']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,

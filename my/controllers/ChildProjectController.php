@@ -21,6 +21,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class ChildProjectController
@@ -69,6 +70,10 @@ class ChildProjectController extends CustomController
                     'staff-edit' => ['POST'],
                     'staffcreate' => ['POST'],
                 ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['order-domain', 'staff-passwd', 'staff-edit', 'staffcreate']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,

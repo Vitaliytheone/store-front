@@ -23,6 +23,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class ProjectController
@@ -42,6 +43,10 @@ class ProjectController extends CustomController
                     'staffedit' => ['POST'],
                     'staffcreate' => ['POST'],
                 ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['order-domain', 'staffpasswd', 'staffedit', 'staffcreate', 'search-domains']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,

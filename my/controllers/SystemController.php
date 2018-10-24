@@ -3,7 +3,6 @@
 namespace my\controllers;
 
 use common\models\panels\MyActivityLog;
-use my\components\filters\DisableCsrfToken;
 use my\helpers\UserHelper;
 use my\mail\mailers\PanelFrozen;
 use my\models\forms\LoginFormSuper;
@@ -12,7 +11,6 @@ use Yii;
 use common\models\panels\Customers;
 use yii\web\HttpException;
 use yii\web\Response;
-use yii\filters\ContentNegotiator;
 
 /**
  * Class SystemController
@@ -20,25 +18,7 @@ use yii\filters\ContentNegotiator;
  */
 class SystemController extends CustomController
 {
-
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'content' => [
-                    'class' => ContentNegotiator::class,
-                    'only' => ['dns', 'dns-list'],
-                    'formats' => [
-                        'application/json' => Response::FORMAT_JSON,
-                    ],
-                ],
-                'token' => [
-                    'class' => DisableCsrfToken::class,
-                ],
-            ]
-        );
-    }
+    public $enableCsrfValidation = false;
 
     /**
      * System pip action
@@ -113,6 +93,7 @@ class SystemController extends CustomController
 
     /**
      * Test succesed add ssl to ddos guard service
+     * @return string
      * @throws HttpException
      */
     public function actionDdosSuccess()
@@ -131,10 +112,13 @@ class SystemController extends CustomController
 
     /**
      * Test successed dns
+     * @return array
      * @throws HttpException
      */
     public function actionDns()
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         return [
             'status' => 'Success'
         ];
@@ -142,10 +126,13 @@ class SystemController extends CustomController
 
     /**
      * Test dns list
+     * @return array
      * @throws HttpException
      */
     public function actionDnsList()
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         return [
             [
                 'id' => 1

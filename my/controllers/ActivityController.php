@@ -15,16 +15,13 @@ use yii\web\Response;
 class ActivityController extends CustomController
 {
 
-    public function behaviors()
-    {
-        return parent::behaviors();
-    }
-
     /**
      * View panel activity log list
-     * @param integer $id
-     * @return array|string
+     * @param $id
+     * @return array|string|void
      * @throws \yii\base\ExitException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function actionIndex($id)
     {
