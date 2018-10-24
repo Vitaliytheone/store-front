@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use my\components\bitcoin\Bitcoin;
+use my\components\filters\DisableCsrfToken;
 use my\components\payments\BasePayment;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PaypalFailed;
@@ -24,15 +25,22 @@ use yii\helpers\ArrayHelper;
 class PaymentsController extends CustomController
 {
 	public $enableDomainValidation = false;
-	
+
+	public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'token' => [
+                    'class' => DisableCsrfToken::class,
+                ],
+            ]
+        );
+    }
+
     public function init()
     {
 
-    }
-
-    public function beforeAction($action) {
-        $this->enableCsrfValidation = false;
-        return parent::beforeAction($action);
     }
 
     public function actions()

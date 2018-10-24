@@ -4,6 +4,7 @@ namespace my\controllers;
 
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
+use my\components\filters\DisableCsrfToken;
 use my\components\payments\Paypal;
 use my\helpers\CurlHelper;
 use common\models\panels\Content;
@@ -75,6 +76,10 @@ class SiteController extends CustomController
                     'application/json' => Response::FORMAT_JSON,
                 ],
             ],
+            'token' => [
+                'class' => DisableCsrfToken::class,
+                'only' => ['checkout', 'invoices', 'invoice'],
+            ],
         ];
     }
 
@@ -96,14 +101,6 @@ class SiteController extends CustomController
      * @return bool
      */
     public function beforeAction($action) {
-        if (in_array($this->action->id, [
-            'checkout',
-            'invoices',
-            'invoice',
-        ])) {
-            $this->enableCsrfValidation = false;
-        }
-
         // Disable csrf-validation for logged-in user on SignIn form
         // Uses for prevent "Bad Request (#400): Unable to verify your data submission"
         // on form double submit
