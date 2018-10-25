@@ -11,6 +11,7 @@
     /* @var $panels  array */
     /* @var $childPanels  array */
     /* @var $domains  array */
+    /* @var $notes  array */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
@@ -60,9 +61,16 @@
                 'statuses' => $statuses,
                 'domains' => $domains
             ])?>
+            <?= $this->render('layouts/_ticket_notes', [
+                    'notes' => $notes,
+                    'ticket' => $ticket,
+            ])?>
         </div>
     </div>
 </div>
+
+<?= $this->render('layouts/_create_note')?>
+<?= $this->render('layouts/_edit_note')?>
 
 <?php $this->beginBlock('modals'); ?>
 <?= $this->render('layouts/_edit_message_modal.php')?>
