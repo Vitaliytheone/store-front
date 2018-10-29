@@ -1,6 +1,6 @@
 <?php
 
-$serverIp = "54.37.92.228";
+$serverIp = "54.37.239.222";
 
 return [
     'time' => '10800',

@@ -2,6 +2,7 @@
 
 namespace my\modules\superadmin\models\search;
 
+use common\models\panels\CustomersNote;
 use common\models\panels\Project;
 use common\models\panels\Domains;
 use common\models\panels\SslCert;
@@ -25,7 +26,8 @@ class TicketBlocksSearch
             'childPanels' => self::_getChildPanels($customerId),
             'domains' => self::_getDomains($customerId),
             'ssl' => self::_getSSl($customerId),
-            'stores' => self::_getStores($customerId)
+            'stores' => self::_getStores($customerId),
+            'notes' => self::_getNotes($customerId),
         ];
     }
 
@@ -147,6 +149,29 @@ class TicketBlocksSearch
             'id',
             'status AS status',
             'domain AS domain'
+        ]);
+
+        $query->orderBy("id DESC");
+
+        return $query->all();
+    }
+
+    /**
+     * @param $customerId
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    private static function _getNotes($customerId) {
+        $query = CustomersNote::find();
+
+        $query->where([
+            '=',
+            'customer_id', $customerId,
+        ]);
+
+        $query->select([
+            'id',
+            'note',
+            'customer_id',
         ]);
 
         $query->orderBy("id DESC");

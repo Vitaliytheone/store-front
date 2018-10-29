@@ -17,7 +17,6 @@ use \yii\filters\VerbFilter;
  */
 class DashboardController extends CustomController
 {
-    public $layout = 'superadmin_v2.php';
     public $activeTab = 'dashboard';
 
     public function behaviors()

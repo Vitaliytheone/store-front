@@ -372,6 +372,12 @@ return [
     'tickets.assignee_list.all' => 'All ({count})',
     'tickets.panels.frozen' => 'Frozen',
     'tickets.status' => 'Status',
+    'tickets.notes.title' => 'Notes',
+    'tickets.create_node.title' => 'Create notes',
+    'tickets.create_node.cancel_btn' => 'Cancel',
+    'tickets.create_node.save_btn' => 'Create note',
+    'tickets.edit_note.title' => 'Edit notes',
+    'tickets.edit_note.save_btn' => 'Save changes',
 
 
     'providers.list.navs_all' => 'All ({count})',

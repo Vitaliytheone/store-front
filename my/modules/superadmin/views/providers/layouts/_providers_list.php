@@ -113,11 +113,11 @@
                                 'id' => $provider['id']
                             ]), [
                                 'class' => 'dropdown-item edit-provider',
-                                'data-details' => Json::encode($provider['form_data'])
+                                'data-details' => Json::encode(SpecialCharsHelper::multiPurifierDecode($provider['form_data']))
                             ])?>
                             <?= Html::a(Yii::t('app/superadmin', 'providers.modal_clone_provider'), Url::toRoute(['/providers/create']), [
                                 'class' => 'dropdown-item clone-provider',
-                                'data-details' => Json::encode($provider['form_data'])
+                                'data-details' => Json::encode(SpecialCharsHelper::multiPurifierDecode($provider['form_data']))
                             ])?>
                         </div>
                     </div>

@@ -41,6 +41,96 @@ customModule.superadminTicketsEditController = {
             }
         });
 
+        $('.create-note').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var modal = $('#createNotesModal');
+            var form = $('#createNoteForm');
+            var errorBlock = $('#createNoteError');
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            form.attr('action', action);
+            modal.modal('show');
+
+            return false;
+        });
+
+        $('.edit-note').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var modal = $('#editNotesModal');
+            var form = $('#editNoteForm');
+            var errorBlock = $('#editNoteError');
+            var note = link.data('note');
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+            $('.note_content').val(note);
+
+            form.attr('action', action);
+            modal.modal('show');
+
+            return false;
+        });
+
+        $(document).on('click', '#createNoteButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#createNoteForm');
+            var errorBlock = $('#createNoteError', form);
+
+            errorBlock.addClass('hidden');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+
+                    if ('success' == response.status) {
+                        $('#createNotesModal').modal('hide');
+                        location.reload();
+                    }
+
+                    if ('error' == response.status) {
+                        errorBlock.removeClass('hidden');
+                        errorBlock.html(response.error);
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        $(document).on('click', '#editNoteButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#editNoteForm');
+            var errorBlock = $('#editNoteError', form);
+
+            errorBlock.addClass('hidden');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+
+                    if ('success' == response.status) {
+                        $('#editNotesModal').modal('hide');
+                        location.reload();
+                    }
+
+                    if ('error' == response.status) {
+                        errorBlock.removeClass('hidden');
+                        errorBlock.html(response.error);
+                    }
+                }
+            });
+
+            return false;
+        });
+
         $(document).on('click', '#modal-save-edit', function(e) {
             e.preventDefault();
             var form = $('#edit-message-form');
