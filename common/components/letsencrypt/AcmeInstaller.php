@@ -83,7 +83,7 @@ class AcmeInstaller extends Component
                 }
             }
 
-            if (!@file_exists($letsencrypt->getPath('srс') . '/' . 'acme.sh')) {
+            if (!@file_exists($letsencrypt->getPath('src') . '/' . 'acme.sh')) {
                 $this->console->stdout('Clone ACME.sh repository...' . PHP_EOL, Console::FG_GREEN);
                 exec('git clone https://github.com/Neilpang/acme.sh.git ' . $letsencrypt->getPath('src'), $output, $returnVar);
 
