@@ -127,6 +127,7 @@ $routes = [
     'stores/staff/create/<id:>' => '/store/staff-create',
     'stores/staff/edit/<id:>' => '/store/staff-edit',
     'stores/staff/password/<id:>' => '/store/staff-password',
+    'webhook/<action:>' => '/webhook/index',
 ];
 
 return array_merge($routes, $superadmin);
