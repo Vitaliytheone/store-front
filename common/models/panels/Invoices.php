@@ -17,7 +17,6 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property integer $cid
  * @property string $code
- * @property integer $type
  * @property integer $date
  * @property integer $date_update
  * @property integer $expired
@@ -52,7 +51,7 @@ class Invoices extends ActiveRecord
     {
         return [
             [['code', 'expired', 'total', 'cid'], 'required'],
-            [['date', 'date_update', 'expired', 'status', 'cid', 'type'], 'integer'],
+            [['date', 'date_update', 'expired', 'status', 'cid'], 'integer'],
             [['status'], 'default', 'value' => static::STATUS_UNPAID],
             [['total', 'credit'], 'number'],
             [['code'], 'string', 'max' => 64],
@@ -68,7 +67,6 @@ class Invoices extends ActiveRecord
             'id' => 'ID',
             'cid' => 'Cid',
             'code' => 'Code',
-            'type' => 'Type',
             'date' => 'Date',
             'date_update' => 'Date Update',
             'expired' => 'Expired',
