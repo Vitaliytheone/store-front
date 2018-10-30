@@ -1,6 +1,6 @@
-./account
-./config
-./deploy
-./dnsapi
-./acme.sh
-./acme.sh.env
+/account
+/config
+/deploy
+/dnsapi
+/acme.sh
+/acme.sh.env
