@@ -162,7 +162,6 @@ class Letsencrypt extends Component
         $options = [
             '--home' => $this->_paths['lib'],
             '--config-home' => $this->_paths['config'],
-            '--certhome' => $this->getCertPath(),
         ];
 
         if ($this->getStageMode()) {
@@ -299,7 +298,9 @@ class Letsencrypt extends Component
         }
 
         $this->exec('--issue', [
+            '--force',
             '--domain' => $domain,
+            '--certhome' => $this->getCertPath(),
             self::CHALLENGE_MODE_STATELESS,
         ]);
     }
@@ -334,7 +335,10 @@ class Letsencrypt extends Component
             throw new Exception('Invalid column name(s)!');
         }
 
-        $this->exec('--list', ['--listraw']);
+        $this->exec('--list', [
+            '--listraw',
+            '--certhome' => $this->getCertPath()
+        ]);
 
         $certsList = $this->getExecResult( self::EXEC_RESULT_FIELD_RETURN_DATA);
 
@@ -433,6 +437,7 @@ class Letsencrypt extends Component
         $this->exec('--renew', [
             '--domain' => $domain,
             '--force',
+            '--certhome' => $this->getCertPath(),
         ]);
     }
 
