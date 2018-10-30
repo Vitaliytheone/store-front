@@ -1,11 +1,11 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\helpers\Url;
 use common\models\panels\Payments;
 use common\models\panels\PaymentsLog;
-use my\modules\superadmin\models\search\PaymentsSearch;
+use superadmin\models\search\PaymentsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

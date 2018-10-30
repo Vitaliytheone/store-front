@@ -1,13 +1,13 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model \my\modules\superadmin\models\forms\CreateTicketForm */
+    /* @var $model \superadmin\models\forms\CreateTicketForm */
     /* @var $ticket \common\models\panels\Tickets */
 
-    use my\modules\superadmin\models\forms\CreateTicketForm;
+    use superadmin\models\forms\CreateTicketForm;
     use my\helpers\Url;
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
-    use my\modules\superadmin\widgets\SelectCustomer;
+    use superadmin\widgets\SelectCustomer;
 
     $model = new CreateTicketForm();
     $this->context->addModule('superadminSelectCustomerController');

@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\PanelDomains;
 use common\models\panels\SuperAdmin;
@@ -9,12 +9,12 @@ use my\components\ActiveForm;
 use my\helpers\StringHelper;
 use my\helpers\Url;
 use common\models\panels\Project;
-use my\modules\superadmin\models\forms\ChangeDomainForm;
-use my\modules\superadmin\models\forms\DowngradePanelForm;
-use my\modules\superadmin\models\forms\EditExpiryForm;
-use my\modules\superadmin\models\forms\EditProjectForm;
-use my\modules\superadmin\models\forms\EditProvidersForm;
-use my\modules\superadmin\models\search\PanelsSearch;
+use superadmin\models\forms\ChangeDomainForm;
+use superadmin\models\forms\DowngradePanelForm;
+use superadmin\models\forms\EditExpiryForm;
+use superadmin\models\forms\EditProjectForm;
+use superadmin\models\forms\EditProvidersForm;
+use superadmin\models\search\PanelsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;

@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $logs \my\modules\superadmin\models\search\ProviderLogsSearch */
+    /* @var $logs \superadmin\models\search\ProviderLogsSearch */
     /* @var $log \common\models\panels\SearchProcessor */
     /* @var $filters */
 

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\Customers;
 use common\models\panels\Invoices;
@@ -10,7 +10,7 @@ use common\models\panels\SuperCreditsLog;
 
 /**
  * Class EditInvoiceCreditForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class AddInvoiceEarningsForm extends Model {
 

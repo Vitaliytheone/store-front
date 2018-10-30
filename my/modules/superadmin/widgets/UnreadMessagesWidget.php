@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
 use Yii;
 use common\models\panels\Tickets;

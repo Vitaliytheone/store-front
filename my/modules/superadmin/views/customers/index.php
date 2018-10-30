@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $customers \my\modules\superadmin\models\search\CustomersSearch */
-    /* @var $navs \my\modules\superadmin\models\search\CustomersSearch */
+    /* @var $customers \superadmin\models\search\CustomersSearch */
+    /* @var $navs \superadmin\models\search\CustomersSearch */
     /* @var $status int|string */
     /* @var $filters array */
 

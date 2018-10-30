@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
 use common\models\panels\Orders;
 use Yii;

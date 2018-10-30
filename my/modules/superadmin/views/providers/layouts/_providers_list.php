@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $providers \my\modules\superadmin\models\search\ProvidersSearch */
+    /* @var $providers \superadmin\models\search\ProvidersSearch */
     /* @var $provider \common\models\panels\AdditionalServices */
     /* @var $scripts array */
 
@@ -9,7 +9,7 @@
     use yii\helpers\Json;
     use my\helpers\SpecialCharsHelper;
     use yii\widgets\LinkPager;
-    use my\modules\superadmin\widgets\CountPagination;
+    use superadmin\widgets\CountPagination;
 ?>
 <table class="table table-sm table-custom" id="providersTable">
     <thead>

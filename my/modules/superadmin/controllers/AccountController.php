@@ -1,9 +1,9 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\SuperAdmin;
-use my\modules\superadmin\models\forms\PasswordUpdateForm;
+use superadmin\models\forms\PasswordUpdateForm;
 use Yii;
 
 /**

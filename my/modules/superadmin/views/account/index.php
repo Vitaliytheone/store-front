@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form my\components\ActiveForm */
-    /* @var $model \my\modules\superadmin\models\forms\PasswordUpdateForm */
+    /* @var $model \superadmin\models\forms\PasswordUpdateForm */
 
     use yii\helpers\Html;
     use my\components\ActiveForm;

@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $plans \my\modules\superadmin\models\search\PlanSearch */
+    /* @var $plans \superadmin\models\search\PlanSearch */
 
     use my\helpers\Url;
     use yii\bootstrap\Html;

@@ -1,11 +1,11 @@
 <?php
-namespace my\modules\superadmin\components\services;
+namespace superadmin\components\services;
 
 use Exception;
 
 /**
  * Class BaseService
- * @package my\modules\superadmin\components\services
+ * @package superadmin\components\services
  */
 abstract class BaseService  {
 

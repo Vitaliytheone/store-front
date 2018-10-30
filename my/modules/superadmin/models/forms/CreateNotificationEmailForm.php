@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use common\models\panels\NotificationEmail;
@@ -7,7 +7,7 @@ use yii\base\Model;
 
 /**
  * Class CreateNotificationEmailForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class CreateNotificationEmailForm extends Model
 {

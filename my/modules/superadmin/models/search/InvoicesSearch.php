@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class InvoicesSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class InvoicesSearch extends Invoices {
 
