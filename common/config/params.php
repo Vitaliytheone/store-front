@@ -109,6 +109,12 @@ return [
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
     'failsEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем неудачные действия - пока не используется нигде
 
+    'cron.check_payments_fee_days' => 2,
 
-    'cron.check_payments_fee_days' => 2
+    'letsencrypt' => [
+        'paths' => [
+            'lib' => Yii::getAlias('@project_root/shell/acme.sh'),
+            'ssl' => Yii::getAlias('@project_root/ssl'),
+        ],
+    ],
 ];
