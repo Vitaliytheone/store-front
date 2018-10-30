@@ -47,6 +47,7 @@ class AcmeInstaller extends Component
             '5' => 'List certificates',
             '6' => 'Get certificate content',
             '7' => 'Renew certificate',
+            '8' => 'Show current config paths',
         ];
 
         foreach ($menuOptions as $itemNumber => $itemLabel) {
@@ -242,6 +243,12 @@ class AcmeInstaller extends Component
 
             return ExitCode::OK;
         }
+
+        if ($menuOption == 8) {
+            $this->console->stdout('Current library SSL paths...' . PHP_EOL, Console::FG_GREEN);
+            $this->console->stdout( $letsencrypt->getCertPath() . PHP_EOL, Console::FG_CYAN);
+        }
+
 
         return ExitCode::OK;
     }
