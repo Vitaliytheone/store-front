@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\CustomersNote;
 use common\models\panels\SuperAdmin;
@@ -9,15 +9,15 @@ use my\components\ActiveForm;
 use my\helpers\Url;
 use my\components\SuperAccessControl;
 use common\models\panels\Tickets;
-use my\modules\superadmin\helpers\SystemMessages;
-use my\modules\superadmin\models\forms\CreateMessageForm;
-use my\modules\superadmin\models\forms\CreateTicketForm;
-use my\modules\superadmin\models\forms\EditMessageForm;
-use my\modules\superadmin\models\forms\TicketNoteForm;
-use my\modules\superadmin\models\search\TicketBlocksSearch;
-use my\modules\superadmin\models\search\TicketMessagesSearch;
-use my\modules\superadmin\models\search\TicketsSearch;
-use my\modules\superadmin\models\SystemMessages as ModelSystemMessages;
+use superadmin\helpers\SystemMessages;
+use superadmin\models\forms\CreateMessageForm;
+use superadmin\models\forms\CreateTicketForm;
+use superadmin\models\forms\EditMessageForm;
+use superadmin\models\search\TicketBlocksSearch;
+use superadmin\models\SystemMessages as ModelSystemMessages;
+use superadmin\models\forms\TicketNoteForm;
+use superadmin\models\search\TicketMessagesSearch;
+use superadmin\models\search\TicketsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;

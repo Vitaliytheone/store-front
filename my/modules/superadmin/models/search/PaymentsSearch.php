@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Project;
 use common\models\panels\Orders;
@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class PaymentsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class PaymentsSearch extends Payments {
 

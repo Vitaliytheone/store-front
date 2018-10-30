@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\ActiveForm;
 use my\components\SuperAccessControl;
@@ -10,20 +10,20 @@ use common\models\panels\NotificationEmail;
 use common\models\panels\PaymentGateway;
 use common\models\panels\SuperAdmin;
 use common\models\panels\Tariff;
-use my\modules\superadmin\models\forms\ChangeStaffPasswordForm;
-use my\modules\superadmin\models\forms\CreateNotificationEmailForm;
-use my\modules\superadmin\models\forms\CreatePlanForm;
-use my\modules\superadmin\models\forms\CreateStaffForm;
-use my\modules\superadmin\models\forms\EditContentForm;
-use my\modules\superadmin\models\forms\EditNotificationEmailForm;
-use my\modules\superadmin\models\forms\EditPaymentForm;
-use my\modules\superadmin\models\forms\EditPlanForm;
-use my\modules\superadmin\models\forms\EditStaffForm;
-use my\modules\superadmin\models\search\ContentSearch;
-use my\modules\superadmin\models\search\NotificationEmailSearch;
-use my\modules\superadmin\models\search\PaymentGatewaySearch;
-use my\modules\superadmin\models\search\PlanSearch;
-use my\modules\superadmin\models\search\StaffSearch;
+use superadmin\models\forms\ChangeStaffPasswordForm;
+use superadmin\models\forms\CreateNotificationEmailForm;
+use superadmin\models\forms\CreatePlanForm;
+use superadmin\models\forms\CreateStaffForm;
+use superadmin\models\forms\EditContentForm;
+use superadmin\models\forms\EditNotificationEmailForm;
+use superadmin\models\forms\EditPaymentForm;
+use superadmin\models\forms\EditPlanForm;
+use superadmin\models\forms\EditStaffForm;
+use superadmin\models\search\ContentSearch;
+use superadmin\models\search\NotificationEmailSearch;
+use superadmin\models\search\PaymentGatewaySearch;
+use superadmin\models\search\PlanSearch;
+use superadmin\models\search\StaffSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

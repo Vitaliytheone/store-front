@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\helpers\CurrencyHelper;
 use common\models\panels\Customers;
@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class PanelsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class PanelsSearch {
     const PAGE_SIZE_100 = 100;

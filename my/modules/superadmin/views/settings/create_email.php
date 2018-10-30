@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\CreateNotificationEmailForm */
+    /* @var $model superadmin\models\forms\CreateNotificationEmailForm */
     /* @var $form my\components\ActiveForm */
 
     use my\helpers\Url;

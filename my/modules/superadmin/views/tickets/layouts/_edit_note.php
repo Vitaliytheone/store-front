@@ -1,6 +1,6 @@
 <?php
 
-use my\modules\superadmin\models\forms\TicketNoteForm;
+use superadmin\models\forms\TicketNoteForm;
 use my\components\ActiveForm;
 use yii\helpers\Html;
 

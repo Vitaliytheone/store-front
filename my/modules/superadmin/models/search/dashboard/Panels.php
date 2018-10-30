@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search\dashboard;
+namespace superadmin\models\search\dashboard;
 
 use common\models\panels\Customers;
 use common\models\panels\Project;

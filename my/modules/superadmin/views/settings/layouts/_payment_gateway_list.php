@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $payments \my\modules\superadmin\models\search\PaymentGatewaySearch */
+    /* @var $payments \superadmin\models\search\PaymentGatewaySearch */
     /* @var $payment \common\models\panels\PaymentGateway */
 
     use my\helpers\Url;

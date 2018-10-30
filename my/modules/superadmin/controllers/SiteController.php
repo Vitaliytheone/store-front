@@ -1,10 +1,10 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\SuperAccessControl;
 use my\helpers\Url;
-use my\modules\superadmin\models\forms\LoginForm;
+use superadmin\models\forms\LoginForm;
 use Yii;
 use yii\filters\VerbFilter;
 

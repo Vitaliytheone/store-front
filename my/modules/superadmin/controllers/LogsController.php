@@ -1,17 +1,17 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
-use my\modules\superadmin\models\search\ApiKeysLogsSearch;
-use my\modules\superadmin\models\search\CreditsLogsSearch;
+use superadmin\models\search\ApiKeysLogsSearch;
+use superadmin\models\search\CreditsLogsSearch;
 use Yii;
 use my\helpers\Url;
-use my\modules\superadmin\models\search\StatusLogsSearch;
-use my\modules\superadmin\models\search\ProviderLogsSearch;
+use superadmin\models\search\StatusLogsSearch;
+use superadmin\models\search\ProviderLogsSearch;
 
 /**
  * Class LogsController
- * @package my\modules\superadmin\controllers
+ * @package superadmin\controllers
  */
 class LogsController extends CustomController
 {

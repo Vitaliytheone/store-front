@@ -1,10 +1,10 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\Domains;
 use common\models\panels\ThirdPartyLog;
-use my\modules\superadmin\models\search\DomainsSearch;
+use superadmin\models\search\DomainsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

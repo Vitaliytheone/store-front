@@ -11,6 +11,7 @@ use common\models\panels\PanelDomains;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
+use common\models\panels\SuperAdmin;
 use common\models\panels\Tickets;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;

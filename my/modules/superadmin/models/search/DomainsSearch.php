@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use Yii;
 use common\models\panels\Domains;
@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class DomainsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class DomainsSearch extends Domains {
 

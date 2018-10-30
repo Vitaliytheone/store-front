@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $sslList \my\modules\superadmin\models\search\SslSearch */
-    /* @var $ssl \my\modules\superadmin\models\search\SslSearch */
+    /* @var $sslList \superadmin\models\search\SslSearch */
+    /* @var $ssl \superadmin\models\search\SslSearch */
 
     use my\helpers\Url;
     use yii\helpers\Html;
