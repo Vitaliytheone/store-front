@@ -18,10 +18,11 @@ class Letsencrypt extends Component
     const EXEC_RESULT_FIELD_RETURN_CODE = 'return_code';
     const EXEC_RESULT_FIELD_RETURN_DATA = 'return_data';
 
-    const CERT_DATA_CA= 'ca';
-    const CERT_DATA_FULLCHAIN = 'fullchain';
-    const CERT_DATA_CSR = 'csr';
-    const CERT_DATA_KEY = 'key';
+    const CERT_DATA_CA = 'ca.cer';
+    const CERT_DATA_FULLCHAIN = 'fullchain.cer';
+    const CERT_DATA_CSR = 'domain.csr';
+    const CERT_DATA_CER = 'domain.cer';
+    const CERT_DATA_KEY = 'domain.key';
 
     /**
      * Enable/disable Letsencrypt stage (test) mode
@@ -148,6 +149,7 @@ class Letsencrypt extends Component
         return [
             self::CERT_DATA_CA => $domainPath .  '/ca.cer',
             self::CERT_DATA_FULLCHAIN => $domainPath . '/fullchain.cer',
+            self::CERT_DATA_CER => $domainPath . '/' . $domain . '.cer',
             self::CERT_DATA_CSR => $domainPath . '/' . $domain . '.csr',
             self::CERT_DATA_KEY => $domainPath . '/' . $domain . '.key',
         ];
@@ -370,11 +372,11 @@ class Letsencrypt extends Component
     /**
      * Return domain certificate data
      * @param $domain
-     * @param null $data Return completed certificate data if $data is not specified
+     * @param null $certDataKey Return completed certificate data if $data is not specified
      * @return false|int|string
      * @throws Exception
      */
-    public function getCertData($domain, $data = null)
+    public function getCertData($domain, $certDataKey = null)
     {
         $domain = trim($domain);
 
@@ -407,12 +409,12 @@ class Letsencrypt extends Component
         $certData = '';
 
         // Only one file
-        if ($data) {
-            if (!in_array($data, array_keys($certFiles))) {
+        if ($certDataKey) {
+            if (!in_array($certDataKey, array_keys($certFiles))) {
                 throw new Exception('Unknown requested certificate data [' . $certFiles . ']!');
             }
 
-            $certData = $getFileContent($certFiles[$data]);
+            $certData = $getFileContent($certFiles[$certDataKey]);
 
         } else {
             // All cert files

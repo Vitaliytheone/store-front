@@ -5,6 +5,7 @@ namespace common\components\letsencrypt;
 use console\controllers\my\SystemController;
 use yii\base\Component;
 use Yii;
+use yii\base\Exception;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 
@@ -44,7 +45,7 @@ class AcmeInstaller extends Component
             '2' => 'Create Letsencrypt account',
             '3' => 'Get ACCOUNT_THUMBPRINT code',
             '4' => 'Issue certificate',
-            '5' => 'List certificates',
+            '5' => 'Certificates list',
             '6' => 'Get certificate content',
             '7' => 'Renew certificate',
             '8' => 'Show current config paths',
@@ -204,23 +205,30 @@ class AcmeInstaller extends Component
                 return ExitCode::OK;
             }
 
-            $certFiles = array_keys($letsencrypt->getCertFiles($domain));
+            $certFiles = $letsencrypt->getCertFiles($domain);
+            $certFilesIndexed = array_values($certFiles);
 
             $this->console->stdout("Possible domain certificate files: " . PHP_EOL);
 
-            foreach ($certFiles as $menuOption) {
-                $this->console->stdout("\t" . $menuOption . PHP_EOL);
+            foreach ($certFilesIndexed as $index => $menuOption) {
+                $this->console->stdout("\t" . $index . '. ' . $menuOption . PHP_EOL);
             }
 
-            $certFile = $this->console->prompt('Input certificate file from list above:', ['required' => true, 'validator' => function ($input, &$error) use ($certFiles) {
-                if (!in_array($input, $certFiles)) {
-                    $this->console->stdout("Input valid certificate file! ", Console::FG_YELLOW);
+            $certFileIndex = $this->console->prompt('Select certificate file from list above:', ['required' => true, 'validator' => function ($input, &$error) use ($certFilesIndexed) {
+                if (empty($certFilesIndexed[$input])) {
+                    $this->console->stdout("Select valid certificate file! ", Console::FG_YELLOW);
                     return false;
                 }
                 return true;
             }]);
 
-            $this->console->stdout(PHP_EOL . $letsencrypt->getCertData($domain, $certFile) . PHP_EOL);
+            $fileKey = array_search($certFilesIndexed[$certFileIndex], $certFiles, false);
+
+            if (empty($fileKey)) {
+                throw new Exception('Wrong cert file key data!');
+            }
+
+            $this->console->stdout(PHP_EOL . $letsencrypt->getCertData($domain, $fileKey) . PHP_EOL);
 
             return ExitCode::OK;
         }
