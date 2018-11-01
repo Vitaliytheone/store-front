@@ -1,446 +1,350 @@
 <?php
 
 namespace common\components\letsencrypt;
-
-use yii\base\Component;
-use yii\base\Exception;
+use common\components\letsencrypt\exceptions\LetsencryptException;
+use common\models\panels\LetsencryptSsl;
+use common\models\panels\Params;
+use yii\console\ExitCode;
 
 /**
  * Class Letsencrypt
- * See detailed use in {common/components/letsencrypt/AcmeInstaller.php}
  * @package common\components\letsencrypt
  */
-class Letsencrypt extends Component
+class Letsencrypt extends Acme
 {
-    const CHALLENGE_MODE_STATELESS = '--stateless';
-
-    const EXEC_RESULT_FIELD_COMMAND = 'command';
-    const EXEC_RESULT_FIELD_RETURN_CODE = 'return_code';
-    const EXEC_RESULT_FIELD_RETURN_DATA = 'return_data';
-
-    const CERT_DATA_CA = 'ca.cer';
-    const CERT_DATA_FULLCHAIN = 'fullchain.cer';
-    const CERT_DATA_CSR = 'domain.csr';
-    const CERT_DATA_CER = 'domain.cer';
-    const CERT_DATA_KEY = 'domain.key';
-
-    /**
-     * Enable/disable Letsencrypt stage (test) mode
-     * @var bool
-     */
-    private $_stageMode = false;
-
-    /**
-     * Enable/disable Letsencrypt debug mode
-     * @var bool
-     */
-    private $_debug_mode = false;
-
-    /**
-     * ACME.sh library path config
-     * @var array
-     */
-    private $_paths = [
-        'lib' => '',
-        'config' => '',
-        'account' => '',
-        'ssl' => '',
-        'src' => '',
-    ];
-
-    /**
-     * Last execute exec result
-     * @var array
-     */
-    private $_exec_cmd_result;
-
-    /**
-     * Set stage mode
-     * @param bool $mode
-     */
-    public function setStageMode(bool $mode)
-    {
-        $this->_stageMode = $mode;
-    }
-
-    /**
-     * Get stage mode
-     * @return bool
-     */
-    public function getStageMode()
-    {
-        return $this->_stageMode;
-    }
-
-    /**
-     * Set debug mode
-     * @param bool $mode
-     */
-    public function setDebugMode(bool $mode)
-    {
-        $this->_debug_mode = $mode;
-    }
-
-    /**
-     * Get debug mode
-     * @return bool
-     */
-    public function getDebugMode()
-    {
-        return $this->_debug_mode;
-    }
-
-    /**
-     * Set ACME.sh library path config
-     * @param array $paths
-     */
-    public function setPaths($paths)
-    {
-        $this->_paths['lib'] = $paths['lib'];
-        $this->_paths['ssl'] = $paths['ssl'];
-
-        $this->_paths['config'] = $this->_paths['lib'] . '/config';
-        $this->_paths['account'] = $this->_paths['lib'] . '/account';
-        $this->_paths['src'] = $this->_paths['lib'] . '/src';
-    }
-
-    /**
-     * Get ACME.sh library path config
-     * @return array
-     */
-    public function getPaths()
-    {
-        return $this->_paths;
-    }
-
-    /**
-     * Get ACME.sh library path by name
-     * @param $path
-     * @return mixed
-     */
-    public function getPath($path)
-    {
-        return $this->_paths[$path];
-    }
-
-    /**
-     * Return certificates path
-     * @return string
-     */
-    public function getCertPath()
-    {
-        return $this->getPath('ssl') . '/' . ($this->getStageMode() ? 'stage' : 'prod');
-    }
-
-    /**
-     * Return domain certificate file paths
-     * @param $domain
-     * @return array
-     * @throws Exception
-     */
-    public function getCertFiles($domain)
-    {
-        $domainPath = $this->getCertPath() . '/' . $domain;
-
-        if (!file_exists($domainPath) || !is_dir($domainPath)) {
-            throw new Exception('Domain ' . $domain . ' certificate does not exist!');
-        }
-
-        return [
-            self::CERT_DATA_CA => $domainPath .  '/ca.cer',
-            self::CERT_DATA_FULLCHAIN => $domainPath . '/fullchain.cer',
-            self::CERT_DATA_CER => $domainPath . '/' . $domain . '.cer',
-            self::CERT_DATA_CSR => $domainPath . '/' . $domain . '.csr',
-            self::CERT_DATA_KEY => $domainPath . '/' . $domain . '.key',
-        ];
-    }
-
-    /**
-     * Return shell exec CMD additional params
-     * @return array
-     */
-    private function _cmdConfigOptions()
-    {
-        $options = [
-            '--home' => $this->_paths['lib'],
-            '--config-home' => $this->_paths['config'],
-        ];
-
-        if ($this->getStageMode()) {
-            $options[] = '--staging';
-        }
-
-        if ($this->getDebugMode()) {
-            $options[] = '--debug';
-        }
-
-        return $options;
-    }
-
-    /**
-     * Return last execute exec result
-     * @param string $resultField
-     * @return mixed
-     */
-    public function getExecResult($resultField = null)
-    {
-        return $resultField ? $this->_exec_cmd_result[$resultField] : $this->_exec_cmd_result;
-    }
-
-    /**
-     * Run ACME.sh command
-     * @param string $cmd ACME.sh command
-     * @param array $options ACME.sh cmd params
-     * @param null|string $cmdPath script run path
-     * @throws Exception
-     */
-    public function exec(string $cmd, $options = [], $cmdPath = null)
-    {
-        $currentDir = @getcwd();
-
-        $cmdPath = $cmdPath ? $cmdPath : $this->_paths['lib'];
-
-        if (!@chdir($cmdPath)) {
-            throw new Exception('Cannot change path to ' . "$cmdPath");
-        }
-
-        // Build CMD string options
-        $options = array_merge($this->_cmdConfigOptions(), $options);
-
-        $cmdOptions = '';
-
-        foreach ($options as $optionKey => $optionValue) {
-            $cmdOptions .= ' ' . (is_int($optionKey) ? $optionValue : $optionKey . ' ' . $optionValue);
-        }
-
-        $cmd = './acme.sh ' . $cmd . $cmdOptions . ' 2>&1';
-
-        exec($cmd, $output, $returnVar);
-
-        $this->_exec_cmd_result = [
-            self::EXEC_RESULT_FIELD_COMMAND => $cmd,
-            self::EXEC_RESULT_FIELD_RETURN_DATA => $output,
-            self::EXEC_RESULT_FIELD_RETURN_CODE => $returnVar,
-        ];
-
-        if ($returnVar !== 0) {
-            throw new Exception('Shell CMD execution error! ' . PHP_EOL .
-                '[ CMD = ' . $cmd . ']' . PHP_EOL .
-                '[ Exit Code = ' . $returnVar . ']' . PHP_EOL .
-                json_encode($output, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-        }
-
-        if ($currentDir && !@chdir($currentDir)) {
-            throw new Exception('Cannot restore working dir ' . "$currentDir");
-        }
-    }
+    const OPTION_ACCOUNT_THUMBPRINT = 'account_thumbprint';
+    const OPTION_ACCOUNT_KEY = 'account_key';
 
     /**
      * Install ACME.sh library
+     * @return bool
+     * @throws LetsencryptException
      */
     public function install()
     {
-        $this->exec('--install', [
-            '--accountconf' => $this->getPath('account') . '/account.conf',
-            '--accountkey' => $this->getPath('account') . '/account.key',
-            '--nocron',
-        ], $this->getPath('src'));
+        $dirs = [
+            $this->getPath(self::CONFIG_PATH_CONFIG_HOME),
+            $this->getPath(self::CONFIG_PATH_ACCOUNT),
+            $this->getPath(self::CONFIG_PATH_SSL),
+        ];
+
+        foreach ($dirs as $dir) {
+            if (!@file_exists($dir)) {
+                if (!@mkdir($dir, 0755, true)) {
+                    throw new LetsencryptException('Cannot create dir: ' . $dir);
+                }
+            }
+        }
+
+        return parent::install();
     }
 
     /**
-     * Update Letsencrypt account info
-     * @param $accountEmail
-     */
-    public function updateAccount($accountEmail)
-    {
-        $this->exec('--updateaccount', [
-            '--accountemail ' => $accountEmail,
-        ]);
-    }
-
-    /**
-     * Register Letsencrypt account
+     * Register new Letsencrypt account
+     *
+     * Create a new account even if there is an existing one
+     * @param $force boolean
+     *
+     *
+     * Return ACCOUNT_THUMBPRINT or null
      * @return null|string
-     * @throws Exception
+     *
+     * @throws LetsencryptException
      */
-    public function registerAccount()
+    public function registerAccount(bool $force = false)
     {
-        $this->exec('--registeraccount');
+        $accountParams = Params::findOne([
+            'category' => Params::CATEGORY_SERVICE,
+            'code' => Params::CODE_LETSENCRYPT
+        ]);
 
-        $accountThumbprint = null;
+        if (!$accountParams) {
+            $accountParams = new Params();
+            $accountParams->category = Params::CATEGORY_SERVICE;
+            $accountParams->code = Params::CODE_LETSENCRYPT;
+        }
 
-        foreach ($this->getExecResult(self::EXEC_RESULT_FIELD_RETURN_DATA) as $string) {
+        if (!$force && $accountParams->getOption(self::OPTION_ACCOUNT_KEY)) {
+            throw new LetsencryptException('Account already exist! Use $force = true param for register new one!');
+        }
 
-            if (strpos($string, 'ACCOUNT_THUMBPRINT') === false) {
-                continue;
-            }
+        $accountPrivateKey = null;
+        $accountThumbprint = parent::registerAccount();
 
-            if (!(preg_match('/ACCOUNT_THUMBPRINT=\'(.*?)\'/', $string, $match) == 1)) {
-                throw new Exception('Account registration filed! ACCOUNT_THUMBPRINT not found or empty!');
-            }
+        if (!$accountThumbprint || !@file_exists($this->getPath(self::CONFIG_PATH_ACCOUNT_KEY))) {
+            throw new LetsencryptException("Account private key was not created!");
+        }
 
-            $accountThumbprint = $match[1];
-            break;
+        $accountPrivateKey = @file_get_contents($this->getPath(self::CONFIG_PATH_ACCOUNT_KEY));
+
+        if (!$accountPrivateKey) {
+            throw new LetsencryptException('Cannot read account private key!');
+        }
+
+        $options = [
+            self::OPTION_ACCOUNT_KEY => $accountPrivateKey,
+            self::OPTION_ACCOUNT_THUMBPRINT => $accountThumbprint,
+        ];
+
+        $accountParams->setOptions($options);
+
+        if(!$accountParams->save(false)) {
+            throw new LetsencryptException('Account options have not been saved!');
         }
 
         return $accountThumbprint;
     }
 
     /**
-     * Issue letsencrypt certificate
-     * @param string $domain
-     * @throws Exception
+     * Restore Letsencrypt account from database
+     * @return null|string
+     * @throws LetsencryptException
      */
-    public function issueCert(string $domain)
+    public function restoreAccountFromDb()
     {
-        $domain = trim($domain);
+        $accountParams = Params::findOne([
+            'category' => Params::CATEGORY_SERVICE,
+            'code' => Params::CODE_LETSENCRYPT
+        ]);
 
-        if (!filter_var('test@' . $domain, FILTER_VALIDATE_EMAIL)) {
-           throw new Exception('Invalid domain!');
+        $backupAccountKey = $accountParams->getOption(self::OPTION_ACCOUNT_KEY);
+        $backupAccountThumbprint = $accountParams->getOption(self::OPTION_ACCOUNT_THUMBPRINT);
+
+        if (!$backupAccountKey) {
+            throw new LetsencryptException('No backup copy of private account key in database!');
         }
 
-        $this->exec('--issue', [
-            '--force',
-            '--domain' => $domain,
-            '--certhome' => $this->getCertPath(),
-            self::CHALLENGE_MODE_STATELESS,
-        ]);
+        $accountKeyPath = $this->getPath(self::CONFIG_PATH_ACCOUNT_KEY);
+
+        // Skip restoring if backup & current keys are equal
+        if (@file_exists($accountKeyPath) && (@file_get_contents($accountKeyPath) === $backupAccountKey)) {
+            return $backupAccountThumbprint;
+        }
+
+        // Delete exiting key
+        if (@file_exists($accountKeyPath) && !@unlink($accountKeyPath)) {
+            throw new LetsencryptException('Cannot delete old account RSA private key! [' . $accountKeyPath . ']');
+        }
+
+        // Write backup key
+        if (!@file_put_contents($accountKeyPath, $backupAccountKey)) {
+            throw new LetsencryptException('Cannot restore account RSA private key! [' . $accountKeyPath . ']');
+        }
+
+        $restoredKeyThumbprint = parent::registerAccount();
+
+        if ($restoredKeyThumbprint !== $backupAccountThumbprint) {
+            throw new LetsencryptException('Restored and backup ACCOUNT_THUMBPRINTs does not matched!');
+        }
+
+        return $restoredKeyThumbprint;
     }
 
     /**
-     * Return current account thumbprint
+     * Cut cert files
+     * @param string $domain
+     * @return array of cert files content
+     * @throws LetsencryptException
+     */
+    public function cutCertFiles(string $domain)
+    {
+        $certDir = $this->getCertDir($domain);
+
+        if (!@file_exists($certDir) || !@is_dir($certDir)) {
+            throw new LetsencryptException('Corrupt certificate dir!');
+        }
+
+        $certFiles = array_diff(scandir($certDir), array('..', '.'));
+        $certFilesContent = [];
+
+        foreach ($certFiles as $fileName) {
+
+            $filePath = $certDir . '/' . $fileName;
+            $fileContent = @file_get_contents($filePath);
+
+            if (!$fileContent) {
+                throw new LetsencryptException('Cannot read cert file ['. $filePath  .']');
+            }
+
+            $certFilesContent[$fileName] = $fileContent;
+        }
+
+        exec('rm -rf ' . escapeshellarg($certDir), $output, $returnVar);
+
+        if ($returnVar !== ExitCode::OK) {
+            throw new LetsencryptException('Cannot delete domain ssl folder! [' . $certDir . ']');
+        }
+
+        return $certFilesContent;
+    }
+
+    /**
+     * Restore certificate files from DB
+     * @param LetsencryptSsl $ssl
+     * @throws LetsencryptException
+     */
+    public function restoreCertFilesFromDb(LetsencryptSsl $ssl)
+    {
+        $certFiles = $ssl->getFileContents();
+
+        $certDir = $this->getCertDir($ssl->domain);
+
+        if (!@file_exists($certDir)) {
+            if (!@mkdir($certDir, 0755, true)) {
+                throw new LetsencryptException('Cannot create dir [' . $certDir . ']');
+            }
+        }
+
+        foreach ($certFiles as $fileName => $fileContent) {
+
+            $filePath = $certDir . '/' . $fileName;
+
+            if (!@file_exists($filePath)) {
+                if (!@file_put_contents($filePath, $fileContent)) {
+                    throw new LetsencryptException('Cannot create file [' . $filePath . ']');
+                }
+            }
+        }
+    }
+
+    /**
+     * Return account Thumbprint
      * @return null|string
-     * @throws Exception
      */
     public function getAccountThumbprint()
     {
-        return $this->registerAccount();
+        $this->restoreAccountFromDb();
+
+        return parent::registerAccount();
     }
 
     /**
-     * Return registered certificates list
-     * @param $columns array
-     * @return mixed
-     * @throws Exception
+     * Issue Letsencrypt certificate
+     * @param string $domain
+     * @return int
+     * @throws LetsencryptException
      */
-    public function listCerts($columns = ['Main_Domain', "Created", "Renew"])
+    public function issueCert(string $domain)
     {
-        $allowedColumns = [
-            'Main_Domain',
-            'KeyLength',
-            'SAN_Domains',
-            'Created',
-            'Renew'
-        ];
+        $this->restoreAccountFromDb();
 
-        if (array_diff($columns, $allowedColumns)) {
-            throw new Exception('Invalid column name(s)!');
+        $this->_prepareDomain($domain);
+
+        if (!filter_var('test@' . $domain, FILTER_VALIDATE_EMAIL)) {
+            throw new LetsencryptException('Invalid domain name!');
         }
 
-        $this->exec('--list', [
-            '--listraw',
-            '--certhome' => $this->getCertPath()
-        ]);
-
-        $certsList = $this->getExecResult( self::EXEC_RESULT_FIELD_RETURN_DATA);
-
-        if (!is_array($certsList)) {
-            throw new Exception('Invalid domains list data!');
+        if (LetsencryptSsl::findOne(['domain' => $domain])) {
+            throw new LetsencryptException('Certificate for domain [' . $domain . '] already exist! Use renewSsl instead!');
         }
 
-        array_shift($certsList);
+        $this->restoreAccountFromDb();
 
-        // Remove additional line debug data
-        if ($this->getStageMode()) {
-            array_shift($certsList);
+        if (!parent::issueCert($domain)) {
+            throw new LetsencryptException('Cannot issue Letsencrypt cert ['. $domain .']');
         }
 
-        foreach ($certsList as &$cert) {
-            $fullCert = explode('|', $cert);
+        $ssl = new LetsencryptSsl();
+        $ssl->domain = $domain;
+        $ssl->setFileContents($this->cutCertFiles($domain));
+        $ssl->expired_at = '10500';
 
-            $cert = [];
-
-            foreach ($columns as $column) {
-                $idx = array_search($column, $allowedColumns, false);
-                $cert[strtolower($column)] = $fullCert[$idx];
-            }
+        if (!$ssl->save(false)) {
+            throw new LetsencryptException('Cannot create new LetsencryptSsl record!');
         }
 
-        return $certsList;
+        return $ssl->id;
     }
 
     /**
-     * Return domain certificate data
+     * Renew certificate
      * @param $domain
-     * @param null $certDataKey Return completed certificate data if $data is not specified
-     * @return false|int|string
-     * @throws Exception
+     * @return bool
+     * @throws LetsencryptException
      */
-    public function getCertData($domain, $certDataKey = null)
+    public function renewCert($domain)
+    {
+        $this->_prepareDomain($domain);
+
+        $this->restoreAccountFromDb();
+
+        $ssl = $this->_fetchSsl($domain);
+
+        $this->restoreCertFilesFromDb($ssl);
+
+        if (!parent::renewCert($domain)) {
+            throw new LetsencryptException('Cannot renew domain ['. $domain .'] certificate!');
+        }
+
+        $ssl->setFileContents($this->cutCertFiles($domain));
+        $ssl->expired_at = '1318';
+
+        if (!$ssl->save(false)) {
+            throw new LetsencryptException('Cannot save LetsencryptSsl domain ['. $domain .'] certificate!');
+        }
+
+        return true;
+    }
+
+    /**
+     * Return certificate file names list
+     * @param $domain
+     * @return array
+     * @throws LetsencryptException
+     */
+    public function getCertFiles($domain)
+    {
+        $this->_prepareDomain($domain);
+
+        $ssl = $this->_fetchSsl($domain);
+
+        return array_keys($ssl->getFileContents());
+    }
+
+    /**
+     * Return certificate file content
+     * @param $domain
+     * @param $fileName
+     * @return string
+     */
+    public function getCertFileContent($domain, $fileName)
+    {
+        $this->_prepareDomain($domain);
+
+        $ssl = $this->_fetchSsl($domain);
+
+        return $ssl->getFileContent($fileName);
+    }
+
+    /**
+     * Prepare domain format
+     * @param $domain
+     * @throws LetsencryptException
+     */
+    private function _prepareDomain(&$domain)
     {
         $domain = trim($domain);
 
         if (!filter_var('test@' . $domain, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception('Invalid domain!');
+            throw new LetsencryptException('Invalid domain name!');
         }
-
-        $certFiles = $this->getCertFiles($domain);
-
-        /**
-         * Read certificate file content
-         * @param $filePath
-         * @return false|int
-         * @throws Exception
-         */
-        $getFileContent = function($filePath) {
-            if (!file_exists($filePath) || !is_file($filePath)) {
-                throw new Exception('Cannot find certificate file!');
-            }
-
-            $content = file_get_contents($filePath);
-
-            if (!$content) {
-                throw new Exception('Cannot read certificate file!');
-            }
-
-            return $content;
-        };
-
-        $certData = '';
-
-        // Only one file
-        if ($certDataKey) {
-            if (!in_array($certDataKey, array_keys($certFiles))) {
-                throw new Exception('Unknown requested certificate data [' . $certFiles . ']!');
-            }
-
-            $certData = $getFileContent($certFiles[$certDataKey]);
-
-        } else {
-            // All cert files
-            foreach ($certFiles as $key => $file) {
-                $certData .=
-                    PHP_EOL . '=============[' . $key . ']=================' . PHP_EOL .
-                    $getFileContent($certFiles[$key]) . PHP_EOL;
-            }
-        }
-
-        return $certData;
     }
 
     /**
-     * Renew domain certificate
+     * Fetch exiting ssl from db
      * @param $domain
+     * @return null|LetsencryptSsl
+     * @throws LetsencryptException
      */
-    public function renewSsl($domain)
+    private function _fetchSsl($domain)
     {
-        $domain = trim($domain);
+        $ssl = LetsencryptSsl::findOne(['domain' => $domain]);
 
-        $this->exec('--renew', [
-            '--domain' => $domain,
-            '--force',
-            '--certhome' => $this->getCertPath(),
-        ]);
+        if (!$ssl) {
+            throw new LetsencryptException('SSL for domain [' . $domain . '] does not exist yet!');
+        }
+
+        return $ssl;
     }
 
 }
