@@ -1,10 +1,10 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\SuperAccessControl;
-use my\modules\superadmin\helpers\DashboardServices;
-use my\modules\superadmin\helpers\DashboardBlocks;
+use superadmin\helpers\DashboardServices;
+use superadmin\helpers\DashboardBlocks;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;

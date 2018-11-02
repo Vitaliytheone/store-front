@@ -2,10 +2,10 @@
     /* @var $this yii\web\View */
     /* @var $ticketMessages array */
     /* @var $ticket \common\models\panels\Tickets */
-    /* @var $model \my\modules\superadmin\models\forms\CreateMessageForm */
+    /* @var $model \superadmin\models\forms\CreateMessageForm */
     /* @var $admins array */
     /* @var $statuses array */
-    /* @var $ticketMessagesSearch my\modules\superadmin\models\search\TicketMessagesSearch */
+    /* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
     /* @var $stores  array */
     /* @var $ssl  array */
     /* @var $panels  array */

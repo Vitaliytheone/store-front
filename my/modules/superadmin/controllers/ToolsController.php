@@ -1,14 +1,14 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\PaypalFraudReports;
 use my\components\ActiveForm;
 use common\models\panels\SuperToolsScanner;
-use my\modules\superadmin\models\forms\PanelsScannerAddDomainForm;
-use my\modules\superadmin\models\search\DbHelperSearch;
-use my\modules\superadmin\models\search\FraudReportsSearch;
-use my\modules\superadmin\models\search\PanelsScannerSearch;
+use superadmin\models\forms\PanelsScannerAddDomainForm;
+use superadmin\models\search\DbHelperSearch;
+use superadmin\models\search\FraudReportsSearch;
+use superadmin\models\search\PanelsScannerSearch;
 use Yii;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -18,7 +18,7 @@ use my\helpers\Url;
 
 /**
  * Class ToolsController
- * @package my\modules\superadmin\controllers
+ * @package superadmin\controllers
  */
 class ToolsController extends CustomController
 {

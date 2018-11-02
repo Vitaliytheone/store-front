@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\AdditionalServices;
-use my\modules\superadmin\models\forms\CreateProviderForm;
-use my\modules\superadmin\models\forms\EditProviderForm;
-use my\modules\superadmin\models\search\ProvidersSearch;
+use superadmin\models\forms\CreateProviderForm;
+use superadmin\models\forms\EditProviderForm;
+use superadmin\models\search\ProvidersSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
@@ -12,7 +12,7 @@ use Yii;
 
 /**
  * Class ChangeDomainForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class ChangeDomainForm extends Model {
 

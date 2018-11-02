@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
 use yii\base\InvalidConfigException;
 use yii\bootstrap\Dropdown;

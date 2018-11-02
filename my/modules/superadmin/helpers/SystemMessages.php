@@ -1,10 +1,10 @@
 <?php
 
-namespace my\modules\superadmin\helpers;
+namespace superadmin\helpers;
 
-use my\modules\superadmin\widgets\SystemMessages\BaseSystemMessage;
-use my\modules\superadmin\widgets\SystemMessages\ChangedStatusMessage;
-use my\modules\superadmin\widgets\SystemMessages\ChangedAssignedMessage;
+use superadmin\widgets\SystemMessages\BaseSystemMessage;
+use superadmin\widgets\SystemMessages\ChangedStatusMessage;
+use superadmin\widgets\SystemMessages\ChangedAssignedMessage;
 
 class SystemMessages
 {

@@ -1,17 +1,17 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\Customers;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\Invoices;
-use my\modules\superadmin\models\forms\AddInvoiceEarningsForm;
-use my\modules\superadmin\models\forms\AddInvoicePaymentForm;
-use my\modules\superadmin\models\forms\CreateInvoiceForm;
-use my\modules\superadmin\models\forms\EditInvoiceCreditForm;
-use my\modules\superadmin\models\forms\EditInvoiceForm;
-use my\modules\superadmin\models\search\InvoicesSearch;
+use superadmin\models\forms\AddInvoiceEarningsForm;
+use superadmin\models\forms\AddInvoicePaymentForm;
+use superadmin\models\forms\CreateInvoiceForm;
+use superadmin\models\forms\EditInvoiceCreditForm;
+use superadmin\models\forms\EditInvoiceForm;
+use superadmin\models\search\InvoicesSearch;
 use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;

@@ -1,11 +1,11 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\ActiveForm;
 use common\models\panels\Project;
-use my\modules\superadmin\models\forms\UpgradePanelForm;
-use my\modules\superadmin\models\search\PanelsSearch;
+use superadmin\models\forms\UpgradePanelForm;
+use superadmin\models\search\PanelsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
 use common\models\panels\SslCert;
 use yii\base\Widget;
@@ -7,7 +7,7 @@ use yii\bootstrap\Html;
 
 /**
  * Class ErrorSslWidget
- * @package my\modules\superadmin\widgets
+ * @package superadmin\widgets
  */
 class ErrorSslWidget extends Widget {
 

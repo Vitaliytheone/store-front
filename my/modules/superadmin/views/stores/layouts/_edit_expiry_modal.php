@@ -1,14 +1,14 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
-    /* @var $modal \my\modules\superadmin\models\forms\EditStoreExpiryForm */
+    /* @var $modal \superadmin\models\forms\EditStoreExpiryForm */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
-    use my\modules\superadmin\widgets\DateTimePicker;
+    use superadmin\widgets\DateTimePicker;
 
-    $model = new \my\modules\superadmin\models\forms\EditStoreExpiryForm();
+    $model = new superadmin\models\forms\EditStoreExpiryForm();
 ?>
 <div class="modal fade" id="editExpiryModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">

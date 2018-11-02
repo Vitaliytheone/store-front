@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\helpers\CurrencyHelper;
 use common\models\panels\PanelPaymentMethods;
@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class EditPanelPaymentMethodsForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditPanelPaymentMethodsForm extends Model
 {

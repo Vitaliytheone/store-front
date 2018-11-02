@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\Invoices;
 use Yii;
@@ -7,7 +7,7 @@ use yii\base\Model;
 
 /**
  * Class EditInvoiceForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditInvoiceForm extends Model {
 

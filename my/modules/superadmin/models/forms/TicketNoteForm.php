@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 
 use common\models\panels\CustomersNote;
@@ -8,7 +8,7 @@ use yii\base\Model;
 
 /**
  * Class TicketNoteForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class TicketNoteForm extends Model
 {
