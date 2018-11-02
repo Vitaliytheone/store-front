@@ -1,6 +1,6 @@
 <?php
     use common\components\ActiveForm;
-    use my\modules\superadmin\models\forms\EditPanelPaymentMethodsForm;
+    use superadmin\models\forms\EditPanelPaymentMethodsForm;
     use yii\bootstrap\Html;
 
     /* @var $this yii\web\View */

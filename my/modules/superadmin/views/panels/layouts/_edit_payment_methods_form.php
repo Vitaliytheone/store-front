@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use my\helpers\Url;
-use my\modules\superadmin\models\forms\EditPanelPaymentMethodsForm;
+use superadmin\models\forms\EditPanelPaymentMethodsForm;
 
 /* @var $this yii\web\View */
 /* @var $payments array */
