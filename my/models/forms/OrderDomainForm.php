@@ -98,18 +98,6 @@ class OrderDomainForm extends Model
     public function setUser(Auth $user)
     {
         $this->_user = $user;
-
-        // В формах заказа нового домена/ssl убираем временно автозаполнение формы включая выбор страны
-        /*$this->_ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
-        if ($this->_ip) {
-            $geoIp = Yii::$app->geoip->ip($this->_ip);
-
-            if ($geoIp && $geoIp->isoCode) {
-                $this->domain_country = $geoIp->isoCode;
-            }
-        }
-
-        $this->initLastOrderDetails();*/
     }
 
     /**
@@ -268,7 +256,7 @@ class OrderDomainForm extends Model
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
+            $currencies[$code] = Yii::t('app', $currency['name']) . ' (' . $code . ')';
         }
         return $currencies;
     }

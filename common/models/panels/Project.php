@@ -456,10 +456,6 @@ class Project extends ActiveRecord implements ProjectInterface
             return false;
         }
 
-        if (!$this->currency_code) {
-            $this->currency_code = CurrencyHelper::getCurrencyCodeById($this->currency);
-        }
-
         return true;
     }
 
@@ -480,11 +476,11 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Get currency code
-     * @return mixed
+     * @return string
      */
     public function getCurrencyCode()
     {
-        return CurrencyHelper::getCurrencyCodeById($this->currency);
+        return $this->currency_code;
     }
 
     /**

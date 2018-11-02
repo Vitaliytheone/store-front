@@ -10,9 +10,7 @@ use common\models\panels\Tariff;
 use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use common\helpers\CurrencyHelper;
 
 /**
  * Class EditProjectForm
@@ -239,7 +237,7 @@ class EditProjectForm extends Model
         }
 
         $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
-        if ($this->currency != $this->_project->currency) {
+        if ($this->currency != $this->_project->getCurrencyCode()) {
             $isChangedCurrency = true;
         }
 
@@ -376,7 +374,7 @@ class EditProjectForm extends Model
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
+            $currencies[$code] = Yii::t('app', $currency['name']) . ' (' . $code . ')';
         }
         return $currencies;
     }
@@ -419,7 +417,7 @@ class EditProjectForm extends Model
             ':pid' => $this->_project->id
         ]);
 
-        $currencies = Yii::$app->params['currencies'];
+        $currencies = Yii::$app->params['legacy_currencies'];
         $currency = strtoupper($this->_project->getCurrencyCode());
 
         if (empty($currencies[$currency])) {
@@ -468,7 +466,7 @@ class EditProjectForm extends Model
         }
 
         AdditionalServices::updateAll(
-            ['currency' => CurrencyHelper::getCurrencyCodeById($this->currency)],
+            ['currency' => $this->_project->getCurrencyCode()],
             ['type' => 1, 'name' => $this->_project->site]
         );
     }
