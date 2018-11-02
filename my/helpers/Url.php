@@ -18,9 +18,14 @@ class Url extends \yii\helpers\Url {
      */
     public static function toRoute($route, $scheme = false)
     {
-        if (!empty(Yii::$app->controller->module)) {
-            $module = Yii::$app->controller->module->id;
+        if (is_a(Yii::$app,'yii\console\Application')) {
+            Yii::$app->urlManager->baseUrl = 'http://' . Yii::$app->params['panelDomain'] . '/';
 
+            return parent::toRoute($route, $scheme);
+        }
+
+        if (!empty(Yii::$app->controller->module->module)) {
+            $module = Yii::$app->controller->module->id;
             if (!is_array($route)) {
                 $route = [$route];
             }

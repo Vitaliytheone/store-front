@@ -101,6 +101,12 @@ $config = [
             ],
             'viewPath' => '@my/mail/views',
         ],
+
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+        ],
     ],
     'params' => $params,
 ];

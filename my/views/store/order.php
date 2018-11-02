@@ -5,7 +5,7 @@
     /* @var $hasStores bool */
 
     use my\components\ActiveForm;
-    use yii\helpers\Url;
+    use my\helpers\Url;
 
     $hasStores = $model->getUser()->hasStores();
 

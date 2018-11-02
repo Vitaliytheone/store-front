@@ -405,16 +405,4 @@ class CronController extends CustomController
     {
         Yii::$container->get(UpdateServicesCount::class)->run();
     }
-
-    public function actionErrorTest()
-    {
-        Yii::$app->urlManager->baseUrl = Yii::getAlias('@myUrl');
-        $payment = Payments::findOne(['id' => 4]);
-        $test = new PaypalVerificationNeeded([
-            'payment' => $payment,
-            'email' => 'test@mail.com',
-            'code' => $payment->verification(1, 'test@mail.com'),
-        ]);
-        $test->init();
-    }
 }
