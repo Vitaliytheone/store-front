@@ -7,6 +7,7 @@ use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\PanelPaymentMethods;
+use common\models\panels\PaymentGateway;
 use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\Tariff;
 use Yii;
@@ -266,6 +267,7 @@ class EditProjectForm extends Model
 
             if ($isChangedCurrency) {
                 $this->updateCurrencies();
+                $this->legacyUpdateCurrency();
             }
 
             if ($isChangedCustomer) {
@@ -457,5 +459,65 @@ class EditProjectForm extends Model
             ['currency' => $currency],
             ['type' => 1, 'name' => $this->_project->site]
         );
+    }
+
+    /**
+     * Update legacy panel payment methods
+     */
+    public function legacyUpdateCurrency()
+    {
+        PaymentGateway::updateAll([
+            'position' => 0,
+        ], 'pid = :pid', [
+            ':pid' => $this->_project->id
+        ]);
+
+        $currencies = Yii::$app->params['legacy_currencies'];
+        $currency = strtoupper($this->_project->getCurrencyCode());
+
+        if (empty($currencies[$currency])) {
+            return;
+        }
+
+        $gatewayMethods = ArrayHelper::index($currencies[$currency]['gateway'], 'position');
+        ksort($gatewayMethods);
+
+        $currentMethods = PaymentGateway::find()->andWhere([
+            'pid' => $this->_project->id
+        ])->all();
+        $currentMethods = ArrayHelper::index($currentMethods, 'pgid');
+
+        $position = 1;
+        foreach ($gatewayMethods as $key => $options) {
+            $pgid = $options['pgid'];
+            if (empty($currentMethods[$pgid])) {
+                continue;
+            }
+
+            unset($gatewayMethods[$key]);
+
+            if (isset($options['allow']) && empty($options['allow'][$this->_project->id])) {
+                continue;
+            }
+
+            $currentMethods[$pgid]->position = $position++;
+
+            $currentMethods[$pgid]->save(false);
+        }
+
+        foreach ($gatewayMethods as $key => $options) {
+            $model = new PaymentGateway();
+            $model->attributes = $options;
+            $model->pid = $this->_project->id;
+            $model->setOptionsData([]);
+
+            if (isset($options['allow']) && empty($options['allow'][$this->_project->id])) {
+                $model->position = 0;
+            } else {
+                $model->position = $position++;
+            }
+
+            $model->save(false);
+        }
     }
 }
