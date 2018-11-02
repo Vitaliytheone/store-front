@@ -440,9 +440,8 @@ class EditProjectForm extends Model
 
         foreach ($currentPaymentMethods as $methodId => $currentPaymentMethod) {
             if (empty($availablePaymentMethods[$methodId])) {
-
                 // Disable panel payment method bonus
-                $db->createCommand()->update($db->quoteValue($panelDb) . '.' . Bonuses::tableName(), [
+                $db->createCommand()->update($db->quoteTableName($panelDb) . '.' . Bonuses::tableName(), [
                     'status' => Bonuses::STATUS_DISABLED
                 ], [
                     'pgid' => $currentPaymentMethod->method_id
