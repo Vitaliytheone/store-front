@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\helpers\ProjectHelper;
 use common\models\common\ProjectInterface;
@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class StatusLogsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class StatusLogsSearch
 {

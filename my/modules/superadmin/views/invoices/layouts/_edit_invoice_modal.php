@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\EditInvoiceForm */
+    /* @var $model superadmin\models\forms\EditInvoiceForm */
     /* @var $form my\components\ActiveForm */
 
-    use my\modules\superadmin\models\forms\EditInvoiceForm;
+    use superadmin\models\forms\EditInvoiceForm;
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
     use my\helpers\Url;

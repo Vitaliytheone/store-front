@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use common\models\panels\Project;
@@ -8,7 +8,7 @@ use yii\db\Exception;
 
 /**
  * Class UpgradePanelForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class UpgradePanelForm extends Model {
 

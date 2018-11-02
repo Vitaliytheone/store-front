@@ -15,6 +15,7 @@ use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
+use common\models\panels\SuperAdmin;
 use common\models\panels\Tickets;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;
@@ -30,6 +31,8 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 use common\models\panels\AdditionalServices;
 use common\helpers\CurrencyHelper;
+use Exception;
+use my\helpers\order\OrderSslHelper;
 
 /**
  * Class SystemController
@@ -623,6 +626,54 @@ class SystemController extends CustomController
                 $this->stderr(ActiveForm::firstError($params) . "\n", Console::FG_RED);
             } else {
                 $this->stderr("Successful \n", Console::FG_GREEN);
+            }
+        }
+    }
+
+    /**
+     * Change additional_services.currency
+     */
+    public function actionSslFix()
+    {
+        $sslQuery = SslCert::find()->andWhere([
+            'status' => SslCert::STATUS_ACTIVE
+        ]);
+
+        foreach ($sslQuery->batch() as $sslList) {
+            foreach ($sslList as $ssl) {
+                $this->stderr($ssl->domain . "\n", Console::FG_GREEN);
+
+                $json = json_decode($ssl->details);
+                if ($json !== false) {
+                    try {
+                        if (!empty($json->order_status->crt_code) and !empty($json->order_status->ca_code) and !empty($json->csr->csr_key)) {
+
+                            $crt = $json->order_status->crt_code;
+                            $ca = $json->order_status->ca_code;
+
+                            $crtKey = $crt . "\n" . $ca;
+                            $csrKey = $json->csr->csr_key;
+
+                            if (!OrderSslHelper::addConfig($ssl, [
+                                'domain' => $ssl->domain,
+                                'crt_cert' => $crtKey,
+                                'key_cert' => $csrKey,
+                            ])) {
+                                $this->stderr('Can not add config for ' . $ssl->domain . "\n", Console::FG_RED);
+                            } else {
+                                $this->stderr('Config for has been added for ' . $ssl->domain . "\n", Console::FG_GREEN);
+                            }
+                        } else {
+                            $this->stderr('Can not add config for ' . $ssl->domain . ". Details: empty required json data \n", Console::FG_RED);
+                        }
+
+
+                    } catch (Exception $e) {
+                        $this->stderr('Can not add config for ' . $ssl->domain . ". Details: " . $e->getMessage() . " \n", Console::FG_RED);
+                    }
+                } else {
+                    $this->stderr('Can not add config for ' . $ssl->domain . ". Details: invalid json details \n", Console::FG_RED);
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-use my\modules\superadmin\widgets\CountPagination;
+use superadmin\widgets\CountPagination;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */

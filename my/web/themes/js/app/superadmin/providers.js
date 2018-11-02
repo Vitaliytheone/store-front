@@ -10,20 +10,22 @@ customModule.superadminProvidersController = {
         });
 
         function setInputs(method, details, form) {
+            $('input', form).val('');
+            $('select', form).prop('selectedIndex', 0);
 
             if (method == false) {
-                $(':input').val('');
                 return false;
             }
 
             $.each(details, function(name, value) {
-                if (method == 'edit') {
-                    $('#editproviderform-' + name, form).val(value);
-                    $('#edit-provider-' + name, form).val(value);
-                    $('#edit-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
-                } else {
-                    $('#create-provider-' + name, form).val(value);
-                    $('#create-provider-' + name + ' option[value="'+ value +'"]').attr('selected', 'true');
+                if ($('input[id$="-' + name + '"]', form).length) {
+                    $('input[id$="-' + name + '"]', form).val(value);
+                }
+                if ($('textarea[id$="-' + name + '"]', form).length) {
+                    $('textarea[id$="-' + name + '"]', form).val(value);
+                }
+                if ($('select[id$="-' + name + '"]', form).length) {
+                    $('select[id$="-' + name + '"]', form).val(value);
                 }
             });
         }

@@ -413,11 +413,7 @@ class SiteController extends CustomController
         $model->setCustomer($customer);
 
         if ($model->load(Yii::$app->request->post()) && $model->reset()) {
-            if ($this->hasActiveInvoice()) {
-                return $this->redirect('/invoices');
-            } else {
-                return $this->redirect('/panels');
-            }
+            return $this->goHome();
         }
 
         return $this->render('reset', [

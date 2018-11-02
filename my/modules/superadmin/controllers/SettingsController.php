@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\Params;
 use my\components\ActiveForm;
@@ -8,23 +8,22 @@ use my\components\SuperAccessControl;
 use my\helpers\Url;
 use common\models\panels\Content;
 use common\models\panels\NotificationEmail;
-use common\models\panels\PaymentGateway;
 use common\models\panels\SuperAdmin;
 use common\models\panels\Tariff;
-use my\modules\superadmin\models\forms\ChangeStaffPasswordForm;
-use my\modules\superadmin\models\forms\CreateNotificationEmailForm;
-use my\modules\superadmin\models\forms\CreatePlanForm;
-use my\modules\superadmin\models\forms\CreateStaffForm;
-use my\modules\superadmin\models\forms\EditContentForm;
-use my\modules\superadmin\models\forms\EditNotificationEmailForm;
-use my\modules\superadmin\models\forms\EditPaymentForm;
-use my\modules\superadmin\models\forms\EditPlanForm;
-use my\modules\superadmin\models\forms\EditStaffForm;
-use my\modules\superadmin\models\search\ContentSearch;
-use my\modules\superadmin\models\search\NotificationEmailSearch;
-use my\modules\superadmin\models\search\PaymentMethodsSearch;
-use my\modules\superadmin\models\search\PlanSearch;
-use my\modules\superadmin\models\search\StaffSearch;
+use superadmin\models\forms\ChangeStaffPasswordForm;
+use superadmin\models\forms\CreateNotificationEmailForm;
+use superadmin\models\forms\CreatePlanForm;
+use superadmin\models\forms\CreateStaffForm;
+use superadmin\models\forms\EditContentForm;
+use superadmin\models\forms\EditNotificationEmailForm;
+use superadmin\models\forms\EditPaymentForm;
+use superadmin\models\forms\EditPlanForm;
+use superadmin\models\forms\EditStaffForm;
+use superadmin\models\search\ContentSearch;
+use superadmin\models\search\NotificationEmailSearch;
+use superadmin\models\search\PaymentMethodsSearch;
+use superadmin\models\search\PlanSearch;
+use superadmin\models\search\StaffSearch;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
@@ -175,6 +174,7 @@ class SettingsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditStaff($id)
     {
@@ -223,6 +223,7 @@ class SettingsController extends CustomController
      * Change staff password action
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionStaffPassword($id)
     {
@@ -250,6 +251,8 @@ class SettingsController extends CustomController
     /**
      * Get payment edit form or save data
      * @param $code
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEditPayment($code)
     {
@@ -304,16 +307,17 @@ class SettingsController extends CustomController
      * Edit email.
      *
      * @access public
-     * @param int $id
-     * @return string
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEditEmail($id)
     {
-        $this->view->title = 'Edit email';
-
         if (!($email = NotificationEmail::findOne($id))) {
             throw new NotFoundHttpException();
         }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new EditNotificationEmailForm();
         $model->setEmail($email);
@@ -322,9 +326,16 @@ class SettingsController extends CustomController
             $this->redirect(Url::toRoute('/settings/email'));
         }
 
-        return $this->render('edit_email', [
-            'model' => $model
-        ]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**
@@ -334,6 +345,7 @@ class SettingsController extends CustomController
      * @param int $id
      * @param int $status
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionEmailStatus($id, $status)
     {
@@ -352,6 +364,7 @@ class SettingsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditPlan($id)
     {
@@ -402,6 +415,7 @@ class SettingsController extends CustomController
      * @access public
      * @param int $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditContent($id)
     {

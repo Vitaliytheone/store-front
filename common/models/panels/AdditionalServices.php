@@ -38,6 +38,7 @@ use yii\helpers\ArrayHelper;
  * @property int $processing
  * @property int $show_id
  * @property int $input_type
+ * @property int $provider_authkeys_field
  * @property string $proxy
  * @property int $string_type
  * @property int $string_name
@@ -72,9 +73,12 @@ class AdditionalServices extends ActiveRecord
     const TYPE_INTERNAL = 1;
 
     const STATUS_ACTIVE = 0;
-    const STATUS_FROZEN = 1;
+    const STATUS_BROKEN = 1;
     const STATUS_PROCESSING = 2;
     const STATUS_NOT_UPDATED = 3;
+
+    const SEARCH_ON = 1;
+    const SEARCH_OFF = 0;
 
     const AUTO_SERVICE_NOT_AUTO_LIST = 0;
     const AUTO_SERVICE_AUTO_LIST = 1;
@@ -119,7 +123,7 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             [['name', 'apihelp', 'type', 'status', 'service_view'], 'required'],
-            [['service_auto_rate', 'import', 'service_description', 'res', 'provider_id', 'type', 'status', 'search', 'sc', 'service_auto_min', 'provider_rate', 'service_auto_max', 'send_method', 'manual_order_status', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'service_count', 'service_inuse_count', 'default_order_status'], 'integer'],
+            [['provider_authkeys_field', 'service_auto_rate', 'import', 'service_description', 'res', 'provider_id', 'type', 'status', 'search', 'sc', 'service_auto_min', 'provider_rate', 'service_auto_max', 'send_method', 'manual_order_status', 'auto_services', 'auto_order', 'processing', 'show_id', 'input_type', 'string_type', 'string_name', 'provider_service_id_label', 'service_count', 'service_inuse_count', 'default_order_status'], 'integer'],
             [['content', 'name_script', 'getstatus_params', 'params', 'services_params', 'sender_params', 'type_services', 'service_options', 'provider_service_settings', 'provider_service_api_error'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 32],
@@ -158,6 +162,7 @@ class AdditionalServices extends ActiveRecord
             'processing' => Yii::t('app', 'Processing'),
             'show_id' => Yii::t('app', 'Show ID'),
             'input_type' => Yii::t('app', 'Input Type'),
+            'provider_authkeys_field' => Yii::t('app', 'Provider Authkeys Field'),
             'proxy' => Yii::t('app', 'Proxy'),
             'string_type' => Yii::t('app', 'String Type'),
             'string_name' => Yii::t('app', 'String name'),
@@ -232,7 +237,7 @@ class AdditionalServices extends ActiveRecord
     {
         return [
             static::STATUS_ACTIVE => Yii::t('app', 'additional_service.status.ok'),
-            static::STATUS_FROZEN => Yii::t('app', 'additional_service.status.broken'),
+            static::STATUS_BROKEN => Yii::t('app', 'additional_service.status.broken'),
             static::STATUS_PROCESSING => Yii::t('app', 'additional_service.status.send_only'),
             static::STATUS_NOT_UPDATED => Yii::t('app', 'additional_service.status.not_updated'),
         ];

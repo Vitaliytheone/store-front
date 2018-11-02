@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
@@ -12,7 +12,7 @@ use yii\data\Pagination;
 
 /**
  * Class ProvidersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ProvidersSearch
 {
@@ -58,7 +58,6 @@ class ProvidersSearch
     {
         $searchQuery = $this->getQuery();
         $script = $script == 'all' ? null : $script;
-
 
         $providers = (new Query())
             ->select([
@@ -229,7 +228,10 @@ class ProvidersSearch
 
             foreach ($projects as $id => $project) {
                 if (!empty($project['providers'][$provider['provider_id']])) {
-                    $usedProjects[] = $project;
+                    $usedProjects[] = array_merge(
+                        $project,
+                        ['url' => $project['child_panel'] == 0 ? Url::toRoute(['/panels', 'id' => $project['id']]) : Url::toRoute(['/child-panels', 'id' => $project['id']])]
+                    );
                 }
                 $projects[$id]['url'] = $project['child_panel'] == 0 ? Url::toRoute(['/panels', 'id' => $project['id']]) : Url::toRoute(['/child-panels', 'id' => $project['id']]);
             }

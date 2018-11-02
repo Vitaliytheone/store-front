@@ -1,18 +1,18 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $payments \my\modules\superadmin\models\search\PaymentMethodsSearch */
+    /* @var $payments \superadmin\models\search\PaymentMethodsSearch */
     /* @var $payment \common\models\panels\Params */
 
     use my\helpers\Url;
     use common\models\panels\Params;
     use yii\bootstrap\Html;
 ?>
-<table class="table mb-0">
+<table class="table table-sm table-custom">
     <thead>
         <tr>
-            <th class="border-0"><?= Yii::t('app/superadmin', 'payments.list.method') ?></th>
-            <th class="border-0"><?= Yii::t('app/superadmin', 'payments.list.visibility') ?></th>
-            <th class="border-0"></th>
+            <th scope="col"><?= Yii::t('app/superadmin', 'payments.list.method') ?></th>
+            <th scope="col"><?= Yii::t('app/superadmin', 'payments.list.visibility') ?></th>
+            <th class="table-custom__action-th"></th>
         </tr>
     </thead>
     <tbody>

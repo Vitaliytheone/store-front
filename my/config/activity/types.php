@@ -30,6 +30,7 @@ return [
     '2014' => 'Disable category',
     '2016' => 'Move Service',
     '2017' => 'Move Category',
+    '2018' => 'Assign Category',
 
     '3001' => 'Add provider',
     '3002' => 'Edit provider',

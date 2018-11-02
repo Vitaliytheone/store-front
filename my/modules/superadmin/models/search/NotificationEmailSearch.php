@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\NotificationEmail;
 use yii\db\ActiveQuery;
 
 /**
  * Class NotificationEmailSearch
- * @package my\modules\superadmin\models
+ * @package superadmin\models
  */
 class NotificationEmailSearch extends NotificationEmail
 {

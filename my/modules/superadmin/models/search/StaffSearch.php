@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\SuperAdmin;
 use yii\db\ActiveQuery;
 
 /**
  * Class StaffSearch
- * @package my\modules\superadmin\models
+ * @package superadmin\models
  */
 class StaffSearch extends SuperAdmin
 {

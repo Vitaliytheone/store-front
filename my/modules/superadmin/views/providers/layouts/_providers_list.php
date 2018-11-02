@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $providers \my\modules\superadmin\models\search\ProvidersSearch */
+    /* @var $providers \superadmin\models\search\ProvidersSearch */
     /* @var $provider \common\models\panels\AdditionalServices */
     /* @var $scripts array */
 
@@ -9,7 +9,7 @@
     use yii\helpers\Json;
     use my\helpers\SpecialCharsHelper;
     use yii\widgets\LinkPager;
-    use my\modules\superadmin\widgets\CountPagination;
+    use superadmin\widgets\CountPagination;
 ?>
 <table class="table table-sm table-custom" id="providersTable">
     <thead>
@@ -113,11 +113,11 @@
                                 'id' => $provider['id']
                             ]), [
                                 'class' => 'dropdown-item edit-provider',
-                                'data-details' => Json::encode($provider['form_data'])
+                                'data-details' => Json::encode(SpecialCharsHelper::multiPurifierDecode($provider['form_data']))
                             ])?>
                             <?= Html::a(Yii::t('app/superadmin', 'providers.modal_clone_provider'), Url::toRoute(['/providers/create']), [
                                 'class' => 'dropdown-item clone-provider',
-                                'data-details' => Json::encode($provider['form_data'])
+                                'data-details' => Json::encode(SpecialCharsHelper::multiPurifierDecode($provider['form_data']))
                             ])?>
                         </div>
                     </div>

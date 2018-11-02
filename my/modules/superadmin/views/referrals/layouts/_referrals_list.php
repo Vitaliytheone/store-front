@@ -1,13 +1,13 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $referrals \my\modules\superadmin\models\search\PanelsSearch */
+    /* @var $referrals \superadmin\models\search\PanelsSearch */
     /* @var $filters array */
 
     use my\helpers\Url;
     use yii\bootstrap\Html;
     use my\helpers\SpecialCharsHelper;
     use yii\widgets\LinkPager;
-    use my\modules\superadmin\widgets\CountPagination;
+    use superadmin\widgets\CountPagination;
 ?>
 <table class="table table-sm table-custom">
     <thead>

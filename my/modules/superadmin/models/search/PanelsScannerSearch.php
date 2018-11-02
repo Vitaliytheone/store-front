@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\SuperToolsScanner;
@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class PanelsScannerSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class PanelsScannerSearch extends Model
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Getstatus;
 use common\models\panels\AdditionalServices;
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class GetstatusSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class GetstatusSearch extends Getstatus
 {

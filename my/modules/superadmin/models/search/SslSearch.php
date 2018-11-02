@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use Yii;
 use common\models\panels\SslCert;
@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class SslSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class SslSearch extends SslCert {
 

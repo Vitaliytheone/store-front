@@ -1,14 +1,14 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
-    /* @var $modal \my\modules\superadmin\models\forms\EditProvidersForm */
+    /* @var $modal \superadmin\models\forms\EditProvidersForm */
     /* @var $action string */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \my\modules\superadmin\models\forms\EditProvidersForm();
+    $model = new superadmin\models\forms\EditProvidersForm();
 ?>
 <div class="modal fade" id="editProvidersModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">

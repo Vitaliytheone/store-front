@@ -2,10 +2,11 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use my\modules\superadmin\widgets\SuperAdminNav;
-use my\modules\superadmin\widgets\SuperAdminNavBar;
-use my\modules\superadmin\widgets\UnreadMessagesWidgetV2;
-use my\modules\superadmin\widgets\ErrorOrdersWidgetV2;
+use superadmin\widgets\SuperAdminNav;
+use superadmin\widgets\SuperAdminNavBar;
+use superadmin\widgets\UnreadMessagesWidgetV2;
+use superadmin\widgets\ErrorOrdersWidgetV2;
+use superadmin\widgets\ErrorSslWidget;
 use common\models\panels\SuperAdmin;
 use my\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -86,7 +87,7 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
 }
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SSL)) {
     $optionsLeft[] = [
-        'label' => Yii::t('app/superadmin', 'header.nav.ssl'),
+        'label' => Yii::t('app/superadmin', 'header.nav.ssl') . ' ' . ErrorSslWidget::widget(),
         'url' => Url::toRoute('/ssl'),
         'options' => ['class' => 'nav-item'],
         'linkOptions' => ['class' => 'nav-link'],

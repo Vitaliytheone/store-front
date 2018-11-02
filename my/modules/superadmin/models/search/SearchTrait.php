@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use Yii;
 use yii\db\Connection;
@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class SearchTrait
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 trait SearchTrait {
 

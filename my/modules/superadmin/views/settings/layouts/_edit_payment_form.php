@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\EditPaymentForm */
+    /* @var $model superadmin\models\forms\EditPaymentForm */
     /* @var $payment \common\models\panels\Params */
     /* @var $form my\components\ActiveForm */
 

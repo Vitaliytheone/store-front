@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\Customers;
 use yii\base\Model;
@@ -7,7 +7,7 @@ use Yii;
 
 /**
  * Class CustomerPasswordForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class CustomerPasswordForm extends Model
 {

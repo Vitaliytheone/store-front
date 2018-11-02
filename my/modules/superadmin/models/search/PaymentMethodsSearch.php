@@ -1,6 +1,7 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
+
 
 use common\models\panels\Params;
 use yii\db\ActiveQuery;
