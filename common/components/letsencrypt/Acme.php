@@ -308,7 +308,7 @@ class Acme extends Component
     /**
      * Issue letsencrypt certificate
      * @param string $domain
-     * @return boolean
+     * @return null|array Null if crashes, parsed certificate data if success
      * @throws AcmeException
      */
     public function issueCert(string $domain)
@@ -323,16 +323,18 @@ class Acme extends Component
         ]);;
 
         if (!$success) {
-            return false;
+            return null;
         }
 
-        foreach ($this->requiredCertFiles($domain) as $certFile) {
+        $certFiles = $this->requiredCertFiles($domain);
+
+        foreach ($certFiles as $certFile) {
             if (!@file_exists($certFile)) {
                 throw new AcmeException('One of required domain [' . $domain . '] certificate file [' . $certFile . '] does not exist!');
             }
         }
 
-        return true;
+        return $this->parseCert($domain, $certFiles[self::CERT_DATA_CER]);
     }
 
     /**
@@ -402,17 +404,55 @@ class Acme extends Component
     /**
      * Renew domain certificate
      * @param $domain
-     * @return boolean
+     * @return null|array Null if crashed, parsed certificate data if success
+     * @throws AcmeException
      */
     public function renewCert($domain)
     {
         $domain = trim($domain);
 
-        return $this->exec('--renew', [
+        $success = $this->exec('--renew', [
             '--domain' => $domain,
             '--force',
             '--certhome' => $this->getCertsDir(),
         ]);
+
+        if (!$success) {
+            return null;
+        }
+
+        $certFiles = $this->requiredCertFiles($domain);
+
+        foreach ($certFiles as $certFile) {
+            if (!@file_exists($certFile)) {
+                throw new AcmeException('One of required domain [' . $domain . '] certificate file [' . $certFile . '] does not exist!');
+            }
+        }
+
+        return $this->parseCert($domain, $certFiles[self::CERT_DATA_CER]);
     }
 
+    /**
+     * Parse letsencrypt certificate
+     * @param string $certFilePath
+     * @param string $domain
+     * @return array
+     * @throws AcmeException
+     */
+    public function parseCert(string $domain, string $certFilePath)
+    {
+        $certContent = @file_get_contents($certFilePath);
+
+        if (!$certContent) {
+            throw new AcmeException('Cannot read domain [' . $domain . '] certificate file [' . $certFilePath . ']!');
+        }
+
+        $parsedCert = openssl_x509_parse($certContent);
+
+        if (!$parsedCert || !is_array($parsedCert)) {
+            throw new AcmeException('Cannot parse domain [' . $domain . '] certificate file [' . $certFilePath . ']!');
+        }
+
+        return $parsedCert;
+    }
 }

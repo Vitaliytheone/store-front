@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use Yii;
+use yii\base\ExitException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use \common\models\panels\queries\LetsencryptSslQuery;
@@ -20,6 +21,15 @@ use yii\helpers\ArrayHelper;
  */
 class LetsencryptSsl extends ActiveRecord
 {
+    const SSL_FILE_CA = 'ca.cer';
+    const SSL_FILE_FULLCHAIN = 'fullchain.cer';
+    const SSL_FILE_CSR = '{domain}.csr';
+    const SSL_FILE_CER = '{domain}.cer';
+    const SSL_FILE_KEY = '{domain}.key';
+
+    const SSL_FILE_CSR_CONF = '{domain}.csr.conf';
+    const SSL_FILE_DOMAIN_CONF = '{domain}.conf';
+
     /** @inheritdoc */
     public function behaviors()
     {
@@ -83,6 +93,37 @@ class LetsencryptSsl extends ActiveRecord
     }
 
     /**
+     * Return SSL file names list
+     * @param $domain
+     * @return array
+     */
+    public static function sslFileNames($domain)
+    {
+        $files =  [
+            self::SSL_FILE_CA,
+            self::SSL_FILE_FULLCHAIN,
+            self::SSL_FILE_CSR,
+            self::SSL_FILE_CER,
+            self::SSL_FILE_KEY,
+            self::SSL_FILE_CSR_CONF,
+            self::SSL_FILE_DOMAIN_CONF,
+        ];
+
+        $domainPlaceholder = '{domain}';
+
+        foreach ($files as &$file) {
+
+            if (strpos($file, $domainPlaceholder) === false) {
+                continue;
+            }
+
+            $file = str_replace($domainPlaceholder, trim($domain), $file);
+        }
+
+        return $files;
+    }
+
+    /**
      * Get SSL files content
      * @return mixed
      */
@@ -101,12 +142,29 @@ class LetsencryptSsl extends ActiveRecord
     }
 
     /**
+     * Prepare filename for class constant uses
+     * @param string $fileName
+     */
+    private function _prepareFilename(string &$fileName)
+    {
+        $sslFiles = static::sslFileNames($this->domain);
+
+        $index = array_search($fileName, $sslFiles);
+
+        if ($index !== false) {
+            $fileName = $sslFiles[$index];
+        }
+    }
+
+    /**
      * Get SSL file content
      * @param $fileName string
      * @return null|string
      */
     public function getFileContent(string $fileName)
     {
+        $this->_prepareFilename($fileName);
+
         $files = $this->getFileContents();
         $files = is_array($files) ? $files : [];
 
@@ -120,10 +178,11 @@ class LetsencryptSsl extends ActiveRecord
      */
     public function setFileContent(string $fileName, string $fileContent)
     {
+        $this->_prepareFilename($fileName);
+
         $files = $this->getFileContents();
         $files = is_array($files) ? $files : [];
 
         $this->setFileContents(array_merge($files, [$fileName => $fileContent]));
     }
-
 }

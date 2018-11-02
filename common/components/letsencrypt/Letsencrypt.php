@@ -1,10 +1,13 @@
 <?php
 
 namespace common\components\letsencrypt;
+
 use common\components\letsencrypt\exceptions\LetsencryptException;
-use common\models\panels\LetsencryptSsl;
+use common\models\panels\LetsencryptSslHelper;
 use common\models\panels\Params;
+use my\helpers\ExpiryHelper;
 use yii\console\ExitCode;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class Letsencrypt
@@ -142,6 +145,7 @@ class Letsencrypt extends Acme
 
     /**
      * Cut cert files
+     * Copy local stored cert files contents and delete cert files dir
      * @param string $domain
      * @return array of cert files content
      * @throws LetsencryptException
@@ -180,10 +184,10 @@ class Letsencrypt extends Acme
 
     /**
      * Restore certificate files from DB
-     * @param LetsencryptSsl $ssl
+     * @param LetsencryptSslHelper $ssl
      * @throws LetsencryptException
      */
-    public function restoreCertFilesFromDb(LetsencryptSsl $ssl)
+    public function restoreCertFilesFromDb(LetsencryptSslHelper $ssl)
     {
         $certFiles = $ssl->getFileContents();
 
@@ -234,20 +238,22 @@ class Letsencrypt extends Acme
             throw new LetsencryptException('Invalid domain name!');
         }
 
-        if (LetsencryptSsl::findOne(['domain' => $domain])) {
+        if (LetsencryptSslHelper::findOne(['domain' => $domain])) {
             throw new LetsencryptException('Certificate for domain [' . $domain . '] already exist! Use renewSsl instead!');
         }
 
         $this->restoreAccountFromDb();
 
-        if (!parent::issueCert($domain)) {
-            throw new LetsencryptException('Cannot issue Letsencrypt cert ['. $domain .']');
+        $parsedCert = parent::issueCert($domain);
+
+        if (!$parsedCert) {
+            throw new LetsencryptException('Cannot obtain issued Letsencrypt cert ['. $domain .'] data!');
         }
 
-        $ssl = new LetsencryptSsl();
+        $ssl = new LetsencryptSslHelper();
         $ssl->domain = $domain;
         $ssl->setFileContents($this->cutCertFiles($domain));
-        $ssl->expired_at = '10500';
+        $ssl->expired_at = static::_expiryDate($parsedCert);
 
         if (!$ssl->save(false)) {
             throw new LetsencryptException('Cannot create new LetsencryptSsl record!');
@@ -272,12 +278,14 @@ class Letsencrypt extends Acme
 
         $this->restoreCertFilesFromDb($ssl);
 
-        if (!parent::renewCert($domain)) {
-            throw new LetsencryptException('Cannot renew domain ['. $domain .'] certificate!');
+        $parsedCert = parent::renewCert($domain);
+
+        if (!$parsedCert) {
+            throw new LetsencryptException('Cannot obtain renewed Letsencrypt cert ['. $domain .'] data!');
         }
 
         $ssl->setFileContents($this->cutCertFiles($domain));
-        $ssl->expired_at = '1318';
+        $ssl->expired_at = static::_expiryDate($parsedCert);
 
         if (!$ssl->save(false)) {
             throw new LetsencryptException('Cannot save LetsencryptSsl domain ['. $domain .'] certificate!');
@@ -333,18 +341,30 @@ class Letsencrypt extends Acme
     /**
      * Fetch exiting ssl from db
      * @param $domain
-     * @return null|LetsencryptSsl
+     * @return null|LetsencryptSslHelper
      * @throws LetsencryptException
      */
     private function _fetchSsl($domain)
     {
-        $ssl = LetsencryptSsl::findOne(['domain' => $domain]);
+        $ssl = LetsencryptSslHelper::findOne(['domain' => $domain]);
 
         if (!$ssl) {
             throw new LetsencryptException('SSL for domain [' . $domain . '] does not exist yet!');
         }
 
         return $ssl;
+    }
+
+    /**
+     * Return ssl expiry date
+     * @param array $parsedCert
+     * @return integer
+     */
+    private static function _expiryDate(array $parsedCert)
+    {
+        $expiryTime = (int)ArrayHelper::getValue($parsedCert, 'validTo_time_t', null);
+
+        return $expiryTime ? $expiryTime : ExpiryHelper::days(90, time());
     }
 
 }
