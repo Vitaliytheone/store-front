@@ -620,7 +620,7 @@ class SystemController extends CustomController
             ]));
             $params->code = $code;
             $params->category = $category;
-            $params->setOption($options);
+            $params->setOptions($options);
             $params->position = $payment->position;
             if (!$params->save()) {
                 $this->stderr(ActiveForm::firstError($params) . "\n", Console::FG_RED);

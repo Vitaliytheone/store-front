@@ -149,7 +149,7 @@ class Params extends ActiveRecord
     /**
      * @return array
      */
-    public function getOptions(): array
+    public function getOptions()
     {
         return json_decode($this->options, true);
     }
@@ -157,7 +157,7 @@ class Params extends ActiveRecord
     /**
      * @param array $options
      */
-    public function setOption($options)
+    public function setOptions($options)
     {
         $this->options = json_encode($options);
     }

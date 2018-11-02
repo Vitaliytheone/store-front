@@ -59,7 +59,7 @@ class EditPaymentForm extends Model
             return false;
         }
 
-        $this->_payment->setOption($this->attributes);
+        $this->_payment->setOptions($this->attributes);
 
         if (!$this->_payment->save()) {
             $this->addErrors($this->_payment->getErrors());
