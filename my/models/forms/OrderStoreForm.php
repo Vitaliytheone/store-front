@@ -6,12 +6,15 @@ use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
+use common\models\stores\StoreDomains;
 use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
 use Yii;
 use common\models\panels\Auth;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use my\components\validators\OrderDomainValidator;
+use yii\base\Exception;
 
 /**
  * Class OrderStoreForm
@@ -30,6 +33,9 @@ class OrderStoreForm extends DomainForm
 
     /** @var string */
     protected $_ip;
+
+    /** @var string */
+    protected $storeDomain;
 
     const SCENARIO_CREATE_STORE = 'store';
 
@@ -120,6 +126,7 @@ class OrderStoreForm extends DomainForm
 
     /**
      * @return bool
+     * @throws Exception
      * @throws \yii\db\Exception
      */
     public function save()
@@ -150,6 +157,8 @@ class OrderStoreForm extends DomainForm
             $this->preparedDomain = $this->domain;
         }
 
+        $this->generateSubdomain();
+
         $result = $this->orderStore($invoiceModel);
 
         if (!$result) {
@@ -166,24 +175,80 @@ class OrderStoreForm extends DomainForm
     }
 
     /**
+     * Return generated subdomain from store name
+     * @return string
+     * @throws Exception
+     */
+    protected function generateSubdomain()
+    {
+        $domain = Yii::$app->params['storeDomain'];
+
+        if (empty($domain)) {
+            throw new Exception('Bad config-params: store_domain not configured yet!');
+        }
+
+        $subdomain = str_replace(' ', '-', strtolower(trim($this->domain)));
+        $subdomain = preg_replace('/\.(\w+)$/', '', $subdomain);
+
+        $pendingOrders = (new Query())
+            ->select('domain')
+            ->from(Orders::tableName())
+            ->andWhere(['status' => [
+                Orders::STATUS_PENDING,
+                Orders::STATUS_PAID
+            ]])
+            ->column();
+
+        $exitingStores = (new Query())
+            ->select('domain')
+            ->from(StoreDomains::tableName())
+            ->column();
+
+        $exitingDomains = array_merge($pendingOrders, $exitingStores);
+
+        $subdomainPostfix = 2;
+
+        $checkingSubdomain = $subdomain;
+
+        // Check if store with same domain already exist
+        do {
+            $checkingDomain = $checkingSubdomain . '.' . $domain;
+
+            $domainExist = in_array($checkingDomain, $exitingDomains);
+
+            if ($domainExist) {
+                $checkingSubdomain = $subdomain . $subdomainPostfix;
+                $subdomainPostfix++;
+            }
+
+        } while ($domainExist);
+
+        $this->storeDomain = $checkingDomain;
+
+        return $this->storeDomain;
+    }
+
+    /**
      * Order store
-     * @param Invoices $invoiceModel
+     * @param $invoiceModel
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function orderStore(&$invoiceModel)
     {
         $this->scenario = static::SCENARIO_CREATE_STORE;
 
+        $transaction = Yii::$app->db->beginTransaction();
+
         $model = new Orders();
         $model->cid = $this->_user->id;
         $model->item = Orders::ITEM_BUY_STORE;
-        $model->domain = $this->preparedDomain;
+        $model->domain = $this->storeDomain;
         $model->ip = $this->_ip;
         $model->setDetails([
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
-            'domain' => $this->domain,
-            'clean_domain' => $this->preparedDomain,
+            'domain' => $this->storeDomain,
             'currency' => $this->store_currency,
             'admin_email' => $this->admin_email,
             'name' => $this->domain,
@@ -206,6 +271,8 @@ class OrderStoreForm extends DomainForm
         }
 
         $invoiceModel->total += $invoiceDetailsModel->amount;
+
+        $transaction->commit();
 
         MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_STORE_ORDER, $model->id, $model->id, UserHelper::getHash());
 
