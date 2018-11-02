@@ -28,7 +28,6 @@ class EditProjectForm extends Model
     public $auto_order;
     public $lang;
     public $theme;
-    public $currency;
     public $utc;
     public $package;
     public $seo;
@@ -74,7 +73,7 @@ class EditProjectForm extends Model
                 'auto_order',
                 'lang',
                 'theme',
-                'currency',
+                'currency_code',
                 'utc',
                 'package',
                 'seo',
@@ -119,7 +118,7 @@ class EditProjectForm extends Model
     public function getDropDownAttrs()
     {
         return [
-            'currency',
+            'currency_code',
             'plan',
             'utc',
             'cid'
@@ -237,7 +236,7 @@ class EditProjectForm extends Model
         }
 
         $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
-        if ($this->currency != $this->_project->getCurrencyCode()) {
+        if ($this->currency_code != $this->_project->getCurrencyCode()) {
             $isChangedCurrency = true;
         }
 
@@ -309,7 +308,7 @@ class EditProjectForm extends Model
             'auto_order' => Yii::t('app/superadmin', 'panels.edit.auto_order'),
             'lang' => Yii::t('app/superadmin', 'panels.edit.lang'),
             'theme' => Yii::t('app/superadmin', 'panels.edit.theme'),
-            'currency' => Yii::t('app/superadmin', 'panels.edit.currency'),
+            'currency_code' => Yii::t('app/superadmin', 'panels.edit.currency'),
             'utc' => Yii::t('app/superadmin', 'panels.edit.utc'),
             'package' => Yii::t('app/superadmin', 'panels.edit.package'),
             'seo' => Yii::t('app/superadmin', 'panels.edit.seo'),
