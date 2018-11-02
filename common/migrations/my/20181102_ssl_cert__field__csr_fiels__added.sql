@@ -1,0 +1,1 @@
+ALTER TABLE `ssl_cert` ADD `csr_files` TEXT  NULL  COMMENT 'All genered csr files content'  AFTER `csr_key`;
