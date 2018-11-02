@@ -111,33 +111,6 @@ class Params extends ActiveRecord
         $this->options = json_encode($options);
     }
 
-    /**
-     * Return option by key
-     * @param $optionKey string
-     * @return null|mixed
-     */
-    public function getOption(string $optionKey)
-    {
-        $options = $this->getOptions();
-        $options = is_array($options) ? $options : [];
-
-        return ArrayHelper::getValue($options, $optionKey, null);
-    }
-
-    /**
-     * Set option by key
-     * @param $optionKey string
-     * @param $optionValue
-     * @return array
-     */
-    public function setOption(string $optionKey, $optionValue)
-    {
-        $options = $this->getOptions();
-        $options = is_array($options) ? $options : [];
-
-        $this->setOptions(array_merge($options, [$optionKey => $optionValue]));
-    }
-
     public function behaviors()
     {
         return [
