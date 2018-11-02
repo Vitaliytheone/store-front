@@ -1,14 +1,14 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\helpers\Url;
-use my\modules\superadmin\models\search\SenderSearch;
-use my\modules\superadmin\models\search\SubscriptionSearch;
+use superadmin\models\search\SenderSearch;
+use superadmin\models\search\SubscriptionSearch;
 use Yii;
 use my\components\SuperAccessControl;
-use my\modules\superadmin\models\forms\DatetimepickerForm;
-use my\modules\superadmin\models\search\GetstatusSearch;
+use superadmin\models\forms\DatetimepickerForm;
+use superadmin\models\search\GetstatusSearch;
 
 /**
  * StatusesController for the `superadmin` module

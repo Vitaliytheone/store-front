@@ -1,11 +1,11 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\Customers;
-use my\modules\superadmin\models\search\ReferralEarningsSearch;
-use my\modules\superadmin\models\search\ReferralsPaymentsSearch;
-use my\modules\superadmin\models\search\ReferralsSearch;
+use superadmin\models\search\ReferralEarningsSearch;
+use superadmin\models\search\ReferralsPaymentsSearch;
+use superadmin\models\search\ReferralsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 

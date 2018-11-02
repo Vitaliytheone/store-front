@@ -1,9 +1,8 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $payments \my\modules\superadmin\models\search\PaymentGatewaySearch */
+    /* @var $payments \superadmin\models\search\PaymentMethodsSearch */
 
     use my\helpers\Url;
-    use yii\bootstrap\Html;
 
     $this->context->addModule('superadminPaymentGatewayController');
 ?>

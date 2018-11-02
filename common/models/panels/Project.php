@@ -34,14 +34,18 @@ use yii\helpers\ArrayHelper;
  * @property integer $hide
  * @property integer $child_panel
  * @property integer $provider_id
+ * @property integer $folder
+ * @property integer $folder_content
  * @property integer $theme
  * @property string $theme_custom
  * @property string $theme_default
  * @property integer $ssl
  * @property string $theme_path
+ * @property integer $rtl
  * @property integer $utc
  * @property string $db
  * @property string $apikey
+ * @property integer $orders
  * @property integer $plan
  * @property integer $tariff
  * @property integer $last_count
@@ -50,8 +54,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $paypal
  * @property integer $type
  * @property string $lang
+ * @property integer $language_id
  * @property integer $currency
- * @property string $currency_code
  * @property integer $seo
  * @property integer $comments
  * @property integer $mentions
@@ -86,12 +90,18 @@ use yii\helpers\ArrayHelper;
  * @property integer $ticket_per_user
  * @property integer $auto_order
  * @property integer $drip_feed
+ * @property integer $currency_format
+ * @property string $currency_code
+ * @property integer $tasks
  * @property integer $name_fields
  * @property integer $name_modal
  * @property string $notification_email
  * @property int $forgot_password
  * @property int $no_invoice
+ * @property int $js_error_tracking
  * @property int $no_referral
+ * @property string $paypal_fraud_settings
+ * @property int $refiller
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -150,14 +160,16 @@ class Project extends ActiveRecord implements ProjectInterface
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
                 'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password',
-                'name_fields', 'name_modal', 'no_invoice', 'no_referral'
+                'name_fields', 'name_modal', 'no_invoice', 'no_referral', 'rtl', 'orders', 'language_id', 'currency_format', 'tasks', 'js_error_tracking', 'refiller'
             ], 'integer'],
             [['site', 'name', 'skype'], 'string', 'max' => 1000],
             [['theme_custom', 'theme_default', 'db', 'logo', 'favicon', 'notification_email'], 'string', 'max' => 300],
             [['theme_path'], 'string', 'max' => 500],
             [['apikey'], 'string', 'max' => 64],
             [['lang'], 'string', 'max' => 32],
+            [['folder'], 'string', 'max' => 6],
             [['currency_code'], 'string', 'max' => 3],
+            [['folder_content', 'paypal_fraud_settings'], 'string'],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
@@ -182,13 +194,17 @@ class Project extends ActiveRecord implements ProjectInterface
             'hide' => Yii::t('app', 'Hidden'),
             'child_panel' => Yii::t('app', 'Child Panel'),
             'provider_id' => Yii::t('app', 'Provider ID'),
+            'folder' => Yii::t('app', 'Folder'),
+            'folder_content' => Yii::t('app', 'Folder Content'),
             'theme' => Yii::t('app', 'Theme'),
             'theme_custom' => Yii::t('app', 'Theme Custom'),
             'theme_default' => Yii::t('app', 'Theme Default'),
             'theme_path' => Yii::t('app', 'Theme Path'),
+            'rtl' => Yii::t('app', 'Rtl'),
             'utc' => Yii::t('app', 'Utc'),
             'db' => Yii::t('app', 'Db'),
             'apikey' => Yii::t('app', 'Apikey'),
+            'orders' => Yii::t('app', 'Orders'),
             'plan' => Yii::t('app', 'Plan'),
             'tariff' => Yii::t('app', 'Tariff'),
             'last_count' => Yii::t('app', 'Last Count'),
@@ -197,6 +213,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'paypal' => Yii::t('app', 'Paypal'),
             'type' => Yii::t('app', 'Type'),
             'lang' => Yii::t('app', 'Lang'),
+            'language_id' => Yii::t('app', 'Language ID'),
             'currency' => Yii::t('app', 'Currency'),
             'seo' => Yii::t('app', 'Seo'),
             'comments' => Yii::t('app', 'Comments'),
@@ -238,13 +255,20 @@ class Project extends ActiveRecord implements ProjectInterface
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
             'no_invoice' => Yii::t('app', 'No Invoice'),
+            'currency_format' => Yii::t('app', 'Currency Format'),
             'currency_code' => Yii::t('app', 'Currency code'),
+            'tasks' => Yii::t('app', 'Tasks'),
+            'js_error_tracking' => Yii::t('app', 'JS Error Tracking'),
             'no_referral' => Yii::t('app', 'No Referral'),
+            'paypal_fraud_settings' => Yii::t('app', 'PayPal Fraud Settings'),
+            'refiller' => Yii::t('app', 'Refiller'),
         ];
     }
-    
+
     /**
-     * @return null|static
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getParent()
     {
@@ -592,6 +616,8 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Enable domain (create panel domains and add domain to dns servers)
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function enableDomain()
     {
@@ -734,6 +760,7 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Create nginx config
      * @return bool
+     * @throws \Exception
      */
     public function createNginxConfig()
     {
@@ -743,6 +770,7 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Remove nginx config
      * @return bool
+     * @throws \Exception
      */
     public function deleteNginxConfig()
     {

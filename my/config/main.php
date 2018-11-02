@@ -193,7 +193,7 @@ $config = [
     ],
     'modules' => [
         $params['superadminUrl'] => [
-            'class' => '\my\modules\superadmin\Module',
+            'class' => '\superadmin\Module',
             'defaultRoute' => 'site'
         ],
         'supervisor' => [

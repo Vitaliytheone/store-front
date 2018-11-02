@@ -1,9 +1,9 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Customers;
 use common\models\panels\ReferralEarnings;
-use my\modules\superadmin\widgets\CountPagination;
+use superadmin\widgets\CountPagination;
 use yii\data\Pagination;
 use yii\data\Sort;
 use yii\db\Query;
@@ -11,7 +11,7 @@ use Yii;
 
 /**
  * Class ReferralsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ReferralsSearch extends ReferralEarnings
 {

@@ -2,8 +2,9 @@
 
 namespace my\helpers;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\MyVerifiedPaypal;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\Payments;
 use common\models\panels\PaymentsLog;
 use common\models\panels\ThirdPartyLog;
@@ -58,7 +59,7 @@ class PaymentsHelper {
      */
     public static function refundPaypalPayment(Payments $payment)
     {
-        if ($payment->type != PaymentGateway::METHOD_PAYPAL || empty($payment->transaction_id)) {
+        if ($payment->payment_method != Params::CODE_PAYPAL || empty($payment->transaction_id)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_REFUND_PAYPAL_PAYMENT, $payment->id, ['payment_attributes' => $payment->attributes], 'required_params_missed');
         }
 
@@ -104,7 +105,7 @@ class PaymentsHelper {
 
         $payments = Payments::find()
             ->andWhere([
-                'type' => PaymentGateway::METHOD_PAYPAL,
+                'payment_method' => Params::CODE_PAYPAL,
                 'status' => Payments::STATUS_VERIFICATION,
             ])
             ->andWhere(['<', 'date_update', time() - $verificationTime])

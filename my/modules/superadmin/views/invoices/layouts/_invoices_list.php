@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $invoices \my\modules\superadmin\models\search\InvoicesSearch[] */
-    /* @var $invoice \my\modules\superadmin\models\search\InvoicesSearch */
+    /* @var $invoices \superadmin\models\search\InvoicesSearch[] */
+    /* @var $invoice \superadmin\models\search\InvoicesSearch */
 
     use my\helpers\Url;
     use yii\helpers\Html;

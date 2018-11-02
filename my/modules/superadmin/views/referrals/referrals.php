@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $referrals \my\modules\superadmin\models\search\ReferralsPaymentsSearch[] */
+    /* @var $referrals \superadmin\models\search\ReferralsPaymentsSearch[] */
 
     use my\helpers\SpecialCharsHelper;
 

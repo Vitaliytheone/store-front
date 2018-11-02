@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Content;
 use yii\db\ActiveQuery;
 
 /**
  * Class PlanSearch
- * @package my\modules\superadmin\models
+ * @package superadmin\models
  */
 class ContentSearch extends Content
 {

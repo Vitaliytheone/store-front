@@ -6,7 +6,7 @@
  * Time: 16:25
  */
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 
 use common\models\panels\SenderLog;
@@ -16,7 +16,7 @@ use yii\base\DynamicModel;
 
 /**
  * Class SenderSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class SenderSearch extends SenderLog
 {

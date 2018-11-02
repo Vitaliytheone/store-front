@@ -3,10 +3,10 @@
     /* @var $ticketMessages array */
     /* @var $message \common\models\panels\TicketMessages */
     /* @var $admins array */
-    /* @var $ticketMessagesSearch my\modules\superadmin\models\search\TicketMessagesSearch */
+    /* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
 
-    use my\modules\superadmin\helpers\SystemMessages;
-    use my\modules\superadmin\widgets\DeleteMessageWidget;
+    use superadmin\helpers\SystemMessages;
+    use superadmin\widgets\DeleteMessageWidget;
 
     $i = 0;
 ?>

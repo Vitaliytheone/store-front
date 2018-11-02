@@ -373,6 +373,12 @@ return [
     'tickets.assignee_list.all' => 'All ({count})',
     'tickets.panels.frozen' => 'Frozen',
     'tickets.status' => 'Status',
+    'tickets.notes.title' => 'Notes',
+    'tickets.create_node.title' => 'Create notes',
+    'tickets.create_node.cancel_btn' => 'Cancel',
+    'tickets.create_node.save_btn' => 'Create note',
+    'tickets.edit_note.title' => 'Edit notes',
+    'tickets.edit_note.save_btn' => 'Save changes',
 
 
     'providers.list.navs_all' => 'All ({count})',
@@ -475,6 +481,7 @@ return [
     'payments.edit_modal.close_btn' => 'Close',
     'payments.edit_modal.method_name' => 'Method name',
     'payments.edit_modal.visibility' => 'Visibility',
+    'payments.edit_modal.name' => 'Name',
 
     'payments.2checkout.account_number' => '2Checkout Account Number',
     'payments.2checkout.secret_word' => '2Checkout Secret Word',

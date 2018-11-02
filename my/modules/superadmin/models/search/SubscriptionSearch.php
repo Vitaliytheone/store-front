@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 use common\models\panels\Project;
 use my\helpers\SpecialCharsHelper;
 use yii\db\Query;
@@ -8,7 +8,7 @@ use yii\db\Query;
 
 /**
  * Class SubscriptionSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class SubscriptionSearch
 {
