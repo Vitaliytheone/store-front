@@ -3,7 +3,7 @@
 namespace common\components\letsencrypt;
 
 use common\components\letsencrypt\exceptions\LetsencryptException;
-use common\models\panels\LetsencryptSslHelper;
+use common\models\panels\LetsencryptSsl;
 use common\models\panels\Params;
 use my\helpers\ExpiryHelper;
 use yii\console\ExitCode;
@@ -184,10 +184,10 @@ class Letsencrypt extends Acme
 
     /**
      * Restore certificate files from DB
-     * @param LetsencryptSslHelper $ssl
+     * @param LetsencryptSsl $ssl
      * @throws LetsencryptException
      */
-    public function restoreCertFilesFromDb(LetsencryptSslHelper $ssl)
+    public function restoreCertFilesFromDb(LetsencryptSsl $ssl)
     {
         $certFiles = $ssl->getFileContents();
 
@@ -238,7 +238,7 @@ class Letsencrypt extends Acme
             throw new LetsencryptException('Invalid domain name!');
         }
 
-        if (LetsencryptSslHelper::findOne(['domain' => $domain])) {
+        if (LetsencryptSsl::findOne(['domain' => $domain])) {
             throw new LetsencryptException('Certificate for domain [' . $domain . '] already exist! Use renewSsl instead!');
         }
 
@@ -250,7 +250,7 @@ class Letsencrypt extends Acme
             throw new LetsencryptException('Cannot obtain issued Letsencrypt cert ['. $domain .'] data!');
         }
 
-        $ssl = new LetsencryptSslHelper();
+        $ssl = new LetsencryptSsl();
         $ssl->domain = $domain;
         $ssl->setFileContents($this->cutCertFiles($domain));
         $ssl->expired_at = static::_expiryDate($parsedCert);
@@ -341,12 +341,12 @@ class Letsencrypt extends Acme
     /**
      * Fetch exiting ssl from db
      * @param $domain
-     * @return null|LetsencryptSslHelper
+     * @return null|LetsencryptSsl
      * @throws LetsencryptException
      */
     private function _fetchSsl($domain)
     {
-        $ssl = LetsencryptSslHelper::findOne(['domain' => $domain]);
+        $ssl = LetsencryptSsl::findOne(['domain' => $domain]);
 
         if (!$ssl) {
             throw new LetsencryptException('SSL for domain [' . $domain . '] does not exist yet!');
