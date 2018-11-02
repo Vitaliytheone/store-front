@@ -20,6 +20,7 @@ use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
+use my\helpers\Url;
 use my\mail\mailers\PanelExpired;
 use my\mail\mailers\PaypalVerificationNeeded;
 use console\components\terminate\CancelOrder;
@@ -403,5 +404,17 @@ class CronController extends CustomController
     public function actionUpdateServicesCount()
     {
         Yii::$container->get(UpdateServicesCount::class)->run();
+    }
+
+    public function actionErrorTest()
+    {
+        Yii::$app->urlManager->baseUrl = Yii::getAlias('@myUrl');
+        $payment = Payments::findOne(['id' => 4]);
+        $test = new PaypalVerificationNeeded([
+            'payment' => $payment,
+            'email' => 'test@mail.com',
+            'code' => $payment->verification(1, 'test@mail.com'),
+        ]);
+        $test->init();
     }
 }
