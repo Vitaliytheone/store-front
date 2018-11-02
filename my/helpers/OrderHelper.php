@@ -324,7 +324,7 @@ class OrderHelper {
         $project->cid = $order->cid;
         $project->site = $domain;
         $project->name = DomainsHelper::idnToUtf8($domain);
-        $project->currency = ArrayHelper::getValue($orderDetails, 'currency');
+        $project->currency_code = ArrayHelper::getValue($orderDetails, 'currency');
         $project->generateDbName();
         $project->generateExpired();
 
@@ -386,7 +386,7 @@ class OrderHelper {
         $additionalService->provider_rate = 1;
         $additionalService->service_auto_max = 1;
         $additionalService->service_auto_min = 1;
-        $additionalService->currency = CurrencyHelper::getCurrencyCodeById($order->getCurrency());
+        $additionalService->currency = $order->getCurrency();
 
         if (!$additionalService->save(false)) {
             $order->status = Orders::STATUS_ERROR;
