@@ -3,11 +3,11 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
+use common\models\panels\queries\PanelPaymentMethodsQuery;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\panels\queries\PanelPaymentMethodsQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property int $panel_id
  * @property int $method_id
+ * @property int $currency_id
  * @property string $name
  * @property string $minimal
  * @property string $maximal
@@ -27,18 +28,22 @@ use yii\helpers\ArrayHelper;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property PaymentMethods $method
  * @property Project $panel
+ * @property PaymentMethods $method
+ * @property PaymentMethodsCurrency $currency
  */
 class PanelPaymentMethods extends ActiveRecord
 {
     public const NEW_USERS_ENABLED = 1;
     public const NEW_USERS_DISABLED = 0;
 
+    public const TAKE_FEE_FROM_USER_ENABLED = 1;
+    public const TAKE_FEE_FROM_USER_DISABLED = 0;
+
     use UnixTimeFormatTrait;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -46,23 +51,29 @@ class PanelPaymentMethods extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
             [['panel_id', 'method_id', 'name'], 'required'],
-            [['panel_id', 'method_id', 'position', 'visibility', 'new_users', 'take_fee_from_user', 'created_at', 'updated_at'], 'integer'],
+            [['panel_id', 'method_id', 'position', 'visibility', 'new_users', 'take_fee_from_user', 'created_at', 'updated_at', 'currency_id'], 'integer'],
             [['minimal', 'maximal'], 'number'],
+            ['minimal', 'default', 'value' => 10],
+            ['maximal', 'default', 'value' => 0],
+            ['visibility', 'default', 'value' => 0],
+            ['new_users', 'default', 'value' => 1],
+            ['minimal', 'number', 'min' => 1],
             [['options'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['panel_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::class, 'targetAttribute' => ['panel_id' => 'id']],
             [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethods::class, 'targetAttribute' => ['method_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -70,6 +81,7 @@ class PanelPaymentMethods extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'panel_id' => Yii::t('app', 'Panel ID'),
             'method_id' => Yii::t('app', 'Method ID'),
+            'currency_id' => Yii::t('app', 'Currency ID'),
             'name' => Yii::t('app', 'Name'),
             'minimal' => Yii::t('app', 'Minimal'),
             'maximal' => Yii::t('app', 'Maximal'),
@@ -86,6 +98,14 @@ class PanelPaymentMethods extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPanel()
+    {
+        return $this->hasOne(Project::class, ['id' => 'panel_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getMethod()
     {
         return $this->hasOne(PaymentMethods::class, ['id' => 'method_id']);
@@ -94,13 +114,13 @@ class PanelPaymentMethods extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPanel()
+    public function getCurrency()
     {
-        return $this->hasOne(Project::class, ['id' => 'panel_id']);
+        return $this->hasOne(PaymentMethodsCurrency::class, ['id' => 'currency_id']);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      * @return PanelPaymentMethodsQuery the active query used by this AR class.
      */
     public static function find()
@@ -122,8 +142,8 @@ class PanelPaymentMethods extends ActiveRecord
                 ],
                 'value' => function ($event) {
                     return static::find()->andWhere([
-                            'panel_id' => $this->panel_id
-                        ])->max('position') + 1;
+                        'panel_id' => $this->panel_id
+                    ])->max('position') + 1;
                 },
             ],
         ];
@@ -170,21 +190,29 @@ class PanelPaymentMethods extends ActiveRecord
         return true;
     }
 
+
     /**
      * @param array $options
      */
     public function setOptions($options = [])
     {
-        // Filter options
-        $paymentMethod = PaymentMethods::findOne([
-            'id' => $this->method_id
-        ]);
+        if (($paymentMethodCurrency = PaymentMethodsCurrency::findOne([
+            'currency' => $this->panel->getCurrencyCode(),
+            'method_id' => $this->method_id
+        ])) && !empty($paymentMethodCurrency->settings_form)) {
+            $paymentMethodSettings = $paymentMethodCurrency->getSettingsForm();
+        } else {
+            $paymentMethod = PaymentMethods::findOne([
+                'id' => $this->method_id
+            ]);
 
-        if (!$paymentMethod) {
-            return;
+            if (!$paymentMethod) {
+                return;
+            }
+
+            $paymentMethodSettings = $paymentMethod->getSettingsForm();
         }
 
-        $paymentMethodSettings = $paymentMethod->getSettingsForm();
         $cleanOptions = [];
         foreach ($paymentMethodSettings as $method => $details) {
             $cleanOptions[$method] = ArrayHelper::getValue($options, $method);
