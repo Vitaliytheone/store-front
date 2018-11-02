@@ -1,6 +1,7 @@
 <?php
 namespace superadmin\models\forms;
 
+use common\models\panel\Bonuses;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
@@ -11,6 +12,7 @@ use common\models\panels\Tariff;
 use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -425,6 +427,8 @@ class EditProjectForm extends Model
     public function updateCurrencies()
     {
         $currency = $this->_project->getCurrencyCode();
+        $panelDb = $this->_project->db;
+        $db = Yii::$app->db;
 
         $currentPaymentMethods = PanelPaymentMethods::find()->andWhere([
             'panel_id' => $this->_project->id
@@ -436,6 +440,14 @@ class EditProjectForm extends Model
 
         foreach ($currentPaymentMethods as $methodId => $currentPaymentMethod) {
             if (empty($availablePaymentMethods[$methodId])) {
+
+                // Disable panel payment method bonus
+                $db->createCommand()->update($db->quoteValue($panelDb) . '.' . Bonuses::tableName(), [
+                    'status' => Bonuses::STATUS_DISABLED
+                ], [
+                    'pgid' => $currentPaymentMethod->method_id
+                ])->execute();
+
                 $currentPaymentMethod->delete();
                 continue;
             }
