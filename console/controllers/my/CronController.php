@@ -20,7 +20,6 @@ use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
-use my\helpers\Url;
 use my\mail\mailers\PanelExpired;
 use my\mail\mailers\PaypalVerificationNeeded;
 use console\components\terminate\CancelOrder;
