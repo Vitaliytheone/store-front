@@ -5,14 +5,13 @@ use common\models\panels\AdditionalServices;
 use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
+use common\models\panels\PanelPaymentMethods;
+use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\Tariff;
 use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use common\helpers\CurrencyHelper;
 
 /**
  * Class EditProjectForm
@@ -238,60 +237,72 @@ class EditProjectForm extends Model
             return false;
         }
 
-        $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
-        if ($this->currency != $this->_project->currency) {
-            $isChangedCurrency = true;
-        }
+        $transaction = Yii::$app->db->beginTransaction();
 
-        if ($this->cid != $this->_project->cid) {
-            $isChangedCustomer = true;
-        }
+        try {
+            $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
+            if ($this->currency != $this->_project->currency) {
+                $isChangedCurrency = true;
+            }
 
-        if ($this->no_invoice != $this->_project->no_invoice) {
-            $isChangedNoInvoice = true;
-        }
+            if ($this->cid != $this->_project->cid) {
+                $isChangedCustomer = true;
+            }
 
-        $this->_project->attributes = $this->attributes;
-        $this->_project->captcha = !$this->captcha;
+            if ($this->no_invoice != $this->_project->no_invoice) {
+                $isChangedNoInvoice = true;
+            }
 
-        if (!$this->_project->save(false)) {
-            $this->addErrors($this->_project->getErrors());
+            $this->_project->attributes = $this->attributes;
+            $this->_project->captcha = !$this->captcha;
+
+            if (!$this->_project->save(false)) {
+                $this->addErrors($this->_project->getErrors());
+                $transaction->rollBack();
+                return false;
+            }
+
+            $this->_project->refresh();
+
+            if ($isChangedCurrency) {
+                $this->updateCurrencies();
+            }
+
+            if ($isChangedCustomer) {
+                /**
+                 * @var $customer Customers
+                 */
+                $customer = $this->getCustomers()[$this->cid];
+
+                $customer->activateReferral();
+                $customer->activateChildPanels();
+            }
+
+            if ($isChangedNoInvoice && Project::NO_INVOICE_ENABLED == $this->_project->no_invoice) {
+                /**
+                 * @var Invoices $invoice
+                 */
+                foreach (Invoices::find()
+                             ->joinWith(['invoiceDetails'])
+                             ->andWhere([
+                                 'invoices.status' => Invoices::STATUS_UNPAID,
+                                 'invoice_details.item_id' => $this->_project->id,
+                                 'invoice_details.item' => [
+                                     InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                                     InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                                 ],
+                             ])
+                             ->all() as $invoice) {
+                    $invoice->status = Invoices::STATUS_CANCELED;
+                    $invoice->save(false);
+                }
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
             return false;
         }
 
-        if ($isChangedCurrency) {
-           $this->updateCurrencies();
-        }
-
-        if ($isChangedCustomer) {
-            /**
-             * @var $customer Customers
-             */
-            $customer = $this->getCustomers()[$this->cid];
-
-            $customer->activateReferral();
-            $customer->activateChildPanels();
-        }
-
-        if ($isChangedNoInvoice && Project::NO_INVOICE_ENABLED == $this->_project->no_invoice) {
-            /**
-             * @var Invoices $invoice
-             */
-            foreach (Invoices::find()
-                 ->joinWith(['invoiceDetails'])
-                 ->andWhere([
-                     'invoices.status' => Invoices::STATUS_UNPAID,
-                     'invoice_details.item_id' => $this->_project->id,
-                     'invoice_details.item' => [
-                         InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-                         InvoiceDetails::ITEM_PROLONGATION_PANEL,
-                     ],
-                 ])
-                 ->all() as $invoice) {
-                $invoice->status = Invoices::STATUS_CANCELED;
-                $invoice->save(false);
-            }
-        }
+        $transaction->commit();
 
         return true;
     }
@@ -409,66 +420,32 @@ class EditProjectForm extends Model
     }
 
     /**
-     * Update payments geteway panel values
+     * Update panel payment methods
      */
     public function updateCurrencies()
     {
-        PaymentGateway::updateAll([
-            'position' => 0,
-        ], 'pid = :pid', [
-            ':pid' => $this->_project->id
-        ]);
+        $currency = $this->_project->getCurrencyCode();
 
-        $currencies = Yii::$app->params['currencies'];
-        $currency = strtoupper($this->_project->getCurrencyCode());
+        $currentPaymentMethods = PanelPaymentMethods::find()->andWhere([
+            'panel_id' => $this->_project->id
+        ])->indexBy('method_id')->all();
 
-        if (empty($currencies[$currency])) {
-            return;
-        }
+        $availablePaymentMethods = PaymentMethodsCurrency::find()->andWhere([
+            'currency' => $currency,
+        ])->indexBy('method_id')->all();
 
-        $gatewayMethods = ArrayHelper::index($currencies[$currency]['gateway'], 'position');
-        ksort($gatewayMethods);
-
-        $currentMethods = PaymentGateway::find()->andWhere([
-            'pid' => $this->_project->id
-        ])->all();
-        $currentMethods = ArrayHelper::index($currentMethods, 'pgid');
-
-        $position = 1;
-        foreach ($gatewayMethods as $key => $options) {
-            $pgid = $options['pgid'];
-            if (empty($currentMethods[$pgid])) {
+        foreach ($currentPaymentMethods as $methodId => $currentPaymentMethod) {
+            if (empty($availablePaymentMethods[$methodId])) {
+                $currentPaymentMethod->delete();
                 continue;
             }
 
-            unset($gatewayMethods[$key]);
-
-            if (isset($options['allow']) && empty($options['allow'][$this->_project->id])) {
-                continue;
-            }
-
-            $currentMethods[$pgid]->position = $position++;
-
-            $currentMethods[$pgid]->save(false);
-        }
-
-        foreach ($gatewayMethods as $key => $options) {
-            $model = new PaymentGateway();
-            $model->attributes = $options;
-            $model->pid = $this->_project->id;
-            $model->setOptionsData([]);
-
-            if (isset($options['allow']) && empty($options['allow'][$this->_project->id])) {
-                $model->position = 0;
-            } else {
-                $model->position = $position++;
-            }
-
-            $model->save(false);
+            $currentPaymentMethod->currency_id = $availablePaymentMethods[$methodId]->id;
+            $currentPaymentMethod->save(false);
         }
 
         AdditionalServices::updateAll(
-            ['currency' => CurrencyHelper::getCurrencyCodeById($this->currency)],
+            ['currency' => $currency],
             ['type' => 1, 'name' => $this->_project->site]
         );
     }
