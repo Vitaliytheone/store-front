@@ -18,8 +18,8 @@ class Url extends \yii\helpers\Url {
      */
     public static function toRoute($route, $scheme = false)
     {
-        if (is_a(Yii::$app,'yii\console\Application')) {
-            Yii::$app->urlManager->baseUrl = 'http://' . Yii::$app->params['panelDomain'] . '/';
+        if (Yii::$app->request->isConsoleRequest) {
+            Yii::$app->urlManager->baseUrl = Yii::$app->params['myUrl'];
 
             return parent::toRoute($route, $scheme);
         }
