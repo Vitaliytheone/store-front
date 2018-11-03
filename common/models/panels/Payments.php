@@ -385,6 +385,9 @@ class Payments extends ActiveRecord
 
     /**
      * Complete payment with invoice and invoice details
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function complete()
     {
@@ -398,15 +401,17 @@ class Payments extends ActiveRecord
         }
 
         $this->status = static::STATUS_COMPLETED;
-        $this->update();
+        $this->update(false);
     }
 
     /**
      * Make payment as `Payer verification needed`
-     * @param $payerId string|int
-     * @param $payerEmail string
-     * @return string generated verification code
+     * @param $payerId
+     * @param $payerEmail
+     * @return string
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function verification($payerId, $payerEmail)
     {
@@ -439,6 +444,8 @@ class Payments extends ActiveRecord
     /**
      * Make payment as verified and completed
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function verified()
     {
