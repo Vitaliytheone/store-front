@@ -40,6 +40,8 @@
                 <?= $form->field($model, 'method')->dropDownList($model->getMethods()) ?>
 
                 <?= $form->field($model, 'memo') ?>
+
+                <?= $form->field($model, 'fee') ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'invoices.add_payment.close_btn') ?></button>
