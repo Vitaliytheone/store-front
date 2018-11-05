@@ -32,7 +32,7 @@ class AddInvoicePaymentForm extends Model {
             [['method'], 'validateInvoice'],
             [['method'], 'required'],
             [['memo'], 'string'],
-            [['fee'], 'integer'],
+            [['fee'], 'number'],
         ];
     }
 
@@ -68,7 +68,7 @@ class AddInvoicePaymentForm extends Model {
         $payment->amount = $this->_invoice->total;
         $payment->iid = $this->_invoice->id;
         $payment->pid = $panel->id;
-        $payment->fee = $this->fee === '' ? null : $this->fee;
+        $payment->fee = $this->fee;
 
         if (!$payment->save(false)) {
             $this->addError('method', Yii::t('app/superadmin', 'error.invoices.can_not_create_payment'));
