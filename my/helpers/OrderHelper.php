@@ -748,6 +748,17 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_domain');
         }
 
+        $storeGeneratedDomain = new StoreDomains();
+        $storeGeneratedDomain->store_id = $store->id;
+        $storeGeneratedDomain->domain = $store->name;
+        $storeGeneratedDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
+        $storeGeneratedDomain->ssl = StoreDomains::SSL_OFF;
+
+        if (!$storeGeneratedDomain->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeGeneratedDomain->getErrors(), 'cron.order.store_domain');
+        }
+
         // Create Store db
         if (!DbHelper::existDatabase($store->db_name)) {
             DbHelper::createDatabase($store->db_name);

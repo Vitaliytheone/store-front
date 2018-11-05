@@ -243,7 +243,7 @@ class OrderStoreForm extends DomainForm
         $model = new Orders();
         $model->cid = $this->_user->id;
         $model->item = Orders::ITEM_BUY_STORE;
-        $model->domain = $this->storeDomain;
+        $model->domain = $this->preparedDomain;
         $model->ip = $this->_ip;
         $model->setDetails([
             'username' => $this->admin_username,
@@ -251,7 +251,7 @@ class OrderStoreForm extends DomainForm
             'domain' => $this->storeDomain,
             'currency' => $this->store_currency,
             'admin_email' => $this->admin_email,
-            'name' => $this->domain,
+            'name' => $this->storeDomain,
         ]);
 
         if ($model->save()) {
