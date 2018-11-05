@@ -306,6 +306,12 @@ class Payments extends ActiveRecord
                     return true;
                 }
             break;
+
+            case 'makeCompleted':
+                if ($this->status == self::STATUS_FAIL) {
+                    return true;
+                }
+            break;
         }
         return false;
     }

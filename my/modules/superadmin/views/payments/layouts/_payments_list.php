@@ -10,7 +10,6 @@
     use yii\widgets\LinkPager;
     use my\helpers\PriceHelper;
     use my\helpers\SpecialCharsHelper;
-    use common\models\panels\Payments;
 ?>
 <table class="table table-sm table-custom">
     <thead>
@@ -124,7 +123,7 @@
                                     'data-action_url' => Url::toRoute(['/payments/make-refunded', 'id' => $payment->id]),
                                 ])?>
                             <?php endif; ?>
-                            <?php if ($payment->status == Payments::STATUS_FAIL) : ?>
+                            <?php if ($payment->can('makeCompleted')) : ?>
                                 <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_complete'), Url::toRoute(['/payments/complete', 'id' => $payment->id]), [
                                     'class' => 'dropdown-item',
                                 ])?>

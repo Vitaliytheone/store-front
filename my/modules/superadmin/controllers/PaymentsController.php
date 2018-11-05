@@ -86,6 +86,9 @@ class PaymentsController extends CustomController
      * Accept verified payment
      * @param $id
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionMakeAccepted($id)
     {
@@ -119,12 +122,17 @@ class PaymentsController extends CustomController
      * Mark as complete
      * @param $id
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionComplete($id)
     {
         $payment = $this->findModel($id);
 
-        $payment->complete();
+        if ($payment->can('makeCompleted')) {
+            $payment->complete();
+        }
 
         $this->redirect(Url::toRoute('/payments'));
     }
