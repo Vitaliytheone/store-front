@@ -47,6 +47,9 @@ class ChangeDomainForm extends Model {
     /**
      * Save domain
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function save()
     {
@@ -113,15 +116,11 @@ class ChangeDomainForm extends Model {
         }
 
         if ($isChangedSubdomain) {
-            if ($this->subdomain) {
-                // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
-                DnsHelper::removeMainDns($this->_project);
-            } else {
+            if (!$this->subdomain) {
                 // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
                 DnsHelper::addMainDns($this->_project);
             }
         }
-
 
         return true;
     }
