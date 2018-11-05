@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use yii\base\Model;
@@ -10,7 +10,7 @@ use sommerce\helpers\ConfigHelper;
 
 /**
  * Class EditStoreForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditStoreForm extends Model
 {

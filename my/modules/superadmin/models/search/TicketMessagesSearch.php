@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
@@ -8,7 +8,7 @@ use Yii;
 /**
  * Search messages for ticket
  * Class TicketMessages
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class TicketMessagesSearch
 {

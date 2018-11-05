@@ -29,6 +29,7 @@ use yii\db\Query;
  * @property string $auth_ip
  * @property integer $timezone
  * @property string $auth_token
+ * @property integer $unpaid_earnings
  * @property integer $referrer_id
  * @property integer $referral_status
  * @property integer $paid
@@ -93,7 +94,7 @@ class Customers extends ActiveRecord
         return [
             [['email', 'password', 'password_confirm', 'first_name', 'last_name'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['first_name', 'last_name'], 'required', 'on' => self::SCENARIO_SETTINGS],
-            [['status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores', 'buy_domain'], 'integer'],
+            [['unpaid_earnings', 'status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores', 'buy_domain'], 'integer'],
             [['referral_link'], 'string', 'max' => 5],
             [['first_name'], 'string', 'max' => 300],
             [['last_name'], 'string', 'max' => 300],
@@ -306,6 +307,7 @@ class Customers extends ActiveRecord
             'auth_ip' => Yii::t('app', 'Auth Ip'),
             'timezone' => Yii::t('app', 'Timezone'),
             'auth_token' => Yii::t('app', 'Auth Token'),
+            'unpaid_earnings' => Yii::t('app', 'Unpaid Earnings'),
             'referrer_id' => Yii::t('app', 'Referrer ID'),
             'referral_status' => Yii::t('app', 'Referral Status'),
             'paid' => Yii::t('app', 'Paid'),

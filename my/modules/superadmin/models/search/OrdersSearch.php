@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Orders;
@@ -11,7 +11,7 @@ use Yii;
 
 /**
  * Class OrdersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class OrdersSearch extends Orders {
 

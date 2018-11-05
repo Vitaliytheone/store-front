@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $domains \my\modules\superadmin\models\search\DomainsSearch */
-/* @var $navs \my\modules\superadmin\models\search\DomainsSearch */
+/* @var $domains \superadmin\models\search\DomainsSearch */
+/* @var $navs \superadmin\models\search\DomainsSearch */
 /* @var $status */
 
 use my\helpers\Url;

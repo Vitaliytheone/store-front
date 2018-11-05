@@ -1,10 +1,10 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model my\modules\superadmin\models\forms\EditProviderForm */
+/* @var $model superadmin\models\forms\EditProviderForm */
 /* @var $form my\components\ActiveForm */
 
 use my\components\ActiveForm;
-use my\modules\superadmin\models\forms\CreateProviderForm;
+use superadmin\models\forms\CreateProviderForm;
 use yii\bootstrap\Html;
 use common\models\panels\AdditionalServices;
 

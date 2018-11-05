@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search\dashboard;
+namespace superadmin\models\search\dashboard;
 
 use Yii;
 

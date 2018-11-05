@@ -2,11 +2,11 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use my\modules\superadmin\widgets\SuperAdminNav;
-use my\modules\superadmin\widgets\SuperAdminNavBar;
-use my\modules\superadmin\widgets\UnreadMessagesWidgetV2;
-use my\modules\superadmin\widgets\ErrorOrdersWidgetV2;
-use my\modules\superadmin\widgets\ErrorSslWidget;
+use superadmin\widgets\SuperAdminNav;
+use superadmin\widgets\SuperAdminNavBar;
+use superadmin\widgets\UnreadMessagesWidgetV2;
+use superadmin\widgets\ErrorOrdersWidgetV2;
+use superadmin\widgets\ErrorSslWidget;
 use common\models\panels\SuperAdmin;
 use my\helpers\Url;
 use yii\helpers\ArrayHelper;

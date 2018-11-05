@@ -1,12 +1,12 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form my\components\ActiveForm */
-    /* @var $model \my\modules\superadmin\models\forms\ChangeStaffPasswordForm */
+    /* @var $model \superadmin\models\forms\ChangeStaffPasswordForm */
 
     use my\helpers\Url;
     use yii\helpers\Html;
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\ChangeStaffPasswordForm;
+    use superadmin\models\forms\ChangeStaffPasswordForm;
 
     $model = new ChangeStaffPasswordForm();
 ?>

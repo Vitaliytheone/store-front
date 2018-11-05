@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $contents \my\modules\superadmin\models\search\ContentSearch */
+/* @var $contents \superadmin\models\search\ContentSearch */
 
 use my\helpers\Url;
 use yii\bootstrap\Html;

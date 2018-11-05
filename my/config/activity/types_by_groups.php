@@ -62,6 +62,7 @@ return [
             2014,
             2016,
             2017,
+            2018,
             21, // Only for old events support, without new records
             22, // Only for old events support, without new records
         ]

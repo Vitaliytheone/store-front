@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\helpers;
+namespace superadmin\helpers;
 
-use my\modules\superadmin\models\search\dashboard\BaseBlock;
-use my\modules\superadmin\models\search\dashboard\ChildPanels;
-use my\modules\superadmin\models\search\dashboard\Domains;
-use my\modules\superadmin\models\search\dashboard\Panels;
-use my\modules\superadmin\models\search\dashboard\SSL;
-use my\modules\superadmin\models\search\dashboard\Stores;
+use superadmin\models\search\dashboard\BaseBlock;
+use superadmin\models\search\dashboard\ChildPanels;
+use superadmin\models\search\dashboard\Domains;
+use superadmin\models\search\dashboard\Panels;
+use superadmin\models\search\dashboard\SSL;
+use superadmin\models\search\dashboard\Stores;
 use ReflectionClass;
 use ReflectionMethod;
 use Yii;

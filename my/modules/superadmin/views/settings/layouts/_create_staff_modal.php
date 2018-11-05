@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\CreateStaffForm */
+    /* @var $model superadmin\models\forms\CreateStaffForm */
     /* @var $form my\components\ActiveForm */
 
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\CreateStaffForm;
+    use superadmin\models\forms\CreateStaffForm;
     use my\helpers\Url;
     use common\models\panels\SuperAdmin;
     use yii\bootstrap\Html;
