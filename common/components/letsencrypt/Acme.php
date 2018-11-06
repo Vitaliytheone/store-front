@@ -159,7 +159,7 @@ class Acme extends Component
      */
     public function requiredCertFiles($domain)
     {
-        $domainPath = $this->getCertsDir() . '/' . $domain;
+        $domainPath = $this->getCertDir($domain);
 
         if (!file_exists($domainPath) || !is_dir($domainPath)) {
             throw new AcmeException('Domain ' . $domain . ' certificate does not exist!');
@@ -214,7 +214,7 @@ class Acme extends Component
      * @return boolean
      * @throws AcmeException
      */
-    public function exec(string $cmd, $options = [], $cmdPath = null)
+    public function execCmd(string $cmd, $options = [], $cmdPath = null)
     {
         $currentDir = @getcwd();
 
@@ -254,9 +254,9 @@ class Acme extends Component
      * Install ACME.sh library
      * @return boolean
      */
-    public function install()
+    public function cmdInstall()
     {
-        return $this->exec('--install', [
+        return $this->execCmd('--install', [
             '--accountconf' => $this->getPath(self::CONFIG_PATH_ACCOUNT_CONF),
             '--accountkey' => $this->getPath(self::CONFIG_PATH_ACCOUNT_KEY),
             '--nocron',
@@ -268,7 +268,7 @@ class Acme extends Component
      * @param $accountEmail
      * @return boolean;
      */
-    public function updateAccount($accountEmail = false)
+    public function cmdUpdateAccount($accountEmail = false)
     {
         $params = [];
 
@@ -276,7 +276,7 @@ class Acme extends Component
             $params['--accountemail'] = $accountEmail;
         }
 
-        return $this->exec('--updateaccount', $params);
+        return $this->execCmd('--updateaccount', $params);
     }
 
     /**
@@ -284,9 +284,9 @@ class Acme extends Component
      * @throws AcmeException
      * @return null|string
      */
-    public function registerAccount()
+    public function cmdRegisterAccount()
     {
-        $this->exec('--registeraccount');
+        $this->execCmd('--registeraccount');
 
         $accountThumbprint = null;
 
@@ -311,16 +311,16 @@ class Acme extends Component
      * @return null|array Null if crashes, parsed certificate data if success
      * @throws AcmeException
      */
-    public function issueCert(string $domain)
+    public function cmdIssueCert(string $domain)
     {
         $domain = trim($domain);
 
-        $success = $this->exec('--issue', [
+        $success = $this->execCmd('--issue', [
             '--force',
             '--domain' => $domain,
             '--certhome' => $this->getCertsDir(),
             '--stateless',
-        ]);;
+        ]);
 
         if (!$success) {
             return null;
@@ -342,9 +342,9 @@ class Acme extends Component
      * @return null|string
      * @throws AcmeException
      */
-    public function getAccountThumbprint()
+    public function cmdGetAccountThumbprint()
     {
-        return $this->registerAccount();
+        return $this->cmdRegisterAccount();
     }
 
     /**
@@ -353,7 +353,7 @@ class Acme extends Component
      * @return false|array
      * @throws AcmeException
      */
-    public function listCerts($columns = ['Main_Domain', "Created", "Renew"])
+    public function cmdListCerts($columns = ['Main_Domain', "Created", "Renew"])
     {
         $allowedColumns = [
             'Main_Domain',
@@ -367,7 +367,7 @@ class Acme extends Component
             throw new AcmeException('Invalid column name(s)!');
         }
 
-        if (!$this->exec('--list', [
+        if (!$this->execCmd('--list', [
             '--listraw',
             '--certhome' => $this->getCertsDir()
         ])) {
@@ -407,11 +407,11 @@ class Acme extends Component
      * @return null|array Null if crashed, parsed certificate data if success
      * @throws AcmeException
      */
-    public function renewCert($domain)
+    public function cmdRenewCert($domain)
     {
         $domain = trim($domain);
 
-        $success = $this->exec('--renew', [
+        $success = $this->execCmd('--renew', [
             '--domain' => $domain,
             '--force',
             '--certhome' => $this->getCertsDir(),

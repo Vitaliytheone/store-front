@@ -2,10 +2,16 @@
 
 namespace common\components\letsencrypt;
 
+use common\components\models\SslCertLetsencrypt;
+use common\models\panels\Customers;
+use common\models\panels\Project;
+use common\models\panels\SslCert;
+use common\models\panels\SslCertItem;
 use console\controllers\my\SystemController;
 use yii\base\Component;
 use Yii;
 use yii\base\Exception;
+use yii\base\ExitException;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 
@@ -32,6 +38,7 @@ class AcmeInstaller extends Component
 
         $letsencrypt = new Letsencrypt();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
+        $letsencrypt->setStageMode(true);
 
 //        if ($this->console->confirm('Use stage (test) mode?')) {
 //            $letsencrypt->setStageMode(true);
@@ -99,11 +106,6 @@ class AcmeInstaller extends Component
 
             $this->console->stdout('Letsencrypt account registration...' . PHP_EOL, Console::FG_GREEN);
 
-            if (!$this->console->confirm('Continue registration and destroy all existing account data?')) {
-                $this->console->stdout('ACME.sh installation aborted!' . PHP_EOL, Console::FG_RED);
-                return ExitCode::OK;
-            }
-
             $accountThumbprint = $letsencrypt->registerAccount();
 
             if (!$accountThumbprint) {
@@ -154,14 +156,55 @@ class AcmeInstaller extends Component
             $this->console->stdout('Issue certificate...' . PHP_EOL, Console::FG_GREEN);
 
             $domain = $this->console->prompt('Input exiting domain:', ['required' => true, 'validator' => function ($input, &$error) {
-                if (!filter_var('test@' . $input, FILTER_VALIDATE_EMAIL)) {
+                if (!filter_var('test@' . trim($input), FILTER_VALIDATE_EMAIL)) {
                     $error = 'Invalid domain!';
                     return false;
                 }
                 return true;
             }]);
 
-            $letsencrypt->issueCert($domain);
+            $domain = trim($domain);
+
+//            if (SslCertLetsencrypt::findOne(['domain' => $domain])) {
+//                throw new Exception('SslCert already exist! Use "Renew certificate" menu item!');
+//            }
+//
+//            $panel = Project::findOne(['site' => $domain]);
+//
+//            if (!$panel) {
+//                throw new Exception('Panel [' . $domain . '] not exist!');
+//            }
+//
+//            $customer = Customers::findOne(['id' => $panel->cid]);
+//
+//            if (!$customer) {
+//                throw new Exception('Panel [' . $domain . '] customer [' . $customer->id . '] not exist!');
+//            }
+
+            $sslCertItem = SslCertItem::findOne(['provider' => SslCertItem::PROVIDER_LETSENCRYPT]);
+
+            if (!$sslCertItem) {
+                throw new Exception('Cannot find PROVIDER_LETSENCRYPT SslCertItem');
+            }
+
+            $ssl = new SslCertLetsencrypt();
+            $ssl->cid = 7;//$panel->id;
+            $ssl->pid = 57;//$customer->id;
+            $ssl->project_type = SslCert::PROJECT_TYPE_PANEL;
+            $ssl->item_id = $sslCertItem->id;
+            $ssl->status = SslCert::STATUS_PENDING;
+            $ssl->checked = SslCert::CHECKED_NO;
+            $ssl->domain = trim($domain);
+            $ssl->details = '';
+
+            if (!$ssl->save(false)) {
+                throw new Exception('Cannot create SslCertLetsencrypt [' . $domain . ']');
+            }
+
+            $letsencrypt->setSsl($ssl);
+            $letsencrypt->issueCert();
+
+            $ssl->refresh();
 
             $this->console->stdout( print_r($letsencrypt->getExecResult(Acme::EXEC_RESULT_RETURN_DATA),1));
 
@@ -182,7 +225,19 @@ class AcmeInstaller extends Component
                 return true;
             }]);
 
-            $certFiles = $letsencrypt->getCertFiles($domain);
+            $domain = trim($domain);
+
+            $ssl = SslCertLetsencrypt::findOne([
+                'domain' => $domain,
+            ]);
+
+            if (!$ssl) {
+                throw new Exception('SslCertLetsencrypt does not exist for domain [' . $domain . ']!');
+            }
+
+            $letsencrypt->setSsl($ssl);
+
+            $certFiles = $letsencrypt->getCertFilesList();
 
             $this->console->stdout("Possible domain certificate files: " . PHP_EOL);
 
@@ -198,7 +253,7 @@ class AcmeInstaller extends Component
                 return true;
             }]);
 
-            $this->console->stdout(PHP_EOL . $letsencrypt->getCertFileContent($domain, $certFiles[$certFileIndex]) . PHP_EOL);
+            $this->console->stdout(PHP_EOL . $letsencrypt->getCertFileContent($certFiles[$certFileIndex]) . PHP_EOL);
 
             return ExitCode::OK;
         }
@@ -215,7 +270,19 @@ class AcmeInstaller extends Component
                 return true;
             }]);
 
-            $letsencrypt->renewCert($domain);
+            $domain = trim($domain);
+
+            $ssl = SslCertLetsencrypt::findOne([
+                'domain' => $domain,
+            ]);
+
+            if (!$ssl) {
+                throw new Exception('SslCertLetsencrypt does not exist for domain [' . $domain . ']!');
+            }
+
+            $letsencrypt->setSsl($ssl);
+
+            $letsencrypt->renewCert();
 
             $this->console->stdout(json_encode($letsencrypt->getExecResult(), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . PHP_EOL);
 

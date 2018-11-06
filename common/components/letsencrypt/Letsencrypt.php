@@ -3,7 +3,7 @@
 namespace common\components\letsencrypt;
 
 use common\components\letsencrypt\exceptions\LetsencryptException;
-use common\models\panels\LetsencryptSsl;
+use common\components\models\SslCertLetsencrypt;
 use common\models\panels\Params;
 use my\helpers\ExpiryHelper;
 use yii\console\ExitCode;
@@ -17,6 +17,59 @@ class Letsencrypt extends Acme
 {
     const OPTION_ACCOUNT_THUMBPRINT = 'account_thumbprint';
     const OPTION_ACCOUNT_KEY = 'account_key';
+
+    /**
+     * Current Letsencrypt SSL model
+     * @var SslCertLetsencrypt
+     */
+    private $_ssl;
+
+    /**
+     * Current content of SSL physical files
+     * @var array
+     */
+    private $_cert_file_contents;
+
+    /**
+     * Current SSL expiry date
+     * @var
+     */
+    private $_cert_expiry_date;
+
+    /**
+     * Set current SslCertLetsencrypt
+     * @param SslCertLetsencrypt $sslCert
+     */
+    public function setSsl(SslCertLetsencrypt &$sslCert)
+    {
+        $this->_ssl = &$sslCert;
+    }
+
+    /**
+     * Return current SslCertLetsencrypt
+     * @return SslCertLetsencrypt
+     */
+    public function getSsl() : SslCertLetsencrypt
+    {
+       return $this->_ssl;
+    }
+
+    /**
+     * Return current content of SSL physical files
+     * @return array
+     */
+    public function getCertFileContents()
+    {
+        return $this->_cert_file_contents;
+    }
+
+    /**
+     * Return current SSL expiry date
+     */
+    public function getExpiryDate()
+    {
+        return $this->_cert_expiry_date;
+    }
 
     /**
      * Install ACME.sh library
@@ -39,7 +92,7 @@ class Letsencrypt extends Acme
             }
         }
 
-        return parent::install();
+        return $this->cmdInstall();
     }
 
     /**
@@ -68,11 +121,11 @@ class Letsencrypt extends Acme
         }
 
         if (!$force && $accountParams->getOption(self::OPTION_ACCOUNT_KEY)) {
-            throw new LetsencryptException('Account already exist! Use $force = true param for register new one!');
+            throw new LetsencryptException('Account already exist! Use "Restore Letsencrypt account from DB" menu options or  $force = true param for register new one!');
         }
 
         $accountPrivateKey = null;
-        $accountThumbprint = parent::registerAccount();
+        $accountThumbprint = $this->cmdRegisterAccount();
 
         if (!$accountThumbprint || !@file_exists($this->getPath(self::CONFIG_PATH_ACCOUNT_KEY))) {
             throw new LetsencryptException("Account private key was not created!");
@@ -134,7 +187,7 @@ class Letsencrypt extends Acme
             throw new LetsencryptException('Cannot restore account RSA private key! [' . $accountKeyPath . ']');
         }
 
-        $restoredKeyThumbprint = parent::registerAccount();
+        $restoredKeyThumbprint = $this->cmdRegisterAccount();
 
         if ($restoredKeyThumbprint !== $backupAccountThumbprint) {
             throw new LetsencryptException('Restored and backup ACCOUNT_THUMBPRINTs does not matched!');
@@ -144,13 +197,108 @@ class Letsencrypt extends Acme
     }
 
     /**
+     * Return account Thumbprint
+     * @return null|string
+     */
+    public function getAccountThumbprint()
+    {
+        $this->restoreAccountFromDb();
+
+        return $this->cmdRegisterAccount();
+    }
+
+    /**
+     * Issue Letsencrypt certificate
+     * @return int Expiry date
+     * @throws LetsencryptException
+     */
+    public function issueCert()
+    {
+        $this->restoreAccountFromDb();
+
+        $parsedCert = $this->cmdIssueCert($this->_ssl->domain);
+
+        if (!$parsedCert) {
+            throw new LetsencryptException('Cannot obtain issued Letsencrypt cert [' . $this->_ssl->domain . '] data!');
+        }
+
+        $certFiles = $this->_cutCertFiles($this->_ssl->domain);
+
+        $this->_ssl->setCsrFiles($certFiles);
+        $this->_ssl->expiry =static::_expiryDate($parsedCert);
+        $this->_ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+        $this->_ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+        $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
+        $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
+
+        if (!$this->_ssl->save(false)) {
+            throw new LetsencryptException('Cannot update LetsencryptSsl record!');
+        }
+
+        return $this->_cert_expiry_date;
+    }
+
+    /**
+     * Renew certificate
+     * @return integer New expiry date
+     * @throws LetsencryptException
+     */
+    public function renewCert()
+    {
+        $this->restoreAccountFromDb();
+
+        $this->_restoreCertFilesFromDb();
+
+        $parsedCert = $this->cmdRenewCert($this->_ssl->domain);
+
+        if (!$parsedCert) {
+            throw new LetsencryptException('Cannot obtain renewed Letsencrypt cert ['. $this->_ssl->domain .'] data!');
+        }
+
+        $certFiles = $this->_cutCertFiles($this->_ssl->domain);
+
+        $this->_ssl->setCsrFiles($certFiles);
+        $this->_ssl->expiry =static::_expiryDate($parsedCert);
+        $this->_ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+        $this->_ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+        $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
+        $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
+
+        if (!$this->_ssl->save(false)) {
+            throw new LetsencryptException('Cannot save SslCertLetsencrypt domain ['. $this->_ssl->domain .'] certificate!');
+        }
+
+        return $this->_cert_expiry_date;
+    }
+
+    /**
+     * Return certificate file names list
+     * @return array
+     * @throws LetsencryptException
+     */
+    public function getCertFilesList()
+    {
+        return array_keys($this->_ssl->getCsrFiles());
+    }
+
+    /**
+     * Return certificate file content
+     * @param $fileName
+     * @return string
+     */
+    public function getCertFileContent($fileName)
+    {
+        return $this->_ssl->getCsrFile($fileName);
+    }
+
+    /**
      * Cut cert files
      * Copy local stored cert files contents and delete cert files dir
      * @param string $domain
      * @return array of cert files content
      * @throws LetsencryptException
      */
-    public function cutCertFiles(string $domain)
+    private function _cutCertFiles(string $domain)
     {
         $certDir = $this->getCertDir($domain);
 
@@ -184,12 +332,13 @@ class Letsencrypt extends Acme
 
     /**
      * Restore certificate files from DB
-     * @param LetsencryptSsl $ssl
      * @throws LetsencryptException
      */
-    public function restoreCertFilesFromDb(LetsencryptSsl $ssl)
+    private function _restoreCertFilesFromDb()
     {
-        $certFiles = $ssl->getFileContents();
+        $ssl = $this->_ssl;
+
+        $certFiles = $ssl->getCsrFiles();
 
         $certDir = $this->getCertDir($ssl->domain);
 
@@ -209,150 +358,6 @@ class Letsencrypt extends Acme
                 }
             }
         }
-    }
-
-    /**
-     * Return account Thumbprint
-     * @return null|string
-     */
-    public function getAccountThumbprint()
-    {
-        $this->restoreAccountFromDb();
-
-        return parent::registerAccount();
-    }
-
-    /**
-     * Issue Letsencrypt certificate
-     * @param string $domain
-     * @return int
-     * @throws LetsencryptException
-     */
-    public function issueCert(string $domain)
-    {
-        $this->restoreAccountFromDb();
-
-        $this->_prepareDomain($domain);
-
-        if (!filter_var('test@' . $domain, FILTER_VALIDATE_EMAIL)) {
-            throw new LetsencryptException('Invalid domain name!');
-        }
-
-        if (LetsencryptSsl::findOne(['domain' => $domain])) {
-            throw new LetsencryptException('Certificate for domain [' . $domain . '] already exist! Use renewSsl instead!');
-        }
-
-        $this->restoreAccountFromDb();
-
-        $parsedCert = parent::issueCert($domain);
-
-        if (!$parsedCert) {
-            throw new LetsencryptException('Cannot obtain issued Letsencrypt cert ['. $domain .'] data!');
-        }
-
-        $ssl = new LetsencryptSsl();
-        $ssl->domain = $domain;
-        $ssl->setFileContents($this->cutCertFiles($domain));
-        $ssl->expired_at = static::_expiryDate($parsedCert);
-
-        if (!$ssl->save(false)) {
-            throw new LetsencryptException('Cannot create new LetsencryptSsl record!');
-        }
-
-        return $ssl->id;
-    }
-
-    /**
-     * Renew certificate
-     * @param $domain
-     * @return bool
-     * @throws LetsencryptException
-     */
-    public function renewCert($domain)
-    {
-        $this->_prepareDomain($domain);
-
-        $this->restoreAccountFromDb();
-
-        $ssl = $this->_fetchSsl($domain);
-
-        $this->restoreCertFilesFromDb($ssl);
-
-        $parsedCert = parent::renewCert($domain);
-
-        if (!$parsedCert) {
-            throw new LetsencryptException('Cannot obtain renewed Letsencrypt cert ['. $domain .'] data!');
-        }
-
-        $ssl->setFileContents($this->cutCertFiles($domain));
-        $ssl->expired_at = static::_expiryDate($parsedCert);
-
-        if (!$ssl->save(false)) {
-            throw new LetsencryptException('Cannot save LetsencryptSsl domain ['. $domain .'] certificate!');
-        }
-
-        return true;
-    }
-
-    /**
-     * Return certificate file names list
-     * @param $domain
-     * @return array
-     * @throws LetsencryptException
-     */
-    public function getCertFiles($domain)
-    {
-        $this->_prepareDomain($domain);
-
-        $ssl = $this->_fetchSsl($domain);
-
-        return array_keys($ssl->getFileContents());
-    }
-
-    /**
-     * Return certificate file content
-     * @param $domain
-     * @param $fileName
-     * @return string
-     */
-    public function getCertFileContent($domain, $fileName)
-    {
-        $this->_prepareDomain($domain);
-
-        $ssl = $this->_fetchSsl($domain);
-
-        return $ssl->getFileContent($fileName);
-    }
-
-    /**
-     * Prepare domain format
-     * @param $domain
-     * @throws LetsencryptException
-     */
-    private function _prepareDomain(&$domain)
-    {
-        $domain = trim($domain);
-
-        if (!filter_var('test@' . $domain, FILTER_VALIDATE_EMAIL)) {
-            throw new LetsencryptException('Invalid domain name!');
-        }
-    }
-
-    /**
-     * Fetch exiting ssl from db
-     * @param $domain
-     * @return null|LetsencryptSsl
-     * @throws LetsencryptException
-     */
-    private function _fetchSsl($domain)
-    {
-        $ssl = LetsencryptSsl::findOne(['domain' => $domain]);
-
-        if (!$ssl) {
-            throw new LetsencryptException('SSL for domain [' . $domain . '] does not exist yet!');
-        }
-
-        return $ssl;
     }
 
     /**
