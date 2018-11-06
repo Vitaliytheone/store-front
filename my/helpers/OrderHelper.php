@@ -1,6 +1,8 @@
 <?php
 namespace my\helpers;
 
+use common\components\letsencrypt\Letsencrypt;
+use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
@@ -784,6 +786,102 @@ class OrderHelper {
             Yii::$app->db->createCommand("
                 INSERT INTO `{$store->db_name}`.`notification_admin_emails` (`email`, `status`, `primary`) VALUES ('{$adminEmail}', 1, 1);
             ")->execute();
+        }
+
+        return true;
+    }
+
+    /**
+     * Obtain free letsencrypt SSL certificate
+     * @param Orders $order
+     * @return bool
+     * @throws Exception
+     */
+    public static function leSsl(Orders $order)
+    {
+        if (SslCert::findOne([
+            'domain' => $order->domain,
+            'status' => SslCert::STATUS_ACTIVE
+        ])) {
+            throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
+        }
+
+        $orderDetails = $order->getDetails();
+
+        $sslCertItem = SslCertItem::findOne(ArrayHelper::getValue($orderDetails, 'item_id'));
+
+        if (!$sslCertItem) {
+            throw new Exception('SslItem for domain [' . $order->domain . '] not found!');
+        }
+
+        $ssl = new SslCertLetsencrypt();
+        $ssl->cid = $order->cid;
+        $ssl->pid = $orderDetails['pid'];
+        $ssl->project_type = $orderDetails['project_type'];
+        $ssl->item_id = $sslCertItem->id;
+        $ssl->status = SslCert::STATUS_PENDING;
+        $ssl->checked = SslCert::CHECKED_NO;
+        $ssl->domain = $order->domain;
+
+        $letsencrypt = new Letsencrypt();
+        $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
+        $letsencrypt->setSsl($ssl);
+
+        $letsencrypt->issueCert();
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
+
+        $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+        $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+        if (!$ssl->save(false)) {
+            throw new Exception('Cannot create SslCertLetsencrypt [orderId=' . $order->id . ']');
+        }
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->item_id = $ssl->id;
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        return true;
+    }
+
+    /**
+     * Renew free Letsencrypt certificate
+     * @param Orders $order
+     * @return bool
+     * @throws Exception
+     */
+    public static function leProlongationSsl(Orders $order)
+    {
+        $ssl = SslCertLetsencrypt::findOne($order->item_id);
+
+        if (!$ssl) {
+            throw new Exception('SslCertLetsencrypt item not found [orderId=' . $order->id . ']');
+        }
+
+        $ssl->status = SslCertLetsencrypt::STATUS_INCOMPLETE;
+        $ssl->checked = SslCertLetsencrypt::CHECKED_NO;
+
+        if (!$ssl->save(false)) {
+            throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+        }
+
+        $letsencrypt = new Letsencrypt();
+        $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
+        $letsencrypt->setSsl($ssl);
+
+        $letsencrypt->renewCert();
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
+
+        $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+        $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+        if (!$ssl->save(false)) {
+            throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
 
         return true;

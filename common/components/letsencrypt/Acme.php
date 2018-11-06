@@ -59,7 +59,7 @@ class Acme extends Component
      * Last execute exec result
      * @var array
      */
-    private $_exec_cmd_result;
+    private $_exec_cmd_result = [];
 
     /**
      * Set stage mode

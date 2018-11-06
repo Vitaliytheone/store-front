@@ -38,7 +38,6 @@ class AcmeInstaller extends Component
 
         $letsencrypt = new Letsencrypt();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
-        $letsencrypt->setStageMode(true);
 
 //        if ($this->console->confirm('Use stage (test) mode?')) {
 //            $letsencrypt->setStageMode(true);
@@ -195,16 +194,16 @@ class AcmeInstaller extends Component
             $ssl->status = SslCert::STATUS_PENDING;
             $ssl->checked = SslCert::CHECKED_NO;
             $ssl->domain = trim($domain);
-            $ssl->details = '';
-
-            if (!$ssl->save(false)) {
-                throw new Exception('Cannot create SslCertLetsencrypt [' . $domain . ']');
-            }
 
             $letsencrypt->setSsl($ssl);
             $letsencrypt->issueCert();
 
-            $ssl->refresh();
+            $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+            $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+            if (!$ssl->save(false)) {
+                throw new Exception('Cannot create SslCertLetsencrypt [' . $domain . ']');
+            }
 
             $this->console->stdout( print_r($letsencrypt->getExecResult(Acme::EXEC_RESULT_RETURN_DATA),1));
 
@@ -280,9 +279,23 @@ class AcmeInstaller extends Component
                 throw new Exception('SslCertLetsencrypt does not exist for domain [' . $domain . ']!');
             }
 
+            $ssl->status = SslCertLetsencrypt::STATUS_INCOMPLETE;
+            $ssl->checked = SslCertLetsencrypt::CHECKED_NO;
+
+            if (!$ssl->save(false)) {
+                throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+            }
+
             $letsencrypt->setSsl($ssl);
 
             $letsencrypt->renewCert();
+
+            $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+            $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+            if (!$ssl->save(false)) {
+                throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+            }
 
             $this->console->stdout(json_encode($letsencrypt->getExecResult(), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . PHP_EOL);
 

@@ -18,23 +18,17 @@ class Letsencrypt extends Acme
     const OPTION_ACCOUNT_THUMBPRINT = 'account_thumbprint';
     const OPTION_ACCOUNT_KEY = 'account_key';
 
+    public function init()
+    {
+        parent::init();
+        $this->setStageMode(true);
+    }
+
     /**
      * Current Letsencrypt SSL model
      * @var SslCertLetsencrypt
      */
     private $_ssl;
-
-    /**
-     * Current content of SSL physical files
-     * @var array
-     */
-    private $_cert_file_contents;
-
-    /**
-     * Current SSL expiry date
-     * @var
-     */
-    private $_cert_expiry_date;
 
     /**
      * Set current SslCertLetsencrypt
@@ -52,23 +46,6 @@ class Letsencrypt extends Acme
     public function getSsl() : SslCertLetsencrypt
     {
        return $this->_ssl;
-    }
-
-    /**
-     * Return current content of SSL physical files
-     * @return array
-     */
-    public function getCertFileContents()
-    {
-        return $this->_cert_file_contents;
-    }
-
-    /**
-     * Return current SSL expiry date
-     */
-    public function getExpiryDate()
-    {
-        return $this->_cert_expiry_date;
     }
 
     /**
@@ -209,7 +186,6 @@ class Letsencrypt extends Acme
 
     /**
      * Issue Letsencrypt certificate
-     * @return int Expiry date
      * @throws LetsencryptException
      */
     public function issueCert()
@@ -219,28 +195,23 @@ class Letsencrypt extends Acme
         $parsedCert = $this->cmdIssueCert($this->_ssl->domain);
 
         if (!$parsedCert) {
-            throw new LetsencryptException('Cannot obtain issued Letsencrypt cert [' . $this->_ssl->domain . '] data!');
+            throw new LetsencryptException(json_encode([
+                'message' => 'Cannot obtain issued Letsencrypt cert [' . $this->_ssl->domain . ']',
+                'acme_result' => $this->getExecResult(),
+            ], JSON_PRETTY_PRINT));
         }
 
         $certFiles = $this->_cutCertFiles($this->_ssl->domain);
 
         $this->_ssl->setCsrFiles($certFiles);
-        $this->_ssl->expiry =static::_expiryDate($parsedCert);
-        $this->_ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
-        $this->_ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+        $this->_ssl->expiry = static::_expiryDate($parsedCert);
         $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
         $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
-
-        if (!$this->_ssl->save(false)) {
-            throw new LetsencryptException('Cannot update LetsencryptSsl record!');
-        }
-
-        return $this->_cert_expiry_date;
+        $this->_ssl->setOrderDetails($this->getExecResult());
     }
 
     /**
      * Renew certificate
-     * @return integer New expiry date
      * @throws LetsencryptException
      */
     public function renewCert()
@@ -252,7 +223,10 @@ class Letsencrypt extends Acme
         $parsedCert = $this->cmdRenewCert($this->_ssl->domain);
 
         if (!$parsedCert) {
-            throw new LetsencryptException('Cannot obtain renewed Letsencrypt cert ['. $this->_ssl->domain .'] data!');
+            throw new LetsencryptException(json_encode([
+                'message' => 'Cannot obtain renewed Letsencrypt cert [' . $this->_ssl->domain . ']',
+                'acme_result' => $this->getExecResult(),
+            ], JSON_PRETTY_PRINT));
         }
 
         $certFiles = $this->_cutCertFiles($this->_ssl->domain);
@@ -267,8 +241,6 @@ class Letsencrypt extends Acme
         if (!$this->_ssl->save(false)) {
             throw new LetsencryptException('Cannot save SslCertLetsencrypt domain ['. $this->_ssl->domain .'] certificate!');
         }
-
-        return $this->_cert_expiry_date;
     }
 
     /**
