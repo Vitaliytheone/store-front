@@ -18,12 +18,6 @@ class Letsencrypt extends Acme
     const OPTION_ACCOUNT_THUMBPRINT = 'account_thumbprint';
     const OPTION_ACCOUNT_KEY = 'account_key';
 
-    public function init()
-    {
-        parent::init();
-        $this->setStageMode(true);
-    }
-
     /**
      * Current Letsencrypt SSL model
      * @var SslCertLetsencrypt

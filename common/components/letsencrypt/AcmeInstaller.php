@@ -39,12 +39,12 @@ class AcmeInstaller extends Component
         $letsencrypt = new Letsencrypt();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
 
-//        if ($this->console->confirm('Use stage (test) mode?')) {
-//            $letsencrypt->setStageMode(true);
-//            $this->console->stdout( 'Letsencrypt configured to use in (test) mode' . PHP_EOL, Console::FG_CYAN);
-//        } else {
-//            $this->console->stdout( 'Letsencrypt configured to use in production mode' . PHP_EOL, Console::FG_YELLOW);
-//        }
+        if ($this->console->confirm('Use stage (test) mode?')) {
+            $letsencrypt->setStageMode(true);
+            $this->console->stdout( 'Letsencrypt configured to use in (test) mode' . PHP_EOL, Console::FG_CYAN);
+        } else {
+            $this->console->stdout( 'Letsencrypt configured to use in production mode' . PHP_EOL, Console::FG_YELLOW);
+        }
 
         $menuOptions = [
             '1' => 'Install ACME.sh library to project folder',
@@ -164,21 +164,21 @@ class AcmeInstaller extends Component
 
             $domain = trim($domain);
 
-//            if (SslCertLetsencrypt::findOne(['domain' => $domain])) {
-//                throw new Exception('SslCert already exist! Use "Renew certificate" menu item!');
-//            }
-//
-//            $panel = Project::findOne(['site' => $domain]);
-//
-//            if (!$panel) {
-//                throw new Exception('Panel [' . $domain . '] not exist!');
-//            }
-//
-//            $customer = Customers::findOne(['id' => $panel->cid]);
-//
-//            if (!$customer) {
-//                throw new Exception('Panel [' . $domain . '] customer [' . $customer->id . '] not exist!');
-//            }
+            if (SslCertLetsencrypt::findOne(['domain' => $domain])) {
+                throw new Exception('SslCert already exist! Use "Renew certificate" menu item!');
+            }
+
+            $panel = Project::findOne(['site' => $domain]);
+
+            if (!$panel) {
+                throw new Exception('Panel [' . $domain . '] not exist!');
+            }
+
+            $customer = Customers::findOne(['id' => $panel->cid]);
+
+            if (!$customer) {
+                throw new Exception('Panel [' . $domain . '] customer [' . $customer->id . '] not exist!');
+            }
 
             $sslCertItem = SslCertItem::findOne(['provider' => SslCertItem::PROVIDER_LETSENCRYPT]);
 
@@ -187,8 +187,8 @@ class AcmeInstaller extends Component
             }
 
             $ssl = new SslCertLetsencrypt();
-            $ssl->cid = 7;//$panel->id;
-            $ssl->pid = 57;//$customer->id;
+            $ssl->cid = $panel->id;
+            $ssl->pid = $customer->id;
             $ssl->project_type = SslCert::PROJECT_TYPE_PANEL;
             $ssl->item_id = $sslCertItem->id;
             $ssl->status = SslCert::STATUS_PENDING;
