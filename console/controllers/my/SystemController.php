@@ -775,9 +775,16 @@ class SystemController extends CustomController
      */
     public function actionAcme()
     {
+        $this->stdout('Letsencrypt ACME.sh library management script'. PHP_EOL, Console::FG_GREEN);
+
         $installer = new AcmeInstaller();
         $installer->console = $this;
-        $installer->run();
+
+        try{
+            $installer->run();
+        } catch (\Exception $exception) {
+             $this->stderr(PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL, Console::FG_RED);
+        }
 
         if ($this->confirm('Exit from ACME?')) {
             return ExitCode::OK;

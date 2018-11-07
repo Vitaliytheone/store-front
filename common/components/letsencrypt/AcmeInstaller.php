@@ -34,8 +34,6 @@ class AcmeInstaller extends Component
      */
     public function run()
     {
-        $this->console->stdout('Letsencrypt ACME.sh library management script'. PHP_EOL, Console::FG_GREEN);
-
         $letsencrypt = new Letsencrypt();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
 
@@ -52,9 +50,9 @@ class AcmeInstaller extends Component
             '3' => 'Restore Letsencrypt account from DB',
             '4' => 'Get ACCOUNT_THUMBPRINT code',
             '5' => 'Issue certificate',
+            '6' => 'Renew certificate',
             '7' => 'Get certificate content',
-            '8' => 'Renew certificate',
-            '9' => 'Show current config paths',
+            '8' => 'Show current config paths',
         ];
 
         foreach ($menuOptions as $itemNumber => $itemLabel) {
@@ -212,6 +210,50 @@ class AcmeInstaller extends Component
             return ExitCode::OK;
         }
 
+        if ($menuOption == 6) {
+
+            $this->console->stdout('Renew domain certificate...' . PHP_EOL, Console::FG_GREEN);
+
+            $domain = $this->console->prompt('Input exiting domain:', ['required' => true, 'validator' => function ($input, &$error) {
+                if (!filter_var('test@' . $input, FILTER_VALIDATE_EMAIL)) {
+                    $error = 'Invalid domain!';
+                    return false;
+                }
+                return true;
+            }]);
+
+            $domain = trim($domain);
+
+            $ssl = SslCertLetsencrypt::findOne([
+                'domain' => $domain,
+            ]);
+
+            if (!$ssl) {
+                throw new Exception('SslCertLetsencrypt does not exist for domain [' . $domain . ']!');
+            }
+
+            $ssl->status = SslCertLetsencrypt::STATUS_INCOMPLETE;
+            $ssl->checked = SslCertLetsencrypt::CHECKED_NO;
+
+            if (!$ssl->save(false)) {
+                throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+            }
+
+            $letsencrypt->setSsl($ssl);
+
+            $letsencrypt->renewCert();
+
+            $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+            $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+            if (!$ssl->save(false)) {
+                throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+            }
+
+            $this->console->stdout(json_encode($letsencrypt->getExecResult(), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . PHP_EOL);
+
+            return ExitCode::OK;
+        }
 
         if ($menuOption == 7) {
             $this->console->stdout('Get certificate files...' . PHP_EOL, Console::FG_GREEN);
@@ -258,53 +300,8 @@ class AcmeInstaller extends Component
         }
 
         if ($menuOption == 8) {
-
-            $this->console->stdout('Renew domain certificate...' . PHP_EOL, Console::FG_GREEN);
-
-            $domain = $this->console->prompt('Input exiting domain:', ['required' => true, 'validator' => function ($input, &$error) {
-                if (!filter_var('test@' . $input, FILTER_VALIDATE_EMAIL)) {
-                    $error = 'Invalid domain!';
-                    return false;
-                }
-                return true;
-            }]);
-
-            $domain = trim($domain);
-
-            $ssl = SslCertLetsencrypt::findOne([
-                'domain' => $domain,
-            ]);
-
-            if (!$ssl) {
-                throw new Exception('SslCertLetsencrypt does not exist for domain [' . $domain . ']!');
-            }
-
-            $ssl->status = SslCertLetsencrypt::STATUS_INCOMPLETE;
-            $ssl->checked = SslCertLetsencrypt::CHECKED_NO;
-
-            if (!$ssl->save(false)) {
-                throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
-            }
-
-            $letsencrypt->setSsl($ssl);
-
-            $letsencrypt->renewCert();
-
-            $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
-            $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
-
-            if (!$ssl->save(false)) {
-                throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
-            }
-
-            $this->console->stdout(json_encode($letsencrypt->getExecResult(), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) . PHP_EOL);
-
-            return ExitCode::OK;
-        }
-
-        if ($menuOption == 9) {
             $this->console->stdout('Current library SSL paths...' . PHP_EOL, Console::FG_GREEN);
-            $this->console->stdout( $letsencrypt->getCertsDir() . PHP_EOL, Console::FG_CYAN);
+            $this->console->stdout( print_r($letsencrypt->getPaths(), 1) . PHP_EOL, Console::FG_CYAN);
         }
 
         return ExitCode::OK;
