@@ -111,11 +111,11 @@ class CronController extends CustomController
                     break;
 
                     case Orders::ITEM_OBTAIN_LE_SSL:
-                        OrderHelper::leSsl();
+                        OrderHelper::leSsl($order);
                     break;
 
                     case Orders::ITEM_PROLONGATION_LE_SSL:
-                        OrderHelper::leProlongationSsl();
+                        OrderHelper::leProlongationSsl($order);
                     break;
                 }
             } catch (Exception $e) {

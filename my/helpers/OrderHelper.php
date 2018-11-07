@@ -829,8 +829,6 @@ class OrderHelper {
 
         $letsencrypt->issueCert();
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
-
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
 
@@ -844,6 +842,8 @@ class OrderHelper {
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
         }
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
 
         return true;
     }
@@ -875,14 +875,21 @@ class OrderHelper {
 
         $letsencrypt->renewCert();
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
-
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
 
         if (!$ssl->save(false)) {
             throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->item_id = $ssl->id;
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
 
         return true;
     }
