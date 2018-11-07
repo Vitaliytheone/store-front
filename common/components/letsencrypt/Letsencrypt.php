@@ -227,10 +227,9 @@ class Letsencrypt extends Acme
 
         $this->_ssl->setCsrFiles($certFiles);
         $this->_ssl->expiry =static::_expiryDate($parsedCert);
-        $this->_ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
-        $this->_ssl->checked = SslCertLetsencrypt::CHECKED_YES;
         $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
         $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
+        $this->_ssl->setOrderDetails($this->getExecResult());
 
         if (!$this->_ssl->save(false)) {
             throw new LetsencryptException('Cannot save SslCertLetsencrypt domain ['. $this->_ssl->domain .'] certificate!');
