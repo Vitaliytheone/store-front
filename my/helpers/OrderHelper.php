@@ -824,7 +824,7 @@ class OrderHelper {
         $ssl->domain = $order->domain;
 
         $letsencrypt = new Letsencrypt();
-        $letsencrypt->setStageMode(true);
+        $letsencrypt->setStageMode(false);
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
@@ -837,30 +837,30 @@ class OrderHelper {
             throw new Exception('Cannot create SslCertLetsencrypt [orderId=' . $order->id . ']');
         }
 
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
+
+        if (!OrderSslHelper::addDdos($ssl, [
+            'site' => $order->domain,
+            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to DDoS!');
+        }
+
+        if (!OrderSslHelper::addConfig($ssl, [
+            'domain' => $order->domain,
+            'crt_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to Config!');
+        }
+
         $order->status = Orders::STATUS_ADDED;
         $order->item_id = $ssl->id;
         $order->setItemDetails(['expiry_at' => $ssl->expiry], 'ssl_details');
 
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
-        }
-
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
-
-//        if (!OrderSslHelper::addDdos($ssl, [
-//            'site' => $order->domain,
-//            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
-//            'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
-//        ])) {
-//            throw new Exception('Cannot add SSL to DDoS!');
-//        }
-
-        if (!OrderSslHelper::addConfig($ssl, [
-            'domain' => $order->domain,
-            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
-            'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
-        ])) {
-            throw new Exception('Cannot add SSL to Config!');
         }
 
         return true;
@@ -888,7 +888,7 @@ class OrderHelper {
         }
 
         $letsencrypt = new Letsencrypt();
-        $letsencrypt->setStageMode(true);
+        $letsencrypt->setStageMode(false);
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
@@ -901,30 +901,30 @@ class OrderHelper {
             throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
 
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
+
+        if (!OrderSslHelper::addDdos($ssl, [
+            'site' => $order->domain,
+            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to DDoS!');
+        }
+
+        if (!OrderSslHelper::addConfig($ssl, [
+            'domain' => $order->domain,
+            'crt_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to Config!');
+        }
+
         $order->status = Orders::STATUS_ADDED;
         $order->item_id = $ssl->id;
         $order->setItemDetails(['expiry_at' => $ssl->expiry], 'ssl_details');
 
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
-        }
-
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
-
-//        if (!OrderSslHelper::addDdos($ssl, [
-//            'site' => $order->domain,
-//            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
-//            'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
-//        ])) {
-//            throw new Exception('Cannot add SSL to DDoS!');
-//        }
-
-        if (!OrderSslHelper::addConfig($ssl, [
-            'domain' => $order->domain,
-            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
-            'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
-        ])) {
-            throw new Exception('Cannot add SSL to Config!');
         }
 
         return true;
