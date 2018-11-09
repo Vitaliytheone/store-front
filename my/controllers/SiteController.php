@@ -628,7 +628,7 @@ class SiteController extends CustomController
                 break;
 
             case Params::CODE_PERFECT_MONEY:
-                $account = ArrayHelper::getValue($paymentMethod, ['options', 'credentials', 'account'], '');
+                $account = ArrayHelper::getValue($paymentMethod, ['credentials', 'account'], '');
 
                 return $this->render('checkout', [
                     'paymentType' => 2,
@@ -640,7 +640,7 @@ class SiteController extends CustomController
                 break;
 
             case Params::CODE_WEBMONEY:
-                $purse = ArrayHelper::getValue($paymentMethod, ['options', 'credentials', 'purse'], '');
+                $purse = ArrayHelper::getValue($paymentMethod, ['credentials', 'purse'], '');
 
                 return $this->render('checkout', [
                     'paymentType' => 3,
@@ -652,8 +652,8 @@ class SiteController extends CustomController
                 break;
 
             case Params::CODE_BITCOIN:
-                $bitcoinId = ArrayHelper::getValue($paymentMethod, ['options', 'credentials', 'id'], '');
-                $secret = ArrayHelper::getValue($paymentMethod, ['options', 'credentials', 'secret'], '');
+                $bitcoinId = ArrayHelper::getValue($paymentMethod, ['credentials', 'id'], '');
+                $secret = ArrayHelper::getValue($paymentMethod, ['credentials', 'secret'], '');
 
                 $params = [
                     'callback_data' => $paymentsModel->id,
@@ -684,7 +684,7 @@ class SiteController extends CustomController
                 break;
 
             case Params::CODE_TWO_CHECKOUT:
-                $account_number = ArrayHelper::getValue($paymentMethod, ['options', 'credentials', 'account_number'], '');
+                $account_number = ArrayHelper::getValue($paymentMethod, ['credentials', 'account_number'], '');
 
                 return $this->render('checkout', [
                     'paymentType' => 5,
@@ -700,7 +700,7 @@ class SiteController extends CustomController
 
                 return $this->render('checkout', [
                     'paymentType' => 6,
-                    'merchantId' => ArrayHelper::getValue($paymentMethod, ['options', 'credentials', 'merchant_id'], null),
+                    'merchantId' => ArrayHelper::getValue($paymentMethod, ['credentials', 'merchant_id'], null),
                     'paymentId' => $paymentsModel->id,
                     'paymentDescription' => $description,
                     'amount' => $paymentsModel->amount,
