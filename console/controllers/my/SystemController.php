@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers\my;
 
+use common\components\letsencrypt\AcmeInstaller;
 use common\helpers\PaymentHelper;
 use common\models\panels\Customers;
 use common\models\panels\Domains;
@@ -25,6 +26,7 @@ use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use Yii;
+use yii\console\ExitCode;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -765,5 +767,29 @@ class SystemController extends CustomController
                 }
             }
         }
+    }
+
+    /**
+     * Installed ACME.sh library to the MY project
+     * @return int
+     */
+    public function actionAcme()
+    {
+        $this->stdout('Letsencrypt ACME.sh library management script'. PHP_EOL, Console::FG_GREEN);
+
+        $installer = new AcmeInstaller();
+        $installer->console = $this;
+
+        try{
+            $installer->run();
+        } catch (\Exception $exception) {
+             $this->stderr(PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL, Console::FG_RED);
+        }
+
+        if ($this->confirm('Exit from ACME?')) {
+            return ExitCode::OK;
+        }
+
+        return $this->run($this->route);
     }
 }
