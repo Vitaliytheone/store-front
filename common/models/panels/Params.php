@@ -11,12 +11,39 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "params".
  *
  * @property int $id
+ * @property string $category
  * @property string $code
  * @property string $options
  * @property int $updated_at
+ * @property int $position
  */
 class Params extends ActiveRecord
 {
+    public const VISIBILITY_ENABLED = 1;
+    public const VISIBILITY_DISABLED = 0;
+
+    public const CATEGORY_SERVICE = 'service';
+    public const CATEGORY_PAYMENT = 'payment';
+
+    public const CODE_OTHER = 'other';
+    public const CODE_PAYPAL = 'paypal';
+    public const CODE_PERFECT_MONEY = 'perfect_money';
+    public const CODE_WEBMONEY = 'webmoney';
+    public const CODE_TWO_CHECKOUT = '2checkout';
+    public const CODE_BITCOIN = 'bitcoin';
+    public const CODE_COINPAYMENTS = 'coinpayments';
+
+    public const CODE_WHOISXML = 'whoisxml';
+    public const CODE_DNSLYTICS = 'dnslytics';
+    public const CODE_GOGETSSL = 'gogetssl';
+    public const CODE_AHNAMES = 'ahnames';
+    public const CODE_OPENSRS = 'opensrs';
+
+    /**
+     * After this time after payment refund paypal transaction impossible
+     */
+    public const PAYPAL_REFUND_EXPIRED_AFTER = 180 * 24 * 60 * 60;
+
     /**
      * @var static[]
      */
@@ -36,11 +63,11 @@ class Params extends ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'options', 'updated_at'], 'required'],
+            [['code', 'options'], 'required'],
             [['options'], 'string'],
-            [['updated_at'], 'integer'],
-            [['code'], 'string', 'max' => 64],
-            [['code'], 'unique'],
+            [['updated_at', 'position'], 'integer'],
+            [['code', 'category'], 'string', 'max' => 64],
+            [['code', 'category'], 'unique', 'targetAttribute' => ['code', 'category']],
         ];
     }
 
@@ -54,6 +81,8 @@ class Params extends ActiveRecord
             'code' => 'Code',
             'options' => 'Options',
             'updated_at' => 'Updated At',
+            'position' => 'Position',
+            'category' => 'Category',
         ];
     }
 
@@ -73,26 +102,48 @@ class Params extends ActiveRecord
     public static function getAll():array
     {
         if (null === static::$_params) {
-            static::$_params = ArrayHelper::index(static::find()->select([
+            $params = static::find()->select([
                 'code',
+                'category',
                 'options'
-            ])->all(), 'code');
+            ])->asArray()->orderBy([
+                'position' => SORT_ASC
+            ])->all();
+
+            static::$_params = ArrayHelper::index(array_map(function($value) {
+                $value['options'] = json_decode($value['options'], true);
+                return $value;
+            }, $params), 'code', 'category');
         }
 
         return (array)static::$_params;
     }
 
     /**
-     * @param $code
-     * @return null
+     * Get parameter
+     * @param string $category
+     * @param string $code
+     * @return null|array
      */
-    public static function get($code)
+    public static function get($category, $code)
     {
-        $parameters = static::getAll();
-        if (isset($parameters[$code])) {
-            return $parameters[$code]->getOptions();
+        return ArrayHelper::getValue(static::getAll(), [$category, $code, 'options']);
+    }
+
+    /**
+     * @return array
+     */
+    public static function indexByPgid(): array
+    {
+        $payments = Params::find()->where(['category' => Params::CATEGORY_PAYMENT])->all();
+
+        $paymentsList = [];
+        foreach ($payments as $key => $method) {
+            $options = $method->getOptions();
+            $paymentsList[$options['pgid']] = $options['name'];
         }
-        return null;
+
+        return $paymentsList;
     }
 
     /**
@@ -106,7 +157,7 @@ class Params extends ActiveRecord
     /**
      * @param array $options
      */
-    public function setOption($options)
+    public function setOptions($options)
     {
         $this->options = json_encode($options);
     }
@@ -123,6 +174,18 @@ class Params extends ActiveRecord
                     return time();
                 },
             ],
+        ];
+    }
+
+    /**
+     * Get visibility list with labels
+     * @return array
+     */
+    public static function getVisibilityList(): array
+    {
+        return [
+            static::VISIBILITY_ENABLED => Yii::t('app', 'payment_gateway.visibility.enabled'),
+            static::VISIBILITY_DISABLED => Yii::t('app', 'payment_gateway.visibility.disabled')
         ];
     }
 }

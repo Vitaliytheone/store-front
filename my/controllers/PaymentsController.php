@@ -2,6 +2,8 @@
 
 namespace my\controllers;
 
+use common\helpers\PaymentHelper;
+use common\models\panels\Params;
 use my\components\bitcoin\Bitcoin;
 use my\components\payments\BasePayment;
 use my\helpers\PaymentsHelper;
@@ -14,7 +16,6 @@ use my\mail\mailers\TwoCheckoutPass;
 use my\mail\mailers\TwoCheckoutReview;
 use Yii;
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use common\models\panel\PaymentsLog;
 use common\models\panels\PaymentHash;
@@ -239,20 +240,9 @@ class PaymentsController extends CustomController
 
 		$this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER), 'Webmoney', $paymentSignature);
 
-		$paypalInfo = PaymentGateway::findOne(['pgid' => 3, 'visibility' => 1, 'pid' => -1]);
+        $purse = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_WEBMONEY), ['credentials', 'purse']);
+		$secret_key = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_WEBMONEY), ['credentials', 'secret_key']);
 
-		$purse = '';
-		$secret_key = '';
-
-		$paypalInfo = json_decode($paypalInfo->options);
-
-		if (!empty($paypalInfo->purse)) {
-			$purse = $paypalInfo->purse;
-		}
-
-		if (!empty($paypalInfo->secret_key)) {
-			$secret_key = $paypalInfo->secret_key;
-		}
 
 		if(!empty($_POST['LMI_PREREQUEST'])) {
 			if(trim($_POST['LMI_PAYEE_PURSE']) != $purse) {
@@ -309,7 +299,7 @@ class PaymentsController extends CustomController
                                 if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(PaymentGateway::METHOD_WEBMONEY);
+                                    $invoice->paid(Params::CODE_WEBMONEY);
 
                                     $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
@@ -379,21 +369,8 @@ class PaymentsController extends CustomController
 
 	            if ($invoice->status == 0 and $payment->status == 0) {
 
-	            	$paypalInfo = PaymentGateway::findOne(['pgid' => 2, 'visibility' => 1, 'pid' => -1]);
-
-					$account = '';
-					$passphrase = '';
-
-					$paypalInfo = json_decode($paypalInfo->options);
-
-					if (!empty($paypalInfo->account)) {
-						$account = $paypalInfo->account;
-					}
-
-					if (!empty($paypalInfo->passphrase)) {
-						$passphrase = strtoupper(md5($paypalInfo->passphrase));
-					}
-
+					$account = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PERFECT_MONEY), ['credentials', 'account']);
+					$passphrase = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PERFECT_MONEY), ['credentials', 'passphrase']);
 
 	            	$string =  $_POST['PAYMENT_ID'].':'.$_POST['PAYEE_ACCOUNT'].':'.$_POST['PAYMENT_AMOUNT'].':'.$_POST['PAYMENT_UNITS'].':'.$_POST['PAYMENT_BATCH_NUM'].':'.$_POST['PAYER_ACCOUNT'].':'.$passphrase.':'.$_POST['TIMESTAMPGMT'];
 
@@ -406,7 +383,7 @@ class PaymentsController extends CustomController
 		            			if ($hash === null) {
 
                                     // Mark invoice paid
-                                    $invoice->paid(PaymentGateway::METHOD_PERFECT_MONEY);
+                                    $invoice->paid(Params::CODE_PERFECT_MONEY);
 
 					                $payments = Payments::findOne(['id' => $payment->id]);
                                     $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
@@ -474,12 +451,8 @@ class PaymentsController extends CustomController
 
 	            if ($invoice->status == 0 && in_array($payment->status, [0, 2])) {
 
-	            	$paypalInfo = PaymentGateway::findOne(['pgid' => 4, 'visibility' => 1, 'pid' => -1]);
-
-					$paypalInfo = json_decode($paypalInfo->options);
-
-                    $id = ArrayHelper::getValue($paypalInfo, 'id');
-                    $secret = ArrayHelper::getValue($paypalInfo, 'secret');
+                    $id = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_BITCOIN), ['credentials', 'id']);
+                    $secret = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_BITCOIN), ['credentials', 'secret']);
 
                     $signature = Bitcoin::generateSignature($_SERVER['REQUEST_URI'], $secret);
 
@@ -517,7 +490,7 @@ class PaymentsController extends CustomController
                     }
 
                     // Mark invoice paid
-                    $invoice->paid(PaymentGateway::METHOD_BITCOIN);
+                    $invoice->paid(Params::CODE_BITCOIN);
 
                     $payments->status = Payments::STATUS_COMPLETED;
                     $payments->update();
@@ -573,21 +546,9 @@ class PaymentsController extends CustomController
                 $invoice = Invoices::findOne(['id' => $payment->iid]);
 
                 if ($invoice->status == 0 and $payment->status != 1) {
-                	
-                	$paypalInfo = PaymentGateway::findOne(['pgid' => 5, 'visibility' => 1, 'pid' => -1]);
 
-					$account_number = '';
-					$secret_word = '';
-
-					$paypalInfo = json_decode($paypalInfo->options);
-
-					if (!empty($paypalInfo->account_number)) {
-						$account_number = $paypalInfo->account_number;
-					}
-
-					if (!empty($paypalInfo->secret_word)) {
-						$secret_word = $paypalInfo->secret_word;
-					}
+					$account_number = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'account_number']);
+					$secret_word = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'secret_word']);
 
 					$hashSid = $account_number; #Input your seller ID (2Checkout account number)
 					$hashOrder = $_POST['sale_id'];
@@ -720,11 +681,8 @@ class PaymentsController extends CustomController
             exit;
         }
 
-        $pg = PaymentGateway::findOne(['pgid' => 6, 'visibility' => 1, 'pid' => -1]);
-
-        $pgData = json_decode($pg->options);
-        $pgMerchantId = ArrayHelper::getValue($pgData,'merchant_id', null);
-        $pgIpnSecret = ArrayHelper::getValue($pgData,'secret', null);
+        $pgMerchantId = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_COINPAYMENTS), ['credentials', 'merchant_id']);
+        $pgIpnSecret = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_COINPAYMENTS), ['credentials', 'secret']);
 
         $requestRawBody = http_build_query($_POST);
 
@@ -754,7 +712,7 @@ class PaymentsController extends CustomController
         // Mark invoice paid
         if (in_array($ipnStatus, [100, 2])) {
 
-            $invoice->paid(PaymentGateway::METHOD_COINPAYMENTS);
+            $invoice->paid(Params::CODE_COINPAYMENTS);
 
             $payments->status = Payments::STATUS_COMPLETED;
             $payments->update();

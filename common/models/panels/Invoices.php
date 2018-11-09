@@ -204,7 +204,7 @@ class Invoices extends ActiveRecord
 
     /**
      * Paid invoice
-     * @param $method
+     * @param string $method
      * @return bool
      * @throws \yii\db\Exception
      */
