@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers\my;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\Customers;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
@@ -8,6 +9,9 @@ use common\models\panels\Invoices;
 use common\models\panels\Languages;
 use common\models\panels\Orders;
 use common\models\panels\PanelDomains;
+use common\models\panels\Params;
+use common\models\panels\PaymentGateway;
+use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
@@ -16,10 +20,12 @@ use common\models\panels\Tickets;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;
 use common\components\dns\Dns;
+use my\components\ActiveForm;
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -565,6 +571,66 @@ class SystemController extends CustomController
     }
 
     /**
+     * Update the category column which it is empty
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionUpdateParams()
+    {
+        $methods = Params::find()
+            ->where('category IS NULL')
+            ->all();
+
+
+        foreach ($methods as $method) {
+            $this->stderr("Updating {$method->code} \n", Console::FG_GREEN);
+
+            $updateData = explode('.', $method->code);
+            $method->category = $updateData[0];
+            $method->code = $updateData[1];
+            $method->update(false);
+
+            $this->stderr("Successful update {$method->code} \n", Console::FG_GREEN);
+        }
+    }
+
+    /**
+     * Transfer data from payment_gateway to params
+     */
+    public function actionTransferToParams()
+    {
+        $payments = PaymentGateway::find()->where(['pid' => -1])->all();
+        $category = 'payment';
+
+        foreach ($payments as $payment) {
+            $this->stderr("Transfer {$payment->name} \n", Console::FG_GREEN);
+
+            $params = new Params();
+
+            $code = strtolower(str_replace(' ', '_', $payment->name));
+            $options = ['credentials' => $payment->getOptionsData()];
+            $options = array_merge((array)$options, $payment->getAttributes([
+                'name',
+                'minimal',
+                'maximal',
+                'visibility',
+                'fee',
+                'type',
+                'dev_options',
+            ]));
+            $params->code = $code;
+            $params->category = $category;
+            $params->setOptions($options);
+            $params->position = $payment->position;
+            if (!$params->save()) {
+                $this->stderr(ActiveForm::firstError($params) . "\n", Console::FG_RED);
+            } else {
+                $this->stderr("Successful \n", Console::FG_GREEN);
+            }
+        }
+    }
+
+    /**
      * Change additional_services.currency
      */
     public function actionSslFix()
@@ -612,6 +678,9 @@ class SystemController extends CustomController
         }
     }
 
+    /**
+     * Update timezone
+     */
     public function actionUpdateTimezones()
     {
         $timezoneList = Yii::$app->params['timezones'];
@@ -670,6 +739,29 @@ class SystemController extends CustomController
                             echo "Successful update \n";
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Set code to payment_method column of payments table
+     */
+    public function actionSetPaymentMethods()
+    {
+        $paymentQuery = Payments::find()
+            ->where('payment_method IS NULL');
+
+        foreach ($paymentQuery->batch() as $payments) {
+            foreach ($payments as $payment) {
+                /**
+                 * @var Payments $payment
+                 */
+                $payment->payment_method = PaymentHelper::getCodeByType($payment->type);
+                if ($payment->save(false)) {
+                    $this->stderr("Successful update the payment #{$payment->id} \n", Console::FG_GREEN);
+                } else {
+                    $this->stderr("Payment #{$payment->id} : " . ActiveForm::firstError($payment) . "\n", Console::FG_RED);
                 }
             }
         }
