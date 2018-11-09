@@ -25,7 +25,7 @@
                         <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment',
                             'code' => $payment['code']
                         ]), [
-                            'class' => 'btn btn-secondary btn-sm edit-payment'
+                            'class' => 'btn btn-primary btn-sm edit-payment'
                         ])?>
                     </td>
                 </tr>
