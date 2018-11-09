@@ -23,6 +23,7 @@ use yii\base\Exception;
 class OrderStoreForm extends DomainForm
 {
     public $store_currency;
+    public $admin_email;
     public $admin_username;
     public $admin_password;
     public $confirm_password;
@@ -45,9 +46,10 @@ class OrderStoreForm extends DomainForm
     {
         return array_merge(
             parent::rules(), [
-            [['admin_username'], 'trim'],
+            [['admin_username', 'admin_email'], 'trim'],
             [['domain', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
+            ['admin_email', 'email'],
             [['domain'], OrderDomainValidator::class, 'store' => true],
             ['admin_username', 'string', 'max' => 255],
             ['admin_password', 'string', 'min' => 5],
@@ -65,6 +67,7 @@ class OrderStoreForm extends DomainForm
             'domain' => Yii::t('app', 'stores.order.form.label.store_domain'),
             'store_currency' => Yii::t('app', 'stores.order.form.label.store_currency'),
             'admin_username' => Yii::t('app', 'stores.order.form.label.admin_username'),
+            'admin_email' => Yii::t('app', 'stores.order.form.label.admin_email'),
             'admin_password' => Yii::t('app', 'stores.order.form.label.admin_password'),
             'confirm_password' => Yii::t('app', 'stores.order.form.label.confirm_password'),
         ]);
@@ -248,6 +251,7 @@ class OrderStoreForm extends DomainForm
             'domain' => $this->storeDomain,
             'currency' => $this->store_currency,
             'name' => $this->storeDomain,
+            'admin_email' => $this->admin_email,
         ]);
 
         if ($model->save()) {
