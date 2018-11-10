@@ -89,6 +89,27 @@ class Params extends ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public static function getPayments(): array
+    {
+        return [
+            static::CODE_OTHER => Yii::t('app', 'payment_gateway.method.other'),
+            static::CODE_PAYPAL => Yii::t('app', 'payment_gateway.method.paypal'),
+            static::CODE_PERFECT_MONEY => Yii::t('app', 'payment_gateway.method.perfect_money'),
+            static::CODE_WEBMONEY => Yii::t('app', 'payment_gateway.method.webmoney'),
+            static::CODE_TWO_CHECKOUT => Yii::t('app', 'payment_gateway.method.two_checkout'),
+            static::CODE_BITCOIN => Yii::t('app', 'payment_gateway.method.bitcoin'),
+            static::CODE_COINPAYMENTS => Yii::t('app', 'payment_gateway.method.coinpayments'),
+        ];
+    }
+
+    public static function getPaymentName($code)
+    {
+        return ArrayHelper::getValue(static::getPayments(), $code, 'All');
+    }
+
+    /**
      * {@inheritdoc}
      * @return ParamsQuery the active query used by this AR class.
      */

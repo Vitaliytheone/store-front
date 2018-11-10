@@ -3,7 +3,6 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
-use common\helpers\PaymentHelper;
 use my\helpers\PaymentsHelper;
 use Yii;
 use yii\base\Exception;
@@ -35,7 +34,7 @@ use yii\base\Security;
  * @property string $verification_code
  *
  * @property Project $project
- * @property PaymentGateway $method
+ * @property Params $method
  * @property PaymentsLog[] $paymentLogs
  * @property Invoices $invoice
  * @property InvoiceDetails $invoiceDetails
@@ -138,7 +137,7 @@ class Payments extends ActiveRecord
      */
     public function getMethod()
     {
-        return $this->hasOne(PaymentGateway::class, ['pgid' => 'type'])
+        return $this->hasOne(Params::class, ['code' => 'payment_method'])
             ->andOnCondition([ 'payment_gateway.pid' => '-1']);
     }
 
@@ -407,10 +406,12 @@ class Payments extends ActiveRecord
 
     /**
      * Make payment as `Payer verification needed`
-     * @param $payerId string|int
-     * @param $payerEmail string
-     * @return string generated verification code
+     * @param $payerId
+     * @param $payerEmail
+     * @return string
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function verification($payerId, $payerEmail)
     {
@@ -443,6 +444,8 @@ class Payments extends ActiveRecord
     /**
      * Make payment as verified and completed
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function verified()
     {
