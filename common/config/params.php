@@ -18,6 +18,7 @@ return [
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
     'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых магазинов
 
+    'myUrl' => 'http://sommerce.my/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
     'storeDomain' => 'sommerce.net', // Домен нашего сайта
 
