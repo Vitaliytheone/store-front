@@ -447,17 +447,17 @@ class Invoices extends ActiveRecord
 
         if ($this->isWait()) {
             $notes = [
-                PaymentHelper::TYPE_PAYPAL => Content::getContent('paypal_hold'),
-                PaymentHelper::TYPE_TWO_CHECKOUT => Content::getContent('2checkout_review'),
-                PaymentHelper::TYPE_BITCOIN => Content::getContent('bitcoin_not_confirmed'),
-                PaymentHelper::TYPE_COINPAYMENTS => Content::getContent('coinpayments_not_confirmed'),
+                Params::CODE_PAYPAL => Content::getContent('paypal_hold'),
+                Params::CODE_TWO_CHECKOUT => Content::getContent('2checkout_review'),
+                Params::CODE_BITCOIN => Content::getContent('bitcoin_not_confirmed'),
+                Params::CODE_COINPAYMENTS => Content::getContent('coinpayments_not_confirmed'),
             ];
         } else if (static::STATUS_UNPAID == $this->status) {
             $notes = [
-                PaymentHelper::TYPE_PAYPAL => Content::getContent('paypal_note'),
-                PaymentHelper::TYPE_TWO_CHECKOUT => Content::getContent('2checkout_note'),
-                PaymentHelper::TYPE_BITCOIN => Content::getContent('bitcoin_note'),
-                PaymentHelper::TYPE_COINPAYMENTS => Content::getContent('coinpayments_note'),
+                Params::CODE_PAYPAL => Content::getContent('paypal_note'),
+                Params::CODE_TWO_CHECKOUT => Content::getContent('2checkout_note'),
+                Params::CODE_BITCOIN => Content::getContent('bitcoin_note'),
+                Params::CODE_COINPAYMENTS => Content::getContent('coinpayments_note'),
             ];
         }
 

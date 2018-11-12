@@ -132,16 +132,6 @@ class Payments extends ActiveRecord
     }
 
     /**
-     * TODO: Need to remove
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMethod()
-    {
-        return $this->hasOne(Params::class, ['code' => 'payment_method'])
-            ->andOnCondition([ 'payment_gateway.pid' => '-1']);
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getPaymentLogs()
