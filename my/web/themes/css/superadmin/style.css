@@ -1230,7 +1230,8 @@ body{padding-top:70px;font-size:14px}a{font-size:14px}.form-control{font-size:14
 .dropdown-item__notification .dropdown-item__notification-content:before{content:'';position:absolute;border:12px solid transparent;border-left:12px solid #dae0e5;right:-4px;top:5px}
 .dropdown-item__notification .dropdown-item__notification-content:after{content:'';position:absolute;border:10px solid transparent;border-left:10px solid #fff;right:0;top:6px}
 .dropdown-item__notification-block{position:relative}.dropdown-item__notification-block:hover .dropdown-item__notification{display:block}
-.navbar-light .navbar-nav .nav-link{white-space:nowrap}.table-custom{border-collapse:collapse;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;border-style:hidden;box-shadow:0 0 0 1px #dee2e6}
+.navbar-light .navbar-nav .nav-link{white-space:nowrap}.navbar-collapse{max-height:300px;overflow-y:auto}
+.table-custom{border-collapse:collapse;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;border-style:hidden;box-shadow:0 0 0 1px #dee2e6}
 .table-custom thead{background:#f3f5f9}.table-custom thead th{height:47px;vertical-align:middle}
 .table-custom thead th:first-child{-webkit-border-top-left-radius:4px;-moz-border-radius-topleft:4px;border-top-left-radius:4px;padding:0 10px}
 .table-custom thead th:last-child{-webkit-border-top-right-radius:4px;-moz-border-radius-topright:4px;border-top-right-radius:4px}
