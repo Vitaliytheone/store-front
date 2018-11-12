@@ -63,6 +63,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
+                Orders::ITEM_OBTAIN_LE_SSL,
+                Orders::ITEM_PROLONGATION_LE_SSL,
             ]
         ])->all();
 
@@ -106,6 +108,14 @@ class CronController extends CustomController
 
                     case Orders::ITEM_PROLONGATION_DOMAIN:
                         OrderHelper::prolongationDomain($order);
+                    break;
+
+                    case Orders::ITEM_OBTAIN_LE_SSL:
+                        OrderHelper::leSsl($order);
+                    break;
+
+                    case Orders::ITEM_PROLONGATION_LE_SSL:
+                        OrderHelper::leProlongationSsl($order);
                     break;
                 }
             } catch (Exception $e) {

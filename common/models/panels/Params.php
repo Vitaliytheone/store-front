@@ -39,6 +39,8 @@ class Params extends ActiveRecord
     public const CODE_AHNAMES = 'ahnames';
     public const CODE_OPENSRS = 'opensrs';
 
+    public const CODE_LETSENCRYPT = 'letsencrypt';
+
     /**
      * After this time after payment refund paypal transaction impossible
      */
@@ -162,6 +164,36 @@ class Params extends ActiveRecord
         $this->options = json_encode($options);
     }
 
+    /**
+     * Return option by key
+     * @param $optionKey string
+     * @return null|mixed
+     */
+    public function getOption(string $optionKey)
+    {
+        $options = $this->getOptions();
+        $options = is_array($options) ? $options : [];
+
+        return ArrayHelper::getValue($options, $optionKey, null);
+    }
+
+    /**
+     * Set option value by key
+     * @param $optionKey string
+     * @param $optionValue
+     * @return array
+     */
+    public function setOption(string $optionKey, $optionValue)
+    {
+        $options = $this->getOptions();
+        $options = is_array($options) ? $options : [];
+
+        $this->setOptions(array_merge($options, [$optionKey => $optionValue]));
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [

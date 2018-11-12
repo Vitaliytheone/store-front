@@ -372,9 +372,13 @@ class PaymentsController extends CustomController
 					$account = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PERFECT_MONEY), ['credentials', 'account']);
 					$passphrase = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PERFECT_MONEY), ['credentials', 'passphrase']);
 
-	            	$string =  $_POST['PAYMENT_ID'].':'.$_POST['PAYEE_ACCOUNT'].':'.$_POST['PAYMENT_AMOUNT'].':'.$_POST['PAYMENT_UNITS'].':'.$_POST['PAYMENT_BATCH_NUM'].':'.$_POST['PAYER_ACCOUNT'].':'.$passphrase.':'.$_POST['TIMESTAMPGMT'];
+					if (!empty($passphrase)) {
+                        $passphrase = strtoupper(md5($passphrase));
+                    }
 
-                    $signature=strtoupper(md5($string));
+	            	$string = $_POST['PAYMENT_ID'].':'.$_POST['PAYEE_ACCOUNT'].':'.$_POST['PAYMENT_AMOUNT'].':'.$_POST['PAYMENT_UNITS'].':'.$_POST['PAYMENT_BATCH_NUM'].':'.$_POST['PAYER_ACCOUNT'].':'.$passphrase.':'.$_POST['TIMESTAMPGMT'];
+
+                    $signature = strtoupper(md5($string));
 
           			if ($signature == $_POST['V2_HASH']){ 
           				if($_POST['PAYMENT_UNITS'] == 'USD'){
