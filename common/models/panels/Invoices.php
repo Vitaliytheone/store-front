@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\services\GetParentPanelService;
 use my\helpers\CustomerHelper;
 use my\helpers\StringHelper;
@@ -446,17 +447,17 @@ class Invoices extends ActiveRecord
 
         if ($this->isWait()) {
             $notes = [
-                PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_hold'),
-                PaymentGateway::METHOD_TWO_CHECKOUT => Content::getContent('2checkout_review'),
-                PaymentGateway::METHOD_BITCOIN => Content::getContent('bitcoin_not_confirmed'),
-                PaymentGateway::METHOD_COINPAYMENTS => Content::getContent('coinpayments_not_confirmed'),
+                Params::CODE_PAYPAL => Content::getContent('paypal_hold'),
+                Params::CODE_TWO_CHECKOUT => Content::getContent('2checkout_review'),
+                Params::CODE_BITCOIN => Content::getContent('bitcoin_not_confirmed'),
+                Params::CODE_COINPAYMENTS => Content::getContent('coinpayments_not_confirmed'),
             ];
         } else if (static::STATUS_UNPAID == $this->status) {
             $notes = [
-                PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_note'),
-                PaymentGateway::METHOD_TWO_CHECKOUT => Content::getContent('2checkout_note'),
-                PaymentGateway::METHOD_BITCOIN => Content::getContent('bitcoin_note'),
-                PaymentGateway::METHOD_COINPAYMENTS => Content::getContent('coinpayments_note'),
+                Params::CODE_PAYPAL => Content::getContent('paypal_note'),
+                Params::CODE_TWO_CHECKOUT => Content::getContent('2checkout_note'),
+                Params::CODE_BITCOIN => Content::getContent('bitcoin_note'),
+                Params::CODE_COINPAYMENTS => Content::getContent('coinpayments_note'),
             ];
         }
 

@@ -32,7 +32,7 @@ class PaymentsFee {
     /**
      * @var array
      */
-    protected $types;
+    protected $codes;
 
     /**
      * @var array
@@ -47,14 +47,20 @@ class PaymentsFee {
         $this->from = (string)$from;
         $this->to = (string)$to;
         $this->days = (int)$days;
-        $this->types = empty($types) ? static::$availableTypes : $types;
+
+        $func = function($type) {
+            return PaymentHelper::getCodeByType($type);
+        };
+
+        $types = empty($types) ? static::$availableTypes : $types;
+        $this->codes = array_map($func, $types);
     }
 
     public function run()
     {
         $query = Payments::find()
             ->andWhere([
-                'type' => $this->types,
+                'payment_method' => $this->codes,
                 'response' => 1,
                 'status' => Payments::STATUS_COMPLETED
             ])

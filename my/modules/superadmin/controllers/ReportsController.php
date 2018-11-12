@@ -35,7 +35,7 @@ class ReportsController extends CustomController
 
         return $this->render('index', [
             'reportData' => $searchModel->getYearReportTable(),
-            'paymentGateways' => $searchModel->getPaymentGatewaysForView(),
+            'paymentParams' => $searchModel->getPaymentParamsForView(),
             'filters' => $searchModel->getFilters(),
             'years' => $searchModel->getYearsForView(),
         ]);
