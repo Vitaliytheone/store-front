@@ -25,7 +25,6 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'payments.list.column_method')?></a>
                 <div class="dropdown-menu">
                     <?php foreach ($methods as $method => $label) : ?>
-                        <?php $method = is_numeric($method) ? (int)$method : null ?>
                         <a class="dropdown-item <?=($method === $filters['method'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/payments'], $filters, ['method' => $method]))?>"><?= $label ?></a>
                     <?php endforeach; ?>
                 </div>

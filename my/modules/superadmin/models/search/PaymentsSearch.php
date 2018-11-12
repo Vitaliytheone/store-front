@@ -1,8 +1,12 @@
 <?php
 namespace superadmin\models\search;
 
+use common\helpers\PaymentHelper;
+use common\models\panels\Params;
 use common\models\panels\Project;
 use common\models\panels\Orders;
+use common\models\panels\queries\PaymentsQuery;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use common\models\panels\InvoiceDetails;
@@ -46,7 +50,7 @@ class PaymentsSearch extends Payments {
             'query' => $this->getQuery(),
             'status' => isset($this->params['status']) ? $this->params['status'] : null,
             'mode' => isset($this->params['mode']) && is_numeric($this->params['mode']) ? (int)$this->params['mode'] : null,
-            'method' => isset($this->params['method']) && is_numeric($this->params['method']) ? (int)$this->params['method'] : null,
+            'method' => isset($this->params['method']) ? $this->params['method'] : null,
             'search-type' => isset($this->params['search-type']) && is_numeric($this->params['search-type']) ? (int)$this->params['search-type'] : null,
         ];
     }
@@ -55,8 +59,8 @@ class PaymentsSearch extends Payments {
      * Build sql query
      * @param int $status
      * @param int $mode
-     * @param int $method
-     * @return ActiveRecord
+     * @param string $method
+     * @return PaymentsQuery
      */
     public function buildQuery($status = null, $mode = null, $method = null)
     {
@@ -79,7 +83,7 @@ class PaymentsSearch extends Payments {
 
         if (null !== $method && '' !== $method) {
             $payments->andWhere([
-                'payments.type' => $method
+                'payments.payment_method' => $method
             ]);
         }
 
@@ -118,7 +122,7 @@ class PaymentsSearch extends Payments {
      * @param $query
      * @return mixed
      */
-    protected function addDomainJoinQuery($query)
+    protected function addDomainJoinQuery(PaymentsQuery $query)
     {
         $query->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.invoice_id = payments.iid');
         $query->leftJoin(['orders' => Orders::tableName()], 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
@@ -190,19 +194,7 @@ class PaymentsSearch extends Payments {
     public static function getMethods()
     {
         if (null == static::$_methods) {
-            static::$_methods = [];
-            foreach((new Query())
-                ->select([
-                    'pgid',
-                    'name'
-                ])
-                ->from('payment_gateway')
-                ->andWhere([
-                    'pid' => '-1'
-                ])
-                ->all() as $method) {
-                static::$_methods[$method['pgid']] = $method;
-            }
+            static::$_methods = ArrayHelper::map(Yii::$container->get(GetGeneralPaymentMethodsService::class)->get(), 'code', 'name');
         }
 
         return static::$_methods;
@@ -212,7 +204,7 @@ class PaymentsSearch extends Payments {
      * Get count panels by type
      * @param int $status
      * @param int $mode
-     * @param int $method
+     * @param string $method
      * @return int
      */
     public function count($status = null, $mode = null, $method = null)
@@ -309,12 +301,12 @@ class PaymentsSearch extends Payments {
 
         $methods = static::getMethods();
 
-        foreach ($methods as $method) {
-            $returnMethods[$method['pgid']] = $method['name'] . ' (' . $this->count($status, $mode, $method['pgid']) . ')';
+        foreach ($methods as $key => $method) {
+            $returnMethods[$key] = $method . ' (' . $this->count($status, $mode, $key) . ')';
         }
 
-        $returnMethods[0] = Yii::t('app/superadmin', 'payments.list.navs_method_other', [
-            'count' => $this->count($status, $mode, 0)
+        $returnMethods[Params::CODE_OTHER] = Yii::t('app/superadmin', 'payments.list.navs_method_other', [
+            'count' => $this->count($status, $mode, Params::CODE_OTHER)
         ]);
 
         return $returnMethods;
@@ -328,7 +320,7 @@ class PaymentsSearch extends Payments {
     {
         $methods = static::getMethods();
 
-        return ArrayHelper::getValue(ArrayHelper::getValue($methods, $this->type), 'name', Yii::t('app', 'payment_gateway.method.other'));
+        return ArrayHelper::getValue($methods, $this->payment_method, Yii::t('app', 'payment_gateway.method.other'));
     }
 
     /**

@@ -482,6 +482,7 @@ return [
     'payments.edit_modal.close_btn' => 'Close',
     'payments.edit_modal.method_name' => 'Method name',
     'payments.edit_modal.visibility' => 'Visibility',
+    'payments.edit_modal.name' => 'Name',
 
     'payments.2checkout.account_number' => '2Checkout Account Number',
     'payments.2checkout.secret_word' => '2Checkout Secret Word',

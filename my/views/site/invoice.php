@@ -4,7 +4,7 @@
     /* @var $customer \common\models\panels\Customers */
     /* @var $pay2co \common\models\panels\Payments */
     /* @var $paymentsList array */
-    /* @var $pgid integer */
+    /* @var $code integer */
     /* @var $payWait boolean */
     /* @var $verificationWait null|string payment verification needed */
     /* @var $disabled boolean */
@@ -23,7 +23,7 @@
 
     $this->context->addModule('invoiceController', [
         'live' => !$payWait,
-        'pgid' => $pgid,
+        'code' => $code,
         'notes' => $invoice->getNotesByPaymentMethods()
     ]);
 ?>
@@ -50,9 +50,9 @@
                         <?php if ($invoice->can('pay')): ?>
                             <form class="form-inline" action="/checkout/<?= $invoice->code ?>" method="post">
                                 <div class="form-group">
-                                    <select class="form-control" <?= ($payWait ? 'disabled' : '') ?> name="pgid" id="pgid">
+                                    <select class="form-control" <?= ($payWait ? 'disabled' : '') ?> name="code" id="code">
                                         <?php foreach ($paymentsList as $key => $value): ?>
-                                            <option value="<?= $key ?>" <?= ($key == $pgid ? 'selected' : '') ?>><?= $value ?></option>
+                                            <option value="<?= $key ?>" <?= ($key == $code ? 'selected' : '') ?>><?= $value ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                     <button type="submit" <?= ($payWait ? 'disabled' : '') ?> class="btn btn-default"><?= Yii::t('app', 'invoices.view.btn_pay'); ?></button>
