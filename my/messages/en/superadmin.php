@@ -282,6 +282,7 @@ return [
     'payments.list.action_make_active' => 'Make active',
     'payments.list.action_make_accepted' => 'Accept payment',
     'payments.list.action_make_refunded' => 'Refund payment',
+    'payments.list.action_complete' => 'Complete',
     'payments.list.refund_modal_title' => 'Refund payment',
     'payments.list.refund_modal_text_1' => 'Attention!',
     'payments.list.refund_modal_text_2' => 'By pressing the "Refund" button you will return all the money of this payment back to the payer.',

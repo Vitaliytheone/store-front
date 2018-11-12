@@ -122,6 +122,11 @@
                                     'data-action_url' => Url::toRoute(['/payments/make-refunded', 'id' => $payment->id]),
                                 ])?>
                             <?php endif; ?>
+                            <?php if ($payment->can('makeCompleted')) : ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_complete'), Url::toRoute(['/payments/complete', 'id' => $payment->id]), [
+                                    'class' => 'dropdown-item',
+                                ])?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </td>

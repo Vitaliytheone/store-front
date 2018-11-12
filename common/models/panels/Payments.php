@@ -299,6 +299,12 @@ class Payments extends ActiveRecord
                     return true;
                 }
             break;
+
+            case 'makeCompleted':
+                if ($this->status == self::STATUS_FAIL) {
+                    return true;
+                }
+            break;
         }
         return false;
     }
@@ -378,6 +384,9 @@ class Payments extends ActiveRecord
 
     /**
      * Complete payment with invoice and invoice details
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function complete()
     {
@@ -391,7 +400,7 @@ class Payments extends ActiveRecord
         }
 
         $this->status = static::STATUS_COMPLETED;
-        $this->update();
+        $this->update(false);
     }
 
     /**
