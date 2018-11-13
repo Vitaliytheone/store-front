@@ -546,14 +546,15 @@ class SiteController extends CustomController
         $this->view->title = Yii::t('app', 'pages.title.checkout');
         $invoice = Invoices::findOne(['code' => $id]);
         $code = Yii::$app->request->post('code');
+
+        if (!$code || !$invoice || !($paymentMethod = Params::get(Params::CATEGORY_PAYMENT, $code)) || !ArrayHelper::getValue($paymentMethod, 'visibility')) {
+            return $this->redirect('/');
+        }
         
         if (!$invoice->can('pay')) {
            throw new ForbiddenHttpException();
         }
 
-        if (!$code || !$invoice || !($paymentMethod = Params::get(Params::CATEGORY_PAYMENT, $code)) || !ArrayHelper::getValue($paymentMethod, 'visibility')) {
-           return $this->redirect('/');
-        }
         $type = PaymentHelper::getTypeByCode($code);
 
         $invoiceDetails = $invoice->invoiceDetails;
