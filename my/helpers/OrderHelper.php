@@ -739,26 +739,9 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_admin');
         }
 
-        $storeDomain = new StoreDomains();
-        $storeDomain->store_id = $store->id;
-        $storeDomain->domain = $store->domain;
-        $storeDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
-        $storeDomain->ssl = StoreDomains::SSL_OFF;
-
-        if (!$storeDomain->save(false)) {
+        if (!$store->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_domain');
-        }
-
-        $storeGeneratedDomain = new StoreDomains();
-        $storeGeneratedDomain->store_id = $store->id;
-        $storeGeneratedDomain->domain = $store->name;
-        $storeGeneratedDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
-        $storeGeneratedDomain->ssl = StoreDomains::SSL_OFF;
-
-        if (!$storeGeneratedDomain->save(false)) {
-            $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeGeneratedDomain->getErrors(), 'cron.order.store_domain');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $store->getErrors(), 'cron.order.store_domain');
         }
 
         // Create Store db
