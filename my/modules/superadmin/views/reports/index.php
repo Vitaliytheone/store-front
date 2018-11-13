@@ -7,13 +7,12 @@ use my\helpers\Url;
 /* @var $reportData array */
 /* @var $filters array */
 /* @var $years array */
-/* @var $paymentGateways array */
+/* @var $paymentParams array */
 
-$currentGatewayIndex = array_search(true, array_column($paymentGateways, 'active'));
-$currentGatewayName = ArrayHelper::getValue($paymentGateways, "$currentGatewayIndex.name");
+$currentParamsCode = array_search(true, array_column($paymentParams, 'active'));
+$currentParamsName = ArrayHelper::getValue($paymentParams, "$currentParamsCode.name");
 
 error_log(print_r($reportData,1));
-
 ?>
 
     <div class="row">
@@ -33,11 +32,11 @@ error_log(print_r($reportData,1));
                 </div>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?= $currentGatewayName ?>
+                        <?= $currentParamsName ?>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        <?php foreach ($paymentGateways as $gateway): ?>
-                            <a class="dropdown-item <?= $gateway['active'] ? 'active' : '' ?>" href="<?= $gateway['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'gateway' => $gateway['pgid']])) ?>"><?= $gateway['name'] ?></a>
+                        <?php foreach ($paymentParams as $param): ?>
+                            <a class="dropdown-item <?= $param['active'] ? 'active' : '' ?>" href="<?= $param['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'params' => $param['code']])) ?>"><?= $param['name'] ?></a>
                         <?php endforeach; ?>
                     </div>
                 </div>

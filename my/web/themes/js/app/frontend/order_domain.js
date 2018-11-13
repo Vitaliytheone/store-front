@@ -101,7 +101,7 @@ customModule.orderDomainController = {
                         return;
                     }
 
-                    $('#orderPanelBlock').removeClass('hidden');
+                    $('#orderBlock').removeClass('hidden');
                     $('#orderDomainBlock').addClass('hidden');
 
                     $('#helpDomain').addClass('hidden');

@@ -10,10 +10,10 @@ customModule.invoiceController = {
         }
 
         self.notes = params.notes;
-        self.showContent(params.pgid);
+        self.showContent(params.code);
 
         if (live) {
-            $(document).on('change', '#pgid', function(e) {
+            $(document).on('change', '#code', function(e) {
                 var num = $(this).val();
 
                 self.showContent(num);

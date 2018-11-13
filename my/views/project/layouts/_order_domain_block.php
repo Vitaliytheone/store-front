@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\CreateOrderForm */
+    /* @var $model \my\models\forms\OrderPanelForm */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
 ?>
 
 <div class="panel-body">

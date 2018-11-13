@@ -1,9 +1,11 @@
 <?php
 namespace superadmin\models\forms;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\Payments;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -16,6 +18,7 @@ class AddInvoicePaymentForm extends Model {
 
     public $method;
     public $memo;
+    public $fee;
 
     /**
      * @var Invoices
@@ -31,6 +34,7 @@ class AddInvoicePaymentForm extends Model {
             [['method'], 'validateInvoice'],
             [['method'], 'required'],
             [['memo'], 'string'],
+            [['fee'], 'number'],
         ];
     }
 
@@ -46,6 +50,7 @@ class AddInvoicePaymentForm extends Model {
     /**
      * Save domain
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -59,12 +64,14 @@ class AddInvoicePaymentForm extends Model {
 
         $payment = new Payments();
         $payment->mode = Payments::MODE_MANUAL;
-        $payment->type = $this->method;
+        $payment->type = PaymentHelper::getTypeByCode($this->method);
+        $payment->payment_method = $this->method;
         $payment->comment = $this->memo;
         $payment->status = Payments::STATUS_COMPLETED;
         $payment->amount = $this->_invoice->total;
         $payment->iid = $this->_invoice->id;
         $payment->pid = $panel->id;
+        $payment->fee = $this->fee;
 
         if (!$payment->save(false)) {
             $this->addError('method', Yii::t('app/superadmin', 'error.invoices.can_not_create_payment'));
@@ -72,7 +79,7 @@ class AddInvoicePaymentForm extends Model {
         }
 
         // Mark invoice paid
-        $this->_invoice->paid($this->method);
+        $this->_invoice->paid($payment->payment_method);
 
         return true;
     }
@@ -83,9 +90,7 @@ class AddInvoicePaymentForm extends Model {
      */
     public function getMethods()
     {
-        $methods = ArrayHelper::map(PaymentGateway::find()->andWhere([
-            'pid' => '-1'
-        ])->all(), 'pgid', 'name');
+        $methods = ArrayHelper::map(Yii::$container->get(GetGeneralPaymentMethodsService::class)->get(), 'code', 'name');
         $methods[0] = Yii::t('app', 'payment_gateway.method.other');
         return $methods;
     }
@@ -93,6 +98,7 @@ class AddInvoicePaymentForm extends Model {
     /**
      * Validate invoice
      * @param $attribute
+     * @return bool
      */
     public function validateInvoice($attribute) {
         if ($this->hasErrors()) {
