@@ -11,7 +11,6 @@ use common\models\panels\Languages;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
-use my\components\domains\Ahnames;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Domains;
@@ -749,6 +748,17 @@ class OrderHelper {
         if (!$storeDomain->save(false)) {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_domain');
+        }
+
+        $storeGeneratedDomain = new StoreDomains();
+        $storeGeneratedDomain->store_id = $store->id;
+        $storeGeneratedDomain->domain = $store->name;
+        $storeGeneratedDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
+        $storeGeneratedDomain->ssl = StoreDomains::SSL_OFF;
+
+        if (!$storeGeneratedDomain->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeGeneratedDomain->getErrors(), 'cron.order.store_domain');
         }
 
         // Create Store db

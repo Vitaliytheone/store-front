@@ -1,9 +1,9 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\OrderPanelForm */
+/* @var $this yii\web\View */
+/* @var $form yii\bootstrap\ActiveForm */
+/* @var $model \my\models\forms\OrderStoreForm */
 
-    use my\helpers\Url;
+use yii\helpers\Url;
 ?>
 
 <div class="panel-body">
@@ -25,14 +25,14 @@
     </div>
 
     <div class="form-group">
-        <button class="btn btn-primary has-spinner" type="button" id="searchDomainSubmit" data-action="<?= Url::toRoute('/search-domains') ?>"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span> <?= Yii::t('app', 'panels.order.btn_domain_search')?></button>
+        <button class="btn btn-primary has-spinner" type="button" id="searchDomainSubmit" data-action="<?= Url::toRoute('/search-domains') ?>"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span> <?= Yii::t('app', 'stores.order.btn_domain_search')?></button>
     </div>
 
     <div id="searchResult" class="hidden">
         <div id="searchResultContainer"></div>
 
         <div class="input-group">
-            <button type="button" class="btn btn-primary disabled" id="continueDomainSearch"><?= Yii::t('app', 'panels.order.btn_continue_domain_search')?></button>
+            <button type="button" class="btn btn-primary disabled" id="continueDomainSearch"><?= Yii::t('app', 'stores.order.btn_continue_domain_search')?></button>
         </div>
 
     </div>

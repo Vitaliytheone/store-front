@@ -1,16 +1,16 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\OrderPanelForm */
+/* @var $this yii\web\View */
+/* @var $form yii\bootstrap\ActiveForm */
+/* @var $model \my\models\forms\OrderPanelForm */
 
-    use my\helpers\Url;
+use yii\helpers\Url;
 ?>
 <div class="modal fade" tabindex="-1" role="dialog" id="orderDomainModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><?= Yii::t('app', 'panels.order.registrant_modal_header')?></h4>
+                <h4 class="modal-title"><?= Yii::t('app', 'stores.order.registrant_modal_header')?></h4>
             </div>
                 <div class="form-horizontal">
                     <div class="modal-body">
@@ -172,10 +172,10 @@
                         ])->label(false)?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'panels.order.registrant_modal_btn_close') ?></button>
-                        <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute(['/domains/order-domain', 'order' => 'panel']) ?>">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'stores.order.registrant_modal_btn_close') ?></button>
+                        <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute(['/domains/order-domain', 'order' => 'store']) ?>">
                             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                            <?= Yii::t('app', 'panels.order.registrant_modal_btn_submit') ?>
+                            <?= Yii::t('app', 'stores.order.registrant_modal_btn_submit') ?>
                         </button>
                     </div>
 

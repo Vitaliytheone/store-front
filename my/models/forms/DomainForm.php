@@ -1,38 +1,31 @@
 <?php
+
 namespace my\models\forms;
 
-use my\components\domains\Ahnames;
-use my\components\validators\OrderLimitValidator;
-use my\components\validators\OrderDomainValidator;
-use my\helpers\CurlHelper;
-use my\helpers\DomainsHelper;
-use my\helpers\UserHelper;
-use common\models\panels\Auth;
-use common\models\panels\DomainZones;
-use common\models\panels\InvoiceDetails;
-use common\models\panels\Invoices;
-use common\models\panels\MyActivityLog;
-use common\models\panels\OrderLogs;
-use common\models\panels\Orders;
-use common\models\panels\Project;
-use common\models\panels\ProjectAdmin;
-use Yii;
+
 use yii\base\Model;
+use Yii;
+use my\components\validators\OrderLimitValidator;
+use common\models\panels\Invoices;
+use common\models\panels\DomainZones;
+use my\helpers\DomainsHelper;
+use common\models\panels\Orders;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\MyActivityLog;
+use my\helpers\UserHelper;
+use my\components\domains\Ahnames;
+use common\models\panels\Auth;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class OrderDomainForm
+ * Class DomainForm
  * @package my\models\forms
  */
-class OrderDomainForm extends Model
+class DomainForm extends Model
 {
-    public $domain;
-    public $currency;
-    public $username;
-    public $password;
-    public $password_confirm;
+    public $has_domain = 1;
 
-    public $code;
+    public $domain;
     public $preparedDomain;
 
     public $search_domain;
@@ -52,43 +45,54 @@ class OrderDomainForm extends Model
     public $domain_fax;
     public $domain_protection;
 
+    const HAS_DOMAIN = 1;
+    const HAS_NOT_DOMAIN = 2;
+
+    const SCENARIO_CREATE_DOMAIN = 'domain';
+
     /**
      * @var Auth
      */
     protected $_user;
 
-    /**
-     * @var string - user IP address
-     */
-    protected $_ip;
-
-    /**
-     * @return array the validation rules.
-     */
     public function rules()
     {
         return [
-            [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_ccountry')],
-            [['domain'], OrderDomainValidator::class],
+            [['domain'], OrderLimitValidator::class],
+            [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_country')],
             [['domain_zone'], 'integer'],
-            [['search_domain'], 'string'],
             [['domain_email'], 'email'],
+            ['has_domain', 'in', 'range' => array_keys($this->getHasDomainsLabels()), 'message' => Yii::t('app', 'error.panel.bad_domain')],
             [['domain_fax'], 'integer', 'message' => Yii::t('app', 'error.domain.bad_fax')],
+            [['search_domain'], 'string'],
             [[
                 'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
                 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
             ], 'safe'],
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection'], 'required'],
+            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection'], 'required', 'on' => static::SCENARIO_CREATE_DOMAIN],
         ];
     }
 
     /**
-     * Set user IP
-     * @param $ip
+     * @inheritdoc
      */
-    public function setIP($ip)
+    public function attributeLabels()
     {
-        $this->_ip = $ip;
+        return [
+            'search_domain' => Yii::t('app', 'form.order_panel.search_domain'),
+            'domain_lastname' => Yii::t('app', 'form.order_panel.domain_lastname'),
+            'domain_firstname' => Yii::t('app', 'form.order_panel.domain_firstname'),
+            'domain_email' => Yii::t('app', 'form.order_panel.domain_email'),
+            'domain_company' => Yii::t('app', 'form.order_panel.domain_company'),
+            'domain_address' => Yii::t('app', 'form.order_panel.domain_address'),
+            'domain_city' => Yii::t('app', 'form.order_panel.domain_city'),
+            'domain_postalcode' => Yii::t('app', 'form.order_panel.domain_postalcode'),
+            'domain_state' => Yii::t('app', 'form.order_panel.domain_state'),
+            'domain_country' => Yii::t('app', 'form.order_panel.domain_country'),
+            'domain_phone' => Yii::t('app', 'form.order_panel.domain_phone'),
+            'domain_fax' => Yii::t('app', 'form.order_panel.domain_fax'),
+            'domain_protection' => Yii::t('app', 'form.order_panel.domain_protection'),
+        ];
     }
 
     /**
@@ -122,38 +126,98 @@ class OrderDomainForm extends Model
     }
 
     /**
-     * Sign up method
+     * Get countries
+     * @return array
      */
-    public function save()
+    public function getCountries()
     {
-        if (!$this->validate()) {
+        return Yii::$app->params['countries'];
+    }
+
+    /**
+     * Get has domain labels
+     * @return array
+     */
+    public function getHasDomainsLabels()
+    {
+        return [
+            static::HAS_DOMAIN => Yii::t('app', 'form.order_panel.have_domain'),
+            static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_panel.want_to_register_new_domain')
+        ];
+    }
+
+    /**
+     * Is domain available
+     * @param string $domain
+     * @return bool
+     */
+    public function isDomainAvailable($domain)
+    {
+        if (empty($domain)) {
             return false;
         }
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $domain = mb_strtolower(trim($domain));
 
-        $invoiceModel = new Invoices();
-        $invoiceModel->total = 0;
-        $invoiceModel->cid = $this->_user->id;
-        $invoiceModel->generateCode();
-        $invoiceModel->daysExpired(Yii::$app->params['invoice.domainDuration']);
+        $result = Ahnames::domainsCheck($domain);
 
-        if (!$invoiceModel->save()) {
+        if (empty($result[$domain])) {
             return false;
         }
 
-        if (!$this->orderDomain($invoiceModel)) {
-            $this->addError('domain', Yii::t('app', 'error.panel.can_not_order_domain'));
+        $existsDomain = Orders::find()->andWhere([
+            'domain' => DomainsHelper::idnToAscii($domain),
+            'item' => Orders::ITEM_BUY_DOMAIN,
+            'status' => [
+                Orders::STATUS_PENDING,
+                Orders::STATUS_PAID,
+                Orders::STATUS_ADDED,
+                Orders::STATUS_ERROR
+            ]
+        ])->exists();
+
+        if ($existsDomain) {
             return false;
         }
-
-        $invoiceModel->save(false);
-
-        $transaction->commit();
-
-        $this->code = $invoiceModel->code;
 
         return true;
+    }
+
+    /**
+     * Is validate domain
+     * @return bool
+     */
+    public function isValidateDomain()
+    {
+        if (static::HAS_NOT_DOMAIN == $this->has_domain) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get domain zones
+     * @return array
+     */
+    public function getDomainZones()
+    {
+        $zones = [];
+
+        foreach (DomainZones::find()->all() as $zone) {
+            $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
+        }
+
+        return $zones;
+    }
+
+    /**
+     * Get domain value
+     * @return string
+     */
+    public function getDomain()
+    {
+        return DomainsHelper::idnToUtf8($this->domain);
     }
 
     /**
@@ -164,6 +228,7 @@ class OrderDomainForm extends Model
     protected function orderDomain(&$invoiceModel)
     {
         $model = new static();
+        $model->scenario = static::SCENARIO_CREATE_DOMAIN;
         $model->attributes = $this->attributes;
 
         if (!$this->validate()) {
@@ -182,7 +247,7 @@ class OrderDomainForm extends Model
             $this->search_domain = explode(".", $this->search_domain)[0];
         }
 
-        $this->domain = $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
+        $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
 
         if (!$this->isDomainAvailable($this->domain)) {
             return false;
@@ -237,67 +302,6 @@ class OrderDomainForm extends Model
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'domain' => Yii::t('app', 'form.order_panel.domain'),
-            'search_domain' => Yii::t('app', 'form.order_panel.search_domain'),
-            'domain_lastname' => Yii::t('app', 'form.order_panel.domain_lastname'),
-            'domain_firstname' => Yii::t('app', 'form.order_panel.domain_firstname'),
-            'domain_email' => Yii::t('app', 'form.order_panel.domain_email'),
-            'domain_company' => Yii::t('app', 'form.order_panel.domain_company'),
-            'domain_address' => Yii::t('app', 'form.order_panel.domain_address'),
-            'domain_city' => Yii::t('app', 'form.order_panel.domain_city'),
-            'domain_postalcode' => Yii::t('app', 'form.order_panel.domain_postalcode'),
-            'domain_state' => Yii::t('app', 'form.order_panel.domain_state'),
-            'domain_country' => Yii::t('app', 'form.order_panel.domain_country'),
-            'domain_phone' => Yii::t('app', 'form.order_panel.domain_phone'),
-            'domain_fax' => Yii::t('app', 'form.order_panel.domain_fax'),
-            'domain_protection' => Yii::t('app', 'form.order_panel.domain_protection'),
-        ];
-    }
-
-    /**
-     * Get currencies
-     * @return mixed
-     */
-    public function getCurrencies()
-    {
-        $currencies = [];
-
-        foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
-        }
-        return $currencies;
-    }
-
-    /**
-     * Get countries
-     * @return array
-     */
-    public function getCountries()
-    {
-        return Yii::$app->params['countries'];
-    }
-
-    /**
-     * Get domain zones
-     * @return array
-     */
-    public function getDomainZones()
-    {
-        $zones = [];
-
-        foreach (DomainZones::find()->all() as $zone) {
-            $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
-        }
-
-        return $zones;
-    }
-
-    /**
      * Init previous order order details
      */
     protected function initLastOrderDetails()
@@ -319,51 +323,5 @@ class OrderDomainForm extends Model
         $details = ArrayHelper::getValue($lastOrder->getDetails(), 'details', []);
 
         $this->setAttributes($details);
-    }
-
-    /**
-     * Is domain available
-     * @param string $domain
-     * @return bool
-     */
-    public function isDomainAvailable($domain)
-    {
-        if (empty($domain)) {
-            return false;
-        }
-
-        $domain = mb_strtolower(trim($domain));
-
-        $result = Ahnames::domainsCheck($domain);
-
-        if (empty($result[$domain])) {
-            return false;
-        }
-
-        $existsDomain = Orders::find()->andWhere([
-            'domain' => DomainsHelper::idnToAscii($domain),
-            'item' => Orders::ITEM_BUY_DOMAIN,
-            'status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID,
-                Orders::STATUS_ADDED,
-                Orders::STATUS_ERROR
-            ]
-        ])->exists();
-
-        if ($existsDomain) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get domain value
-     * @return string
-     */
-    public function getDomain()
-    {
-        return DomainsHelper::idnToUtf8($this->domain);
     }
 }

@@ -3,7 +3,7 @@ namespace my\models\forms;
 
 use my\components\domains\Ahnames;
 use my\components\validators\OrderLimitValidator;
-use my\components\validators\PanelDomainValidator;
+use my\components\validators\OrderDomainValidator;
 use my\helpers\ChildHelper;
 use my\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
@@ -88,7 +88,7 @@ class CreateChildForm extends Model
             [['domain', 'currency', 'username', 'password', 'password_confirm', 'provider'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['provider'], 'in', 'range' => array_keys($this->getProviders()), 'message' => Yii::t('app', 'error.panel.bad_provider')],
-            [['domain'], PanelDomainValidator::class, 'child_panel' => true],
+            [['domain'], OrderDomainValidator::class, 'child_panel' => true],
             ['password', 'compare', 'compareAttribute' => 'password_confirm'],
             [['username'], 'safe'],
 

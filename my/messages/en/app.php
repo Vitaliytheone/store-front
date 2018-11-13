@@ -437,6 +437,7 @@ return [
     'error.store.bad_currency' => 'Bad currency',
     'error.store.bad_name' => 'Wrong store name! Allowed symbols are: `A-Z`, `0-9`, `-`, and `space`',
     'error.store.can_not_order_store' => 'Can not order store',
+    'error.store.can_not_order_domain' => 'Can not order domain',
 
     'ssl.my.created.ticket_subject' => 'Attention',
     'ssl.my.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
@@ -560,11 +561,19 @@ return [
     'stores.order.form.title_trial' => 'Start your free 14-day trial',
     'stores.order.form.submit' => 'Submit order',
     'stores.order.form.label.store_name' => 'Store name',
+    'stores.order.form.label.store_domain' => 'Store domain',
     'stores.order.form.label.store_currency' => 'Store currency',
     'stores.order.form.label.admin_email' => 'Admin email',
     'stores.order.form.label.admin_username' => 'Admin username',
     'stores.order.form.label.admin_password' => 'Admin password',
     'stores.order.form.label.confirm_password' => 'Confirm password',
+    'stores.order.registrant_modal_btn_close' => 'Close',
+    'stores.order.registrant_modal_btn_submit' => 'Continue',
+    'stores.order.registrant_modal_header' => 'Registrant information',
+    'stores.order.btn_domain_search' => 'Search',
+    'stores.order.btn_continue_domain_search' => 'Continue',
+
+    'domain.order.error_invalid_form_data' => 'Invalid form data',
 
     'stores.edit_store_domain.domain' => 'Domain name',
     'stores.edit_store_domain.modal_submit' => 'Save changes',
