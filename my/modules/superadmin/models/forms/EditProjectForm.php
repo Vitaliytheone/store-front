@@ -389,7 +389,7 @@ class EditProjectForm extends Model
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$code] = Yii::t('app', $currency['name']) . ' (' . $code . ')';
+            $currencies[$code] = $currency['name'] . ' (' . $code . ')';
         }
         return $currencies;
     }

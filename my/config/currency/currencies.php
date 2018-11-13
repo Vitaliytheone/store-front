@@ -2,99 +2,99 @@
 
 return [
     'USD' => [
-        'name' => 'currency.usd',
+        'name' => 'United States Dollars',
         'money_format' => '${{value}}',
     ],
     'RUB' => [
-        'name' => 'currency.rub',
+        'name' => 'Russian Rubles',
         'money_format' => '{{value}} руб.',
     ],
     'THB' => [
-        'name' => 'currency.thb',
+        'name' => 'Thai Baht',
         'money_format' => '{{value}} ฿',
     ],
     'TRY' => [
-        'name' => 'currency.try',
+        'name' => 'Turkish Lira',
         'money_format' => '{{value}}₺',
     ],
     'EUR' => [
-        'name' => 'currency.eur',
+        'name' => 'Euro',
         'money_format' => '€{{value}}',
     ],
     'IDR' => [
-        'name' => 'currency.idr',
+        'name' => 'Indonesian Rupiah',
         'money_format' => 'Rp {{value}}',
     ],
     'BRL' => [
-        'name' => 'currency.brl',
+        'name' => 'Brazilian Real',
         'money_format' => 'R${{value}}',
     ],
     'CNY' => [
-        'name' => 'currency.cny',
+        'name' => 'Chinese Yuan',
         'money_format' => '¥{{value}}',
     ],
     'KRW' => [
-        'name' => 'currency.krw',
+        'name' => 'South Korean Won',
         'money_format' => '₩ {{value}}',
     ],
     'INR' => [
-        'name' => 'currency.inr',
+        'name' => 'Indian Rupee',
         'money_format' => '₹{{value}}',
     ],
     'IRR' => [
-        'name' => 'currency.irr',
+        'name' => 'Iranian Rial',
         'money_format' => '{{value}}﷼',
     ],
     'SAR' => [
-        'name' => 'currency.sar',
+        'name' => 'Saudi Arabia Riyal',
         'money_format' => 'ر.س {{value}}',
     ],
     'PLN' => [
-        'name' => 'currency.pln',
+        'name' => 'Polish złoty',
         'money_format' => '{{value}} zl',
     ],
     'MYR' => [
-        'name' => 'currency.myr',
+        'name' => 'Malaysian Ringgit',
         'money_format' => 'RM{{value}}',
     ],
     'GBP' => [
-        'name' => 'currency.gbp',
+        'name' => 'Pound sterling',
         'money_format' => '£{{value}}',
     ],
     'KWD' => [
-        'name' => 'currency.kwd',
+        'name' => 'Kuwaiti dinar',
         'money_format' => '{{value}} د.ك',
     ],
     'SEK' => [
-        'name' => 'currency.sek',
+        'name' => 'Swedish krona',
         'money_format' => '{{value}} kr',
     ],
     'ILS' => [
-        'name' => 'currency.ils',
+        'name' => 'Israeli shekel',
         'money_format' => '₪{{value}}',
     ],
     'HKD' => [
-        'name' => 'currency.hkd',
+        'name' => 'Hong Kong dollar',
         'money_format' => 'HK${{value}}',
     ],
     'NGN' => [
-        'name' => 'currency.ngn',
+        'name' => 'Nigerian naira',
         'money_format' => '₦{{value}}',
     ],
     'KES' => [
-        'name' => 'currency.kes',
+        'name' => 'Kenyan shilling',
         'money_format' => 'Ksh{{value}}',
     ],
     'JPY' => [
-        'name' => 'currency.jpy',
+        'name' => 'Japanese Yen',
         'money_format' => '¥{{value}}',
     ],
     'ARS' => [
-        'name' => 'currency.ars',
+        'name' => 'Argentine peso',
         'money_format' => '${{value}}',
     ],
     'VND' => [
-        'name' => 'currency.vnd',
+        'name' => 'Vietnamese đồng',
         'money_format' => '{{value}}₫',
     ],
 ];
