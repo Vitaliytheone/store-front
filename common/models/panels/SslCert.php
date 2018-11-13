@@ -31,6 +31,7 @@ use my\mail\mailers\CreatedSSL;
  * @property string $csr_files
  * @property string $details
  * @property string $expiry
+ * @property string $expiry_at_timestamp
  * @property integer $created_at
  *
  * @property Project|Stores $project
@@ -85,6 +86,7 @@ class SslCert extends ActiveRecord
             [['cid'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['cid' => 'id']],
             [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::class, 'targetAttribute' => ['item_id' => 'id']],
             ['csr_files', 'string'],
+            ['expiry_at_timestamp', 'integer'],
         ];
     }
 
@@ -107,6 +109,7 @@ class SslCert extends ActiveRecord
             'csr_files' => Yii::t('app', 'CSR files'),
             'details' => Yii::t('app', 'Details'),
             'expiry' => Yii::t('app', 'Expiry'),
+            'expiry_at_timestamp' => Yii::t('app', 'Expiry at'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
     }
