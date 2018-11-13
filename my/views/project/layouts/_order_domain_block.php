@@ -3,7 +3,7 @@
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\OrderPanelForm */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
 ?>
 
 <div class="panel-body">

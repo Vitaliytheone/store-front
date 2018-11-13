@@ -5,7 +5,7 @@
 
     use my\components\ActiveForm;
     use my\models\forms\OrderStoreForm;
-    use yii\helpers\Html;
+    use yii\bootstrap\Html;
 
     $this->context->addModule('orderDomainController');
     $this->context->addModule('orderController');
