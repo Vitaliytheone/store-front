@@ -157,8 +157,6 @@ class OrderStoreForm extends DomainForm
             $this->preparedDomain = $this->domain;
         }
 
-        $this->generateSubdomain();
-
         $result = $this->orderStore($invoiceModel);
 
         if (!$result) {
@@ -172,60 +170,6 @@ class OrderStoreForm extends DomainForm
         $this->_invoiceCode = $invoiceModel->code;
 
         return true;
-    }
-
-    /**
-     * Return generated subdomain from store name
-     * @return string
-     * @throws Exception
-     */
-    protected function generateSubdomain()
-    {
-        $domain = Yii::$app->params['storeDomain'];
-
-        if (empty($domain)) {
-            throw new Exception('Bad config-params: store_domain not configured yet!');
-        }
-
-        $subdomain = str_replace(' ', '-', strtolower(trim($this->domain)));
-        $subdomain = preg_replace('/\.(\w+)$/', '', $subdomain);
-
-        $pendingOrders = (new Query())
-            ->select('domain')
-            ->from(Orders::tableName())
-            ->andWhere(['status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID
-            ]])
-            ->column();
-
-        $exitingStores = (new Query())
-            ->select('domain')
-            ->from(StoreDomains::tableName())
-            ->column();
-
-        $exitingDomains = array_merge($pendingOrders, $exitingStores);
-
-        $subdomainPostfix = 2;
-
-        $checkingSubdomain = $subdomain;
-
-        // Check if store with same domain already exist
-        do {
-            $checkingDomain = $checkingSubdomain . '.' . $domain;
-
-            $domainExist = in_array($checkingDomain, $exitingDomains);
-
-            if ($domainExist) {
-                $checkingSubdomain = $subdomain . $subdomainPostfix;
-                $subdomainPostfix++;
-            }
-
-        } while ($domainExist);
-
-        $this->storeDomain = $checkingDomain;
-
-        return $this->storeDomain;
     }
 
     /**
