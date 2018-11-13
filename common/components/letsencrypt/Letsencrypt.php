@@ -198,7 +198,7 @@ class Letsencrypt extends Acme
         $certFiles = $this->_cutCertFiles($this->_ssl->domain);
 
         $this->_ssl->setCsrFiles($certFiles);
-        $this->_ssl->expiry = static::_expiryDate($parsedCert);
+        $this->_ssl->expiry_at_timestamp = static::_expiryDate($parsedCert);
         $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
         $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
         $this->_ssl->setOrderDetails($this->getExecResult());
@@ -226,7 +226,7 @@ class Letsencrypt extends Acme
         $certFiles = $this->_cutCertFiles($this->_ssl->domain);
 
         $this->_ssl->setCsrFiles($certFiles);
-        $this->_ssl->expiry =static::_expiryDate($parsedCert);
+        $this->_ssl->expiry_at_timestamp =static::_expiryDate($parsedCert);
         $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
         $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
         $this->_ssl->setOrderDetails($this->getExecResult());
