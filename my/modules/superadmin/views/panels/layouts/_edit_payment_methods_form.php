@@ -8,7 +8,13 @@ use superadmin\models\forms\EditPanelPaymentMethodsForm;
 /* @var $payments array */
 /* @var $model EditPanelPaymentMethodsForm */
 
+
 ?>
+
+
+<?= $form->field($model, 'method_id')->dropDownList($model->getPaymentMethodDropdown()) ?>
+
+
 <table class="table">
     <thead>
     <tr>

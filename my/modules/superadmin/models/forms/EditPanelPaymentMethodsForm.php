@@ -6,6 +6,7 @@ use common\helpers\CurrencyHelper;
 use common\models\panels\PanelPaymentMethods;
 use common\models\panels\Project;
 use common\models\panels\services\GetPanelPaymentMethodsService;
+use common\models\panels\services\GetPaymentMethodsCurrencyService;
 use yii\base\Model;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -27,6 +28,16 @@ class EditPanelPaymentMethodsForm extends Model
      * @var array
      */
     protected static $paymentMethods;
+
+    /**
+     * @var array
+     */
+    protected static $paymentMethodsCurrency;
+
+    /**
+     * @var array
+     */
+    protected static $panelPaymentMethods;
 
     /**
      * @return array the validation rules.
@@ -120,6 +131,10 @@ class EditPanelPaymentMethodsForm extends Model
             $panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
 
             foreach ($paymentMethods as $method) {
+                if (empty($panelPaymentMethods[$method['id']])) {
+                    continue;
+                }
+
                 static::$paymentMethods[$method['id']] = [
                     'id' => $method['id'],
                     'method_name' => $method['method_name'],
@@ -129,5 +144,66 @@ class EditPanelPaymentMethodsForm extends Model
         }
 
         return static::$paymentMethods;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPanelPaymentMethods()
+    {
+        if (null === static::$panelPaymentMethods) {
+            static::$panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
+        }
+
+        return static::$panelPaymentMethods;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPaymentMethodsCurrency()
+    {
+        if (null === static::$paymentMethodsCurrency) {
+            static::$paymentMethodsCurrency = Yii::$container->get(GetPaymentMethodsCurrencyService::class, [$this->_panel])->get();
+            static::$paymentMethodsCurrency = ArrayHelper::index(static::$paymentMethodsCurrency, 'method_id', 'currency');
+        }
+
+        return static::$paymentMethodsCurrency;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaymentMethodDropdown()
+    {
+        $options = [];
+        $panelPaymentMethods = $this->getPanelPaymentMethods();
+        $paymentMethodsCurrency = $this->getPaymentMethodsCurrency();
+        $currencies = CurrencyHelper::getAvailableCurrencies();
+        $methods = CurrencyHelper::getPaymentMethods();
+        ArrayHelper::multisort($methods, 'method_name');
+
+        foreach ($currencies as $currency) {
+            foreach ((array)ArrayHelper::getValue($paymentMethodsCurrency, $currency, []) as $currencyMethods) {
+                foreach ($currencyMethods as $methodId => $currencyMethod) {
+                    foreach (ArrayHelper::getValue()) {
+
+                    }
+                }
+            }
+        }
+        foreach ($methods as $method) {
+            if (!empty($panelPaymentMethods[$method['id']])) {
+                continue;
+            }
+
+            $group = Yii::t('superadmin', 'payments.add_payment_method_modal.select.available_for', [
+                'currency' => $currency
+            ]);
+
+            $options[$group][$method['currency_id']] = $method['method_name'];
+        }
+
+        return $options;
     }
 }

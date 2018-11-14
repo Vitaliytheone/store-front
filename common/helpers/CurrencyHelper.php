@@ -117,4 +117,12 @@ class CurrencyHelper {
 
         return (array)static::$_paymentMethods;
     }
+
+    /**
+     * @return array
+     */
+    public static function getAvailableCurrencies()
+    {
+        return array_keys(Yii::$app->params['currencies']);
+    }
 }
