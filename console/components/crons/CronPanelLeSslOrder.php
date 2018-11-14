@@ -47,28 +47,37 @@ class CronPanelLeSslOrder extends CronBase
             $this->stdout('Elapsed time since last panel nameservers check, sec (' . $lastCheckedSec . ')');
 
             switch (true) {
-                // 1-th hour — each 3 min
-                case $createdSec < 1 * 60 * 60 && $lastCheckedSec > 3 * 60:
+//                // 1-th hour — each 3 min
+//                case $createdSec < 1 * 60 * 60 && $lastCheckedSec > 3 * 60:
+//                    $allowCheck = true;
+//                    break;
+//                // 2-th hour - each 5 min
+//                case $createdSec > 1 * 60 * 60 && $createdSec < 2 * 60 * 60 && $lastCheckedSec > 5 * 60:
+//                    $allowCheck = true;
+//                    break;
+//                // 3-th hour - each 10 min
+//                case $createdSec > 2 * 60 * 60 && $createdSec < 3 * 60 * 60 && $lastCheckedSec > 10 * 60:
+//                    $allowCheck = true;
+//                    break;
+//                // 4-th hour - each 15 min
+//                case $createdSec > 3 * 60 * 60 && $createdSec < 4 * 60 * 60 && $lastCheckedSec > 15 * 60:
+//                    $allowCheck = true;
+//                    break;
+//                // 5-th - 12-th hour - each 30 min
+//                case $createdSec > 4 * 60 * 60 && $createdSec < 12 * 60 * 60 && $lastCheckedSec > 30 * 60:
+//                    $allowCheck = true;
+//                    break;
+//                // 13-th hour - 31 day - each 60 min
+//                case $createdSec > 12 * 60 * 60 && $createdSec < 31 * 24 * 60 * 60 && $lastCheckedSec > 60 * 60:
+//                    $allowCheck = true;
+//                    break;
+
+                // 1-й день после регистрации - раз в 30 мин
+                case $createdSec < 1 * 24 * 60 * 60 && $lastCheckedSec > 30 * 60:
                     $allowCheck = true;
                     break;
-                // 2-th hour - each 5 min
-                case $createdSec > 1 * 60 * 60 && $createdSec < 2 * 60 * 60 && $lastCheckedSec > 5 * 60:
-                    $allowCheck = true;
-                    break;
-                // 3-th hour - each 10 min
-                case $createdSec > 2 * 60 * 60 && $createdSec < 3 * 60 * 60 && $lastCheckedSec > 10 * 60:
-                    $allowCheck = true;
-                    break;
-                // 4-th hour - each 15 min
-                case $createdSec > 3 * 60 * 60 && $createdSec < 4 * 60 * 60 && $lastCheckedSec > 15 * 60:
-                    $allowCheck = true;
-                    break;
-                // 5-th - 12-th hour - each 30 min
-                case $createdSec > 4 * 60 * 60 && $createdSec < 12 * 60 * 60 && $lastCheckedSec > 30 * 60:
-                    $allowCheck = true;
-                    break;
-                // 13-th hour - 31 day - each 60 min
-                case $createdSec > 12 * 60 * 60 && $createdSec < 31 * 24 * 60 * 60 && $lastCheckedSec > 60 * 60:
+                // 2-й - 31 день после регистрации - раз в 3 часа
+                case $createdSec > 1 * 24 * 60 * 60 && $createdSec < 31 * 24 * 60 * 60 && $lastCheckedSec > 3 * 60 * 60:
                     $allowCheck = true;
                     break;
             }
