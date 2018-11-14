@@ -112,7 +112,7 @@ class SslSearch extends SslCert {
         $models = static::queryAllCache($ssl);
 
         array_walk($models, function(&$model){
-           $model['expired'] = $model['expired'] ? $model['expired'] : UnixTimeFormatTrait::formatDate($model['expiry_at_timestamp']);
+           $model['expiry'] = $model['expiry'] ? $model['expiry'] : UnixTimeFormatTrait::formatDate($model['expiry_at_timestamp']);
         });
 
         return [
