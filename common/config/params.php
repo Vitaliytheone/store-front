@@ -118,4 +118,8 @@ return [
             'ssl' => Yii::getAlias('@project_root/ssl'),
         ],
     ],
+
+    'whoisxmlapi' => [
+        'api_url' => 'https://www.whoisxmlapi.com/whoisserver/WhoisService',
+    ],
 ];

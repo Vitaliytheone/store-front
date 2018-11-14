@@ -628,5 +628,4 @@ return [
 
     'project.type.panel' => 'Panel',
     'project.type.store' => 'Store',
-
 ];

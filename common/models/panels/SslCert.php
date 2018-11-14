@@ -255,7 +255,7 @@ class SslCert extends ActiveRecord
 
             // Create new unreaded ticket after activate ssl cert.
             // Not for SSL prolongation
-            if(!$isProlonged) {
+            if(!$isProlonged/* && !$project->hasManualPaymentMethods()*/) {
                 $ticket = new Tickets();
                 $ticket->customer_id = $this->cid;
                 $ticket->is_admin = 1;
