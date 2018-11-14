@@ -116,7 +116,10 @@ class ChangeDomainForm extends Model {
         }
 
         if ($isChangedSubdomain) {
-            if (!$this->subdomain) {
+            if ($this->subdomain) {
+                // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
+                $this->_project->disableDomain();
+            } else {
                 // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
                 DnsHelper::addMainDns($this->_project);
             }

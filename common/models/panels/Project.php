@@ -752,7 +752,11 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ]);
 
-        DnsHelper::removeDns($this);
+        $domain = Domains::findOne(['domain' => $this->site]);
+
+        if (!isset($domain)) {
+            DnsHelper::removeDns($this);
+        }
 
         return true;
     }
