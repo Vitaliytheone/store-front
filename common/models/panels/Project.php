@@ -456,6 +456,8 @@ class Project extends ActiveRecord implements ProjectInterface
             return false;
         }
 
+        $this->currency = CurrencyHelper::getCurrencyIdByCode($this->currency_code);
+        
         return true;
     }
 

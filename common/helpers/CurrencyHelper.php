@@ -117,4 +117,13 @@ class CurrencyHelper {
 
         return (array)static::$_paymentMethods;
     }
+
+    /**
+     * @param string $currency
+     * @return integer|null
+     */
+    public static function getCurrencyIdByCode(string $currency)
+    {
+        return ArrayHelper::getValue(ArrayHelper::getColumn(Yii::$app->params['legacy_currencies'], 'id'), $currency);
+    }
 }
