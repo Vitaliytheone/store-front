@@ -175,19 +175,9 @@ class OrderPanelForm extends DomainForm
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
+            $currencies[$code] = Yii::t('app', $currency['name']) . ' (' . $code . ')';
         }
 
-        asort($currencies);
-
-        $returnCurrencies = [
-            1 => $currencies[1]
-        ];
-
-        unset($currencies[1]);
-
-        $returnCurrencies = ArrayHelper::merge($returnCurrencies, $currencies);
-
-        return $returnCurrencies;
+        return $currencies;
     }
 }
