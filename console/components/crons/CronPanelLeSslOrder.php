@@ -86,10 +86,14 @@ class CronPanelLeSslOrder extends CronBase
                 throw new CronException('Cannot update panel [' . $panel->id . '] data!');
             }
 
-            $apiUrl = Yii::$app->params['whoxy']['api_url'];
-            $apiKey = Params::get(Params::CATEGORY_SERVICE, Params::CODE_WHOXY, 'ssl');
+            $requestParams = http_build_query([
+                'apiKey' => Params::get(Params::CATEGORY_SERVICE, Params::CODE_WHOISXMLAPI, 'ssl'),
+                'domainName' => $panel->domain,
+                'outputFormat' => 'JSON',
+            ]);
 
-            $request = $apiUrl . '/?key=' . $apiKey . '&whois=' . $panel->domain;
+            $request = Yii::$app->params['whoisxmlapi']['api_url'] . '/?' . $requestParams;
+
             $response = CurlHelper::request($request);
 
             $this->stdout('NsLoockup raw response:');
@@ -114,12 +118,15 @@ class CronPanelLeSslOrder extends CronBase
                 throw new CronException('Cannot update panel [' . $panel->id . '] data!');
             }
 
-            if ((int)ArrayHelper::getValue($response, 'status') !== 1) {
+            if (!ArrayHelper::getValue($response, 'WhoisRecord')) {
                 $this->stderror('Invalid api NsLoockup response! [Skipped]');
                 continue;
             }
 
-            $whoisNameservers = ArrayHelper::getValue($response, 'name_servers', null);
+            $whoisNameservers = ArrayHelper::getValue($response, ['WhoisRecord', 'nameServers', 'hostNames'], null);
+
+            $this->stdout('NsLoockup nameservers:');
+            $this->stdout(print_r($whoisNameservers,1));
 
             if (!$whoisNameservers || !is_array($whoisNameservers)) {
                 $this->stderror('Domain nameservers are not defined! [Skipped]');

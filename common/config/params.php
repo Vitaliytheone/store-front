@@ -119,7 +119,7 @@ return [
         ],
     ],
 
-    'whoxy' => [
-        'api_url' => 'http://api.whoxy.com',
+    'whoisxmlapi' => [
+        'api_url' => 'https://www.whoisxmlapi.com/whoisserver/WhoisService',
     ],
 ];

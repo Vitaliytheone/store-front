@@ -1,0 +1,1 @@
+UPDATE `params` SET `code` = 'whoisxmlapi' WHERE `code` = 'whoxy';
