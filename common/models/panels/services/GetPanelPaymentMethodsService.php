@@ -41,6 +41,7 @@ class GetPanelPaymentMethodsService {
             ->select([
                 'id',
                 'method_id',
+                'currency_id',
                 'name',
                 'minimal',
                 'maximal',
@@ -69,6 +70,7 @@ class GetPanelPaymentMethodsService {
             $paymentMethods[$method['method_id']] = [
                 'id' => $method['id'],
                 'method_id' => $method['method_id'],
+                'currency_id' => $method['currency_id'],
                 'name' => $method['name'],
                 'minimal' => $method['minimal'],
                 'maximal' => $method['maximal'],
