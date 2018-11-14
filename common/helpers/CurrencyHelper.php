@@ -126,4 +126,20 @@ class CurrencyHelper {
     {
         return ArrayHelper::getValue(ArrayHelper::getColumn(Yii::$app->params['legacy_currencies'], 'id'), $currency);
     }
+
+    /**
+     * @param integer $currencyId
+     * @return string|null
+     */
+    public static function getCurrencyCodeById(int $currencyId)
+    {
+        foreach ((array)Yii::$app->params['legacy_currencies'] as $currency => $currencyOptions) {
+            $id = ArrayHelper::getValue($currencyOptions, 'id');
+            if ($id == $currencyId) {
+                return $currency;
+            }
+        }
+
+        return null;
+    }
 }

@@ -317,6 +317,7 @@ class OrderHelper {
         $orderDetails = $order->getDetails();
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
+        $currency = ArrayHelper::getValue($orderDetails, 'currency');
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -325,7 +326,7 @@ class OrderHelper {
         $project->cid = $order->cid;
         $project->site = $domain;
         $project->name = DomainsHelper::idnToUtf8($domain);
-        $project->currency_code = ArrayHelper::getValue($orderDetails, 'currency');
+        $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
         $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
