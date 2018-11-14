@@ -326,6 +326,7 @@ class OrderHelper {
         $project->site = $domain;
         $project->name = DomainsHelper::idnToUtf8($domain);
         $project->currency = ArrayHelper::getValue($orderDetails, 'currency');
+        $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -801,7 +802,7 @@ class OrderHelper {
 
         $orderDetails = $order->getDetails();
 
-        $sslCertItem = SslCertItem::findOne($orderDetails['item_id']);
+        $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
 
         if (!$sslCertItem) {
             throw new Exception('SslItem for domain [' . $order->domain . '] not found!');

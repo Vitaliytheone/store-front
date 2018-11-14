@@ -28,6 +28,11 @@ class SslCertItem extends ActiveRecord
     const PROVIDER_GOGETSSL = 1;
     const PROVIDER_LETSENCRYPT = 2;
 
+    const PRODUCT_ID_COMODO_POSITIVE = 45;
+    const PRODUCT_ID_COMODO_ESSENTIAL= 75;
+    const PRODUCT_ID_COMODO_RAPID= 31;
+    const PRODUCT_ID_LETSENCRYPT_BASE = 1;
+
     /**
      * @inheritdoc
      */

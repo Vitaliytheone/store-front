@@ -3,7 +3,6 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
-use common\helpers\PaymentHelper;
 use common\models\panel\PaymentsLog;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
@@ -14,6 +13,7 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
+use console\components\crons\CronPanelLeSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminatePanel;
 use console\components\terminate\TerminateStore;
@@ -414,5 +414,17 @@ class CronController extends CustomController
     public function actionUpdateServicesCount()
     {
         Yii::$container->get(UpdateServicesCount::class)->run();
+    }
+
+    /**
+     *  New panel ns-checker, order-maker
+     * @throws Exception
+     */
+    public function actionPanelNewSslOrder()
+    {
+        $cron = new CronPanelLeSslOrder();
+        $cron->setConsole($this);
+        $cron->setDebug(true);
+        $cron->run();
     }
 }
