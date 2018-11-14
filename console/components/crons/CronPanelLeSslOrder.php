@@ -123,7 +123,12 @@ class CronPanelLeSslOrder extends CronBase
                 continue;
             }
 
-            $whoisNameservers = ArrayHelper::getValue($response, ['WhoisRecord', 'nameServers', 'hostNames'], null);
+            // Check 2 places
+            $whoisNameservers = ArrayHelper::getValue(
+                $response,
+                ['WhoisRecord', 'registryData', 'nameServers', 'hostNames'],
+                ArrayHelper::getValue($response, ['WhoisRecord', 'nameServers', 'hostNames'], [])
+            );
 
             $this->stdout('NsLoockup nameservers:');
             $this->stdout(print_r($whoisNameservers,1));
@@ -139,12 +144,12 @@ class CronPanelLeSslOrder extends CronBase
                 throw new CronException('Cannot update panel [' . $panel->id . '] data!');
             }
 
-            $configNameservers = [
-                Yii::$app->params['ahnames.my.ns']['ns_1'],
-                Yii::$app->params['ahnames.my.ns']['ns_2'],
-            ];
+            $configNameservers = array_values(array_filter(Yii::$app->params['ahnames.my.ns'], function($nameserver) { return !empty($nameserver); }));
 
-            if (array_diff($configNameservers, $whoisNameservers)) {
+            $this->stdout('Config-params nameservers:');
+            $this->stdout(print_r($configNameservers,1));
+
+            if (array_udiff($configNameservers, $whoisNameservers, 'strcasecmp')) {
                 $this->stdout('Nameservers do not match! [Skipped]');
                 continue;
             }
