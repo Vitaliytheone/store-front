@@ -41,6 +41,8 @@ class Params extends ActiveRecord
 
     public const CODE_LETSENCRYPT = 'letsencrypt';
 
+    public const CODE_WHOXY = 'whoxy';
+
     /**
      * After this time after payment refund paypal transaction impossible
      */
@@ -146,11 +148,18 @@ class Params extends ActiveRecord
      * Get parameter
      * @param string $category
      * @param string $code
+     * @param string $optionKey
      * @return null|array
      */
-    public static function get($category, $code)
+    public static function get($category, $code, $optionKey = null)
     {
-        return ArrayHelper::getValue(static::getAll(), [$category, $code, 'options']);
+        $params = ArrayHelper::getValue(static::getAll(), [$category, $code, 'options']);
+
+        if (!$optionKey) {
+            return $params;
+        }
+
+        return ArrayHelper::getValue($params, $optionKey);
     }
 
     /**

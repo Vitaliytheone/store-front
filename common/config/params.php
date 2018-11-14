@@ -118,4 +118,8 @@ return [
             'ssl' => Yii::getAlias('@project_root/ssl'),
         ],
     ],
+
+    'whoxy' => [
+        'api_url' => 'http://api.whoxy.com',
+    ],
 ];

@@ -103,6 +103,10 @@ use yii\helpers\ArrayHelper;
  * @property int $no_referral
  * @property string $paypal_fraud_settings
  * @property int $refiller
+ * @property string $whois_lookup
+ * @property string $nameservers
+ * @property int $dns_checked_at
+ * @property int $dns_status
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -137,6 +141,10 @@ class Project extends ActiveRecord implements ProjectInterface
 
     const NO_INVOICE_ENABLED = 1;
     const NO_INVOICE_DISABLED = 0;
+
+    const DNS_STATUS_NOT_DEFINED = null;
+    const DNS_STATUS_ALIEN = 0;
+    const DNS_STATUS_MINE = 1;
 
     use UnixTimeFormatTrait;
 
@@ -174,6 +182,8 @@ class Project extends ActiveRecord implements ProjectInterface
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
+            [['whois_lookup', 'nameservers'], 'string'],
+            [['dns_checked_at', 'dns_status'], 'integer'],
         ];
     }
 
@@ -263,6 +273,10 @@ class Project extends ActiveRecord implements ProjectInterface
             'no_referral' => Yii::t('app', 'No Referral'),
             'paypal_fraud_settings' => Yii::t('app', 'PayPal Fraud Settings'),
             'refiller' => Yii::t('app', 'Refiller'),
+            'whois_lookup' => Yii::t('app', 'Who is'),
+            'nameservers' => Yii::t('app', 'Nameservers'),
+            'dns_checked_at' => Yii::t('app', 'Dns checked at'),
+            'dns_status' => Yii::t('app', 'Dns status'),
         ];
     }
 
@@ -457,7 +471,7 @@ class Project extends ActiveRecord implements ProjectInterface
         }
 
         $this->currency = CurrencyHelper::getCurrencyIdByCode($this->currency_code);
-        
+
         return true;
     }
 
@@ -943,5 +957,41 @@ class Project extends ActiveRecord implements ProjectInterface
                 'ppm.panel_id' => $this->id
             ])
             ->exists();
+    }
+
+    /**
+     * Set whois_lookup
+     * @param array $whoisLookupData
+     */
+    public function setWhoisLookup(array $whoisLookupData)
+    {
+        $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get whois_lookup
+     * @return array
+     */
+    public function getWhoisLookup()
+    {
+        return json_decode($this->whois_lookup,true);
+    }
+
+    /**
+     * Set nameservers
+     * @param array $nameserversList
+     */
+    public function setNameservers(array $nameserversList)
+    {
+        $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get nameservers
+     * @return array
+     */
+    public function getNameservers()
+    {
+        return json_decode($this->nameservers,true);
     }
 }
