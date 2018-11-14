@@ -8,12 +8,16 @@ use common\models\panels\Project;
 use yii\base\Model;
 
 /**
- * Class PanelDomainValidator
+ * Class OrderDomainValidator
  * @package my\components\validators
  */
-class PanelDomainValidator extends BaseDomainValidator
+class OrderDomainValidator extends BaseDomainValidator
 {
     protected $domain;
+
+    public $panel = false;
+
+    public $store = false;
 
     public $child_panel = false;
 
@@ -88,8 +92,8 @@ class PanelDomainValidator extends BaseDomainValidator
             ])->andWhere([
                 'store_domains.domain' => $domain,
                 'stores.status' => [
-                    Project::STATUS_ACTIVE,
-                    Project::STATUS_FROZEN
+                    Stores::STATUS_ACTIVE,
+                    Stores::STATUS_FROZEN
                 ]
             ])->exists();
 
@@ -116,6 +120,8 @@ class PanelDomainValidator extends BaseDomainValidator
                 $item = Orders::ITEM_BUY_PANEL;
                 if ($this->child_panel) {
                     $item = Orders::ITEM_BUY_CHILD_PANEL;
+                } elseif ($this->store) {
+                    $item = Orders::ITEM_BUY_STORE;
                 }
 
                 // Для заказов с отличным item и статусом pending не проверяем, а после создания нового заказа - отменяем предыдущий заказ

@@ -25,7 +25,6 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'payments.list.column_method')?></a>
                 <div class="dropdown-menu">
                     <?php foreach ($methods as $method => $label) : ?>
-                        <?php $method = is_numeric($method) ? (int)$method : null ?>
                         <a class="dropdown-item <?=($method === $filters['method'] ? 'active' : '')?>" href="<?=Url::toRoute(array_merge(['/payments'], $filters, ['method' => $method]))?>"><?= $label ?></a>
                     <?php endforeach; ?>
                 </div>
@@ -121,6 +120,11 @@
                                     'data-payment_id' => $payment->id,
                                     'data-payment_amount' => $payment->amount,
                                     'data-action_url' => Url::toRoute(['/payments/make-refunded', 'id' => $payment->id]),
+                                ])?>
+                            <?php endif; ?>
+                            <?php if ($payment->can('makeCompleted')) : ?>
+                                <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_complete'), Url::toRoute(['/payments/complete', 'id' => $payment->id]), [
+                                    'class' => 'dropdown-item',
                                 ])?>
                             <?php endif; ?>
                         </div>

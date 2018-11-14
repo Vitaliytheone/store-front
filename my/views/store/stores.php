@@ -4,7 +4,7 @@
     /* @var \common\models\stores\Stores $store */
     /* @var $accesses */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
     use common\models\stores\Stores;
     use common\models\panels\Orders;
     use yii\bootstrap\Html;

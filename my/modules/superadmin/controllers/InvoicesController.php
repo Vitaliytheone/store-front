@@ -144,12 +144,11 @@ class InvoicesController extends CustomController
     }
 
     /**
-     * Add payment.
-     *
-     * @access public
-     * @param integer $id
-     * @return mixed
+     * Add payment
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionAddPayment($id)
     {

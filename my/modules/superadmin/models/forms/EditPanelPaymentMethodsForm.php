@@ -116,7 +116,7 @@ class EditPanelPaymentMethodsForm extends Model
     public function getPaymentMethods()
     {
         if (null === static::$paymentMethods) {
-            $paymentMethods = CurrencyHelper::getPaymentMethodsByCurrency($this->_panel->getCurrencyCode());
+            $paymentMethods = CurrencyHelper::getPaymentMethods();
             $panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
 
             foreach ($paymentMethods as $method) {

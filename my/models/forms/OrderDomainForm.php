@@ -3,7 +3,7 @@ namespace my\models\forms;
 
 use my\components\domains\Ahnames;
 use my\components\validators\OrderLimitValidator;
-use my\components\validators\PanelDomainValidator;
+use my\components\validators\OrderDomainValidator;
 use my\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
@@ -69,7 +69,7 @@ class OrderDomainForm extends Model
     {
         return [
             [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_ccountry')],
-            [['domain'], PanelDomainValidator::class],
+            [['domain'], OrderDomainValidator::class],
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
             [['domain_email'], 'email'],
@@ -256,7 +256,7 @@ class OrderDomainForm extends Model
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$code] = Yii::t('app', $currency['name']) . ' (' . $code . ')';
+            $currencies[$code] = $currency['name'] . ' (' . $code . ')';
         }
         return $currencies;
     }

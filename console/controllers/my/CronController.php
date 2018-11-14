@@ -3,10 +3,11 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
+use common\helpers\PaymentHelper;
 use common\models\panel\PaymentsLog;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\PaymentHash;
 use common\models\panels\Payments;
 use common\models\panels\Project;
@@ -62,6 +63,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
+                Orders::ITEM_OBTAIN_LE_SSL,
+                Orders::ITEM_PROLONGATION_LE_SSL,
             ]
         ])->all();
 
@@ -105,6 +108,14 @@ class CronController extends CustomController
 
                     case Orders::ITEM_PROLONGATION_DOMAIN:
                         OrderHelper::prolongationDomain($order);
+                    break;
+
+                    case Orders::ITEM_OBTAIN_LE_SSL:
+                        OrderHelper::leSsl($order);
+                    break;
+
+                    case Orders::ITEM_PROLONGATION_LE_SSL:
+                        OrderHelper::leProlongationSsl($order);
                     break;
                 }
             } catch (Exception $e) {
@@ -278,7 +289,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => PaymentGateway::METHOD_PAYPAL,
+            'payment_method' => Params::CODE_PAYPAL,
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,
@@ -289,7 +300,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (PaymentGateway::METHOD_PAYPAL == $payment->type) {
+                if (Params::CODE_PAYPAL == $payment->payment_method) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id

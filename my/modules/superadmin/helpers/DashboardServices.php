@@ -11,6 +11,7 @@ use superadmin\components\services\OpenSRSService;
 use superadmin\components\services\WhoisxmlService;
 use ReflectionClass;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class DashboardServices
@@ -27,11 +28,11 @@ class DashboardServices
 
     private static function _getConfig()
     {
-        $whoisxmlParams = Params::get('service.whoisxml');
-        $ahnamesParams = Params::get('service.ahnames');
-        $gogetsslParams = Params::get('service.gogetssl');
-        $dnslyticsParams = Params::get('service.dnslytics');
-        $opensrsParams = Params::get('service.opensrs');
+        $whoisxmlParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_WHOISXML);
+        $ahnamesParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_AHNAMES);
+        $gogetsslParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_GOGETSSL);
+        $dnslyticsParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_DNSLYTICS);
+        $opensrsParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_OPENSRS);
 
         return [
             self::SERVICE_WHOISXML => [
