@@ -41,7 +41,7 @@ class Params extends ActiveRecord
 
     public const CODE_LETSENCRYPT = 'letsencrypt';
 
-    public const CODE_WHOXY = 'whoxy';
+    public const CODE_WHOISXMLAPI = 'whoisxmlapi';
 
     /**
      * After this time after payment refund paypal transaction impossible
