@@ -17,6 +17,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -455,10 +456,6 @@ class Project extends ActiveRecord implements ProjectInterface
             return false;
         }
 
-        if (!$this->currency_code) {
-            $this->currency_code = CurrencyHelper::getCurrencyCodeById($this->currency);
-        }
-
         return true;
     }
 
@@ -479,11 +476,11 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Get currency code
-     * @return mixed
+     * @return string
      */
     public function getCurrencyCode()
     {
-        return CurrencyHelper::getCurrencyCodeById($this->currency);
+        return $this->currency_code;
     }
 
     /**
@@ -930,5 +927,19 @@ class Project extends ActiveRecord implements ProjectInterface
             ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.provider_id')
             ->where(['project.site' => $this->site])
             ->all();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasManualPaymentMethods()
+    {
+        return (new Query())
+            ->from(['ppm' => PanelPaymentMethods::tableName()])
+            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND manual_callback_url = 1')
+            ->andWhere([
+                'ppm.panel_id' => $this->id
+            ])
+            ->exists();
     }
 }

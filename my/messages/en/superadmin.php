@@ -111,7 +111,6 @@ return [
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
-    'panels.edit.expiry' => 'Edit expiry date',
 
     'panels.change_domain.error' => 'Can not change domain',
     'panels.edit_expiry.error' => 'Can not change domain',
@@ -891,4 +890,12 @@ return [
 
     'header.nav.subscription' => 'Subscriptions',
     'header.nav.sender' => 'Sender',
+
+    'panels.list.edit_payment_methods' => 'Edit payment methods',
+    'panels.edit.payment_methods.header' => 'Edit panel payment methods',
+    'panels.edit.payment_methods.close' => 'Close',
+    'panels.edit.payment_methods.save' => 'Save changes',
+    'panels.edit.payment_methods.field.name' => 'Name',
+    'panels.edit.payment_methods.field.active' => 'Active',
+    'panels.edit.payment_methods.error' => 'Can not change panel payment methods',
 ];
