@@ -802,6 +802,12 @@ class OrderHelper {
 
         $orderDetails = $order->getDetails();
 
+        $panel = Project::findOne($orderDetails['pid']);
+
+        if (!$panel) {
+            throw new Exception('Panel [' . $orderDetails['pid'] . '] not found!');
+        }
+
         $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
 
         if (!$sslCertItem) {
@@ -847,6 +853,12 @@ class OrderHelper {
             'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
         ])) {
             throw new Exception('Cannot add SSL to Config!');
+        }
+
+        $panel->ssl = Project::SSL_MODE_ON;
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Panel [' . $panel->id . ']');
         }
 
         $order->status = Orders::STATUS_ADDED;
