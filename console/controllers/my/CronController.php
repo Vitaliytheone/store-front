@@ -158,7 +158,6 @@ class CronController extends CustomController
     {
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
-        InvoiceHelper::prolongSsl();
         InvoiceHelper::prolongStores();
     }
 

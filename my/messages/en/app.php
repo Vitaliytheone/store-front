@@ -335,6 +335,8 @@ return [
     'orders.item.prolongation_ssl' => 'Prolongation SSL',
     'orders.item.prolongation_domain' => 'Prolongation domain',
     'orders.item.trial_store' => 'Trial store',
+    'orders.item.free_ssl' => 'Free SSL',
+    'orders.item.prolongation_free_ssl' => 'Prolongation Free SSL',
     'panel_domains.type.standard' => 'Standard',
     'panel_domains.type.additional' => 'Additional',
     'panel_domains.type.subdomain' => 'Subdomain',
