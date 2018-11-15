@@ -20,16 +20,22 @@ class CronPanelRenewSslOrder extends CronBase
     {
         $this->stdout($this->cronTaskName() . ' started now', Console::FG_GREEN);
 
-        $timeLeftToExpiry = 20 * 24 * 60 * 60;
+        $timeLeftToExpiry = 20 * 24 * 60 * 60; // 20 Days
 
         $sslList = SslCert::find()
             ->select([
                 'ssl_id' => 'ssl.id', 'ssl_item_id' => 'ssl.item_id',
-                'panel_id' => 'panel.id', 'panel_cid' => 'panel.cid', 'panel_domain' => 'panel.site'
+                'panel_id' => 'panel.id', 'panel_cid' => 'panel.cid', 'panel_domain' => 'panel.site',
+                'order_id' => 'order.id',
             ])
             ->alias('ssl')
             ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl.pid')
             ->leftJoin(['ssl_item' => SslCertItem::tableName()], 'ssl_item.id = ssl.item_id')
+            ->leftJoin(['order' => Orders::tableName()], 'order.item = :orderItem AND order.item_id = ssl.id AND order.processing = :orderProcessing', [
+                ':orderItem' => Orders::ITEM_PROLONGATION_LE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->andWhere(['IS', 'order.id', null])
             ->andWhere([
                 '<',
                 'ssl.expiry_at_timestamp',
@@ -48,10 +54,7 @@ class CronPanelRenewSslOrder extends CronBase
             ->asArray()
             ->all();
 
-
         $this->stdout('Prolongation SSL count (' . count($sslList) . ')');
-
-        error_log(print_r($sslList,1));
 
         foreach ($sslList as $ssl) {
 
@@ -62,6 +65,7 @@ class CronPanelRenewSslOrder extends CronBase
             $order->processing = Orders::PROCESSING_NO;
             $order->domain = $ssl['panel_domain'];
             $order->item = Orders::ITEM_PROLONGATION_LE_SSL;
+            $order->item_id = $ssl['ssl_id'];
             $order->ip = '127.0.0.1';
             $order->setDetails([
                 'pid' => $ssl['panel_id'],
