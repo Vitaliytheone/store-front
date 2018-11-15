@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $domains \my\modules\superadmin\models\search\DomainsSearch */
+    /* @var $domains \superadmin\models\search\DomainsSearch */
     /* @var $domain \common\models\panels\Domains */
 
     use my\helpers\Url;
@@ -8,7 +8,7 @@
     use yii\widgets\LinkPager;
     use my\helpers\SpecialCharsHelper;
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
         <tr>
             <th><?= Yii::t('app/superadmin', 'domains.list.column_id')?></th>
@@ -19,7 +19,7 @@
             <th class="text-nowrap"><?= Yii::t('app/superadmin', 'domains.list.column_expiry')?></th>
             <th><?= Yii::t('app/superadmin', 'domains.list.column_privacy')?></th>
             <th><?= Yii::t('app/superadmin', 'domains.list.column_transfer')?></th>
-            <th class="w-1"></th>
+            <th class="table-custom__action-th"></th>
         </tr>
     </thead>
     <tbody>
@@ -61,7 +61,7 @@
                     </td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'domains.list.actions_label')?></button>
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'domains.list.actions_label')?></button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <?= Html::a(Yii::t('app/superadmin', 'domains.list.action_details'), Url::toRoute(['/domains/details', 'id' => $domain->id]), [
                                     'class' => 'dropdown-item domain-details',
@@ -76,8 +76,12 @@
     </tbody>
 </table>
 
-<div class="text-align-center pager">
-    <?= LinkPager::widget([
-        'pagination' => $domains['pages'],
-    ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $domains['pages'],]); ?>
+            </ul>
+        </nav>
+    </div>
 </div>

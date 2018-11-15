@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\EditCustomerForm */
+    /* @var $model superadmin\models\forms\EditCustomerForm */
     /* @var $form my\components\ActiveForm */
 
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\EditCustomerForm;
+    use superadmin\models\forms\EditCustomerForm;
     use yii\bootstrap\Html;
 
     $model = new EditCustomerForm();

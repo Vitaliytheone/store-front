@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class DowngradePanelForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class DowngradePanelForm extends Model {
 
@@ -64,7 +64,7 @@ class DowngradePanelForm extends Model {
         /**
          * @var UserServices $currentProviders
          */
-        $currentProviders = ArrayHelper::index($this->_project->userServices, 'aid');
+        $currentProviders = ArrayHelper::index($this->_project->userServices, 'provider_id');
 
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -79,8 +79,8 @@ class DowngradePanelForm extends Model {
             } else {
                 $userService = new UserServices();
                 $userService->attributes = [
-                    'pid' => $this->_project->id,
-                    'aid' => $this->provider,
+                    'panel_id' => $this->_project->id,
+                    'provider_id' => $this->provider,
                 ];
 
                 $userService->save(false);

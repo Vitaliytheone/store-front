@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $referralEarnings \my\modules\superadmin\models\search\ReferralEarningsSearch */
+    /* @var $referralEarnings \superadmin\models\search\ReferralEarningsSearch */
 
     use yii\bootstrap\Html;
     use my\helpers\Url;

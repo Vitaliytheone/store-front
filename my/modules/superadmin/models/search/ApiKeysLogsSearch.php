@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\panels\AdditionalServices;
@@ -23,7 +23,7 @@ use yii\db\Query;
  * In use   [project.site, …]
  * Date     panel_providers_log.created_at
  *
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ApiKeysLogsSearch
 {
@@ -113,12 +113,12 @@ class ApiKeysLogsSearch
             ->leftJoin(['pt' => $this->_projectTable], 'pt.id = lt.panel_id')
             ->leftJoin(['pat' => $this->_projectAdminTable], 'pat.id = lt.admin_id')
             ->leftJoin(['ct' => $this->_customersTable], 'ct.id = pt.cid')
-            ->leftJoin(['provt' => $this->_providersTable], 'lt.provider_id = provt.res')
+            ->leftJoin(['provt' => $this->_providersTable], 'lt.provider_id = provt.provider_id')
             ->leftJoin(['prvt' => (new Query())
-                ->select(['res', 'name'])
+                ->select(['provider_id', 'name'])
                 ->from($this->_providersTable)
-                ->groupBy('res')
-            ],'prvt.res = lt.provider_id')
+                ->groupBy('provider_id')
+            ],'prvt.provider_id = lt.provider_id')
             ->orderBy([
                 'id' => SORT_DESC,
             ])

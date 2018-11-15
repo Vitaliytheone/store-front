@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\CreatePlanForm */
+    /* @var $model superadmin\models\forms\CreatePlanForm */
     /* @var $form my\components\ActiveForm */
 
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\CreatePlanForm;
+    use superadmin\models\forms\CreatePlanForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
@@ -15,7 +15,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= Yii::t('app/superadmin', 'plan.create.modal_header')?></h4>
+                <h5 class="modal-title"><?= Yii::t('app/superadmin', 'plan.create.modal_header')?></h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
 
@@ -52,7 +52,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'plan.create.modal_cancel_btn')?></button>
+                    <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'plan.create.modal_cancel_btn')?></button>
                     <?= Html::submitButton(Yii::t('app/superadmin', 'plan.create.modal_submit_btn'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'create-plan-button',

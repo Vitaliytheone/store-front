@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\SuperAdmin;
 use common\models\panels\SuperAdminToken;
@@ -8,10 +8,10 @@ use my\components\SuperAccessControl;
 use common\models\stores\Stores;
 use my\components\ActiveForm;
 use my\helpers\Url;
-use my\modules\superadmin\models\forms\ChangeStoreDomainForm;
-use my\modules\superadmin\models\forms\EditStoreExpiryForm;
-use my\modules\superadmin\models\search\StoresSearch;
-use my\modules\superadmin\models\forms\EditStoreForm;
+use superadmin\models\forms\ChangeStoreDomainForm;
+use superadmin\models\forms\EditStoreExpiryForm;
+use superadmin\models\search\StoresSearch;
+use superadmin\models\forms\EditStoreForm;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -26,8 +26,6 @@ use yii\filters\ContentNegotiator;
 class StoresController extends CustomController
 {
     public $activeTab = 'stores';
-
-    public $layout = 'superadmin_v2.php';
 
     public function behaviors()
     {

@@ -7,7 +7,7 @@
     use common\models\stores\StoreAdmins;
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
-    use yii\helpers\Url;
+    use my\helpers\Url;
 
     $model = new CreateStoreStaffForm();
 ?>

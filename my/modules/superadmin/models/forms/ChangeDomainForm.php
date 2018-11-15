@@ -1,17 +1,18 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use my\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
+use my\helpers\ProvidersHelper;
 use yii\base\Model;
 use Yii;
 
 /**
  * Class ChangeDomainForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class ChangeDomainForm extends Model {
 
@@ -74,6 +75,8 @@ class ChangeDomainForm extends Model {
                 $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
                 return false;
             }
+
+            ProvidersHelper::makeProvidersOld($domain);
 
             if (($additionalService = AdditionalServices::findOne([
                 'name' => $oldDomain

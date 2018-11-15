@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $customers array */
-    /* @var $customer \my\modules\superadmin\models\search\CustomersSearch */
+    /* @var $customer \superadmin\models\search\CustomersSearch */
     /* @var $filters array */
 
     use yii\helpers\Html;
@@ -9,7 +9,7 @@
     use my\helpers\Url;
     use yii\helpers\Json;
     use yii\widgets\LinkPager;
-    use my\modules\superadmin\widgets\CountPagination;
+    use superadmin\widgets\CountPagination;
     use my\helpers\SpecialCharsHelper;
 ?>
 
@@ -150,7 +150,6 @@
                         <?= LinkPager::widget(['pagination' => $customers['pages'],]); ?>
                     </ul>
                 </nav>
-                <!-- Pagination End -->
             </div>
             <div class="col-md-6 text-md-right">
                 <?= CountPagination::widget([

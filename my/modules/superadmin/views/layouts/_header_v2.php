@@ -2,10 +2,11 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use my\modules\superadmin\widgets\SuperAdminNav;
-use my\modules\superadmin\widgets\SuperAdminNavBar;
-use my\modules\superadmin\widgets\UnreadMessagesWidgetV2;
-use my\modules\superadmin\widgets\ErrorOrdersWidgetV2;
+use superadmin\widgets\SuperAdminNav;
+use superadmin\widgets\SuperAdminNavBar;
+use superadmin\widgets\UnreadMessagesWidgetV2;
+use superadmin\widgets\ErrorOrdersWidgetV2;
+use superadmin\widgets\ErrorSslWidget;
 use common\models\panels\SuperAdmin;
 use my\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -86,7 +87,7 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
 }
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SSL)) {
     $optionsLeft[] = [
-        'label' => Yii::t('app/superadmin', 'header.nav.ssl'),
+        'label' => Yii::t('app/superadmin', 'header.nav.ssl') . ' ' . ErrorSslWidget::widget(),
         'url' => Url::toRoute('/ssl'),
         'options' => ['class' => 'nav-item'],
         'linkOptions' => ['class' => 'nav-link'],
@@ -241,6 +242,7 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_TOOLS)) {
             ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/panelfire')],
             ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')],
             ['label' => Yii::t('app/superadmin', 'header.nav.db_helper'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/db-helper')],
+            ['label' => Yii::t('app/superadmin', 'header.nav.fraud_reports'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/fraud-reports')],
         ]
     ];
 }

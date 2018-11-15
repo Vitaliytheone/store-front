@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $panels \my\modules\superadmin\models\search\PanelsSearch */
-    /* @var $panel \my\modules\superadmin\models\search\PanelsSearch */
+    /* @var $panels \superadmin\models\search\PanelsSearch */
+    /* @var $panel \superadmin\models\search\PanelsSearch */
     /* @var $plans */
     /* @var $pageSizes array */
     /* @var $filters array */
@@ -10,7 +10,7 @@
 
     use my\helpers\Url;
     use yii\widgets\LinkPager;
-    use my\modules\superadmin\widgets\CountPagination;
+    use superadmin\widgets\CountPagination;
     use my\helpers\SpecialCharsHelper;
 
     $now = time();

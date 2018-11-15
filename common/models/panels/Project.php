@@ -17,6 +17,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\components\traits\UnixTimeFormatTrait;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -34,14 +35,18 @@ use yii\helpers\ArrayHelper;
  * @property integer $hide
  * @property integer $child_panel
  * @property integer $provider_id
+ * @property integer $folder
+ * @property integer $folder_content
  * @property integer $theme
  * @property string $theme_custom
  * @property string $theme_default
  * @property integer $ssl
  * @property string $theme_path
+ * @property integer $rtl
  * @property integer $utc
  * @property string $db
  * @property string $apikey
+ * @property integer $orders
  * @property integer $plan
  * @property integer $tariff
  * @property integer $last_count
@@ -50,8 +55,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $paypal
  * @property integer $type
  * @property string $lang
+ * @property integer $language_id
  * @property integer $currency
- * @property string $currency_code
  * @property integer $seo
  * @property integer $comments
  * @property integer $mentions
@@ -86,12 +91,22 @@ use yii\helpers\ArrayHelper;
  * @property integer $ticket_per_user
  * @property integer $auto_order
  * @property integer $drip_feed
+ * @property integer $currency_format
+ * @property string $currency_code
+ * @property integer $tasks
  * @property integer $name_fields
  * @property integer $name_modal
  * @property string $notification_email
  * @property int $forgot_password
  * @property int $no_invoice
+ * @property int $js_error_tracking
  * @property int $no_referral
+ * @property string $paypal_fraud_settings
+ * @property int $refiller
+ * @property string $whois_lookup
+ * @property string $nameservers
+ * @property int $dns_checked_at
+ * @property int $dns_status
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -127,6 +142,13 @@ class Project extends ActiveRecord implements ProjectInterface
     const NO_INVOICE_ENABLED = 1;
     const NO_INVOICE_DISABLED = 0;
 
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_HIGH = 'accept_high';
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_CRITICAL = 'accept_critical';
+
+    const DNS_STATUS_NOT_DEFINED = null;
+    const DNS_STATUS_ALIEN = 0;
+    const DNS_STATUS_MINE = 1;
+
     use UnixTimeFormatTrait;
 
     /**
@@ -150,17 +172,23 @@ class Project extends ActiveRecord implements ProjectInterface
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
                 'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password',
-                'name_fields', 'name_modal', 'no_invoice', 'no_referral'
+                'name_fields', 'name_modal', 'no_invoice', 'no_referral', 'rtl', 'orders', 'language_id', 'currency_format', 'tasks', 'js_error_tracking', 'refiller'
             ], 'integer'],
             [['site', 'name', 'skype'], 'string', 'max' => 1000],
             [['theme_custom', 'theme_default', 'db', 'logo', 'favicon', 'notification_email'], 'string', 'max' => 300],
             [['theme_path'], 'string', 'max' => 500],
             [['apikey'], 'string', 'max' => 64],
             [['lang'], 'string', 'max' => 32],
+            [['folder'], 'string', 'max' => 6],
             [['currency_code'], 'string', 'max' => 3],
+            [['folder_content', 'paypal_fraud_settings'], 'string'],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
+            [['whois_lookup', 'nameservers'], 'string'],
+            [['dns_checked_at', 'dns_status'], 'integer'],
+            ['paypal_fraud_settings', 'string'],
+            ['paypal_fraud_settings', 'default', 'value' => json_encode(Yii::$app->params['paypal_fraud_settings'])],
         ];
     }
 
@@ -182,13 +210,17 @@ class Project extends ActiveRecord implements ProjectInterface
             'hide' => Yii::t('app', 'Hidden'),
             'child_panel' => Yii::t('app', 'Child Panel'),
             'provider_id' => Yii::t('app', 'Provider ID'),
+            'folder' => Yii::t('app', 'Folder'),
+            'folder_content' => Yii::t('app', 'Folder Content'),
             'theme' => Yii::t('app', 'Theme'),
             'theme_custom' => Yii::t('app', 'Theme Custom'),
             'theme_default' => Yii::t('app', 'Theme Default'),
             'theme_path' => Yii::t('app', 'Theme Path'),
+            'rtl' => Yii::t('app', 'Rtl'),
             'utc' => Yii::t('app', 'Utc'),
             'db' => Yii::t('app', 'Db'),
             'apikey' => Yii::t('app', 'Apikey'),
+            'orders' => Yii::t('app', 'Orders'),
             'plan' => Yii::t('app', 'Plan'),
             'tariff' => Yii::t('app', 'Tariff'),
             'last_count' => Yii::t('app', 'Last Count'),
@@ -197,6 +229,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'paypal' => Yii::t('app', 'Paypal'),
             'type' => Yii::t('app', 'Type'),
             'lang' => Yii::t('app', 'Lang'),
+            'language_id' => Yii::t('app', 'Language ID'),
             'currency' => Yii::t('app', 'Currency'),
             'seo' => Yii::t('app', 'Seo'),
             'comments' => Yii::t('app', 'Comments'),
@@ -238,13 +271,24 @@ class Project extends ActiveRecord implements ProjectInterface
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
             'no_invoice' => Yii::t('app', 'No Invoice'),
+            'currency_format' => Yii::t('app', 'Currency Format'),
             'currency_code' => Yii::t('app', 'Currency code'),
+            'tasks' => Yii::t('app', 'Tasks'),
+            'js_error_tracking' => Yii::t('app', 'JS Error Tracking'),
             'no_referral' => Yii::t('app', 'No Referral'),
+            'paypal_fraud_settings' => Yii::t('app', 'PayPal Fraud Settings'),
+            'refiller' => Yii::t('app', 'Refiller'),
+            'whois_lookup' => Yii::t('app', 'Who is'),
+            'nameservers' => Yii::t('app', 'Nameservers'),
+            'dns_checked_at' => Yii::t('app', 'Dns checked at'),
+            'dns_status' => Yii::t('app', 'Dns status'),
         ];
     }
-    
+
     /**
-     * @return null|static
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getParent()
     {
@@ -346,7 +390,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function getUserServices()
     {
-        return $this->hasMany(UserServices::class, ['pid' => 'id']);
+        return $this->hasMany(UserServices::class, ['panel_id' => 'id']);
     }
 
     /**
@@ -431,9 +475,7 @@ class Project extends ActiveRecord implements ProjectInterface
             return false;
         }
 
-        if (!$this->currency_code) {
-            $this->currency_code = CurrencyHelper::getCurrencyCodeById($this->currency);
-        }
+        $this->currency = CurrencyHelper::getCurrencyIdByCode($this->currency_code);
 
         return true;
     }
@@ -455,11 +497,11 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Get currency code
-     * @return mixed
+     * @return string
      */
     public function getCurrencyCode()
     {
-        return CurrencyHelper::getCurrencyCodeById($this->currency);
+        return $this->currency_code;
     }
 
     /**
@@ -592,6 +634,8 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Enable domain (create panel domains and add domain to dns servers)
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function enableDomain()
     {
@@ -734,6 +778,7 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Create nginx config
      * @return bool
+     * @throws \Exception
      */
     public function createNginxConfig()
     {
@@ -743,6 +788,7 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Remove nginx config
      * @return bool
+     * @throws \Exception
      */
     public function deleteNginxConfig()
     {
@@ -899,8 +945,77 @@ class Project extends ActiveRecord implements ProjectInterface
         return Project::find()
             ->select('child_panel.*')
             ->leftJoin('additional_services', 'additional_services.name = project.site')
-            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.res')
+            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.provider_id')
             ->where(['project.site' => $this->site])
             ->all();
     }
+
+    /**
+     * @return bool
+     */
+    public function hasManualPaymentMethods()
+    {
+        return (new Query())
+            ->from(['ppm' => PanelPaymentMethods::tableName()])
+            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND manual_callback_url = 1')
+            ->andWhere([
+                'ppm.panel_id' => $this->id
+            ])
+            ->exists();
+    }
+
+    /**
+     * Set whois_lookup
+     * @param array $whoisLookupData
+     */
+    public function setWhoisLookup(array $whoisLookupData)
+    {
+        $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get whois_lookup
+     * @return array
+     */
+    public function getWhoisLookup()
+    {
+        return json_decode($this->whois_lookup,true);
+    }
+
+    /**
+     * Set nameservers
+     * @param array $nameserversList
+     */
+    public function setNameservers(array $nameserversList)
+    {
+        $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get nameservers
+     * @return array
+     */
+    public function getNameservers()
+    {
+        return json_decode($this->nameservers,true);
+    }
+
+    /**
+     * Get paypal_fraud_settings
+     * @return array
+     */
+    public function getPaypalFraudSettings()
+    {
+        return json_decode($this->paypal_fraud_settings, true);
+    }
+
+    /**
+     * Set paypal_fraud_settings
+     * @param array $settings
+     */
+    public function setPaypalFraudSettings(array $settings)
+    {
+        $this->paypal_fraud_settings = json_encode($settings);
+    }
+
 }

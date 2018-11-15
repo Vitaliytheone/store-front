@@ -2,7 +2,7 @@
 
 use my\helpers\Url;
 use my\components\ActiveForm;
-use my\modules\superadmin\models\forms\CreateMessageForm;
+use superadmin\models\forms\CreateMessageForm;
 
 $model = new CreateMessageForm();
 ?>

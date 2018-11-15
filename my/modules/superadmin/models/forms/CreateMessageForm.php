@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\AdminUsers;
 use common\models\panels\SuperAdmin;
@@ -10,7 +10,7 @@ use yii\base\Model;
 
 /**
  * Class CreateMessageForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class CreateMessageForm extends Model
 {

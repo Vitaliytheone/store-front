@@ -1,9 +1,9 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\stores\Stores;
 use my\helpers\SpecialCharsHelper;
-use my\modules\superadmin\widgets\CountPagination;
+use superadmin\widgets\CountPagination;
 use Yii;
 use common\models\panels\Customers;
 use yii\db\Query;
@@ -12,7 +12,7 @@ use yii\data\Pagination;
 
 /**
  * Class CustomersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class CustomersSearch extends Customers {
 
@@ -114,7 +114,7 @@ class CustomersSearch extends Customers {
                 'COUNT(DISTINCT ssl_cert.id) AS countSslCerts',
             ])
             ->leftJoin(['referral' => Customers::tableName()], 'referral.id = customers.referrer_id')
-            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [':projectChildPanel' => 0])
+            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id')
             ->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [':projectChildPanel' => 0])
             ->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [':childPanel' => 1])
             ->leftJoin('domains', 'domains.customer_id = customers.id')

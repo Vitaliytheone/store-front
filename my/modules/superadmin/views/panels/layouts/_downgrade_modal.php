@@ -1,9 +1,9 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $form \my\components\ActiveForm */
-/* @var $modal \my\modules\superadmin\models\forms\DowngradePanelForm */
+/* @var $modal \superadmin\models\forms\DowngradePanelForm */
 
-use my\modules\superadmin\models\forms\DowngradePanelForm;
+use superadmin\models\forms\DowngradePanelForm;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use yii\bootstrap\Html;

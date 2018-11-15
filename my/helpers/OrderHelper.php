@@ -1,6 +1,8 @@
 <?php
 namespace my\helpers;
 
+use common\components\letsencrypt\Letsencrypt;
+use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
@@ -9,7 +11,6 @@ use common\models\panels\Languages;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
-use my\components\domains\Ahnames;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
 use common\models\panels\Domains;
@@ -316,6 +317,7 @@ class OrderHelper {
         $orderDetails = $order->getDetails();
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
+        $currency = ArrayHelper::getValue($orderDetails, 'currency');
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -324,7 +326,8 @@ class OrderHelper {
         $project->cid = $order->cid;
         $project->site = $domain;
         $project->name = DomainsHelper::idnToUtf8($domain);
-        $project->currency = ArrayHelper::getValue($orderDetails, 'currency');
+        $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
+        $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -367,17 +370,7 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $projectAdmin->getErrors(), 'cron.order.admin');
         }
 
-        // проверяем добавлена ли ранее запись additional_services.name = домен панели, если да то добавляем к имени _old
-        // и меняем additional_services.status = 1 и additional_services.search = 1
-        $additionalService = AdditionalServices::findOne([
-            'name' => $domain
-        ]);
-        if ($additionalService) {
-            $additionalService->name = $additionalService->name . '_old';
-            $additionalService->search = 1;
-            $additionalService->status = 1;
-            $additionalService->save(false);
-        }
+        ProvidersHelper::makeProvidersOld($domain);
 
         $additionalService = new AdditionalServices();
         $additionalService->name = $domain;
@@ -392,7 +385,11 @@ class OrderHelper {
         $additionalService->status = AdditionalServices::STATUS_ACTIVE;
         $additionalService->service_description = 1;
         $additionalService->import = 1;
-        $additionalService->currency = CurrencyHelper::getCurrencyCodeById($order->getCurrency());
+        $additionalService->service_auto_rate = 1;
+        $additionalService->provider_rate = 1;
+        $additionalService->service_auto_max = 1;
+        $additionalService->service_auto_min = 1;
+        $additionalService->currency = $order->getCurrency();
 
         if (!$additionalService->save(false)) {
             $order->status = Orders::STATUS_ERROR;
@@ -401,8 +398,8 @@ class OrderHelper {
 
         if ($child) {
             $userService = new UserServices();
-            $userService->pid = $project->id;
-            $userService->aid = $project->provider_id;
+            $userService->panel_id = $project->id;
+            $userService->provider_id = $project->provider_id;
             $userService->save(false);
         }
 
@@ -744,15 +741,9 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_admin');
         }
 
-        $storeDomain = new StoreDomains();
-        $storeDomain->store_id = $store->id;
-        $storeDomain->domain = $store->domain;
-        $storeDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
-        $storeDomain->ssl = StoreDomains::SSL_OFF;
-
-        if (!$storeDomain->save(false)) {
+        if (!$store->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_domain');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $store->getErrors(), 'cron.order.store_domain');
         }
 
         // Create Store db
@@ -790,6 +781,157 @@ class OrderHelper {
             Yii::$app->db->createCommand("
                 INSERT INTO `{$store->db_name}`.`notification_admin_emails` (`email`, `status`, `primary`) VALUES ('{$adminEmail}', 1, 1);
             ")->execute();
+        }
+
+        return true;
+    }
+
+    /**
+     * Obtain free letsencrypt SSL certificate
+     * @param Orders $order
+     * @return bool
+     * @throws Exception
+     */
+    public static function leSsl(Orders $order)
+    {
+        if (SslCert::findOne([
+            'domain' => $order->domain,
+            'status' => SslCert::STATUS_ACTIVE
+        ])) {
+            throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
+        }
+
+        $orderDetails = $order->getDetails();
+
+        $panel = Project::findOne($orderDetails['pid']);
+
+        if (!$panel) {
+            throw new Exception('Panel [' . $orderDetails['pid'] . '] not found!');
+        }
+
+        $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
+
+        if (!$sslCertItem) {
+            throw new Exception('SslItem for domain [' . $order->domain . '] not found!');
+        }
+
+        $ssl = new SslCertLetsencrypt();
+        $ssl->cid = $order->cid;
+        $ssl->pid = $orderDetails['pid'];
+        $ssl->project_type = $orderDetails['project_type'];
+        $ssl->item_id = $sslCertItem->id;
+        $ssl->status = SslCert::STATUS_PENDING;
+        $ssl->checked = SslCert::CHECKED_NO;
+        $ssl->domain = $order->domain;
+
+        $letsencrypt = new Letsencrypt();
+        $letsencrypt->setStageMode(false);
+        $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
+        $letsencrypt->setSsl($ssl);
+
+        $letsencrypt->issueCert();
+
+        $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+        $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+        if (!$ssl->save(false)) {
+            throw new Exception('Cannot create SslCertLetsencrypt [orderId=' . $order->id . ']');
+        }
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
+
+        if (!OrderSslHelper::addDdos($ssl, [
+            'site' => $order->domain,
+            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to DDoS!');
+        }
+
+        if (!OrderSslHelper::addConfig($ssl, [
+            'domain' => $order->domain,
+            'crt_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to Config!');
+        }
+
+        $panel->ssl = Project::SSL_MODE_ON;
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Panel [' . $panel->id . ']');
+        }
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->item_id = $ssl->id;
+        $order->setItemDetails(['expiry_at' => $ssl->expiry], 'ssl_details');
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        return true;
+    }
+
+    /**
+     * Renew free Letsencrypt certificate
+     * @param Orders $order
+     * @return bool
+     * @throws Exception
+     */
+    public static function leProlongationSsl(Orders $order)
+    {
+        $ssl = SslCertLetsencrypt::findOne($order->item_id);
+
+        if (!$ssl) {
+            throw new Exception('SslCertLetsencrypt item not found [orderId=' . $order->id . ']');
+        }
+
+        $ssl->status = SslCertLetsencrypt::STATUS_INCOMPLETE;
+        $ssl->checked = SslCertLetsencrypt::CHECKED_NO;
+
+        if (!$ssl->save(false)) {
+            throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+        }
+
+        $letsencrypt = new Letsencrypt();
+        $letsencrypt->setStageMode(false);
+        $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
+        $letsencrypt->setSsl($ssl);
+
+        $letsencrypt->renewCert();
+
+        $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
+        $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+
+        if (!$ssl->save(false)) {
+            throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
+        }
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
+
+        if (!OrderSslHelper::addDdos($ssl, [
+            'site' => $order->domain,
+            'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to DDoS!');
+        }
+
+        if (!OrderSslHelper::addConfig($ssl, [
+            'domain' => $order->domain,
+            'crt_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
+            'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
+        ])) {
+            throw new Exception('Cannot add SSL to Config!');
+        }
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->item_id = $ssl->id;
+        $order->setItemDetails(['expiry_at' => $ssl->expiry], 'ssl_details');
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
         }
 
         return true;

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Orders;
@@ -11,7 +11,7 @@ use Yii;
 
 /**
  * Class OrdersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class OrdersSearch extends Orders {
 
@@ -151,7 +151,7 @@ class OrdersSearch extends Orders {
             $resultData[$key]['ip'] = $value['ip'];
             $resultData[$key]['domain'] = $value['domain'] ? DomainsHelper::idnToUtf8($value['domain']) : '';
             $resultData[$key]['details'] = $value['details'];
-            $resultData[$key]['item'] = Orders::getItems()[$value['item']];
+            $resultData[$key]['item'] = Orders::getItemName($value['item']);
             $resultData[$key]['item_id'] = $value['item_id'];
             $resultData[$key]['invoice_id'] = $value['invoice_id'];
             $resultData[$key]['customer_email'] = $value['customer_email'];
@@ -260,6 +260,21 @@ class OrdersSearch extends Orders {
             ]),
             Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_stores', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0)
+            ]),
+            Orders::ITEM_PROLONGATION_SSL => Yii::t('app/superadmin', 'orders.list.item_prolongation_ssl', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_SSL, 0)
+            ]),
+            Orders::ITEM_PROLONGATION_DOMAIN => Yii::t('app/superadmin', 'orders.list.item_prolongation_domain', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_DOMAIN, 0)
+            ]),
+            Orders::ITEM_BUY_TRIAL_STORE => Yii::t('app/superadmin', 'orders.list.item_trial_store', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_TRIAL_STORE, 0)
+            ]),
+            Orders::ITEM_FREE_SSL => Yii::t('app/superadmin', 'orders.list.item_free_ssl', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_FREE_SSL, 0)
+            ]),
+            Orders::ITEM_PROLONGATION_FREE_SSL => Yii::t('app/superadmin', 'orders.list.item_prolongation_free_ssl', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_FREE_SSL, 0)
             ]),
         ];
 

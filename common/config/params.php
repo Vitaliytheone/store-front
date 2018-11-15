@@ -1,10 +1,10 @@
 <?php
 
-$serverIp = "54.37.92.228";
+$serverIp = "54.37.239.222";
 
 return [
     'time' => '10800',
-    
+
     'config.db' => DB_CONFIG,
     'config.proxy' => PROXY_CONFIG,
     'panelNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
@@ -18,6 +18,7 @@ return [
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
     'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых панелей
 
+    'myUrl' => 'http://sommerce.my/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
     'storeDomain' => 'sommerce.net', // Домен нашего сайта
 
@@ -109,7 +110,19 @@ return [
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
     'failsEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем неудачные действия - пока не используется нигде
 
+    'cron.check_payments_fee_days' => 2,
+
+    'letsencrypt' => [
+        'paths' => [
+            'lib' => Yii::getAlias('@project_root/shell/acme.sh'),
+            'ssl' => Yii::getAlias('@project_root/ssl'),
+        ],
+    ],
 
     'cron.check_payments_fee_days' => 2,
-    'cron.orderExpiry' => 30 //days
+    'cron.orderExpiry' => 30, //days
+
+    'whoisxmlapi' => [
+        'api_url' => 'https://www.whoisxmlapi.com/whoisserver/WhoisService',
+    ],
 ];

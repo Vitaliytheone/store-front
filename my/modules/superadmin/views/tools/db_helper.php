@@ -17,11 +17,15 @@ $this->context->addModule('superadminDbHelperController');
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-block">
-                    <div class="row">
+                    <br>
+                    <div class="input-group">
                         <div class="col-lg-6">
                             <?php $form = ActiveForm::begin([
                                 'action' => Url::toRoute(['tools/db-helper']),
                                 'id' => 'dbHelperForm',
+                                'options' => [
+                                    'class' => "form",
+                                ],
                                 'fieldClass' => 'yii\bootstrap\ActiveField',
                                 'fieldConfig' => [
                                     'labelOptions' => ['class' => 'form'],
@@ -34,14 +38,17 @@ $this->context->addModule('superadminDbHelperController');
                             <?= Html::textarea('query', $query, ['class' => 'query_input form-control', 'rows' => '15']); ?>
                             <br>
                             <?= Html::submitButton(Yii::t('app/superadmin', Yii::t('app/superadmin', 'db_helper.apply_btn')), [
-                                'class' => 'btn btn-outline btn-primary',
+                                'class' => 'btn btn-outline btn-lg btn-primary',
                                 'name' => 'db-helper-button',
                                 'id' => 'dbHelperButton'
                             ]) ?>
                             <?php ActiveForm::end(); ?>
                         </div>
-                        <?= Html::textarea('query', isset($model) ? $model : $query, ['class' => 'query_content form-control col-lg-6', 'rows' => '15']); ?>
+                        <div class="form-group col-lg-6">
+                        <?= Html::textarea('query', isset($model) ? $model : $query, ['class' => 'query_content form-control', 'rows' => '18']); ?>
+                        </div>
                     </div>
+                    <br>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -12,7 +12,7 @@ use my\helpers\SpecialCharsHelper;
 
 /**
  * Class StoresSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class StoresSearch {
 
@@ -91,6 +91,8 @@ class StoresSearch {
             }
         }
 
+        $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
+
         if (!empty($searchQuery)) {
             $stores->andFilterWhere([
                 'or',
@@ -112,29 +114,6 @@ class StoresSearch {
             ]);
         }
 
-        $stores->select([
-            'stores.id',
-            'stores.domain',
-            'stores.subdomain',
-            'stores.currency',
-            'stores.language',
-            'stores.name',
-            'stores.customer_id',
-            'stores.status',
-            'stores.created_at',
-            'stores.expired',
-            'stores.last_count',
-            'stores.current_count',
-            'customers.email AS customer_email',
-            'customers.referrer_id AS referrer_id',
-            'store_domains.domain AS store_domain',
-        ]);
-        $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
-        $stores->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
-            StoreDomains::DOMAIN_TYPE_DEFAULT,
-            StoreDomains::DOMAIN_TYPE_SUBDOMAIN
-        ]). ')');
-
         return $stores;
     }
 
@@ -144,6 +123,7 @@ class StoresSearch {
      */
     public function search()
     {
+        $searchQuery = $this->getQuery();
         $status = isset($this->params['status']) ? $this->params['status'] : 'all';
 
         $query = clone $this->buildQuery($status);
@@ -157,16 +137,37 @@ class StoresSearch {
         }
 
         $stores = $query
-            ->offset($pages->offset)
+            ->select([
+                'stores.id',
+                'stores.domain',
+                'stores.subdomain',
+                'stores.currency',
+                'stores.language',
+                'stores.name',
+                'stores.customer_id',
+                'stores.status',
+                'stores.created_at',
+                'stores.expired',
+                'stores.last_count',
+                'stores.current_count',
+                'customers.email AS customer_email',
+                'customers.referrer_id AS referrer_id',
+                'store_domains.domain AS store_domain',
+            ])
+            ->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
+                StoreDomains::DOMAIN_TYPE_DEFAULT,
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+            ]). ')');
+
+        $stores->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
                 'stores.id' => SORT_DESC
             ])
-            ->groupBy('stores.id')
-            ->all();
+            ->groupBy('stores.id');
 
         return [
-            'models' => SpecialCharsHelper::multiPurifier($this->prepareStoresData($stores)),
+            'models' => SpecialCharsHelper::multiPurifier($this->prepareStoresData($stores->all())),
             'pages' => $pages,
         ];
     }

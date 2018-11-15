@@ -1,21 +1,56 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
+use common\models\panels\PaypalFraudReports;
 use my\components\ActiveForm;
 use common\models\panels\SuperToolsScanner;
-use my\modules\superadmin\models\forms\PanelsScannerAddDomainForm;
-use my\modules\superadmin\models\search\DbHelperSearch;
-use my\modules\superadmin\models\search\PanelsScannerSearch;
+use superadmin\models\forms\PanelsScannerAddDomainForm;
+use superadmin\models\search\DbHelperSearch;
+use superadmin\models\search\FraudReportsSearch;
+use superadmin\models\search\PanelsScannerSearch;
 use Yii;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use my\helpers\Url;
 
 /**
  * Class ToolsController
- * @package my\modules\superadmin\controllers
+ * @package superadmin\controllers
  */
 class ToolsController extends CustomController
 {
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'levopanel'=> ['GET'],
+                    'rentalpanel'=> ['GET'],
+                    'panelfire' => ['GET'],
+                    'fraud-reports' => ['GET'],
+                    'reports-change-status' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['add-domain']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['add-domain'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ]);
+    }
+
     /** @var string Active navigation tab */
     public $activeTab = 'tools';
 
@@ -112,14 +147,44 @@ class ToolsController extends CustomController
     }
 
     /**
+     * Render Fraud Reports page
+     * @return string
+     */
+    public function actionFraudReports()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.fraud_reports');
+
+        $reports = new FraudReportsSearch();
+        $reports->setParams(Yii::$app->request->get());
+
+        return $this->render('fraud_reports', [
+            'reports' => $reports->search(),
+            'navs' => $reports->navs(),
+            'filters' => $reports->getParams(),
+        ]);
+    }
+
+    /**
+     * Change status of report
+     */
+    public function actionReportsChangeStatus()
+    {
+        $id = Yii::$app->request->post('id');
+        $status = Yii::$app->request->post('status');
+
+        $report = PaypalFraudReports::findOne($id);
+        $report->changeStatus($status);
+
+        $this->redirect(Url::toRoute(['/tools/fraud-reports']));
+    }
+
+    /**
      * Add new panel domain Ajax action
      * @param $panel string Name of the current scanner
      * @return array
      */
     public function actionAddDomain($panel)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $form = new PanelsScannerAddDomainForm();
         $form->setPanelInfo($panel);
 

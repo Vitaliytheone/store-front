@@ -24,6 +24,12 @@ $config = [
             'migrationPath' => '@common/migrations/sommerce/',
         ],
 
+        'migrate' => [
+            'class' => 'console\controllers\my\CustomMigrateController',
+            'migrationTable' => DB_PANELS . '.system_migrations',
+            'migrationPath' => '@common/migrations/my/',
+        ],
+
         'migrate-my' => [
             'class' => 'console\controllers\my\CustomMigrateController',
             'migrationTable' => DB_PANELS . '.system_migrations',
@@ -104,6 +110,12 @@ $config = [
                 'class' => 'Swift_MailTransport',
             ],
             'viewPath' => '@my/mail/views',
+        ],
+
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
         ],
     ],
     'params' => $params,

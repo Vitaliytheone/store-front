@@ -22,8 +22,9 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $created_at
  * @property string $ip
  * @property int $is_system
- * @property Tickets $ticket
  * @property string $user_agent
+ *
+ * @property Tickets $ticket
  * @property Customers $customer
  * @property SuperAdmin $admin
  */
@@ -48,7 +49,7 @@ class TicketMessages extends ActiveRecord
             [['ticket_id', 'message'], 'required'],
             [['customer_id', 'ticket_id', 'admin_id', 'created_at', 'is_system'], 'integer'],
             [['message'], 'string', 'max' => 1000],
-            [['user_agent'], 'string', 'max' => 300],
+            [['user_agent', 'ip'], 'string', 'max' => 300],
         ];
     }
 
@@ -66,6 +67,7 @@ class TicketMessages extends ActiveRecord
             'created_at' => Yii::t('app', 'Created at'),
             'user_agent' => Yii::t('app', 'User agent'),
             'ip' => Yii::t('app', 'Ip'),
+            'is_system' => Yii::t('app', 'Is System'),
         ];
     }
 

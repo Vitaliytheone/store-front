@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\CreateInvoiceForm */
+    /* @var $model superadmin\models\forms\CreateInvoiceForm */
     /* @var $form my\components\ActiveForm */
 
-    use my\modules\superadmin\models\forms\CreateInvoiceForm;
+    use superadmin\models\forms\CreateInvoiceForm;
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
     use my\helpers\Url;
@@ -11,7 +11,7 @@
     $model = new CreateInvoiceForm();
 ?>
 <div class="modal fade" id="createInvoiceModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><?= Yii::t('app/superadmin', 'invoices.create_invoice.header')?></h5>
