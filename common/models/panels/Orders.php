@@ -51,6 +51,8 @@ class Orders extends ActiveRecord
     const ITEM_PROLONGATION_SSL = 6;
     const ITEM_PROLONGATION_DOMAIN = 7;
     const ITEM_BUY_TRIAL_STORE = 8;
+    const ITEM_FREE_SSL = 9;
+    const ITEM_PROLONGATION_FREE_SSL = 10;
 
     const ITEM_OBTAIN_LE_SSL = 9;
     const ITEM_PROLONGATION_LE_SSL = 10;
@@ -166,16 +168,19 @@ class Orders extends ActiveRecord
             static::ITEM_PROLONGATION_SSL => Yii::t('app', 'orders.item.prolongation_ssl'),
             static::ITEM_PROLONGATION_DOMAIN => Yii::t('app', 'orders.item.prolongation_domain'),
             static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'orders.item.trial_store'),
+            static::ITEM_FREE_SSL => Yii::t('app', 'orders.item.free_ssl'),
+            static::ITEM_PROLONGATION_FREE_SSL => Yii::t('app', 'orders.item.prolongation_free_ssl'),
         ];
     }
 
     /**
      * Get item name
+     * @param int $item
      * @return string
      */
-    public function getItemName()
+    public function getItemName($item)
     {
-        return static::getItems()[$this->item];
+        return ArrayHelper::getValue(static::getItems(), $item, '');
     }
 
     /**
