@@ -1,9 +1,9 @@
 <?php
 
-namespace my\modules\superadmin\models\search\dashboard;
+namespace superadmin\models\search\dashboard;
 
 use Exception;
-use my\modules\superadmin\components\services\BaseService;
+use superadmin\components\services\BaseService;
 
 class DashboardService
 {

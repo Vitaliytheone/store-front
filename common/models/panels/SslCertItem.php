@@ -16,6 +16,7 @@ use common\models\panels\queries\SslCertItemQuery;
  * @property string $price
  * @property string $allow
  * @property string $generator
+ * @property integer $provider
  *
  * @property SslCert[] $sslCerts
  */
@@ -23,6 +24,14 @@ class SslCertItem extends ActiveRecord
 {
     const GENERATOR_COMODO = 1;
     const GENERATOR_RAPIDSSL = 2;
+
+    const PROVIDER_GOGETSSL = 1;
+    const PROVIDER_LETSENCRYPT = 2;
+
+    const PRODUCT_ID_COMODO_POSITIVE = 45;
+    const PRODUCT_ID_COMODO_ESSENTIAL= 75;
+    const PRODUCT_ID_COMODO_RAPID= 31;
+    const PRODUCT_ID_LETSENCRYPT_BASE = 1;
 
     /**
      * @inheritdoc
@@ -43,7 +52,7 @@ class SslCertItem extends ActiveRecord
             [['price'], 'number'],
             [['name'], 'string', 'max' => 250],
             ['allow', 'string'],
-            ['generator', 'integer']
+            [['generator', 'provider'],  'integer'],
         ];
     }
 
@@ -59,6 +68,7 @@ class SslCertItem extends ActiveRecord
             'price' => Yii::t('app', 'Price'),
             'allow' => Yii::t('app', 'Allow'),
             'generator' => Yii::t('app', 'Generator'),
+            'provider' => Yii::t('app', 'Provider'),
         ];
     }
 

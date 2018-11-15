@@ -1,9 +1,9 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\Payments;
 use Yii;
 use yii\db\Query;
@@ -11,14 +11,14 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class ReportsPaymentsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ReportsPaymentsSearch
 {
     use UnixTimeFormatTrait;
 
     const FILTER_YEAR = 'year';
-    const FILTER_PAYMENT_GATEWAY = 'gateway';
+    const FILTER_PAYMENT_PARAMS = 'params';
 
     private $_defaultFilters = [];
     private $_currentFilters = [];
@@ -30,19 +30,19 @@ class ReportsPaymentsSearch
     private $_models = [];
 
     private $_paymentsTable;
-    private $_gatewaysTable;
+    private $_paramsTable;
 
     public function __construct()
     {
         $this->_timeOffset = ArrayHelper::getValue(Yii::$app->params, 'time', 0);
 
         $this->_paymentsTable= Payments::tableName();
-        $this->_gatewaysTable = PaymentGateway::tableName();
+        $this->_paramsTable = Params::tableName();
 
         // Set default filters values
         $this->_defaultFilters = [
             self::FILTER_YEAR  => date("Y"),
-            self::FILTER_PAYMENT_GATEWAY => null,
+            self::FILTER_PAYMENT_PARAMS => null,
         ];
     }
 
@@ -64,17 +64,17 @@ class ReportsPaymentsSearch
             $yearFilter = $this->_defaultFilters[self::FILTER_YEAR];
         }
 
-        // Check Gateway filter
-        $gatewayFilter = (int)ArrayHelper::getValue($filters, self::FILTER_PAYMENT_GATEWAY, null);
-        $allowedGatewaysIds = array_keys(PaymentGateway::getMethods());
+        // Check Params filter
+        $paramsFilter = ArrayHelper::getValue($filters, self::FILTER_PAYMENT_PARAMS, null);
+        $allowedParamsCodes = array_keys(Params::getPayments());
 
-        if (!in_array($gatewayFilter, $allowedGatewaysIds)) {
-            $gatewayFilter = $this->_defaultFilters[self::FILTER_PAYMENT_GATEWAY];
+        if (!in_array($paramsFilter, $allowedParamsCodes)) {
+            $paramsFilter = $this->_defaultFilters[self::FILTER_PAYMENT_PARAMS];
         }
 
         $this->_currentFilters = array_merge($this->_defaultFilters, $filters, [
             self::FILTER_YEAR => $yearFilter,
-            self::FILTER_PAYMENT_GATEWAY => $gatewayFilter,
+            self::FILTER_PAYMENT_PARAMS => $paramsFilter,
         ]);
 
         return  $this->_currentFilters;
@@ -97,16 +97,16 @@ class ReportsPaymentsSearch
         $filters = $this->_currentFilters;
 
         $yearFilter = ArrayHelper::getValue($filters, self::FILTER_YEAR, null);
-        $gatewayFilter = ArrayHelper::getValue($filters, self::FILTER_PAYMENT_GATEWAY, null);
+        $paramsFilter = ArrayHelper::getValue($filters, self::FILTER_PAYMENT_PARAMS, null);
 
         $startYearTS = mktime(0, 0, 0, 01, 01, $yearFilter) - $this->_timeOffset;
         $endYearTS = mktime(23, 59, 59, 12, 31, $yearFilter) - $this->_timeOffset;
 
         $query->andWhere('`date` BETWEEN :startTS AND :endTS', [':startTS' => $startYearTS, ':endTS' => $endYearTS]);
 
-        if ($gatewayFilter) {
-            $type = ($gatewayFilter === -1 ? 0 : $gatewayFilter);
-            $query->andWhere(['type' => $type ]);
+        if ($paramsFilter) {
+            $method = $paramsFilter == Params::CODE_OTHER ? null : $paramsFilter;
+            $query->andWhere(['payment_method' => $method]);
         }
     }
 
@@ -179,15 +179,15 @@ class ReportsPaymentsSearch
     }
 
     /**
-     * Return payment systems gateways data
+     * Return payment systems params data
      * @return array
      */
-    public function getPaymentGateways()
+    public function getPaymentParams()
     {
         $query = (new Query)
-            ->select(['pgid', 'name', 'position'])
-            ->from($this->_gatewaysTable)
-            ->where(['pid' => '-1'])
+            ->select(['code', 'position'])
+            ->from($this->_paramsTable)
+            ->where(['category' => Params::CATEGORY_PAYMENT])
             ->orderBy(['position' => SORT_DESC])
             ->all();
 
@@ -195,32 +195,33 @@ class ReportsPaymentsSearch
     }
 
     /**
-     * Return payment gateways for view
+     * Return payment params for view
      * @return array
      */
-    public function getPaymentGatewaysForView()
+    public function getPaymentParamsForView()
     {
-        $gateways = $this->getPaymentGateways();
-        $currentGateway = ArrayHelper::getValue($this->_currentFilters, self::FILTER_PAYMENT_GATEWAY, null);
+        $params = $this->getPaymentParams();
+        $currentParams = ArrayHelper::getValue($this->_currentFilters, self::FILTER_PAYMENT_PARAMS, null);
 
-        foreach ($gateways as &$gateway) {
-            $gateway['active'] = (int)$currentGateway === (int)ArrayHelper::getValue($gateway, 'pgid');
+        foreach ($params as &$param) {
+            $param['active'] = $currentParams === ArrayHelper::getValue($param, 'code');
+            $param['name'] = Params::getPaymentName($param['code']);
         }
 
         // Past 'All' item
-        array_unshift($gateways, [
+        array_unshift($params, [
+            'code' => null,
             'name' => 'All',
-            'pgid' => null,
-            'active' => !isset($this->_currentFilters[self::FILTER_PAYMENT_GATEWAY]),
+            'active' => !isset($this->_currentFilters[self::FILTER_PAYMENT_PARAMS]),
         ]);
 
-        array_push($gateways, [
-            'name' => PaymentGateway::getMethodNameById(-1),
-            'pgid' => -1,
-            'active' => (int)$currentGateway === (-1)
+        array_push($params, [
+            'code' => Params::CODE_OTHER,
+            'name' => Params::getPaymentName(Params::CODE_OTHER),
+            'active' => $currentParams === Params::CODE_OTHER,
         ]);
 
-        return $gateways;
+        return $params;
     }
 
     /**

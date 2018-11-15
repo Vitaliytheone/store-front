@@ -1,9 +1,9 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\stores\Stores;
 use my\helpers\SpecialCharsHelper;
-use my\modules\superadmin\widgets\CountPagination;
+use superadmin\widgets\CountPagination;
 use Yii;
 use common\models\panels\Customers;
 use yii\db\Query;
@@ -12,7 +12,7 @@ use yii\data\Pagination;
 
 /**
  * Class CustomersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class CustomersSearch extends Customers {
 

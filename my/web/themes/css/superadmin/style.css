@@ -1163,7 +1163,17 @@ html,body{height:100%}body.my-login-page{background-color:#f7f9fb;font-size:14px
 .ticket-message__tab{margin-top:15px;border-bottom:1px solid #ced4db;background:#edf1f6}
 .ticket-message__tab .nav-link{color:#007bff}.ticket-message__tab .nav-link.active,.ticket-message__tab .show>.nav-link{background:0;color:#22252a;border-bottom:1px solid #ced4db;border-radius:0}
 .collapse tr td:nth-child(2){width:10px}.ticket-block__right .collapse.show{max-height:230px;overflow-y:auto}
-.dashboard-box-shadow{box-shadow:0 1px 15px 1px rgba(81,77,92,0.08)}.dashboard-card__main{box-shadow:0 1px 15px 1px rgba(81,77,92,0.08);-webkit-box-shadow:0 1px 15px 1px rgba(81,77,92,0.08);-moz-box-shadow:0 1px 15px 1px rgba(81,77,92,0.08)}
+.tickets-notes{background:#fffaba;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;position:relative}
+.tickets-notes:before{content:"\f0c6";display:inline-block;font:normal normal normal 14px/1 FontAwesome;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:24px;position:absolute;right:-5px;top:-9px;transform:rotate(58deg)}
+.tickets-notes__title{padding:12px 15px 9px 20px;font-size:16px;color:#000;position:relative;-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;border-top-left-radius:5px;border-top-right-radius:5px}
+.tickets-notes__row{padding:15px 30px 15px 20px;position:relative;border-bottom:1px dashed rgba(156,145,18,0.16)}
+.tickets-notes__row .tickets-notes__row-edit{position:absolute;bottom:14px;right:10px;display:none}
+.tickets-notes__row .tickets-notes__row-edit a{color:#000}.tickets-notes__row:hover .tickets-notes__row-edit{display:block}
+.tickets-notes__add{width:25px;height:25px;-webkit-border-radius:50%;-moz-border-radius:50%;border-radius:50%;background:rgba(0,0,0,0.67);display:flex;justify-content:center;align-items:center;font-size:30px}
+.tickets-notes__add:hover{background:black}.tickets-notes__add-block{padding-left:20px;padding-bottom:15px;padding-top:15px}
+.tickets-notes__add-block a{color:#fff}.tickets-notes__add-block a:hover{text-decoration:none}
+.tickets-notes__add span{font-size:15px}.dashboard-box-shadow{box-shadow:0 1px 15px 1px rgba(81,77,92,0.08)}
+.dashboard-card__main{box-shadow:0 1px 15px 1px rgba(81,77,92,0.08);-webkit-box-shadow:0 1px 15px 1px rgba(81,77,92,0.08);-moz-box-shadow:0 1px 15px 1px rgba(81,77,92,0.08)}
 .dashboard-card__main .dashboard-card{position:relative;padding:15px;border-right:1px solid #ebedf2;color:#575962;cursor:pointer;-webkit-transition:all .5s ease;-moz-transition:all .5s ease;-o-transition:all .5s ease;-ms-transition:all .5s ease;transition:all .5s ease}
 .dashboard-card__main .dashboard-card:hover{box-shadow:0 1px 15px 1px rgba(81,77,92,0.08);-webkit-box-shadow:0 1px 15px 1px rgba(81,77,92,0.08);-moz-box-shadow:0 1px 15px 1px rgba(81,77,92,0.08)}
 .dashboard-card__main .dashboard-card:last-child{border-right:0}.dashboard-card__main .dashboard-card .dashboard-card__title{display:inline-block;font-size:1.1rem;font-weight:600}
@@ -1255,8 +1265,12 @@ table.dataTable tr:first-child td{border-top:0}table.dataTable thead .sorting_as
 @media(max-width:991px){.dashboard2-card__row .dashboard2-card .dashboard2-card__title{font-size:11px}
     .dashboard2-card__row .dashboard2-card .dashboard2-card__value{font-size:30px}.m-portlet__body .balances-line{font-size:14px}
     .ticket-title{padding-right:0}.ticket-id{position:relative;top:5px;font-size:16px}
-}@media(max-width:600px){.table-mobile{border:0}.table-mobile caption{font-size:1.3em}
-    .table-mobile thead{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}
+    .table-ticket tbody tr .fa-external-link{display:inline-block;padding-left:5px;font-size:18px}
+    .navbar-collapse{max-height:300px;overflow-y:auto}}@media(max-width:600px){.table-mobile{border:0}
+    .order-lg-1 .btn-primary{width:100%;padding:10px 15px}.order-lg-1 .btn-no-line{width:100%}
+    .tickets-notes__title{display:none}.tickets-notes__add-block{padding-top:10px;padding-bottom:10px}
+    .tickets-notes__row .tickets-notes__row-edit{display:block}.tickets-notes:before{display:none}
+    .table-mobile caption{font-size:1.3em}.table-mobile thead{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}
     .table-mobile tr{border-bottom:2px solid #ddd;display:block}.table-mobile td{display:block;font-size:14px;text-align:right}
     .table-mobile td::before{content:attr(data-title);float:left;font-weight:bold}.table-mobile td:last-child{border-bottom:0}
 }

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use my\components\scanners\components\BasePanelInfo;
 use my\components\scanners\components\info\LevopanelInfo;
@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property string $domain
  *
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class PanelsScannerAddDomainForm extends Model
 {

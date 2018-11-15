@@ -4,7 +4,7 @@ namespace my\mail\mailers;
 use common\models\panels\Notifications;
 use common\models\panels\Payments;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use my\helpers\Url;
 
 /**
  * Class PaypalReviewed

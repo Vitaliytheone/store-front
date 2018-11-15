@@ -20,6 +20,7 @@ return [
     'dnsLogin' => 'werewind',
     'dnsPasswd' => 'isoa41bh',
     'currencies' => require(__DIR__ . '/currency/currencies.php'),
+    'legacy_currencies' => require(__DIR__ . '/currency/legacy_currencies.php'),
     'timezones' => require(__DIR__ . '/timezone/timezones.php'),
     'countries' => require(__DIR__ . '/countries/countries.php'),
     'languages' => require(__DIR__ . '/languages/languages.php'),

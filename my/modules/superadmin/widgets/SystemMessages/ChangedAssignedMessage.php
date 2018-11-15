@@ -1,11 +1,11 @@
 <?php
 
-namespace my\modules\superadmin\widgets\SystemMessages;
+namespace superadmin\widgets\SystemMessages;
 
 /**
  * Widget for system message
  * Class ChangedAssignedMessage
- * @package my\modules\superadmin\widgets\SystemMessages
+ * @package superadmin\widgets\SystemMessages
  */
 class ChangedAssignedMessage extends BaseSystemMessage
 {

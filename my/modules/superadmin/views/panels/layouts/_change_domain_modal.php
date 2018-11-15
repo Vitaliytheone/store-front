@@ -2,13 +2,13 @@
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
     /* @var $action string */
-    /* @var $modal \my\modules\superadmin\models\forms\ChangeDomainForm */
+    /* @var $modal \superadmin\models\forms\ChangeDomainForm */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \my\modules\superadmin\models\forms\ChangeDomainForm();
+    $model = new superadmin\models\forms\ChangeDomainForm();
 ?>
 <div class="modal fade" id="changeDomainModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">

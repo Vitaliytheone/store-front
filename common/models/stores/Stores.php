@@ -665,7 +665,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Enable domain (create panel domains and add domain to dns servers)
+     * Enable domain (create store domains and add domain to dns servers)
      * @return bool
      */
     public function enableDomain()
@@ -678,23 +678,77 @@ class Stores extends ActiveRecord implements ProjectInterface
         ]);
 
         if ($storeDomain) {
-            $panel = $storeDomain->store;
+            $store = $storeDomain->store;
 
-            if (static::STATUS_TERMINATED !== $panel->status) {
+            if (static::STATUS_TERMINATED !== $store->status) {
                 return false;
             }
 
             $storeDomain->delete();
         }
 
-        $type = $this->subdomain ? StoreDomains::DOMAIN_TYPE_SUBDOMAIN : StoreDomains::DOMAIN_TYPE_DEFAULT;
+        $result = true;
+
+        if (!$this->enableSubDomain()) {
+            $result = false;
+        }
+
+        if (!$this->enableMainDomain()) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Enable sub domain
+     * @return bool
+     */
+    public function enableSubDomain()
+    {
+        $domain = $this->domain;
+        $subPrefix = str_replace('.', '-', $domain);
+        $storeDomainName = Yii::$app->params['storeDomain'];
+        $subDomain = $subPrefix . '.' . $storeDomainName;
+
+        $storeDomain = StoreDomains::findOne([
+            'domain' => $subDomain,
+        ]);
+
+        if (!$storeDomain) {
+            $storeDomain = new StoreDomains();
+            $storeDomain->type = StoreDomains::DOMAIN_TYPE_SUBDOMAIN;
+            $storeDomain->store_id = $this->id;
+            $storeDomain->domain = $subDomain;
+
+            if (!$storeDomain->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                return false;
+            }
+        } else {
+            if ($storeDomain->store_id != $this->id) {
+                $storeDomain->store_id = $this->id;
+                $storeDomain->save(false);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Enable main domain
+     * @return bool
+     */
+    public function enableMainDomain()
+    {
+        $domain = $this->domain;
 
         if (!StoreDomains::findOne([
-            'type' => $type,
+            'type' => StoreDomains::DOMAIN_TYPE_DEFAULT,
             'store_id' => $this->id
         ])) {
             $storeDomain = new StoreDomains();
-            $storeDomain->type = $type;
+            $storeDomain->type = StoreDomains::DOMAIN_TYPE_DEFAULT;
             $storeDomain->store_id = $this->id;
             $storeDomain->domain = $domain;
 
@@ -724,7 +778,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Create panel db name
+     * Create store db name
      */
     public function generateDbName()
     {
@@ -860,23 +914,19 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Disable main domain (remove store domain and remove domain from dns servers)
+     * Disable main domain (remove store domains and remove domain from dns servers)
      * @return bool
      */
     public function disableMainDomain()
     {
-        // Check if main domain is not belong to our zone
-        $storeDomain = StoreDomains::findOne([
-            'domain' => $this->domain,
-            'store_id' => $this->id,
-            StoreDomains::DOMAIN_TYPE_DEFAULT,
+        // Remove all subdomains and domains
+        StoreDomains::deleteAll([
+            'type' => [
+                StoreDomains::DOMAIN_TYPE_DEFAULT
+            ],
+            'store_id' => $this->id
         ]);
 
-        if (!$storeDomain) {
-            return false;
-        }
-
-        $storeDomain->delete();
         DnsHelper::removeMainDns($this);
 
         return true;

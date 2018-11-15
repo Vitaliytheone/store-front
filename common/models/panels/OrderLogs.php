@@ -8,11 +8,10 @@ use Yii;
  * This is the model class for table "order_logs".
  *
  * @property integer $id
- * @property string $title
- * @property string $price
- * @property string $description
- * @property integer $of_orders
- * @property integer $before_orders
+ * @property integer $cid
+ * @property string $domain
+ * @property integer $date
+ * @property string $log
  */
 class OrderLogs extends \yii\db\ActiveRecord
 {
@@ -42,11 +41,10 @@ class OrderLogs extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
-            'price' => 'Price',
-            'description' => 'Description',
-            'of_orders' => 'Of Orders',
-            'before_orders' => 'Before Orders',
+            'cid' => 'Cid',
+            'domain' => 'Domain',
+            'date' => 'Date',
+            'log' => 'Log',
         ];
     }
 }

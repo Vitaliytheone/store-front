@@ -5,7 +5,7 @@
     /* @var $note string */
 
     use yii\bootstrap\Html;
-    use my\models\forms\CreateOrderForm;
+    use my\models\forms\OrderPanelForm;
 ?>
 <div class="panel-body">
     <div class="form-group">
@@ -15,7 +15,7 @@
             'value' => $model->getDomain(),
             'autofocus' => true,
             'class' => 'form-control',
-            'readonly' => CreateOrderForm::HAS_NOT_DOMAIN == $model->has_domain ? 'readonly' : null
+            'readonly' => OrderPanelForm::HAS_NOT_DOMAIN == $model->has_domain ? 'readonly' : null
         ]) ?>
     </div>
 

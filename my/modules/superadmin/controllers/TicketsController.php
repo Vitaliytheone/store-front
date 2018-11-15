@@ -1,21 +1,23 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
+use common\models\panels\CustomersNote;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use my\components\ActiveForm;
 use my\helpers\Url;
 use my\components\SuperAccessControl;
 use common\models\panels\Tickets;
-use my\modules\superadmin\helpers\SystemMessages;
-use my\modules\superadmin\models\forms\CreateMessageForm;
-use my\modules\superadmin\models\forms\CreateTicketForm;
-use my\modules\superadmin\models\forms\EditMessageForm;
-use my\modules\superadmin\models\search\TicketBlocksSearch;
-use my\modules\superadmin\models\search\TicketMessagesSearch;
-use my\modules\superadmin\models\search\TicketsSearch;
-use my\modules\superadmin\models\SystemMessages as ModelSystemMessages;
+use superadmin\helpers\SystemMessages;
+use superadmin\models\forms\CreateMessageForm;
+use superadmin\models\forms\CreateTicketForm;
+use superadmin\models\forms\EditMessageForm;
+use superadmin\models\search\TicketBlocksSearch;
+use superadmin\models\SystemMessages as ModelSystemMessages;
+use superadmin\models\forms\TicketNoteForm;
+use superadmin\models\search\TicketMessagesSearch;
+use superadmin\models\search\TicketsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
@@ -46,7 +48,7 @@ class TicketsController extends CustomController
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['create', 'edit-message']
+                'only' => ['create', 'edit-message', 'create-note', 'edit-note']
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -58,12 +60,14 @@ class TicketsController extends CustomController
                     'change-status' => ['POST'],
                     'change-assigned' => ['POST'],
                     'delete-message' => ['POST'],
-                    'edit-message' => ['POST']
+                    'edit-message' => ['POST'],
+                    'create-note' => ['POST'],
+                    'edit-note' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['create', 'edit-message'],
+                'only' => ['create', 'edit-message', 'create-note', 'edit-note'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -102,6 +106,7 @@ class TicketsController extends CustomController
      * Render view ticket with ticket messages
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -143,13 +148,15 @@ class TicketsController extends CustomController
             'domains' => $blocks['domains'],
             'ssl' => $blocks['ssl'],
             'panels' => $blocks['panels'],
-            'childPanels' => $blocks['childPanels']
+            'childPanels' => $blocks['childPanels'],
+            'notes' => $blocks['notes'],
         ]);
     }
 
     /**
      * Create ticket
      * @return array
+     * @throws \yii\db\Exception
      */
     public function actionCreate()
     {
@@ -169,8 +176,58 @@ class TicketsController extends CustomController
     }
 
     /**
+     * @param $id
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionCreateNote($id)
+    {
+        $model = new TicketNoteForm();
+        $model->scenario = TicketNoteForm::SCENARIO_CREATE;
+        $model->setCustomerId($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionEditNote($id)
+    {
+        $model = new TicketNoteForm();
+        $model->scenario = TicketNoteForm::SCENARIO_EDIT;
+        $note = $this->findNote($id);
+        $model->setNote($note);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
      * Mark ticket unread
      * @param integer $id
+     * @throws NotFoundHttpException
      */
     public function actionMarkUnread($id)
     {
@@ -302,6 +359,22 @@ class TicketsController extends CustomController
     protected function findModel($id)
     {
         $model = Tickets::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
+    }
+
+    /**
+     * @param int $id
+     * @return CustomersNote
+     * @throws NotFoundHttpException
+     */
+    protected function findNote(int $id): CustomersNote
+    {
+        $model = CustomersNote::findOne($id);
 
         if (!$model) {
             throw new NotFoundHttpException();

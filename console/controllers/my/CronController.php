@@ -6,13 +6,14 @@ use common\helpers\InvoiceHelper;
 use common\models\panel\PaymentsLog;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\PaymentHash;
 use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
+use console\components\crons\CronPanelLeSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminatePanel;
 use console\components\terminate\TerminateStore;
@@ -62,6 +63,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
+                Orders::ITEM_OBTAIN_LE_SSL,
+                Orders::ITEM_PROLONGATION_LE_SSL,
             ]
         ])->all();
 
@@ -106,6 +109,14 @@ class CronController extends CustomController
                     case Orders::ITEM_PROLONGATION_DOMAIN:
                         OrderHelper::prolongationDomain($order);
                     break;
+
+                    case Orders::ITEM_OBTAIN_LE_SSL:
+                        OrderHelper::leSsl($order);
+                    break;
+
+                    case Orders::ITEM_PROLONGATION_LE_SSL:
+                        OrderHelper::leProlongationSsl($order);
+                    break;
                 }
             } catch (Exception $e) {
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $e->getMessage() . $e->getTraceAsString(), 'cron.order.exception');
@@ -147,7 +158,6 @@ class CronController extends CustomController
     {
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
-        InvoiceHelper::prolongSsl();
         InvoiceHelper::prolongStores();
     }
 
@@ -278,7 +288,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => PaymentGateway::METHOD_PAYPAL,
+            'payment_method' => Params::CODE_PAYPAL,
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,
@@ -289,7 +299,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (PaymentGateway::METHOD_PAYPAL == $payment->type) {
+                if (Params::CODE_PAYPAL == $payment->payment_method) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id
@@ -403,5 +413,17 @@ class CronController extends CustomController
     public function actionUpdateServicesCount()
     {
         Yii::$container->get(UpdateServicesCount::class)->run();
+    }
+
+    /**
+     *  New panel ns-checker, order-maker
+     * @throws Exception
+     */
+    public function actionPanelNewSslOrder()
+    {
+        $cron = new CronPanelLeSslOrder();
+        $cron->setConsole($this);
+        $cron->setDebug(true);
+        $cron->run();
     }
 }

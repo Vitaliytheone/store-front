@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use common\models\panels\SuperAdmin;

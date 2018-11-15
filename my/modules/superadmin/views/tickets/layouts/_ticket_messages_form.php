@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model \my\modules\superadmin\models\forms\CreateMessageForm */
+    /* @var $model \superadmin\models\forms\CreateMessageForm */
     /* @var $ticket \common\models\panels\Tickets */
 
     use common\models\panels\Tickets;

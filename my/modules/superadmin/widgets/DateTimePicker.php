@@ -1,14 +1,14 @@
 <?php
 
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
-use my\modules\superadmin\controllers\CustomController;
+use superadmin\controllers\CustomController;
 use yii\base\Model;
 use yii\base\Widget;
 
 /**
  * Class DateTimePicker
- * @package my\modules\superadmin\widgets
+ * @package superadmin\widgets
  */
 class DateTimePicker extends Widget
 {

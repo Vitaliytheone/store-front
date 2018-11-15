@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class DowngradePanelForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class DowngradePanelForm extends Model {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models;
+namespace superadmin\models;
 
 use common\models\panels\TicketMessages;
 use yii\base\Model;

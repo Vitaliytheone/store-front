@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $emails \my\modules\superadmin\models\search\NotificationEmailSearch */
+/* @var $emails \superadmin\models\search\NotificationEmailSearch */
 
 use my\helpers\Url;
 use yii\bootstrap\Html;

@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\ProviderSearchLog;
 use common\models\panels\queries\ProviderSearchLogQuery;
@@ -7,7 +7,7 @@ use yii\data\Pagination;
 
 /**
  * Class SearchLog
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ProviderLogsSearch
 {
