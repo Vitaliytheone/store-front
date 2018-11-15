@@ -15,6 +15,8 @@ use yii\filters\AccessControl;
  */
 class SslController extends CustomController
 {
+    public $activeTab = 'ssl';
+
     /**
      * @inheritdoc
      */

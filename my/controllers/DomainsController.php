@@ -24,6 +24,8 @@ use my\models\forms\OrderPanelForm;
  */
 class DomainsController extends CustomController
 {
+    public $activeTab = 'domains';
+
     /**
      * @inheritdoc
      */

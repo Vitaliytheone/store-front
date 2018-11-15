@@ -12,6 +12,8 @@ use Yii;
  */
 class CustomController extends MainController
 {
+    public $activeTab;
+
     /**
      * @return mixed|\yii\web\User
      */

@@ -16,6 +16,8 @@ use yii\web\Response;
  */
 class ReferralsController extends CustomController
 {
+    public $activeTab = 'referrals';
+
     /**
      * @var Customers
      */

@@ -29,6 +29,8 @@ use yii\web\Response;
  */
 class ProjectController extends CustomController
 {
+    public $activeTab = 'panels';
+
     /**
      * @inheritdoc
      */

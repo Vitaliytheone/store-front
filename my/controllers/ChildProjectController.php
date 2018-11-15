@@ -26,6 +26,8 @@ use yii\web\Response;
  */
 class ChildProjectController extends CustomController
 {
+    public $activeTab = 'child-panels';
+
     /**
      * @inheritdoc
      */

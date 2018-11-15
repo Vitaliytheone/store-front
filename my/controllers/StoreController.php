@@ -29,6 +29,8 @@ use yii\web\Response;
  */
 class StoreController extends CustomController
 {
+    public $activeTab = 'stores';
+
     /**
      * @inheritdoc
      */
