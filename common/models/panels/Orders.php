@@ -178,7 +178,7 @@ class Orders extends ActiveRecord
      * @param int $item
      * @return string
      */
-    public function getItemName($item)
+    public static function getItemName($item)
     {
         return ArrayHelper::getValue(static::getItems(), $item, '');
     }
