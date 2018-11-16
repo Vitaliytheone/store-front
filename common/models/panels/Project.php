@@ -148,6 +148,7 @@ class Project extends ActiveRecord implements ProjectInterface
     const DNS_STATUS_NOT_DEFINED = null;
     const DNS_STATUS_ALIEN = 0;
     const DNS_STATUS_MINE = 1;
+    const DNS_STATUS_2 = 2;
 
     use UnixTimeFormatTrait;
 

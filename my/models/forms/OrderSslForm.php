@@ -115,6 +115,12 @@ class OrderSslForm extends Model
             throw new Exception('Cannot find SSL cert item!');
         }
 
+        $project->dns_status = Project::DNS_STATUS_2;
+
+        if (!$project->save(false)) {
+            throw new Exception('Cannot update Panel!');
+        }
+
         $order = new Orders();
         $order->cid = $this->_customer->id;
         $order->status = Orders::STATUS_PAID;
