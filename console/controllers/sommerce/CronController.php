@@ -50,6 +50,9 @@ class CronController extends CustomController
      */
     public function actionGetstatus()
     {
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
+        
         $getstatus = new GetstatusComponent([
             'ordersLimit' => Yii::$app->params['getstatusOrdersLimit'],
         ]);

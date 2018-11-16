@@ -57,4 +57,5 @@
 <?= $this->render('layouts/_edit_expiry_modal', ['action' => $action]) ?>
 <?= $this->render('layouts/_edit_providers_modal', ['action' => $action]) ?>
 <?= $this->render('layouts/_edit_panels_modal', ['action' => $action]) ?>
+<?= $this->render('layouts/_edit_payment_methods_modal', ['action' => $action]) ?>
 <?= $this->endBlock();?>

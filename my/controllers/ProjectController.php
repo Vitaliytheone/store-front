@@ -9,7 +9,7 @@ use my\helpers\DomainsHelper;
 use common\models\panels\Auth;
 use common\models\panels\Content;
 use common\models\panels\DomainZones;
-use my\models\forms\CreateOrderForm;
+use my\models\forms\OrderPanelForm;
 use my\models\forms\CreateStaffForm;
 use my\models\forms\EditStaffForm;
 use my\models\forms\SetStaffPasswordForm;
@@ -91,7 +91,7 @@ class ProjectController extends CustomController
 
         $this->view->title = Yii::t('app', 'pages.title.order');
 
-        $model = new CreateOrderForm();
+        $model = new OrderPanelForm();
         $model->setUser($user);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -103,43 +103,6 @@ class ProjectController extends CustomController
             'note' => Content::getContent('nameservers'),
             'user' => $user,
         ]);
-    }
-
-    /**
-     * Create order
-     * @return string|\yii\web\Response
-     */
-    public function actionOrderDomain()
-    {
-        $this->view->title = Yii::t('app', 'pages.title.order');
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new CreateOrderForm();
-        $model->scenario = CreateOrderForm::SCENARIO_CREATE_DOMAIN;
-
-        /**
-         * @var $customer Customers
-         */
-        $customer = Yii::$app->user->getIdentity();
-
-        // if ($customer->can('domains') && $model->load(Yii::$app->request->post())) { TODO:: Temporary allowed buy domain with panel for new customer
-        if ($model->load(Yii::$app->request->post())) {
-            if (!$model->validate()) {
-                return [
-                    'status' => 'error',
-                    'error' => ActiveForm::firstError($model)
-                ];
-            }
-            return [
-                'status' => 'success'
-            ];
-        }
-
-        return [
-            'status' => 'error',
-            'error' => 'Invalid form data'
-        ];
     }
 
     /**

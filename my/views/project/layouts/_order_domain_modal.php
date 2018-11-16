@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\CreateOrderForm */
+    /* @var $model \my\models\forms\OrderPanelForm */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
 ?>
 <div class="modal fade" tabindex="-1" role="dialog" id="orderDomainModal">
     <div class="modal-dialog" role="document">
@@ -173,7 +173,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'panels.order.registrant_modal_btn_close') ?></button>
-                        <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute('/order-domain') ?>">
+                        <button type="submit" class="btn btn-primary has-spinner" id="orderDomainBtn" data-action="<?= Url::toRoute(['/domains/order-domain', 'order' => 'panel']) ?>">
                             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
                             <?= Yii::t('app', 'panels.order.registrant_modal_btn_submit') ?>
                         </button>

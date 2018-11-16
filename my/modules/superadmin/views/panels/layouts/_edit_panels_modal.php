@@ -69,7 +69,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     ]) ?>
                 </div>
 
-                <?= $form->field($model, 'currency', ['options' => [
+                <?= $form->field($model, 'currency_code', ['options' => [
                     'id' => 'form-currency',
                     'class' => 'form-group']])
                     ->dropDownList($model->getCurrencies()) ?>
