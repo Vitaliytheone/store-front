@@ -17,6 +17,11 @@ use yii\helpers\ArrayHelper;
  */
 class EditPanelPaymentMethodsForm extends Model
 {
+    /**
+     * @var integer
+     */
+    public $currency_id;
+
     public $methods;
 
     /**
@@ -46,6 +51,7 @@ class EditPanelPaymentMethodsForm extends Model
     {
         return [
             [['methods'], 'safe'],
+            [['currency_id'], 'integer'],
         ];
     }
 
@@ -127,6 +133,7 @@ class EditPanelPaymentMethodsForm extends Model
     public function getPaymentMethods()
     {
         if (null === static::$paymentMethods) {
+            static::$paymentMethods = [];
             $paymentMethods = CurrencyHelper::getPaymentMethods();
             $panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
 
@@ -183,25 +190,23 @@ class EditPanelPaymentMethodsForm extends Model
         $methods = CurrencyHelper::getPaymentMethods();
         ArrayHelper::multisort($methods, 'method_name');
 
+        $panelPaymentMethods = ArrayHelper::index($panelPaymentMethods, 'currency_id');
+
         foreach ($currencies as $currency) {
             foreach ((array)ArrayHelper::getValue($paymentMethodsCurrency, $currency, []) as $currencyMethods) {
                 foreach ($currencyMethods as $methodId => $currencyMethod) {
-                    foreach (ArrayHelper::getValue()) {
-
+                    if (!empty($panelPaymentMethods[$currencyMethod['id']])) {
+                        continue;
                     }
+
+                    $method = $methods[$methodId];
+                    $group = Yii::t('superadmin', 'payments.add_payment_method_modal.select.available_for', [
+                        'currency' => $currency
+                    ]);
+
+                    $options[$group][$method['currency_id']] = $method['method_name'];
                 }
             }
-        }
-        foreach ($methods as $method) {
-            if (!empty($panelPaymentMethods[$method['id']])) {
-                continue;
-            }
-
-            $group = Yii::t('superadmin', 'payments.add_payment_method_modal.select.available_for', [
-                'currency' => $currency
-            ]);
-
-            $options[$group][$method['currency_id']] = $method['method_name'];
         }
 
         return $options;
