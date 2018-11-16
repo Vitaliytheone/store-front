@@ -4,9 +4,10 @@ namespace superadmin\models\forms;
 
 use common\helpers\CurrencyHelper;
 use common\models\panels\PanelPaymentMethods;
+use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\Project;
+use common\models\panels\services\GetPanelAvailablePaymentMethodsService;
 use common\models\panels\services\GetPanelPaymentMethodsService;
-use common\models\panels\services\GetPaymentMethodsCurrencyService;
 use yii\base\Model;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -33,11 +34,6 @@ class EditPanelPaymentMethodsForm extends Model
      * @var array
      */
     protected static $paymentMethods;
-
-    /**
-     * @var array
-     */
-    protected static $paymentMethodsCurrency;
 
     /**
      * @var array
@@ -74,27 +70,36 @@ class EditPanelPaymentMethodsForm extends Model
             return false;
         }
 
-        $paymentMethods = $this->getPaymentMethods();
+        $paymentMethods = CurrencyHelper::getPaymentMethods();
         $currentMethods = ArrayHelper::index(PanelPaymentMethods::find()->andWhere([
             'panel_id' => $this->_panel->id
-        ])->all(), 'method_id');
+        ])->all(), 'currency_id');
+        $paymentMethodsCurrency = ArrayHelper::index(PaymentMethodsCurrency::find()->all(), 'id');
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        foreach ((array)$this->methods as $methodId => $value) {
-            if (!empty($currentMethods[$methodId])) {
-                unset($currentMethods[$methodId]);
+        if (!empty($this->currency_id)) {
+            $this->methods[$this->currency_id] = 1;
+        }
+
+        foreach ((array)$this->methods as $currencyId => $value) {
+            if (!empty($currentMethods[$currencyId])) {
+                unset($currentMethods[$currencyId]);
                 continue;
             }
 
-            if (empty($paymentMethods[$methodId])) {
+            $currencyPaymentMethod = ArrayHelper::getValue($paymentMethodsCurrency, $currencyId);
+            if (empty($currencyPaymentMethod) || empty($paymentMethods[$currencyPaymentMethod->method_id])) {
                 continue;
             }
+
+            $paymentMethod = $paymentMethods[$currencyPaymentMethod->method_id];
 
             $model = new PanelPaymentMethods();
-            $model->method_id = $methodId;
+            $model->currency_id = $currencyId;
+            $model->method_id = $currencyPaymentMethod->method_id;
             $model->panel_id = $this->_panel->id;
-            $model->name = ArrayHelper::getValue($paymentMethods, [$methodId, 'method_name']);
+            $model->name = $paymentMethod['method_name'];
             $model->setOptions([]);
 
             if (!$model->save()) {
@@ -138,12 +143,9 @@ class EditPanelPaymentMethodsForm extends Model
             $panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
 
             foreach ($paymentMethods as $method) {
-                if (empty($panelPaymentMethods[$method['id']])) {
-                    continue;
-                }
-
-                static::$paymentMethods[$method['id']] = [
+                static::$paymentMethods[$method['currency_id']] = [
                     'id' => $method['id'],
+                    'currency_id' => $method['currency_id'],
                     'method_name' => $method['method_name'],
                     'active' => (int)!empty($panelPaymentMethods[$method['id']])
                 ];
@@ -168,47 +170,8 @@ class EditPanelPaymentMethodsForm extends Model
     /**
      * @return array
      */
-    protected function getPaymentMethodsCurrency()
-    {
-        if (null === static::$paymentMethodsCurrency) {
-            static::$paymentMethodsCurrency = Yii::$container->get(GetPaymentMethodsCurrencyService::class, [$this->_panel])->get();
-            static::$paymentMethodsCurrency = ArrayHelper::index(static::$paymentMethodsCurrency, 'method_id', 'currency');
-        }
-
-        return static::$paymentMethodsCurrency;
-    }
-
-    /**
-     * @return array
-     */
     public function getPaymentMethodDropdown()
     {
-        $options = [];
-        $panelPaymentMethods = $this->getPanelPaymentMethods();
-        $paymentMethodsCurrency = $this->getPaymentMethodsCurrency();
-        $currencies = CurrencyHelper::getAvailableCurrencies();
-        $methods = CurrencyHelper::getPaymentMethods();
-        ArrayHelper::multisort($methods, 'method_name');
-
-        $panelPaymentMethods = ArrayHelper::index($panelPaymentMethods, 'currency_id');
-
-        foreach ($currencies as $currency) {
-            foreach ((array)ArrayHelper::getValue($paymentMethodsCurrency, $currency, []) as $currencyMethods) {
-                foreach ($currencyMethods as $methodId => $currencyMethod) {
-                    if (!empty($panelPaymentMethods[$currencyMethod['id']])) {
-                        continue;
-                    }
-
-                    $method = $methods[$methodId];
-                    $group = Yii::t('superadmin', 'payments.add_payment_method_modal.select.available_for', [
-                        'currency' => $currency
-                    ]);
-
-                    $options[$group][$method['currency_id']] = $method['method_name'];
-                }
-            }
-        }
-
-        return $options;
+        return Yii::$container->get(GetPanelAvailablePaymentMethodsService::class, [$this->_panel])->get();
     }
 }

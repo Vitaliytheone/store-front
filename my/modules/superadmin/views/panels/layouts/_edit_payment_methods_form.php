@@ -10,9 +10,21 @@ use superadmin\models\forms\EditPanelPaymentMethodsForm;
 
 ?>
 
-
-<?= Html::activeDropDownList($model, 'currency_id', $model->getPaymentMethodDropdown()) ?>
-
+<div class="form-group">
+    <div class="input-group">
+        <?= Html::activeDropDownList($model, 'currency_id', $model->getPaymentMethodDropdown(), [
+            'prompt' => Yii::t('app/superadmin', 'panels.edit.payment_methods.select_payment_method'),
+            'class' => 'form-control',
+        ]) ?>
+        <div class="input-group-append">
+            <?= Html::submitButton(Yii::t('app/superadmin', 'panels.edit.payment_methods.add_method'), [
+                'class' => 'btn btn-light',
+                'name' => 'edit-expiry-button',
+                'id' => 'addPaymentMethodBtn'
+            ]) ?>
+        </div>
+    </div>
+</div>
 
 <table class="table">
     <thead>
@@ -26,7 +38,7 @@ use superadmin\models\forms\EditPanelPaymentMethodsForm;
         <tr>
             <td><?= $payment['method_name'] ?></td>
             <td>
-                <?= Html::checkbox($model->formName() . '[methods][' . $payment['id'] . ']', $payment['active'])?>
+                <?= Html::checkbox($model->formName() . '[methods][' . $payment['currency_id'] . ']', $payment['active'])?>
             </td>
         </tr>
     <?php endforeach; ?>
