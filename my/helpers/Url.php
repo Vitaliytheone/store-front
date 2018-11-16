@@ -13,7 +13,7 @@ class Url extends \yii\helpers\Url {
     /**
      * Make url
      * @param array|string $route
-     * @param bool $scheme
+     * @param bool|string $scheme
      * @return string
      */
     public static function toRoute($route, $scheme = false)

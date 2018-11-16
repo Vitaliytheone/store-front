@@ -51,6 +51,7 @@ class SslCert extends ActiveRecord
     const STATUS_INCOMPLETE = 5;
     const STATUS_EXPIRED = 6;
     const STATUS_ERROR = 7;
+    const STATUS_RENEWED = 8;
 
     const CHECKED_NO = 0;
     const CHECKED_YES = 1;
@@ -255,7 +256,7 @@ class SslCert extends ActiveRecord
 
             // Create new unreaded ticket after activate ssl cert.
             // Not for SSL prolongation
-            if(!$isProlonged/* && !$project->hasManualPaymentMethods()*/) {
+            if(!$isProlonged && !$project->hasManualPaymentMethods()) {
                 $ticket = new Tickets();
                 $ticket->customer_id = $this->cid;
                 $ticket->is_admin = 1;

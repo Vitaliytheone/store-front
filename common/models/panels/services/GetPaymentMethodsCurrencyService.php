@@ -54,13 +54,6 @@ class GetPaymentMethodsCurrencyService {
         foreach ($query->all() as $method) {
             $settingsForm = (array)(!empty($method['settings_form']) ? json_decode($method['settings_form'], true) : []);
 
-            foreach ($settingsForm as &$value) {
-                $label = Yii::t('admin/payment_method', $value['label'], [
-                    'currency' => $this->_panel->getCurrencyCode()
-                ], 'en');
-                $value['label'] = $label == $value['label'] ? $value['code'] : $label;
-            }
-
             ArrayHelper::setValue($paymentMethods, [$method['method_id'], $method['currency']], [
                 'method_id' => $method['method_id'],
                 'currency' => $method['currency'],
@@ -73,7 +66,7 @@ class GetPaymentMethodsCurrencyService {
                     '{currency}',
                     '{site}',
                 ], [
-                    $this->_panel ? $method['currency'] : '',
+                    $method['currency'],
                     $this->_panel ? $this->_panel->getSiteUrl() : '',
                 ], (string)$method['settings_form_description']),
             ]);
