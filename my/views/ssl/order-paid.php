@@ -1,9 +1,11 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \my\models\forms\OrderSslForm */
+/* @var $model \my\models\forms\OrderSslPaidForm */
 
+use yii\helpers\Html;
 use my\components\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 ?>
 <div class="row">
@@ -28,6 +30,18 @@ use my\components\ActiveForm;
 
                     <?= $form->field($model, 'item_id')->dropDownList($model->getSslItems()) ?>
 
+                    <hr />
+
+                    <?php foreach ($model->getDetails() as $name) : ?>
+                        <?php if (in_array($name, [
+                            'admin_country',
+                            'tech_country'
+                        ])) : ?>
+                            <?= $form->field($model, $name)->dropDownList($model->getCountries(), ['prompt' => '']) ?>
+                        <?php else : ?>
+                            <?= $form->field($model, $name) ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
                 <div class="panel-footer" style="background-color: #fff">
                     <button type="submit" class="btn btn-outline btn-primary"><?= Yii::t('app', 'ssl.order.btn_submit')?></button>
