@@ -317,6 +317,7 @@ class OrderHelper {
         $orderDetails = $order->getDetails();
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
+        $currency = ArrayHelper::getValue($orderDetails, 'currency');
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -325,7 +326,8 @@ class OrderHelper {
         $project->cid = $order->cid;
         $project->site = $domain;
         $project->name = DomainsHelper::idnToUtf8($domain);
-        $project->currency_code = ArrayHelper::getValue($orderDetails, 'currency');
+        $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
+        $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -801,7 +803,13 @@ class OrderHelper {
 
         $orderDetails = $order->getDetails();
 
-        $sslCertItem = SslCertItem::findOne($orderDetails['item_id']);
+        $panel = Project::findOne($orderDetails['pid']);
+
+        if (!$panel) {
+            throw new Exception('Panel [' . $orderDetails['pid'] . '] not found!');
+        }
+
+        $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
 
         if (!$sslCertItem) {
             throw new Exception('SslItem for domain [' . $order->domain . '] not found!');
@@ -846,6 +854,12 @@ class OrderHelper {
             'key_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
         ])) {
             throw new Exception('Cannot add SSL to Config!');
+        }
+
+        $panel->ssl = Project::SSL_MODE_ON;
+
+        if (!$order->save(false)) {
+            throw new Exception('Cannot update Panel [' . $panel->id . ']');
         }
 
         $order->status = Orders::STATUS_ADDED;

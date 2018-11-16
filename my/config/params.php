@@ -137,5 +137,10 @@ return [
 
     'payment_verification_time' => 1 * 24 * 60 * 60,
     'curl.timeout' => '20',
-    'getstatus_info_url' => ''
+    'getstatus_info_url' => '',
+
+    'paypal_fraud_settings' => [
+        'accept_high' => 1,
+        'accept_critical' => 1,
+    ],
 ];

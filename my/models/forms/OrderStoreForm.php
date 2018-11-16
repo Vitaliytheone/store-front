@@ -154,7 +154,7 @@ class OrderStoreForm extends DomainForm
                 return false;
             }
         } else {
-            $this->preparedDomain = $this->domain;
+             $this->domain = $this->preparedDomain;
         }
 
         $result = $this->orderStore($invoiceModel);
