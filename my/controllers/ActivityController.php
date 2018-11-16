@@ -41,6 +41,7 @@ class ActivityController extends CustomController
     public function actionIndex($id)
     {
         $panel = $this->_findModel($id);
+        $this->activeTab = $panel->child_panel == 0 ? 'panels' : 'child-panels';
 
         $this->view->title = Yii::t('app', 'pages.title.activity', [
             'panel' => mb_strtolower($panel->getSite())
