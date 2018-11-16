@@ -878,7 +878,7 @@ class OrderHelper {
 
         $messagePrefix = 'my';
 
-        if($order->ip != '127.0.0.1' && $order->ip != '') {
+        if(!$panel->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
             $ticket = new Tickets();
             $ticket->customer_id =$ssl->cid;
             $ticket->is_admin = 1;
