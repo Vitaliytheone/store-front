@@ -209,7 +209,7 @@ class OrderSslForm extends Model
                 ])
                 ->leftJoin('orders o', 'project.site = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
                     ':orderStatus' => Orders::STATUS_CANCELED,
-                    ':orderItem' => Orders::ITEM_BUY_SSL
+                    ':orderItem' => Orders::ITEM_OBTAIN_LE_SSL,
                 ])
                 ->andWhere([
                     'project.cid' => $this->_customer->id,

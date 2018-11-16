@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \my\models\forms\OrderSslForm */
+/* @var $model \my\models\forms\OrderSslPaidForm */
 
 use yii\helpers\Html;
 use my\components\ActiveForm;
