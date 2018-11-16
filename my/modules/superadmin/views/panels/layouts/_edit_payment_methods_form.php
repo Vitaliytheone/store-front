@@ -1,14 +1,19 @@
 <?php
 
 use yii\helpers\Html;
-use my\helpers\Url;
 use superadmin\models\forms\EditPanelPaymentMethodsForm;
 
 /* @var $this yii\web\View */
 /* @var $payments array */
 /* @var $model EditPanelPaymentMethodsForm */
 
+
 ?>
+
+
+<?= Html::activeDropDownList($model, 'currency_id', $model->getPaymentMethodDropdown()) ?>
+
+
 <table class="table">
     <thead>
     <tr>

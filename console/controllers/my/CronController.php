@@ -14,6 +14,7 @@ use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use console\components\crons\CronPanelLeSslOrder;
+use console\components\crons\CronPanelRenewSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminatePanel;
 use console\components\terminate\TerminateStore;
@@ -158,7 +159,6 @@ class CronController extends CustomController
     {
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
-        InvoiceHelper::prolongSsl();
         InvoiceHelper::prolongStores();
     }
 
@@ -417,12 +417,23 @@ class CronController extends CustomController
     }
 
     /**
-     *  New panel ns-checker, order-maker
+     * New panel`s Letsencrypt SSL order maker
      * @throws Exception
      */
     public function actionPanelNewSslOrder()
     {
         $cron = new CronPanelLeSslOrder();
+        $cron->setConsole($this);
+        $cron->setDebug(true);
+        $cron->run();
+    }
+
+    /**
+     * Renew panel`s Letsencrypt SSL order maker
+     */
+    public function actionPanelRenewSslOrder()
+    {
+        $cron = new CronPanelRenewSslOrder();
         $cron->setConsole($this);
         $cron->setDebug(true);
         $cron->run();

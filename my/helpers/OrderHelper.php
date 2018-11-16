@@ -8,6 +8,9 @@ use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\Languages;
+use common\models\panels\SuperAdmin;
+use common\models\panels\TicketMessages;
+use common\models\panels\Tickets;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -868,6 +871,30 @@ class OrderHelper {
 
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        // Create new unreaded ticket after activate ssl cert.
+        // Only for SSL created by user
+
+        $messagePrefix = 'my';
+
+        if(!$panel->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
+            $ticket = new Tickets();
+            $ticket->customer_id =$ssl->cid;
+            $ticket->is_admin = 1;
+            $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
+            if ($ticket->save(false)) {
+                $ticketMessage = new TicketMessages();
+                $ticketMessage->ticket_id = $ticket->id;
+                $ticketMessage->admin_id = SuperAdmin::DEFAULT_ADMIN;
+                $ticketMessage->created_at = time();
+                $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
+                    'domain' => $panel->getBaseDomain()
+                ]);
+                $ticketMessage->ip = ' ';
+                $ticketMessage->user_agent = ' ';
+                $ticketMessage->save(false);
+            }
         }
 
         return true;

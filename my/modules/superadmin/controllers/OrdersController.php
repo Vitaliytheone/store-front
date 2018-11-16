@@ -75,8 +75,6 @@ class OrdersController extends CustomController
 
     /**
      * Change order status
-     * @param int $id
-     * @param int $status
      * @return Response
      * @throws NotFoundHttpException
      */

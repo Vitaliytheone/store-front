@@ -142,9 +142,13 @@ class Project extends ActiveRecord implements ProjectInterface
     const NO_INVOICE_ENABLED = 1;
     const NO_INVOICE_DISABLED = 0;
 
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_HIGH = 'accept_high';
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_CRITICAL = 'accept_critical';
+
     const DNS_STATUS_NOT_DEFINED = null;
     const DNS_STATUS_ALIEN = 0;
     const DNS_STATUS_MINE = 1;
+    const DNS_STATUS_2 = 2;
 
     use UnixTimeFormatTrait;
 
@@ -184,6 +188,8 @@ class Project extends ActiveRecord implements ProjectInterface
             [['notification_email'], 'default', 'value' => ' '],
             [['whois_lookup', 'nameservers'], 'string'],
             [['dns_checked_at', 'dns_status'], 'integer'],
+            ['paypal_fraud_settings', 'string'],
+            ['paypal_fraud_settings', 'default', 'value' => json_encode(Yii::$app->params['paypal_fraud_settings'])],
         ];
     }
 
@@ -954,7 +960,8 @@ class Project extends ActiveRecord implements ProjectInterface
             ->from(['ppm' => PanelPaymentMethods::tableName()])
             ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND manual_callback_url = 1')
             ->andWhere([
-                'ppm.panel_id' => $this->id
+                'ppm.panel_id' => $this->id,
+                'ppm.visibility' => 1
             ])
             ->exists();
     }
@@ -994,4 +1001,23 @@ class Project extends ActiveRecord implements ProjectInterface
     {
         return json_decode($this->nameservers,true);
     }
+
+    /**
+     * Get paypal_fraud_settings
+     * @return array
+     */
+    public function getPaypalFraudSettings()
+    {
+        return json_decode($this->paypal_fraud_settings, true);
+    }
+
+    /**
+     * Set paypal_fraud_settings
+     * @param array $settings
+     */
+    public function setPaypalFraudSettings(array $settings)
+    {
+        $this->paypal_fraud_settings = json_encode($settings);
+    }
+
 }
