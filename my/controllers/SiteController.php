@@ -53,7 +53,7 @@ class SiteController extends CustomController
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect'],
+                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect', 'paypal-verify'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
