@@ -8,8 +8,7 @@
     use yii\helpers\ArrayHelper;
 
     $user = Yii::$app->user->getIdentity();
-    $activeTab = empty($this->context->activeTab) ? null : ArrayHelper::getValue($this->context, 'activeTab');
-
+    $activeTab = !empty($this->context->activeTab) ? $this->context->activeTab : null;
 ?>
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
