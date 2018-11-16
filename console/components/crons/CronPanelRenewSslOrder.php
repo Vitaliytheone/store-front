@@ -24,7 +24,7 @@ class CronPanelRenewSslOrder extends CronBase
 
         $sslList = SslCert::find()
             ->select([
-                'ssl_id' => 'ssl.id', 'ssl_item_id' => 'ssl.item_id',
+                'ssl_id' => 'ssl.id', 'ssl_item_id' => 'ssl.item_id', 'ssl_status' => 'ssl.status',
                 'panel_id' => 'panel.id', 'panel_cid' => 'panel.cid', 'panel_domain' => 'panel.site',
                 'order_id' => 'order.id',
             ])
@@ -47,6 +47,7 @@ class CronPanelRenewSslOrder extends CronBase
             ])
             ->andWhere([
                 'ssl.project_type' => SslCert::PROJECT_TYPE_PANEL,
+                'ssl.status' => SslCert::STATUS_ACTIVE,
             ])
             ->andWhere([
                 'panel.act' => Project::STATUS_ACTIVE
@@ -55,6 +56,8 @@ class CronPanelRenewSslOrder extends CronBase
             ->all();
 
         $this->stdout('Prolongation SSL count (' . count($sslList) . ')');
+
+        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED], ['id' => array_column($sslList, 'ssl_id')]);
 
         foreach ($sslList as $ssl) {
 
