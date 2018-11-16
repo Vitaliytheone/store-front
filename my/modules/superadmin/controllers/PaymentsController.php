@@ -43,8 +43,9 @@ class PaymentsController extends CustomController
 
     /**
      * Get payment details
-     * @param int $id
+     * @param $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDetails($id)
     {
@@ -68,7 +69,9 @@ class PaymentsController extends CustomController
 
     /**
      * Make payment active
-     * @param int $id
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
      */
     public function actionMakeActive($id)
     {
@@ -82,6 +85,10 @@ class PaymentsController extends CustomController
     /**
      * Accept verified payment
      * @param $id
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionMakeAccepted($id)
     {
@@ -97,6 +104,8 @@ class PaymentsController extends CustomController
     /**
      * Refund payment to payer
      * @param $id
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionMakeRefunded($id)
     {
@@ -104,6 +113,25 @@ class PaymentsController extends CustomController
 
         if ($payment->can('makeRefunded')) {
             $payment->refund();
+        }
+
+        $this->redirect(Url::toRoute('/payments'));
+    }
+
+    /**
+     * Mark as complete
+     * @param $id
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionComplete($id)
+    {
+        $payment = $this->findModel($id);
+
+        if ($payment->can('makeCompleted')) {
+            $payment->complete();
         }
 
         $this->redirect(Url::toRoute('/payments'));

@@ -32,14 +32,8 @@ class PriceHelper {
 
         $value = number_format($value, $min, $delimiter, $thousands);
 
-        if (null !== $currency && !empty(CurrencyHelper::$currencies[$currency])) {
-            $value = str_replace([
-                '{{value}}',
-                '{{symbol}}'
-            ], [
-                $value,
-                CurrencyHelper::getCurrencySymbol($currency)
-            ], CurrencyHelper::getCurrencyTemplate($currency));
+        if (null !== $currency) {
+            $value = str_replace('{{value}}', $value, CurrencyHelper::getCurrencyTemplate($currency));
         }
 
         return $value;

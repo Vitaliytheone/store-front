@@ -23,6 +23,7 @@ use yii\base\Security;
  * @property integer $date
  * @property integer $date_update
  * @property integer $type
+ * @property integer $payment_method
  * @property string $amount
  * @property string $fee
  * @property integer $status
@@ -33,7 +34,7 @@ use yii\base\Security;
  * @property string $verification_code
  *
  * @property Project $project
- * @property PaymentGateway $method
+ * @property Params $method
  * @property PaymentsLog[] $paymentLogs
  * @property Invoices $invoice
  * @property InvoiceDetails $invoiceDetails
@@ -76,7 +77,7 @@ class Payments extends ActiveRecord
             [['ip', 'transaction_id'], 'string', 'max' => 300],
             [['mode'], 'default', 'value' => static::MODE_AUTO],
             [['options'], 'string'],
-            [['verification_code'], 'string', 'max' => 64],
+            [['verification_code', 'payment_method'], 'string', 'max' => 64],
         ];
     }
 
@@ -94,6 +95,7 @@ class Payments extends ActiveRecord
             'date' => Yii::t('app', 'Date'),
             'date_update' => Yii::t('app', 'Date Update'),
             'type' => Yii::t('app', 'Type'),
+            'payment_method' => Yii::t('app', 'Payment Method'),
             'amount' => Yii::t('app', 'Amount'),
             'fee' => Yii::t('app', 'Fee'),
             'status' => Yii::t('app', 'Status'),
@@ -127,15 +129,6 @@ class Payments extends ActiveRecord
                 },
             ]
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMethod()
-    {
-        return $this->hasOne(PaymentGateway::class, ['pgid' => 'type'])
-            ->andOnCondition([ 'payment_gateway.pid' => '-1']);
     }
 
     /**
@@ -225,7 +218,7 @@ class Payments extends ActiveRecord
      */
     public function getTypeName()
     {
-        return ArrayHelper::getValue(PaymentGateway::getMethods(), $this->type, Yii::t('app', 'payment_gateway.method.other'));
+        return ($name = Params::get(Params::CATEGORY_PAYMENT, $this->payment_method)) ? $name : Yii::t('app', 'payment_gateway.method.other');
     }
 
     /**
@@ -264,9 +257,9 @@ class Payments extends ActiveRecord
     {
         switch ($code) {
             case 'makeActive':
-                if (in_array($this->type, [
-                    PaymentGateway::METHOD_TWO_CHECKOUT,
-                    PaymentGateway::METHOD_PAYPAL
+                if (in_array($this->payment_method, [
+                    Params::CODE_TWO_CHECKOUT,
+                    Params::CODE_PAYPAL
                 ])) {
 
                     if (Payments::STATUS_WAIT == $this->status && $this->pid) {
@@ -277,9 +270,9 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeNotActive':
-                if (in_array($this->type, [
-                    PaymentGateway::METHOD_TWO_CHECKOUT,
-                    PaymentGateway::METHOD_PAYPAL
+                if (in_array($this->payment_method, [
+                    Params::CODE_TWO_CHECKOUT,
+                    Params::CODE_PAYPAL
                 ])) {
 
                     if (Payments::STATUS_REVIEW == $this->status && $this->pid) {
@@ -290,7 +283,7 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeAccepted':
-                if (in_array($this->type, [PaymentGateway::METHOD_PAYPAL]) &&
+                if (in_array($this->payment_method, [Params::CODE_PAYPAL]) &&
                     $this->status == self::STATUS_VERIFICATION
                 ) {
                     return true;
@@ -298,11 +291,17 @@ class Payments extends ActiveRecord
             break;
 
             case 'makeRefunded':
-                if (in_array($this->type, [PaymentGateway::METHOD_PAYPAL]) &&
+                if (in_array($this->payment_method, [Params::CODE_PAYPAL]) &&
                     $this->status == self::STATUS_VERIFICATION &&
                     !empty($this->transaction_id) &&
-                     time() < $this->date_update + PaymentGateway::PAYPAL_REFUND_EXPIRED_AFTER
+                     time() < $this->date_update + Params::PAYPAL_REFUND_EXPIRED_AFTER
                 ) {
+                    return true;
+                }
+            break;
+
+            case 'makeCompleted':
+                if ($this->status == self::STATUS_FAIL) {
                     return true;
                 }
             break;
@@ -385,6 +384,9 @@ class Payments extends ActiveRecord
 
     /**
      * Complete payment with invoice and invoice details
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function complete()
     {
@@ -394,23 +396,25 @@ class Payments extends ActiveRecord
         if (Payments::STATUS_REVIEW == $this->status) {
             $invoice->markPaid();
         } else {
-            $invoice->paid($this->type);
+            $invoice->paid($this->payment_method);
         }
 
         $this->status = static::STATUS_COMPLETED;
-        $this->update();
+        $this->update(false);
     }
 
     /**
      * Make payment as `Payer verification needed`
-     * @param $payerId string|int
-     * @param $payerEmail string
-     * @return string generated verification code
+     * @param $payerId
+     * @param $payerEmail
+     * @return string
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function verification($payerId, $payerEmail)
     {
-        if ($this->type != PaymentGateway::METHOD_PAYPAL) {
+        if ($this->payment_method != Params::CODE_PAYPAL) {
             throw new Exception('This method for PayPal payments only!');
         }
 
@@ -439,10 +443,12 @@ class Payments extends ActiveRecord
     /**
      * Make payment as verified and completed
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function verified()
     {
-        if ($this->type != PaymentGateway::METHOD_PAYPAL) {
+        if ($this->payment_method != Params::CODE_PAYPAL) {
             throw new Exception('This method for PayPal payments only!');
         }
 
@@ -465,7 +471,7 @@ class Payments extends ActiveRecord
      */
     public function refund()
     {
-        if ($this->type != PaymentGateway::METHOD_PAYPAL) {
+        if ($this->payment_method != Params::CODE_PAYPAL) {
             throw new Exception('This method for PayPal payments only!');
         }
 

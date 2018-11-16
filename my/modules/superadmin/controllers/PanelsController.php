@@ -3,6 +3,7 @@
 namespace superadmin\controllers;
 
 use common\models\panels\PanelDomains;
+use common\models\panels\PanelPaymentMethods;
 use common\models\panels\SuperAdmin;
 use common\models\panels\SuperAdminToken;
 use my\components\ActiveForm;
@@ -15,6 +16,7 @@ use superadmin\models\forms\EditExpiryForm;
 use superadmin\models\forms\EditProjectForm;
 use superadmin\models\forms\EditProvidersForm;
 use superadmin\models\search\PanelsSearch;
+use superadmin\models\forms\EditPanelPaymentMethodsForm;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -52,10 +54,11 @@ class PanelsController extends CustomController
                     'edit',
                     'generate-apikey',
                     'downgrade',
+                    'edit-payment-methods',
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'change-domain' => ['POST'],
@@ -64,7 +67,8 @@ class PanelsController extends CustomController
                     'edit' => ['POST'],
                     'generate-apikey' => ['GET'],
                     'downgrade' => ['POST'],
-                    'change-status' => ['POST']
+                    'change-status' => ['POST'],
+                    'edit-payment-methods' => ['POST', 'GET'],
                 ],
             ],
             'content' => [
@@ -76,7 +80,8 @@ class PanelsController extends CustomController
                     'generate-apikey',
                     'providers',
                     'downgrade',
-                    'edit'
+                    'edit',
+                    'edit-payment-methods',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -297,6 +302,38 @@ class PanelsController extends CustomController
     }
 
     /**
+     * Get payment edit form or save data
+     * @param $id
+     */
+    public function actionEditPaymentMethods($id)
+    {
+        $project = $this->findModel($id);
+
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return [
+                    'status' => 'success',
+                ];
+            }
+
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+
+        return [
+            'content' => $this->renderPartial('layouts/_edit_payment_methods_form', [
+                'model' => $model,
+                'payments' => $model->getPaymentMethods()
+            ])
+        ];
+    }
+
+    /**
      * Sign in as admin panel
      *
      * @access public
@@ -342,4 +379,18 @@ class PanelsController extends CustomController
         return $project;
     }
 
+    /**
+     * @param $id
+     * @return null|PanelPaymentMethods
+     * @throws NotFoundHttpException
+     */
+    protected function findPaymentMethodModel($id)
+    {
+        $paymentMethod = PanelPaymentMethods::findOne($id);
+
+        if (!$paymentMethod) {
+            throw new NotFoundHttpException();
+        }
+        return $paymentMethod;
+    }
 }

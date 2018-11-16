@@ -20,6 +20,7 @@ return [
     'dnsLogin' => 'werewind',
     'dnsPasswd' => 'isoa41bh',
     'currencies' => require(__DIR__ . '/currency/currencies.php'),
+    'legacy_currencies' => require(__DIR__ . '/currency/legacy_currencies.php'),
     'timezones' => require(__DIR__ . '/timezone/timezones.php'),
     'countries' => require(__DIR__ . '/countries/countries.php'),
     'languages' => require(__DIR__ . '/languages/languages.php'),
@@ -136,5 +137,10 @@ return [
 
     'payment_verification_time' => 1 * 24 * 60 * 60,
     'curl.timeout' => '20',
-    'getstatus_info_url' => ''
+    'getstatus_info_url' => '',
+
+    'paypal_fraud_settings' => [
+        'accept_high' => 1,
+        'accept_critical' => 1,
+    ],
 ];

@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $payments \superadmin\models\search\PaymentGatewaySearch */
-    /* @var $payment \common\models\panels\PaymentGateway */
+    /* @var $payments \superadmin\models\search\PaymentMethodsSearch */
+    /* @var $payment \common\models\panels\Params */
 
     use my\helpers\Url;
-    use common\models\panels\PaymentGateway;
+    use common\models\panels\Params;
     use yii\bootstrap\Html;
 ?>
 <table class="table table-sm table-custom">
@@ -18,11 +18,13 @@
     <tbody>
         <?php if ($payments) : ?>
             <?php foreach ($payments as $payment) : ?>
-                <tr <?= (PaymentGateway::VISIBILITY_DISABLED == $payment->visibility ? 'class="disabled-row"' : '') ?>>
-                    <td><?= $payment->name ?></td>
-                    <td><?= $payment->getVisibilityName() ?></td>
+                <tr <?= (Params::VISIBILITY_DISABLED == $payment['visibility'] ? 'class="text-muted"' : '') ?>>
+                    <td><?= $payment['name'] ?></td>
+                    <td><?= $payment['visibility_string'] ?></td>
                     <td class="text-right">
-                        <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment', 'id' => $payment->id]), [
+                        <?= Html::a(Yii::t('app/superadmin', 'payments.list.dropdown_edit'), Url::toRoute(['/settings/edit-payment',
+                            'code' => $payment['code']
+                        ]), [
                             'class' => 'btn btn-primary btn-sm edit-payment'
                         ])?>
                     </td>

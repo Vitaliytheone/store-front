@@ -7,7 +7,7 @@
     use my\components\ActiveForm;
     use common\models\panels\ProjectAdmin;
     use yii\bootstrap\Html;
-    use yii\helpers\Url;
+    use my\helpers\Url;
 
     $model = new CreateStaffForm();
 ?>

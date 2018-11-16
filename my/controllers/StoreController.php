@@ -110,7 +110,7 @@ class StoreController extends CustomController
         $model->setUser($user);
         $model->setIp($request->getUserIP());
 
-        if (!$model->load($request->post()) || !$model->orderStore()) {
+        if (!$model->load($request->post()) || !$model->save()) {
             return $this->render('order', [
                 'model' => $model,
             ]);
