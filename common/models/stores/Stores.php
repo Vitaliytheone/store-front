@@ -18,7 +18,7 @@ use common\models\store\NotificationAdminEmails;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
-use sommerce\helpers\DnsHelper;
+use common\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\Exception;

@@ -6,7 +6,7 @@ use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\services\GetParentPanelService;
-use my\helpers\DnsHelper;
+use common\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use common\helpers\DbHelper;

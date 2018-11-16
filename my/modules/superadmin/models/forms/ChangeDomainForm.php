@@ -2,7 +2,7 @@
 namespace superadmin\models\forms;
 
 use common\models\panels\Domains;
-use my\helpers\DnsHelper;
+use common\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
