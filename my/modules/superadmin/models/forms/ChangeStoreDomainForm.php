@@ -44,6 +44,9 @@ class ChangeStoreDomainForm extends Model {
     /**
      * Save domain
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function save()
     {
@@ -63,7 +66,7 @@ class ChangeStoreDomainForm extends Model {
             return true;
         }
 
-        if (!$this->_store->disableDomain()) {
+        if (!$this->_store->disableDomain(true)) {
             $this->addError('domain', Yii::t('app/superadmin', 'stores.modal.error_change_domain'));
             return false;
         }

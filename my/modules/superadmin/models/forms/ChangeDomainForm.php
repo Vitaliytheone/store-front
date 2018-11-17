@@ -75,7 +75,7 @@ class ChangeDomainForm extends Model {
         }
 
         if ($isChangedDomain) {
-            if (!$this->_project->disableDomain()) {
+            if (!$this->_project->disableDomain(true)) {
                 $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
                 return false;
             }

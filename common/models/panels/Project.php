@@ -544,7 +544,7 @@ class Project extends ActiveRecord implements ProjectInterface
             case static::STATUS_TERMINATED:
                 if (static::STATUS_FROZEN == $this->act) {
                     $this->act = static::STATUS_TERMINATED;
-                    $this->terminate();
+                    $this->terminate(true);
                 }
             break;
         }
@@ -599,12 +599,15 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Terminate project
+     * @param bool $check
+     * @return bool
+     * @throws \yii\base\Exception
      */
-    public function terminate()
+    public function terminate($check = false)
     {
         if (!$this->subdomain) {
             // Удаляем главный домен
-            $this->disableMainDomain();
+            $this->disableMainDomain($check);
         }
 
         $item = $this->child_panel ? InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL : InvoiceDetails::ITEM_PROLONGATION_PANEL;
@@ -738,9 +741,10 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Disable main domain (remove panel domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableMainDomain()
+    public function disableMainDomain($check = false)
     {
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
@@ -750,16 +754,21 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ]);
 
-        DnsHelper::removeMainDns($this);
+        $domain = Domains::findOne(['domain' => $this->domain]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeMainDns($this);
+        }
 
         return true;
     }
 
     /**
      * Disable domain (remove panel domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableDomain()
+    public function disableDomain($check = false)
     {
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
@@ -772,7 +781,7 @@ class Project extends ActiveRecord implements ProjectInterface
 
         $domain = Domains::findOne(['domain' => $this->site]);
 
-        if (!isset($domain)) {
+        if (!$check || !isset($domain)) {
             DnsHelper::removeDns($this);
         }
 
