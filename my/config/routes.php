@@ -82,6 +82,7 @@ $routes = [
 
     'ssl' => '/ssl/index',
     'ssl/order' => '/ssl/order',
+    'ssl/order-paid' => '/ssl/order-paid',
 
     'order' => '/project/order',
     'panels' => '/project/panels',
