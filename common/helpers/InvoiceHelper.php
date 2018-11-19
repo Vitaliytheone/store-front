@@ -7,10 +7,13 @@ use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
+use common\models\panels\SslCertItem;
 use common\models\panels\Tariff;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
+use console\components\crons\exceptions\CronException;
+use my\helpers\order\OrderSslHelper;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
 use yii\db\Query;
@@ -359,5 +362,71 @@ class InvoiceHelper
                 $mail->send();
             }
         }
+    }
+
+    /**
+     * Prolongation Goget SSL to Letsencrypt SSL
+     */
+    public static function prolongGogetSsl2LetsencryptSsl()
+    {
+        $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
+
+        $sslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item', [
+                ':order_item' => Orders::ITEM_OBTAIN_LE_SSL,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl_cert.pid')
+            ->andWhere(['panel.act' => Project::STATUS_ACTIVE])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_GOGETSSL,
+            ])
+            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [':expiry' => $date])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED],['id' => array_column($sslCerts, 'id')]);
+
+        foreach ($sslCerts as $ssl) {
+
+            $order = new Orders();
+            $order->cid = $ssl['cid'];
+            $order->status = Orders::STATUS_PAID;
+            $order->hide = Orders::HIDDEN_OFF;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->domain = $ssl['domain'];
+            $order->item = Orders::ITEM_OBTAIN_LE_SSL;
+            $order->ip = '127.0.0.1';
+            $order->setDetails([
+                'pid' => $ssl['pid'],
+                'project_type' => Project::getProjectType(),
+                'domain' => $ssl['domain'],
+                'ssl_cert_item_id' =>$ssl['item_id'],
+                'delay' => Yii::$app->params['ssl_order_delay']
+            ]);
+
+            if (!$order->save(false)) {
+                throw new CronException('Cannot create order!');
+            }
+
+            // Reset Nginx config HTTPS -> HTTP
+            if (!OrderSslHelper::addDdos(SslCert::findOne($ssl['id']), [
+                'isSSL' => false,
+                'site' => $order->domain,
+                'crt' => null,
+                'key' => null,
+            ])) {
+                throw new CronException('Cannot reset HTTPS to HTTP at DDoS-guard!');
+            }
+        }
+
+        SslCert::updateAll(['status' => SslCert::STATUS_EXPIRED], ['id' => array_column($sslCerts, 'id')]);
+
+        $transaction->commit();
     }
 }
