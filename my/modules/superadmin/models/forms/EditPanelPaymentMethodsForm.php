@@ -8,6 +8,7 @@ use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\Project;
 use common\models\panels\services\GetPanelAvailablePaymentMethodsService;
 use common\models\panels\services\GetPanelPaymentMethodsService;
+use common\models\panels\services\GetPaymentMethodsCurrencyService;
 use yii\base\Model;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -34,6 +35,11 @@ class EditPanelPaymentMethodsForm extends Model
      * @var array
      */
     protected static $paymentMethods;
+
+    /**
+     * @var array
+     */
+    protected static $paymentMethodsCurrency;
 
     /**
      * @var array
@@ -139,15 +145,16 @@ class EditPanelPaymentMethodsForm extends Model
     {
         if (null === static::$paymentMethods) {
             static::$paymentMethods = [];
-            $paymentMethods = CurrencyHelper::getPaymentMethods();
-            $panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
+            $panelPaymentMethods = $this->getPanelPaymentMethods();
+            $paymentMethodsCurrency = $this->getPaymentMethodsCurrency();
 
-            foreach ($paymentMethods as $method) {
+            foreach ($panelPaymentMethods as $method) {
+                $currency = ArrayHelper::getValue($paymentMethodsCurrency, $method['currency_id']);
                 static::$paymentMethods[$method['currency_id']] = [
-                    'id' => $method['id'],
+                    'id' => $method['method_id'],
                     'currency_id' => $method['currency_id'],
-                    'method_name' => $method['method_name'],
-                    'active' => (int)!empty($panelPaymentMethods[$method['id']])
+                    'method_name' => $method['name'],
+                    'currency' => $currency['currency'],
                 ];
             }
         }
@@ -165,6 +172,18 @@ class EditPanelPaymentMethodsForm extends Model
         }
 
         return static::$panelPaymentMethods;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPaymentMethodsCurrency()
+    {
+        if (null === static::$paymentMethodsCurrency) {
+            static::$paymentMethodsCurrency = Yii::$container->get(GetPaymentMethodsCurrencyService::class, [$this->_panel])->get();
+        }
+
+        return static::$paymentMethodsCurrency;
     }
 
     /**

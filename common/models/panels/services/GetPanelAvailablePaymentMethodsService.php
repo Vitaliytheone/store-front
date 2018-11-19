@@ -37,11 +37,12 @@ class GetPanelAvailablePaymentMethodsService {
         $panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
         $paymentMethodsCurrency = Yii::$container->get(GetPaymentMethodsCurrencyService::class, [$this->_panel])->get();
         $panelPaymentMethods = ArrayHelper::index($panelPaymentMethods, 'currency_id');
+        $paymentMethodsCurrency = ArrayHelper::index($paymentMethodsCurrency, 'method_id', 'currency');
 
         foreach (CurrencyHelper::getAvailableCurrencies() as $currency) {
             $currencyMethods = ArrayHelper::getValue($paymentMethodsCurrency, $currency, []);
             foreach ($currencyMethods as $methodId => $currencyMethod) {
-                if (!empty($panelPaymentMethods[$currencyMethod['currency_id']])) {
+                if (!empty($panelPaymentMethods[$currencyMethod['id']])) {
                     continue;
                 }
 

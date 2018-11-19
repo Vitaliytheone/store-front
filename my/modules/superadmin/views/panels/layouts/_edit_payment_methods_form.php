@@ -30,6 +30,7 @@ use superadmin\models\forms\EditPanelPaymentMethodsForm;
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'panels.edit.payment_methods.field.name'); ?></th>
+        <th><?= Yii::t('app/superadmin', 'panels.edit.payment_methods.field.currency'); ?></th>
         <th><?= Yii::t('app/superadmin', 'panels.edit.payment_methods.field.active'); ?></th>
     </tr>
     </thead>
@@ -37,8 +38,9 @@ use superadmin\models\forms\EditPanelPaymentMethodsForm;
     <?php foreach ($payments as $payment) : ?>
         <tr>
             <td><?= $payment['method_name'] ?></td>
+            <td><?= $payment['currency'] ?></td>
             <td>
-                <?= Html::checkbox($model->formName() . '[methods][' . $payment['currency_id'] . ']', $payment['active'])?>
+                <?= Html::checkbox($model->formName() . '[methods][' . $payment['currency_id'] . ']', 1)?>
             </td>
         </tr>
     <?php endforeach; ?>

@@ -54,7 +54,7 @@ class GetPaymentMethodsCurrencyService {
         foreach ($query->all() as $method) {
             $settingsForm = (array)(!empty($method['settings_form']) ? json_decode($method['settings_form'], true) : []);
 
-            ArrayHelper::setValue($paymentMethods, [$method['currency'], $method['method_id']], [
+            $paymentMethods[$method['id']] = [
                 'id' => $method['id'],
                 'method_id' => $method['method_id'],
                 'currency' => $method['currency'],
@@ -70,7 +70,7 @@ class GetPaymentMethodsCurrencyService {
                     $method['currency'],
                     $this->_panel ? $this->_panel->getSiteUrl() : '',
                 ], (string)$method['settings_form_description']),
-            ]);
+            ];
         }
 
         return $paymentMethods;
