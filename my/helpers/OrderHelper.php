@@ -800,7 +800,7 @@ class OrderHelper {
         $orderDetails = $order->getDetails();
 
         // Check if its prolonged GogetSSl -> Letsencrypt or regular Letsencrypt SSL order
-        $orderDelay = ArrayHelper::getValue($orderDetails, 'delay');
+        $orderDelay = ArrayHelper::getValue($orderDetails, 'delay', 0);
 
         if (time() < $order->date + $orderDelay) {
             return true;
