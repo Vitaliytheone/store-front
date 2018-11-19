@@ -907,5 +907,5 @@ return [
 
     'panels.edit.payment_method_modal.select.available_for' => 'Available for {currency}',
     'panels.edit.payment_methods.select_payment_method' => 'Select payment method',
-    'panels.edit.payment_methods.add_method' => 'Add',
+    'panels.edit.payment_methods.add_method' => 'Add payment',
 ];
