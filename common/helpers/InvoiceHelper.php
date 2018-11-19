@@ -392,6 +392,15 @@ class InvoiceHelper
 
         SslCert::updateAll(['status' => SslCert::STATUS_RENEWED],['id' => array_column($sslCerts, 'id')]);
 
+        $sslCertsItem = SslCertItem::findOne([
+            'provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            'product_id' => SslCertItem::PRODUCT_ID_LETSENCRYPT_BASE
+        ]);
+
+        if (!$sslCertsItem) {
+            throw new CronException('Cannot find SSL Cert item!');
+        }
+
         foreach ($sslCerts as $ssl) {
 
             $order = new Orders();
@@ -406,7 +415,7 @@ class InvoiceHelper
                 'pid' => $ssl['pid'],
                 'project_type' => Project::getProjectType(),
                 'domain' => $ssl['domain'],
-                'ssl_cert_item_id' =>$ssl['item_id'],
+                'ssl_cert_item_id' => $sslCertsItem->id,
                 'delay' => Yii::$app->params['ssl_order_delay']
             ]);
 
