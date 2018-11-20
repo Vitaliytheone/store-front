@@ -96,7 +96,6 @@ class TicketBlocksSearch
             '=',
             'cid', $customerId,
         ]);
-        $query->andWhere(['status' => SslCert::STATUS_ACTIVE]);
 
         $query->select([
             'id',

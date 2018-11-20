@@ -60,21 +60,21 @@ use common\models\panels\PaypalFraudReports;
                         <h6 class="dropdown-header"><?= Yii::t('app/superadmin', 'fraud_reports.dropdown.header') ?></h6>
                         <?php if ($report['status'] == PaypalFraudReports::STATUS_PENDING) : ?>
                             <?= Html::a(Yii::t('app/superadmin', 'fraud_reports.dropdown.accept'),
-                                Url::toRoute('/fraud/reports-change-status'),
+                                Url::toRoute('/tools/reports-change-status'),
                                 ['class' => 'dropdown-item', 'data-method' => 'POST', 'data-params' => ['id' => $report['id'], 'status' => PaypalFraudReports::STATUS_ACCEPTED]]
                             )?>
                             <?= Html::a(Yii::t('app/superadmin', 'fraud_reports.dropdown.reject'),
-                                Url::toRoute('/fraud/reports-change-status'),
+                                Url::toRoute('/tools/reports-change-status'),
                                 ['class' => 'dropdown-item', 'data-method' => 'POST', 'data-params' => ['id' => $report['id'], 'status' => PaypalFraudReports::STATUS_REJECTED]]
                             )?>
                         <?php elseif ($report['status'] == PaypalFraudReports::STATUS_REJECTED) : ?>
                             <?= Html::a(Yii::t('app/superadmin', 'fraud_reports.dropdown.accept'),
-                                Url::toRoute('/fraud/reports-change-status'),
+                                Url::toRoute('/tools/reports-change-status'),
                                 ['class' => 'dropdown-item', 'data-method' => 'POST', 'data-params' => ['id' => $report['id'], 'status' => PaypalFraudReports::STATUS_ACCEPTED]]
                             )?>
                         <?php elseif ($report['status'] == PaypalFraudReports::STATUS_ACCEPTED) : ?>
                             <?= Html::a(Yii::t('app/superadmin', 'fraud_reports.dropdown.reject'),
-                                Url::toRoute('/fraud/reports-change-status'),
+                                Url::toRoute('/tools/reports-change-status'),
                                 ['class' => 'dropdown-item', 'data-method' => 'POST', 'data-params' => ['id' => $report['id'], 'status' => PaypalFraudReports::STATUS_REJECTED]]
                             )?>
                         <?php endif; ?>

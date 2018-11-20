@@ -41,7 +41,7 @@
                 <tr>
                     <td><?= $order['id'] ?></td>
                     <td>
-                        <?= Html::a(SpecialCharsHelper::multiPurifier($order['customer_email']), Url::toRoute(["/customers", 'id' => $order['cid']])); ?>
+                        <?= Html::a(SpecialCharsHelper::multiPurifier($order['customer_email']), Url::toRoute("/customers#" . $order['cid'])); ?>
                     </td>
                     <td>
                         <?php if (!empty($order['invoice_id'])) : ?>
