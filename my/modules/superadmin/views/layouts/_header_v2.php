@@ -242,7 +242,18 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_TOOLS)) {
             ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/panelfire')],
             ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')],
             ['label' => Yii::t('app/superadmin', 'header.nav.db_helper'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/db-helper')],
-            ['label' => Yii::t('app/superadmin', 'header.nav.fraud_reports'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/fraud-reports')],
+        ]
+    ];
+}
+
+if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_FRAUD)) {
+    $optionsLeft[] = [
+        'label' => Yii::t('app/superadmin', 'header.nav.fraud'),
+        'active' => 'fraud' === $activeTab,
+        'options' => ['class' => 'nav-item'],
+        'linkOptions' => ['class' => 'nav-link'],
+        'items' => [
+            ['label' => Yii::t('app/superadmin', 'header.nav.fraud_reports'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/fraud/reports')],
         ]
     ];
 }
