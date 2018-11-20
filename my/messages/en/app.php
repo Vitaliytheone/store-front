@@ -388,6 +388,7 @@ return [
     'super_admin.can_work_with.staffs' => 'Staffs',
     'super_admin.can_work_with.settings' => 'Settings',
     'super_admin.can_work_with.tools' => 'Tools',
+    'super_admin.can_work_with.fraud' => 'Fraud',
     'tickets.status.pending' => 'Pending',
     'tickets.status.responded' => 'Responded',
     'tickets.status.closed' => 'Closed',

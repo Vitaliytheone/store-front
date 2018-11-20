@@ -50,6 +50,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
     const CAN_WORK_WITH_LOGS = 'logs';
     const CAN_WORK_WITH_STAFFS = 'staffs';
     const CAN_WORK_WITH_TOOLS = 'tools';
+    const CAN_WORK_WITH_FRAUD = 'fraud';
 
     use UnixTimeFormatTrait;
 
@@ -155,6 +156,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_STAFFS => 0,
             static::CAN_WORK_WITH_SETTINGS => 0,
             static::CAN_WORK_WITH_TOOLS => 0,
+            static::CAN_WORK_WITH_FRAUD => 0,
         ], $rules));
     }
 
@@ -200,6 +202,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_STAFFS => 1,
             static::CAN_WORK_WITH_SETTINGS => 1,
             static::CAN_WORK_WITH_TOOLS => 1,
+            static::CAN_WORK_WITH_FRAUD => 1,
         ];
     }
 
@@ -226,6 +229,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_STAFFS => Yii::t('app', 'super_admin.can_work_with.staffs'),
             static::CAN_WORK_WITH_SETTINGS => Yii::t('app', 'super_admin.can_work_with.settings'),
             static::CAN_WORK_WITH_TOOLS => Yii::t('app', 'super_admin.can_work_with.tools'),
+            static::CAN_WORK_WITH_FRAUD => Yii::t('app', 'super_admin.can_work_with.fraud'),
         ];
     }
 
