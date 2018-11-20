@@ -4,6 +4,9 @@ namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
 use common\models\panel\PaymentsLog;
+use common\models\panels\Domains;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
 use common\models\panels\Params;
@@ -30,6 +33,7 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use console\components\UpdateServicesCount;
+use yii\helpers\Console;
 
 /**
  * Class CronController
@@ -437,5 +441,45 @@ class CronController extends CustomController
         $cron->setConsole($this);
         $cron->setDebug(true);
         $cron->run();
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionUpdateDomainExpiry()
+    {
+        $domains = Domains::find()
+            ->where(['>', 'expiry', time()])
+            ->all();
+
+        foreach ($domains as $domain) {
+            $domain->status = Domains::STATUS_EXPIRED;
+
+            if (!$domain->save()) {
+                $this->stderr("Domain id: {$domain->id} - Save error \n", Console::FG_RED);
+                continue;
+            }
+
+            $order = Orders::findOne([
+                'domain' => $domain->domain,
+                'item' => Orders::ITEM_PROLONGATION_DOMAIN,
+                'cid' => $domain->customer_id,
+            ]);
+
+            if (!isset($order)) {
+                $this->stderr("Domain id: {$domain->id} - Order does not exist \n", Console::FG_RED);
+                continue;
+            }
+
+            $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id]);
+            $invoice = Invoices::findOne(['id' => $invoiceDetails->invoice_id]);
+
+            if (!$invoiceDetails->delete() || !$invoice->delete() || !$order->delete()) {
+                $this->stderr("Domain id: {$domain->id} - Order delete error \n", Console::FG_RED);
+                continue;
+            }
+            $this->stderr("Domain id: {$domain->id} - Successful update \n", Console::FG_GREEN);
+        }
     }
 }
