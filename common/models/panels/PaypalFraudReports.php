@@ -4,6 +4,7 @@ namespace common\models\panels;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use common\models\panels\queries\PaypalFraudReportsQuery;
 
 /**
  * This is the model class for table "paypal_fraud_reports".
@@ -98,5 +99,14 @@ class PaypalFraudReports extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
             'transaction_details' => Yii::t('app', 'Transaction Details'),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return PaypalFraudReportsQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new PaypalFraudReportsQuery(get_called_class());
     }
 }
