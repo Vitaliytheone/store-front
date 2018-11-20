@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use common\models\panels\Project;
@@ -8,6 +9,10 @@ use Yii;
 use yii\base\Exception;
 use yii\base\Model;
 
+/**
+ * Class DisableSslForm
+ * @package superadmin\models\forms
+ */
 class DisableSslForm extends Model
 {
     /**
