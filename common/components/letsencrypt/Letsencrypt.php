@@ -180,13 +180,14 @@ class Letsencrypt extends Acme
 
     /**
      * Issue Letsencrypt certificate
+     * @param $withWww boolean Request additionsl www-subdomain if true
      * @throws LetsencryptException
      */
-    public function issueCert()
+    public function issueCert($withWww = false)
     {
         $this->restoreAccountFromDb();
 
-        $parsedCert = $this->cmdIssueCert($this->_ssl->domain);
+        $parsedCert = $this->cmdIssueCert($this->_ssl->domain, $withWww);
 
         if (!$parsedCert) {
             throw new LetsencryptException(json_encode([
@@ -206,15 +207,16 @@ class Letsencrypt extends Acme
 
     /**
      * Renew certificate
+     * @param $withWww boolean Request additionsl www-subdomain if true
      * @throws LetsencryptException
      */
-    public function renewCert()
+    public function renewCert($withWww = false)
     {
         $this->restoreAccountFromDb();
 
         $this->_restoreCertFilesFromDb();
 
-        $parsedCert = $this->cmdRenewCert($this->_ssl->domain);
+        $parsedCert = $this->cmdRenewCert($this->_ssl->domain, $withWww);
 
         if (!$parsedCert) {
             throw new LetsencryptException(json_encode([

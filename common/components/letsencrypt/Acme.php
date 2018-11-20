@@ -308,19 +308,28 @@ class Acme extends Component
     /**
      * Issue letsencrypt certificate
      * @param string $domain
+     * @param $withWww boolean Request additionsl www-subdomain if true
      * @return null|array Null if crashes, parsed certificate data if success
      * @throws AcmeException
      */
-    public function cmdIssueCert(string $domain)
+    public function cmdIssueCert(string $domain, $withWww = false)
     {
         $domain = trim($domain);
 
-        $success = $this->execCmd('--issue', [
+        $cmdParams =  [
             '--force',
             '--domain' => $domain,
             '--certhome' => $this->getCertsDir(),
             '--stateless',
-        ]);
+        ];
+
+        if ($withWww) {
+            $cmdParams['-d'] = 'www.' . $domain;
+        }
+
+        error_log(print_r($cmdParams,1));
+
+        $success = $this->execCmd('--issue', $cmdParams);
 
         if (!$success) {
             return null;
@@ -404,18 +413,25 @@ class Acme extends Component
     /**
      * Renew domain certificate
      * @param $domain
+     * @param $withWww boolean Request additionsl www-subdomain if true
      * @return null|array Null if crashed, parsed certificate data if success
      * @throws AcmeException
      */
-    public function cmdRenewCert($domain)
+    public function cmdRenewCert($domain, $withWww = false)
     {
         $domain = trim($domain);
 
-        $success = $this->execCmd('--renew', [
+        $cmdParams = [
             '--domain' => $domain,
             '--force',
             '--certhome' => $this->getCertsDir(),
-        ]);
+        ];
+
+        if ($withWww) {
+            $cmdParams['-d'] = 'www.' . $domain;
+        }
+
+        $success = $this->execCmd('--renew', $cmdParams);
 
         if (!$success) {
             return null;
