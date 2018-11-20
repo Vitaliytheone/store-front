@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property int $status 0 - pending, 1 - accepted, 2 - rejected
  * @property int $created_at
  * @property int $updated_at
+ * @property string $transaction_details
  */
 class PaypalFraudReports extends \yii\db\ActiveRecord
 {
@@ -40,7 +41,7 @@ class PaypalFraudReports extends \yii\db\ActiveRecord
         return [
             [['id', 'report', 'status', 'created_at', 'updated_at'], 'required'],
             [['id', 'panel_id', 'user_id', 'payment_id', 'created_at', 'updated_at'], 'integer'],
-            [['report'], 'string'],
+            [['report', 'transaction_details'], 'string'],
             [['status'], 'string', 'max' => 1],
         ];
     }
@@ -95,6 +96,7 @@ class PaypalFraudReports extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'transaction_details' => Yii::t('app', 'Transaction Details'),
         ];
     }
 }

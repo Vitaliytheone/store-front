@@ -9,6 +9,9 @@ use common\models\panels\PaypalFraudReports;
 use my\components\SuperAccessControl;
 use yii\filters\VerbFilter;
 use my\helpers\Url;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\web\Response;
 
 /**
  * Class FraudController
@@ -37,6 +40,17 @@ class FraudController extends CustomController
                     'index' => ['GET'],
                     'reports' => ['GET'],
                     'reports-change-status' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['report-details']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['report-details'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -80,5 +94,21 @@ class FraudController extends CustomController
         $report->changeStatus($status);
 
         $this->redirect(Url::toRoute(['/fraud/reports']));
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function actionReportDetails($id)
+    {
+        $report = PaypalFraudReports::findOne(['id' => $id]);
+
+        return [
+            'status' => 'success',
+            'content' => $this->renderPartial('layouts/reports/_report_details', [
+                'details' => $report->transaction_details,
+            ])
+        ];
     }
 }

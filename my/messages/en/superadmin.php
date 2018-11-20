@@ -904,4 +904,7 @@ return [
     'panels.edit.payment_methods.field.name' => 'Name',
     'panels.edit.payment_methods.field.active' => 'Active',
     'panels.edit.payment_methods.error' => 'Can not change panel payment methods',
+
+    'fraud_reports.list.reports_modal_header' => 'Report details',
+    'fraud_reports.list.reports_modal_btn_close' => 'Close',
 ];
