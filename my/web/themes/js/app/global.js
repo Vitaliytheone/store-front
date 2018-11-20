@@ -62,7 +62,7 @@ var custom = new function() {
 
         var options = $.extend({}, true, settings);
 
-        options.url = btn.attr('href');
+        options.url = btn.attr('href') || btn.data('href');
 
         $('.spinner', btn).remove();
 
