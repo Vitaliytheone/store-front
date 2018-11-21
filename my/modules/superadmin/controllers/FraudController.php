@@ -47,7 +47,7 @@ class FraudController extends CustomController
      */
     public function actionIndex()
     {
-        return $this->redirect('fraud/reports');
+        return $this->redirect(Url::toRoute('/fraud/reports'));
     }
 
     /**
