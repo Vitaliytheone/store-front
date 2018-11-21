@@ -254,6 +254,7 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_FRAUD)) {
         'linkOptions' => ['class' => 'nav-link'],
         'items' => [
             ['label' => Yii::t('app/superadmin', 'header.nav.fraud_reports'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/fraud/reports')],
+            ['label' => Yii::t('app/superadmin', 'header.nav.fraud_incidents'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/fraud/incidents')],
         ]
     ];
 }
