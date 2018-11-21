@@ -52,6 +52,9 @@
                             <?= Html::a(Yii::t('app/superadmin', 'ssl.list.action_details'), Url::toRoute(['/ssl/details', 'id' => $ssl->id]), [
                                 'class' => 'dropdown-item ssl-details',
                             ])?>
+                            <?= Html::a(Yii::t('app/superadmin', 'ssl.list.action_disable'), Url::toRoute(['/ssl/disable', 'id' => $ssl->id]), [
+                                'class' => 'dropdown-item ssl-disable',
+                            ])?>
                         </div>
                     </div>
                 </td>
