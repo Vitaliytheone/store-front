@@ -59,7 +59,8 @@ return [
 
     '3301' => 'Add payment method',
     '3302' => 'Edit payment method',
-    '3303' => 'Toggle payment method',
+    '3303' => 'Activate payment method',
+    '3305' => 'Deactivate payment method',
     '3304' => 'Sort payment method',
 
     '8' => 'Resend order',
