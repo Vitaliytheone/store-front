@@ -27,6 +27,9 @@ class FraudAccountsSearch extends Model
         return array_key_exists($pageSize, CountPagination::$pageSizeList) ? $pageSize : 100;
     }
 
+    /**
+     * @return array
+     */
     public function getParams(): array
     {
         return [
@@ -47,6 +50,9 @@ class FraudAccountsSearch extends Model
         return $query;
     }
 
+    /**
+     * @return array
+     */
     public function search(): array
     {
         $countQuery = $this->buildQuery()->count();
@@ -70,7 +76,11 @@ class FraudAccountsSearch extends Model
         ];
     }
 
-    public function prepareData($data): array
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function prepareData(array $data): array
     {
         $result = [];
 

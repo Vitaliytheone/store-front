@@ -49,7 +49,7 @@ class FraudController extends CustomController
      */
     public function actionIndex()
     {
-        return $this->redirect('fraud/reports');
+        return $this->redirect(Url::toRoute('/fraud/reports'));
     }
 
     /**
@@ -84,6 +84,10 @@ class FraudController extends CustomController
         $this->redirect(Url::toRoute(['/fraud/reports']));
     }
 
+    /**
+     * Render accounts list
+     * @return string
+     */
     public function actionAccounts()
     {
         $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.fraud_accounts');
