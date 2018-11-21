@@ -76,7 +76,15 @@ class DisableSslForm extends Model
             throw new Exception('Cannot update SSL!');
         }
 
-        $order = Orders::findOne(['domain' => $this->_ssl->domain]);
+        $order = Orders::findOne([
+            'domain' => $this->_ssl->domain,
+            'item' => [
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_SSL,
+                Orders::ITEM_PROLONGATION_SSL,
+            ],
+        ]);
 
         if ($order) {
 
