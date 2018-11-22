@@ -29,14 +29,11 @@ class PaymentsController extends CustomController
 
 	public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'token' => [
-                    'class' => DisableCsrfToken::class,
-                ],
-            ]
-        );
+        return [
+            'token' => [
+                'class' => DisableCsrfToken::class,
+            ],
+        ];
     }
 
     public function init()
