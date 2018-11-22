@@ -445,7 +445,7 @@ class CronController extends CustomController
 
     /**
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws \yii\db\Exception
      */
     public function actionUpdateDomainExpiry()
     {
@@ -455,6 +455,7 @@ class CronController extends CustomController
             ->all();
 
         foreach ($domains as $domain) {
+            $transaction = Yii::$app->db->beginTransaction();
             $domain->status = Domains::STATUS_EXPIRED;
 
             if (!$domain->save()) {
@@ -471,15 +472,17 @@ class CronController extends CustomController
                 continue;
             }
 
-            $transaction = Yii::$app->db->beginTransaction();
-
             $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id]);
-            $invoice = Invoices::findOne(['id' => $invoiceDetails->invoice_id]);
 
-            if (!$invoiceDetails->delete() || !$invoice->delete() || !$order->delete()) {
+            try {
+                Invoices::deleteAll(['id' => $invoiceDetails->invoice_id]);
+                $invoiceDetails->delete();
+                $order->delete();
+            } catch (\Exception $e) {
                 $transaction->rollBack();
                 continue;
             }
+
             $transaction->commit();
         }
     }
