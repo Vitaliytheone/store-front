@@ -22,7 +22,7 @@ use console\components\payments\PaymentsFee;
 use Faker\Factory;
 use common\components\dns\Dns;
 use my\components\ActiveForm;
-use my\helpers\DnsHelper;
+use common\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use Yii;

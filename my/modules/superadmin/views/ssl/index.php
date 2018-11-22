@@ -29,4 +29,5 @@ $this->context->addModule('superadminSslController');
         <?= $this->render('layouts/_ssl_list', [
             'sslList' => $sslList
         ])?>
-<?= $this->render('layouts/_ssl_details_modal')?>
+<?= $this->render('layouts/_ssl_details_modal') ?>
+<?= $this->render('layouts/_ssl_submit_disable_modal') ?>

@@ -6,6 +6,7 @@ use my\components\MainController;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;
 use Yii;
+use yii\filters\AccessControl;
 
 /**
  * Custom controller
@@ -13,6 +14,21 @@ use Yii;
 class CustomController extends MainController
 {
     public $activeTab;
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
 
     /**
      * @return mixed|\yii\web\User
