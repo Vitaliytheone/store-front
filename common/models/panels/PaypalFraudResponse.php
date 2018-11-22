@@ -19,21 +19,6 @@ use common\models\panels\queries\PaypalFraudResponseQuery;
  */
 class PaypalFraudResponse extends ActiveRecord
 {
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                ],
-                'value' => function() {
-                    return time();
-                },
-            ],
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -48,7 +33,7 @@ class PaypalFraudResponse extends ActiveRecord
     public function rules()
     {
         return [
-            [['panel_id', 'payment_id', 'response', 'created_at'], 'required'],
+            [['panel_id', 'payment_id', 'response'], 'required'],
             [['panel_id', 'payment_id', 'created_at'], 'integer'],
             [['response'], 'string'],
         ];
@@ -75,6 +60,25 @@ class PaypalFraudResponse extends ActiveRecord
     public static function find()
     {
         return new PaypalFraudResponseQuery(get_called_class());
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 
     /**

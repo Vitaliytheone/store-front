@@ -27,26 +27,6 @@ class PaypalFraudAccounts extends ActiveRecord
     const FRAUD_RISK_HIGH = 1;
     const FRAUD_RISK_CRITICAL = 2;
 
-    /** {@inheritdoc} */
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => [
-                        'created_at',
-                        'updated_at'
-                    ],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
-                ],
-                'value' => function() {
-                    return time();
-                },
-            ],
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -61,7 +41,7 @@ class PaypalFraudAccounts extends ActiveRecord
     public function rules()
     {
         return [
-            [['fraud_risk', 'payer_status', 'created_at', 'updated_at'], 'required'],
+            [['fraud_risk', 'payer_status'], 'required'],
             [['fraud_risk', 'payer_status', 'created_at', 'updated_at'], 'integer'],
             [['payer_id', 'payer_email'], 'string', 'max' => 1000],
         ];
@@ -90,5 +70,27 @@ class PaypalFraudAccounts extends ActiveRecord
     public static function find()
     {
         return new PaypalFraudAccountsQuery(get_called_class());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }
