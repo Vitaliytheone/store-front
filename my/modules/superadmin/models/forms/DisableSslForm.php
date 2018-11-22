@@ -2,6 +2,7 @@
 
 namespace superadmin\models\forms;
 
+use common\models\panels\Orders;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
 use my\helpers\order\OrderSslHelper;
@@ -63,6 +64,7 @@ class DisableSslForm extends Model
         $transaction = Yii::$app->db->beginTransaction();
 
         $panel->ssl = Project::SSL_MODE_OFF;
+        $panel->dns_status = Project::DNS_STATUS_NOT_DEFINED;
 
         if (!$panel->save(false)) {
             throw new Exception('Cannot update project!');
@@ -72,6 +74,25 @@ class DisableSslForm extends Model
 
         if (!$this->_ssl->save(false)) {
             throw new Exception('Cannot update SSL!');
+        }
+
+        $order = Orders::findOne([
+            'domain' => $this->_ssl->domain,
+            'item' => [
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_SSL,
+                Orders::ITEM_PROLONGATION_SSL,
+            ],
+        ]);
+
+        if ($order) {
+
+            $order->status = Orders::STATUS_CANCELED;
+
+            if (!$order->save(false)) {
+                throw new Exception('Cannot update order!');
+            }
         }
 
         $transaction->commit();
