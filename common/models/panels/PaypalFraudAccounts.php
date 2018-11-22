@@ -54,10 +54,10 @@ class PaypalFraudAccounts extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'payer_id' => Yii::t('app', 'PayPal payer ID'),
-            'payer_email' => Yii::t('app', 'PayPal payer email'),
-            'fraud_risk' => Yii::t('app', '1 - high, 2 - critical'),
-            'payer_status' => Yii::t('app', '1 - verified, 0 - unverified'),
+            'payer_id' => Yii::t('app', 'Payer ID'),
+            'payer_email' => Yii::t('app', 'Payer email'),
+            'fraud_risk' => Yii::t('app', 'Fraud Risk'),
+            'payer_status' => Yii::t('app', 'Payer status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];

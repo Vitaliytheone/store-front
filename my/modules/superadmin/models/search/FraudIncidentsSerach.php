@@ -81,9 +81,10 @@ class FraudIncidentsSerach extends Model
     private function prepareData(array $data): array
     {
         $result = [];
+        $panels = Project::find()->indexBy('id')->all();
 
         foreach ($data as $key => $item) {
-            $panel = Project::findOne(['id' => $item['panel_id']]);
+            $panel = $panels[$item['panel_id']];
             $result[$key] = [
                 'id' => $item['id'],
                 'panel_domain' => $panel->site,

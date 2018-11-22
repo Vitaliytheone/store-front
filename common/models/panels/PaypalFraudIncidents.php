@@ -64,9 +64,9 @@ class PaypalFraudIncidents extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'panel_id' => Yii::t('app', 'Panel ID'),
             'payment_id' => Yii::t('app', 'Payment ID'),
-            'fraud_risk' => Yii::t('app', '0 - undefined, 1 - high, 2 - critical'),
-            'fraud_reason' => Yii::t('app', '0 - нет, 1 - unverifed, 2 - high from fraud_accounts id#id записи из таблицы paypal_fraud_accounts, 3 - critical from fraud_accounts id#id записи из таблицы paypal_fraud_accounts'),
-            'balance_added' => Yii::t('app', '0 - not added on balance, 1 - funds added on balance'),
+            'fraud_risk' => Yii::t('app', 'Fraud Risk'),
+            'fraud_reason' => Yii::t('app', 'Fraud Reason'),
+            'balance_added' => Yii::t('app', 'Balance Added'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
     }
