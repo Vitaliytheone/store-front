@@ -18,7 +18,7 @@ use common\models\store\NotificationAdminEmails;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
-use sommerce\helpers\DnsHelper;
+use common\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\Exception;
@@ -474,8 +474,9 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Change store status
-     * @param int $status
+     * @param $status
      * @return bool
+     * @throws Exception
      */
     public function changeStatus($status)
     {
@@ -495,7 +496,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             case static::STATUS_TERMINATED:
                 if (static::STATUS_FROZEN == $this->status) {
                     $this->status = static::STATUS_TERMINATED;
-                    $this->terminate();
+                    $this->terminate(true);
                 }
             break;
         }
@@ -629,6 +630,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     /**
      * Create nginx config
      * @return bool
+     * @throws \Exception
      */
     public function createNginxConfig()
     {
@@ -638,6 +640,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     /**
      * Remove nginx config
      * @return bool
+     * @throws \Exception
      */
     public function deleteNginxConfig()
     {
@@ -646,9 +649,10 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Disable domain (remove store domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableDomain()
+    public function disableDomain($check = false)
     {
         // Remove all subdomains and domains
         StoreDomains::deleteAll([
@@ -659,7 +663,11 @@ class Stores extends ActiveRecord implements ProjectInterface
             'store_id' => $this->id
         ]);
 
-        DnsHelper::removeDns($this);
+        $domain = Domains::findOne(['domain' => $this->domain]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeDns($this);
+        }
 
         return true;
     }
@@ -667,6 +675,8 @@ class Stores extends ActiveRecord implements ProjectInterface
     /**
      * Enable domain (create store domains and add domain to dns servers)
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function enableDomain()
     {
@@ -855,6 +865,8 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Prolong store and create new invoice
+     * @return string|null
+     * @throws \yii\db\Exception
      */
     public function prolong()
     {
@@ -915,9 +927,10 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Disable main domain (remove store domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableMainDomain()
+    public function disableMainDomain($check = false)
     {
         // Remove all subdomains and domains
         StoreDomains::deleteAll([
@@ -927,16 +940,22 @@ class Stores extends ActiveRecord implements ProjectInterface
             'store_id' => $this->id
         ]);
 
-        DnsHelper::removeMainDns($this);
+        $domain = Domains::findOne(['domain' => $this->domain]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeMainDns($this);
+        }
 
         return true;
     }
 
     /**
      * Terminate store main domain and linked invoices
+     * @param bool $check
      * @return bool
+     * @throws Exception
      */
-    public function terminate()
+    public function terminate($check = false)
     {
         $domain = $this->domain;
 
@@ -948,7 +967,7 @@ class Stores extends ActiveRecord implements ProjectInterface
                 'store_id' => $this->id,
                 'type' => StoreDomains::DOMAIN_TYPE_DEFAULT])
         ) {
-            $this->disableMainDomain();
+            $this->disableMainDomain($check);
         }
 
         // Cancel unpaid invoices

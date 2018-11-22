@@ -6,7 +6,6 @@ use my\components\ActiveForm;
 use my\models\search\ActivitySearch;
 use Yii;
 use common\models\panels\Project;
-use yii\filters\AccessControl;
 use yii\web\Response;
 
 /**
@@ -15,32 +14,19 @@ use yii\web\Response;
  */
 class ActivityController extends CustomController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ];
-    }
 
     /**
      * View panel activity log list
-     * @param integer $id
-     * @return string
+     * @param $id
+     * @return array|string|void
+     * @throws \yii\base\ExitException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function actionIndex($id)
     {
         $panel = $this->_findModel($id);
+        $this->activeTab = $panel->child_panel == 0 ? 'panels' : 'child-panels';
 
         $this->view->title = Yii::t('app', 'pages.title.activity', [
             'panel' => mb_strtolower($panel->getSite())
@@ -113,6 +99,7 @@ class ActivityController extends CustomController
      * Find model by id
      * @param int $id
      * @return Project
+     * @throws \yii\base\ExitException
      */
     private function _findModel($id)
     {
