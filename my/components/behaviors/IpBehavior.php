@@ -2,6 +2,7 @@
 
 namespace my\components\behaviors;
 
+use my\helpers\UserHelper;
 use Yii;
 use yii\base\Event;
 use yii\behaviors\AttributeBehavior;
@@ -71,10 +72,9 @@ class IpBehavior extends AttributeBehavior {
         } else {
             if ($this->value !== null) {
                 return call_user_func($this->value, $event);
-            } else if (!empty(Yii::$app->request->userIp)) {
-                return Yii::$app->request->userIp;
+            } else {
+                return UserHelper::ip();
             }
-            return null;
         }
     }
 }
