@@ -9,12 +9,12 @@ use superadmin\models\forms\EditPanelPaymentMethodsForm;
 
 
 ?>
-
 <div class="form-group">
     <div class="input-group">
         <?= Html::activeDropDownList($model, 'currency_id', $model->getPaymentMethodDropdown(), [
             'prompt' => Yii::t('app/superadmin', 'panels.edit.payment_methods.select_payment_method'),
             'class' => 'form-control',
+            'style' => 'max-width: 200px;'
         ]) ?>
         <div class="input-group-append">
             <?= Html::submitButton(Yii::t('app/superadmin', 'panels.edit.payment_methods.add_method'), [
