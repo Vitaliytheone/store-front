@@ -8,6 +8,9 @@ use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\Languages;
+use common\models\panels\SuperAdmin;
+use common\models\panels\TicketMessages;
+use common\models\panels\Tickets;
 use common\models\stores\StoreAdmins;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
@@ -829,7 +832,7 @@ class OrderHelper {
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
-        $letsencrypt->issueCert();
+        $letsencrypt->issueCert(!(bool)$panel->subdomain);
 
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
@@ -870,6 +873,30 @@ class OrderHelper {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
         }
 
+        // Create new unreaded ticket after activate ssl cert.
+        // Only for SSL created by user
+
+        $messagePrefix = 'my';
+
+        if($panel->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
+            $ticket = new Tickets();
+            $ticket->customer_id =$ssl->cid;
+            $ticket->is_admin = 1;
+            $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
+            if ($ticket->save(false)) {
+                $ticketMessage = new TicketMessages();
+                $ticketMessage->ticket_id = $ticket->id;
+                $ticketMessage->admin_id = SuperAdmin::DEFAULT_ADMIN;
+                $ticketMessage->created_at = time();
+                $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
+                    'domain' => $panel->getBaseDomain()
+                ]);
+                $ticketMessage->ip = ' ';
+                $ticketMessage->user_agent = ' ';
+                $ticketMessage->save(false);
+            }
+        }
+
         return true;
     }
 
@@ -894,12 +921,18 @@ class OrderHelper {
             throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
 
+        $panel = Project::findOne($ssl->pid);
+
+        if (!$panel) {
+            throw new Exception('Panel [' . $ssl->pid . '] not found!');
+        }
+
         $letsencrypt = new Letsencrypt();
         $letsencrypt->setStageMode(false);
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
-        $letsencrypt->renewCert();
+        $letsencrypt->renewCert(!(bool)$panel->subdomain);
 
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;

@@ -7,6 +7,7 @@ use common\models\panels\Params;
 use common\models\panels\services\GetGeneralPaymentMethodsService;
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
+use my\components\filters\DisableCsrfToken;
 use my\components\payments\Paypal;
 use my\helpers\CurlHelper;
 use common\models\panels\Content;
@@ -32,6 +33,9 @@ use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class SiteController
@@ -46,18 +50,42 @@ class SiteController extends CustomController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect'],
+                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect', 'paypal-verify'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                 ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'message' => ['POST'],
+                    'create-ticket' => ['POST'],
+                    'changeemail' => ['POST'],
+                    'changepassword' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+            'token' => [
+                'class' => DisableCsrfToken::class,
+                'only' => ['checkout', 'invoices', 'invoice'],
             ],
         ];
     }
@@ -80,14 +108,6 @@ class SiteController extends CustomController
      * @return bool
      */
     public function beforeAction($action) {
-        if (in_array($this->action->id, [
-            'checkout',
-            'invoices',
-            'invoice',
-        ])) {
-            $this->enableCsrfValidation = false;
-        }
-
         // Disable csrf-validation for logged-in user on SignIn form
         // Uses for prevent "Bad Request (#400): Unable to verify your data submission"
         // on form double submit
@@ -115,11 +135,10 @@ class SiteController extends CustomController
      * Create ticket message
      * @param int $id
      * @return array
+     * @throws \yii\base\ExitException
      */
     public function actionMessage($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $ticket = $this->findModel($id, 'Tickets');
         $customer = Customers::findOne(Yii::$app->user->identity->id);
 
@@ -151,6 +170,7 @@ class SiteController extends CustomController
      * @param int $id
      * @param bool $clear
      * @return string
+     * @throws \yii\base\ExitException
      */
     public function actionTicket($id, $clear = false)
     {
@@ -173,13 +193,10 @@ class SiteController extends CustomController
 
     /**
      * Create ticket message
-     * @param int $id
      * @return array
      */
     public function actionCreateTicket()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $customer = Customers::findOne(Yii::$app->user->identity->id);
 
         $model = new CreateTicketForm();
@@ -210,6 +227,7 @@ class SiteController extends CustomController
      */
     public function actionSupport()
     {
+        $this->activeTab = 'support';
         $this->view->title = Yii::t('app', 'pages.title.support');
 
         $model = new CreateTicketForm();
@@ -282,6 +300,8 @@ class SiteController extends CustomController
      */
     public function actionInvoices()
     {
+        $this->activeTab = 'invoices';
+
         $this->view->title = Yii::t('app', 'pages.title.invoices');
 
         $invoices = new InvoicesSearch();
@@ -300,6 +320,7 @@ class SiteController extends CustomController
      */
     public function actionSettings()
     {
+        $this->activeTab = 'settings';
         $this->view->title = Yii::t('app', 'pages.title.settings');
 
         $customer = Customers::findOne(Yii::$app->user->identity->id);
@@ -395,6 +416,8 @@ class SiteController extends CustomController
     /**
      * Reset customer password
      * @param string $token
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      * @return string
      */
     public function actionReset($token)
@@ -427,8 +450,6 @@ class SiteController extends CustomController
      */
     public function actionChangeemail()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new ChangeEmailForm();
 
         if ($model->load(Yii::$app->request->post())) {
@@ -457,8 +478,6 @@ class SiteController extends CustomController
      */
     public function actionChangepassword()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $model = new ChangePasswordForm();
 
         if ($model->load(Yii::$app->request->post())) {
@@ -503,43 +522,12 @@ class SiteController extends CustomController
         return $this->redirect($url);
     }
 
-
-    /**
-     * Check if customer have active invoice
-     * @return null|Invoices
-     */
-    private function hasActiveInvoice()
-    {
-        return Invoices::findOne([
-            'cid' => Yii::$app->user->identity->id,
-            'status' => 0
-        ]);
-    }
-
-    /**
-     * Find model by id and class name
-     * @param int $id
-     * @param string $class - class name
-     * @return Response
-     */
-    private function findModel($id, $class)
-    {
-        if (!($model = ('\common\models\panels\\' . $class)::findOne([
-            'customer_id' => Yii::$app->user->identity->id,
-            'id' => $id
-        ]))) {
-            $this->redirect('/');
-            return Yii::$app->end();
-        }
-
-        return $model;
-    }
-
     /**
      * Checkout
      * @param string $id
      * @return string|Response
      * @throws ForbiddenHttpException
+     * @throws \yii\db\Exception
      */
     public function actionCheckout($id)
     {
@@ -716,6 +704,7 @@ class SiteController extends CustomController
      * Paypal payer payment verification
      * @param $code
      * @return Response
+     * @throws \yii\base\Exception
      */
     public function actionPaypalVerify($code)
     {
@@ -731,5 +720,37 @@ class SiteController extends CustomController
         $payment->verified();
 
         return $this->redirect('/invoices/' . $payment->invoice->code);
+    }
+
+    /**
+     * Check if customer have active invoice
+     * @return null|Invoices
+     */
+    private function hasActiveInvoice()
+    {
+        return Invoices::findOne([
+            'cid' => Yii::$app->user->identity->id,
+            'status' => 0
+        ]);
+    }
+
+    /**
+     * Find model by id and class name
+     * @param int $id
+     * @param string $class - class name
+     * @return Response
+     * @throws \yii\base\ExitException
+     */
+    private function findModel($id, $class)
+    {
+        if (!($model = ('\common\models\panels\\' . $class)::findOne([
+            'customer_id' => Yii::$app->user->identity->id,
+            'id' => $id
+        ]))) {
+            $this->redirect('/');
+            return Yii::$app->end();
+        }
+
+        return $model;
     }
 }
