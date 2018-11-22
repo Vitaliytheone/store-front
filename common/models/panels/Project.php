@@ -6,7 +6,7 @@ use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\services\GetParentPanelService;
-use my\helpers\DnsHelper;
+use common\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use common\helpers\DbHelper;
@@ -545,7 +545,7 @@ class Project extends ActiveRecord implements ProjectInterface
             case static::STATUS_TERMINATED:
                 if (static::STATUS_FROZEN == $this->act) {
                     $this->act = static::STATUS_TERMINATED;
-                    $this->terminate();
+                    $this->terminate(true);
                 }
             break;
         }
@@ -600,12 +600,15 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Terminate project
+     * @param bool $check
+     * @return bool
+     * @throws \yii\base\Exception
      */
-    public function terminate()
+    public function terminate($check = false)
     {
         if (!$this->subdomain) {
             // Удаляем главный домен
-            $this->disableMainDomain();
+            $this->disableMainDomain($check);
         }
 
         $item = $this->child_panel ? InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL : InvoiceDetails::ITEM_PROLONGATION_PANEL;
@@ -739,9 +742,10 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Disable main domain (remove panel domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableMainDomain()
+    public function disableMainDomain($check = false)
     {
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
@@ -751,16 +755,21 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ]);
 
-        DnsHelper::removeMainDns($this);
+        $domain = Domains::findOne(['domain' => $this->domain]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeMainDns($this);
+        }
 
         return true;
     }
 
     /**
      * Disable domain (remove panel domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableDomain()
+    public function disableDomain($check = false)
     {
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
@@ -771,7 +780,11 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ]);
 
-        DnsHelper::removeDns($this);
+        $domain = Domains::findOne(['domain' => $this->site]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeDns($this);
+        }
 
         return true;
     }
@@ -958,7 +971,7 @@ class Project extends ActiveRecord implements ProjectInterface
     {
         return (new Query())
             ->from(['ppm' => PanelPaymentMethods::tableName()])
-            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND manual_callback_url = 1')
+            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND pm.manual_callback_url = :manual_url', [':manual_url' => 1])
             ->andWhere([
                 'ppm.panel_id' => $this->id,
                 'ppm.visibility' => 1
