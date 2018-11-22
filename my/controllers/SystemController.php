@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\MyActivityLog;
+use my\components\filters\DisableCsrfToken;
 use my\helpers\UserHelper;
 use my\mail\mailers\PanelFrozen;
 use my\models\forms\LoginFormSuper;
@@ -19,6 +20,15 @@ use yii\web\Response;
 class SystemController extends CustomController
 {
     public $enableCsrfValidation = false;
+
+    public function behaviors()
+    {
+        return [
+            'token' => [
+                'class' => DisableCsrfToken::class,
+            ],
+        ];
+    }
 
     /**
      * System pip action
