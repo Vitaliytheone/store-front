@@ -35,7 +35,6 @@ class FraudController extends CustomController
                 'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
-                    'reports' => ['GET'],
                     'reports-change-status' => ['POST'],
                 ],
             ],
@@ -43,18 +42,10 @@ class FraudController extends CustomController
     }
 
     /**
-     * @return \yii\web\Response
-     */
-    public function actionIndex()
-    {
-        return $this->redirect(Url::toRoute('/fraud/reports'));
-    }
-
-    /**
      * Render reports list
      * @return string
      */
-    public function actionReports()
+    public function actionIndex()
     {
         $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.fraud_reports');
 
