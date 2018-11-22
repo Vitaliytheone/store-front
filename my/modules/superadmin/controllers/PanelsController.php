@@ -54,7 +54,7 @@ class PanelsController extends CustomController
                     'edit',
                     'generate-apikey',
                     'downgrade',
-                    'edit-payment-methods',
+                    //'edit-payment-methods',
                 ]
             ],
             'verbs' => [

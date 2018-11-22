@@ -916,6 +916,7 @@ return [
     'panels.edit.payment_methods.close' => 'Close',
     'panels.edit.payment_methods.save' => 'Save changes',
     'panels.edit.payment_methods.field.name' => 'Name',
+    'panels.edit.payment_methods.field.currency' => 'Currency',
     'panels.edit.payment_methods.field.active' => 'Active',
     'panels.edit.payment_methods.error' => 'Can not change panel payment methods',
 
@@ -923,4 +924,8 @@ return [
     'paypal_fraud_accounts.risk.critical' => 'Critical',
     'paypal_fraud_accounts.status.verified' => 'Verified',
     'paypal_fraud_accounts.status.unverified' => 'Unverified',
+
+    'panels.edit.payment_method_modal.select.available_for' => 'Available for {currency}',
+    'panels.edit.payment_methods.select_payment_method' => 'Select payment method',
+    'panels.edit.payment_methods.add_method' => 'Add payment',
 ];
