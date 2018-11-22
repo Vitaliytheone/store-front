@@ -3,7 +3,10 @@
 namespace common\models\panels;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use common\models\panels\queries\PaypalFraudReportsQuery;
 
 /**
  * This is the model class for table "paypal_fraud_reports".
@@ -17,7 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property int $created_at
  * @property int $updated_at
  */
-class PaypalFraudReports extends \yii\db\ActiveRecord
+class PaypalFraudReports extends ActiveRecord
 {
 
     const STATUS_PENDING = 0;
@@ -38,7 +41,7 @@ class PaypalFraudReports extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'report', 'status', 'created_at', 'updated_at'], 'required'],
+            [['id', 'report', 'status'], 'required'],
             [['id', 'panel_id', 'user_id', 'payment_id', 'created_at', 'updated_at'], 'integer'],
             [['report'], 'string'],
             [['status'], 'string', 'max' => 1],
@@ -95,6 +98,37 @@ class PaypalFraudReports extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return PaypalFraudReportsQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new PaypalFraudReportsQuery(get_called_class());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
         ];
     }
 }

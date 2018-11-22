@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\MyActivityLog;
+use my\components\filters\DisableCsrfToken;
 use my\helpers\UserHelper;
 use my\mail\mailers\PanelFrozen;
 use my\models\forms\LoginFormSuper;
@@ -19,6 +20,15 @@ use yii\web\Response;
 class SystemController extends CustomController
 {
     public $enableCsrfValidation = false;
+
+    public function behaviors()
+    {
+        return [
+            'token' => [
+                'class' => DisableCsrfToken::class,
+            ],
+        ];
+    }
 
     /**
      * System pip action
@@ -93,6 +103,7 @@ class SystemController extends CustomController
 
     /**
      * Test succesed add ssl to ddos guard service
+     * @return string
      * @throws HttpException
      */
     public function actionDdosSuccess()
@@ -111,6 +122,7 @@ class SystemController extends CustomController
 
     /**
      * Test successed dns
+     * @return array
      * @throws HttpException
      */
     public function actionDns()
@@ -124,6 +136,7 @@ class SystemController extends CustomController
 
     /**
      * Test dns list
+     * @return array
      * @throws HttpException
      */
     public function actionDnsList()
@@ -140,6 +153,11 @@ class SystemController extends CustomController
         ];
     }
 
+    /**
+     * @param $key
+     * @param $id
+     * @return string|void
+     */
     public function actionPanelNotify($key, $id)
     {
         if (Yii::$app->params['gypAuth'] !== $key) {

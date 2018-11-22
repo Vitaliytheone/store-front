@@ -9,7 +9,6 @@ use superadmin\models\search\dashboard\Panels;
 use superadmin\models\search\dashboard\SSL;
 use superadmin\models\search\dashboard\Stores;
 use ReflectionClass;
-use ReflectionMethod;
 use Yii;
 
 /*
@@ -26,7 +25,8 @@ class DashboardBlocks
     /**
      * Get block
      * @param $key
-     * @return BaseBlock
+     * @return BaseBlock|null
+     * @throws \ReflectionException
      */
     public static function getBlock($key)
     {
@@ -75,10 +75,11 @@ class DashboardBlocks
             ]
         ];
     }
-    
+
     /**
      * Get panels
      * @return array
+     * @throws \ReflectionException
      */
     public static function getBlocks()
     {

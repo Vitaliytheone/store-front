@@ -19,6 +19,9 @@ use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class ChildProjectController
@@ -26,6 +29,8 @@ use yii\web\Response;
  */
 class ChildProjectController extends CustomController
 {
+    public $activeTab = 'child-panels';
+
     /**
      * @inheritdoc
      */
@@ -33,7 +38,7 @@ class ChildProjectController extends CustomController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -58,6 +63,26 @@ class ChildProjectController extends CustomController
                     ],
                 ],
 
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'order-domain' => ['POST'],
+                    'staff-passwd' => ['POST'],
+                    'staff-edit' => ['POST'],
+                    'staffcreate' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['order-domain', 'staff-passwd', 'staff-edit', 'staffcreate']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['order-domain', 'staff-passwd', 'staff-edit', 'staffcreate'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
             ],
         ];
     }
@@ -93,7 +118,8 @@ class ChildProjectController extends CustomController
 
     /**
      * Create order
-     * @return string|\yii\web\Response
+     * @return string|Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {
@@ -126,11 +152,10 @@ class ChildProjectController extends CustomController
     /**
      * Domain order validation
      * @return array
+     * @throws \Throwable
      */
     public function actionOrderDomain()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         /**
          * @var $user Auth
          */
@@ -163,6 +188,7 @@ class ChildProjectController extends CustomController
      * Panel staffs list
      * @param $id
      * @return string|Response
+     * @throws \yii\base\ExitException
      */
     public function actionStaff($id)
     {
@@ -190,14 +216,14 @@ class ChildProjectController extends CustomController
 
     /**
      * Set staff password
-     * @param int $id
-     * @return string|Response
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\base\ExitException
      */
     public function actionStaffPasswd($id)
     {
         $staff = $this->findStaffModel($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new SetStaffPasswordForm();
         $model->setStaff($staff);
@@ -224,14 +250,14 @@ class ChildProjectController extends CustomController
 
     /**
      * Edit staff
-     * @param int $id
-     * @return string|Response
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\base\ExitException
      */
     public function actionStaffEdit($id)
     {
         $staff = $this->findStaffModel($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new EditStaffForm();
         $model->setStaff($staff);
@@ -258,7 +284,10 @@ class ChildProjectController extends CustomController
 
     /**
      * Create project staff
-     * @param int $id
+     * @param $id
+     * @return array
+     * @throws ForbiddenHttpException
+     * @throws \yii\base\ExitException
      */
     public function actionStaffcreate($id)
     {
@@ -267,8 +296,6 @@ class ChildProjectController extends CustomController
         if (!Project::hasAccess($project, 'canCreateStaff')) {
             throw new ForbiddenHttpException();
         }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new CreateStaffForm();
         $model->setProject($project);
@@ -295,8 +322,9 @@ class ChildProjectController extends CustomController
 
     /**
      * Find model by id and class name
-     * @param int $id
-     * @return Response|Project
+     * @param $id
+     * @return Project|null|void
+     * @throws \yii\base\ExitException
      */
     private function findModel($id)
     {
@@ -317,8 +345,10 @@ class ChildProjectController extends CustomController
 
     /**
      * Find model by id and class name
-     * @param int $id
-     * @return Response|ProjectAdmin
+     * @param $id
+     * @return ProjectAdmin|null
+     * @throws NotFoundHttpException
+     * @throws \yii\base\ExitException
      */
     private function findStaffModel($id)
     {

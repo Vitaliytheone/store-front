@@ -16,6 +16,8 @@ use yii\web\Response;
  */
 class ReferralsController extends CustomController
 {
+    public $activeTab = 'referrals';
+
     /**
      * @var Customers
      */
@@ -28,7 +30,7 @@ class ReferralsController extends CustomController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'actions' => ['index'],
