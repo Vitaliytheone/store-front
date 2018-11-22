@@ -88,8 +88,8 @@ class FraudAccountsSearch extends Model
             $result[$key] = $item;
             $result[$key]['fraud_risk'] = PaypalFraudAccounts::getRiskName($item['fraud_risk']);
             $result[$key]['payer_status'] = PaypalFraudAccounts::getStatusName($item['payer_status']);
-            $result[$key]['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
-            $result[$key]['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
+            $result[$key]['created_at'] = PaypalFraudAccounts::formatDate($item['created_at'], 'php:Y-m-d H:i:s');
+            $result[$key]['updated_at'] = PaypalFraudAccounts::formatDate($item['updated_at'], 'php:Y-m-d H:i:s');
         }
 
         return $result;
