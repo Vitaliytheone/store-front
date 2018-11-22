@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 
+use common\components\traits\UnixTimeFormatTrait;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use Yii;
@@ -31,6 +32,8 @@ class PaypalFraudIncidents extends ActiveRecord
 
     const BALANCE_NO = 0;
     const BALANCE_YES = 1;
+
+    use UnixTimeFormatTrait;
 
     /**
      * {@inheritdoc}

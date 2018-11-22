@@ -93,7 +93,7 @@ class FraudIncidentsSerach extends Model
                 'fraud_risk' => PaypalFraudIncidents::getRiskName($item['fraud_risk']),
                 'fraud_reason' => PaypalFraudIncidents::getReasonName($item['fraud_reason']),
                 'balance_added' => PaypalFraudIncidents::getBalanceName($item['balance_added']),
-                'created_at' => date('Y-m-d H:i:s', $item['created_at']),
+                'created_at' => PaypalFraudIncidents::formatDate($item['created_at'], 'php:Y-m-d H:i:s'),
             ];
         }
 
