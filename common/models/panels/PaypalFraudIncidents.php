@@ -22,24 +22,6 @@ use common\models\panels\queries\PaypalFraudIncidentsQuery;
 class PaypalFraudIncidents extends ActiveRecord
 {
     /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                ],
-                'value' => function() {
-                    return time();
-                },
-            ],
-        ];
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -53,7 +35,7 @@ class PaypalFraudIncidents extends ActiveRecord
     public function rules()
     {
         return [
-            [['panel_id', 'payment_id', 'fraud_risk', 'balance_added', 'created_at'], 'required'],
+            [['panel_id', 'payment_id', 'fraud_risk', 'balance_added'], 'required'],
             [['panel_id', 'payment_id', 'fraud_risk', 'balance_added', 'created_at'], 'integer'],
             [['fraud_reason'], 'string', 'max' => 1000],
         ];
@@ -82,6 +64,25 @@ class PaypalFraudIncidents extends ActiveRecord
     public static function find()
     {
         return new PaypalFraudIncidentsQuery(get_called_class());
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 
     /**

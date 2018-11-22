@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property int $created_at
  * @property int $updated_at
  */
-class PaypalFraudAccounts extends \yii\db\ActiveRecord
+class PaypalFraudAccounts extends ActiveRecord
 {
     const PAYER_STATUS_UNVERIFIED = 0;
     const PAYER_STATUS_VERIFIED = 1;
@@ -36,34 +36,14 @@ class PaypalFraudAccounts extends \yii\db\ActiveRecord
         return 'paypal_fraud_accounts';
     }
 
-    /** {@inheritdoc} */
-    public function behaviors()
-    {
-        return [
-                'timestamp' => [
-                    'class' => TimestampBehavior::class,
-                    'attributes' => [
-                        ActiveRecord::EVENT_BEFORE_INSERT => [
-                            'created_at',
-                            'updated_at'
-                        ],
-                        ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
-                    ],
-                    'value' => function() {
-                        return time();
-                    },
-                ],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['fraud_risk', 'payer_status', 'created_at', 'updated_at'], 'required'],
-            [['created_at', 'updated_at'], 'integer'],
+            [['fraud_risk', 'payer_status'], 'required'],
+            [['fraud_risk', 'payer_status', 'created_at', 'updated_at'], 'integer'],
             [['payer_id', 'payer_email'], 'string', 'max' => 1000],
             [['fraud_risk', 'payer_status'], 'string', 'max' => 1],
         ];
@@ -82,6 +62,37 @@ class PaypalFraudAccounts extends \yii\db\ActiveRecord
             'payer_status' => 'Payer Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return PaypalFraudAccountsQuery|\yii\db\ActiveQuery
+     */
+    public static function find()
+    {
+        return new PaypalFraudAccountsQuery(get_called_class());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
         ];
     }
 
@@ -127,10 +138,5 @@ class PaypalFraudAccounts extends \yii\db\ActiveRecord
     public static function getStatusName(int $status): string
     {
         return ArrayHelper::getValue(static::getStatuses(), $status, '');
-    }
-
-    public static function find()
-    {
-        return new PaypalFraudAccountsQuery(get_called_class());
     }
 }
