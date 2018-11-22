@@ -220,6 +220,7 @@ class OrderSslForm extends Model
                 ->andWhere([
                     'project.cid' => $this->_customer->id,
                     'project.act' => Project::STATUS_ACTIVE,
+                    'project.dns_status' => Project::DNS_STATUS_NOT_DEFINED,
                 ])
                 ->groupBy('project.id')
                 ->having('COUNT(sc.id) = 0 AND COUNT(o.id) = 0')

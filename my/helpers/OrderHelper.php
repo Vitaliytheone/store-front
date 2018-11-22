@@ -832,7 +832,7 @@ class OrderHelper {
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
-        $letsencrypt->issueCert();
+        $letsencrypt->issueCert(!(bool)$panel->subdomain);
 
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
@@ -878,7 +878,7 @@ class OrderHelper {
 
         $messagePrefix = 'my';
 
-        if(!$panel->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
+        if($panel->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
             $ticket = new Tickets();
             $ticket->customer_id =$ssl->cid;
             $ticket->is_admin = 1;
@@ -921,12 +921,18 @@ class OrderHelper {
             throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
 
+        $panel = Project::findOne($ssl->pid);
+
+        if (!$panel) {
+            throw new Exception('Panel [' . $ssl->pid . '] not found!');
+        }
+
         $letsencrypt = new Letsencrypt();
         $letsencrypt->setStageMode(false);
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
-        $letsencrypt->renewCert();
+        $letsencrypt->renewCert(!(bool)$panel->subdomain);
 
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
