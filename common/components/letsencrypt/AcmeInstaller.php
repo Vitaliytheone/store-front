@@ -194,7 +194,7 @@ class AcmeInstaller extends Component
             $ssl->domain = trim($domain);
 
             $letsencrypt->setSsl($ssl);
-            $letsencrypt->issueCert();
+            $letsencrypt->issueCert(!(bool)$panel->subdomain);
 
             $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
             $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
@@ -239,9 +239,15 @@ class AcmeInstaller extends Component
                 throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
             }
 
+            $panel = Project::findOne($ssl->pid);
+
+            if (!$panel) {
+                throw new Exception('Panel [' . $ssl->pid . '] not found!');
+            }
+
             $letsencrypt->setSsl($ssl);
 
-            $letsencrypt->renewCert();
+            $letsencrypt->renewCert(!(bool)$panel->subdomain);
 
             $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
             $ssl->checked = SslCertLetsencrypt::CHECKED_YES;

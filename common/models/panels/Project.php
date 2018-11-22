@@ -971,7 +971,7 @@ class Project extends ActiveRecord implements ProjectInterface
     {
         return (new Query())
             ->from(['ppm' => PanelPaymentMethods::tableName()])
-            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND manual_callback_url = 1')
+            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND pm.manual_callback_url = :manual_url', [':manual_url' => 1])
             ->andWhere([
                 'ppm.panel_id' => $this->id,
                 'ppm.visibility' => 1
