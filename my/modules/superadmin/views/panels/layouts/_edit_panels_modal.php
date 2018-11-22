@@ -4,9 +4,9 @@
 use my\components\ActiveForm;
 use my\helpers\Url;
 use yii\bootstrap\Html;
-use \my\modules\superadmin\models\forms\EditProjectForm;
+use superadmin\models\forms\EditProjectForm;
 use yii\helpers\Json;
-use my\modules\superadmin\widgets\SelectCustomer;
+use superadmin\widgets\SelectCustomer;
 
 $model = new EditProjectForm();
 $checkboxTemplate = "<div class=\"custom-control custom-checkbox mt-2\">{input} {label}</div>";
@@ -69,7 +69,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     ]) ?>
                 </div>
 
-                <?= $form->field($model, 'currency', ['options' => [
+                <?= $form->field($model, 'currency_code', ['options' => [
                     'id' => 'form-currency',
                     'class' => 'form-group']])
                     ->dropDownList($model->getCurrencies()) ?>

@@ -62,6 +62,7 @@ return [
             2014,
             2016,
             2017,
+            2018,
             21, // Only for old events support, without new records
             22, // Only for old events support, without new records
         ]
@@ -116,14 +117,16 @@ return [
             3002,
             3003,
             3004,
+            3005,
         ]
     ],
     [
         'title' => 'Payments',
         'events' => [
-            36,
-            83,
-            84
+            3301,
+            3302,
+            3303,
+            3304,
         ]
     ],
     [

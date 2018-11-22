@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $tickets \my\modules\superadmin\models\search\TicketsSearch */
+    /* @var $tickets \superadmin\models\search\TicketsSearch */
     /* @var $ticket \common\models\panels\Tickets */
     /* @var $superAdmins */
     /* @var $superAdminCount */

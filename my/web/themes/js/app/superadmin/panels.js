@@ -1,5 +1,8 @@
 customModule.superadminPanelsController = {
     run : function(params) {
+        var self = this;
+
+        self.editPaymentMethods(params);
 
         $('#search-providers').on('keyup', function(e) {
             if (e.keyCode == 13) {
@@ -375,6 +378,51 @@ customModule.superadminPanelsController = {
                 data: form.serialize(),
                 callback : function(response) {
                     $('#upgradePanelModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+    },
+    editPaymentMethods: function (params) {
+        var self = this;
+
+        $('.edit-payment-methods').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var modal = $('#editPaymentMethodsModal');
+            var form = $('#editPaymentMethodsForm');
+            var errorBlock = $('#editPaymentMethodsError', form);
+            var container = $('#editPaymentMethodsContainer', modal);
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+            container.html('');
+            container.append('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>');
+
+            $.get(link.attr('href'), function (response) {
+                if (response.content) {
+                    container.html(response.content);
+                }
+            });
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('click', '#editPaymentMethodsButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#editPaymentMethodsForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#editPaymentMethodsModal').modal('hide');
                     location.reload();
                 }
             });

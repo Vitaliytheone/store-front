@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use Yii;
 use common\models\panels\Tickets;
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class TicketsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class TicketsSearch extends Tickets
 {

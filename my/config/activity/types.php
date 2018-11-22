@@ -30,6 +30,7 @@ return [
     '2014' => 'Disable category',
     '2016' => 'Move Service',
     '2017' => 'Move Category',
+    '2018' => 'Assign Category',
 
     '3001' => 'Add provider',
     '3002' => 'Edit provider',
@@ -55,6 +56,12 @@ return [
     '3214' => 'Logo delete',
     '3215' => 'Favicon upload',
     '3216' => 'Favicon delete',
+
+    '3301' => 'Add payment method',
+    '3302' => 'Edit payment method',
+    '3303' => 'Activate payment method',
+    '3305' => 'Deactivate payment method',
+    '3304' => 'Sort payment method',
 
     '8' => 'Resend order',
     '9' => 'Change status',

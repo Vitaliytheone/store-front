@@ -82,9 +82,9 @@ $routes = [
 
     'ssl' => '/ssl/index',
     'ssl/order' => '/ssl/order',
+    'ssl/order-paid' => '/ssl/order-paid',
 
     'order' => '/project/order',
-    'order-domain' => '/project/order-domain',
     'panels' => '/project/panels',
     'staff/create/<id:>' => '/project/staffcreate',
     'staff/passwd/<id:>' => '/project/staffpasswd',
@@ -127,6 +127,7 @@ $routes = [
     'stores/staff/create/<id:>' => '/store/staff-create',
     'stores/staff/edit/<id:>' => '/store/staff-edit',
     'stores/staff/password/<id:>' => '/store/staff-password',
+    'webhook/<action:>' => '/webhook/index',
 ];
 
 return array_merge($routes, $superadmin);

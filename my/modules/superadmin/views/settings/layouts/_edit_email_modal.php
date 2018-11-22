@@ -1,12 +1,12 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model my\modules\superadmin\models\forms\CreateNotificationEmailForm */
+/* @var $model superadmin\models\forms\CreateNotificationEmailForm */
 /* @var $form my\components\ActiveForm */
 
 use my\helpers\Url;
 use yii\bootstrap\Html;
 use my\components\ActiveForm;
-use my\modules\superadmin\models\forms\EditNotificationEmailForm;
+use superadmin\models\forms\EditNotificationEmailForm;
 
 $model = new EditNotificationEmailForm();
 ?>

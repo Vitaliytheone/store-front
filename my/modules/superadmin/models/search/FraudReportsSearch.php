@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use yii\base\Model;
 use yii\db\Query;
@@ -10,7 +10,7 @@ use common\models\panels\PaypalFraudReports;
 
 /**
  * Class FraudReportsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class FraudReportsSearch extends Model
 {

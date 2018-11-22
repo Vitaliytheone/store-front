@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use common\models\panels\services\GetPaymentMethodsService;
 use common\models\stores\PaymentGateways;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -10,6 +11,11 @@ use yii\helpers\ArrayHelper;
  * @package common\helpers
  */
 class CurrencyHelper {
+
+    /**
+     * @var array
+     */
+    protected static $_paymentMethods;
 
     protected static $currencyOptions = [];
 
@@ -49,23 +55,6 @@ class CurrencyHelper {
         return static::$currencyOptions[$code];
     }
 
-
-    /**
-     * Get currency symbol
-     * @param string $code
-     * @return mixed
-     */
-    public static function getCurrencySymbol($code)
-    {
-        $symbol = $code;
-
-        if (!empty(Yii::$app->params['currencies'][$code])) {
-            $symbol = Yii::$app->params['currencies'][$code]['symbol'];
-        }
-
-        return $symbol;
-    }
-
     /**
      * Get currency format template
      * @param string $code
@@ -75,12 +64,7 @@ class CurrencyHelper {
     {
         $template = '{{value}}';
         if (!empty(Yii::$app->params['currencies'][$code])) {
-            $currencyOptions = Yii::$app->params['currencies'][$code];
-            if (1 == (int)$currencyOptions['symbol_aligment']) {
-                $template = '{{symbol}}{{value}}';
-            } else if (2 == (int)$currencyOptions['symbol_aligment']) {
-                $template = '{{value}}{{symbol}}';
-            }
+            $template = Yii::$app->params['currencies'][$code]['money_format'];
         }
         return $template;
     }
@@ -110,16 +94,60 @@ class CurrencyHelper {
     }
 
     /**
-     * Get currency code by id
-     * @param $id
-     * @return mixed
+     * Get payment methods for currency
+     * @param string $currency
+     * @return array
      */
-    public static function getCurrencyCodeById($id)
+    public static function getPaymentMethodsByCurrency(string $currency): array
     {
-        $currencies = [];
-        foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $code;
+        return (array)array_filter(static::getPaymentMethods(), function ($method) use ($currency) {
+            return in_array($currency, $method['currency']) || in_array($currency, $method['multi_currency']);
+        });
+    }
+
+    /**
+     * Get all payment methods
+     * @return array
+     */
+    public static function getPaymentMethods(): array
+    {
+        if (null === static::$_paymentMethods) {
+            static::$_paymentMethods = Yii::$container->get(GetPaymentMethodsService::class)->get();
         }
-        return ArrayHelper::getValue($currencies, (integer)$id);
+
+        return (array)static::$_paymentMethods;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAvailableCurrencies()
+    {
+        return array_keys(Yii::$app->params['currencies']);
+    }
+
+    /**
+     * @param string $currency
+     * @return integer|null
+     */
+    public static function getCurrencyIdByCode(string $currency)
+    {
+        return ArrayHelper::getValue(ArrayHelper::getColumn(Yii::$app->params['legacy_currencies'], 'id'), $currency);
+    }
+
+    /**
+     * @param integer $currencyId
+     * @return string|null
+     */
+    public static function getCurrencyCodeById(int $currencyId)
+    {
+        foreach ((array)Yii::$app->params['legacy_currencies'] as $currency => $currencyOptions) {
+            $id = ArrayHelper::getValue($currencyOptions, 'id');
+            if ($id == $currencyId) {
+                return $currency;
+            }
+        }
+
+        return null;
     }
 }

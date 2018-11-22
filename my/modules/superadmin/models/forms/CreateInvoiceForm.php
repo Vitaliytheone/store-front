@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class CreateInvoiceForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class CreateInvoiceForm extends Model {
 

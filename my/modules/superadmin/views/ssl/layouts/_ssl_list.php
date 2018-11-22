@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $sslList \my\modules\superadmin\models\search\SslSearch */
-    /* @var $ssl \my\modules\superadmin\models\search\SslSearch */
+    /* @var $sslList \superadmin\models\search\SslSearch */
+    /* @var $ssl \superadmin\models\search\SslSearch */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -51,6 +51,9 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <?= Html::a(Yii::t('app/superadmin', 'ssl.list.action_details'), Url::toRoute(['/ssl/details', 'id' => $ssl->id]), [
                                 'class' => 'dropdown-item ssl-details',
+                            ])?>
+                            <?= Html::a(Yii::t('app/superadmin', 'ssl.list.action_disable'), Url::toRoute(['/ssl/disable', 'id' => $ssl->id]), [
+                                'class' => 'dropdown-item ssl-disable',
                             ])?>
                         </div>
                     </div>

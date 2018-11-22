@@ -1,10 +1,11 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
-use my\modules\superadmin\models\search\SslSearch;
+use superadmin\models\forms\DisableSslForm;
+use superadmin\models\search\SslSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -63,6 +64,25 @@ class SslController extends CustomController
                 'logs' => $logs
             ])
         ];
+    }
+
+    /**
+     * Disable SSL action
+     * @param $id
+     * @return array
+     */
+    public function actionDisable($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $form = new DisableSslForm();
+        $form->setSsl($this->findModel($id));
+
+        if (!$form->disabled() || $form->hasErrors()) {
+            return ['status' => 'error'];
+        }
+
+        return ['status' => 'success'];
     }
 
     /**

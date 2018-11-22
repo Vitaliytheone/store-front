@@ -12,7 +12,10 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-
+use my\models\forms\OrderStoreForm;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use my\models\forms\OrderPanelForm;
 
 /**
  * Class DomainsController
@@ -57,6 +60,18 @@ class DomainsController extends CustomController
                 'actions' => [
                     'index' => ['GET'],
                     'order' => ['POST', 'GET'],
+                    'order-domain' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['order-domain']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['order-domain'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -126,5 +141,49 @@ class DomainsController extends CustomController
         return $this->render('order', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @param string $order
+     * @return array
+     * @throws \Throwable
+     */
+    public function actionOrderDomain($order)
+    {
+        $this->view->title = Yii::t('app', 'pages.title.order');
+
+        switch ($order) {
+            case 'store':
+                $model = new OrderStoreForm();
+                $model->setIp(Yii::$app->request->getUserIP());
+                break;
+            case 'panel':
+                $model = new OrderPanelForm();
+                break;
+            default:
+                return [
+                    'status' => 'error',
+                    'error' => Yii::t('app', 'domain.order.error_invalid_form_data')
+                ];
+        }
+
+        $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
+
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->validate()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($model)
+                ];
+            }
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('app', 'domain.order.error_invalid_form_data')
+        ];
     }
 }

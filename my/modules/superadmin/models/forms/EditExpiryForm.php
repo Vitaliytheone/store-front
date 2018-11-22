@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\ExpiredLog;
 use Yii;
@@ -8,7 +8,7 @@ use yii\base\Model;
 
 /**
  * Class EditExpityForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditExpiryForm extends Model {
 

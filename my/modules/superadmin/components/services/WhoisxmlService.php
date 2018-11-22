@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\components\services;
+namespace superadmin\components\services;
 
 use Yii;
 use Exception;
@@ -7,7 +7,7 @@ use SimpleXMLElement;
 
 /**
  * Class WhoisxmlService
- * @package my\modules\superadmin\components\services
+ * @package superadmin\components\services
  */
 class WhoisxmlService extends BaseService
 {

@@ -3,7 +3,7 @@
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\CreateChildForm */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
 ?>
 <div class="modal fade" tabindex="-1" role="dialog" id="orderDomainModal">
     <div class="modal-dialog" role="document">

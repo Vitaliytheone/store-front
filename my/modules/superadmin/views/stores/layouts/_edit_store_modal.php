@@ -1,13 +1,13 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
-    /* @var $model \my\modules\superadmin\models\forms\ChangeStoreDomainForm */
+    /* @var $model \superadmin\models\forms\ChangeStoreDomainForm */
 
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
-    use my\modules\superadmin\models\forms\EditStoreForm;
+    use superadmin\models\forms\EditStoreForm;
     use sommerce\helpers\ConfigHelper;
-    use my\modules\superadmin\widgets\SelectCustomer;
+    use superadmin\widgets\SelectCustomer;
 
     $model = new EditStoreForm();
 ?>

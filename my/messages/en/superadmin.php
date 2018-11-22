@@ -111,7 +111,6 @@ return [
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
-    'panels.edit.expiry' => 'Edit expiry date',
 
     'panels.change_domain.error' => 'Can not change domain',
     'panels.edit_expiry.error' => 'Can not change domain',
@@ -208,11 +207,15 @@ return [
     'ssl.list.column_expiry' => 'Expiry',
     'ssl.list.actions_label' => 'Actions',
     'ssl.list.action_details' => 'SSL details',
+    'ssl.list.action_disable' => 'Disable SSL',
     'ssl.list.details_modal_header' => 'Ssl details',
     'ssl.list.details_modal_btn_close' => 'Close',
     'ssl.list.details_modal_details_header' => 'Details',
     'ssl.list.details_modal_logs_header' => 'Logs',
     'ssl.list.search' => 'Search SSL',
+    'ssl.list.submit_disable_modal_header' => 'Disable SSL?',
+    'ssl.list.submit_disable_no' => 'No',
+    'ssl.list.submit_disable_yes' => 'Yes',
 
     'invoices.list.navs_all' => 'All ({count})',
     'invoices.list.navs_unpaid' => 'Unpaid ({count})',
@@ -282,6 +285,7 @@ return [
     'payments.list.action_make_active' => 'Make active',
     'payments.list.action_make_accepted' => 'Accept payment',
     'payments.list.action_make_refunded' => 'Refund payment',
+    'payments.list.action_complete' => 'Complete',
     'payments.list.refund_modal_title' => 'Refund payment',
     'payments.list.refund_modal_text_1' => 'Attention!',
     'payments.list.refund_modal_text_2' => 'By pressing the "Refund" button you will return all the money of this payment back to the payer.',
@@ -373,6 +377,12 @@ return [
     'tickets.assignee_list.all' => 'All ({count})',
     'tickets.panels.frozen' => 'Frozen',
     'tickets.status' => 'Status',
+    'tickets.notes.title' => 'Notes',
+    'tickets.create_node.title' => 'Create notes',
+    'tickets.create_node.cancel_btn' => 'Cancel',
+    'tickets.create_node.save_btn' => 'Create note',
+    'tickets.edit_note.title' => 'Edit notes',
+    'tickets.edit_note.save_btn' => 'Save changes',
 
 
     'providers.list.navs_all' => 'All ({count})',
@@ -475,6 +485,7 @@ return [
     'payments.edit_modal.close_btn' => 'Close',
     'payments.edit_modal.method_name' => 'Method name',
     'payments.edit_modal.visibility' => 'Visibility',
+    'payments.edit_modal.name' => 'Name',
 
     'payments.2checkout.account_number' => '2Checkout Account Number',
     'payments.2checkout.secret_word' => '2Checkout Secret Word',
@@ -864,6 +875,11 @@ return [
     'orders.list.item_domains' => 'Domains ({count})',
     'orders.list.item_certificates' => 'Certificates ({count})',
     'orders.list.item_stores' => 'Stores ({count})',
+    'orders.list.item_prolongation_ssl' => 'Prolongation SSL ({count})',
+    'orders.list.item_prolongation_free_ssl' => 'Prolongation Free SSL ({count})',
+    'orders.list.item_prolongation_domain' => 'Prolongation Domain ({count})',
+    'orders.list.item_trial_store' => 'Trial Store ({count})',
+    'orders.list.item_free_ssl' => 'Free SSL ({count})',
     'orders.nav.canceled' => 'Canceled ({count})',
     'orders.nav.all' => 'All ({count})',
     'orders.nav.completed' => 'Completed ({count})',
@@ -883,4 +899,12 @@ return [
 
     'header.nav.subscription' => 'Subscriptions',
     'header.nav.sender' => 'Sender',
+
+    'panels.list.edit_payment_methods' => 'Edit payment methods',
+    'panels.edit.payment_methods.header' => 'Edit panel payment methods',
+    'panels.edit.payment_methods.close' => 'Close',
+    'panels.edit.payment_methods.save' => 'Save changes',
+    'panels.edit.payment_methods.field.name' => 'Name',
+    'panels.edit.payment_methods.field.active' => 'Active',
+    'panels.edit.payment_methods.error' => 'Can not change panel payment methods',
 ];

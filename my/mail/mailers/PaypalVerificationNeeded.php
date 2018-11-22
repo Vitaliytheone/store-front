@@ -4,7 +4,7 @@ namespace my\mail\mailers;
 use common\models\panels\Notifications;
 use common\models\panels\Payments;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use my\helpers\Url;
 
 /**
  * Class PaypalReviewed
@@ -36,7 +36,7 @@ class PaypalVerificationNeeded extends BaseMailer {
         $this->message = ArrayHelper::getValue($this->notificationEmail, 'message');
         $this->subject = ArrayHelper::getValue($this->notificationEmail, 'subject');
 
-        $verificationUrl = Url::toRoute('/paypal-verify/' . $payment->verification_code, true);
+        $verificationUrl = Url::toRoute('/paypal-verify/' . $payment->verification_code, 'https');
 
         $this->message = str_replace([
             '{{verify_link}}'

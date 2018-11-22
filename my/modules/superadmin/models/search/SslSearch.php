@@ -1,6 +1,7 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
+use common\components\traits\UnixTimeFormatTrait;
 use Yii;
 use common\models\panels\SslCert;
 use yii\data\Pagination;
@@ -9,7 +10,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class SslSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class SslSearch extends SslCert {
 
@@ -108,8 +109,14 @@ class SslSearch extends SslCert {
                 'ssl_cert.id' => SORT_DESC
             ])->groupBy('ssl_cert.id');
 
+        $models = static::queryAllCache($ssl);
+
+        array_walk($models, function(&$model){
+           $model['expiry'] = $model['expiry'] ? $model['expiry'] : UnixTimeFormatTrait::formatDate($model['expiry_at_timestamp']);
+        });
+
         return [
-            'models' => static::queryAllCache($ssl),
+            'models' => $models,
             'pages' => $pages,
         ];
     }

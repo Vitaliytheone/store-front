@@ -5,10 +5,10 @@
     use yii\bootstrap\Nav;
     use common\models\panels\SuperAdmin;
     use yii\helpers\ArrayHelper;
-    use my\modules\superadmin\widgets\ErrorOrdersWidget;
+    use superadmin\widgets\ErrorOrdersWidget;
     use my\helpers\Url;
-    use my\modules\superadmin\widgets\UnreadMessagesWidget;
-    use my\modules\superadmin\widgets\ErrorSslWidget;
+    use superadmin\widgets\UnreadMessagesWidget;
+    use superadmin\widgets\ErrorSslWidget;
 
     $activeTab = empty($this->context->activeTab) ? null : ArrayHelper::getValue($this->context, 'activeTab');
 
@@ -142,7 +142,7 @@
             'options' => ['class' => 'navbar-nav mr-auto'],
             'items' => $optionsLeft,
             'encodeLabels' => false,
-            'dropdownClass' => 'my\modules\superadmin\widgets\CustomDropdown',
+            'dropdownClass' => 'superadmin\widgets\CustomDropdown',
         ]);?>
 
         <?= Nav::widget([

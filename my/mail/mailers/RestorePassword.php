@@ -2,7 +2,7 @@
 namespace my\mail\mailers;
 use common\models\panels\Notifications;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use my\helpers\Url;
 
 /**
  * Class RestorePassword

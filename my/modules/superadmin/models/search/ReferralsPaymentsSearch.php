@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Customers;
 use common\models\panels\Payments;
@@ -7,7 +7,7 @@ use yii\db\Query;
 
 /**
  * Class ReferralsPaymentsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class ReferralsPaymentsSearch {
 

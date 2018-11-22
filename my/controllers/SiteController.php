@@ -2,6 +2,9 @@
 
 namespace my\controllers;
 
+use common\helpers\PaymentHelper;
+use common\models\panels\Params;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
 use my\components\filters\DisableCsrfToken;
@@ -25,7 +28,6 @@ use yii\helpers\ArrayHelper;
 use common\models\panels\Customers;
 use my\models\forms\LoginForm;
 use common\models\panels\Invoices;
-use common\models\panels\PaymentGateway;
 use common\models\panels\Payments;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
@@ -55,7 +57,7 @@ class SiteController extends CustomController
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect'],
+                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect', 'paypal-verify'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -270,28 +272,23 @@ class SiteController extends CustomController
             return $this->redirect('/');
         }
 
-
         $this->view->title = Yii::t('app', 'pages.title.invoice', [
             'id' => $invoice->id
         ]);
-
-        $paymentGateway = PaymentGateway::find()
-            ->active()
-            ->all();
 
         $payWait = Payments::findOne([
             'iid' => $invoice->id,
             'status' => Payments::STATUS_WAIT
         ]);
 
-        $paymentsList = ArrayHelper::map($paymentGateway, 'pgid', 'name');
+        $paymentsList = ArrayHelper::map(Yii::$container->get(GetGeneralPaymentMethodsService::class, [1])->get(), 'code', 'name');
 
         return $this->render('invoice', [
             'invoice' => $invoice,
             'customer' => $invoice->customer,
             'paymentsList' => $paymentsList,
             'payWait' => !!$payWait,
-            'pgid' => $payWait ? $payWait->type : key($paymentsList),
+            'code' => $payWait ? $payWait->payment_method : key($paymentsList),
             'verificationWait' => $invoice->emailVerification() ? Content::getContent('paypal_verify_note', ['email' => $invoice->emailVerification()]) : null,
         ]);
     }
@@ -417,6 +414,7 @@ class SiteController extends CustomController
      * @param string $token
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException
+     * @return string
      */
     public function actionReset($token)
     {
@@ -434,11 +432,7 @@ class SiteController extends CustomController
         $model->setCustomer($customer);
 
         if ($model->load(Yii::$app->request->post()) && $model->reset()) {
-            if ($this->hasActiveInvoice()) {
-                return $this->redirect('/invoices');
-            } else {
-                return $this->redirect('/panels');
-            }
+            return $this->goHome();
         }
 
         return $this->render('reset', [
@@ -535,195 +529,171 @@ class SiteController extends CustomController
     {
         $this->view->title = Yii::t('app', 'pages.title.checkout');
         $invoice = Invoices::findOne(['code' => $id]);
-        
-       if (!$invoice->can('pay')) {
-           throw new ForbiddenHttpException();
-       }
-        
-        if ($invoice !== null) {
+        $code = Yii::$app->request->post('code');
 
-            if (!empty($_POST['pgid'])) {
-                $paymentGateway = PaymentGateway::findOne(['pgid' => $_POST['pgid'], 'visibility' => 1, 'pid' => -1]);
-                if ($paymentGateway !== null) {
-                    $invoiceDetails = $invoice->invoiceDetails;
-                    $paymentAmount = $invoice->getPaymentAmount();
-                    $description = Yii::t('app', 'invoices.checkout.description', [
-                        'invoice' => $invoice->id
-                    ]);
-
-                    if (empty($invoiceDetails) || 0 > $paymentAmount) {
-                        return $this->redirect('/');
-                    }
-
-                    $invoiceDetails = array_shift($invoiceDetails);
-
-                    $panel = $invoiceDetails->panel;
-                    if (!$panel) {
-                        return $this->redirect('/');
-                    }
-
-                    if (0 == $paymentAmount) {
-                        $invoice->paid($_POST['pgid']);
-                        return $this->redirect('/');
-                    }
-
-                    $paymentsModel = new Payments();
-                    $paymentsModel->load(array('Payments' => array(
-                        'pid' => $panel->id,
-                        'iid' => $invoice->id,
-                        'date' => time(),
-                        'type' => $_POST['pgid'],
-                        'amount' => $paymentAmount,
-                        'ip' => $_SERVER['REMOTE_ADDR'],
-                    )));
-                    $paymentsModel->save();
-                    switch ($_POST['pgid']) {
-                        case "1":
-                            $requestParams = array(
-                                'RETURNURL' => 'http://'.$_SERVER['HTTP_HOST'].'/paypalexpress/'.$paymentsModel->id,
-                                'CANCELURL' => 'http://'.$_SERVER['HTTP_HOST'].'/invoices'
-                            );
-
-                            $orderParams = array(
-                                'PAYMENTREQUEST_0_AMT' => $paymentsModel->amount,
-                                'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
-                                'BRANDNAME' => 'Perfect Panel',
-                                'PAYMENTREQUEST_0_CURRENCYCODE' => 'USD',
-                                'PAYMENTREQUEST_0_ITEMAMT' => $paymentsModel->amount,
-                                'NOSHIPPING' => 1,
-                                'PAYMENTREQUEST_0_DESC' => $description,
-                                'RETURNFMFDETAILS' => 1,
-                            );
-
-                            $items = [];
-
-                            foreach ($invoice->getCountedInvoiceDetails() as $key => $item) {
-                                $items = array_merge($items, [
-                                    'L_PAYMENTREQUEST_0_NAME' . $key => $item->getDescription(),
-                                    'L_PAYMENTREQUEST_0_AMT' . $key => $item->amount,
-                                    'L_PAYMENTREQUEST_0_QTY' . $key => '1',
-                                ]);
-                            }
-
-                            $paypal = new Paypal;
-                            $response = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $items);
-
-                            if (is_array($response) && $response['ACK'] == 'Success') {
-                                return $paypal->checkout($response['TOKEN']);
-                            }
-
-                            break;
-
-                        case "2":
-                            $account = '';
-
-                            $paymentGateway = json_decode($paymentGateway->options);
-
-                            if (!empty($paymentGateway->account)) {
-                                $account = $paymentGateway->account;
-                            }
-
-                            return $this->render('checkout', [
-                                'paymentType' => 2,
-                                'account' => $account,
-                                'paymentId' => $paymentsModel->id,
-                                'paymentDescription' => $description,
-                                'amount' => $paymentsModel->amount
-                            ]);
-                            break;
-
-                        case "3":
-                            $purse = '';
-
-                            $paymentGateway = json_decode($paymentGateway->options);
-
-                            if (!empty($paymentGateway->purse)) {
-                                $purse = $paymentGateway->purse;
-                            }
-
-                            return $this->render('checkout', [
-                                'paymentType' => 3,
-                                'purse' => $purse,
-                                'paymentId' => $paymentsModel->id,
-                                'paymentDescription' => $description,
-                                'amount' => $paymentsModel->amount
-                            ]);
-                            break;
-
-                        case "4":
-                            $paymentGateway = json_decode($paymentGateway->options);
-
-                            $bitcoinId = ArrayHelper::getValue($paymentGateway, 'id');
-                            $secret = ArrayHelper::getValue($paymentGateway, 'secret');
-
-                            $params = [
-                                'callback_data' => $paymentsModel->id,
-                                'amount' => $paymentsModel->amount,
-                            ];
-
-                            $headers = Bitcoin::getHeaderOptions('/gateways/' . $bitcoinId . '/orders', $secret, $params);
-
-                            $response = CurlHelper::request(
-                                'https://gateway.gear.mycelium.com/gateways/' . $bitcoinId . '/orders?' . http_build_query($params),
-                                '',
-                                $headers
-                            );
-                            $response = json_decode($response);
-
-                            $paymentId = ArrayHelper::getValue($response, 'payment_id');
-
-                            if ($paymentId) {
-                                $url = 'https://gateway.gear.mycelium.com/pay/' . $paymentId;
-
-                                return $this->render('checkout', [
-                                    'paymentType' => 4,
-                                    'paymentDescription' => $description,
-                                    'url' => $url
-                                ]);
-                            }
-
-                            break;
-
-                        case "5":
-                            $account_number = '';
-
-                            $paymentGateway = json_decode($paymentGateway->options);
-
-                            if (!empty($paymentGateway->account_number)) {
-                                $account_number = $paymentGateway->account_number;
-                            }
-
-                            return $this->render('checkout', [
-                                'paymentType' => 5,
-                                'account_number' => $account_number,
-                                'paymentId' => $paymentsModel->id,
-                                'paymentDescription' => $invoiceDetails->description,
-                                'amount' => $paymentsModel->amount,
-                                'items' => $invoice->getCountedInvoiceDetails()
-                            ]);
-                            break;
-
-                        case "6":
-                            $paymentGateway = json_decode($paymentGateway->options);
-
-                            return $this->render('checkout', [
-                                'paymentType' => 6,
-                                'merchantId' => ArrayHelper::getValue($paymentGateway,'merchant_id', null),
-                                'paymentId' => $paymentsModel->id,
-                                'paymentDescription' => $description,
-                                'amount' => $paymentsModel->amount,
-                            ]);
-                            break;
-                    }
-                } else {
-                    return $this->redirect('/');
-                }
-            } else {
-                return $this->redirect('/');
-            }
-        } else {
+        if (!$code || !$invoice || !($paymentMethod = Params::get(Params::CATEGORY_PAYMENT, $code)) || !ArrayHelper::getValue($paymentMethod, 'visibility')) {
             return $this->redirect('/');
         }
+        
+        if (!$invoice->can('pay')) {
+           throw new ForbiddenHttpException();
+        }
+
+        $type = PaymentHelper::getTypeByCode($code);
+
+        $invoiceDetails = $invoice->invoiceDetails;
+        $paymentAmount = $invoice->getPaymentAmount();
+        $description = Yii::t('app', 'invoices.checkout.description', [
+            'invoice' => $invoice->id
+        ]);
+
+        if (empty($invoiceDetails) || 0 > $paymentAmount) {
+            return $this->redirect('/');
+        }
+
+        $invoiceDetails = array_shift($invoiceDetails);
+
+        $panel = $invoiceDetails->panel;
+        if (!$panel) {
+            return $this->redirect('/');
+        }
+
+        if (0 == $paymentAmount) {
+            $invoice->paid($code);
+            return $this->redirect('/');
+        }
+
+        $paymentsModel = new Payments();
+        $paymentsModel->load(array('Payments' => array(
+            'pid' => $panel->id,
+            'iid' => $invoice->id,
+            'date' => time(),
+            'type' => $type,
+            'payment_method' => $code,
+            'amount' => $paymentAmount,
+            'ip' => $_SERVER['REMOTE_ADDR'],
+        )));
+        $paymentsModel->save();
+
+        switch ($code) {
+            case Params::CODE_PAYPAL:
+                $requestParams = array(
+                    'RETURNURL' => 'http://'.$_SERVER['HTTP_HOST'].'/paypalexpress/' . $paymentsModel->id,
+                    'CANCELURL' => 'http://'.$_SERVER['HTTP_HOST'].'/invoices'
+                );
+
+                $orderParams = array(
+                    'PAYMENTREQUEST_0_AMT' => $paymentsModel->amount,
+                    'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
+                    'BRANDNAME' => 'Perfect Panel',
+                    'PAYMENTREQUEST_0_CURRENCYCODE' => 'USD',
+                    'PAYMENTREQUEST_0_ITEMAMT' => $paymentsModel->amount,
+                    'NOSHIPPING' => 1,
+                    'PAYMENTREQUEST_0_DESC' => $description,
+                    'RETURNFMFDETAILS' => 1,
+                );
+
+                $items = [];
+
+                foreach ($invoice->getCountedInvoiceDetails() as $key => $item) {
+                    $items = array_merge($items, [
+                        'L_PAYMENTREQUEST_0_NAME' . $key => $item->getDescription(),
+                        'L_PAYMENTREQUEST_0_AMT' . $key => $item->amount,
+                        'L_PAYMENTREQUEST_0_QTY' . $key => '1',
+                    ]);
+                }
+
+                $paypal = new Paypal();
+                $response = $paypal->request('SetExpressCheckout', $requestParams + $orderParams + $items);
+
+                if (is_array($response) && $response['ACK'] == 'Success') {
+                    return $paypal->checkout($response['TOKEN']);
+                }
+
+                break;
+
+            case Params::CODE_PERFECT_MONEY:
+                $account = ArrayHelper::getValue($paymentMethod, ['credentials', 'account'], '');
+
+                return $this->render('checkout', [
+                    'paymentType' => 2,
+                    'account' => $account,
+                    'paymentId' => $paymentsModel->id,
+                    'paymentDescription' => $description,
+                    'amount' => $paymentsModel->amount
+                ]);
+                break;
+
+            case Params::CODE_WEBMONEY:
+                $purse = ArrayHelper::getValue($paymentMethod, ['credentials', 'purse'], '');
+
+                return $this->render('checkout', [
+                    'paymentType' => 3,
+                    'purse' => $purse,
+                    'paymentId' => $paymentsModel->id,
+                    'paymentDescription' => $description,
+                    'amount' => $paymentsModel->amount
+                ]);
+                break;
+
+            case Params::CODE_BITCOIN:
+                $bitcoinId = ArrayHelper::getValue($paymentMethod, ['credentials', 'id'], '');
+                $secret = ArrayHelper::getValue($paymentMethod, ['credentials', 'secret'], '');
+
+                $params = [
+                    'callback_data' => $paymentsModel->id,
+                    'amount' => $paymentsModel->amount,
+                ];
+
+                $headers = Bitcoin::getHeaderOptions('/gateways/' . $bitcoinId . '/orders', $secret, $params);
+
+                $response = CurlHelper::request(
+                    'https://gateway.gear.mycelium.com/gateways/' . $bitcoinId . '/orders?' . http_build_query($params),
+                    '',
+                    $headers
+                );
+                $response = json_decode($response);
+
+                $paymentId = ArrayHelper::getValue($response, 'payment_id');
+
+                if ($paymentId) {
+                    $url = 'https://gateway.gear.mycelium.com/pay/' . $paymentId;
+
+                    return $this->render('checkout', [
+                        'paymentType' => 4,
+                        'paymentDescription' => $description,
+                        'url' => $url
+                    ]);
+                }
+
+                break;
+
+            case Params::CODE_TWO_CHECKOUT:
+                $account_number = ArrayHelper::getValue($paymentMethod, ['credentials', 'account_number'], '');
+
+                return $this->render('checkout', [
+                    'paymentType' => 5,
+                    'account_number' => $account_number,
+                    'paymentId' => $paymentsModel->id,
+                    'paymentDescription' => $invoiceDetails->description,
+                    'amount' => $paymentsModel->amount,
+                    'items' => $invoice->getCountedInvoiceDetails()
+                ]);
+                break;
+
+            case Params::CODE_COINPAYMENTS:
+
+                return $this->render('checkout', [
+                    'paymentType' => 6,
+                    'merchantId' => ArrayHelper::getValue($paymentMethod, ['credentials', 'merchant_id'], null),
+                    'paymentId' => $paymentsModel->id,
+                    'paymentDescription' => $description,
+                    'amount' => $paymentsModel->amount,
+                ]);
+                break;
+        }
+
+        return $this->redirect('/');
     }
 
     /**

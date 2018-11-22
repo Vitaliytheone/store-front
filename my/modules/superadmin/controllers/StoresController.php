@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\SuperAdmin;
 use common\models\panels\SuperAdminToken;
@@ -8,10 +8,10 @@ use my\components\SuperAccessControl;
 use common\models\stores\Stores;
 use my\components\ActiveForm;
 use my\helpers\Url;
-use my\modules\superadmin\models\forms\ChangeStoreDomainForm;
-use my\modules\superadmin\models\forms\EditStoreExpiryForm;
-use my\modules\superadmin\models\search\StoresSearch;
-use my\modules\superadmin\models\forms\EditStoreForm;
+use superadmin\models\forms\ChangeStoreDomainForm;
+use superadmin\models\forms\EditStoreExpiryForm;
+use superadmin\models\search\StoresSearch;
+use superadmin\models\forms\EditStoreForm;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -44,7 +44,7 @@ class StoresController extends CustomController
                 'only' => ['edit-store', 'edit-expiry', 'change-domain']
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'edit-store' => ['POST'],
@@ -141,6 +141,7 @@ class StoresController extends CustomController
     /**
      * Change project status
      * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionChangeStatus()
     {
@@ -157,10 +158,12 @@ class StoresController extends CustomController
     /**
      * Change store domain.
      *
-     * @access public
-     * @param int $id
-     * @return mixed
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionChangeDomain($id)
     {

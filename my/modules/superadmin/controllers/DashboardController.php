@@ -1,10 +1,10 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\SuperAccessControl;
-use my\modules\superadmin\helpers\DashboardServices;
-use my\modules\superadmin\helpers\DashboardBlocks;
+use superadmin\helpers\DashboardServices;
+use superadmin\helpers\DashboardBlocks;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
@@ -56,6 +56,7 @@ class DashboardController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \ReflectionException
      */
     public function actionIndex()
     {
@@ -69,8 +70,9 @@ class DashboardController extends CustomController
 
     /**
      * Get dashboard blocks
-     * @param string $name
+     * @param $name
      * @return array
+     * @throws \ReflectionException
      */
     public function actionBlock($name)
     {

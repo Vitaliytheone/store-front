@@ -1,4 +1,4 @@
-customModule.orderPanelController = {
+customModule.orderController = {
     run : function(params) {
         $('.has_domain').change(function(e) {
             e.preventDefault();
@@ -6,14 +6,14 @@ customModule.orderPanelController = {
             var radio = $("input.has_domain:checked").val();
 
             if (1 == radio) {
-                $('#orderPanelBlock').removeClass('hidden');
+                $('#orderBlock').removeClass('hidden');
                 $('#orderDomainBlock').addClass('hidden');
                 $('#orderNote').removeClass('hidden');
 
                 $('#domain').val('').prop('readonly', false);
             } else {
                 $('#orderDomainBlock').removeClass('hidden');
-                $('#orderPanelBlock').addClass('hidden');
+                $('#orderBlock').addClass('hidden');
                 $('#searchResult').addClass('hidden');
                 $('#searchResultContainer').html('');
                 $('#orderNote').addClass('hidden');
@@ -22,8 +22,8 @@ customModule.orderPanelController = {
             return false;
         });
 
-        $('#order-panel-form').on('submit', function() {
-            if ($("#orderPanelBlock").hasClass('hidden')) {
+        $('#order-form').on('submit', function() {
+            if ($("#orderBlock").hasClass('hidden')) {
                 $('#orderDomainModal').modal('hide');
                 $('#searchDomainSubmit').trigger('click');
                 return false;

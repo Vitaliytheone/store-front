@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
-use my\modules\superadmin\models\search\ReportsPaymentsSearch;
+use superadmin\models\search\ReportsPaymentsSearch;
 use Yii;
 
 /**
  * Class ReportsController
- * @package my\modules\superadmin\controllers
+ * @package superadmin\controllers
  */
 class ReportsController extends CustomController
 {
@@ -35,7 +35,7 @@ class ReportsController extends CustomController
 
         return $this->render('index', [
             'reportData' => $searchModel->getYearReportTable(),
-            'paymentGateways' => $searchModel->getPaymentGatewaysForView(),
+            'paymentParams' => $searchModel->getPaymentParamsForView(),
             'filters' => $searchModel->getFilters(),
             'years' => $searchModel->getYearsForView(),
         ]);

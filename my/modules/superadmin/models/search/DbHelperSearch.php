@@ -1,13 +1,13 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use yii\db\Query;
 use Yii;
 
 /**
  * Class DbHelperSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class DbHelperSearch
 {
