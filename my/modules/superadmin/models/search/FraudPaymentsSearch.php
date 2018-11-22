@@ -30,10 +30,10 @@ class FraudPaymentsSearch extends Model
     public function getFilters(): array
     {
         return [
-            'query' => isset($this->params['query']) ? $this->params['query'] : null,
+            'query' => isset($this->params['query']) ? trim($this->params['query']) : null,
             'search_type' =>
                 isset($this->params['search_type']) && array_key_exists($this->params['search_type'], static::getSearchTypes()) ?
-                $this->params['search_type'] :
+                trim($this->params['search_type']) :
                 null,
             'page_size' => isset($this->params['page_size']) ? $this->params['page_size'] : null,
         ];
@@ -102,9 +102,10 @@ class FraudPaymentsSearch extends Model
     private function prepareData(array $data): array
     {
         $result = [];
+        $panels = Project::find()->indexBy('id')->all();
 
         foreach ($data as $key => $item) {
-            $panel = Project::findOne(['id' => $item['panel_id']]);
+            $panel = $panels[$item['panel_id']];
             $result[$key] = [
                 'id' => $item['id'],
                 'panel' => $panel,
