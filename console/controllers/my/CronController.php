@@ -451,35 +451,36 @@ class CronController extends CustomController
     {
         $domains = Domains::find()
             ->where(['>', 'expiry', time()])
+            ->andWhere(['status' => Domains::STATUS_OK])
             ->all();
 
         foreach ($domains as $domain) {
             $domain->status = Domains::STATUS_EXPIRED;
 
             if (!$domain->save()) {
-                $this->stderr("Domain id: {$domain->id} - Save error \n", Console::FG_RED);
                 continue;
             }
 
             $order = Orders::findOne([
-                'domain' => $domain->domain,
+                'item_id' => $domain->id,
                 'item' => Orders::ITEM_PROLONGATION_DOMAIN,
                 'cid' => $domain->customer_id,
             ]);
 
             if (!isset($order)) {
-                $this->stderr("Domain id: {$domain->id} - Order does not exist \n", Console::FG_RED);
                 continue;
             }
+
+            $transaction = Yii::$app->db->beginTransaction();
 
             $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id]);
             $invoice = Invoices::findOne(['id' => $invoiceDetails->invoice_id]);
 
             if (!$invoiceDetails->delete() || !$invoice->delete() || !$order->delete()) {
-                $this->stderr("Domain id: {$domain->id} - Order delete error \n", Console::FG_RED);
+                $transaction->rollBack();
                 continue;
             }
-            $this->stderr("Domain id: {$domain->id} - Successful update \n", Console::FG_GREEN);
+            $transaction->commit();
         }
     }
 }
