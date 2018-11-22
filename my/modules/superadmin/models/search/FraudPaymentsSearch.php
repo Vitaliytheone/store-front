@@ -3,6 +3,7 @@
 namespace superadmin\models\search;
 
 
+use common\models\panels\PaypalPayments;
 use common\models\panels\Project;
 use superadmin\widgets\CountPagination;
 use yii\base\Model;
@@ -112,8 +113,8 @@ class FraudPaymentsSearch extends Model
                 'payer_email' => $item['payer_email'],
                 'firstname' => $item['firstname'],
                 'lastname' => $item['lastname'],
-                'created_at' => date('Y-m-d H:i:s', $item['created_at']),
-                'updated_at' => isset($item['updated_at']) ? date('Y-m-d H:i:s', $item['updated_at']) : '',
+                'created_at' => PaypalPayments::formatDate($item['created_at'], 'php:Y-m-d H:i:s'),
+                'updated_at' => PaypalPayments::formatDate($item['updated_at'], 'php:Y-m-d H:i:s'),
             ];
         }
 
