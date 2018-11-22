@@ -67,7 +67,7 @@ class GetPanelPaymentMethodsService {
         }
 
         foreach ($query->all() as $method) {
-            $paymentMethods[$method['method_id']] = [
+            $paymentMethods[$method['id']] = [
                 'id' => $method['id'],
                 'method_id' => $method['method_id'],
                 'currency_id' => $method['currency_id'],

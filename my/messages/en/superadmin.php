@@ -908,6 +908,7 @@ return [
     'panels.edit.payment_methods.close' => 'Close',
     'panels.edit.payment_methods.save' => 'Save changes',
     'panels.edit.payment_methods.field.name' => 'Name',
+    'panels.edit.payment_methods.field.currency' => 'Currency',
     'panels.edit.payment_methods.field.active' => 'Active',
     'panels.edit.payment_methods.error' => 'Can not change panel payment methods',
 
@@ -925,4 +926,8 @@ return [
     'fraud_incidents.list.fraud_reason' => 'Fraud reason',
     'fraud_incidents.list.balance' => 'Balance',
     'fraud_incidents.list.created' => 'Created',
+
+    'panels.edit.payment_method_modal.select.available_for' => 'Available for {currency}',
+    'panels.edit.payment_methods.select_payment_method' => 'Select payment method',
+    'panels.edit.payment_methods.add_method' => 'Add payment',
 ];

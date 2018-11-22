@@ -44,7 +44,7 @@ class StoresController extends CustomController
                 'only' => ['edit-store', 'edit-expiry', 'change-domain']
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'edit-store' => ['POST'],
@@ -141,6 +141,7 @@ class StoresController extends CustomController
     /**
      * Change project status
      * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionChangeStatus()
     {
@@ -157,10 +158,12 @@ class StoresController extends CustomController
     /**
      * Change store domain.
      *
-     * @access public
-     * @param int $id
-     * @return mixed
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionChangeDomain($id)
     {

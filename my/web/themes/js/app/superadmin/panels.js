@@ -414,7 +414,7 @@ customModule.superadminPanelsController = {
             return false;
         });
 
-        $(document).on('click', '#editPaymentMethodsButton', function(e) {
+        $(document).on('click', '#editPaymentMethodsButton, #addPaymentMethodBtn', function(e) {
             e.preventDefault();
             var btn = $(this);
             var form = $('#editPaymentMethodsForm');

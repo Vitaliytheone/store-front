@@ -26,6 +26,7 @@ class SSL extends  BaseBlock
             Customers::tableName() . '.email AS customer',
             'created_at AS created',
             'expiry AS expired',
+            'expiry_at_timestamp',
             SslCert::tableName() . '.status AS status'
         ]);
 
@@ -36,7 +37,7 @@ class SSL extends  BaseBlock
         foreach ($items as &$item) {
             $item['status'] = SslCert::getStatuses()[$item['status']];
             $item['created'] = static::_formatDate($item['created']);
-            $item['expired'] = static::_formatDate($item['expired']);
+            $item['expired'] = isset($item['expired']) ? static::_formatDate($item['expired']) : static::_formatDate($item['expiry_at_timestamp']);
         }
         return SpecialCharsHelper::multiPurifier($items);
     }
