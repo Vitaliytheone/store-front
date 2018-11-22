@@ -5,6 +5,7 @@ namespace my\controllers;
 use common\helpers\PaymentHelper;
 use common\models\panels\Params;
 use my\components\bitcoin\Bitcoin;
+use my\components\filters\DisableCsrfToken;
 use my\components\payments\BasePayment;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PaypalFailed;
@@ -25,15 +26,22 @@ use yii\helpers\ArrayHelper;
 class PaymentsController extends CustomController
 {
 	public $enableDomainValidation = false;
-	
+
+	public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'token' => [
+                    'class' => DisableCsrfToken::class,
+                ],
+            ]
+        );
+    }
+
     public function init()
     {
 
-    }
-
-    public function beforeAction($action) {
-        $this->enableCsrfValidation = false;
-        return parent::beforeAction($action);
     }
 
     public function actions()
@@ -49,6 +57,10 @@ class PaymentsController extends CustomController
         ];
     }
 
+    /**
+     * @return \yii\web\Response
+     * @throws \Throwable
+     */
     public function actionPaypalexpress()
     {
         $invoice = null;
@@ -221,19 +233,8 @@ class PaymentsController extends CustomController
     }
 
     /**
-     * @param $invoice
-     * @return \yii\web\Response
+     * @throws \Throwable
      */
-    private function _redirectWithInvoice($invoice) {
-        $redirectUrl = '/invoices';
-
-        if (!empty($invoice) && $invoice instanceof Invoices) {
-            $redirectUrl .= '/' . $invoice->code;
-        }
-
-        return $this->redirect($redirectUrl,302);
-    }
-
     public function actionWebmoney()
     {
 		$paymentSignature = md5(rand().rand().time().rand().rand());
@@ -336,6 +337,9 @@ class PaymentsController extends CustomController
 		}
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function actionPerfectmoney()
     {
     	$paymentSignature = md5(rand().rand().time().rand().rand());
@@ -427,6 +431,9 @@ class PaymentsController extends CustomController
 		}
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function actionBitcoin()
     {
     	$paymentSignature = md5(rand().rand().time().rand().rand());
@@ -520,6 +527,9 @@ class PaymentsController extends CustomController
       	}
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function action2checkout()
     {
     	$paymentSignature = md5(rand().rand().time().rand().rand());
@@ -641,6 +651,11 @@ class PaymentsController extends CustomController
 		}
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionCoinpayments()
     {
         $paymentSignature = md5(rand().rand().time().rand().rand());
@@ -735,11 +750,32 @@ class PaymentsController extends CustomController
         }
     }
 
+    /**
+     * @return \yii\web\Response
+     */
     public function actionIndex()
     {
     	return $this->redirect('/signin',403);
     }
 
+    /**
+     * @param $invoice
+     * @return \yii\web\Response
+     */
+    private function _redirectWithInvoice($invoice) {
+        $redirectUrl = '/invoices';
+
+        if (!empty($invoice) && $invoice instanceof Invoices) {
+            $redirectUrl .= '/' . $invoice->code;
+        }
+
+        return $this->redirect($redirectUrl,302);
+    }
+
+    /**
+     * @param $response
+     * @param int $pid
+     */
     private function paymentLog($response, $pid = -1) {
 		$paymentsLogModel = new PaymentsLog();
 		$paymentsLogModel->load(array('PaymentsLog' => array(
@@ -752,6 +788,11 @@ class PaymentsController extends CustomController
 		$paymentsLogModel->save();
     }
 
+    /**
+     * @param $array
+     * @param $logname
+     * @param $signStamp
+     */
     private function logging($array, $logname, $signStamp) {
       
       $path = Yii::getAlias('@runtime/payments/');
@@ -763,6 +804,11 @@ class PaymentsController extends CustomController
       fclose ($fp);
     }
 
+    /**
+     * @param $comment
+     * @param $logname
+     * @param $signStamp
+     */
     private function Errorlogging($comment, $logname, $signStamp) {
     	$path = Yii::getAlias('@runtime/payments/');
 		$output = $_SERVER['HTTP_HOST']."\n".date("Y-m-d H:i:s", time()+\Yii::$app->params['time']+10803)."\n\n".$logname."-".$signStamp."\n\n";
