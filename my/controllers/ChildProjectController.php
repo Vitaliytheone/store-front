@@ -29,6 +29,8 @@ use yii\filters\AjaxFilter;
  */
 class ChildProjectController extends CustomController
 {
+    public $activeTab = 'child-panels';
+
     /**
      * @inheritdoc
      */

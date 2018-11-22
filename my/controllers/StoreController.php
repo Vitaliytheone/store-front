@@ -31,6 +31,8 @@ use yii\filters\AjaxFilter;
  */
 class StoreController extends CustomController
 {
+    public $activeTab = 'stores';
+
     /**
      * @inheritdoc
      */

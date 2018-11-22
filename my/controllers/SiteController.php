@@ -227,6 +227,7 @@ class SiteController extends CustomController
      */
     public function actionSupport()
     {
+        $this->activeTab = 'support';
         $this->view->title = Yii::t('app', 'pages.title.support');
 
         $model = new CreateTicketForm();
@@ -299,6 +300,8 @@ class SiteController extends CustomController
      */
     public function actionInvoices()
     {
+        $this->activeTab = 'invoices';
+
         $this->view->title = Yii::t('app', 'pages.title.invoices');
 
         $invoices = new InvoicesSearch();
@@ -317,6 +320,7 @@ class SiteController extends CustomController
      */
     public function actionSettings()
     {
+        $this->activeTab = 'settings';
         $this->view->title = Yii::t('app', 'pages.title.settings');
 
         $customer = Customers::findOne(Yii::$app->user->identity->id);

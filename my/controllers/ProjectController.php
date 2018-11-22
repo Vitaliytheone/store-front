@@ -31,7 +31,11 @@ use yii\filters\AjaxFilter;
  */
 class ProjectController extends CustomController
 {
+    public $activeTab = 'panels';
 
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return array_merge(parent::behaviors(), [

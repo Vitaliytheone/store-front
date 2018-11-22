@@ -14,6 +14,7 @@ use Yii;
  */
 class SslController extends CustomController
 {
+    public $activeTab = 'ssl';
 
     /**
      * Ssl page

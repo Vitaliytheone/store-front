@@ -13,6 +13,7 @@ use yii\filters\AccessControl;
  */
 class CustomController extends MainController
 {
+    public $activeTab;
 
     public function behaviors()
     {
