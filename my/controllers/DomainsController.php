@@ -11,12 +11,11 @@ use my\models\search\DomainsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
-use my\models\forms\OrderStoreForm;
 use yii\filters\VerbFilter;
+use my\models\forms\OrderStoreForm;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use my\models\forms\OrderPanelForm;
-
 
 /**
  * Class DomainsController
@@ -59,6 +58,8 @@ class DomainsController extends CustomController
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'index' => ['GET'],
+                    'order' => ['POST', 'GET'],
                     'order-domain' => ['POST'],
                 ],
             ],
@@ -96,7 +97,8 @@ class DomainsController extends CustomController
 
     /**
      * Create order
-     * @return string|\yii\web\Response
+     * @return array|string|Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {

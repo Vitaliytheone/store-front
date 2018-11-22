@@ -5,10 +5,8 @@ namespace my\controllers;
 use common\models\panels\Customers;
 use my\models\forms\OrderSslForm;
 use my\models\forms\OrderSslPaidForm;
-use common\models\panels\Orders;
 use my\models\search\SslSearch;
 use Yii;
-use yii\filters\AccessControl;
 
 /**
  * Class SslController
@@ -16,23 +14,6 @@ use yii\filters\AccessControl;
  */
 class SslController extends CustomController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Ssl page
