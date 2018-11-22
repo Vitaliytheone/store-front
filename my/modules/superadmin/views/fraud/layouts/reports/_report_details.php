@@ -2,5 +2,7 @@
     /* @var $details string|null */
 
     if (isset($details)) {
-        print_r(json_decode($details));
+        print_r($details);
+    } else {
+        print_r([]);
     }

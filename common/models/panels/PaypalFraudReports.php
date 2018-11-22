@@ -133,4 +133,22 @@ class PaypalFraudReports extends ActiveRecord
             ],
         ];
     }
+
+    /**
+     * Set transaction details
+     * @param array $details
+     */
+    public function setDetails(array $details)
+    {
+        $this->transaction_details = json_encode($details);
+    }
+
+    /**
+     * Get transaction details
+     * @return array|null
+     */
+    public function getDetails()
+    {
+        return json_decode($this->transaction_details, true);
+    }
 }
