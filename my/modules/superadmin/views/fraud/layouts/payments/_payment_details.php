@@ -2,6 +2,9 @@
 /* @var $this yii\web\View */
 /* @var $details string */
 
+use my\helpers\SpecialCharsHelper;
+
+$details = SpecialCharsHelper::multiPurifier($details);
 $detailsDecode = json_decode($details, true);
 ?>
 <pre>
