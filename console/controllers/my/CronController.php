@@ -451,7 +451,7 @@ class CronController extends CustomController
     public function actionUpdateDomainExpiry()
     {
         $domains = Domains::find()
-            ->where(['>', 'expiry', time()])
+            ->where(['<', 'expiry', time()])
             ->andWhere(['status' => Domains::STATUS_OK])
             ->all();
 
