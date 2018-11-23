@@ -66,6 +66,7 @@ class FraudController extends CustomController
 
     /**
      * Change status of report
+     * @throws \yii\db\Exception
      */
     public function actionReportsChangeStatus()
     {
