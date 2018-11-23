@@ -803,6 +803,13 @@ class OrderHelper {
         $orderDelay = ArrayHelper::getValue($orderDetails, 'delay', 0);
 
         if (time() < $order->date + $orderDelay) {
+
+            $order->processing = Orders::PROCESSING_NO;
+
+            if (!$order->save(false)) {
+                throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+            };
+
             return true;
         }
 
