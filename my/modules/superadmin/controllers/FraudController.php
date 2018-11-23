@@ -3,6 +3,7 @@
 namespace superadmin\controllers;
 
 use superadmin\models\search\FraudIncidentsSerach;
+use superadmin\models\search\FraudPaymentsSearch;
 use superadmin\models\search\FraudAccountsSearch;
 use Yii;
 use superadmin\models\search\FraudReportsSearch;
@@ -38,6 +39,7 @@ class FraudController extends CustomController
                     'index' => ['GET'],
                     'reports-change-status' => ['POST'],
                     'incidents' => ['GET'],
+                    'payments' => ['GET'],
                     'accounts' => ['GET'],
                 ],
             ],
@@ -91,6 +93,24 @@ class FraudController extends CustomController
             'incidents' => $incidents->search(),
             'filters' => $incidents->getParams(),
         ]);
+    }
+
+    /**
+     * Render payments list
+     * $return string
+     */
+    public function actionPayments()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.fraud_payments');
+
+        $payments = new FraudPaymentsSearch();
+        $payments->setParams(Yii::$app->request->get());
+
+        return $this->render('payments', [
+            'payments' => $payments->search(),
+            'filters' => $payments->getFilters(),
+            'searchTypes' => FraudPaymentsSearch::getSearchTypes(),
+         ]);
     }
 
     /**
