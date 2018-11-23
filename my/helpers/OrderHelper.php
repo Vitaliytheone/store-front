@@ -859,18 +859,18 @@ class OrderHelper {
             throw new Exception('Cannot add SSL to Config!');
         }
 
-        $panel->ssl = Project::SSL_MODE_ON;
-
-        if (!$order->save(false)) {
-            throw new Exception('Cannot update Panel [' . $panel->id . ']');
-        }
-
         $order->status = Orders::STATUS_ADDED;
         $order->item_id = $ssl->id;
         $order->setItemDetails(['expiry_at' => $ssl->expiry], 'ssl_details');
 
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        $panel->ssl = Project::SSL_MODE_ON;
+
+        if (!$panel->save(false)) {
+            throw new Exception('Cannot update Panel [' . $panel->id . ']');
         }
 
         // Create new unreaded ticket after activate ssl cert.
