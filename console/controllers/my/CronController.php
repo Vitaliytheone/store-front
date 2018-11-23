@@ -4,6 +4,9 @@ namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
 use common\models\panel\PaymentsLog;
+use common\models\panels\Domains;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
 use common\models\panels\Params;
@@ -30,6 +33,7 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use console\components\UpdateServicesCount;
+use yii\helpers\Console;
 
 /**
  * Class CronController
@@ -438,5 +442,55 @@ class CronController extends CustomController
         $cron->setConsole($this);
         $cron->setDebug(true);
         $cron->run();
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     */
+    public function actionUpdateDomainExpiry()
+    {
+        $domains = Domains::find()
+            ->where(['>', 'expiry', time()])
+            ->andWhere(['status' => Domains::STATUS_OK])
+            ->all();
+
+        foreach ($domains as $domain) {
+            $transaction = Yii::$app->db->beginTransaction();
+            $domain->status = Domains::STATUS_EXPIRED;
+
+            if (!$domain->save()) {
+                $transaction->rollBack();
+                continue;
+            }
+
+            $orders = Orders::find()->andWhere([
+                'item_id' => $domain->id,
+                'item' => Orders::ITEM_PROLONGATION_DOMAIN,
+                'status' => Orders::STATUS_PENDING,
+            ])->all();
+
+            /**
+             * @val Orders $order
+             */
+            foreach ($orders as $order) {
+                $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id, 'item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN]);
+                if (!$invoiceDetails) {
+                    continue;
+                }
+                $invoiceId = $invoiceDetails->invoice_id;
+
+                try {
+                    InvoiceDetails::deleteAll(['invoice_id' => $invoiceId]);
+                    Invoices::deleteAll(['id' => $invoiceId]);
+                    $order->delete();
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    continue;
+                }
+            }
+
+            $transaction->commit();
+        }
     }
 }
