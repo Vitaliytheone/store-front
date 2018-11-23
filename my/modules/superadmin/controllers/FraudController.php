@@ -98,7 +98,7 @@ class FraudController extends CustomController
         return [
             'status' => 'success',
             'content' => $this->renderPartial('layouts/reports/_report_details', [
-                'details' => $report->getDetails(),
+                'details' => $report,
             ])
         ];
     }

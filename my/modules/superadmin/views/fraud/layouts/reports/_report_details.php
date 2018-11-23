@@ -1,8 +1,12 @@
 <?php
-    /* @var $details string|null */
+    /* @var $details \common\models\panels\PaypalFraudReports */
 
-    if (isset($details)) {
-        print_r($details);
+    use my\helpers\SpecialCharsHelper;
+
+    $detailsDecode = SpecialCharsHelper::multiPurifier($details->getDetails());
+
+    if (isset($detailsDecode)) {
+        print_r($detailsDecode);
     } else {
-        print_r([]);
+        print_r(SpecialCharsHelper::multiPurifier($details->transaction_details));
     }
