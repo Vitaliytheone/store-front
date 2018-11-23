@@ -76,6 +76,12 @@ class FraudPaymentsSearch extends Model
     public function search(): array
     {
         $searchParams = $this->getFilters();
+
+        if (!isset($searchParams['query'])) {
+            $pages = new Pagination(['totalCount' => 0, 'pageSize' => 0]);
+            return ['models' => [], 'pages' => $pages];
+        }
+
         $model = $this->buildQuery($searchParams['query'], $searchParams['search_type']);
 
         $countQuery = $model->count();
