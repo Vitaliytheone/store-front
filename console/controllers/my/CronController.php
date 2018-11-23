@@ -459,24 +459,31 @@ class CronController extends CustomController
             $domain->status = Domains::STATUS_EXPIRED;
 
             if (!$domain->save()) {
+                $transaction->rollBack();
                 continue;
             }
 
             $order = Orders::findOne([
                 'item_id' => $domain->id,
                 'item' => Orders::ITEM_PROLONGATION_DOMAIN,
-                'cid' => $domain->customer_id,
             ]);
 
             if (!isset($order)) {
+                $transaction->commit();
                 continue;
             }
 
-            $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id]);
+            $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id, 'item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN]);
+
+            if (!$invoiceDetails) {
+                $transaction->commit();
+                continue;
+            }
+            $invoiceId = $invoiceDetails->invoice_id;
 
             try {
-                Invoices::deleteAll(['id' => $invoiceDetails->invoice_id]);
-                $invoiceDetails->delete();
+                InvoiceDetails::deleteAll(['invoice_id' => $invoiceId]);
+                Invoices::deleteAll(['id' => $invoiceId]);
                 $order->delete();
             } catch (\Exception $e) {
                 $transaction->rollBack();
