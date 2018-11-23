@@ -797,14 +797,21 @@ class OrderHelper {
      */
     public static function leSsl(Orders $order)
     {
+        $orderDetails = $order->getDetails();
+
+        // Check if its prolonged GogetSSl -> Letsencrypt or regular Letsencrypt SSL order
+        $orderDelay = ArrayHelper::getValue($orderDetails, 'delay', 0);
+
+        if (time() < $order->date + $orderDelay) {
+            return true;
+        }
+
         if (SslCert::findOne([
             'domain' => $order->domain,
             'status' => SslCert::STATUS_ACTIVE
         ])) {
             throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
         }
-
-        $orderDetails = $order->getDetails();
 
         $panel = Project::findOne($orderDetails['pid']);
 
