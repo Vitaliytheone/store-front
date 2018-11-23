@@ -191,7 +191,8 @@ class MyCustomersHash extends ActiveRecord
     {
         $userHash = static::findOne([
             'customer_id' => $customer->id,
-            'hash' => $hash
+            'hash' => $hash,
+            'ip' => UserHelper::ip()
         ]);
 
         if ($userHash) {

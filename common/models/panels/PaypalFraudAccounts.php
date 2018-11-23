@@ -3,10 +3,12 @@
 namespace common\models\panels;
 
 
+use common\components\traits\UnixTimeFormatTrait;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use Yii;
 use common\models\panels\queries\PaypalFraudAccountsQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%paypal_fraud_accounts}}".
@@ -27,16 +29,18 @@ class PaypalFraudAccounts extends ActiveRecord
     const FRAUD_RISK_HIGH = 1;
     const FRAUD_RISK_CRITICAL = 2;
 
+    use UnixTimeFormatTrait;
+
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%paypal_fraud_accounts}}';
+        return 'paypal_fraud_accounts';
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
@@ -44,11 +48,12 @@ class PaypalFraudAccounts extends ActiveRecord
             [['fraud_risk', 'payer_status'], 'required'],
             [['fraud_risk', 'payer_status', 'created_at', 'updated_at'], 'integer'],
             [['payer_id', 'payer_email'], 'string', 'max' => 1000],
+            [['fraud_risk', 'payer_status'], 'string', 'max' => 1],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function attributeLabels()
     {
@@ -65,7 +70,7 @@ class PaypalFraudAccounts extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return PaypalFraudAccountsQuery the active query used by this AR class.
+     * @return PaypalFraudAccountsQuery|\yii\db\ActiveQuery
      */
     public static function find()
     {
@@ -92,5 +97,49 @@ class PaypalFraudAccounts extends ActiveRecord
                 },
             ],
         ];
+    }
+
+    /**
+     * Get risk list
+     * @return array
+     */
+    public static function getRisks(): array
+    {
+        return [
+            static::FRAUD_RISK_HIGH => Yii::t('app/superadmin', 'paypal_fraud_accounts.risk.high'),
+            static::FRAUD_RISK_CRITICAL => Yii::t('app/superadmin', 'paypal_fraud_accounts.risk.critical'),
+        ];
+    }
+
+    /**
+     * Get status list
+     * @return array
+     */
+    public static function getStatuses(): array
+    {
+        return [
+            static::PAYER_STATUS_UNVERIFIED => Yii::t('app/superadmin', 'paypal_fraud_accounts.status.unverified'),
+            static::PAYER_STATUS_VERIFIED => Yii::t('app/superadmin', 'paypal_fraud_accounts.status.verified'),
+        ];
+    }
+
+    /**
+     * Get risk name
+     * @param int $risk
+     * @return string
+     */
+    public static function getRiskName(int $risk): string
+    {
+        return ArrayHelper::getValue(static::getRisks(), $risk, '');
+    }
+
+    /**
+     * Get status name
+     * @param int $status
+     * @return string
+     */
+    public static function getStatusName(int $status): string
+    {
+        return ArrayHelper::getValue(static::getStatuses(), $status, '');
     }
 }
