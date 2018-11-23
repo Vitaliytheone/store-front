@@ -29,6 +29,7 @@ return [
     'header.nav.fraud' => 'Fraud',
     'header.nav.fraud_reports' => 'Reports',
     'header.nav.fraud_payments' => 'Payments',
+    'header.nav.fraud_accounts' => 'Accounts',
     'header.nav.settings' => 'Settings',
     'header.nav.account' => 'Account',
     'header.nav.logout' => 'Logout',
@@ -61,6 +62,7 @@ return [
     'pages.title.tools.smmfire' => 'Panelfire scanner',
     'pages.title.tools.fraud_reports' => 'Fraud reports',
     'pages.title.tools.fraud_payments' => 'Fraud payments',
+    'pages.title.tools.fraud_accounts' => 'Fraud accounts',
     'pages.title.stores' => 'Stores',
     'pages.title.dashboard' => 'Dashboard',
     'pages.title.customers' => 'Customers',
@@ -710,6 +712,14 @@ return [
     'fraud_reports.dropdown.accept' => 'Accept',
     'fraud_reports.dropdown.reject' => 'Reject',
 
+    'fraud.accounts.list.id' => 'ID',
+    'fraud.accounts.list.payer_id' => 'Payer ID',
+    'fraud.accounts.list.payer_email' => 'Payer Email',
+    'fraud.accounts.list.risk' => 'Fraud Risk',
+    'fraud.accounts.list.status' => 'Payer status',
+    'fraud.accounts.list.created' => 'Created',
+    'fraud.accounts.list.updated' => 'Updated',
+
     'stores.list.navs_all' => 'All ({count})',
     'stores.list.navs_active' => 'Active ({count})',
     'stores.list.navs_frozen' => 'Frozen ({count})',
@@ -926,6 +936,11 @@ return [
     'fraud_payments.list.lastname' => 'Lastname',
     'fraud_payments.list.created' => 'Created',
     'fraud_payments.list.updated' => 'Updated',
+
+    'paypal_fraud_accounts.risk.high' => 'High',
+    'paypal_fraud_accounts.risk.critical' => 'Critical',
+    'paypal_fraud_accounts.status.verified' => 'Verified',
+    'paypal_fraud_accounts.status.unverified' => 'Unverified',
 
     'panels.edit.payment_method_modal.select.available_for' => 'Available for {currency}',
     'panels.edit.payment_methods.select_payment_method' => 'Select payment method',
