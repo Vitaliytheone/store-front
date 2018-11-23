@@ -177,8 +177,27 @@ class CronController extends CustomController
     public function actionTerminate()
     {
         Yii::$container->get(CancelOrder::class, [
-            time() - (7 * 24 * 60 * 60)
+            time() - (7 * 24 * 60 * 60),
+            [
+                Orders::ITEM_BUY_PANEL,
+                Orders::ITEM_BUY_DOMAIN,
+                Orders::ITEM_BUY_SSL,
+                Orders::ITEM_BUY_CHILD_PANEL,
+                Orders::ITEM_BUY_STORE,
+                Orders::ITEM_BUY_TRIAL_STORE,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
+            ]
         ])->run();
+
+        Yii::$container->get(CancelOrder::class, [
+            time() - (30 * 24 * 60 * 60),
+            [
+                Orders::ITEM_PROLONGATION_SSL,
+                Orders::ITEM_PROLONGATION_DOMAIN,
+            ]
+        ])->run();
+
         Yii::$container->get(TerminateStore::class, [
             strtotime("-1 month", time())
         ])->run();
