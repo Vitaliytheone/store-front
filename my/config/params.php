@@ -143,4 +143,6 @@ return [
         'accept_high' => 1,
         'accept_critical' => 1,
     ],
+
+    'ssl_order_delay' => 2 * 60, // Задержка на выполнение заказа продления GoGet SSL -> Letsencrypt SSL
 ];
