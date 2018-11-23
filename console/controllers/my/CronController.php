@@ -463,31 +463,30 @@ class CronController extends CustomController
                 continue;
             }
 
-            $order = Orders::findOne([
+            $orders = Orders::find()->andWhere([
                 'item_id' => $domain->id,
                 'item' => Orders::ITEM_PROLONGATION_DOMAIN,
-            ]);
+                'status' => Orders::STATUS_PENDING,
+            ])->all();
 
-            if (!isset($order)) {
-                $transaction->commit();
-                continue;
-            }
+            /**
+             * @val Orders $order
+             */
+            foreach ($orders as $order) {
+                $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id, 'item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN]);
+                if (!$invoiceDetails) {
+                    continue;
+                }
+                $invoiceId = $invoiceDetails->invoice_id;
 
-            $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id, 'item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN]);
-
-            if (!$invoiceDetails) {
-                $transaction->commit();
-                continue;
-            }
-            $invoiceId = $invoiceDetails->invoice_id;
-
-            try {
-                InvoiceDetails::deleteAll(['invoice_id' => $invoiceId]);
-                Invoices::deleteAll(['id' => $invoiceId]);
-                $order->delete();
-            } catch (\Exception $e) {
-                $transaction->rollBack();
-                continue;
+                try {
+                    InvoiceDetails::deleteAll(['invoice_id' => $invoiceId]);
+                    Invoices::deleteAll(['id' => $invoiceId]);
+                    $order->delete();
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    continue;
+                }
             }
 
             $transaction->commit();
