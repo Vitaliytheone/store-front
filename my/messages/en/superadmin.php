@@ -114,6 +114,9 @@ return [
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
+    'panels.change_provider.header' => 'Change provider',
+    'panels.change_provider.close' => 'Close',
+    'panels.change_provider.save' => 'Save changes',
 
     'panels.change_domain.error' => 'Can not change domain',
     'panels.edit_expiry.error' => 'Can not change domain',
@@ -143,6 +146,7 @@ return [
     'panels.list.actions' => 'Actions',
     'panels.list.details' => 'Edit details',
     'panels.list.providers' => 'Edit providers',
+    'panels.list.change_provider' => 'Change provider',
     'panels.list.expiry_date' => 'Edit expiry date',
     'panels.list.chage_domain' => 'Change domain',
     'panels.list.freeze_panel' => 'Freeze panel',

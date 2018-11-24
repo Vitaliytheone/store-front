@@ -4,6 +4,7 @@ namespace superadmin\controllers;
 
 use my\components\ActiveForm;
 use common\models\panels\Project;
+use superadmin\models\forms\ChangePanelProvider;
 use superadmin\models\forms\UpgradePanelForm;
 use superadmin\models\search\PanelsSearch;
 use Yii;
@@ -45,6 +46,7 @@ class ChildPanelsController extends PanelsController
                     'generate-apikey',
                     'upgrade',
                     'edit-payment-methods',
+                    'change-provider',
                 ]
             ],
             'verbs' => [
@@ -72,6 +74,8 @@ class ChildPanelsController extends PanelsController
                     'upgrade',
                     'edit',
                     'edit-payment-methods',
+                    'change-provider',
+                    'get-providers',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -147,5 +151,46 @@ class ChildPanelsController extends PanelsController
     public function actionDowngrade($id)
     {
         throw new ForbiddenHttpException();
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetProviders($id)
+    {
+        $panel = $this->findModel($id);
+        $model = new ChangePanelProvider();
+        $model->setProject($panel);
+
+        return [
+            'status' => 'success',
+            'content' => $model->getProviders(),
+            'current' => $panel->provider_id,
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionChangeProvider($id)
+    {
+        $panel = $this->findModel($id);
+        $model = new ChangePanelProvider();
+        $model->setProject($panel);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 }
