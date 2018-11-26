@@ -8,7 +8,6 @@ use common\models\panels\Project;
 use my\helpers\ChildHelper;
 use my\helpers\DomainsHelper;
 use yii\base\Model;
-use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -71,6 +70,10 @@ class ChangeChildPanelProvider extends Model
     public function getProviders()
     {
         if (null === $this->providers) {
+            if (empty($this->panel)) {
+                return [];
+            }
+
             $this->providers = [];
 
             if ($this->panel->provider_id && ($provider = AdditionalServices::findOne(['provider_id' => $this->panel->provider_id]))) {
