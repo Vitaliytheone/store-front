@@ -49,11 +49,17 @@ class FraudController extends CustomController
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['payment-details']
+                'only' => [
+                    'payment-details',
+                    'report-details',
+                ]
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['payment-details'],
+                'only' => [
+                    'payment-details',
+                    'report-details',
+                ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -91,6 +97,22 @@ class FraudController extends CustomController
         $report->changeStatus($status);
 
         $this->redirect(Url::toRoute(['/fraud/reports']));
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function actionReportDetails($id)
+    {
+        $report = PaypalFraudReports::findOne(['id' => $id]);
+
+        return [
+            'status' => 'success',
+            'content' => $this->renderPartial('layouts/reports/_report_details', [
+                'details' => $report,
+            ])
+        ];
     }
 
     /**

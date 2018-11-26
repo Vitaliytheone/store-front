@@ -924,6 +924,8 @@ return [
     'panels.edit.payment_methods.field.active' => 'Active',
     'panels.edit.payment_methods.error' => 'Can not change panel payment methods',
 
+    'fraud_reports.list.reports_modal_header' => 'Report details',
+    'fraud_reports.list.reports_modal_btn_close' => 'Close',
     'fraud_incidents.reason.unverified' => 'Unverified',
     'fraud_incidents.reason.high' => 'High from fraud_accounts id#',
     'fraud_incidents.reason.critical' => 'Critical from fraud_accounts id#',
