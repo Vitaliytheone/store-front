@@ -3,6 +3,7 @@
 namespace superadmin\controllers;
 
 use common\models\panels\PaypalPayments;
+use superadmin\models\search\FraudIncidentsSerach;
 use superadmin\models\search\FraudPaymentsSearch;
 use superadmin\models\search\FraudAccountsSearch;
 use Yii;
@@ -41,6 +42,7 @@ class FraudController extends CustomController
                 'actions' => [
                     'index' => ['GET'],
                     'reports-change-status' => ['POST'],
+                    'incidents' => ['GET'],
                     'payments' => ['GET'],
                     'accounts' => ['GET'],
                 ],
@@ -89,6 +91,23 @@ class FraudController extends CustomController
         $report->changeStatus($status);
 
         $this->redirect(Url::toRoute(['/fraud/reports']));
+    }
+
+    /**
+     * Render incidents list
+     * @return string
+     */
+    public function actionIncidents()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.fraud_incidents');
+
+        $incidents = new FraudIncidentsSerach();
+        $incidents->setParams(Yii::$app->request->get());
+
+        return $this->render('incidents', [
+            'incidents' => $incidents->search(),
+            'filters' => $incidents->getParams(),
+        ]);
     }
 
     /**
