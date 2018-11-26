@@ -58,13 +58,13 @@ class PaypalFraudAccounts extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'payer_id' => 'Payer ID',
-            'payer_email' => 'Payer Email',
-            'fraud_risk' => 'Fraud Risk',
-            'payer_status' => 'Payer Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('app', 'ID'),
+            'payer_id' => Yii::t('app', 'Payer ID'),
+            'payer_email' => Yii::t('app', 'Payer email'),
+            'fraud_risk' => Yii::t('app', 'Fraud Risk'),
+            'payer_status' => Yii::t('app', 'Payer status'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 
