@@ -48,7 +48,7 @@ class PaypalFraudResponse extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'panel_id' => Yii::t('app', 'Panel ID'),
             'payment_id' => Yii::t('app', 'Payment ID'),
-            'response' => Yii::t('app', 'PayPal server response'),
+            'response' => Yii::t('app', 'Response'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
     }

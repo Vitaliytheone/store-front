@@ -29,32 +29,16 @@ class PaymentsController extends CustomController
 
 	public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'token' => [
-                    'class' => DisableCsrfToken::class,
-                ],
-            ]
-        );
+        return [
+            'token' => [
+                'class' => DisableCsrfToken::class,
+            ],
+        ];
     }
 
     public function init()
     {
 
-    }
-
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
     }
 
     /**
