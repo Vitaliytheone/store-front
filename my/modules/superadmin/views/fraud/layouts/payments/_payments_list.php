@@ -23,6 +23,7 @@ use superadmin\widgets\CountPagination;
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.lastname')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.created')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.updated')?></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -55,6 +56,17 @@ use superadmin\widgets\CountPagination;
                 </td>
                 <td>
                     <?= $payment['updated_at'] ?>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><?= Yii::t('app/superadmin', 'customers.dropdown.actions_label') ?></button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <?= Html::a(Yii::t('app/superadmin', 'fraud_payments.action.details'),
+                                Url::toRoute(['/fraud/payment-details', 'id' => $payment['id']]),
+                                ['class' => 'dropdown-item payment-details']
+                            )?>
+                        </div>
+                    </div>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -952,6 +952,8 @@ return [
     'fraud_payments.list.lastname' => 'Lastname',
     'fraud_payments.list.created' => 'Created',
     'fraud_payments.list.updated' => 'Updated',
+    'fraud_payments.action.details' => 'Details',
+    
     'paypal_fraud_accounts.risk.high' => 'High',
     'paypal_fraud_accounts.risk.critical' => 'Critical',
     'paypal_fraud_accounts.status.verified' => 'Verified',

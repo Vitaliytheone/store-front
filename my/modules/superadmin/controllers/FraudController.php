@@ -2,6 +2,7 @@
 
 namespace superadmin\controllers;
 
+use common\models\panels\PaypalPayments;
 use superadmin\models\search\FraudIncidentsSerach;
 use superadmin\models\search\FraudPaymentsSearch;
 use superadmin\models\search\FraudAccountsSearch;
@@ -9,8 +10,11 @@ use Yii;
 use superadmin\models\search\FraudReportsSearch;
 use common\models\panels\PaypalFraudReports;
 use my\components\SuperAccessControl;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use my\helpers\Url;
+use yii\web\Response;
 
 /**
  * Class FraudController
@@ -41,6 +45,17 @@ class FraudController extends CustomController
                     'incidents' => ['GET'],
                     'payments' => ['GET'],
                     'accounts' => ['GET'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['payment-details']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['payment-details'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -128,5 +143,21 @@ class FraudController extends CustomController
             'accounts' => $accounts->search(),
             'filters' => $accounts->getParams(),
         ]);
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function actionPaymentDetails($id)
+    {
+        $payment = PaypalPayments::findOne($id);
+
+        return [
+            'status' => 'success',
+            'content' => $this->renderPartial('layouts/payments/_payment_details', [
+                'details' => $payment->response,
+            ])
+        ];
     }
 }
