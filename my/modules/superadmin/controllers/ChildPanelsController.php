@@ -4,7 +4,8 @@ namespace superadmin\controllers;
 
 use my\components\ActiveForm;
 use common\models\panels\Project;
-use superadmin\models\forms\ChangePanelProvider;
+use my\helpers\DomainsHelper;
+use superadmin\models\forms\ChangeChildPanelProvider;
 use superadmin\models\forms\UpgradePanelForm;
 use superadmin\models\search\PanelsSearch;
 use Yii;
@@ -161,7 +162,7 @@ class ChildPanelsController extends PanelsController
     public function actionGetProviders($id)
     {
         $panel = $this->findModel($id);
-        $model = new ChangePanelProvider();
+        $model = new ChangeChildPanelProvider();
         $model->setProject($panel);
 
         return [
@@ -179,7 +180,7 @@ class ChildPanelsController extends PanelsController
     public function actionChangeProvider($id)
     {
         $panel = $this->findModel($id);
-        $model = new ChangePanelProvider();
+        $model = new ChangeChildPanelProvider();
         $model->setProject($panel);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

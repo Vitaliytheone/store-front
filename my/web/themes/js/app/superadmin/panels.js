@@ -131,12 +131,11 @@ customModule.superadminPanelsController = {
             e.preventDefault();
             var link = $(this);
             var action = link.attr('href');
-            var modal = $('#changePanelProviderModal');
+            var modal = $('#changeChildPanelProviderModal');
             var url = link.data('providers');
             var modalSelect = $('.providers-list select', modal);
-
-            var form = $('#changePanelProviderForm');
-            var errorBlock = $('#changePanelProviderError', form);
+            var form = $('#changeChildPanelProviderForm');
+            var errorBlock = $('#changeChildPanelProviderError', form);
 
             form.attr('action', action);
 
@@ -145,27 +144,26 @@ customModule.superadminPanelsController = {
 
             $.get(url, function (response) {
                 $.each(response.content, function(index, name) {
-                    if (response.current == index) {
-                        modalSelect.append($("<option></option>", {value: index, text: name, selected: 'selected'}));
-                    } else {
-                        modalSelect.append($("<option></option>", {value: index, text: name}));
-                    }
+                    modalSelect.append($("<option></option>", {value: index, text: name}));
                 });
+                modalSelect.val(response.current);
             });
+
+
 
             modal.modal('show');
             return false;
         });
 
-        $(document).on('click', '#changePanelProviderButton', function(e) {
+        $(document).on('click', '#changeChildPanelProviderButton', function(e) {
             e.preventDefault();
             var btn = $(this);
-            var form = $('#changePanelProviderForm');
+            var form = $('#changeChildPanelProviderForm');
 
             custom.sendFrom(btn, form, {
                 data: form.serialize(),
                 callback : function(response) {
-                    $('#changePanelProviderModal').modal('hide');
+                    $('#changeChildPanelProviderModal').modal('hide');
                     location.reload();
                 }
             });
@@ -176,13 +174,13 @@ customModule.superadminPanelsController = {
         $('.close-change-modal').click(function(e) {
             e.preventDefault();
 
-            var modal = $('#changePanelProviderModal');
+            var modal = $('#changeChildPanelProviderModal');
             var modalSelect = $('.providers-list select', modal);
 
             modalSelect.html('');
         });
 
-        $('#changePanelProviderModal').keyup(function(e) {
+        $('#changeChildPanelProviderModal').keyup(function(e) {
             if (e.keyCode == 27) {
                 var modalSelect = $('.providers-list select', $(this));
                 modalSelect.html('');
