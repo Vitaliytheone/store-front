@@ -7,6 +7,7 @@ use my\helpers\Url;
 /* @var $filters array */
 /* @var $navs array */
 
+$this->context->addModule('superadminFraudProtectionController');
 ?>
 
     <div class="row">
@@ -26,5 +27,5 @@ use my\helpers\Url;
 <?= $this->render('layouts/reports/_reports_list', [
         'reports' => $reports
     ])?>
-
+<?= $this->render('layouts/reports/_report_details_modal')?>
 
