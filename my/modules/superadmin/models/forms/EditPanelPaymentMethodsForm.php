@@ -168,7 +168,9 @@ class EditPanelPaymentMethodsForm extends Model
     protected function getPanelPaymentMethods()
     {
         if (null === static::$panelPaymentMethods) {
-            static::$panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])->get();
+            static::$panelPaymentMethods = Yii::$container->get(GetPanelPaymentMethodsService::class, [$this->_panel])
+                ->withOriginalName()
+                ->get();
         }
 
         return static::$panelPaymentMethods;
