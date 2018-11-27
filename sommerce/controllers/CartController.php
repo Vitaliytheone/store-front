@@ -3,6 +3,7 @@ namespace sommerce\controllers;
 
 use common\components\ActiveForm;
 use common\components\filters\DisableCsrfToken;
+use common\components\filters\DisableDomainValidation;
 use common\models\store\Carts;
 use common\models\store\Packages;
 use sommerce\helpers\UserHelper;
@@ -47,6 +48,10 @@ class CartController extends CustomController
             ],
             'token' => [
                 'class' => DisableCsrfToken::class,
+                'only' => ['index'],
+            ],
+            'domain' => [
+                'class' => DisableDomainValidation::class,
                 'only' => ['index'],
             ],
         ];
