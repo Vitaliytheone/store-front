@@ -1,6 +1,6 @@
 <?php
 
-namespace my\components\filters;
+namespace common\components\filters;
 
 
 use yii\base\ActionFilter;
@@ -22,7 +22,7 @@ use Yii;
  * }
  *
  * Class DisableCsrfToken
- * @package my\components\filters
+ * @package common\components\filters
  */
 class DisableCsrfToken extends ActionFilter
 {
