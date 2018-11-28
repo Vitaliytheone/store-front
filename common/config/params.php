@@ -113,6 +113,7 @@ return [
     'cron.check_payments_fee_days' => 2,
 
     'letsencrypt' => [
+        'prolong.days.before' => 20, // За 20 дней до окончания создается заказ на продление
         'paths' => [
             'lib' => Yii::getAlias('@project_root/shell/acme.sh'),
             'ssl' => Yii::getAlias('@project_root/ssl'),

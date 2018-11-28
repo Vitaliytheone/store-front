@@ -54,9 +54,6 @@ class Orders extends ActiveRecord
     const ITEM_FREE_SSL = 9;
     const ITEM_PROLONGATION_FREE_SSL = 10;
 
-    const ITEM_OBTAIN_LE_SSL = 9;
-    const ITEM_PROLONGATION_LE_SSL = 10;
-
     use UnixTimeFormatTrait;
 
     /**
