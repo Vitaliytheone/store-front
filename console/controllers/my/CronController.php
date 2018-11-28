@@ -68,8 +68,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
-                Orders::ITEM_OBTAIN_LE_SSL,
-                Orders::ITEM_PROLONGATION_LE_SSL,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
             ]
         ])->all();
 
@@ -115,11 +115,11 @@ class CronController extends CustomController
                         OrderHelper::prolongationDomain($order);
                     break;
 
-                    case Orders::ITEM_OBTAIN_LE_SSL:
+                    case Orders::ITEM_FREE_SSL:
                         OrderHelper::leSsl($order);
                     break;
 
-                    case Orders::ITEM_PROLONGATION_LE_SSL:
+                    case Orders::ITEM_PROLONGATION_FREE_SSL:
                         OrderHelper::leProlongationSsl($order);
                     break;
                 }
@@ -165,6 +165,7 @@ class CronController extends CustomController
         InvoiceHelper::prolongDomains();
         InvoiceHelper::prolongStores();
         InvoiceHelper::prolongGogetSsl2LetsencryptSsl();
+        InvoiceHelper::prolongFreeSsl();
     }
 
     /**

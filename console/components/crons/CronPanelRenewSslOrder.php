@@ -32,7 +32,7 @@ class CronPanelRenewSslOrder extends CronBase
             ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl.pid')
             ->leftJoin(['ssl_item' => SslCertItem::tableName()], 'ssl_item.id = ssl.item_id')
             ->leftJoin(['order' => Orders::tableName()], 'order.item = :orderItem AND order.item_id = ssl.id AND order.processing = :orderProcessing', [
-                ':orderItem' => Orders::ITEM_PROLONGATION_LE_SSL,
+                ':orderItem' => Orders::ITEM_PROLONGATION_FREE_SSL,
                 ':orderProcessing' => Orders::PROCESSING_NO,
             ])
             ->andWhere(['IS', 'order.id', null])
@@ -67,7 +67,7 @@ class CronPanelRenewSslOrder extends CronBase
             $order->hide = Orders::HIDDEN_OFF;
             $order->processing = Orders::PROCESSING_NO;
             $order->domain = $ssl['panel_domain'];
-            $order->item = Orders::ITEM_PROLONGATION_LE_SSL;
+            $order->item = Orders::ITEM_PROLONGATION_FREE_SSL;
             $order->item_id = $ssl['ssl_id'];
             $order->ip = '127.0.0.1';
             $order->setDetails([

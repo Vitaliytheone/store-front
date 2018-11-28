@@ -184,7 +184,7 @@ class CronPanelLeSslOrder extends CronBase
             $order->hide = Orders::HIDDEN_OFF;
             $order->processing = Orders::PROCESSING_NO;
             $order->domain = $panel->domain;
-            $order->item = Orders::ITEM_OBTAIN_LE_SSL;
+            $order->item = Orders::ITEM_FREE_SSL;
             $order->ip = '127.0.0.1';
             $order->setDetails([
                 'pid' => $panel->id,
