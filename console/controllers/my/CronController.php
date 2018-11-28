@@ -454,17 +454,6 @@ class CronController extends CustomController
     }
 
     /**
-     * Renew panel`s Letsencrypt SSL order maker
-     */
-    public function actionPanelRenewSslOrder()
-    {
-        $cron = new CronPanelRenewSslOrder();
-        $cron->setConsole($this);
-        $cron->setDebug(true);
-        $cron->run();
-    }
-
-    /**
      * @throws \Throwable
      * @throws \yii\db\Exception
      */
