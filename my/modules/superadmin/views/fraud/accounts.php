@@ -6,6 +6,8 @@
 use my\helpers\SpecialCharsHelper;
 use yii\widgets\LinkPager;
 use superadmin\widgets\CountPagination;
+use yii\helpers\Html;
+use my\helpers\Url;
 
 ?>
 
@@ -30,7 +32,8 @@ use superadmin\widgets\CountPagination;
                 <?= $account['id'] ?>
             </td>
             <td>
-                <?= $account['payer_id'] ?>
+                <?= Html::a($account['payer_id'],
+                    Url::toRoute(['/fraud/payments', 'query' => $account['payer_id'],'search_type' => 'payer_id']))?>
             </td>
             <td>
                 <?= $account['payer_email'] ?>

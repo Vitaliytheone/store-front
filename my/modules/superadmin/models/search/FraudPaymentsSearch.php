@@ -32,7 +32,7 @@ class FraudPaymentsSearch extends Model
         return [
             'query' => isset($this->params['query']) ? trim($this->params['query']) : null,
             'search_type' =>
-                isset($this->params['search_type']) && array_key_exists($this->params['search_type'], static::getSearchTypes()) ?
+                isset($this->params['search_type']) && array_key_exists(trim($this->params['search_type']), static::getSearchTypes()) ?
                 trim($this->params['search_type']) :
                 null,
             'page_size' => isset($this->params['page_size']) ? $this->params['page_size'] : null,
@@ -76,6 +76,12 @@ class FraudPaymentsSearch extends Model
     public function search(): array
     {
         $searchParams = $this->getFilters();
+
+        if (!isset($searchParams['query'])) {
+            $pages = new Pagination(['totalCount' => 0, 'pageSize' => 0]);
+            return ['models' => [], 'pages' => $pages];
+        }
+
         $model = $this->buildQuery($searchParams['query'], $searchParams['search_type']);
 
         $countQuery = $model->count();
@@ -115,7 +121,7 @@ class FraudPaymentsSearch extends Model
                 'paypal_status' => $item['paypal_status'],
                 'firstname' => $item['firstname'],
                 'lastname' => $item['lastname'],
-                'created_at' => PaypalPayments::formatDate($item['created_at'], 'php:Y-m-d H:i:s'),
+                'created_at' => PaypalPayments::formatDate($item['payment_created_at'], 'php:Y-m-d H:i:s'),
                 'updated_at' => PaypalPayments::formatDate($item['updated_at'], 'php:Y-m-d H:i:s'),
             ];
         }

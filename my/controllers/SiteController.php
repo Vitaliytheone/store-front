@@ -7,7 +7,7 @@ use common\models\panels\Params;
 use common\models\panels\services\GetGeneralPaymentMethodsService;
 use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
-use my\components\filters\DisableCsrfToken;
+use common\components\filters\DisableCsrfToken;
 use my\components\payments\Paypal;
 use my\helpers\CurlHelper;
 use common\models\panels\Content;

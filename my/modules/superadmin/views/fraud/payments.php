@@ -8,6 +8,7 @@ use my\helpers\Url;
 use my\helpers\SpecialCharsHelper;
 use yii\helpers\Html;
 
+$this->context->addModule('superadminFraudPaymentsController');
 ?>
 <ul class="nav nav-pills mb-3">
     <li class="ml-auto">
@@ -30,4 +31,6 @@ use yii\helpers\Html;
     'payments' => $payments,
     'filters' => $filters,
 ])?>
+
+<?= $this->render('layouts/payments/_payment_details_modal') ?>
 

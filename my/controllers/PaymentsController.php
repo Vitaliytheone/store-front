@@ -2,10 +2,9 @@
 
 namespace my\controllers;
 
-use common\helpers\PaymentHelper;
 use common\models\panels\Params;
 use my\components\bitcoin\Bitcoin;
-use my\components\filters\DisableCsrfToken;
+use common\components\filters\DisableCsrfToken;
 use my\components\payments\BasePayment;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PaypalFailed;

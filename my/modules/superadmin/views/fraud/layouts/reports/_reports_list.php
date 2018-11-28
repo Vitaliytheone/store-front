@@ -57,6 +57,9 @@ use common\models\panels\PaypalFraudReports;
                 <div class="dropdown">
                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><?= Yii::t('app/superadmin', 'customers.dropdown.actions_label') ?></button>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <?= Html::a(Yii::t('app/superadmin', 'payments.list.action_details'), Url::toRoute(['/fraud/report-details', 'id' => $report['id']]), [
+                            'class' => 'dropdown-item report-details',
+                        ])?>
                         <h6 class="dropdown-header"><?= Yii::t('app/superadmin', 'fraud_reports.dropdown.header') ?></h6>
                         <?php if ($report['status'] == PaypalFraudReports::STATUS_PENDING) : ?>
                             <?= Html::a(Yii::t('app/superadmin', 'fraud_reports.dropdown.accept'),
