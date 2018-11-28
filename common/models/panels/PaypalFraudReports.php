@@ -131,10 +131,6 @@ class PaypalFraudReports extends ActiveRecord
         }
 
         switch ($status) {
-            case static::STATUS_REJECTED :
-                $this->status = $status;
-                return $this->save(false);
-
             case static::STATUS_ACCEPTED :
                 $transaction = Yii::$app->db->beginTransaction();
 
@@ -143,32 +139,31 @@ class PaypalFraudReports extends ActiveRecord
 
                 $details = $this->getDetails();
 
-                if (!isset($details)) {
+                if (empty($details)) {
                     $transaction->commit();
                     return true;
                 }
 
-                $account = PaypalFraudAccounts::find()
-                    ->where([
+                if (PaypalFraudAccounts::find()
+                    ->andWhere([
                         'payer_id' => $details['PAYERID'],
                         'payer_email' => $details['EMAIL'],
                     ])
-                    ->exists();
-
-                if ($account) {
+                    ->exists()) {
                     $transaction->commit();
                     return true;
                 }
 
-                $fraudAccount = new PaypalFraudAccounts();
-                $fraudAccount->payer_id = $details['PAYERID'];
-                $fraudAccount->payer_email = $details['EMAIL'];
-                $fraudAccount->lastname = $details['LASTNAME'];
-                $fraudAccount->firstname = $details['FIRSTNAME'];
-                $fraudAccount->fraud_risk = PaypalFraudAccounts::FRAUD_RISK_CRITICAL;
-                $fraudAccount->payer_status = $details['PAYERSTATUS'] == 'verified' ?
-                    PaypalFraudAccounts::PAYER_STATUS_VERIFIED :
-                    PaypalFraudAccounts::PAYER_STATUS_UNVERIFIED;
+                $fraudAccount = new PaypalFraudAccounts([
+                    'payer_id' => $details['PAYERID'],
+                    'payer_email' => $details['EMAIL'],
+                    'lastname' => $details['LASTNAME'],
+                    'firstname' => $details['FIRSTNAME'],
+                    'fraud_risk' => PaypalFraudAccounts::FRAUD_RISK_CRITICAL,
+                    'payer_status' => strtolower($details['PAYERSTATUS']) == 'verified' ?
+                        PaypalFraudAccounts::PAYER_STATUS_VERIFIED :
+                        PaypalFraudAccounts::PAYER_STATUS_UNVERIFIED,
+                ]);
 
                 if (!$fraudAccount->save()) {
                     $transaction->rollBack();
@@ -177,9 +172,11 @@ class PaypalFraudReports extends ActiveRecord
 
                 $transaction->commit();
                 return true;
-        }
 
-        return false;
+            default:
+                $this->status = $status;
+                return $this->save(false);
+        }
     }
 
     /**
