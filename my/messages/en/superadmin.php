@@ -115,6 +115,7 @@ return [
     'panels.edit.show_selected' => 'Show selected',
     'panels.edit.perfect_panel_providers' => 'Perfectpanel providers',
     'panels.edit.change_domain' => 'Change domain',
+    'panels.edit.affiliate_system' => 'Affiliate system status',
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',

@@ -63,6 +63,12 @@ return [
     '3305' => 'Deactivate payment method',
     '3304' => 'Sort payment method',
 
+    '5001' => 'Approve payout',
+    '5002' => 'Reject payout',
+    '5003' => 'Commission rate updated',
+    '5004' => 'Minimum payout updated',
+    '5005' => 'Approve payouts status updated',
+
     '8' => 'Resend order',
     '9' => 'Change status',
     '10' => 'Cancel and refund',

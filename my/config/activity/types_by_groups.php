@@ -130,6 +130,16 @@ return [
         ]
     ],
     [
+        'title' => 'Affiliate',
+        'events' => [
+            5001,
+            5002,
+            5003,
+            5004,
+            5005,
+        ]
+    ],
+    [
         'title' => 'Bonuses',
         'events' => [
             3101,
