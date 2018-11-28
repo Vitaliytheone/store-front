@@ -2,9 +2,7 @@
 namespace common\models\panels\services;
 
 use common\models\panels\PanelPaymentMethods;
-use common\models\panels\PaymentMethods;
 use common\models\panels\Project;
-use Faker\Provider\kk_KZ\Payment;
 use yii\db\Query;
 
 /**
@@ -23,12 +21,6 @@ class GetPanelPaymentMethodsService {
      */
     private $_visibility;
 
-
-    /**
-     * @var boolean
-     */
-    private $_originalName = false;
-
     /**
      * GetPanelPaymentMethodsService constructor.
      * @param Project $panel
@@ -40,41 +32,26 @@ class GetPanelPaymentMethodsService {
         $this->_visibility = $visibility;
     }
 
-
-    /**
-     * @return $this
-     */
-    public function withOriginalName()
-    {
-        $this->_originalName = true;
-        return $this;
-    }
-
     /**
      * @return array
      */
     public function get()
     {
-        $fields = [
-            'ppm.id',
-            'ppm.method_id',
-            'ppm.currency_id',
-            'ppm.minimal',
-            'ppm.maximal',
-            'ppm.options',
-            'ppm.visibility',
-            'ppm.new_users',
-            'ppm.take_fee_from_user'
-        ];
-        array_push($fields, $this->_originalName ? 'pm.method_name as name' : 'name');
         $query = (new Query())
-            ->select($fields)
-            ->from(['ppm' => DB_PANELS . '.' . PanelPaymentMethods::tableName()]);
-            if ($this->_originalName) {
-                $query->innerJoin(['pm' => PaymentMethods::tableName()], 'ppm.method_id = pm.id');
-            }
-
-        $query->andWhere([
+            ->select([
+                'id',
+                'method_id',
+                'currency_id',
+                'name',
+                'minimal',
+                'maximal',
+                'options',
+                'visibility',
+                'new_users',
+                'take_fee_from_user',
+            ])
+            ->from(['ppm' => DB_PANELS . '.' . PanelPaymentMethods::tableName()])
+            ->andWhere([
                 'ppm.panel_id' => $this->_panel->id
             ])
             ->orderBy([
