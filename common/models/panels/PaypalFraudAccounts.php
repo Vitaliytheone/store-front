@@ -20,6 +20,8 @@ use yii\helpers\ArrayHelper;
  * @property int $payer_status 1 - verified, 0 - unverified
  * @property int $created_at
  * @property int $updated_at
+ * @property string $lastname
+ * @property string $firstname
  */
 class PaypalFraudAccounts extends ActiveRecord
 {
@@ -47,8 +49,8 @@ class PaypalFraudAccounts extends ActiveRecord
         return [
             [['fraud_risk', 'payer_status'], 'required'],
             [['fraud_risk', 'payer_status', 'created_at', 'updated_at'], 'integer'],
+            [['lastname', 'firstname'], 'string', 'max' => 300],
             [['payer_id', 'payer_email'], 'string', 'max' => 1000],
-            [['fraud_risk', 'payer_status'], 'string', 'max' => 1],
         ];
     }
 
@@ -65,6 +67,8 @@ class PaypalFraudAccounts extends ActiveRecord
             'payer_status' => Yii::t('app', 'Payer status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'lastname' => Yii::t('app', 'Lastname'),
+            'firstname' => Yii::t('app', 'Firstname'),
         ];
     }
 
