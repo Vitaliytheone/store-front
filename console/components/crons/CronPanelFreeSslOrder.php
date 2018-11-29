@@ -93,7 +93,7 @@ class CronPanelFreeSslOrder extends CronBase
             }
 
             $dnsChecker = new DnsCheckerPhp();
-            $dnsChecker->setFlushCache(false);
+            $dnsChecker->setFlushCache(true);
             $dnsChecker->setDomain($panel->domain);
             $dnsChecker->setSubdomain((bool)$panel->subdomain);
 
