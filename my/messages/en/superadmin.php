@@ -949,6 +949,7 @@ return [
     'fraud_payments.search_type.payer_firstname' => 'Payer firsname',
     'fraud_payments.search_type.payer_lastname' => 'Payer lastname',
     'fraud_payments.list.search' => 'Search Payments',
+    'fraud_accounts.list.search' => 'Search Accounts',
     'fraud_payments.list.id' => 'ID',
     'fraud_payments.list.panel' => 'Panel',
     'fraud_payments.list.payment_id' => 'Payment ID',

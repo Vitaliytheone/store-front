@@ -164,7 +164,8 @@ class FraudController extends CustomController
 
         return $this->render('accounts', [
             'accounts' => $accounts->search(),
-            'filters' => $accounts->getParams(),
+            'filters' => $accounts->getFilters(),
+            'searchTypes' => FraudAccountsSearch::getSearchTypes(),
         ]);
     }
 
