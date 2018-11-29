@@ -19,6 +19,7 @@ use superadmin\widgets\CountPagination;
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.payment_id')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.payer_id')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.email')?></th>
+        <th><?= Yii::t('app/superadmin', 'fraud_payments.list.status')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.firstname')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.lastname')?></th>
         <th><?= Yii::t('app/superadmin', 'fraud_payments.list.created')?></th>
@@ -44,6 +45,9 @@ use superadmin\widgets\CountPagination;
                 </td>
                 <td>
                     <?= $payment['payer_email'] ?>
+                </td>
+                <td>
+                    <?= $payment['paypal_status'] ?>
                 </td>
                 <td>
                     <?= $payment['firstname'] ?>

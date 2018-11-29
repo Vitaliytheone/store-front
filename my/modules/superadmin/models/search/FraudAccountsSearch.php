@@ -85,6 +85,7 @@ class FraudAccountsSearch extends Model
         $result = [];
 
         foreach ($data as $key => $item) {
+
             $result[$key] = $item;
             $result[$key]['fraud_risk'] = PaypalFraudAccounts::getRiskName($item['fraud_risk']);
             $result[$key]['payer_status'] = PaypalFraudAccounts::getStatusName($item['payer_status']);

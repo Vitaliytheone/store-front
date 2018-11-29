@@ -118,6 +118,7 @@ class FraudPaymentsSearch extends Model
                 'payment_id' => $item['payment_id'],
                 'payer_id' => $item['payer_id'],
                 'payer_email' => $item['payer_email'],
+                'paypal_status' => $item['paypal_status'],
                 'firstname' => $item['firstname'],
                 'lastname' => $item['lastname'],
                 'created_at' => PaypalPayments::formatDate($item['payment_created_at'], 'php:Y-m-d H:i:s'),
