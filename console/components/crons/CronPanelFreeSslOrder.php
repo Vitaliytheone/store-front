@@ -74,7 +74,7 @@ class CronPanelFreeSslOrder extends CronBase
 //                    break;
 
                 // Чекаем раз в 15 минут вне зависомости от даты регистрации
-                case $lastCheckedSec > 15 * 60:
+                case empty($lastCheckedSec) || $lastCheckedSec > 15 * 60:
                     $allowCheck = true;
                     break;
             }
