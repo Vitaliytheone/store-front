@@ -655,6 +655,7 @@ class OrderHelper {
         }
 
         // Renew domain data
+        $domain->status = Domains::STATUS_OK;
         $domain->expiry = $expiryTs;
         $domain->setItemDetails($domainRenewResult, 'domain_renew_info');
 
