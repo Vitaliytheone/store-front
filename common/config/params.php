@@ -123,4 +123,13 @@ return [
     'whoisxmlapi' => [
         'api_url' => 'https://www.whoisxmlapi.com/whoisserver/WhoisService',
     ],
+
+    'dns.checker.records' => [
+        'A' => [
+            'ip' => '54.37.239.222',
+        ],
+        'CNAME' => [
+            'target' => 'perfectpanel.com',
+        ],
+    ],
 ];
