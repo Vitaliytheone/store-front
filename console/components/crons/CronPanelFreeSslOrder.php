@@ -5,6 +5,7 @@ namespace console\components\crons;
 use common\models\panels\Orders;
 use common\models\panels\Params;
 use common\models\panels\SslCertItem;
+use console\components\dns_checker\DnsCheckerPhp;
 use Yii;
 use common\models\panels\Project;
 use console\components\crons\exceptions\CronException;
@@ -16,8 +17,9 @@ use yii\helpers\Console;
  * Class CronPanelLeSslOrder
  * @package console\components\crons
  */
-class CronPanelLeSslOrder extends CronBase
+class CronPanelFreeSslOrder extends CronBase
 {
+    /** @inheritdoc */
     public function run()
     {
         $this->stdout($this->cronTaskName() . ' started now', Console::FG_GREEN);
@@ -29,7 +31,6 @@ class CronPanelLeSslOrder extends CronBase
                 'dns_status' => Project::DNS_STATUS_ALIEN
             ])
             ->all();
-
 
         $this->stdout('Total panel domains count (' . count($panels) . ')');
 
@@ -72,22 +73,18 @@ class CronPanelLeSslOrder extends CronBase
 //                    $allowCheck = true;
 //                    break;
 
-                // 1-й день после регистрации - раз в 30 мин
-                case $createdSec < 1 * 24 * 60 * 60 && $lastCheckedSec > 30 * 60:
-                    $allowCheck = true;
-                    break;
-                // 2-й - 31 день после регистрации - раз в 3 часа
-                case $createdSec > 1 * 24 * 60 * 60 && $createdSec < 31 * 24 * 60 * 60 && $lastCheckedSec > 3 * 60 * 60:
+                // Чекаем раз в 15 минут вне зависомости от даты регистрации
+                case empty($lastCheckedSec) || $lastCheckedSec > 15 * 60:
                     $allowCheck = true;
                     break;
             }
 
             if (!$allowCheck) {
-                $this->stdout('Nameservers checkout is not allowed now! [Skipped]', Console::FG_YELLOW);
+                $this->stdout('Panel checkout is not allowed now! [Skipped]', Console::FG_YELLOW);
                 continue;
             }
 
-            $this->stdout('Nameservers checkout started...');
+            $this->stdout('Panel checkout started...');
 
             $panel->dns_checked_at = time();
 
@@ -95,72 +92,29 @@ class CronPanelLeSslOrder extends CronBase
                 throw new CronException('Cannot update panel [' . $panel->id . '] data!');
             }
 
-            $requestParams = http_build_query([
-                'apiKey' => Params::get(Params::CATEGORY_SERVICE, Params::CODE_WHOISXMLAPI, 'ssl'),
-                'domainName' => $panel->domain,
-                'outputFormat' => 'JSON',
-            ]);
+            $dnsChecker = new DnsCheckerPhp();
+            $dnsChecker->setFlushCache(true);
+            $dnsChecker->setDomain($panel->domain);
+            $dnsChecker->setSubdomain((bool)$panel->subdomain);
 
-            $request = Yii::$app->params['whoisxmlapi']['api_url'] . '/?' . $requestParams;
+            if (!$dnsChecker->check() || $dnsChecker->getErrors())
+            {
+                $this->stdout('Panel ['. $panel->domain .'] dns check not passed! [ skipped ]');
 
-            $response = CurlHelper::request($request);
+                if ($dnsChecker->getErrors()) {
+                    $this->stdout('Dns checker errors: ' . PHP_EOL . print_r($dnsChecker->getErrors(), 1));
+                }
 
-            $this->stdout('NsLoockup raw response:');
-            $this->stdout(print_r($response,1));
-
-            if (!$response) {
                 continue;
             }
 
-            $response = json_decode($response, true);
+            $this->stdout('Dns checkout record: ' . PHP_EOL . print_r($dnsChecker->getDnsCheckoutRecord(), 1));
 
-            $this->stdout('NsLoockup json-decoded response:');
-            $this->stdout(print_r($response,1));
-
-            if (json_last_error()) {
-                continue;
-            }
-
-            $panel->setWhoisLookup($response);
+            $panel->setWhoisLookup($dnsChecker->getDnsRecords());
+            $panel->setNameservers($dnsChecker->getDnsCheckoutRecord());
 
             if (!$panel->save(false)) {
                 throw new CronException('Cannot update panel [' . $panel->id . '] data!');
-            }
-
-            if (!ArrayHelper::getValue($response, 'WhoisRecord')) {
-                $this->stderror('Invalid api NsLoockup response! [Skipped]');
-                continue;
-            }
-
-            // Check 2 places
-            $whoisNameservers = ArrayHelper::getValue(
-                $response,
-                ['WhoisRecord', 'registryData', 'nameServers', 'hostNames'],
-                ArrayHelper::getValue($response, ['WhoisRecord', 'nameServers', 'hostNames'], [])
-            );
-
-            $this->stdout('NsLoockup nameservers:');
-            $this->stdout(print_r($whoisNameservers,1));
-
-            if (!$whoisNameservers || !is_array($whoisNameservers)) {
-                $this->stderror('Domain nameservers are not defined! [Skipped]');
-                continue;
-            }
-
-            $panel->setNameservers($whoisNameservers);
-
-            if (!$panel->save(false)) {
-                throw new CronException('Cannot update panel [' . $panel->id . '] data!');
-            }
-
-            $configNameservers = array_values(array_filter(Yii::$app->params['ahnames.my.ns'], function($nameserver) { return !empty($nameserver); }));
-
-            $this->stdout('Config-params nameservers:');
-            $this->stdout(print_r($configNameservers,1));
-
-            if (array_udiff($configNameservers, $whoisNameservers, 'strcasecmp')) {
-                $this->stdout('Nameservers do not match! [Skipped]');
-                continue;
             }
 
             $panel->dns_status = Project::DNS_STATUS_MINE;
@@ -184,7 +138,7 @@ class CronPanelLeSslOrder extends CronBase
             $order->hide = Orders::HIDDEN_OFF;
             $order->processing = Orders::PROCESSING_NO;
             $order->domain = $panel->domain;
-            $order->item = Orders::ITEM_OBTAIN_LE_SSL;
+            $order->item = Orders::ITEM_FREE_SSL;
             $order->ip = '127.0.0.1';
             $order->setDetails([
                 'pid' => $panel->id,
@@ -197,8 +151,7 @@ class CronPanelLeSslOrder extends CronBase
                 throw new CronException('Cannot create order!');
             }
 
-            $this->stdout('Letsencrypt SSL-order has been created successfully!');
-            $this->stdout(print_r($order->attributes,1));
+            $this->stdout('Letsencrypt SSL-order has been created successfully! Order ID [ ' . $order->id . ' ]' . PHP_EOL);
         }
 
         $this->stdout($this->cronTaskName() . ' finished', Console::FG_GREEN);

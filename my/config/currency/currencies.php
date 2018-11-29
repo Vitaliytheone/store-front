@@ -97,4 +97,8 @@ return [
         'name' => 'Vietnamese đồng',
         'money_format' => '{{value}}₫',
     ],
+    'CAD' => [
+        'name' => 'Canadian dollar',
+        'money_format' => '${{value}}',
+    ],
 ];

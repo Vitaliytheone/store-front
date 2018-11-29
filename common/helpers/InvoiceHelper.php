@@ -13,6 +13,7 @@ use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use console\components\crons\exceptions\CronException;
+use my\helpers\ExpiryHelper;
 use my\helpers\order\OrderSslHelper;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
@@ -365,7 +366,7 @@ class InvoiceHelper
     }
 
     /**
-     * Prolongation Goget SSL to Letsencrypt SSL
+     * Prolongation Goget SSL to Letsencrypt SSL order maker
      */
     public static function prolongGogetSsl2LetsencryptSsl()
     {
@@ -373,7 +374,7 @@ class InvoiceHelper
 
         $sslCerts = SslCert::find()
             ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item', [
-                ':order_item' => Orders::ITEM_OBTAIN_LE_SSL,
+                ':order_item' => Orders::ITEM_FREE_SSL,
             ])
             ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
             ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl_cert.pid')
@@ -409,7 +410,7 @@ class InvoiceHelper
             $order->hide = Orders::HIDDEN_OFF;
             $order->processing = Orders::PROCESSING_NO;
             $order->domain = $ssl['domain'];
-            $order->item = Orders::ITEM_OBTAIN_LE_SSL;
+            $order->item = Orders::ITEM_FREE_SSL;
             $order->ip = '127.0.0.1';
             $order->setDetails([
                 'pid' => $ssl['pid'],
@@ -435,6 +436,61 @@ class InvoiceHelper
         }
 
         SslCert::updateAll(['status' => SslCert::STATUS_EXPIRED], ['id' => array_column($sslCerts, 'id')]);
+
+        $transaction->commit();
+    }
+
+    /**
+     * Prolongation Letsencrypt SSL order maker
+     */
+    public static function prolongFreeSsl()
+    {
+        $time = ExpiryHelper::days(Yii::$app->params['letsencrypt']['prolong.days.before']);
+
+        $sslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl_cert.pid')
+            ->andWhere(['panel.act' => Project::STATUS_ACTIVE])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED],['id' => array_column($sslCerts, 'id')]);
+
+        foreach ($sslCerts as $ssl) {
+
+            $order = new Orders();
+            $order->cid = $ssl['cid'];
+            $order->status = Orders::STATUS_PAID;
+            $order->hide = Orders::HIDDEN_OFF;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->domain = $ssl['domain'];
+            $order->ip = '127.0.0.1';
+            $order->item = Orders::ITEM_PROLONGATION_FREE_SSL;
+            $order->item_id = $ssl['id'];
+            $order->setDetails([
+                'pid' => $ssl['pid'],
+                'project_type' => Project::getProjectType(),
+                'domain' => $ssl['domain'],
+                'ssl_cert_item_id' => $ssl['item_id'],
+            ]);
+
+            if (!$order->save(false)) {
+                throw new CronException('Cannot create order!');
+            }
+        }
 
         $transaction->commit();
     }
