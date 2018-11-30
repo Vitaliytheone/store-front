@@ -124,7 +124,7 @@ abstract class BaseLinkValidator {
         }
 
         if (!empty($proxy)) {
-            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+            curl_setopt($ch, CURLOPT_PROXY, '10.0.1.5:3128');
         }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_values($headers));
