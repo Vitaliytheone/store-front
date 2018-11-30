@@ -73,8 +73,8 @@ class CronPanelFreeSslOrder extends CronBase
 //                    $allowCheck = true;
 //                    break;
 
-                // Чекаем раз в 15 минут вне зависомости от даты регистрации
-                case empty($lastCheckedSec) || $lastCheckedSec > 15 * 60:
+                // Чекаем раз в 5 минут вне зависомости от даты регистрации
+                case empty($lastCheckedSec) || $lastCheckedSec > 5 * 60:
                     $allowCheck = true;
                     break;
             }
@@ -97,7 +97,16 @@ class CronPanelFreeSslOrder extends CronBase
             $dnsChecker->setDomain($panel->domain);
             $dnsChecker->setSubdomain((bool)$panel->subdomain);
 
-            if (!$dnsChecker->check() || $dnsChecker->getErrors())
+            $checkResult = $dnsChecker->check();
+
+            $panel->setWhoisLookup($dnsChecker->getDnsRecords());
+            $panel->setNameservers($dnsChecker->getDnsCheckoutRecord());
+
+            if (!$panel->save(false)) {
+                throw new CronException('Cannot update panel [' . $panel->id . '] data!');
+            }
+
+            if (!$checkResult || $dnsChecker->getErrors())
             {
                 $this->stdout('Panel ['. $panel->domain .'] dns check not passed! [ skipped ]');
 
@@ -109,13 +118,6 @@ class CronPanelFreeSslOrder extends CronBase
             }
 
             $this->stdout('Dns checkout record: ' . PHP_EOL . print_r($dnsChecker->getDnsCheckoutRecord(), 1));
-
-            $panel->setWhoisLookup($dnsChecker->getDnsRecords());
-            $panel->setNameservers($dnsChecker->getDnsCheckoutRecord());
-
-            if (!$panel->save(false)) {
-                throw new CronException('Cannot update panel [' . $panel->id . '] data!');
-            }
 
             $panel->dns_status = Project::DNS_STATUS_MINE;
 
