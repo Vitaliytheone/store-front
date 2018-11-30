@@ -87,10 +87,6 @@ class DnsCheckerPhp extends DnsCheckerBase
         if ($this->getFlushCache()) {
             // Reset local dns cache
             exec('rndc flush', $output, $returnVar);
-
-            if ($returnVar !== 0) {
-                $this->addError('flush_dns_cache', print_r($output, 1));
-            }
         }
 
         $this->setDnsRecords(dns_get_record($this->getDomain()));
