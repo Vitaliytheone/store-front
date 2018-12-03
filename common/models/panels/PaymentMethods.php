@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property string $method_name
+ * @property string $name
  * @property string $class_name
  * @property string $url
  * @property string $addfunds_form
@@ -113,10 +114,10 @@ class PaymentMethods extends ActiveRecord
     public function rules()
     {
         return [
-            [['method_name', 'class_name', 'url'], 'required'],
+            [['method_name', 'name', 'class_name', 'url'], 'required'],
             [['addfunds_form', 'settings_form', 'settings_form_description'], 'string'],
             [['manual_callback_url', 'created_at', 'updated_at', 'take_fee_from_user'], 'integer'],
-            [['method_name', 'class_name', 'url'], 'string', 'max' => 255],
+            [['method_name', 'class_name', 'url', 'name'], 'string', 'max' => 255],
         ];
     }
 
@@ -128,6 +129,7 @@ class PaymentMethods extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'method_name' => Yii::t('app', 'Method Name'),
+            'name' => Yii::t('app', 'Name'),
             'class_name' => Yii::t('app', 'Class Name'),
             'url' => Yii::t('app', 'Url'),
             'addfunds_form' => Yii::t('app', 'Addfunds Form'),
