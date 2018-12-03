@@ -94,6 +94,11 @@ class DnsCheckerPhp extends DnsCheckerBase
         if ($this->getSubdomain()) {
             // Check Subdomain
             $dnsCNAME = dns_get_record($this->getDomain(), DNS_CNAME);
+
+            if (!$dnsCNAME || !is_array($dnsCNAME)) {
+                return false;
+            }
+
             $dnsCNAME = reset($dnsCNAME);
             $dnsValidCNAME = Yii::$app->params['dns.checker.records']['CNAME'];
 
@@ -109,6 +114,11 @@ class DnsCheckerPhp extends DnsCheckerBase
         }  else {
             // Check Domain
             $dnsA = dns_get_record($this->getDomain(), DNS_A);
+
+            if (!$dnsA || !is_array($dnsA)) {
+                return false;
+            }
+
             $dnsA = reset($dnsA);
             $dnsValidA = Yii::$app->params['dns.checker.records']['A'];
 
