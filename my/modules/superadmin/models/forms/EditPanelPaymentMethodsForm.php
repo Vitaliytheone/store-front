@@ -100,12 +100,12 @@ class EditPanelPaymentMethodsForm extends Model
             }
 
             $paymentMethod = $paymentMethods[$currencyPaymentMethod->method_id];
-
+            $name = !empty($paymentMethod['name']) ? $paymentMethod['name'] : $paymentMethod['method_name'];
             $model = new PanelPaymentMethods();
             $model->currency_id = $currencyId;
             $model->method_id = $currencyPaymentMethod->method_id;
             $model->panel_id = $this->_panel->id;
-            $model->name = $paymentMethod['method_name'];
+            $model->name = $name;
             $model->setOptions([]);
 
             if (!$model->save()) {
