@@ -482,17 +482,16 @@ class Customers extends ActiveRecord
 
             case 'ssl':
                 $sslCerts = SslCert::find()
-                    ->where(['cid' => $this->id, 'status' => SslCert::STATUS_ACTIVE])
-                    ->indexBy('item_id')
-                    ->all();
-                $sslItems = SslCertItem::find()
-                    ->where(['provider' => SslCertItem::PROVIDER_GOGETSSL])
-                    ->all();
+                    ->leftJoin('ssl_cert_item', 'ssl_cert.item_id = ssl_cert_item.id')
+                    ->where([
+                        'ssl_cert.cid' => $this->id,
+                        'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                        'ssl_cert_item.provider' => SslCertItem::PROVIDER_GOGETSSL
+                    ])
+                    ->exists();
 
-                foreach ($sslItems as $item) {
-                    if (array_key_exists($item->id, $sslCerts)) {
-                        return true;
-                    }
+                if ($sslCerts) {
+                    return true;
                 }
 
                 $panels = Project::find()
