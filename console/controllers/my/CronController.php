@@ -16,7 +16,7 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
-use console\components\crons\CronPanelFreeSslOrder;
+use console\components\crons\CronFreeSslOrder;
 use console\components\crons\CronPanelRenewSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminatePanel;
@@ -442,12 +442,12 @@ class CronController extends CustomController
     }
 
     /**
-     * New panel`s Letsencrypt SSL order maker
+     * New panel|store Letsencrypt SSL order maker
      * @throws Exception
      */
-    public function actionPanelNewSslOrder()
+    public function actionNewSslOrder()
     {
-        $cron = new CronPanelFreeSslOrder();
+        $cron = new CronFreeSslOrder();
         $cron->setConsole($this);
         $cron->setDebug(true);
         $cron->run();

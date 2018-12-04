@@ -701,8 +701,7 @@ class OrderHelper {
         $store->status = Stores::STATUS_ACTIVE;
         $store->trial = $isTrial;
         $store->generateExpired($isTrial);
-
-
+        $store->dns_status = Stores::DNS_STATUS_ALIEN;
 
         if (!$store->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');

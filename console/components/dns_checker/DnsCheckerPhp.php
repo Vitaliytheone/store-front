@@ -2,6 +2,9 @@
 
 namespace console\components\dns_checker;
 
+use common\models\common\ProjectInterface;
+use common\models\panels\Project;
+use common\models\stores\Stores;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -11,6 +14,12 @@ use yii\helpers\ArrayHelper;
  */
 class DnsCheckerPhp extends DnsCheckerBase
 {
+    /**
+     * Project
+     * @var Stores|Project
+     */
+    protected $_project;
+
     /**
      * Domain/subdomain dns records data
      * @var
@@ -28,6 +37,24 @@ class DnsCheckerPhp extends DnsCheckerBase
      * @var bool
      */
     protected $_flush_dns_cache = true;
+
+    /**
+     * Set project
+     * @param $project Project|Stores
+     */
+    public function setProject($project)
+    {
+        $this->_project = $project;
+    }
+
+    /**
+     * Get project
+     * @return Project|Stores
+     */
+    public function getProject()
+    {
+        return $this->_project;
+    }
 
     /**
      * Set domain/subdomain dns records
