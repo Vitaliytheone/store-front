@@ -4,9 +4,11 @@ namespace superadmin\models\forms;
 
 
 use common\models\panels\Project;
+use common\models\panels\UserServices;
 use my\helpers\ChildHelper;
 use yii\base\Model;
 use yii\db\ActiveRecord;
+use Yii;
 
 /**
  * Class ChangePanelProvider
@@ -39,6 +41,7 @@ class ChangePanelProvider extends Model
 
     /**
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save(): bool
     {
@@ -50,12 +53,30 @@ class ChangePanelProvider extends Model
             return false;
         }
 
+        $transaction = Yii::$app->db->beginTransaction();
+
         $this->panel->provider_id = $this->provider;
 
         if (!$this->panel->save()) {
+            $transaction->rollBack();
             return false;
         }
 
+        if (!UserServices::deleteAll(['panel_id' => $this->panel->id])) {
+            $transaction->rollBack();
+            return false;
+        }
+
+        $newService = new UserServices();
+        $newService->panel_id = $this->panel->id;
+        $newService->provider_id = $this->provider;
+
+        if (!$newService->save()) {
+            $transaction->rollBack();
+            return false;
+        }
+
+        $transaction->commit();
         return true;
     }
 
