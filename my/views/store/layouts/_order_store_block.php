@@ -18,6 +18,12 @@
         ]) ?>
     </div>
 
+    <?php if (!empty($note)) : ?>
+        <div class="alert alert-info" id="orderNote">
+            <?= $note ?>
+        </div>
+    <?php endif; ?>
+
     <div class="form-group">
         <?= $form->field($model, 'store_currency')->dropDownList($model->getCurrencies(), ['class' => 'form-control']) ?>
     </div>

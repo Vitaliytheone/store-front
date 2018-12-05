@@ -655,6 +655,7 @@ class OrderHelper {
         }
 
         // Renew domain data
+        $domain->status = Domains::STATUS_OK;
         $domain->expiry = $expiryTs;
         $domain->setItemDetails($domainRenewResult, 'domain_renew_info');
 
@@ -797,14 +798,28 @@ class OrderHelper {
      */
     public static function leSsl(Orders $order)
     {
+        $orderDetails = $order->getDetails();
+
+        // Check if its prolonged GogetSSl -> Letsencrypt or regular Letsencrypt SSL order
+        $orderDelay = ArrayHelper::getValue($orderDetails, 'delay', 0);
+
+        if (time() < $order->date + $orderDelay) {
+
+            $order->processing = Orders::PROCESSING_NO;
+
+            if (!$order->save(false)) {
+                throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+            };
+
+            return true;
+        }
+
         if (SslCert::findOne([
             'domain' => $order->domain,
             'status' => SslCert::STATUS_ACTIVE
         ])) {
             throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
         }
-
-        $orderDetails = $order->getDetails();
 
         $panel = Project::findOne($orderDetails['pid']);
 
@@ -859,18 +874,18 @@ class OrderHelper {
             throw new Exception('Cannot add SSL to Config!');
         }
 
-        $panel->ssl = Project::SSL_MODE_ON;
-
-        if (!$order->save(false)) {
-            throw new Exception('Cannot update Panel [' . $panel->id . ']');
-        }
-
         $order->status = Orders::STATUS_ADDED;
         $order->item_id = $ssl->id;
         $order->setItemDetails(['expiry_at' => $ssl->expiry], 'ssl_details');
 
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        $panel->ssl = Project::SSL_MODE_ON;
+
+        if (!$panel->save(false)) {
+            throw new Exception('Cannot update Panel [' . $panel->id . ']');
         }
 
         // Create new unreaded ticket after activate ssl cert.

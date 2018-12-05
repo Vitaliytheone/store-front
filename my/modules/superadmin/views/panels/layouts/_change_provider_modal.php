@@ -8,9 +8,9 @@ use my\components\ActiveForm;
 use my\helpers\Url;
 use yii\bootstrap\Html;
 
-$model = new \superadmin\models\forms\ChangePanelProvider();
+$model = new \superadmin\models\forms\ChangeChildPanelProvider();
 ?>
-<div class="modal fade" id="changePanelProviderModal" tabindex="-1" data-backdrop="static">
+<div class="modal fade" id="changeChildPanelProviderModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,7 +21,7 @@ $model = new \superadmin\models\forms\ChangePanelProvider();
             </div>
 
             <?php $form = ActiveForm::begin([
-                'id' => 'changePanelProviderForm',
+                'id' => 'changeChildPanelProviderForm',
                 'action' => Url::toRoute("/child-panels/change-provider"),
                 'options' => [
                     'class' => "form",
@@ -33,7 +33,7 @@ $model = new \superadmin\models\forms\ChangePanelProvider();
             ]); ?>
 
             <?= $form->errorSummary($model, [
-                'id' => 'changePanelProviderError'
+                'id' => 'changeChildPanelProviderError'
             ]); ?>
 
             <div class="modal-body">
@@ -48,7 +48,7 @@ $model = new \superadmin\models\forms\ChangePanelProvider();
                 <?= Html::submitButton(Yii::t('app/superadmin', 'panels.change_provider.save'), [
                     'class' => 'btn  btn-primary',
                     'name' => 'edit-providers-button',
-                    'id' => 'changePanelProviderButton',
+                    'id' => 'changeChildPanelProviderButton',
                     'data-dismiss' => 'modal'
                 ]) ?>
             </div>

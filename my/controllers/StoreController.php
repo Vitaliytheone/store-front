@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\Auth;
+use common\models\panels\Content;
 use common\models\panels\Customers;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
@@ -138,6 +139,7 @@ class StoreController extends CustomController
         if (!$model->load($request->post()) || !$model->save()) {
             return $this->render('order', [
                 'model' => $model,
+                'note' => Content::getContent('nameservers'),
             ]);
         }
 

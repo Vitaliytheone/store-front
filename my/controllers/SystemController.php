@@ -3,7 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\MyActivityLog;
-use my\components\filters\DisableCsrfToken;
+use common\components\filters\DisableCsrfToken;
 use my\helpers\UserHelper;
 use my\mail\mailers\PanelFrozen;
 use my\models\forms\LoginFormSuper;

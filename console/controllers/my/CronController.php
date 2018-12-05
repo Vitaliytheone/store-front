@@ -4,6 +4,9 @@ namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
 use common\models\panel\PaymentsLog;
+use common\models\panels\Domains;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
 use common\models\panels\Params;
@@ -13,7 +16,7 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
-use console\components\crons\CronPanelLeSslOrder;
+use console\components\crons\CronPanelFreeSslOrder;
 use console\components\crons\CronPanelRenewSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminatePanel;
@@ -30,6 +33,7 @@ use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use console\components\UpdateServicesCount;
+use yii\helpers\Console;
 
 /**
  * Class CronController
@@ -64,8 +68,8 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
-                Orders::ITEM_OBTAIN_LE_SSL,
-                Orders::ITEM_PROLONGATION_LE_SSL,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
             ]
         ])->all();
 
@@ -111,11 +115,11 @@ class CronController extends CustomController
                         OrderHelper::prolongationDomain($order);
                     break;
 
-                    case Orders::ITEM_OBTAIN_LE_SSL:
+                    case Orders::ITEM_FREE_SSL:
                         OrderHelper::leSsl($order);
                     break;
 
-                    case Orders::ITEM_PROLONGATION_LE_SSL:
+                    case Orders::ITEM_PROLONGATION_FREE_SSL:
                         OrderHelper::leProlongationSsl($order);
                     break;
                 }
@@ -160,6 +164,8 @@ class CronController extends CustomController
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
         InvoiceHelper::prolongStores();
+        InvoiceHelper::prolongGogetSsl2LetsencryptSsl();
+        InvoiceHelper::prolongFreeSsl();
     }
 
     /**
@@ -172,8 +178,27 @@ class CronController extends CustomController
     public function actionTerminate()
     {
         Yii::$container->get(CancelOrder::class, [
-            time() - (7 * 24 * 60 * 60)
+            time() - (7 * 24 * 60 * 60),
+            [
+                Orders::ITEM_BUY_PANEL,
+                Orders::ITEM_BUY_DOMAIN,
+                Orders::ITEM_BUY_SSL,
+                Orders::ITEM_BUY_CHILD_PANEL,
+                Orders::ITEM_BUY_STORE,
+                Orders::ITEM_BUY_TRIAL_STORE,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
+            ]
         ])->run();
+
+        Yii::$container->get(CancelOrder::class, [
+            time() - (30 * 24 * 60 * 60),
+            [
+                Orders::ITEM_PROLONGATION_SSL,
+                Orders::ITEM_PROLONGATION_DOMAIN,
+            ]
+        ])->run();
+
         Yii::$container->get(TerminateStore::class, [
             strtotime("-1 month", time())
         ])->run();
@@ -422,20 +447,59 @@ class CronController extends CustomController
      */
     public function actionPanelNewSslOrder()
     {
-        $cron = new CronPanelLeSslOrder();
+        $cron = new CronPanelFreeSslOrder();
         $cron->setConsole($this);
         $cron->setDebug(true);
         $cron->run();
     }
 
     /**
-     * Renew panel`s Letsencrypt SSL order maker
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
-    public function actionPanelRenewSslOrder()
+    public function actionUpdateDomainExpiry()
     {
-        $cron = new CronPanelRenewSslOrder();
-        $cron->setConsole($this);
-        $cron->setDebug(true);
-        $cron->run();
+        $domains = Domains::find()
+            ->where(['<', 'expiry', time()])
+            ->andWhere(['status' => Domains::STATUS_OK])
+            ->all();
+
+        foreach ($domains as $domain) {
+            $transaction = Yii::$app->db->beginTransaction();
+            $domain->status = Domains::STATUS_EXPIRED;
+
+            if (!$domain->save()) {
+                $transaction->rollBack();
+                continue;
+            }
+
+            $orders = Orders::find()->andWhere([
+                'item_id' => $domain->id,
+                'item' => Orders::ITEM_PROLONGATION_DOMAIN,
+                'status' => Orders::STATUS_PENDING,
+            ])->all();
+
+            /**
+             * @val Orders $order
+             */
+            foreach ($orders as $order) {
+                $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id, 'item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN]);
+                if (!$invoiceDetails) {
+                    continue;
+                }
+                $invoiceId = $invoiceDetails->invoice_id;
+
+                try {
+                    InvoiceDetails::deleteAll(['invoice_id' => $invoiceId]);
+                    Invoices::deleteAll(['id' => $invoiceId]);
+                    $order->delete();
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    continue;
+                }
+            }
+
+            $transaction->commit();
+        }
     }
 }

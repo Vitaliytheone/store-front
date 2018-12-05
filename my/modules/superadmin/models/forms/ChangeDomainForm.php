@@ -98,7 +98,8 @@ class ChangeDomainForm extends Model {
             $this->_project->site = $domain;
         }
 
-        $this->_project->dns_status = Project::DNS_STATUS_NOT_DEFINED;
+        $this->_project->dns_status = Project::DNS_STATUS_ALIEN;
+        $this->_project->dns_checked_at = null;
 
         if (!$this->_project->save(false)) {
             $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
