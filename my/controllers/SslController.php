@@ -72,6 +72,10 @@ class SslController extends CustomController
     {
         $this->view->title = 'Order new certificate';
 
+        if (!Yii::$app->user->identity->can('ssl')) {
+            return $this->redirect(Url::toRoute('/'));
+        }
+
         $customer = Customers::findOne(Yii::$app->user->identity->id);
 
         $model = new OrderSslPaidForm();
