@@ -74,8 +74,8 @@ class DisableSslForm extends Model
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        $project->ssl = Project::SSL_MODE_OFF;
-        $project->dns_status = Project::DNS_STATUS_NOT_DEFINED;
+        $project->ssl = ProjectInterface::SSL_MODE_OFF;
+        $project->dns_status = ProjectInterface::DNS_STATUS_NOT_DEFINED;
 
         if (!$project->save(false)) {
             throw new Exception('Cannot update project!');

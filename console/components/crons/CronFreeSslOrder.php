@@ -2,18 +2,15 @@
 
 namespace console\components\crons;
 
+use Yii;
 use common\models\common\ProjectInterface;
 use common\models\panels\Orders;
-use common\models\panels\Params;
 use common\models\panels\SslCertItem;
 use common\models\stores\Stores;
 use console\components\dns_checker\DnsCheckerPhp;
-use Yii;
 use common\models\panels\Project;
 use console\components\crons\exceptions\CronException;
-use my\helpers\CurlHelper;
 use yii\base\Exception;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 
 /**
@@ -22,29 +19,6 @@ use yii\helpers\Console;
  */
 class CronFreeSslOrder extends CronBase
 {
-
-    /**
-     * Is allow check domain DNS
-     * @param $project Project|Stores
-     * @return true
-     * @throws Exception
-     */
-    private function _allowDnsCheck($project)
-    {
-        switch ($project::getProjectType()) {
-            case ProjectInterface::PROJECT_TYPE_PANEL:
-                $createdAt = $project->date;
-                break;
-            case ProjectInterface::PROJECT_TYPE_STORE:
-                $createdAt = $project->created_at;
-                break;
-            default:
-                throw new Exception('Undefined Project type!');
-                break;
-        }
-
-        return empty($project->dns_checked_at) || time() - $project->dns_checked_at > 5 * 60;
-    }
 
     /** @inheritdoc */
     public function run()
@@ -140,6 +114,7 @@ class CronFreeSslOrder extends CronBase
                 // Create SSL order for store or panel
 
                 switch ($project::getProjectType()) {
+
                     case ProjectInterface::PROJECT_TYPE_PANEL:
 
                         $order = new Orders();
