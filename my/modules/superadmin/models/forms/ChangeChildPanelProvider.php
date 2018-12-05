@@ -97,11 +97,9 @@ class ChangeChildPanelProvider extends Model
                 return [];
             }
 
-            $this->providers = [];
-
-            $this->providers = ArrayHelper::merge($this->providers, ChildHelper::getProviders($this->panel->cid, [
+            $this->providers = ChildHelper::getProviders($this->panel->cid, [
                 Project::STATUS_ACTIVE
-            ]));
+            ]);
 
             if (array_key_exists($this->panel->provider_id, $this->providers)) {
                 unset($this->providers[$this->panel->provider_id]);
