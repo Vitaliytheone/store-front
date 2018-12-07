@@ -658,7 +658,8 @@ class Stores extends ActiveRecord implements ProjectInterface
         StoreDomains::deleteAll([
             'type' => [
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
-                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                StoreDomains::DOMAIN_TYPE_SOMMERCE,
             ],
             'store_id' => $this->id
         ]);
@@ -727,7 +728,7 @@ class Stores extends ActiveRecord implements ProjectInterface
 
         if (!$storeDomain) {
             $storeDomain = new StoreDomains();
-            $storeDomain->type = StoreDomains::DOMAIN_TYPE_SUBDOMAIN;
+            $storeDomain->type = StoreDomains::DOMAIN_TYPE_SOMMERCE;
             $storeDomain->store_id = $this->id;
             $storeDomain->domain = $subDomain;
 
