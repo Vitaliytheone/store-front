@@ -70,12 +70,6 @@ use my\helpers\Url;
         </tbody>
     </table>
 
-    <div class="text-align-center pager">
-        <?= LinkPager::widget([
-            'pagination' => $pagination,
-        ]); ?>
-    </div>
-
 <div class="row">
     <div class="col-md-6">
         <nav>
