@@ -3,8 +3,6 @@
 namespace superadmin\controllers;
 
 use my\components\ActiveForm;
-use common\models\panels\Project;
-use my\helpers\DomainsHelper;
 use superadmin\models\forms\ChangeChildPanelProvider;
 use superadmin\models\forms\UpgradePanelForm;
 use superadmin\models\search\PanelsSearch;
@@ -167,8 +165,7 @@ class ChildPanelsController extends PanelsController
 
         return [
             'status' => 'success',
-            'content' => $model->getProviders(),
-            'current' => $panel->provider_id,
+            'content' => $model->getProviders()
         ];
     }
 
@@ -176,6 +173,7 @@ class ChildPanelsController extends PanelsController
      * @param $id
      * @return array
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionChangeProvider($id)
     {
