@@ -56,6 +56,7 @@ return [
     '3214' => 'Logo delete',
     '3215' => 'Favicon upload',
     '3216' => 'Favicon delete',
+    '3217' => 'Affiliate system',
 
     '3301' => 'Add payment method',
     '3302' => 'Edit payment method',
@@ -69,6 +70,10 @@ return [
     '5004' => 'Minimum payout updated',
     '5005' => 'Approve payouts status updated',
     '5006' => 'Affiliate for status updated',
+
+    '6001' => 'Admin tasks resend',
+    '6002' => 'Admin task success',
+    '6003' => 'Admin task reject',
 
     '8' => 'Resend order',
     '9' => 'Change status',
