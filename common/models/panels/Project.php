@@ -199,7 +199,6 @@ class Project extends ActiveRecord implements ProjectInterface
             [['whois_lookup', 'nameservers'], 'string'],
             [['dns_checked_at', 'dns_status'], 'integer'],
             ['paypal_fraud_settings', 'string'],
-            ['paypal_fraud_settings', 'default', 'value' => json_encode(Yii::$app->params['paypal_fraud_settings'])],
         ];
     }
 
