@@ -252,7 +252,7 @@ class PanelsSearch {
         'project.custom',
         'project.start_count',
         'project.apikey',
-        'project.affiliate_system'
+        'project.affiliate_system',
     ]);
         $query->leftJoin('project as pr2', 'pr2.cid = project.cid AND pr2.child_panel = project.child_panel');
         $query->leftJoin('customers as cust2', 'cust2.id = cust1.referrer_id');

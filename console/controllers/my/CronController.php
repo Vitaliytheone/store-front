@@ -16,7 +16,7 @@ use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
-use console\components\crons\CronPanelLeSslOrder;
+use console\components\crons\CronPanelFreeSslOrder;
 use console\components\crons\CronPanelRenewSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminatePanel;
@@ -447,7 +447,7 @@ class CronController extends CustomController
      */
     public function actionPanelNewSslOrder()
     {
-        $cron = new CronPanelLeSslOrder();
+        $cron = new CronPanelFreeSslOrder();
         $cron->setConsole($this);
         $cron->setDebug(true);
         $cron->run();

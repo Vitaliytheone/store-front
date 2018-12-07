@@ -100,12 +100,12 @@ class EditPanelPaymentMethodsForm extends Model
             }
 
             $paymentMethod = $paymentMethods[$currencyPaymentMethod->method_id];
-
+            $name = !empty($paymentMethod['name']) ? $paymentMethod['name'] : $paymentMethod['method_name'];
             $model = new PanelPaymentMethods();
             $model->currency_id = $currencyId;
             $model->method_id = $currencyPaymentMethod->method_id;
             $model->panel_id = $this->_panel->id;
-            $model->name = $paymentMethod['method_name'];
+            $model->name = $name;
             $model->setOptions([]);
 
             if (!$model->save()) {
@@ -147,13 +147,14 @@ class EditPanelPaymentMethodsForm extends Model
             static::$paymentMethods = [];
             $panelPaymentMethods = $this->getPanelPaymentMethods();
             $paymentMethodsCurrency = $this->getPaymentMethodsCurrency();
+            $paymentMethods = CurrencyHelper::getPaymentMethods();
 
             foreach ($panelPaymentMethods as $method) {
                 $currency = ArrayHelper::getValue($paymentMethodsCurrency, $method['currency_id']);
                 static::$paymentMethods[$method['currency_id']] = [
                     'id' => $method['method_id'],
                     'currency_id' => $method['currency_id'],
-                    'method_name' => $method['name'],
+                    'method_name' => $paymentMethods[$method['method_id']]['method_name'],
                     'currency' => $currency['currency'],
                 ];
             }

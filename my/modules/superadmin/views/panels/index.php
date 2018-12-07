@@ -52,6 +52,7 @@
     <?= $this->render('layouts/_downgrade_modal') ?>
 <?php else : ?>
     <?= $this->render('layouts/_upgrade_modal') ?>
+    <?= $this->render('layouts/_change_provider_modal') ?>
 <?php endif; ?>
 <?= $this->render('layouts/_change_domain_modal', ['action' => $action]) ?>
 <?= $this->render('layouts/_edit_expiry_modal', ['action' => $action]) ?>

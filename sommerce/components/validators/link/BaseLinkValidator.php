@@ -25,6 +25,11 @@ abstract class BaseLinkValidator {
     protected $name;
 
     /**
+     * @var bool
+     */
+    protected $useProxy = true;
+
+    /**
      * Validate method
      * @return mixed
      */
@@ -123,7 +128,7 @@ abstract class BaseLinkValidator {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
 
-        if (!empty($proxy)) {
+        if ($this->useProxy && !empty($proxy)) {
             curl_setopt($ch, CURLOPT_PROXY, $proxy);
         }
 

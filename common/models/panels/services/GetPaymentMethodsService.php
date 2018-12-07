@@ -35,6 +35,7 @@ class GetPaymentMethodsService {
             ->select([
                 'id',
                 'method_name',
+                'name',
                 'class_name',
                 'url',
                 'addfunds_form',
@@ -62,6 +63,7 @@ class GetPaymentMethodsService {
             $paymentMethods[$method['id']] = [
                 'id' => $method['id'],
                 'method_name' => $method['method_name'],
+                'name' => $method['name'],
                 'class_name' => $method['class_name'],
                 'url' => $method['url'],
                 'addfunds_form' => !empty($method['addfunds_form']) ? json_decode($method['addfunds_form'], true) : [],

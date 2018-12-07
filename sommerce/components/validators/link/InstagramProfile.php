@@ -9,6 +9,11 @@ use Yii;
  */
 class InstagramProfile extends BaseLinkValidator
 {
+    /**
+     * @var bool
+     */
+    protected $useProxy = false;
+
     public function validate()
     {
         if (FALSE === strpos($this->link, '/')) {

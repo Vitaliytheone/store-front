@@ -115,31 +115,14 @@ class OrderSslForm extends Model
             throw new Exception('Cannot find SSL cert item!');
         }
 
-        $project->dns_status = Project::DNS_STATUS_2;
+        $project->dns_checked_at = null;
+        $project->dns_status = Project::DNS_STATUS_ALIEN;
 
-        if (!$project->save(false)) {
+        if (!$project->save()) {
             throw new Exception('Cannot update Panel!');
         }
 
-        $order = new Orders();
-        $order->cid = $this->_customer->id;
-        $order->status = Orders::STATUS_PAID;
-        $order->hide = Orders::HIDDEN_OFF;
-        $order->processing = Orders::PROCESSING_NO;
-        $order->domain = $project->domain;
-        $order->item = Orders::ITEM_FREE_SSL;
-        $order->setDetails([
-            'pid' => $project->id,
-            'project_type' => $project::getProjectType(),
-            'domain' => $project->domain,
-            'ssl_cert_item_id' => $certItem->id
-        ]);
-
-        if (!$order->save()) {
-            throw new Exception('Cannot create new Letsencrypt SSL order!');
-        }
-
-        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_SSL_ORDER, $order->id, $order->id, UserHelper::getHash());
+        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_SSL_ORDER, $certItem->id, $certItem->id, UserHelper::getHash());
 
         return true;
     }

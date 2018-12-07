@@ -87,6 +87,7 @@ class FraudController extends CustomController
 
     /**
      * Change status of report
+     * @throws \yii\db\Exception
      */
     public function actionReportsChangeStatus()
     {
@@ -163,7 +164,8 @@ class FraudController extends CustomController
 
         return $this->render('accounts', [
             'accounts' => $accounts->search(),
-            'filters' => $accounts->getParams(),
+            'filters' => $accounts->getFilters(),
+            'searchTypes' => FraudAccountsSearch::getSearchTypes(),
         ]);
     }
 
