@@ -330,6 +330,7 @@ class OrderHelper {
         $project->site = $domain;
         $project->name = DomainsHelper::idnToUtf8($domain);
         $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
+        $project->paypal_fraud_settings = json_encode(Yii::$app->params['paypal_fraud_settings']);
         $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
