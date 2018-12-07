@@ -2,6 +2,7 @@
     /* @var $this yii\web\View */
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\OrderStoreForm */
+    /* @var $note string */
 
     use my\components\ActiveForm;
     use my\models\forms\OrderStoreForm;
@@ -49,6 +50,7 @@
                     <?= $this->render('layouts/_order_store_block', [
                         'form' => $form,
                         'model' => $model,
+                        'note' => $note,
                     ])?>
                 </div>
 
