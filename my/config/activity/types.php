@@ -68,6 +68,7 @@ return [
     '5003' => 'Commission rate updated',
     '5004' => 'Minimum payout updated',
     '5005' => 'Approve payouts status updated',
+    '5006' => 'Affiliate for status updated',
 
     '8' => 'Resend order',
     '9' => 'Change status',
