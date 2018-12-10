@@ -338,10 +338,11 @@ class PanelsController extends CustomController
      *
      * @access public
      * @param int $id
+     * @param string $redirect link to redirect
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionSignInAsAdmin($id)
+    public function actionSignInAsAdmin($id, $redirect = null)
     {
         $project = $this->findModel($id);
         if (!($panelDomain = PanelDomains::find()->andWhere([
@@ -359,8 +360,9 @@ class PanelsController extends CustomController
          */
         $superUser = Yii::$app->superadmin->getIdentity();
         $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_PANELS, $project->id);
+        $redirect = isset($redirect) ? '&redirect=' . urlencode($redirect) : '';
 
-        return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token);
+        return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token . $redirect);
     }
 
 

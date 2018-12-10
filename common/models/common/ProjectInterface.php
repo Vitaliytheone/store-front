@@ -13,6 +13,10 @@ interface ProjectInterface
     const SSL_MODE_ON = 1;
     const SSL_MODE_OFF = 0;
 
+    const DNS_STATUS_NOT_DEFINED = null;
+    const DNS_STATUS_ALIEN = 0;
+    const DNS_STATUS_MINE = 1;
+
     /**
      * Return project type
      * @return integer
@@ -48,4 +52,28 @@ interface ProjectInterface
      * @return mixed
      */
     public function restore();
+
+    /**
+     * Set whois_lookup
+     * @param array|mixed $whoisLookupData
+     */
+    public function setWhoisLookup($whoisLookupData);
+
+    /**
+     * Get whois_lookup
+     * @return array|mixed
+     */
+    public function getWhoisLookup();
+
+    /**
+     * Set nameservers
+     * @param array|mixed $nameserversList
+     */
+    public function setNameservers($nameserversList);
+
+    /**
+     * Get nameservers
+     * @return array|mixed
+     */
+    public function getNameservers();
 }

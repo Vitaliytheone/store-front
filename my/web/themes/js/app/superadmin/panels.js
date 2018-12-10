@@ -146,7 +146,6 @@ customModule.superadminPanelsController = {
                 $.each(response.content, function(index, name) {
                     modalSelect.append($("<option></option>", {value: index, text: name}));
                 });
-                modalSelect.val(response.current);
             });
 
 

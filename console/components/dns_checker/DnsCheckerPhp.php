@@ -2,6 +2,9 @@
 
 namespace console\components\dns_checker;
 
+use common\models\common\ProjectInterface;
+use common\models\panels\Project;
+use common\models\stores\Stores;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -11,6 +14,12 @@ use yii\helpers\ArrayHelper;
  */
 class DnsCheckerPhp extends DnsCheckerBase
 {
+    /**
+     * Project
+     * @var Stores|Project
+     */
+    protected $_project;
+
     /**
      * Domain/subdomain dns records data
      * @var
@@ -30,35 +39,53 @@ class DnsCheckerPhp extends DnsCheckerBase
     protected $_flush_dns_cache = true;
 
     /**
-     * Set domain/subdomain dns records
-     * @param array $dnsRecords
+     * Set project
+     * @param $project Project|Stores
      */
-    public function setDnsRecords(array $dnsRecords) {
+    public function setProject($project)
+    {
+        $this->_project = $project;
+    }
+
+    /**
+     * Get project
+     * @return Project|Stores
+     */
+    public function getProject()
+    {
+        return $this->_project;
+    }
+
+    /**
+     * Set domain/subdomain dns records
+     * @param array|mixed $dnsRecords
+     */
+    public function setDnsRecords($dnsRecords) {
         $this->_dns_records = $dnsRecords;
     }
 
     /**
      * Get domain/subdomain dns records
-     * @return array
+     * @return array|mixed
      */
-    public function getDnsRecords() : array
+    public function getDnsRecords()
     {
         return $this->_dns_records;
     }
 
     /**
      * Set domain/subdomain dns checkout record
-     * @param array $dnsRecord
+     * @param array|mixed $dnsRecord
      */
-    public function setDnsCheckoutRecord(array $dnsRecord) {
+    public function setDnsCheckoutRecord($dnsRecord) {
         $this->_dns_checkout_record = $dnsRecord;
     }
 
     /**
      * Get domain/subdomain dns checkout record
-     * @return array
+     * @return array|mixed
      */
-    public function getDnsCheckoutRecord() : array
+    public function getDnsCheckoutRecord()
     {
         return $this->_dns_checkout_record;
     }
@@ -89,11 +116,18 @@ class DnsCheckerPhp extends DnsCheckerBase
             exec('rndc flush', $output, $returnVar);
         }
 
-        $this->setDnsRecords(dns_get_record($this->getDomain()));
+        // TODO:: remove @-error_control operand after php-bug "A temporary server error" is fixed
+        $dnsRecords = @dns_get_record($this->getDomain());
+
+        if (!is_array($dnsRecords)) {
+            return false;
+        }
+
+        $this->setDnsRecords($dnsRecords);
 
         if ($this->getSubdomain()) {
             // Check Subdomain
-            $dnsCNAME = dns_get_record($this->getDomain(), DNS_CNAME);
+            $dnsCNAME = @dns_get_record($this->getDomain(), DNS_CNAME);
 
             if (!$dnsCNAME || !is_array($dnsCNAME)) {
                 return false;
@@ -113,7 +147,7 @@ class DnsCheckerPhp extends DnsCheckerBase
 
         }  else {
             // Check Domain
-            $dnsA = dns_get_record($this->getDomain(), DNS_A);
+            $dnsA = @dns_get_record($this->getDomain(), DNS_A);
 
             if (!$dnsA || !is_array($dnsA)) {
                 return false;

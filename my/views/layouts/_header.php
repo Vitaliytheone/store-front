@@ -59,11 +59,13 @@
                         ]) ?>
                     </li>
                     <?php endif; ?>
+                    <?php if ($user && $user->can('ssl')) : ?>
                     <li>
                         <?= Html::a('<i class="fa fa-certificate fa-fw"></i> ' . Yii::t('app', 'layouts.header.ssl'), '/ssl', [
                                 'class' => $activeTab == 'ssl' ? 'active' : null,
                         ]) ?>
                     </li>
+                    <?php endif; ?>
                     <li>
                         <?= Html::a('<i class="fa fa-usd fa-fw"></i> ' . Yii::t('app', 'layouts.header.invoices') . ' ' . UnpaidInvoicesWidget::widget(), '/invoices', [
                                 'class' => $activeTab == 'invoices' ? 'active' : null,

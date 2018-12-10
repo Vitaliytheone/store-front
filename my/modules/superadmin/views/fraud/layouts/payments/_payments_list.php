@@ -37,8 +37,11 @@ use superadmin\widgets\CountPagination;
                     <?php $panel = $payment['panel']; ?>
                     <?= Html::a($panel->site, Url::toRoute([$panel->child_panel === 0 ? '/panels' : '/child-panels', 'id' => $panel->id]))?>
                 </td>
-                <td>
+                <td class="table-custom__customer-td">
                     <?= $payment['payment_id'] ?>
+                    <a href="<?= Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel->id, 'redirect' => '/admin/payments?query=' . $payment['payment_id'] . '&search_type=1']); ?>" target="_blank" class="table-custom__customer-button"  data-placement="top" title="">
+                        <span class="my-icons my-icons-autorization"></span>
+                    </a>
                 </td>
                 <td>
                     <?= $payment['payer_id'] ?>
