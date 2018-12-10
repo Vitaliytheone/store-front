@@ -47,7 +47,7 @@ customModule.superadminCustomersController = {
             return false;
         });
 
-        new Clipboard('.random-password', {
+        custom.clipboard('.random-password', {
             container: document.getElementById('#setPasswordModal'),
         });
 
