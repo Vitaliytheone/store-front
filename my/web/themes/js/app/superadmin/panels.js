@@ -210,6 +210,12 @@ customModule.superadminPanelsController = {
             if (!panel) {
                 return;
             }
+
+            if (panel.child_panel == 1) {
+                $('.private-apikey').hide();
+                $('#editprojectform-apikey').val('');
+            }
+
             var form = $('#edit-panel-form');
             var inputs = form.data('inputs');
             var checkboxes = inputs['checkboxes'];

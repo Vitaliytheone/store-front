@@ -933,6 +933,7 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->child_panel = 1;
         $this->plan = Project::DEFAULT_CHILD_TARIFF;
         $this->tariff = Project::DEFAULT_CHILD_TARIFF;
+        $this->apikey = '';
 
         return $this->save(false);
     }

@@ -116,7 +116,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group private-apikey">
                     <label for="form-apikey"><?= Yii::t('app/superadmin', 'panels.edit.apikey') ?></label>
                     <div class="input-group mb-3">
                         <?= Html::input('text', 'EditProjectForm[apikey]', $model->apikey, [
