@@ -149,12 +149,7 @@ class Project extends ActiveRecord implements ProjectInterface
 
     const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_HIGH = 'accept_high';
     const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_CRITICAL = 'accept_critical';
-
-    const DNS_STATUS_NOT_DEFINED = null;
-    const DNS_STATUS_ALIEN = 0;
-    const DNS_STATUS_MINE = 1;
-    const DNS_STATUS_2 = 2;
-
+    
     const AFFILIATE_SYSTEM_ENABLED = 1;
     const AFFILIATE_SYSTEM_DISABLED = 0;
     
