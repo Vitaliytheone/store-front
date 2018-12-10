@@ -980,9 +980,9 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Set whois_lookup
-     * @param array $whoisLookupData
+     * @param array|mixed $whoisLookupData
      */
-    public function setWhoisLookup(array $whoisLookupData)
+    public function setWhoisLookup($whoisLookupData)
     {
         $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
     }
@@ -998,9 +998,9 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Set nameservers
-     * @param array $nameserversList
+     * @param array|mixed $nameserversList
      */
-    public function setNameservers(array $nameserversList)
+    public function setNameservers($nameserversList)
     {
         $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
     }
