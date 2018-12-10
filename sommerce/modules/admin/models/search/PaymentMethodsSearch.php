@@ -26,6 +26,10 @@ class PaymentMethodsSearch extends PaymentMethods
                 'icon' => '/img/pg/paypal.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYPAL),
             ],
+            PaymentMethods::METHOD_PAYPAL_STANDARD => [
+                'icon' => '/img/pg/paypal.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYPAL_STANDARD),
+            ],
             PaymentMethods::METHOD_2CHECKOUT => [
                 'icon' => '/img/pg/2checkout.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_2CHECKOUT),

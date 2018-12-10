@@ -23,7 +23,8 @@ class PaymentsHelper
         /** @var PaymentGateways $pg */
         foreach ($pgList as $pg)
         {
-            if ($pg->isCurrencySupported($store->currency) && !PaymentMethods::findOne(['store_id' => $store->id, 'method' => $pg->method])) {
+            if ($pg->visibility === $pg::GATEWAY_PUBLIC && $pg->isCurrencySupported($store->currency) &&
+                !PaymentMethods::findOne(['store_id' => $store->id, 'method' => $pg->method])) {
                 $paymentMethod = new PaymentMethods();
                 $paymentMethod->method = $pg->method;
                 $paymentMethod->store_id = $store->id;

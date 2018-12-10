@@ -46,7 +46,7 @@ class EditPaymentMethodForm extends PaymentMethods
                     }
 
                     // Prepare PayPal details
-                    if ($model->method == $model::METHOD_PAYPAL) {
+                    if ($model->method == $model::METHOD_PAYPAL || $model->method == $model::METHOD_PAYPAL_STANDARD) {
                         $apiUsername = ArrayHelper::getValue($details, 'username');
                         $details['username'] = trim($apiUsername);
                     }
@@ -112,6 +112,16 @@ class EditPaymentMethodForm extends PaymentMethods
             PaymentMethods::METHOD_PAYPAL => [
                 'icon' => '/img/pg/paypal.png',
                 'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][username]', 'value' => $getDetailsField('username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][password]', 'value' => $getDetailsField('password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][signature]', 'value' => $getDetailsField('signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
+                    ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
+                ]
+            ],
+            PaymentMethods::METHOD_PAYPAL_STANDARD => [
+                'icon' => '/img/pg/paypal.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_email', 'placeholder' => '', 'name' => 'PaymentsForm[details][email]', 'value' => $getDetailsField('email'), 'label' => Yii::t('admin', 'settings.payments_paypal_email')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][username]', 'value' => $getDetailsField('username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][password]', 'value' => $getDetailsField('password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][signature]', 'value' => $getDetailsField('signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
