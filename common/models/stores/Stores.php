@@ -64,6 +64,10 @@ use yii\helpers\ArrayHelper;
  * @property integer $last_count
  * @property integer $current_count
  * @property int $no_referral
+ * @property string $whois_lookup
+ * @property string $nameservers
+ * @property string $dns_checked_at
+ * @property string $dns_status
  *
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
@@ -123,6 +127,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             [['currency', 'language'], 'string', 'max' => 10],
             [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
+            [['whois_lookup', 'nameservers', 'dns_status', 'dns_checked_at'], 'string'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
         ];
     }
@@ -167,6 +172,10 @@ class Stores extends ActiveRecord implements ProjectInterface
             'last_count' => Yii::t('app', 'Last count'),
             'current_count' => Yii::t('app', 'Current count'),
             'no_referral' => Yii::t('app', 'No Referral'),
+            'whois_lookup' => Yii::t('app', 'Whois Lookup'),
+            'nameservers' => Yii::t('app', 'Nameservers'),
+            'dns_checked_at' => Yii::t('app', 'DNS Checked At'),
+            'dns_status' => Yii::t('app', 'DNS Status'),
         ];
     }
 
