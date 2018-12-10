@@ -984,7 +984,7 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Get whois_lookup
-     * @return array
+     * @return array|mixed
      */
     public function getWhoisLookup()
     {
@@ -1002,7 +1002,7 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Get nameservers
-     * @return array
+     * @return array|mixed
      */
     public function getNameservers()
     {

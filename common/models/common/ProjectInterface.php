@@ -55,25 +55,25 @@ interface ProjectInterface
 
     /**
      * Set whois_lookup
-     * @param array $whoisLookupData
+     * @param array|mixed $whoisLookupData
      */
-    public function setWhoisLookup(array $whoisLookupData);
+    public function setWhoisLookup($whoisLookupData);
 
     /**
      * Get whois_lookup
-     * @return array
+     * @return array|mixed
      */
     public function getWhoisLookup();
 
     /**
      * Set nameservers
-     * @param array $nameserversList
+     * @param array|mixed $nameserversList
      */
-    public function setNameservers(array $nameserversList);
+    public function setNameservers($nameserversList);
 
     /**
      * Get nameservers
-     * @return array
+     * @return array|mixed
      */
     public function getNameservers();
 }

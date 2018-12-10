@@ -294,16 +294,16 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Set whois_lookup
-     * @param array $whoisLookupData
+     * @param array|mixed $whoisLookupData
      */
-    public function setWhoisLookup(array $whoisLookupData)
+    public function setWhoisLookup($whoisLookupData)
     {
         $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
     }
 
     /**
      * Get whois_lookup
-     * @return array
+     * @return array|mixed
      */
     public function getWhoisLookup()
     {
@@ -312,16 +312,16 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Set nameservers
-     * @param array $nameserversList
+     * @param array|mixed $nameserversList
      */
-    public function setNameservers(array $nameserversList)
+    public function setNameservers($nameserversList)
     {
         $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
     }
 
     /**
      * Get nameservers
-     * @return array
+     * @return array|mixed
      */
     public function getNameservers()
     {
