@@ -26,4 +26,8 @@ return [
         'route' => 'site/ssl',
         'suffix' => '.txt',
     ],
+    [
+        'pattern' => '/.well-known/acme-challenge/<filename:[-_a-zA-Z0-9]+>',
+        'route' => 'site/ssl',
+    ],
 ];
