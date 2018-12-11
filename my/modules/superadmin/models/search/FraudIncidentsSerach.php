@@ -87,9 +87,7 @@ class FraudIncidentsSerach extends Model
             $panel = $panels[$item['panel_id']];
             $result[$key] = [
                 'id' => $item['id'],
-                'panel_domain' => $panel->site,
-                'panel_id' => $item['panel_id'],
-                'is_child' => $panel->child_panel,
+                'panel' => $panel,
                 'payment_id' => $item['payment_id'],
                 'fraud_risk' => PaypalFraudIncidents::getRiskName($item['fraud_risk']),
                 'fraud_reason' => PaypalFraudIncidents::getReasonName($item['fraud_reason']),

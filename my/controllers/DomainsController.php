@@ -31,8 +31,25 @@ class DomainsController extends CustomController
     public function behaviors()
     {
         return [
+            'guestAccess' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->isGuest) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            return true;
+                        }
+                    ],
+                ],
+            ],
             'access' => [
                 'class' => AccessControl::class,
+                'except' => ['order-domain'],
                 'rules' => [
                     [
                         'allow' => true,
