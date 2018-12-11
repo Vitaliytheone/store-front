@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\Customers;
+use my\helpers\Url;
 use my\models\forms\OrderSslForm;
 use my\models\forms\OrderSslPaidForm;
 use my\models\search\SslSearch;
@@ -24,6 +25,10 @@ class SslController extends CustomController
     {
         $this->view->title = 'SSL Certificates';
 
+        if (!Yii::$app->user->identity->can('ssl')) {
+            return $this->redirect(Url::toRoute('/'));
+        }
+
         $sslList = new SslSearch();
         $sslList->setParams(['customer_id' => Yii::$app->user->identity->id]);
 
@@ -35,10 +40,15 @@ class SslController extends CustomController
     /**
      * Order free Letsencrypt SSL cert
      * @return string|\yii\web\Response
+     * @throws \yii\base\Exception
      */
     public function actionOrder()
     {
         $this->view->title = 'Order new certificate';
+
+        if (!Yii::$app->user->identity->can('ssl')) {
+            return $this->redirect(Url::toRoute('/'));
+        }
 
         $customer = Customers::findOne(Yii::$app->user->identity->id);
 
@@ -61,6 +71,10 @@ class SslController extends CustomController
     public function actionOrderPaid()
     {
         $this->view->title = 'Order new certificate';
+
+        if (!Yii::$app->user->identity->can('ssl')) {
+            return $this->redirect(Url::toRoute('/'));
+        }
 
         $customer = Customers::findOne(Yii::$app->user->identity->id);
 

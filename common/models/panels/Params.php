@@ -58,7 +58,7 @@ class Params extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'params';
+        return DB_PANELS . '.params';
     }
 
     /**

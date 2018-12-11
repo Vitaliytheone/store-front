@@ -64,6 +64,10 @@ use yii\helpers\ArrayHelper;
  * @property integer $last_count
  * @property integer $current_count
  * @property int $no_referral
+ * @property string $whois_lookup
+ * @property string $nameservers
+ * @property int $dns_checked_at
+ * @property int $dns_status
  *
  * @property PaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
@@ -124,6 +128,8 @@ class Stores extends ActiveRecord implements ProjectInterface
             [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
             [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
+            [['whois_lookup', 'nameservers'], 'string'],
+            [['dns_checked_at', 'dns_status'], 'integer'],
         ];
     }
 
@@ -167,6 +173,10 @@ class Stores extends ActiveRecord implements ProjectInterface
             'last_count' => Yii::t('app', 'Last count'),
             'current_count' => Yii::t('app', 'Current count'),
             'no_referral' => Yii::t('app', 'No Referral'),
+            'whois_lookup' => Yii::t('app', 'Whois Lookup'),
+            'nameservers' => Yii::t('app', 'Nameservers'),
+            'dns_checked_at' => Yii::t('app', 'DNS Checked At'),
+            'dns_status' => Yii::t('app', 'DNS Status'),
         ];
     }
 
@@ -280,6 +290,42 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function setSslMode($isActive)
     {
         $this->ssl = $isActive;
+    }
+
+    /**
+     * Set whois_lookup
+     * @param array|mixed $whoisLookupData
+     */
+    public function setWhoisLookup($whoisLookupData)
+    {
+        $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get whois_lookup
+     * @return array|mixed
+     */
+    public function getWhoisLookup()
+    {
+        return json_decode($this->whois_lookup,true);
+    }
+
+    /**
+     * Set nameservers
+     * @param array|mixed $nameserversList
+     */
+    public function setNameservers($nameserversList)
+    {
+        $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get nameservers
+     * @return array|mixed
+     */
+    public function getNameservers()
+    {
+        return json_decode($this->nameservers,true);
     }
 
     /**
