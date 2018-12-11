@@ -178,7 +178,12 @@ class ProjectAdmin extends ActiveRecord
      */
     public function getRules()
     {
-        return (array)json_decode($this->rules, true);
+        $rules = (array)json_decode($this->rules, true);
+        if (empty($rules)) {
+            return $rules;
+        }
+
+        return ArrayHelper::merge(static::$defaultRules, $rules);
     }
 
     /**
