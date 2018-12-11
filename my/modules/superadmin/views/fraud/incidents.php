@@ -8,6 +8,7 @@ use yii\helpers\Html;
 use my\helpers\Url;
 use yii\widgets\LinkPager;
 use superadmin\widgets\CountPagination;
+use common\models\panels\Project;
 
 ?>
 
@@ -26,16 +27,23 @@ use superadmin\widgets\CountPagination;
     <tbody>
     <?php foreach (SpecialCharsHelper::multiPurifier($incidents['models']) as $incident) : ?>
         <tr>
+            <?php
+                /** @var Project $panel */
+                $panel = $incident['panel'];
+            ?>
             <td>
                 <?= $incident['id'] ?>
             </td>
             <td>
-            <?= Html::a($incident['panel_domain'],
-                Url::toRoute([$incident['is_child'] == 0 ? '/panels' : '/child-panels', 'id' => $incident['panel_id']]))
+            <?= Html::a($panel->site,
+                Url::toRoute([$panel->child_panel == 0 ? '/panels' : '/child-panels', 'id' => $panel->id]))
             ?>
             </td>
-            <td>
+            <td class="table-custom__customer-td">
                 <?= $incident['payment_id'] ?>
+                <a href="<?= Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel->id, 'redirect' => '/admin/payments?query=' . $incident['payment_id'] . '&search_type=1']); ?>" target="_blank" class="table-custom__customer-button"  data-placement="top" title="">
+                    <span class="my-icons my-icons-autorization"></span>
+                </a>
             </td>
             <td>
                 <?= $incident['fraud_risk'] ?>
