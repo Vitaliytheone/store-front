@@ -50,6 +50,7 @@ class EditProjectForm extends Model
     public $apikey;
     public $no_invoice;
     public $currency_code;
+    public $affiliate_system;
 
     /**
      * @var Project
@@ -94,7 +95,8 @@ class EditProjectForm extends Model
                 'custom',
                 'start_count',
                 'apikey',
-                'no_invoice'
+                'no_invoice',
+                'affiliate_system',
             ], 'safe'],
             ['cid', 'checkOwnedChildPanel'],
             [['apikey'], 'string'],
@@ -169,7 +171,10 @@ class EditProjectForm extends Model
     {
         return [
             'checkboxes' => array_merge(
-                ['subdomain'],
+                [
+                    'subdomain',
+                    'affiliate_system',
+                ],
                 $this->getAdvanced(),
                 $this->getServiceTypes()
             ),
@@ -343,6 +348,7 @@ class EditProjectForm extends Model
             'start_count' => Yii::t('app/superadmin', 'panels.edit.start_count'),
             'apikey' => Yii::t('app/superadmin', 'panels.edit.apikey'),
             'no_invoice' => Yii::t('app/superadmin', 'panels.edit.no_invoice'),
+            'affiliate_system' => Yii::t('app/superadmin', 'panels.edit.affiliate_system'),
         ];
     }
 

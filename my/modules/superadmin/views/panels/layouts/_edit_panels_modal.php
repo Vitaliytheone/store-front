@@ -51,6 +51,14 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     'class' => 'custom-control-label'
                 ]); ?>
 
+                <?= $form->field($model, 'affiliate_system', [
+                    'checkboxTemplate' => $checkboxTemplate,
+                ])->checkbox([
+                    'class' => 'custom-control-input', 'id' => 'form-affiliate_system',
+                ])->label(null,[
+                    'class' => 'custom-control-label'
+                ]); ?>
+
                 <?= $form->field($model, 'name', ['options' => ['id' => 'form-name', 'class' => 'form-group']])->label(Yii::t('app/superadmin', 'panels.edit.panel_name')) ?>
                 <?= $form->field($model, 'skype', ['options' =>['id' => 'form-skype', 'class' => 'form-group']]) ?>
 

@@ -2,9 +2,11 @@
 
 namespace superadmin\models\forms;
 
+use common\models\common\ProjectInterface;
 use common\models\panels\Orders;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
+use common\models\stores\Stores;
 use my\helpers\order\OrderSslHelper;
 use Yii;
 use yii\base\Exception;
@@ -46,10 +48,19 @@ class DisableSslForm extends Model
      */
     public function disabled()
     {
-        $panel = Project::findOne($this->_ssl->pid);
+        switch ($this->_ssl->project_type) {
 
-        if (!$panel) {
-            throw new Exception('Project [' . $this->_ssl->pid . '] not found!');
+            case ProjectInterface::PROJECT_TYPE_PANEL:
+                $project = Project::findOne($this->_ssl->pid);
+                break;
+
+            case ProjectInterface::PROJECT_TYPE_STORE:
+                $project = Stores::findOne($this->_ssl->pid);
+                break;
+
+            default:
+                throw new Exception('Project [' . $this->_ssl->project_type . '] [' . $this->_ssl->pid . '] not found!');
+                break;
         }
 
         if (!OrderSslHelper::addDdos($this->_ssl, [
@@ -63,10 +74,10 @@ class DisableSslForm extends Model
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        $panel->ssl = Project::SSL_MODE_OFF;
-        $panel->dns_status = Project::DNS_STATUS_NOT_DEFINED;
+        $project->ssl = ProjectInterface::SSL_MODE_OFF;
+        $project->dns_status = ProjectInterface::DNS_STATUS_NOT_DEFINED;
 
-        if (!$panel->save(false)) {
+        if (!$project->save(false)) {
             throw new Exception('Cannot update project!');
         }
 

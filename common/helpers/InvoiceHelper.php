@@ -17,6 +17,7 @@ use my\helpers\ExpiryHelper;
 use my\helpers\order\OrderSslHelper;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
+use yii\base\Exception;
 use yii\db\Query;
 
 /**
@@ -447,14 +448,17 @@ class InvoiceHelper
     {
         $time = ExpiryHelper::days(Yii::$app->params['letsencrypt']['prolong.days.before']);
 
-        $sslCerts = SslCert::find()
+        $panelSslCerts = SslCert::find()
             ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
                 ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
                 ':orderProcessing' => Orders::PROCESSING_NO,
             ])
             ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
             ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl_cert.pid')
-            ->andWhere(['panel.act' => Project::STATUS_ACTIVE])
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_PANEL,
+                'panel.act' => Project::STATUS_ACTIVE,
+            ])
             ->andWhere([
                 'ssl_cert.status' => SslCert::STATUS_ACTIVE,
                 'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
@@ -465,9 +469,42 @@ class InvoiceHelper
             ->asArray()
             ->all();
 
+        $storesSslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_STORE,
+            ])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $activeStoresIds = Stores::find()
+            ->andWhere([
+                'id' => array_column($storesSslCerts, 'pid'),
+                'status' => Stores::STATUS_ACTIVE,
+            ])
+            ->asArray()
+            ->column();
+
+        $storesSslCerts = array_filter($storesSslCerts, function($sslCert) use ($activeStoresIds) {
+            return in_array($sslCert['pid'], $activeStoresIds);
+        });
+
+        $sslCerts = array_merge($panelSslCerts, $storesSslCerts);
+
         $transaction = Yii::$app->db->beginTransaction();
 
-        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED],['id' => array_column($sslCerts, 'id')]);
+        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED], ['id' => array_column($sslCerts, 'id')]);
 
         foreach ($sslCerts as $ssl) {
 
@@ -482,7 +519,7 @@ class InvoiceHelper
             $order->item_id = $ssl['id'];
             $order->setDetails([
                 'pid' => $ssl['pid'],
-                'project_type' => Project::getProjectType(),
+                'project_type' => $ssl['project_type'],
                 'domain' => $ssl['domain'],
                 'ssl_cert_item_id' => $ssl['item_id'],
             ]);

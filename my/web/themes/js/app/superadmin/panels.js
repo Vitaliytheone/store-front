@@ -146,7 +146,6 @@ customModule.superadminPanelsController = {
                 $.each(response.content, function(index, name) {
                     modalSelect.append($("<option></option>", {value: index, text: name}));
                 });
-                modalSelect.val(response.current);
             });
 
 
@@ -213,7 +212,7 @@ customModule.superadminPanelsController = {
             }
             var form = $('#edit-panel-form');
             var inputs = form.data('inputs');
-            var checkboxes =  inputs['checkboxes'];
+            var checkboxes = inputs['checkboxes'];
 
             for (var prop in checkboxes) {
                 var value = 1;
@@ -242,7 +241,7 @@ customModule.superadminPanelsController = {
             $('.selectpicker').selectpicker('refresh');
         }
 
-        new Clipboard('.copy', {
+        custom.clipboard('.copy', {
             container: document.getElementById('#editPanelsModal')
         });
 

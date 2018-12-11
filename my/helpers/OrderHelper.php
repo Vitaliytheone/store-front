@@ -701,8 +701,7 @@ class OrderHelper {
         $store->status = Stores::STATUS_ACTIVE;
         $store->trial = $isTrial;
         $store->generateExpired($isTrial);
-
-
+        $store->dns_status = Stores::DNS_STATUS_ALIEN;
 
         if (!$store->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
@@ -801,9 +800,29 @@ class OrderHelper {
      * @return bool
      * @throws Exception
      */
-    public static function leSsl(Orders $order)
+    public static function freeSsl(Orders $order)
     {
         $orderDetails = $order->getDetails();
+
+        /** @var $project Stores|Project  */
+
+        switch ($orderDetails['project_type']) {
+            case ProjectInterface::PROJECT_TYPE_PANEL:
+                $project = Project::findOne($orderDetails['pid']);
+                break;
+
+            case ProjectInterface::PROJECT_TYPE_STORE:
+                $project = Stores::findOne($orderDetails['pid']);
+                break;
+
+            default:
+                throw new Exception('Project type [' . $orderDetails['project_type'] . '] not exist!');
+                break;
+        }
+
+        if (!$project) {
+            throw new Exception('Project [' . $orderDetails['project_type'] . '] [' . $orderDetails['pid'] . '] not found!');
+        }
 
         // Check if its prolonged GogetSSl -> Letsencrypt or regular Letsencrypt SSL order
         $orderDelay = ArrayHelper::getValue($orderDetails, 'delay', 0);
@@ -826,12 +845,6 @@ class OrderHelper {
             throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
         }
 
-        $panel = Project::findOne($orderDetails['pid']);
-
-        if (!$panel) {
-            throw new Exception('Panel [' . $orderDetails['pid'] . '] not found!');
-        }
-
         $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
 
         if (!$sslCertItem) {
@@ -852,7 +865,7 @@ class OrderHelper {
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
-        $letsencrypt->issueCert(!(bool)$panel->subdomain);
+        $letsencrypt->issueCert(!(bool)$project->subdomain);
 
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
@@ -887,10 +900,10 @@ class OrderHelper {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
         }
 
-        $panel->ssl = Project::SSL_MODE_ON;
+        $project->ssl = Project::SSL_MODE_ON;
 
-        if (!$panel->save(false)) {
-            throw new Exception('Cannot update Panel [' . $panel->id . ']');
+        if (!$project->save(false)) {
+            throw new Exception('Cannot update project [' . $project->id . ']');
         }
 
         // Create new unreaded ticket after activate ssl cert.
@@ -898,7 +911,7 @@ class OrderHelper {
 
         $messagePrefix = 'my';
 
-        if($panel->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
+        if($project->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
             $ticket = new Tickets();
             $ticket->customer_id =$ssl->cid;
             $ticket->is_admin = 1;
@@ -909,7 +922,7 @@ class OrderHelper {
                 $ticketMessage->admin_id = SuperAdmin::DEFAULT_ADMIN;
                 $ticketMessage->created_at = time();
                 $ticketMessage->message = Yii::t('app', "ssl.$messagePrefix.created.ticket_message", [
-                    'domain' => $panel->getBaseDomain()
+                    'domain' => $project->getBaseDomain()
                 ]);
                 $ticketMessage->ip = ' ';
                 $ticketMessage->user_agent = ' ';
@@ -926,7 +939,7 @@ class OrderHelper {
      * @return bool
      * @throws Exception
      */
-    public static function leProlongationSsl(Orders $order)
+    public static function prolongationFreeSsl(Orders $order)
     {
         $ssl = SslCertLetsencrypt::findOne($order->item_id);
 
@@ -941,10 +954,24 @@ class OrderHelper {
             throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
 
-        $panel = Project::findOne($ssl->pid);
+        /** @var $project Stores|Project  */
 
-        if (!$panel) {
-            throw new Exception('Panel [' . $ssl->pid . '] not found!');
+        switch ($ssl->project_type) {
+            case ProjectInterface::PROJECT_TYPE_PANEL:
+                $project = Project::findOne($ssl->pid);
+                break;
+
+            case ProjectInterface::PROJECT_TYPE_STORE:
+                $project = Stores::findOne($ssl->pid);
+                break;
+
+            default:
+                throw new Exception('Project type [' . $ssl->project_type . '] not exist!');
+                break;
+        }
+
+        if (!$project) {
+            throw new Exception('Project [' . $ssl->project_type . '] [' . $ssl->pid . '] not found!');
         }
 
         $letsencrypt = new Letsencrypt();
@@ -952,7 +979,7 @@ class OrderHelper {
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
         $letsencrypt->setSsl($ssl);
 
-        $letsencrypt->renewCert(!(bool)$panel->subdomain);
+        $letsencrypt->renewCert(!(bool)$project->subdomain);
 
         $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
         $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
