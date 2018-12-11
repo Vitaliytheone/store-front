@@ -1,10 +1,13 @@
 <?php
 namespace sommerce\controllers;
 
+use common\models\panels\Params;
 use common\models\panels\SslValidation;
 use sommerce\models\search\BlocksSearch;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Site controller
@@ -69,15 +72,43 @@ class SiteController extends CustomController
      */
     public function actionSsl($filename)
     {
-        $model = SslValidation::findOne([
-            'pid' => $this->store->id,
-            'file_name' => $filename . '.txt'
-        ]);
+        $method = ArrayHelper::getValue(explode('/', mb_strtolower(Yii::$app->request->url)), 2);
 
-        if (!$model) {
-            throw new NotFoundHttpException();
+        switch ($method) {
+            case 'pki-validation':
+
+                $model = SslValidation::findOne([
+                    'pid' => $this->store->id,
+                    'file_name' => $filename . '.txt'
+                ]);
+
+                if (!$model) {
+                    throw new NotFoundHttpException();
+                }
+
+                $content = $model->content;
+
+                break;
+
+            case 'acme-challenge':
+
+                Yii::$app->response->format = Response::FORMAT_RAW;
+                Yii::$app->response->headers->add('Content-Type', 'text/plain; charset=utf-8');
+
+                $accountThumbPrint = Params::get(Params::CATEGORY_SERVICE, Params::CODE_LETSENCRYPT, 'account_thumbprint');
+
+                if (!$accountThumbPrint) {
+                    throw new NotFoundHttpException();
+                }
+
+                $content = $filename . '.' . $accountThumbPrint;
+
+                break;
+
+            default:
+                throw new NotFoundHttpException();
         }
 
-        return $model->content;
+        return $content;
     }
 }

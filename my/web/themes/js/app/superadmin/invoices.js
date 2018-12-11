@@ -220,7 +220,7 @@ customModule.superadminInvoicesController = {
             return false;
         });
 
-        new Clipboard('.copy', {
+        custom.clipboard('.copy', {
             text: function (trigger) {
                 return trigger.getAttribute('data-link');
             }

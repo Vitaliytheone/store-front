@@ -110,6 +110,7 @@ return [
             3214,
             3215,
             3216,
+            3217,
             33, // Only for old events support, without new records
         ]
     ],
@@ -130,6 +131,25 @@ return [
             3302,
             3303,
             3304,
+        ]
+    ],
+    [
+        'title' => 'Affiliate',
+        'events' => [
+            5001,
+            5002,
+            5003,
+            5004,
+            5005,
+            5006,
+        ]
+    ],
+    [
+        'title' => 'Admin tasks',
+        'events' => [
+            6001,
+            6002,
+            6003,
         ]
     ],
     [

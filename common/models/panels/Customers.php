@@ -479,6 +479,42 @@ class Customers extends ActiveRecord
             case 'disable_referral':
                 return static::REFERRAL_ACTIVE == $this->referral_status;
             break;
+
+            case 'ssl':
+                $sslCerts = SslCert::find()
+                    ->leftJoin('ssl_cert_item', 'ssl_cert.item_id = ssl_cert_item.id')
+                    ->where([
+                        'ssl_cert.cid' => $this->id,
+                        'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                        'ssl_cert_item.provider' => SslCertItem::PROVIDER_GOGETSSL
+                    ])
+                    ->exists();
+
+                if ($sslCerts) {
+                    return true;
+                }
+
+                $panels = Project::find()
+                    ->where([
+                        'cid' => $this->id,
+                        'act' => Project::STATUS_ACTIVE,
+                        'ssl' => Project::SSL_MODE_OFF,
+                        'dns_status' => null,
+                    ]);
+
+                $stores = Stores::find()
+                    ->where([
+                        'customer_id' => $this->id,
+                        'status' => Stores::STATUS_ACTIVE,
+                        'ssl' => Stores::SSL_MODE_OFF,
+                        'dns_status' => null,
+                    ]);
+
+                if ($panels->exists() || $stores->exists()) {
+                    return true;
+                }
+                return false;
+            break;
         }
 
         return false;
