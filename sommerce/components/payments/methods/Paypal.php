@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\store\Checkouts;
@@ -15,7 +16,8 @@ use yii\helpers\ArrayHelper;
  * Class Paypal
  * @package app\components\payments\methods
  */
-class Paypal extends BasePayment {
+class Paypal extends BasePayment
+{
 
     /**
      * @var string - url action
@@ -23,6 +25,11 @@ class Paypal extends BasePayment {
     public $action = 'https://www.paypal.com/cgi-bin/webscr';
 
     public $method = 'POST';
+
+    /**
+     * @var string
+     */
+    protected $_method = 'paypal';
 
     /**
      * Указываем, куда будет отправляться запрос
@@ -77,39 +84,39 @@ class Paypal extends BasePayment {
         $amount = number_format($checkout->price, 2, '.', '');
 
         // Now only express checkout
-            $credentials = [
-                'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
-                'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
-                'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
-            ];
+        $credentials = [
+            'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
+            'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
+            'SIGNATURE' => ArrayHelper::getValue($paymentMethodOptions, 'signature'),
+        ];
 
-            $requestParams = [
-                'RETURNURL' => SiteHelper::hostUrl() . '/paypalexpress/' . $checkout->id,
-                'CANCELURL' => SiteHelper::hostUrl() . '/addfunds'
-            ];
+        $requestParams = [
+            'RETURNURL' => SiteHelper::hostUrl() . '/paypalexpress/' . $checkout->id,
+            'CANCELURL' => SiteHelper::hostUrl() . '/addfunds'
+        ];
 
-            $orderParams = [
-                'PAYMENTREQUEST_0_AMT' => $amount,
-                'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
-                'PAYMENTREQUEST_0_CURRENCYCODE' => $store->currency,
-                'PAYMENTREQUEST_0_ITEMAMT' => $amount,
-                'NOSHIPPING' => '1'
-            ];
+        $orderParams = [
+            'PAYMENTREQUEST_0_AMT' => $amount,
+            'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
+            'PAYMENTREQUEST_0_CURRENCYCODE' => $store->currency,
+            'PAYMENTREQUEST_0_ITEMAMT' => $amount,
+            'NOSHIPPING' => '1'
+        ];
 
 
-            $item = [
-                'L_PAYMENTREQUEST_0_NAME0' => static::getDescription($checkout->id),
-                'L_PAYMENTREQUEST_0_AMT0' => $amount,
-                'L_PAYMENTREQUEST_0_QTY0' => '1'
-            ];
+        $item = [
+            'L_PAYMENTREQUEST_0_NAME0' => static::getDescription($checkout->id),
+            'L_PAYMENTREQUEST_0_AMT0' => $amount,
+            'L_PAYMENTREQUEST_0_QTY0' => '1'
+        ];
 
-            $response = $this->request('SetExpressCheckout', $credentials + $requestParams + $orderParams + $item);
+        $response = $this->request('SetExpressCheckout', $credentials + $requestParams + $orderParams + $item);
 
-            if (is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
-                $token = $response['TOKEN'];
+        if (is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
+            $token = $response['TOKEN'];
 
-                return static::returnRedirect($this->paymentPoint . '?cmd=_express-checkout&token=' . urlencode($token));
-            }
+            return static::returnRedirect($this->paymentPoint . '?cmd=_express-checkout&token=' . urlencode($token));
+        }
 
         return static::returnError();
     }
@@ -117,6 +124,7 @@ class Paypal extends BasePayment {
     /**
      * Processing payments result
      * @param Stores $store
+     * @return array
      */
     public function processing($store)
     {
@@ -140,12 +148,11 @@ class Paypal extends BasePayment {
             $this->testMode();
         }
 
-        $this->_method = 'paypal';
         return $this->expressProcessing($store, $paymentMethod);
     }
 
     /**
-     * Processing standart payments result
+     * Processing express payments result
      * @param Stores $store
      * @param PaymentMethods $details
      */
@@ -234,8 +241,8 @@ class Paypal extends BasePayment {
         $transactionId = ArrayHelper::getValue($response, 'PAYMENTINFO_0_TRANSACTIONID');
 
         $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
-            'TRANSACTIONID' => $transactionId
-        ]);
+                'TRANSACTIONID' => $transactionId
+            ]);
 
         $this->log(json_encode($GetTransactionDetails, JSON_PRETTY_PRINT));
 
@@ -307,8 +314,9 @@ class Paypal extends BasePayment {
      * @param array $params Дополнительные параметры
      * @return array | boolean Response array | boolean false on failure
      */
-    public function request($method, $params = []) {
-        if( empty($method) ) { // Проверяем, указан ли способ платежа
+    public function request($method, $params = [])
+    {
+        if (empty($method)) { // Проверяем, указан ли способ платежа
             return false;
         }
 
@@ -323,13 +331,13 @@ class Paypal extends BasePayment {
 
         // Настраиваем cURL
         $curlOptions = [
-            CURLOPT_URL             => $this->endPoint,
-            CURLOPT_SSL_VERIFYPEER  => 1,
-            CURLOPT_SSL_VERIFYHOST  => 2,
+            CURLOPT_URL => $this->endPoint,
+            CURLOPT_SSL_VERIFYPEER => 1,
+            CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_CAINFO => Yii::getAlias('@common') . '/config/certificates/pp.pem', // Файл сертификата
-            CURLOPT_RETURNTRANSFER  => 1,
-            CURLOPT_POST            => 1,
-            CURLOPT_POSTFIELDS      => $request,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $request,
         ];
 
         if (!empty(PROXY_CONFIG['main']['ip'])) {
@@ -349,10 +357,10 @@ class Paypal extends BasePayment {
         if (curl_errno($ch)) {
             curl_close($ch);
             return false;
-        } else  {
+        } else {
             curl_close($ch);
             $responseArray = [];
-            parse_str($response,$responseArray); // Разбиваем данные, полученные от NVP в массив
+            parse_str($response, $responseArray); // Разбиваем данные, полученные от NVP в массив
             return $responseArray;
         }
     }
@@ -379,8 +387,8 @@ class Paypal extends BasePayment {
         ];
 
         $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
-            'TRANSACTIONID' => $payment->transaction_id
-        ]);
+                'TRANSACTIONID' => $payment->transaction_id
+            ]);
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($payment->checkout_id, [

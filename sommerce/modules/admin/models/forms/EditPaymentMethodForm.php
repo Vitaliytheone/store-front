@@ -46,7 +46,7 @@ class EditPaymentMethodForm extends PaymentMethods
                     }
 
                     // Prepare PayPal details
-                    if ($model->method == $model::METHOD_PAYPAL || $model->method == $model::METHOD_PAYPAL_STANDARD) {
+                    if (in_array($model->method, [$model::METHOD_PAYPAL, $model::METHOD_PAYPAL_STANDARD])) {
                         $apiUsername = ArrayHelper::getValue($details, 'username');
                         $details['username'] = trim($apiUsername);
                     }
@@ -63,7 +63,7 @@ class EditPaymentMethodForm extends PaymentMethods
                     /* @var $event \yii\base\Event */
                     /* @var $model $this */
                     $model = $event->sender;
-                    return json_decode($model->getAttribute('details'),true);
+                    return json_decode($model->getAttribute('details'), true);
                 },
             ],
         ];
@@ -103,11 +103,11 @@ class EditPaymentMethodForm extends PaymentMethods
     {
         $method = $this->method;
         $details = $this->details;
-        
-        $getDetailsField = function ($field) use ($details){
+
+        $getDetailsField = function ($field) use ($details) {
             return ArrayHelper::getValue($details, $field);
         };
-        
+
         $paymentsFormData = [
             PaymentMethods::METHOD_PAYPAL => [
                 'icon' => '/img/pg/paypal.png',
@@ -122,9 +122,9 @@ class EditPaymentMethodForm extends PaymentMethods
                 'icon' => '/img/pg/paypal.png',
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_email', 'placeholder' => '', 'name' => 'PaymentsForm[details][email]', 'value' => $getDetailsField('email'), 'label' => Yii::t('admin', 'settings.payments_paypal_email')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][username]', 'value' => $getDetailsField('username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][password]', 'value' => $getDetailsField('password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][signature]', 'value' => $getDetailsField('signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
+//                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'PaymentsForm[details][username]', 'value' => $getDetailsField('username'), 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
+//                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'PaymentsForm[details][password]', 'value' => $getDetailsField('password'), 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
+//                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_signature', 'placeholder' => '', 'name' => 'PaymentsForm[details][signature]', 'value' => $getDetailsField('signature'), 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
@@ -235,6 +235,7 @@ class EditPaymentMethodForm extends PaymentMethods
      * Change PG active status
      * @param $active
      * @return mixed
+     * @throws \Throwable
      */
     public function setActive($active)
     {
@@ -254,6 +255,7 @@ class EditPaymentMethodForm extends PaymentMethods
      * Change PG settings
      * @param $postData
      * @return bool
+     * @throws \Throwable
      */
     public function changeSettings($postData)
     {
