@@ -167,7 +167,6 @@ class ProjectAdmin extends ActiveRecord
     public function setRules(array $rules)
     {
         $defaultRules = array_fill_keys(array_keys(static::$defaultRules), 0);
-        $defaultRules['providers'] = 1;
         $rules = ArrayHelper::merge($defaultRules, $rules);
         $rules = array_intersect_key($rules, $defaultRules);
         $this->rules = json_encode($rules);
