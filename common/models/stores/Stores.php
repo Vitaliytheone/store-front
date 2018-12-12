@@ -1047,4 +1047,12 @@ class Stores extends ActiveRecord implements ProjectInterface
     {
         return true;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasManualPaymentMethods()
+    {
+        return true;
+    }
 }
