@@ -334,4 +334,29 @@ class Paypalstandard extends BasePayment
 
     }
 
+    /**
+     * Use own method instead parent, because if there was no POST request,
+     * the page "Payment Failed" is displayed.
+     *
+     * @inheritdoc
+     */
+    public static function getPaymentResult($checkoutId): array
+    {
+        $paymentsResult = [
+            'id' => $checkoutId,
+        ];
+
+        if (!$checkoutId) {
+            $paymentsResult['failed'] = true;
+        } elseif (!$payment = Payments::findOne(['checkout_id' => $checkoutId])) {
+            $paymentsResult['awaiting'] = true; // force use Awaiting status if POST is empty
+        } else {
+            $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
+            $paymentsResult['awaiting'] = in_array($payment->status, [Payments::STATUS_AWAITING]);
+            $paymentsResult['completed'] = in_array($payment->status, [Payments::STATUS_COMPLETED]);
+        }
+
+        return $paymentsResult;
+    }
+
 }
