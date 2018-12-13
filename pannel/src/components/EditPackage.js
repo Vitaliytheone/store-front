@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import PackageModal from "../modals/PackageModal";
 
-class AddPackage extends Component {
+class EditPackage extends Component {
   state = {
     modal: false
   };
@@ -15,32 +15,29 @@ class AddPackage extends Component {
 
   render() {
     return (
-      <div>
-        <div className="mt-2 mb-3">
-          <button
-            className="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air"
-            onClick={this.toggle}
-          >
-            Add package
-          </button>
-        </div>
+      <span>
+        <button
+          onClick={this.toggle}
+          type="button"
+          className="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"
+        >
+          Edit
+        </button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} backdrop={false}>
-          <ModalHeader toggle={this.toggle}>
-            Create package (ID : 23)
-          </ModalHeader>
+          <ModalHeader toggle={this.toggle}>Edit package (ID : 25)</ModalHeader>
           <PackageModal />
           <ModalFooter className="justify-content-start">
             <Button color="primary" onClick={this.toggle}>
-              Add package
+              Save package
             </Button>{" "}
             <Button color="secondary" onClick={this.toggle}>
               Cancel
             </Button>
           </ModalFooter>
         </Modal>
-      </div>
+      </span>
     );
   }
 }
 
-export default AddPackage;
+export default EditPackage;

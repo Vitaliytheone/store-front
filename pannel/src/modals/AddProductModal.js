@@ -1,5 +1,4 @@
 import React from "react";
-import "../App.css";
 import "../styles/AddProduct.css";
 
 const AddProductModal = props => (
@@ -59,96 +58,56 @@ const AddProductModal = props => (
                       </div>
                       <ul className="m-nav">
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Facebook likes
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Facebook followers
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Facebook photo/post likes
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Facebook vide views
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Twitter Followers
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Twitter Retweets
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Twitter Favorites
                             </span>
                           </a>
                         </li>
                         <li className="m-nav__item">
-                          <a
-                            href=""
-                            className="m-nav__link"
-                            data-toggle="modal"
-                            data-target="#copyProperties"
-                          >
+                          <a href="" className="m-nav__link">
                             <span className="m-nav__link-text">
                               Buy Instagram Likes
                             </span>
@@ -203,9 +162,6 @@ const AddProductModal = props => (
                 <a
                   href="#"
                   className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-                  data-toggle="modal"
-                  data-target="#delete-modal"
-                  data-backdrop="static"
                   title="Delete"
                 >
                   <i className="la la-trash" />
@@ -229,9 +185,6 @@ const AddProductModal = props => (
                 <a
                   href="#"
                   className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-                  data-toggle="modal"
-                  data-target="#delete-modal"
-                  data-backdrop="static"
                   title="Delete"
                 >
                   <i className="la la-trash" />
@@ -255,9 +208,6 @@ const AddProductModal = props => (
                 <a
                   href="#"
                   className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-                  data-toggle="modal"
-                  data-target="#delete-modal"
-                  data-backdrop="static"
                   title="Delete"
                 >
                   <i className="la la-trash" />
@@ -281,9 +231,6 @@ const AddProductModal = props => (
                 <a
                   href="#"
                   className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-                  data-toggle="modal"
-                  data-target="#delete-modal"
-                  data-backdrop="static"
                   title="Delete"
                 >
                   <i className="la la-trash" />
@@ -307,9 +254,6 @@ const AddProductModal = props => (
                 <a
                   href="#"
                   className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-                  data-toggle="modal"
-                  data-target="#delete-modal"
-                  data-backdrop="static"
                   title="Delete"
                 >
                   <i className="la la-trash" />
@@ -326,11 +270,7 @@ const AddProductModal = props => (
         <div className="row seo-header align-items-center">
           <div className="col-sm-8">Search engine listing preview</div>
           <div className="col-sm-4 text-sm-right">
-            <a
-              className="btn btn-sm btn-link"
-              data-toggle="collapse"
-              href="#seo-block"
-            >
+            <a className="btn btn-sm btn-link" href="#seo-block">
               Edit website SEO
             </a>
           </div>
