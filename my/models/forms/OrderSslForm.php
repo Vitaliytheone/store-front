@@ -227,8 +227,10 @@ class OrderSslForm extends Model
                 ->rightJoin(['s' => Stores::tableName()], 's.id = sd.store_id')
                 ->andWhere(['s.customer_id' => $this->_customer->id])
                 ->andWhere(['sd.type' => [
-                    StoreDomains::DOMAIN_TYPE_DEFAULT,
-                    StoreDomains::DOMAIN_TYPE_SUBDOMAIN]
+                        StoreDomains::DOMAIN_TYPE_DEFAULT,
+                        StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                        StoreDomains::DOMAIN_TYPE_SOMMERCE
+                    ]
                 ])
                 ->column();
 

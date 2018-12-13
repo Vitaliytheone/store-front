@@ -2807,4 +2807,14 @@ return array(
 
         ],
     ),
+
+    'IQD' => array(
+        'id' => 26,
+        'name' => 'Iraqi dinar',
+        'symbol' => 'د.ع',
+        'symbol_aligment' => '1',
+        'gateway' => [
+
+        ],
+    ),
 );
