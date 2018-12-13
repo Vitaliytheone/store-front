@@ -315,6 +315,10 @@ class Paypalstandard extends BasePayment
             $this->_payment->fee = $_POST['mc_fee'];
         }
 
+        if ($paymentStatus == 'failed') {
+            $this->_payment->status = Payments::STATUS_FAILED;
+        }
+
         if ($paymentStatus != 'completed') {
             return [
                 'checkout_id' => $id,
