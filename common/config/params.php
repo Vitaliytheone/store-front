@@ -150,6 +150,6 @@ return [
         'ticket_per_user' => 3,
         'affiliate_minimum_payout' => 10,
         'affiliate_commission_rate' => 5,
-        'affiliate_approve_payouts' => 1,
+        'affiliate_approve_payouts' => 0,
     ],
 ];

@@ -819,7 +819,7 @@ class SystemController extends CustomController
         Project::updateAll([
             'affiliate_minimum_payout' => 10,
             'affiliate_commission_rate' => 5,
-            'affiliate_approve_payouts' => 1,
+            'affiliate_approve_payouts' => 0,
         ], 'affiliate_minimum_payout IS NULL');
     }
 }
