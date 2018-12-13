@@ -183,6 +183,12 @@ class ProjectAdmin extends ActiveRecord
             return $rules;
         }
 
+        if (count($rules) < count(static::$defaultRules)) {
+            foreach (static::$defaultRules as $key => $defaultRule) {
+                $rules[$key] = isset($rules[$key]) ? $rules[$key] : 0;
+            }
+        }
+
         return ArrayHelper::merge(static::$defaultRules, $rules);
     }
 
