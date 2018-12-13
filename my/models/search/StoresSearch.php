@@ -216,7 +216,8 @@ class StoresSearch
                 ->andWhere([
                     'type' => [
                         StoreDomains::DOMAIN_TYPE_DEFAULT,
-                        StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+                        StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                        StoreDomains::DOMAIN_TYPE_SOMMERCE,
                     ],
                     'store_id' => $storeIds
                 ])

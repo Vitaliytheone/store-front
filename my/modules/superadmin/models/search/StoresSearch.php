@@ -156,7 +156,8 @@ class StoresSearch {
             ])
             ->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
-                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                StoreDomains::DOMAIN_TYPE_SOMMERCE
             ]). ')');
 
         $stores->offset($pages->offset)
