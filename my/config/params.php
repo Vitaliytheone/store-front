@@ -32,23 +32,6 @@ return [
     'sysmailSupportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта для sysmail метода
     'provider_service_id_label_list' => require(__DIR__ . '/services/provider_service_id_label_list.php'),
 
-    // Параметры по умолчанию при создании панели
-    'projectDefaults' => [
-        'theme_path' => 'default_light',
-        'lang' => 'en',
-        'plan' => 1,
-        'comments' => 1,
-        'mentions_wo_hashtag' => 1,
-        'mentions' => 1,
-        'mentions_custom' => 1,
-        'mentions_hashtag' => 1,
-        'mentions_follower' => 1,
-        'mentions_likes' => 1,
-        'start_count' => 1,
-        'custom' => 1,
-        'ticket_per_user' => 3,
-    ],
-
     // Mailgun mailer
     'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
     'mailgun.domain' => 'perfectpanel.net',
