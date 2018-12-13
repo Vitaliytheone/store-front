@@ -116,6 +116,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     </div>
                 </div>
 
+                <?php if ($action == 'panels') : ?>
                 <div class="form-group">
                     <label for="form-apikey"><?= Yii::t('app/superadmin', 'panels.edit.apikey') ?></label>
                     <div class="input-group mb-3">
@@ -129,6 +130,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                         </div>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'panels.edit.close') ?></button>
