@@ -86,7 +86,7 @@ class Paypalstandard extends BasePayment
             'currency_code' => $store->currency,
             'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
             'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'cancel_return' => SiteHelper::hostUrl() . '/cart',
+            'cancel_return' => SiteHelper::hostUrl() . '/addfunds',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
         ]);
@@ -133,24 +133,24 @@ class Paypalstandard extends BasePayment
     protected function standardProcessing($store, $details)
     {
         // paypal standard отвечаем ok если платеж добавлен
-        $this->redirectProcessing = false;
 
         $itemNumber = ArrayHelper::getValue($_POST, 'item_number', ArrayHelper::getValue($_GET, 'id'));
         $business = ArrayHelper::getValue($_POST, 'business');
-        $paymentStatus = ArrayHelper::getValue($_POST, 'payment_status');
+        $paymentStatus = strtolower(trim(ArrayHelper::getValue($_POST, 'payment_status')));
         $mcGross = ArrayHelper::getValue($_POST, 'mc_gross');
         $txnId = ArrayHelper::getValue($_POST, 'txn_id');
         $mcCurrency = ArrayHelper::getValue($_POST, 'mc_currency');
         $paypalAmount = ArrayHelper::getValue($_POST, 'mc_gross');
         $tax = ArrayHelper::getValue($_POST, 'tax');
         $payerEmail = ArrayHelper::getValue($_POST, 'payer_email');
+        $id = ArrayHelper::getValue($_GET, 'id');
 
-        // TODO delete from here after final test
-        // Remove paid items from cart if success
-        $this->_checkout = Checkouts::findOne(['id' => $itemNumber]);
-        $items = $this->_checkout->getDetails();
-        foreach ($items as $item) {
-            Carts::removeItemByKey($item['cart_key']);
+        // after redirect POST is empty, show Payment Awaiting
+        if (empty($_POST)) {
+            return [
+                'checkout_id' => $id,
+                'result' => 2,
+            ];
         }
 
         if (!$itemNumber || !$business || !$paymentStatus || !$mcGross || !$txnId) {
@@ -174,11 +174,13 @@ class Paypalstandard extends BasePayment
                 'id' => $itemNumber,
                 'method_id' => $details->id
             ]))
-            || in_array($this->_checkout->status, [Checkouts::STATUS_PENDING])) {
+            // Changed Checkouts::STATUS_PENDING to PAID, otherwise it does not work
+            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
             return [
+                'checkout_id' => $id,
                 'result' => 2,
-                'content' => 'no invoice'
+                'content' => 'no invoice or already paid'
             ];
         }
 
@@ -207,6 +209,7 @@ class Paypalstandard extends BasePayment
 
         if (strtoupper($mcCurrency) != $store->currency) {
             return [
+                'checkout_id' => $id,
                 'result' => 2,
                 'content' => 'bad currency'
             ];
@@ -282,6 +285,7 @@ class Paypalstandard extends BasePayment
 
         if (strcmp($res, "VERIFIED") != 0) {
             return [
+                'checkout_id' => $id,
                 'result' => 2,
                 'content' => 'bad payment'
             ];
@@ -293,6 +297,7 @@ class Paypalstandard extends BasePayment
 
         if ($paypalAmount != $this->_checkout->price) {
             return [
+                'checkout_id' => $id,
                 'result' => 2,
                 'content' => 'bad amount'
             ];
@@ -310,13 +315,15 @@ class Paypalstandard extends BasePayment
             $this->_payment->fee = $_POST['mc_fee'];
         }
 
-        if (strtolower($paymentStatus) != 'completed') {
+        if ($paymentStatus != 'completed') {
             return [
+                'checkout_id' => $id,
                 'result' => 2,
                 'content' => 'other status'
             ];
         }
 
+        // if payments complete create suborder and clear cart
         static::success($this->_payment, [
             'result' => 1,
             'transaction_id' => $txnId,
@@ -324,13 +331,6 @@ class Paypalstandard extends BasePayment
             'checkout_id' => $this->_checkout->id,
             'content' => 'Ok'
         ], $store);
-
-        return [
-            'result' => 1,
-            'transaction_id' => $txnId,
-            'amount' => $this->_checkout->price,
-            'checkout_id' => $this->_checkout->id,
-        ];
 
     }
 
