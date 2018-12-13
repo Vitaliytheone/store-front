@@ -116,11 +116,15 @@ class CronController extends CustomController
                     break;
 
                     case Orders::ITEM_FREE_SSL:
-                        OrderHelper::freeSsl($order);
+                        if (Yii::$app->params['free_ssl.create']) {
+                            OrderHelper::freeSsl($order);
+                        }
                     break;
 
                     case Orders::ITEM_PROLONGATION_FREE_SSL:
-                        OrderHelper::prolongationFreeSsl($order);
+                        if (Yii::$app->params['free_ssl.prolong']) {
+                            OrderHelper::prolongationFreeSsl($order);
+                        }
                     break;
                 }
             } catch (Exception $e) {
@@ -164,8 +168,11 @@ class CronController extends CustomController
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
         InvoiceHelper::prolongStores();
-        InvoiceHelper::prolongGogetSsl2LetsencryptSsl();
-        InvoiceHelper::prolongFreeSsl();
+
+        if (Yii::$app->params['free_ssl.prolong']) {
+            InvoiceHelper::prolongFreeSsl();
+            InvoiceHelper::prolongGogetSsl2LetsencryptSsl();
+        }
     }
 
     /**
@@ -447,10 +454,12 @@ class CronController extends CustomController
      */
     public function actionNewSslOrder()
     {
-        $cron = new CronFreeSslOrder();
-        $cron->setConsole($this);
-        $cron->setDebug(true);
-        $cron->run();
+        if (Yii::$app->params['free_ssl.create']) {
+            $cron = new CronFreeSslOrder();
+            $cron->setConsole($this);
+            $cron->setDebug(true);
+            $cron->run();
+        }
     }
 
     /**
