@@ -792,4 +792,22 @@ class SystemController extends CustomController
 
         return $this->run($this->route);
     }
+
+    public function actionAdminFullAccess()
+    {
+        $staffsBatch = ProjectAdmin::find();
+
+        /**
+         * @var $staff ProjectAdmin
+         */
+        foreach ($staffsBatch->batch() as $staffs) {
+            foreach ($staffs as $staff) {
+                if ($staff->isFullAccess()) {
+                    $staff->setRules(ProjectAdmin::$defaultRules);
+                    $staff->save(false);
+                    $this->stderr('Migrated rules staff ' . $staff->id . "\n", Console::FG_GREEN);
+                }
+            }
+        }
+    }
 }

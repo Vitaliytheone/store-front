@@ -38,6 +38,8 @@ class SuperTaskHelper
 
     /**
      * Run common tasks
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public static function runTasks()
     {
@@ -48,8 +50,10 @@ class SuperTaskHelper
 
     /**
      * Set common Nginx tasks
-     * @param Project|Stores $object
+     * @param $object
      * @param array $data
+     * @throws Exception
+     * @throws \ReflectionException
      */
     public static function setTasksNginx($object, $data = [])
     {
@@ -66,7 +70,7 @@ class SuperTaskHelper
                 /**
                  * @var Stores $object
                  */
-                $domain = $object->site;
+                $domain = $object->domain;
                 $item = SuperTasks::TASK_CREATE_STORE_NGINX_CONFIG;
                 break;
 

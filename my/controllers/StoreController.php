@@ -166,7 +166,8 @@ class StoreController extends CustomController
             'store_id' => $store->id,
             'type' => [
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
-                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                StoreDomains::DOMAIN_TYPE_SOMMERCE,
             ]
         ]);
 
