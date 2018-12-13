@@ -76,4 +76,10 @@ interface ProjectInterface
      * @return array|mixed
      */
     public function getNameservers();
+
+    /**
+     * Return is project has manually-configured payment methods
+     * @return mixed
+     */
+    public function hasManualPaymentMethods();
 }
