@@ -2,13 +2,13 @@
 
 namespace sommerce\components\payments\methods;
 
+use Yii;
 use common\models\stores\PaymentMethods;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\store\Checkouts;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Exceptions\ApiException;
@@ -21,8 +21,6 @@ use Mollie\Api\Resources\Payment;
 class Mollie extends BasePayment
 {
 
-//INSERT INTO `payment_gateways` (`id`, `method`, `currencies`, `name`, `class_name`, `url`, `position`, `options`, `visibility`) VALUES (NULL, 'mollie', '[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"INR\",\"IDR\"]', 'Mollie', 'Mollie', 'mollie', '17', '{\"secret_key\":\"\"}', '1');
-
     /**
      * @var string - url action
      */
@@ -30,7 +28,10 @@ class Mollie extends BasePayment
 
     protected $_paymentPoint = '';
 
-    protected $_apiKey = '';
+    /**
+     * @var string store PaymentID
+     */
+    protected $_transactionId;
 
     public $redirectProcessing = false;
 
@@ -47,28 +48,38 @@ class Mollie extends BasePayment
 
         try {
             $mollie = new MollieApiClient();
-            $mollie->setApiKey(ArrayHelper::getValue($paymentMethodOptions, 'api_key'));
-//            $amount = number_format((float)$checkout->price, 2, '.', '');
+            $mollie->setApiKey(ArrayHelper::getValue($paymentMethodOptions, 'secret_key'));
 
+            /**
+             * Payment parameters:
+             *   amount        Amount [currency, value]
+             *   description   Description of the payment.
+             *   redirectUrl   Redirect location. The customer will be redirected there after the payment.
+             *   webhookUrl    Webhook location, used to report when the payment changes state.
+             *   metadata      Custom metadata that is stored with the payment.
+             */
             $paymentCheckout = $mollie->payments->create([
                 'amount' => [
                     'currency' => $store->currency,
                     'value' => $amount
                 ],
                 'description' => static::getDescription($checkout->id),
-                'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-                'webhookUrl' => SiteHelper::hostUrl() . '/mollie/' . $checkout->id,
+                'redirectUrl' => SiteHelper::hostUrl() . '/mollie/' . $checkout->id,
+                'webhookUrl' => 'http://93c394c3.ngrok.io' . '/mollie/' . $checkout->id,
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
             ]);
 
+//            $this->_transactionId = $paymentCheckout->id;
+//            Yii::debug($this->_transactionId);
+//            Yii::debug($paymentCheckout->getCheckoutUrl());
+
             return static::returnRedirect($paymentCheckout->getCheckoutUrl());
 
         } catch (ApiException $e) {
-//            $this->dbLog($payment, $e->getMessage() . $e->getTraceAsString());
-            PaymentsLog::log($this->_checkout->id, $e->getMessage() . $e->getTraceAsString());
-
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
+            Yii::error($e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         }
     }
@@ -92,22 +103,56 @@ class Mollie extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $txnId = ArrayHelper::getValue($_POST, 'id');
+        $id = ArrayHelper::getValue($_GET, 'id');
 
-        if (empty($_POST['id'])) {
+        Yii::debug($id);
+        Yii::debug($txnId);
+
+        $this->_payment = Payments::findOne(['checkout_id' => $id]);
+
+        // after redirect POST is empty, show Payment Awaiting
+        if (empty($_POST) && empty($this->_payment)) {
             return [
+                'checkout_id' => $id,
                 'result' => 2,
-                'content' => 'bad data',
-//                'reason' => 'bad data'
+            ];
+        }
+        if (!empty($this->_payment) && $this->_payment->status == Payments::STATUS_COMPLETED) {
+            return [
+                'checkout_id' => $id,
+                'result' => 1,
             ];
         }
 
+        $paymentMethodOptions = $paymentMethod->getDetails();
+
+        if (empty($id) || !($this->_checkout = Checkouts::findOne([
+                'id' => $id,
+                'method_id' => $paymentMethod->id
+            ]))) {
+            return [
+                'checkout_id' => $id,
+                'result' => 2,
+                'content' => 'no invoice'
+            ];
+        }
+
+        if (empty($txnId)) {
+            return [
+                'result' => 2,
+                'content' => 'no data',
+            ];
+        }
 
         try {
             $mollie = new MollieApiClient();
-            $mollie->setApiKey(ArrayHelper::getValue($paymentMethodOptions, 'api_key'));
-            $payment = $mollie->payments->get($_POST['id']);
+            $mollie->setApiKey(ArrayHelper::getValue($paymentMethodOptions, 'secret_key'));
+            $payment = $mollie->payments->get($txnId);
             $paymentId = $payment->metadata->paymentId;
+            $paymentStatus = strtolower(trim($payment->status));
+            $profileId = $payment->profileId;
+            $country = $payment->countryCode ?? null; // FIXME не видит кантри код
 //            $paymentId = $this->_checkout->id;
 
             if ($paymentId != $this->_checkout->id) {
@@ -117,54 +162,97 @@ class Mollie extends BasePayment
                 ];
             }
 
-            if (!($this->_payment = Payments::findOne([
-                'checkout_id' => $this->_checkout->id,
-            ]))) {
+            Yii::debug($payment);
+
+            if (!$this->_payment) {
                 $this->_payment = new Payments();
                 $this->_payment->method = $this->_method;
                 $this->_payment->checkout_id = $this->_checkout->id;
                 $this->_payment->amount = $this->_checkout->price;
                 $this->_payment->customer = $this->_checkout->customer;
                 $this->_payment->currency = $this->_checkout->currency;
-            } else if ($this->_payment->method != $this->_method) {
+                $this->_payment->country = $country;
+            } elseif ($this->_payment->method != $this->_method) {
                 // no invoice
                 return [
                     'checkout_id' => $paymentId,
                     'result' => 2,
-                    'content' => 'bad invoice payment'
+                    'content' => 'bad invoice'
                 ];
             }
 
             $this->_logPayment($payment);
 
-            $this->_payment->response_status = $payment->status;
-            $this->_payment->transaction_id = $payment->id;
+            $this->_checkout->method_status = $paymentStatus;
 
-            if (!$payment->isPaid() || $payment->hasRefunds() || $payment->hasChargebacks()) {
-                return [
-                    'result' => 2,
-                    'content' => 'other payment status',
-//                    'reason' => 'other payment status'
-                ];
-            }
+            $this->_payment->transaction_id = $txnId;
+            $this->_payment->status = Payments::STATUS_AWAITING;
+            $this->_payment->response_status = $paymentStatus;
+//            $this->_payment->email = $payerEmail;
+            $this->_payment->memo = $profileId . '; ' . $txnId;
+
 
             if ((float)$payment->amount->value != (float)$this->_payment->amount) {
                 // bad amount
                 return [
+                    'checkout_id' => $paymentId,
                     'result' => 2,
                     'content' => 'bad amount',
-//                    'reason' => 'bad amount'
                 ];
             }
 
             if ($payment->amount->currency != $store->currency) {
                 // bad amount
                 return [
+                    'checkout_id' => $paymentId,
                     'result' => 2,
                     'content' => 'bad currency',
-//                    'reason' => 'bad currency'
                 ];
             }
+
+            if ($payment->hasRefunds() || $payment->hasChargebacks()) {
+                $this->log(json_encode(['status' => 'Payment change status. Refund or Chargebacks receive'], JSON_PRETTY_PRINT));
+                $this->_payment->status = Payments::STATUS_REFUNDED;
+                return [
+                    'checkout_id' => $paymentId,
+                    'result' => 2,
+                    'content' => 'Refund or chargebacks status receive',
+                ];
+            }
+
+            if ($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
+                $this->_payment->status = Payments::STATUS_COMPLETED;
+                Yii::debug('Paid');
+
+                // if payments complete create suborder and clear cart
+                static::success($this->_payment, [
+                    'result' => 1,
+                    'transaction_id' => $txnId,
+                    'amount' => $this->_checkout->price,
+                    'checkout_id' => $this->_checkout->id,
+                ], $store);
+
+            } elseif ($payment->isOpen() || $payment->isPending()) {
+
+                Yii::debug('Awaiting');
+                return [
+                    'checkout_id' => $id,
+                    'result' => 2,
+                    'content' => 'payment awaiting',
+                ];
+
+            } elseif ($payment->isFailed() || $payment->isExpired() || $payment->isCanceled()) {
+                $this->_payment->status = Payments::STATUS_FAILED;
+                Yii::debug('Failed');
+
+                return [
+                    'checkout_id' => $id,
+                    'result' => 2,
+                    'content' => 'payment failed',
+                ];
+
+            }
+
 
             $this->_payment->status = Payments::STATUS_AWAITING;
 
@@ -178,11 +266,9 @@ class Mollie extends BasePayment
             ];
 
         } catch (ApiException $e) {
-//            $this->fileLog($e->getMessage() . $e->getTraceAsString());
-
-//            PaymentsLog::log($this->_checkout->id, $_POST);
 
             $this->log(json_encode($e->getMessage() . $e->getTraceAsString(), JSON_PRETTY_PRINT));
+            Yii::error($e->getMessage() . $e->getTraceAsString());
 
             return [
                 'result' => 2,
@@ -229,8 +315,6 @@ class Mollie extends BasePayment
             $response = $_POST;
         }
 
-        PaymentsLog::log($response, $_POST);
-
-        $this->log(json_encode($response, JSON_PRETTY_PRINT));
+        PaymentsLog::log($this->_checkout->id, $response);
     }
 }
