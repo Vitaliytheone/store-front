@@ -1,0 +1,60 @@
+<?php
+
+namespace common\models\stores;
+
+use Yii;
+
+/**
+ * This is the model class for table "{{%payment_methods_currency}}".
+ *
+ * @property int $id
+ * @property int $method_id
+ * @property string $currency
+ * @property int $position
+ * @property string $settings_form
+ * @property string $settings_form_description
+ * @property int $hidden
+ * @property int $created_at
+ * @property int $updated_at
+ */
+class PaymentMethodsCurrency extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'payment_methods_currency';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['method_id', 'position', 'hidden', 'created_at', 'updated_at'], 'integer'],
+            [['settings_form', 'settings_form_description'], 'string'],
+            [['currency'], 'string', 'max' => 3],
+            [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['method_id' => 'id']],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'method_id' => Yii::t('app', 'Method ID'),
+            'currency' => Yii::t('app', 'Currency'),
+            'position' => Yii::t('app', 'Position'),
+            'settings_form' => Yii::t('app', 'Settings Form'),
+            'settings_form_description' => Yii::t('app', 'Settings Form Description'),
+            'hidden' => Yii::t('app', 'Hidden'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+}

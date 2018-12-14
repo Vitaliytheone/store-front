@@ -11,12 +11,15 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "{{%payment_methods}}".
  *
  * @property integer $id
- * @property integer $store_id
- * @property string $method
- * @property string $details
- * @property integer $active
- *
- * @property Stores $store
+ * @property string $method_name
+ * @property string $name
+ * @property string $class_name
+ * @property string $url
+ * @property string $settings_form
+ * @property string $icon
+ * @property string $addfunds_form
+ * @property string $settings_form_description
+ * @property integer $manual_callback_url
  */
 class PaymentMethods extends ActiveRecord
 {
@@ -55,10 +58,10 @@ class PaymentMethods extends ActiveRecord
     public function rules()
     {
         return [
-            [['store_id', 'active'], 'integer'],
-            [['details'], 'string'],
-            [['method'], 'string', 'max' => 255],
-            [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
+            [['id'], 'integer'],
+            [['manual_callback_url'], 'integer', 'max' => 1],
+            [['settings_form', 'addfunds_form', 'settings_form_description'], 'string'],
+            [['method_name', 'name', 'class_name', 'url', 'icon'], 'string', 'max' => 255],
         ];
     }
 
@@ -69,19 +72,15 @@ class PaymentMethods extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'store_id' => Yii::t('app', 'Store ID'),
-            'method' => Yii::t('app', 'Method'),
-            'details' => Yii::t('app', 'Details'),
-            'active' => Yii::t('app', 'Active'),
+            'method_name' => Yii::t('app', 'Method Name'),
+            'name' => Yii::t('app', 'Name'),
+            'class_name' => Yii::t('app', 'Class Name'),
+            'url' => Yii::t('app', 'URL'),
+            'settings_form' => Yii::t('app', 'Settings Form'),
+            'icon' => Yii::t('app', 'Icon'),
+            'addfunds_form' => Yii::t('app', 'Addfunds Form'),
+            'settings_form_description' => Yii::t('app', 'Setting Form Description'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStore()
-    {
-        return $this->hasOne(Stores::class, ['id' => 'store_id']);
     }
 
     /**
@@ -102,7 +101,7 @@ class PaymentMethods extends ActiveRecord
         if (empty(static::$methodsNames) || !is_array(static::$methodsNames)) {
             static::$methodsNames = PaymentGateways::find()
                 ->select(['name'])
-                ->indexBy('method')
+                ->indexBy('method_name')
                 ->asArray()
                 ->column();
         }
@@ -130,11 +129,93 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get payment method details
-     * @return array|mixed
+     * Get method name
+     * @param string $method
+     * @return string
      */
-    public function getDetails()
+    public static function getMethodName(string $method):string
     {
-        return !empty($this->details) ? json_decode($this->details, true) : [];
+        return (string)ArrayHelper::getValue(ArrayHelper::index(static::getMethods(), 'method'), [$method, 'name'], $method);
+    }
+
+//    /**
+//     * Get payment method details
+//     * @return array|mixed
+//     */
+//    public function getDetails()
+//    {
+//        return !empty($this->details) ? json_decode($this->details, true) : [];
+//    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrencies()
+    {
+        $currenciesList = json_decode($this->currencies, true);
+
+        if (!is_array($currenciesList)) {
+            $currenciesList = [];
+        }
+
+        return $currenciesList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptions():array
+    {
+        return (array)json_decode($this->options, true);
+    }
+
+    /**
+     * Return is passed $currencyCode is supported by this payment gateway
+     * @param $currencyCode
+     * @return bool
+     */
+    public function isCurrencySupported($currencyCode)
+    {
+        return in_array($currencyCode, $this->getCurrencies());
+    }
+
+    /**
+     * Get all payment methods with options
+     * @return static[]
+     */
+    public static function getMethods():array
+    {
+        if (empty(static::$methods)) {
+            static::$methods = static::find()->all();
+
+        }
+
+        return (array)static::$methods;
+    }
+
+    /**
+     * Return payments methods list which is supported this $currencyCode
+     * @param $currencyCode string
+     * @param $onlyMethods boolean Return only method code or full method data array
+     * @return array
+     */
+    public static function getSupportedMethods($currencyCode, $onlyMethods  = true)
+    {
+        $methods = static::find()->asArray()->all();
+
+        foreach ($methods as $key => &$method) {
+            $supportedCurrencies = json_decode(ArrayHelper::getValue($method, 'currencies', []), true);
+
+            if (!in_array($currencyCode, $supportedCurrencies)) {
+                unset($methods[$key]);
+                continue;
+            }
+
+            if ($onlyMethods) {
+                $method = $method['method'];
+            }
+        }
+
+        return $methods;
     }
 }

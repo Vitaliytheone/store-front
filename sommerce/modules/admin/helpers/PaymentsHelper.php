@@ -1,8 +1,9 @@
 <?php
 namespace sommerce\modules\admin\helpers;
 
-use common\models\stores\PaymentGateways;
+
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 
 /**
@@ -11,23 +12,22 @@ use common\models\stores\Stores;
  */
 class PaymentsHelper
 {
-
     /**
      * Update store payment method list by available payment gateways
      * @param $store Stores
      */
-    public static function updateStorePaymentMethods(Stores $store){
+    public static function updateStorePaymentMethods(Stores $store)
+    {
+        $paymentMethodsList = PaymentMethods::find()->all();
 
-        $pgList = PaymentGateways::find()->all();
-
-        /** @var PaymentGateways $pg */
-        foreach ($pgList as $pg)
+        /** @var PaymentMethods $pm */
+        foreach ($paymentMethodsList as $pm)
         {
-            if ($pg->isCurrencySupported($store->currency) && !PaymentMethods::findOne(['store_id' => $store->id, 'method' => $pg->method])) {
-                $paymentMethod = new PaymentMethods();
-                $paymentMethod->method = $pg->method;
+            if ($pm->isCurrencySupported($store->currency) && !StorePaymentMethods::findOne(['store_id' => $store->id, 'method_id' => $pm->id])) {
+                $paymentMethod = new StorePaymentMethods();
+                $paymentMethod->method_id = $pm->id;
                 $paymentMethod->store_id = $store->id;
-                $paymentMethod->active = PaymentMethods::ACTIVE_DISABLED;
+                $paymentMethod->visibility = PaymentMethods::ACTIVE_DISABLED;
                 $paymentMethod->save(false);
             }
         }

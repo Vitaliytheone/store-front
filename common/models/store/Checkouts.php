@@ -17,6 +17,7 @@ use common\models\store\queries\CheckoutsQuery;
  * @property integer $status
  * @property string $method_status
  * @property integer $method_id
+ * @property integer $currency_id
  * @property string $ip
  * @property string $details
  * @property integer $created_at
@@ -56,7 +57,7 @@ class Checkouts extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'status', 'method_id', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'status', 'method_id', 'created_at', 'updated_at', 'currency_id'], 'integer'],
             [['price'], 'number'],
             [['details', 'user_details'], 'string'],
             [['customer', 'method_status', 'ip'], 'string', 'max' => 255],
@@ -77,6 +78,7 @@ class Checkouts extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'method_status' => Yii::t('app', 'Method Status'),
             'method_id' => Yii::t('app', 'Method ID'),
+            'currency_id' => Yii::t('app', 'Currency ID'),
             'ip' => Yii::t('app', 'Ip'),
             'details' => Yii::t('app', 'Details'),
             'created_at' => Yii::t('app', 'Created At'),
