@@ -16,13 +16,13 @@ class EditProduct extends Component {
   render() {
     return (
       <span>
-        <a
+        <button
           onClick={this.toggle}
           href="#"
-          className="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"
+          className="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action product-pointer-events"
         >
           Edit
-        </a>
+        </button>
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}

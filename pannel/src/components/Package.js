@@ -5,6 +5,7 @@ import DeletePackage from "./DeletePackage";
 class Package extends Component {
   render() {
     const { pack } = this.props;
+    console.log(pack.id);
     return (
       <div className="group-item sommerce_dragtable__tr align-items-center">
         <div className="col-lg-5 padding-null-left">

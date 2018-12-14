@@ -41606,3 +41606,14 @@ a:hover, a:focus {
         border-bottom-right-radius: 5px; }
   .sommerce-settings__payment-cart .payment-cart__preview img {
     max-width: 35px; } }
+
+
+/*            My custom Styles     */
+
+      .row.group-caption {
+        pointer-events: none;
+      }
+
+      .product-pointer-events{
+        pointer-events: auto;
+      }

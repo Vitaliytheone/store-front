@@ -19,7 +19,7 @@ class EditPackage extends Component {
         <button
           onClick={this.toggle}
           type="button"
-          className="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"
+          className="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action product-pointer-events"
         >
           Edit
         </button>

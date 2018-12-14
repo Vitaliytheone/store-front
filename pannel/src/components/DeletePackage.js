@@ -15,13 +15,13 @@ class DeletePackage extends Component {
   render() {
     return (
       <span>
-        <a
+        <button
           onClick={this.toggle}
           href="#"
-          className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
+          className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill product-pointer-events"
         >
           <i className="la la-trash" />
-        </a>
+        </button>
         <Modal
           isOpen={this.state.modal}
           toggle={this.toggle}

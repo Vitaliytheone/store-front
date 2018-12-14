@@ -6,15 +6,15 @@ import AddPackage from "./AddPackage";
 
 class Product extends Component {
   render() {
-    const { data } = this.props;
+    const { data, innerRef, ...rest } = this.props;
 
     return (
-      <div className="row group-caption">
+      <div className="row group-caption" ref={innerRef} {...rest}>
         <div className="col-12 sommerce_dragtable__category">
           <div className="sommerce_dragtable__category-title">
             <div className="row align-items-center">
               <div className="col-12">
-                <div className="sommerce_dragtable__category-move move">
+                <div className="sommerce_dragtable__category-move move product-pointer-events">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <title>Drag-Handle</title>
                     <path
