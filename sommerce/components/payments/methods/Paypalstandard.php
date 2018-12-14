@@ -2,7 +2,6 @@
 
 namespace sommerce\components\payments\methods;
 
-use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
@@ -32,23 +31,6 @@ class Paypalstandard extends BasePayment
      */
     protected $_method = 'paypalstandard';
 
-    /**
-     * Указываем, куда будет отправляться запрос
-     * Реальные условия - https://api-3t.paypal.com/nvp
-     * Песочница - https://api-3t.sandbox.paypal.com/nvp
-     * @var string
-     */
-    protected $endPoint = 'https://api-3t.paypal.com/nvp';
-
-    /**
-     * Указываем, куда будет отправляться запрос для клиента
-     * Реальные условия - https://www.paypal.com/webscr
-     * Песочница - https://www.sandbox.paypal.com/webscr
-     * @var string
-     */
-    protected $paymentPoint = 'https://www.paypal.com/webscr';
-
-
     public $redirectProcessing = true;
 
     /**
@@ -57,8 +39,6 @@ class Paypalstandard extends BasePayment
     public function testMode()
     {
         $this->action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-        $this->endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
-        $this->paymentPoint = 'https://www.sandbox.paypal.com/webscr';
     }
 
     /**
@@ -86,7 +66,7 @@ class Paypalstandard extends BasePayment
             'currency_code' => $store->currency,
             'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
             'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'cancel_return' => SiteHelper::hostUrl() . '/addfunds',
+            'cancel_return' => SiteHelper::hostUrl() . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
         ]);
@@ -350,9 +330,12 @@ class Paypalstandard extends BasePayment
             'id' => $checkoutId,
         ];
 
-        if (!$checkoutId) {
+        $checkout = Checkouts::findOne(['id' => $checkoutId]);
+        $payment = Payments::findOne(['checkout_id' => $checkoutId]);
+
+        if (!$checkoutId || empty($checkout) || (!empty($payment) && $payment->method != 'paypalstandard')) {
             $paymentsResult['failed'] = true;
-        } elseif (!$payment = Payments::findOne(['checkout_id' => $checkoutId])) {
+        } elseif (!$payment) {
             $paymentsResult['awaiting'] = true; // force use Awaiting status if POST is empty
         } else {
             $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);

@@ -92,7 +92,7 @@ class Paypal extends BasePayment
 
         $requestParams = [
             'RETURNURL' => SiteHelper::hostUrl() . '/paypalexpress/' . $checkout->id,
-            'CANCELURL' => SiteHelper::hostUrl() . '/addfunds'
+            'CANCELURL' => SiteHelper::hostUrl() . '/cart'
         ];
 
         $orderParams = [
@@ -155,6 +155,7 @@ class Paypal extends BasePayment
      * Processing express payments result
      * @param Stores $store
      * @param PaymentMethods $details
+     * @return array
      */
     protected function expressProcessing($store, $details)
     {
@@ -180,13 +181,13 @@ class Paypal extends BasePayment
         $checkoutDetails = $this->request('GetExpressCheckoutDetails', $credentials + ['TOKEN' => $token]);
 
 
-        $requestParams = array(
+        $requestParams = [
             'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
             'PAYERID' => $payerId,
             'TOKEN' => $token,
             'PAYMENTREQUEST_0_AMT' => ArrayHelper::getValue($checkoutDetails, 'PAYMENTREQUEST_0_AMT'),
             'PAYMENTREQUEST_0_CURRENCYCODE' => $store->currency, // валюта панели
-        );
+        ];
 
         $response = $this->request('DoExpressCheckoutPayment', $credentials + $requestParams);
 
@@ -241,8 +242,8 @@ class Paypal extends BasePayment
         $transactionId = ArrayHelper::getValue($response, 'PAYMENTINFO_0_TRANSACTIONID');
 
         $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
-                'TRANSACTIONID' => $transactionId
-            ]);
+            'TRANSACTIONID' => $transactionId
+        ]);
 
         $this->log(json_encode($GetTransactionDetails, JSON_PRETTY_PRINT));
 
@@ -387,8 +388,8 @@ class Paypal extends BasePayment
         ];
 
         $GetTransactionDetails = $this->request('GetTransactionDetails', $credentials + [
-                'TRANSACTIONID' => $payment->transaction_id
-            ]);
+            'TRANSACTIONID' => $payment->transaction_id
+        ]);
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($payment->checkout_id, [
