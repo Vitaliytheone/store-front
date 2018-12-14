@@ -54,5 +54,9 @@
         case EditPaymentMethodForm::METHOD_BILLPLZ:
             echo $this->render('rules/_billplz', ['store' => $store]);
             break;
+
+        case EditPaymentMethodForm::METHOD_MOLLIE:
+            echo $this->render('rules/_mollie', ['store' => $store]);
+            break;
     }
 ?>
