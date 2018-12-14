@@ -132,4 +132,24 @@ return [
             'target' => 'perfectpanel.com',
         ],
     ],
+
+    // Параметры по умолчанию при создании панели
+    'projectDefaults' => [
+        'theme_path' => 'default_light',
+        'lang' => 'en',
+        'plan' => 1,
+        'comments' => 1,
+        'mentions_wo_hashtag' => 1,
+        'mentions' => 1,
+        'mentions_custom' => 1,
+        'mentions_hashtag' => 1,
+        'mentions_follower' => 1,
+        'mentions_likes' => 1,
+        'start_count' => 1,
+        'custom' => 1,
+        'ticket_per_user' => 3,
+        'affiliate_minimum_payout' => 10,
+        'affiliate_commission_rate' => 5,
+        'affiliate_approve_payouts' => 0,
+    ],
 ];

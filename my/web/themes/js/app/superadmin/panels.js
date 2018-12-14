@@ -210,6 +210,7 @@ customModule.superadminPanelsController = {
             if (!panel) {
                 return;
             }
+
             var form = $('#edit-panel-form');
             var inputs = form.data('inputs');
             var checkboxes = inputs['checkboxes'];
