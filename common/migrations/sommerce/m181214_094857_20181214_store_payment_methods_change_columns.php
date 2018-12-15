@@ -1,6 +1,9 @@
 <?php
 
 use yii\db\Migration;
+use yii\db\Query;
+use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class m181214_094857_20181214_store_payment_methods_change_columns
@@ -12,6 +15,12 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
      */
     public function safeUp()
     {
+        $methods = (new Query())
+            ->select('id', 'method')
+            ->from(DB_STORES . '.store_payment_methods')
+            ->indexBy('id')
+            ->all();
+
         $this->renameColumn(DB_STORES . '.store_payment_methods', 'details', 'options');
         $this->renameColumn(DB_STORES . '.store_payment_methods', 'active', 'visibility');
 
@@ -64,6 +73,14 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
             'CASCADE',
             'CASCADE'
         );
+
+        foreach ($methods as $key => $methodName) {
+            $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
+
+            $storeMethod = StorePaymentMethods::findOne($key);
+            $storeMethod->method_id = $method->id;
+            $storeMethod->save(false);
+        }
     }
 
     /**

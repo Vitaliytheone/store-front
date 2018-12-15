@@ -22,30 +22,24 @@ class Payment {
     /**
      * Get payment component by payment method name
      *
-     * @param string $method
+     * @param PaymentMethods $method
      * @throws UnknownClassException
      * @return BasePayment
      */
     public static function getPayment($method)
     {
-        if (!empty(static::$methods[$method])) {
-            return static::$methods[$method];
+        if (!empty(static::$methods[$method->method_name])) {
+            return static::$methods[$method->method_name];
         }
 
-        /**
-         * @var Stores $store
-         */
-        $store = Yii::$app->store->getInstance();
-        $className = (string)CurrencyHelper::getPaymentClass($method, $store->currency);
-
-        $className = '\sommerce\components\payments\methods\\' . ucfirst($className);
+        $className = '\sommerce\components\payments\methods\\' . ucfirst($method->class_name);
 
         if (!class_exists($className)) {
             throw new UnknownClassException();
         }
 
-        static::$methods[$method] = new $className(['method' => $method]);
+        static::$methods[$method->method_name] = new $className(['method' => $method->method_name]);
 
-        return static::$methods[$method];
+        return static::$methods[$method->method_name];
     }
 }

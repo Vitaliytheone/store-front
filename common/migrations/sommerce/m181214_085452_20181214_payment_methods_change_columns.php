@@ -1,6 +1,8 @@
 <?php
 
 use yii\db\Migration;
+use yii\db\Query;
+use common\models\stores\PaymentMethodsCurrency;
 
 /**
  * Class m181214_085452_20181214_payment_methods_change_columns
@@ -12,6 +14,23 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
      */
     public function safeUp()
     {
+        $methods = (new Query())
+            ->select(['id', 'currencies', 'options', 'position'])
+            ->from(DB_STORES . '.payment_methods')
+            ->all();
+
+        foreach ($methods as $method) {
+            $currencies = json_decode($methods['currencies'], true);
+
+            foreach ($currencies as $currency) {
+                $paymentMethodCurrency = new PaymentMethodsCurrency();
+                $paymentMethodCurrency->method_id = $methods['id'];
+                $paymentMethodCurrency->currency = $currency;
+                $paymentMethodCurrency->position = $method['position'];
+                $paymentMethodCurrency->settings_form = $method['options'];
+            }
+        }
+
         $this->renameColumn(DB_STORES . '.payment_methods', 'method', 'method_name');
         $this->renameColumn(DB_STORES . '.payment_methods', 'options', 'settings_form');
 

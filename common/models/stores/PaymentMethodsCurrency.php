@@ -3,6 +3,8 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use common\models\stores\queries\PaymentMethodsCurrencyQuery;
 
 /**
  * This is the model class for table "{{%payment_methods_currency}}".
@@ -56,5 +58,61 @@ class PaymentMethodsCurrency extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => TimestampBehavior::class,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return PaymentMethodsCurrencyQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new PaymentMethodsCurrencyQuery(get_called_class());
+    }
+
+    /**
+     * Set settings form
+     * @param $options
+     */
+    public function setSettingsForm($options)
+    {
+        $this->settings_form = json_encode($options);
+    }
+
+    /**
+     * Get settings form
+     * @return array
+     */
+    public function getSettingsForm(): array
+    {
+        return !empty($this->settings_form) ? json_decode($this->settings_form, true) : [];
+    }
+
+    /**
+     * Set settings form description
+     * @param $description
+     */
+    public function setSettingsFormDescription($description)
+    {
+        $this->settings_form_description = json_encode($description);
+    }
+
+    /**
+     * Get settings form description
+     * @return array
+     */
+    public function getSettingsFormDescription(): array
+    {
+        return !empty($this->settings_form_description) ? json_decode($this->settings_form_description, true) : [];
     }
 }

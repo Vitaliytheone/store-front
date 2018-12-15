@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use common\models\stores\queries\StorePaymentMethodsQuery;
@@ -23,22 +24,6 @@ use common\models\stores\queries\StorePaymentMethodsQuery;
  */
 class StorePaymentMethods extends \yii\db\ActiveRecord
 {
-    /* Payment methods names */
-    const METHOD_PAYPAL = 'paypal';
-    const METHOD_2CHECKOUT = '2checkout';
-    const METHOD_COINPAYMENTS = 'coinpayments';
-    const METHOD_PAGSEGURO = 'pagseguro';
-    const METHOD_WEBMONEY = 'webmoney';
-    const METHOD_YANDEX_MONEY = 'yandexmoney';
-    const METHOD_YANDEX_CARDS = 'yandexcards';
-    const METHOD_FREE_KASSA = 'freekassa';
-    const METHOD_PAYTR = 'paytr';
-    const METHOD_PAYWANT = 'paywant';
-    const METHOD_BILLPLZ = 'billplz';
-    const METHOD_AUTHORIZE = 'authorize';
-    const METHOD_STRIPE = 'stripe';
-    const METHOD_MERCADOPAGO = 'mercadopago';
-
     const VISIBILITY_DISABLED = 0;
     const VISIBILITY_ENABLED = 1;
 
@@ -86,6 +71,16 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
             'position' => Yii::t('app', 'Position'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => TimestampBehavior::class,
         ];
     }
 
@@ -165,5 +160,15 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
     public function getOptions(): array
     {
         return !empty($this->options) ? json_decode($this->options, true) : [];
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethodIcon()
+    {
+        $method = PaymentMethods::findOne([$this->method_id]);
+
+        return $method->icon;
     }
 }

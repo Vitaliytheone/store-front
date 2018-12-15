@@ -2,14 +2,10 @@
 
 namespace sommerce\controllers;
 
-use common\models\store\Payments;
-use common\models\stores\PaymentMethods;
-use sommerce\components\payments\BasePayment;
-use sommerce\components\payments\Payment;
-use Yii;
-use common\models\stores\Stores;
-use yii\helpers\ArrayHelper;
 
+use common\models\stores\PaymentMethods;
+use sommerce\components\payments\Payment;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class PaymentsController
@@ -23,8 +19,9 @@ class PaymentsController extends CustomController
 
     /**
      * Process payment method
-     * @param $method
+     * @param string $method
      * @return string|\yii\web\Response
+     * @throws \yii\base\UnknownClassException
      */
     public function actionResult($method)
     {
@@ -35,8 +32,8 @@ class PaymentsController extends CustomController
         //     $_GET = ArrayHelper::getValue($json, 'GET', []);
         //     $_SERVER = ArrayHelper::getValue($json, 'SERVER', []);
         // }
-
-        $paymentMethod = Payment::getPayment($method);
+        $methodModel = PaymentMethods::findOne(['method_name' => $method]);
+        $paymentMethod = Payment::getPayment($methodModel);
         $result = $paymentMethod->process($this->store);
 
         if (!empty($result['content']) && !$paymentMethod->redirectProcessing) {

@@ -5,6 +5,7 @@ use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use Yii;
 use sommerce\components\payments\BasePayment;
@@ -63,12 +64,12 @@ class Paypal extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -131,16 +132,21 @@ class Paypal extends BasePayment {
     /**
      * Processing payments result
      * @param Stores $store
+     * @return array|mixed
      */
     public function processing($store)
     {
         $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYPAL,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'method_name' => PaymentMethods::METHOD_PAYPAL
         ]);
 
-        if (empty($paymentMethod)) {
+        $storePaymentMethod = StorePaymentMethods::findOne([
+            'method_id' => $paymentMethod->id,
+            'store_id' => $store->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+        ]);
+
+        if (empty($storePaymentMethod)) {
             // no invoice
             return [
                 'result' => 2,
@@ -148,7 +154,7 @@ class Paypal extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $storePaymentMethod->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -157,21 +163,22 @@ class Paypal extends BasePayment {
         // Now only express checkout
         if (0) {
             $this->_method = 'paypalstandart';
-            return $this->standardProcessing($store, $paymentMethod);
+            return $this->standardProcessing($store, $storePaymentMethod);
         } else {
             $this->_method = 'paypal';
-            return $this->expressProcessing($store, $paymentMethod);
+            return $this->expressProcessing($store, $storePaymentMethod);
         }
     }
 
     /**
      * Processing standart payments result
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
+     * @return array
      */
     protected function expressProcessing($store, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $token = ArrayHelper::getValue($_GET, 'token');
         $payerId = ArrayHelper::getValue($_GET, 'PayerID');
@@ -322,7 +329,8 @@ class Paypal extends BasePayment {
     /**
      * Processing standart payments result
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
+     * @return array
      */
     protected function standardProcessing($store, $details)
     {
@@ -346,7 +354,7 @@ class Paypal extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (strtolower($business) != strtolower(ArrayHelper::getValue($paymentMethodOptions, 'email'))) {
             return [
@@ -573,12 +581,12 @@ class Paypal extends BasePayment {
      * Check payment status
      * @param Payments $payment
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return boolean
      */
     public function checkStatus($payment, $store, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();

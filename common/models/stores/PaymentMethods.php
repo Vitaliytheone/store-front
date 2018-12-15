@@ -39,9 +39,6 @@ class PaymentMethods extends ActiveRecord
     const METHOD_STRIPE = 'stripe';
     const METHOD_MERCADOPAGO = 'mercadopago';
 
-    const ACTIVE_DISABLED = 0;
-    const ACTIVE_ENABLED = 1;
-
     public static $methodsNames = [];
 
     /**
@@ -99,7 +96,7 @@ class PaymentMethods extends ActiveRecord
     public static function getNames()
     {
         if (empty(static::$methodsNames) || !is_array(static::$methodsNames)) {
-            static::$methodsNames = PaymentGateways::find()
+            static::$methodsNames = static::find()
                 ->select(['name'])
                 ->indexBy('method_name')
                 ->asArray()
@@ -110,112 +107,48 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get payment method name
+     * Return payment method title by method
+     * @param string $method
      * @return string
      */
-    public function getName()
-    {
-        return ArrayHelper::getValue(static::getNames(), $this->method, $this->method);
-    }
-
-    /**
-     * Return payment method title by method
-     * @param $method
-     * @return mixed
-     */
-    public static function getMethodName($method)
+    public static function getMethodName(string $method): string
     {
         return ArrayHelper::getValue(static::getNames(), $method, $method);
     }
 
     /**
-     * Get method name
-     * @param string $method
-     * @return string
+     * Set settings form
+     * @param $options
      */
-    public static function getMethodName(string $method):string
+    public function setSettingsForm($options)
     {
-        return (string)ArrayHelper::getValue(ArrayHelper::index(static::getMethods(), 'method'), [$method, 'name'], $method);
-    }
-
-//    /**
-//     * Get payment method details
-//     * @return array|mixed
-//     */
-//    public function getDetails()
-//    {
-//        return !empty($this->details) ? json_decode($this->details, true) : [];
-//    }
-
-    /**
-     * @return mixed
-     */
-    public function getCurrencies()
-    {
-        $currenciesList = json_decode($this->currencies, true);
-
-        if (!is_array($currenciesList)) {
-            $currenciesList = [];
-        }
-
-        return $currenciesList;
+        $this->settings_form = json_encode($options);
     }
 
     /**
-     * @return mixed
-     */
-    public function getOptions():array
-    {
-        return (array)json_decode($this->options, true);
-    }
-
-    /**
-     * Return is passed $currencyCode is supported by this payment gateway
-     * @param $currencyCode
-     * @return bool
-     */
-    public function isCurrencySupported($currencyCode)
-    {
-        return in_array($currencyCode, $this->getCurrencies());
-    }
-
-    /**
-     * Get all payment methods with options
-     * @return static[]
-     */
-    public static function getMethods():array
-    {
-        if (empty(static::$methods)) {
-            static::$methods = static::find()->all();
-
-        }
-
-        return (array)static::$methods;
-    }
-
-    /**
-     * Return payments methods list which is supported this $currencyCode
-     * @param $currencyCode string
-     * @param $onlyMethods boolean Return only method code or full method data array
+     * Get settings form
      * @return array
      */
-    public static function getSupportedMethods($currencyCode, $onlyMethods  = true)
+    public function getSettingsForm(): array
     {
-        $methods = static::find()->asArray()->all();
+        return !empty($this->settings_form) ? json_decode($this->settings_form, true) : [];
+    }
 
-        foreach ($methods as $key => &$method) {
-            $supportedCurrencies = json_decode(ArrayHelper::getValue($method, 'currencies', []), true);
+    /**
+     * Set settings form description
+     * @param $description
+     */
+    public function setSettingsFormDescription($description)
+    {
+        $this->settings_form_description = json_encode($description);
+    }
 
-            if (!in_array($currencyCode, $supportedCurrencies)) {
-                unset($methods[$key]);
-                continue;
-            }
-
-            if ($onlyMethods) {
-                $method = $method['method'];
-            }
-        }
-
-        return $methods;
+    /**
+     * Get settings form description
+     * @return array
+     */
+    public function getSettingsFormDescription(): array
+    {
+        return !empty($this->settings_form_description) ? json_decode($this->settings_form_description, true) : [];
     }
 }

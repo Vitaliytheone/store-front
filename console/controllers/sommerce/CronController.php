@@ -7,7 +7,9 @@ use common\helpers\CurrencyHelper;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StoreAdminsHash;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
@@ -16,7 +18,6 @@ use sommerce\components\payments\methods\Paypal;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\StoresHelper;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class CronController
@@ -125,20 +126,21 @@ class CronController extends CustomController
 
     /**
      * @param Stores $store
+     * @throws \yii\base\UnknownClassException
      */
     protected function _checkAuthorize(Stores $store)
     {
-        $method = PaymentMethods::METHOD_AUTHORIZE;
-        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
+        $method = PaymentMethods::findOne(['method_name' => PaymentMethods::METHOD_AUTHORIZE]);
+        $paymentCurrency = PaymentMethodsCurrency::findOne([
+            'method_id' => $method->id,
+            'currency' => $store->currency
+        ]);
 
-        if (empty($availableMethods[$method])) {
-            return;
-        }
-
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => $method,
+        $paymentMethod = StorePaymentMethods::findOne([
+            'method_id' => $method->id,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED,
+            'currency_id' => $paymentCurrency->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 
         if (!$paymentMethod) {
@@ -151,7 +153,7 @@ class CronController extends CustomController
         $component = Payment::getPayment($method);
 
         foreach (Payments::find()->andWhere([
-            'method' => $method,
+            'method' => $method->method_name,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {
@@ -162,20 +164,21 @@ class CronController extends CustomController
 
     /**
      * @param Stores $store
+     * @throws \yii\base\UnknownClassException
      */
     protected function _checkPaypalPayment(Stores $store)
     {
-        $method = PaymentMethods::METHOD_PAYPAL;
-        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
+        $method = PaymentMethods::findOne(['method_name' => PaymentMethods::METHOD_PAYPAL]);
+        $paymentCurrency = PaymentMethodsCurrency::findOne([
+            'method_id' => $method->id,
+            'currency' => $store->currency
+        ]);
 
-        if (empty($availableMethods[$method])) {
-            return;
-        }
-
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => $method,
+        $paymentMethod = StorePaymentMethods::findOne([
+            'method_id' => $method->id,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED,
+            'currency_id' => $paymentCurrency->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 
         // Only for express checkout

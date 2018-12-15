@@ -7,6 +7,7 @@ use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use net\authorize\api\contract\v1\ANetApiResponseType;
 use net\authorize\api\contract\v1\CreateTransactionRequest;
@@ -71,12 +72,12 @@ class Authorize extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $options = $checkout->getUserDetails();
 
         if (!empty($paymentMethodOptions['test_mode'])) {
@@ -229,12 +230,12 @@ class Authorize extends BasePayment {
      * Get js payment environment
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function getJsEnvironments($store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $clientKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_client_key');
         $loginId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_login_id');
 
@@ -274,7 +275,7 @@ class Authorize extends BasePayment {
 
     /**
      * Get payment method auth
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return MerchantAuthenticationType
      */
     public function getAuth($details)
@@ -283,7 +284,7 @@ class Authorize extends BasePayment {
             return $this->_auth;
         }
 
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (!empty($paymentMethodOptions['test_mode'])) {
             $this->initTestMode();
@@ -305,7 +306,7 @@ class Authorize extends BasePayment {
      * Get transaction details
      * @param string $transactionId
      * @param Payments $payment
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return AnetApiResponseType|null
      */
     public function getTransactionDetails($transactionId, $payment, $details)
@@ -330,7 +331,7 @@ class Authorize extends BasePayment {
      * Check payment status
      * @param Payments $payment
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return boolean
      */
     public function checkStatus($payment, $store, $details)
