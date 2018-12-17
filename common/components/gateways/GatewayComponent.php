@@ -44,7 +44,7 @@ class GatewayComponent extends Component
 
             $site = $domain ? Sites::findOne(['domain' => $domain]) : null;
 
-            if ($store instanceof Sites) {
+            if ($site instanceof Sites) {
                 $this->setInstance($site);
             }
         }

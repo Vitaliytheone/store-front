@@ -1,6 +1,7 @@
 <?php
 namespace gateway\modules\admin\helpers;
 
+use common\models\gateways\Admins;
 use gateway\modules\admin\components\Url;
 use Yii;
 
@@ -16,18 +17,6 @@ class NavbarHelper {
      */
     private static function _NavbarItems(){
         return [
-            'orders' =>  [
-                'url' => '/admin/orders',
-                'label' => Yii::t('admin', 'header.menu_orders'),
-            ],
-            'payments' => [
-                'url' => '/admin/payments',
-                'label' => Yii::t('admin', 'header.menu_payments'),
-            ],
-            'products' => [
-                'url' => '/admin/products',
-                'label' => Yii::t('admin', 'header.menu_products'),
-            ],
             'settings' => [
                 'url' => '/admin/settings',
                 'label' => 'Settings',
@@ -43,11 +32,6 @@ class NavbarHelper {
                         'icon' => 'icon-wallet',
                         'label' => Yii::t('admin', 'header.menu_settings_payments'),
                     ],
-                    'settings-providers' => [
-                        'url' => '/admin/settings/providers',
-                        'icon' => 'icon-share',
-                        'label' => Yii::t('admin', 'header.menu_settings_providers'),
-                    ],
                     'settings-navigation' => [
                         'url' => '/admin/settings/navigation',
                         'icon' => 'flaticon-list-1',
@@ -62,11 +46,6 @@ class NavbarHelper {
                         'url' => '/admin/settings/themes',
                         'icon' => 'icon-puzzle',
                         'label' => Yii::t('admin', 'header.menu_settings_themes'),
-                    ],
-                    'settings-blocks' => [
-                        'url' => '/admin/settings/blocks',
-                        'icon' => 'icon-layers',
-                        'label' => Yii::t('admin', 'header.menu_settings_blocks'),
                     ],
                 ],
             ],
@@ -93,20 +72,9 @@ class NavbarHelper {
     {
         $navbarItems = static::_NavbarItems();
 
-        /** @var \common\models\stores\StoreAdmins $user */
+        /** @var Admins $user */
         $authUser = Yii::$app->user;
         $user = $authUser->getIdentity();
-
-        // Show only allowed for current user items
-        if (!$authUser->isGuest) {
-            $allowedControllers = $user->getAllowedControllersNames();
-            foreach ($navbarItems as $controller => $menuItem) {
-
-                if (false === array_search($controller, $allowedControllers)) {
-                    unset($navbarItems[$controller]);
-                }
-            }
-        }
 
         /**
          * Populate $navbarItems by url and active class is menu item is active

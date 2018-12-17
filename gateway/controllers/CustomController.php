@@ -2,11 +2,9 @@
 
 namespace gateway\controllers;
 
-use common\helpers\ThemesHelper;
+use gateway\helpers\ThemesHelper;
 use gateway\helpers\AssetsHelper;
-use gateway\models\search\NavigationSearch;
 use gateway\modules\admin\components\Url;
-use gateway\modules\admin\helpers\LanguagesHelper;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
@@ -113,7 +111,7 @@ class CustomController extends CommonController
         $this->endContent = [];
 
         if (!empty($this->customJs)) {
-            foreach (AssetsHelper::getStoreScripts() as $src) {
+            foreach (AssetsHelper::getScripts() as $src) {
                 $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
             }
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
@@ -125,8 +123,6 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
-        $search =  new NavigationSearch();
-        $search->setStore($this->gateway);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
@@ -135,19 +131,18 @@ class CustomController extends CommonController
                 'page_title' => $this->pageTitle ? $this->pageTitle : $this->gateway->seo_title,
                 'menu' => [],
                 'language' => Yii::$app->language,
-                'rtl' => LanguagesHelper::getLanguageRtl($this->gateway),
-                'store_name' => $this->gateway->name,
-                'favicon' => $this->gateway->favicon,
-                'logo' => $this->gateway->logo,
+                'rtl' => '',
+                'favicon' => '',
+                'logo' => '',
                 'meta' => [
                     'keywords' => $this->seoKeywords ? $this->seoKeywords : $this->gateway->seo_keywords,
                     'description' => $this->seoDescription ? $this->seoDescription : $this->gateway->seo_description,
                 ],
-                'story_domain' => Yii::$app->getRequest()->getHostName(),
-                'story_name' => Yii::$app->gateway->getInstance()->name,
+                'domain' => Yii::$app->getRequest()->getHostName(),
+                'name' => $this->gateway->getBaseDomain(),
                 'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => $this->gateway->custom_header,
-                'custom_footer' => $this->gateway->custom_footer,
+                'custom_header' => '',
+                'custom_footer' => '',
             ]
         ];
 

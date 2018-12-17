@@ -1,7 +1,7 @@
 <?php
-namespace common\components;
+namespace sommerce\components;
 
-use common\helpers\ThemesHelper;
+use sommerce\helpers\ThemesHelper;
 use Yii;
 use yii\base\InvalidCallException;
 use yii\base\ViewContextInterface;
@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 
 /**
  * Class View
- * @package app\components
+ * @package sommerce\components
  */
 class View extends \yii\web\View {
 

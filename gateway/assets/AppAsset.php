@@ -5,7 +5,7 @@ namespace gateway\assets;
 use yii\web\AssetBundle;
 
 /**
- * Main gateway application asset bundle.
+ * Main frontend application asset bundle.
  */
 class AppAsset extends AssetBundle
 {

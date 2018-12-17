@@ -85,7 +85,7 @@ $config = [
         ],
 
         'view' => [
-            'class' => 'common\components\View',
+            'class' => 'sommerce\components\View',
             'renderers' => [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',

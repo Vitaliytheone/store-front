@@ -107,11 +107,10 @@ $config = [
             ],
         ],
         'view' => [
-            'class' => 'common\components\View',
+            'class' => 'sommerce\components\View',
             'renderers' => [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',
-                    //'cachePath' => $params['sommerce.twig.cachePath'],
                     'cachePath' => null,
                     'options' => [
                         'autoescape' => false

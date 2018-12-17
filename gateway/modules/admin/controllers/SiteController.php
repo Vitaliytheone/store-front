@@ -1,12 +1,8 @@
 <?php
 namespace gateway\modules\admin\controllers;
 
-use common\models\stores\StoreAdmins;
-use common\models\stores\Stores;
-use gateway\controllers\CommonController;
 use gateway\modules\admin\components\Url;
 use gateway\modules\admin\models\forms\LoginForm;
-use gateway\modules\admin\models\forms\SuperLoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\User;
@@ -14,7 +10,7 @@ use yii\web\User;
 /**
  * Site controller for the `admin` module
  */
-class SiteController extends AdminController
+class SiteController extends CustomController
 {
     /**
      * Layout for login pages
@@ -33,18 +29,6 @@ class SiteController extends AdminController
      * @var User
      */
     private $_user;
-
-    /**
-     * Redirect order list
-     * @var array
-     */
-    private $_redirectList= [
-        'orders',
-        'payments',
-        'products',
-        'settings',
-        StoreAdmins::DEFAULT_CONTROLLER,
-    ];
 
     /**
      * @inheritdoc
@@ -67,7 +51,7 @@ class SiteController extends AdminController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['index'],
                 'rules' => [
                     [
@@ -133,22 +117,6 @@ class SiteController extends AdminController
     }
 
     /**
-     * @param $token
-     * @return \yii\web\Response
-     */
-    public function actionSuperLogin($token)
-    {
-        $form = new SuperLoginForm();
-
-        if (!$form->login($token)) {
-
-            return $this->redirect(Url::toRoute('/'));
-        }
-
-        $this->redirect(Url::toRoute($this->_loggedInRedirectUrl));
-    }
-
-    /**
      * Render store frozen page for guest and non-superadmins
      * @return string
      */
@@ -163,6 +131,18 @@ class SiteController extends AdminController
     }
 
     /**
+     * Logout action.
+     * @return string
+     */
+    public function actionLogout()
+    {
+        $user = Yii::$app->user;
+
+        $user->logout();
+        $user->loginRequired();
+    }
+
+    /**
      * Make redirect url for logged in user
      * If exist return Url, and it is allowed, use it.
      * Else use first allowed controller from _redirectList list
@@ -170,10 +150,6 @@ class SiteController extends AdminController
      */
     private function _makeRedirectUrl()
     {
-        /** @var StoreAdmins $adminModel */
-        $adminModel = $this->_user->getIdentity();
-        $allowedControllers = $adminModel->getAllowedControllersNames();
-
         // Try to redirect by `return url`
         $returnUrl = $this->_user->getReturnUrl();
         if ($returnUrl) {
@@ -182,28 +158,15 @@ class SiteController extends AdminController
             $parsedPath = explode('/', trim($path, '/'));
 
             if ($path && isset($parsedPath[1])) {
-
-                $returnController = $parsedPath[1];
-
                 // Check if $returnController allowed
-                if (in_array($returnController, $allowedControllers)) {
-                    $this->_loggedInRedirectUrl = ltrim($returnUrl, '/admin');
+                $this->_loggedInRedirectUrl = ltrim($returnUrl, '/admin');
 
-                    return $this->_loggedInRedirectUrl;
-                }
+                return $this->_loggedInRedirectUrl;
             }
         }
 
-        // Else Try to find first allowed action in redirect orders list
-        $firstAllowedController = StoreAdmins::DEFAULT_CONTROLLER;
-        foreach ($this->_redirectList as $redirect) {
-            if (false !== array_search($redirect, $allowedControllers)) {
-                $firstAllowedController = $redirect;
-                break;
-            }
-        }
+        $this->_loggedInRedirectUrl = '/account';
 
-        $this->_loggedInRedirectUrl = '/' . $firstAllowedController;
         return $this->_loggedInRedirectUrl;
     }
 }

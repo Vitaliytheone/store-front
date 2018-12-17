@@ -1,9 +1,7 @@
 <?php
 namespace gateway\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreAdminsHash;
+use common\models\gateways\Admins;
 use Yii;
 use yii\base\Model;
 
@@ -94,32 +92,26 @@ class LoginForm extends Model
             return false;
         }
 
-        StoreAdminsHash::deleteByUser($user->id);
-
-        $hash = $user::generateAuthKey($user->id);
-        StoreAdminsHash::setHash($user->id, $hash, StoreAdminsHash::MODE_SUPERADMIN_OFF);
-
-        if (!Yii::$app->user->login($user, StoreAdminAuth::COOKIE_LIFETIME)) {
+        if (!Yii::$app->user->login($user, Admins::COOKIE_LIFETIME)) {
             return false;
         }
 
+        $user->auth_key = Admins::generateAuthKey($user->id);
         $user->ip = Yii::$app->getRequest()->getUserIP();
         $user->last_login = time();
-        $user->save();
-
-        ActivityLog::log($user, ActivityLog::E_ADMIN_ADMIN_AUTHORIZATION);
+        $user->save(false);
 
         return true;
     }
 
     /**
      * Finds user by Username
-     * @return StoreAdminAuth|null
+     * @return Admins|null
      */
     public function getUser()
     {
-        if (!($this->_user instanceof StoreAdminAuth)) {
-            $this->_user = StoreAdminAuth::findByUsername($this->username);
+        if (!($this->_user instanceof Admins)) {
+            $this->_user = Admins::findByUsername($this->username);
         }
 
         return $this->_user;

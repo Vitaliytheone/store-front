@@ -106,7 +106,7 @@ $config = [
             ],
         ],
         'view' => [
-            'class' => 'common\components\View',
+            'class' => 'gateway\components\View',
             'renderers' => [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',
