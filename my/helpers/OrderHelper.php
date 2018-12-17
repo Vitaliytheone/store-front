@@ -677,7 +677,6 @@ class OrderHelper {
         return true;
     }
 
-
     /**
      * Create store
      * @param Orders $order
@@ -749,6 +748,11 @@ class OrderHelper {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $store->getErrors(), 'cron.order.store_domain');
         }
+
+        // Create nginx config
+        SuperTaskHelper::setTasksNginx($store, [
+            'order_id' => $order->id
+        ]);
 
         // Create Store db
         if (!DbHelper::existDatabase($store->db_name)) {

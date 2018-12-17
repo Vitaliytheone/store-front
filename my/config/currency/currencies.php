@@ -101,4 +101,8 @@ return [
         'name' => 'Canadian dollar',
         'money_format' => '${{value}}',
     ],
+    'IQD' => [
+        'name' => 'Iraqi dinar',
+        'money_format' => 'د.ع{{value}}',
+    ],
 ];
