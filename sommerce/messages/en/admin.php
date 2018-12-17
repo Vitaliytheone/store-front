@@ -312,6 +312,7 @@ return [
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
     'settings.payments_paypal_guide_2' => 'Get your {api_credentials_url}.',
     'settings.payments_paypal_guide_3' => 'Enter your PayPal API details below.',
+    'settings.payments_paypal_standard_guide_1' => 'Enter your PayPal Email address below.',
     'settings.payments_paypal_email' => 'Email',
     'settings.payments_paypal_username' => 'Api username',
     'settings.payments_paypal_password' => 'Api password',
