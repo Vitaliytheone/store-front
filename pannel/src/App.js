@@ -14,8 +14,7 @@ const arrayData = Object.values(data).map(item => ({
 
 class App extends Component {
   state = {
-    data: arrayData,
-    dragElemets: false
+    data: arrayData
   };
 
   handleDragEnd = ({ source, destination }) => {
@@ -32,8 +31,22 @@ class App extends Component {
     });
   };
 
+  handlePackageSwitch = productIndex => ({ oldIndex, newIndex }) => {
+    const newData = [...this.state.data];
+    const product = newData[productIndex];
+    const packages = product.packages;
+    [packages[oldIndex], packages[newIndex]] = [
+      packages[newIndex],
+      packages[oldIndex]
+    ];
+
+    this.setState(prevState => ({
+      data: newData
+    }));
+  };
+
   render() {
-    const { data, dragElements } = this.state;
+    const { data } = this.state;
     return (
       <DragDropContext onDragEnd={this.handleDragEnd}>
         <div>
@@ -56,12 +69,12 @@ class App extends Component {
                               key={product.id}
                               draggableId={product.id}
                               index={index}
-                              disableInteractiveElementBlocking={
-                                  dragElements
-                                }
                             >
                               {(dragProvided, snapshot) => (
                                 <Product
+                                  handlePackageSwitch={this.handlePackageSwitch(
+                                    index
+                                  )}
                                   key={index}
                                   data={product}
                                   {...dragProvided.draggableProps}
