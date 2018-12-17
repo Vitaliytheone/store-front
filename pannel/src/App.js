@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Product from "./components/Product";
 import AddProduct from "./components/AddProduct";
 import "./App.css";
+import { SortableContainer } from "react-sortable-hoc";
 import data from "./data.json";
 
 //parse of json
@@ -11,6 +12,14 @@ const arrayData = Object.values(data).map(item => ({
   ...item,
   packages: Object.values(item.packages)
 }));
+
+// const ProductList = SortableContainer(({ data }) => (
+//   <div className="sortable">
+//     {data.map((product, index) => (
+//       <SortableProduct key={`item-${index}`} product={product} index={index} />
+//     ))}
+//   </div>
+// ));
 
 class App extends Component {
   state = {
@@ -29,6 +38,11 @@ class App extends Component {
     this.setState({
       data
     });
+  };
+
+  handleProductSwitch = ({ oldIndex, newIndex }) => {
+    const data = [...this.state.data];
+    [data[oldIndex], data[newIndex]] = [data[newIndex], data[oldIndex]];
   };
 
   handlePackageSwitch = productIndex => ({ oldIndex, newIndex }) => {
@@ -76,10 +90,8 @@ class App extends Component {
                                     index
                                   )}
                                   key={index}
-                                  data={product}
-                                  {...dragProvided.draggableProps}
-                                  {...dragProvided.dragHandleProps}
-                                  innerRef={dragProvided.innerRef}
+                                  product={product}
+                                  dragProvided={dragProvided}
                                 />
                               )}
                             </Draggable>

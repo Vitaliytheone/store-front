@@ -40054,18 +40054,21 @@ button.swiper-pagination-bullet {
 
 /* Drag */
 .sommerce_dragtable {
-  margin-bottom: 30px; }
+  margin-bottom: 30px;
+}
   .sommerce_dragtable .sommerce_dragtable__thead {
     flex-wrap: wrap;
     display: flex;
-    background-color: #e9ecef; }
-    .sommerce_dragtable .sommerce_dragtable__thead .sommerce_dragtable__th {
+    background-color: #e9ecef;
+  }
+  .sommerce_dragtable .sommerce_dragtable__thead .sommerce_dragtable__th {
       border-bottom: none;
       font-size: 15px;
       font-weight: 600;
       color: #808080;
-      padding: 10px; }
-  .sommerce_dragtable .sommerce_dragtable__tr {
+      padding: 10px;
+  }
+  .sommerce_dragtable__tr {
     font-size: 14px;
     border-top: none;
     border-bottom: 1px solid #e9ecef;
@@ -40089,14 +40092,14 @@ button.swiper-pagination-bullet {
   .sommerce_dragtable .movable-placeholder {
     height: 50px;
     margin-bottom: 5px; }
-  .sommerce_dragtable .sommerce_dragtable__category .sommerce_dragtable__category-move {
+  .sommerce_dragtable__category-move {
     display: inline-block;
     width: 12px;
     text-align: center;
     padding: 5px 0px;
     margin-right: 5px;
     cursor: move; }
-  .sommerce_dragtable .sommerce_dragtable__category .sommerce_dragtable__category-title {
+  .sommerce_dragtable__category-title {
     font-size: 16px;
     font-weight: 600;
     padding: 8px 10px;
@@ -40106,9 +40109,9 @@ button.swiper-pagination-bullet {
     position: relative;
     border-radius: 5px;
     box-shadow: 0 1px 15px 1px rgba(113, 106, 202, 0.08); }
-    .sommerce_dragtable .sommerce_dragtable__category .sommerce_dragtable__category-title .button-add-package {
+    .sommerce_dragtable__category-title .button-add-package {
       opacity: 0; }
-    .sommerce_dragtable .sommerce_dragtable__category .sommerce_dragtable__category-title:hover .button-add-package {
+    .sommerce_dragtable__category-title:hover .button-add-package {
       opacity: 1; }
   .sommerce_dragtable .sommerce_dragtable__button-edit {
     border: none;
@@ -41608,12 +41611,10 @@ a:hover, a:focus {
     max-width: 35px; } }
 
 
-/*            My custom Styles     */
+              /* MY CUSTOM STYLES */
 
-      .row.group-caption {
-        pointer-events: none;
-      }
-
-      .product-pointer-events{
-        pointer-events: auto;
-      }
+/* reorder styles for nested drag-elements */
+body .group-item {
+  display: flex !important;
+  flex-direction: row !important;
+}
