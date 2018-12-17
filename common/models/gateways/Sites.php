@@ -2,6 +2,11 @@
 
 namespace common\models\gateways;
 
+use common\helpers\DbHelper;
+use common\models\common\ProjectInterface;
+use gateway\helpers\GatewayHelper;
+use my\helpers\DomainsHelper;
+use my\helpers\ExpiryHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\gateways\queries\SitesQuery;
@@ -35,6 +40,8 @@ use common\models\gateways\queries\SitesQuery;
  */
 class Sites extends ActiveRecord
 {
+    const GATEWAY_DB_NAME_PREFIX = 'gateway_';
+
     /**
      * @inheritdoc
      */
@@ -110,5 +117,216 @@ class Sites extends ActiveRecord
     public static function find()
     {
         return new SitesQuery(get_called_class());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseDomain()
+    {
+        return DomainsHelper::idnToUtf8($this->domain);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseSite()
+    {
+        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSslMode($isActive)
+    {
+        $this->ssl = $isActive;
+    }
+
+    /**
+     * Set whois_lookup
+     * @param array|mixed $whoisLookupData
+     */
+    public function setWhoisLookup($whoisLookupData)
+    {
+        $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get whois_lookup
+     * @return array|mixed
+     */
+    public function getWhoisLookup()
+    {
+        return json_decode($this->whois_lookup, true);
+    }
+
+    /**
+     * Set nameservers
+     * @param array|mixed $nameserversList
+     */
+    public function setNameservers($nameserversList)
+    {
+        $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get nameservers
+     * @return array|mixed
+     */
+    public function getNameservers()
+    {
+        return json_decode($this->nameservers,true);
+    }
+
+    /**
+     * Get store folder
+     * @return string
+     */
+    public function getThemeFolder()
+    {
+        return $this->theme_folder;
+    }
+
+    /**
+     * Get folder content decoded data
+     * @return array|mixed
+     */
+    public function getFolderContentData()
+    {
+        if (empty($this->folder_content)) {
+            return [];
+        }
+
+        return json_decode($this->folder_content, true);
+    }
+
+    /**
+     * Set folder content decoded data
+     * @param mixed $content
+     * @return bool
+     */
+    public function setFolderContentData($content)
+    {
+        $this->folder_content = json_encode($content);
+
+        return $this->save(false);
+    }
+
+    /**
+     * Generate unique folder name
+     * @return bool
+     */
+    public function generateFolderName()
+    {
+        for ($i = 1; $i < 100; $i++) {
+            $this->folder = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 6);
+            if (!static::findOne([
+                'folder' => $this->theme_folder
+            ])) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Get store folder
+     * @return string
+     */
+    public function getFolder()
+    {
+        $assetsPath = GatewayHelper::getAssetsPath();
+        if (empty($this->theme_folder) || !is_dir($assetsPath . $this->theme_folder)) {
+            $this->generateFolderName();
+            $this->save(false);
+            GatewayHelper::generateAssets($this->id);
+        }
+
+        return $this->folder;
+    }
+
+    /**
+     * Return is store inactive
+     * @return bool
+     */
+    public function isInactive()
+    {
+        return $this->isExpired();
+    }
+
+    /**
+     * Return if store expired
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return $this->expired_at ? time() > $this->expired_at : false;
+    }
+
+    /**
+     * Check if store is expired and update store status
+     * @return bool
+     */
+    public function checkExpired()
+    {
+        if ($this->isExpired()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Rename database
+     */
+    public function renameDb()
+    {
+        $oldDbName = $this->db_name;
+        $this->generateDbName();
+        DbHelper::renameDatabase($oldDbName, $this->db_name);
+    }
+
+    /**
+     * Create store db name
+     */
+    public function generateDbName()
+    {
+        $domain = Yii::$app->params['gatewayDomain'];
+
+        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', $this->domain));
+
+        $postfix = null;
+
+        do {
+            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
+            $postfix ++;
+        } while(DbHelper::existDatabase($dbName));
+
+        $this->db_name = $dbName;
+    }
+
+    /**
+     * Generate store expired datetime
+     * @param bool $isTrial is store trial
+     */
+    public function generateExpired($isTrial = false)
+    {
+        $this->expired_at = $isTrial ? ExpiryHelper::days(14, time()) : ExpiryHelper::month(time());
+    }
+
+    /**
+     * Update expired
+     * @return bool
+     */
+    public function updateExpired()
+    {
+        if (!$this->isExpired()) {
+            $time = $this->expired_at;
+        } else {
+            $time = time();
+        }
+
+        $this->expired_at = ExpiryHelper::month($time);
+
+        return $this->save(false);
     }
 }

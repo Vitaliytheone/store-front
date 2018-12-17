@@ -1,65 +1,114 @@
 <?php
 namespace gateway\controllers;
 
+use common\models\panels\Params;
+use common\models\panels\SslValidation;
+use gateway\models\search\BlocksSearch;
 use Yii;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends CustomController
 {
     /**
-     * @inheritdoc
+     * Error action
+     * @return string
      */
-    public function behaviors()
+    public function actionError()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+        $this->view->title = Yii::t('app', '404.title');
+
+        return $this->renderPartialCustom('404.twig');
     }
 
     /**
-     * @inheritdoc
+     * Frozen action
+     * @return string
      */
-    public function actions()
+    public function actionFrozen()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
+
+        if (!$this->gateway->isInactive()) {
+            return $this->redirect('/');
+        }
+
+        return $this->renderPartial('frozen');
     }
 
     /**
-     * Displays homepage.
+     * Displays index page.
      *
      * @return string
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $this->pageTitle = $this->gateway->seo_title;
+
+        return $this->render('index.twig', [
+            'block' => BlocksSearch::search($this->gateway)
+        ]);
+    }
+
+    /**
+     * Displays checkout page.
+     *
+     * @return string
+     */
+    public function actionCheckout()
+    {
+        return $this->renderPartial('checkout');
+    }
+
+
+    /**
+     * Validate ssl certificate. For robot comings
+     * @param $filename
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionSsl($filename)
+    {
+        $method = ArrayHelper::getValue(explode('/', mb_strtolower(Yii::$app->request->url)), 2);
+
+        switch ($method) {
+            case 'pki-validation':
+
+                $model = SslValidation::findOne([
+                    'pid' => $this->gateway->id,
+                    'file_name' => $filename . '.txt'
+                ]);
+
+                if (!$model) {
+                    throw new NotFoundHttpException();
+                }
+
+                $content = $model->content;
+
+                break;
+
+            case 'acme-challenge':
+
+                Yii::$app->response->format = Response::FORMAT_RAW;
+                Yii::$app->response->headers->add('Content-Type', 'text/plain; charset=utf-8');
+
+                $accountThumbPrint = Params::get(Params::CATEGORY_SERVICE, Params::CODE_LETSENCRYPT, 'account_thumbprint');
+
+                if (!$accountThumbPrint) {
+                    throw new NotFoundHttpException();
+                }
+
+                $content = $filename . '.' . $accountThumbPrint;
+
+                break;
+
+            default:
+                throw new NotFoundHttpException();
+        }
+
+        return $content;
     }
 }

@@ -8,7 +8,7 @@ return [
         'password' => 'root',
         'charset' => 'utf8',
     ],
-    'storeDb' => [
+    'gatewayDb' => [
         'class' => 'yii\db\Connection',
         'dsn' => 'mysql:host=localhost;dbname=gateway_site',
         'username' => 'root',

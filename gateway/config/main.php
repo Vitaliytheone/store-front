@@ -20,14 +20,13 @@ $routers = require(__DIR__ . '/routers.php');
 $config = [
     'id' => 'app-gateway',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'store', 'view'],
+    'bootstrap' => ['log', 'gateway', 'view'],
     'controllerNamespace' => 'gateway\controllers',
     'sourceLanguage' => 'esperanto',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-gateway',
             'cookieValidationKey' => 'uKJVjhPVYpKcAirTEKcgVrcau5ZVPV0d',
-            'class'	=> 'gateway\components\MyRequest',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser'
             ],
@@ -40,7 +39,7 @@ $config = [
         ],
         'user' => [
             'class' => 'gateway\modules\admin\components\CustomUser',
-            'identityClass' => 'common\models\gateways\Admins',
+            'identityClass' => \common\models\gateways\Admins::class,
             'loginUrl' => '/admin',
             'enableSession' => true,
             'enableAutoLogin' => true,
@@ -118,11 +117,11 @@ $config = [
                 ],
             ],
         ],
-        'store' => [
-            'class' => 'common\components\stores\StoreComponent'
+        'gateway' => [
+            'class' => 'common\components\gateways\GatewayComponent'
         ],
         'db' => $db['db'],
-        'storeDb' => $db['storeDb'],
+        'gatewayDb' => $db['gatewayDb'],
     ],
     'params' => $params,
     'modules' => [

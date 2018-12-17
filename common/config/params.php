@@ -21,6 +21,7 @@ return [
     'myUrl' => 'http://sommerce.my/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
     'storeDomain' => 'sommerce.net', // Домен нашего сайта
+    'gatewayDomain' => 'gateway.net',
 
     'nginx_restart' => '/etc/init.d/nginx restart',
 
@@ -79,6 +80,12 @@ return [
         'block_features' => 1,
         'block_reviews' => 1,
         'block_process' => 1,
+    ],
+
+    // Default gateway attributes
+    'gateway.defaults' => [
+        'theme_name' => 'Default',
+        'theme_folder' => 'default',
     ],
 
     'store.staff_users.limit' => 10,

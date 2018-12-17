@@ -11,18 +11,7 @@ return [
 
     'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb',
 
-    'gearmanIp' => '127.0.0.1',
-    'gearmanPort' => 4730,
-    'gearmanPrefix' => 'sommerce_',
-
     'debugEmail' => null,
 
-    'senderOrdersLimit' => 100,
-    'getstatusOrdersLimit' => 100,
-    'localApiDomain' => 'http://localapi2/api/v2', //Sender API point
-
-    'iconFileSizeLimit' => 0.512e6,     // Bytes
-    'logoFileSizeLimit' => 2.097152e6,  // Bytes
-
-    'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
+    'devEmail' => [], // Адреса почты на которые шлем ошибки
 ];
