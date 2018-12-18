@@ -1,0 +1,66 @@
+<div class="container min-height">
+	<div class="row">
+      {% if payment_result.completed %}
+          <div class="alert-card col-md-offset-2 col-md-8">
+              <div class="panel">
+                  <div class="panel-body">
+                      <div class="alert-icon__block">
+                          <div class="alert-icon"><span class="fa fa-check"></span></div>
+                      </div>
+                      <div class="panel-body__content">
+                          <div class="panel-body__content-title {% if site.rtl %} rtl-content {% endif %}">{{ lang('payment_result.completed.title') }}</div>
+                          <div class="panel-body__content-message">
+                              <div class="alert alert-success {% if site.rtl %} rtl-content {% endif %}">
+                                  {{ lang('payment_result.completed.description') }}
+                              </div>
+                          </div>
+                          <div class="panel-body__content-id">#{{ payment_result.id }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      {% endif %}
+
+      {% if payment_result.failed %}
+          <div class="alert-card col-md-offset-2 col-md-8">
+              <div class="panel">
+                  <div class="panel-body">
+                      <div class="alert-icon__block">
+                          <div class="alert-icon"><span class="fa fa-times"></span></div>
+                      </div>
+                      <div class="panel-body__content">
+                          <div class="panel-body__content-title {% if site.rtl %} rtl-content {% endif %}">{{ lang('payment_result.failed.title') }}</div>
+                          <div class="panel-body__content-message">
+                              <div class="alert alert-danger {% if site.rtl %} rtl-content {% endif %}">
+                                  {{ lang('payment_result.failed.description') }}
+                              </div>
+                          </div>
+                          <div class="panel-body__content-id">#{{ payment_result.id }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      {% endif %}
+
+      {% if payment_result.awaiting %}
+          <div class="alert-card col-md-offset-2 col-md-8">
+              <div class="panel">
+                  <div class="panel-body">
+                      <div class="alert-icon__block">
+                          <div class="alert-icon"><span class="fa fa-clock-o"></span></div>
+                      </div>
+                      <div class="panel-body__content">
+                          <div class="panel-body__content-title {% if site.rtl %} rtl-content {% endif %}">{{ lang('payment_result.awaiting.title') }}</div>
+                          <div class="panel-body__content-message">
+                              <div class="alert alert-success {% if site.rtl %} rtl-content {% endif %}">
+                                  {{ lang('payment_result.awaiting.description') }}
+                              </div>
+                          </div>
+                          <div class="panel-body__content-id">#{{ payment_result.id }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      {% endif %}
+	</div>
+</div>

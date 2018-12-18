@@ -1,6 +1,6 @@
 <?php
 
-namespace gateway\modules\admin\models\search;
+namespace admin\models\search;
 
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;

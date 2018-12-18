@@ -1,0 +1,94 @@
+<!-- Page Header Section Start -->
+<div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
+    <div class="container">
+        <!-- Page Header Title Start -->
+        <div class="page-header--title pull-left {% if site.rtl %} page-header-rtl {% endif %}">
+            <h1 class="h1">{{ product.title }}</h1>
+        </div>
+        <!-- Page Header Title End -->
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+
+<!-- Content Start -->
+<div class="contact--info pd--100-0-40">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Info Item Start -->
+            <div class="contact--info-item {% if site.rtl %} rtl-content {% endif %}">
+                {{ product.content }}
+            </div>
+            <!-- Contact Info Item End -->
+        </div>
+    </div>
+</div>
+<!-- Content End -->
+
+
+<!-- Pricing Section Start -->
+<div id="pricing" class="pd--100-0-0">
+    <div class="container">
+
+        <div class="row {% if site.rtl %} rtl-products {% endif %} AdjustRow">
+            {% for package in product.packages %}
+            <div class="col-md-3 col-xs-6">
+                <!-- Pricing Item Start -->
+                <div class="pricing--item">
+                  	{% if package.best %} <span class="best-product">{{ lang('product.best') }}</span> {% endif %}
+                    <div class="pricing--header bg--color-theme">
+                        <div class="pricing--quantity">
+                            <span class="price-text">{{ package.quantity }}</span>
+                        </div>
+                        <h3 class="h4">{{ package.name}}</h3>
+                    </div>
+                  
+                    <div class="pricing--price">
+                        <p class="price-text"><strong>{{ package.price|money }}</strong></p>
+                    </div>
+
+                    <div class="pricing--features">
+                        <ul class="nav">
+                            {% for property in product.properties %}
+                            <li>{{ property }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="pricing--footer">
+                        <a href="{{ package.button.url_buy_now }}" class="btn btn-default">{{
+                            lang('product.button.buy_now') }}</a>
+                    </div>
+                </div>
+                <!-- Pricing Item End -->
+            </div>
+            {% if loop.index is divisible by(4) %}
+            <div class="clearfix"></div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Pricing Section End -->
+
+
+{% if product.color %}
+  <style>
+    .pricing--header{
+      background-color: {{ product.color }};
+    }
+    .pricing--header:before{
+      border-color: {{ product.color }} transparent transparent transparent;
+    }
+    .pricing--price .price-text strong{
+      color: {{ product.color }};
+    }
+    .best-product:before{
+      color: {{ product.color }};
+    }
+    .pricing--item .btn-default:hover{
+      background: {{ product.color }};
+      border-color: {{ product.color }};
+    }
+  </style>
+{% endif %}

@@ -38,7 +38,7 @@ $config = [
             ],
         ],
         'user' => [
-            'class' => 'gateway\modules\admin\components\CustomUser',
+            'class' => 'admin\components\CustomUser',
             'identityClass' => \common\models\gateways\Admins::class,
             'loginUrl' => '/admin',
             'enableSession' => true,
@@ -95,14 +95,6 @@ $config = [
                         'admin' => 'admin.php',
                     ]
                 ],
-                'app*' => [
-                    'class' => 'gateway\components\i18n\CustomDbMessageSource',
-                    'db' => 'db',
-                    'storeDb' => 'storeDb',
-                    'cache' => 'cache',
-                    'enableCaching' => false,
-                    'cachingDuration' => 0, // cached data will never expire
-                ],
             ],
         ],
         'view' => [
@@ -126,7 +118,7 @@ $config = [
     'params' => $params,
     'modules' => [
         'admin' => [
-            'class' => '\gateway\modules\admin\Module',
+            'class' => 'admin\Module',
             'defaultRoute' => 'site'
         ],
     ],

@@ -3,7 +3,7 @@
     use yii\helpers\Html;
     use common\components\ActiveForm;
 
-    /** @var $form \gateway\modules\admin\models\forms\LoginForm */
+    /** @var $form \admin\models\forms\LoginForm */
 
 ?>
 <div class="m-grid m-grid--hor m-grid--root m-page">

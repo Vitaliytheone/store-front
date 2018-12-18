@@ -1,8 +1,8 @@
 <?php
-namespace gateway\modules\admin\controllers;
+namespace admin\controllers;
 
-use gateway\modules\admin\components\Url;
-use gateway\modules\admin\models\forms\LoginForm;
+use admin\components\Url;
+use admin\models\forms\LoginForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\User;
@@ -37,7 +37,7 @@ class SiteController extends CustomController
     {
         return [
             'error' => [
-                'class' => 'gateway\modules\admin\components\CustomErrorAction',
+                'class' => 'admin\components\CustomErrorAction',
                 'layout' => '@admin/views/layouts/main.php',
                 'view' => '@admin/views/error/404',
             ],

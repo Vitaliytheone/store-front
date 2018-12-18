@@ -1,5 +1,5 @@
 <?php
-namespace gateway\modules\admin\components;
+namespace admin\components;
 
 use common\models\gateways\Admins;
 use Yii;
@@ -7,7 +7,7 @@ use yii\web\User;
 
 /**
  * Class CustomUser
- * @package gateway\modules\admin\components
+ * @package admin\components
  */
 class CustomUser extends User
 {

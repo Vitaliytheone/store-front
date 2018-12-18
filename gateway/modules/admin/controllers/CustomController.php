@@ -1,6 +1,6 @@
 <?php
 
-namespace gateway\modules\admin\controllers;
+namespace admin\controllers;
 
 use gateway\controllers\CommonController;
 use Yii;

@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use common\components\ActiveForm;
-use gateway\modules\admin\components\Url;
+use admin\components\Url;
 
 /** @var \yii\base\Model $form */
 
