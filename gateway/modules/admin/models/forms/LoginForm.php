@@ -1,5 +1,5 @@
 <?php
-namespace gateway\modules\admin\models\forms;
+namespace admin\models\forms;
 
 use common\models\gateways\Admins;
 use Yii;
@@ -7,7 +7,7 @@ use yii\base\Model;
 
 /**
  * LoginForm is the model behind the login form.
- * @package gateway\modules\admin\models\forms
+ * @package admin\models\forms
  */
 class LoginForm extends Model
 {

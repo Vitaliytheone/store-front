@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace gateway\modules\admin\components;
+namespace admin\components;
 
 use Yii;
 use yii\web\ErrorAction;

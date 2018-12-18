@@ -1,11 +1,11 @@
 <?php
-namespace gateway\modules\admin\helpers;
+namespace admin\helpers;
 
 use Yii;
 
 /**
  * Class LanguagesHelper
- * @package gateway\modules\admin\helpers
+ * @package admin\helpers
  */
 class LanguagesHelper
 {

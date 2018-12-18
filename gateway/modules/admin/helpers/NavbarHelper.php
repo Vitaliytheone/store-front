@@ -1,13 +1,13 @@
 <?php
-namespace gateway\modules\admin\helpers;
+namespace admin\helpers;
 
 use common\models\gateways\Admins;
-use gateway\modules\admin\components\Url;
+use admin\components\Url;
 use Yii;
 
 /**
  * Class NavbarHelper
- * @package gateway\modules\admin\helpers
+ * @package admin\helpers
  */
 class NavbarHelper {
 

@@ -15,14 +15,14 @@ class m181218_112938_add_default_data extends Migration
         $this->execute("
             USE " . DB_GATEWAYS . ";
             
-            INSERT INTO `admins` (`id`, `site_id`, `username`, `password`, `auth_key`, `status`, `ip`, `last_login`, `created_at`, `updated_at`) VALUES
-            (1,	1,	'admin',	'b8debceae0c4b8a60048e41d3b90c451bb437c4a157f8e550c2958fec15e9edc',	'3807e30f5a8aae7b82c562413481736792b5c4be09829214812d2105d02bd2d3',	1,	'::1',	1545052540,	1516106224,	1544787825);
-            
-            
+            SET foreign_key_checks = 0;
             
             INSERT INTO `sites` (`id`, `customer_id`, `domain`, `subdomain`, `ssl`, `db_name`, `seo_title`, `seo_keywords`, `seo_description`, `folder`, `folder_content`, `theme_name`, `theme_folder`, `whois_lookup`, `nameservers`, `dns_status`, `dns_checked_at`, `expired_at`, `created_at`, `updated_at`) VALUES
             (1,	1,	'gateway.v1',	0,	0,	'gateway_site',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0,	NULL,	2147483647,	0,	NULL);
 
+
+            INSERT INTO `admins` (`id`, `site_id`, `username`, `password`, `auth_key`, `status`, `ip`, `last_login`, `created_at`, `updated_at`) VALUES
+            (1,	1,	'admin',	'b8debceae0c4b8a60048e41d3b90c451bb437c4a157f8e550c2958fec15e9edc',	'3807e30f5a8aae7b82c562413481736792b5c4be09829214812d2105d02bd2d3',	1,	'::1',	1545052540,	1516106224,	1544787825);
         ");
     }
 

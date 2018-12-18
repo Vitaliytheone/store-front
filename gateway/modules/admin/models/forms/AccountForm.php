@@ -1,5 +1,5 @@
 <?php
-namespace gateway\modules\admin\models\forms;
+namespace admin\models\forms;
 
 use common\models\gateways\Admins;
 use Yii;
@@ -8,7 +8,7 @@ use yii\web\User;
 
 /**
  * Class AccountForm
- * @package gateway\modules\admin\models\forms
+ * @package admin\models\forms
  */
 class AccountForm extends Model
 {

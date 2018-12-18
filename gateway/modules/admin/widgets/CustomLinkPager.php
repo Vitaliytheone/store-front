@@ -1,5 +1,5 @@
 <?php
-namespace gateway\modules\admin\widgets;
+namespace admin\widgets;
 
 use Yii;
 use yii\helpers\ArrayHelper;

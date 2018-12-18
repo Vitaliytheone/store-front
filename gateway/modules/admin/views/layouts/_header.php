@@ -1,9 +1,9 @@
 <?php
     /* @var $this \yii\web\View */
 
-    use gateway\modules\admin\components\Url;
+    use admin\components\Url;
     use yii\helpers\ArrayHelper;
-    use gateway\modules\admin\helpers\NavbarHelper;
+    use admin\helpers\NavbarHelper;
 
 $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
 

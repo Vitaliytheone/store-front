@@ -1,12 +1,12 @@
 <?php
-namespace gateway\modules\admin\components;
+namespace admin\components;
 
 use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class Url
- * @package gateway\modules\admin\components
+ * @package admin\components
  */
 class Url extends \yii\helpers\Url {
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace gateway\modules\admin\controllers;
+namespace admin\controllers;
 
 use common\models\gateways\Admins;
 use gateway\helpers\UiHelper;
-use gateway\modules\admin\models\forms\AccountForm;
+use admin\models\forms\AccountForm;
 use Yii;
 
 /**
