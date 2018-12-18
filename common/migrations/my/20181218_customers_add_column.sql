@@ -1,0 +1,1 @@
+ALTER TABLE `customers` ADD `gateway` TINYINT(1) NOT NULL DEFAULT '0';

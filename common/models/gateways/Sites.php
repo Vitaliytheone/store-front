@@ -10,12 +10,15 @@ use my\helpers\ExpiryHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\gateways\queries\SitesQuery;
+use yii\helpers\ArrayHelper;
+use yii\base\Exception;
 
 /**
  * This is the model class for table "{{%sites}}".
  *
  * @property int $id
  * @property int $customer_id
+ * @property int $status
  * @property string $domain
  * @property int $subdomain
  * @property int $ssl
@@ -42,6 +45,13 @@ class Sites extends ActiveRecord
 {
     const GATEWAY_DB_NAME_PREFIX = 'gateway_';
 
+    const STATUS_PENDING = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_FROZEN = 2;
+    const STATUS_TERMINATED = 3;
+
+    const CAN_DASHBOARD = 1;
+
     /**
      * @inheritdoc
      */
@@ -57,7 +67,7 @@ class Sites extends ActiveRecord
     {
         return [
             [['customer_id', 'domain', 'db_name', 'created_at'], 'required'],
-            [['customer_id', 'dns_checked_at', 'expired_at', 'created_at', 'updated_at'], 'integer'],
+            [['customer_id', 'dns_checked_at', 'expired_at', 'created_at', 'updated_at', 'status'], 'integer'],
             [['whois_lookup', 'nameservers'], 'string'],
             [['domain', 'db_name', 'seo_title', 'folder', 'folder_content', 'theme_name', 'theme_folder'], 'string', 'max' => 255],
             [['subdomain', 'ssl', 'dns_status'], 'string', 'max' => 1],
@@ -73,6 +83,7 @@ class Sites extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'customer_id' => Yii::t('app', 'Customer ID'),
+            'status' => Yii::t('app', 'Status'),
             'domain' => Yii::t('app', 'Domain'),
             'subdomain' => Yii::t('app', 'Subdomain'),
             'ssl' => Yii::t('app', 'Ssl'),
@@ -91,6 +102,20 @@ class Sites extends ActiveRecord
             'expired_at' => Yii::t('app', 'Expired At'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * Get statuses labels
+     * @return array
+     */
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_PENDING => Yii::t('app', 'sites.status.pending'),
+            static::STATUS_ACTIVE => Yii::t('app', 'sites.status.active'),
+            static::STATUS_FROZEN => Yii::t('app', 'sites.status.frozen'),
+            static::STATUS_TERMINATED => Yii::t('app', 'sites.status.terminated'),
         ];
     }
 
@@ -328,5 +353,34 @@ class Sites extends ActiveRecord
         $this->expired_at = ExpiryHelper::month($time);
 
         return $this->save(false);
+    }
+
+    /**
+     * Check store access some actions
+     * @param Sites|array $site
+     * @param integer $code
+     * @param array $options
+     * @return bool
+     * @throws Exception
+     */
+    public static function hasAccess($site, $code, array $options = [])
+    {
+        if ($site instanceof Sites) {
+            $status = $site->status;
+        } else {
+            $status = ArrayHelper::getValue($site, 'status');
+        }
+
+        if (!in_array($status, array_keys(static::getStatuses()))) {
+            throw new Exception('Unknown site status ' . "[$status]");
+        }
+
+        switch ($code) {
+            case self::CAN_DASHBOARD:
+                return self::STATUS_ACTIVE == $status;
+                break;
+        }
+
+        return false;
     }
 }

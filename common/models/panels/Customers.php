@@ -35,6 +35,7 @@ use yii\db\Query;
  * @property integer $paid
  * @property string $referral_link
  * @property integer $referral_expired_at
+ * @property integer $gateway
  *
  * @property Invoices[] $invoices
  * @property Payments[] $payments
@@ -95,6 +96,7 @@ class Customers extends ActiveRecord
             [['email', 'password', 'password_confirm', 'first_name', 'last_name'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['first_name', 'last_name'], 'required', 'on' => self::SCENARIO_SETTINGS],
             [['unpaid_earnings', 'status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores', 'buy_domain'], 'integer'],
+            [['gateway'], 'integer', 'max' => 1],
             [['referral_link'], 'string', 'max' => 5],
             [['first_name'], 'string', 'max' => 300],
             [['last_name'], 'string', 'max' => 300],
@@ -313,6 +315,7 @@ class Customers extends ActiveRecord
             'paid' => Yii::t('app', 'Paid'),
             'referral_link' => Yii::t('app', 'Referral Link'),
             'referral_expired_at' => Yii::t('app', 'Referral Expired At'),
+            'gateway' => Yii::t('app', 'Gateway'),
         ];
     }
 
@@ -514,6 +517,10 @@ class Customers extends ActiveRecord
                     return true;
                 }
                 return false;
+            break;
+
+            case 'gateway':
+                return $this->gateway;
             break;
         }
 

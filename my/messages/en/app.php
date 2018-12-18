@@ -14,6 +14,7 @@ return [
     'layouts.header.child_panels' => 'Child panels',
     'layouts.header.stores' => 'Stores',
     'layouts.header.beta' => 'Beta',
+    'layouts.header.gateway' => 'Gateway',
 
     'pages.title.domains' => 'Domains',
     'pages.title.staff' => 'Staff',
@@ -36,6 +37,7 @@ return [
     'pages.title.referral' => 'Referral program',
     'pages.title.stores' => 'Stores',
     'pages.title.store.staff' => 'Staff',
+    'pages.title.gateways' => 'Gateways',
 
     'panels.list.header' => 'Panels',
     'panels.list.order_panel' => 'Order new panel',
@@ -632,4 +634,16 @@ return [
 
     'project.type.panel' => 'Panel',
     'project.type.store' => 'Store',
+
+    'sites.list.header' => 'Gateway',
+    'sites.list.order_gateway' => 'Order new gateway',
+    'sites.list.domain' => 'Domain',
+    'sites.list.created' => 'Created',
+    'sites.list.expiry' => 'Expiry',
+    'sites.list.status' => 'Status',
+    'sites.list.action_dashboard' => 'Dashboard',
+    'sites.status.pending' => 'Pending',
+    'sites.status.active' => 'Active',
+    'sites.status.frozen' => 'Frozen',
+    'sites.status.terminated' => 'Terminated',
 ];

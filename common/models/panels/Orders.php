@@ -53,6 +53,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_TRIAL_STORE = 8;
     const ITEM_FREE_SSL = 9;
     const ITEM_PROLONGATION_FREE_SSL = 10;
+    const ITEM_BUY_GATEWAY = 11;
 
     use UnixTimeFormatTrait;
 
@@ -348,6 +349,15 @@ class Orders extends ActiveRecord
                 }
 
                 return true;
+            break;
+
+            case 'create_gateway':
+                if (empty($customerId)) {
+                    return false;
+                }
+
+                return true;
+            break;
         }
 
         return false;
