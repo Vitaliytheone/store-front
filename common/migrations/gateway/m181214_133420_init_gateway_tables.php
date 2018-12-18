@@ -10,10 +10,12 @@ class m181214_133420_init_gateway_tables extends Migration
     /**
      * {@inheritdoc}
      */
-    public function up()
+    public function safeUp()
     {
         $this->execute("
             USE `" . DB_GATEWAY . "`;
+
+            SET foreign_key_checks = 0;
 
             DROP TABLE IF EXISTS `pages`;
             CREATE TABLE `pages` (
@@ -52,7 +54,7 @@ class m181214_133420_init_gateway_tables extends Migration
     /**
      * {@inheritdoc}
      */
-    public function down()
+    public function safeDown()
     {
         $this->execute("
             USE `" . DB_GATEWAY . "`;

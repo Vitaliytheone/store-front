@@ -1,5 +1,7 @@
 USE `gateway`;
 
+SET foreign_key_checks = 0;
+
 DROP TABLE IF EXISTS `pages`;
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

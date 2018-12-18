@@ -10,11 +10,13 @@ class m181214_133411_init_gateways_tables extends Migration
     /**
      * {@inheritdoc}
      */
-    public function up()
+    public function safeUp()
     {
         $this->execute("
             USE `" . DB_GATEWAYS . "`;
 
+            SET foreign_key_checks = 0;
+            
             DROP TABLE IF EXISTS `admins`;
             CREATE TABLE `admins` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -98,7 +100,7 @@ class m181214_133411_init_gateways_tables extends Migration
     /**
      * {@inheritdoc}
      */
-    public function down()
+    public function safeDown()
     {
         $this->execute("
             USE `" . DB_GATEWAYS . "`;

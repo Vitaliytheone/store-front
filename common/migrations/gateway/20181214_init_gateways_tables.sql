@@ -1,5 +1,7 @@
 USE `gateways`;
 
+SET foreign_key_checks = 0;
+
 DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
