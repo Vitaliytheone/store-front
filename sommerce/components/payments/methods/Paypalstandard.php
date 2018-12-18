@@ -62,8 +62,8 @@ class Paypalstandard extends BasePayment
             'cmd' => '_xclick',
             'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
             'currency_code' => $store->currency,
-            'return' => SiteHelper::hostUrl() . '/' . $this->_method . '/' . $checkout->id,
-            'notify_url' => SiteHelper::hostUrl() . '/' . $this->_method . '/' . $checkout->id,
+            'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
+            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
             'cancel_return' => SiteHelper::hostUrl() . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
@@ -329,12 +329,11 @@ class Paypalstandard extends BasePayment
         ];
 
         $checkout = Checkouts::findOne(['id' => $checkoutId]);
-        $payment = Payments::findOne(['checkout_id' => $checkoutId, 'method' => PaymentMethods::METHOD_PAYPAL_STANDARD]);
 
         if (empty($checkout)) {
             $paymentsResult['failed'] = true;
-        } elseif (!$payment) {
-            $paymentsResult['awaiting'] = true; // force use Awaiting status if POST is empty
+        } elseif (empty($payment = Payments::findOne(['checkout_id' => $checkoutId, 'method' => PaymentMethods::METHOD_PAYPAL_STANDARD]))) {
+            $paymentsResult['awaiting'] = true; // force use Awaiting status if payment not yet created (POST is empty)
         } else {
             $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
             $paymentsResult['awaiting'] = in_array($payment->status, [Payments::STATUS_AWAITING]);
