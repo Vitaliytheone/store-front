@@ -13,7 +13,7 @@ class m181218_112938_add_default_data extends Migration
     public function safeUp()
     {
         $this->execute("
-            USE " . DB_GATEWAY . ";
+            USE " . DB_GATEWAYS . ";
             
             INSERT INTO `admins` (`id`, `site_id`, `username`, `password`, `auth_key`, `status`, `ip`, `last_login`, `created_at`, `updated_at`) VALUES
             (1,	1,	'admin',	'b8debceae0c4b8a60048e41d3b90c451bb437c4a157f8e550c2958fec15e9edc',	'3807e30f5a8aae7b82c562413481736792b5c4be09829214812d2105d02bd2d3',	1,	'::1',	1545052540,	1516106224,	1544787825);
@@ -32,7 +32,7 @@ class m181218_112938_add_default_data extends Migration
     public function safeDown()
     {
         $this->execute("
-            USE " . DB_GATEWAY . ";
+            USE " . DB_GATEWAYS . ";
             
             SET foreign_key_checks = 0;
             TRUNCATE TABLE `admins`;
