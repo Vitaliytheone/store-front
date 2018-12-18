@@ -23,7 +23,6 @@ class Mollie extends BasePayment
 
     protected $_method = PaymentMethods::METHOD_MOLLIE;
 
-    public $redirectProcessing = true;
 
     /**
      * Create checkout and redirect to Mollie pay site
@@ -54,8 +53,8 @@ class Mollie extends BasePayment
                     'value' => $amount
                 ],
                 'description' => static::getDescription($checkout->id),
-                'redirectUrl' => SiteHelper::hostUrl() . '/' . $this->_method . '/' . $checkout->id,
-                'webhookUrl' => SiteHelper::hostUrl() . '/' . $this->_method . '/' . $checkout->id,
+                'redirectUrl' => SiteHelper::hostUrl() . '/cart',
+                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
@@ -77,6 +76,14 @@ class Mollie extends BasePayment
      */
     public function processing($store)
     {
+        $txnId = ArrayHelper::getValue($_POST, 'id');
+        if (empty($txnId)) {
+            return [
+                'result' => 2,
+                'content' => 'no data',
+            ];
+        }
+
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_MOLLIE,
             'store_id' => $store->id,
@@ -90,33 +97,7 @@ class Mollie extends BasePayment
             ];
         }
 
-        $txnId = ArrayHelper::getValue($_POST, 'id');
-        $id = ArrayHelper::getValue($_GET, 'id');
-
-        // after redirect POST is empty, show Payment Awaiting
-        if (empty($_POST)) {
-            return [
-                'checkout_id' => $id,
-                'result' => 2,
-            ];
-        }
-
-        if (empty($txnId)) {
-            return [
-                'result' => 2,
-                'content' => 'no data',
-            ];
-        }
-
         $paymentMethodOptions = $paymentMethod->getDetails();
-
-        if (empty($id) || !($this->_checkout = Checkouts::findOne(['id' => $id, 'method_id' => $paymentMethod->id]))) {
-            return [
-                'checkout_id' => $id,
-                'result' => 2,
-                'content' => 'no invoice'
-            ];
-        }
 
         try {
             $mollie = new MollieApiClient();
@@ -127,6 +108,13 @@ class Mollie extends BasePayment
             $profileId = $payment->profileId;
             $country = $payment->countryCode ?? null;
 
+            if (empty($paymentId) || !($this->_checkout = Checkouts::findOne(['id' => $paymentId, 'method_id' => $paymentMethod->id]))) {
+                return [
+                    'result' => 2,
+                    'content' => 'no invoice'
+                ];
+            }
+
             if ($paymentId != $this->_checkout->id) {
                 return [
                     'result' => 2,
@@ -134,7 +122,7 @@ class Mollie extends BasePayment
                 ];
             }
 
-            $this->_payment = Payments::findOne(['checkout_id' => $id]);
+            $this->_payment = Payments::findOne(['checkout_id' => $paymentId]);
 
             if (!$this->_payment) {
                 $this->_payment = new Payments();
@@ -145,7 +133,6 @@ class Mollie extends BasePayment
                 $this->_payment->currency = $this->_checkout->currency;
                 $this->_payment->country = $country;
                 $this->_payment->transaction_id = $txnId;
-                $this->_payment->status = Payments::STATUS_AWAITING;
                 $this->_payment->response_status = $paymentStatus;
                 $this->_payment->memo = $profileId . '; ' . $txnId;
             } elseif ($this->_payment->method != $this->_method) {
@@ -160,6 +147,15 @@ class Mollie extends BasePayment
 
             $this->_checkout->method_status = $paymentStatus;
 
+            if (!$payment->isPaid() || $payment->hasRefunds() || $payment->hasChargebacks()) {
+
+                return [
+                    'checkout_id' => $paymentId,
+                    'result' => 2,
+                    'content' => 'other payment status',
+                ];
+
+            }
 
             if ((float)$payment->amount->value != (float)$this->_payment->amount) {
                 return [
@@ -177,53 +173,17 @@ class Mollie extends BasePayment
                 ];
             }
 
+            $this->_payment->status = Payments::STATUS_AWAITING;
 
-            if ($payment->hasRefunds() || $payment->hasChargebacks()) {
-                $this->_payment->status = Payments::STATUS_REFUNDED;
-                $this->log(json_encode(['status' => 'Payment change status. Refund or chargeback receive'], JSON_PRETTY_PRINT));
-
-                return [
-                    'checkout_id' => $paymentId,
-                    'result' => 2,
-                    'content' => 'payment refund or chargeback',
-                ];
-            }
-
-            if ($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
-                $this->_payment->status = Payments::STATUS_COMPLETED;
-
-                // if payments complete create suborder and clear cart
-                static::success($this->_payment, [
-                    'result' => 1,
-                    'transaction_id' => $txnId,
-                    'amount' => $this->_checkout->price,
-                    'checkout_id' => $this->_checkout->id,
-                ], $store);
-
-                return [
-                    'checkout_id' => $id,
-                    'result' => 1,
-                    'content' => 'payment paid',
-                ];
-
-            } elseif ($payment->isOpen() || $payment->isPending()) {
-
-                return [
-                    'checkout_id' => $id,
-                    'result' => 2,
-                    'content' => 'payment awaiting',
-                ];
-
-            } elseif ($payment->isFailed() || $payment->isExpired() || $payment->isCanceled()) {
-                $this->_payment->status = Payments::STATUS_FAILED;
-
-                return [
-                    'checkout_id' => $id,
-                    'result' => 2,
-                    'content' => 'payment failed',
-                ];
-
-            }
+            return [
+                'checkout_id' => $paymentId,
+                'result' => 1,
+                'transaction_id' => $txnId,
+                'fee' => 0,
+                'amount' => $this->_payment->amount,
+                'payment_id' => $this->_payment->id,
+                'content' => 'Ok',
+            ];
 
 
         } catch (ApiException $e) {
@@ -276,34 +236,6 @@ class Mollie extends BasePayment
         }
 
         PaymentsLog::log($this->_checkout->id, $response);
-    }
-
-    /**
-     * Use own method instead parent, because if there was no POST request,
-     * the page "Payment Failed" is displayed.
-     *
-     * @inheritdoc
-     */
-    public static function getPaymentResult($checkoutId): array
-    {
-        $paymentsResult = [
-            'id' => $checkoutId,
-        ];
-
-        $checkout = Checkouts::findOne(['id' => $checkoutId]);
-        $payment = Payments::findOne(['checkout_id' => $checkoutId, 'method' => PaymentMethods::METHOD_MOLLIE]);
-
-        if (empty($checkout)) {
-            $paymentsResult['failed'] = true;
-        } elseif (!$payment) {
-            $paymentsResult['awaiting'] = true;
-        } else {
-            $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
-            $paymentsResult['awaiting'] = in_array($payment->status, [Payments::STATUS_AWAITING]);
-            $paymentsResult['completed'] = in_array($payment->status, [Payments::STATUS_COMPLETED]);
-        }
-
-        return $paymentsResult;
     }
 
 }

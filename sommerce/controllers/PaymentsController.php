@@ -59,7 +59,6 @@ class PaymentsController extends CustomController
             PaymentMethods::METHOD_STRIPE,
             PaymentMethods::METHOD_PAYPAL,
             PaymentMethods::METHOD_MERCADOPAGO,
-            PaymentMethods::METHOD_MOLLIE,
         ])) {
             return $this->redirect('/cart');
         }
