@@ -70,6 +70,7 @@ class CronController extends CustomController
                 Orders::ITEM_PROLONGATION_DOMAIN,
                 Orders::ITEM_FREE_SSL,
                 Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_GATEWAY,
             ]
         ])->all();
 
@@ -125,6 +126,10 @@ class CronController extends CustomController
                         if (Yii::$app->params['free_ssl.prolong']) {
                             OrderHelper::prolongationFreeSsl($order);
                         }
+                    break;
+
+                    case Orders::ITEM_BUY_GATEWAY:
+                        OrderHelper::gateway($order);
                     break;
                 }
             } catch (Exception $e) {

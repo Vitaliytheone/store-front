@@ -48,6 +48,7 @@ class MyActivityLog extends ActiveRecord
     const E_ORDERS_CREATE_SSL_ORDER = 403;
     const E_ORDERS_CREATE_CHILD_PANEL_ORDER = 404;
     const E_ORDERS_CREATE_STORE_ORDER = 405;
+    const E_ORDERS_CREATE_GATEWAY_ORDER = 404;
 
     const E_TICKETS_CREATE_TICKET = 501;
     const E_TICKETS_REPLY_TICKET = 502;

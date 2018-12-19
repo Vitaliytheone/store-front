@@ -1,6 +1,7 @@
 <?php
 namespace common\helpers;
 
+use common\models\gateways\Sites;
 use common\super_tasks\CreatePanelNginxConfigTask;
 use common\super_tasks\CreateStoreNginxConfigTask;
 use common\super_tasks\RestartNginxTask;
@@ -72,6 +73,14 @@ class SuperTaskHelper
                  */
                 $domain = $object->domain;
                 $item = SuperTasks::TASK_CREATE_STORE_NGINX_CONFIG;
+                break;
+
+            case 'Sites':
+                /**
+                 * @var Sites $object
+                 */
+                $domain = $object->domain;
+                $item = SuperTasks::TASK_CREATE_GATEWAY_NGINX_CONFIG;
                 break;
 
             default:

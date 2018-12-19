@@ -3,11 +3,13 @@
 namespace common\models\gateways;
 
 use common\helpers\DbHelper;
+use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
 use gateway\helpers\GatewayHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateways\queries\SitesQuery;
 use yii\helpers\ArrayHelper;
@@ -52,12 +54,16 @@ class Sites extends ActiveRecord
 
     const CAN_DASHBOARD = 1;
 
+    const DNS_STATUS_NOT_DEFINED = null;
+    const DNS_STATUS_ALIEN = 0;
+    const DNS_STATUS_MINE = 1;
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%sites}}';
+        return DB_GATEWAYS . '.sites';
     }
 
     /**
@@ -103,6 +109,16 @@ class Sites extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'timestamp' => TimestampBehavior::class,
+        ]);
     }
 
     /**
@@ -382,5 +398,25 @@ class Sites extends ActiveRecord
         }
 
         return false;
+    }
+
+    /**
+     * Create nginx config
+     * @return bool
+     * @throws \Exception
+     */
+    public function createNginxConfig()
+    {
+        return NginxHelper::create($this);
+    }
+
+    /**
+     * Remove nginx config
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteNginxConfig()
+    {
+        return NginxHelper::delete($this);
     }
 }

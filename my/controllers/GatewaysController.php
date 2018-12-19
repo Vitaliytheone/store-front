@@ -3,8 +3,11 @@
 namespace my\controllers;
 
 
+use common\models\panels\Content;
 use common\models\panels\Customers;
 use common\models\panels\Orders;
+use my\models\Auth;
+use my\models\forms\OrderGatewayForm;
 use my\models\search\GatewaysSearch;
 use yii\filters\VerbFilter;
 use Yii;
@@ -32,6 +35,9 @@ class GatewaysController extends CustomController
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         $this->view->title = Yii::t('app', 'pages.title.gateways');
@@ -49,6 +55,39 @@ class GatewaysController extends CustomController
                     'customerId' => $customer->id
                 ])
             ]
+        ]);
+    }
+
+    /**
+     * Create order
+     * @return string|\yii\web\Response
+     * @throws \Throwable
+     */
+    public function actionOrder()
+    {
+        /**
+         * @var Auth $user
+         */
+        $user = Yii::$app->user->getIdentity();
+        if (!Orders::can('create_panel', [
+            'customerId' => $user->id
+        ])) {
+            return $this->redirect('/panels');
+        }
+
+        $this->view->title = Yii::t('app', 'pages.title.order');
+
+        $model = new OrderGatewayForm();
+        $model->setUser($user);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect('/invoices/' . $model->code);
+        }
+
+        return $this->render('order', [
+            'model' => $model,
+            'note' => Content::getContent('nameservers'),
+            'user' => $user,
         ]);
     }
 }

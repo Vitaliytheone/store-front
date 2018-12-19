@@ -168,6 +168,7 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'orders.item.trial_store'),
             static::ITEM_FREE_SSL => Yii::t('app', 'orders.item.free_ssl'),
             static::ITEM_PROLONGATION_FREE_SSL => Yii::t('app', 'orders.item.prolongation_free_ssl'),
+            static::ITEM_BUY_GATEWAY => Yii::t('app', 'orders.item.buy_gateway'),
         ];
     }
 
