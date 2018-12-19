@@ -1,6 +1,7 @@
 <?php
 namespace admin\controllers\traits\settings;
 
+use common\models\gateway\ThemesFiles;
 use common\models\gateways\Admins;
 use common\models\gateways\DefaultThemes;
 use gateway\controllers\CommonController;
@@ -144,7 +145,10 @@ trait ThemesTrait {
             throw new NotFoundHttpException();
         }
 
-        if (!$themeModel->reset($file)) {
+        if (!ThemesFiles::deleteAll([
+            'theme_id' => $themeModel->id,
+            'name' => $file
+        ])) {
             $this->refresh();
         }
 

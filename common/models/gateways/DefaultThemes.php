@@ -112,20 +112,4 @@ class DefaultThemes extends ActiveRecord
     {
         return $this->folder === $this->_gateway->theme_folder;
     }
-
-    /**
-     * Reset theme file
-     * @param $resetFileName
-     * @return bool
-     */
-    public function reset($resetFileName)
-    {
-        $file = trim(escapeshellarg($resetFileName),'\'');
-
-        if (!$this->isActive()) {
-            return false;
-        }
-
-        return true;
-    }
 }

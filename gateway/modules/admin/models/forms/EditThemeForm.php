@@ -3,6 +3,7 @@ namespace admin\models\forms;
 
 use common\components\traits\UnixTimeFormatTrait;
 use admin\models\search\ThemesSearch;
+use common\models\gateway\ThemesFiles;
 use common\models\gateways\DefaultThemes;
 use common\models\gateways\Sites;
 use gateway\helpers\ThemesFilesHelper;
@@ -31,23 +32,11 @@ class EditThemeForm extends Model
         ],
         'Templates' => [
             'index.twig',
-            'product.twig',
-            'order.twig',
             'page.twig',
-            'cart.twig',
             '404.twig',
-            'contact.twig',
-            'payment_result.twig',
-        ],
-        'Snippets' => [
-            'slider.twig',
-            'features.twig',
-            'reviews.twig',
-            'process.twig',
         ],
         'JS' => [],
         'CSS' => [],
-        'configs' => [],
     ];
 
     /** @var  string */
@@ -67,6 +56,11 @@ class EditThemeForm extends Model
 
     /** @var Sites */
     protected $_gateway;
+
+    /**
+     * @var array
+     */
+    protected $_themes;
 
     public function formName()
     {
@@ -141,7 +135,6 @@ class EditThemeForm extends Model
         $themeModel = (new ThemesSearch())->searchByFolder($themeFolderName);
         $fileName = ltrim(str_replace('../', '', $themeEditFileName), '/');
 
-
         if (!$themeModel || !$themeModel->isActive()) {
             return false;
         }
@@ -154,7 +147,6 @@ class EditThemeForm extends Model
         if (!$themeEditFileName) {
             return $model;
         }
-
 
         /** Check is filename is allowed */
         if (strpos(json_encode($model->getFilesTree()), $fileName) === false) {
@@ -207,6 +199,7 @@ class EditThemeForm extends Model
         $themePath = $themeModel->getThemePath();
 
         $themeFiles = ThemesFilesHelper::dirTree($themePath, $themePath, '/^.*\.(css|js|twig|json)$/i');
+        $customFiles = $this->getThemes();
 
         foreach ($themeFiles as $fileName => $fileData) {
             $extension = ArrayHelper::getValue($fileData, 'extension');
@@ -223,17 +216,21 @@ class EditThemeForm extends Model
             }
         }
 
-        foreach ($this->_filesTree as $key=>&$folder)
-        {
+        foreach ($this->_filesTree as $key => &$folder) {
             sort($folder);
         }
 
         // Populate files by files data
         foreach ($this->_filesTree as &$folder) {
-            array_walk($folder, function(&$file) use ($themeFiles, $themeModel) {
+            array_walk($folder, function(&$file) use ($themeFiles, $themeModel, $customFiles) {
 
                 $modifiedAt = ArrayHelper::getValue($themeFiles, [$file, 'modified_at']);
                 $isModified = false;
+
+                if (!empty($customFiles[$file])) {
+                    $isModified = true;
+                    $modifiedAt = $customFiles[$file]['modified_at'];
+                }
 
                 $file = [
                     'name' => $file,
@@ -278,20 +275,22 @@ class EditThemeForm extends Model
         }
 
         $themeModel = $this->getThemeModel();
+        $customFiles = $this->getThemes();
 
-        $themeFilePath = $this->getPathToFile();
-        $themeRealFilePath = $themeModel->getThemePath() . '/' . $fileName;
+        if (!empty($customFiles[$fileName])) {
+            $fileContent = $customFiles[$fileName]['content'];
+        } else {
+            $themeFilePath = $this->getPathToFile();
+            $themeRealFilePath = $themeModel->getThemePath() . '/' . $fileName;
 
-        $filePath = false;
+            if (!file_exists($filePath = $themeFilePath) &&
+                !file_exists($filePath = $themeRealFilePath)
+            ) {
+                $filePath = false;
+            }
 
-        if (
-            !file_exists($filePath = $themeFilePath) &&
-            !file_exists($filePath = $themeRealFilePath)
-        ) {
-            $filePath = false;
+            $fileContent = $filePath ? file_get_contents($filePath, false) : '';
         }
-
-        $fileContent = $filePath ? file_get_contents($filePath, false) : '';
 
         $this->file_content = $fileContent;
 
@@ -312,24 +311,25 @@ class EditThemeForm extends Model
             }
         }
 
-        $pathToFile = $this->getPathToFile();
-        $path = dirname($pathToFile);
+        $themeModel = $this->getThemeModel();
 
-        if (!file_exists($path)) {
-            mkdir($path, 0766, true);
+        $attributes = [
+            'theme_id' => $themeModel->id,
+            'name' => $this->_file,
+        ];
+
+        if (!($model = ThemesFiles::findOne($attributes))) {
+            $model = new ThemesFiles($attributes);
         }
 
-        if (!file_put_contents($pathToFile, $this->file_content)) {
+        $model->content = $this->file_content;
+
+        if (!$model->save()) {
             return false;
         }
+        $model->refresh();
 
-        $modifiedAt = @filemtime($pathToFile);
-
-        if (!$modifiedAt) {
-            return false;
-        }
-
-        return static::formatDate($modifiedAt, 'php:Y-m-d');
+        return static::formatDate($model->updated_at, 'php:Y-m-d');
     }
 
     /**
@@ -338,9 +338,9 @@ class EditThemeForm extends Model
      */
     public function isResetAble()
     {
-        $file = $this->getPathToFile();
+        $customThemes = $this->getThemes();
 
-        return $file && file_exists($file);
+        return !empty($this->_file) && !empty($customThemes[$this->_file]);
     }
 
     /**
@@ -356,6 +356,31 @@ class EditThemeForm extends Model
         }
 
         return static::formatDate($editDate);
+    }
+
+    /**
+     * @return array
+     */
+    public function getThemes()
+    {
+        if (null !== $this->_themes) {
+            return $this->_themes;
+        }
+
+        $this->_themes = ThemesFiles::find()
+            ->select([
+                'name' => 'name',
+                'content' => 'content',
+                'modified_at' => 'updated_at',
+            ])
+            ->andWhere([
+                'theme_id' => $this->getThemeModel()->id
+            ])
+            ->asArray()
+            ->indexBy('name')
+            ->all();
+
+        return $this->_themes;
     }
 }
 
