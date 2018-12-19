@@ -25,6 +25,11 @@ use common\models\gateway\queries\PagesQuery;
  */
 class Pages extends ActiveRecord
 {
+    public static function getDb()
+    {
+        return Yii::$app->gatewayDb;
+    }
+
     /**
      * @inheritdoc
      */

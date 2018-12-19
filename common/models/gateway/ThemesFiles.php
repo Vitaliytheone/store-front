@@ -3,6 +3,7 @@
 namespace common\models\gateway;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateway\queries\ThemesFilesQuery;
 
@@ -18,6 +19,11 @@ use common\models\gateway\queries\ThemesFilesQuery;
  */
 class ThemesFiles extends ActiveRecord
 {
+    public static function getDb()
+    {
+        return Yii::$app->gatewayDb;
+    }
+
     /**
      * @inheritdoc
      */
@@ -32,7 +38,7 @@ class ThemesFiles extends ActiveRecord
     public function rules()
     {
         return [
-            [['theme_id', 'name', 'content', 'created_at'], 'required'],
+            [['theme_id', 'name', 'content'], 'required'],
             [['theme_id', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['name'], 'string', 'max' => 300],
@@ -61,5 +67,27 @@ class ThemesFiles extends ActiveRecord
     public static function find()
     {
         return new ThemesFilesQuery(get_called_class());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }
