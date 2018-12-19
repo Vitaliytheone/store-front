@@ -1,6 +1,7 @@
 <?php
 namespace admin\controllers;
 
+use admin\controllers\traits\settings\PaymentsTrait;
 use admin\controllers\traits\settings\ThemesTrait;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
@@ -13,6 +14,7 @@ use \yii\filters\VerbFilter;
 class SettingsController extends CustomController
 {
     use ThemesTrait;
+    use PaymentsTrait;
 
     public function behaviors()
     {
@@ -20,7 +22,7 @@ class SettingsController extends CustomController
         return $parentBehaviors + [
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style']
+                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style', 'payments-toggle-active']
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -29,11 +31,12 @@ class SettingsController extends CustomController
                     'theme-get-style' => ['GET'],
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
+                    'payments-toggle-active' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style'],
+                'only' => ['theme-update-style', 'payments-toggle-active'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -49,7 +52,8 @@ class SettingsController extends CustomController
         // Disabled csrf validation for some ajax actions
         if (in_array($action->id, [
             'update-theme',
-            'theme-update-style'
+            'theme-update-style',
+            'payments-toggle-active',
         ])) {
             $this->enableCsrfValidation = false;
         }

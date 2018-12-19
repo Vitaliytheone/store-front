@@ -2,6 +2,7 @@
 
 namespace admin\models\search;
 
+use common\models\gateways\Sites;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
 
@@ -14,6 +15,19 @@ abstract class BaseSearch
     const PAGE_SIZE = 100;
 
     protected $params;
+
+    /**
+     * @var Sites
+     */
+    protected $_gateway;
+
+    /**
+     * @param Sites $gateway
+     */
+    public function setGateway(Sites $gateway)
+    {
+        $this->_gateway = $gateway;
+    }
 
     /**
      * Set search parameters

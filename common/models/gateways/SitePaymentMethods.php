@@ -3,8 +3,10 @@
 namespace common\models\gateways;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateways\queries\SitePaymentMethodsQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%site_payment_methods}}".
@@ -20,8 +22,11 @@ use common\models\gateways\queries\SitePaymentMethodsQuery;
  * @property Sites $site
  * @property PaymentMethods $method
  */
-class SitePaymentMethods extends \yii\db\ActiveRecord
+class SitePaymentMethods extends ActiveRecord
 {
+    public const VISIBILITY_ENABLED = 1;
+    public const VISIBILITY_DISABLED = 0;
+
     /**
      * @inheritdoc
      */
@@ -36,12 +41,13 @@ class SitePaymentMethods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'site_id', 'method_id', 'options', 'created_at'], 'required'],
-            [['id', 'site_id', 'method_id', 'created_at', 'updated_at'], 'integer'],
+            [['site_id', 'method_id'], 'required'],
+            [['id', 'site_id', 'method_id', 'created_at', 'updated_at', 'visibility'], 'integer'],
             [['options'], 'string'],
-            [['visibility'], 'string', 'max' => 1],
             [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sites::class, 'targetAttribute' => ['site_id' => 'id']],
             [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethods::class, 'targetAttribute' => ['method_id' => 'id']],
+            [['options'], 'default', 'value' => '[]'],
+            [['visibility'], 'default', 'value' => static::VISIBILITY_DISABLED],
         ];
     }
 
@@ -84,5 +90,52 @@ class SitePaymentMethods extends \yii\db\ActiveRecord
     public static function find()
     {
         return new SitePaymentMethodsQuery(get_called_class());
+    }
+
+    /**
+     * Get payment method details
+     * @return array|mixed
+     */
+    public function getOptionsDetails()
+    {
+        return !empty($this->options) ? json_decode($this->options, true) : [];
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setOptionsDetails($options)
+    {
+        $paymentMethodOptions = PaymentMethods::findOne($this->method_id)->getFormSettings();
+
+        $preparedOptions = [];
+
+        foreach ($paymentMethodOptions as $paymentMethodOption) {
+            $preparedOptions[$paymentMethodOption['name']] = ArrayHelper::getValue($options, $paymentMethodOption['name']);
+        }
+
+        $this->options = json_encode((array)$preparedOptions);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }
