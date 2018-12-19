@@ -12,8 +12,8 @@ class m181218_095147_stores_change_pg_sort_order extends Migration
      */
     public function up()
     {
-        $this->execute('USE `stores`;');
-        $pg = Yii::$app->db->createCommand('SELECT * FROM `payment_gateways`;')->queryAll();
+        $this->execute('USE `' . DB_STORES . '`');
+        $pg = Yii::$app->db->createCommand('SELECT * FROM `payment_gateways` ORDER BY `position`;')->queryAll();
         $pos = 0;
 
         foreach ($pg as $key => $item) {
@@ -29,9 +29,7 @@ class m181218_095147_stores_change_pg_sort_order extends Migration
      */
     public function down()
     {
-        echo "m181218_095147_stores_change_pg_sort_order cannot be reverted.\n";
 
-        return false;
     }
 
 

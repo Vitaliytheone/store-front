@@ -5300,11 +5300,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2.0",
-        "ext-curl": "*",
-        "ext-json": "*",
-        "ext-simplexml": "*",
-        "ext-xmlwriter": "*"
+        "php": ">=7.2.0"
     },
     "platform-dev": []
 }
