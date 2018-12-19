@@ -45,6 +45,16 @@ gulp.task('js-so', function(done) {
         .pipe(gulp.dest('./sommerce/web/js/'));
 });
 
+gulp.task('js-gateway', function(done) {
+    return gulp.src([
+        './gateway/web/js/app/*.js',
+        './gateway/web/js/app/admin/*.js',
+    ])
+        .pipe(concat('main.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./gateway/web/js/'));
+});
+
 gulp.task('js-sommerce-frontend', function(done) {
     return gulp.src([
             './sommerce/web/js/app/*.js',

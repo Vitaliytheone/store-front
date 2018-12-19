@@ -102,10 +102,7 @@ return [
     'payments.payment_status_3' => 'Failed',
     'payments.payment_status_4' => 'Refunded',
     'payments.payment_method_all' => 'All',
-    'payments.payment_method_paypal' => 'Paypal',
-    'payments.payment_method_2checkout' => '2Checkout',
-    'payments.payment_method_bitcoin' => 'Bitcoin',
-    'payments.payment_method_coinpayments' => 'CoinPayments',
+    'payments.payment_method_1' => 'Paypal',
 
     'payments.t_id' => 'ID',
     'payments.t_customer' => 'Customer',
@@ -262,6 +259,7 @@ return [
     'settings.payments_save_method' => 'Save changes',
     'settings.payments_cancel_method' => 'Cancel',
     'settings.message_settings_saved' => 'Changes successfully saved!',
+    'settings.message_settings_error' => 'Can not save changes!',
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 
     'settings.payments_stripe_guide_1' => 'Publishable key and Secret key you may find on {signup_url}',
@@ -307,7 +305,7 @@ return [
     'settings.payments_bitcoin_guide_3' => 'Enter your Gateway secret and API Gateway ID below.',
     'settings.payments_bitcoin_gateway_id' => 'API Gateway ID',
     'settings.payments_bitcoin_gateway_secret' => 'Gateway secret',
-    'settings.payments_edit_paypal' => 'Edit PayPal',
+    'settings.payments_edit_1' => 'Edit PayPal',
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
     'settings.payments_paypal_guide_2' => 'Get your {api_credentials_url}.',
     'settings.payments_paypal_guide_3' => 'Enter your PayPal API details below.',

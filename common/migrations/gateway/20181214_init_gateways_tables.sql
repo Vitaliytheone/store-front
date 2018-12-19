@@ -67,7 +67,7 @@ CREATE TABLE `sites` (
 
 DROP TABLE IF EXISTS `site_payment_methods`;
 CREATE TABLE `site_payment_methods` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `site_id` int(11) NOT NULL,
   `method_id` int(11) NOT NULL,
   `options` text NOT NULL,
