@@ -3,7 +3,7 @@ import EditPackage from "./EditPackage";
 import DeletePackage from "./DeletePackage";
 import { SortableElement, SortableHandle } from "react-sortable-hoc";
 
-const DragHandle = SortableHandle(() => (
+export const DragHandle = SortableHandle(() => (
   <div className="sommerce_dragtable__category-move move">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
       <title>Drag-Handle</title>
@@ -15,7 +15,7 @@ const DragHandle = SortableHandle(() => (
   </div>
 ));
 
-const SortablePackage = SortableElement(({ pack }) => {
+export const SortablePackage = SortableElement(({ pack }) => {
   return (
     <div className="group-item sommerce_dragtable__tr align-items-center">
       <div className="col-lg-5 padding-null-left">
@@ -32,5 +32,3 @@ const SortablePackage = SortableElement(({ pack }) => {
     </div>
   );
 });
-
-export default SortablePackage;

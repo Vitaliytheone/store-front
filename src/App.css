@@ -41618,3 +41618,9 @@ body .group-item {
   display: flex !important;
   flex-direction: row !important;
 }
+
+
+/* active links in menu */
+li.m-menu__item > a.active > span{
+  color: white !important;
+}

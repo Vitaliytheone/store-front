@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const Header = props => (
   <div>
@@ -47,31 +48,28 @@ const Header = props => (
                 className="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light "
               >
                 <ul className="m-menu__nav  m-menu__nav--submenu-arrow ">
-                  <li
-                    className="m-menu__item m-menu__item--active"
-                    aria-haspopup="true"
-                  >
-                    <a href="order.html" className="m-menu__link ">
+                  <li className="m-menu__item" aria-haspopup="true">
+                    <NavLink to="/orders" className="m-menu__link ">
                       <span className="m-menu__link-text">Orders</span>
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="m-menu__item" aria-haspopup="true">
-                    <a href="payments.html" className="m-menu__link ">
+                    <NavLink to="/payments" className="m-menu__link ">
                       <span className="m-menu__link-text">Payments</span>
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="m-menu__item" aria-haspopup="true">
-                    <a href="products.html" className="m-menu__link ">
+                    <NavLink to="/products" className="m-menu__link">
                       <span className="m-menu__link-text">Products</span>
-                    </a>
+                    </NavLink>
                   </li>
                   <li
                     className="m-menu__item mobile-hidden"
                     aria-haspopup="true"
                   >
-                    <a href="settings.html" className="m-menu__link ">
+                    <NavLink to="/settings" className="m-menu__link ">
                       <span className="m-menu__link-text">Settings</span>
-                    </a>
+                    </NavLink>
                   </li>
                   <li
                     className="m-menu__item m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--icon-only mobile-show"
