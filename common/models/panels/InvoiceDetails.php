@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -175,6 +176,7 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_BUY_TRIAL_STORE,
             static::ITEM_PROLONGATION_SSL,
             static::ITEM_PROLONGATION_DOMAIN,
+            static::ITEM_BUY_GATEWAY,
         ];
     }
 
@@ -285,6 +287,13 @@ class InvoiceDetails extends ActiveRecord
                         'domain' => $store->domain
                     ]);
                 break;
+
+                case static::ITEM_BUY_GATEWAY:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_gateway', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
             }
         }
         return parent::beforeSave($insert);
@@ -401,6 +410,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_STORE:
             case static::ITEM_PROLONGATION_SSL:
             case static::ITEM_PROLONGATION_DOMAIN:
+            case static::ITEM_BUY_GATEWAY:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);

@@ -26,6 +26,8 @@ class ExpiredLog extends ActiveRecord
     const TYPE_CREATE_EXPIRY = 22;
     const TYPE_CREATE_STORE_EXPIRY = 23;
     const TYPE_CHANGE_STORE_EXPIRY = 24;
+    const TYPE_CREATE_GATEWAY_EXPIRY = 25;
+    const TYPE_CHANGE_GATEWAY_EXPIRY = 26;
 
     /**
      * @inheritdoc

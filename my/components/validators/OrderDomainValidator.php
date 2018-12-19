@@ -15,11 +15,17 @@ class OrderDomainValidator extends BaseDomainValidator
 {
     protected $domain;
 
+    /** @var bool */
     public $panel = false;
 
+    /** @var bool */
     public $store = false;
 
+    /** @var bool */
     public $child_panel = false;
+
+    /** @var bool */
+    public $gateway = false;
 
     /**
      * Validate domain
@@ -122,6 +128,8 @@ class OrderDomainValidator extends BaseDomainValidator
                     $item = Orders::ITEM_BUY_CHILD_PANEL;
                 } elseif ($this->store) {
                     $item = Orders::ITEM_BUY_STORE;
+                } elseif ($this->gateway) {
+                    $item = Orders::ITEM_BUY_GATEWAY;
                 }
 
                 // Для заказов с отличным item и статусом pending не проверяем, а после создания нового заказа - отменяем предыдущий заказ

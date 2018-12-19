@@ -1,6 +1,9 @@
 <?php
+
 namespace common\helpers;
 
+
+use common\models\gateways\Sites;
 use ReflectionClass;
 use common\models\panels\Project;
 use common\models\stores\Stores;
@@ -12,12 +15,14 @@ use Exception;
  * Class NginxHelper
  * @package common\helpers
  */
-class NginxHelper {
-
+class NginxHelper
+{
     /**
      * Create nginx config file by object
-     * @param Project|Stores $object
+     * @param Project|Stores|Sites $object
      * @return bool
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     public static function create($object)
     {
@@ -43,6 +48,17 @@ class NginxHelper {
                 $configPath = Yii::$app->params['storeNginxConfigPath'];
                 $defaultConfigPath = Yii::$app->params['storeNginxDefaultConfigPath'];
             break;
+
+            case 'Sites':
+                /**
+                 * @var Sites $object
+                 */
+                $domain = $object->domain;
+                $logItem = ThirdPartyLog::ITEM_BUY_GATEWAY;
+                $logCode = 'gateway.create_nginx_config';
+                $configPath = Yii::$app->params['gatewayNginxConfigPath'];
+                $defaultConfigPath = Yii::$app->params['gatewayNginxDefaultConfigPath'];
+                break;
 
             default:
                 throw new Exception();
@@ -71,8 +87,10 @@ class NginxHelper {
 
     /**
      * Delete nginx config file by object
-     * @param Project|Stores $object
+     * @param Project|Stores|Sites $object
      * @return bool
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     public static function delete($object)
     {
@@ -96,6 +114,16 @@ class NginxHelper {
                 $logCode = 'store.remove_nginx_config';
                 $configPath = Yii::$app->params['storeNginxConfigPath'];
             break;
+
+            case 'Sites':
+                /**
+                 * @var Sites $object
+                 */
+                $domain = $object->domain;
+                $logItem = ThirdPartyLog::ITEM_BUY_GATEWAY;
+                $logCode = 'gateway.remove_nginx_config';
+                $configPath = Yii::$app->params['gatewayNginxConfigPath'];
+                break;
 
             default:
                 throw new Exception();

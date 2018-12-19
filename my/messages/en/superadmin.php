@@ -900,6 +900,7 @@ return [
     'orders.list.item_prolongation_domain' => 'Prolongation Domain ({count})',
     'orders.list.item_trial_store' => 'Trial Store ({count})',
     'orders.list.item_free_ssl' => 'Free SSL ({count})',
+    'orders.list.item_gateway' => 'Gateways ({count})',
     'orders.nav.canceled' => 'Canceled ({count})',
     'orders.nav.all' => 'All ({count})',
     'orders.nav.completed' => 'Completed ({count})',

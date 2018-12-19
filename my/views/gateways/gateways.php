@@ -7,6 +7,7 @@
 use common\models\gateways\Sites;
 use common\models\panels\Orders;
 use yii\bootstrap\Html;
+use my\helpers\Url;
 
 $gatewayColors = [
     Sites::STATUS_FROZEN => 'text-danger',
@@ -35,7 +36,7 @@ $colors = function($gateway) use ($gatewayColors, $orderColors) {
     <div class="col-lg-12">
         <h2 class="page-header">
             <?= Yii::t('app', 'sites.list.header')?>
-            <a href="/order" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
+            <a href="<?= Url::toRoute(['gateways/order']) ?>" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
                 <?= Yii::t('app', 'sites.list.order_gateway')?>
             </a>
             <div class="alert alert-danger error-hint hidden" role="alert">

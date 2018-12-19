@@ -310,6 +310,7 @@ return [
     'invoice_details.description.buy_store' => 'First month maintenance for {domain}',
     'invoice_details.description.buy_trial_store' => 'One free month maintenance for trial store {domain}',
     'invoice_details.description.prolongation_store' => 'One month maintenance for {domain}',
+    'invoice_details.description.buy_gateway' => 'First month maintenance for {domain}',
     'invoices.status.unpaid' => 'Unpaid',
     'invoices.status.paid' => 'Paid',
     'invoices.status.canceled' => 'Canceled',
@@ -339,6 +340,7 @@ return [
     'orders.item.trial_store' => 'Trial store',
     'orders.item.free_ssl' => 'Free SSL',
     'orders.item.prolongation_free_ssl' => 'Prolongation Free SSL',
+    'orders.item.buy_gateway' => 'Gateway',
     'panel_domains.type.standard' => 'Standard',
     'panel_domains.type.additional' => 'Additional',
     'panel_domains.type.subdomain' => 'Subdomain',
@@ -443,6 +445,7 @@ return [
     'error.store.bad_name' => 'Wrong store name! Allowed symbols are: `A-Z`, `0-9`, `-`, and `space`',
     'error.store.can_not_order_store' => 'Can not order store',
     'error.store.can_not_order_domain' => 'Can not order domain',
+    'error.gateway.can_not_order_gateway' => 'Can not order gateway',
 
     'ssl.my.created.ticket_subject' => 'Attention',
     'ssl.my.created.ticket_message' => 'Because SSL was activated, you need to check and edit payment settings if needed.
@@ -646,4 +649,12 @@ return [
     'sites.status.active' => 'Active',
     'sites.status.frozen' => 'Frozen',
     'sites.status.terminated' => 'Terminated',
+
+    'form.order_gateway.domain' => 'Gateway domain',
+    'form.order_gateway.username' => 'Admin username',
+    'form.order_gateway.password' => 'Admin password',
+    'form.order_gateway.password_confirm' => 'Confirm password',
+
+    'gateways.order.gateway_block_header' => 'Order new gateway',
+    'gateways.order.gateway_block_submit' => 'Submit order',
 ];

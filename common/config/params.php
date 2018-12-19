@@ -9,14 +9,18 @@ return [
     'config.proxy' => PROXY_CONFIG,
     'panelNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
     'storeNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
+    'gatewayNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
     'panelNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
     'storeNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
+    'gatewayNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
 
     'panelSqlPath' => Yii::getAlias('@sommerce/runtime/sql/panel_template.sql'), // Путь к дампу базы данных соззданной панели
     'storeSqlPath' => Yii::getAlias('@sommerce/runtime/sql/store_template.sql'), // Путь к дампу базы данных созданного магазина
+    'gatewaySqlPath' => Yii::getAlias('@sommerce/runtime/sql/gateway_template.sql'),
 
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
-    'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых магазинов
+    'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых панелей
+    'gatewayDefaultDatabase' => 'gateway_template',
 
     'myUrl' => 'http://sommerce.my/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
@@ -35,6 +39,7 @@ return [
     'panelDeployPrice' => '50',
     'childPanelDeployPrice' => '25',
     'storeDeployPrice' => '35',
+    'gatewayDeployPrice' => '50',
     'storeChangeDomainDuration' => 6 * 60 * 60, // Время паузы между сменами домена магазина
     'storeProlongMinDuration' => 14 * 24 * 60 * 60, // 14 дней до окончания действия магазина, в который можно продлить магазин
 
