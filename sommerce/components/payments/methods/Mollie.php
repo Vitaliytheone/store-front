@@ -76,6 +76,8 @@ class Mollie extends BasePayment
      */
     public function processing($store)
     {
+        $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
+
         $txnId = ArrayHelper::getValue($_POST, 'id');
         if (empty($txnId)) {
             return [
@@ -115,13 +117,6 @@ class Mollie extends BasePayment
                 ];
             }
 
-            if ($paymentId != $this->_checkout->id) {
-                return [
-                    'result' => 2,
-                    'content' => 'bad checkout',
-                ];
-            }
-
             $this->_payment = Payments::findOne(['checkout_id' => $paymentId]);
 
             if (!$this->_payment) {
@@ -132,8 +127,6 @@ class Mollie extends BasePayment
                 $this->_payment->customer = $this->_checkout->customer;
                 $this->_payment->currency = $this->_checkout->currency;
                 $this->_payment->country = $country;
-                $this->_payment->transaction_id = $txnId;
-                $this->_payment->response_status = $paymentStatus;
                 $this->_payment->memo = $profileId . '; ' . $txnId;
             } elseif ($this->_payment->method != $this->_method) {
                 return [
@@ -143,19 +136,8 @@ class Mollie extends BasePayment
                 ];
             }
 
+            // save Log to DB
             $this->_logPayment($payment);
-
-            $this->_checkout->method_status = $paymentStatus;
-
-            if (!$payment->isPaid() || $payment->hasRefunds() || $payment->hasChargebacks()) {
-
-                return [
-                    'checkout_id' => $paymentId,
-                    'result' => 2,
-                    'content' => 'other payment status',
-                ];
-
-            }
 
             if ((float)$payment->amount->value != (float)$this->_payment->amount) {
                 return [
@@ -171,6 +153,20 @@ class Mollie extends BasePayment
                     'result' => 2,
                     'content' => 'bad currency',
                 ];
+            }
+
+            $this->_payment->transaction_id = $txnId;
+            $this->_payment->response_status = $paymentStatus;
+            $this->_checkout->method_status = $paymentStatus;
+
+            if (!$payment->isPaid() || $payment->hasRefunds() || $payment->hasChargebacks()) {
+
+                return [
+                    'checkout_id' => $paymentId,
+                    'result' => 2,
+                    'content' => 'other payment status',
+                ];
+
             }
 
             $this->_payment->status = Payments::STATUS_AWAITING;
