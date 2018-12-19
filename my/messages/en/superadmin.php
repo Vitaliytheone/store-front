@@ -552,6 +552,7 @@ return [
     'customers.list.header_panels' => 'Panels',
     'customers.list.header_stores' => 'Stores',
     'customers.list.header_child' => 'Child',
+    'customers.list.header_gateway' => 'Gateway',
     'customers.list.header_domains' => 'Domains',
     'customers.list.header_certificates' => 'Certificates',
     'customers.list.header_first_name' => 'First name',

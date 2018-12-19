@@ -75,6 +75,9 @@ class Customers extends ActiveRecord
     const BUY_DOMAIN_ACTIVE = 1;
     const BUY_DOMAIN_NOT_ACTIVE = 0;
 
+    const BUY_GATEWAY_ACTIVE = 1;
+    const BUY_GATEWAY_NOT_ACTIVE = 0;
+
     public $password_confirm;
 
     use UnixTimeFormatTrait;
@@ -615,5 +618,15 @@ class Customers extends ActiveRecord
         $this->buy_domain = self::BUY_DOMAIN_ACTIVE;
 
         return $this->save(false);
+    }
+
+    /**
+     * Activate gateways feature status
+     */
+    public function activateGateways()
+    {
+        $this->gateway = self::BUY_GATEWAY_ACTIVE;
+
+        return  $this->save(false);
     }
 }

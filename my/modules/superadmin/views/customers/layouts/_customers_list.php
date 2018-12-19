@@ -21,6 +21,7 @@
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_panels') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_stores') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_child') ?></th>
+                <th><?= Yii::t('app/superadmin', 'customers.list.header_gateway') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_domains') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_certificates') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_first_name') ?></th>
@@ -69,6 +70,17 @@
                         </td>
                         <td>
                             <?= Html::a($customer->countChild, Url::toRoute(['/child-panels', 'customer_id' => $customer->id])); ?>
+                        </td>
+                        <td>
+                            <?php if (!$customer->can('gateway')) : ?>
+                                <?= Html::a(Html::tag('span', Yii::t('app/superadmin', 'customers.list.activate_stores'),
+                                    ['class' => 'badge badge-light']),
+                                    Url::toRoute(['/customers/activate-gateways']),
+                                    ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
+                                )?>
+                            <?php else : ?>
+                                <?= Html::a($customer->countGateways, Url::toRoute(['/gateway', 'customer_id' => $customer->id])); ?>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <?php if (!$customer->can('domains')) : ?>
