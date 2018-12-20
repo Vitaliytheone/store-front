@@ -178,7 +178,14 @@ class ProjectAdmin extends ActiveRecord
      */
     public function getRules()
     {
-        return ArrayHelper::merge(static::$defaultRules, (array)json_decode($this->rules, true));
+        $rules = (array)json_decode($this->rules, true);
+        if (empty($rules)) {
+            return $rules;
+        }
+
+        $this->setRules($rules);
+
+        return json_decode($this->rules, true);
     }
 
     /**
@@ -224,6 +231,10 @@ class ProjectAdmin extends ActiveRecord
     public function isFullAccess()
     {
         $rules = $this->getRules();
+
+        if (empty($rules)) {
+            return false;
+        }
 
         if (0 != $rules['providers']) {
             return false;
