@@ -12,6 +12,14 @@
     data-menu-scrollable="false" data-menu-dropdown-timeout="500"
     style="margin-top: 40px;" >
     <ul class="m-nav">
+        <li class="m-nav__item <?=('pages' == $active ? 'm-nav__item--active' : '') ?>">
+            <a href="<?= Url::toRoute('/settings/pages')?>" class="m-nav__link">
+                <i class="m-nav__link-icon icon-docs"></i>
+                <span class="m-nav__link-text">
+                    <?= Yii::t('admin', 'settings.left_menu_pages') ?>
+                </span>
+            </a>
+        </li>
         <li class="m-nav__item <?=('payments' == $active ? 'm-nav__item--active' : '') ?>">
             <a href="<?= Url::toRoute('/settings/payments')?>" class="m-nav__link">
                 <i class="m-nav__link-icon icon-wallet"></i>
