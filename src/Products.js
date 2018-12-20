@@ -7,6 +7,7 @@ import {
   changePositionPackage
 } from "./services/products";
 import data from "./data.json";
+import axios from "axios";
 
 //parse of json
 const arrayData = Object.values(data).map(item => ({
@@ -33,13 +34,6 @@ class Products extends Component {
   };
 
   handleProductSwitch = ({ oldIndex, newIndex }) => {
-    // const data = [...this.state.data];
-    // [data[oldIndex], data[newIndex]] = [data[newIndex], data[oldIndex]];
-    //
-    // this.setState({
-    //   data
-    // });
-
     const { data } = this.state;
     this.setState({
       data: arrayMove(data, oldIndex, newIndex)
@@ -58,17 +52,21 @@ class Products extends Component {
     });
 
     changePositionPackage(productIndex, { oldIndex, newIndex });
-    // const newData = [...this.state.data];
-    // const product = newData[productIndex];
-    // const packages = product.packages;
-    // [packages[oldIndex], packages[newIndex]] = [
-    //   packages[newIndex],
-    //   packages[oldIndex]
-    // ];
-    //
-    // this.setState(prevState => ({
-    //   data: newData
-    // }));
+  };
+
+  handleAddProduct = async (values, actions) => {
+    const newProduct = {
+      id: null,
+      name: values.name,
+      position: this.state.products.length,
+      visibility: values.visibility
+    };
+    this.setState(prevState => ({
+      ...prevState,
+      data: [...prevState.data, newProduct]
+    }));
+    await axios.post("/products", newProduct);
+    actions.setSubmitting(false);
   };
 
   render() {
@@ -77,7 +75,7 @@ class Products extends Component {
       <div>
         <div className="page-container">
           <div className="m-container-sommerce container-fluid">
-            <AddProduct />
+            <AddProduct onSubmit={this.handleAddProduct} />
             <div className="row">
               <div className="col-12">
                 <div className="sommerce_dragtable">

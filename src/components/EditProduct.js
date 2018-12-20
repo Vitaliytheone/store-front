@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
-import AddProductModal from "../modals/AddProductModal";
+import ProductModal from "../modals/ProductModal";
 
 class EditProduct extends Component {
   state = {
@@ -30,7 +30,7 @@ class EditProduct extends Component {
           backdrop={false}
         >
           <ModalHeader toggle={this.toggle}>Edit product</ModalHeader>
-          <AddProductModal />
+          <ProductModal />
           <ModalFooter className="justify-content-start">
             <Button color="primary" onClick={this.toggle}>
               Edit product

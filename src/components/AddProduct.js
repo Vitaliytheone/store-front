@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { addProduct } from "../services/products";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
-import AddProductModal from "../modals/AddProductModal";
+import { Formik, Form } from "formik";
+import ProductModal from "../modals/ProductModal";
 
 class AddProduct extends Component {
   state = {
@@ -12,6 +14,10 @@ class AddProduct extends Component {
       modal: !this.state.modal
     });
   };
+
+  // onSubmit = ({ productName, visibility }) => {
+  //   console.log(productName, visibility);
+  // };
 
   render() {
     return (
@@ -34,16 +40,26 @@ class AddProduct extends Component {
           size="lg"
           backdrop={false}
         >
-          <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
-          <AddProductModal />
-          <ModalFooter className="justify-content-start">
-            <Button color="primary" onClick={this.toggle}>
-              Add product
-            </Button>{" "}
-            <Button color="secondary" onClick={this.toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
+          <Formik
+            onSubmit={this.props.onSubmit}
+            initialValues={{
+              productName: " ",
+              visibility: "enabled"
+            }}
+          >
+            <Form>
+              <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
+              <ProductModal />
+              <ModalFooter className="justify-content-start">
+                <Button color="primary" type="submit">
+                  Add product
+                </Button>{" "}
+                <Button color="secondary" onClick={this.toggle}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </Form>
+          </Formik>
         </Modal>
       </div>
     );
