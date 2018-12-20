@@ -2,9 +2,7 @@
 namespace admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
-use common\models\store\ActivityLog;
-use common\models\store\Pages;
-use common\models\stores\StoreAdminAuth;
+use common\models\gateway\Pages;
 use gateway\controllers\CommonController;
 use gateway\helpers\UiHelper;
 use admin\components\Url;
@@ -34,12 +32,12 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_page_title");
         $this->addModule('adminPages');
+
         $search = new PagesSearch();
-        $search->setStore($this->store);
-        $pages = $search->searchPages();
+        $search->setGateway($this->gateway);
 
         return $this->render('pages', [
-            'pages' => $pages,
+            'pages' => $search->search(),
         ]);
     }
 
@@ -53,10 +51,9 @@ trait PagesTrait {
 
         $pageForm = new SavePageForm();
         $pageForm->setUser(Yii::$app->user);
-        $pageForm->setPage(new Pages());
 
         $urlsModel = new UrlsSearch();
-        $urlsModel->setStore($this->store);
+        $urlsModel->setStore($this->gateway);
         $exitingUrls = $urlsModel->searchUrls();
 
         $this->addModule('adminPageEdit', [
@@ -66,8 +63,8 @@ trait PagesTrait {
 
         return $this->render('edit_page', [
             'pageForm' => $pageForm,
-            'isNewPage' => $pageForm->getPage()->isNewRecord,
-            'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
+            'isNewPage' => 1,
+            'url' => $this->gateway->getBaseSite(),
             'actionUrl' => Url::toRoute('/settings/new-page'),
         ]);
     }
@@ -82,13 +79,10 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_edit_page");
 
+        $page = $this->_findModel($id, Pages::class);
         $pageForm = new EditPageForm();
         $pageForm->setUser(Yii::$app->user);
-        $pageForm->setPage(Pages::findOne($id));
-
-        if (!$pageForm->getPage() instanceof Pages) {
-            throw new NotFoundHttpException();
-        }
+        $pageForm->setPage($page);
 
         $this->addModule('adminPageEdit', [
             'url_error' => $pageForm->getFirstError('url'),
@@ -99,7 +93,7 @@ trait PagesTrait {
 
         return $this->render($view, [
             'pageForm' => $pageForm,
-            'isNewPage' => $pageForm->getPage()->isNewRecord,
+            'isNewPage' => 0,
             'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
             'actionUrl' => Url::toRoute(['/settings/edit-page', 'id' => $pageForm->getPage()->id]),
         ]);
@@ -205,11 +199,6 @@ trait PagesTrait {
         }
 
         $pageModel->deleteVirtual();
-
-        /** @var StoreAdminAuth $identity */
-        $identity = Yii::$app->user->getIdentity(false);
-
-        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAGES_PAGE_DELETED);
 
         UiHelper::message(Yii::t('admin', 'settings.pages_message_deleted'));
 

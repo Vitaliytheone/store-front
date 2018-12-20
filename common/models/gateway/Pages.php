@@ -25,6 +25,9 @@ use common\models\gateway\queries\PagesQuery;
  */
 class Pages extends ActiveRecord
 {
+    public const DELETED_NO = 0;
+    public const DELETED_YES = 1;
+
     public static function getDb()
     {
         return Yii::$app->gatewayDb;

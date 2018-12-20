@@ -47,7 +47,7 @@ trait PaymentsTrait {
     {
         $this->view->title = Yii::t('admin', "settings.payments_edit_$method");
 
-        $paymentMethod = $this->_findModel($method);
+        $paymentMethod = $this->_findModel($method, PaymentMethods::class);
 
         $model = new EditPaymentMethodForm();
         $model->setGateway(Yii::$app->gateway->getInstance());
@@ -73,7 +73,7 @@ trait PaymentsTrait {
     public function actionPaymentsToggleActive($method)
     {
         $gateway = Yii::$app->gateway->getInstance();
-        $paymentMethod = $this->_findModel($method);
+        $paymentMethod = $this->_findModel($method, PaymentMethods::class);
         $attributes = [
             'method_id' => $paymentMethod->id,
             'site_id' => $gateway->id,
@@ -88,19 +88,5 @@ trait PaymentsTrait {
         return [
             'active' => $sitePaymentMethods->visibility,
         ];
-    }
-
-    /**
-     * @param int $id
-     * @return null|PaymentMethods
-     * @throws NotFoundHttpException
-     */
-    protected function _findModel($id)
-    {
-        if (empty($id) || !($model = PaymentMethods::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        return $model;
     }
 }

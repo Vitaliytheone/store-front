@@ -1,8 +1,11 @@
 <?php
 namespace admin\controllers;
 
+use admin\controllers\traits\settings\PagesTrait;
 use admin\controllers\traits\settings\PaymentsTrait;
 use admin\controllers\traits\settings\ThemesTrait;
+use Codeception\Lib\Interfaces\ActiveRecord;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use yii\filters\AjaxFilter;
@@ -15,6 +18,7 @@ class SettingsController extends CustomController
 {
     use ThemesTrait;
     use PaymentsTrait;
+    use PagesTrait;
 
     public function behaviors()
     {
@@ -60,5 +64,20 @@ class SettingsController extends CustomController
         // Add custom JS modules
 
         return parent::beforeAction($action);
+    }
+
+    /**
+     * @param int $id
+     * @param ActiveRecord $class
+     * @return ActiveRecord
+     * @throws NotFoundHttpException
+     */
+    protected function _findModel($id, $class)
+    {
+        if (empty($id) || !($model = $class::findOne($id))) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
     }
 }
