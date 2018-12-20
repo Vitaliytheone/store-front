@@ -375,6 +375,8 @@ class Orders extends ActiveRecord
 
     /**
      * Cancel order
+     * @return bool
+     * @throws \yii\db\Exception
      */
     public function cancel()
     {

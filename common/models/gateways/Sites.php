@@ -5,6 +5,10 @@ namespace common\models\gateways;
 use common\helpers\DbHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
+use common\models\panels\Customers;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
+use common\models\panels\Logs;
 use gateway\helpers\GatewayHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -42,8 +46,9 @@ use yii\base\Exception;
  *
  * @property Admins[] $admins
  * @property SitePaymentMethods[] $sitePaymentMethods
+ * @property Customers $customer
  */
-class Sites extends ActiveRecord
+class Sites extends ActiveRecord implements ProjectInterface
 {
     const GATEWAY_DB_NAME_PREFIX = 'gateway_';
 
@@ -138,6 +143,14 @@ class Sites extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customers::class, ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getAdmins()
     {
         return $this->hasMany(Admins::class, ['site_id' => 'id']);
@@ -221,7 +234,7 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Get store folder
+     * Get gateway folder
      * @return string
      */
     public function getThemeFolder()
@@ -271,7 +284,7 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Get store folder
+     * Get gateway folder
      * @return string
      */
     public function getFolder()
@@ -287,16 +300,20 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Return is store inactive
+     * Return is gateway inactive
      * @return bool
      */
     public function isInactive()
     {
-        return $this->isExpired();
+        if($this->isExpired()) {
+            return true;
+        }
+
+        return $this->status == static::STATUS_ACTIVE ? false : true;
     }
 
     /**
-     * Return if store expired
+     * Return if gateway expired
      * @return bool
      */
     public function isExpired()
@@ -305,12 +322,14 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Check if store is expired and update store status
+     * Check if gateway is expired and update gateway status
      * @return bool
      */
     public function checkExpired()
     {
-        if ($this->isExpired()) {
+        if ($this->isExpired() && $this->status != self::STATUS_FROZEN) {
+            $this->status = self::STATUS_FROZEN;
+            $this->save(false);
             return true;
         }
         return false;
@@ -327,7 +346,7 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Create store db name
+     * Create gateway db name
      */
     public function generateDbName()
     {
@@ -346,8 +365,8 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Generate store expired datetime
-     * @param bool $isTrial is store trial
+     * Generate gateway expired datetime
+     * @param bool $isTrial is gateway trial
      */
     public function generateExpired($isTrial = false)
     {
@@ -372,7 +391,7 @@ class Sites extends ActiveRecord
     }
 
     /**
-     * Check store access some actions
+     * Check gateway access some actions
      * @param Sites|array $site
      * @param integer $code
      * @param array $options
@@ -418,5 +437,60 @@ class Sites extends ActiveRecord
     public function deleteNginxConfig()
     {
         return NginxHelper::delete($this);
+    }
+
+    /**
+     * Terminate gateway
+     * @return bool
+     * @throws Exception
+     */
+    public function terminate()
+    {
+        // Cancel unpaid invoices
+        $invoices = Invoices::find()
+            ->innerJoin('invoice_details', 'invoice_details.invoice_id = invoices.id AND invoice_details.item = :item', [
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
+            ])
+            ->andWhere([
+                'invoices.status' => Invoices::STATUS_UNPAID,
+                'invoice_details.item_id' => $this->id
+            ])
+            ->all();
+
+        /**
+         * @var Invoices $invoice
+         */
+        foreach ($invoices as $invoice) {
+            $invoice->status = Invoices::STATUS_CANCELED;
+            $invoice->save(false);
+        }
+
+        Logs::log($this, Logs::TYPE_TERMINATED);
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasManualPaymentMethods()
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function restore()
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getProjectType()
+    {
+        return ProjectInterface::PROJECT_TYPE_GATEWAY;
     }
 }

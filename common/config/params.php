@@ -99,6 +99,7 @@ return [
     'domain.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели
     'ssl.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление панели
     'store.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление магазин
+    'gateway.invoice_prolong' => 7, // За 7 дней до окончания, создается инвойс на продление gateway
 
     'store.paywant_proxy' => 'http://37.1.207.99/scr/paywant.php',
 

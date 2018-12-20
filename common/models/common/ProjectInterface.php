@@ -9,6 +9,7 @@ interface ProjectInterface
 {
     const PROJECT_TYPE_PANEL = 1;
     const PROJECT_TYPE_STORE = 2;
+    const PROJECT_TYPE_GATEWAY = 3;
 
     const SSL_MODE_ON = 1;
     const SSL_MODE_OFF = 0;
