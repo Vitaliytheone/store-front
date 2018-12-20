@@ -18,9 +18,13 @@ use yii\helpers\ArrayHelper;
  * @property integer $position
  * @property string $options
  * @property string $currencies
+ * @property integer $visibility 0 - hide, 1 - visible
  */
 class PaymentGateways extends ActiveRecord
 {
+    public const GATEWAY_PUBLIC = 1;
+    public const GATEWAY_HIDE = 0;
+
     public static $methods;
 
     /**
@@ -38,7 +42,7 @@ class PaymentGateways extends ActiveRecord
     {
         return [
             [['method', 'name', 'class_name', 'url'], 'string', 'max' => 255],
-            [['position'], 'integer'],
+            [['position', 'visibility'], 'integer'],
             [['currencies', 'options'], 'string', 'max' => 3000],
         ];
     }
@@ -57,6 +61,7 @@ class PaymentGateways extends ActiveRecord
             'position' => Yii::t('app', 'Position'),
             'options' => Yii::t('app', 'Options'),
             'currencies' => Yii::t('app', 'Currencies'),
+            'visibility' => Yii::t('app', 'Visibility'),
         ];
     }
 
