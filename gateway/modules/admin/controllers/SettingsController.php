@@ -26,7 +26,15 @@ class SettingsController extends CustomController
         return $parentBehaviors + [
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style', 'payments-toggle-active']
+                'only' => [
+                    'theme-get-style',
+                    'theme-get-data',
+                    'theme-update-style',
+                    'payments-toggle-active',
+                    'new-page',
+                    'delete-page',
+                    'edit-page',
+                ]
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -35,12 +43,23 @@ class SettingsController extends CustomController
                     'theme-get-style' => ['GET'],
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
+                    'new-page' => ['POST'],
+                    'delete-page' => ['POST'],
+                    'edit-page' => ['POST'],
                     'payments-toggle-active' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style', 'payments-toggle-active'],
+                'only' => [
+                    'theme-get-style',
+                    'theme-get-data',
+                    'theme-update-style',
+                    'payments-toggle-active',
+                    'new-page',
+                    'delete-page',
+                    'edit-page',
+                ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],

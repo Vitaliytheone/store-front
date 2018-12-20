@@ -40,45 +40,43 @@ PagesAsset::register($this);
                 </div>
             </div>
 
-            <form id="pageForm" class="form-horizontal" action="<?= $actionUrl ?>" method="post" role="form" data-new_page="<?= $isNewPage ?>">
-
+            <?= Html::beginForm($actionUrl, 'POST', [
+                'id' => 'pageForm',
+                'class' => 'form-horizontal',
+                'role' => 'form',
+                'data-new_page' => $isNewPage
+            ]) ?>
                 <div class="modal-loader square hidden"></div>
 
-                <?= Html::beginForm() ?>
+
                 <div class="m-content">
 
                     <div class="error-summary alert alert-danger hidden"></div>
 
                     <div class="form-group">
                         <label for="edit-page-title"><?= Yii::t('admin', 'settings.pages_title') ?></label>
-                        <input type="text" class="form-control form_field__name" id="edit-page-title" name="PageForm[title]" value="<?= $page->title ?>">
+                        <?= Html::activeTextInput($pageForm, 'title', [
+                            'class' => 'form-control form_field__name',
+                            'id' => 'edit-page-title',
+                        ])?>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleFormControlSelect1"><?= Yii::t('admin', 'settings.pages_visibility') ?></label>
-                        <select class="form-control form_field__visibility" id="exampleFormControlSelect1" name="PageForm[visibility]">
-                            <option name="PageForm[visibility]" value="1" <?= $page->visibility === 1 ? 'selected' : '' ?>>
-                                <?= Yii::t('admin', 'settings.pages_visibility_visible') ?>
-                            </option>
-                            <option name="PageForm[visibility]" value="0" <?= $page->visibility === 0 ? 'selected' : '' ?>>
-                                <?= Yii::t('admin', 'settings.pages_visibility_hidden') ?>
-                            </option>
-                        </select>
+
+                        <?= Html::activeDropDownList($pageForm, 'visibility', $pageForm->getVisibilityList(), [
+                            'class' => 'form-control form_field__visibility',
+                            'id' => 'exampleFormControlSelect1',
+                        ])?>
                     </div>
 
                     <div class="form-group">
-                        <?php if ('file' == $page->template) : ?>
-                            <textarea class="form-control"
-                                rows="20"
-                                id="description"
-                                title="Description"
-                                name="PageForm[content]"><?= $page->content ?></textarea>
-                        <?php else : ?>
-                            <textarea class="summernote form_field__content d-none"
-                                id="description"
-                                title="Description"
-                                name="PageForm[content]"><?= $page->content ?></textarea>
-                        <?php endif; ?>
+                        <?= Html::activeTextarea($pageForm, 'content', [
+                            'class' => 'form-control',
+                            'id' => 'description',
+                            'title' => 'Description',
+                            'rows' => 20
+                        ])?>
                     </div>
 
                     <div class="card card-white">
@@ -104,27 +102,41 @@ PagesAsset::register($this);
                             <div class="collapse" id="seo-block">
                                 <div class="form-group">
                                     <label for="edit-seo__title"><?= Yii::t('admin', 'settings.pages_seo_page') ?></label>
-                                    <input class="form-control form_field__seo_title" id="edit-seo__title" name="PageForm[seo_title]" value="<?= $page->seo_title ?>">
+                                    <?= Html::activeTextInput($pageForm, 'seo_title', [
+                                        'class' => 'form-control form_field__seo_title',
+                                        'id' => 'edit-seo__title',
+                                    ])?>
                                     <small class="form-text text-muted">
                                         <span class="edit-seo__title-muted"></span> <?= Yii::t('admin', 'settings.pages_seo_page_chars_used') ?>
                                     </small>
                                 </div>
                                 <div class="form-group">
                                     <label for="edit-seo__meta"><?= Yii::t('admin', 'settings.pages_seo_meta') ?></label>
-                                    <textarea class="form-control form_field__seo_description" id="edit-seo__meta" rows="3" name="PageForm[seo_description]" ><?= $page->seo_description ?></textarea>
+                                    <?= Html::activeTextarea($pageForm, 'seo_description', [
+                                        'class' => 'form-control form_field__seo_description',
+                                        'id' => 'edit-seo__meta',
+                                        'rows' => 3,
+                                    ])?>
                                     <small class="form-text text-muted">
                                         <span class="edit-seo__meta-muted"></span> <?= Yii::t('admin', 'settings.pages_seo_meta_chars_used') ?>
                                     </small>
                                 </div>
                                 <div class="form-group">
                                     <label for="edit-seo__meta-keyword"><?= Yii::t('admin', 'settings.pages_seo_meta_keywords') ?></label>
-                                    <textarea class="form-control" id="edit-seo__meta-keyword" rows="3" name="PageForm[seo_keywords]"><?= $page->seo_keywords ?></textarea>
+                                    <?= Html::activeTextarea($pageForm, 'seo_keywords', [
+                                        'class' => 'form-control',
+                                        'id' => 'edit-seo__meta-keyword',
+                                        'rows' => 3,
+                                    ])?>
                                 </div>
                                 <div class="form-group">
                                     <label for="edit-seo__url"><?= Yii::t('admin', 'settings.pages_seo_url') ?></label>
                                     <div class="input-group">
                                         <span class="input-group-addon" id="basic-addon3"><?= $storeUrl ?>/</span>
-                                        <input type="text" class="form-control form_field__url" id="edit-seo__url" name="PageForm[url]" value="<?= $page->url ?>">
+                                        <?= Html::activeTextInput($pageForm, 'url', [
+                                            'class' => 'form-control form_field__url',
+                                            'id' => 'edit-seo__url',
+                                        ])?>
                                     </div>
                                 </div>
                             </div>
@@ -137,8 +149,6 @@ PagesAsset::register($this);
                     <a class="btn btn-secondary" href="<?= Url::toRoute('/settings/pages') ?>"><?= Yii::t('admin', 'settings.pages_cancel') ?></a>
                 </div>
             <?= Html::endForm() ?>
-            </form>
-
         </div>
 
     </div>

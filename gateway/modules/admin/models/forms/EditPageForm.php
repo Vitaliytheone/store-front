@@ -2,6 +2,8 @@
 
 namespace admin\models\forms;
 
+use common\models\gateways\Sites;
+use Yii;
 use common\models\gateway\Pages;
 use common\models\gateways\Admins;
 use yii\base\Model;
@@ -22,6 +24,11 @@ class EditPageForm extends Model
     public $seo_keywords;
 
     /**
+     * @var Sites
+     */
+    protected $_gateway;
+
+    /**
      * Current page
      * @var Pages
      */
@@ -38,7 +45,18 @@ class EditPageForm extends Model
      */
     public function init()
     {
-        parent::init();
+        return parent::init();
+    }
+
+    /**
+     * @param Sites $gateway
+     */
+    public function setGateway(Sites $gateway)
+    {
+        $this->_gateway = $gateway;
+        $editThemeForm = EditThemeForm::make($this->_gateway->theme_name, Pages::DEFAULT_PAGE_TEMPLATE_FILE);
+
+        $this->content = $editThemeForm->fetchFileContent();
     }
 
     /**
@@ -66,6 +84,7 @@ class EditPageForm extends Model
     public function setPage(Pages $page)
     {
         $this->_page = $page;
+        $this->attributes = $page->attributes;
     }
 
     /**
@@ -117,11 +136,29 @@ class EditPageForm extends Model
 
         $this->_page->attributes = $this->attributes;
 
+        $transaction = Yii::$app->db->beginTransaction();
+
         if (!$this->_page->save(false)) {
             $this->addErrors($this->_page->getErrors());
+            $transaction->rollBack();
             return false;
         };
 
+
+
+        $transaction->commit();
+
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVisibilityList()
+    {
+        return [
+            Pages::VISIBILITY_YES => Yii::t('admin', 'settings.pages_visibility_visible'),
+            Pages::VISIBILITY_NO => Yii::t('admin', 'settings.pages_visibility_hidden'),
+        ];
     }
 }

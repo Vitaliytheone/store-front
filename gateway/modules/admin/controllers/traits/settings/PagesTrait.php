@@ -6,14 +6,11 @@ use common\models\gateway\Pages;
 use gateway\controllers\CommonController;
 use gateway\helpers\UiHelper;
 use admin\components\Url;
-use admin\models\forms\EditFilePageForm;
 use admin\models\forms\EditPageForm;
-use admin\models\forms\SavePageForm;
 use admin\models\search\PagesSearch;
 use admin\models\search\UrlsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -49,15 +46,15 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_create_page");
 
-        $pageForm = new SavePageForm();
+        $pageForm = new EditPageForm();
         $pageForm->setUser(Yii::$app->user);
+        $pageForm->setGateway($this->gateway);
 
         $urlsModel = new UrlsSearch();
-        $urlsModel->setStore($this->gateway);
-        $exitingUrls = $urlsModel->searchUrls();
+        $urlsModel->setGateway($this->gateway);
 
         $this->addModule('adminPageEdit', [
-            'urls' => $exitingUrls,
+            'urls' => $urlsModel->search(),
             'url_error' => $pageForm->getFirstError('url'),
         ]);
 
@@ -79,9 +76,14 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_edit_page");
 
+        /**
+         * @var Pages $pageModel
+         */
         $page = $this->_findModel($id, Pages::class);
+
         $pageForm = new EditPageForm();
         $pageForm->setUser(Yii::$app->user);
+        $pageForm->setGateway($this->gateway);
         $pageForm->setPage($page);
 
         $this->addModule('adminPageEdit', [
@@ -89,12 +91,10 @@ trait PagesTrait {
             'pageId' => $pageForm->getPage()->id,
         ]);
 
-        $view = $pageForm->getPage()->template == 'file' ? 'edit_page_file' : 'edit_page';
-
-        return $this->render($view, [
+        return $this->render('edit_page', [
             'pageForm' => $pageForm,
             'isNewPage' => 0,
-            'storeUrl' => Yii::$app->store->getInstance()->getBaseSite(),
+            'storeUrl' => $this->gateway->getBaseSite(),
             'actionUrl' => Url::toRoute(['/settings/edit-page', 'id' => $pageForm->getPage()->id]),
         ]);
     }
@@ -108,67 +108,59 @@ trait PagesTrait {
     public function actionEditPage($id = null)
     {
         $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
 
-        if (!$request->isAjax) {
-            exit;
-        }
+        /**
+         * @var Pages $pageModel
+         */
+        $page = $this->_findModel($id, Pages::class);
 
-        $page = Pages::findOne($id);
-        if ($page->template == 'file') {
-            $pageForm = new EditFilePageForm();
-        } else {
-            $pageForm = new EditPageForm();
-        }
-
+        $pageForm = new EditPageForm();
+        $pageForm->setGateway($this->gateway);
+        $pageForm->setPage($page);
         $pageForm->setUser(Yii::$app->user);
 
-        if (!$pageForm->edit($request->post(), $id)) {
+        if (!$pageForm->load($request->post()) || !$pageForm->save()) {
             return [
                 'success' => false,
                 'message' => ActiveForm::firstError($pageForm, true)
             ];
         };
 
+        UiHelper::message(Yii::t('admin', 'settings.pages_message_updated'));
+
         return [
             'success' => true,
             'message' => Yii::t('admin', 'settings.pages_message_updated'),
-            'id' => $pageForm->getPage()->id,
+            'redirect' => Url::toRoute(['/settings/update-page', 'id' => $pageForm->getPage()->id]),
         ];
     }
 
 
     /**
      * Create page AJAX action
-     * @param $id
      * @return array
      * @throws NotFoundHttpException
      */
-    public function actionNewPage($id = null)
+    public function actionNewPage()
     {
         $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
 
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $pageForm = new SavePageForm();
+        $pageForm = new EditPageForm();
+        $pageForm->setGateway($this->gateway);
         $pageForm->setUser(Yii::$app->user);
-
-        if (!$pageForm->edit($request->post(), $id)) {
+        if (!$pageForm->load($request->post()) || !$pageForm->save()) {
             return [
                 'success' => false,
                 'message' => ActiveForm::firstError($pageForm, true)
             ];
         };
 
+        UiHelper::message(Yii::t('admin', 'settings.pages_message_updated'));
+
         return [
             'success' => true,
             'message' => Yii::t('admin', 'settings.pages_message_updated'),
-            'id' => $pageForm->getPage()->id,
+            'redirect' => Url::toRoute(['/settings/update-page', 'id' => $pageForm->getPage()->id]),
         ];
     }
 
@@ -181,22 +173,10 @@ trait PagesTrait {
      */
     public function actionDeletePage($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $pageModel = Pages::findOne($id);
-        if (!$pageModel) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!Pages::canDelete($pageModel->toArray())) {
-            throw new ForbiddenHttpException();
-        }
+        /**
+         * @var Pages $pageModel
+         */
+        $pageModel = $this->_findModel($id, Pages::class);
 
         $pageModel->deleteVirtual();
 

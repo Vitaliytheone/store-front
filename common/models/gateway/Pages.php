@@ -3,6 +3,7 @@
 namespace common\models\gateway;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateway\queries\PagesQuery;
 
@@ -27,6 +28,11 @@ class Pages extends ActiveRecord
 {
     public const DELETED_NO = 0;
     public const DELETED_YES = 1;
+
+    public const VISIBILITY_YES = 1;
+    public const VISIBILITY_NO = 0;
+
+    public const DEFAULT_PAGE_TEMPLATE_FILE = 'page.twig';
 
     public static function getDb()
     {
@@ -85,5 +91,42 @@ class Pages extends ActiveRecord
     public static function find()
     {
         return new PagesQuery(get_called_class());
+    }
+
+    /**
+     * Virtual deleting page
+     * @return bool
+     */
+    public function deleteVirtual()
+    {
+        if ($this->deleted == static::DELETED_YES) {
+            return false;
+        }
+
+        $this->setAttribute('deleted', static::DELETED_YES);
+
+        return $this->save(false);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
     }
 }
