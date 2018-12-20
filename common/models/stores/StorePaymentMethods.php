@@ -34,7 +34,7 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'test_stores_new.store_payment_methods';
+        return 'store_payment_methods';
     }
 
     /**
@@ -165,10 +165,22 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function getMethodIcon()
+    public function getMethodIcon(): string
     {
         $method = PaymentMethods::findOne([$this->method_id]);
 
         return $method->icon;
     }
+
+    /**
+     * Return is passed $currencyCode is supported by this payment gateway
+     * @param $currencyCode
+     * @return bool
+     */
+    public function isCurrencySupported($currencyCode)
+    {
+        // TODO гет метод hasOne из куренси по ИД
+        return true;
+    }
+
 }

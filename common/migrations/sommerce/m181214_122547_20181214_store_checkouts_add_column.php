@@ -8,6 +8,13 @@ use yii\db\Query;
  */
 class m181214_122547_20181214_store_checkouts_add_column extends Migration
 {
+
+    public function getQuery($db)
+    {
+        return 'USE `' . $db . '`;
+            ALTER TABLE checkouts ADD `currency_id` int(11) unsigned NULL AFTER `method_id`;';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -48,9 +55,4 @@ class m181214_122547_20181214_store_checkouts_add_column extends Migration
         }
     }
 
-    public function getQuery($db)
-    {
-        return 'USE `' . $db . '`;
-            ALTER TABLE checkouts ADD `currency_id` int(11) unsigned NULL AFTER `method_id`;';
-    }
 }

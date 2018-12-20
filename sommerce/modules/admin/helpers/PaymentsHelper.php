@@ -19,6 +19,7 @@ class PaymentsHelper
     public static function updateStorePaymentMethods(Stores $store)
     {
         $paymentMethodsList = PaymentMethods::find()->all();
+        // TODO данные так же брать из store_payment_methods, думаю
 
         /** @var PaymentMethods $pm */
         foreach ($paymentMethodsList as $pm)
@@ -27,7 +28,7 @@ class PaymentsHelper
                 $paymentMethod = new StorePaymentMethods();
                 $paymentMethod->method_id = $pm->id;
                 $paymentMethod->store_id = $store->id;
-                $paymentMethod->visibility = PaymentMethods::ACTIVE_DISABLED;
+                $paymentMethod->visibility = StorePaymentMethods::VISIBILITY_ENABLED;
                 $paymentMethod->save(false);
             }
         }

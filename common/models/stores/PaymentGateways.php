@@ -23,6 +23,7 @@ class PaymentGateways extends ActiveRecord
 {
     public static $methods;
 
+    // TODO Del after testing
     /**
      * @inheritdoc
      */

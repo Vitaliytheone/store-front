@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use common\models\stores\queries\PaymentMethodsQuery;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%payment_methods}}".
@@ -55,7 +56,7 @@ class PaymentMethods extends ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'created_at', 'updated_at'], 'integer'],
             [['manual_callback_url'], 'integer', 'max' => 1],
             [['settings_form', 'addfunds_form', 'settings_form_description'], 'string'],
             [['method_name', 'name', 'class_name', 'url', 'icon'], 'string', 'max' => 255],
@@ -77,6 +78,20 @@ class PaymentMethods extends ActiveRecord
             'icon' => Yii::t('app', 'Icon'),
             'addfunds_form' => Yii::t('app', 'Addfunds Form'),
             'settings_form_description' => Yii::t('app', 'Setting Form Description'),
+            'manual_callback_url' => Yii::t('app', 'Manual Callback Url'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => TimestampBehavior::class,
         ];
     }
 

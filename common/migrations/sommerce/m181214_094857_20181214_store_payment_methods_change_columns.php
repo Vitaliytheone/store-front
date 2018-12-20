@@ -16,13 +16,15 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
     public function safeUp()
     {
         $methods = (new Query())
-            ->select('id', 'method')
+            ->select('id, method')
             ->from(DB_STORES . '.store_payment_methods')
             ->indexBy('id')
             ->all();
 
         $this->renameColumn(DB_STORES . '.store_payment_methods', 'details', 'options');
         $this->renameColumn(DB_STORES . '.store_payment_methods', 'active', 'visibility');
+
+        $this->dropForeignKey('fk_store_id_method', DB_STORES . '.store_payment_methods');
 
         $this->alterColumn(DB_STORES . '.store_payment_methods', 'id', $this->integer(11)->unsigned());
         $this->alterColumn(DB_STORES . '.store_payment_methods', 'store_id', $this->integer(11)->notNull());
@@ -88,6 +90,10 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk_method_id_to_payment_methods', DB_STORES . '.store_payment_methods');
+        $this->dropForeignKey('fk_currency_id_to_methods_currency', DB_STORES . '.store_payment_methods');
+        $this->dropForeignKey('fk_store_id_to_stores', DB_STORES . '.store_payment_methods');
+
         $this->dropIndex('idx_store_id', DB_STORES . '.store_payment_methods');
         $this->dropIndex('idx_method_id', DB_STORES . '.store_payment_methods');
         $this->dropIndex('idx_currency_id', DB_STORES . '.store_payment_methods');

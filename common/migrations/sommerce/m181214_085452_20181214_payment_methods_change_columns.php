@@ -20,11 +20,11 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
             ->all();
 
         foreach ($methods as $method) {
-            $currencies = json_decode($methods['currencies'], true);
+            $currencies = json_decode($method['currencies'], true);
 
             foreach ($currencies as $currency) {
                 $paymentMethodCurrency = new PaymentMethodsCurrency();
-                $paymentMethodCurrency->method_id = $methods['id'];
+                $paymentMethodCurrency->method_id = $method['id'];
                 $paymentMethodCurrency->currency = $currency;
                 $paymentMethodCurrency->position = $method['position'];
                 $paymentMethodCurrency->settings_form = $method['options'];
