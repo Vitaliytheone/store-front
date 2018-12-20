@@ -45,6 +45,7 @@ class InvoiceDetails extends ActiveRecord
     const ITEM_BUY_TRIAL_STORE = 12;
     const ITEM_PROLONGATION_STORE = 13;
     const ITEM_BUY_GATEWAY = 14;
+    const ITEM_PROLONGATION_GATEWAY = 15;
 
     /**
      * @inheritdoc

@@ -325,6 +325,7 @@ return [
     'notifications.item.customer' => 'Customer',
     'notifications.item.payments' => 'Payments',
     'notifications.item.ticket' => 'Ticket',
+    'notifications.item.gateway' => 'Gateway',
     'orders.status.pending' => 'Pending',
     'orders.status.paid' => 'Ready',
     'orders.status.added' => 'Completed',
