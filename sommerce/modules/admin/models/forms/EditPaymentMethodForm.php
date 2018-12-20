@@ -223,6 +223,12 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'PaymentsForm[details][test_mode]', 'checked' => $getDetailsField('test_mode') ? 'checked' : '', 'label' => Yii::t('admin', 'settings.payments_mercadopago_test_mode')],
                 ]
             ],
+            PaymentMethods::METHOD_MOLLIE => [
+                'icon' => '/img/pg/mollie.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'mollie_api', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_key]', 'value' => $getDetailsField('secret_key'), 'label' => Yii::t('admin', 'settings.payments_mollie_api')],
+                ]
+            ],
         ];
 
         return ArrayHelper::getValue($paymentsFormData, $method);

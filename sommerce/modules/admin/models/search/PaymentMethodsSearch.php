@@ -83,6 +83,10 @@ class PaymentMethodsSearch extends PaymentMethods
                 'icon' => '/img/pg/mercado_pago.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_MERCADOPAGO),
             ],
+            PaymentMethods::METHOD_MOLLIE => [
+                'icon' => '/img/pg/mollie.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_MOLLIE),
+            ],
         ];
 
         return ArrayHelper::getValue($methodItemsData, "$method.$methodName", $methodName);

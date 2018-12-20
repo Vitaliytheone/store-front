@@ -408,6 +408,11 @@ return [
     'settings.payments_mercadopago_course' => 'Course',
     'settings.payments_mercadopago_test_mode' => 'Use test mode',
 
+    'settings.payments_edit_mollie' => 'Edit Mollie',
+    'settings.payments_mollie_api' => 'Enter your API key',
+    'settings.payments_mollie_guide_1' => 'Go to Mollie website → {website_url} and get your <b>Live API key</b>',
+    'settings.payments_mollie_guide_2' => 'If you want to test payment system, use <b>Test API key</b> instead.',
+
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
     'settings.providers_save' => 'Save changes',
