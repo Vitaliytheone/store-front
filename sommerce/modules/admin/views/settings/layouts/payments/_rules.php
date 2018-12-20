@@ -11,6 +11,10 @@
             echo $this->render('rules/_paypal', ['store' => $store]);
             break;
 
+        case EditPaymentMethodForm::METHOD_PAYPAL_STANDARD:
+            echo $this->render('rules/_paypalstandard', ['store' => $store]);
+            break;
+
         case EditPaymentMethodForm::METHOD_2CHECKOUT:
             echo $this->render('rules/_2checkout', ['store' => $store]);
             break;

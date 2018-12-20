@@ -22,6 +22,7 @@ class PaymentMethods extends ActiveRecord
 {
     /* Payment methods names */
     const METHOD_PAYPAL = 'paypal';
+    const METHOD_PAYPAL_STANDARD = 'paypalstandard';
     const METHOD_2CHECKOUT = '2checkout';
     const METHOD_COINPAYMENTS = 'coinpayments';
     const METHOD_PAGSEGURO = 'pagseguro';
