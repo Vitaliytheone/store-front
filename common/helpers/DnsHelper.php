@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 
+use common\models\gateways\Sites;
 use Yii;
 use common\components\dns\Dns;
 use common\models\panels\ThirdPartyLog;
@@ -15,7 +16,6 @@ use common\models\panels\Project;
  */
 class DnsHelper
 {
-
     /**
      * @param Stores|Project $project
      * @return bool
@@ -191,7 +191,7 @@ class DnsHelper
 
     /**
      * Add dns
-     * @param Stores|Project $project
+     * @param Stores|Project|Sites $project
      * @return bool
      */
     public static function addDns($project)
@@ -203,7 +203,7 @@ class DnsHelper
 
     /**
      * Remove dns
-     * @param Stores|Project $project
+     * @param Stores|Project|Sites $project
      * @return bool
      */
     public static function removeDns($project)
@@ -254,6 +254,14 @@ class DnsHelper
                 'logCodes' => static::getLogCodes('panel'),
                 'logItem' => ThirdPartyLog::ITEM_BUY_PANEL,
                 'ahnamesParams' => Yii::$app->params['ahnames.my.ns'],
+            ];
+        } elseif ($project instanceof Sites) {
+            return [
+                'domain' => $project->domain,
+                'projectDomainName' => Yii::$app->params['gatewayDomain'],
+                'logCodes' => static::getLogCodes('gateway'),
+                'logItem' => ThirdPartyLog::ITEM_BUY_GATEWAY,
+                'ahnamesParams' => Yii::$app->params['ahnames.gateway.ns'],
             ];
         } else {
             return false;

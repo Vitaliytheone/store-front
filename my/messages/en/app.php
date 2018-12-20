@@ -394,6 +394,7 @@ return [
     'super_admin.can_work_with.settings' => 'Settings',
     'super_admin.can_work_with.tools' => 'Tools',
     'super_admin.can_work_with.fraud' => 'Fraud',
+    'super_admin.can_work_with.gateways' => 'Gateways',
     'tickets.status.pending' => 'Pending',
     'tickets.status.responded' => 'Responded',
     'tickets.status.closed' => 'Closed',

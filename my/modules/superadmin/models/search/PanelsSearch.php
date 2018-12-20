@@ -1,16 +1,13 @@
 <?php
+
 namespace superadmin\models\search;
 
-use common\helpers\CurrencyHelper;
-use common\models\panels\Customers;
+
+
 use my\helpers\DomainsHelper;
-use my\helpers\SpecialCharsHelper;
 use Yii;
 use common\models\panels\Project;
-use common\models\panels\Tariff;
 use yii\data\Pagination;
-use yii\db\ActiveQuery;
-use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -18,7 +15,8 @@ use yii\helpers\ArrayHelper;
  * Class PanelsSearch
  * @package superadmin\models\search
  */
-class PanelsSearch {
+class PanelsSearch
+{
     const PAGE_SIZE_100 = 100;
     const PAGE_SIZE_500 = 500;
     const PAGE_SIZE_1000 = 1000;
