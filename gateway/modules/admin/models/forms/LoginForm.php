@@ -2,6 +2,7 @@
 namespace admin\models\forms;
 
 use common\models\gateways\Admins;
+use common\models\gateways\AdminsHash;
 use Yii;
 use yii\base\Model;
 
@@ -78,7 +79,8 @@ class LoginForm extends Model
 
     /**
      * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
+     * @return bool bool whether the user is logged in successfully
+     * @throws \Exception
      */
     public function login()
     {
@@ -91,6 +93,11 @@ class LoginForm extends Model
         if (!$user) {
             return false;
         }
+
+        $hash = $user::generateAuthKey($user->getId());
+
+        AdminsHash::deleteByHash($hash);
+        AdminsHash::setHash($user->id, $hash, AdminsHash::MODE_SUPERADMIN_OFF);
 
         if (!Yii::$app->user->login($user, Admins::COOKIE_LIFETIME)) {
             return false;

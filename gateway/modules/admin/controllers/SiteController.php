@@ -47,7 +47,7 @@ class SiteController extends CustomController
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'super-login', 'frozen', 'logout'],
+                'only' => ['index', 'super-login', 'frozen'],
                 'rules' => [
                     [
                         'actions' => ['index', 'super-login', 'frozen'],
@@ -66,7 +66,7 @@ class SiteController extends CustomController
                  * allowed controller from $_redirectOrderList
                  */
                 'denyCallback' => function($rule, $action){
-                    if (!$this->_user->isGuest) {
+                    if (!Yii::$app->user->isGuest) {
                         $this->redirect(Url::toRoute('/settings'));
                     } else {
                         $this->redirect(Url::toRoute('/'));
