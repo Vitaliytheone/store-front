@@ -74,7 +74,7 @@ class PageBehavior extends Behavior {
      */
     public function beforeUpdateTwig()
     {
-        $oldPage = Pages::findOne($this->owner->id);
+        $oldPage = Pages::findOne($this->getPageModel()->id);
 
         $this->_themeFile = ThemesFiles::findOne([
             'theme_id' => $this->_getThemeModel()->id,
@@ -153,7 +153,7 @@ class PageBehavior extends Behavior {
      */
     public function getTwigName()
     {
-        return $this->owner->url . '.twig';
+        return $this->getPageModel()->url . '.twig';
     }
 
     /**
@@ -161,7 +161,7 @@ class PageBehavior extends Behavior {
      */
     public function getTwigContent()
     {
-        return $this->owner->content;
+        return $this->getPageModel()->content;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace gateway\components;
 
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
 use gateway\helpers\RouteHelper;
 use Yii;
@@ -27,13 +28,13 @@ class MyRequest extends Request
         $pathInfo = $this->getUrl();
 
         /**
-         * @var $store Stores
+         * @var $gateway Sites
          */
-        $store = Yii::$app->store->getInstance();
+        $gateway = Yii::$app->gateway->getInstance();
 
         $isAdminModule = strpos($pathInfo, 'admin') !== false;
 
-        if ($store && !$isAdminModule) {
+        if ($gateway && !$isAdminModule) {
 
             $urls = RouteHelper::getRoutes();
 

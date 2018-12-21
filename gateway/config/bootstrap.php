@@ -5,3 +5,4 @@ Yii::setAlias('@paymentsLog', dirname(dirname(__DIR__)) . '/gateway/runtime/logs
 Yii::setAlias('@themes', dirname(dirname(__DIR__)) . '/gateway/views/themes');
 Yii::setAlias('@customThemes', dirname(dirname(__DIR__)) . '/gateway/views/themes/custom');
 Yii::setAlias('@defaultThemes', dirname(dirname(__DIR__)) . '/gateway/views/themes/default');
+Yii::setAlias('@payments', dirname(dirname(__DIR__)) . '/gateway/components/payments/');
