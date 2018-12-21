@@ -25,7 +25,6 @@ class SiteController extends CustomController
      */
     public function actionFrozen()
     {
-
         if (!$this->gateway->isInactive()) {
             return $this->redirect('/');
         }
