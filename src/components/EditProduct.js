@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
+import { Formik, Form } from "formik";
 import ProductModal from "../modals/ProductModal";
 
 class EditProduct extends Component {
@@ -29,16 +30,26 @@ class EditProduct extends Component {
           size="lg"
           backdrop={false}
         >
-          <ModalHeader toggle={this.toggle}>Edit product</ModalHeader>
-          <ProductModal />
-          <ModalFooter className="justify-content-start">
-            <Button color="primary" onClick={this.toggle}>
-              Edit product
-            </Button>{" "}
-            <Button color="secondary" onClick={this.toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
+          <Formik
+            onSubmit={this.props.onSubmit}
+            initialValues={{
+              productName: " ",
+              visibility: "enabled"
+            }}
+          >
+            <Form>
+              <ModalHeader toggle={this.toggle}>Edit product</ModalHeader>
+              <ProductModal />
+              <ModalFooter className="justify-content-start">
+                <Button color="primary" onClick={this.toggle}>
+                  Edit product
+                </Button>{" "}
+                <Button color="secondary" onClick={this.toggle}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </Form>
+          </Formik>
         </Modal>
       </span>
     );
