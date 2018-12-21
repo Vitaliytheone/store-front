@@ -2,6 +2,7 @@
 
 namespace common\models\gateway;
 
+use gateway\components\behaviors\PageBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -23,6 +24,8 @@ use common\models\gateway\queries\PagesQuery;
  * @property int $is_default
  * @property int $created_at
  * @property int $updated_at
+ *
+ * @method getDefaultContent()
  */
 class Pages extends ActiveRecord
 {
@@ -31,8 +34,6 @@ class Pages extends ActiveRecord
 
     public const VISIBILITY_YES = 1;
     public const VISIBILITY_NO = 0;
-
-    public const DEFAULT_PAGE_TEMPLATE_FILE = 'page.twig';
 
     public static function getDb()
     {
@@ -54,6 +55,7 @@ class Pages extends ActiveRecord
     {
         return [
             [['content'], 'string'],
+            [['content'], 'default', 'value' => $this->getDefaultContent()],
             [['created_at', 'updated_at'], 'integer'],
             [['title', 'seo_title', 'url'], 'string', 'max' => 255],
             [['visibility', 'deleted', 'is_default'], 'string', 'max' => 1],
@@ -127,6 +129,7 @@ class Pages extends ActiveRecord
                     return time();
                 },
             ],
+            'twig' => PageBehavior::class
         ];
     }
 }
