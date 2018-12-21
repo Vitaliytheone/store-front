@@ -15,6 +15,7 @@ class EditPackage extends Component {
   };
 
   render() {
+    const { packageValue } = this.props;
     return (
       <span>
         <button
@@ -28,13 +29,13 @@ class EditPackage extends Component {
           <Formik
             onSubmit={this.onSubmit}
             initialValues={{
-              packageName: "ajsajsajaskfasf",
-              price: "131",
-              quantity: "",
-              overflow: "404",
-              availability: "2",
-              mode: "2",
-              provider: "4"
+              packageName: packageValue.name,
+              price: packageValue.price,
+              quantity: packageValue.quantity,
+              overflow: packageValue.overflow,
+              availability: packageValue.availability,
+              mode: packageValue.mode,
+              provider: packageValue.provider
             }}
           >
             <Form>

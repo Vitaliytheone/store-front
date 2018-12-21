@@ -41243,8 +41243,7 @@ a:hover, a:focus {
         background-color: #007bff;
         color: #fff; }
 
-.m-container-sommerce {
-  margin-top: 60px; }
+
 
 .product-file {
   border-radius: 5px;
@@ -41623,4 +41622,20 @@ body .group-item {
 /* active links in menu */
 li.m-menu__item > a.active > span{
   color: white !important;
+}
+
+/* without top margin after header */
+/* .m-container-sommerce {
+  margin-top: 60px; } */
+
+/* padding between categories in the header */
+  @media (min-width: 993px) {
+    .m-page__container {
+      padding: 0 30px;
+  }
+}
+
+/* padding between name of product and button  */
+.edit_product {
+  padding-left: 3px;
 }

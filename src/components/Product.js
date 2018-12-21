@@ -7,7 +7,7 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 const PackageList = SortableContainer(({ product }) => (
   <div className="col-12 group-items">
     {product.packages.map((pack, index) => (
-      <SortablePackage key={`item-${index}`} pack={pack} index={index} />
+      <SortablePackage key={`item-${index}`} pack={pack} index={index}  />
     ))}
     <AddPackage />
   </div>
@@ -23,7 +23,7 @@ export const SortableProduct = SortableElement(
               <div className="col-12">
                 <DragHandle />
                 {product.name}
-                <EditProduct />
+                <EditProduct  productValue = {product} />
               </div>
             </div>
           </div>

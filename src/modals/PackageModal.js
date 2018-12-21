@@ -25,7 +25,7 @@ class PackageModal extends Component {
 
         <div className="form-group">
           <Field
-            name="productName"
+            name="packageName"
             component={PackageInput}
             label="Package name"
             placeholder="package"
@@ -135,8 +135,8 @@ class PackageModal extends Component {
         <div className="form-group">
           <label htmlFor="mode">Mode</label>
           <Field className="form-control" component="select" name="mode">
-            <option value="1">Manual</option>
-            <option value="2">Auto</option>
+            <option value="2">Manual</option>
+            <option value="1">Auto</option>
           </Field>
         </div>
         <div className="form-group">

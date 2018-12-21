@@ -15,8 +15,9 @@ class EditProduct extends Component {
   };
 
   render() {
+  const { productValue } = this.props;
     return (
-      <span>
+      <span className="edit_product">
         <button
           onClick={this.toggle}
           href="#"
@@ -33,8 +34,8 @@ class EditProduct extends Component {
           <Formik
             onSubmit={this.props.onSubmit}
             initialValues={{
-              productName: " ",
-              visibility: "enabled"
+              productName: productValue.name,
+              visibility: productValue.name
             }}
           >
             <Form>

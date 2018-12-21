@@ -26,7 +26,7 @@ export const SortablePackage = SortableElement(({ pack }) => {
       <div className="col-lg-2">{pack.provider}</div>
       <div className="col-lg-2 text-lg-center">Enabled</div>
       <div className="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
-        <EditPackage />
+        <EditPackage packageValue={pack}/>
         <DeletePackage />
       </div>
     </div>
