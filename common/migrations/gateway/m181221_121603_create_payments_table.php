@@ -25,6 +25,7 @@ class m181221_121603_create_payments_table extends Migration
               `currency` char(3) NOT NULL,
               `amount` decimal(20,5) NOT NULL,
               `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - pending; 1 - completed; 2 - expired; 3 - writing; 4 - fail; 5 - hold',
+              `transaction_id` varchar(300) DEFAULT NULL,
               `response_status` varchar(300) DEFAULT NULL,
               `response` varchar(1000) DEFAULT NULL,
               `success_url` varchar(300) DEFAULT NULL,

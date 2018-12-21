@@ -18,6 +18,7 @@ use common\models\gateway\queries\PaymentsQuery;
  * @property string $currency
  * @property string $amount
  * @property int $status 0 - pending; 1 - completed; 2 - expired; 3 - writing; 4 - fail; 5 - hold
+ * @property string $transaction_id
  * @property string $response_status
  * @property string $response
  * @property string $success_url
@@ -30,6 +31,13 @@ use common\models\gateway\queries\PaymentsQuery;
  */
 class Payments extends ActiveRecord
 {
+    const STATUS_PENDING = 0;
+    const STATUS_COMPLETED = 1;
+    const STATUS_EXPIRED = 2;
+    const STATUS_WAITING = 3;
+    const STATUS_FAIL = 4;
+    const STATUS_HOLD = 5;
+
     /**
      * @inheritdoc
      */
@@ -49,7 +57,7 @@ class Payments extends ActiveRecord
             [['amount'], 'number'],
             [['source_type', 'status'], 'string', 'max' => 1],
             [['currency'], 'string', 'max' => 3],
-            [['response_status', 'success_url', 'fail_url', 'return_url'], 'string', 'max' => 300],
+            [['response_status', 'success_url', 'fail_url', 'return_url', 'transaction_id'], 'string', 'max' => 300],
             [['response'], 'string', 'max' => 1000],
         ];
     }
@@ -68,6 +76,7 @@ class Payments extends ActiveRecord
             'currency' => Yii::t('app', 'Currency'),
             'amount' => Yii::t('app', 'Amount'),
             'status' => Yii::t('app', 'Status'),
+            'transaction_id' => Yii::t('app', 'Transaction ID'),
             'response_status' => Yii::t('app', 'Response Status'),
             'response' => Yii::t('app', 'Response'),
             'success_url' => Yii::t('app', 'Success Url'),
