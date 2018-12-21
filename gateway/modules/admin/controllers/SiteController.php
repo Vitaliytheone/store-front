@@ -117,7 +117,7 @@ class SiteController extends CustomController
     }
 
     /**
-     * Render store frozen page for guest and non-superadmins
+     * Render gateway frozen page for guest and non-superadmins
      * @return string
      */
     public function actionFrozen()

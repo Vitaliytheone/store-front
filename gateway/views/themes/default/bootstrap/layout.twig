@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="/css/frontend/fontawesome.css">
     <!-- Custom styles -->
     <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('/css/swiper.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/classic.css') }}">
     {{ site.custom_header }}
 </head>
@@ -30,51 +29,14 @@
             </button>
             <a class="navbar-brand" href="/">
                 {% if site.logo %}
-                    <img src="{{ site.logo }}" alt="{{ site.store_name }}" class="img-responsive">
+                    <img src="{{ site.logo }}" alt="{{ site.name }}" class="img-responsive">
                 {% else %}
-                    {{ site.store_name }}
+                    {{ site.name }}
                 {% endif %}
             </a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="nav navbar-nav navbar-right {% if site.rtl %} navbar-nav-rtl {% endif %}">
-
-                <!-- User's menu -->
-                {% for menu_first_level in site.menu %}
-                    {% if menu_first_level.submenu %}
-                        <li class="dropdown {% if menu_first_level.active %}active{% endif %}">
-                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_first_level.name }} <span class="caret"></span></a>
-                            <ul class="dropdown-menu multi-level">
-                                {% for menu_second_level in menu_first_level.submenu %}
-                                    {% if menu_second_level.submenu %}
-                                        <li class="dropdown-submenu">
-                                            <a href="#" class="dropdown-toggle" type="button" data-toggle="dropdown">{{ menu_second_level.name }}</a>
-                                            <ul class="dropdown-menu multi-level">
-                                                {% for menu_third_level in menu_second_level.submenu %}
-                                                    <li>
-                                                        <a href="{{ menu_third_level.link }}">{{ menu_third_level.name }}</a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
-                                    {% else %}
-                                        <li>
-                                            <a href="{{ menu_second_level.link }}">{{ menu_second_level.name }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="{% if menu_first_level.active %}active{% endif %}">
-                            <a href="{{ menu_first_level.link }}">{{ menu_first_level.name }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                <!--/ User's menu -->
-
-                <li {% if 'cart' == site.active_menu %} class="active" {% endif %}><a href="/cart" class="bold">({{ site.cart.item_count }}) {{ lang('cart.title') }}</a></li>
-            </ul>
+            <ul class="nav navbar-nav navbar-right {% if site.rtl %} navbar-nav-rtl {% endif %}"></ul>
         </div>
     </div>
 </nav>
@@ -91,14 +53,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    &copy; {{ site.store_name }} {{ "now"|date("Y") }}
+                    &copy; {{ site.name }} {{ "now"|date("Y") }}
                 </div>
                 <div class="col-md-8">
-                    <ul class="footer-links {% if site.rtl %} rtl-content {% endif %}">
-                        <li><a href="{{ page_url(3) }}">{{ lang('footer.policy') }}</a></li>
-                        <li><a href="{{ page_url(2) }}">{{ lang('footer.terms') }}</a></li>
-                        <li><a href="{{ page_url(1) }}">{{ lang('footer.contact') }}</a></li>
-                    </ul>
+                    <ul class="footer-links {% if site.rtl %} rtl-content {% endif %}"></ul>
                 </div>
             </div>
         </div>
@@ -111,7 +69,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Custom Scripts -->
 <script src="{{ asset('/js/bootstrap.js') }}"></script>
-<script src="{{ asset('/js/swiper.js') }}"></script>
 <script src="{{ asset('/js/main.js') }}"></script>
 {{ site.custom_footer }}
 </html>

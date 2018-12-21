@@ -1,7 +1,7 @@
 <?php
 namespace admin\models\search;
 
-use common\models\store\Pages;
+use common\models\gateway\Pages;
 use yii\db\Query;
 
 /**

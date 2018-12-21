@@ -7,7 +7,7 @@ use admin\components\Url;
 
 /* @var $this \yii\web\View */
 /* @var $filesTree array */
-/** @var $theme \common\models\stores\DefaultThemes | \common\models\store\CustomThemes */
+/** @var $theme \common\models\gateways\DefaultThemes */
 /** @var string $currentFile */
 /** @var string $editDate */
 /** @var string $currentFileContent */

@@ -4,7 +4,6 @@ namespace gateway\helpers;
 use common\models\gateways\Sites;
 use Yii;
 use yii\helpers\FileHelper;
-use common\models\store\CustomThemes;
 
 /**
  * Class GatewayHelper
@@ -57,8 +56,6 @@ class GatewayHelper {
 
         $themePath = $site->theme_folder;
 
-        $isCustomTheme = strpos($themePath, CustomThemes::THEME_PREFIX) !== false;
-
         $customThemePath = $themesPath . 'custom' . $sp . $site->id . $sp . $themePath . $sp;
         $standardThemePath = $themesPath . 'default' . $sp . $themePath . $sp;
         $assetsPath = $assetsPath . $site->folder . $sp;
@@ -106,54 +103,33 @@ class GatewayHelper {
             FileHelper::createDirectory($assetsPath . 'json' . $sp);
         }
 
-        if ($isCustomTheme) {
-            foreach ($customStyles as $fileName => $filePath) {
-                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
-                    $css[] = $fileName;
-                }
+        foreach ($standardStyles as $fileName => $filePath) {
+            if (isset($customStyles[$fileName])) {
+                $filePath = $customStyles[$fileName];
             }
 
-            foreach ($customScripts as $fileName => $filePath) {
-                if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
-                    $js[] = $fileName;
-                }
+            if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
+                $css[] = $fileName;
+            }
+        }
+
+        foreach ($standardScripts as $fileName => $filePath) {
+            if (isset($customScripts[$fileName])) {
+                $filePath = $customScripts[$fileName];
             }
 
-            foreach ($customJson as $fileName => $filePath) {
-                if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
-                    $json[] = $fileName;
-                }
+            if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
+                $js[] = $fileName;
+            }
+        }
+
+        foreach ($standardJson as $fileName => $filePath) {
+            if (isset($customJson[$fileName])) {
+                $filePath = $customJson[$fileName];
             }
 
-        } else {
-            foreach ($standardStyles as $fileName => $filePath) {
-                if (isset($customStyles[$fileName])) {
-                    $filePath = $customStyles[$fileName];
-                }
-
-                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
-                    $css[] = $fileName;
-                }
-            }
-
-            foreach ($standardScripts as $fileName => $filePath) {
-                if (isset($customScripts[$fileName])) {
-                    $filePath = $customScripts[$fileName];
-                }
-
-                if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
-                    $js[] = $fileName;
-                }
-            }
-
-            foreach ($standardJson as $fileName => $filePath) {
-                if (isset($customJson[$fileName])) {
-                    $filePath = $customJson[$fileName];
-                }
-
-                if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
-                    $json[] = $fileName;
-                }
+            if (file_put_contents($assetsPath . 'json' . $sp . $fileName, file_get_contents($filePath))) {
+                $json[] = $fileName;
             }
         }
 

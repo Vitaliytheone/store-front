@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Stores default translation string list
+ * Gateway default translation string list
  */
 return [
     'cart.title' => 'Cart',

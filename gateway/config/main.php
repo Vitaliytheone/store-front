@@ -103,6 +103,7 @@ $config = [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',
                     'cachePath' => null,
+                    'extension' => \gateway\components\twig\Extension::class,
                     'options' => [
                         'autoescape' => false
                     ],

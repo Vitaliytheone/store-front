@@ -59,10 +59,6 @@ class Sites extends ActiveRecord implements ProjectInterface
 
     const CAN_DASHBOARD = 1;
 
-    const DNS_STATUS_NOT_DEFINED = null;
-    const DNS_STATUS_ALIEN = 0;
-    const DNS_STATUS_MINE = 1;
-
     /**
      * @inheritdoc
      */

@@ -40,11 +40,11 @@ class AssetsHelper {
     public static function getAssetPath()
     {
         /**
-         * @var $store Sites
+         * @var $gateway Sites
          */
-        $store = Yii::$app->gateway->getInstance();
+        $gateway = Yii::$app->gateway->getInstance();
 
-        return '/assets/' . $store->getFolder();
+        return '/assets/' . $gateway->getFolder();
     }
 
     /**

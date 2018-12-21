@@ -94,7 +94,7 @@ trait PagesTrait {
         return $this->render('edit_page', [
             'pageForm' => $pageForm,
             'isNewPage' => 0,
-            'storeUrl' => $this->gateway->getBaseSite(),
+            'siteUrl' => $this->gateway->getBaseSite(),
             'actionUrl' => Url::toRoute(['/settings/edit-page', 'id' => $pageForm->getPage()->id]),
         ]);
     }
