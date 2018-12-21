@@ -2,6 +2,7 @@
 
 namespace common\models\gateways;
 
+use common\models\panels\SuperAdminToken;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -31,18 +32,20 @@ class Admins extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE     = 1;
     const STATUS_SUSPENDED  = 2;
 
+    const SUPERADMIN_SITE_ID = '-1';
 
     /** Auth cookie lifetime */
     const COOKIE_LIFETIME = 365 * 24 * 60 * 60;
 
     const SESSION_KEY_ADMIN_HASH = 'super_admin_hash';
 
-
     /**
      * Cached copy of model
      * @var  null|static
      */
     private static $_identity;
+
+    private static $_hash;
 
     /**
      * @inheritdoc
@@ -211,6 +214,25 @@ class Admins extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Get hash
+     * @param $adminId
+     * @return mixed
+     * @throws Exception
+     */
+    public static function getHash($adminId)
+    {
+        if (static::$_hash instanceof AdminsHash) {
+            return static::$_hash;
+        }
+
+        $hash = static::generateAuthKey($adminId);
+
+        static::$_hash = AdminsHash::findOne(['hash' => $hash]);
+
+        return static::$_hash;
+    }
+
+    /**
      * Return site auth key from config params
      * @return mixed
      * @throws Exception
@@ -270,5 +292,52 @@ class Admins extends ActiveRecord implements IdentityInterface
     public static function hashPassword($password)
     {
         return hash_hmac('sha256', $password, static::getSalt());
+    }
+
+    /**
+     * @param string $token
+     * @return Admins|null
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function findByToken(string $token)
+    {
+        $gateway = Yii::$app->gateway->getInstance();
+
+        $superAdminToken = SuperAdminToken::find()
+            ->andFilterWhere([
+                'token' => $token,
+                'item_id' => $gateway->id,
+                'item' => SuperAdminToken::ITEM_GATEWAY,
+            ])
+            ->andFilterWhere(['>', 'expiry_at', time()])
+            ->one();
+
+        if (!$superAdminToken) {
+            return null;
+        }
+
+        $identity = static::getSuperadminIdentity($superAdminToken->super_admin_id);
+
+        $superAdminToken->delete();
+
+        return $identity;
+    }
+
+    /**
+     * @param $superadminId
+     * @return Admins|null
+     */
+    private static function getSuperadminIdentity($superadminId)
+    {
+        $identity = static::findOne([
+            'site_id' => self::SUPERADMIN_SITE_ID,
+        ]);
+
+        $identity->id = $superadminId;
+
+        static::$_identity = $identity;
+
+        return static::$_identity;
     }
 }

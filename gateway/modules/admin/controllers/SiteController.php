@@ -3,6 +3,7 @@ namespace admin\controllers;
 
 use admin\components\Url;
 use admin\models\forms\LoginForm;
+use admin\models\forms\SuperLoginFom;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\User;
@@ -114,6 +115,22 @@ class SiteController extends CustomController
         return $this->render('signin', [
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @param $token
+     * @return \yii\web\Response
+     * @throws \Exception
+     */
+    public function actionSuperLogin($token)
+    {
+        $form = new SuperLoginFom();
+
+        if (!$form->login($token)) {
+            return $this->redirect(Url::toRoute('/'));
+        }
+
+        $this->redirect(Url::toRoute($this->_loggedInRedirectUrl));
     }
 
     /**

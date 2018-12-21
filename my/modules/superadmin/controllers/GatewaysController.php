@@ -4,6 +4,8 @@ namespace superadmin\controllers;
 
 
 use common\models\gateways\Sites;
+use common\models\panels\SuperAdmin;
+use common\models\panels\SuperAdminToken;
 use my\components\ActiveForm;
 use my\components\SuperAccessControl;
 use my\helpers\Url;
@@ -45,6 +47,7 @@ class GatewaysController extends CustomController
                     'change-status' => ['POST'],
                     'change-domain' => ['POST'],
                     'edit-expiry' => ['POST'],
+                    'sign-in-as-admin' => ['GET'],
                 ],
             ],
             'ajax' => [
@@ -148,6 +151,25 @@ class GatewaysController extends CustomController
                 'message' => ActiveForm::firstError($model)
             ];
         }
+    }
+
+    /**
+     * Sign in as admin store
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionSignInAsAdmin($id)
+    {
+        $site = $this->findModel($id);
+
+        /**
+         * @var SuperAdmin $superUser
+         */
+        $superUser = Yii::$app->superadmin->getIdentity();
+        $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_GATEWAY, $site->id);
+
+        return $this->redirect('http://' . $site->domain . '/admin/super-login?token=' . $token);
     }
 
     /**
