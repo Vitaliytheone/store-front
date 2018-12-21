@@ -8,16 +8,11 @@ import {
 } from "./services/products";
 import data from "./data.json";
 import axios from "axios";
-
-//parse of json
-const arrayData = Object.values(data).map(item => ({
-  ...item,
-  packages: Object.values(item.packages)
-}));
+import { map, sortBy } from "lodash";
 
 const ProductList = SortableContainer(({ data, handlePackageSwitch }) => (
   <div className="sortable">
-    {data.map((product, index) => (
+    {sortBy(data, "position").map((product, index) => (
       <SortableProduct
         key={`item-${index}`}
         product={product}
@@ -25,24 +20,31 @@ const ProductList = SortableContainer(({ data, handlePackageSwitch }) => (
         handlePackageSwitch={handlePackageSwitch(index)}
       />
     ))}
-  </div>
+      </div>
 ));
 
 class Products extends Component {
   state = {
-    data: arrayData
+    data
   };
 
-  handleProductSwitch = ({ oldIndex, newIndex }) => {
+  handleProductSwitch = ({ oldIndex,  newIndex, collection }) => {
+    const [firstItemId, secondItemId] = [collection[oldIndex], collection[newIndex]].map(({id}) => id);
+
     const { data } = this.state;
-    this.setState({
-      data: arrayMove(data, oldIndex, newIndex)
+    this.setState(prevState => ({
+      ...prevState,
+      data: {
+        ...prevState.data,
+        [firstItemId]: collection[newIndex],
+        [secondItemId]: collection[oldIndex]
+      }
     });
 
     changePositionProduct(oldIndex, { oldIndex, newIndex });
   };
 
-  handlePackageSwitch = productIndex => ({ oldIndex, newIndex }) => {
+  handlePackageSwitch = productIndex => ({ oldIndex, newIndex, collection }) => {
     const newData = [...this.state.data];
     const product = newData[productIndex];
     product.packages = arrayMove(product.packages, oldIndex, newIndex);
@@ -71,6 +73,7 @@ class Products extends Component {
 
   render() {
     const { data } = this.state;
+    console.log(data);
     return (
       <div>
         <div className="page-container">
