@@ -3,6 +3,7 @@ namespace admin\controllers;
 
 use admin\components\Url;
 use admin\models\forms\LoginForm;
+use admin\models\forms\SuperLoginFom;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\User;
@@ -117,7 +118,23 @@ class SiteController extends CustomController
     }
 
     /**
-     * Render gateway frozen page for guest and non-superadmins
+     * @param $token
+     * @return \yii\web\Response
+     * @throws \Exception
+     */
+    public function actionSuperLogin($token)
+    {
+        $form = new SuperLoginFom();
+
+        if (!$form->login($token)) {
+            return $this->redirect(Url::toRoute('/'));
+        }
+
+        $this->redirect(Url::toRoute($this->_loggedInRedirectUrl));
+    }
+
+    /**
+     * Render store frozen page for guest and non-superadmins
      * @return string
      */
     public function actionFrozen()

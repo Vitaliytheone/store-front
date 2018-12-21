@@ -40,18 +40,21 @@ class ChangeGatewayDomainForm extends Model
         $this->gateway = $site;
     }
 
+    /**
+     * @return bool
+     */
     public function save()
     {
         if (!$this->validate()) {
-
+            return false;
         }
 
-        DnsHelper::removeDns($this);
+        DnsHelper::removeDns($this->gateway);
 
         $this->gateway->domain = $this->domain;
 
         if (!$this->gateway->save(false)) {
-            //$this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
+            $this->addError('domain', Yii::t('app/superadmin', 'gateways.change_domain.error'));
             return false;
         }
 

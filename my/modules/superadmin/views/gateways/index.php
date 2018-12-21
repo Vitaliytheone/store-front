@@ -42,3 +42,5 @@ $action = $this->context->activeTab;
         'action' => $action
     ])?>
 </div>
+<?= $this->render('layouts/_change_domain_modal')?>
+<?= $this->render('layouts/_edit_expiry_modal')?>

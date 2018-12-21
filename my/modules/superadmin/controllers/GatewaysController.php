@@ -4,12 +4,21 @@ namespace superadmin\controllers;
 
 
 use common\models\gateways\Sites;
+use common\models\panels\SuperAdmin;
+use common\models\panels\SuperAdminToken;
+use my\components\ActiveForm;
 use my\components\SuperAccessControl;
 use my\helpers\Url;
+use superadmin\models\forms\ChangeGatewayDomainForm;
+use superadmin\models\forms\EditGatewayExpiryForm;
 use superadmin\models\search\GatewaysSearch;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use Yii;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Class GatewaysController
@@ -36,19 +45,22 @@ class GatewaysController extends CustomController
                 'actions' => [
                     'index' => ['GET'],
                     'change-status' => ['POST'],
+                    'change-domain' => ['POST'],
+                    'edit-expiry' => ['POST'],
+                    'sign-in-as-admin' => ['GET'],
                 ],
             ],
-//            'ajax' => [
-//                'class' => AjaxFilter::class,
-//                'only' => ['ajax-customers', 'edit', 'set-password']
-//            ],
-//            'content' => [
-//                'class' => ContentNegotiator::class,
-//                'only' => ['edit', 'set-password', 'ajax-customers'],
-//                'formats' => [
-//                    'application/json' => Response::FORMAT_JSON,
-//                ],
-//            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['change-domain', 'edit-expiry']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['change-domain', 'edit-expiry'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
         ]);
     }
 
@@ -86,25 +98,24 @@ class GatewaysController extends CustomController
     {
         $id = Yii::$app->request->post('id');
         $status = Yii::$app->request->post('status');
-        $site = Sites::findOne($id);
+        $site = $this->findModel($id);
         $site->changeStatus($status);
         $this->redirect(Url::toRoute('/'. $this->activeTab));
     }
 
     /**
      * Change panel domain.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
      */
     public function actionChangeDomain($id)
     {
-        $site = Sites::findOne($id);
-        $domain = Yii::$app->request->post();
-var_dump($domain);die;
-        if ($site->changeDomain()) {
+        $model = new ChangeGatewayDomainForm();
+        $gateway = $this->findModel($id);
+        $model->setGateway($gateway);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [
                 'status' => 'success',
             ];
@@ -114,5 +125,66 @@ var_dump($domain);die;
                 'message' => ActiveForm::firstError($model)
             ];
         }
+    }
+
+    /**
+     * Change panel expired.
+     *
+     * @access public
+     * @param int $id
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionEditExpiry($id)
+    {
+        $gateway = $this->findModel($id);
+        $model = new EditGatewayExpiryForm();
+        $model->setGateway($gateway);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * Sign in as admin store
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionSignInAsAdmin($id)
+    {
+        $site = $this->findModel($id);
+
+        /**
+         * @var SuperAdmin $superUser
+         */
+        $superUser = Yii::$app->superadmin->getIdentity();
+        $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_GATEWAY, $site->id);
+
+        return $this->redirect('http://' . $site->domain . '/admin/super-login?token=' . $token);
+    }
+
+    /**
+     * @param $attributes
+     * @return Sites|null
+     * @throws NotFoundHttpException
+     */
+    private function findModel($attributes)
+    {
+        $site = Sites::findOne($attributes);
+
+        if (!$site) {
+            throw new NotFoundHttpException();
+        }
+
+        return $site;
     }
 }

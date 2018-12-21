@@ -36,7 +36,7 @@ $now = time();
                     </td>
                     <td class="table-no-wrap table-custom__customer-td">
                         <?= $gateway['domain'] ?>
-                        <a href="<?= '' ?>" target="_blank" class="table-custom__customer-button"  data-placement="top" title="">
+                        <a href="<?= Url::toRoute(['/gateways/sign-in-as-admin', 'id' => $gateway['id']]) ?>" target="_blank" class="table-custom__customer-button"  data-placement="top" title="">
                             <span class="my-icons my-icons-autorization"></span>
                         </a>
                     </td>
@@ -99,7 +99,8 @@ $now = time();
                                 ])?>
                                 <?php endif; ?>
 
-                                <?= Html::a(Yii::t('app/superadmin', 'gateways.list.action.sign_in_as_admin'), '', [
+                                <?= Html::a(Yii::t('app/superadmin', 'gateways.list.action.sign_in_as_admin'),
+                                    Url::toRoute(['/gateways/sign-in-as-admin', 'id' => $gateway['id']]), [
                                     'class' => 'dropdown-item',
                                     'target' => '_blank',
                                 ])?>
