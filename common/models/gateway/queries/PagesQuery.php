@@ -12,10 +12,13 @@ use common\models\gateway\Pages;
  */
 class PagesQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'deleted' => Pages::DELETED_NO,
+            'visibility' => Pages::VISIBILITY_YES
+        ]);
+    }
 
     /**
      * @inheritdoc

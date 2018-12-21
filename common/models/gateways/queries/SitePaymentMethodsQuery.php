@@ -12,10 +12,12 @@ use common\models\gateways\SitePaymentMethods;
  */
 class SitePaymentMethodsQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'visibility' => SitePaymentMethods::VISIBILITY_ENABLED
+        ]);
+    }
 
     /**
      * @inheritdoc

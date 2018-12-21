@@ -12,6 +12,8 @@ use yii\helpers\ArrayHelper;
  *
  * @property int $id
  * @property string $method_name
+ * @property string $class_name
+ * @property string $url
  *
  * @property SitePaymentMethods[] $sitePaymentMethods
  */
@@ -33,8 +35,8 @@ class PaymentMethods extends ActiveRecord
     public function rules()
     {
         return [
-            [['method_name'], 'required'],
-            [['method_name'], 'string', 'max' => 300],
+            [['method_name', 'class_name', 'url'], 'required'],
+            [['method_name', 'class_name', 'url'], 'string', 'max' => 300],
         ];
     }
 
@@ -46,6 +48,8 @@ class PaymentMethods extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'method_name' => Yii::t('app', 'Method Name'),
+            'class_name' => Yii::t('app', 'Class Name'),
+            'url' => Yii::t('app', 'Url'),
         ];
     }
 

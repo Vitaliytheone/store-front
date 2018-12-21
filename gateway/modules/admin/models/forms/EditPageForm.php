@@ -1,5 +1,4 @@
 <?php
-
 namespace admin\models\forms;
 
 use common\models\gateways\Sites;
@@ -54,9 +53,8 @@ class EditPageForm extends Model
     public function setGateway(Sites $gateway)
     {
         $this->_gateway = $gateway;
-        $editThemeForm = EditThemeForm::make($this->_gateway->theme_name, Pages::DEFAULT_PAGE_TEMPLATE_FILE);
 
-        $this->content = $editThemeForm->fetchFileContent();
+        $this->content = $this->getPage()->getDefaultContent();
     }
 
     /**
@@ -89,9 +87,14 @@ class EditPageForm extends Model
 
     /**
      * Get page
+     * @return Pages
      */
     public function getPage()
     {
+        if (!$this->_page) {
+            $this->_page = new Pages();
+        }
+
         return $this->_page;
     }
 
@@ -130,21 +133,15 @@ class EditPageForm extends Model
             return false;
         }
 
-        if (empty($this->_page)) {
-            $this->_page = new Pages();
-        }
-
-        $this->_page->attributes = $this->attributes;
+        $this->getPage()->attributes = $this->attributes;
 
         $transaction = Yii::$app->db->beginTransaction();
 
-        if (!$this->_page->save(false)) {
-            $this->addErrors($this->_page->getErrors());
+        if (!$this->getPage()->save(false)) {
+            $this->addErrors($this->getPage()->getErrors());
             $transaction->rollBack();
             return false;
-        };
-
-
+        }
 
         $transaction->commit();
 

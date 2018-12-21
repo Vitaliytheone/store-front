@@ -44,7 +44,7 @@ class SettingsController extends CustomController
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
                     'new-page' => ['POST'],
-                    'delete-page' => ['POST'],
+                    //'delete-page' => ['POST'],
                     'edit-page' => ['POST'],
                     'payments-toggle-active' => ['POST'],
                 ],

@@ -8,7 +8,7 @@ use \sommerce\assets\PagesAsset;
 /* @var $pageForm \admin\models\forms\EditPageForm */
 /* @var $isNewPage boolean Is page is new or updated */
 /* @var $actionUrl string Action form url */
-/* @var $storeUrl string */
+/* @var $siteUrl string */
 
 $page = $pageForm->getPage();
 
@@ -95,7 +95,7 @@ PagesAsset::register($this);
 
                             <div class="seo-preview">
                                 <div class="seo-preview__title edit-seo__title"></div>
-                                <div class="seo-preview__url"><?= $storeUrl; ?>/<span class="edit-seo__url"></span></div>
+                                <div class="seo-preview__url"><?= $siteUrl; ?>/<span class="edit-seo__url"></span></div>
                                 <div class="seo-preview__description edit-seo__meta"></div>
                             </div>
 
@@ -132,7 +132,7 @@ PagesAsset::register($this);
                                 <div class="form-group">
                                     <label for="edit-seo__url"><?= Yii::t('admin', 'settings.pages_seo_url') ?></label>
                                     <div class="input-group">
-                                        <span class="input-group-addon" id="basic-addon3"><?= $storeUrl ?>/</span>
+                                        <span class="input-group-addon" id="basic-addon3"><?= $siteUrl ?>/</span>
                                         <?= Html::activeTextInput($pageForm, 'url', [
                                             'class' => 'form-control form_field__url',
                                             'id' => 'edit-seo__url',

@@ -4,7 +4,7 @@ namespace gateway\controllers;
 
 use gateway\helpers\ThemesHelper;
 use gateway\helpers\AssetsHelper;
-use gateway\modules\admin\components\Url;
+use yii\helpers\Url;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
@@ -75,7 +75,7 @@ class CustomController extends CommonController
     /** @inheritdoc */
     public function beforeAction($action)
     {
-        // Redirect frozen store to `frozen page`
+        // Redirect frozen gateway to `frozen page`
         if ($this->gateway->isInactive() && $action->id !== 'frozen') {
             $this->redirect(Url::to('/frozen'));
         }

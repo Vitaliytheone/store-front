@@ -61,7 +61,7 @@ class CustomController extends CommonController
         /** @var User $user */
         $user = Yii::$app->user;
 
-        // Frozen/terminated store routine
+        // Frozen/terminated gateway routine
         if ($this->gateway->isInactive() && !$user->isGuest) {
             $user->logout();
         }

@@ -112,6 +112,7 @@ $config = [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',
                     'cachePath' => null,
+                    'extension' => \sommerce\components\twig\Extension::class,
                     'options' => [
                         'autoescape' => false
                     ],

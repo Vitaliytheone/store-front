@@ -1,13 +1,15 @@
 <?php
-namespace common\components\twig;
+namespace gateway\components\twig;
 
 use common\components\twig\parsers\TokenParser_Include;
+use common\models\gateway\Pages;
+use gateway\helpers\AssetsHelper;
 use Yii;
 use Twig_SimpleFunction;
 
 /**
  * Class Extension
- * @package common\components\twig
+ * @package gateway\components\twig
  */
 class Extension extends \Twig_Extension {
 
@@ -41,6 +43,15 @@ class Extension extends \Twig_Extension {
                 return Yii::t('app', $value, array_merge(static::getTemplateVariables(), $options));
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
+            new Twig_SimpleFunction('asset', function($value) {
+                return AssetsHelper::getAssetPath() . $value;
+            }),
+            new Twig_SimpleFunction('page_url', function($pageId){
+                $page = Pages::find()->active()->andWhere([
+                    'id' => $pageId,
+                ])->one();
+                return '/' . ($page ? $page->url : '#');
+            }),
         ];
 
         return $functions;
