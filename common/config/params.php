@@ -67,6 +67,13 @@ return [
         'ns_4' => null,
     ],
 
+    'ahnames.gateway.ns' => [
+        'ns_1' => 'ns1.perfectdns.com',
+        'ns_2' => 'ns2.perfectdns.com',
+        'ns_3' => null,
+        'ns_4' => null,
+    ],
+
     'my.domains.stop_words' => [
         'perfect'
     ],

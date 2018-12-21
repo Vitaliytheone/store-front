@@ -2,6 +2,7 @@
 
 namespace common\models\gateways;
 
+
 use common\helpers\DbHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
@@ -126,7 +127,7 @@ class Sites extends ActiveRecord implements ProjectInterface
      * Get statuses labels
      * @return array
      */
-    public static function getStatuses()
+    public static function getStatuses(): array
     {
         return [
             static::STATUS_PENDING => Yii::t('app', 'sites.status.pending'),
@@ -134,6 +135,16 @@ class Sites extends ActiveRecord implements ProjectInterface
             static::STATUS_FROZEN => Yii::t('app', 'sites.status.frozen'),
             static::STATUS_TERMINATED => Yii::t('app', 'sites.status.terminated'),
         ];
+    }
+
+    /**
+     * Get status string name
+     * @param int $status
+     * @return string
+     */
+    public static function getStatusName(int $status): string
+    {
+        return ArrayHelper::getValue(static::getStatuses(), $status, '');
     }
 
     /**
@@ -488,5 +499,37 @@ class Sites extends ActiveRecord implements ProjectInterface
     public static function getProjectType()
     {
         return ProjectInterface::PROJECT_TYPE_GATEWAY;
+    }
+
+    /**
+     * Change gateway status
+     * @param int $status
+     * @return bool
+     * @throws Exception
+     */
+    public function changeStatus(int $status)
+    {
+        switch ($status) {
+            case static::STATUS_ACTIVE:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_ACTIVE;
+                }
+                break;
+
+            case static::STATUS_FROZEN:
+                if (static::STATUS_ACTIVE == $this->status) {
+                    $this->status = static::STATUS_FROZEN;
+                }
+                break;
+
+            case static::STATUS_TERMINATED:
+                if (static::STATUS_FROZEN == $this->status) {
+                    $this->status = static::STATUS_TERMINATED;
+                    $this->terminate();
+                }
+                break;
+        }
+
+        return $this->save(false);
     }
 }
