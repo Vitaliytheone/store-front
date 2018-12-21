@@ -109,6 +109,10 @@ class AdminsHash extends ActiveRecord
         $model->update(false);
     }
 
+    /**
+     * @return bool
+     * @throws \Exception
+     */
     public static function updateFreshnessCurrentAdmin()
     {
         /** @var Admins $identity */

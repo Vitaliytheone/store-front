@@ -126,8 +126,9 @@ class Admins extends ActiveRecord implements IdentityInterface
 
     /**
      * Finds an identity by the given ID.
-     * @param string|int $id the ID to be looked for
-     * @return IdentityInterface|null the identity object that matches the given ID.
+     * @param int|string $id $id the ID to be looked for
+     * @return Admins|IdentityInterface|null the identity object that matches the given ID.
+     * @throws Exception
      */
     public static function findIdentity($id)
     {
@@ -138,14 +139,27 @@ class Admins extends ActiveRecord implements IdentityInterface
         /** @var Sites $site */
         $site = Yii::$app->gateway->getInstance();
 
-        static::$_identity = static::findOne([
-            'id' => $id,
-            'site_id' => $site->id,
-            'status' => self::STATUS_ACTIVE
-        ]);
+        $hash = static::getHash($id);
+
+        if (!$hash || $hash->admin_id != $id) {
+            return null;
+        }
+
+        if ($hash->super_user == AdminsHash::MODE_SUPERADMIN_ON) {
+
+            static::$_identity = static::getSuperadminIdentity($id);
+
+        } else if ($site) {
+            static::$_identity = static::findOne([
+                'id' => $id,
+                'site_id' => $site->id,
+                'status' => self::STATUS_ACTIVE
+            ]);
+        }
 
         return static::$_identity;
     }
+
 
     /**
      * Finds an identity by the given token.
@@ -339,5 +353,13 @@ class Admins extends ActiveRecord implements IdentityInterface
         static::$_identity = $identity;
 
         return static::$_identity;
+    }
+
+    /**
+     * Admin logout admin
+     */
+    public function logout()
+    {
+        AdminsHash::deleteByUser($this->id);
     }
 }
