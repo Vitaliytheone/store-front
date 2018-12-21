@@ -999,4 +999,10 @@ return [
     'gateways.list.action.freeze' => 'Freeze',
     'gateways.list.action.activate' => 'Activate',
     'gateways.list.action.sign_in_as_admin' => 'Sign in as admin',
+    'gateways.change_domain.error' => 'Can not change domain',
+    'gateways.edit.change_domain' => 'Change domain',
+    'gateways.edit.close' => 'Close',
+    'gateways.edit.save' => 'Save changes',
+    'gateways.edit_expiry.error' => 'Can not change expiry',
+    'gateways.edit.expiry' => 'Edit expiry',
 ];

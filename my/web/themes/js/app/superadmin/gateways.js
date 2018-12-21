@@ -17,8 +17,7 @@ customModule.superadminGatewaysController = {
             errorBlock.addClass('hidden');
             errorBlock.html('');
 
-            $('#changedomainform-domain', form).val(domain);
-            $('#changedomainform-subdomain', form).prop('checked', subdomain);
+            $('#changegatewaydomainform-domain', form).val(domain);
             modal.modal('show');
             return false;
         });
