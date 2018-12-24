@@ -98,20 +98,20 @@ class Paypal extends BasePayment
     public static function paymentStatuses()
     {
         return [
-            self::PAYMENTSTATUS_NONE,
-            self::PAYMENTSTATUS_CANCELED_REVERSAL,
-            self::PAYMENTSTATUS_COMPLETED,
-            self::PAYMENTSTATUS_DENIED,
-            self::PAYMENTSTATUS_EXPIRED,
-            self::PAYMENTSTATUS_FAILED,
-            self::PAYMENTSTATUS_IN_PROGRESS,
-            self::PAYMENTSTATUS_PARTIALLY_REFUNDED,
-            self::PAYMENTSTATUS_PENDING,
-            self::PAYMENTSTATUS_REFUNDED,
-            self::PAYMENTSTATUS_REVERSED,
-            self::PAYMENTSTATUS_PROCESSED,
-            self::PAYMENTSTATUS_VOIDED,
-            self::PAYMENTSTATUS_COMPLETED_FUNDS_HELD,
+            static::PAYMENTSTATUS_NONE,
+            static::PAYMENTSTATUS_CANCELED_REVERSAL,
+            static::PAYMENTSTATUS_COMPLETED,
+            static::PAYMENTSTATUS_DENIED,
+            static::PAYMENTSTATUS_EXPIRED,
+            static::PAYMENTSTATUS_FAILED,
+            static::PAYMENTSTATUS_IN_PROGRESS,
+            static::PAYMENTSTATUS_PARTIALLY_REFUNDED,
+            static::PAYMENTSTATUS_PENDING,
+            static::PAYMENTSTATUS_REFUNDED,
+            static::PAYMENTSTATUS_REVERSED,
+            static::PAYMENTSTATUS_PROCESSED,
+            static::PAYMENTSTATUS_VOIDED,
+            static::PAYMENTSTATUS_COMPLETED_FUNDS_HELD,
         ];
     }
 
@@ -379,14 +379,18 @@ class Paypal extends BasePayment
         $currency = ArrayHelper::getValue($GetTransactionDetails, 'CURRENCYCODE');
 
         // если стаутс не Completed и не Pending и не In-Progress тогда переводим invoice_status = 4
-        if (!empty($status) && !in_array($status, ['completed', 'pending', 'in-progress'])) {
+        if (!empty($status) && !in_array($status, [
+            static::PAYMENTSTATUS_COMPLETED,
+            static::PAYMENTSTATUS_PENDING,
+            static::PAYMENTSTATUS_IN_PROGRESS,
+        ])) {
             $payment->status = Payments::STATUS_FAIL;
         }
 
         $payment->save(false);
 
         // Проверяемстатус, сумму и валюту
-        if ($status != 'completed' || $amount != $payment->amount || $currency != $payment->currency) {
+        if ($status != static::PAYMENTSTATUS_COMPLETED || $amount != $payment->amount || $currency != $payment->currency) {
             return false;
         }
 

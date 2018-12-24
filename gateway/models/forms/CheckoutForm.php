@@ -1,33 +1,27 @@
 <?php
-namespace app\models\forms;
+namespace gateway\models\forms;
 
-use app\components\ActiveForm;
-use app\helpers\PaymentMethodHelper;
-use app\models\main\PaymentMethods;
+use common\models\gateway\Payments;
+use common\models\gateways\PaymentMethods;
+use common\models\gateways\Sites;
 use payments\Payment;
-use app\components\validators\DemoValidator;
-use app\helpers\PriceHelper;
-use app\models\main\Project;
-use app\models\panel\Payments;
 use Yii;
-use app\models\panel\Users;
-use yii\base\DynamicModel;
 use yii\base\Model;
-use yii\helpers\ArrayHelper;
 
 /**
- * Class AddFoundsForm
- * @package app\models\forms
+ * Class CheckoutForm
+ * @package gateway\models\forms
  */
-class AddFoundsForm extends Model {
+class CheckoutForm extends Model {
 
-    /**
-     * @var array
-     */
-    protected static $panelPaymentMethods;
-
-    public $type;
+    public $source_id;
+    public $source_type;
+    public $source_payment_id;
+    public $method_id;
+    public $currency;
     public $amount;
+    public $success_url;
+    public $fail_url;
     public $fields;
 
     /**
@@ -46,14 +40,9 @@ class AddFoundsForm extends Model {
     public $redirect;
 
     /**
-     * @var Users
+     * @var Sites
      */
-    protected $_user;
-
-    /**
-     * @var Project
-     */
-    protected $_project;
+    protected $_gateway;
 
     /**
      * @var Payments
@@ -61,78 +50,36 @@ class AddFoundsForm extends Model {
     protected $_payment;
 
     /**
-     * @var array
-     */
-    protected $_payments;
-
-    /**
-     * @var array
-     */
-    protected $_paymentsFields;
-
-    /**
-     * @var string
-     */
-    protected $_ip;
-
-    /**
-     * @var array
-     */
-    protected $_userData;
-
-    /**
-     * @var array
-     */
-    protected $_jsOptions = [];
-
-    /**
      * @return array the validation rules.
      */
     public function rules()
     {
         return [
-            [['amount'], 'safe'],
-            [['type'], 'required', 'message' => ''],
-            [['type'], 'integer', 'message' => ''],
-            [['type'], 'in', 'range' => array_keys($this->getPayments()), 'message' => ''],
+            [['amount', 'method_id', 'source_id', 'source_type', 'source_payment_id', 'currency'], 'required', 'message' => ''],
+            [['amount',], 'number', 'message' => ''],
+            [['currency',], 'string', 'message' => '', 'length' => 3],
+            [['success_url', 'fail_url'], 'string', 'message' => ''],
+            [['method_id', 'method_id', 'source_id', 'source_type', 'source_payment_id',], 'integer', 'message' => ''],
             ['fields', 'safe'],
         ];
     }
 
     /**
-     * Set user
-     * @param Users $user
+     * Set gateway
+     * @param Sites $gateway
      */
-    public function setUser($user)
+    public function setGateway($gateway)
     {
-        $this->_user = $user;
-    }
-
-    /**
-     * Set project
-     * @param Project $project
-     */
-    public function setPanel($project)
-    {
-        $this->_project = $project;
-    }
-
-    /**
-     * Set user
-     * @param string $ip
-     */
-    public function setIp($ip)
-    {
-        $this->_ip = $ip;
+        $this->_gateway = $gateway;
     }
 
     /**
      * Get panel model
-     * @return Project
+     * @return Sites
      */
-    public function getPanel()
+    public function getGateway()
     {
-        return $this->_project;
+        return $this->_gateway;
     }
 
     /**
@@ -141,88 +88,6 @@ class AddFoundsForm extends Model {
     public function getPayment()
     {
         return $this->_payment;
-    }
-
-    /**
-     * Validate data
-     * @param string[]|string $attributeNames
-     * @param bool $clearErrors
-     * @return bool
-     */
-    public function validate($attributeNames = null, $clearErrors = true)
-    {
-        if (!parent::validate() || !$this->validateAmount('amount') || !$this->validateUserOptions('fields')) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate fields
-     * @param $attribute
-     * @return bool
-     */
-    protected function validateUserOptions($attribute)
-    {
-        if ($this->hasErrors()) {
-            return false;
-        }
-
-        $panel = $this->_project;
-        $methodOptions = ArrayHelper::getValue($this->getPanelPaymentMethods(), $this->type, []);
-        $fields = ArrayHelper::getValue($methodOptions, 'fields', []);
-        $paymentMethod = Payment::getPayment($methodOptions['class_name']);
-        $paymentMethod->setPanel($panel);
-        $paymentMethod->setUser($this->_user);
-
-        if (empty($fields)) {
-            return true;
-        }
-
-        $this->_userData = [];
-        $rules = [];
-
-        foreach ($fields as $name => $field) {
-            $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name);
-            if (empty($field['rules'])) {
-                continue;
-            }
-
-            foreach ($field['rules'] as &$rule) {
-                if (!empty($rule[1]) && 'method' == $rule[1]) {
-                    $attributes = $this->getAttributes();
-                    $error = Yii::t('app', ArrayHelper::getValue($rule, 'message'));
-                    $rule[1] = function($attribute, $params = []) use ($panel, $paymentMethod, $name, $attributes, $error) {
-                        if ($this->hasErrors($attribute)) {
-                            return false;
-                        }
-                        if (!$paymentMethod->validate($name, $attributes)) {
-                            $this->addError($attribute, $error);
-                            return false;
-                        }
-
-                        return true;
-                    };
-                }
-            }
-
-            $rules = ArrayHelper::merge($rules, $field['rules']);
-        }
-
-        if (empty($rules)) {
-            return true;
-        }
-
-        $model = DynamicModel::validateData($this->_userData, $rules);
-
-        if (!$model->validate()) {
-            $error = ActiveForm::firstError($model);
-            $this->addError($attribute, Yii::t('app', $error));
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -235,161 +100,46 @@ class AddFoundsForm extends Model {
             return false;
         }
 
-        $method = ArrayHelper::getValue($this->getPanelPaymentMethods(), $this->_payment->type, []);
-        if (empty($method)) {
+        if (!($method = PaymentMethods::findOne($this->method_id))) {
+            $this->addError('method_id', '');
             return false;
         }
 
-        $payment = Payment::getPayment($method['class_name']);
-        $payment->setPanel($this->getPanel());
-        $payment->setUser($this->_user);
-        $payment->setPaymentMethod($method);
+        $this->_payment = new Payments($this->attributes);
+
+        if (!$this->_payment->save(false)) {
+            $this->addError('method_id', '');
+            return false;
+        }
+
+        $payment = Payment::getPayment($method->class_name);
+        $payment->setGateway($this->getGateway());
         $result = $payment->checkout($this->_payment);
 
-        return $this->result($method, $result);
+        return $this->result($result);
     }
 
     /**
-     * Get available payment methods
-     * @return array
-     */
-    protected function getPanelPaymentMethods()
-    {
-        if (null !== static::$panelPaymentMethods) {
-            return static::$panelPaymentMethods;
-        }
-
-        static::$panelPaymentMethods = PaymentMethodHelper::getUserAvailablePaymentMethods($this->getPanel(), $this->_user);
-
-        return static::$panelPaymentMethods;
-    }
-
-    /**
-     * Get payments
-     * @return array
-     */
-    public function getPayments()
-    {
-        if ($this->_payments) {
-            return $this->_payments;
-        }
-
-        $this->_payments = [];
-
-        foreach ($this->getPanelPaymentMethods() as $payment) {
-            // TODO:: Изменим в новых платежках на элегентное решение
-            if (PaymentMethods::METHOD_STRIPE_PAY == $payment['id'] && !$this->_project->ssl) {
-                continue;
-            }
-
-            $this->_payments[$payment['id']] = [
-                'id' => $payment['id'],
-                'name' => $payment['name'],
-            ];
-        }
-
-        return $this->_payments;
-    }
-
-    /**
-     * Get available payments methods
-     * @return array
-     */
-    public function getPaymentsFields()
-    {
-        if ($this->_paymentsFields) {
-            return $this->_paymentsFields;
-        }
-
-        $this->_paymentsFields = [];
-
-        $payments = $this->getPanelPaymentMethods();
-
-        foreach ($payments as $payment) {
-            $this->_paymentsFields[$payment['id']] = [];
-
-            if (!empty($payment['fields'])) {
-                foreach($payment['fields'] as $name => $field) {
-                    $field = ArrayHelper::merge($field, [
-                        'label' => Yii::t('app', ArrayHelper::getValue($field, 'label')),
-                        'type' => $field['type'],
-                        'value' => '',
-                    ]);
-
-                    if (in_array($field['type'], ['input', 'hidden'])) {
-                        $field['name'] = $name;
-                    }
-
-                    if (!empty($field['texts'])) {
-                        foreach ($field['texts'] as &$text) {
-                            $text = Yii::t('app', $text);
-                        }
-                    } else {
-                        $field['texts'] = [];
-                    }
-
-                    $this->_paymentsFields[$payment['id']][$name] = $field;
-                }
-            }
-        }
-
-        // Assign fields post data
-        foreach ($this->_paymentsFields as $payment => $fields) {
-            foreach ($fields as $key => $field) {
-                $name = ArrayHelper::getValue($field, 'name');
-                if ($name) {
-                    $this->_paymentsFields[$payment][$key]['value'] = ArrayHelper::getValue($this->fields, $name);
-                }
-            }
-        }
-
-        return $this->_paymentsFields;
-    }
-
-    /**
-     * @return array
-     */
-    public function getJsOptions()
-    {
-        $payments = $this->getPanelPaymentMethods();
-
-        foreach ($payments as $payment) {
-            $method = ArrayHelper::getValue($this->getPanelPaymentMethods(), $payment['id']);
-            $paymentMethod = Payment::getPayment($method['class_name']);
-            $paymentMethod->setPanel($this->getPanel());
-            $paymentMethod->setUser($this->_user);
-            $jsEnvironments = $paymentMethod->getJsEnvironments();
-
-            if (!empty($jsEnvironments['code'])) {
-                $this->_jsOptions[$jsEnvironments['code']] = ArrayHelper::merge((array)ArrayHelper::getValue($this->_jsOptions, $payment['id'], []), $jsEnvironments);
-            }
-        }
-
-        return $this->_jsOptions;
-    }
-
-    /**
-     * @param array $method
      * @param array $result
      * @return bool
      */
-    protected function result($method, $result)
+    protected function result($result)
     {
         switch ($result['result']) {
             case 1:
                 $this->formData = $result['formData'];
                 return true;
-                break;
+            break;
 
             case 2:
                 $this->redirect = $result['redirect'];
                 return true;
-                break;
+            break;
 
             case 3:
                 $this->returnData = $result['options'];
                 return true;
-                break;
+            break;
         }
 
         return false;

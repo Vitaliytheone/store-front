@@ -31,12 +31,15 @@ use common\models\gateway\queries\PaymentsQuery;
  */
 class Payments extends ActiveRecord
 {
-    const STATUS_PENDING = 0;
-    const STATUS_COMPLETED = 1;
-    const STATUS_EXPIRED = 2;
-    const STATUS_WAITING = 3;
-    const STATUS_FAIL = 4;
-    const STATUS_HOLD = 5;
+    public const STATUS_PENDING = 0;
+    public const STATUS_COMPLETED = 1;
+    public const STATUS_EXPIRED = 2;
+    public const STATUS_WAITING = 3;
+    public const STATUS_FAIL = 4;
+    public const STATUS_HOLD = 5;
+
+    public const SOURCE_TYPE_PANEL = 1;
+    public const SOURCE_TYPE_STORE = 2;
 
     /**
      * @inheritdoc
@@ -52,13 +55,14 @@ class Payments extends ActiveRecord
     public function rules()
     {
         return [
-            [['source_type', 'source_id', 'source_payment_id', 'method_id', 'currency', 'amount', 'created_at'], 'required'],
+            [['source_type', 'source_id', 'source_payment_id', 'method_id', 'currency', 'amount'], 'required'],
             [['source_id', 'source_payment_id', 'method_id', 'created_at', 'updated_at'], 'integer'],
             [['amount'], 'number'],
             [['source_type', 'status'], 'string', 'max' => 1],
             [['currency'], 'string', 'max' => 3],
             [['response_status', 'success_url', 'fail_url', 'return_url', 'transaction_id'], 'string', 'max' => 300],
             [['response'], 'string', 'max' => 1000],
+            [['status'], 'default', 'value' => static::STATUS_PENDING],
         ];
     }
 
@@ -123,6 +127,32 @@ class Payments extends ActiveRecord
                     return time();
                 },
             ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_PENDING => Yii::t('app', 'payments.status.pending'),
+            static::STATUS_COMPLETED => Yii::t('app', 'payments.status.completed'),
+            static::STATUS_EXPIRED => Yii::t('app', 'payments.status.expired'),
+            static::STATUS_WAITING => Yii::t('app', 'payments.status.waiting'),
+            static::STATUS_FAIL => Yii::t('app', 'payments.status.fail'),
+            static::STATUS_HOLD => Yii::t('app', 'payments.status.hold'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSourceTypes()
+    {
+        return [
+            static::SOURCE_TYPE_PANEL => Yii::t('app', 'payments.source_type.panel'),
+            static::SOURCE_TYPE_STORE => Yii::t('app', 'payments.source_type.store'),
         ];
     }
 }

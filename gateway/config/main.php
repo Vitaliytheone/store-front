@@ -96,6 +96,14 @@ $config = [
                         'admin' => 'admin.php',
                     ]
                 ],
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => dirname(__DIR__) . '/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                    ]
+                ],
             ],
         ],
         'view' => [

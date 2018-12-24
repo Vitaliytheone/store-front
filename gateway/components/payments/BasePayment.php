@@ -383,7 +383,7 @@ abstract class BasePayment extends Component {
     /**
      * @param Sites $site
      */
-    public function setPanel(?Sites $site)
+    public function setGateway(?Sites $site)
     {
         $this->_site = $site;
     }
@@ -391,7 +391,7 @@ abstract class BasePayment extends Component {
     /**
      * @return Sites
      */
-    public function getPanel(): Sites
+    public function getGateway(): Sites
     {
         return $this->_site;
     }
@@ -401,7 +401,7 @@ abstract class BasePayment extends Component {
      */
     public function getNotifyUrl(): string
     {
-        return SiteHelper::hostUrl($this->getPanel()->ssl) . '/' . ArrayHelper::getValue($this->getPaymentMethod(), 'url');
+        return SiteHelper::hostUrl($this->getGateway()->ssl) . '/' . ArrayHelper::getValue($this->getPaymentMethod(), 'url');
     }
 
     /**
@@ -409,6 +409,6 @@ abstract class BasePayment extends Component {
      */
     public function getReturnUrl(): string
     {
-        return SiteHelper::hostUrl($this->getPanel()->ssl) . '/addfunds';
+        return SiteHelper::hostUrl($this->getGateway()->ssl) . '/processing';
     }
 }
