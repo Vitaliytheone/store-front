@@ -27,6 +27,7 @@ $config = [
         'request' => [
             'csrfParam' => '_csrf-gateway',
             'cookieValidationKey' => 'uKJVjhPVYpKcAirTEKcgVrcau5ZVPV0d',
+            'class'	=> \gateway\components\MyRequest::class,
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser'
             ],

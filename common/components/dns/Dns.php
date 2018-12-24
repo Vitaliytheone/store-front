@@ -2,7 +2,7 @@
 namespace common\components\dns;
 
 use Yii;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;

@@ -7,11 +7,11 @@ use payments\exceptions\ValidationException;
 use Yii;
 use common\models\gateway\Payments;
 use common\models\gateway\PaymentsLog;
-use common\models\gateways\PaymentMethods;
 use common\models\gateways\SitePaymentMethods;
 use yii\base\Component;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
+use common\helpers\SiteHelper;
 
 /**
  * Class BasePayment
@@ -274,7 +274,7 @@ abstract class BasePayment extends Component {
      */
     protected function getDescription()
     {
-        return Yii::t('app', 'addfunds.payment.description') . ' (' . $this->getUser()->login . ')';
+        return Yii::t('app', 'addfunds.payment.description');
     }
 
     /**
@@ -309,7 +309,7 @@ abstract class BasePayment extends Component {
     {
         // заносим запись в таблицу payments_log
         $this->_log = new PaymentsLog();
-        $this->_log->pid = $payment->id;
+        $this->_log->payment_id = $payment->id;
         $this->_log->setResponse(is_string($data) ? $data : var_export($data, true));
         $this->_log->save(false);
     }
@@ -347,15 +347,26 @@ abstract class BasePayment extends Component {
     {
         if (!$this->_paymentMethod) {
             foreach ((array)$this->_method_id as $methodId) {
-                $this->_paymentMethod = ArrayHelper::getValue(PaymentMethodHelper::getPanelPaymentMethods($this->_panel), $methodId);
+                $sitePaymentMethod = SitePaymentMethods::find()
+                    ->joinWith(['method'])
+                    ->andWhere([
+                        'method_id' => $methodId,
+                        'site_id' => $this->_site->id,
+                        'visibility' => 1
+                    ])
+                    ->one();
+                $this->_paymentMethod = [
+                    'id' => $sitePaymentMethod->id,
+                    'method_id' => $sitePaymentMethod->method_id,
+                    'name' => $sitePaymentMethod->method->method_name,
+                    'url' => $sitePaymentMethod->method->url,
+                    'options' => $sitePaymentMethod->getOptionsDetails(),
+                ];
+
                 if ($this->_paymentMethod) {
                     break;
                 }
             }
-        }
-
-        if (empty($this->_paymentMethod['visibility'])) {
-            throw new ValidationException('Bad payment method');
         }
 
         return $this->_paymentMethod;
@@ -370,35 +381,19 @@ abstract class BasePayment extends Component {
     }
 
     /**
-     * @param Project $panel
+     * @param Sites $site
      */
-    public function setPanel(?Project $panel)
+    public function setPanel(?Sites $site)
     {
-        $this->_panel = $panel;
+        $this->_site = $site;
     }
 
     /**
-     * @return Project
+     * @return Sites
      */
-    public function getPanel(): Project
+    public function getPanel(): Sites
     {
-        return $this->_panel;
-    }
-
-    /**
-     * @param Users $user
-     */
-    public function setUser(?Users $user)
-    {
-        $this->_user = $user;
-    }
-
-    /**
-     * @return Users
-     */
-    public function getUser(): Users
-    {
-        return $this->_user;
+        return $this->_site;
     }
 
     /**
@@ -406,10 +401,7 @@ abstract class BasePayment extends Component {
      */
     public function getNotifyUrl(): string
     {
-        return SiteHelper::hostUrl($this->getPanel()->ssl) . '/' . ArrayHelper::getValue(PaymentMethodHelper::getPaymentMethods($this->_panel), [
-            $this->getPaymentMethod()['method_id'],
-            'url'
-        ]);
+        return SiteHelper::hostUrl($this->getPanel()->ssl) . '/' . ArrayHelper::getValue($this->getPaymentMethod(), 'url');
     }
 
     /**
@@ -418,13 +410,5 @@ abstract class BasePayment extends Component {
     public function getReturnUrl(): string
     {
         return SiteHelper::hostUrl($this->getPanel()->ssl) . '/addfunds';
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrencyCode()
-    {
-        return $this->getPanel()->getCurrencyCode();
     }
 }

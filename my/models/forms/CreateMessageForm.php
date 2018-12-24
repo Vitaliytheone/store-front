@@ -1,7 +1,7 @@
 <?php
 namespace my\models\forms;
 
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Customers;
 use common\models\panels\Invoices;

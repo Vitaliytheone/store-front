@@ -1,13 +1,11 @@
 <?php
 namespace payments\methods;
 
-use app\helpers\CurlHelper;
-use app\helpers\PanelHelper;
+use common\helpers\CurlHelper;
 use common\models\gateways\PaymentMethods;
 use common\models\gateway\Payments;
 use Yii;
 use payments\BasePayment;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -140,7 +138,7 @@ class Paypal extends BasePayment
         $orderParams = [
             'PAYMENTREQUEST_0_AMT' => $amount,
             'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
-            'PAYMENTREQUEST_0_CURRENCYCODE' => $this->getCurrencyCode(),
+            'PAYMENTREQUEST_0_CURRENCYCODE' => $payment->currency,
             'PAYMENTREQUEST_0_ITEMAMT' => $amount,
             'PAYMENTREQUEST_0_DESC' => $this->getDescription(),
             //'NOSHIPPING' => 1,
@@ -182,6 +180,8 @@ class Paypal extends BasePayment
             ];
         }
 
+        $this->getPayment($id);
+
         $credentials = [
             'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
             'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),
@@ -195,14 +195,12 @@ class Paypal extends BasePayment
             'PAYERID' => $payerId,
             'TOKEN' => $token,
             'PAYMENTREQUEST_0_AMT' => ArrayHelper::getValue($checkoutDetails, 'PAYMENTREQUEST_0_AMT'),
-            'PAYMENTREQUEST_0_CURRENCYCODE' => $this->getCurrencyCode(), // валюта панели
+            'PAYMENTREQUEST_0_CURRENCYCODE' => $this->_payment->currency, // валюта панели
         );
 
         $response = $this->request('DoExpressCheckoutPayment', $credentials + $requestParams);
 
         $this->fileLog(json_encode($response, JSON_PRETTY_PRINT));
-
-        $this->getPayment($id);
 
         // заносим запись в таблицу payments_log
         $this->dbLog($this->_payment, json_encode([
@@ -220,8 +218,8 @@ class Paypal extends BasePayment
         $transactionId = ArrayHelper::getValue($response, 'PAYMENTINFO_0_TRANSACTIONID');
 
         $this->_transactionDetails = $this->request('GetTransactionDetails', $credentials + [
-                'TRANSACTIONID' => $transactionId
-            ]);
+            'TRANSACTIONID' => $transactionId
+        ]);
 
         $this->fileLog(json_encode($this->_transactionDetails, JSON_PRETTY_PRINT));
 
@@ -238,7 +236,7 @@ class Paypal extends BasePayment
             ];
         }
 
-        if (ArrayHelper::getValue($this->_transactionDetails, 'CURRENCYCODE') != $this->getCurrencyCode()) {// проверяем валюту панели и ту что вернула платежка
+        if (ArrayHelper::getValue($this->_transactionDetails, 'CURRENCYCODE') != $this->_payment->currency) {// проверяем валюту панели и ту что вернула платежка
             // no invoice
             return [
                 'result' => 2,
@@ -251,12 +249,6 @@ class Paypal extends BasePayment
         $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
         $doExpressCheckoutPaymentStatus = strtolower($doExpressCheckoutPaymentStatus);
 
-        $this->_payment->comment = $this->_transactionDetails['EMAIL'] . '; ' . $transactionId;
-
-        if (383 == $this->getPanel()->id) {
-            $this->_payment->comment .= '; ' . $this->_transactionDetails['SHIPTOCOUNTRYNAME'];
-        }
-
         $this->_payment->transaction_id = $transactionId;
         $this->_payment->status = Payments::STATUS_PENDING;
         $this->_payment->response_status = $getTransactionDetailsStatus;
@@ -264,7 +256,7 @@ class Paypal extends BasePayment
         if ($getTransactionDetailsStatus != 'completed' || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
 
             if ('pending' == $getTransactionDetailsStatus || $getTransactionDetailsStatus != $doExpressCheckoutPaymentStatus) {
-                $this->_payment->invoice_status = 3;
+                $this->_payment->status = Payments::STATUS_WAITING;
             }
 
             // no invoice
@@ -281,7 +273,6 @@ class Paypal extends BasePayment
         return [
             'result' => 1,
             'transaction_id' => $transactionId,
-            'fee' => $this->getPaymentMethod()['take_fee_from_user'] ? ArrayHelper::getValue($this->_transactionDetails, 'FEEAMT', 0) : 0,
             'amount' => $this->_payment->amount,
             'payment_id' => $this->_payment->id,
         ];
@@ -313,7 +304,7 @@ class Paypal extends BasePayment
             CURLOPT_URL             => $this->endPoint,
             CURLOPT_SSL_VERIFYPEER  => 1,
             CURLOPT_SSL_VERIFYHOST  => 2,
-            CURLOPT_CAINFO          => Yii::getAlias('@app') . '/config/certificates/pp.pem', // Файл сертификата
+            CURLOPT_CAINFO          => Yii::getAlias('@common') . '/config/certificates/pp.pem', // Файл сертификата
             CURLOPT_RETURNTRANSFER  => 1,
             CURLOPT_POST            => 1,
             CURLOPT_POSTFIELDS      => $request,
@@ -389,19 +380,19 @@ class Paypal extends BasePayment
 
         // если стаутс не Completed и не Pending и не In-Progress тогда переводим invoice_status = 4
         if (!empty($status) && !in_array($status, ['completed', 'pending', 'in-progress'])) {
-            $payment->invoice_status = 4;
+            $payment->status = Payments::STATUS_FAIL;
         }
+
         $payment->save(false);
 
         // Проверяемстатус, сумму и валюту
-        if ($status != 'completed' || $amount != $payment->amount || $currency != $this->getCurrencyCode()) {
+        if ($status != 'completed' || $amount != $payment->amount || $currency != $payment->currency) {
             return false;
         }
 
         $this->success([
             'result' => 1,
             'transaction_id' => $payment->transaction_id,
-            'fee' => $this->getPaymentMethod()['take_fee_from_user'] ? ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT', 0) : 0,
             'amount' => $payment->amount,
             'payment_id' => $payment->id,
         ]);
