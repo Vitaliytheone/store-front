@@ -1,6 +1,7 @@
 <?php
 namespace my\components\validators;
 
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
 use Yii;
 use common\models\panels\Orders;
@@ -105,6 +106,15 @@ class OrderDomainValidator extends BaseDomainValidator
 
         // Если есть активный магазин, то выдаем ошибку что уже существует панель или магазин
         if ($hasAvailableStores) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            return false;
+        }
+
+        $hasAvailableGateway = Sites::find()
+            ->where(['domain' => $domain])
+            ->exists();
+
+        if ($hasAvailableGateway) {
             $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
             return false;
         }
