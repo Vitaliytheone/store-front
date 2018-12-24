@@ -96,8 +96,8 @@ return [
 
     // Default gateway attributes
     'gateway.defaults' => [
-        'theme_name' => 'Default',
-        'theme_folder' => 'default',
+        'theme_name' => 'Bootstrap',
+        'theme_folder' => 'bootstrap',
     ],
 
     'store.staff_users.limit' => 10,
