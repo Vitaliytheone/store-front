@@ -5,6 +5,7 @@ namespace common\models\gateways;
 use common\models\panels\SuperAdminToken;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateways\queries\AdminsQuery;
 use yii\helpers\ArrayHelper;
@@ -61,7 +62,7 @@ class Admins extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['site_id', 'username', 'password', 'auth_key', 'created_at'], 'required'],
+            [['site_id', 'username', 'password'], 'required'],
             [['site_id', 'last_login', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password', 'auth_key', 'ip'], 'string', 'max' => 255],
             [['status'], 'string', 'max' => 1],
@@ -361,5 +362,27 @@ class Admins extends ActiveRecord implements IdentityInterface
     public function logout()
     {
         AdminsHash::deleteByUser($this->id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => [
+                        'created_at',
+                        'updated_at'
+                    ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ]);
     }
 }

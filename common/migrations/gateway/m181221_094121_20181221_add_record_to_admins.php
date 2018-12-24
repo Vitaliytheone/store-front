@@ -15,19 +15,22 @@ class m181221_094121_20181221_add_record_to_admins extends Migration
     {
         $this->execute('SET foreign_key_checks = 0;');
 
-        $admin = Admins::findOne(1);
+        $superadminId = 1;
+        $currentAdmin = Admins::findOne($superadminId);
 
-        if ($admin) {
+        if ($currentAdmin) {
             $newAdmin = new Admins();
-            $newAdmin->load($admin->attributes);
+            $newAdmin->attributes = $currentAdmin->attributes;
             $newAdmin->id = null;
 
-            $newAdmin->save();
-            $admin->delete();
+            $newAdmin->save(false);
+            $currentAdmin->delete();
         }
 
         $superadmin = new Admins();
-        $superadmin->id = 1;
+        $superadmin->id = $superadminId;
+        $superadmin->username = 'superadmin';
+        $superadmin->password = '';
         $superadmin->site_id = Admins::SUPERADMIN_SITE_ID;
         $superadmin->status = Admins::STATUS_ACTIVE;
         $superadmin->save(false);
