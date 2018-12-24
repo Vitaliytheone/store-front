@@ -72,7 +72,7 @@ class OrderGatewayForm extends DomainForm
 
         $invoiceModel = new Invoices();
         $invoiceModel->total = 0;
-        $invoiceModel->cid = $this->_user->id;
+        $invoiceModel->cid = $this->getUser()->id;
         $invoiceModel->generateCode();
         $invoiceModel->daysExpired(Yii::$app->params['invoice.domainDuration']);
 
@@ -106,7 +106,7 @@ class OrderGatewayForm extends DomainForm
         $this->scenario = static::SCENARIO_CREATE_PROJECT;
 
         $model = new Orders();
-        $model->cid = $this->_user->id;
+        $model->cid = $this->getUser()->id;
         $model->item = Orders::ITEM_BUY_GATEWAY;
         $model->domain = $this->domain;
         $model->ip = $this->_ip;
