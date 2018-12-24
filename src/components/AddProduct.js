@@ -1,25 +1,28 @@
 import React, { Component } from "react";
-import { addProduct } from "../services/products";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
 import ProductModal from "../modals/ProductModal";
 
 class AddProduct extends Component {
   state = {
-    modal: false
+    modalIsOpen: false
   };
 
   toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
+    this.setState(prevstate =>({
+      modalIsOpen: !prevstate.modalIsOpen
+    }));
   };
 
-  // onSubmit = ({ productName, visibility }) => {
-  //   console.log(productName, visibility);
-  // };
+  handleSubmit = (...params) => {
+    this.setState({
+      modalIsOpen: false
+    });
+    this.props.onSubmit(...params);
+  };
 
   render() {
+    const { isSubmitting } = this.props;
     return (
       <div>
         <div className="row sommerce-products__actions">
@@ -35,15 +38,15 @@ class AddProduct extends Component {
           </div>
         </div>
         <Modal
-          isOpen={this.state.modal}
+          isOpen={this.state.modalIsOpen}
           toggle={this.toggle}
           size="lg"
           backdrop={false}
         >
           <Formik
-            onSubmit={this.props.onSubmit}
+            onSubmit={this.handleSubmit}
             initialValues={{
-              productName: " ",
+              name: " ",
               visibility: "enabled"
             }}
           >
@@ -51,8 +54,8 @@ class AddProduct extends Component {
               <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
               <ProductModal />
               <ModalFooter className="justify-content-start">
-                <Button color="primary" type="submit">
-                  Add product
+                <Button color="primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Loading...' : 'Add product'}
                 </Button>{" "}
                 <Button color="secondary" onClick={this.toggle}>
                   Cancel

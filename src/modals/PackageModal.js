@@ -4,64 +4,27 @@ import { PackageInput } from "../components/Inputs";
 
 class PackageModal extends Component {
   render() {
-    return (
-      <div className="modal-body">
+    return <div className="modal-body">
         {/* Alert Error */}
 
-        <div
-          className="alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          />
+        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          <button type="button" className="close" data-dismiss="alert" aria-label="Close" />
           <strong>Oh snap!</strong> Error message!
         </div>
 
         {/* Alert Error End */}
 
         <div className="form-group">
-          <Field
-            name="packageName"
-            component={PackageInput}
-            label="Package name"
-            placeholder="package"
-            id="package-name"
-            required
-          />
+          <Field name="name" component={PackageInput} label="Package name *" placeholder="package" id="package-name" required />
         </div>
         <div className="form-group">
-          <Field
-            name="price"
-            component={PackageInput}
-            label="Price *"
-            placeholder="price"
-            id="package-price"
-            required
-          />
+          <Field name="price" component={PackageInput} label="Price *" placeholder="price" id="package-price" required />
         </div>
         <div className="form-group">
-          <Field
-            name="quantity"
-            component={PackageInput}
-            label="Quantity *"
-            placeholder="quantity"
-            id="package-quantity"
-            required
-          />
+          <Field name="quantity" component={PackageInput} label="Quantity *" placeholder="quantity" id="package-quantity" required />
         </div>
         <div className="form-group">
-          <Field
-            name="overflow"
-            component={PackageInput}
-            label="Overflow, % *"
-            placeholder="overflow"
-            id="package-overflow"
-            required
-          />
+          <Field name="overflow" component={PackageInput} label="Overflow, % *" placeholder="overflow" id="package-overflow" required />
         </div>
         <div className="form-group">
           <label htmlFor="package-best">Best package</label>
@@ -122,48 +85,32 @@ class PackageModal extends Component {
         <hr />
         <div className="form-group">
           <label htmlFor="availability">Availability</label>
-          <Field
-            className="form-control"
-            component="select"
-            name="availability"
-          >
-            <option value="1">Enabled</option>
-            <option value="2">Disabled</option>
+          <Field className="form-control" component="select" name="availability">
+            <option value="Enabled">Enabled</option>
+            <option value="Disabled">Disabled</option>
           </Field>
         </div>
         <hr />
         <div className="form-group">
           <label htmlFor="mode">Mode</label>
           <Field className="form-control" component="select" name="mode">
-            <option value="2">Manual</option>
-            <option value="1">Auto</option>
+            <option value="Manual">Manual</option>
+            <option value="Auto">Auto</option>
           </Field>
         </div>
         <div className="form-group">
           <label htmlFor="provider">Provider</label>
           <Field className="form-control" component="select" name="provider">
-            <option
-              value="2"
-              data-action-url="/admin/products/get-provider-services?provider_id=2"
-            >
+            <option value="test.myperfectpanel.com" data-action-url="/admin/products/get-provider-services?provider_id=2">
               test.myperfectpanel.com{" "}
             </option>
-            <option
-              value="3"
-              data-action-url="/admin/products/get-provider-services?provider_id=3"
-            >
+          <option value="bulkfollows.com" data-action-url="/admin/products/get-provider-services?provider_id=3">
               bulkfollows.com{" "}
             </option>
-            <option
-              value="4"
-              data-action-url="/admin/products/get-provider-services?provider_id=4"
-            >
+          <option value="demo.perfectpanel.com" data-action-url="/admin/products/get-provider-services?provider_id=4">
               demo.perfectpanel.com{" "}
             </option>
-            <option
-              value="5"
-              data-action-url="/admin/products/get-provider-services?provider_id=5"
-            >
+          <option value="autosmo.com" data-action-url="/admin/products/get-provider-services?provider_id=5">
               autosmo.com{" "}
             </option>
           </Field>
@@ -171,8 +118,7 @@ class PackageModal extends Component {
         <span className="m--font-danger">
           API responce errors: Incorrect required
         </span>
-      </div>
-    );
+      </div>;
   }
 }
 
