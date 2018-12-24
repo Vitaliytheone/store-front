@@ -4,7 +4,7 @@ return [
     'adminEmail' => 'admin@example.com',
     'debugIps' => ['*'],
 
-    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r', // Must be a same as my/config/params.php 'auth_key'!
+    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(R', // Must be a same as my/config/params.php 'auth_key'!
 
     'reCaptcha.siteKey' => '6LeAmT4UAAAAAKz1c-wjHdI2XDp_PglfA1rl8RbG',
     'reCaptcha.secret' => '6LeAmT4UAAAAAI88eDxVJkusrAurV9A8EqwphqVw',
@@ -13,5 +13,5 @@ return [
 
     'debugEmail' => null,
 
-    'devEmail' => [], // Адреса почты на которые шлем ошибки
+    'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
 ];
