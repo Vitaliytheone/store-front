@@ -160,6 +160,8 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_BUY_STORE => Yii::t('app', 'invoice_details.item.buy_store'),
             static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'invoice_details.item.buy_trial_store'),
             static::ITEM_PROLONGATION_STORE => Yii::t('app', 'invoice_details.item.prolongation_store'),
+            static::ITEM_BUY_GATEWAY => Yii::t('app', 'invoice_details.item.buy_gateway'),
+            static::ITEM_PROLONGATION_GATEWAY => Yii::t('app', 'invoice_details.item.prolongation_gateway'),
         ];
     }
 
@@ -193,7 +195,7 @@ class InvoiceDetails extends ActiveRecord
                     $this->description = Yii::t('app', 'invoice_details.description.buy_panel', [
                         'domain' => $order->domain
                     ]);
-                    break;
+                break;
 
                 case static::ITEM_PROLONGATION_PANEL:
                     $project = Project::findOne($this->item_id);
@@ -294,7 +296,14 @@ class InvoiceDetails extends ActiveRecord
                     $this->description = Yii::t('app', 'invoice_details.description.buy_gateway', [
                         'domain' => $order->domain
                     ]);
-                    break;
+                break;
+
+                case static::ITEM_PROLONGATION_GATEWAY:
+                    $gateway = Sites::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.prolongation_gateway', [
+                        'domain' => $gateway->domain
+                    ]);
+                break;
             }
         }
         return parent::beforeSave($insert);
@@ -309,6 +318,7 @@ class InvoiceDetails extends ActiveRecord
         switch ($this->item) {
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_PANEL:
+            case static::ITEM_BUY_GATEWAY:
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
@@ -327,6 +337,11 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_PROLONGATION_STORE:
                 $store = Stores::findOne($this->item_id);
                 return $store ? $store->getBaseDomain() : '';
+            break;
+
+            case static::ITEM_PROLONGATION_GATEWAY:
+                $gateway = Sites::findOne($this->item_id);
+                return $gateway ? $gateway->getBaseDomain() : '';
             break;
 
             case static::ITEM_PROLONGATION_SSL:
@@ -364,6 +379,7 @@ class InvoiceDetails extends ActiveRecord
     {
         switch ($this->item) {
             case static::ITEM_BUY_PANEL:
+            case static::ITEM_BUY_GATEWAY:
             case static::ITEM_BUY_SSL:
             case static::ITEM_BUY_DOMAIN:
             case static::ITEM_BUY_CHILD_PANEL:
@@ -385,6 +401,11 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_PROLONGATION_STORE:
                 $store = Stores::findOne($this->item_id);
                 return $store;
+            break;
+
+            case static::ITEM_PROLONGATION_GATEWAY:
+                $gateway = Sites::findOne($this->item_id);
+                return $gateway;
             break;
 
             case static::ITEM_CUSTOM_CUSTOMER:
@@ -472,6 +493,27 @@ class InvoiceDetails extends ActiveRecord
                     'pid' => $store->id,
                     'expired_last' => $lastExpired,
                     'expired' => $store->expired,
+                    'created_at' => time(),
+                    'type' => ExpiredLog::getTypeByCode($method)
+                ];
+                $ExpiredLogModel->save(false);
+
+            return true;
+
+            case static::ITEM_PROLONGATION_GATEWAY:
+                $gateway = Sites::findOne($this->item_id);
+                $lastExpired = $gateway->expired_at;
+
+                if (!$gateway->updateExpired()) {
+                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $gateway->id, $gateway->getErrors(), 'paid.invoice_details.expired');
+                    return false;
+                }
+
+                $ExpiredLogModel = new ExpiredLog();
+                $ExpiredLogModel->attributes = [
+                    'pid' => $gateway->id,
+                    'expired_last' => $lastExpired,
+                    'expired' => $gateway->expired_at,
                     'created_at' => time(),
                     'type' => ExpiredLog::getTypeByCode($method)
                 ];
