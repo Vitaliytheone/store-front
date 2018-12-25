@@ -53,7 +53,6 @@ class Sites extends ActiveRecord implements ProjectInterface
 {
     const GATEWAY_DB_NAME_PREFIX = 'gateway_';
 
-    const STATUS_PENDING = 0;
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
@@ -130,7 +129,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     public static function getStatuses(): array
     {
         return [
-            static::STATUS_PENDING => Yii::t('app', 'sites.status.pending'),
             static::STATUS_ACTIVE => Yii::t('app', 'sites.status.active'),
             static::STATUS_FROZEN => Yii::t('app', 'sites.status.frozen'),
             static::STATUS_TERMINATED => Yii::t('app', 'sites.status.terminated'),

@@ -111,7 +111,13 @@ class OrderDomainValidator extends BaseDomainValidator
         }
 
         $hasAvailableGateway = Sites::find()
-            ->where(['domain' => $domain])
+            ->where([
+                'domain' => $domain,
+                'status' => [
+                    Sites::STATUS_ACTIVE,
+                    Sites::STATUS_FROZEN
+                ]
+            ])
             ->exists();
 
         if ($hasAvailableGateway) {
