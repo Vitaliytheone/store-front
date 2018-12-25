@@ -12,6 +12,9 @@ use common\models\stores\Stores;
  */
 class PaymentsHelper
 {
+
+    // TODO delete after testing, not use anymore
+
     /**
      * Update store payment method list by available payment gateways
      * @param $store Stores

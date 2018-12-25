@@ -11,6 +11,7 @@ use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\Suborders;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
@@ -97,7 +98,7 @@ abstract class BasePayment extends Component {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return mixed -
      * [
      *  'result' => 1,
@@ -377,7 +378,7 @@ abstract class BasePayment extends Component {
      * Get js payment environment
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function getJsEnvironments($store, $email, $details)

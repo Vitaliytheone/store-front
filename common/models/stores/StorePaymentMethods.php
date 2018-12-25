@@ -5,6 +5,7 @@ namespace common\models\stores;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use common\models\stores\queries\StorePaymentMethodsQuery;
 
@@ -22,12 +23,12 @@ use common\models\stores\queries\StorePaymentMethodsQuery;
  * @property int $created_at
  * @property int $updated_at
  */
-class StorePaymentMethods extends \yii\db\ActiveRecord
+class StorePaymentMethods extends ActiveRecord
 {
-    const VISIBILITY_DISABLED = 0;
-    const VISIBILITY_ENABLED = 1;
+    public const VISIBILITY_DISABLED = 0;
+    public const VISIBILITY_ENABLED = 1;
 
-    public static $methodsNames = [];
+    public static $paymentsNames = [];
 
     /**
      * @inheritdoc
@@ -85,6 +86,7 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
     }
 
     /**
+     * Get store of current method
      * @return ActiveQuery
      */
     public function getStore()
@@ -93,6 +95,7 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
     }
 
     /**
+     * Get payment method of current store payment method
      * @return ActiveQuery
      */
     public function getPaymentMethod()
@@ -101,9 +104,10 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
     }
 
     /**
+     * Get currency of current method
      * @return ActiveQuery
      */
-    public function getPaymentMethodCurrency()
+    public function getStorePaymentMethodCurrency()
     {
         return $this->hasOne(PaymentMethodsCurrency::class, ['id' => 'currency_id']);
     }
@@ -123,22 +127,22 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
      */
     public static function getNames(): array
     {
-        if (empty(static::$methodsNames) || !is_array(static::$methodsNames)) {
-            static::$methodsNames = PaymentGateways::find()
+        if (empty(static::$paymentsNames) || !is_array(static::$paymentsNames)) {
+            static::$paymentsNames = PaymentMethods::find()
                 ->select(['name'])
-                ->indexBy('method_id')
+                ->indexBy('id')
                 ->asArray()
                 ->column();
         }
 
-        return static::$methodsNames;
+        return static::$paymentsNames;
     }
 
     /**
      * Get payment method name
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return ArrayHelper::getValue(static::getNames(), $this->method_id);
     }
@@ -148,7 +152,7 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
      * @param int $methodId
      * @return string|null
      */
-    public static function getMethodName($methodId)
+    public static function getMethodName($methodId): ?string
     {
         return ArrayHelper::getValue(static::getNames(), $methodId);
     }
@@ -163,13 +167,14 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
     }
 
     /**
+     * Get current method icon
      * @return string
      */
     public function getMethodIcon(): string
     {
         $method = PaymentMethods::findOne([$this->method_id]);
 
-        return $method->icon;
+        return $method->icon ?? '';
     }
 
     /**
@@ -179,7 +184,7 @@ class StorePaymentMethods extends \yii\db\ActiveRecord
      */
     public function isCurrencySupported($currencyCode)
     {
-        // TODO гет метод hasOne из куренси по ИД
+//        $this->getPaymentMethodCurrency(); // TODO check and fix
         return true;
     }
 

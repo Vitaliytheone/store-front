@@ -4,6 +4,7 @@ namespace common\models\stores;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 use common\models\stores\queries\PaymentMethodsQuery;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -25,22 +26,27 @@ use yii\behaviors\TimestampBehavior;
 class PaymentMethods extends ActiveRecord
 {
     /* Payment methods names */
-    const METHOD_PAYPAL = 'paypal';
-    const METHOD_2CHECKOUT = '2checkout';
-    const METHOD_COINPAYMENTS = 'coinpayments';
-    const METHOD_PAGSEGURO = 'pagseguro';
-    const METHOD_WEBMONEY = 'webmoney';
-    const METHOD_YANDEX_MONEY = 'yandexmoney';
-    const METHOD_YANDEX_CARDS = 'yandexcards';
-    const METHOD_FREE_KASSA = 'freekassa';
-    const METHOD_PAYTR = 'paytr';
-    const METHOD_PAYWANT = 'paywant';
-    const METHOD_BILLPLZ = 'billplz';
-    const METHOD_AUTHORIZE = 'authorize';
-    const METHOD_STRIPE = 'stripe';
-    const METHOD_MERCADOPAGO = 'mercadopago';
+    public const METHOD_PAYPAL = 'paypal';
+    public const METHOD_2CHECKOUT = '2checkout';
+    public const METHOD_COINPAYMENTS = 'coinpayments';
+    public const METHOD_PAGSEGURO = 'pagseguro';
+    public const METHOD_WEBMONEY = 'webmoney';
+    public const METHOD_YANDEX_MONEY = 'yandexmoney';
+    public const METHOD_YANDEX_CARDS = 'yandexcards';
+    public const METHOD_FREE_KASSA = 'freekassa';
+    public const METHOD_PAYTR = 'paytr';
+    public const METHOD_PAYWANT = 'paywant';
+    public const METHOD_BILLPLZ = 'billplz';
+    public const METHOD_AUTHORIZE = 'authorize';
+    public const METHOD_STRIPE = 'stripe';
+    public const METHOD_MERCADOPAGO = 'mercadopago';
 
     public static $methodsNames = [];
+
+    /** @var array all method_name */
+    public static $allMethodsNames = [];
+
+    public static $methods;
 
     /**
      * @inheritdoc
@@ -105,7 +111,17 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get available payment method names
+     * Get currency of current method
+     *
+     * @return ActiveQuery
+     */
+    public function getPaymentMethodCurrency(): ActiveQuery
+    {
+        return $this->hasMany(PaymentMethodsCurrency::class, ['method_id' => 'id']);
+    }
+
+    /**
+     * Get available payment method Names
      * @return array
      */
     public static function getNames()
@@ -132,6 +148,48 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
+     * Get all payment methods only from `method_name` column
+     * @return static[]
+     */
+    public static function getAllMethods(): array
+    {
+        if (empty(static::$allMethodsNames) || !is_array(static::$allMethodsNames)) {
+            static::$allMethodsNames = static::find()
+                ->select(['method_name'])
+                ->indexBy('id')
+                ->asArray()
+                ->column();
+        }
+
+        return static::$allMethodsNames;
+    }
+
+    /**
+     * Return value from `method_name` column
+     * @param int $method
+     * @return string
+     */
+    public static function getOneMethod(int $method): string
+    {
+        Yii::debug($method);
+        return ArrayHelper::getValue(static::getAllMethods(), $method);
+    }
+
+    /**
+     * Get all payment methods with options
+     * @return static[]
+     */
+    public static function getMethods():array
+    {
+        if (empty(static::$methods)) {
+            static::$methods = static::find()->all();
+
+        }
+
+        return (array)static::$methods;
+    }
+
+    /**
      * Set settings form
      * @param $options
      */
@@ -144,7 +202,7 @@ class PaymentMethods extends ActiveRecord
      * Get settings form
      * @return array
      */
-    public function getSettingsForm(): array
+    public function getSettingsForm(): ?array
     {
         return !empty($this->settings_form) ? json_decode($this->settings_form, true) : [];
     }

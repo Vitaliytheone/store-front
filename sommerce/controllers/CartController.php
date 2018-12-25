@@ -10,6 +10,7 @@ use sommerce\models\forms\AddToCartForm;
 use sommerce\models\forms\OrderForm;
 use sommerce\models\search\CartSearch;
 use Yii;
+use yii\base\UnknownClassException;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
@@ -63,9 +64,10 @@ class CartController extends CustomController
     }
 
     /**
-     * Displays homepage.
+     * Displays cart.
      *
      * @return string
+     * @throws UnknownClassException
      */
     public function actionIndex()
     {
@@ -83,6 +85,7 @@ class CartController extends CustomController
         $model->setStore($this->store);
         $model->setSearchItems($searchModel);
 
+        Yii::debug(Yii::$app->request->post(), 'POST'); // TODO del
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if ($model->redirect) {
                 return $this->redirect($model->redirect);

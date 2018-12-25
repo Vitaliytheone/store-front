@@ -1,7 +1,10 @@
 <?php
+
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\models\stores\PaymentGateways;
+use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use sommerce\helpers\UiHelper;
@@ -32,33 +35,40 @@ trait PaymentsTrait {
         $this->addModule('adminPayments');
 
         /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
+//        $store = Yii::$app->store->getInstance();
 
         $paymentMethods = StorePaymentMethods::findAll([
             'store_id' => yii::$app->store->getId(),
         ]);
 
+        $availableMethod = PaymentMethodsCurrency::getSupportCurrency();
+        Yii::debug($availableMethod); // TODO del
+
         return $this->render('payments', [
             'paymentMethods' => $paymentMethods,
+            'availableMethod' => $availableMethod,
         ]);
     }
 
     /**
      * Settings payments. Payment method settings
-     * @param $method
+     * @param $method integer method->id
      * @return string|Response
      * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionPaymentsSettings($method)
     {
-        $request = yii::$app->getRequest();
-        $storeId = yii::$app->store->getId();
 
-        $this->view->title = Yii::t('admin', "settings.payments_edit_$method");
+        $request = yii::$app->getRequest();
+        $storeId = yii::$app->store->getId(); // FIXME - store->id
+        $methodName = PaymentMethods::getOneMethod($method);
+
+        $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
 
         $paymentModel = EditPaymentMethodForm::findOne([
             'store_id' => $storeId,
-            'method' => $method,
+            'method_id' => $method,
         ]);
 
         if (!$paymentModel) {
@@ -67,23 +77,29 @@ trait PaymentsTrait {
 
         $paymentModel->setUser(Yii::$app->user);
 
+        Yii::debug($request->post(), 'POST'); // TODO del
+
+        // FIXME не сохраняет ПОСТ из-за ошибки валидации
         if ($paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
         }
 
+
         return $this->render('payments', [
             'method' => $method,
+            'methodName' => $methodName,
             'paymentModel' => $paymentModel,
         ]);
     }
 
     /**
      * Settings payments. Toggle payment method active AJAX action.
-     * @param $method
+     * @param $method integer method->id
      * @return array
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionPaymentsToggleActive($method)
     {
@@ -104,7 +120,7 @@ trait PaymentsTrait {
 
         $paymentModel = EditPaymentMethodForm::findOne([
             'store_id' => $storeId,
-            'method' => $method,
+            'method_id' => $method,
         ]);
 
         if (!$paymentModel) {
@@ -113,6 +129,7 @@ trait PaymentsTrait {
 
         $paymentModel->setUser(Yii::$app->user);
 
+        // FIXME не сохраняет из-за ошибки валидации
         return [
             'active' => $paymentModel->setActive($active|0),
         ];

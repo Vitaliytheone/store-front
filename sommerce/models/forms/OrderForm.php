@@ -7,13 +7,16 @@ use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\stores\PaymentGateways;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\UserHelper;
 use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\DynamicModel;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -22,8 +25,14 @@ use yii\helpers\ArrayHelper;
  */
 class OrderForm extends Model {
 
+    /** @var string customer (buyer) email */
     public $email;
+
+    /** @var int current PaymentMethod - ID */
     public $method;
+
+    /** @var int ID of current StorePaymentMethod */
+    public $storePayMethod;
 
     /**
      * @var array
@@ -77,6 +86,7 @@ class OrderForm extends Model {
 
     /**
      * @return array the validation rules.
+     * @throws UnknownClassException
      */
     public function rules()
     {
@@ -160,35 +170,34 @@ class OrderForm extends Model {
     /**
      * Get available payment methods
      * @return array
+     * @throws UnknownClassException
      */
-    public function getPaymentMethods()
+    public function getPaymentMethods(): array
     {
         if (null === static::$_methods) {
-
-            $currencyPayments = $this->getCurrencyPayments();
 
             static::$_methods = [];
             $methods = [];
 
-            foreach (PaymentMethods::find()
-                 ->andWhere([
-                     'method' => array_keys($currencyPayments)
-                 ])
+            foreach (StorePaymentMethods::find()
                  ->store($this->_store)
                  ->active()
                  ->all() as $key => $method) {
 
+                /** @var StorePaymentMethods $method */
                 $methods[$key] = [
-                    'id' => $method->id,
-                    'name' => $method->getName(),
-                    'method' => $method->method,
-                    'details' => $method->getDetails(),
-                    'position' => ArrayHelper::getValue($currencyPayments, [$method->method, 'position'], 0),
+                    'id' => $method->method_id,
+                    'name' => $method->name, //$method->getName(),
+                    'method' => PaymentMethods::getOneMethod($method->method_id),
+                    'details' => $method->getOptions(),
+                    'position' => $method->position,
                     'fields' => [],
-                    'jsOptions' => []
+                    'jsOptions' => [],
+                    'storePayId' => $method->id,
                 ];
 
-                $payment = Payment::getPayment($method->method);
+                $payMethod = PaymentMethods::findOne($method->method_id);
+                $payment = Payment::getPayment($payMethod);
                 $methods[$key]['fields'] = $payment->fields();
                 $methods[$key]['jsOptions'] = $payment->getJsEnvironments($this->_store, $this->email, $method);
             }
@@ -198,12 +207,14 @@ class OrderForm extends Model {
             static::$_methods = ArrayHelper::index($methods, 'method');
         }
 
+        Yii::debug(static::$_methods, 'static1'); // TODO del
         return static::$_methods;
     }
 
     /**
      * Return Payments methods list for view
      * @return array
+     * @throws UnknownClassException
      */
     public function getPaymentsMethodsForView()
     {
@@ -221,6 +232,7 @@ class OrderForm extends Model {
     /**
      * Save to cart
      * @return bool
+     * @throws UnknownClassException
      */
     public function save()
     {
@@ -230,11 +242,27 @@ class OrderForm extends Model {
             return false;
         }
 
+        $payMethod = PaymentMethods::findOne($this->method);
+        if (empty($payMethod)) {
+            return false;
+        }
+
+        // TODO упростить - ищем текущий метод доставя ИД из массива
+        $storePayMethodArray = static::$_methods[$payMethod->method_name];
+        Yii::debug(static::$_methods, 'static-$methods2'); // TODO del
+
+        $storePayMethod = StorePaymentMethods::findOne($storePayMethodArray['storePayId']);
+        if (empty($storePayMethod)) {
+            return false;
+        }
+
+
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
-        $checkout->method_id = $this->method;
+        $checkout->method_id = $storePayMethod->id;
         $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
+        $checkout->currency_id = $storePayMethod->currency_id;
         $checkout->setDetails($this->getItems());
         $checkout->setUserDetails($this->_userData);
 
@@ -243,12 +271,8 @@ class OrderForm extends Model {
             return false;
         }
 
-        $paymentMethod = PaymentMethods::find()
-            ->andWhere([
-                'id' => $this->method
-            ])->store($this->_store)->active()->one();
 
-        $result = Payment::getPayment($paymentMethod->method)->checkout($checkout, $this->_store, $this->email, $paymentMethod);
+        $result = Payment::getPayment($payMethod)->checkout($checkout, $this->_store, $this->email, $storePayMethod);
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;
@@ -326,6 +350,8 @@ class OrderForm extends Model {
     /**
      * @param $attribute
      * @return bool
+     * @throws UnknownClassException
+     * @throws InvalidConfigException
      */
     public function validateUserOptions($attribute)
     {
@@ -337,7 +363,8 @@ class OrderForm extends Model {
         $paymentMethods = ArrayHelper::index($this->getPaymentMethods(), 'id');
         $methodOptions = ArrayHelper::getValue($paymentMethods, $this->method, []);
         $fields = ArrayHelper::getValue($methodOptions, 'fields', []);
-        $paymentMethod = Payment::getPayment($methodOptions['method']);
+        $payMethod = PaymentMethods::findOne($methodOptions['id']);
+        $paymentMethod = Payment::getPayment($payMethod);
 
         if (empty($fields)) {
             return true;
@@ -390,6 +417,7 @@ class OrderForm extends Model {
 
     /**
      * @return array
+     * @throws UnknownClassException
      */
     public function getJsOptions()
     {
@@ -403,8 +431,9 @@ class OrderForm extends Model {
     }
 
     /**
-     * Get available payments methods
+     * Get Fields for available payments methods
      * @return array
+     * @throws UnknownClassException
      */
     public function getPaymentsFields()
     {

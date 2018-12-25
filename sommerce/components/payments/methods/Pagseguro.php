@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\store\PaymentsLog;
@@ -18,6 +19,7 @@ use PagSeguroNotificationService;
 use PagSeguroNotificationType;
 use Exception;
 use PagSeguroLibrary;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Pagseguro
@@ -42,12 +44,12 @@ class Pagseguro extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $directPaymentRequest = new PagSeguroPaymentRequest();
         $directPaymentRequest->addItem($checkout->id, static::getDescription($checkout->id), 1, $checkout->price);
@@ -97,7 +99,7 @@ class Pagseguro extends BasePayment {
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_PAGSEGURO,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
         ]);
 
         if (empty($paymentMethod)) {

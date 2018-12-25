@@ -262,6 +262,13 @@ return [
     'settings.payments_save_method' => 'Save changes',
     'settings.payments_cancel_method' => 'Cancel',
     'settings.message_settings_saved' => 'Changes successfully saved!',
+    'settings.payments_add' => 'Add method',
+    'settings.payments_modal_title' => 'Add payment',
+    'settings.payments_modal_method' => 'Method',
+    'settings.payments_modal_select_item' => 'Please select…',
+    'settings.payments_modal_save' => 'Add method',
+    'settings.payments_modal_cancel' => 'Cancel',
+
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 
     'settings.payments_stripe_guide_1' => 'Publishable key and Secret key you may find on {signup_url}',

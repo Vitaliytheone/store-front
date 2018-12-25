@@ -3,6 +3,7 @@ namespace common\helpers;
 
 use common\models\panels\services\GetPaymentMethodsService;
 use common\models\stores\PaymentGateways;
+use common\models\stores\PaymentMethods;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -21,7 +22,7 @@ class CurrencyHelper {
 
     /**
      * Get currency options by code
-     * @param string $code
+     * @param string $code currency code (USD, RUB, etc.)
      * @return array
      */
     public static function getCurrencyOptions(string $code):array
@@ -33,22 +34,24 @@ class CurrencyHelper {
         static::$currencyOptions[$code] = [];
 
         /**
-         * @var PaymentGateways $method
+         * @var PaymentMethods $method
          */
-        foreach (PaymentGateways::getMethods() as $method) {
-            $availableCurrencies = (array)$method->getCurrencies();
+        // TODO изменил ПейментГейтвей на ПайментМетод, возможно будет лучше использовать СтореПайментМетод
+        foreach (PaymentMethods::getMethods() as $method) {
+            $availableCurrencies = (array)$method->getPaymentMethodCurrency()->where(['currency' => $code])->asArray();
 
-            if (!in_array($code, $availableCurrencies)) {
-                continue;
-            }
+            // TODO проверить и раскоментировать хардкод
+//            if (!in_array($code, $availableCurrencies['currency'])) {
+//                continue;
+//            }
 
-            static::$currencyOptions[$code][$method->method] = [
+            static::$currencyOptions[$code][$method->method_name] = [
                 'url' => $method->url,
                 'class_name' => $method->class_name,
                 'name' => $method->name,
-                'code' => $method->method,
-                'position' => $method->position,
-                'options' => $method->getOptions()
+                'code' => $method->method_name,
+                'position' => 0,//$availableCurrencies['position'],
+                'options' => $method->getSettingsForm(),
             ];
         }
 

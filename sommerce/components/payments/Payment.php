@@ -1,12 +1,10 @@
 <?php
+
 namespace sommerce\components\payments;
 
-use common\helpers\CurrencyHelper;
-use common\models\store\Payments;
 use common\models\stores\PaymentMethods;
-use common\models\stores\Stores;
-use Yii;
 use yii\base\UnknownClassException;
+
 
 /**
  * Class Payment

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use sommerce\components\payments\BasePayment;
@@ -8,6 +9,7 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Freekassa
@@ -28,12 +30,12 @@ class Freekassa extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $sign = md5(ArrayHelper::getValue($paymentMethodOptions, 'merchant_id') . ':' . $checkout->price . ':' . ArrayHelper::getValue($paymentMethodOptions, 'secret_word') . ':' . $checkout->id);
 
@@ -70,7 +72,7 @@ class Freekassa extends BasePayment {
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_FREE_KASSA,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
         ]);
 
         if (empty($paymentMethod)) {

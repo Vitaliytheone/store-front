@@ -11,6 +11,7 @@ use common\models\stores\Stores;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 class Coinpayments extends BasePayment
 {
@@ -69,12 +70,12 @@ class Coinpayments extends BasePayment
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id', null);
         $ipnSecret = ArrayHelper::getValue($paymentMethodOptions, 'ipn_secret', null);
@@ -141,7 +142,7 @@ class Coinpayments extends BasePayment
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_COINPAYMENTS,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
         ]);
 
         if (empty($paymentMethod)) {
@@ -151,7 +152,7 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $methodDetails = $paymentMethod->getDetails();
+        $methodDetails = $paymentMethod->getOptions();
         $methodMerchantId = ArrayHelper::getValue($methodDetails, 'merchant_id');
         $methodIPNSecret = ArrayHelper::getValue($methodDetails, 'ipn_secret');
 

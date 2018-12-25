@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\PaymentGateways;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use Yii;
 use yii\base\Model;
@@ -34,6 +34,7 @@ class PaymentsSearch extends Model
     private $_db;
     private $_paymentsTable;
     private $_paymentMethodsTable;
+    private $_storePaymentMethodsTable;
 
     private $_queryActiveFilters;
     private $_dataProvider;
@@ -48,6 +49,7 @@ class PaymentsSearch extends Model
         $this->_db = $store->db_name;
         $this->_paymentsTable = $this->_db . "." . Payments::tableName();
         $this->_paymentMethodsTable = PaymentMethods::tableName();
+        $this->_storePaymentMethodsTable = StorePaymentMethods::tableName(); // было _paymentMethodsTable = PaymentMethods::tableName()
     }
 
     /**
@@ -202,11 +204,15 @@ class PaymentsSearch extends Model
     {
         $storeId = yii::$app->store->getId();
 
+        // FIXME отображение кол-ва записей для каждой платежки
+        // плюс не отображаются платежки которых нет в store_payment_methods,
+        // может есть смысл использовать таблицу payments текущего стора
         $methodsList = (new Query())
-            ->select(['method'])
-            ->from($this->_paymentMethodsTable)
+            ->select(['method_id'])
+//            ->from($this->_paymentMethodsTable)
+            ->from($this->_storePaymentMethodsTable)
             ->where(['store_id' => $storeId])
-            ->indexBy('method')
+            ->indexBy('method_id.')
             ->all();
 
         $countsByMethodsQuery = (new Query())
@@ -292,10 +298,10 @@ class PaymentsSearch extends Model
 
         /* Populate methods filter by additional data */
         array_walk($methodsFilterMenuItems, function(&$menuItem){
-            $method = $menuItem['method'];
+            $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = PaymentGateways::getMethodName($method);
+            $menuItem['method_title'] = StorePaymentMethods::getMethodName($method);
         });
 
         $allMethodsMenuItem = [
@@ -326,7 +332,7 @@ class PaymentsSearch extends Model
 
         /* Populate payments list by additional formats and data */
         array_walk($payments, function(&$payment) {
-            $payment['method_title'] = PaymentGateways::getMethodName($payment['method']);
+            $payment['method_title'] = PaymentMethods::getMethodName($payment['method']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

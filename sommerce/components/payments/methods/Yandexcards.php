@@ -1,11 +1,12 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\helpers\SiteHelper;
 use common\models\store\Checkouts;
-use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Yandexcards
@@ -23,12 +24,12 @@ class Yandexcards extends Yandexmoney {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         return static::returnForm($this->getFrom(), [
             'receiver' => ArrayHelper::getValue($paymentMethodOptions, 'wallet_number'),
@@ -39,7 +40,7 @@ class Yandexcards extends Yandexmoney {
             'sum' => $checkout->price,
             'quickpay-form' => 'shop',
             'paymentType' => 'AC',
-            'successURL' =>SiteHelper::hostUrl() . '/cart'
+            'successURL' => SiteHelper::hostUrl() . '/cart'
         ]);
     }
 }

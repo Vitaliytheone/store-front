@@ -5,6 +5,7 @@ use sommerce\helpers\UiHelper;
 
 /* @var $paymentMethods[] \common\models\stores\StorePaymentMethods */
 /* @var $method \common\models\stores\StorePaymentMethods */
+/* @var $availableMethod array */
 
 ?>
 
@@ -14,6 +15,11 @@ use sommerce\helpers\UiHelper;
             <h3 class="m-subheader__title">
                 <?= Yii::t('admin', 'settings.payments_title') ?>
             </h3>
+        </div>
+        <div>
+            <div class="m-dropdown--align-right">
+                <a href="#" class="btn btn-primary m-btn--air btn-brand cursor-pointer" data-toggle="modal" data-target=".add-method-modal"><?= Yii::t('admin', 'settings.payments_add') ?></a>
+            </div>
         </div>
     </div>
 </div>
@@ -38,8 +44,8 @@ use sommerce\helpers\UiHelper;
                                      <label>
                                         <input class="toggle-active" type="checkbox"
                                                name="toggle-active" <?= UiHelper::toggleString($method->visibility, 'checked') ?>
-                                               data-payment_method="<?= $method->method_id ?>"
-                                               data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->id,]) ?>">
+                                               data-payment_method="<?= $method->method_id // TODO возможно заменить на вывод метод_нейм ?>"
+                                               data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->method_id]) ?>">
                                          <span></span>
                                      </label>
                                   </span>
@@ -59,3 +65,5 @@ use sommerce\helpers\UiHelper;
     <?php endforeach; ?>
 
 </div>
+
+<?= $this->render('_modal_add_method', ['availableMethod' => $availableMethod]) ?>

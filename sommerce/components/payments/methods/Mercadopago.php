@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\stores\PaymentMethods;
@@ -12,6 +13,7 @@ use common\helpers\SiteHelper;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\store\Checkouts;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Mercadopago
@@ -29,16 +31,16 @@ class Mercadopago extends BasePayment
 
     /**
      * Checkout
-     * @param \common\models\store\Checkouts $checkout
-     * @param \common\models\stores\Stores $store
+     * @param Checkouts $checkout
+     * @param Stores $store
      * @param string $email
-     * @param \common\models\stores\PaymentMethods $details
+     * @param StorePaymentMethods; $details
      * @return array|mixed
      * @throws MercadoPagoException
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
@@ -136,7 +138,7 @@ class Mercadopago extends BasePayment
         $paymentGateway = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_MERCADOPAGO,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
         ]);
 
         if (empty($paymentGateway)) {

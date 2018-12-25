@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\store\Checkouts;
@@ -11,6 +12,7 @@ use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Twocheckout
@@ -66,12 +68,12 @@ class Twocheckout extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $mode = (int)ArrayHelper::getValue($paymentMethodOptions, 'test_mode', null);
         $accountNumber = ArrayHelper::getValue($paymentMethodOptions, 'account_number', null);
         $secretWord = ArrayHelper::getValue($paymentMethodOptions, 'secret_word', null);
@@ -165,7 +167,7 @@ class Twocheckout extends BasePayment {
        $paymentMethod = PaymentMethods::findOne([
            'method' => PaymentMethods::METHOD_2CHECKOUT,
            'store_id' => $store->id,
-           'active' => PaymentMethods::ACTIVE_ENABLED
+           'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
        ]);
 
        if (empty($paymentMethod)) {

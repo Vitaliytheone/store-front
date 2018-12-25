@@ -5,11 +5,11 @@ use yii\helpers\Html;
 
 /* @var $submitUrl string */
 /* @var $cancelUrl string */
+/* @var $method string from column method_name */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm; */
 
 $formData = $paymentModel->getMethodFormData();
-$method = $paymentModel->method;
-
+Yii::debug($formData, 'formdata'); // TODO del
 ?>
 
 <div class="m-subheader ">
@@ -27,10 +27,10 @@ $method = $paymentModel->method;
     <div class="sommerce-settings__well">
         <div class="row align-items-center">
             <div class="col-md-3 text-center">
-                <img src="<?= $formData['icon'] ?>" alt="" class="img-fluid">
+                <img src="<?= $formData['icon'] // TODO брать из БД ?>" alt="" class="img-fluid">
             </div>
             <div class="col-md-9">
-                <?= $this->render('_rules', ['method' => $paymentModel->method,]);?>
+                <?= $this->render('_rules', ['method' => $method]);?>
             </div>
         </div>
     </div>

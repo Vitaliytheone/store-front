@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use Yii;
+use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\models\stores\queries\PaymentMethodsCurrencyQuery;
 
@@ -19,7 +20,7 @@ use common\models\stores\queries\PaymentMethodsCurrencyQuery;
  * @property int $created_at
  * @property int $updated_at
  */
-class PaymentMethodsCurrency extends \yii\db\ActiveRecord
+class PaymentMethodsCurrency extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -114,5 +115,18 @@ class PaymentMethodsCurrency extends \yii\db\ActiveRecord
     public function getSettingsFormDescription(): array
     {
         return !empty($this->settings_form_description) ? json_decode($this->settings_form_description, true) : [];
+    }
+
+    /**
+     * Get currency support by current store
+     * @return array
+     */
+    public static function getSupportCurrency(): array
+    {
+        /** @var Stores $store */
+        $store = Yii::$app->store->getInstance();
+//        ->andFilterWhere(['currency' => $store->currency])->asArray()
+
+        return self::find()->filterWhere(['hidden' => 0])->andFilterWhere(['currency' => $store->currency])->asArray()->all();
     }
 }

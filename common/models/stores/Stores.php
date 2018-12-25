@@ -185,7 +185,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function getPaymentMethods()
     {
-        // delete after checked !!!!!!!!!!!!!!!!!!!!!!!
+        // TODO delete after checked !!!!!!!!!!!!!!!!!!!!!!!
         // delete after checked !!!!!!!!!!!!!!!!!!!!!!!
         // delete after checked !!!!!!!!!!!!!!!!!!!!!!!
         // delete after checked !!!!!!!!!!!!!!!!!!!!!!!

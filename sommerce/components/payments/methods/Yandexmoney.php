@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use sommerce\components\payments\BasePayment;
@@ -9,6 +10,7 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Yandexmoney
@@ -26,12 +28,12 @@ class Yandexmoney extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         return static::returnForm($this->getFrom(), [
             'receiver' => ArrayHelper::getValue($paymentMethodOptions, 'wallet_number'),
@@ -82,7 +84,7 @@ class Yandexmoney extends BasePayment {
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_YANDEX_MONEY,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
         ]);
 
         if (empty($paymentMethod)) {
