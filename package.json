@@ -36,6 +36,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "react-app-rewire-build-dev": "^1.0.1",
     "react-autocomplete-cli": "0.0.3"
   }
 }

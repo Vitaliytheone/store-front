@@ -9,7 +9,7 @@ class AddProduct extends Component {
   };
 
   toggle = () => {
-    this.setState(prevstate =>({
+    this.setState(prevstate => ({
       modalIsOpen: !prevstate.modalIsOpen
     }));
   };

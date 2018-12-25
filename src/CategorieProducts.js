@@ -32,6 +32,7 @@ const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd
 
 class CategorieProducts extends Component {
   state = {
+    success: false,  
     data: arrayData
   };
 
@@ -75,7 +76,7 @@ class CategorieProducts extends Component {
     newData[newProductIndex] = response;
     this.setState(prevState => ({
       ...prevState,
-      data: newData
+      data: newData 
     }));
     actions.setSubmitting(false);
   };

@@ -29,7 +29,7 @@ class AddPackage extends Component {
             Add package
           </button>
         </div>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} backdrop={false}>
+        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop={false}>
           <Formik onSubmit={this.handleSubmit} initialValues={{ name: "", price: "", quantity: "", overflow: "", availability: "Enabled", mode: "Auto", provider: "bulkfollows.com" }}>
             <Form>
               <ModalHeader toggle={this.toggle}>
