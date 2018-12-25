@@ -29,7 +29,7 @@ class EditPackage extends Component {
           <Formik
             onSubmit={this.onSubmit}
             initialValues={{
-              packageName: packageValue.name,
+              name: packageValue.name,
               price: packageValue.price,
               quantity: packageValue.quantity,
               overflow: packageValue.overflow,

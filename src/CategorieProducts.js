@@ -16,7 +16,7 @@ const arrayData = Object.values(data).map(item => ({
   packages: Object.values(item.packages)
 }));
 
-const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd }) => (
+const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd, handleEditProduct }) => (
   <div className="sortable">
     {data.map((product, index) => (
       <SortableProduct
@@ -24,6 +24,7 @@ const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd
         product={product}
         index={index}
         handlePackageSwitch={handlePackageSwitch(index)}
+        handleEditProduct={handleEditProduct(index)}
         onPackageAdd={onPackageAdd(index)}
       />
     ))}
@@ -32,7 +33,6 @@ const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd
 
 class CategorieProducts extends Component {
   state = {
-    success: false,  
     data: arrayData
   };
 
@@ -73,7 +73,7 @@ class CategorieProducts extends Component {
     const response = await addProduct(newProduct);
     const newData = [...this.state.data];
     //add new product to array end
-    newData[newProductIndex] = response;
+    newData[newProductIndex] = response.data;
     this.setState(prevState => ({
       ...prevState,
       data: newData 
@@ -113,6 +113,22 @@ class CategorieProducts extends Component {
     actions.setSubmitting(false);
   };
 
+  handleEditProduct = (productIndex) => async (values, actions) => {
+      const editedProduct = {
+        name: values.name,
+        visibility: values.visibility
+      }
+      
+      const newData = [...this.state.data];
+      newData[productIndex] = editedProduct;
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        data: newData
+      };
+    });
+  };
+
   render() {
     const { data } = this.state;
     const { isSubmitting } = this.props;
@@ -126,6 +142,7 @@ class CategorieProducts extends Component {
               <div className="col-12">
                 <div className="sommerce_dragtable">
                   <ProductList
+                    handleEditProduct = {this.handleEditProduct}
                     handlePackageSwitch={this.handlePackageSwitch}
                     data={data}
                     useDragHandle={true}

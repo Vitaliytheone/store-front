@@ -34,7 +34,7 @@ class EditProduct extends Component {
           <Formik
             onSubmit={this.props.onSubmit}
             initialValues={{
-              productName: productValue.name,
+              name: productValue.name,
               visibility: productValue.name
             }}
           >

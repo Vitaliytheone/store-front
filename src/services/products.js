@@ -3,16 +3,13 @@ import nanoid from "nanoid";
 
 export function addProduct(payload) {
   axiosInstance.post(`/products/`, payload);
-  const mockResponse = { id: nanoid(), ...payload };
+  const mockResponse = {  data: {id: nanoid(), ...payload}, success: true };
   return Promise.resolve(mockResponse);
 }
 
 export function addPackage(productId, payload) {
-  // const response = axiosInstance.post(`/products/${productId}`, payload);
-  const mockResponse = {
-    ...payload,
-    id: nanoid()
-  };
+  axiosInstance.post(`/products/${productId}`, payload);
+  const mockResponse = { data: { id: nanoid(), ...payload }, success: true };
   return Promise.resolve(mockResponse);
 }
 

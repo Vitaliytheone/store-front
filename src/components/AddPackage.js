@@ -33,7 +33,7 @@ class AddPackage extends Component {
           <Formik onSubmit={this.handleSubmit} initialValues={{ name: "", price: "", quantity: "", overflow: "", availability: "Enabled", mode: "Auto", provider: "bulkfollows.com" }}>
             <Form>
               <ModalHeader toggle={this.toggle}>
-                Create package (ID : 23)
+                Create package
               </ModalHeader>
               <PackageModal />
               <ModalFooter className="justify-content-start">
