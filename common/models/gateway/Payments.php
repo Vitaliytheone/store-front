@@ -41,6 +41,11 @@ class Payments extends ActiveRecord
     public const SOURCE_TYPE_PANEL = 1;
     public const SOURCE_TYPE_STORE = 2;
 
+    public static function getDb()
+    {
+        return Yii::$app->gatewayDb;
+    }
+
     /**
      * @inheritdoc
      */

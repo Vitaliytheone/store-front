@@ -325,7 +325,7 @@ abstract class BasePayment extends Component {
         if (empty($paymentId)
             || !($this->_payment = Payments::findOne([
                 'id' => $paymentId,
-                'type' => $this->_method_id
+                'method_id' => $this->_method_id
             ]))
             || in_array($this->_payment->status, [1, 2])) {
             // no invoice

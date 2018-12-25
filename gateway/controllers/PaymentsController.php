@@ -2,6 +2,7 @@
 namespace gateway\controllers;
 
 use common\components\filters\DisableCsrfToken;
+use common\models\gateway\Payments;
 use gateway\models\forms\CheckoutForm;
 use payments\Payment;
 use Yii;
@@ -40,7 +41,7 @@ class PaymentsController extends CommonController
     {
         $model = new CheckoutForm();
         $model->setGateway(Yii::$app->gateway->getInstance());
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post(), '') && $model->save()) {
             if ($model->redirect) {
                 return $this->redirect($model->redirect);
             } else if (!empty($model->formData)) {
@@ -66,6 +67,7 @@ class PaymentsController extends CommonController
         // }
 
         $paymentMethod = Payment::getPayment($method);
+        $paymentMethod->setGateway(Yii::$app->gateway->getInstance());
         $result = $paymentMethod->process();
 
         if (!empty($result['content']) && !$paymentMethod->redirectProcessing) {
@@ -83,8 +85,12 @@ class PaymentsController extends CommonController
             }
         }
 
-        return $this->render('payment_result.twig', [
-            'payment_result' => [],
-        ]);
+        $payment = !empty($result['payment_id']) ? Payments::findOne($result['payment_id']) : null;
+
+        if ($payment && !empty($payment->return_url)) {
+            return $this->redirect($payment->return_url);
+        }
+        
+        return '';
     }
 }

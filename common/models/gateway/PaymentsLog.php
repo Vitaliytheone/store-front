@@ -22,6 +22,12 @@ use common\models\gateway\queries\PaymentsLogQuery;
  */
 class PaymentsLog extends ActiveRecord
 {
+
+    public static function getDb()
+    {
+        return Yii::$app->gatewayDb;
+    }
+
     /**
      * @inheritdoc
      */

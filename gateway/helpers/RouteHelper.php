@@ -62,7 +62,7 @@ class RouteHelper {
                     'id'
                 ],
                 'options' => [
-                    'class_name' => $method->class_name,
+                    'method' => $method->class_name,
                 ],
                 'url' => '/payments/processing'
             ];
