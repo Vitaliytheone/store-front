@@ -553,6 +553,11 @@ class PaymentsController extends CustomController
 					$StringToHash = strtoupper(md5($hashOrder . $hashSid . $hashInvoice . $secret_word));
 
                     $payments = Payments::findOne(['id' => $payment->id]);
+
+                    if ($payments->status == Payments::STATUS_COMPLETED) {
+                        exit;
+                    }
+
                     $payments->comment = $hashOrder . '; ' . $hashInvoice;
                     $payments->transaction_id = $hashOrder;
 
