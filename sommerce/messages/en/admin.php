@@ -268,6 +268,7 @@ return [
     'settings.payments_modal_select_item' => 'Please select…',
     'settings.payments_modal_save' => 'Add method',
     'settings.payments_modal_cancel' => 'Cancel',
+    'settings.payments_modal_payment_method' => 'Payment method',
 
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 

@@ -5,8 +5,10 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
+use my\components\ActiveForm;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\models\forms\AddPaymentMethodForm;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
 use Yii;
 use yii\web\BadRequestHttpException;
@@ -19,8 +21,8 @@ use yii\web\Response;
  * @property Controller $this
  * @package sommerce\modules\admin\controllers
  */
-trait PaymentsTrait {
-
+trait PaymentsTrait
+{
     /**
      * Settings payments. Payment methods list
      * @return string
@@ -34,12 +36,11 @@ trait PaymentsTrait {
             'store_id' => yii::$app->store->getId(),
         ]);
 
-        $availableMethod = PaymentMethodsCurrency::getSupportCurrency();
-        Yii::debug($availableMethod); // TODO del
+        $availableMethods = PaymentMethodsCurrency::getSupportCurrency();
 
         return $this->render('payments', [
             'paymentMethods' => $paymentMethods,
-            'availableMethod' => $availableMethod,
+            'availableMethods' => $availableMethods,
         ]);
     }
 
@@ -125,5 +126,27 @@ trait PaymentsTrait {
         return [
             'active' => $paymentModel->setActive($active|0),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function actionAddPaymentMethod()
+    {
+        $storeId = Yii::$app->store->getId();
+
+        $model = new AddPaymentMethodForm();
+        $model->setStoreId($storeId);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 }

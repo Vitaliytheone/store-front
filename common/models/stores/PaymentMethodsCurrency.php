@@ -125,8 +125,29 @@ class PaymentMethodsCurrency extends ActiveRecord
     {
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
-//        ->andFilterWhere(['currency' => $store->currency])->asArray()
 
-        return self::find()->filterWhere(['hidden' => 0])->andFilterWhere(['currency' => $store->currency])->asArray()->all();
+        $currencies = self::find()
+            ->filterWhere(['hidden' => 0])
+            ->andFilterWhere(['currency' => $store->currency])
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+
+        $storePaymentMethods = StorePaymentMethods::find()
+            ->where(['store_id' => $store->id])
+            ->indexBy('currency_id')
+            ->asArray()
+            ->all();
+
+        $result = [];
+        foreach ($currencies as $id => $method) {
+            if (isset($storePaymentMethods[$id])) {
+                continue;
+            }
+
+            $result[$id] = StorePaymentMethods::getMethodName($method['method_id']);
+        }
+
+        return $result;
     }
 }

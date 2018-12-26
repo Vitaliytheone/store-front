@@ -26,62 +26,50 @@ customModule.adminPayments = {
                 }
             });
         });
-    }
 
-    /*****************************************************************************************************
-     *                     Add store payments
-     *****************************************************************************************************/
-    (function (window, alert){
-        'use strict';
+        $('.add-method').click(function(e) {
+            e.preventDefault();
 
-        var actionUrl = params.action_add_pay_url,
-            successUrl = params.success_redirect_url,
-            errorUrl = successUrl;
+            var link = $(this);
+            var modal = $('#addPaymentMethodModal');
+            var form = $('#addPaymentMethodForm');
+            var errorBlock = $('#addPaymentMethodError', form);
 
-        var $modal = $('.add-method-modal'),
-            $form = $('.form-add-method'),
-            $methodsList = $('.form_field__method_list'),
-            $submit = $form.find('.btn_submit'),
-            $modalLoader = $('.modal-loader');
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
 
-        $methodsList.on('change', function(event){
-            var code = $(this).val();
-            $submit.prop('disabled', !code);
+            form.attr('action', link.attr('href'));
+
+            modal.modal('show');
+
+            return false;
         });
 
-        $form.on('submit', function(event){
+        $(document).on('click', '#addPaymentMethodButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#addPaymentMethodForm');
+            var errorBlock = $('#addPaymentMethodError', form);
 
-            event.preventDefault();
+            errorBlock.addClass('hidden');
 
-            var formData = $(this).serializeArray(),
-                code = $methodsList.find("option:selected").val();
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
 
-            loading(true);
-
-            $.ajax({
-                url: actionUrl + code,
-                type: 'GET',
-                success: function (data, textStatus, jqXHR){
-                    if (data.result !== true){
-                        console.log('Error on add store payment method!');
+                    if ('success' == response.status) {
+                        $('#editCustomerModal').modal('hide');
+                        location.reload();
                     }
-                    $(location).attr('href', errorUrl);
-                },
-                error: function (jqXHR, textStatus, errorThrown){
-                    loading(false);
-                    console.log('Error on updating store payment method!', jqXHR, textStatus, errorThrown);
+
+                    if ('error' == response.status) {
+                        errorBlock.removeClass('hidden');
+                        errorBlock.html(response.error);
+                    }
                 }
             });
+
+            return false;
         });
-
-        function loading(toggle) {
-            $modalLoader.toggleClass('hidden', !toggle);
-            $submit.prop('disabled', toggle);
-        }
-
-        loading(false);
-        $methodsList.trigger('change');
-
-    })
-
+    }
 };

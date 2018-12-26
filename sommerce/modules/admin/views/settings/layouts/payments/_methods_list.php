@@ -18,7 +18,7 @@ use sommerce\helpers\UiHelper;
         </div>
         <div>
             <div class="m-dropdown--align-right">
-                <a href="#" class="btn btn-primary m-btn--air btn-brand cursor-pointer" data-toggle="modal" data-target=".add-method-modal"><?= Yii::t('admin', 'settings.payments_add') ?></a>
+                <a href="<?= Url::toRoute(['/settings/add-payment-method']) ?>" class="btn btn-primary m-btn--air btn-brand cursor-pointer add-method"><?= Yii::t('admin', 'settings.payments_add') ?></a>
             </div>
         </div>
     </div>
@@ -66,4 +66,4 @@ use sommerce\helpers\UiHelper;
 
 </div>
 
-<?= $this->render('_modal_add_method', ['availableMethod' => $availableMethod]) ?>
+<?= $this->render('_modal_add_method', ['availableMethods' => $availableMethods]) ?>

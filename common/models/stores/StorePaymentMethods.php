@@ -44,8 +44,8 @@ class StorePaymentMethods extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'store_id'], 'required'],
-            [['id', 'store_id', 'method_id', 'currency_id', 'position', 'created_at', 'updated_at'], 'integer'],
+            [['store_id'], 'required'],
+            [['store_id', 'method_id', 'currency_id', 'position', 'created_at', 'updated_at'], 'integer'],
             [['options'], 'string'],
             [['visibility'], 'integer', 'max' => 1],
             [['name'], 'string', 'max' => 255],
@@ -177,4 +177,11 @@ class StorePaymentMethods extends ActiveRecord
         return $method->icon ?? '';
     }
 
+    /**
+     * @return int
+     */
+    public static function getLastPosition(): int
+    {
+        return static::find()->max('position');
+    }
 }

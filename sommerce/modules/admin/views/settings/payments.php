@@ -9,7 +9,7 @@ use sommerce\modules\admin\components\Url;
 /* @var $methodName string */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $paymentMethods[] \sommerce\modules\admin\models\forms\EditPaymentMethodForm */
-/* @var $availableMethod array */
+/* @var $availableMethods array */
 
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
@@ -40,7 +40,7 @@ use sommerce\modules\admin\components\Url;
                 } else {
                     echo $this->render('layouts/payments/_methods_list', [
                         'paymentMethods' => $paymentMethods,
-                        'availableMethod' => $availableMethod,
+                        'availableMethods' => $availableMethods,
                     ]);
                 }
             ?>

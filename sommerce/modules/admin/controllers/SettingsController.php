@@ -44,7 +44,12 @@ class SettingsController extends CustomController
         return $parentBehaviors + [
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style']
+                'only' => [
+                    'theme-get-style',
+                    'theme-get-data',
+                    'theme-update-style',
+                    'add-payment-method',
+                ]
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -53,11 +58,12 @@ class SettingsController extends CustomController
                     'theme-get-style' => ['GET'],
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
+                    'add-payment-method' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style'],
+                'only' => ['theme-update-style', 'add-payment-method',],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
