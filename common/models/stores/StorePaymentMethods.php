@@ -182,6 +182,7 @@ class StorePaymentMethods extends ActiveRecord
      */
     public static function getLastPosition(): int
     {
-        return static::find()->max('position');
+        $last = static::find()->max('position');
+        return isset($last) ? $last : 0;
     }
 }

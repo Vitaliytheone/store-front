@@ -32,7 +32,7 @@ use sommerce\helpers\UiHelper;
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="payment-cart__preview">
-                        <img src="<?= $method->getMethodIcon() ?>" alt="" class="img-fluid"  style="">
+                        <img src="<?= $method->getMethodIcon() ?>" alt="" class="img-fluid" style="">
                     </div>
                     <div class="payment-cart__title">
                         <?= $method->name ?>
