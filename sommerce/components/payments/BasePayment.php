@@ -11,6 +11,7 @@ use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\Suborders;
 use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
@@ -403,5 +404,34 @@ abstract class BasePayment extends Component {
     public function fields()
     {
         return [];
+    }
+
+    /**
+     * Get visible store pay method
+     * @param $store Stores current store
+     * @param $payMethod string - PaymentMethods->method_name
+     * @return StorePaymentMethods
+     */
+    public function getStorePayMethod($store, $payMethod)
+    {
+        $paymentMethod = PaymentMethods::findOne([
+            'method_name' => $payMethod,
+        ]);
+
+        // TODO по идее можно убрать поиск с учетом валюты,
+        // в таблице не может быть два одинаковых метода с разными валютами
+        $currency = PaymentMethodsCurrency::findOne([
+            'method_id' => $paymentMethod->id,
+            'currency' => $store->currency,
+        ]);
+
+        $storePaymentMethod = StorePaymentMethods::findOne([
+            'method_id' => $paymentMethod->id,
+            'store_id' => $store->id,
+            'currency_id' => $currency->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
+        ]);
+
+        return $storePaymentMethod;
     }
 }

@@ -81,11 +81,13 @@ class Yandexmoney extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_YANDEX_MONEY,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+//        $paymentMethod = PaymentMethods::findOne([
+//            'method' => PaymentMethods::METHOD_YANDEX_MONEY,
+//            'store_id' => $store->id,
+//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+//        ]);
+
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
 
         if (empty($paymentMethod)) {
             // no invoice

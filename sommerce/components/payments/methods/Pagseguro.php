@@ -96,11 +96,13 @@ class Pagseguro extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAGSEGURO,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+//        $paymentMethod = PaymentMethods::findOne([
+//            'method' => PaymentMethods::METHOD_PAGSEGURO,
+//            'store_id' => $store->id,
+//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+//        ]);
+
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAGSEGURO);
 
         if (empty($paymentMethod)) {
             // no invoice

@@ -120,11 +120,13 @@ class Paywant extends BasePayment {
         $urunTutari = ArrayHelper::getValue($_POST, 'UrunTutari', '');
         $hash = ArrayHelper::getValue($_POST, 'Hash', '');
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYWANT,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+//        $paymentMethod = PaymentMethods::findOne([
+//            'method' => PaymentMethods::METHOD_PAYWANT,
+//            'store_id' => $store->id,
+//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+//        ]);
+
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYWANT);
 
         if (empty($paymentMethod)) {
             // no invoice

@@ -69,11 +69,13 @@ class Freekassa extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_FREE_KASSA,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+//        $paymentMethod = PaymentMethods::findOne([
+//            'method' => PaymentMethods::METHOD_FREE_KASSA,
+//            'store_id' => $store->id,
+//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+//        ]);
+
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_FREE_KASSA);
 
         if (empty($paymentMethod)) {
             // no invoice

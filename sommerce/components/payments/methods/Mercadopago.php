@@ -135,13 +135,15 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $paymentGateway = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_MERCADOPAGO,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+//        $paymentMethod = PaymentMethods::findOne([
+//            'method' => PaymentMethods::METHOD_MERCADOPAGO,
+//            'store_id' => $store->id,
+//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+//        ]);
 
-        if (empty($paymentGateway)) {
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_MERCADOPAGO);
+
+        if (empty($paymentMethod)) {
             // no invoice
             return [
                 'result' => 2,
@@ -149,7 +151,7 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentGateway->getDetails();
+        $paymentMethodOptions = $paymentMethod->getDetails();
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
@@ -197,7 +199,7 @@ class Mercadopago extends BasePayment
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $checkoutId,
-                'method_id' => $paymentGateway->id
+                'method_id' => $paymentMethod->id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

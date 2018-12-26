@@ -157,11 +157,13 @@ class Paytr extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYTR,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+//        $paymentMethod = PaymentMethods::findOne([
+//            'method' => PaymentMethods::METHOD_PAYTR,
+//            'store_id' => $store->id,
+//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
+//        ]);
+
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYTR);
 
         if (empty($paymentMethod)) {
             // no invoice

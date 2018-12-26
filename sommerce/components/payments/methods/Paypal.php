@@ -137,15 +137,8 @@ class Paypal extends BasePayment {
      */
     public function processing($store)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method_name' => PaymentMethods::METHOD_PAYPAL
-        ]);
 
-        $storePaymentMethod = StorePaymentMethods::findOne([
-            'method_id' => $paymentMethod->id,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+        $storePaymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYPAL);
 
         if (empty($storePaymentMethod)) {
             // no invoice

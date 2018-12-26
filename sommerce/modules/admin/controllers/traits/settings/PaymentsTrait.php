@@ -2,16 +2,12 @@
 
 namespace sommerce\modules\admin\controllers\traits\settings;
 
-use common\models\stores\PaymentGateways;
 use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\helpers\PaymentsHelper;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
-use sommerce\modules\admin\models\search\PaymentMethodsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -33,9 +29,6 @@ trait PaymentsTrait {
     {
         $this->view->title = Yii::t('admin', 'settings.payments_page_title');
         $this->addModule('adminPayments');
-
-        /** @var Stores $store */
-//        $store = Yii::$app->store->getInstance();
 
         $paymentMethods = StorePaymentMethods::findAll([
             'store_id' => yii::$app->store->getId(),
@@ -61,7 +54,7 @@ trait PaymentsTrait {
     {
 
         $request = yii::$app->getRequest();
-        $storeId = yii::$app->store->getId(); // FIXME - store->id
+        $storeId = yii::$app->store->getId();
         $methodName = PaymentMethods::getOneMethod($method);
 
         $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
@@ -129,7 +122,6 @@ trait PaymentsTrait {
 
         $paymentModel->setUser(Yii::$app->user);
 
-        // FIXME не сохраняет из-за ошибки валидации
         return [
             'active' => $paymentModel->setActive($active|0),
         ];

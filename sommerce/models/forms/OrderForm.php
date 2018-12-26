@@ -187,7 +187,7 @@ class OrderForm extends Model {
                 /** @var StorePaymentMethods $method */
                 $methods[$key] = [
                     'id' => $method->method_id,
-                    'name' => $method->name, //$method->getName(),
+                    'name' => $method->name,
                     'method' => PaymentMethods::getOneMethod($method->method_id),
                     'details' => $method->getOptions(),
                     'position' => $method->position,
@@ -207,7 +207,6 @@ class OrderForm extends Model {
             static::$_methods = ArrayHelper::index($methods, 'method');
         }
 
-        Yii::debug(static::$_methods, 'static1'); // TODO del
         return static::$_methods;
     }
 
@@ -276,10 +275,10 @@ class OrderForm extends Model {
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;
-        } else if (2 == $result['result']) {
+        } elseif (2 == $result['result']) {
             $this->redirect = $result['redirect'];
             return true;
-        } else if (1 == $result['result']) {
+        } elseif (1 == $result['result']) {
             $this->formData = $result['formData'];
             return true;
         }
