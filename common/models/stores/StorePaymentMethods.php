@@ -47,12 +47,12 @@ class StorePaymentMethods extends ActiveRecord
             [['id', 'store_id'], 'required'],
             [['id', 'store_id', 'method_id', 'currency_id', 'position', 'created_at', 'updated_at'], 'integer'],
             [['options'], 'string'],
-            [['visibility'], 'string', 'max' => 1],
+            [['visibility'], 'integer', 'max' => 1],
             [['name'], 'string', 'max' => 255],
             [['id'], 'unique'],
             [['store_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stores::class, 'targetAttribute' => ['store_id' => 'id']],
             [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethods::class, 'targetAttribute' => ['method_id' => 'id']],
-            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['method_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -175,17 +175,6 @@ class StorePaymentMethods extends ActiveRecord
         $method = PaymentMethods::findOne([$this->method_id]);
 
         return $method->icon ?? '';
-    }
-
-    /**
-     * Return is passed $currencyCode is supported by this payment gateway
-     * @param $currencyCode
-     * @return bool
-     */
-    public function isCurrencySupported($currencyCode)
-    {
-//        $this->getPaymentMethodCurrency(); // TODO check and fix
-        return true;
     }
 
 }

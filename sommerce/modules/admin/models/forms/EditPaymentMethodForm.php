@@ -230,12 +230,12 @@ class EditPaymentMethodForm extends StorePaymentMethods
     }
 
     /**
-     * Change PG active status
-     * @param $active
+     * Change StorePayMethod visibility status
+     * @param $active int visibility status (1 - show, 0 - hide)
      * @return mixed
      * @throws \Throwable
      */
-    public function setActive($active)
+    public function setActive(int $active)
     {
         $this->setAttribute('visibility', $active);
         $this->save();

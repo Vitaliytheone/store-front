@@ -39,7 +39,7 @@ class PaymentMethodsCurrency extends ActiveRecord
             [['method_id', 'position', 'hidden', 'created_at', 'updated_at'], 'integer'],
             [['settings_form', 'settings_form_description'], 'string'],
             [['currency'], 'string', 'max' => 3],
-            [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['method_id' => 'id']],
+            [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethods::class, 'targetAttribute' => ['method_id' => 'id']],
         ];
     }
 
