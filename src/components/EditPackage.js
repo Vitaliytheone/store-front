@@ -5,13 +5,20 @@ import PackageModal from "../modals/PackageModal";
 
 class EditPackage extends Component {
   state = {
-    modal: false
+    modalIsOpen: false
   };
 
   toggle = () => {
+    this.setState(prevstate => ({
+      modalIsOpen: !prevstate.modalIsOpen
+    }));
+  };
+
+  handleSubmit = (...params) => {
     this.setState({
-      modal: !this.state.modal
+      modalIsOpen: false
     });
+    this.props.onSubmit(...params);
   };
 
   render() {
@@ -25,9 +32,9 @@ class EditPackage extends Component {
         >
           Edit
         </button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} backdrop={false}>
+        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop={false}>
           <Formik
-            onSubmit={this.onSubmit}
+            onSubmit={this.handleSubmit}
             initialValues={{
               name: packageValue.name,
               price: packageValue.price,
@@ -44,7 +51,7 @@ class EditPackage extends Component {
               </ModalHeader>
               <PackageModal />
               <ModalFooter className="justify-content-start">
-                <Button color="primary" onClick={this.toggle}>
+                <Button color="primary" type="submit">
                   Save package
                 </Button>{" "}
                 <Button color="secondary" onClick={this.toggle}>

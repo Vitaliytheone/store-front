@@ -6,15 +6,22 @@ import {
   changePositionProduct,
   changePositionPackage,
   addPackage,
-  addProduct
+  addProduct,
+  updateProduct,
+  updatePackage
 } from "./services/products";
 import data from "./data.json";
+import { sortBy } from "lodash";
 
 //parse of json
-const arrayData = Object.values(data).map(item => ({
+const arrayDataParse = Object.values(data).map(item => ({
   ...item,
+  position: +(item.position),
   packages: Object.values(item.packages)
 }));
+
+//sort data of elements position
+const arrayData = sortBy(arrayDataParse, "position");
 
 const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd, handleEditProduct }) => (
   <div className="sortable">
@@ -38,8 +45,13 @@ class CategorieProducts extends Component {
 
   handleProductSwitch = ({ oldIndex, newIndex }) => {
     const { data } = this.state;
+    const arrayData = arrayMove(data, oldIndex, newIndex);
+    // new position = new index
+    const newData = arrayData.map((product, index) => ({
+      ...product, position: index
+    }))
     this.setState({
-      data: arrayMove(data, oldIndex, newIndex)
+      data: newData
     });
 
     changePositionProduct({ oldIndex, newIndex });
@@ -72,7 +84,7 @@ class CategorieProducts extends Component {
     }));
     const response = await addProduct(newProduct);
     const newData = [...this.state.data];
-    //add new product to array end
+    //add new product to array end (server)
     newData[newProductIndex] = response.data;
     this.setState(prevState => ({
       ...prevState,
@@ -114,20 +126,23 @@ class CategorieProducts extends Component {
   };
 
   handleEditProduct = (productIndex) => async (values, actions) => {
-      const editedProduct = {
+      const editedProduct = [...this.state.data]//сopy state
+      editedProduct[productIndex] = { //change fields of product 
         name: values.name,
         visibility: values.visibility
       }
-      
-      const newData = [...this.state.data];
-      newData[productIndex] = editedProduct;
-    this.setState(prevState => {
-      return {
+      this.setState(prevState => ({
         ...prevState,
-        data: newData
-      };
-    });
+        data: editedProduct
+      }))
+
+      const response = await updateProduct(productIndex, editedProduct[productIndex]);
+
   };
+
+  // handleEditPackage = (productIndex) => (packageIndex) => async (values, actions) => {
+
+  // };
 
   render() {
     const { data } = this.state;
@@ -142,7 +157,7 @@ class CategorieProducts extends Component {
               <div className="col-12">
                 <div className="sommerce_dragtable">
                   <ProductList
-                    handleEditProduct = {this.handleEditProduct}
+                    handleEditProduct={this.handleEditProduct}
                     handlePackageSwitch={this.handlePackageSwitch}
                     data={data}
                     useDragHandle={true}

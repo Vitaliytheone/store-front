@@ -13,15 +13,15 @@ export function addPackage(productId, payload) {
   return Promise.resolve(mockResponse);
 }
 
-export function updateProduct(id, payload) {
-  axiosInstance.put(`/product/${id}`, payload);
-  const mockResponse = {};
+export function updateProduct(productId, payload) {
+  axiosInstance.put(`/product/${productId}`, payload);
+  const mockResponse = { success: true};
   return Promise.resolve(mockResponse);
 }
 
-export function updatePackage(id, payload) {
-  axiosInstance.put(`/product/${id}/package/${id}`, payload);
-  const mockResponse = {};
+export function updatePackage(productId, packageId, payload) {
+  axiosInstance.put(`/product/${productId}/package/${packageId}`, payload);
+  const mockResponse = { success: true };
   return Promise.resolve(mockResponse);
 }
 

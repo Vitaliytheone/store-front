@@ -37,7 +37,7 @@ class AddPackage extends Component {
               </ModalHeader>
               <PackageModal />
               <ModalFooter className="justify-content-start">
-                <Button type="submit" color="primary">
+              <Button color="primary" type="submit" >
                   Add package
                 </Button> <Button color="secondary" onClick={this.toggle}>
                   Cancel

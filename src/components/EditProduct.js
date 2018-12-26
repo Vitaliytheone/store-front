@@ -5,17 +5,24 @@ import ProductModal from "../modals/ProductModal";
 
 class EditProduct extends Component {
   state = {
-    modal: false
+    modalIsOpen: false
   };
 
   toggle = () => {
+    this.setState(prevstate => ({
+      modalIsOpen: !prevstate.modalIsOpen
+    }));
+  };
+
+  handleSubmit = (...params) => {
     this.setState({
-      modal: !this.state.modal
+      modalIsOpen: false
     });
+    this.props.onSubmit(...params);
   };
 
   render() {
-  const { productValue } = this.props;
+    const { productValue } = this.props;
     return (
       <span className="edit_product">
         <button
@@ -26,13 +33,13 @@ class EditProduct extends Component {
           Edit
         </button>
         <Modal
-          isOpen={this.state.modal}
+          isOpen={this.state.modalIsOpen}
           toggle={this.toggle}
           size="lg"
           backdrop={false}
         >
           <Formik
-            onSubmit={this.props.onSubmit}
+            onSubmit={this.handleSubmit}
             initialValues={{
               name: productValue.name,
               visibility: productValue.name
@@ -42,7 +49,7 @@ class EditProduct extends Component {
               <ModalHeader toggle={this.toggle}>Edit product</ModalHeader>
               <ProductModal />
               <ModalFooter className="justify-content-start">
-                <Button color="primary" onClick={this.toggle}>
+                <Button color="primary" type="submit">
                   Edit product
                 </Button>{" "}
                 <Button color="secondary" onClick={this.toggle}>
