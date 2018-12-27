@@ -4,6 +4,8 @@
  */
 customModule.adminGeneral = {
     run: function (params) {
+        var isChangedCurrency = false;
+
         /******************************************************************
          *            General settings SEO part interaction
          *******************************************************************/
@@ -84,5 +86,22 @@ customModule.adminGeneral = {
             });
         });
 
+        $('#settingsgeneralform-currency').change(function() {
+            isChangedCurrency = true;
+        });
+
+        if (isChangedCurrency) {
+            $('.settings-general-form').click(function (e) {
+                e.preventDefault();
+                var btn = $('#generalSettingsSubmit');
+                var form = $('#settings-general-form');
+                var link = form.attr('action');
+
+                custom.confirm(btn.data('title'), '', function () {
+                    window.location.href = link + (link.match(/\?/) ? '&' : '?') + form.serialize();
+                });
+                return false;
+            });
+        }
     }
 };

@@ -200,7 +200,7 @@ $storeUrl = $store->getBaseSite();
                     </div>
                     <hr>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success m-btn--air" name="save-button">
+                        <button type="submit" class="btn btn-success m-btn--air" id ="generalSettingsSubmit" name="save-button" data-title="<?= Yii::t('admin', 'settings.general_currency_change_approving') ?>">
                             <?= Yii::t('admin', 'settings.general_save') ?>
                         </button>
                     </div>

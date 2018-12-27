@@ -234,6 +234,7 @@ return [
     'settings.general_custom_header_placeholder' => '<style type="text/css">...</style>',
     'settings.general_custom_footer' => 'Custom footer code',
     'settings.general_custom_footer_placeholder' => '<script>...</script>',
+    'settings.general_currency_change_approving' => 'If the currency has been changed, payment methods with this currency will be deleted.',
 
 
     'settings.general_seo' => 'Search engine listing preview',

@@ -1,8 +1,11 @@
 <?php
+
 namespace sommerce\modules\admin\models\forms;
+
 
 use common\models\store\ActivityLog;
 use common\models\store\Files;
+use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
 use sommerce\helpers\ConfigHelper;
@@ -13,7 +16,6 @@ use yii\validators\FileValidator;
 use yii\web\UploadedFile;
 use common\components\cdn\BaseCdn;
 use yii\web\User;
-
 
 /**
  * Class EditStoreSettingsForm
@@ -153,6 +155,8 @@ class EditStoreSettingsForm extends Stores
      * Update General settings
      * @param $postData
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function updateSettings($postData)
     {
@@ -160,12 +164,6 @@ class EditStoreSettingsForm extends Stores
 
         if (!$this->load($postData) || !$this->validate()) {
             return false;
-        }
-
-        $transaction = Yii::$app->db->transaction->begin();
-
-        if ($currentCurrency != $this->currency) {
-            $storeMethods = StorePaymentMethods::findAll([]);
         }
 
         // Processing files
@@ -204,6 +202,12 @@ class EditStoreSettingsForm extends Stores
             return false;
         }
 
+        if ($currentCurrency != $this->currency) {
+            $currencyMethods = array_keys(PaymentMethodsCurrency::getMethodsByCurrency($currentCurrency));
+
+            StorePaymentMethods::deleteAll(['currency_id' => $currencyMethods]);
+        }
+
         $this->_changeLog($changedAttributes);
 
         return true;
@@ -212,7 +216,7 @@ class EditStoreSettingsForm extends Stores
     /**
      * Write changes to log
      * @param $changedAttributes
-     * @return bool
+     * @throws \Throwable
      */
     private function _changeLog($changedAttributes)
     {
