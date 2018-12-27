@@ -139,20 +139,20 @@ class StorePaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get payment method name
-     * @return string
+     * Get current payment method Name (title)
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return ArrayHelper::getValue(static::getNames(), $this->method_id);
     }
 
     /**
-     * Return payment method title by method
+     * Return payment method Name (title) by method_id
      * @param int $methodId
      * @return string|null
      */
-    public static function getMethodName($methodId): ?string
+    public static function getNameById($methodId): ?string
     {
         return ArrayHelper::getValue(static::getNames(), $methodId);
     }

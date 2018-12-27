@@ -35,7 +35,7 @@ use sommerce\helpers\UiHelper;
                         <img src="<?= $method->getMethodIcon() ?>" alt="" class="img-fluid" style="">
                     </div>
                     <div class="payment-cart__title">
-                        <?= $method->name ?>
+                        <?= $method->name ?: $method->getName() ?>
                     </div>
                     <div class="payment-cart__control d-flex justify-content-between align-items-center">
                         <div>

@@ -301,7 +301,7 @@ class PaymentsSearch extends Model
             $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = StorePaymentMethods::getMethodName($method);
+            $menuItem['method_title'] = StorePaymentMethods::getNameById($method);
         });
 
         $allMethodsMenuItem = [
