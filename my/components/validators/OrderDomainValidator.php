@@ -1,6 +1,7 @@
 <?php
 namespace my\components\validators;
 
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
 use Yii;
 use common\models\panels\Orders;
@@ -15,11 +16,17 @@ class OrderDomainValidator extends BaseDomainValidator
 {
     protected $domain;
 
+    /** @var bool */
     public $panel = false;
 
+    /** @var bool */
     public $store = false;
 
+    /** @var bool */
     public $child_panel = false;
+
+    /** @var bool */
+    public $gateway = false;
 
     /**
      * Validate domain
@@ -103,6 +110,21 @@ class OrderDomainValidator extends BaseDomainValidator
             return false;
         }
 
+        $hasAvailableGateway = Sites::find()
+            ->where([
+                'domain' => $domain,
+                'status' => [
+                    Sites::STATUS_ACTIVE,
+                    Sites::STATUS_FROZEN
+                ]
+            ])
+            ->exists();
+
+        if ($hasAvailableGateway) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            return false;
+        }
+
         /**
          * @var Orders $hasOrder
          */
@@ -122,6 +144,8 @@ class OrderDomainValidator extends BaseDomainValidator
                     $item = Orders::ITEM_BUY_CHILD_PANEL;
                 } elseif ($this->store) {
                     $item = Orders::ITEM_BUY_STORE;
+                } elseif ($this->gateway) {
+                    $item = Orders::ITEM_BUY_GATEWAY;
                 }
 
                 // Для заказов с отличным item и статусом pending не проверяем, а после создания нового заказа - отменяем предыдущий заказ

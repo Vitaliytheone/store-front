@@ -3,7 +3,7 @@ namespace my\helpers\order;
 
 use my\components\ddos\Ddos;
 use my\components\ssl\Ssl;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use common\models\panels\Orders;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;

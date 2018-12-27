@@ -69,6 +69,11 @@ class ViewRenderer extends BaseViewRenderer
      */
     public $globals = [];
 
+    /**
+     * @var Extension
+     */
+    public $extension = Extension::class;
+
     public function init()
     {
         $this->getTwig();
@@ -100,7 +105,7 @@ class ViewRenderer extends BaseViewRenderer
         $this->twig = new Twig_Environment(new Twig_Loader_Filesystem(), array_merge($options, $this->options));
 
         $this->addExtensions($this->twig, [
-            new Extension($this->options),
+            new $this->extension($this->options),
         ]);
 
         return $this->twig;
@@ -122,7 +127,7 @@ class ViewRenderer extends BaseViewRenderer
         $this->twigContent = new Twig_Environment(new Twig_Loader_Array(), array_merge($options, $this->options));
 
         $this->addExtensions($this->twigContent, [
-            new Extension($this->options),
+            new $this->extension($this->options),
         ]);
 
         return $this->twigContent;

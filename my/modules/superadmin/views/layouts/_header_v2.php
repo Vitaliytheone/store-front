@@ -74,6 +74,15 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
     ];
 }
 
+if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_GATEWAYS)) {
+    $optionsLeft[] = [
+        'label' => Yii::t('app/superadmin', 'header.nav.gateways'),
+        'url' => Url::toRoute('/gateways'),
+        'options' => ['class' => 'nav-item'],
+        'linkOptions' => ['class' => 'nav-link'],
+        'active' => 'gateways' == $activeTab
+    ];
+}
 
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
     $optionsLeft[] = [
@@ -85,6 +94,7 @@ if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
     ];
 
 }
+
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_SSL)) {
     $optionsLeft[] = [
         'label' => Yii::t('app/superadmin', 'header.nav.ssl') . ' ' . ErrorSslWidget::widget(),
