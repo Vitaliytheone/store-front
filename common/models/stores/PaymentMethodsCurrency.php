@@ -150,4 +150,9 @@ class PaymentMethodsCurrency extends ActiveRecord
 
         return $result;
     }
+
+    public static function getMethodsIdByCurrency(string $currency): array
+    {
+        // TODO get array with methods id which has $currency
+    }
 }

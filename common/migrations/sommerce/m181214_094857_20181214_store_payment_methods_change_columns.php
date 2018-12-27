@@ -24,8 +24,6 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
         $this->renameColumn(DB_STORES . '.store_payment_methods', 'details', 'options');
         $this->renameColumn(DB_STORES . '.store_payment_methods', 'active', 'visibility');
 
-        $this->dropForeignKey('fk_store_id_method', DB_STORES . '.store_payment_methods');
-
         $this->alterColumn(DB_STORES . '.store_payment_methods', 'id', $this->integer(11)->unsigned());
         $this->alterColumn(DB_STORES . '.store_payment_methods', 'store_id', $this->integer(11)->notNull());
         $this->alterColumn(DB_STORES . '.store_payment_methods', 'options', $this->text()->null());
@@ -42,7 +40,6 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
 
         $this->dropIndex('fk_store_id_method_idx', DB_STORES . '.store_payment_methods');
 
-        $this->createIndex('idx_store_id', DB_STORES . '.store_payment_methods', 'store_id');
         $this->createIndex('idx_method_id', DB_STORES . '.store_payment_methods', 'method_id');
         $this->createIndex('idx_currency_id', DB_STORES . '.store_payment_methods', 'currency_id');
 
@@ -78,9 +75,14 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
 
         foreach ($methods as $key => $methodName) {
             $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
-
             $storeMethod = StorePaymentMethods::findOne($key);
+
+            $lastPositions = StorePaymentMethods::find()
+                ->where(['store_id' => $storeMethod->store_id])
+                ->max('position');
+
             $storeMethod->method_id = $method->id;
+            $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
             $storeMethod->save(false);
         }
     }

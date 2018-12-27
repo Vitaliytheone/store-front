@@ -4,6 +4,7 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\store\Files;
 use common\models\stores\StoreAdminAuth;
+use common\models\stores\StorePaymentMethods;
 use sommerce\helpers\ConfigHelper;
 use Yii;
 use common\models\stores\Stores;
@@ -155,8 +156,16 @@ class EditStoreSettingsForm extends Stores
      */
     public function updateSettings($postData)
     {
+        $currentCurrency = $this->currency;
+
         if (!$this->load($postData) || !$this->validate()) {
             return false;
+        }
+
+        $transaction = Yii::$app->db->transaction->begin();
+
+        if ($currentCurrency != $this->currency) {
+            $storeMethods = StorePaymentMethods::findAll([]);
         }
 
         // Processing files

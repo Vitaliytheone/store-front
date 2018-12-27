@@ -28,6 +28,7 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
                 $paymentMethodCurrency->currency = $currency;
                 $paymentMethodCurrency->position = $method['position'];
                 $paymentMethodCurrency->settings_form = $method['options'];
+                $paymentMethodCurrency->save(false);
             }
         }
 
