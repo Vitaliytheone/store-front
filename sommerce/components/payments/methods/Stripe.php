@@ -32,7 +32,7 @@ class Stripe extends BasePayment {
      * @var string - url action
      */
     public $action = 'https://checkout.stripe.com/checkout.js';
-    public $redirectProcessing = true;
+    public $redirectProcessing = false;
 
     /**
      * Checkout
@@ -130,11 +130,6 @@ class Stripe extends BasePayment {
      */
     public function processing($store)
     {
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_STRIPE,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
 
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_STRIPE);
 
@@ -146,7 +141,7 @@ class Stripe extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $webhookSecretKey = ArrayHelper::getValue($paymentMethodOptions, 'webhook_secret');
         StripeBase::setApiKey($secretKey);

@@ -72,7 +72,8 @@ abstract class BasePayment extends Component {
     public $redirectProcessing = false;
 
     /**
-     * @var bool - show errors
+     * Is shown processing & checkout errors messages
+     * @var bool show errors (default False)
      */
     public $showErrors = false;
 

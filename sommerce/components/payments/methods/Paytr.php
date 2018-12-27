@@ -2,7 +2,6 @@
 
 namespace sommerce\components\payments\methods;
 
-use Yii;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
 use common\models\store\Checkouts;
@@ -157,12 +156,6 @@ class Paytr extends BasePayment {
             ];
         }
 
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_PAYTR,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
-
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYTR);
 
         if (empty($paymentMethod)) {
@@ -207,7 +200,7 @@ class Paytr extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id');
         $merchantKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_key');

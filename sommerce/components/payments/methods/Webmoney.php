@@ -66,11 +66,6 @@ class Webmoney extends BasePayment {
      */
     public function processing($store)
     {
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_WEBMONEY,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
 
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_WEBMONEY);
 
@@ -82,7 +77,7 @@ class Webmoney extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
         $payeePurse = ArrayHelper::getValue($_POST, 'LMI_PAYEE_PURSE', '');
         $id = ArrayHelper::getValue($_POST, 'id');
         $purse = ArrayHelper::getValue($paymentMethodOptions, 'purse');

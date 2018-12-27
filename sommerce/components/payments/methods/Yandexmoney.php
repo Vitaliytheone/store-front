@@ -81,12 +81,6 @@ class Yandexmoney extends BasePayment {
             ];
         }
 
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_YANDEX_MONEY,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
-
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
 
         if (empty($paymentMethod)) {
@@ -132,7 +126,7 @@ class Yandexmoney extends BasePayment {
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $hash = sha1(implode('&', [
             $notificationType,

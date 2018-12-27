@@ -10,7 +10,6 @@ use common\models\stores\Stores;
 use Yii;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use common\models\stores\StorePaymentMethods;
 
@@ -164,12 +163,6 @@ class Twocheckout extends BasePayment {
            ];
        }
 
-//       $paymentMethod = PaymentMethods::findOne([
-//           'method' => PaymentMethods::METHOD_2CHECKOUT,
-//           'store_id' => $store->id,
-//           'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//       ]);
-
        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_2CHECKOUT);
 
        if (empty($paymentMethod)) {
@@ -179,7 +172,7 @@ class Twocheckout extends BasePayment {
            ];
        }
 
-       $paymentDetails = $paymentMethod->getDetails();
+       $paymentDetails = $paymentMethod->getOptions();
        $secretWord = ArrayHelper::getValue($paymentDetails, 'secret_word', null);
 
        if (empty($secretWord)) {
