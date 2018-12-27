@@ -26,6 +26,10 @@ class PaymentMethodsSearch extends PaymentMethods
                 'icon' => '/img/pg/paypal.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYPAL),
             ],
+            PaymentMethods::METHOD_PAYPAL_STANDARD => [
+                'icon' => '/img/pg/paypal.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_PAYPAL_STANDARD),
+            ],
             PaymentMethods::METHOD_2CHECKOUT => [
                 'icon' => '/img/pg/2checkout.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_2CHECKOUT),
@@ -78,6 +82,10 @@ class PaymentMethodsSearch extends PaymentMethods
             PaymentMethods::METHOD_MERCADOPAGO => [
                 'icon' => '/img/pg/mercado_pago.png',
                 'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_MERCADOPAGO),
+            ],
+            PaymentMethods::METHOD_MOLLIE => [
+                'icon' => '/img/pg/mollie.png',
+                'title' => PaymentMethods::getMethodName(PaymentMethods::METHOD_MOLLIE),
             ],
         ];
 
