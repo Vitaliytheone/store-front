@@ -270,6 +270,7 @@ return [
     'settings.payments_modal_save' => 'Add method',
     'settings.payments_modal_cancel' => 'Cancel',
     'settings.payments_modal_payment_method' => 'Payment method',
+    'settings.payments_test_mode' => 'Use test mode',
 
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 
@@ -316,6 +317,7 @@ return [
     'settings.payments_bitcoin_guide_3' => 'Enter your Gateway secret and API Gateway ID below.',
     'settings.payments_bitcoin_gateway_id' => 'API Gateway ID',
     'settings.payments_bitcoin_gateway_secret' => 'Gateway secret',
+
     'settings.payments_edit_paypal' => 'Edit PayPal',
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
     'settings.payments_paypal_guide_2' => 'Get your {api_credentials_url}.',
@@ -324,6 +326,7 @@ return [
     'settings.payments_paypal_password' => 'Api password',
     'settings.payments_paypal_signature' => 'Api signature',
     'settings.payments_paypal_test_mode' => 'Use test mode',
+
     'settings.payments_edit_coinpayments' => 'Edit CoinPayments',
     'settings.payments_coinpayments_merchant_id' => 'Merchant ID',
     'settings.payments_coinpayments_ipn_secret' => 'IPN secret',
@@ -333,14 +336,17 @@ return [
     'settings.payments_coinpayments_guide_2_2' => 'Apply changes',
     'settings.payments_coinpayments_guide_3' => 'Enter your Merchant ID and IPN Secret bellow',
 
-    'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
-    'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
     'settings.payments_edit_stripe' => 'Edit Stripe',
-    'settings.payments_yandex_money_wallet_number' => 'Wallet number',
-    'settings.payments_yandex_money_secret_word' => 'Secret word',
     'settings.payments_stripe_secret_key' => 'Secret key',
     'settings.payments_stripe_public_key' => 'Public key',
     'settings.payments_stripe_webhook_secret' => 'Webhook secret',
+
+    'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
+    'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
+    'settings.payments_yandex_money_wallet_number' => 'Wallet number',
+    'settings.payments_yandex_cards_wallet_number' => 'Wallet number',
+    'settings.payments_yandex_money_secret_word' => 'Secret word',
+    'settings.payments_yandex_cards_secret_word' => 'Secret word',
     'settings.payments_yandex_money_guide_1' => 'Go to',
     'settings.payments_yandex_money_guide_2' => 'Enter login details.',
     'settings.payments_yandex_money_guide_2-1' => 'Secret word: set strong password',
@@ -365,12 +371,14 @@ return [
     'settings.payments_paytr_merchant_id' => 'Merchant id',
     'settings.payments_paytr_merchant_key' => 'Merchant key',
     'settings.payments_paytr_merchant_salt' => 'Merchant salt',
+    'settings.payments_paytr_merchant_comission' => 'Merchant Comission',
     'settings.payments_paytr_guide_1' => 'Go to Merchant Settings',
     'settings.payments_paytr_guide_2' => 'Set callback url: ',
 
     'settings.payments_edit_paywant' => 'Edit PayWant',
     'settings.payments_paywant_apiKey' => 'API Key',
     'settings.payments_paywant_apiSecret' => 'API Secret',
+    'settings.payments_paywant_fee' => 'Fee',
     'settings.payments_paywant_guide_1' => 'Store Site: ',
     'settings.payments_paywant_guide_2' => 'Ip address (Site): ',
     'settings.payments_paywant_guide_2-1' => '54.36.105.233',
@@ -630,4 +638,8 @@ return [
 
     'settings.notification_preview_m_header' => 'Preview',
     'settings.notification_preview_m_cancel' => 'Cancel',
+
+    'addfunds.phone' => 'Phone',
+    'addfunds.error.phone' => 'Phone error',
+
 ];

@@ -27,7 +27,10 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
                 $paymentMethodCurrency->method_id = $method['id'];
                 $paymentMethodCurrency->currency = $currency;
                 $paymentMethodCurrency->position = $method['position'];
-                $paymentMethodCurrency->settings_form = $method['options'];
+                // TODO считаю что не нужно, тут должен хранится шаблон как в паймент_метод, а не настройки как в сторе_паймент_метод
+               // $paymentMethodCurrency->settings_form = $method['options'];
+                $paymentMethodCurrency->created_at = time();
+                $paymentMethodCurrency->updated_at = time();
                 $paymentMethodCurrency->save(false);
             }
         }

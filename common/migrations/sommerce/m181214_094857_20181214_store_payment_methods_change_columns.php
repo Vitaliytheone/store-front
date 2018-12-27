@@ -40,6 +40,7 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
 
         $this->dropIndex('fk_store_id_method_idx', DB_STORES . '.store_payment_methods');
 
+        $this->createIndex('idx_store_id', DB_STORES . '.store_payment_methods', 'store_id');
         $this->createIndex('idx_method_id', DB_STORES . '.store_payment_methods', 'method_id');
         $this->createIndex('idx_currency_id', DB_STORES . '.store_payment_methods', 'currency_id');
 

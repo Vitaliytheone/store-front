@@ -145,7 +145,7 @@ class PaymentMethodsCurrency extends ActiveRecord
                 continue;
             }
 
-            $result[$id] = StorePaymentMethods::getMethodName($method['method_id']);
+            $result[$id] = StorePaymentMethods::getNameById($method['method_id']);
         }
 
         return $result;

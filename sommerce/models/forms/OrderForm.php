@@ -187,7 +187,7 @@ class OrderForm extends Model {
                 /** @var StorePaymentMethods $method */
                 $methods[$key] = [
                     'id' => $method->method_id,
-                    'name' => $method->name,
+                    'name' => $method->name ?: $method->getName(),
                     'method' => PaymentMethods::getOneMethod($method->method_id),
                     'details' => $method->getOptions(),
                     'position' => $method->position,
