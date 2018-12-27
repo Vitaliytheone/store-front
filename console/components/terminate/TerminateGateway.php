@@ -71,7 +71,7 @@ class TerminateGateway
                 ':type' => Logs::TYPE_RESTORED,
             ])
             ->andWhere(['sites.status' => Sites::STATUS_FROZEN])
-            ->andWhere(['<', 'sites.expired', $date])
+            ->andWhere(['<', 'sites.expired_at', $date])
             ->andWhere('logs.id IS NULL')
             ->one();
     }
