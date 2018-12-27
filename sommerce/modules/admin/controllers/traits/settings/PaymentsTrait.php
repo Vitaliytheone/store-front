@@ -55,35 +55,30 @@ trait PaymentsTrait
     {
 
         $request = yii::$app->getRequest();
-        $storeId = yii::$app->store->getId();
-        $methodName = PaymentMethods::getOneMethod($method);
-
-        $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
-
-        $paymentModel = EditPaymentMethodForm::findOne([
-            'store_id' => $storeId,
-            'method_id' => $method,
-        ]);
+        $paymentModel = EditPaymentMethodForm::findOne($method);
 
         if (!$paymentModel) {
             throw new NotFoundHttpException();
         }
 
+        $methodName = PaymentMethods::getOneMethod($paymentModel->method_id);
+        $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
+
         $paymentModel->setUser(Yii::$app->user);
+        $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
 
-        Yii::debug($request->post(), 'POST'); // TODO del
-
-        // FIXME не сохраняет ПОСТ из-за ошибки валидации
         if ($paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
         }
 
-
         return $this->render('payments', [
             'method' => $method,
             'methodName' => $methodName,
             'paymentModel' => $paymentModel,
+            'formData' => $paymentModel->getMethodFormData(),
+            'icon' => $paymentMethod->icon,
+            'description' => $paymentMethod->settings_form_description,
         ]);
     }
 
@@ -100,7 +95,6 @@ trait PaymentsTrait
         $request = Yii::$app->getRequest();
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_JSON;
-        $storeId = yii::$app->store->getId();
 
         if (!$request->isAjax) {
             exit;
@@ -112,10 +106,7 @@ trait PaymentsTrait
             throw new BadRequestHttpException();
         }
 
-        $paymentModel = EditPaymentMethodForm::findOne([
-            'store_id' => $storeId,
-            'method_id' => $method,
-        ]);
+        $paymentModel = EditPaymentMethodForm::findOne($method);
 
         if (!$paymentModel) {
             throw new NotFoundHttpException();

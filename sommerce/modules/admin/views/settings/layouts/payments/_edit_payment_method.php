@@ -5,11 +5,12 @@ use yii\helpers\Html;
 
 /* @var $submitUrl string */
 /* @var $cancelUrl string */
+/* @var $icon string */
+/* @var $description string */
+/* @var $formData array */
 /* @var $method string from column method_name */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm; */
 
-$formData = $paymentModel->getMethodFormData();
-Yii::debug($formData, 'formdata'); // TODO del
 ?>
 
 <div class="m-subheader ">
@@ -27,10 +28,10 @@ Yii::debug($formData, 'formdata'); // TODO del
     <div class="sommerce-settings__well">
         <div class="row align-items-center">
             <div class="col-md-3 text-center">
-                <img src="<?= $formData['icon'] // TODO брать из БД ?>" alt="" class="img-fluid">
+                <img src="<?= $icon ?>" alt="" class="img-fluid">
             </div>
             <div class="col-md-9">
-                <?= $this->render('_rules', ['method' => $method]);?>
+                <?= $description ?>
             </div>
         </div>
     </div>
@@ -38,26 +39,19 @@ Yii::debug($formData, 'formdata'); // TODO del
     <form id="paypalSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
         <?= Html::beginForm(); ?>
 
-        <?php foreach (ArrayHelper::getValue($formData, 'form_fields') as $formField): ?>
+        <?php foreach ($formData as $formField): ?>
 
-            <?php if($formField['type'] == 'text'): ?>
-                <div class="form-group">
-                    <label for="<?= $formField['id'] ?>">
-                        <?= $formField['label'] ?>
-                    </label>
-                    <input type="text" class="form-control" id="<?= $formField['id'] ?>" placeholder="<?= $formField['placeholder'] ?>" name="<?= $formField['name'] ?>" value="<?= $formField['value'] ?>">
-                </div>
-            <?php endif; ?>
-
-            <?php if($formField['type'] == 'checkbox'): ?>
-                <div class="form-check">
+            <div class="<?= $formField['parentClass'] ?>">
+                <?php if (isset($formField['additionalElement'])): ?>
                     <label class="form-check-label">
-                        <input type="hidden" name="<?= $formField['name'] ?>" value="0">
-                        <input type="checkbox" class="form-check-input" name="<?= $formField['name'] ?>" value="1" <?= $formField['checked'] ?> >
+                        <?= $formField['content'] ?>
                         <?= $formField['label'] ?>
                     </label>
-                </div>
-            <?php endif; ?>
+                <?php else: ?>
+                    <?= $formField['label'] ?>
+                    <?= $formField['content'] ?>
+                <?php endif; ?>
+            </div>
 
         <?php endforeach; ?>
         <hr>

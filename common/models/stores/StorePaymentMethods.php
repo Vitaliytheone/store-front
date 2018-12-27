@@ -163,6 +163,10 @@ class StorePaymentMethods extends ActiveRecord
      */
     public function getOptions(): array
     {
+        if (is_array($this->options)) {
+            return $this->options;
+        }
+
         return !empty($this->options) ? json_decode($this->options, true) : [];
     }
 

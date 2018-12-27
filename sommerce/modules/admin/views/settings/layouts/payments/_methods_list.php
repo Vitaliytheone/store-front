@@ -45,13 +45,13 @@ use sommerce\helpers\UiHelper;
                                         <input class="toggle-active" type="checkbox"
                                                name="toggle-active" <?= UiHelper::toggleString($method->visibility, 'checked') ?>
                                                data-payment_method="<?= $method->method_id // TODO возможно заменить на вывод метод_нейм ?>"
-                                               data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->method_id]) ?>">
+                                               data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->id]) ?>">
                                          <span></span>
                                      </label>
                                   </span>
                             </div>
                             <div class="payment-cart__actions">
-                                <a href="<?= Url::toRoute(['/settings/payments-settings', 'method' => $method->method_id]) ?>"
+                                <a href="<?= Url::toRoute(['/settings/payments-settings', 'method' => $method->id]) ?>"
                                    class="btn m-btn--pill m-btn--air btn-primary">
                                     <?= Yii::t('admin', 'settings.payments_edit_method') ?>
                                 </a>

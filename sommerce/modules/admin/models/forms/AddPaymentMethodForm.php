@@ -64,13 +64,15 @@ class AddPaymentMethodForm extends Model
 
         $paymentMethod = PaymentMethods::findOne($currency->method_id);
 
+        $settingsForm = isset($currency->settings_form) ? $currency->settings_form : $paymentMethod->settings_form;
+
         $newStoreMethod = new StorePaymentMethods();
         $newStoreMethod->store_id = $this->storeId;
         $newStoreMethod->method_id = $currency->method_id;
         $newStoreMethod->currency_id = $currency->id;
         $newStoreMethod->name = $paymentMethod->name != '' ? $paymentMethod->name : $paymentMethod->method_name;
         $newStoreMethod->visibility = StorePaymentMethods::VISIBILITY_DISABLED;
-        $newStoreMethod->options = isset($currency->settings_form) ? $currency->settings_form : $paymentMethod->settings_form;
+        $newStoreMethod->options = $this->getOptions($settingsForm);
         $newStoreMethod->position = StorePaymentMethods::getLastPosition() + 1;
 
         if (!$newStoreMethod->save()) {
@@ -89,5 +91,24 @@ class AddPaymentMethodForm extends Model
         return [
             'method' => Yii::t('admin', 'settings.payments_modal_payment_method'),
         ];
+    }
+
+    /**
+     * Get payment method options
+     * @param $settingsForm
+     * @return string
+     */
+    private function getOptions($settingsForm): string
+    {
+        $settingsForm = json_decode($settingsForm, true);
+
+        $options = array_keys($settingsForm);
+        $result = [];
+
+        foreach ($options as $option) {
+            $result[$option] = '';
+        }
+
+        return json_encode($result);
     }
 }

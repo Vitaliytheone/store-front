@@ -5,11 +5,14 @@ use sommerce\modules\admin\components\Url;
 /* @var $this \yii\web\View */
 /* @var $method string Current `settings payments` method */
 /* @var $submitUrl string */
+/* @var $description string */
 /* @var $cancelUrl string */
 /* @var $methodName string */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $paymentMethods[] \sommerce\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $availableMethods array */
+/* @var $formData array */
+/* @var $icon string */
 
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
@@ -34,7 +37,10 @@ use sommerce\modules\admin\components\Url;
                         'paymentModel' => $paymentModel,
                         'submitUrl' => $submitUrl,
                         'cancelUrl' => $cancelUrl,
-                        'method' => $methodName,
+                        'method' => $method,
+                        'formData' => $formData,
+                        'icon' => $icon,
+                        'description' => $description,
                     ]);
 
                 } else {
