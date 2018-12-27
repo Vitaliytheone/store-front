@@ -1118,6 +1118,10 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $site->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
 
+        if (!$site->enableDomain()) {
+            $order->status = Orders::STATUS_ERROR;
+        }
+
         // Change status
         if (Orders::STATUS_ADDED != $order->status) {
             $order->save(false);

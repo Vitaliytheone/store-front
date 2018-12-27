@@ -4,6 +4,7 @@ namespace common\models\gateways;
 
 
 use common\helpers\DbHelper;
+use common\helpers\DnsHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
@@ -529,5 +530,46 @@ class Sites extends ActiveRecord implements ProjectInterface
         }
 
         return $this->save(false);
+    }
+
+    /**
+     * Enable gateway domain
+     * @return bool
+     */
+    public function enableDomain()
+    {
+        if (!$this->enableMainDomain()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Enable main domain
+     * @return bool
+     */
+    public function enableMainDomain()
+    {
+        if (!$this->subdomain) {
+            if (!DnsHelper::addMainDns($this)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Disable domain
+     * @return bool
+     */
+    public function disableDomain()
+    {
+        if (!DnsHelper::removeDns($this)) {
+            return false;
+        }
+
+        return true;
     }
 }
