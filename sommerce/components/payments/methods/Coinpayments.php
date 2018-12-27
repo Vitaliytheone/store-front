@@ -2,7 +2,6 @@
 
 namespace sommerce\components\payments\methods;
 
-use Yii;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
@@ -138,12 +137,6 @@ class Coinpayments extends BasePayment
                 'content' => "Unknown CoinPayments IPN status! Status=" . $ipnData['ipn_status']
             ];
         }
-
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_COINPAYMENTS,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
 
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_COINPAYMENTS);
 

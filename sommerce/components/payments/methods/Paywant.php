@@ -4,7 +4,6 @@ namespace sommerce\components\payments\methods;
 
 use Yii;
 use sommerce\components\payments\BasePayment;
-use common\helpers\SiteHelper;
 use common\models\store\Checkouts;
 use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
@@ -120,12 +119,6 @@ class Paywant extends BasePayment {
         $urunTutari = ArrayHelper::getValue($_POST, 'UrunTutari', '');
         $hash = ArrayHelper::getValue($_POST, 'Hash', '');
 
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_PAYWANT,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
-
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYWANT);
 
         if (empty($paymentMethod)) {
@@ -169,7 +162,7 @@ class Paywant extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);

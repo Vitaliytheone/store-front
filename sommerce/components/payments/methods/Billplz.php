@@ -95,12 +95,6 @@ class Billplz extends BasePayment {
             ];
         }
 
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_BILLPLZ,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
-
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_BILLPLZ);
 
         if (empty($paymentMethod)) {
@@ -143,7 +137,7 @@ class Billplz extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $collectionId = ArrayHelper::getValue($paymentMethodOptions, 'collectionId');
         $secret = ArrayHelper::getValue($paymentMethodOptions, 'secret');

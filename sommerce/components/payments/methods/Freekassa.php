@@ -69,12 +69,6 @@ class Freekassa extends BasePayment {
             ];
         }
 
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_FREE_KASSA,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
-
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_FREE_KASSA);
 
         if (empty($paymentMethod)) {
@@ -120,7 +114,7 @@ class Freekassa extends BasePayment {
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $signature = [
             ArrayHelper::getValue($paymentMethodOptions, 'merchant_id'),

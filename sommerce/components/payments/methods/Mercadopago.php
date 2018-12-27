@@ -135,12 +135,6 @@ class Mercadopago extends BasePayment
             ];
         }
 
-//        $paymentMethod = PaymentMethods::findOne([
-//            'method' => PaymentMethods::METHOD_MERCADOPAGO,
-//            'store_id' => $store->id,
-//            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-//        ]);
-
         $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_MERCADOPAGO);
 
         if (empty($paymentMethod)) {
@@ -151,7 +145,7 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
@@ -194,7 +188,7 @@ class Mercadopago extends BasePayment
         $checkoutId = $paymentInfoResponse['collection']['external_reference'];
         $status = $paymentInfoResponse['collection']['status'];
         $amount = $paymentInfoResponse['collection']['transaction_amount'];
-        $currency = $paymentInfoResponse["collection"]["currency_id"];
+        $currency = $paymentInfoResponse['collection']['currency_id'];
 
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
