@@ -26,6 +26,8 @@ use common\models\gateway\queries\PagesQuery;
  * @property int $updated_at
  *
  * @method getDefaultContent()
+ * @method getTwigName()
+ * @method getThemeTemplate()
  */
 class Pages extends ActiveRecord
 {

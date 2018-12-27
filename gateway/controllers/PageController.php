@@ -2,6 +2,7 @@
 namespace gateway\controllers;
 
 use common\models\gateway\Pages;
+use common\models\gateway\ThemesFiles;
 use yii\web\NotFoundHttpException;
 use Yii;
 
@@ -21,8 +22,13 @@ class PageController extends CustomController
         $this->pageTitle = $page->seo_title;
         $this->seoDescription = $page->seo_description;
         $this->seoKeywords = $page->seo_keywords;
-
-        return $this->renderContent($page->content);
+        $params = [
+            'page' => [
+                'title' => $page->title,
+                'content' => $page->content,
+            ]
+        ];
+        return $this->renderContent($page->getThemeTemplate());
     }
 
     /**

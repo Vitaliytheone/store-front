@@ -40,21 +40,11 @@ class EditPageForm extends Model
     protected $_user;
 
     /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        return parent::init();
-    }
-
-    /**
      * @param Sites $gateway
      */
     public function setGateway(Sites $gateway)
     {
         $this->_gateway = $gateway;
-
-        $this->content = $this->getPage()->getDefaultContent();
     }
 
     /**
