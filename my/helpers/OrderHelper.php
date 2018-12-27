@@ -806,7 +806,7 @@ class OrderHelper {
     {
         $orderDetails = $order->getDetails();
 
-        /** @var $project Stores|Project  */
+        /** @var $project Stores|Project|Sites  */
 
         switch ($orderDetails['project_type']) {
             case ProjectInterface::PROJECT_TYPE_PANEL:
@@ -815,6 +815,10 @@ class OrderHelper {
 
             case ProjectInterface::PROJECT_TYPE_STORE:
                 $project = Stores::findOne($orderDetails['pid']);
+                break;
+
+            case ProjectInterface::PROJECT_TYPE_GATEWAY:
+                $project = Sites::findOne($orderDetails['pid']);
                 break;
 
             default:
@@ -965,6 +969,10 @@ class OrderHelper {
 
             case ProjectInterface::PROJECT_TYPE_STORE:
                 $project = Stores::findOne($ssl->pid);
+                break;
+
+            case ProjectInterface::PROJECT_TYPE_GATEWAY:
+                $project = Sites::findOne($ssl->pid);
                 break;
 
             default:

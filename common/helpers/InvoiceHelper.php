@@ -551,7 +551,28 @@ class InvoiceHelper
             return in_array($sslCert['pid'], $activeStoresIds);
         });
 
-        $sslCerts = array_merge($panelSslCerts, $storesSslCerts);
+        $gatewaySslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['gateway' => Sites::tableName()], 'gateway.id = ssl_cert.pid')
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_GATEWAY,
+                'gateway.status' => Sites::STATUS_ACTIVE,
+            ])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $sslCerts = array_merge($panelSslCerts, $storesSslCerts, $gatewaySslCerts);
 
         $transaction = Yii::$app->db->beginTransaction();
 

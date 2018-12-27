@@ -2,6 +2,8 @@
 
 namespace console\components\crons;
 
+
+use common\models\gateways\Sites;
 use Yii;
 use common\models\common\ProjectInterface;
 use common\models\panels\Orders;
@@ -19,8 +21,12 @@ use yii\helpers\Console;
  */
 class CronFreeSslOrder extends CronBase
 {
-
-    /** @inheritdoc */
+    /**
+     * {@inheritdoc}
+     * @return mixed|void
+     * @throws CronException
+     * @throws Exception
+     */
     public function run()
     {
         $this->stdout($this->cronTaskName() . ' started now', Console::FG_GREEN);
@@ -41,12 +47,21 @@ class CronFreeSslOrder extends CronBase
             ])
             ->all();
 
+        $gateways = Sites::find()
+            ->andWhere([
+                'status' => Sites::STATUS_ACTIVE,
+                'ssl' => Sites::SSL_MODE_OFF,
+                'dns_status' => Sites::DNS_STATUS_ALIEN
+            ])
+            ->all();
+
         $this->stdout('Total panels`s domains count (' . count($panels) . ')');
         $this->stdout('Total stores`s domains count (' . count($stores) . ')');
+        $this->stdout('Total gateways`s domains count (' . count($gateways) . ')');
 
-        foreach ([$panels, $stores] as $projectList) {
+        foreach ([$panels, $stores, $gateways] as $projectList) {
 
-            /** @var Project|Stores $project */
+            /** @var Project|Stores|Sites $project */
             foreach ($projectList as $project) {
 
                 if (!$project instanceof ProjectInterface) {
@@ -135,6 +150,7 @@ class CronFreeSslOrder extends CronBase
                         break;
 
                     case ProjectInterface::PROJECT_TYPE_STORE:
+                    case ProjectInterface::PROJECT_TYPE_GATEWAY:
 
                         $order = new Orders();
                         $order->cid = $project->customer_id;
