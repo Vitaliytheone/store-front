@@ -1005,4 +1005,6 @@ return [
     'gateways.edit.save' => 'Save changes',
     'gateways.edit_expiry.error' => 'Can not change expiry',
     'gateways.edit.expiry' => 'Edit expiry',
+    'gateways.change_domain.domain' => 'Domain',
+    'gateways.change_domain.subdomain' => 'Is subdomain',
 ];

@@ -17,7 +17,7 @@ use common\models\panels\Project;
 class DnsHelper
 {
     /**
-     * @param Stores|Project $project
+     * @param Stores|Project|Sites $project
      * @return bool
      */
     public static function addMainDns($project)
@@ -96,7 +96,7 @@ class DnsHelper
     }
 
     /**
-     * @param Stores|Project $project
+     * @param Stores|Project|Sites $project
      * @return bool
      */
     public static function addSubDns($project)
@@ -141,7 +141,7 @@ class DnsHelper
     }
 
     /**
-     * @param Stores|Project $project
+     * @param Stores|Project|Sites $project
      * @return bool
      */
     public static function removeMainDns($project)

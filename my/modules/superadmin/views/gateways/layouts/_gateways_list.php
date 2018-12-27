@@ -66,7 +66,7 @@ $now = time();
                                 <?= Html::a(Yii::t('app/superadmin', 'gateways.list.action.change_domain'), Url::toRoute(['/gateways/change-domain', 'id' => $gateway['id']]), [
                                     'class' => 'dropdown-item change-domain',
                                     'data-domain' => htmlspecialchars_decode($gateway['domain']),
-                                    'data-subdomain' => $gateway['subdomain']
+                                    'data-subdomain' => htmlspecialchars_decode($gateway['subdomain']),
                                 ])?>
 
                                 <?php if (Sites::STATUS_ACTIVE == $gateway['status']) : ?>

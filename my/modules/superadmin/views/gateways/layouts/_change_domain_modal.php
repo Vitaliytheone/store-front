@@ -35,6 +35,8 @@ $model = new \superadmin\models\forms\ChangeGatewayDomainForm();
                 ]); ?>
 
                 <?= $form->field($model, 'domain') ?>
+
+                <?= $form->field($model, 'subdomain')->checkbox() ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'gateways.edit.close') ?></button>
