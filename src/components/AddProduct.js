@@ -47,7 +47,7 @@ class AddProduct extends Component {
             onSubmit={this.handleSubmit}
             initialValues={{
               name: " ",
-              visibility: "enabled"
+              visibility: "Enabled"
             }}
           >
             <Form>

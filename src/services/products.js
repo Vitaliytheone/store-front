@@ -15,13 +15,13 @@ export function addPackage(productId, payload) {
 
 export function updateProduct(productId, payload) {
   axiosInstance.put(`/product/${productId}`, payload);
-  const mockResponse = { success: true};
+  const mockResponse = { data: { ...payload }, success: true};
   return Promise.resolve(mockResponse);
 }
 
 export function updatePackage(productId, packageId, payload) {
   axiosInstance.put(`/product/${productId}/package/${packageId}`, payload);
-  const mockResponse = { success: true };
+  const mockResponse = { data: { ...payload }, success: true };
   return Promise.resolve(mockResponse);
 }
 
@@ -34,5 +34,11 @@ export function changePositionProduct(payload) {
 export function changePositionPackage(productId, payload) {
   axiosInstance.put(`/product/${productId}/change-position-package`, payload);
   const mockResponse = { productId, ...payload };
+  return Promise.resolve(mockResponse);
+}
+
+export async function deletePackage(productId, packageId) {
+  axiosInstance.delete(`/product/${productId}/package/${packageId}`)
+  const mockResponse = {};
   return Promise.resolve(mockResponse);
 }

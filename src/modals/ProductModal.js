@@ -18,8 +18,8 @@ const ProductModal = () => (
   <div className="form-group">
     <label htmlFor="visibility">Visibility</label>
     <Field className="form-control" component="select" name="visibility">
-      <option value="1">Enabled</option>
-      <option value="2">Disabled</option>
+      <option value="Enabled">Enabled</option>
+      <option value="Disabled">Disabled</option>
     </Field>
   </div>
 

@@ -42,7 +42,7 @@ class EditProduct extends Component {
             onSubmit={this.handleSubmit}
             initialValues={{
               name: productValue.name,
-              visibility: productValue.name
+              visibility: productValue.visibility
             }}
           >
             <Form>

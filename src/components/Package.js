@@ -15,7 +15,7 @@ export const DragHandle = SortableHandle(() => (
   </div>
 ));
 
-export const SortablePackage = SortableElement(({ pack }) => {
+export const SortablePackage = SortableElement(({ pack, handleEditPackage }) => {
   return (
     <div className="group-item sommerce_dragtable__tr align-items-center">
       <div className="col-lg-5 padding-null-left">
@@ -26,7 +26,7 @@ export const SortablePackage = SortableElement(({ pack }) => {
       <div className="col-lg-2">{pack.provider}</div>
       <div className="col-lg-2 text-lg-center">Enabled</div>
       <div className="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
-        <EditPackage packageValue={pack}/>
+        <EditPackage packageValue={pack} onSubmit={handleEditPackage} />
         <DeletePackage />
       </div>
     </div>

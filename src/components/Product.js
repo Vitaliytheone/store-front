@@ -4,17 +4,17 @@ import EditProduct from "./EditProduct";
 import AddPackage from "./AddPackage";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
-const PackageList = SortableContainer(({ product, onPackageAdd }) => (
+const PackageList = SortableContainer(({ product, onPackageAdd, handleEditPackage }) => (
   <div className="col-12 group-items">
     {product.packages.map((pack, index) => (
-      <SortablePackage key={`item-${index}`} pack={pack} index={index} />
+      <SortablePackage key={`item-${index}`} pack={pack} index={index} handleEditPackage={handleEditPackage(index)}/>
     ))}
     <AddPackage onSubmit={onPackageAdd} />
   </div>
 ));
 
 export const SortableProduct = SortableElement(
-  ({ product, handlePackageSwitch, onPackageAdd, handleEditProduct }) => {
+  ({ product, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage }) => {
     return (
       <div className="row group-caption">
         <div className="col-12 sommerce_dragtable__category">
@@ -35,6 +35,7 @@ export const SortableProduct = SortableElement(
           onSortEnd={handlePackageSwitch}
           useDragHandle={true}
           onPackageAdd={onPackageAdd}
+          handleEditPackage={handleEditPackage}
         />
       </div>
     );

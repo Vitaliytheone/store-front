@@ -47,7 +47,7 @@ class EditPackage extends Component {
           >
             <Form>
               <ModalHeader toggle={this.toggle}>
-                Edit package (ID : 25)
+                Edit package
               </ModalHeader>
               <PackageModal />
               <ModalFooter className="justify-content-start">
