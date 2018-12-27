@@ -325,7 +325,7 @@ abstract class BasePayment extends Component {
         if (empty($paymentId)
             || !($this->_payment = Payments::findOne([
                 'id' => $paymentId,
-                'type' => $this->_method_id
+                'method_id' => $this->_method_id
             ]))
             || in_array($this->_payment->status, [1, 2])) {
             // no invoice
@@ -348,7 +348,7 @@ abstract class BasePayment extends Component {
         if (!$this->_paymentMethod) {
             foreach ((array)$this->_method_id as $methodId) {
                 $sitePaymentMethod = SitePaymentMethods::find()
-                    ->joinWith(['method'])
+                    ->innerJoinWith(['method'])
                     ->andWhere([
                         'method_id' => $methodId,
                         'site_id' => $this->_site->id,

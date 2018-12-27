@@ -14,6 +14,7 @@ use yii\base\Model;
  */
 class CheckoutForm extends Model {
 
+    public $method;
     public $source_id;
     public $source_type;
     public $source_payment_id;
@@ -22,6 +23,7 @@ class CheckoutForm extends Model {
     public $amount;
     public $success_url;
     public $fail_url;
+    public $return_url;
     public $fields;
 
     /**
@@ -55,11 +57,11 @@ class CheckoutForm extends Model {
     public function rules()
     {
         return [
-            [['amount', 'method_id', 'source_id', 'source_type', 'source_payment_id', 'currency'], 'required', 'message' => ''],
-            [['amount',], 'number', 'message' => ''],
-            [['currency',], 'string', 'message' => '', 'length' => 3],
-            [['success_url', 'fail_url'], 'string', 'message' => ''],
-            [['method_id', 'method_id', 'source_id', 'source_type', 'source_payment_id',], 'integer', 'message' => ''],
+            [['amount', 'method', 'source_id', 'source_type', 'source_payment_id', 'currency'], 'required'],
+            [['amount',], 'number'],
+            [['currency',], 'string', 'length' => 3],
+            [['success_url', 'fail_url', 'return_url', 'method'], 'string'],
+            [['method_id', 'method_id', 'source_id', 'source_type', 'source_payment_id',], 'integer'],
             ['fields', 'safe'],
         ];
     }
@@ -100,15 +102,19 @@ class CheckoutForm extends Model {
             return false;
         }
 
-        if (!($method = PaymentMethods::findOne($this->method_id))) {
-            $this->addError('method_id', '');
+        if (!($method = PaymentMethods::findOne([
+            'url' => $this->method,
+        ]))) {
+            $this->addError('method', '');
             return false;
         }
 
-        $this->_payment = new Payments($this->attributes);
+        $this->method_id = $method->id;
+        $this->_payment = new Payments();
+        $this->_payment->attributes = $this->attributes;
 
         if (!$this->_payment->save(false)) {
-            $this->addError('method_id', '');
+            $this->addError('method', '');
             return false;
         }
 

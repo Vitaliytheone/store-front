@@ -83,6 +83,9 @@ $config = [
         'store' => [
             'class' => 'common\components\stores\StoreComponent'
         ],
+        'gateway' => [
+            'class' => 'common\components\gateways\GatewayComponent'
+        ],
 
         'view' => [
             'class' => 'sommerce\components\View',

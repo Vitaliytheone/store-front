@@ -35,8 +35,8 @@ class EditThemeForm extends Model
             'page.twig',
             '404.twig',
         ],
-        'JS' => [],
-        'CSS' => [],
+        /*'JS' => [],
+        'CSS' => [],*/
     ];
 
     /** @var  string */
@@ -198,7 +198,7 @@ class EditThemeForm extends Model
         $themeModel = $this->getThemeModel();
         $themePath = $themeModel->getThemePath();
 
-        $themeFiles = ThemesFilesHelper::dirTree($themePath, $themePath, '/^.*\.(css|js|twig|json)$/i');
+        $themeFiles = [];//ThemesFilesHelper::dirTree($themePath, $themePath, '/^.*\.(css|js|twig|json)$/i');
         $customFiles = $this->getThemes();
 
         foreach ($themeFiles as $fileName => $fileData) {

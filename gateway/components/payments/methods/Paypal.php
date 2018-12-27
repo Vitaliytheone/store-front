@@ -77,18 +77,13 @@ class Paypal extends BasePayment
     protected $_transactionDetails;
 
     /**
-     * Paypal constructor.
-     * @param array $config
+     * Init test mode
      */
-    public function __construct(array $config = [])
+    public function testMode()
     {
-        if (!empty(Yii::$app->params['testPayPal'])) {
-            $this->action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-            $this->endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
-            $this->paymentPoint = 'https://www.sandbox.paypal.com/webscr';
-        }
-
-        return parent::__construct($config);
+        $this->action = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+        $this->endPoint = 'https://api-3t.sandbox.paypal.com/nvp';
+        $this->paymentPoint = 'https://www.sandbox.paypal.com/webscr';
     }
 
     /**
@@ -122,6 +117,10 @@ class Paypal extends BasePayment
     {
         $paymentMethodOptions = $this->getPaymentMethod()['options'];
 
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
+
         $amount = number_format($payment->amount, 2, '.', '');
 
         $credentials = [
@@ -152,7 +151,6 @@ class Paypal extends BasePayment
         ];
 
         $response = $this->request('SetExpressCheckout', $credentials + $requestParams + $orderParams + $item);
-
         if (is_array($response) && $response['ACK'] == 'Success') { // Запрос был успешно принят
             $token = $response['TOKEN'];
 
@@ -168,6 +166,10 @@ class Paypal extends BasePayment
     public function processing()
     {
         $paymentMethodOptions = $this->getPaymentMethod()['options'];
+
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
 
         $token = ArrayHelper::getValue($_GET, 'token');
         $payerId = ArrayHelper::getValue($_GET, 'PayerID');
@@ -349,6 +351,10 @@ class Paypal extends BasePayment
     public function checkStatus($payment)
     {
         $paymentMethodOptions = $this->getPaymentMethod()['options'];
+
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
 
         $credentials = [
             'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),

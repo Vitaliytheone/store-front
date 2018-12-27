@@ -61,7 +61,7 @@ trait PagesTrait {
         return $this->render('edit_page', [
             'pageForm' => $pageForm,
             'isNewPage' => 1,
-            'url' => $this->gateway->getBaseSite(),
+            'siteUrl' => $this->gateway->getBaseSite(),
             'actionUrl' => Url::toRoute('/settings/new-page'),
         ]);
     }

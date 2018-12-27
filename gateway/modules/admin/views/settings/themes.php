@@ -46,7 +46,7 @@ use admin\components\Url;
                                             <?php endif; ?>
                                         </div>
                                     </div>
-                                    <div style="background-image: url(<?= $theme['thumbnail'] ?>)" class="gateway-settings_theme-preview"></div>
+                                    <div class="gateway-settings_theme-preview"></div>
                                 </div>
                                 <div class="gateway-settings_cards-title">
                                     <?php if ($theme['active']): ?>

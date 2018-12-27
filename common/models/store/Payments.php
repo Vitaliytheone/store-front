@@ -16,7 +16,7 @@ use common\models\store\queries\PaymentsQuery;
  * @property string $method
  * @property string $customer
  * @property string $amount
- * @property integer $status
+ * @property integer $status 1 - Awaiting, 2 - Completed, 3 - Failed, 4 - Refunded
  * @property string $fee
  * @property string $transaction_id
  * @property string $memo

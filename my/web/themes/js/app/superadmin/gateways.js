@@ -18,6 +18,8 @@ customModule.superadminGatewaysController = {
             errorBlock.html('');
 
             $('#changegatewaydomainform-domain', form).val(domain);
+            $('#changegatewaydomainform-subdomain', form).prop('checked', subdomain);
+
             modal.modal('show');
             return false;
         });
