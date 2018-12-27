@@ -1,18 +1,18 @@
 <?php
-namespace console\controllers\my;
+namespace console\controllers\gateway;
 
 use console\components\MainController;
 use Yii;
 
 /**
  * Class CustomController
- * @package console\controllers\my
+ * @package console\controllers\gateway
  */
 class CustomController extends MainController
 {
     public function init()
     {
-        $this->frontendPath = Yii::getAlias('@my/config');
+        $this->frontendPath = Yii::getAlias('@gateway/config');
 
         Yii::$app->i18n->translations = [
             'yii' => [
@@ -22,11 +22,10 @@ class CustomController extends MainController
             ],
             'app*' => [
                 'class' => 'yii\i18n\PhpMessageSource',
-                'basePath' => '@my/messages',
+                'basePath' => '@gateway/messages',
                 'sourceLanguage' => 'en',
                 'fileMap' => [
                     'app' => 'app.php',
-                    'app/superadmin' => 'superadmin.php',
                 ],
             ],
         ];

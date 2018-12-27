@@ -352,6 +352,10 @@ class Paypal extends BasePayment
     {
         $paymentMethodOptions = $this->getPaymentMethod()['options'];
 
+        if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
+            $this->testMode();
+        }
+
         $credentials = [
             'USER' => ArrayHelper::getValue($paymentMethodOptions, 'username'),
             'PWD' => ArrayHelper::getValue($paymentMethodOptions, 'password'),

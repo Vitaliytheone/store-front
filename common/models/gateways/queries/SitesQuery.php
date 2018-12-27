@@ -11,10 +11,13 @@ use common\models\gateways\Sites;
  */
 class SitesQuery extends ActiveQuery
 {
-    /*public function active()
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'status' => Sites::STATUS_ACTIVE,
+        ])
+        ->andWhere("db_name <> ''");
+    }
 
     /**
      * @inheritdoc
