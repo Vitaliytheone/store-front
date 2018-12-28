@@ -72,7 +72,7 @@ PagesAsset::register($this);
 
                     <div class="form-group">
                         <?= Html::activeTextarea($pageForm, 'content', [
-                            'class' => 'form-control',
+                            'class' => 'ummernote form_field__content d-none',
                             'id' => 'description',
                             'title' => 'Description',
                             'rows' => 20

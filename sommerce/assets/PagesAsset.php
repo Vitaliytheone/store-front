@@ -16,7 +16,7 @@ class PagesAsset extends AssetBundle
     public $css = [];
 
     public $js = [
-        'js/libs/summernote/summernote-bs4.js'
+        'js/libs/summernote/summernote-bs4.js',
     ];
 
     public $depends = [

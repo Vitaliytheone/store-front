@@ -198,15 +198,21 @@ class CustomController extends CommonController
     /**
      * Renders a static string by applying a layout.
      * @param string $content the static string being rendered
+     * @param mixed $params
+     * @param boolean $render
      * @return string the rendering result of the layout with the given static string as the `$content` variable.
      * If the layout is disabled, the string will be returned back.
      * @since 2.0.1
      */
-    public function renderContent($content)
+    public function renderContent($content, $params = [], $render = false)
     {
         $layoutFile = $this->findLayoutFile($this->getView());
         if ($layoutFile !== false) {
-            return $this->getView()->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
+            $renderer = $this->getView();
+            if ($render && method_exists($renderer, 'renderContent')) {
+                $content = $renderer->renderContent($content, $params);
+            }
+            return $renderer->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
                 'content' => $content,
             ]), $this);
         }

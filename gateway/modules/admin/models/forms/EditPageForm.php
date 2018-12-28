@@ -40,21 +40,11 @@ class EditPageForm extends Model
     protected $_user;
 
     /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        return parent::init();
-    }
-
-    /**
      * @param Sites $gateway
      */
     public function setGateway(Sites $gateway)
     {
         $this->_gateway = $gateway;
-
-        $this->content = $this->getPage()->getDefaultContent();
     }
 
     /**
@@ -112,6 +102,7 @@ class EditPageForm extends Model
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
+            ['url', 'in', 'range' => ['index', 'layout', 'page', '404'], 'not' => true,],
             ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => function(Query $query) {
                 $query->andWhere(['deleted' => Pages::DELETED_NO]);
                 $pageId = $this->getPage()->id;

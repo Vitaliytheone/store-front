@@ -63,7 +63,7 @@ class PageBehavior extends Behavior {
     {
         $this->_themeFile = new ThemesFiles([
             'theme_id' => $this->_getThemeModel()->id,
-            'content' => $this->getTwigContent(),
+            'content' => $this->getDefaultContent(),
             'name' => $this->getTwigName(),
         ]);
         return $this->_themeFile->save();
@@ -88,7 +88,6 @@ class PageBehavior extends Behavior {
             return $this->afterAddTwig();
         }
 
-        $this->_themeFile->content = $this->getTwigContent();
         $this->_themeFile->name = $this->getTwigName();
         return $this->_themeFile->save();
     }
@@ -102,6 +101,23 @@ class PageBehavior extends Behavior {
             'theme_id' => $this->_getThemeModel()->id,
             'name' => $this->getPageModel()->getTwigName(),
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getThemeTemplate()
+    {
+        if (($twig = ThemesFiles::findOne([
+            'theme_id' => $this->_getThemeModel()->id,
+            'name' => $this->getPageModel()->getTwigName(),
+        ]))) {
+            $template = $twig->content;
+        } else {
+            $template = $this->getDefaultContent();
+        }
+
+        return $template;
     }
 
     /**
@@ -154,14 +170,6 @@ class PageBehavior extends Behavior {
     public function getTwigName()
     {
         return $this->getPageModel()->url . '.twig';
-    }
-
-    /**
-     * @return string
-     */
-    public function getTwigContent()
-    {
-        return $this->getPageModel()->content;
     }
 
     /**
