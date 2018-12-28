@@ -108,12 +108,12 @@ class OrderGatewayForm extends DomainForm
         $model = new Orders();
         $model->cid = $this->getUser()->id;
         $model->item = Orders::ITEM_BUY_GATEWAY;
-        $model->domain = $this->domain;
+        $model->domain = $this->preparedDomain;
         $model->ip = $this->_ip;
         $model->setDetails([
             'username' => $this->username,
             'password' => Admins::hashPassword($this->password),
-            'domain' => $this->domain,
+            'domain' => $this->preparedDomain,
         ]);
 
         if ($model->save()) {
