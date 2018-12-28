@@ -9,7 +9,11 @@ use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
 use common\models\gateways\Sites;
+use common\models\panels\Customers;
 use common\models\panels\Languages;
+use common\models\panels\PanelPaymentMethods;
+use common\models\panels\PaymentMethods;
+use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
@@ -1126,6 +1130,47 @@ class OrderHelper {
         if (Orders::STATUS_ADDED != $order->status) {
             $order->save(false);
             return false;
+        }
+
+        $projects = Project::findAll(['cid' => $order->cid, 'act' => Project::STATUS_ACTIVE]);
+        $paypalGatewayMethod = PaymentMethods::findOne(['class_name' => 'PaypalGateway']);
+
+        foreach ($projects as $project) {
+            $currency = PaymentMethodsCurrency::findOne([
+                'currency' => $project->getCurrencyCode(),
+                'method_id' => $paypalGatewayMethod->id,
+            ]);
+
+            $paypalGateway = PanelPaymentMethods::find()
+                ->where(['panel_id' => $project->id, 'method_id' => $paypalGatewayMethod->id])
+                ->one();
+
+            if ($paypalGateway) {
+                $paypalGateway->visibility = 1;
+                $paypalGateway->save(false);
+            } else {
+                $paypalGateway = new PanelPaymentMethods();
+                $paypalGateway->currency_id = $currency->id;
+                $paypalGateway->method_id = $currency->method_id;
+                $paypalGateway->panel_id = $project->id;
+                $paypalGateway->name = $paypalGatewayMethod->method_name;
+                $paypalGateway->setOptions([]);
+                $paypalGateway->save(false);
+            }
+
+//            if ($paypalGateway->exists()) {
+//                $panelGatewayMethod = $paypalGateway->one();
+//            } else {
+//                $panelGatewayMethod = new PanelPaymentMethods();
+//                $panelGatewayMethod->currency_id = $currency->id;
+//                $panelGatewayMethod->method_id = $currency->method_id;
+//                $panelGatewayMethod->panel_id = $project->id;
+//                $panelGatewayMethod->name = $paypalGatewayMethod->method_name;
+//                $panelGatewayMethod->setOptions([]);
+//            }
+//
+//            $panelGatewayMethod->visibility = 1;
+//            $panelGatewayMethod->save(false);
         }
 
         return true;

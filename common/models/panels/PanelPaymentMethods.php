@@ -207,6 +207,7 @@ class PanelPaymentMethods extends ActiveRecord
             ]);
 
             if (!$paymentMethod) {
+                echo 'err';die;
                 return;
             }
 
