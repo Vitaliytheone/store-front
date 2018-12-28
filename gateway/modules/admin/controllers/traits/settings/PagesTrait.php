@@ -178,7 +178,7 @@ trait PagesTrait {
          */
         $pageModel = $this->_findModel($id, Pages::class);
 
-        $pageModel->deleteVirtual();
+        $pageModel->delete();
 
         UiHelper::message(Yii::t('admin', 'settings.pages_message_deleted'));
 
