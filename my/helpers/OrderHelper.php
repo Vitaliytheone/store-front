@@ -1150,27 +1150,13 @@ class OrderHelper {
                 $paypalGateway->save(false);
             } else {
                 $paypalGateway = new PanelPaymentMethods();
-                $paypalGateway->currency_id = $currency->id;
-                $paypalGateway->method_id = $currency->method_id;
+                $paypalGateway->currency_id = isset($currency->id) ? $currency->id : null;
+                $paypalGateway->method_id = $paypalGatewayMethod->id;
                 $paypalGateway->panel_id = $project->id;
                 $paypalGateway->name = $paypalGatewayMethod->method_name;
-                $paypalGateway->setOptions([]);
+                $paypalGateway->setOptions();
                 $paypalGateway->save(false);
             }
-
-//            if ($paypalGateway->exists()) {
-//                $panelGatewayMethod = $paypalGateway->one();
-//            } else {
-//                $panelGatewayMethod = new PanelPaymentMethods();
-//                $panelGatewayMethod->currency_id = $currency->id;
-//                $panelGatewayMethod->method_id = $currency->method_id;
-//                $panelGatewayMethod->panel_id = $project->id;
-//                $panelGatewayMethod->name = $paypalGatewayMethod->method_name;
-//                $panelGatewayMethod->setOptions([]);
-//            }
-//
-//            $panelGatewayMethod->visibility = 1;
-//            $panelGatewayMethod->save(false);
         }
 
         return true;
