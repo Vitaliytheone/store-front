@@ -105,9 +105,10 @@ class CheckoutForm extends Model {
 
         if (!($method = $this->getPaymentMethod())) {
             $this->addError('method', '');
+            return false;
         }
 
-        $this->method_id = $method->id;
+        $this->method_id = $method->method_id;
         $this->_payment = new Payments();
         $this->_payment->attributes = $this->attributes;
 
@@ -116,7 +117,7 @@ class CheckoutForm extends Model {
             return false;
         }
 
-        $payment = Payment::getPayment($method->class_name);
+        $payment = Payment::getPayment($method->method->class_name);
         $payment->setGateway($this->getGateway());
         $result = $payment->checkout($this->_payment);
 
@@ -150,7 +151,7 @@ class CheckoutForm extends Model {
     }
 
     /**
-     * @return PaymentMethods|null
+     * @return SitePaymentMethods|null
      */
     protected function getPaymentMethod()
     {
@@ -158,11 +159,13 @@ class CheckoutForm extends Model {
             return null;
         }
 
-        return PaymentMethods::find()
-            ->innerJoinWith(['sitePaymentMethods'])
+        return SitePaymentMethods::find()
+            ->innerJoinWith(['method'])
             ->andWhere([
-                'url' => $this->method,
-                'site_payment_methods.visibility' => SitePaymentMethods::VISIBILITY_ENABLED
-            ])->one();
+                'payment_methods.url' => $this->method,
+                'site_id' => $this->getGateway()->id,
+                'visibility' => 1
+            ])
+            ->one();
     }
 }

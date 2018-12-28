@@ -83,6 +83,7 @@ class PaymentMethods extends ActiveRecord
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_username', 'placeholder' => '', 'name' => 'username', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_username')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_password', 'placeholder' => '', 'name' => 'password', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_password')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_signature', 'placeholder' => '', 'name' => 'signature', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_signature')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'paypal_description', 'placeholder' => '', 'name' => 'description', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_description')],
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'test_mode', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
