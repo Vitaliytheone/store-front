@@ -32,8 +32,8 @@ return [
     'Development' => [
         'path' => 'dev',
         'setWritable' => [
-            'backend/runtime',
-            'backend/web/assets',
+            'gateway/runtime',
+            'gateway/web/assets',
             'sommerce/runtime',
             'sommerce/web/assets',
             'my/runtime',
@@ -44,7 +44,7 @@ return [
             'yii_test',
         ],
         'setCookieValidationKey' => [
-            'backend/config/main-local.php',
+            'gateway/config/main-local.php',
             'sommerce/config/main-local.php',
             'my/config/main-local.php',
         ],
@@ -52,8 +52,8 @@ return [
     'Production' => [
         'path' => 'prod',
         'setWritable' => [
-            'backend/runtime',
-            'backend/web/assets',
+            'gateway/runtime',
+            'gateway/web/assets',
             'sommerce/runtime',
             'sommerce/web/assets',
             'my/runtime',
@@ -63,7 +63,7 @@ return [
             'yii',
         ],
         'setCookieValidationKey' => [
-            'backend/config/main-local.php',
+            'gateway/config/main-local.php',
             'sommerce/config/main-local.php',
             'my/config/main-local.php',
         ],

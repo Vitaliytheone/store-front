@@ -5,7 +5,7 @@ use my\components\domains\Ahnames;
 use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
 use my\helpers\ChildHelper;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;

@@ -24,6 +24,12 @@ $config = [
             'migrationPath' => '@common/migrations/sommerce/',
         ],
 
+        'migrate-gateway' => [
+            'class' => 'console\controllers\gateway\CustomMigrateController',
+            'migrationTable' => DB_GATEWAYS . '.system_migrations',
+            'migrationPath' => '@common/migrations/gateway/',
+        ],
+
         'migrate' => [
             'class' => 'console\controllers\my\CustomMigrateController',
             'migrationTable' => DB_PANELS . '.system_migrations',
@@ -77,9 +83,12 @@ $config = [
         'store' => [
             'class' => 'common\components\stores\StoreComponent'
         ],
+        'gateway' => [
+            'class' => 'common\components\gateways\GatewayComponent'
+        ],
 
         'view' => [
-            'class' => 'common\components\View',
+            'class' => 'sommerce\components\View',
             'renderers' => [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',

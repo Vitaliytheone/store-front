@@ -276,6 +276,9 @@ class OrdersSearch extends Orders {
             Orders::ITEM_PROLONGATION_FREE_SSL => Yii::t('app/superadmin', 'orders.list.item_prolongation_free_ssl', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_FREE_SSL, 0)
             ]),
+            Orders::ITEM_BUY_GATEWAY => Yii::t('app/superadmin', 'orders.list.item_gateway', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_GATEWAY, 0)
+            ]),
         ];
 
         return $items;

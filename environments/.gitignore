@@ -1,8 +1,8 @@
-/dev/backend/config/*
+/dev/gateway/config/*
 /dev/common/config/*
 /dev/console/config/*
 /dev/sommerce/config/*
-/prod/backend/config/*
+/prod/gateway/config/*
 /prod/common/config/*
 /prod/console/config/*
 /prod/sommerce/config/*
