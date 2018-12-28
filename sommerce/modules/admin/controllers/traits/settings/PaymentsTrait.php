@@ -67,7 +67,7 @@ trait PaymentsTrait
         $paymentModel->setUser(Yii::$app->user);
         $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
 
-        if ($paymentModel->changeSettings($request->post())) {
+        if ($request->method == 'POST' && $paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
         }
