@@ -355,17 +355,19 @@ abstract class BasePayment extends Component {
                         'visibility' => 1
                     ])
                     ->one();
-                $this->_paymentMethod = [
-                    'id' => $sitePaymentMethod->id,
-                    'method_id' => $sitePaymentMethod->method_id,
-                    'name' => $sitePaymentMethod->method->method_name,
-                    'url' => $sitePaymentMethod->method->url,
-                    'options' => $sitePaymentMethod->getOptionsDetails(),
-                ];
 
-                if ($this->_paymentMethod) {
+                if ($sitePaymentMethod) {
+                    $this->_paymentMethod = [
+                        'id' => $sitePaymentMethod->id,
+                        'method_id' => $sitePaymentMethod->method_id,
+                        'name' => $sitePaymentMethod->method->method_name,
+                        'url' => $sitePaymentMethod->method->url,
+                        'options' => $sitePaymentMethod->getOptionsDetails(),
+                    ];
+
                     break;
                 }
+
             }
         }
 
