@@ -32,6 +32,7 @@ trait UnixTimeFormatTrait {
      * @param string $format
      * @param null $timezone
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public static function formatDate($value, $format = 'php:Y-m-d H:i:s', $timezone = null)
     {

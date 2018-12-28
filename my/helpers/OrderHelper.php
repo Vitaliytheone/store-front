@@ -7,6 +7,8 @@ use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
+use common\models\gateways\Admins;
+use common\models\gateways\Sites;
 use common\models\panels\Languages;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
@@ -804,7 +806,7 @@ class OrderHelper {
     {
         $orderDetails = $order->getDetails();
 
-        /** @var $project Stores|Project  */
+        /** @var $project Stores|Project|Sites  */
 
         switch ($orderDetails['project_type']) {
             case ProjectInterface::PROJECT_TYPE_PANEL:
@@ -813,6 +815,10 @@ class OrderHelper {
 
             case ProjectInterface::PROJECT_TYPE_STORE:
                 $project = Stores::findOne($orderDetails['pid']);
+                break;
+
+            case ProjectInterface::PROJECT_TYPE_GATEWAY:
+                $project = Sites::findOne($orderDetails['pid']);
                 break;
 
             default:
@@ -965,6 +971,10 @@ class OrderHelper {
                 $project = Stores::findOne($ssl->pid);
                 break;
 
+            case ProjectInterface::PROJECT_TYPE_GATEWAY:
+                $project = Sites::findOne($ssl->pid);
+                break;
+
             default:
                 throw new Exception('Project type [' . $ssl->project_type . '] not exist!');
                 break;
@@ -1012,6 +1022,110 @@ class OrderHelper {
 
         if (!$order->save(false)) {
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+        }
+
+        return true;
+    }
+
+    /**
+     * Create gateway
+     * @param Orders $order
+     * @return bool
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public static function gateway(Orders $order)
+    {
+        $orderDetails = $order->getDetails();
+
+        $projectDefaults = Yii::$app->params['gateway.defaults'];
+
+        $site = new Sites();
+        $site->setAttributes($projectDefaults);
+
+        $site->customer_id = $order->cid;
+        $site->domain = DomainsHelper::idnToUtf8($order->domain);
+        $site->subdomain = 0;
+        $site->status = Sites::STATUS_ACTIVE;
+        $site->generateExpired();
+        $site->dns_status = Sites::DNS_STATUS_ALIEN;
+
+        if (!$site->save(false)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $order->id, $site->getErrors(), 'cron.order.gateway');
+            return false;
+        }
+
+        $site->generateDbName();
+
+        if (!$site->save(false)) {
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $order->id, $site->getErrors(), 'cron.order.gateway');
+            return false;
+        }
+
+        $expiredLog = new ExpiredLog();
+        $expiredLog->setAttributes([
+            'pid' => $site->id,
+            'expired_last' => 0,
+            'expired' => $site->expired_at,
+            'created_at' => time(),
+            'type' => ExpiredLog::TYPE_CREATE_GATEWAY_EXPIRY
+        ]);
+
+        $expiredLog->save(false);
+
+        $order->status = Orders::STATUS_ADDED;
+        $order->item_id = $site->id;
+        $order->save(false);
+        $order->refresh();
+
+        $siteAdmin = new Admins();
+        $siteAdmin->site_id = $site->id;
+        $siteAdmin->username = ArrayHelper::getValue($orderDetails,'username');
+        $siteAdmin->password = ArrayHelper::getValue($orderDetails,'password');
+        $siteAdmin->status = Admins::STATUS_ACTIVE;
+
+        if (!$siteAdmin->save(false)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $site->id, $siteAdmin->getErrors(), 'cron.order.gateway_admin');
+        }
+
+        // Create nginx config
+        SuperTaskHelper::setTasksNginx($site, [
+            'order_id' => $order->id
+        ]);
+
+        // Create Store db
+        if (!DbHelper::existDatabase($site->db_name)) {
+            DbHelper::createDatabase($site->db_name);
+        }
+
+        if (!DbHelper::existDatabase($site->db_name)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $site->id, '', 'cron.order.gateway_db');
+        }
+
+        $storeSqlPath = Yii::$app->params['gatewaySqlPath'];
+
+        // Make Sql dump from store template db
+        if (!DbHelper::makeSqlDump(Yii::$app->params['gatewayDefaultDatabase'], $storeSqlPath)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $site->id, $storeSqlPath, 'cron.order.make_sql_dump');
+        }
+
+        // Deploy Sql dump to store db
+        if (!DbHelper::dumpSql($site->db_name, $storeSqlPath)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_GATEWAY, $site->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
+        }
+
+        if (!$site->enableDomain()) {
+            $order->status = Orders::STATUS_ERROR;
+        }
+
+        // Change status
+        if (Orders::STATUS_ADDED != $order->status) {
+            $order->save(false);
+            return false;
         }
 
         return true;

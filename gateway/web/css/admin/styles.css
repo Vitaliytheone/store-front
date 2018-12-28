@@ -1,0 +1,18 @@
+.hidden {
+    display: none;
+}
+
+.gateway_dragtable .disabled-product-item {
+    color: #b3b3b3;
+}
+
+/* Page /admin/products modal window */
+.modal.add_product .empty-property-error {
+    display: inline-block;
+    margin-top: 6px;
+}
+
+/* Dropdown menu active item  */
+.m-dropdown.m-dropdown--small li.active {
+    background-color: #f2f3f9;
+}

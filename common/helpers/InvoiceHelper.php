@@ -2,6 +2,7 @@
 namespace common\helpers;
 
 use common\models\common\ProjectInterface;
+use common\models\gateways\Sites;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -367,6 +368,56 @@ class InvoiceHelper
     }
 
     /**
+     * Create invoices to prolong gateways
+     * @throws \yii\db\Exception
+     */
+    public static function prolongGateways()
+    {
+        $date = time() + (Yii::$app->params['gateway.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
+
+        $sites = Sites::find()
+            ->leftJoin('invoice_details', 'invoice_details.item_id = sites.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_GATEWAY)
+            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->andWhere([
+                'sites.status' => Sites::STATUS_ACTIVE,
+            ])->andWhere('sites.expired_at < :expiry', [
+                ':expiry' => $date
+            ])
+            ->groupBy('sites.id')
+            ->having("COUNT(invoices.id) = 0")
+            ->all();
+
+        foreach ($sites as $site) {
+            $transaction = Yii::$app->db->beginTransaction();
+
+            $invoice = new Invoices();
+            $invoice->cid = $site->customer_id;
+            $invoice->total = Yii::$app->params['gatewayDeployPrice'];
+            $invoice->generateCode();
+            $invoice->daysExpired(7);
+
+            if ($invoice->save()) {
+                $invoiceDetailsModel = new InvoiceDetails();
+                $invoiceDetailsModel->invoice_id = $invoice->id;
+                $invoiceDetailsModel->item_id = $site->id;
+                $invoiceDetailsModel->amount = $invoice->total;
+                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_GATEWAY;
+
+                if (!$invoiceDetailsModel->save()) {
+                    continue;
+                }
+
+                $transaction->commit();
+
+                $mail = new InvoiceCreated([
+                    'gateway' => $site
+                ]);
+                $mail->send();
+            }
+        }
+    }
+
+    /**
      * Prolongation Goget SSL to Letsencrypt SSL order maker
      */
     public static function prolongGogetSsl2LetsencryptSsl()
@@ -500,7 +551,28 @@ class InvoiceHelper
             return in_array($sslCert['pid'], $activeStoresIds);
         });
 
-        $sslCerts = array_merge($panelSslCerts, $storesSslCerts);
+        $gatewaySslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['gateway' => Sites::tableName()], 'gateway.id = ssl_cert.pid')
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_GATEWAY,
+                'gateway.status' => Sites::STATUS_ACTIVE,
+            ])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $sslCerts = array_merge($panelSslCerts, $storesSslCerts, $gatewaySslCerts);
 
         $transaction = Yii::$app->db->beginTransaction();
 

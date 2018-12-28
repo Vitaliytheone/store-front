@@ -3,7 +3,7 @@
 namespace console\components\dns_checker;
 
 use common\models\panels\Params;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
 

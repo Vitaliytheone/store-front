@@ -23,6 +23,7 @@ class SuperAdminToken extends ActiveRecord
     const ITEM_PANELS = 0;
     const ITEM_MY = 1;
     const ITEM_SOMMERCE = 2;
+    const ITEM_GATEWAY = 3;
 
     use UnixTimeFormatTrait;
 

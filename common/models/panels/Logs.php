@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\models\common\ProjectInterface;
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
 use Yii;
 use yii\base\Exception;
@@ -107,7 +108,7 @@ class Logs extends ActiveRecord
 
     /**
      * Log
-     * @param Project|Stores $project
+     * @param Project|Stores|Sites $project
      * @param int $type
      * @param string $data
      * @return bool
