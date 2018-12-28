@@ -106,6 +106,7 @@ class GatewaysSearch extends Model
         $model = $query
             ->offset($pages->offset)
             ->limit($pages->limit)
+            ->orderBy(['id' => SORT_DESC])
             ->all();
 
         return [
