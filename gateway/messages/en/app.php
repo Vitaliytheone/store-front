@@ -19,4 +19,6 @@ return [
     'checkout.redirect.redirect' => 'Redirecting...',
     'checkout.redirect.go' => 'Go',
     'checkout.error' => 'Error processing checkout',
+
+    'addfunds.payment.description' => 'Balance recharge',
 ];
