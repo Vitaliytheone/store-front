@@ -5,6 +5,7 @@ use common\models\store\Languages;
 use common\models\store\Messages;
 use common\models\stores\StoreAdmins;
 use sommerce\helpers\MessagesHelper;
+use yii\db\Exception;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
@@ -12,6 +13,9 @@ use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\helpers\FileHelper;
+use common\models\stores\PaymentMethodsCurrency;
+use common\models\stores\StorePaymentMethods;
+use common\models\stores\PaymentMethods;
 
 /**
  * Class SystemController
@@ -271,4 +275,109 @@ class SystemController extends CustomController
             Yii::$app->db->createCommand()->batchInsert($store['db_name'].'.pages', array_keys(array_slice($templates['contacts'], 1)), $batchInsertData)->execute();
         }
     }
+
+
+    /**
+     * 1) Create currency list from pay_methods
+     * @return string
+     */
+    public function actionApplyCurrency(): string
+    {
+        if (Yii::$app->db->getTableSchema('{{%payment_methods_currency}}', true) === null) {
+            return print "Table `payment_methods_currency` does not exist. Apply SQL first.\n";
+        }
+
+        $methods = (new Query())
+            ->select(['id', 'currencies', 'options', 'position'])
+            ->from(DB_STORES . '.payment_methods')
+            ->all();
+
+        $count = 0;
+
+        foreach ($methods as $method) {
+            $currencies = json_decode($method['currencies'], true);
+
+            foreach ($currencies as $currency) {
+                $paymentMethodCurrency = new PaymentMethodsCurrency();
+                $paymentMethodCurrency->method_id = $method['id'];
+                $paymentMethodCurrency->currency = $currency;
+                $paymentMethodCurrency->position = $method['position'];
+                $paymentMethodCurrency->created_at = time();
+                $paymentMethodCurrency->updated_at = time();
+                $paymentMethodCurrency->save(false);
+
+                $count++;
+            }
+        }
+        return print "Success add {$count} currencies\n";
+    }
+
+    /**
+     * 2) Change settings for store_payment_methods
+     * @return string
+     * @throws Exception
+     */
+    public function actionApplyStorePay(): string
+    {
+        if (Yii::$app->db->getTableSchema('{{%store_payment_methods}}', true) === null) {
+            return print "Table `store_payment_methods` does not exist. Apply SQL first.\n";
+        }
+
+        $methods = (new Query())
+            ->select('id, method')
+            ->from(DB_STORES . '.store_payment_methods')
+            ->indexBy('id')
+            ->all();
+
+        $count = 0;
+
+        foreach ($methods as $key => $methodName) {
+            $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
+            $storeMethod = StorePaymentMethods::findOne($key);
+
+            $lastPositions = StorePaymentMethods::find()
+                ->where(['store_id' => $storeMethod->store_id])
+                ->max('position');
+
+            $storeMethod->method_id = $method->id;
+            $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
+            $storeMethod->save(false);
+
+            $count++;
+        }
+
+        Yii::$app->db->createCommand('ALTER TABLE `store_payment_methods` DROP COLUMN `method`')->execute();
+
+        return print "Success change in {$count} store_payment_methods settings\n";
+    }
+
+    /**
+     * 3) Add new column to checkout table
+     * @return string
+     * @throws Exception
+     */
+    public function actionApplyCheckout(): string
+    {
+
+        $stores = (new Query())
+            ->select('db_name')
+            ->from(DB_STORES)
+            ->where('db_name is not null')
+            ->andWhere('db_name != ""')
+            ->all();
+
+        $templateDb = Yii::$app->params['storeDefaultDatabase'];
+        $stores[] = ['db_name' => $templateDb];
+
+        $count = 0;
+        foreach ($stores as $store) {
+            Yii::$app->db->createCommand('USE `' . $store['db_name'] . '`;
+                ALTER TABLE `checkouts` ADD `currency_id` int(11) unsigned NULL AFTER `method_id`;)')->execute();
+
+            $count++;
+        }
+
+        return print "Success add new column to {$count} checkouts dbs\n";
+    }
+
 }
