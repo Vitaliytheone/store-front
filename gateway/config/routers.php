@@ -8,4 +8,9 @@ return [
     '/admin/super-login' => 'admin/site/super-login',
     'checkout' => 'payments/checkout',
     'processing' => 'payments/processing',
+
+    [
+        'pattern' => '/.well-known/acme-challenge/<filename:[-_a-zA-Z0-9]+>',
+        'route' => 'site/ssl',
+    ],
 ];
