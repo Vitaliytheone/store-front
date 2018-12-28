@@ -8,14 +8,14 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div>
+        <React.Fragment>
           <Header />
           <Route exact path="/" />
           <Route exact path="/orders" />
           <Route exact path="/payments"/>
           <Route exact path="/products" component={CategorieProducts} />
           <Route exact path="/settings" />
-        </div>
+        </React.Fragment>
       </Router>
     );
   }

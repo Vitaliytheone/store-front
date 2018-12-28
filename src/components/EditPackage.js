@@ -24,7 +24,7 @@ class EditPackage extends Component {
   render() {
     const { packageValue } = this.props;
     return (
-      <span>
+      <React.Fragment>
         <button
           onClick={this.toggle}
           type="button"
@@ -61,7 +61,7 @@ class EditPackage extends Component {
             </Form>
           </Formik>
         </Modal>
-      </span>
+      </React.Fragment>
     );
   }
 }

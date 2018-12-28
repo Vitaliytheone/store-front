@@ -23,7 +23,8 @@ class AddPackage extends Component {
 
 
   render() {
-    return <div>
+    return (
+      <React.Fragment>
         <div className="mt-2 mb-3">
           <button className="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air product-pointer-events" onClick={this.toggle}>
             Add package
@@ -46,7 +47,8 @@ class AddPackage extends Component {
             </Form>
           </Formik>
         </Modal>
-      </div>;
+      </React.Fragment>
+    );
   }
 }
 

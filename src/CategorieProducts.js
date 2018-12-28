@@ -151,12 +151,25 @@ class CategorieProducts extends Component {
     actions.setSubmitting(false);
   };
 
+  handleDeletePackage = (productIndex) => (packageIndex) =>  () => {
+      const newData = [...this.state.data];
+      newData[productIndex].packages.splice((packageIndex), 1);
+      newData[productIndex].packages.map((pack, index) => ({
+        ...pack, position: index
+      }));
+      this.setState({
+        data: newData
+      });
+    console.log(newData);
+    
+  }
+
   render() {
     const { data } = this.state;
     const { isSubmitting } = this.props;
     console.log(data);
     return (
-      <div>
+      <React.Fragment> 
         <div className="page-container">
           <div className="m-container-sommerce container-fluid">
             <AddProduct onSubmit={this.handleAddProduct} isSubmitting={isSubmitting} />
@@ -168,6 +181,7 @@ class CategorieProducts extends Component {
                     handleEditProduct={this.handleEditProduct}
                     handleEditPackage={this.handleEditPackage}
                     handlePackageSwitch={this.handlePackageSwitch}
+                    handleDeletePackage={this.handleDeletePackage}
                     data={data}
                     useDragHandle={true}
                     onSortEnd={this.handleProductSwitch}
@@ -178,7 +192,7 @@ class CategorieProducts extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

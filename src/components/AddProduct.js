@@ -24,7 +24,7 @@ class AddProduct extends Component {
   render() {
     const { isSubmitting } = this.props;
     return (
-      <div>
+      <React.Fragment>
         <div className="row sommerce-products__actions">
           <div className="col-lg-12">
             <div className="page-content">
@@ -64,7 +64,7 @@ class AddProduct extends Component {
             </Form>
           </Formik>
         </Modal>
-      </div>
+      </React.Fragment>
     );
   }
 }

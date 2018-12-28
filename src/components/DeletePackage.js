@@ -3,18 +3,25 @@ import { Button, Modal, ModalBody } from "reactstrap";
 
 class DeletePackage extends Component {
   state = {
-    modal: false
+    modalIsOpen: false
   };
 
   toggle = () => {
+    this.setState(prevstate =>({
+      modalIsOpen: !prevstate.modalIsOpen
+    }));
+  };
+
+  handleSubmit = (...params) => {
     this.setState({
-      modal: !this.state.modal
+      modalIsOpen: false
     });
+    this.props.onSubmit(...params);
   };
 
   render() {
     return (
-      <span>
+      <React.Fragment>
         <button
           onClick={this.toggle}
           href="#"
@@ -23,14 +30,14 @@ class DeletePackage extends Component {
           <i className="la la-trash" />
         </button>
         <Modal
-          isOpen={this.state.modal}
+          isOpen={this.state.modalIsOpen}
           toggle={this.toggle}
           backdrop={false}
           size="sm"
         >
           <ModalBody>
-            <div class="container-fluid">
-              <div class="row">
+            <div className="container-fluid">
+              <div className="row">
                 <div className="col modal-delete-block text-center">
                   <span className="fa fa-trash-o" />
                   <p>Are your sure that your want to delete this Package?</p>
@@ -44,7 +51,7 @@ class DeletePackage extends Component {
                   <Button
                     color="danger"
                     id="feature-delete m-btn--air"
-                    onClick={this.toggle}
+                    onClick={this.handleSubmit}
                   >
                     Yes, delete it!
                   </Button>
@@ -53,7 +60,7 @@ class DeletePackage extends Component {
             </div>
           </ModalBody>
         </Modal>
-      </span>
+      </React.Fragment>
     );
   }
 }
