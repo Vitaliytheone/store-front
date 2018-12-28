@@ -58,6 +58,7 @@ return [
     'settings.payments_paypal_password' => 'Api password',
     'settings.payments_paypal_signature' => 'Api signature',
     'settings.payments_paypal_test_mode' => 'Use test mode',
+    'settings.payments_paypal_description' => 'Payment description',
 
     'settings.pages_page_title' => 'Pages',
     'settings.pages_add' => 'Add page',
