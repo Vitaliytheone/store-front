@@ -1150,11 +1150,7 @@ class OrderHelper {
 
                 $paypalGateway = PanelPaymentMethods::findOne(['panel_id' => $project->id, 'method_id' => $paypalGatewayMethod->id]);
 
-                if ($paypalGateway) {
-                    $paypalGateway->updateAttributes([
-                        'visibility' => PanelPaymentMethods::VISIBILITY_DISABLED
-                    ]);
-                } else {
+                if (!$paypalGateway) {
                     $paypalGateway = new PanelPaymentMethods();
                     $paypalGateway->currency_id = $currency->id;
                     $paypalGateway->method_id = $paypalGatewayMethod->id;
