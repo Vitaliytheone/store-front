@@ -2,15 +2,14 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\panels\PaymentMethodsCurrency;
+
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
-use Yii;
+use sommerce\helpers\SettingsFormHelper;
 use yii\behaviors\AttributeBehavior;
 use yii\helpers\ArrayHelper;
 use common\models\stores\PaymentMethods;
-use yii\helpers\Html;
 use yii\web\User;
 
 /**
@@ -100,119 +99,13 @@ class EditPaymentMethodForm extends StorePaymentMethods
         return $this->_user;
     }
 
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
     public function getMethodFormData()
     {
-        /** @var PaymentMethodsCurrency $method */
-        $method = $this->getStorePaymentMethodCurrency()->one();
-
-        if (!isset($method->settings_form)) {
-            /** @var PaymentMethods $method */
-            $method = $this->getPaymentMethod()->one();
-        }
-
-        $settingForm = $method->getSettingsForm();
-        $options = $this->getOptions();
-        $result = [];
-
-        foreach ($settingForm as $key => $settings) {
-            $commonLabel = Html::label(Yii::t('admin', $settings['label']), 'editpaymentmethod-' . $settings['code']);
-
-            switch ($settings['type']) {
-                case 'input':
-                    $result[$key] =
-                        '<div class="form-group">' .
-                        $commonLabel .
-                        Html::input(
-                            'text', $this->getFormElementName($settings['name']),
-                            $options[$settings['code']],
-                            [
-                                'id' => 'editpaymentmethod-' . $settings['code'],
-                                'class' => 'form-control',
-                            ]
-                        ) .
-                        '</div>';
-                    break;
-
-                case 'checkbox':
-                    $result[$key] =
-                        '<div class="form-group">' .
-                        '<label class="form-check-label">' .
-                        Html::checkbox(
-                            $this->getFormElementName($settings['name']),
-                            $options[$settings['code']],
-                            [
-                                'id' => 'editpaymentmethod-' . $settings['code'],
-                                'class' => 'form-check-input',
-                            ]
-                        ) . ' ' .
-                        Yii::t('admin', $settings['label']) .
-                        '</label>';
-                    break;
-
-                case 'multi_input':
-                    $result[$key] =
-                        '<div id="multi_input_container_descriptions">';
-
-                    $id = 1;
-                    foreach ((array)$options[$settings['code']] as $description) {
-                        $result[$key] .=
-                            '<div class="form-group form-group-description">' .
-                            '<span class="fa fa-times remove-description"></span>' .
-                            Html::label(Yii::t('admin', $settings['label']), 'edit-payment-method-options-descriptions' . $id) .
-                            Html::input('text', $this->getFormElementName($settings['name']) . '[]', $description, [
-                                'class' => 'form-control multi-input-item',
-                                'id' => 'edit-payment-method-options-descriptions' . $id,
-                            ]) .
-                            '</div>';
-
-                        $id++;
-                    }
-                    $result[$key] .= '</div>' .
-                        Html::a('<span>' . Yii::t('admin', 'settings.payments.multi_input.add_description') . '</span>', '#',
-                            [
-                                'class' => 'add-multi-input',
-                                'data-name' => $this->getFormElementName($settings['name']) . '[]',
-                                'data-label' => $settings['label'],
-                                'data-class' => 'multi-input-item',
-                                'data-id' => 'edit-payment-method-options-descriptions' . $id,
-                            ]
-                        );
-                    break;
-
-                case 'select':
-                    $result[$key] =
-                        '<div class="form-group">' .
-                        $commonLabel .
-                        Html::dropDownList(
-                            $this->getFormElementName($settings['name']),
-                            $options[$settings['code']],
-                            $settings['options'],
-                            [
-                                'id' => 'editpaymentmethod-' . $settings['code'],
-                                'class' => 'form-control',
-                            ]
-                        ) .
-                        '</div>';
-                    break;
-
-                case 'textarea':
-                    $result[$key] =
-                        '<div class="form-group">' .
-                        $commonLabel .
-                        Html::textarea(
-                            $this->getFormElementName($settings['name']),
-                            $options[$settings['code']],
-                            [
-                                'id' => 'editpaymentmethod-' . $settings['code'],
-                                'class' => 'form-control',
-                            ]
-                        ) .
-                        '</div>';
-                    break;
-            }
-        }
-
-        return $result;
+        return SettingsFormHelper::getMethodFormData($this);
     }
 
     /**
@@ -259,7 +152,7 @@ class EditPaymentMethodForm extends StorePaymentMethods
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    private function getFormElementName(string $name): string
+    public function getFormElementName(string $name): string
     {
         return $this->formName() . "[$name]";
     }
