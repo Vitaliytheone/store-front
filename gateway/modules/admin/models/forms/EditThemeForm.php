@@ -22,21 +22,26 @@ class EditThemeForm extends Model
 {
     use UnixTimeFormatTrait;
 
+    public const FOLDER_LAYOUTS = 'Layouts';
+    public const FOLDER_TEMPLATES = 'Templates';
+    public const FOLDER_CSS = 'CSS';
+    public const FOLDER_JS = 'JS';
+
     /**
      * Theme allowed folders/files structure
      * @var array
      */
     private $_filesTree = [
-        'Layouts' => [
+        self::FOLDER_LAYOUTS => [
             'layout.twig',
         ],
-        'Templates' => [
+        self::FOLDER_TEMPLATES => [
             'index.twig',
             'page.twig',
             '404.twig',
         ],
-        /*'JS' => [],
-        'CSS' => [],*/
+        /*self::FOLDER_CSS => [],
+        self::FOLDER_JS => [],*/
     ];
 
     /** @var  string */
@@ -219,6 +224,8 @@ class EditThemeForm extends Model
         foreach ($this->_filesTree as $key => &$folder) {
             sort($folder);
         }
+
+        $this->_filesTree['Templates'] = ArrayHelper::merge($this->_filesTree['Templates'], ArrayHelper::getColumn($customFiles, 'name'));
 
         // Populate files by files data
         foreach ($this->_filesTree as &$folder) {

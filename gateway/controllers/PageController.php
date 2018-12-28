@@ -22,13 +22,13 @@ class PageController extends CustomController
         $this->pageTitle = $page->seo_title;
         $this->seoDescription = $page->seo_description;
         $this->seoKeywords = $page->seo_keywords;
-        $params = [
+
+        return $this->renderContent($page->getThemeTemplate(), [
             'page' => [
                 'title' => $page->title,
                 'content' => $page->content,
             ]
-        ];
-        return $this->renderContent($page->getThemeTemplate());
+        ], true);
     }
 
     /**
