@@ -1,7 +1,8 @@
 <?php
 
 return [
-    '/' => 'site/index',
+    '/' => 'page/index',
+    '/index' => 'page/index',
     '/admin/logout' => 'admin/site/logout',
     '/admin/frozen' => 'admin/site/frozen',
     '/admin/settings' => 'admin/settings/themes',

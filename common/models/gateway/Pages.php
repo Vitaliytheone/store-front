@@ -7,6 +7,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateway\queries\PagesQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%pages}}".
@@ -36,6 +37,9 @@ class Pages extends ActiveRecord
 
     public const VISIBILITY_YES = 1;
     public const VISIBILITY_NO = 0;
+
+    public const CAN_DELETE = 'delete';
+    public const CAN_UPDATE_URL = 'update_url';
 
     public static function getDb()
     {
@@ -133,5 +137,23 @@ class Pages extends ActiveRecord
             ],
             'twig' => PageBehavior::class
         ];
+    }
+
+    /**
+     * @param mixed $page
+     * @param string $code
+     * @param array $params
+     */
+    public static function can($page, $code, $params = [])
+    {
+        switch ($code) {
+            case static::CAN_DELETE:
+                return !ArrayHelper::getValue($page, 'is_default');
+            break;
+
+            case static::CAN_UPDATE_URL:
+                return !ArrayHelper::getValue($page, 'is_default');
+            break;
+        }
     }
 }

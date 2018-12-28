@@ -102,7 +102,7 @@ class EditPageForm extends Model
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
-            ['url', 'in', 'range' => ['index', 'layout', 'page', '404'], 'not' => true,],
+            ['url', 'in', 'range' => ['ssl', 'checkout', 'layout', 'page', '404'], 'not' => true,],
             ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => function(Query $query) {
                 $query->andWhere(['deleted' => Pages::DELETED_NO]);
                 $pageId = $this->getPage()->id;
@@ -122,6 +122,10 @@ class EditPageForm extends Model
     {
         if (!$this->validate()) {
             return false;
+        }
+
+        if (!Pages::can($this->getPage(), Pages::CAN_UPDATE_URL)) {
+            $this->url = $this->getPage()->url;
         }
 
         $this->getPage()->attributes = $this->attributes;
