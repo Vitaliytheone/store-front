@@ -171,6 +171,32 @@ class StorePaymentMethods extends ActiveRecord
     }
 
     /**
+     * Set options
+     * @param $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = json_encode($options);
+    }
+
+    /**
+     * @param array $options
+     * @return bool
+     */
+    public function validateOptions(array $options): bool
+    {
+        $currentOptions = $this->getOptions();
+
+        foreach ($options as $key => $option) {
+            if (!array_key_exists($key, $currentOptions)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get current method icon
      * @return string
      */
