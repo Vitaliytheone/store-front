@@ -19,8 +19,12 @@ class RentapanelInfo extends BasePanelInfo
         $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
 
-        if (!boolval(stripos($content, '<a href="api_docs">Api</a>'))
-            || !boolval(strpos($content, '<a href="services">Services</a>'))) {
+        $matchesApiLink = [];
+        $matchesServicesLink = [];
+        preg_match('/<a href="api_docs">\s*API\s*<\/a>/', $content, $matchesApiLink);
+        preg_match('/<a href="services">\s*Services\s*<\/a>/', $content, $matchesServicesLink);
+
+        if (empty($matchesApiLink) || empty($matchesServicesLink)) {
             return false;
         }
 
@@ -74,7 +78,9 @@ class RentapanelInfo extends BasePanelInfo
             '<td>apiKey</td>',
             '<td>actionType</td>',
             '<td>orderType</td>',
-            '<td>orderID</td>'
+            '<td>orderID</td>',
+            '<td>orderUrl</td>',
+            '<td>orderQuantity</td>',
         ];
 
         foreach ($valid_html as $needle) {
