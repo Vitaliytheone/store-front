@@ -102,7 +102,7 @@ class EditPageForm extends Model
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
-            ['url', 'in', 'range' => ['layout', 'page', '404'], 'not' => true,],
+            ['url', 'in', 'range' => ['ssl', 'checkout', 'layout', 'page', '404'], 'not' => true,],
             ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => function(Query $query) {
                 $query->andWhere(['deleted' => Pages::DELETED_NO]);
                 $pageId = $this->getPage()->id;
