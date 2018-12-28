@@ -1152,7 +1152,7 @@ class OrderHelper {
 
                 if ($paypalGateway) {
                     $paypalGateway->updateAttributes([
-                        'visibility' => PanelPaymentMethods::VISIBILITY_ENABLED
+                        'visibility' => PanelPaymentMethods::VISIBILITY_DISABLED
                     ]);
                 } else {
                     $paypalGateway = new PanelPaymentMethods();
@@ -1161,7 +1161,7 @@ class OrderHelper {
                     $paypalGateway->panel_id = $project->id;
                     $paypalGateway->name = $paypalGatewayMethod->name;
                     $paypalGateway->setOptions();
-                    $paypalGateway->visibility = PanelPaymentMethods::VISIBILITY_ENABLED;
+                    $paypalGateway->visibility = PanelPaymentMethods::VISIBILITY_DISABLED;
                     $paypalGateway->save(false);
                 }
             }
