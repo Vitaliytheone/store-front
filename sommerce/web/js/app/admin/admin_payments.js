@@ -71,5 +71,62 @@ customModule.adminPayments = {
 
             return false;
         });
+
+        $(document).on('click', '.add-multi-input', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var elementCalss = link.data('class');
+            var container = $('#multi_input_container_descriptions');
+            var label = link.data('label');
+            var elementName = link.data('name');
+            var elementId = link.data('id');
+
+            if (!container.length) {
+                return false;
+            }
+
+            var input = '<div class="form-group form-group-description">' +
+                '<span class="fa fa-times remove-description"></span>' +
+                '<label for="' + elementId + '" class="control-label">' + label + '</label>' +
+                '<input type="text" class="form-control ' + elementCalss + '" name="' + elementName + '" id="' + elementId + '" value="">' +
+                '</div>';
+
+            container.append(input);
+
+            return false;
+        });
+
+        $(document).on('click', '.remove-description', function(e) {
+            e.preventDefault();
+
+            var element = $(this);
+
+            element.parents('.form-group-description').remove();
+
+            return false;
+        });
+
+        $('#editPaymentMethodOptions textarea').summernote({
+            dialogsInBody: true,
+            minHeight: 200,
+            toolbar: [
+                ['style', ['style', 'bold', 'italic']],
+                ['lists', ['ul', 'ol']],
+                ['para', ['paragraph']],
+                ['color', ['color']],
+                ['insert', ['link', 'picture', 'video']],
+                ['codeview', ['codeview']]
+            ],
+            disableDragAndDrop: true,
+            styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+            popover: {
+                image: [
+                    ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                    ['remove', ['removeMedia']]
+                ]
+            },
+            dialogsFade: true
+        });
     }
 };

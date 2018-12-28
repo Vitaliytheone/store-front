@@ -44,7 +44,7 @@ use sommerce\helpers\UiHelper;
                                      <label>
                                         <input class="toggle-active" type="checkbox"
                                                name="toggle-active" <?= UiHelper::toggleString($method->visibility, 'checked') ?>
-                                               data-payment_method="<?= $method->method_id // TODO возможно заменить на вывод метод_нейм ?>"
+                                               data-payment_method="<?= $method->method_id ?>"
                                                data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->id]) ?>">
                                          <span></span>
                                      </label>

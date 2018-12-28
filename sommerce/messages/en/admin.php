@@ -422,6 +422,8 @@ return [
     'settings.payments_mercadopago_course' => 'Course',
     'settings.payments_mercadopago_test_mode' => 'Use test mode',
 
+    'settings.payments.multi_input.add_description' => 'Add descriptions',
+
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
     'settings.providers_save' => 'Save changes',

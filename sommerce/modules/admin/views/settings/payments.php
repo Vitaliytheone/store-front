@@ -28,8 +28,6 @@ use sommerce\modules\admin\components\Url;
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <?php
                 if (isset($method)) {
-                    // FIXME $method должен быть метод_нейм
-
                     $submitUrl = Url::toRoute(['/settings/payments-settings', 'method' => $method]);
                     $cancelUrl = Url::toRoute(['/settings/payments']);
 

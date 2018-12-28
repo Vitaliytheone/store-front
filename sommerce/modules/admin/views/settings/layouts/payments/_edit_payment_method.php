@@ -11,13 +11,14 @@ use yii\helpers\Html;
 /* @var $method string from column method_name */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm; */
 
+$this->context->addModule('adminPayments');
 ?>
 
 <div class="m-subheader ">
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title">
-                <?= Yii::t('admin', "settings.payments_edit_$method") ?>
+                <?= $paymentModel->name ?>
             </h3>
         </div>
     </div>
@@ -36,24 +37,15 @@ use yii\helpers\Html;
         </div>
     </div>
 
-    <form id="paypalSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
+    <form id="editSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
         <?= Html::beginForm(); ?>
-
+        <div id="editPaymentMethodOptions">
         <?php foreach ($formData as $formField): ?>
 
-            <div class="<?= $formField['parentClass'] ?>">
-                <?php if (isset($formField['additionalElement'])): ?>
-                    <label class="form-check-label">
-                        <?= $formField['content'] ?>
-                        <?= $formField['label'] ?>
-                    </label>
-                <?php else: ?>
-                    <?= $formField['label'] ?>
-                    <?= $formField['content'] ?>
-                <?php endif; ?>
-            </div>
+            <?= $formField ?>
 
         <?php endforeach; ?>
+        </div>
         <hr>
 
         <button type="submit" class="btn btn-success">
