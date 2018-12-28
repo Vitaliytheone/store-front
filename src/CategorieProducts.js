@@ -1,7 +1,7 @@
-import { SortableContainer, arrayMove } from "react-sortable-hoc";
 import React, { Component } from "react";
-import { SortableProduct } from "./components/Product";
+import { arrayMove } from "react-sortable-hoc";
 import AddProduct from "./components/AddProduct";
+import ProductList from "./components/SortableComponents/ProductList";
 import {
   changePositionProduct,
   changePositionPackage,
@@ -10,34 +10,19 @@ import {
   updateProduct,
   updatePackage
 } from "./services/products";
-import data from "./data.json";
 import { sortBy } from "lodash";
+import data from "./data.json";
+
 
 //parse of json
 const arrayDataParse = Object.values(data).map(item => ({
   ...item,
-  position: +(item.position),
-  packages: sortBy(Object.values(item.packages), "position")
+  position: +(item.position), //cast position to a number 
+  packages: sortBy(Object.values(item.packages), "position")//sort packages by position
 }));
 
 //sort data of elements position
 const arrayData = sortBy(arrayDataParse, "position");
-
-const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage }) => (
-  <div className="sortable">
-    {data.map((product, index) => (
-      <SortableProduct
-        key={`item-${index}`}
-        product={product}
-        index={index}
-        handlePackageSwitch={handlePackageSwitch(index)}
-        handleEditProduct={handleEditProduct(index)}
-        handleEditPackage={handleEditPackage(index)}
-        onPackageAdd={onPackageAdd(index)}
-      />
-    ))}
-  </div>
-));
 
 class CategorieProducts extends Component {
   state = {
@@ -61,7 +46,7 @@ class CategorieProducts extends Component {
   handlePackageSwitch = productIndex => ({ oldIndex, newIndex }) => {
     const newData = [...this.state.data];//copy state
     const product = newData[productIndex];//initial product 
-    //move package and assign pacakge positon = package index
+    //move package and assign package positon = package index
     product.packages = arrayMove(product.packages, oldIndex, newIndex).map((pack, index) => ({
       ...pack, position: index
     }));
@@ -157,10 +142,10 @@ class CategorieProducts extends Component {
       this.setState({
         data: editedPackage
       });
-    const response = await updatePackage(productIndex, packageIndex, editedPackage[productIndex].packages[packageIndex]);
-    console.log(response);
-    editedPackage[productIndex].packages[packageIndex] = response.data;
-    this.setState({
+      const response = await updatePackage(productIndex, packageIndex, editedPackage[productIndex].packages[packageIndex]);
+      console.log(response);
+      editedPackage[productIndex].packages[packageIndex] = response.data;
+      this.setState({
       data: editedPackage
     });
     actions.setSubmitting(false);
@@ -179,6 +164,7 @@ class CategorieProducts extends Component {
               <div className="col-12">
                 <div className="sommerce_dragtable">
                   <ProductList
+                    helperClass="sortable-helper"
                     handleEditProduct={this.handleEditProduct}
                     handleEditPackage={this.handleEditPackage}
                     handlePackageSwitch={this.handlePackageSwitch}

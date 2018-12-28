@@ -41639,3 +41639,8 @@ li.m-menu__item > a.active > span{
 .edit_product {
   padding-left: 3px;
 }
+
+/* opacity for draggable elements */
+.sortable-helper {
+  opacity: 0.5;
+}
