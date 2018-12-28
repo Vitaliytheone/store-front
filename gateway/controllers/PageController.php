@@ -13,10 +13,10 @@ class PageController extends CustomController
 {
     /**
      * Displays page.
-     * @param int $id
+     * @param int|array $id
      * @return string
      */
-    public function actionIndex($id)
+    public function actionIndex($id = ['url' => 'index'])
     {
         $page = $this->_findPage($id);
         $this->pageTitle = $page->seo_title;
@@ -33,15 +33,19 @@ class PageController extends CustomController
 
     /**
      * Find page or return exception
-     * @param int $id
+     * @param array|int $attributes
      * @return Pages
      * @throws NotFoundHttpException
      */
-    protected function _findPage(int $id)
+    protected function _findPage($attributes)
     {
-        $page = Pages::find()->active()->andWhere([
-            'id' => $id,
-        ])->one();
+        if (is_int($attributes)) {
+            $attributes = [
+                'id' => $attributes
+            ];
+        }
+
+        $page = Pages::find()->active()->andWhere($attributes)->one();
 
         if (!$page) {
             throw new NotFoundHttpException();
