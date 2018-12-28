@@ -3,6 +3,7 @@ namespace gateway\models\forms;
 
 use common\models\gateway\Payments;
 use common\models\gateways\PaymentMethods;
+use common\models\gateways\SitePaymentMethods;
 use common\models\gateways\Sites;
 use payments\Payment;
 use Yii;
@@ -102,11 +103,8 @@ class CheckoutForm extends Model {
             return false;
         }
 
-        if (!($method = PaymentMethods::findOne([
-            'url' => $this->method,
-        ]))) {
+        if (!($method = $this->getPaymentMethod())) {
             $this->addError('method', '');
-            return false;
         }
 
         $this->method_id = $method->id;
@@ -149,5 +147,22 @@ class CheckoutForm extends Model {
         }
 
         return false;
+    }
+
+    /**
+     * @return PaymentMethods|null
+     */
+    protected function getPaymentMethod()
+    {
+        if ($this->hasErrors() || !$this->method) {
+            return null;
+        }
+
+        return PaymentMethods::find()
+            ->innerJoinWith(['sitePaymentMethods'])
+            ->andWhere([
+                'url' => $this->method,
+                'site_payment_methods.visibility' => SitePaymentMethods::VISIBILITY_ENABLED
+            ])->one();
     }
 }

@@ -49,6 +49,10 @@ class PaymentsController extends CommonController
             }
         }
 
+        if ($model->return_url) {
+            return $this->redirect($model->return_url);
+        }
+
         return Yii::t('app', 'checkout.error');
     }
 
