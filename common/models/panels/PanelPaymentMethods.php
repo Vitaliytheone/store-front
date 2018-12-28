@@ -34,6 +34,9 @@ use yii\helpers\ArrayHelper;
  */
 class PanelPaymentMethods extends ActiveRecord
 {
+    public const VISIBILITY_ENABLED = 1;
+    public const VISIBILITY_DISABLED = 0;
+
     public const NEW_USERS_ENABLED = 1;
     public const NEW_USERS_DISABLED = 0;
 
@@ -207,7 +210,6 @@ class PanelPaymentMethods extends ActiveRecord
             ]);
 
             if (!$paymentMethod) {
-                echo 'err';die;
                 return;
             }
 

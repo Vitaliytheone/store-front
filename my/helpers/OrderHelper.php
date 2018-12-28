@@ -1132,32 +1132,41 @@ class OrderHelper {
             return false;
         }
 
-        $projects = Project::findAll(['cid' => $order->cid, 'act' => Project::STATUS_ACTIVE]);
-        $paypalGatewayMethod = PaymentMethods::findOne(['class_name' => 'PaypalGateway']);
+        $paypalGatewayMethod = PaymentMethods::findOne(PaymentMethods::METHOD_PAYPAL_GATEWAY);
+        if ($paypalGatewayMethod) {
+            $projects = Project::find()
+                ->andWhere(['cid' => $order->cid, 'act' => Project::STATUS_ACTIVE])
+                ->andWhere("db <> ''")
+                ->all();
+            foreach ($projects as $project) {
+                $currency = PaymentMethodsCurrency::findOne([
+                    'currency' => $project->getCurrencyCode(),
+                    'method_id' => $paypalGatewayMethod->id,
+                ]);
 
-        foreach ($projects as $project) {
-            $currency = PaymentMethodsCurrency::findOne([
-                'currency' => $project->getCurrencyCode(),
-                'method_id' => $paypalGatewayMethod->id,
-            ]);
+                if (!$currency) {
+                    continue;
+                }
 
-            $paypalGateway = PanelPaymentMethods::find()
-                ->where(['panel_id' => $project->id, 'method_id' => $paypalGatewayMethod->id])
-                ->one();
+                $paypalGateway = PanelPaymentMethods::findOne(['panel_id' => $project->id, 'method_id' => $paypalGatewayMethod->id]);
 
-            if ($paypalGateway) {
-                $paypalGateway->visibility = 1;
-                $paypalGateway->save(false);
-            } else {
-                $paypalGateway = new PanelPaymentMethods();
-                $paypalGateway->currency_id = isset($currency->id) ? $currency->id : null;
-                $paypalGateway->method_id = $paypalGatewayMethod->id;
-                $paypalGateway->panel_id = $project->id;
-                $paypalGateway->name = $paypalGatewayMethod->method_name;
-                $paypalGateway->setOptions();
-                $paypalGateway->save(false);
+                if ($paypalGateway) {
+                    $paypalGateway->updateAttributes([
+                        'visibility' => PanelPaymentMethods::VISIBILITY_ENABLED
+                    ]);
+                } else {
+                    $paypalGateway = new PanelPaymentMethods();
+                    $paypalGateway->currency_id = $currency->id;
+                    $paypalGateway->method_id = $paypalGatewayMethod->id;
+                    $paypalGateway->panel_id = $project->id;
+                    $paypalGateway->name = $paypalGatewayMethod->name;
+                    $paypalGateway->setOptions();
+                    $paypalGateway->visibility = PanelPaymentMethods::VISIBILITY_ENABLED;
+                    $paypalGateway->save(false);
+                }
             }
         }
+
 
         return true;
     }
