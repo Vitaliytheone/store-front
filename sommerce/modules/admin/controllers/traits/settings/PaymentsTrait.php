@@ -10,6 +10,7 @@ use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\AddPaymentMethodForm;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
+use sommerce\modules\admin\models\forms\UpdatePositionsPaymentsForm;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -30,11 +31,11 @@ trait PaymentsTrait
     public function actionPayments()
     {
         $this->view->title = Yii::t('admin', 'settings.payments_page_title');
-        $this->addModule('adminPayments');
-
-        $paymentMethods = StorePaymentMethods::findAll([
-            'store_id' => yii::$app->store->getId(),
+        $this->addModule('adminPayments', [
+            'action_update_pos' => Url::toRoute('/settings/update-payment-positions'),
         ]);
+
+        $paymentMethods = StorePaymentMethods::find()->where(['store_id' => yii::$app->store->getId()])->orderBy('position')->all();
 
         $availableMethods = PaymentMethodsCurrency::getSupportCurrency();
 
@@ -139,5 +140,25 @@ trait PaymentsTrait
                 'message' => ActiveForm::firstError($model)
             ];
         }
+    }
+
+    /**
+     * Update Navigation items positions after drag&drop AJAX action
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws \Throwable
+     */
+    public function actionUpdatePaymentPositions(): array
+    {
+        $request = Yii::$app->getRequest();
+
+        $model = new UpdatePositionsPaymentsForm();
+        $model->setUser(Yii::$app->user);
+
+        if (!$model->updatePositions($request->post())) {
+            throw new BadRequestHttpException();
+        }
+
+        return [true];
     }
 }

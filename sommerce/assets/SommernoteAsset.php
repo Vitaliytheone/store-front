@@ -2,7 +2,6 @@
 
 namespace sommerce\assets;
 
-
 use yii\web\AssetBundle;
 
 /**

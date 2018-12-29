@@ -5,7 +5,7 @@ use sommerce\helpers\UiHelper;
 
 /* @var $paymentMethods[] \common\models\stores\StorePaymentMethods */
 /* @var $method \common\models\stores\StorePaymentMethods */
-/* @var $availableMethod array */
+/* @var $availableMethods array */
 
 ?>
 
@@ -25,12 +25,16 @@ use sommerce\helpers\UiHelper;
 </div>
 
 <div class="m-content">
+    <div class="dd" id="nestable">
+        <ol class="dd-list">
 
     <?php foreach ($paymentMethods as $method): ?>
 
-        <div class="sommerce-settings__payment-cart m-portlet">
+        <li class="dd-item" data-id="<?= $method->id ?>">
+            <div class="dd-handle-pay sommerce-settings__payment-cart m-portlet <?= $method->visibility ? '' : 'text-muted' ?>">
             <div class="row align-items-center">
                 <div class="col-12">
+                    <div class="dd-icon-pay"></div>
                     <div class="payment-cart__preview">
                         <img src="<?= $method->getMethodIcon() ?>" alt="" class="img-fluid" style="">
                     </div>
@@ -60,10 +64,12 @@ use sommerce\helpers\UiHelper;
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
+        </li>
 
     <?php endforeach; ?>
-
+        </ol>
+    </div>
 </div>
 
 <?= $this->render('_modal_add_method', ['availableMethods' => $availableMethods]) ?>

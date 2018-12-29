@@ -19,8 +19,6 @@ use yii\web\User;
 class EditPaymentMethodForm extends StorePaymentMethods
 {
 
-    // TODO rename to StoreEditPaymentMethodForm
-
     /**
      * @var User
      */
@@ -76,7 +74,7 @@ class EditPaymentMethodForm extends StorePaymentMethods
     /**
      * @inheritdoc
      */
-    public function formName()
+    public function formName(): string
     {
         return 'PaymentsForm';
     }
@@ -103,7 +101,7 @@ class EditPaymentMethodForm extends StorePaymentMethods
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getMethodFormData()
+    public function getMethodFormData(): array
     {
         return SettingsFormHelper::getMethodFormData($this);
     }
@@ -133,7 +131,7 @@ class EditPaymentMethodForm extends StorePaymentMethods
      * @return bool
      * @throws \Throwable
      */
-    public function changeSettings($postData)
+    public function changeSettings($postData): bool
     {
         $data = $postData[$this->formName()];
         if (!$this->validateOptions($data)) {

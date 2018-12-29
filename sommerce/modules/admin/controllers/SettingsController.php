@@ -49,6 +49,7 @@ class SettingsController extends CustomController
                     'theme-get-data',
                     'theme-update-style',
                     'add-payment-method',
+                    'update-payment-positions',
                 ]
             ],
             'verbs' => [
@@ -59,11 +60,12 @@ class SettingsController extends CustomController
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
                     'add-payment-method' => ['POST'],
+                    'update-payment-positions' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style', 'add-payment-method',],
+                'only' => ['theme-update-style', 'add-payment-method','update-payment-positions',],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],

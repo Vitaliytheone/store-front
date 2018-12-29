@@ -1,0 +1,14 @@
+.dd-handle-pay {
+    cursor: move!important;
+}
+
+.dd-icon-pay {
+    padding-left: 10px;
+    display: inline-block;
+    text-align: center;
+}
+
+.dd-icon-pay:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f047";
+}
