@@ -2,7 +2,6 @@
 namespace common\helpers;
 
 use common\models\panels\services\GetPaymentMethodsService;
-use common\models\stores\PaymentGateways;
 use common\models\stores\PaymentMethods;
 use Yii;
 use yii\helpers\ArrayHelper;

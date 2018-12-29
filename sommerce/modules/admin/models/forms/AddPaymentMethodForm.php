@@ -2,12 +2,10 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-
 use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
-use my\components\ActiveForm;
 use yii\base\Model;
 use Yii;
 

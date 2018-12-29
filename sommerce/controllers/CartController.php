@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\controllers;
 
 use common\components\ActiveForm;
@@ -18,7 +19,6 @@ use yii\filters\ContentNegotiator;
 use yii\web\Response;
 use yii\filters\AjaxFilter;
 use \yii\filters\VerbFilter;
-
 
 /**
  * Cart controller
@@ -66,8 +66,9 @@ class CartController extends CustomController
     /**
      * Displays cart.
      *
-     * @return string
+     * @return string|Response
      * @throws UnknownClassException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -85,7 +86,6 @@ class CartController extends CustomController
         $model->setStore($this->store);
         $model->setSearchItems($searchModel);
 
-        Yii::debug(Yii::$app->request->post(), 'POST'); // TODO del
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if ($model->redirect) {
                 return $this->redirect($model->redirect);
@@ -120,6 +120,8 @@ class CartController extends CustomController
     /**
      * Validate cart
      * @return array
+     * @throws UnknownClassException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionValidate()
     {
@@ -141,8 +143,11 @@ class CartController extends CustomController
 
     /**
      * Delete cart item
-     * @param string|integer $key
-     * @return string
+     * @param $key
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($key)
     {
@@ -156,12 +161,12 @@ class CartController extends CustomController
 
     /**
      * Displays add to cart page.
-     * @param integer $id
+     * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionOrder($id)
     {
-
         $package = $this->_findPackage($id);
 
         $this->pageTitle = $package->name;

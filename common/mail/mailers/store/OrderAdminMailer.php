@@ -2,9 +2,6 @@
 namespace common\mail\mailers\store;
 
 use common\models\store\Orders;
-use common\models\store\Payments;
-use common\models\store\Suborders;
-use common\models\stores\PaymentGateways;
 use Yii;
 use yii\helpers\ArrayHelper;
 

@@ -33,8 +33,6 @@ class PaymentsSearch extends Model
 
     private $_db;
     private $_paymentsTable;
-    private $_paymentMethodsTable;
-    private $_storePaymentMethodsTable;
 
     private $_queryActiveFilters;
     private $_dataProvider;
@@ -48,8 +46,6 @@ class PaymentsSearch extends Model
     {
         $this->_db = $store->db_name;
         $this->_paymentsTable = $this->_db . "." . Payments::tableName();
-        $this->_paymentMethodsTable = PaymentMethods::tableName();
-        $this->_storePaymentMethodsTable = StorePaymentMethods::tableName(); // было _paymentMethodsTable = PaymentMethods::tableName()
     }
 
     /**
@@ -204,16 +200,14 @@ class PaymentsSearch extends Model
     {
         $storeId = yii::$app->store->getId();
 
-        // FIXME отображение кол-ва записей для каждой платежки
-        // плюс не отображаются платежки которых нет в store_payment_methods,
-        // может есть смысл использовать таблицу payments текущего стора
         $methodsList = (new Query())
-            ->select(['method_id'])
-//            ->from($this->_paymentMethodsTable)
-            ->from($this->_storePaymentMethodsTable)
+            ->select(['method_id', 'payment_methods.method_name'])
+            ->from(StorePaymentMethods::tableName())
+            ->leftJoin('payment_methods', 'payment_methods.id = store_payment_methods.method_id')
             ->where(['store_id' => $storeId])
-            ->indexBy('method_id.')
             ->all();
+
+        $methodsList = ArrayHelper::map($methodsList, 'method_name', 'method_id');
 
         $countsByMethodsQuery = (new Query())
             ->select(['method', 'COUNT(*) count'])
@@ -222,14 +216,17 @@ class PaymentsSearch extends Model
             ->indexBy('method');
 
         $this->_applyFilters($countsByMethodsQuery, $this->_queryActiveFilters, ['method']);
-
         $counts = $countsByMethodsQuery->all();
 
-        array_walk($methodsList, function(&$methodItem, $method) use ($counts) {
-            $methodItem['count'] = ArrayHelper::getValue($counts, "$method.count", 0);
-        });
-
-        return $methodsList;
+        $result = [];
+        foreach ($methodsList as $methodName => $methodId) {
+            $result[] = [
+                'method' => $methodName,
+                'method_id' => $methodId,
+                'count' => isset($counts[$methodName]) ? $counts[$methodName]['count'] : 0,
+            ];
+        }
+        return $result;
     }
 
     /**
@@ -296,12 +293,11 @@ class PaymentsSearch extends Model
     {
         $methodsFilterMenuItems = $this->countsByMethods();
 
-        /* Populate methods filter by additional data */
         array_walk($methodsFilterMenuItems, function(&$menuItem){
-            $method = $menuItem['method_id'];
+            $method = $menuItem['method'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = StorePaymentMethods::getNameById($method);
+            $menuItem['method_title'] = StorePaymentMethods::getNameById($menuItem['method_id']);
         });
 
         $allMethodsMenuItem = [
@@ -330,7 +326,6 @@ class PaymentsSearch extends Model
 
         $payments = $this->_dataProvider->getModels();
 
-        /* Populate payments list by additional formats and data */
         array_walk($payments, function(&$payment) {
             $payment['method_title'] = PaymentMethods::getMethodName($payment['method']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);

@@ -1,11 +1,11 @@
 <?php
+
 namespace common\mail\mailers\store;
 
 use common\models\store\Orders;
 use common\models\store\Payments;
 use common\models\store\Suborders;
-use common\models\stores\PaymentGateways;
-use Yii;
+use common\models\stores\PaymentMethods;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 
@@ -13,7 +13,8 @@ use yii\helpers\ArrayHelper;
  * Class OrderMailer
  * @package common\mail\mailers\store
  */
-class OrderMailer extends BaseNotificationMailer {
+class OrderMailer extends BaseNotificationMailer
+{
 
     /**
      * @var Orders
@@ -68,7 +69,7 @@ class OrderMailer extends BaseNotificationMailer {
             'sub_total' => $total,
             'total' => $total,
             'url' => $url,
-            'payment_method' => $payment ? PaymentGateways::getMethodName($payment->method) : null
+            'payment_method' => $payment ? PaymentMethods::getMethodName($payment->method) : null
         ];
 
         $this->html = $this->renderTwig((string)$this->template->body, $options);

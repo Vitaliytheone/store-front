@@ -8,6 +8,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use common\models\stores\queries\StorePaymentMethodsQuery;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "{{%store_payment_methods}}".
@@ -176,7 +177,34 @@ class StorePaymentMethods extends ActiveRecord
      */
     public function setOptions(array $options)
     {
-        $this->options = json_encode($options);
+        if (($paymentMethodCurrency = PaymentMethodsCurrency::findOne([
+                'id' => $this->currency_id,
+                'method_id' => $this->method_id
+            ])) && !empty($paymentMethodCurrency->settings_form)) {
+            $paymentMethodSettings = $paymentMethodCurrency->getSettingsForm();
+        } else {
+            $paymentMethod = PaymentMethods::findOne([
+                'id' => $this->method_id
+            ]);
+
+            if (!$paymentMethod) {
+                return;
+            }
+
+            $paymentMethodSettings = $paymentMethod->getSettingsForm();
+        }
+
+        $cleanOptions = [];
+        foreach ($paymentMethodSettings as $method => $details) {
+            $cleanOptions[$method] = ArrayHelper::getValue($options, $method);
+            if (PaymentMethods::FIELD_TYPE_MULTI_INPUT == $details['type']) {
+                $cleanOptions[$method] = (array)$cleanOptions[$method];
+            } else {
+                $cleanOptions[$method] = (string)$cleanOptions[$method];
+            }
+        }
+
+        $this->options = Json::encode($cleanOptions);
     }
 
     /**

@@ -1,14 +1,10 @@
 <?php
 
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /* @var $submitUrl string */
 /* @var $cancelUrl string */
-/* @var $icon string */
-/* @var $description string */
-/* @var $formData array */
-/* @var $method string from column method_name */
+/* @var $paymentData array */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm; */
 
 $this->context->addModule('adminPayments');
@@ -29,10 +25,10 @@ $this->context->addModule('adminPayments');
     <div class="sommerce-settings__well">
         <div class="row align-items-center">
             <div class="col-md-3 text-center">
-                <img src="<?= $icon ?>" alt="" class="img-fluid">
+                <img src="<?= $paymentData['icon'] ?>" alt="" class="img-fluid">
             </div>
             <div class="col-md-9">
-                <?= $description ?>
+                <?= $paymentData['description'] ?>
             </div>
         </div>
     </div>
@@ -40,7 +36,7 @@ $this->context->addModule('adminPayments');
     <form id="editSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
         <?= Html::beginForm(); ?>
         <div id="editPaymentMethodOptions">
-        <?php foreach ($formData as $formField): ?>
+        <?php foreach ($paymentData['formData'] as $formField): ?>
 
             <?= $formField ?>
 

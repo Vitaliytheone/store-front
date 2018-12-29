@@ -1,9 +1,8 @@
 <?php
+
 namespace sommerce\modules\admin\controllers;
 
 use common\models\stores\StoreAdmins;
-use common\models\stores\Stores;
-use sommerce\controllers\CommonController;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\LoginForm;
 use sommerce\modules\admin\models\forms\SuperLoginForm;
@@ -167,6 +166,7 @@ class SiteController extends AdminController
      * If exist return Url, and it is allowed, use it.
      * Else use first allowed controller from _redirectList list
      * @return string
+     * @throws \Throwable
      */
     private function _makeRedirectUrl()
     {

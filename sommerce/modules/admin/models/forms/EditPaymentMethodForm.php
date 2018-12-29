@@ -7,9 +7,6 @@ use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
 use sommerce\helpers\SettingsFormHelper;
-use yii\behaviors\AttributeBehavior;
-use yii\helpers\ArrayHelper;
-use common\models\stores\PaymentMethods;
 use yii\web\User;
 
 /**
@@ -18,58 +15,10 @@ use yii\web\User;
  */
 class EditPaymentMethodForm extends StorePaymentMethods
 {
-
     /**
      * @var User
      */
     private $_user;
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => AttributeBehavior::class,
-                'attributes' => [
-                    self::EVENT_BEFORE_VALIDATE => 'options',
-                ],
-                'value' => function ($event) {
-                    /* @var $event \yii\base\Event */
-                    /* @var $model $this */
-                    $model = $event->sender;
-                    $details = (array)$model->getAttribute('options');
-
-                    foreach ($details as $key => $elem) {
-                        if (is_string($elem)) {
-                            $details[$key] = trim($elem);
-                        }
-                    }
-
-                    // Prepare PayPal details
-                    if ($model->getPaymentMethod()->one()->name == PaymentMethods::METHOD_PAYPAL) {
-                        $apiUsername = ArrayHelper::getValue($details, 'username');
-                        $details['username'] = trim($apiUsername);
-                    }
-
-                    return json_encode($details);
-                },
-            ],
-            [
-                'class' => AttributeBehavior::class,
-                'attributes' => [
-                    self::EVENT_AFTER_FIND => 'options',
-                ],
-                'value' => function ($event) {
-                    /* @var $event \yii\base\Event */
-                    /* @var $model $this */
-                    $model = $event->sender;
-                    return json_decode($model->getAttribute('options'),true);
-                },
-            ],
-        ];
-    }
 
     /**
      * @inheritdoc

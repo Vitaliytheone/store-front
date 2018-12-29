@@ -37,8 +37,12 @@ class SettingsFormHelper
         foreach ($settingForm as $key => $settings) {
             $commonLabel = Html::label(Yii::t('admin', $settings['label']), 'editpaymentmethod-' . $settings['code']);
 
+            if (!isset($options[$settings['code']])) {
+                continue;
+            }
+
             switch ($settings['type']) {
-                case 'input':
+                case PaymentMethods::FIELD_TYPE_INPUT:
                     $result[$key] =
                         '<div class="form-group">' .
                         $commonLabel .
@@ -53,7 +57,7 @@ class SettingsFormHelper
                         '</div>';
                     break;
 
-                case 'checkbox':
+                case PaymentMethods::FIELD_TYPE_CHECKBOX:
                     $result[$key] =
                         '<div class="form-group">' .
                         '<label class="form-check-label">' .
@@ -69,7 +73,7 @@ class SettingsFormHelper
                         '</label>';
                     break;
 
-                case 'multi_input':
+                case PaymentMethods::FIELD_TYPE_MULTI_INPUT:
                     $result[$key] =
                         '<div id="multi_input_container_descriptions">';
 
@@ -99,7 +103,7 @@ class SettingsFormHelper
                         );
                     break;
 
-                case 'select':
+                case PaymentMethods::FIELD_TYPE_SELECT:
                     $result[$key] =
                         '<div class="form-group">' .
                         $commonLabel .
@@ -115,7 +119,7 @@ class SettingsFormHelper
                         '</div>';
                     break;
 
-                case 'textarea':
+                case PaymentMethods::FIELD_TYPE_TEXTAREA:
                     $result[$key] =
                         '<div class="form-group">' .
                         $commonLabel .

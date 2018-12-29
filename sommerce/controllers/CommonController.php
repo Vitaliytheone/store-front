@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\controllers;
 
 use common\components\MainController;
