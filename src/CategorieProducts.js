@@ -8,7 +8,8 @@ import {
   addPackage,
   addProduct,
   updateProduct,
-  updatePackage
+  updatePackage,
+  deletePackage
 } from "./services/products";
 import { sortBy } from "lodash";
 import data from "./data.json";
@@ -151,16 +152,22 @@ class CategorieProducts extends Component {
     actions.setSubmitting(false);
   };
 
-  handleDeletePackage = (productIndex) => (packageIndex) =>  () => {
+  handleDeletePackage = (productIndex) => (packageIndex) => async () => {
       const newData = [...this.state.data];
-      newData[productIndex].packages.splice((packageIndex), 1);
-      newData[productIndex].packages.map((pack, index) => ({
+     newData[productIndex].packages.splice((packageIndex), 1);
+     newData[productIndex].packages = newData[productIndex].packages.map((pack, index) => ({
         ...pack, position: index
       }));
       this.setState({
         data: newData
       });
-    console.log(newData);
+      
+      console.log(newData);
+      const response = await deletePackage(productIndex, packageIndex, newData[productIndex].packages);
+      newData[productIndex].packages = response.data;
+           this.setState({ 
+             data: newData
+    });
     
   }
 

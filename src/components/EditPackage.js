@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
-import PackageModal from "../modals/PackageModal";
+import PackageModal from "./modals/PackageModal";
 
 class EditPackage extends Component {
   state = {
@@ -32,7 +32,8 @@ class EditPackage extends Component {
         >
           Edit
         </button>
-        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop={false}>
+        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle}  backdrop='static'
+          keyboard={false}>
           <Formik
             onSubmit={this.handleSubmit}
             initialValues={{

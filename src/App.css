@@ -222,15 +222,15 @@
   */
 @font-face {
   font-family: "Flaticon";
-  src: url("./fonts/Flaticon.eot");
-  src: url("./fonts/Flaticon.eot?#iefix") format("embedded-opentype"), url("./fonts/Flaticon.woff") format("woff"), url("./fonts/Flaticon.ttf") format("truetype"), url("./fonts/Flaticon.svg#Flaticon") format("svg");
+  src: url("assets/fonts/Flaticon.eot");
+  src: url("assets/fonts/Flaticon.eot?#iefix") format("embedded-opentype"), url("assets/fonts/Flaticon.woff") format("woff"), url("assets/fonts/Flaticon.ttf") format("truetype"), url("assets/fonts/Flaticon.svg#Flaticon") format("svg");
   font-weight: normal;
   font-style: normal; }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: "Flaticon";
-    src: url("./fonts/Flaticon.svg#Flaticon") format("svg"); } }
+    src: url("assets/fonts/Flaticon.svg#Flaticon") format("svg"); } }
 
 [class^="flaticon-"]:before,
 [class*=" flaticon-"]:before {
@@ -749,15 +749,15 @@
  */
 @font-face {
   font-family: "LineAwesome";
-  src: url("./fonts/line-awesome.eot?v=1.1.");
-  src: url("./fonts/line-awesome.eot??v=1.1.#iefix") format("embedded-opentype"), url("./fonts/line-awesome.woff2?v=1.1.") format("woff2"), url("./fonts/line-awesome.woff?v=1.1.") format("woff"), url("./fonts/line-awesome.ttf?v=1.1.") format("truetype"), url("./fonts/line-awesome.svg?v=1.1.#fa") format("svg");
+  src: url("assets/fonts/line-awesome.eot?v=1.1.");
+  src: url("assets/fonts/line-awesome.eot??v=1.1.#iefix") format("embedded-opentype"), url("assets/fonts/line-awesome.woff2?v=1.1.") format("woff2"), url("assets/fonts/line-awesome.woff?v=1.1.") format("woff"), url("assets/fonts/line-awesome.ttf?v=1.1.") format("truetype"), url("assets/fonts/line-awesome.svg?v=1.1.#fa") format("svg");
   font-weight: normal;
   font-style: normal; }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: "LineAwesome";
-    src: url("./fonts/line-awesome.svg?v=1.1.#fa") format("svg"); } }
+    src: url("assets/fonts/line-awesome.svg?v=1.1.#fa") format("svg"); } }
 
 /* Thanks to http://fontawesome.io @fontawesome and @davegandy */
 .la {
@@ -2887,15 +2887,15 @@
  */
 @font-face {
   font-family: "Metronic";
-  src: url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot");
-  src: url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot?#iefix") format("embedded-opentype"), url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff2") format("woff2"), url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff") format("woff"), url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.ttf") format("truetype"), url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.svg#Metronic") format("svg");
+  src: url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot");
+  src: url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot?#iefix") format("embedded-opentype"), url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff2") format("woff2"), url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff") format("woff"), url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.ttf") format("truetype"), url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.svg#Metronic") format("svg");
   font-weight: normal;
   font-style: normal; }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: "Metronic";
-    src: url("./fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.svg#Metronic") format("svg"); } }
+    src: url("assets/fonts/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.svg#Metronic") format("svg"); } }
 
 [data-icons8]:before {
   content: attr(data-icons8); }
@@ -2938,8 +2938,8 @@
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("./fonts/fontawesome-webfont.eot?v=4.7.0");
-  src: url("./fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("./fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("./fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("./fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("./fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
+  src: url("assets/fonts/fontawesome-webfont.eot?v=4.7.0");
+  src: url("assets/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("assets/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("assets/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("assets/fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("assets/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -5265,8 +5265,8 @@
 
 @font-face {
   font-family: "simple-line-icons";
-  src: url("./fonts/Simple-Line-Icons.eot?v=2.4.0");
-  src: url("./fonts/Simple-Line-Icons.eot?v=2.4.0#iefix") format("embedded-opentype"), url("./fonts/Simple-Line-Icons.woff2?v=2.4.0") format("woff2"), url("./fonts/Simple-Line-Icons.ttf?v=2.4.0") format("truetype"), url("./fonts/Simple-Line-Icons.woff?v=2.4.0") format("woff"), url("./fonts/Simple-Line-Icons.svg?v=2.4.0#simple-line-icons") format("svg");
+  src: url("assets/fonts/Simple-Line-Icons.eot?v=2.4.0");
+  src: url("assets/fonts/Simple-Line-Icons.eot?v=2.4.0#iefix") format("embedded-opentype"), url("assets/fonts/Simple-Line-Icons.woff2?v=2.4.0") format("woff2");
   font-weight: normal;
   font-style: normal; }
 
@@ -33903,8 +33903,8 @@ select.m-select2 {
   font-family: "summernote";
   font-style: normal;
   font-weight: normal;
-  src: url("./fonts/summernote.eot?0d0d5fac99cc8774d89eb08b1a8323c4");
-  src: url("./fonts/summernote.eot?#iefix") format("embedded-opentype"), url("./fonts/summernote.woff?0d0d5fac99cc8774d89eb08b1a8323c4") format("woff"), url("./fonts/summernote.ttf?0d0d5fac99cc8774d89eb08b1a8323c4") format("truetype"); }
+  src: url("assets/fonts/summernote.eot?0d0d5fac99cc8774d89eb08b1a8323c4");
+  src: url("assets/fonts/summernote.eot?#iefix") format("embedded-opentype"), url("assets/fonts/summernote.woff?0d0d5fac99cc8774d89eb08b1a8323c4") format("woff"), url("assets/fonts/summernote.ttf?0d0d5fac99cc8774d89eb08b1a8323c4") format("truetype"); }
 
 [class^="note-icon-"]:before, [class*=" note-icon-"]:before {
   display: inline-block;
@@ -35393,10 +35393,10 @@ span.CodeMirror-selectedtext {
     background: url("/img/throbber.gif") center center no-repeat; } */
 
 .jstree-default .jstree-file {
-  background: url("./img/32px.png") -100px -68px no-repeat; }
+  background: url("assets/img/32px.png") -100px -68px no-repeat; }
 
 .jstree-default .jstree-folder {
-  background: url("./img/32px.png") -260px -4px no-repeat; }
+  background: url("assets/img/32px.png") -260px -4px no-repeat; }
 
 .jstree-default > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -35408,7 +35408,7 @@ span.CodeMirror-selectedtext {
 
 #jstree-dnd.jstree-default .jstree-ok,
 #jstree-dnd.jstree-default .jstree-er {
-  background-image: url("./img/32px.png");
+  background-image: url("assets/img/32px.png");
   background-repeat: no-repeat;
   background-color: transparent; }
 
@@ -35469,7 +35469,7 @@ span.CodeMirror-selectedtext {
 
 .jstree-default-small .jstree-node,
 .jstree-default-small .jstree-icon {
-  background-image: url("./img/32px.png"); }
+  background-image: url("assets/img/32px.png"); }
 
 .jstree-default-small .jstree-node {
   background-position: -295px -7px;
@@ -35576,10 +35576,10 @@ span.CodeMirror-selectedtext {
   background: url("/img/throbber.gif") center center no-repeat; }
 
 .jstree-default-small .jstree-file {
-  background: url("./img/32px.png") -103px -71px no-repeat; }
+  background: url("assets/img/32px.png") -103px -71px no-repeat; }
 
 .jstree-default-small .jstree-folder {
-  background: url("./img/32px.png") -263px -7px no-repeat; }
+  background: url("assets/img/32px.png") -263px -7px no-repeat; }
 
 .jstree-default-small > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -35591,7 +35591,7 @@ span.CodeMirror-selectedtext {
 
 #jstree-dnd.jstree-default-small .jstree-ok,
 #jstree-dnd.jstree-default-small .jstree-er {
-  background-image: url("./img/32px.png");
+  background-image: url("assets/img/32px.png");
   background-repeat: no-repeat;
   background-color: transparent; }
 
@@ -35652,7 +35652,7 @@ span.CodeMirror-selectedtext {
 
 .jstree-default-large .jstree-node,
 .jstree-default-large .jstree-icon {
-  background-image: url("/img/32px.png"); }
+  background-image: url("assets//img/32px.png"); }
 
 .jstree-default-large .jstree-node {
   background-position: -288px 0px;
@@ -35759,10 +35759,10 @@ span.CodeMirror-selectedtext {
   background: url("/img/throbber.gif") center center no-repeat; }
 
 .jstree-default-large .jstree-file {
-  background: url("/img/32px.png") -96px -64px no-repeat; }
+  background: url("assets/img/32px.png") -96px -64px no-repeat; }
 
 .jstree-default-large .jstree-folder {
-  background: url("/img/32px.png") -256px 0px no-repeat; }
+  background: url("assets/img/32px.png") -256px 0px no-repeat; }
 
 .jstree-default-large > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -35774,7 +35774,7 @@ span.CodeMirror-selectedtext {
 
 #jstree-dnd.jstree-default-large .jstree-ok,
 #jstree-dnd.jstree-default-large .jstree-er {
-  background-image: url("./img/32px.png");
+  background-image: url("assets/img/32px.png");
   background-repeat: no-repeat;
   background-color: transparent; }
 
@@ -39640,7 +39640,7 @@ button.swiper-pagination-bullet {
   height: 60px;
   display: block;
   margin: 10px auto;
-  background: url("/img/editor_arrow_right.png") center center no-repeat; }
+  background: url("assets/img/editor_arrow_right.png") center center no-repeat; }
 
 .sommerce-editorPage__text .sommerce-editorPage__file-edit {
   padding: 5px 10px; }

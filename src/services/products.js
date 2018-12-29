@@ -37,8 +37,8 @@ export function changePositionPackage(productId, payload) {
   return Promise.resolve(mockResponse);
 }
 
-export function deletePackage(productId, packageId) {
+export function deletePackage(productId, packageId, payload) {
   axiosInstance.delete(`/product/${productId}/package/${packageId}`)
-  const mockResponse = {};
+  const mockResponse = { data: { ...payload }, success: true};
   return Promise.resolve(mockResponse);
 }

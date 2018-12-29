@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "formik";
-import { PackageInput } from "../components/Inputs";
+import { PackageInput } from "../Inputs";
 
 class PackageModal extends Component {
   render() {
