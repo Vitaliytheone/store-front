@@ -1,12 +1,13 @@
 <?php
+
 namespace superadmin\models\search;
 
+
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
-use my\helpers\SpecialCharsHelper;
 use superadmin\widgets\CountPagination;
 use Yii;
 use common\models\panels\Customers;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
 
@@ -14,14 +15,15 @@ use yii\data\Pagination;
  * Class CustomersSearch
  * @package superadmin\models\search
  */
-class CustomersSearch extends Customers {
-
+class CustomersSearch extends Customers
+{
     public $countStores;
     public $countProjects;
     public $countChild;
     public $countDomains;
     public $countSslCerts;
     public $referrer_email;
+    public $countGateways;
 
     /**
      * @var Pagination
@@ -112,9 +114,11 @@ class CustomersSearch extends Customers {
                 'COUNT(DISTINCT child_project.id) AS countChild',
                 'COUNT(DISTINCT domains.id) AS countDomains',
                 'COUNT(DISTINCT ssl_cert.id) AS countSslCerts',
+                'COUNT(DISTINCT sites.id) AS countGateways',
             ])
             ->leftJoin(['referral' => Customers::tableName()], 'referral.id = customers.referrer_id')
             ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id')
+            ->leftJoin(['sites' => Sites::tableName()], 'sites.customer_id = customers.id')
             ->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [':projectChildPanel' => 0])
             ->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [':childPanel' => 1])
             ->leftJoin('domains', 'domains.customer_id = customers.id')

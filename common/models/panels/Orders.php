@@ -53,6 +53,7 @@ class Orders extends ActiveRecord
     const ITEM_BUY_TRIAL_STORE = 8;
     const ITEM_FREE_SSL = 9;
     const ITEM_PROLONGATION_FREE_SSL = 10;
+    const ITEM_BUY_GATEWAY = 11;
 
     use UnixTimeFormatTrait;
 
@@ -167,6 +168,7 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'orders.item.trial_store'),
             static::ITEM_FREE_SSL => Yii::t('app', 'orders.item.free_ssl'),
             static::ITEM_PROLONGATION_FREE_SSL => Yii::t('app', 'orders.item.prolongation_free_ssl'),
+            static::ITEM_BUY_GATEWAY => Yii::t('app', 'orders.item.buy_gateway'),
         ];
     }
 
@@ -348,6 +350,15 @@ class Orders extends ActiveRecord
                 }
 
                 return true;
+            break;
+
+            case 'create_gateway':
+                if (empty($customerId)) {
+                    return false;
+                }
+
+                return true;
+            break;
         }
 
         return false;
@@ -364,6 +375,8 @@ class Orders extends ActiveRecord
 
     /**
      * Cancel order
+     * @return bool
+     * @throws \yii\db\Exception
      */
     public function cancel()
     {

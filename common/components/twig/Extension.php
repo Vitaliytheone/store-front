@@ -2,13 +2,8 @@
 namespace common\components\twig;
 
 use common\components\twig\parsers\TokenParser_Include;
-use common\models\store\Pages;
-use sommerce\helpers\AssetsHelper;
-use sommerce\helpers\PackageHelper;
 use Yii;
 use Twig_SimpleFunction;
-use Twig_SimpleFilter;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class Extension
@@ -46,18 +41,6 @@ class Extension extends \Twig_Extension {
                 return Yii::t('app', $value, array_merge(static::getTemplateVariables(), $options));
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
-            new Twig_SimpleFunction('asset', function($value) {
-                return AssetsHelper::getAssetPath() . $value;
-            }),
-            new Twig_SimpleFunction('page_url', function($pageId){
-                $page = Pages::find()->active()->andWhere([
-                    'id' => $pageId,
-                ])->one();
-                return '/' . ($page ? $page->url : '#');
-            }),
-            new Twig_SimpleFunction('package', function($value) {
-                return PackageHelper::getPackageBuyNow($value);
-            }),
         ];
 
         return $functions;
@@ -76,15 +59,7 @@ class Extension extends \Twig_Extension {
     /** @inheritdoc */
     public function getFilters()
     {
-        $filters = [
-            new Twig_SimpleFilter('money', function($price) {
-                $currencyRule = ArrayHelper::getValue(Yii::$app->params['currencies'], Yii::$app->store->getInstance()->currency);
-                if ($currencyRule && isset($currencyRule['money_format'])) {
-                    $price = str_replace('{{number}}', $price, $currencyRule['money_format']);
-                }
-                return $price;
-            })
-        ];
+        $filters = [];
 
         return $filters;
     }

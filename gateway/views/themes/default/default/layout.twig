@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="{{ site.language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ site.page_title }}</title>
+    <meta name="keywords" content="{{ site.meta.keywords }}">
+    <meta name="description" content="{{ site.meta.description }}">
+    {% if site.favicon %}
+        <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
+    {% endif %}
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="/css/frontend/fontawesome.css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/classic.css') }}">
+    {{ site.custom_header }}
+</head>
+<body>
+<nav class="navbar navbar-default navbar-white">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                {% if site.logo %}
+                    <img src="{{ site.logo }}" alt="{{ site.name }}" class="img-responsive">
+                {% else %}
+                    {{ site.name }}
+                {% endif %}
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-right {% if site.rtl %} navbar-nav-rtl {% endif %}"></ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Content Start -->
+{{ content }}
+<!-- Content End -->
+
+<!-- Process block End -->
+</body>
+<!-- Footer block Start -->
+<footer class="bg-white">
+    <div class="footer-copy">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    &copy; {{ site.name }} {{ "now"|date("Y") }}
+                </div>
+                <div class="col-md-8">
+                    <ul class="footer-links {% if site.rtl %} rtl-content {% endif %}"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer block End -->
+
+<!-- CDN Scripts -->
+<script src="https://www.google.com/recaptcha/api.js?hl={{ site.language }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Custom Scripts -->
+<script src="{{ asset('/js/bootstrap.js') }}"></script>
+<script src="{{ asset('/js/main.js') }}"></script>
+{{ site.custom_footer }}
+</html>

@@ -15,6 +15,10 @@ $store = Yii::$app->store->getInstance();
             echo $this->render('rules/_paypal', ['store' => $store]);
             break;
 
+        case PaymentMethods::METHOD_PAYPAL_STANDARD:
+            echo $this->render('rules/_paypalstandard', ['store' => $store]);
+            break;
+
         case PaymentMethods::METHOD_2CHECKOUT:
             echo $this->render('rules/_2checkout', ['store' => $store]);
             break;
@@ -57,6 +61,10 @@ $store = Yii::$app->store->getInstance();
 
         case PaymentMethods::METHOD_BILLPLZ:
             echo $this->render('rules/_billplz', ['store' => $store]);
+            break;
+
+        case PaymentMethods::METHOD_MOLLIE:
+            echo $this->render('rules/_mollie', ['store' => $store]);
             break;
     }
 ?>

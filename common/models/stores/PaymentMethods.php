@@ -40,6 +40,8 @@ class PaymentMethods extends ActiveRecord
     public const METHOD_AUTHORIZE = 'authorize';
     public const METHOD_STRIPE = 'stripe';
     public const METHOD_MERCADOPAGO = 'mercadopago';
+    public const METHOD_PAYPAL_STANDARD = 'paypalstandard';
+    public const METHOD_MOLLIE = 'mollie';
 
     public const FIELD_TYPE_INPUT = 'input';
     public const FIELD_TYPE_CHECKBOX = 'checkbox';

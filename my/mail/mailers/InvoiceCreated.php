@@ -1,5 +1,8 @@
 <?php
+
 namespace my\mail\mailers;
+
+
 use common\models\panels\Notifications;
 use yii\helpers\ArrayHelper;
 
@@ -20,6 +23,7 @@ class InvoiceCreated extends BaseMailer {
         $domain = ArrayHelper::getValue($this->options, 'domain');
         $ssl = ArrayHelper::getValue($this->options, 'ssl');
         $store = ArrayHelper::getValue($this->options, 'store');
+        $gateway = ArrayHelper::getValue($this->options, 'gateway');
 
         if ($project) {
             $this->to = $project->customer->email;
@@ -44,6 +48,12 @@ class InvoiceCreated extends BaseMailer {
             $this->notificationOptions = [
                 'item' => Notifications::ITEM_STORE,
                 'item_id' => $store->id
+            ];
+        } else if($gateway) {
+            $this->to = $gateway->customer->email;
+            $this->notificationOptions = [
+                'item' => Notifications::ITEM_GATEWAY,
+                'item_id' => $gateway->id
             ];
         } else {
             $this->notificationEmail = false;
