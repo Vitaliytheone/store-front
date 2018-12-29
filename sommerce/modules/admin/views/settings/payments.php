@@ -1,5 +1,6 @@
 <?php
 
+use sommerce\assets\NavigationPaymentAsset;
 use sommerce\modules\admin\components\Url;
 
 /* @var $this \yii\web\View */
@@ -14,6 +15,7 @@ use sommerce\modules\admin\components\Url;
 /* @var $formData array */
 /* @var $icon string */
 
+NavigationPaymentAsset::register($this);
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">
@@ -35,7 +37,7 @@ use sommerce\modules\admin\components\Url;
                         'paymentModel' => $paymentModel,
                         'submitUrl' => $submitUrl,
                         'cancelUrl' => $cancelUrl,
-                        'method' => $method,
+                        'method' => $method, //TODO del ?
                         'formData' => $formData,
                         'icon' => $icon,
                         'description' => $description,

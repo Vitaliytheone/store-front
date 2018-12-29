@@ -128,5 +128,43 @@ customModule.adminPayments = {
             },
             dialogsFade: true
         });
+
+        /*****************************************************************************************************
+         *                     Update payment position
+         *****************************************************************************************************/
+        (function (window, alert){
+
+            var updatePositionUrl = params.action_update_pos;
+
+            var $neatable = $('#nestable');
+            if ($neatable.length > 0) {
+
+                $neatable.nestable({
+                    maxDepth: 1,
+                    handleClass: 'dd-handle-pay',
+                }).on('change', updater);
+
+            }
+
+            function updater(e) {
+
+                var positions = $neatable.nestable('serialize');
+
+                $.ajax({
+                    url: updatePositionUrl,
+                    type: "POST",
+                    data: {
+                        positions: positions
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+                    }
+                });
+
+            }
+
+        })({}, function (){});
     }
 };
