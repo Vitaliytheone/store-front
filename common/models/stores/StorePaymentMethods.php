@@ -2,7 +2,6 @@
 
 namespace common\models\stores;
 
-use my\helpers\SpecialCharsHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -178,7 +177,6 @@ class StorePaymentMethods extends ActiveRecord
      */
     public function setOptions(array $options)
     {
-        //$options = SpecialCharsHelper::multiPurifier($options);
         if (($paymentMethodCurrency = PaymentMethodsCurrency::findOne([
                 'id' => $this->currency_id,
                 'method_id' => $this->method_id

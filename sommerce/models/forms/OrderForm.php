@@ -1,11 +1,10 @@
 <?php
+
 namespace sommerce\models\forms;
 
 use common\components\ActiveForm;
 use common\helpers\CurrencyHelper;
-use common\models\store\Carts;
 use common\models\store\Checkouts;
-use common\models\stores\PaymentGateways;
 use common\models\stores\PaymentMethods;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
@@ -23,8 +22,8 @@ use yii\helpers\ArrayHelper;
  * Class OrderForm
  * @package app\models\forms
  */
-class OrderForm extends Model {
-
+class OrderForm extends Model
+{
     /** @var string customer (buyer) email */
     public $email;
 
@@ -114,9 +113,11 @@ class OrderForm extends Model {
 
     /**
      * Validate data
-     * @param string[]|string $attributeNames
+     * @param null $attributeNames
      * @param bool $clearErrors
      * @return bool
+     * @throws InvalidConfigException
+     * @throws UnknownClassException
      */
     public function validate($attributeNames = null, $clearErrors = true)
     {
@@ -231,6 +232,7 @@ class OrderForm extends Model {
     /**
      * Save to cart
      * @return bool
+     * @throws InvalidConfigException
      * @throws UnknownClassException
      */
     public function save()
@@ -248,7 +250,6 @@ class OrderForm extends Model {
 
         // TODO упростить - ищем текущий метод доставя ИД из массива
         $storePayMethodArray = static::$_methods[$payMethod->method_name];
-        Yii::debug(static::$_methods, 'static-$methods2'); // TODO del
 
         $storePayMethod = StorePaymentMethods::findOne($storePayMethodArray['storePayId']);
         if (empty($storePayMethod)) {
@@ -336,6 +337,8 @@ class OrderForm extends Model {
             $this->addError($attribute, 'Cart can not be empty.');
             return false;
         }
+
+        return true;
     }
 
     /**

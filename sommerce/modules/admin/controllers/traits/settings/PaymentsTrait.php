@@ -54,7 +54,6 @@ trait PaymentsTrait
      */
     public function actionPaymentsSettings($method)
     {
-
         $request = yii::$app->getRequest();
         $paymentModel = EditPaymentMethodForm::findOne($method);
 
@@ -77,9 +76,11 @@ trait PaymentsTrait
             'method' => $method,
             'methodName' => $methodName,
             'paymentModel' => $paymentModel,
-            'formData' => $paymentModel->getMethodFormData(),
-            'icon' => $paymentMethod->icon,
-            'description' => $paymentMethod->settings_form_description,
+            'paymentData' => [
+                'formData' => $paymentModel->getMethodFormData(),
+                'icon' => $paymentMethod->icon,
+                'description' => $paymentMethod->settings_form_description,
+            ],
         ]);
     }
 

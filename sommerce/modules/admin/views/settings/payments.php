@@ -6,14 +6,12 @@ use sommerce\modules\admin\components\Url;
 /* @var $this \yii\web\View */
 /* @var $method string Current `settings payments` method */
 /* @var $submitUrl string */
-/* @var $description string */
 /* @var $cancelUrl string */
 /* @var $methodName string */
 /* @var $paymentModel \sommerce\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $paymentMethods[] \sommerce\modules\admin\models\forms\EditPaymentMethodForm */
 /* @var $availableMethods array */
-/* @var $formData array */
-/* @var $icon string */
+/* @var $paymentData array */
 
 NavigationPaymentAsset::register($this);
 ?>
@@ -30,17 +28,11 @@ NavigationPaymentAsset::register($this);
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <?php
                 if (isset($method)) {
-                    $submitUrl = Url::toRoute(['/settings/payments-settings', 'method' => $method]);
-                    $cancelUrl = Url::toRoute(['/settings/payments']);
-
                     echo $this->render('layouts/payments/_edit_payment_method', [
                         'paymentModel' => $paymentModel,
-                        'submitUrl' => $submitUrl,
-                        'cancelUrl' => $cancelUrl,
-                        'method' => $method, //TODO del ?
-                        'formData' => $formData,
-                        'icon' => $icon,
-                        'description' => $description,
+                        'submitUrl' => Url::toRoute(['/settings/payments-settings', 'method' => $method]),
+                        'cancelUrl' => Url::toRoute(['/settings/payments']),
+                        'paymentData' => $paymentData,
                     ]);
 
                 } else {

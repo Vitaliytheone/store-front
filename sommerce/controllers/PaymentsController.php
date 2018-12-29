@@ -2,7 +2,6 @@
 
 namespace sommerce\controllers;
 
-
 use common\models\stores\PaymentMethods;
 use sommerce\components\payments\Payment;
 use yii\helpers\ArrayHelper;
