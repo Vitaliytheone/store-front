@@ -41,6 +41,12 @@ class PaymentMethods extends ActiveRecord
     public const METHOD_STRIPE = 'stripe';
     public const METHOD_MERCADOPAGO = 'mercadopago';
 
+    public const FIELD_TYPE_INPUT = 'input';
+    public const FIELD_TYPE_CHECKBOX = 'checkbox';
+    public const FIELD_TYPE_MULTI_INPUT = 'multi_input';
+    public const FIELD_TYPE_SELECT = 'select';
+    public const FIELD_TYPE_TEXTAREA = 'textarea';
+
     public static $methodsNames = [];
 
     /** @var array all method_name */
@@ -179,7 +185,7 @@ class PaymentMethods extends ActiveRecord
      * Get all payment methods with options
      * @return static[]
      */
-    public static function getMethods():array
+    public static function getMethods(): array
     {
         if (empty(static::$methods)) {
             static::$methods = static::find()->all();
