@@ -50,6 +50,7 @@ class SettingsController extends CustomController
                     'theme-update-style',
                     'add-payment-method',
                     'update-payment-positions',
+                    'delete-invalid-currency',
                 ]
             ],
             'verbs' => [
@@ -61,11 +62,12 @@ class SettingsController extends CustomController
                     'theme-update-style' => ['POST'],
                     'add-payment-method' => ['POST'],
                     'update-payment-positions' => ['POST'],
+                    'delete-invalid-currency' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style', 'add-payment-method','update-payment-positions',],
+                'only' => ['theme-update-style', 'add-payment-method','update-payment-positions','delete-invalid-currency'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],

@@ -183,17 +183,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPaymentMethods()
-    {
-        // TODO delete after checked !!!!!!!!!!!!!!!!!!!!!!!
-        // delete after checked !!!!!!!!!!!!!!!!!!!!!!!
-        // delete after checked !!!!!!!!!!!!!!!!!!!!!!!
-        // delete after checked !!!!!!!!!!!!!!!!!!!!!!!
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getStorePaymentMethods()
     {
         return $this->hasMany(StorePaymentMethods::class, ['store_id' => 'id']);

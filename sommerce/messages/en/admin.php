@@ -249,10 +249,12 @@ return [
     'settings.general_save' => 'Save changes',
 
     'settings.general_delete_agree' => 'Are your sure that your want to delete this image?',
+    'settings.general_delete_payments_agree' => 'This action will remove all unsupported payment methods and their settings. Are you sure?',
     'settings.general_delete_submit' => 'Delete',
     'settings.general_delete_cancel' => 'Cancel',
 
     'settings.message_settings_updated' => 'Settings was successfully updated!',
+    'settings.message_payments_deleted' => 'Image was successfully deleted!',
     'settings.message_image_deleted' => 'Image was successfully deleted!',
     'settings.message_image_delete_error' => 'Error while deleting image!',
     'settings.message_cdn_upload_error' => 'Error uploading file to CDN!',
