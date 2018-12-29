@@ -311,7 +311,7 @@ class Sites extends ActiveRecord implements ProjectInterface
      */
     public function isInactive()
     {
-        if($this->isExpired()) {
+        if ($this->checkExpired()) {
             return true;
         }
 
