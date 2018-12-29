@@ -27,8 +27,6 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
                 $paymentMethodCurrency->method_id = $method['id'];
                 $paymentMethodCurrency->currency = $currency;
                 $paymentMethodCurrency->position = $method['position'];
-                // TODO считаю что не нужно, тут должен хранится шаблон как в паймент_метод, а не настройки как в сторе_паймент_метод
-               // $paymentMethodCurrency->settings_form = $method['options'];
                 $paymentMethodCurrency->created_at = time();
                 $paymentMethodCurrency->updated_at = time();
                 $paymentMethodCurrency->save(false);
@@ -42,12 +40,15 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
         $this->dropColumn(DB_STORES . '.payment_methods', 'position');
 
         $this->alterColumn(DB_STORES . '.payment_methods', 'name', $this->string(255)->notNull());
+        $this->alterColumn(DB_STORES . '.payment_methods', 'method_name', $this->string(255)->notNull());
+        $this->alterColumn(DB_STORES . '.payment_methods', 'class_name', $this->string(255)->notNull());
+        $this->alterColumn(DB_STORES . '.payment_methods', 'url', $this->string(255)->notNull());
         $this->alterColumn(DB_STORES . '.payment_methods', 'settings_form', $this->text()->null());
 
+        $this->addColumn(DB_STORES . '.payment_methods', 'icon', $this->string(64));
         $this->addColumn(DB_STORES . '.payment_methods', 'addfunds_form', $this->text()->null());
         $this->addColumn(DB_STORES . '.payment_methods', 'settings_form_description', $this->text()->null());
         $this->addColumn(DB_STORES . '.payment_methods', 'manual_callback_url', $this->smallInteger(1)->notNull()->defaultValue(0));
-        $this->addColumn(DB_STORES . '.payment_methods', 'icon', $this->string(64));
         $this->addColumn(DB_STORES . '.payment_methods', 'created_at', $this->integer(11)->null());
         $this->addColumn(DB_STORES . '.payment_methods', 'updated_at', $this->integer(11)->null());
     }
