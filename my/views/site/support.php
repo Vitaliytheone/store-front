@@ -23,9 +23,9 @@
 <div class="row">
     <div class="col-lg-8">
         <?php if (!empty($note)) : ?>
-            <!-- <div class="alert alert-info"> -->
+            <div class="alert alert-info">
                 <?= $note ?>
-            <!-- </div> -->
+            </div>
         <?php endif; ?>
         <?php if (!empty($tickets['models'])): ?>
             <table class="table table-bordered table-hover">
