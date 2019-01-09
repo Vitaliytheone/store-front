@@ -96,6 +96,7 @@ class PaymentMethods extends ActiveRecord
     const METHOD_WEBMONEY_RUB = 55;
     const METHOD_WEBMONEY_EUR = 56;
     const METHOD_PERFECT_MONEY_EUR = 57;
+    const METHOD_PAYPAL_GATEWAY = 100;
 
 
     use UnixTimeFormatTrait;

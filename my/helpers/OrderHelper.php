@@ -9,7 +9,11 @@ use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
 use common\models\gateways\Sites;
+use common\models\panels\Customers;
 use common\models\panels\Languages;
+use common\models\panels\PanelPaymentMethods;
+use common\models\panels\PaymentMethods;
+use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
@@ -1127,6 +1131,38 @@ class OrderHelper {
             $order->save(false);
             return false;
         }
+
+        $paypalGatewayMethod = PaymentMethods::findOne(PaymentMethods::METHOD_PAYPAL_GATEWAY);
+        if ($paypalGatewayMethod) {
+            $projects = Project::find()
+                ->andWhere(['cid' => $order->cid, 'act' => Project::STATUS_ACTIVE])
+                ->andWhere("db <> ''")
+                ->all();
+            foreach ($projects as $project) {
+                $currency = PaymentMethodsCurrency::findOne([
+                    'currency' => $project->getCurrencyCode(),
+                    'method_id' => $paypalGatewayMethod->id,
+                ]);
+
+                if (!$currency) {
+                    continue;
+                }
+
+                $paypalGateway = PanelPaymentMethods::findOne(['panel_id' => $project->id, 'method_id' => $paypalGatewayMethod->id]);
+
+                if (!$paypalGateway) {
+                    $paypalGateway = new PanelPaymentMethods();
+                    $paypalGateway->currency_id = $currency->id;
+                    $paypalGateway->method_id = $paypalGatewayMethod->id;
+                    $paypalGateway->panel_id = $project->id;
+                    $paypalGateway->name = $paypalGatewayMethod->name;
+                    $paypalGateway->setOptions();
+                    $paypalGateway->visibility = PanelPaymentMethods::VISIBILITY_DISABLED;
+                    $paypalGateway->save(false);
+                }
+            }
+        }
+
 
         return true;
     }

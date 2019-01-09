@@ -2,6 +2,7 @@
 
 return [
     '/' => 'page/index',
+    '/frozen' => 'site/frozen',
     '/index' => 'page/index',
     '/admin/logout' => 'admin/site/logout',
     '/admin/frozen' => 'admin/site/frozen',

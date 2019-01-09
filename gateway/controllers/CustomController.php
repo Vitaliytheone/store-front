@@ -76,7 +76,7 @@ class CustomController extends CommonController
     public function beforeAction($action)
     {
         // Redirect frozen gateway to `frozen page`
-        if ($this->gateway->isInactive() && $action->id !== 'frozen') {
+        if ($this->gateway->isInactive() && !in_array($action->id, ['frozen'])) {
             $this->redirect(Url::to('/frozen'));
         }
 
