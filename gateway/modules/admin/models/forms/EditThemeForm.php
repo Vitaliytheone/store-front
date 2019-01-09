@@ -228,7 +228,12 @@ class EditThemeForm extends Model
             sort($folder);
         }
 
-        $this->_filesTree['Templates'] = ArrayHelper::merge($this->_filesTree['Templates'], ArrayHelper::getColumn($customFiles, 'name'));
+        foreach (ArrayHelper::getColumn($customFiles, 'name') as $file) {
+            if (in_array($file, $this->_filesTree[static::FOLDER_LAYOUTS]) || in_array($file, $this->_filesTree[static::FOLDER_TEMPLATES])) {
+                continue;
+            }
+            $this->_filesTree[static::FOLDER_TEMPLATES][] = $file;
+        }
 
         // Populate files by files data
         foreach ($this->_filesTree as &$folder) {
