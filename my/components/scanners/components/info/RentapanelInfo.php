@@ -21,8 +21,8 @@ class RentapanelInfo extends BasePanelInfo
 
         $matchesApiLink = [];
         $matchesServicesLink = [];
-        preg_match('/<a href="api_docs">\s*API\s*<\/a>/', $content, $matchesApiLink);
-        preg_match('/<a href="services">\s*Services\s*<\/a>/', $content, $matchesServicesLink);
+        preg_match('/<a href="api_docs">\s*API\s*<\/a>/i', $content, $matchesApiLink);
+        preg_match('/<a href="services">\s*Services\s*<\/a>/i', $content, $matchesServicesLink);
 
         if (empty($matchesApiLink) || empty($matchesServicesLink)) {
             return false;

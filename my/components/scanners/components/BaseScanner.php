@@ -262,7 +262,7 @@ abstract class BaseScanner extends Component
         $taskTime = time() - $taskTime;
         echo ( "------------------------" . PHP_EOL);
         echo ( "Estimated task time, seconds [" . $taskTime . "]" . PHP_EOL);
-        echo ( "Total domains added: [ " . $domainsAddedCount . "from " . $domainsProcessedCount . " checked" . " ]" . PHP_EOL);
+        echo ( "Total domains added: [ " . $domainsAddedCount . " from " . $domainsProcessedCount . " checked" . " ]" . PHP_EOL);
         exit;
     }
 
