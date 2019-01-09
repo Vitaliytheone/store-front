@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
 import PackageModal from "./modals/PackageModal";
+import PropTypes from "prop-types";
 
 class AddPackage extends Component {
   state = {
@@ -30,7 +31,7 @@ class AddPackage extends Component {
           </button>
         </div>
         <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop="static" keyboard={false}>
-          <Formik onSubmit={this.handleSubmit} initialValues={{ name: "", price: "", quantity: "", overflow: "", availability: "Enabled", mode: "Auto", provider: "bulkfollows.com" }}>
+          <Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
             <Form>
               <ModalHeader toggle={this.toggle}>Create package</ModalHeader>
               <PackageModal />
@@ -47,5 +48,28 @@ class AddPackage extends Component {
       </React.Fragment>;
   }
 }
+
+
+AddPackage.propTypes = {
+  name: PropTypes.string,
+  price: PropTypes.number,
+  quantity: PropTypes.number,
+  overflow: PropTypes.number,
+  availability: PropTypes.number,
+  mode: PropTypes.string,
+  provider: PropTypes.string
+};
+
+AddPackage.defaultProps = {
+  initialValues: {
+    name: " ",
+    price: 0.00,
+    quantity: 0,
+    overflow: 0,
+    availability: 1,
+    mode: "Auto",
+    provider: "bulkfollows.com"
+  }
+};
 
 export default AddPackage;

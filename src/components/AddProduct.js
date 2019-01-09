@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
 import ProductModal from "./modals/ProductModal";
+import PropTypes from 'prop-types';
 
 class AddProduct extends Component {
   state = {
@@ -46,10 +47,7 @@ class AddProduct extends Component {
         >
           <Formik
             onSubmit={this.handleSubmit}
-            initialValues={{
-              name: " ",
-              visibility: "Enabled"
-            }}
+            initialValues={this.props.initialValues}
           >
             <Form>
               <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
@@ -69,5 +67,19 @@ class AddProduct extends Component {
     );
   }
 }
+
+
+AddProduct.propTypes = {
+    name: PropTypes.string,
+    visibility: PropTypes.number
+}
+
+AddProduct.defaultProps = { 
+    initialValues: { 
+      name: " ",
+      visibility: 1
+  } 
+};
+
 
 export default AddProduct;

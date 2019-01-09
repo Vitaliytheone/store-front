@@ -153,7 +153,7 @@ class CategorieProducts extends Component {
   };
 
   handleDeletePackage = (productIndex) => (packageIndex) => async () => {
-      const newData = [...this.state.data];
+    const newData = [...this.state.data];
      newData[productIndex].packages.splice((packageIndex), 1);
      newData[productIndex].packages = newData[productIndex].packages.map((pack, index) => ({
         ...pack, position: index
@@ -161,14 +161,11 @@ class CategorieProducts extends Component {
       this.setState({
         data: newData
       });
-      
-      console.log(newData);
       const response = await deletePackage(productIndex, packageIndex, newData[productIndex].packages);
       newData[productIndex].packages = response.data;
-           this.setState({ 
-             data: newData
-    });
-    
+    //        this.setState({ 
+    //          data: newData
+    // });
   }
 
   render() {
