@@ -145,10 +145,12 @@ trait ThemesTrait {
             throw new NotFoundHttpException();
         }
 
-        if (!ThemesFiles::deleteAll([
+        $file = ThemesFiles::findOne([
             'theme_id' => $themeModel->id,
             'name' => $file
-        ])) {
+        ]);
+
+        if (!$file || !$file->delete()) {
             $this->refresh();
         }
 

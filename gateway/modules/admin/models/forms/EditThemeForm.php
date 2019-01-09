@@ -6,7 +6,6 @@ use admin\models\search\ThemesSearch;
 use common\models\gateway\ThemesFiles;
 use common\models\gateways\DefaultThemes;
 use common\models\gateways\Sites;
-use gateway\helpers\ThemesFilesHelper;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -40,8 +39,12 @@ class EditThemeForm extends Model
             'page.twig',
             '404.twig',
         ],
-        /*self::FOLDER_CSS => [],
-        self::FOLDER_JS => [],*/
+        self::FOLDER_CSS => [
+            'styles.css',
+        ],
+        self::FOLDER_JS => [
+            'main.js',
+        ],
     ];
 
     /** @var  string */
