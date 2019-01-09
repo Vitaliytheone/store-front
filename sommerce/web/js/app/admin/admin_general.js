@@ -85,41 +85,26 @@ customModule.adminGeneral = {
             });
         });
         /*****************************************************************************************************
-         *                      Delete (mark as deleted) Page
+         *                      Delete unsupported currency
          *****************************************************************************************************/
-        var $modalPay = $('#delete-modal-pay'),
-            $modalLoader = $modalPay.find('.modal-loader'),
-            $buttonDelete = $modalPay.find('#feature-delete'),
-            actionUrl,
-            successRedirectUrl;
+        var payChange = false;
 
-        $buttonDelete.on('click', function(){
-            $modalLoader.removeClass('hidden');
-            $.ajax({
-                url: actionUrl,
-                type: "POST",
-                success: function (data, textStatus, jqXHR){
-                    //Success
-                    _.delay(function(){
-                        $(location).attr('href', successRedirectUrl);
-                    }, 500);
-                },
-                error: function (jqXHR, textStatus, errorThrown){
-                    $modalLoader.addClass('hidden');
-                    $modalPay.modal('hide');
-                    console.log('Error on service save', jqXHR, textStatus, errorThrown);
-                }
-            });
+        $('#settingsgeneralform-currency').on('change', function (e) {
+            payChange = true;
         });
 
-        $modalPay.on('show.bs.modal', function (event){
-            var button = $(event.relatedTarget);
-            actionUrl = button.data('action_url');
-            successRedirectUrl = $modalPay.data('success_redirect');
-        });
-
-        $modalPay.on('hidden.bs.modal', function (){
-            actionUrl = null;
+        $('button[name="save-button"]').on('click', function (e) {
+            if (payChange === true) {
+                var $form = $(this).closest('form');
+                e.preventDefault();
+                $('#delete-modal-pay').modal({
+                    backdrop: 'static',
+                    // keyboard: false
+                })
+                    .on('click', '#payments-delete', function (e) {
+                        $form.trigger('submit');
+                    });
+            }
         });
     }
 };

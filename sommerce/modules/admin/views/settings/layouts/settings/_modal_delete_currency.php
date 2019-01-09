@@ -6,8 +6,8 @@ use sommerce\modules\admin\components\Url;
 
 ?>
 
-<div class="modal fade" id="delete-modal-pay" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
-     data-action_url="<?= Url::toRoute(['/settings/delete-invalid-currency']) ?>" data-success_redirect="<?= Url::toRoute(['/settings'])?>">
+<div class="modal fade" id="delete-modal-pay" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<!--     data-action_url="--><?//= Url::toRoute(['/settings/delete-invalid-currency']) ?><!--" data-success_redirect="--><?//= Url::toRoute(['/settings'])?><!--">-->
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-loader hidden"></div>
@@ -17,7 +17,7 @@ use sommerce\modules\admin\components\Url;
                         <span class="fa fa-trash-o"></span>
                         <p><?= Yii::t('admin', 'settings.general_delete_payments_agree') ?></p>
                         <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal"><?= Yii::t('admin', 'settings.general_delete_cancel') ?></button>
-                        <button class="btn btn-danger m-btn--air" id="feature-delete"><?= Yii::t('admin', 'settings.general_delete_submit') ?></button>
+                        <a href="#" class="btn btn-danger m-btn--air" id="payments-delete"><?= Yii::t('admin', 'settings.general_delete_submit') ?></a>
                     </div>
                 </div>
             </div>
