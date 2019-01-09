@@ -38,6 +38,7 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
 
         $this->dropColumn(DB_STORES . '.payment_methods', 'currencies');
         $this->dropColumn(DB_STORES . '.payment_methods', 'position');
+        $this->dropColumn(DB_STORES . '.payment_methods', 'visibility');
 
         $this->alterColumn(DB_STORES . '.payment_methods', 'name', $this->string(255)->notNull());
         $this->alterColumn(DB_STORES . '.payment_methods', 'method_name', $this->string(255)->notNull());

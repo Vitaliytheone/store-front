@@ -5,6 +5,9 @@ ALTER TABLE payment_methods
   DROP COLUMN `position`;
 
 ALTER TABLE payment_methods
+  DROP COLUMN `visibility`;
+
+ALTER TABLE payment_methods
   CHANGE `method` `method_name` varchar(255) NOT NULL;
 
 ALTER TABLE payment_methods

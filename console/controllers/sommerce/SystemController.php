@@ -334,13 +334,21 @@ class SystemController extends CustomController
         foreach ($methods as $key => $methodName) {
             $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
             $storeMethod = StorePaymentMethods::findOne($key);
+            if (!$method || !$storeMethod) {
+                continue;
+            }
+            $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $method->id]);
 
             $lastPositions = StorePaymentMethods::find()
                 ->where(['store_id' => $storeMethod->store_id])
                 ->max('position');
 
             $storeMethod->method_id = $method->id;
+            $storeMethod->currency_id = $storeCurrency->id;
+            $storeMethod->name = $method->name;
             $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
+            $storeMethod->created_at = time();
+            $storeMethod->updated_at = time();
             $storeMethod->save(false);
 
             $count++;

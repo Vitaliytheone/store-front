@@ -18,10 +18,12 @@ use yii\behaviors\TimestampBehavior;
  * @property string $class_name
  * @property string $url
  * @property string $settings_form
+ * @property string $settings_form_description
  * @property string $icon
  * @property string $addfunds_form
- * @property string $settings_form_description
  * @property integer $manual_callback_url
+ * @property integer created_at
+ * @property integer updated_at
  */
 class PaymentMethods extends ActiveRecord
 {
@@ -179,7 +181,6 @@ class PaymentMethods extends ActiveRecord
      */
     public static function getOneMethod(int $method): string
     {
-        Yii::debug($method);
         return ArrayHelper::getValue(static::getAllMethods(), $method);
     }
 

@@ -181,7 +181,7 @@ class EditStoreSettingsForm extends Stores
             if (!$fileValidator->validate($fileInstance, $message)) {
                 $this->addError($attribute, $message);
                 return false;
-            };
+            }
 
             $tmpFilePath = $fileInstance->tempName;
             $mime = $fileInstance->type;

@@ -6,6 +6,7 @@ use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use Yii;
 use sommerce\components\payments\BasePayment;
@@ -44,12 +45,12 @@ class Paypalstandard extends BasePayment
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -63,7 +64,8 @@ class Paypalstandard extends BasePayment
             'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
             'currency_code' => $store->currency,
             'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
+//            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
+            'notify_url' => 'http://2718c64b.ngrok.io/paypalstandard/' . $checkout->id,
             'cancel_return' => SiteHelper::hostUrl() . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
@@ -78,11 +80,7 @@ class Paypalstandard extends BasePayment
      */
     public function processing($store)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYPAL_STANDARD,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYPAL_STANDARD);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -92,7 +90,7 @@ class Paypalstandard extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -105,7 +103,7 @@ class Paypalstandard extends BasePayment
     /**
      * Processing standard payments result
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array|boolean array or false if curl failure
      */
     protected function standardProcessing($store, $details)
@@ -138,7 +136,7 @@ class Paypalstandard extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (strtolower($business) != strtolower(ArrayHelper::getValue($paymentMethodOptions, 'email'))) {
             return [

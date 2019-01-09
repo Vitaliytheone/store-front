@@ -31,7 +31,7 @@ class Mollie extends BasePayment
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $amount = number_format((float)$checkout->price, 2, '.', '');
 
@@ -54,7 +54,8 @@ class Mollie extends BasePayment
                 ],
                 'description' => static::getDescription($checkout->id),
                 'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
+//                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
+                'webhookUrl' => 'http://2718c64b.ngrok.io/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
@@ -86,11 +87,7 @@ class Mollie extends BasePayment
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_MOLLIE,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_MOLLIE);
 
         if (empty($paymentMethod)) {
             return [
@@ -99,7 +96,7 @@ class Mollie extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         try {
             $mollie = new MollieApiClient();

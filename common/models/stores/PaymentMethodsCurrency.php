@@ -152,6 +152,7 @@ class PaymentMethodsCurrency extends ActiveRecord
     }
 
     /**
+     * Get currency ids of passed currency
      * @param string $currency
      * @return array
      */

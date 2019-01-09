@@ -81,6 +81,10 @@ class EditPaymentMethodForm extends StorePaymentMethods
      */
     public function changeSettings($postData): bool
     {
+        if (empty($postData[$this->formName()])) {
+            return false;
+        }
+
         $data = $postData[$this->formName()];
         if (!$this->validateOptions($data)) {
             return false;
