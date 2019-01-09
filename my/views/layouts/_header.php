@@ -52,6 +52,13 @@
                             ]) ?>
                         </li>
                     <?php endif; ?>
+                    <?php if ($user && $user->can('gateway')) : ?>
+                        <li>
+                            <?= Html::a('<i class="fa fa-exchange fa-fw"></i> ' . Yii::t('app', 'layouts.header.gateway'), '/gateways', [
+                                'class' => $activeTab == 'gateway' ? 'active' : null,
+                            ]) ?>
+                        </li>
+                    <?php endif; ?>
                     <?php if ($user && $user->can('domains')) : ?>
                     <li>
                         <?= Html::a('<i class="fa fa fa-globe fa-fw"></i> ' . Yii::t('app', 'layouts.header.domains'), '/domains', [

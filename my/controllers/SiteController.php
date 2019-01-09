@@ -9,7 +9,7 @@ use my\components\ActiveForm;
 use my\components\bitcoin\Bitcoin;
 use common\components\filters\DisableCsrfToken;
 use my\components\payments\Paypal;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use common\models\panels\Content;
 use my\models\forms\ChangeEmailForm;
 use my\models\forms\ChangePasswordForm;

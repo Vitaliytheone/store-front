@@ -2,7 +2,7 @@
 namespace my\components\ddos;
 
 use Yii;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use yii\helpers\Json;
 
 /**

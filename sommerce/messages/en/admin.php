@@ -321,9 +321,12 @@ return [
     'settings.payments_bitcoin_gateway_secret' => 'Gateway secret',
 
     'settings.payments_edit_paypal' => 'Edit PayPal',
+    'settings.payments_edit_paypalstandard' => 'Edit PayPal Standard',
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
     'settings.payments_paypal_guide_2' => 'Get your {api_credentials_url}.',
     'settings.payments_paypal_guide_3' => 'Enter your PayPal API details below.',
+    'settings.payments_paypal_standard_guide_1' => 'Enter your PayPal Email address below.',
+    'settings.payments_paypal_email' => 'Email',
     'settings.payments_paypal_username' => 'Api username',
     'settings.payments_paypal_password' => 'Api password',
     'settings.payments_paypal_signature' => 'Api signature',
@@ -425,6 +428,10 @@ return [
     'settings.payments_mercadopago_test_mode' => 'Use test mode',
 
     'settings.payments.multi_input.add_description' => 'Add descriptions',
+    'settings.payments_edit_mollie' => 'Edit Mollie',
+    'settings.payments_mollie_api' => 'Enter your API key',
+    'settings.payments_mollie_guide_1' => 'Go to Mollie website → {website_url} and get your <b>Live API key</b>',
+    'settings.payments_mollie_guide_2' => 'If you want to test payment system, use <b>Test API key</b> instead.',
 
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',

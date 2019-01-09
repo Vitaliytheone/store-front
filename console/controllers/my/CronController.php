@@ -3,6 +3,7 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
+use common\models\gateways\Sites;
 use common\models\panel\PaymentsLog;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
@@ -19,6 +20,7 @@ use common\models\stores\Stores;
 use console\components\crons\CronFreeSslOrder;
 use console\components\crons\CronPanelRenewSslOrder;
 use console\components\payments\PaymentsFee;
+use console\components\terminate\TerminateGateway;
 use console\components\terminate\TerminatePanel;
 use console\components\terminate\TerminateStore;
 use my\components\payments\Paypal;
@@ -70,6 +72,7 @@ class CronController extends CustomController
                 Orders::ITEM_PROLONGATION_DOMAIN,
                 Orders::ITEM_FREE_SSL,
                 Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_GATEWAY,
             ]
         ])->all();
 
@@ -125,6 +128,10 @@ class CronController extends CustomController
                         if (Yii::$app->params['free_ssl.prolong']) {
                             OrderHelper::prolongationFreeSsl($order);
                         }
+                    break;
+
+                    case Orders::ITEM_BUY_GATEWAY:
+                        OrderHelper::gateway($order);
                     break;
                 }
             } catch (Exception $e) {
@@ -195,6 +202,7 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_TRIAL_STORE,
                 Orders::ITEM_FREE_SSL,
                 Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_GATEWAY,
             ]
         ])->run();
 
@@ -210,6 +218,9 @@ class CronController extends CustomController
             strtotime("-1 month", time())
         ])->run();
         Yii::$container->get(TerminatePanel::class, [
+            strtotime("-1 month", time())
+        ])->run();
+        Yii::$container->get(TerminateGateway::class, [
             strtotime("-1 month", time())
         ])->run();
     }
@@ -254,6 +265,21 @@ class CronController extends CustomController
         foreach ($stores as $store) {
             $store->refresh();
             $store->checkExpired();
+        }
+
+        $sites = Sites::find()
+            ->andWhere([
+                'status' => Sites::STATUS_ACTIVE,
+            ])
+            ->andWhere('expired_at < :currentTime', [
+                ':currentTime' => $date
+            ])
+            ->all();
+
+        /** @var Stores $store */
+        foreach ($sites as $site) {
+            $site->refresh();
+            $site->checkExpired();
         }
     }
 

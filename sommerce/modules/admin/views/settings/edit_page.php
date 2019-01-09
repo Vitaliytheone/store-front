@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use sommerce\modules\admin\components\Url;
-use \sommerce\assets\PagesAsset;
+use sommerce\assets\PagesAsset;
 
 /* @var $this \yii\web\View */
 /* @var $pageForm \sommerce\modules\admin\models\forms\EditPageForm */
