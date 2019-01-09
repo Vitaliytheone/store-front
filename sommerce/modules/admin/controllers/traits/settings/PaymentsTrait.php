@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use common\models\store\ActivityLog;
 use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
@@ -144,7 +145,7 @@ trait PaymentsTrait
     }
 
     /**
-     * Update Navigation items positions after drag&drop AJAX action
+     * Update Store Payments methods positions after drag&drop AJAX action
      * @return array
      * @throws BadRequestHttpException
      * @throws \Throwable
@@ -162,4 +163,42 @@ trait PaymentsTrait
 
         return [true];
     }
+
+
+    /**
+     * Delete payments method doesnt support by store->currency AJAX action
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     */
+    public function actionDeleteInvalidCurrency()
+    {
+
+        $storeId = yii::$app->store->getId();
+        $currency = $this->store->currency;
+
+        $model = StorePaymentMethods::find()->where(['store_id' => $storeId])->andWhere(['!=', 'currency_id', $storeId])->all();
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        $currentCurrency = $this->currency;
+
+        if ($currentCurrency != $this->currency) {
+            $currencyMethods = array_keys(PaymentMethodsCurrency::getMethodsByCurrency($currentCurrency));
+
+            StorePaymentMethods::deleteAll(['currency_id' => $currencyMethods]);
+        }
+
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        ActivityLog::log($identity,ActivityLog::E_SETTINGS_PAYMENTS_SPM_CURRENCY_DELETED, $model->id, $model->name);
+
+        UiHelper::message(Yii::t('admin', 'settings.message_payments_deleted'));
+
+        return [true];
+    }
+
 }
