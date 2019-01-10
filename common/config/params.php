@@ -1,6 +1,6 @@
 <?php
 
-$serverIp = "54.37.239.222";
+$serverIp = "188.165.29.223";
 
 return [
     'time' => '10800',
@@ -51,6 +51,7 @@ return [
 
     'sommerce.twig.cachePath' => '@sommerce/runtime/twig/cache',
     'sommerce.assets.cachePath' => '@sommerce/web/assets',
+    'gateway.assets.cachePath' => '@gateway/web/assets',
     'my.assets.cachePath' => '@my/web/assets',
 
     'ahnames.my.ns' => [
@@ -146,7 +147,7 @@ return [
 
     'dns.checker.records' => [
         'A' => [
-            'ip' => '54.37.239.222',
+            'ip' => $serverIp,
         ],
         'CNAME' => [
             'target' => 'perfectpanel.com',

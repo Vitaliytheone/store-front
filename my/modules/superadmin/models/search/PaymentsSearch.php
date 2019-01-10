@@ -1,7 +1,9 @@
 <?php
+
 namespace superadmin\models\search;
 
-use common\helpers\PaymentHelper;
+
+use common\models\gateways\Sites;
 use common\models\panels\Params;
 use common\models\panels\Project;
 use common\models\panels\Orders;
@@ -13,15 +15,14 @@ use common\models\panels\InvoiceDetails;
 use common\models\panels\Payments;
 use Yii;
 use yii\data\Pagination;
-use yii\db\ActiveRecord;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class PaymentsSearch
  * @package superadmin\models\search
  */
-class PaymentsSearch extends Payments {
+class PaymentsSearch extends Payments
+{
 
     const SEARCH_TYPE_PAYMENT_ID = 1;
     const SEARCH_TYPE_INVOICE_ID = 2;
@@ -102,6 +103,7 @@ class PaymentsSearch extends Payments {
                         ['like', 'orders.domain', $searchQuery],
                         ['like', 'project.site', $searchQuery],
                         ['like', 'store.domain', $searchQuery],
+                        ['like', 'sites.domain', $searchQuery],
                     ]);
                     break;
                 case static::SEARCH_TYPE_PAYMENT_COMMENT:
@@ -134,6 +136,8 @@ class PaymentsSearch extends Payments {
                 InvoiceDetails::ITEM_BUY_TRIAL_STORE,
                 InvoiceDetails::ITEM_PROLONGATION_SSL,
                 InvoiceDetails::ITEM_PROLONGATION_DOMAIN,
+                InvoiceDetails::ITEM_BUY_GATEWAY,
+                InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
             ]) . ')'
         );
         $query->leftJoin(['project' => Project::tableName()], 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
@@ -144,6 +148,10 @@ class PaymentsSearch extends Payments {
         $query->leftJoin(['store' => Stores::tableName()], 'store.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
             InvoiceDetails::ITEM_PROLONGATION_STORE,
         ]) . ')');
+
+        $query->leftJoin(['sites' => Sites::tableName()], 'sites.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+                InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
+            ]) . ')');
 
         return $query;
     }
@@ -172,7 +180,7 @@ class PaymentsSearch extends Payments {
 
         $payments = $query->select([
                 'payments.*',
-                'COALESCE(orders.domain, project.site, store.domain) as domain'
+                'COALESCE(orders.domain, project.site, store.domain, sites.domain) as domain'
             ])
             ->offset($pages->offset)
             ->limit($pages->limit)
@@ -190,6 +198,8 @@ class PaymentsSearch extends Payments {
 
     /**
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public static function getMethods()
     {
@@ -287,6 +297,8 @@ class PaymentsSearch extends Payments {
     /**
      * Get aggregated methods
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getAggregatedMethods()
     {
@@ -315,6 +327,8 @@ class PaymentsSearch extends Payments {
     /**
      * Get payment method name
      * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getMethodName()
     {

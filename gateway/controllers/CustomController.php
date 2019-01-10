@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
-use yii\web\View;
+use gateway\components\View;
 
 /**
  * Custom controller for the Gateway
@@ -76,7 +76,7 @@ class CustomController extends CommonController
     public function beforeAction($action)
     {
         // Redirect frozen gateway to `frozen page`
-        if ($this->gateway->isInactive() && $action->id !== 'frozen') {
+        if ($this->gateway->isInactive() && !in_array($action->id, ['frozen'])) {
             $this->redirect(Url::to('/frozen'));
         }
 
@@ -211,6 +211,12 @@ class CustomController extends CommonController
             $renderer = $this->getView();
             if ($render && method_exists($renderer, 'renderContent')) {
                 $content = $renderer->renderContent($content, $params);
+            }
+
+            if (!is_file($layoutFile) && method_exists($renderer, 'renderContent')) {
+                return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
+                    'content' => $content,
+                ]));
             }
             return $renderer->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
                 'content' => $content,

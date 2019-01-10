@@ -116,6 +116,7 @@ class Paypal extends BasePayment
     public function checkout($payment)
     {
         $paymentMethodOptions = $this->getPaymentMethod()['options'];
+        $description = ArrayHelper::getValue($paymentMethodOptions, 'description', '');
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -139,13 +140,13 @@ class Paypal extends BasePayment
             'PAYMENTREQUEST_0_SHIPPINGAMT' => '0',
             'PAYMENTREQUEST_0_CURRENCYCODE' => $payment->currency,
             'PAYMENTREQUEST_0_ITEMAMT' => $amount,
-            'PAYMENTREQUEST_0_DESC' => $this->getDescription(),
+            'PAYMENTREQUEST_0_DESC' => $description,
             //'NOSHIPPING' => 1,
         ];
 
 
         $item = [
-            'L_PAYMENTREQUEST_0_NAME0' => $this->getDescription(),
+            'L_PAYMENTREQUEST_0_NAME0' => $description,
             'L_PAYMENTREQUEST_0_AMT0' => $amount,
             'L_PAYMENTREQUEST_0_QTY0' => '1'
         ];

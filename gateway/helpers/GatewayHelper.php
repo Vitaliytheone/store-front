@@ -56,24 +56,22 @@ class GatewayHelper {
 
         $themePath = $site->theme_folder;
 
-        $customThemePath = $themesPath . 'custom' . $sp . $site->id . $sp . $themePath . $sp;
+        $customThemeFiles = $site->getThemeFiles();
         $standardThemePath = $themesPath . 'default' . $sp . $themePath . $sp;
         $assetsPath = $assetsPath . $site->folder . $sp;
 
         FileHelper::removeDirectory($assetsPath);
         FileHelper::createDirectory($assetsPath);
 
-        if (is_dir($customThemePath)) {
-            foreach (FileHelper::findFiles($customThemePath, ['only' => ['*.js']]) as $filePath) {
-                $customScripts[basename($filePath)] = $filePath;
-            }
+        if (!empty($customThemeFiles)) {
+            foreach ($customThemeFiles as $customThemeFile) {
+                if (preg_match("/\.js$/uis", $customThemeFile['name'])) {
+                    $customScripts[$customThemeFile['name']] = $customThemeFile['content'];
+                }
 
-            foreach (FileHelper::findFiles($customThemePath, ['only' => ['*.css']]) as $filePath) {
-                $customStyles[basename($filePath)] = $filePath;
-            }
-
-            foreach (FileHelper::findFiles($customThemePath, ['only' => ['*.json']]) as $filePath) {
-                $customJson[basename($filePath)] = $filePath;
+                if (preg_match("/\.css$/uis", $customThemeFile['name'])) {
+                    $customStyles[$customThemeFile['name']] = $customThemeFile['content'];
+                }
             }
         }
 
@@ -105,7 +103,10 @@ class GatewayHelper {
 
         foreach ($standardStyles as $fileName => $filePath) {
             if (isset($customStyles[$fileName])) {
-                $filePath = $customStyles[$fileName];
+                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, $customStyles[$fileName])) {
+                    $css[] = $fileName;
+                }
+                continue;
             }
 
             if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {
@@ -115,7 +116,10 @@ class GatewayHelper {
 
         foreach ($standardScripts as $fileName => $filePath) {
             if (isset($customScripts[$fileName])) {
-                $filePath = $customScripts[$fileName];
+                if (file_put_contents($assetsPath . 'js' . $sp . $fileName, $customScripts[$fileName])) {
+                    $js[] = $fileName;
+                }
+                continue;
             }
 
             if (file_put_contents($assetsPath . 'js' . $sp . $fileName, file_get_contents($filePath))) {
