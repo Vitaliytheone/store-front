@@ -43,7 +43,7 @@ class EditThemeForm extends Model
             'styles.css',
         ],
         self::FOLDER_JS => [
-            'main.js',
+            'script.js',
         ],
     ];
 
