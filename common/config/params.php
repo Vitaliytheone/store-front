@@ -1,6 +1,6 @@
 <?php
 
-$serverIp = "54.37.239.222";
+$serverIp = "188.165.29.223";
 
 return [
     'time' => '10800',
@@ -146,7 +146,7 @@ return [
 
     'dns.checker.records' => [
         'A' => [
-            'ip' => '54.37.239.222',
+            'ip' => $serverIp,
         ],
         'CNAME' => [
             'target' => 'perfectpanel.com',

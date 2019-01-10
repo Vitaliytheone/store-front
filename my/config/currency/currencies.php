@@ -105,4 +105,8 @@ return [
         'name' => 'Iraqi dinar',
         'money_format' => 'د.ع{{value}}',
     ],
+    'TWD' => [
+        'name' => 'New Taiwan Dollars',
+        'money_format' => '${{value}}',
+    ],
 ];
