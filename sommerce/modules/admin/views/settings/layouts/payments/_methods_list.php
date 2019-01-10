@@ -33,14 +33,13 @@ use sommerce\helpers\UiHelper;
 
                     <li class="dd-item" data-id="<?= $method->id ?>">
                         <div class="dd-handle-pay table__drag ui-sortable-handle">
-<!--                            <img src="/img/grip.png" alt="" class="img-fluid" style="">-->
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <title>Drag-Handle</title>
                                 <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
                             </svg>
                         </div>
                         <div class="sommerce-settings__payment-cart m-portlet <?= $method->visibility ? '' : 'text-muted' ?>">
-                            <div class="row align-items-center">
+                            <div class="row align-items-center payment-main-block">
                                 <div class="col-12">
                                     <div class="payment-cart__preview">
                                         <img src="<?= $method->getMethodIcon() ?>" alt="" class="img-fluid" style="">
@@ -51,15 +50,15 @@ use sommerce\helpers\UiHelper;
                                     <div class="payment-cart__control d-flex justify-content-between align-items-center">
                                         <div>
                                             <div class="payment-cart__active">
-                                 <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
-                                     <label>
-                                        <input class="toggle-active" type="checkbox"
-                                               name="toggle-active" <?= UiHelper::toggleString($method->visibility, 'checked') ?>
-                                               data-payment_method="<?= $method->method_id ?>"
-                                               data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->id]) ?>">
-                                         <span></span>
-                                     </label>
-                                  </span>
+                                                <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
+                                                    <label>
+                                                        <input class="toggle-active" type="checkbox"
+                                                               name="toggle-active" <?= UiHelper::toggleString($method->visibility, 'checked') ?>
+                                                               data-payment_method="<?= $method->method_id ?>"
+                                                               data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method->id]) ?>">
+                                                        <span></span>
+                                                    </label>
+                                                </span>
                                             </div>
                                             <div class="payment-cart__actions">
                                                 <a href="<?= Url::toRoute(['/settings/payments-settings', 'method' => $method->id]) ?>"
