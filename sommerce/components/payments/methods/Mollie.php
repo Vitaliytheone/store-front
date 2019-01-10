@@ -20,9 +20,7 @@ use Mollie\Api\Resources\Payment;
  */
 class Mollie extends BasePayment
 {
-
     protected $_method = PaymentMethods::METHOD_MOLLIE;
-
 
     /**
      * Create checkout and redirect to Mollie pay site
@@ -54,8 +52,7 @@ class Mollie extends BasePayment
                 ],
                 'description' => static::getDescription($checkout->id),
                 'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-//                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
-                'webhookUrl' => 'http://2718c64b.ngrok.io/mollie',
+                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
@@ -230,5 +227,4 @@ class Mollie extends BasePayment
 
         PaymentsLog::log($this->_checkout->id, $response);
     }
-
 }

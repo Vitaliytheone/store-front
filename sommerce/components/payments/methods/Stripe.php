@@ -25,9 +25,10 @@ use common\models\stores\StorePaymentMethods;
  * Class Stripe
  * @package sommerce\components\payments\methods
  */
-class Stripe extends BasePayment {
-
+class Stripe extends BasePayment
+{
     const DEFAULT_IMAGE = 'https://stripe.com/img/documentation/checkout/marketplace.png';
+
     /**
      * @var string - url action
      */

@@ -16,8 +16,8 @@ use common\models\stores\StorePaymentMethods;
  * Class Yandexmoney
  * @package sommerce\components\payments\methods
  */
-class Yandexmoney extends BasePayment {
-
+class Yandexmoney extends BasePayment
+{
     /**
      * @var string - url action
      */

@@ -20,8 +20,8 @@ use common\models\stores\StorePaymentMethods;
  *
  * @package app\components\payments\methods
  */
-class Twocheckout extends BasePayment {
-
+class Twocheckout extends BasePayment
+{
     public $action;
     public $method = 'GET';
     public $redirectProcessing = false;

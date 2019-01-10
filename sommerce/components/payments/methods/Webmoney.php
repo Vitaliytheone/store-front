@@ -16,8 +16,8 @@ use common\models\stores\StorePaymentMethods;
  * Class Webmoney
  * @package sommerce\components\payments\methods
  */
-class Webmoney extends BasePayment {
-
+class Webmoney extends BasePayment
+{
     /**
      * @var string - url action
      */

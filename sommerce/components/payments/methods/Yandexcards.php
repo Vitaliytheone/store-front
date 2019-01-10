@@ -12,8 +12,8 @@ use common\models\stores\StorePaymentMethods;
  * Class Yandexcards
  * @package app\components\payments\methods
  */
-class Yandexcards extends Yandexmoney {
-
+class Yandexcards extends Yandexmoney
+{
     /**
      * @var string - url action
      */

@@ -16,8 +16,8 @@ use common\models\stores\StorePaymentMethods;
  * Class Paywant
  * @package sommerce\components\payments\methods
  */
-class Paywant extends BasePayment {
-
+class Paywant extends BasePayment
+{
     /**
      * @var string - url action
      */

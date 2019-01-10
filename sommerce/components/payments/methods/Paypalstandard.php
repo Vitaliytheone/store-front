@@ -19,7 +19,6 @@ use yii\helpers\ArrayHelper;
  */
 class Paypalstandard extends BasePayment
 {
-
     /**
      * @var string - url action
      */
@@ -64,8 +63,7 @@ class Paypalstandard extends BasePayment
             'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
             'currency_code' => $store->currency,
             'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-//            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'notify_url' => 'http://2718c64b.ngrok.io/paypalstandard/' . $checkout->id,
+            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
             'cancel_return' => SiteHelper::hostUrl() . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,

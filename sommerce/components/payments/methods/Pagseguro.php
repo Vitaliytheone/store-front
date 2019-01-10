@@ -25,8 +25,8 @@ use common\models\stores\StorePaymentMethods;
  * Class Pagseguro
  * @package sommerce\components\payments\methods
  */
-class Pagseguro extends BasePayment {
-
+class Pagseguro extends BasePayment
+{
     /**
      * @var string - url action
      */
@@ -45,7 +45,8 @@ class Pagseguro extends BasePayment {
      * @param Stores $store
      * @param string $email
      * @param StorePaymentMethods $details
-     * @return array
+     * @return array|mixed
+     * @throws Exception
      */
     public function checkout($checkout, $store, $email, $details)
     {
@@ -80,7 +81,8 @@ class Pagseguro extends BasePayment {
     /**
      * Processing payments result
      * @param Stores $store
-     * @return array
+     * @return array|mixed
+     * @throws Exception
      */
     public function processing($store)
     {
