@@ -36,7 +36,6 @@ class View extends \yii\web\View {
             $file = Yii::getAlias($view);
         } elseif (strncmp($view, '//', 2) === 0) {
             // e.g. "//layouts/main"
-            $file = Yii::$app->getViewPath() . DIRECTORY_SEPARATOR . ltrim($view, '/');
             $file = $this->getThemeViewFile($view);
         } elseif (strncmp($view, '/', 1) === 0) {
             $file = $this->getThemeViewFile($view);
@@ -78,7 +77,11 @@ class View extends \yii\web\View {
 
         $viewsPath = Yii::getAlias('@gateway' . DIRECTORY_SEPARATOR . 'views');
 
-        return $viewsPath . $view;
+        if (is_file($viewsPath . $view)) {
+            return $viewsPath . $view;
+        }
+        
+        return $view;
     }
 
     /**

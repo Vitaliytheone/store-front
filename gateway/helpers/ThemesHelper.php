@@ -1,8 +1,10 @@
 <?php
 namespace gateway\helpers;
 
+use common\models\gateway\ThemesFiles;
 use common\models\gateways\Sites;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class ThemesHelper
@@ -31,14 +33,12 @@ class ThemesHelper {
 
         $viewsPath = Yii::getAlias('@gateway' . DIRECTORY_SEPARATOR . 'views');
 
-        $custom = $sp . 'themes' . $sp . 'custom' . $sp . $site->id . $sp . $themeFolder . $sp . $view;
         $standard = $sp . 'themes' . $sp . 'default' . $sp . $themeFolder . $sp . $view;
 
-        $customPath = $viewsPath . $custom;
         $standardPath = $viewsPath . $standard;
-
-        if (is_file($customPath) || is_file($customPath . '.' . $defaultExtension) || is_file($customPath . '.php')) {
-            return $custom;
+        $customFiles = ArrayHelper::map($site->getThemeFiles(), 'name', 'content');
+        if (!empty($customFiles[$view])) {
+            return $customFiles[$view];
         } else if (is_file($standardPath) || is_file($standardPath . '.' . $defaultExtension) || is_file($standardPath . '.php')) {
             return $standard;
         }
