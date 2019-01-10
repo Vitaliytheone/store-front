@@ -11,6 +11,7 @@ use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Logs;
+use gateway\components\behaviors\SiteBehavior;
 use gateway\helpers\GatewayHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
@@ -49,6 +50,9 @@ use yii\base\Exception;
  * @property Admins[] $admins
  * @property SitePaymentMethods[] $sitePaymentMethods
  * @property Customers $customer
+ *
+ * @method getThemeModel
+ * @method getThemeFiles
  */
 class Sites extends ActiveRecord implements ProjectInterface
 {
@@ -120,6 +124,7 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         return ArrayHelper::merge(parent::behaviors(), [
             'timestamp' => TimestampBehavior::class,
+            'theme' => SiteBehavior::class,
         ]);
     }
 
@@ -282,7 +287,7 @@ class Sites extends ActiveRecord implements ProjectInterface
         for ($i = 1; $i < 100; $i++) {
             $this->folder = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 6);
             if (!static::findOne([
-                'folder' => $this->theme_folder
+                'folder' => $this->folder
             ])) {
                 break;
             }
@@ -296,7 +301,7 @@ class Sites extends ActiveRecord implements ProjectInterface
     public function getFolder()
     {
         $assetsPath = GatewayHelper::getAssetsPath();
-        if (empty($this->theme_folder) || !is_dir($assetsPath . $this->theme_folder)) {
+        if (empty($this->folder) || !is_dir($assetsPath . $this->folder)) {
             $this->generateFolderName();
             $this->save(false);
             GatewayHelper::generateAssets($this->id);
