@@ -125,7 +125,7 @@ trait PaymentsTrait
      * Add new payments to current Store Pay Method
      * @return array
      */
-    public function actionAddPaymentMethod()
+    public function actionAddPaymentMethod(): array
     {
         $storeId = Yii::$app->store->getId();
 

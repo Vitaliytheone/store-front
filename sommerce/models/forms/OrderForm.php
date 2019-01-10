@@ -216,7 +216,7 @@ class OrderForm extends Model
      * @return array
      * @throws UnknownClassException
      */
-    public function getPaymentsMethodsForView()
+    public function getPaymentsMethodsForView(): array
     {
         $methods = [];
         foreach ($this->getPaymentMethods() as $method) {
@@ -235,7 +235,7 @@ class OrderForm extends Model
      * @throws InvalidConfigException
      * @throws UnknownClassException
      */
-    public function save()
+    public function save(): bool
     {
         $attributes = $this->attributes;
         if (!$this->validate()) {
@@ -288,7 +288,7 @@ class OrderForm extends Model
      * Get currency payments
      * @return array
      */
-    public function getCurrencyPayments()
+    public function getCurrencyPayments(): array
     {
         if ($this->_currencyPayments) {
             return $this->_currencyPayments;
@@ -324,7 +324,7 @@ class OrderForm extends Model
      * @param $attribute
      * @return bool
      */
-    public function validateCarItems($attribute)
+    public function validateCarItems($attribute): bool
     {
         if ($this->hasErrors()) {
             return false;
@@ -352,7 +352,7 @@ class OrderForm extends Model
      * @throws UnknownClassException
      * @throws InvalidConfigException
      */
-    public function validateUserOptions($attribute)
+    public function validateUserOptions($attribute): bool
     {
         if ($this->hasErrors()) {
             return false;
@@ -418,7 +418,7 @@ class OrderForm extends Model
      * @return array
      * @throws UnknownClassException
      */
-    public function getJsOptions()
+    public function getJsOptions(): array
     {
         $jsOptions = [];
 
