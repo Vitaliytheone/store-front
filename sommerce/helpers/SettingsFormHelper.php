@@ -2,7 +2,6 @@
 
 namespace sommerce\helpers;
 
-
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
 use yii\helpers\Html;
 use Yii;
@@ -37,7 +36,7 @@ class SettingsFormHelper
         foreach ($settingForm as $key => $settings) {
             $commonLabel = Html::label(Yii::t('admin', $settings['label']), 'editpaymentmethod-' . $settings['code']);
 
-            if (!isset($options[$settings['code']])) {
+            if (!isset($options[$key])) {
                 continue;
             }
 
@@ -48,7 +47,7 @@ class SettingsFormHelper
                         $commonLabel .
                         Html::input(
                             'text', $storeMethod->getFormElementName($settings['name']),
-                            $options[$settings['code']],
+                            $options[$key],
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
                                 'class' => 'form-control',
@@ -63,7 +62,7 @@ class SettingsFormHelper
                         '<label class="form-check-label">' .
                         Html::checkbox(
                             $storeMethod->getFormElementName($settings['name']),
-                            $options[$settings['code']],
+                            $options[$key],
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
                                 'class' => 'form-check-input',
@@ -78,7 +77,7 @@ class SettingsFormHelper
                         '<div id="multi_input_container_descriptions">';
 
                     $id = 1;
-                    foreach ((array)$options[$settings['code']] as $description) {
+                    foreach ((array)$options[$key] as $description) {
                         $result[$key] .=
                             '<div class="form-group form-group-description">' .
                             '<span class="fa fa-times remove-description"></span>' .
@@ -109,7 +108,7 @@ class SettingsFormHelper
                         $commonLabel .
                         Html::dropDownList(
                             $storeMethod->getFormElementName($settings['name']),
-                            $options[$settings['code']],
+                            $options[$key],
                             $settings['options'],
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
@@ -125,7 +124,7 @@ class SettingsFormHelper
                         $commonLabel .
                         Html::textarea(
                             $storeMethod->getFormElementName($settings['name']),
-                            $options[$settings['code']],
+                            $options[$key],
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
                                 'class' => 'form-control',
