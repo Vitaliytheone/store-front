@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field } from "formik";
 import { ProductInput } from "../Inputs";
-import PropTypes from "prop-types";
+
 // import $ from 'jquery';
 // import ReactSummernote from 'react-summernote';
 // import 'react-summernote/dist/react-summernote.css'; // import styles

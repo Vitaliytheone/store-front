@@ -70,8 +70,10 @@ class AddProduct extends Component {
 
 
 AddProduct.propTypes = {
+  initialValues: {
     name: PropTypes.string,
     visibility: PropTypes.number
+  }
 }
 
 AddProduct.defaultProps = { 

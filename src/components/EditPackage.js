@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
 import PackageModal from "./modals/PackageModal";
+import PropTypes from "prop-types";
 
 class EditPackage extends Component {
   state = {

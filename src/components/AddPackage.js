@@ -51,13 +51,13 @@ class AddPackage extends Component {
 
 
 AddPackage.propTypes = {
-  name: PropTypes.string,
-  price: PropTypes.number,
-  quantity: PropTypes.number,
-  overflow: PropTypes.number,
-  availability: PropTypes.number,
-  mode: PropTypes.string,
-  provider: PropTypes.string
+    name: PropTypes.string,
+    price: PropTypes.number,
+    quantity: PropTypes.number,
+    overflow: PropTypes.number,
+    availability: PropTypes.number,
+    mode: PropTypes.string,
+    provider: PropTypes.string
 };
 
 AddPackage.defaultProps = {
