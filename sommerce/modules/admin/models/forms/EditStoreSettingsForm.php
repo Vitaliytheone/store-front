@@ -203,9 +203,21 @@ class EditStoreSettingsForm extends Stores
         }
 
         if ($currentCurrency != $this->currency) {
-            $currencyMethods = array_keys(PaymentMethodsCurrency::getMethodsByCurrency($currentCurrency));
+            $storeMethods = StorePaymentMethods::findAll(['store_id' => $this->id]);
+            $currencyMethods = PaymentMethodsCurrency::find()
+                ->where(['currency' => $this->currency])
+                ->asArray()
+                ->indexBy('method_id')
+                ->all();
 
-            StorePaymentMethods::deleteAll(['currency_id' => $currencyMethods]);
+            foreach ($storeMethods as $method) {
+                if (!array_key_exists($method->method_id, $currencyMethods)) {
+                    $method->delete();
+                } else {
+                    $method->currency_id = $currencyMethods[$method->method_id]['id'];
+                    $method->save(false);
+                }
+            }
         }
 
         $this->_changeLog($changedAttributes);
