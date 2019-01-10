@@ -347,6 +347,9 @@ class SystemController extends CustomController
             $storeMethod->currency_id = $storeCurrency->id;
             $storeMethod->name = $method->name;
             $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
+            if (empty($storeMethod->options) || $storeMethod->options === '[]') {
+                $storeMethod->options = $storeMethod->setClearOptions($method->id);
+            }
             $storeMethod->created_at = time();
             $storeMethod->updated_at = time();
             $storeMethod->save(false);

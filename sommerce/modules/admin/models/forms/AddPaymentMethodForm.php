@@ -45,15 +45,19 @@ class AddPaymentMethodForm extends Model
      * Save new store payment method
      * @return bool
      */
-    public function save()
+    public function save(): bool
     {
         if (!$this->validate()) {
             return false;
         }
 
         $currency = PaymentMethodsCurrency::findOne($this->method);
+        if (!$currency) {
+            return false;
+        }
+
         $storePaymentMethod = StorePaymentMethods::find()
-            ->where(['currency_id' => $currency->id, 'method_id' => $currency->method_id])
+            ->where(['store_id' => $this->storeId, 'method_id' => $currency->method_id])
             ->exists();
 
         if ($storePaymentMethod) {
@@ -62,13 +66,17 @@ class AddPaymentMethodForm extends Model
 
         $paymentMethod = PaymentMethods::findOne($currency->method_id);
 
-        $settingsForm = isset($currency->settings_form) ? $currency->settings_form : $paymentMethod->settings_form;
+        if (!$paymentMethod) {
+            return false;
+        }
+
+        $settingsForm = $currency->settings_form ?? $paymentMethod->settings_form;
 
         $newStoreMethod = new StorePaymentMethods();
         $newStoreMethod->store_id = $this->storeId;
         $newStoreMethod->method_id = $currency->method_id;
         $newStoreMethod->currency_id = $currency->id;
-        $newStoreMethod->name = $paymentMethod->name != '' ? $paymentMethod->name : $paymentMethod->method_name;
+        $newStoreMethod->name = !empty($paymentMethod->name) ? $paymentMethod->name : $paymentMethod->method_name;
         $newStoreMethod->visibility = StorePaymentMethods::VISIBILITY_DISABLED;
         $newStoreMethod->options = $this->getOptions($settingsForm);
         $newStoreMethod->position = StorePaymentMethods::getLastPosition() + 1;
@@ -98,7 +106,7 @@ class AddPaymentMethodForm extends Model
      */
     private function getOptions($settingsForm): string
     {
-        $settingsForm = json_decode($settingsForm, true);
+        $settingsForm = json_decode(str_replace('\\', '', $settingsForm), true);
 
         $options = array_keys($settingsForm);
         $result = [];

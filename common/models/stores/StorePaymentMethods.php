@@ -208,6 +208,29 @@ class StorePaymentMethods extends ActiveRecord
     }
 
     /**
+     * Set clear options for items with empty settings
+     * @param int method->id
+     * @return string
+     */
+    public function setClearOptions($id): string
+    {
+        $paymentMethod = PaymentMethods::findOne(['id' => $id]);
+
+        if (!$paymentMethod) {
+            return '';
+        }
+
+        $paymentMethodSettings = $paymentMethod->getSettingsForm();
+
+        $cleanOptions = [];
+        foreach ($paymentMethodSettings as $method => $details) {
+            $cleanOptions[$method] = '';
+        }
+
+        return Json::encode($cleanOptions);
+    }
+
+    /**
      * @param array $options
      * @return bool
      */

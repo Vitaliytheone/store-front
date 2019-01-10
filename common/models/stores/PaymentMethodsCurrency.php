@@ -118,10 +118,10 @@ class PaymentMethodsCurrency extends ActiveRecord
     }
 
     /**
-     * Get currency support by current store
+     * Get PayMethods for store support by current currency
      * @return array
      */
-    public static function getSupportCurrency(): array
+    public static function getSupportPayMethods(): array
     {
         /** @var Stores $store */
         $store = Yii::$app->store->getInstance();
@@ -139,9 +139,21 @@ class PaymentMethodsCurrency extends ActiveRecord
             ->asArray()
             ->all();
 
+        $methodsIds = StorePaymentMethods::find()
+            ->where(['store_id' => $store->id])
+            ->indexBy('method_id')
+            ->asArray()
+            ->all();
+
+        $methodsIds = array_column($methodsIds, 'method_id');
+
         $result = [];
         foreach ($currencies as $id => $method) {
             if (isset($storePaymentMethods[$id])) {
+                continue;
+            }
+
+            if (in_array($method['method_id'], $methodsIds)) {
                 continue;
             }
 

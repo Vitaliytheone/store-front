@@ -37,7 +37,7 @@ trait PaymentsTrait
 
         $paymentMethods = StorePaymentMethods::find()->where(['store_id' => yii::$app->store->getId()])->orderBy('position')->all();
 
-        $availableMethods = PaymentMethodsCurrency::getSupportCurrency();
+        $availableMethods = PaymentMethodsCurrency::getSupportPayMethods();
 
         return $this->render('payments', [
             'paymentMethods' => $paymentMethods,
@@ -122,6 +122,7 @@ trait PaymentsTrait
     }
 
     /**
+     * Add new payments to current Store Pay Method
      * @return array
      */
     public function actionAddPaymentMethod()

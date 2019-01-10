@@ -4,7 +4,7 @@ ALTER TABLE store_payment_methods
 ALTER TABLE store_payment_methods
   CHANGE `active` `visibility` smallint(1) NOT NULL DEFAULT 1;
 
-ALTER TABLE payment_methods_currency
+ALTER TABLE store_payment_methods
   CHANGE `id` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE store_payment_methods
