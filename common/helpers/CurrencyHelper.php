@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 use common\models\panels\services\GetPaymentMethodsService;
@@ -10,8 +11,8 @@ use yii\helpers\ArrayHelper;
  * Class CurrencyHelper
  * @package common\helpers
  */
-class CurrencyHelper {
-
+class CurrencyHelper
+{
     /**
      * @var array
      */
@@ -35,21 +36,23 @@ class CurrencyHelper {
         /**
          * @var PaymentMethods $method
          */
-        // TODO изменил ПейментГейтвей на ПайментМетод, возможно будет лучше использовать СтореПайментМетод
         foreach (PaymentMethods::getMethods() as $method) {
-            $availableCurrencies = (array)$method->getPaymentMethodCurrency()->where(['currency' => $code])->asArray();
+            $availableCurrencies = (array)$method->getPaymentMethodCurrency()
+                ->where(['currency' => $code])
+                ->asArray()
+                ->indexBy('method_id')
+                ->all();
 
-            // TODO проверить и раскоментировать хардкод
-//            if (!in_array($code, $availableCurrencies['currency'])) {
-//                continue;
-//            }
+            if (!isset($availableCurrencies[$method->id])) {
+                continue;
+            }
 
             static::$currencyOptions[$code][$method->method_name] = [
                 'url' => $method->url,
                 'class_name' => $method->class_name,
                 'name' => $method->name,
                 'code' => $method->method_name,
-                'position' => 0,//$availableCurrencies['position'],
+                'position' => $availableCurrencies[$method->id]['position'],
                 'options' => $method->getSettingsForm(),
             ];
         }
@@ -110,6 +113,8 @@ class CurrencyHelper {
     /**
      * Get all payment methods
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public static function getPaymentMethods(): array
     {

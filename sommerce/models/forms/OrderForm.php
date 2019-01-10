@@ -248,14 +248,12 @@ class OrderForm extends Model
             return false;
         }
 
-        // TODO упростить - ищем текущий метод доставя ИД из массива
         $storePayMethodArray = static::$_methods[$payMethod->method_name];
 
         $storePayMethod = StorePaymentMethods::findOne($storePayMethodArray['storePayId']);
         if (empty($storePayMethod)) {
             return false;
         }
-
 
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
@@ -270,7 +268,6 @@ class OrderForm extends Model
             $this->addError('email', 'Can not create order.');
             return false;
         }
-
 
         $result = Payment::getPayment($payMethod->method_name)->checkout($checkout, $this->_store, $this->email, $storePayMethod);
         if (3 == $result['result'] && !empty($result['refresh'])) {

@@ -419,17 +419,9 @@ abstract class BasePayment extends Component {
             'method_name' => $payMethod,
         ]);
 
-        // TODO по идее можно убрать поиск с учетом валюты,
-        // в таблице не может быть два одинаковых метода с разными валютами
-        $currency = PaymentMethodsCurrency::findOne([
-            'method_id' => $paymentMethod->id,
-            'currency' => $store->currency,
-        ]);
-
         $storePaymentMethod = StorePaymentMethods::findOne([
             'method_id' => $paymentMethod->id,
             'store_id' => $store->id,
-            'currency_id' => $currency->id,
             'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 

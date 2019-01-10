@@ -387,5 +387,4 @@ class SystemController extends CustomController
 
         return print "Success add new column to {$count} checkouts dbs\n";
     }
-
 }

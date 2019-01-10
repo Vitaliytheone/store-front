@@ -1,13 +1,10 @@
 <?php
 
-use sommerce\modules\admin\components\Url;
-
 /* @var $this yii\web\View */
 
 ?>
 
 <div class="modal fade" id="delete-modal-pay" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-<!--     data-action_url="--><?//= Url::toRoute(['/settings/delete-invalid-currency']) ?><!--" data-success_redirect="--><?//= Url::toRoute(['/settings'])?><!--">-->
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-loader hidden"></div>
