@@ -103,9 +103,10 @@ class GatewayHelper {
 
         foreach ($standardStyles as $fileName => $filePath) {
             if (isset($customStyles[$fileName])) {
-                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, $customScripts[$fileName])) {
+                if (file_put_contents($assetsPath . 'css' . $sp . $fileName, $customStyles[$fileName])) {
                     $css[] = $fileName;
                 }
+                continue;
             }
 
             if (file_put_contents($assetsPath . 'css' . $sp . $fileName, file_get_contents($filePath))) {

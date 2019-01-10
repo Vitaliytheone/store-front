@@ -229,12 +229,14 @@ class EditThemeForm extends Model
         }
 
         foreach (ArrayHelper::getColumn($customFiles, 'name') as $file) {
-            if (in_array($file, $this->_filesTree[static::FOLDER_LAYOUTS]) || in_array($file, $this->_filesTree[static::FOLDER_TEMPLATES])) {
-                continue;
+            foreach ($this->_filesTree as $filesTree) {
+                if (in_array($file, (array)$filesTree)) {
+                    continue 2;
+                }
             }
             $this->_filesTree[static::FOLDER_TEMPLATES][] = $file;
         }
-
+        
         // Populate files by files data
         foreach ($this->_filesTree as &$folder) {
             array_walk($folder, function(&$file) use ($themeFiles, $themeModel, $customFiles) {
