@@ -12,9 +12,11 @@ class m181214_081357_20181214_stores_rename_tables extends Migration
      */
     public function safeUp()
     {
-        $this->renameTable(DB_STORES . '.payment_methods', 'store_payment_methods');
+        $this->execute('
+            ALTER TABLE payment_methods RENAME store_payment_methods;
 
-        $this->renameTable(DB_STORES . '.payment_gateways', 'payment_methods');
+            ALTER TABLE payment_gateways RENAME payment_methods;
+        ');
     }
 
     /**
@@ -22,8 +24,10 @@ class m181214_081357_20181214_stores_rename_tables extends Migration
      */
     public function safeDown()
     {
-        $this->renameTable(DB_STORES . '.payment_methods', 'payment_gateways');
+        $this->execute('
+            ALTER TABLE payment_methods RENAME payment_gateways;
 
-        $this->renameTable(DB_STORES . '.store_payment_methods', 'payment_methods');
+            ALTER TABLE store_payment_methods RENAME payment_methods;
+        ');
     }
 }

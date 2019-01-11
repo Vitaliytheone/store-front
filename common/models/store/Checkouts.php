@@ -3,6 +3,8 @@
 namespace common\models\store;
 
 use common\components\behaviors\IpBehavior;
+use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -34,9 +36,9 @@ use common\models\store\queries\CheckoutsQuery;
  */
 class Checkouts extends ActiveRecord
 {
-    const STATUS_PENDING = 0;
-    const STATUS_PAID = 1;
-    const STATUS_EXPIRED = 2;
+    public const STATUS_PENDING = 0;
+    public const STATUS_PAID = 1;
+    public const STATUS_EXPIRED = 2;
 
     public static function getDb()
     {
@@ -134,6 +136,22 @@ class Checkouts extends ActiveRecord
     public function getSuborders()
     {
         return $this->hasMany(Suborders::class, ['checkout_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMethod()
+    {
+        return $this->hasOne(PaymentMethods::class, ['id' => 'method_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCurrency()
+    {
+        return $this->hasOne(PaymentMethodsCurrency::class, ['id' => 'currency_id']);
     }
 
     /**

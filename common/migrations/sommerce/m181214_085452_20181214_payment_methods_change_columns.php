@@ -33,25 +33,49 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
             }
         }
 
-        $this->renameColumn(DB_STORES . '.payment_methods', 'method', 'method_name');
-        $this->renameColumn(DB_STORES . '.payment_methods', 'options', 'settings_form');
-
-        $this->dropColumn(DB_STORES . '.payment_methods', 'currencies');
-        $this->dropColumn(DB_STORES . '.payment_methods', 'position');
-        $this->dropColumn(DB_STORES . '.payment_methods', 'visibility');
-
-        $this->alterColumn(DB_STORES . '.payment_methods', 'name', $this->string(255)->notNull());
-        $this->alterColumn(DB_STORES . '.payment_methods', 'method_name', $this->string(255)->notNull());
-        $this->alterColumn(DB_STORES . '.payment_methods', 'class_name', $this->string(255)->notNull());
-        $this->alterColumn(DB_STORES . '.payment_methods', 'url', $this->string(255)->notNull());
-        $this->alterColumn(DB_STORES . '.payment_methods', 'settings_form', $this->text()->null());
-
-        $this->addColumn(DB_STORES . '.payment_methods', 'icon', $this->string(64));
-        $this->addColumn(DB_STORES . '.payment_methods', 'addfunds_form', $this->text()->null());
-        $this->addColumn(DB_STORES . '.payment_methods', 'settings_form_description', $this->text()->null());
-        $this->addColumn(DB_STORES . '.payment_methods', 'manual_callback_url', $this->smallInteger(1)->notNull()->defaultValue(0));
-        $this->addColumn(DB_STORES . '.payment_methods', 'created_at', $this->integer(11)->null());
-        $this->addColumn(DB_STORES . '.payment_methods', 'updated_at', $this->integer(11)->null());
+        $this->execute('
+            ALTER TABLE payment_methods
+              DROP COLUMN `currencies`;
+            
+            ALTER TABLE payment_methods
+              DROP COLUMN `position`;
+            
+            ALTER TABLE payment_methods
+              DROP COLUMN `visibility`;
+            
+            ALTER TABLE payment_methods
+              CHANGE `method` `method_name` varchar(255) NOT NULL;
+            
+            ALTER TABLE payment_methods
+              CHANGE `options` `settings_form` text NULL;
+            
+            ALTER TABLE payment_methods
+              CHANGE `name` `name` varchar(255) NOT NULL;
+            
+            ALTER TABLE payment_methods
+              CHANGE `class_name` `class_name` varchar(255) NOT NULL;
+            
+            ALTER TABLE payment_methods
+              CHANGE `url` `url` varchar(255) NOT NULL;
+            
+            ALTER TABLE payment_methods
+              ADD `icon` varchar(64);
+            
+            ALTER TABLE payment_methods
+              ADD `addfunds_form` text NULL;
+            
+            ALTER TABLE payment_methods
+              ADD `settings_form_description` text NULL;
+            
+            ALTER TABLE payment_methods
+              ADD `manual_callback_url` smallint(1) NOT NULL DEFAULT 0;
+            
+            ALTER TABLE payment_methods
+              ADD `created_at` int(11) NULL;
+            
+            ALTER TABLE payment_methods
+              ADD `updated_at` int(11) NULL;
+        ');
     }
 
     /**
@@ -59,19 +83,36 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
      */
     public function safeDown()
     {
-        $this->renameColumn(DB_STORES . '.payment_methods', 'method_name', 'method');
-        $this->renameColumn(DB_STORES . '.payment_methods', 'settings_form', 'options');
+        $this->execute('
+            ALTER TABLE payment_methods
+              CHANGE `method_name` `method` varchar(255) NOT NULL;
 
-        $this->addColumn(DB_STORES . '.payment_methods', 'currencies', $this->string(3000)->null());
-        $this->addColumn(DB_STORES . '.payment_methods', 'position', $this->tinyInteger(2));
+            ALTER TABLE payment_methods
+              CHANGE `settings_form` `options` text NOT NULL;
 
-        $this->alterColumn(DB_STORES . '.payment_methods', 'name', $this->string(300)->null());
-        $this->alterColumn(DB_STORES . '.payment_methods', 'options', $this->text()->notNull());
+            ALTER TABLE payment_methods
+              ADD `currencies` varchar(3000) NULL;
+            
+            ALTER TABLE payment_methods
+              ADD `position` tinyint(2) NOT NULL;
 
-        $this->dropColumn(DB_STORES . '.payment_methods', 'addfunds_form');
-        $this->dropColumn(DB_STORES . '.payment_methods', 'settings_form_description');
-        $this->dropColumn(DB_STORES . '.payment_methods', 'manual_callback_url');
-        $this->dropColumn(DB_STORES . '.payment_methods', 'created_at');
-        $this->dropColumn(DB_STORES . '.payment_methods', 'updated_at');
+            ALTER TABLE payment_methods
+              CHANGE `name` `name` varchar(300) NULL;
+
+            ALTER TABLE payment_methods
+              DROP COLUMN `addfunds_form`;
+            
+            ALTER TABLE payment_methods
+              DROP COLUMN `settings_form_description`;
+            
+            ALTER TABLE payment_methods
+              DROP COLUMN `manual_callback_url`;
+            
+           ALTER TABLE payment_methods
+              DROP COLUMN `created_at`;
+
+            ALTER TABLE payment_methods
+              DROP COLUMN `updated_at`;
+        ');
     }
 }
