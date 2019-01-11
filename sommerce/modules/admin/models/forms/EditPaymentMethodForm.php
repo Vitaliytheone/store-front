@@ -86,9 +86,6 @@ class EditPaymentMethodForm extends StorePaymentMethods
         }
 
         $data = $postData[$this->formName()];
-        if (!$this->validateOptions($data)) {
-            return false;
-        }
 
         $this->setOptions($data);
         if (!$this->save()) {

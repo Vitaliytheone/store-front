@@ -189,7 +189,7 @@ class PaymentMethods extends ActiveRecord
      */
     public function getSettingsForm(): array
     {
-        return !empty($this->settings_form) ? json_decode(str_replace('\\', '', $this->settings_form), true) : [];
+        return !empty($this->settings_form) ? json_decode($this->settings_form, true) : [];
     }
 
     /**

@@ -8,7 +8,6 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use common\models\stores\queries\StorePaymentMethodsQuery;
-use yii\helpers\Json;
 
 /**
  * This is the model class for table "{{%store_payment_methods}}".
@@ -172,8 +171,8 @@ class StorePaymentMethods extends ActiveRecord
     }
 
     /**
-     * Set options
-     * @param $options
+     * Set options if param $options not empty or Set clear options for items with empty settings
+     * @param array $options
      */
     public function setOptions(array $options)
     {
@@ -195,39 +194,22 @@ class StorePaymentMethods extends ActiveRecord
         }
 
         $cleanOptions = [];
+        $currentOptions = $this->getOptions();
+
         foreach ($paymentMethodSettings as $method => $details) {
-            $cleanOptions[$method] = ArrayHelper::getValue($options, $method);
-            if (PaymentMethods::FIELD_TYPE_MULTI_INPUT == $details['type']) {
-                $cleanOptions[$method] = (array)$cleanOptions[$method];
+            if (!array_key_exists($method, $currentOptions)) {
+                $cleanOptions[$method] = '';
             } else {
-                $cleanOptions[$method] = (string)$cleanOptions[$method];
+                $cleanOptions[$method] = ArrayHelper::getValue($options, $method);
+                if (PaymentMethods::FIELD_TYPE_MULTI_INPUT == $details['type']) {
+                    $cleanOptions[$method] = (array)$cleanOptions[$method];
+                } else {
+                    $cleanOptions[$method] = (string)$cleanOptions[$method];
+                }
             }
         }
 
-        $this->options = Json::encode($cleanOptions);
-    }
-
-    /**
-     * Set clear options for items with empty settings
-     * @param int method->id
-     * @return string
-     */
-    public function setClearOptions($id): string
-    {
-        $paymentMethod = PaymentMethods::findOne(['id' => $id]);
-
-        if (!$paymentMethod) {
-            return '';
-        }
-
-        $paymentMethodSettings = $paymentMethod->getSettingsForm();
-
-        $cleanOptions = [];
-        foreach ($paymentMethodSettings as $method => $details) {
-            $cleanOptions[$method] = '';
-        }
-
-        return Json::encode($cleanOptions);
+        $this->options = json_encode($cleanOptions);
     }
 
     /**
@@ -249,13 +231,11 @@ class StorePaymentMethods extends ActiveRecord
 
     /**
      * Get current method icon
-     * @return string
+     * @return array
      */
-    public function getMethodIcon(): string
+    public static function getMethodIcon(): array
     {
-        $method = PaymentMethods::findOne([$this->method_id]);
-
-        return $method->icon ?? '';
+        return PaymentMethods::find()->select('icon, id')->indexBy('id')->asArray()->all();
     }
 
     /**
@@ -264,6 +244,6 @@ class StorePaymentMethods extends ActiveRecord
     public static function getLastPosition(): int
     {
         $last = static::find()->max('position');
-        return isset($last) ? $last : 0;
+        return $last ?? 0;
     }
 }
