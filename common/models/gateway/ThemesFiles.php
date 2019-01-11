@@ -2,6 +2,7 @@
 
 namespace common\models\gateway;
 
+use gateway\components\behaviors\ThemesFilesBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -88,6 +89,7 @@ class ThemesFiles extends ActiveRecord
                     return time();
                 },
             ],
+            'assets' => ThemesFilesBehavior::class,
         ];
     }
 }

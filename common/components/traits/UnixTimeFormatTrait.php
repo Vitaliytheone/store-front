@@ -37,10 +37,10 @@ trait UnixTimeFormatTrait {
     public static function formatDate($value, $format = 'php:Y-m-d H:i:s', $timezone = null)
     {
         if (!empty(Yii::$app->controller)) {
-
+            $user = null;
             if (method_exists(Yii::$app->controller, 'getUser')) {
                 $user = Yii::$app->controller->getUser();
-            } else {
+            } else if (!empty(Yii::$app->user)) {
                 $user = Yii::$app->user;
             }
 

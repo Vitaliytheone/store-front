@@ -69,6 +69,10 @@ $config = [
         'template-my' => [
             'class' => 'console\controllers\my\TemplateController',
         ],
+
+        'system-gateway' => [
+            'class' => 'console\controllers\gateway\SystemController',
+        ],
     ],
     'components' => [
         'log' => [

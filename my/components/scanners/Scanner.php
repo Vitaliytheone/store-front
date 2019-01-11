@@ -1,4 +1,5 @@
 <?php
+
 namespace my\components\scanners;
 
 use my\components\scanners\components\BaseScanner;
@@ -27,6 +28,3 @@ class Scanner
         return new $className($config);
     }
 }
-
-
-
