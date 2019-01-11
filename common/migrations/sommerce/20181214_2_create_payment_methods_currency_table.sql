@@ -20,4 +20,4 @@ CREATE INDEX idx_method_id
 ON `payment_methods_currency` (method_id);
 
 ALTER TABLE `payment_methods_currency`
-  ADD CONSTRAINT `fk_method_id` FOREIGN KEY (`method_id`) REFERENCES `payment_methods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_payment_methods_currency_payment_methods` FOREIGN KEY (`method_id`) REFERENCES `payment_methods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

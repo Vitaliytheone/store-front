@@ -51,7 +51,7 @@ class m181214_122547_20181214_store_checkouts_add_column extends Migration
         $stores[] = ['db_name' => $templateDb];
 
         foreach ($stores as $store) {
-            $this->dropColumn($store['db_name'] . 'checkouts', 'currency_id');
+            $this->dropColumn($store['db_name'] . '.checkouts', 'currency_id');
         }
     }
 
