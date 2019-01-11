@@ -169,10 +169,17 @@ class CronController extends CustomController
     protected function _checkPaypalPayment(Stores $store)
     {
         $method = PaymentMethods::findOne(['method_name' => PaymentMethods::METHOD_PAYPAL]);
-        $paymentCurrency = PaymentMethodsCurrency::findOne([
+        if (!$method) {
+            return;
+        }
+
+         $paymentCurrency = PaymentMethodsCurrency::findOne([
             'method_id' => $method->id,
             'currency' => $store->currency
         ]);
+        if (!$paymentCurrency) {
+            return;
+        }
 
         $paymentMethod = StorePaymentMethods::findOne([
             'method_id' => $method->id,

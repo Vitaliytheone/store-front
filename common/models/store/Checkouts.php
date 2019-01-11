@@ -94,26 +94,6 @@ class Checkouts extends ActiveRecord
     }
 
     /**
-     * Get currency of current method
-     *
-     * @return ActiveQuery
-     */
-    public function getPaymentMethodCurrency(): ActiveQuery
-    {
-        return $this->hasMany(PaymentMethodsCurrency::class, ['id' => 'currency_id']);
-    }
-
-    /**
-     * Get currency of current method
-     *
-     * @return ActiveQuery
-     */
-    public function getPaymentMethod(): ActiveQuery
-    {
-        return $this->hasMany(PaymentMethods::class, ['id' => 'method_id']);
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getOrders()
