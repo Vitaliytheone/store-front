@@ -35,16 +35,22 @@ class AssetsHelper {
 
     /**
      * Get gateway assets path
+     * @param boolean $fullPath
      * @return string
      */
-    public static function getAssetPath()
+    public static function getAssetPath($fullPath = false)
     {
         /**
          * @var $gateway Sites
          */
         $gateway = Yii::$app->gateway->getInstance();
 
-        return '/assets/' . $gateway->getFolder();
+        $path = '/assets/' . $gateway->getFolder();
+
+        if ($fullPath) {
+            $path = Yii::getAlias('@webroot') . $path;
+        }
+        return $path;
     }
 
     /**

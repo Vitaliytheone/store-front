@@ -1,4 +1,5 @@
 <?php
+
 namespace my\components\scanners\components\info;
 
 use my\components\scanners\components\BasePanelInfo;
@@ -18,11 +19,20 @@ class RentapanelInfo extends BasePanelInfo
     {
         $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
+        $host = ArrayHelper::getValue($panelData, 'host');
+
+        if (strpos($content, '<script>window.top.location="login";</script>') === false) {
+            return false;
+        }
+
+        $this->getPanelInfo($host . '/api_docs');
+        $panelData = $this->currentPanelData;
+        $content = ArrayHelper::getValue($panelData, 'content');
 
         $matchesApiLink = [];
         $matchesServicesLink = [];
-        preg_match('/<a href="api_docs">\s*API\s*<\/a>/', $content, $matchesApiLink);
-        preg_match('/<a href="services">\s*Services\s*<\/a>/', $content, $matchesServicesLink);
+        preg_match('/<a href="api_docs">\s*API\s*<\/a>/i', $content, $matchesApiLink);
+        preg_match('/<a href="services">\s*Services\s*<\/a>/i', $content, $matchesServicesLink);
 
         if (empty($matchesApiLink) || empty($matchesServicesLink)) {
             return false;
@@ -58,6 +68,7 @@ class RentapanelInfo extends BasePanelInfo
     /**
      * Check if requested host is valid panel
      * @return bool
+     * @throws \yii\base\Exception
      */
     private function _isValid()
     {
@@ -92,5 +103,3 @@ class RentapanelInfo extends BasePanelInfo
         return true;
     }
 }
-
-

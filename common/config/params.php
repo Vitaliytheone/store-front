@@ -51,6 +51,7 @@ return [
 
     'sommerce.twig.cachePath' => '@sommerce/runtime/twig/cache',
     'sommerce.assets.cachePath' => '@sommerce/web/assets',
+    'gateway.assets.cachePath' => '@gateway/web/assets',
     'my.assets.cachePath' => '@my/web/assets',
 
     'ahnames.my.ns' => [
