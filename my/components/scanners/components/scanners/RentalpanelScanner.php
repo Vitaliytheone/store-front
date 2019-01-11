@@ -57,5 +57,3 @@ class RentalpanelScanner extends BaseScanner
         return $newDomains;
     }
 }
-
-
