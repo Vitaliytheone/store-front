@@ -53,7 +53,7 @@ class m190109_113239_stores_add_json_to_payment_method extends Migration
             
             UPDATE `payment_methods`
             SET `settings_form` = \'{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_merchant_id\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_secret_word\"},\"secret_word2\":{\"code\":\"secret_word2\",\"name\":\"secret_word2\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_secret_word2\"}}\',
-                `settings_form_description` = \'<ul>\r\n<li> Go to Cash Desk Settings </li>\r\n<li> Select <code> OST</code> Alert Method</li>\r\n<li> Select Integration Mode <code>No</code></li>\r\n<li> Site URL: <code>{site}/</code> </li>\r\n<li> Alert IPN URL: <code>{site}/freekassa</code></li>\r\n<li> return URL for success: <code>{site}/addfunds</code></li>\r\n<li> return URL in case of failure: <code>{site}/addfunds</code></i>\r\n</ul>\',
+                `settings_form_description` = \'<ul>\r\n<li> Go to Cash Desk Settings </li>\r\n<li> Select <code>POST</code> Alert Method</li>\r\n<li> Select Integration Mode <code>No</code></li>\r\n<li> Site URL: <code>{site}/</code> </li>\r\n<li> Alert IPN URL: <code>{site}/freekassa</code></li>\r\n<li> return URL for success: <code>{site}/addfunds</code></li>\r\n<li> return URL in case of failure: <code>{site}/addfunds</code></i>\r\n</ul>\',
                 `icon` = \'/img/pg/free_kassa.png\'
             WHERE `payment_methods`.`method_name` = \'freekassa\';
             
@@ -66,7 +66,7 @@ class m190109_113239_stores_add_json_to_payment_method extends Migration
             
             UPDATE `payment_methods`
             SET `settings_form` = \'{\"apiKey\":{\"code\":\"apiKey\",\"name\":\"apiKey\",\"type\":\"input\",\"label\":\"settings.payments_paywant_apiKey\"},\"apiSecret\":{\"code\":\"apiSecret\",\"name\":\"apiSecret\",\"type\":\"input\",\"label\":\"settings.payments_paywant_apiSecret\"},\"fee\":{\"code\":\"fee\",\"name\":\"fee\",\"type\":\"input\",\"label\":\"settings.payments_paywant_fee\"}}\',
-                `settings_form_description` = \'<ul>\r\n<li>Store Site: <code>{site}</code></li>\r\n<li>IP address (Site): <code>54.37.81.176</code></li>\r\n<li>API IPN: <code>{site}/paywant</code></li>\r\n</ul>\',
+                `settings_form_description` = \'<ul>\r\n<li>Store Site: <code>{site}</code></li>\r\n<li>IP address (Site): <code>THIS SERVER IP</code></li>\r\n<li>API IPN: <code>{site}/paywant</code></li>\r\n</ul>\',
                 `icon` = \'/img/pg/paywant.png\'
             WHERE `payment_methods`.`method_name` = \'paywant\';
             
