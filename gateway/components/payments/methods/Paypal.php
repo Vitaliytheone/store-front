@@ -116,7 +116,7 @@ class Paypal extends BasePayment
     public function checkout($payment)
     {
         $paymentMethodOptions = $this->getPaymentMethod()['options'];
-        $description = ArrayHelper::getValue($paymentMethodOptions, 'description', '');
+        $description = $this->getDescription();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();

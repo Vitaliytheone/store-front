@@ -40,6 +40,11 @@ abstract class BasePayment extends Component {
     public $charset = 'utf-8';
 
     /**
+     * @var string
+     */
+    protected $_description;
+
+    /**
      * @var array
      */
     protected $_data = [];
@@ -269,12 +274,26 @@ abstract class BasePayment extends Component {
     }
 
     /**
+     * Set formatted description
+     * @param string $description
+     * @return string
+     */
+    public function setDescription($description)
+    {
+        $this->_description = $description;
+    }
+
+    /**
      * Get formatted description
      * @return string
      */
-    protected function getDescription()
+    public function getDescription()
     {
-        return Yii::t('app', 'addfunds.payment.description');
+        if (null !== $this->_description) {
+            return $this->_description;
+        }
+        $this->_description = ArrayHelper::getValue($this->getPaymentMethod(), 'options');
+        return !empty($this->_description) ? $this->_description : Yii::t('app', 'addfunds.payment.description');
     }
 
     /**
