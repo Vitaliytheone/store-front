@@ -65,7 +65,7 @@ class OrderWithItemsMailer extends BaseNotificationMailer
             'sub_total' => $total,
             'total' => $total,
             'url' => $this->store->getSite() . '/vieworder/' . $this->_order->code,
-            'payment_method' => $payment ? PaymentMethods::getMethodName($payment->method) : null
+            'payment_method' => $payment ? PaymentMethods::getNameByMethodName($payment->method) : null
         ];
 
         $this->html = $this->renderTwig((string)$this->template->body, $options);

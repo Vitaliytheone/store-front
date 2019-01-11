@@ -327,7 +327,7 @@ class PaymentsSearch extends Model
         $payments = $this->_dataProvider->getModels();
 
         array_walk($payments, function(&$payment) {
-            $payment['method_title'] = PaymentMethods::getMethodName($payment['method']);
+            $payment['method_title'] = PaymentMethods::getNameByMethodName($payment['method']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

@@ -22,6 +22,9 @@ use common\models\stores\queries\PaymentMethodsCurrencyQuery;
  */
 class PaymentMethodsCurrency extends ActiveRecord
 {
+    public const NOT_HIDDEN = 0;
+    public const HIDDEN = 1;
+
     /**
      * @inheritdoc
      */
@@ -119,15 +122,13 @@ class PaymentMethodsCurrency extends ActiveRecord
 
     /**
      * Get PayMethods for store support by current currency
+     * @param Stores $store
      * @return array
      */
-    public static function getSupportPayMethods(): array
+    public static function getSupportPayMethods(Stores $store): array
     {
-        /** @var Stores $store */
-        $store = Yii::$app->store->getInstance();
-
         $currencies = self::find()
-            ->filterWhere(['hidden' => 0])
+            ->active()
             ->andFilterWhere(['currency' => $store->currency])
             ->indexBy('id')
             ->asArray()
@@ -139,13 +140,7 @@ class PaymentMethodsCurrency extends ActiveRecord
             ->asArray()
             ->all();
 
-        $methodsIds = StorePaymentMethods::find()
-            ->where(['store_id' => $store->id])
-            ->indexBy('method_id')
-            ->asArray()
-            ->all();
-
-        $methodsIds = array_column($methodsIds, 'method_id');
+        $methodsIds = array_column($storePaymentMethods, 'method_id');
 
         $result = [];
         foreach ($currencies as $id => $method) {

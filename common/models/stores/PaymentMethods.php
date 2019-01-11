@@ -131,57 +131,33 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get available payment method Names
-     * @return array
-     */
-    public static function getNames()
-    {
-        if (empty(static::$methodsNames) || !is_array(static::$methodsNames)) {
-            static::$methodsNames = static::find()
-                ->select(['name'])
-                ->indexBy('method_name')
-                ->asArray()
-                ->column();
-        }
-
-        return static::$methodsNames;
-    }
-
-    /**
      * Return payment method title by method
      * @param string $method
      * @return string
      */
-    public static function getMethodName(string $method): string
+    public static function getNameByMethodName(string $method): string
     {
-        return ArrayHelper::getValue(static::getNames(), $method, $method);
-    }
+        $methodModel = static::find()
+            ->select(['name'])
+            ->where(['method_name' => $method])
+            ->one();
 
-    /**
-     * Get all payment methods only from `method_name` column
-     * @return static[]
-     */
-    public static function getAllMethods(): array
-    {
-        if (empty(static::$allMethodsNames) || !is_array(static::$allMethodsNames)) {
-            static::$allMethodsNames = static::find()
-                ->select(['method_name'])
-                ->indexBy('id')
-                ->asArray()
-                ->column();
-        }
-
-        return static::$allMethodsNames;
+        return isset($methodModel->name) ? $methodModel->name : $method;
     }
 
     /**
      * Return value from `method_name` column
-     * @param int $method
+     * @param int $id
      * @return string
      */
-    public static function getOneMethod(int $method): string
+    public static function getMethodName(int $id): string
     {
-        return ArrayHelper::getValue(static::getAllMethods(), $method);
+        $method = static::find()
+            ->select(['method_name'])
+            ->where(['id' => $id])
+            ->one();
+
+        return isset($method->method_name) ? $method->method_name : null;
     }
 
     /**

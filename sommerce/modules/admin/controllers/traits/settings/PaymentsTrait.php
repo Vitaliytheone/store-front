@@ -37,7 +37,8 @@ trait PaymentsTrait
 
         $paymentMethods = StorePaymentMethods::find()->where(['store_id' => yii::$app->store->getId()])->orderBy('position')->all();
 
-        $availableMethods = PaymentMethodsCurrency::getSupportPayMethods();
+        $store = Yii::$app->store->getInstance();
+        $availableMethods = PaymentMethodsCurrency::getSupportPayMethods($store);
 
         return $this->render('payments', [
             'paymentMethods' => $paymentMethods,
@@ -61,7 +62,7 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        $methodName = PaymentMethods::getOneMethod($paymentModel->method_id);
+        $methodName = PaymentMethods::getMethodName($paymentModel->method_id);
         $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
 
         $paymentModel->setUser(Yii::$app->user);

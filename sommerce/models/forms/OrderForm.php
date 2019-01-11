@@ -189,7 +189,7 @@ class OrderForm extends Model
                 $methods[$key] = [
                     'id' => $method->method_id,
                     'name' => $method->name ?: $method->getName(),
-                    'method' => PaymentMethods::getOneMethod($method->method_id),
+                    'method' => PaymentMethods::getMethodName($method->method_id),
                     'details' => $method->getOptions(),
                     'position' => $method->position,
                     'fields' => [],

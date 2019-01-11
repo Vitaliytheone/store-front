@@ -29,4 +29,20 @@ class PaymentMethodsCurrencyQuery extends ActiveQuery
     {
         return parent::one($db);
     }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function active()
+    {
+        return parent::andFilterWhere(['hidden' => PaymentMethodsCurrency::NOT_HIDDEN]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function notActive()
+    {
+        return parent::andFilterWhere(['hidden' => PaymentMethodsCurrency::HIDDEN]);
+    }
 }

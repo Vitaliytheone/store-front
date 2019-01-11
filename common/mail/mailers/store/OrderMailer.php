@@ -69,7 +69,7 @@ class OrderMailer extends BaseNotificationMailer
             'sub_total' => $total,
             'total' => $total,
             'url' => $url,
-            'payment_method' => $payment ? PaymentMethods::getMethodName($payment->method) : null
+            'payment_method' => $payment ? PaymentMethods::getNameByMethodName($payment->method) : null
         ];
 
         $this->html = $this->renderTwig((string)$this->template->body, $options);
