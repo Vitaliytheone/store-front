@@ -4,6 +4,7 @@ namespace common\helpers;
 
 use common\models\panels\services\GetPaymentMethodsService;
 use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -33,16 +34,12 @@ class CurrencyHelper
 
         static::$currencyOptions[$code] = [];
 
+        $availableCurrencies = PaymentMethodsCurrency::getMethodsByCurrency($code, 'method_id');
+
         /**
          * @var PaymentMethods $method
          */
         foreach (PaymentMethods::getMethods() as $method) {
-            $availableCurrencies = (array)$method->getPaymentMethodCurrency()
-                ->where(['currency' => $code])
-                ->asArray()
-                ->indexBy('method_id')
-                ->all();
-
             if (!isset($availableCurrencies[$method->id])) {
                 continue;
             }
