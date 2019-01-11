@@ -131,18 +131,19 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Return payment method title by method
-     * @param string $method
+     * Get name attribute value
+     * @param int $id
      * @return string
      */
-    public static function getNameByMethodName(string $method): string
+    public static function getName(int $id): string
     {
-        $methodModel = static::find()
-            ->select(['name'])
-            ->where(['method_name' => $method])
-            ->one();
+        $method = static::findOne($id);
 
-        return isset($methodModel->name) ? $methodModel->name : $method;
+        if (!$method) {
+            return false;
+        }
+
+        return isset($method->name) ? $method->name : $method->method_name;
     }
 
     /**
