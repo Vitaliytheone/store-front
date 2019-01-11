@@ -58,6 +58,7 @@ class GatewaysSearch extends Model
     public function buildQuery($status = null)
     {
         $searchQuery = $this->getQuery();
+        $gatewayId = isset($this->params['id']) ? $this->params['id'] : null;
 
         $gateways = (new Query())
             ->select([
@@ -80,6 +81,10 @@ class GatewaysSearch extends Model
                 ['like', 'sites.domain', $searchQuery],
                 ['like', 'customers.email', $searchQuery],
             ]);
+        }
+
+        if (isset($gatewayId)) {
+            $gateways->andWhere(['sites.id' => $gatewayId]);
         }
 
         return $gateways;
