@@ -3,8 +3,11 @@
 namespace common\models\store;
 
 use common\components\behaviors\IpBehavior;
+use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use common\models\store\queries\CheckoutsQuery;
 
@@ -63,6 +66,8 @@ class Checkouts extends ActiveRecord
             [['customer', 'method_status', 'ip'], 'string', 'max' => 255],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
             [['currency'], 'string', 'max' => 10],
+            [['method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethods::class, 'targetAttribute' => ['method_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
 
@@ -86,6 +91,26 @@ class Checkouts extends ActiveRecord
             'currency' => Yii::t('app', 'Currency'),
             'user_details' => Yii::t('app', 'User details'),
         ];
+    }
+
+    /**
+     * Get currency of current method
+     *
+     * @return ActiveQuery
+     */
+    public function getPaymentMethodCurrency(): ActiveQuery
+    {
+        return $this->hasMany(PaymentMethodsCurrency::class, ['id' => 'currency_id']);
+    }
+
+    /**
+     * Get currency of current method
+     *
+     * @return ActiveQuery
+     */
+    public function getPaymentMethod(): ActiveQuery
+    {
+        return $this->hasMany(PaymentMethods::class, ['id' => 'method_id']);
     }
 
     /**
