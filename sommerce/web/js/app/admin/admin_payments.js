@@ -76,7 +76,7 @@ customModule.adminPayments = {
             e.preventDefault();
 
             var link = $(this);
-            var elementCalss = link.data('class');
+            var elementClass = link.data('class');
             var container = $('#multi_input_container_descriptions');
             var label = link.data('label');
             var elementName = link.data('name');
@@ -86,13 +86,13 @@ customModule.adminPayments = {
                 return false;
             }
 
-            var input = '<div class="form-group form-group-description">' +
-                '<span class="fa fa-times remove-description"></span>' +
-                '<label for="' + elementId + '" class="control-label">' + label + '</label>' +
-                '<input type="text" class="form-control ' + elementCalss + '" name="' + elementName + '" id="' + elementId + '" value="">' +
-                '</div>';
-
-            container.append(input);
+            var inputTemplate = templates['admin/payments'];
+            container.append(inputTemplate({
+                "elementId":elementId,
+                "label":label,
+                "elementClass":elementClass,
+                "elementName":elementName
+            }));
 
             return false;
         });
