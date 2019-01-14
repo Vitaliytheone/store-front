@@ -192,6 +192,7 @@ class Payments extends ActiveRecord
             static::STATUS_REVIEW => Yii::t('app', 'payments.status.review'),
             static::STATUS_VERIFICATION => Yii::t('app', 'payments.status.verification'),
             static::STATUS_UNVERIFIED => Yii::t('app', 'payments.status.unverified'),
+            static::STATUS_REVERSED  => Yii::t('app', 'payments.status.reversed'),
         ];
     }
 
