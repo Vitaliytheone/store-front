@@ -118,6 +118,8 @@ class Twocheckout extends BasePayment
 
     public function processing($store)
    {
+       $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_2CHECKOUT);
+
        $request = Yii::$app->request;
        $requestParams = $request->post();
 

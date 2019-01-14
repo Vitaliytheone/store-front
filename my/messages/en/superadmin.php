@@ -273,6 +273,7 @@ return [
     'payments.list.navs_expired' => 'Expired ({count})',
     'payments.list.navs_verification' => 'Verification ({count})',
     'payments.list.navs_unverified' => 'Unverified ({count})',
+    'payments.list.navs_reversed' => 'Reversed ({count})',
     'payments.list.search' => 'Search payments',
     'payments.list.column_id' => 'ID',
     'payments.list.column_invoice' => 'Invoice',

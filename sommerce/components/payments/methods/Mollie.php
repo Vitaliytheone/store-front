@@ -74,6 +74,7 @@ class Mollie extends BasePayment
      */
     public function processing($store)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_MOLLIE);
         $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
 
         $txnId = ArrayHelper::getValue($_POST, 'id');

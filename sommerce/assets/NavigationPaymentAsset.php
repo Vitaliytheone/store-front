@@ -14,7 +14,7 @@ class NavigationPaymentAsset extends AssetBundle
     public $baseUrl = '@web';
 
     public $css = [
-        'css/admin/payments.css',
+        'css/admin/styles.css',
     ];
 
     public $js = [
