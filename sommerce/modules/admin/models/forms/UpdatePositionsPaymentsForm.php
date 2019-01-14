@@ -70,18 +70,15 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
         $db = static::getDb();
         $table = static::tableName();
 
-        $positionList = static::find()->where(['id' => $idsFront])->select('id')->indexBy('id')->asArray()->all();
+        $positionsList = static::find()->where(['id' => $idsFront])->select('id')->indexBy('id')->asArray()->all();
 
-        if (empty($positionList)) {
+        if (empty($positionsList)) {
             return false;
         }
 
-        $idsDb = array_column($positionList, 'id');
-        \Yii::debug($positionsImploded);
-        \Yii::debug($positionList);
-        \Yii::debug($idsDb);
-        \Yii::debug($idsFront);
-        if (!in_array($idsFront, $idsDb)) {
+        $idsDb = array_column($positionsList, 'id');
+
+        if (array_diff($idsFront, $idsDb)) {
             return false;
         }
 
@@ -110,8 +107,8 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
 
         foreach ($tree as $position => $node) {
             $flatArray[] = [
-                'id' => $node['id'],
-                'position' => $position,
+                'id' => (int)$node['id'],
+                'position' => (int)$position,
             ];
         }
 

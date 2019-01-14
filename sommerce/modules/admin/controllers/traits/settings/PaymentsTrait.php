@@ -68,6 +68,10 @@ trait PaymentsTrait
         $paymentModel->setUser(Yii::$app->user);
         $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
 
+        if (!$paymentMethod) {
+            throw new NotFoundHttpException();
+        }
+
         if ($request->method == 'POST' && $paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
@@ -159,7 +163,7 @@ trait PaymentsTrait
         $model->setUser(Yii::$app->user);
 
         if (!$model->updatePositions($request->post())) {
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException('Change in POST detected');
         }
 
         return [true];
