@@ -411,6 +411,7 @@ return [
     'payments.status.review' => 'Review',
     'payments.status.verification' => 'Verification',
     'payments.status.unverified' => 'Unverified',
+    'payments.status.reversed' => 'Reversed',
 
     'error.staff.can_not_change_password' => 'Can not set staff password',
     'error.staff.can_not_edit' => 'Can not edit staff',
