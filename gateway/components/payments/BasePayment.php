@@ -292,7 +292,8 @@ abstract class BasePayment extends Component {
         if (null !== $this->_description) {
             return $this->_description;
         }
-        $this->_description = ArrayHelper::getValue($this->getPaymentMethod(), 'options');
+        $this->_description = ArrayHelper::getValue($this->getPaymentMethod(), ['options', 'description']);
+        
         return $this->_description;
     }
 
