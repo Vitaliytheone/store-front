@@ -485,11 +485,14 @@ class SystemController extends CustomController
                 ->andWhere(['!=', 'db_name', ''])
                 ->all();
 
+            $transaction = Yii::$app->db->transaction;
+            $transaction->begin();
             $currentId = $method->id;
             $method->id = $id;
             if (!$method->update(false))
             {
                 echo $method->method_name . ' - update error: ' . ActiveForm::firstError($method);
+                $transaction->rollBack();
                 return;
             }
 
@@ -498,6 +501,7 @@ class SystemController extends CustomController
                     ->update($store->db_name . '.checkouts', ['method_id' => $id], ['method_id' => $currentId])
                     ->execute();
             }
+            $transaction->commit();
         }
     }
 }
