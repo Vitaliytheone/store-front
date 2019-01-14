@@ -106,6 +106,7 @@ class Paypalstandard extends BasePayment
      */
     protected function standardProcessing($store, $details)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAYPAL_STANDARD);
         // paypal standard отвечаем ok если платеж добавлен
 
         $itemNumber = ArrayHelper::getValue($_POST, 'item_number', ArrayHelper::getValue($_GET, 'id'));

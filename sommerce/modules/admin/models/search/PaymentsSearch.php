@@ -339,7 +339,7 @@ class PaymentsSearch extends Model
                 $checkout = $checkouts[$payment['checkout_id']];
             }
 
-            $payment['method_title'] = PaymentMethods::getName($checkout['method_id']);
+            $payment['method_title'] = PaymentMethods::getMethodName($checkout['method_id']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

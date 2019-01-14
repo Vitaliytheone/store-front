@@ -56,6 +56,8 @@ class Freekassa extends BasePayment {
      */
     public function processing($store)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_FREE_KASSA);
+
         $amount = ArrayHelper::getValue($_POST, 'AMOUNT');
         $merchantId = ArrayHelper::getValue($_POST, 'MERCHANT_ID');
         $merchantOrderId = ArrayHelper::getValue($_POST, 'MERCHANT_ORDER_ID');

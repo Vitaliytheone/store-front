@@ -45,6 +45,8 @@ class Stripe extends BasePayment
      */
     public function checkout($checkout, $store, $user, $details)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_STRIPE);
+
         $paymentMethodOptions = $details->getOptions();
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $options = $checkout->getUserDetails();

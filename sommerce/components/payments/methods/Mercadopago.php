@@ -118,6 +118,8 @@ class Mercadopago extends BasePayment
      */
     public function processing($store)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_MERCADOPAGO);
+
         $id = ArrayHelper::getValue($_GET, 'id');
         $topic = ArrayHelper::getValue($_GET, 'topic');
 

@@ -156,6 +156,7 @@ class Paypal extends BasePayment
      */
     protected function expressProcessing($store, $details)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAYPAL);
         $paymentMethodOptions = $details->getOptions();
 
         $token = ArrayHelper::getValue($_GET, 'token');

@@ -66,6 +66,8 @@ class Webmoney extends BasePayment
      */
     public function processing($store)
     {
+        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_WEBMONEY);
+
         $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_WEBMONEY);
 
         if (empty($paymentMethod)) {
