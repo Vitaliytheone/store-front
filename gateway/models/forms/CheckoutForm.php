@@ -60,6 +60,12 @@ class CheckoutForm extends Model {
     {
         return [
             [['amount', 'method', 'source_id', 'source_type', 'source_payment_id', 'currency'], 'required'],
+            [['description'], 'string'],
+            [['description'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'], // Clear for XSS
+            [['description'], 'filter', 'filter' => function($value) {
+                $value = is_string($value) ? trim($value) : null;
+                return !empty($value) ? $value : null;
+            }],
             [['amount',], 'number'],
             [['currency',], 'string', 'length' => 3],
             [['success_url', 'fail_url', 'return_url', 'method', 'description'], 'string'],
