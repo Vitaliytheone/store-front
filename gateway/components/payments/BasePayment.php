@@ -293,7 +293,7 @@ abstract class BasePayment extends Component {
             return $this->_description;
         }
         $this->_description = ArrayHelper::getValue($this->getPaymentMethod(), 'options');
-        return !empty($this->_description) ? $this->_description : Yii::t('app', 'addfunds.payment.description');
+        return $this->_description;
     }
 
     /**
