@@ -182,7 +182,7 @@ class PaymentMethods extends ActiveRecord
     public static function getMethods(): array
     {
         if (empty(static::$methods)) {
-            static::$methods = static::find()->all();
+            static::$methods = static::find()->indexBy('id')->all();
 
         }
 

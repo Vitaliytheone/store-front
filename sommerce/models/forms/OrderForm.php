@@ -179,17 +179,19 @@ class OrderForm extends Model
 
             static::$_methods = [];
             $methods = [];
+            $paymentMethods = PaymentMethods::getMethods();
 
             foreach (StorePaymentMethods::find()
                  ->store($this->_store)
                  ->active()
                  ->all() as $key => $method) {
-
                 /** @var StorePaymentMethods $method */
+                $paymentMethod = ArrayHelper::getValue($paymentMethods, $method->method_id);
+
                 $methods[$key] = [
                     'id' => $method->method_id,
                     'name' => $method->name ?: $method->getName(),
-                    'method' => PaymentMethods::getMethodName($method->method_id),
+                    'method' => $paymentMethod->method_name,
                     'details' => $method->getOptions(),
                     'position' => $method->position,
                     'fields' => [],
