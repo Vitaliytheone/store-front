@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
 import PackageModal from "./modals/PackageModal";
-import PropTypes from "prop-types";
+
 
 class EditPackage extends Component {
   state = {
@@ -26,13 +26,14 @@ class EditPackage extends Component {
     const { packageValue } = this.props;
     return (
       <React.Fragment>
-        <button
+        <Button 
           onClick={this.toggle}
-          type="button"
-          className="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action product-pointer-events"
+          color="primary"
+          size="sm"
+          className="m-btn--pill sommerce_dragtable__action"
         >
           Edit
-        </button>
+        </Button>
         <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle}  backdrop='static'
           keyboard={false}>
           <Formik

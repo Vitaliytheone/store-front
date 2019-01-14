@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalFooter, Col, Row } from "reactstrap";
 import { Formik, Form } from "formik";
 import PackageModal from "./modals/PackageModal";
 import PropTypes from "prop-types";
@@ -24,12 +24,15 @@ class AddPackage extends Component {
 
 
   render() {
-    return <React.Fragment>
-        <div className="mt-2 mb-3">
-          <button className="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air product-pointer-events" onClick={this.toggle}>
-            Add package
-          </button>
-        </div>
+    return (
+    <React.Fragment>
+      <Row>
+          <Col className="mt-2 mb-3">
+            <Button color="primary" size="sm" onClick={this.toggle}>
+              Add package
+            </Button>
+          </Col>
+        </Row>
         <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop="static" keyboard={false}>
           <Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
             <Form>
@@ -45,7 +48,8 @@ class AddPackage extends Component {
             </Form>
           </Formik>
         </Modal>
-      </React.Fragment>;
+      </React.Fragment>
+    );
   }
 }
 

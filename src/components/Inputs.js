@@ -1,4 +1,5 @@
 import React from "react";
+import { Label, Input, FormGroup } from "reactstrap";
 
 export const ProductInput = ({
   field,
@@ -6,18 +7,16 @@ export const ProductInput = ({
   label,
   ...props
 }) => (
-  <div>
-    <label htmlFor={field.name}>{label}</label>
-    <input
+  <FormGroup>
+    <Label htmlFor={field.name}>{label}</Label>
+    <Input 
       {...field}
       {...props}
-      className="form-control"
-      id="edit-page-title"
     />
     {touched[field.name] && errors[field.name] && (
       <div className="invalid-feedback error">{errors[field.name]}</div>
     )}
-  </div>
+  </FormGroup>
 );
 
 export const PackageInput = ({
@@ -26,11 +25,11 @@ export const PackageInput = ({
   label,
   ...props
 }) => (
-  <div>
-    <label htmlFor={field.name}>{label}</label>
-    <input {...field} {...props} className="form-control" id={field.id} />
+  <FormGroup>
+    <Label htmlFor={field.name}>{label}</Label>
+    <Input {...field} {...props}  />
     {touched[field.name] && errors[field.name] && (
       <div className="invalid-feedback error">{errors[field.name]}</div>
     )}
-  </div>
+  </FormGroup>
 );

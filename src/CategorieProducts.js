@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Container, Row, Col, Jumbotron } from "reactstrap";
 import { arrayMove } from "react-sortable-hoc";
 import AddProduct from "./components/AddProduct";
 import ProductList from "./components/SortableComponents/ProductList";
@@ -174,12 +175,12 @@ class CategorieProducts extends Component {
     console.log(data);
     return (
       <React.Fragment> 
-        <div className="page-container">
-          <div className="m-container-sommerce container-fluid">
+        <Jumbotron className="page-container">
+          <Container fluid className="m-container-sommerce">
             <AddProduct onSubmit={this.handleAddProduct} isSubmitting={isSubmitting} />
-            <div className="row">
-              <div className="col-12">
-                <div className="sommerce_dragtable">
+            <Row>
+              <Col>
+                <Col className="sommerce_dragtable">
                   <ProductList
                     helperClass="sortable-helper"
                     handleEditProduct={this.handleEditProduct}
@@ -191,11 +192,11 @@ class CategorieProducts extends Component {
                     onSortEnd={this.handleProductSwitch}
                     onPackageAdd={this.handleAddPackage}
                   />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                </Col>
+              </Col>
+            </Row>
+          </Container>
+        </Jumbotron>
       </React.Fragment>
     );
   }

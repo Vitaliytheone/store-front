@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalFooter, Row, Col } from "reactstrap";
 import { Formik, Form } from "formik";
 import ProductModal from "./modals/ProductModal";
 import PropTypes from 'prop-types';
@@ -26,18 +26,18 @@ class AddProduct extends Component {
     const { isSubmitting } = this.props;
     return (
       <React.Fragment>
-        <div className="row sommerce-products__actions">
-          <div className="col-lg-12">
-            <div className="page-content">
-              <button
+        <Row className="sommerce-products__actions">
+          <Col lg="12">
+            <Col className="page-content">
+              <Button
                 onClick={this.toggle}
-                className="btn btn-primary m-btn--air"
+                color="primary"
               >
                 Add product
-              </button>
-            </div>
-          </div>
-        </div>
+              </Button>
+            </Col>
+          </Col>
+        </Row>
         <Modal
           isOpen={this.state.modalIsOpen}
           toggle={this.toggle}

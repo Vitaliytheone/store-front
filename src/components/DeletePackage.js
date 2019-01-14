@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody } from "reactstrap";
+import { Button, Modal, ModalBody, Container, Row, Col } from "reactstrap";
 
 class DeletePackage extends Component {
   state = {
@@ -20,15 +20,16 @@ class DeletePackage extends Component {
   };
 
   render() {
-    return <React.Fragment>
-        <button onClick={this.toggle} href="#" className="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill product-pointer-events">
+    return( 
+    <React.Fragment>
+        <Button onClick={this.toggle} color="light" className="m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill">
           <i className="la la-trash" />
-        </button>
+        </Button>
         <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop="static" keyboard={false} size="sm">
           <ModalBody>
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col modal-delete-block text-center">
+            <Container fluid>
+              <Row>
+                <Col className="modal-delete-block text-center">
                   <span className="fa fa-trash-o" />
                   <p>
                     Are your sure that your want to delete this Package?
@@ -39,12 +40,13 @@ class DeletePackage extends Component {
                   <Button color="danger" id="feature-delete m-btn--air" onClick={this.handleSubmit}>
                     Yes, delete it!
                   </Button>
-                </div>
-              </div>
-            </div>
+                </Col>
+              </Row>
+            </Container>
           </ModalBody>
         </Modal>
-      </React.Fragment>;
+      </React.Fragment>
+    );
   }
 }
 

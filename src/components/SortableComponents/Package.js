@@ -1,23 +1,26 @@
 import React from "react";
+import { Row, Col, Container } from "reactstrap";
 import DragHandle from "./DragHandle";
 import { SortableElement } from "react-sortable-hoc";
 import EditPackage from "../EditPackage";
 import DeletePackage from "../DeletePackage";
 
 const SortablePackage = SortableElement(({ pack, handleEditPackage, handleDeletePackage }) => {
-    return <div className="group-item sommerce_dragtable__tr align-items-center">
-        <div className="col-lg-5 padding-null-left">
+    return (
+      <Col className="group-item sommerce_dragtable__tr align-items-center">
+        <Col lg="5" className="padding-null-left">
           <DragHandle />
           <strong>{pack.name}</strong>
-        </div>
-        <div className="col-lg-2">{pack.price}</div>
-        <div className="col-lg-2">{pack.provider}</div>
-        <div className="col-lg-2 text-lg-center">Enabled</div>
-        <div className="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+        </Col>
+        <Col>{pack.price}</Col>
+        <Col>{pack.provider}</Col>
+        <Col className="ext-lg-center">Enabled</Col>
+        <Col className="padding-null-lg-right text-lg-right text-sm-left">
           <EditPackage packageValue={pack} onSubmit={handleEditPackage} />
            <DeletePackage onSubmit={handleDeletePackage}/>
-        </div>
-      </div>;
+        </Col>
+      </Col>
+    );
 });
 
 export default SortablePackage;

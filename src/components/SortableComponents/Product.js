@@ -1,4 +1,5 @@
 import React from "react";
+import { Row, Col } from "reactstrap";
 import { SortableElement } from "react-sortable-hoc";
 import  DragHandle  from "./DragHandle";
 import EditProduct from "../EditProduct";
@@ -7,18 +8,18 @@ import PackageList from "./PackageList";
 const SortableProduct = SortableElement(
     ({ product, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage, handleDeletePackage }) => {
         return (
-            <div className="row group-caption">
-                <div className="col-12 sommerce_dragtable__category">
-                    <div className="sommerce_dragtable__category-title">
-                        <div className="row align-items-center">
-                            <div className="col-12">
-                                 <DragHandle/>
+            <Row className="group-caption">
+                <Col className="sommerce_dragtable__category">
+                    <Col className="sommerce_dragtable__category-title">
+                        <Row className="align-items-center">
+                            <Col sm="12">
+                                <DragHandle />
                                 {product.name}
-                                <EditProduct productValue={product} onSubmit={handleEditProduct}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                <EditProduct productValue={product} onSubmit={handleEditProduct} />
+                            </Col>
+                        </Row>
+                    </Col>
+                </Col>
                 <PackageList
                     lockAxis={"y"}
                     lockToContainerEdges={true}
@@ -29,7 +30,7 @@ const SortableProduct = SortableElement(
                     handleEditPackage={handleEditPackage}
                     handleDeletePackage={handleDeletePackage}
                 />
-            </div>
+            </Row>
         );
     }
 );
