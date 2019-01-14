@@ -3,7 +3,6 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
 use Yii;
 use sommerce\controllers\CommonController;
 use yii\web\User;

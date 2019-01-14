@@ -3,7 +3,6 @@ namespace sommerce\modules\admin\components;
 
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StoreAdminsHash;
-use Yii;
 use yii\web\User;
 
 /**

@@ -1,6 +1,5 @@
 <?php
 
-use common\models\stores\StorePaymentMethods;
 use my\components\ActiveForm;
 use sommerce\modules\admin\models\forms\AddPaymentMethodForm;
 
