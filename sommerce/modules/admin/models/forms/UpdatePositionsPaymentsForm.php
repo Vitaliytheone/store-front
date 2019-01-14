@@ -47,7 +47,7 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
     public function updatePositions($postData): bool
     {
 
-        $positionsTree = ArrayHelper::getValue($postData, 'positions', null);
+        $positionsTree = ArrayHelper::getValue($postData, 'positions');
 
         if (!$positionsTree) {
             return false;
@@ -55,15 +55,35 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
 
         $positions = static::flatten($positionsTree);
 
+        if (empty($positions)) {
+            return false;
+        }
+
         $positionsImploded = null;
         foreach ($positions as $position) {
             $id = (int)$position['id'] | 0;
+            $idsFront[] = (int)$position['id'] | 0;
             $position = (int)$position['position'] | 0;
             $positionsImploded = ($positionsImploded ? $positionsImploded . ',' : '') . "('$id', '$position')";
         }
 
         $db = static::getDb();
         $table = static::tableName();
+
+        $positionList = static::find()->where(['id' => $idsFront])->select('id')->indexBy('id')->asArray()->all();
+
+        if (empty($positionList)) {
+            return false;
+        }
+
+        $idsDb = array_column($positionList, 'id');
+        \Yii::debug($positionsImploded);
+        \Yii::debug($positionList);
+        \Yii::debug($idsDb);
+        \Yii::debug($idsFront);
+        if (!in_array($idsFront, $idsDb)) {
+            return false;
+        }
 
         $command = $db->createCommand("
                 INSERT INTO $table (id, position)

@@ -339,6 +339,10 @@ class SystemController extends CustomController
             }
             $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $method->id]);
 
+            if (!$storeCurrency) {
+                continue;
+            }
+
             $lastPositions = StorePaymentMethods::find()
                 ->where(['store_id' => $storeMethod->store_id])
                 ->max('position');
@@ -348,7 +352,7 @@ class SystemController extends CustomController
             $storeMethod->name = $method->name;
             $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
             if (empty($storeMethod->options) || $storeMethod->options === '[]') {
-                $storeMethod->options = $storeMethod->setClearOptions($method->id);
+                $storeMethod->setOptions([]);
             }
             $storeMethod->created_at = time();
             $storeMethod->updated_at = time();

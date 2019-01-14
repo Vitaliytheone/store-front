@@ -2,10 +2,13 @@
 
 use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
+use common\models\stores\StorePaymentMethods;
 
 /* @var $paymentMethods[]|\common\models\stores\StorePaymentMethods */
 /* @var $method \common\models\stores\StorePaymentMethods */
 /* @var $availableMethods array */
+
+$icons = StorePaymentMethods::getMethodIcon();
 
 ?>
 
@@ -42,7 +45,7 @@ use sommerce\helpers\UiHelper;
                             <div class="row align-items-center payment-main-block">
                                 <div class="col-12">
                                     <div class="payment-cart__preview">
-                                        <img src="<?= $method->getMethodIcon() ?>" alt="" class="img-fluid" style="">
+                                        <img src="<?= $icons[$method->method_id]['icon'] ?>" alt="" class="img-fluid" style="">
                                     </div>
                                     <div class="payment-cart__title">
                                         <?= $method->name ?: $method->getName() ?>
