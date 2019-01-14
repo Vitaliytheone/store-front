@@ -2,7 +2,9 @@
 
 namespace console\controllers\sommerce;
 
+use common\models\store\Checkouts;
 use common\models\stores\StoreAdmins;
+use my\components\ActiveForm;
 use sommerce\helpers\MessagesHelper;
 use yii\db\Exception;
 use yii\db\Query;
@@ -391,5 +393,111 @@ class SystemController extends CustomController
         }
 
         return print "Success add new column to {$count} checkouts dbs\n";
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionChangePaymentsId()
+    {
+        $paymentMethods = PaymentMethods::find()->all();
+        $last = 16;
+
+        foreach ($paymentMethods as $method) {
+            $countCurrentMethod = PaymentMethods::find()
+                ->where(['method_name' => $method->method_name])
+                ->count();
+
+            if ($countCurrentMethod > 1) {
+                $method->delete();
+                continue;
+            }
+
+            switch ($method->method_name) {
+                case 'paypal':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_PAYPAL);
+                    break;
+                case '2checkout':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_2CHECKOUT);
+                    break;
+                case 'coinpayments':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_COINPAYMENTS);
+                    break;
+                case 'pagseguro':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_PAGSEGURO);
+                    break;
+                case 'webmoney':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_WEBMONEY);
+                    break;
+                case 'yandexmoney':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_YANDEX_MONEY);
+                    break;
+                case 'freekassa':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_FREE_KASSA);
+                    break;
+                case 'paytr':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_PAYTR);
+                    break;
+                case 'paywant':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_PAYWANT);
+                    break;
+                case 'billplz':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_BILLPLZ);
+                    break;
+                case 'authorize':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_AUTHORIZE);
+                    break;
+                case 'yandexcards':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_YANDEX_CARDS);
+                    break;
+                case 'stripe':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_STRIPE);
+                    break;
+                case 'mercadopago':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_MERCADOPAGO);
+                    break;
+                case 'paypalstandard':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_PAYPAL_STANDARD);
+                    break;
+                case 'mollie':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_MOLLIE);
+                    break;
+                default:
+                    $method->id = $last + 1;
+                    $last++;
+            }
+        }
+    }
+
+    /**
+     * @param PaymentMethods $method
+     * @param int $id
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    protected static function _checkPaymentMethodId(PaymentMethods $method, int $id)
+    {
+        if ($method->id !== $id) {
+            $stores = Stores::find()
+                ->where('db_name is not null')
+                ->andWhere(['!=', 'db_name', ''])
+                ->all();
+
+            $currentId = $method->id;
+            $method->id = $id;
+            if (!$method->update(false))
+            {
+                echo $method->method_name . ' - update error: ' . ActiveForm::firstError($method);
+                return;
+            }
+
+            foreach ($stores as $store) {
+                Yii::$app->db->createCommand()
+                    ->update($store->db_name . '.checkouts', ['method_id' => $id], ['method_id' => $currentId])
+                    ->execute();
+            }
+        }
     }
 }
