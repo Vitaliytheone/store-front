@@ -6,7 +6,6 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use common\models\stores\queries\PaymentMethodsQuery;
-use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -37,13 +36,13 @@ class PaymentMethods extends ActiveRecord
     public const METHOD_FREE_KASSA = 7;
     public const METHOD_PAYTR = 8;
     public const METHOD_PAYWANT = 9;
-    public const METHOD_BILLPLZ = 11;
-    public const METHOD_AUTHORIZE = 12;
-    public const METHOD_YANDEX_CARDS = 13;
-    public const METHOD_STRIPE = 15;
-    public const METHOD_MERCADOPAGO = 16;
-    public const METHOD_PAYPAL_STANDARD = 17;
-    public const METHOD_MOLLIE = 18;
+    public const METHOD_BILLPLZ = 10;
+    public const METHOD_AUTHORIZE = 11;
+    public const METHOD_YANDEX_CARDS = 12;
+    public const METHOD_STRIPE = 13;
+    public const METHOD_MERCADOPAGO = 14;
+    public const METHOD_PAYPAL_STANDARD = 15;
+    public const METHOD_MOLLIE = 16;
 
     public const FIELD_TYPE_INPUT = 'input';
     public const FIELD_TYPE_CHECKBOX = 'checkbox';
