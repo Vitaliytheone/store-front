@@ -235,5 +235,3 @@ $storeUrl = $store->getBaseSite();
         </div>
     </div>
 </div>
-
-<?= $this->render('layouts/settings/_modal_delete_currency') ?>
