@@ -81,7 +81,7 @@ class Yandexmoney extends BasePayment
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
 
         if (empty($paymentMethod)) {
             // no invoice

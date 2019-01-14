@@ -28,22 +28,22 @@ use yii\behaviors\TimestampBehavior;
 class PaymentMethods extends ActiveRecord
 {
     /* Payment methods names */
-    public const METHOD_PAYPAL = 'paypal';
-    public const METHOD_2CHECKOUT = '2checkout';
-    public const METHOD_COINPAYMENTS = 'coinpayments';
-    public const METHOD_PAGSEGURO = 'pagseguro';
-    public const METHOD_WEBMONEY = 'webmoney';
-    public const METHOD_YANDEX_MONEY = 'yandexmoney';
-    public const METHOD_YANDEX_CARDS = 'yandexcards';
-    public const METHOD_FREE_KASSA = 'freekassa';
-    public const METHOD_PAYTR = 'paytr';
-    public const METHOD_PAYWANT = 'paywant';
-    public const METHOD_BILLPLZ = 'billplz';
-    public const METHOD_AUTHORIZE = 'authorize';
-    public const METHOD_STRIPE = 'stripe';
-    public const METHOD_MERCADOPAGO = 'mercadopago';
-    public const METHOD_PAYPAL_STANDARD = 'paypalstandard';
-    public const METHOD_MOLLIE = 'mollie';
+    public const METHOD_PAYPAL = 1;
+    public const METHOD_2CHECKOUT = 2;
+    public const METHOD_COINPAYMENTS = 3;
+    public const METHOD_PAGSEGURO = 4;
+    public const METHOD_WEBMONEY = 5;
+    public const METHOD_YANDEX_MONEY = 6;
+    public const METHOD_FREE_KASSA = 7;
+    public const METHOD_PAYTR = 8;
+    public const METHOD_PAYWANT = 9;
+    public const METHOD_BILLPLZ = 11;
+    public const METHOD_AUTHORIZE = 12;
+    public const METHOD_YANDEX_CARDS = 13;
+    public const METHOD_STRIPE = 15;
+    public const METHOD_MERCADOPAGO = 16;
+    public const METHOD_PAYPAL_STANDARD = 17;
+    public const METHOD_MOLLIE = 18;
 
     public const FIELD_TYPE_INPUT = 'input';
     public const FIELD_TYPE_CHECKBOX = 'checkbox';

@@ -206,7 +206,7 @@ class Authorize extends BasePayment {
 
             return static::returnError([
                 'result' => 2,
-                'redirect' => SiteHelper::hostUrl() . '/' . PaymentMethods::METHOD_AUTHORIZE . '?checkout_id=' . $checkout->id,
+                'redirect' => SiteHelper::hostUrl() . '/authorize?checkout_id=' . $checkout->id,
                 'content' => 'no final status',
             ]);
         }

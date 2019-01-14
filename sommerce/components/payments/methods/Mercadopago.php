@@ -135,7 +135,7 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_MERCADOPAGO);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_MERCADOPAGO);
 
         if (empty($paymentMethod)) {
             // no invoice

@@ -84,7 +84,7 @@ class Mollie extends BasePayment
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_MOLLIE);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_MOLLIE);
 
         if (empty($paymentMethod)) {
             return [

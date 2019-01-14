@@ -156,7 +156,7 @@ class Paytr extends BasePayment
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYTR);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYTR);
 
         if (empty($paymentMethod)) {
             // no invoice

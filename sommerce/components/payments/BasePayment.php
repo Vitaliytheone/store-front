@@ -24,8 +24,8 @@ use yii\helpers\ArrayHelper;
  * Class BasePayment
  * @package app\components\payments
  */
-abstract class BasePayment extends Component {
-
+abstract class BasePayment extends Component
+{
     /**
      * @var string - url action
      */
@@ -409,22 +409,24 @@ abstract class BasePayment extends Component {
 
     /**
      * Get visible store pay method
-     * @param $store Stores current store
-     * @param $payMethod string - PaymentMethods->method_name
-     * @return StorePaymentMethods
+     * @param Stores $store
+     * @param int $methodId - payment_methods.id
+     * @return StorePaymentMethods|bool
      */
-    public function getStorePayMethod($store, $payMethod)
+    public function getPaymentMethod(Stores $store, int $methodId)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method_name' => $payMethod,
-        ]);
-
-        $storePaymentMethod = StorePaymentMethods::findOne([
-            'method_id' => $paymentMethod->id,
+        $storeMethod = StorePaymentMethods::findOne([
+            'method_id' => $methodId,
             'store_id' => $store->id,
             'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 
-        return $storePaymentMethod;
+        $currencyMethod = PaymentMethodsCurrency::findOne($storeMethod->currency_id);
+
+        if ($currencyMethod->currency !== $store->currency) {
+            return false;
+        }
+
+        return $storeMethod;
     }
 }

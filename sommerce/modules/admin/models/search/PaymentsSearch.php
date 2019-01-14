@@ -99,7 +99,7 @@ class PaymentsSearch extends Model
     {
         $query = (new Query())
             ->select([
-                'id', 'customer', 'amount', 'method', 'fee', 'memo', 'status', 'updated_at', 'checkout_id',
+                'payments.id', 'payments.customer', 'amount', 'method', 'fee', 'memo', 'payments.status', 'payments.updated_at', 'payments.checkout_id',
             ])
             ->from($this->_paymentsTable)
             ->indexBy('id')
@@ -121,13 +121,13 @@ class PaymentsSearch extends Model
 
         // Query filters
         if(isset($this->status)) {
-            $filter = ['status' => $this->status];
+            $filter = ['payments.status' => $this->status];
             $this->_queryActiveFilters['status']['where'] = $filter;
         }
 
         if (isset($this->method)) {
-            $filter = ['method' => $this->method];
-            $this->_queryActiveFilters['method']['where'] = $filter;
+            $query->leftJoin($this->_db . '.checkouts', 'checkouts.id = payments.checkout_id');
+            $query->andFilterWhere(['checkouts.method_id' => $this->method]);
         }
 
         // Search
@@ -155,9 +155,9 @@ class PaymentsSearch extends Model
             $searchFilter = null;
 
             if ($emailValidator->validate($searchQuery)) {
-                $searchFilter = ['customer' => $searchQuery];
+                $searchFilter = ['payments.customer' => $searchQuery];
             } elseif ($paymentIds) {
-                $searchFilter = ['in', 'id', $paymentIds];
+                $searchFilter = ['in', 'payments.id', $paymentIds];
             }
 
             $searchFilter = [
@@ -181,10 +181,10 @@ class PaymentsSearch extends Model
     public function countsByStatus()
     {
         $countsQuery = (new Query())
-            ->select(['status', 'COUNT(*) count'])
+            ->select(['payments.status', 'COUNT(*) count'])
             ->from($this->_paymentsTable)
-            ->groupBy(['status'])
-            ->indexBy('status');
+            ->groupBy(['payments.status'])
+            ->indexBy('payments.status');
 
         $this->_applyFilters($countsQuery, $this->_queryActiveFilters, ['status']);
 
@@ -211,21 +211,21 @@ class PaymentsSearch extends Model
         $methodsList = ArrayHelper::map($methodsList, 'id', 'method_name');
 
         $countsByMethodsQuery = (new Query())
-            ->select(['checkouts.method_id', 'method', 'COUNT(*) count'])
+            ->select(['checkouts.method_id', 'COUNT(payments.id) count'])
             ->from($this->_paymentsTable)
             ->leftJoin($this->_db . '.' . Checkouts::tableName(), 'checkouts.id = payments.checkout_id')
-            ->groupBy('checkouts.method_id')
-            ->indexBy('payments.method');
+            ->groupBy('checkouts.method_id');
 
         $this->_applyFilters($countsByMethodsQuery, $this->_queryActiveFilters, ['method']);
         $counts = $countsByMethodsQuery->all();
 
+        $counts = ArrayHelper::map($counts, 'method_id', 'count');
+
         $result = [];
         foreach ($methodsList as $methodId => $methodName) {
             $result[] = [
-                'method' => $methodName,
                 'method_id' => $methodId,
-                'count' => isset($counts[$methodName]) ? $counts[$methodName]['count'] : 0,
+                'count' => isset($counts[$methodId]) ? $counts[$methodId] : 0,
             ];
         }
         return $result;
@@ -296,10 +296,10 @@ class PaymentsSearch extends Model
         $methodsFilterMenuItems = $this->countsByMethods();
 
         array_walk($methodsFilterMenuItems, function(&$menuItem){
-            $method = $menuItem['method'];
+            $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = StorePaymentMethods::getNameById($menuItem['method_id']);
+            $menuItem['method_title'] = StorePaymentMethods::getNameById($method);
         });
 
         $allMethodsMenuItem = [

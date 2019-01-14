@@ -20,7 +20,7 @@ class Payment {
     /**
      * Get payment component by payment method name
      *
-     * @param string $method
+     * @param string|int $method
      * @throws UnknownClassException
      * @return BasePayment
      */
@@ -30,7 +30,12 @@ class Payment {
             return static::$methods[$method];
         }
 
-        $paymentMethod = PaymentMethods::findOne(['method_name' => $method]);
+        if (is_string($method)) {
+            $paymentMethod = PaymentMethods::findOne(['method_name' => $method]);
+        } else {
+            $paymentMethod = PaymentMethods::findOne($method);
+        }
+
         $className = '\sommerce\components\payments\methods\\' . ucfirst($paymentMethod->class_name);
 
         if (!class_exists($className)) {

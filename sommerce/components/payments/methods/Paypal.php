@@ -129,7 +129,7 @@ class Paypal extends BasePayment
     public function processing($store)
     {
 
-        $storePaymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYPAL);
+        $storePaymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYPAL);
 
         if (empty($storePaymentMethod)) {
             // no invoice
