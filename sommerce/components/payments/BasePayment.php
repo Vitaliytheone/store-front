@@ -10,7 +10,6 @@ use common\models\store\Orders;
 use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\Suborders;
-use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
