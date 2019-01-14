@@ -98,7 +98,7 @@ class Pagseguro extends BasePayment
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAGSEGURO);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAGSEGURO);
 
         if (empty($paymentMethod)) {
             // no invoice

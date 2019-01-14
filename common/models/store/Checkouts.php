@@ -7,7 +7,6 @@ use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use common\models\store\queries\CheckoutsQuery;
 
@@ -51,7 +50,7 @@ class Checkouts extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%checkouts}}';
+        return 'checkouts';
     }
 
     /**

@@ -91,7 +91,7 @@ class Stripe extends BasePayment
         }
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->save(false);
-        return static::returnRedirect(SiteHelper::hostUrl() . '/'  . PaymentMethods::METHOD_STRIPE . '?checkout_id=' . $checkout->id);
+        return static::returnRedirect(SiteHelper::hostUrl() . '/stripe?checkout_id=' . $checkout->id);
     }
 
 
@@ -131,8 +131,7 @@ class Stripe extends BasePayment
      */
     public function processing($store)
     {
-
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_STRIPE);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_STRIPE);
 
         if (empty($paymentMethod)) {
             // no invoice

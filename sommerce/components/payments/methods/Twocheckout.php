@@ -163,7 +163,7 @@ class Twocheckout extends BasePayment
            ];
        }
 
-       $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_2CHECKOUT);
+       $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_2CHECKOUT);
 
        if (empty($paymentMethod)) {
            return [

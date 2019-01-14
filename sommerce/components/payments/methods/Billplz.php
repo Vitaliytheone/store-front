@@ -95,7 +95,7 @@ class Billplz extends BasePayment {
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_BILLPLZ);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_BILLPLZ);
 
         if (empty($paymentMethod)) {
             // no invoice

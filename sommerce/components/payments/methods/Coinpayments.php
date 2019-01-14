@@ -138,7 +138,7 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_COINPAYMENTS);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_COINPAYMENTS);
 
         if (empty($paymentMethod)) {
             return [

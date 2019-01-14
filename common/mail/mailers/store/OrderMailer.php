@@ -2,6 +2,7 @@
 
 namespace common\mail\mailers\store;
 
+use common\models\store\Checkouts;
 use common\models\store\Orders;
 use common\models\store\Payments;
 use common\models\store\Suborders;
@@ -41,6 +42,7 @@ class OrderMailer extends BaseNotificationMailer
         $suborders = (array)ArrayHelper::getValue($this->options, 'suborders', $this->_order->suborders);
         $payment = ArrayHelper::getValue($this->options, 'payment', $this->_order->payment);
         $options = $this->getGlobalVars();
+        $checkout = Checkouts::findOne($payment->checkout_id);
 
         $data = [];
         $total = 0;
@@ -69,7 +71,7 @@ class OrderMailer extends BaseNotificationMailer
             'sub_total' => $total,
             'total' => $total,
             'url' => $url,
-            'payment_method' => $payment ? PaymentMethods::getNameByMethodName($payment->method) : null
+            'payment_method' => $checkout ? PaymentMethods::getName($checkout->method_id) : null
         ];
 
         $this->html = $this->renderTwig((string)$this->template->body, $options);

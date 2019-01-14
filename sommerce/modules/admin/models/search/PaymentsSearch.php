@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
+use common\models\store\Checkouts;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use Yii;
@@ -98,7 +99,7 @@ class PaymentsSearch extends Model
     {
         $query = (new Query())
             ->select([
-                'id', 'customer', 'amount', 'method', 'fee', 'memo', 'status', 'updated_at',
+                'payments.id', 'payments.customer', 'amount', 'method', 'fee', 'memo', 'payments.status', 'payments.updated_at', 'payments.checkout_id',
             ])
             ->from($this->_paymentsTable)
             ->indexBy('id')
@@ -120,13 +121,13 @@ class PaymentsSearch extends Model
 
         // Query filters
         if(isset($this->status)) {
-            $filter = ['status' => $this->status];
+            $filter = ['payments.status' => $this->status];
             $this->_queryActiveFilters['status']['where'] = $filter;
         }
 
         if (isset($this->method)) {
-            $filter = ['method' => $this->method];
-            $this->_queryActiveFilters['method']['where'] = $filter;
+            $query->leftJoin($this->_db . '.checkouts', 'checkouts.id = payments.checkout_id');
+            $query->andFilterWhere(['checkouts.method_id' => $this->method]);
         }
 
         // Search
@@ -154,9 +155,9 @@ class PaymentsSearch extends Model
             $searchFilter = null;
 
             if ($emailValidator->validate($searchQuery)) {
-                $searchFilter = ['customer' => $searchQuery];
+                $searchFilter = ['payments.customer' => $searchQuery];
             } elseif ($paymentIds) {
-                $searchFilter = ['in', 'id', $paymentIds];
+                $searchFilter = ['in', 'payments.id', $paymentIds];
             }
 
             $searchFilter = [
@@ -180,10 +181,10 @@ class PaymentsSearch extends Model
     public function countsByStatus()
     {
         $countsQuery = (new Query())
-            ->select(['status', 'COUNT(*) count'])
+            ->select(['payments.status', 'COUNT(*) count'])
             ->from($this->_paymentsTable)
-            ->groupBy(['status'])
-            ->indexBy('status');
+            ->groupBy(['payments.status'])
+            ->indexBy('payments.status');
 
         $this->_applyFilters($countsQuery, $this->_queryActiveFilters, ['status']);
 
@@ -201,29 +202,30 @@ class PaymentsSearch extends Model
         $storeId = yii::$app->store->getId();
 
         $methodsList = (new Query())
-            ->select(['method_id', 'payment_methods.method_name'])
+            ->select(['payment_methods.id', 'payment_methods.method_name'])
             ->from(StorePaymentMethods::tableName())
             ->leftJoin('payment_methods', 'payment_methods.id = store_payment_methods.method_id')
             ->where(['store_id' => $storeId])
             ->all();
 
-        $methodsList = ArrayHelper::map($methodsList, 'method_name', 'method_id');
+        $methodsList = ArrayHelper::map($methodsList, 'id', 'method_name');
 
         $countsByMethodsQuery = (new Query())
-            ->select(['method', 'COUNT(*) count'])
+            ->select(['checkouts.method_id', 'COUNT(payments.id) count'])
             ->from($this->_paymentsTable)
-            ->groupBy('method')
-            ->indexBy('method');
+            ->leftJoin($this->_db . '.' . Checkouts::tableName(), 'checkouts.id = payments.checkout_id')
+            ->groupBy('checkouts.method_id');
 
         $this->_applyFilters($countsByMethodsQuery, $this->_queryActiveFilters, ['method']);
         $counts = $countsByMethodsQuery->all();
 
+        $counts = ArrayHelper::map($counts, 'method_id', 'count');
+
         $result = [];
-        foreach ($methodsList as $methodName => $methodId) {
+        foreach ($methodsList as $methodId => $methodName) {
             $result[] = [
-                'method' => $methodName,
                 'method_id' => $methodId,
-                'count' => isset($counts[$methodName]) ? $counts[$methodName]['count'] : 0,
+                'count' => isset($counts[$methodId]) ? $counts[$methodId] : 0,
             ];
         }
         return $result;
@@ -294,10 +296,10 @@ class PaymentsSearch extends Model
         $methodsFilterMenuItems = $this->countsByMethods();
 
         array_walk($methodsFilterMenuItems, function(&$menuItem){
-            $method = $menuItem['method'];
+            $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = StorePaymentMethods::getNameById($menuItem['method_id']);
+            $menuItem['method_title'] = StorePaymentMethods::getNameById($method);
         });
 
         $allMethodsMenuItem = [
@@ -326,8 +328,18 @@ class PaymentsSearch extends Model
 
         $payments = $this->_dataProvider->getModels();
 
-        array_walk($payments, function(&$payment) {
-            $payment['method_title'] = PaymentMethods::getNameByMethodName($payment['method']);
+        $checkouts = Checkouts::find()
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+        $checkout = [];
+
+        array_walk($payments, function(&$payment) use ($checkouts, &$checkout) {
+            if (array_key_exists($payment['checkout_id'], $checkouts)) {
+                $checkout = $checkouts[$payment['checkout_id']];
+            }
+
+            $payment['method_title'] = PaymentMethods::getName($checkout['method_id']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

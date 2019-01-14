@@ -198,7 +198,7 @@ class OrderForm extends Model
                 ];
 
                 $payMethod = PaymentMethods::findOne($method->method_id);
-                $payment = Payment::getPayment($payMethod->method_name);
+                $payment = Payment::getPayment($payMethod->id);
                 $methods[$key]['fields'] = $payment->fields();
                 $methods[$key]['jsOptions'] = $payment->getJsEnvironments($this->_store, $this->email, $method);
             }
@@ -257,7 +257,7 @@ class OrderForm extends Model
 
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
-        $checkout->method_id = $storePayMethod->id;
+        $checkout->method_id = $storePayMethod->method_id;
         $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
         $checkout->currency_id = $storePayMethod->currency_id;
@@ -269,7 +269,7 @@ class OrderForm extends Model
             return false;
         }
 
-        $result = Payment::getPayment($payMethod->method_name)->checkout($checkout, $this->_store, $this->email, $storePayMethod);
+        $result = Payment::getPayment($payMethod->id)->checkout($checkout, $this->_store, $this->email, $storePayMethod);
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;
@@ -363,7 +363,7 @@ class OrderForm extends Model
         $methodOptions = ArrayHelper::getValue($paymentMethods, $this->method, []);
         $fields = ArrayHelper::getValue($methodOptions, 'fields', []);
         $payMethod = PaymentMethods::findOne($methodOptions['id']);
-        $paymentMethod = Payment::getPayment($payMethod->method_name);
+        $paymentMethod = Payment::getPayment($payMethod->id);
 
         if (empty($fields)) {
             return true;

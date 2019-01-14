@@ -130,7 +130,7 @@ class CronController extends CustomController
      */
     protected function _checkAuthorize(Stores $store)
     {
-        $method = PaymentMethods::findOne(['method_name' => PaymentMethods::METHOD_AUTHORIZE]);
+        $method = PaymentMethods::findOne(PaymentMethods::METHOD_AUTHORIZE);
         $paymentCurrency = PaymentMethodsCurrency::findOne([
             'method_id' => $method->id,
             'currency' => $store->currency
@@ -150,7 +150,7 @@ class CronController extends CustomController
         /**
          * @var Authorize $component
          */
-        $component = Payment::getPayment($method->method_name);
+        $component = Payment::getPayment($method->id);
 
         foreach (Payments::find()->andWhere([
             'method' => $method->method_name,
@@ -168,7 +168,7 @@ class CronController extends CustomController
      */
     protected function _checkPaypalPayment(Stores $store)
     {
-        $method = PaymentMethods::findOne(['method_name' => PaymentMethods::METHOD_PAYPAL]);
+        $method = PaymentMethods::findOne(PaymentMethods::METHOD_PAYPAL);
         if (!$method) {
             return;
         }
@@ -198,7 +198,7 @@ class CronController extends CustomController
         /**
          * @var $component Paypal
          */
-        $component = Payment::getPayment($method->method_name);
+        $component = Payment::getPayment($method->id);
 
         foreach (Payments::find()->andWhere([
             'method' => $method,

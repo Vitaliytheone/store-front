@@ -78,7 +78,7 @@ class Paypalstandard extends BasePayment
      */
     public function processing($store)
     {
-        $paymentMethod = $this->getStorePayMethod($store, PaymentMethods::METHOD_PAYPAL_STANDARD);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYPAL_STANDARD);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -328,7 +328,7 @@ class Paypalstandard extends BasePayment
 
         if (empty($checkout)) {
             $paymentsResult['failed'] = true;
-        } elseif (empty($payment = Payments::findOne(['checkout_id' => $checkoutId, 'method' => PaymentMethods::METHOD_PAYPAL_STANDARD]))) {
+        } elseif (empty($payment = Payments::findOne(['checkout_id' => $checkoutId]))) {
             $paymentsResult['awaiting'] = true; // force use Awaiting status if payment not yet created (POST is empty)
         } else {
             $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
