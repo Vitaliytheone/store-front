@@ -415,6 +415,7 @@ class SystemController extends CustomController
 
             if ($countCurrentMethod > 1) {
                 $method->delete();
+                $last--;
                 $delete++;
                 continue;
             }

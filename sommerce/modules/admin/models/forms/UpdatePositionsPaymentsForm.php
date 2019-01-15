@@ -36,7 +36,7 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
     {
         return $this->_user;
     }
-    
+
     /**
      * Move payment method to new position
      * @param $postData array
