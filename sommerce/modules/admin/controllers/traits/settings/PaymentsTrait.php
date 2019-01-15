@@ -66,15 +66,15 @@ trait PaymentsTrait
         $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
 
         $paymentModel->setUser(Yii::$app->user);
-        $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
 
-        if (!$paymentMethod) {
-            throw new NotFoundHttpException();
-        }
-
-        if ($request->method == 'POST' && $paymentModel->changeSettings($request->post())) {
+        if ($paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
+        }
+
+        $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
+        if (!$paymentMethod) {
+            throw new NotFoundHttpException();
         }
 
         return $this->render('payments', [
