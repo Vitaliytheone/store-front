@@ -135,7 +135,6 @@ class Paytr extends BasePayment
      */
     public function processing($store)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAYTR);
         $this->showErrors = true;
 
         $this->log(json_encode($_POST, JSON_PRETTY_PRINT));

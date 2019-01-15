@@ -54,8 +54,6 @@ class Yandexcards extends Yandexmoney
      */
     public function processing($store)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_YANDEX_CARDS);
-
         $notificationType = ArrayHelper::getValue($_POST, 'notification_type'); // p2p-incoming / card-incoming - с кошелька / с карты
         $operationId = ArrayHelper::getValue($_POST, 'operation_id'); // Идентификатор операции в истории счета получателя.
         $amount = (ArrayHelper::getValue($_POST, 'amount')); // Сумма, которая зачислена на счет получателя.

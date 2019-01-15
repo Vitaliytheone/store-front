@@ -78,8 +78,6 @@ class Authorize extends BasePayment {
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_AUTHORIZE);
-
         $paymentMethodOptions = $details->getOptions();
         $options = $checkout->getUserDetails();
 

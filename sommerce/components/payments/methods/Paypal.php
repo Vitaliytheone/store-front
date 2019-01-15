@@ -27,11 +27,6 @@ class Paypal extends BasePayment
     public $method = 'POST';
 
     /**
-     * @var string
-     */
-    protected $_method = 'paypal';
-
-    /**
      * Указываем, куда будет отправляться запрос
      * Реальные условия - https://api-3t.paypal.com/nvp
      * Песочница - https://api-3t.sandbox.paypal.com/nvp
@@ -128,7 +123,6 @@ class Paypal extends BasePayment
      */
     public function processing($store)
     {
-
         $storePaymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYPAL);
 
         if (empty($storePaymentMethod)) {
@@ -156,7 +150,6 @@ class Paypal extends BasePayment
      */
     protected function expressProcessing($store, $details)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAYPAL);
         $paymentMethodOptions = $details->getOptions();
 
         $token = ArrayHelper::getValue($_GET, 'token');

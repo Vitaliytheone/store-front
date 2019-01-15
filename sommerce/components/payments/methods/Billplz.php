@@ -87,7 +87,6 @@ class Billplz extends BasePayment {
     {
         $checkoutId = ArrayHelper::getValue($_GET, 'checkoutId');
         $billplz = ArrayHelper::getValue($_GET, 'billplz');
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_BILLPLZ);
 
         if (!$checkoutId || !$billplz || empty($billplz['id'])) {
             return [
