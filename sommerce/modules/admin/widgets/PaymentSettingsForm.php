@@ -68,9 +68,7 @@ class PaymentSettingsForm extends Widget
         foreach ($settingForm as $key => $settings) {
             $commonLabel = Html::label(Yii::t('admin', $settings['label']), 'editpaymentmethod-' . $settings['code']);
 
-            if (!isset($options[$key])) {
-                continue;
-            }
+            $value = isset($options[$key]) ? $options[$key] : '';
 
             switch ($settings['type']) {
                 case PaymentMethods::FIELD_TYPE_INPUT:
@@ -79,7 +77,7 @@ class PaymentSettingsForm extends Widget
                         $commonLabel .
                         Html::input(
                             'text', $storeMethod->getFormElementName($settings['name']),
-                            $options[$key],
+                            $value,
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
                                 'class' => 'form-control',
@@ -94,7 +92,7 @@ class PaymentSettingsForm extends Widget
                         '<label class="form-check-label">' .
                         Html::checkbox(
                             $storeMethod->getFormElementName($settings['name']),
-                            $options[$key],
+                            $value,
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
                                 'class' => 'form-check-input',
@@ -109,7 +107,7 @@ class PaymentSettingsForm extends Widget
                         '<div id="multi_input_container_descriptions">';
 
                     $id = 1;
-                    foreach ((array)$options[$key] as $description) {
+                    foreach ((array)$value as $description) {
                         $result[$key] .=
                             '<div class="form-group form-group-description">' .
                             '<span class="fa fa-times remove-description"></span>' .
@@ -140,7 +138,7 @@ class PaymentSettingsForm extends Widget
                         $commonLabel .
                         Html::dropDownList(
                             $storeMethod->getFormElementName($settings['name']),
-                            $options[$key],
+                            $value,
                             $settings['options'],
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
@@ -156,7 +154,7 @@ class PaymentSettingsForm extends Widget
                         $commonLabel .
                         Html::textarea(
                             $storeMethod->getFormElementName($settings['name']),
-                            $options[$key],
+                            $value,
                             [
                                 'id' => 'editpaymentmethod-' . $settings['code'],
                                 'class' => 'form-control',

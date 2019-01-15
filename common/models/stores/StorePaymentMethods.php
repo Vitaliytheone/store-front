@@ -194,18 +194,13 @@ class StorePaymentMethods extends ActiveRecord
         }
 
         $cleanOptions = [];
-        $currentOptions = $this->getOptions();
 
         foreach ($paymentMethodSettings as $method => $details) {
-            if (!array_key_exists($method, $currentOptions)) {
-                $cleanOptions[$method] = '';
+            $cleanOptions[$method] = ArrayHelper::getValue($options, $method);
+            if (PaymentMethods::FIELD_TYPE_MULTI_INPUT == $details['type']) {
+                $cleanOptions[$method] = (array)$cleanOptions[$method];
             } else {
-                $cleanOptions[$method] = ArrayHelper::getValue($options, $method);
-                if (PaymentMethods::FIELD_TYPE_MULTI_INPUT == $details['type']) {
-                    $cleanOptions[$method] = (array)$cleanOptions[$method];
-                } else {
-                    $cleanOptions[$method] = (string)$cleanOptions[$method];
-                }
+                $cleanOptions[$method] = (string)$cleanOptions[$method];
             }
         }
 

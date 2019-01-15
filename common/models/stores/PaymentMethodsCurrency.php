@@ -108,16 +108,16 @@ class PaymentMethodsCurrency extends ActiveRecord
      */
     public function setSettingsFormDescription($description)
     {
-        $this->settings_form_description = json_encode($description);
+        $this->settings_form_description = $description;
     }
 
     /**
      * Get settings form description
-     * @return array
+     * @return string
      */
-    public function getSettingsFormDescription(): array
+    public function getSettingsFormDescription(): string
     {
-        return !empty($this->settings_form_description) ? json_decode($this->settings_form_description, true) : [];
+        return !empty($this->settings_form_description) ? $this->settings_form_description : '';
     }
 
     /**
