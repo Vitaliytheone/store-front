@@ -119,7 +119,8 @@ class CheckoutForm extends Model {
 
         $payment = Payment::getPayment($method->method->class_name);
         $payment->setGateway($this->getGateway());
-        $result = $payment->checkout($this->_payment);
+        $payment->setPayment($this->_payment);
+        $result = $payment->checkout();
 
         return $this->result($result);
     }

@@ -88,6 +88,14 @@ class PaymentMethods extends ActiveRecord
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'test_mode', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
+            static::METHOD_STRIPE => [
+                'icon' => '/img/pg/stripe_logo.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_secret_key', 'placeholder' => '', 'name' => 'secret_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_secret_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_public_key', 'placeholder' => '', 'name' => 'public_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_public_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_webhook_secret', 'placeholder' => '', 'name' => 'webhook_secret', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_webhook_secret')]
+                ]
+            ],
         ];
     }
 
