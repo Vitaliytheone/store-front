@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use sommerce\modules\admin\widgets\PaymentSettingsForm;
 
 /* @var $submitUrl string */
 /* @var $cancelUrl string */
@@ -33,26 +33,11 @@ $this->context->addModule('adminPayments');
         </div>
     </div>
 
-    <form id="editSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
-        <?= Html::beginForm(); ?>
-        <div id="editPaymentMethodOptions">
-        <?php foreach ($paymentData['formData'] as $formField): ?>
-
-            <?= $formField ?>
-
-        <?php endforeach; ?>
-        </div>
-        <hr>
-
-        <button type="submit" class="btn btn-success">
-                <?= Yii::t('admin', 'settings.payments_save_method') ?>
-        </button>
-        <a href="<?= $cancelUrl ?>" class="btn btn-secondary">
-                <?= Yii::t('admin', 'settings.payments_cancel_method') ?>
-        </a>
-
-        <?= Html::endForm(); ?>
-    </form>
+    <?= PaymentSettingsForm::widget([
+        'paymentModel' => $paymentModel,
+        'submitUrl' => $submitUrl,
+        'cancelUrl' => $cancelUrl,
+    ]) ?>
 
 </div>
 

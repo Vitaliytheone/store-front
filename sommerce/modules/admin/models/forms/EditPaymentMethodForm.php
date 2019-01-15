@@ -5,7 +5,6 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
-use sommerce\helpers\SettingsFormHelper;
 use yii\web\User;
 
 /**
@@ -43,15 +42,6 @@ class EditPaymentMethodForm extends StorePaymentMethods
     public function getUser()
     {
         return $this->_user;
-    }
-
-    /**
-     * @return array
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getMethodFormData(): array
-    {
-        return SettingsFormHelper::getMethodFormData($this);
     }
 
     /**

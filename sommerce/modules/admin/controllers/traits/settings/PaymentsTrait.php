@@ -82,7 +82,6 @@ trait PaymentsTrait
             'methodName' => $methodName,
             'paymentModel' => $paymentModel,
             'paymentData' => [
-                'formData' => $paymentModel->getMethodFormData(),
                 'icon' => $paymentMethod->icon,
                 'description' => $paymentMethod->getSettingsFormDescription(),
             ],
