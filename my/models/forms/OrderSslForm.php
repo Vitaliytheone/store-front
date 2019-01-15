@@ -118,7 +118,7 @@ class OrderSslForm extends Model
         $project->dns_checked_at = null;
         $project->dns_status = Project::DNS_STATUS_ALIEN;
 
-        if (!$project->save()) {
+        if (!$project->save(false)) {
             throw new Exception('Cannot update Panel!');
         }
 

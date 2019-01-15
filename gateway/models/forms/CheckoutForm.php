@@ -25,6 +25,7 @@ class CheckoutForm extends Model {
     public $success_url;
     public $fail_url;
     public $return_url;
+    public $description;
     public $fields;
 
     /**
@@ -59,9 +60,15 @@ class CheckoutForm extends Model {
     {
         return [
             [['amount', 'method', 'source_id', 'source_type', 'source_payment_id', 'currency'], 'required'],
+            [['description'], 'string'],
+            [['description'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'], // Clear for XSS
+            [['description'], 'filter', 'filter' => function($value) {
+                $value = is_string($value) ? trim($value) : null;
+                return !empty($value) ? $value : null;
+            }],
             [['amount',], 'number'],
             [['currency',], 'string', 'length' => 3],
-            [['success_url', 'fail_url', 'return_url', 'method'], 'string'],
+            [['success_url', 'fail_url', 'return_url', 'method', 'description'], 'string'],
             [['method_id', 'method_id', 'source_id', 'source_type', 'source_payment_id',], 'integer'],
             ['fields', 'safe'],
         ];
@@ -119,6 +126,7 @@ class CheckoutForm extends Model {
 
         $payment = Payment::getPayment($method->method->class_name);
         $payment->setGateway($this->getGateway());
+        $payment->setDescription($this->description);
         $result = $payment->checkout($this->_payment);
 
         return $this->result($result);
