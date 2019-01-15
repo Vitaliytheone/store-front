@@ -9,6 +9,7 @@ use common\models\gateway\Payments;
 use common\models\gateway\PaymentsLog;
 use common\models\gateways\SitePaymentMethods;
 use yii\base\Component;
+use Exception;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 use common\helpers\SiteHelper;
@@ -84,6 +85,11 @@ abstract class BasePayment extends Component {
      */
     protected $_paymentMethod;
 
+    /**
+     * @var array
+     */
+    protected $_user_details;
+
     public function init()
     {
         $this->_token = bin2hex(random_bytes(32));
@@ -115,13 +121,31 @@ abstract class BasePayment extends Component {
      *  'redirect' => <redirect link>
      * ]
      */
-    abstract function checkout($payment);
+    abstract function checkouting();
 
     /**
      * Validate payment service response
      * @return mixed
      */
     abstract function processing();
+
+    /**
+     * Checkout
+     * @return mixed
+     */
+    public function checkout()
+    {
+        if (empty($this->_payment)) {
+            throw new Exception();
+        }
+
+        try {
+            return $this->checkouting();
+        } catch (Exception $e) {
+            $this->fileLog($e->getMessage() . $e->getTraceAsString());
+            return static::returnError();
+        }
+    }
 
     /**
      * Validate payment service response
@@ -198,6 +222,15 @@ abstract class BasePayment extends Component {
         $payment->save(false);
 
         $transaction->commit();
+    }
+
+    /**
+     * Get js payment environment
+     * @return array
+     */
+    public function getJsEnvironments()
+    {
+        return [];
     }
 
     /**
@@ -315,12 +348,28 @@ abstract class BasePayment extends Component {
     }
 
     /**
+     * @param Payments $payment
+     */
+    public function setPayment(Payments $payment)
+    {
+        $this->_payment = $payment;
+    }
+
+    /**
+     * @return Payments
+     */
+    public function getPayment()
+    {
+        return $this->_payment;
+    }
+
+    /**
      * Get payment by payment id
      * @param integer $paymentId
      * @return Payments|null
      * @throws ValidationException
      */
-    public function getPayment($paymentId)
+    public function getPaymentById($paymentId)
     {
         if (empty($paymentId)
             || !($this->_payment = Payments::findOne([

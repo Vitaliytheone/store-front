@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
 class PaymentMethods extends ActiveRecord
 {
     public const METHOD_PAYPAL = 1;
+    public const METHOD_STRIPE = 2;
 
     /**
      * @inheritdoc

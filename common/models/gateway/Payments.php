@@ -18,6 +18,7 @@ use common\models\gateway\queries\PaymentsQuery;
  * @property string $currency
  * @property string $amount
  * @property int $status 0 - pending; 1 - completed; 2 - expired; 3 - writing; 4 - fail; 5 - hold
+ * @property string $user_details
  * @property string $transaction_id
  * @property string $response_status
  * @property string $response
@@ -67,6 +68,7 @@ class Payments extends ActiveRecord
             [['currency'], 'string', 'max' => 3],
             [['response_status', 'success_url', 'fail_url', 'return_url', 'transaction_id'], 'string', 'max' => 300],
             [['response'], 'string', 'max' => 1000],
+            [['user_details'], 'safe'],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
         ];
     }
@@ -85,6 +87,7 @@ class Payments extends ActiveRecord
             'currency' => Yii::t('app', 'Currency'),
             'amount' => Yii::t('app', 'Amount'),
             'status' => Yii::t('app', 'Status'),
+            'user_details' => Yii::t('app', 'User Details'),
             'transaction_id' => Yii::t('app', 'Transaction ID'),
             'response_status' => Yii::t('app', 'Response Status'),
             'response' => Yii::t('app', 'Response'),
@@ -159,5 +162,23 @@ class Payments extends ActiveRecord
             static::SOURCE_TYPE_PANEL => Yii::t('app', 'payments.source_type.panel'),
             static::SOURCE_TYPE_STORE => Yii::t('app', 'payments.source_type.store'),
         ];
+    }
+
+    /**
+     * Get user details
+     * @return array
+     */
+    public function getUserDetails()
+    {
+        return !empty($this->user_details) ? json_decode($this->user_details, true) : [];
+    }
+
+    /**
+     * Set user details
+     * @param $userDetails
+     */
+    public function setUserDetails($userDetails)
+    {
+        $this->user_details = json_encode($userDetails);
     }
 }
