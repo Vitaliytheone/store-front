@@ -15,22 +15,22 @@ use yii\helpers\ArrayHelper;
 class UpdatePositionsPaymentsForm extends StorePaymentMethods
 {
     /**
-     * @var User
+     * @var StoreAdminAuth
      */
     protected $_user;
 
     /**
      * Set current user
-     * @param User $user
+     * @param StoreAdminAuth $user
      */
-    public function setUser(User $user)
+    public function setUser(StoreAdminAuth $user)
     {
         $this->_user = $user;
     }
 
     /**
      * Get current user
-     * @return User
+     * @return StoreAdminAuth
      */
     public function getUser()
     {
@@ -88,10 +88,7 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
                 ON DUPLICATE KEY UPDATE position=VALUES(position)
         ")->execute();
 
-        /** @var StoreAdminAuth $identity */
-        $identity = $this->getUser()->getIdentity(false);
-
-        ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAYMENTS_SPM_ITEM_POSITION_CHANGED, $this->id, $this->id);
+        ActivityLog::log($this->getUser(), ActivityLog::E_SETTINGS_PAYMENTS_SPM_ITEM_POSITION_CHANGED, $this->id, $this->id);
 
         return true;
     }

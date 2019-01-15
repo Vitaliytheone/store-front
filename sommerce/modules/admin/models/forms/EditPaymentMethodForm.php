@@ -14,7 +14,7 @@ use yii\web\User;
 class EditPaymentMethodForm extends StorePaymentMethods
 {
     /**
-     * @var User
+     * @var StoreAdminAuth
      */
     private $_user;
 
@@ -28,16 +28,16 @@ class EditPaymentMethodForm extends StorePaymentMethods
 
     /**
      * Set current user
-     * @param User $user
+     * @param StoreAdminAuth $user
      */
-    public function setUser(User $user)
+    public function setUser(StoreAdminAuth $user)
     {
         $this->_user = $user;
     }
 
     /**
      * Return current user
-     * @return User
+     * @return StoreAdminAuth
      */
     public function getUser()
     {
@@ -56,7 +56,7 @@ class EditPaymentMethodForm extends StorePaymentMethods
         $this->save();
 
         /** @var StoreAdminAuth $identity */
-        $identity = $this->getUser()->getIdentity(false);
+        $identity = $this->getUser();
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAYMENTS_PG_ACTIVE_STATUS_CHANGED, $this->id, $this->method_id);
 
@@ -83,7 +83,7 @@ class EditPaymentMethodForm extends StorePaymentMethods
         }
 
         /** @var StoreAdminAuth $identity */
-        $identity = $this->getUser()->getIdentity(false);
+        $identity = $this->getUser();
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_PAYMENTS_PG_SETTINGS_CHANGED, $this->id, $this->method_id);
 

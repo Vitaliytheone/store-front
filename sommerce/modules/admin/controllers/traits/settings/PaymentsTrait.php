@@ -4,7 +4,6 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StorePaymentMethods;
 use my\components\ActiveForm;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -67,7 +66,14 @@ trait PaymentsTrait
         $methodName = PaymentMethods::getMethodName($paymentModel->method_id);
         $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
 
-        $paymentModel->setUser(Yii::$app->user);
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        if (!$identity) {
+            throw new NotFoundHttpException();
+        }
+
+        $paymentModel->setUser($identity);
 
         if ($paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
@@ -98,7 +104,7 @@ trait PaymentsTrait
      * @throws NotFoundHttpException
      * @throws \Throwable
      */
-    public function actionPaymentsToggleActive($method)
+    public function actionPaymentsToggleActive($method): array
     {
         $request = Yii::$app->getRequest();
         $response = Yii::$app->getResponse();
@@ -120,7 +126,14 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        $paymentModel->setUser(Yii::$app->user);
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        if (!$identity) {
+            throw new NotFoundHttpException();
+        }
+
+        $paymentModel->setUser($identity);
 
         return [
             'active' => $paymentModel->setActive($active|0),
@@ -154,6 +167,7 @@ trait PaymentsTrait
      * Update Store Payments methods positions after drag&drop AJAX action
      * @return array
      * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      * @throws \Throwable
      */
     public function actionUpdatePaymentPositions(): array
@@ -161,7 +175,14 @@ trait PaymentsTrait
         $request = Yii::$app->getRequest();
 
         $model = new UpdatePositionsPaymentsForm();
-        $model->setUser(Yii::$app->user);
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        if (!$identity) {
+            throw new NotFoundHttpException();
+        }
+
+        $model->setUser($identity);
 
         if (!$model->updatePositions($request->post())) {
             throw new BadRequestHttpException('Change in POST detected');
