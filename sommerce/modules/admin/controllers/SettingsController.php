@@ -164,7 +164,7 @@ class SettingsController extends CustomController
     /**
      * Check if currency changes and return bool
      * @var $postData string
-     * @return bool
+     * @return bool|null
      */
     public function actionCheckCurrency(): ?bool
     {

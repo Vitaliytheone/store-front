@@ -266,8 +266,19 @@ class EditStoreSettingsForm extends Stores
         $currentCurrency = $this->currency;
 
         if ($currentCurrency != $currency) {
-            return true;
+            $storeMethods = StorePaymentMethods::find()
+                ->where(['store_id' => $this->id])
+                ->indexBy('method_id')
+                ->all();
+            $currencies = PaymentMethodsCurrency::find()
+                ->where(['in', 'method_id', array_keys($storeMethods)])
+                ->andWhere(['currency' => $currency])
+                ->all();
+            if (count($storeMethods) !== count ($currencies)) {
+                return true;
+            }
         }
+
         return false;
     }
 
