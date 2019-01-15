@@ -88,23 +88,48 @@ customModule.adminGeneral = {
          *                      Delete unsupported currency
          *****************************************************************************************************/
         var payChange = false;
+        var settingForm = $('#settingsgeneralform-currency');
+        var submitButton = $('#generalSettingsSubmit');
+        var oldValue = settingForm.val();
+        var curValue = '';
 
-        $('#settingsgeneralform-currency').on('change', function (e) {
-            payChange = true;
+        settingForm.on('change', function () {
+            curValue = settingForm.val();
         });
 
-        $('button[name="save-button"]').on('click', function (e) {
-            if (payChange === true) {
-                var $form = $(this).closest('form');
-                e.preventDefault();
-                $('#delete-modal-pay').modal({
-                    backdrop: 'static',
-                    // keyboard: false
-                })
-                    .on('click', '#payments-delete', function (e) {
-                        $form.trigger('submit');
-                    });
+        submitButton.on('click', function (e) {
+
+            if (oldValue != curValue && curValue != '') {
+                payChange = true;
             }
+
+            if (payChange === true) {
+                $.ajax({
+                    url: submitButton.data('action-url'),
+                    type: "POST",
+                    data: {currency: curValue},
+                    async: false,
+
+                    success: function (data) {
+                        if (data == true) {
+                            e.preventDefault();
+
+                            custom.confirm(submitButton.data('message'), undefined, {
+                                confirm_button: submitButton.data('confirm_button'),
+                                cancel_button: submitButton.data('cancel_button')
+                            }, function () {
+                                $('#settings-general-form').submit();
+                            });
+                        }
+                    },
+
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('Error on post request', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+
         });
+
     }
 };

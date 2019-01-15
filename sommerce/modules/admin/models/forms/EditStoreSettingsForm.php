@@ -256,4 +256,19 @@ class EditStoreSettingsForm extends Stores
         }
     }
 
+    /**
+     * Check if currency changes
+     * @param $currency string
+     * @return bool
+     */
+    public function currencyChange($currency): bool
+    {
+        $currentCurrency = $this->currency;
+
+        if ($currentCurrency != $currency) {
+            return true;
+        }
+        return false;
+    }
+
 }

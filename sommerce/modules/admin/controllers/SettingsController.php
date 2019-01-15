@@ -21,7 +21,7 @@ use Yii;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use yii\filters\AjaxFilter;
-use \yii\filters\VerbFilter;
+use yii\filters\VerbFilter;
 
 /**
  * Settings controller for the `admin` module
@@ -159,5 +159,33 @@ class SettingsController extends CustomController
         $searchModel->setStore($this->store);
 
         return ['links' => $searchModel->searchLinksByType($link_type|0)];
+    }
+
+    /**
+     * Check if currency changes and return bool
+     * @var $postData string
+     * @return bool
+     */
+    public function actionCheckCurrency(): ?bool
+    {
+        if (!Yii::$app->getRequest()->isAjax) {
+            exit;
+        }
+
+        $postData = Yii::$app->getRequest()->post('currency');
+
+        if (empty($postData)) {
+            return null;
+        }
+
+        $storeForm = EditStoreSettingsForm::findOne($this->store->id);
+
+        if (empty($storeForm)) {
+            return null;
+        }
+
+        $storeForm->setUser(Yii::$app->user);
+
+        return $storeForm->currencyChange($postData);
     }
 }
