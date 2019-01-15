@@ -330,6 +330,7 @@ return [
     'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
     'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
     'settings.payments_edit_stripe' => 'Edit Stripe',
+    'settings.payments_edit_stripe_3d_secure' => 'Edit Stripe 3D Secure',
     'settings.payments_yandex_money_wallet_number' => 'Wallet number',
     'settings.payments_yandex_money_secret_word' => 'Secret word',
     'settings.payments_stripe_secret_key' => 'Secret key',
