@@ -10,7 +10,7 @@ const SortableProduct = SortableElement(
         return (
             <Row className="group-caption">
                 <Col className="sommerce_dragtable__category">
-                    <Col className="sommerce_dragtable__category-title">
+                    <div className="sommerce_dragtable__category-title">
                         <Row className="align-items-center">
                             <Col sm="12">
                                 <DragHandle />
@@ -18,7 +18,7 @@ const SortableProduct = SortableElement(
                                 <EditProduct productValue={product} onSubmit={handleEditProduct} />
                             </Col>
                         </Row>
-                    </Col>
+                    </div>
                 </Col>
                 <PackageList
                     lockAxis={"y"}

@@ -7,7 +7,7 @@ export const ProductInput = ({
   label,
   ...props
 }) => (
-  <FormGroup>
+  <div>
     <Label htmlFor={field.name}>{label}</Label>
     <Input 
       {...field}
@@ -16,7 +16,7 @@ export const ProductInput = ({
     {touched[field.name] && errors[field.name] && (
       <div className="invalid-feedback error">{errors[field.name]}</div>
     )}
-  </FormGroup>
+  </div>
 );
 
 export const PackageInput = ({
@@ -25,11 +25,11 @@ export const PackageInput = ({
   label,
   ...props
 }) => (
-  <FormGroup>
+  <div>
     <Label htmlFor={field.name}>{label}</Label>
     <Input {...field} {...props}  />
     {touched[field.name] && errors[field.name] && (
       <div className="invalid-feedback error">{errors[field.name]}</div>
     )}
-  </FormGroup>
+  </div>
 );

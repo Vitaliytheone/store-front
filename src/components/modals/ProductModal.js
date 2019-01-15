@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ModalBody, Label, FormGroup, Input, Button } from "reactstrap";
 import { Field } from "formik";
 import { ProductInput } from "../Inputs";
 
@@ -27,27 +28,28 @@ class ProductModal extends Component {
 
   render(){
     return <React.Fragment>
-        <div className="modal-body">
-          <div className="form-group">
-            <Field name="name" component={ProductInput} label="Product name" placeholder="create a product" required />
-          </div>
+        <ModalBody>
 
-          <div className="form-group">
-            <label htmlFor="visibility">Visibility</label>
+          <FormGroup>
+            <Field name="name" component={ProductInput} label="Product name" placeholder="create a product" required />
+          </FormGroup>
+
+        <FormGroup>
+            <Label htmlFor="visibility">Visibility</Label>
             <Field className="form-control" component="select" name="visibility">
               <option value="Enabled">Enabled</option>
               <option value="Disabled">Disabled</option>
             </Field>
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
-            <label>Color</label>
+        <FormGroup>
+            <Label>Color</Label>
             <div className="product-color__wrap">
-              <input type="text" className="product-color" id="package-color2" value="#ffffff" />
+            <Input type="text" className="product-color" id="package-color2" value="#ffffff" />
             </div>
-          </div>
+        </FormGroup>
 
-          <div className="form-group">
+        <FormGroup>
             {/* <ReactSummernote
               value="Default value"
               options={{
@@ -74,7 +76,8 @@ class ProductModal extends Component {
               onChange={this.onChange}
             /> */}
             <div class="summernote">summernote 1</div>
-          </div>
+          </FormGroup>
+          
           <div className="card card-white mb-3">
             <div className="card-body">
               <div className="row seo-header align-items-center">
@@ -324,7 +327,7 @@ class ProductModal extends Component {
               </div>
             </div>
           </div>
-        </div>
+      </ModalBody>
       </React.Fragment>;
   }
 }

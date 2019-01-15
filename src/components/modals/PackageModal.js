@@ -1,41 +1,48 @@
 import React, { Component } from "react";
+import { ModalBody, Label, FormGroup, Button } from "reactstrap";
 import { Field } from "formik";
 import { PackageInput } from "../Inputs";
 
 class PackageModal extends Component {
   render() {
-    return <div className="modal-body">
+    return (
+      <ModalBody>
         {/* Alert Error */}
 
         <div className="alert alert-danger alert-dismissible fade show" role="alert">
-          <button type="button" className="close" data-dismiss="alert" aria-label="Close" />
+          <button className="close" data-dismiss="alert" aria-label="Close" />
           <strong>Oh snap!</strong> Error message!
         </div>
 
         {/* Alert Error End */}
 
-        <div className="form-group">
+        <FormGroup>
           <Field name="name" component={PackageInput} label="Package name *" placeholder="package" id="package-name" required />
-        </div>
-        <div className="form-group">
+        </FormGroup>
+
+        <FormGroup>
           <Field name="price" component={PackageInput} label="Price *" placeholder="price" id="package-price" required />
-        </div>
-        <div className="form-group">
+        </FormGroup>
+      
+        <FormGroup>
           <Field name="quantity" component={PackageInput} label="Quantity *" placeholder="quantity" id="package-quantity" required />
-        </div>
-        <div className="form-group">
+        </FormGroup>
+        
+        <FormGroup>
           <Field name="overflow" component={PackageInput} label="Overflow, % *" placeholder="overflow" id="package-overflow" required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="package-best">Best package</label>
-          <select id="package-best" className="form-control">
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="package-best">Best package</Label>
+          <Field  component="select" id="package-best" className="form-control">
             <option value="1">Enabled</option>
             <option value="2">Disabled</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="package-link-type">Link Type</label>
-          <select id="package-link-type" className="form-control">
+          </Field>
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="package-link-type">Link Type</Label>
+          <Field component="select" id="package-link-type" className="form-control">
             <option value="">None</option>
             <option value="1">Instagram Profile</option>
             <option value="2">Instagram Post</option>
@@ -80,26 +87,30 @@ class PackageModal extends Component {
             <option value="43">Google+ Profile</option>
             <option value="44">Google+ Post</option>
             <option value="45">Twitch Channel</option>
-          </select>
-        </div>
+            </Field>
+        </FormGroup>
         <hr />
-        <div className="form-group">
-          <label htmlFor="availability">Availability</label>
-          <Field className="form-control" component="select" name="availability">
+
+        <FormGroup>
+          <Label htmlFor="availability">Availability</Label>
+          <Field className="form-control" component="select" name="availability" label="Availability">
             <option value="Enabled">Enabled</option>
             <option value="Disabled">Disabled</option>
           </Field>
-        </div>
+        </FormGroup>
+    
         <hr />
-        <div className="form-group">
-          <label htmlFor="mode">Mode</label>
+ 
+        <FormGroup>
+          <Label htmlFor="mode">Mode</Label>
           <Field className="form-control" component="select" name="mode">
             <option value="Manual">Manual</option>
             <option value="Auto">Auto</option>
           </Field>
-        </div>
-        <div className="form-group">
-          <label htmlFor="provider">Provider</label>
+        </FormGroup>
+     
+        <FormGroup>
+          <Label htmlFor="provider">Provider</Label>
           <Field className="form-control" component="select" name="provider">
             <option value="test.myperfectpanel.com" data-action-url="/admin/products/get-provider-services?provider_id=2">
               test.myperfectpanel.com{" "}
@@ -114,11 +125,13 @@ class PackageModal extends Component {
               autosmo.com{" "}
             </option>
           </Field>
-        </div>
+        </FormGroup>
+
         <span className="m--font-danger">
           API responce errors: Incorrect required
         </span>
-      </div>;
+      </ModalBody>
+    );
   }
 }
 

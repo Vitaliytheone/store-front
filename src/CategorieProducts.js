@@ -99,7 +99,9 @@ class CategorieProducts extends Component {
       provider: values.provider
     };
     const newData = this.state.data;
+    for (let i = 0; i <= 3000; i++) {
     newData[productIndex].packages.push(newPackage);
+    }
     this.setState({
         data: newData
     });
@@ -178,9 +180,9 @@ class CategorieProducts extends Component {
         <Jumbotron className="page-container">
           <Container fluid className="m-container-sommerce">
             <AddProduct onSubmit={this.handleAddProduct} isSubmitting={isSubmitting} />
-            <Row>
-              <Col>
-                <Col className="sommerce_dragtable">
+            <Row> 
+              <Col xs="12">
+                <div className="sommerce_dragtable">
                   <ProductList
                     helperClass="sortable-helper"
                     handleEditProduct={this.handleEditProduct}
@@ -192,7 +194,7 @@ class CategorieProducts extends Component {
                     onSortEnd={this.handleProductSwitch}
                     onPackageAdd={this.handleAddPackage}
                   />
-                </Col>
+                </div>
               </Col>
             </Row>
           </Container>

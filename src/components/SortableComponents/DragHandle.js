@@ -1,9 +1,8 @@
 import React from "react";
-import { Col } from "reactstrap";
 import { SortableHandle } from "react-sortable-hoc";
 
 const DragHandle = SortableHandle(() => (
-    <Col className="sommerce_dragtable__category-move move">
+    <div className="sommerce_dragtable__category-move move">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
             <title>Drag-Handle</title>
             <path
@@ -11,7 +10,7 @@ const DragHandle = SortableHandle(() => (
                 fill="#d4d4d4"
             />
         </svg>
-    </Col>
+    </div>
 ));
 
 export default DragHandle;

@@ -28,14 +28,14 @@ class AddProduct extends Component {
       <React.Fragment>
         <Row className="sommerce-products__actions">
           <Col lg="12">
-            <Col className="page-content">
+            <div className="page-content">
               <Button
                 onClick={this.toggle}
                 color="primary"
               >
                 Add product
               </Button>
-            </Col>
+            </div>
           </Col>
         </Row>
         <Modal

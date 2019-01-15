@@ -1,4 +1,5 @@
 import React from "react";
+import { Col } from "reactstrap";
 import { SortableContainer } from "react-sortable-hoc";
 import SortableProduct from "./Product";
 
