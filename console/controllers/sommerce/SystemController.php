@@ -2,7 +2,6 @@
 
 namespace console\controllers\sommerce;
 
-use common\models\store\Checkouts;
 use common\models\stores\StoreAdmins;
 use my\components\ActiveForm;
 use sommerce\helpers\MessagesHelper;

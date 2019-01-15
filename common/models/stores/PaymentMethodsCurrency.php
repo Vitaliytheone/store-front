@@ -143,6 +143,7 @@ class PaymentMethodsCurrency extends ActiveRecord
         $methodsIds = array_column($storePaymentMethods, 'method_id');
 
         $result = [];
+        $methodsNames = StorePaymentMethods::getNames();
         foreach ($currencies as $id => $method) {
             if (isset($storePaymentMethods[$id])) {
                 continue;
@@ -152,7 +153,7 @@ class PaymentMethodsCurrency extends ActiveRecord
                 continue;
             }
 
-            $result[$id] = StorePaymentMethods::getNameById($method['method_id']);
+            $result[$id] = $methodsNames[$method['method_id']];
         }
 
         return $result;

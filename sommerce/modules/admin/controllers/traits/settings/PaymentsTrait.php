@@ -4,7 +4,6 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StorePaymentMethods;
 use my\components\ActiveForm;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;

@@ -180,6 +180,7 @@ class OrderForm extends Model
             static::$_methods = [];
             $methods = [];
             $paymentMethods = PaymentMethods::getMethods();
+            $names = StorePaymentMethods::getNames();
 
             foreach (StorePaymentMethods::find()
                  ->store($this->_store)
@@ -190,7 +191,7 @@ class OrderForm extends Model
 
                 $methods[$key] = [
                     'id' => $method->method_id,
-                    'name' => $method->name ?: $method->getName(),
+                    'name' => $method->name ?: $names[$method->method_id],
                     'method' => $paymentMethod->method_name,
                     'details' => $method->getOptions(),
                     'position' => $method->position,
@@ -199,8 +200,7 @@ class OrderForm extends Model
                     'storePayId' => $method->id,
                 ];
 
-                $payMethod = PaymentMethods::findOne($method->method_id);
-                $payment = Payment::getPayment($payMethod->class_name);
+                $payment = Payment::getPayment($paymentMethod->class_name);
                 $methods[$key]['fields'] = $payment->fields();
                 $methods[$key]['jsOptions'] = $payment->getJsEnvironments($this->_store, $this->email, $method);
             }
