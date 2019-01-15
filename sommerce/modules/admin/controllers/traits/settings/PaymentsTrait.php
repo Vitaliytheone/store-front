@@ -11,6 +11,7 @@ use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\AddPaymentMethodForm;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
 use sommerce\modules\admin\models\forms\UpdatePositionsPaymentsForm;
+use sommerce\modules\admin\models\search\PaymentsSettingsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -35,13 +36,14 @@ trait PaymentsTrait
             'action_update_pos' => Url::toRoute('/settings/update-payment-positions'),
         ]);
 
-        $paymentMethods = StorePaymentMethods::find()->where(['store_id' => yii::$app->store->getId()])->orderBy('position')->all();
-
         $store = Yii::$app->store->getInstance();
+        $paymentMethods = new PaymentsSettingsSearch();
+        $paymentMethods->setStore($store);
+
         $availableMethods = PaymentMethodsCurrency::getSupportPaymentMethods($store);
 
         return $this->render('payments', [
-            'paymentMethods' => $paymentMethods,
+            'paymentMethods' => $paymentMethods->search(),
             'availableMethods' => $availableMethods,
         ]);
     }
