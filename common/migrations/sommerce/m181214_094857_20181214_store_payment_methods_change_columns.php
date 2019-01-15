@@ -2,9 +2,6 @@
 
 use yii\db\Migration;
 use yii\db\Query;
-use common\models\stores\PaymentMethods;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\PaymentMethodsCurrency;
 
 /**
  * Class m181214_094857_20181214_store_payment_methods_change_columns
@@ -78,31 +75,42 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
         $this->execute('ALTER TABLE `store_payment_methods` DROP COLUMN `method`;');
 
         foreach ($methods as $key => $methodName) {
-            $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
-            $storeMethod = StorePaymentMethods::findOne($key);
-            if (!$method || !$storeMethod) {
+            $payMethod = (new Query())
+                ->from(DB_STORES . '.payment_methods')
+                ->where(['method_name' => $methodName['method']])
+                ->one();
+
+            $storeMethod = (new Query())
+                ->from(DB_STORES . '.store_payment_methods')
+                ->where(['id' => $key])
+                ->one();
+
+            if (!$payMethod || !$storeMethod) {
                 continue;
             }
-            $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $method->id]);
+
+            $storeCurrency = (new Query())
+                ->from(DB_STORES . '.payment_methods_currency')
+                ->where(['method_id' => $payMethod['id']])
+                ->one();
 
             if (!$storeCurrency) {
                 continue;
             }
 
-            $lastPositions = StorePaymentMethods::find()
-                ->where(['store_id' => $storeMethod->store_id])
+            $lastPositions = (new Query())
+                ->from(DB_STORES . '.store_payment_methods')
+                ->where(['store_id' => $storeMethod['store_id']])
                 ->max('position');
 
-            $storeMethod->method_id = $method->id;
-            $storeMethod->currency_id = $storeCurrency->id;
-            $storeMethod->name = $method->name;
-            $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
-            if (empty($storeMethod->options) || $storeMethod->options === '[]') {
-                $storeMethod->setOptions([]);
-            }
-            $storeMethod->created_at = time();
-            $storeMethod->updated_at = time();
-            $storeMethod->save(false);
+            Yii::$app->db->createCommand()->update(DB_STORES .'.store_payment_methods', [
+                'method_id' => $payMethod['id'],
+                'currency_id' => $storeCurrency['id'],
+                'name' => $payMethod['name'],
+                'position' => isset($lastPositions) ? $lastPositions + 1 : 1,
+                'created_at' => time(),
+                'updated_at' => time(),
+            ], ['id' => $storeMethod['id']])->execute();
         }
     }
 
@@ -114,13 +122,13 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
 
         $this->execute('
             ALTER TABLE `store_payment_methods`
-              DROP FOREIGN KEY `fk_method_id_to_payment_methods`;
+              DROP FOREIGN KEY `fk_store_payment_methods_payment_methods`;
 
             ALTER TABLE `store_payment_methods`
-              DROP FOREIGN KEY `fk_currency_id_to_methods_currency`;
+              DROP FOREIGN KEY `fk_store_payment_methods_payment_methods_currency`;
 
             ALTER TABLE `store_payment_methods`
-              DROP FOREIGN KEY `fk_store_id_to_stores`;
+              DROP FOREIGN KEY `fk_store_payment_methods_stores`;
 
             ALTER TABLE `store_payment_methods`
               DROP INDEX `idx_store_id`;
@@ -146,22 +154,22 @@ class m181214_094857_20181214_store_payment_methods_change_columns extends Migra
             ALTER TABLE store_payment_methods
               ADD `method` varchar(255) NULL;
 
-            ALTER TABLE payment_methods
+            ALTER TABLE store_payment_methods
               DROP COLUMN `method_id`;
 
-            ALTER TABLE payment_methods
+            ALTER TABLE store_payment_methods
               DROP COLUMN `currency_id`;
 
-            ALTER TABLE payment_methods
+            ALTER TABLE store_payment_methods
               DROP COLUMN `name`;
 
-            ALTER TABLE payment_methods
+            ALTER TABLE store_payment_methods
               DROP COLUMN `position`;
 
-            ALTER TABLE payment_methods
+            ALTER TABLE store_payment_methods
               DROP COLUMN `created_at`;
 
-            ALTER TABLE payment_methods
+            ALTER TABLE store_payment_methods
               DROP COLUMN `updated_at`;
 
             CREATE INDEX fk_store_id_method_idx

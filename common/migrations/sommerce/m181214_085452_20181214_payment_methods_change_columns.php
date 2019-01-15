@@ -2,7 +2,6 @@
 
 use yii\db\Migration;
 use yii\db\Query;
-use common\models\stores\PaymentMethodsCurrency;
 
 /**
  * Class m181214_085452_20181214_payment_methods_change_columns
@@ -23,13 +22,13 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
             $currencies = json_decode($method['currencies'], true);
 
             foreach ($currencies as $currency) {
-                $paymentMethodCurrency = new PaymentMethodsCurrency();
-                $paymentMethodCurrency->method_id = $method['id'];
-                $paymentMethodCurrency->currency = $currency;
-                $paymentMethodCurrency->position = $method['position'];
-                $paymentMethodCurrency->created_at = time();
-                $paymentMethodCurrency->updated_at = time();
-                $paymentMethodCurrency->save(false);
+                Yii::$app->db->createCommand()->insert(DB_STORES .'.payment_methods_currency', [
+                    'method_id' => $method['id'],
+                    'currency' => $currency,
+                    'position' => $method['position'],
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ])->execute();
             }
         }
 

@@ -351,9 +351,6 @@ class SystemController extends CustomController
             $storeMethod->currency_id = $storeCurrency->id;
             $storeMethod->name = $method->name;
             $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
-            if (empty($storeMethod->options) || $storeMethod->options === '[]') {
-                $storeMethod->setOptions([]);
-            }
             $storeMethod->created_at = time();
             $storeMethod->updated_at = time();
             $storeMethod->save(false);
@@ -386,6 +383,9 @@ class SystemController extends CustomController
 
         $count = 0;
         foreach ($stores as $store) {
+            if (Yii::$app->db->getTableSchema($store['db_name'].'.checkouts', true) === null) {
+                continue;
+            }
             Yii::$app->db->createCommand('USE `' . $store['db_name'] . '`;
                 ALTER TABLE `checkouts` ADD `currency_id` int(11) unsigned NULL AFTER `method_id`;)')->execute();
 
@@ -396,14 +396,17 @@ class SystemController extends CustomController
     }
 
     /**
+     * 4) Update PaymentsMethod IDS and delete duplicates
+     * @return string
      * @throws Exception
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function actionChangePaymentsId()
+    public function actionChangePaymentsId(): string
     {
         $paymentMethods = PaymentMethods::find()->all();
-        $last = 16;
+        $last = count($paymentMethods);
+        $count = $delete = 0;
 
         foreach ($paymentMethods as $method) {
             $countCurrentMethod = PaymentMethods::find()
@@ -412,6 +415,7 @@ class SystemController extends CustomController
 
             if ($countCurrentMethod > 1) {
                 $method->delete();
+                $delete++;
                 continue;
             }
 
@@ -468,7 +472,9 @@ class SystemController extends CustomController
                     $method->id = $last + 1;
                     $last++;
             }
+            $count++;
         }
+        return print "Successfully change {$count} PaymentMethods IDS and delete {$delete} duplicates\n";
     }
 
     /**
