@@ -64,8 +64,8 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        $methodName = PaymentMethods::getMethodName($paymentModel->method_id);
-        $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
+        $methodName = PaymentMethods::getMethodNameList();
+        $this->view->title = Yii::t('admin', "settings.payments_edit_{$methodName[$paymentModel->method_id]}");
 
         $paymentModel->setUser(Yii::$app->user);
 
@@ -81,7 +81,7 @@ trait PaymentsTrait
 
         return $this->render('payments', [
             'method' => $method,
-            'methodName' => $methodName,
+            'methodName' => $methodName[$paymentModel->method_id],
             'paymentModel' => $paymentModel,
             'paymentData' => [
                 'icon' => $paymentMethod->icon,
