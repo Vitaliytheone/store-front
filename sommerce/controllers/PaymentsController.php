@@ -48,6 +48,7 @@ class PaymentsController extends CustomController
         if (!in_array($method, [
             PaymentMethods::METHOD_AUTHORIZE,
             PaymentMethods::METHOD_STRIPE,
+            PaymentMethods::METHOD_STRIPE_3D_SECURE,
             PaymentMethods::METHOD_PAYPAL,
             PaymentMethods::METHOD_PAYPAL_STANDARD,
             PaymentMethods::METHOD_MERCADOPAGO,

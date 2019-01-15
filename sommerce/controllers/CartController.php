@@ -83,7 +83,22 @@ class CartController extends CustomController
         $model->setStore($this->store);
         $model->setSearchItems($searchModel);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $payload = null;
+        $request = Yii::$app->request;
+
+        if ($request->isPost) {
+            $payload = $request->post();
+        } elseif ($request->get('method')) {
+            $payload = [
+                $model->formName() => [
+                    'email' => $request->get('email'),
+                    'method' => $request->get('method'),
+                    'fields' => $request->get(),
+                ],
+            ];
+        }
+
+        if ($model->load($payload) && $model->save()) {
             if ($model->redirect) {
                 return $this->redirect($model->redirect);
             }
@@ -95,7 +110,11 @@ class CartController extends CustomController
 
         $this->addModule('cartFrontend', [
             'fieldOptions' => $model->getPaymentsFields(),
-            'options' => $model->getJsOptions()
+            'options' => $model->getJsOptions(),
+            'cartTotal' => [
+                'amount' => $searchModel->getTotal(),
+                'currency' => $this->store->currency,
+            ]
         ]);
 
         return $this->render('cart.twig', [
