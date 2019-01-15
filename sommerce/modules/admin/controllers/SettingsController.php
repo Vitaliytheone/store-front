@@ -96,7 +96,9 @@ class SettingsController extends CustomController
 
     /**
      * Settings general
-     * @return string
+     * @return string|Response
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionIndex()
     {
@@ -128,6 +130,7 @@ class SettingsController extends CustomController
      * Delete Store Favicon or Logo
      * @param $type
      * @return Response
+     * @throws \yii\base\Exception
      */
     public function actionDeleteImage($type)
     {
@@ -144,6 +147,7 @@ class SettingsController extends CustomController
      * Return links list by link type AJAX action
      * @param $link_type
      * @return array
+     * @throws \yii\base\Exception
      */
     public function actionGetLinks($link_type)
     {

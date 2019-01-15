@@ -149,21 +149,6 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Return value from `method_name` column
-     * @param int $id
-     * @return string|null
-     */
-    public static function getMethodName(int $id): ?string
-    {
-        $method = static::find()
-            ->select(['method_name'])
-            ->where(['id' => $id])
-            ->one();
-
-        return $method->method_name ?? null;
-    }
-
-    /**
      * Get list of methods names ['id' => 'method_name']
      * @return array
      */

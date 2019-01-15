@@ -2,9 +2,7 @@
 
 namespace sommerce\components\payments;
 
-use common\models\stores\PaymentMethods;
 use yii\base\UnknownClassException;
-
 
 /**
  * Class Payment

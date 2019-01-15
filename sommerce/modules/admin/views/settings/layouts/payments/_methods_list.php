@@ -9,7 +9,7 @@ use common\models\stores\StorePaymentMethods;
 /* @var $availableMethods array */
 
 $icons = StorePaymentMethods::getMethodIcon();
-
+$names = StorePaymentMethods::getNames();
 ?>
 
     <div class="m-subheader ">
@@ -48,7 +48,7 @@ $icons = StorePaymentMethods::getMethodIcon();
                                         <img src="<?= $icons[$method->method_id]['icon'] ?>" alt="" class="img-fluid" style="">
                                     </div>
                                     <div class="payment-cart__title">
-                                        <?= $method->name ?: $method->getName() ?>
+                                        <?= $method->name ?: $names[$method->method_id] ?>
                                     </div>
                                     <div class="payment-cart__control d-flex justify-content-between align-items-center">
                                         <div>

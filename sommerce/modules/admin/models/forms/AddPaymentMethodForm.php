@@ -106,7 +106,7 @@ class AddPaymentMethodForm extends Model
      */
     private function getOptions($settingsForm): string
     {
-        $settingsForm = json_decode(str_replace('\\', '', $settingsForm), true);
+        $settingsForm = json_decode($settingsForm, true);
 
         $options = array_keys($settingsForm);
         $result = [];

@@ -37,7 +37,6 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
         return $this->_user;
     }
 
-
     /**
      * Move payment method to new position
      * @param $postData array
@@ -46,7 +45,6 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
      */
     public function updatePositions($postData): bool
     {
-
         $positionsTree = ArrayHelper::getValue($postData, 'positions');
 
         if (!$positionsTree) {
