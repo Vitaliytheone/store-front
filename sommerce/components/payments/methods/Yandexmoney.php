@@ -33,8 +33,6 @@ class Yandexmoney extends BasePayment
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_YANDEX_MONEY);
-
         $paymentMethodOptions = $details->getOptions();
 
         return static::returnForm($this->getFrom(), [

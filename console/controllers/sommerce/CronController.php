@@ -104,6 +104,8 @@ class CronController extends CustomController
 
     /**
      * Cron to check payments status with status pending
+     * @throws \yii\base\UnknownClassException
+     * @throws \yii\db\Exception
      */
     public function actionCheckPayments()
     {
@@ -131,10 +133,17 @@ class CronController extends CustomController
     protected function _checkAuthorize(Stores $store)
     {
         $method = PaymentMethods::findOne(PaymentMethods::METHOD_AUTHORIZE);
+        if (!$method) {
+            return;
+        }
+
         $paymentCurrency = PaymentMethodsCurrency::findOne([
             'method_id' => $method->id,
             'currency' => $store->currency
         ]);
+        if (!$paymentCurrency) {
+            return;
+        }
 
         $paymentMethod = StorePaymentMethods::findOne([
             'method_id' => $method->id,
@@ -150,7 +159,7 @@ class CronController extends CustomController
         /**
          * @var Authorize $component
          */
-        $component = Payment::getPayment($method->id);
+        $component = Payment::getPayment($method->class_name);
 
         foreach (Payments::find()->andWhere([
             'method' => $method->method_name,
@@ -198,7 +207,7 @@ class CronController extends CustomController
         /**
          * @var $component Paypal
          */
-        $component = Payment::getPayment($method->id);
+        $component = Payment::getPayment($method->class_name);
 
         foreach (Payments::find()->andWhere([
             'method' => $method,

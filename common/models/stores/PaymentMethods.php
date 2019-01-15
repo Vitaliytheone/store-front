@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use common\models\stores\queries\PaymentMethodsQuery;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%payment_methods}}".
@@ -163,6 +164,21 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
+     * Get list of methods names ['id' => 'method_name']
+     * @return array
+     */
+    public static function getMethodNameList(): array
+    {
+        $methodsNames = static::find()
+            ->select(['method_name', 'id'])
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+
+        return ArrayHelper::map($methodsNames, 'id', 'method_name');
+    }
+
+    /**
      * Return value from `class_name` column
      * @param int $id
      * @return string|null
@@ -184,7 +200,7 @@ class PaymentMethods extends ActiveRecord
     public static function getMethods(): array
     {
         if (empty(static::$methods)) {
-            static::$methods = static::find()->all();
+            static::$methods = static::find()->indexBy('id')->all();
 
         }
 
@@ -225,5 +241,25 @@ class PaymentMethods extends ActiveRecord
     public function getSettingsFormDescription(): string
     {
         return !empty($this->settings_form_description) ? $this->settings_form_description : '';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMethodsForRedirect(): array
+    {
+        $methods = static::find()
+            ->select(['class_name', 'id'])
+            ->where(['in', 'id', [
+                PaymentMethods::METHOD_AUTHORIZE,
+                PaymentMethods::METHOD_STRIPE,
+                PaymentMethods::METHOD_PAYPAL,
+                PaymentMethods::METHOD_PAYPAL_STANDARD,
+                PaymentMethods::METHOD_MERCADOPAGO,
+            ]])
+            ->indexBy('class_name')
+            ->all();
+
+        return array_keys($methods);
     }
 }

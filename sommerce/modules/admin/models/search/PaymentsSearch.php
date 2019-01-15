@@ -328,18 +328,27 @@ class PaymentsSearch extends Model
 
         $payments = $this->_dataProvider->getModels();
 
-        $checkouts = Checkouts::find()
+        $checkoutLast = reset($payments);
+        $checkoutLast = $checkoutLast['checkout_id'];
+        $checkoutFirst = end($payments);
+        $checkoutFirst = $checkoutFirst['checkout_id'];
+
+        $checkouts = (new Query())
+            ->from($this->_db . '.checkouts')
+            ->where(['>=', 'id', $checkoutFirst])
+            ->andWhere(['<=', 'id', $checkoutLast])
             ->indexBy('id')
-            ->asArray()
+            ->orderBy(['id' => SORT_DESC])
             ->all();
         $checkout = [];
+        $methodsNames = PaymentMethods::getMethodNameList();
 
-        array_walk($payments, function(&$payment) use ($checkouts, &$checkout) {
+        array_walk($payments, function(&$payment) use ($checkouts, &$checkout, $methodsNames) {
             if (array_key_exists($payment['checkout_id'], $checkouts)) {
                 $checkout = $checkouts[$payment['checkout_id']];
             }
 
-            $payment['method_title'] = PaymentMethods::getMethodName($checkout['method_id']);
+            $payment['method_title'] = isset($methodsNames[$checkout['method_id']]) ? $methodsNames[$checkout['method_id']] : '';
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

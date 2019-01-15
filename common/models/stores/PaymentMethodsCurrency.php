@@ -125,7 +125,7 @@ class PaymentMethodsCurrency extends ActiveRecord
      * @param Stores $store
      * @return array
      */
-    public static function getSupportPayMethods(Stores $store): array
+    public static function getSupportPaymentMethods(Stores $store): array
     {
         $currencies = self::find()
             ->active()

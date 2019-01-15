@@ -24,11 +24,6 @@ class Paypalstandard extends BasePayment
      */
     public $action = 'https://www.paypal.com/cgi-bin/webscr';
 
-    /**
-     * @var string
-     */
-    protected $_method = PaymentMethods::METHOD_PAYPAL_STANDARD;
-
     public $redirectProcessing = true;
 
     /**
@@ -106,9 +101,6 @@ class Paypalstandard extends BasePayment
      */
     protected function standardProcessing($store, $details)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAYPAL_STANDARD);
-        // paypal standard отвечаем ok если платеж добавлен
-
         $itemNumber = ArrayHelper::getValue($_POST, 'item_number', ArrayHelper::getValue($_GET, 'id'));
         $business = ArrayHelper::getValue($_POST, 'business');
         $paymentStatus = strtolower(trim(ArrayHelper::getValue($_POST, 'payment_status')));

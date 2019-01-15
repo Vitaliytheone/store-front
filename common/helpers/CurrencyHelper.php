@@ -44,11 +44,11 @@ class CurrencyHelper
                 continue;
             }
 
-            static::$currencyOptions[$code][$method->method_name] = [
+            static::$currencyOptions[$code][$method->class_name] = [
                 'url' => $method->url,
                 'class_name' => $method->class_name,
                 'name' => $method->name,
-                'code' => $method->method_name,
+                'code' => $method->class_name,
                 'position' => $availableCurrencies[$method->id]['position'],
                 'options' => $method->getSettingsForm(),
             ];

@@ -111,7 +111,6 @@ class Coinpayments extends BasePayment
     public function processing($store)
     {
         $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_COINPAYMENTS);
 
         $ipnData = [
             'hmac_signature' => ArrayHelper::getValue($_SERVER, 'HTTP_HMAC'),

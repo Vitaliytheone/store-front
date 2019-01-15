@@ -108,8 +108,6 @@ class Paywant extends BasePayment
      */
     public function processing($store)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAYWANT);
-
         $siparisId = ArrayHelper::getValue($_POST, 'SiparisID', '');
         $extraData = ArrayHelper::getValue($_POST, 'ExtraData', '');
         $userId = ArrayHelper::getValue($_POST, 'UserID', '');

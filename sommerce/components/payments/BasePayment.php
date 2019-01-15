@@ -79,10 +79,11 @@ abstract class BasePayment extends Component
     /**
      * BasePayment constructor.
      * @param array $config
+     * @throws \ReflectionException
      */
     public function __construct(array $config = [])
     {
-        $this->_method = ArrayHelper::getValue($config, 'method');
+        $this->_method = strtolower((new \ReflectionClass($this))->getShortName());
 
         parent::__construct($config);
     }

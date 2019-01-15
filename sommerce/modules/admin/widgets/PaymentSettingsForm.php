@@ -1,25 +1,57 @@
 <?php
 
-namespace sommerce\helpers;
+namespace sommerce\modules\admin\widgets;
 
+use yii\base\Widget;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
-use yii\helpers\Html;
-use Yii;
 use common\models\stores\PaymentMethodsCurrency;
+use Yii;
+use yii\helpers\Html;
 use common\models\stores\PaymentMethods;
 
 /**
- * Class SettingsFormHelper
- * @package sommerce\helpers
+ * Class PaymentSettingsForm
+ * @package sommerce\modules\admin\widgets
  */
-class SettingsFormHelper
+class PaymentSettingsForm extends Widget
 {
+    /** @var EditPaymentMethodForm */
+    public $paymentModel;
+
+    /** @var string */
+    public $submitUrl;
+
+    /** @var string  */
+    public $cancelUrl = '';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function init()
+    {
+        parent::init();
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function run()
+    {
+        return $this->render('_payment_setting_form', [
+            'paymentData' => $this->getMethodFormData($this->paymentModel),
+            'submitUrl' => $this->submitUrl,
+            'cancelUrl' => $this->cancelUrl,
+        ]);
+    }
+
     /**
      * @param EditPaymentMethodForm $storeMethod
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public static function getMethodFormData(EditPaymentMethodForm $storeMethod): array
+    public function getMethodFormData(EditPaymentMethodForm $storeMethod): array
     {
         /** @var PaymentMethodsCurrency $method */
         $method = $storeMethod->getStorePaymentMethodCurrency()->one();

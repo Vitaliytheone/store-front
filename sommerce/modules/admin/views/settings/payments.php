@@ -2,6 +2,7 @@
 
 use sommerce\assets\NavigationPaymentAsset;
 use sommerce\modules\admin\components\Url;
+use sommerce\assets\SommernoteAsset;
 
 /* @var $this \yii\web\View */
 /* @var $method string Current `settings payments` method */
@@ -13,6 +14,7 @@ use sommerce\modules\admin\components\Url;
 /* @var $availableMethods array */
 /* @var $paymentData array */
 
+SommernoteAsset::register($this);
 NavigationPaymentAsset::register($this);
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">

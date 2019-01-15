@@ -11,6 +11,7 @@ use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\AddPaymentMethodForm;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
 use sommerce\modules\admin\models\forms\UpdatePositionsPaymentsForm;
+use sommerce\modules\admin\models\search\PaymentsSettingsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -35,13 +36,14 @@ trait PaymentsTrait
             'action_update_pos' => Url::toRoute('/settings/update-payment-positions'),
         ]);
 
-        $paymentMethods = StorePaymentMethods::find()->where(['store_id' => yii::$app->store->getId()])->orderBy('position')->all();
-
         $store = Yii::$app->store->getInstance();
-        $availableMethods = PaymentMethodsCurrency::getSupportPayMethods($store);
+        $paymentMethods = new PaymentsSettingsSearch();
+        $paymentMethods->setStore($store);
+
+        $availableMethods = PaymentMethodsCurrency::getSupportPaymentMethods($store);
 
         return $this->render('payments', [
-            'paymentMethods' => $paymentMethods,
+            'paymentMethods' => $paymentMethods->search(),
             'availableMethods' => $availableMethods,
         ]);
     }
@@ -66,15 +68,15 @@ trait PaymentsTrait
         $this->view->title = Yii::t('admin', "settings.payments_edit_$methodName");
 
         $paymentModel->setUser(Yii::$app->user);
-        $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
 
-        if (!$paymentMethod) {
-            throw new NotFoundHttpException();
-        }
-
-        if ($request->method == 'POST' && $paymentModel->changeSettings($request->post())) {
+        if ($paymentModel->changeSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
             return $this->redirect(Url::toRoute(['/settings/payments']));
+        }
+
+        $paymentMethod = PaymentMethods::findOne($paymentModel->method_id);
+        if (!$paymentMethod) {
+            throw new NotFoundHttpException();
         }
 
         return $this->render('payments', [
@@ -82,7 +84,6 @@ trait PaymentsTrait
             'methodName' => $methodName,
             'paymentModel' => $paymentModel,
             'paymentData' => [
-                'formData' => $paymentModel->getMethodFormData(),
                 'icon' => $paymentMethod->icon,
                 'description' => $paymentMethod->getSettingsFormDescription(),
             ],

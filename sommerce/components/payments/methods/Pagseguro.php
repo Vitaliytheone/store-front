@@ -86,7 +86,6 @@ class Pagseguro extends BasePayment
      */
     public function processing($store)
     {
-        $this->_method = PaymentMethods::getClassName(PaymentMethods::METHOD_PAGSEGURO);
         $this->log(json_encode($_POST, JSON_PRETTY_PRINT));
 
         $notificationCode = ArrayHelper::getValue($_POST, 'notificationCode');
