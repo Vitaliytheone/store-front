@@ -162,6 +162,21 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
+     * Get list of methods names ['id' => 'method_name']
+     * @return array
+     */
+    public static function getMethodNameList(): array
+    {
+        $methodsNames = static::find()
+            ->select(['method_name', 'id'])
+            ->indexBy('id')
+            ->asArray()
+            ->all();
+
+        return ArrayHelper::map($methodsNames, 'id', 'method_name');
+    }
+
+    /**
      * Return value from `class_name` column
      * @param int $id
      * @return string|null
