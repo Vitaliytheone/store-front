@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use common\models\stores\queries\PaymentMethodsQuery;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%payment_methods}}".
@@ -223,5 +224,25 @@ class PaymentMethods extends ActiveRecord
     public function getSettingsFormDescription(): string
     {
         return !empty($this->settings_form_description) ? $this->settings_form_description : '';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMethodsForRedirect(): array
+    {
+        $methods = static::find()
+            ->select(['class_name', 'id'])
+            ->where(['in', 'id', [
+                PaymentMethods::METHOD_AUTHORIZE,
+                PaymentMethods::METHOD_STRIPE,
+                PaymentMethods::METHOD_PAYPAL,
+                PaymentMethods::METHOD_PAYPAL_STANDARD,
+                PaymentMethods::METHOD_MERCADOPAGO,
+            ]])
+            ->indexBy('class_name')
+            ->all();
+
+        return array_keys($methods);
     }
 }

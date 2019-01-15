@@ -30,20 +30,14 @@ class Payment {
             return static::$methods[$method];
         }
 
-        if (is_string($method)) {
-            $paymentMethod = PaymentMethods::findOne(['method_name' => $method]);
-        } else {
-            $paymentMethod = PaymentMethods::findOne($method);
-        }
-
-        $className = '\sommerce\components\payments\methods\\' . ucfirst($paymentMethod->class_name);
+        $className = '\sommerce\components\payments\methods\\' . ucfirst($method);
 
         if (!class_exists($className)) {
             throw new UnknownClassException();
         }
 
-        static::$methods[$paymentMethod->method_name] = new $className(['method' => $paymentMethod->method_name]);
+        static::$methods[$method] = new $className(['method' => $method]);
 
-        return static::$methods[$paymentMethod->method_name];
+        return static::$methods[$method];
     }
 }
