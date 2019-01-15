@@ -23,6 +23,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $manual_callback_url
  * @property integer created_at
  * @property integer updated_at
+ *
+ * @property PaymentMethodsCurrency[] $paymentMethodCurrency
  */
 class PaymentMethods extends ActiveRecord
 {
@@ -120,7 +122,7 @@ class PaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get currency of current method
+     * Get all currency of current payment method
      *
      * @return ActiveQuery
      */

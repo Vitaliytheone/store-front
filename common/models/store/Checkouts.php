@@ -7,6 +7,7 @@ use common\models\stores\PaymentMethods;
 use common\models\stores\PaymentMethodsCurrency;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use common\models\store\queries\CheckoutsQuery;
 
@@ -33,6 +34,8 @@ use common\models\store\queries\CheckoutsQuery;
  * @property Payments[] $payments
  * @property PaymentsLog[] $paymentsLogs
  * @property Suborders[] $suborders
+ * @property PaymentMethods $payMethod
+ * @property PaymentMethodsCurrency $payMethodCurrency
  */
 class Checkouts extends ActiveRecord
 {
@@ -93,65 +96,73 @@ class Checkouts extends ActiveRecord
     }
 
     /**
+     * Return all Orders by current checkout->id
      * @return \yii\db\ActiveQuery
      */
-    public function getOrders()
+    public function getOrders(): ActiveQuery
     {
         return $this->hasMany(Orders::class, ['checkout_id' => 'id']);
     }
 
     /**
+     * Return one Order by current checkout->id
      * @return \yii\db\ActiveQuery
      */
-    public function getOrder()
+    public function getOrder(): ActiveQuery
     {
         return $this->hasOne(Orders::class, ['checkout_id' => 'id']);
     }
 
     /**
+     * Return one Payment by current checkout->id
      * @return \yii\db\ActiveQuery
      */
-    public function getPayment()
+    public function getPayment(): ActiveQuery
     {
         return $this->hasOne(Payments::class, ['checkout_id' => 'id']);
     }
 
     /**
+     * Return all Payments by current checkout->id
      * @return \yii\db\ActiveQuery
      */
-    public function getPayments()
+    public function getPayments(): ActiveQuery
     {
         return $this->hasMany(Payments::class, ['checkout_id' => 'id']);
     }
 
     /**
+     * Return all PaymentsLog by current checkout->id
      * @return \yii\db\ActiveQuery
      */
-    public function getPaymentsLogs()
+    public function getPaymentsLogs(): ActiveQuery
     {
         return $this->hasMany(PaymentsLog::class, ['checkout_id' => 'id']);
     }
 
     /**
+     * Return all Suborders by current checkout->id
      * @return \yii\db\ActiveQuery
      */
-    public function getSuborders()
+    public function getSuborders(): ActiveQuery
     {
         return $this->hasMany(Suborders::class, ['checkout_id' => 'id']);
     }
 
     /**
+     * Return one PaymentMethods by current checkout->method_id
      * @return \yii\db\ActiveQuery
      */
-    public function getMethod()
+    public function getPayMethod(): ActiveQuery
     {
         return $this->hasOne(PaymentMethods::class, ['id' => 'method_id']);
     }
 
     /**
+     * Return one PaymentMethodsCurrency by current checkout->currency_id
      * @return \yii\db\ActiveQuery
      */
-    public function getCurrency()
+    public function getPayMethodCurrency(): ActiveQuery
     {
         return $this->hasOne(PaymentMethodsCurrency::class, ['id' => 'currency_id']);
     }
@@ -201,18 +212,19 @@ class Checkouts extends ActiveRecord
     }
 
     /**
-     * Get details
+     * Get details as array
+     * @return array
      */
-    public function getDetails()
+    public function getDetails(): array
     {
-        return empty($this->details) ? [] : json_decode($this->details, true);
+        return !empty($this->details) ? json_decode($this->details, true) : [];
     }
 
     /**
-     * Get user details
+     * Get user details as array
      * @return array
      */
-    public function getUserDetails()
+    public function getUserDetails(): array
     {
         return !empty($this->user_details) ? json_decode($this->user_details, true) : [];
     }
