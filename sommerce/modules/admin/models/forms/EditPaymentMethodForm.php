@@ -5,7 +5,6 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
-use yii\web\User;
 
 /**
  * Class EditPaymentMethodForm

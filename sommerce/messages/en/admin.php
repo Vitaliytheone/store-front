@@ -342,6 +342,7 @@ return [
     'settings.payments_coinpayments_guide_3' => 'Enter your Merchant ID and IPN Secret bellow',
 
     'settings.payments_edit_stripe' => 'Edit Stripe',
+    'settings.payments_edit_stripe_3d_secure' => 'Edit Stripe 3D Secure',
     'settings.payments_stripe_secret_key' => 'Secret key',
     'settings.payments_stripe_public_key' => 'Public key',
     'settings.payments_stripe_webhook_secret' => 'Webhook secret',
