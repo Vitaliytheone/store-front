@@ -86,7 +86,7 @@ class Paypal extends BasePayment
         ];
 
         $requestParams = [
-            'RETURNURL' => 'http://2718c64b.ngrok.io/paypalexpress/' . $checkout->id,
+            'RETURNURL' => SiteHelper::hostUrl() . '/paypalexpress/' . $checkout->id,
             'CANCELURL' => SiteHelper::hostUrl() . '/cart'
         ];
 

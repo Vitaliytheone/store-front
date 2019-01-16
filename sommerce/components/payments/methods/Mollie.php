@@ -50,7 +50,7 @@ class Mollie extends BasePayment
                 ],
                 'description' => static::getDescription($checkout->id),
                 'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-                'webhookUrl' => 'http://2718c64b.ngrok.io/mollie',
+                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
