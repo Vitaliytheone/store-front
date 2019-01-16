@@ -53,6 +53,11 @@ class CheckoutForm extends Model {
     protected $_payment;
 
     /**
+     * @var array
+     */
+    protected $_userDetails = [];
+
+    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -111,6 +116,7 @@ class CheckoutForm extends Model {
         $this->method_id = $method->method_id;
         $this->_payment = new Payments();
         $this->_payment->attributes = $this->attributes;
+        $this->_payment->setUserDetails($this->_userDetails);
 
         if (!$this->_payment->save(false)) {
             $this->addError('method', '');
