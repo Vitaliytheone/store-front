@@ -197,8 +197,6 @@ class SettingsController extends CustomController
             return null;
         }
 
-        $storeForm->setUser(Yii::$app->user);
-
         return $storeForm->currencyChange($postData);
     }
 }
