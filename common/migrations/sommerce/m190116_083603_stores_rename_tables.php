@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m181214_081357_20181214_stores_rename_tables
+ * Class m190116_083603_stores_rename_tables
  */
-class m181214_081357_20181214_stores_rename_tables extends Migration
+class m190116_083603_stores_rename_tables extends Migration
 {
     /**
      * {@inheritdoc}

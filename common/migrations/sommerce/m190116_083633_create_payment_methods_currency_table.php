@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m181214_081823_20181214_create_payment_methods_currency_table
+ * Handles the creation of table `payment_methods_currency`.
  */
-class m181214_081823_20181214_create_payment_methods_currency_table extends Migration
+class m190116_083633_create_payment_methods_currency_table extends Migration
 {
     /**
      * {@inheritdoc}

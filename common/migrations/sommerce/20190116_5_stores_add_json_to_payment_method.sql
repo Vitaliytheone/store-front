@@ -98,3 +98,10 @@ SET `settings_form` = '{\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secre
     `settings_form_description` = '<ul>\r\n<li>Go to Mollie website → <a href=\"https://www.mollie.com/dashboard/developers/api-keys\" target=\"_blank\">Developer Dashboard</a> and get your <b>Live API key</b></li>\r\n<li>If you want to test payment system, use <b>Test API key</b> instead.</li>\r\n</ul>',
     `icon` = '/img/pg/mollie.png'
 WHERE `payment_methods`.`method_name` = 'mollie';
+
+UPDATE `payment_methods`
+SET `settings_form` = '{\"public_key\":{\"code\":\"public_key\",\"name\":\"public_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_public_key\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_secret_key\"},\"webhook_secret\":{\"code\":\"webhook_secret\",\"name\":\"webhook_secret\",\"type\":\"input\",\"label\":\"settings.payments_stripe_webhook_secret\"}}',
+    `settings_form_description` = '<ol>\r\n<li>Publishable key and Secret key you may find on <a href=\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">https://dashboard.stripe.com/account/apikeys</a></li>\r\n<li>Go to <a href=\"https://dashboard.stripe.com/account/webhooks\" target=\"_blank\">https://dashboard.stripe.com/account/webhooks</a> and add endpoint for <code>{site}/stripe_3d_secure</code></li>\r\n<li>Click on created webhook to get Signing secret</li>\r\n</ol>',
+    `addfunds_form` = '{\"token\":{\"name\":\"token\",\"type\":\"hidden\"},\"email\":{\"name\":\"email\",\"type\":\"hidden\"}}',
+    `icon` = '/img/pg/stripe_logo.png'
+WHERE `payment_methods`.`method_name` = 'stripe_3d_secure';

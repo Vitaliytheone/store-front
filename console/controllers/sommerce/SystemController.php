@@ -308,7 +308,7 @@ class SystemController extends CustomController
                 $count++;
             }
         }
-        return print "Success add {$count} currencies\n";
+        return print "SUCCESS add {$count} currencies\n";
     }
 
     /**
@@ -328,17 +328,30 @@ class SystemController extends CustomController
             ->indexBy('id')
             ->all();
 
-        $count = 0;
+        $count = $delete = 0;
 
         foreach ($methods as $key => $methodName) {
             $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
+
             $storeMethod = StorePaymentMethods::findOne($key);
+
             if (!$method || !$storeMethod) {
                 continue;
             }
-            $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $method->id]);
+            $store = (new Query())
+                ->from(DB_STORES . '.stores')
+                ->where(['id' => $storeMethod['store_id']])
+                ->one();
+
+            if (!$store) {
+                continue;
+            }
+
+            $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $method->id, 'currency' => $store['currency']]);
 
             if (!$storeCurrency) {
+                $storeMethod->delete();
+                $delete++;
                 continue;
             }
 
@@ -359,7 +372,7 @@ class SystemController extends CustomController
 
         Yii::$app->db->createCommand('ALTER TABLE `store_payment_methods` DROP COLUMN `method`')->execute();
 
-        return print "Success change in {$count} store_payment_methods settings\n";
+        return print "SUCCESS change in {$count} store_payment_methods settings and delete {$delete} unsupported methods\n";
     }
 
     /**
@@ -391,7 +404,7 @@ class SystemController extends CustomController
             $count++;
         }
 
-        return print "Success add new column to {$count} checkouts dbs\n";
+        return print "SUCCESS add new column to {$count} checkouts dbs\n";
     }
 
     /**
@@ -477,7 +490,7 @@ class SystemController extends CustomController
             }
             $count++;
         }
-        return print "Successfully change {$count} PaymentMethods IDS and delete {$delete} duplicates\n";
+        return print "SUCCESSFULLY change {$count} PaymentMethods IDS and delete {$delete} duplicates\n";
     }
 
     /**
@@ -503,9 +516,12 @@ class SystemController extends CustomController
             }
 
             foreach ($stores as $store) {
-                Yii::$app->db->createCommand()
-                    ->update($store->db_name . '.checkouts', ['method_id' => $id], ['method_id' => $currentId])
-                    ->execute();
+                if (Yii::$app->db->getTableSchema($store['db_name'].'.checkouts', true) === null) {
+                    continue;
+                }
+                Yii::$app->db->createCommand()->update($store->db_name . '.checkouts', [
+                        'method_id' => $id
+                    ], ['method_id' => $currentId])->execute();
             }
         }
     }

@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m181214_075147_stores_change_pg_sort_order
+ * Class m181218_095147_stores_change_pg_sort_order
  */
-class m181214_075147_stores_change_pg_sort_order extends Migration
+class m181218_095147_stores_change_pg_sort_order extends Migration
 {
     /**
      * {@inheritdoc}

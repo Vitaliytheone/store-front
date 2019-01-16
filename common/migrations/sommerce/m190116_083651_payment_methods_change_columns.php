@@ -4,9 +4,9 @@ use yii\db\Migration;
 use yii\db\Query;
 
 /**
- * Class m181214_085452_20181214_payment_methods_change_columns
+ * Class m190116_083651_payment_methods_change_columns
  */
-class m181214_085452_20181214_payment_methods_change_columns extends Migration
+class m190116_083651_payment_methods_change_columns extends Migration
 {
     /**
      * {@inheritdoc}
@@ -20,7 +20,9 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
 
         foreach ($methods as $method) {
             $currencies = json_decode($method['currencies'], true);
-
+            if (empty($currencies)) {
+                continue;
+            }
             foreach ($currencies as $currency) {
                 Yii::$app->db->createCommand()->insert(DB_STORES .'.payment_methods_currency', [
                     'method_id' => $method['id'],
@@ -114,4 +116,5 @@ class m181214_085452_20181214_payment_methods_change_columns extends Migration
               DROP COLUMN `updated_at`;
         ');
     }
+
 }

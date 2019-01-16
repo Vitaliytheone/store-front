@@ -4,9 +4,9 @@ use yii\db\Migration;
 use yii\db\Query;
 
 /**
- * Class m181214_122547_20181214_store_checkouts_add_column
+ * Class m190116_083756_store_checkouts_add_column
  */
-class m181214_122547_20181214_store_checkouts_add_column extends Migration
+class m190116_083756_store_checkouts_add_column extends Migration
 {
 
     public function getQuery($db)
@@ -32,7 +32,6 @@ class m181214_122547_20181214_store_checkouts_add_column extends Migration
 
         foreach ($stores as $store) {
             if (Yii::$app->db->getTableSchema($store['db_name'].'.checkouts', true) === null) {
-                echo $store['db_name'] . "\n";
                 continue;
             }
             $this->execute($this->getQuery($store['db_name']));
@@ -56,7 +55,6 @@ class m181214_122547_20181214_store_checkouts_add_column extends Migration
 
         foreach ($stores as $store) {
             if (Yii::$app->db->getTableSchema($store['db_name'].'.checkouts', true) === null) {
-                echo $store['db_name'] . "\n";
                 continue;
             }
             $this->execute('USE `' . $store['db_name'] . '`; ALTER TABLE `checkouts` DROP COLUMN `currency_id`;');
