@@ -119,7 +119,7 @@ class ProductsSearch extends Model
             // Make product
             $currentProductKey = array_search($productId, array_column($productsRows, 'pr_id'));
             $currentRow = $productsRows[$currentProductKey];
-            $productsPackages[$productId] = [
+            $productsPackages[] = [
                 'id' => $productId,
                 'name' => $currentRow['pr_name'],
                 'position' => $currentRow['pr_position'],

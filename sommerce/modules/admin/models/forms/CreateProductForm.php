@@ -202,7 +202,8 @@ class CreateProductForm extends Products
     /**
      * Create new product
      * @param $postData
-     * @return $this|bool
+     * @return array|bool
+     * @throws \Throwable
      */
     public function create($postData)
     {
@@ -219,7 +220,7 @@ class CreateProductForm extends Products
 
         ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_ADDED, $this->id, $this->id);
 
-        return $this;
+        return $this->attributes;
     }
 
     /**

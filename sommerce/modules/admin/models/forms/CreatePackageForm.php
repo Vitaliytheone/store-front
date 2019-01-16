@@ -122,7 +122,8 @@ class CreatePackageForm extends Packages
     /**
      * Crate new package
      * @param $postData
-     * @return $this|bool
+     * @return array|bool
+     * @throws \Throwable
      */
     public function create($postData)
     {
@@ -135,7 +136,7 @@ class CreatePackageForm extends Packages
 
         ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_ADDED, $this->id, $this->id);
 
-        return $this;
+        return $this->attributes;
     }
 
     /**
