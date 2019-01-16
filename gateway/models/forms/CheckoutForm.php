@@ -5,9 +5,11 @@ use common\models\gateway\Payments;
 use common\models\gateways\PaymentMethods;
 use common\models\gateways\SitePaymentMethods;
 use common\models\gateways\Sites;
+use payments\BasePayment;
 use payments\Payment;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class CheckoutForm
@@ -51,6 +53,11 @@ class CheckoutForm extends Model {
      * @var Payments
      */
     protected $_payment;
+
+    /**
+     * @var PaymentMethods
+     */
+    protected $_method;
 
     /**
      * @var array
@@ -108,12 +115,13 @@ class CheckoutForm extends Model {
             return false;
         }
 
-        if (!($method = $this->getPaymentMethod())) {
+        if (!($method = $this->getMethod())) {
             $this->addError('method', '');
             return false;
         }
 
-        $this->method_id = $method->method_id;
+
+        $this->method_id = $method->id;
         $this->_payment = new Payments();
         $this->_payment->attributes = $this->attributes;
         $this->_payment->setUserDetails($this->_userDetails);
@@ -123,8 +131,7 @@ class CheckoutForm extends Model {
             return false;
         }
 
-        $payment = Payment::getPayment($method->method->class_name);
-        $payment->setGateway($this->getGateway());
+        $payment = $this->getPaymentMethod();
         $payment->setPayment($this->_payment);
         $result = $payment->checkout();
 
@@ -158,21 +165,58 @@ class CheckoutForm extends Model {
     }
 
     /**
-     * @return SitePaymentMethods|null
+     * @return BasePayment
      */
     protected function getPaymentMethod()
     {
-        if ($this->hasErrors() || !$this->method) {
-            return null;
+        return Payment::getPayment($this->getMethod()->class_name)
+            ->setGateway($this->getGateway());
+    }
+
+    /**
+     * @return PaymentMethods|null
+     */
+    protected function getMethod()
+    {
+        if (null === $this->_method) {
+            if ($this->hasErrors() || !$this->method) {
+                return null;
+            }
+
+            $sitePaymentMethod = SitePaymentMethods::find()
+                ->innerJoinWith(['method'])
+                ->andWhere([
+                    'payment_methods.url' => $this->method,
+                    'site_id' => $this->getGateway()->id,
+                    'visibility' => 1
+                ])
+                ->one();
+
+            $this->_method = ArrayHelper::getValue($sitePaymentMethod, 'method');
         }
 
-        return SitePaymentMethods::find()
-            ->innerJoinWith(['method'])
-            ->andWhere([
-                'payment_methods.url' => $this->method,
-                'site_id' => $this->getGateway()->id,
-                'visibility' => 1
-            ])
-            ->one();
+        return $this->_method;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateUserDetails()
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $payment = $this->getPaymentMethod();
+
+        return $payment->validateUserDetails($this->_userDetails);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCheckoutFormData()
+    {
+        return [];
     }
 }

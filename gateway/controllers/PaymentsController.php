@@ -41,11 +41,17 @@ class PaymentsController extends CommonController
     {
         $model = new CheckoutForm();
         $model->setGateway(Yii::$app->gateway->getInstance());
-        if ($model->load(Yii::$app->request->post(), '') && $model->save()) {
-            if ($model->redirect) {
-                return $this->redirect($model->redirect);
-            } else if (!empty($model->formData)) {
-                return $this->renderPartial('checkout.php', $model->formData);
+        if ($model->load(Yii::$app->request->post(), '')) {
+            if (!$model->validateUserDetails()) {
+                return $this->renderPartial('user_checkout.php', $model->getCheckoutFormData());
+            }
+
+            if ($model->save()) {
+                if ($model->redirect) {
+                    return $this->redirect($model->redirect);
+                } else if (!empty($model->formData)) {
+                    return $this->renderPartial('checkout.php', $model->formData);
+                }
             }
         }
 

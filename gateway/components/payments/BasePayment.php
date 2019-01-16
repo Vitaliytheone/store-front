@@ -349,10 +349,13 @@ abstract class BasePayment extends Component {
 
     /**
      * @param Payments $payment
+     * @return BasePayment
      */
     public function setPayment(Payments $payment)
     {
         $this->_payment = $payment;
+
+        return $this;
     }
 
     /**
@@ -425,18 +428,24 @@ abstract class BasePayment extends Component {
 
     /**
      * @param array $paymentMethod
+     * @return BasePayment
      */
     public function setPaymentMethod(array $paymentMethod)
     {
         $this->_paymentMethod = $paymentMethod;
+
+        return $this;
     }
 
     /**
      * @param Sites $site
+     * @return BasePayment
      */
     public function setGateway(?Sites $site)
     {
         $this->_site = $site;
+
+        return $this;
     }
 
     /**
@@ -461,5 +470,14 @@ abstract class BasePayment extends Component {
     public function getReturnUrl(): string
     {
         return SiteHelper::hostUrl($this->getGateway()->ssl) . '/processing';
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    public function validateUserDetails($data)
+    {
+        return true;
     }
 }

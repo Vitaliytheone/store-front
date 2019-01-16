@@ -216,4 +216,18 @@ class Stripe extends BasePayment {
             'content' => 'Ok'
         ];
     }
+
+    public function getFields()
+    {
+
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function validateUserDetails($data)
+    {
+        return false;
+    }
 }
