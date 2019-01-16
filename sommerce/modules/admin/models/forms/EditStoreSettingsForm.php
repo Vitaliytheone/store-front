@@ -158,7 +158,7 @@ class EditStoreSettingsForm extends Stores
      * @throws \Throwable
      * @throws \yii\base\Exception
      */
-    public function updateSettings($postData)
+    public function updateSettings($postData): bool
     {
         $currentCurrency = $this->currency;
 
@@ -203,17 +203,20 @@ class EditStoreSettingsForm extends Stores
         }
 
         if ($currentCurrency != $this->currency) {
-            $storeMethods = StorePaymentMethods::findAll(['store_id' => $this->id]);
+            $storeMethods = StorePaymentMethods::find()->where(['store_id' => $this->id])->orderBy('position')->all();
             $currencyMethods = PaymentMethodsCurrency::find()
                 ->where(['currency' => $this->currency])
                 ->asArray()
                 ->indexBy('method_id')
                 ->all();
 
+            $last = 0;
+
             foreach ($storeMethods as $method) {
                 if (!array_key_exists($method->method_id, $currencyMethods)) {
                     $method->delete();
                 } else {
+                    $method->position = $last++;
                     $method->currency_id = $currencyMethods[$method->method_id]['id'];
                     $method->save(false);
                 }
