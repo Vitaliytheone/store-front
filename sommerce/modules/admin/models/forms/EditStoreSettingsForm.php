@@ -42,7 +42,7 @@ class EditStoreSettingsForm extends Stores
 
     /**
      * Current User
-     * @var User
+     * @var StoreAdminAuth
      */
     private $_user;
 
@@ -123,16 +123,16 @@ class EditStoreSettingsForm extends Stores
 
     /**
      * Set current user
-     * @param User $user
+     * @param StoreAdminAuth $user
      */
-    public function setUser(User $user)
+    public function setUser(StoreAdminAuth $user)
     {
         $this->_user = $user;
     }
 
     /**
      * Return current user
-     * @return User
+     * @return StoreAdminAuth
      */
     public function getuser()
     {
@@ -233,7 +233,7 @@ class EditStoreSettingsForm extends Stores
     private function _changeLog($changedAttributes)
     {
         /** @var StoreAdminAuth $identity */
-        $identity = $this->getuser()->getIdentity(false);
+        $identity = $this->getuser();
 
         if (isset($changedAttributes['name'])) {
             ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_NAME_CHANGED);
@@ -274,7 +274,7 @@ class EditStoreSettingsForm extends Stores
                 ->where(['in', 'method_id', array_keys($storeMethods)])
                 ->andWhere(['currency' => $currency])
                 ->all();
-            if (count($storeMethods) !== count ($currencies)) {
+            if (count($storeMethods) !== count($currencies)) {
                 return true;
             }
         }

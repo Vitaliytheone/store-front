@@ -57,8 +57,8 @@ class Paypalstandard extends BasePayment
             'cmd' => '_xclick',
             'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
             'currency_code' => $store->currency,
-            'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
+            'return' => 'http://2718c64b.ngrok.io/paypalstandard/' . $checkout->id,
+            'notify_url' => 'http://2718c64b.ngrok.io/paypalstandard/' . $checkout->id,
             'cancel_return' => SiteHelper::hostUrl() . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
@@ -139,7 +139,7 @@ class Paypalstandard extends BasePayment
         if (empty($id)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $itemNumber,
-                'method_id' => $details->id
+                'method_id' => $details->method_id
             ]))
             // Changed Checkouts::STATUS_PENDING to PAID, otherwise it does not work
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {

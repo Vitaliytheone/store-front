@@ -50,7 +50,7 @@ class Mollie extends BasePayment
                 ],
                 'description' => static::getDescription($checkout->id),
                 'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
+                'webhookUrl' => 'http://2718c64b.ngrok.io/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
@@ -102,7 +102,7 @@ class Mollie extends BasePayment
             $profileId = $payment->profileId;
             $country = $payment->countryCode ?? null;
 
-            if (empty($paymentId) || !($this->_checkout = Checkouts::findOne(['id' => $paymentId, 'method_id' => $paymentMethod->id]))) {
+            if (empty($paymentId) || !($this->_checkout = Checkouts::findOne(['id' => $paymentId, 'method_id' => $paymentMethod->method_id]))) {
                 return [
                     'result' => 2,
                     'content' => 'no invoice'

@@ -86,7 +86,7 @@ class Paypal extends BasePayment
         ];
 
         $requestParams = [
-            'RETURNURL' => SiteHelper::hostUrl() . '/paypalexpress/' . $checkout->id,
+            'RETURNURL' => 'http://2718c64b.ngrok.io/paypalexpress/' . $checkout->id,
             'CANCELURL' => SiteHelper::hostUrl() . '/cart'
         ];
 
@@ -187,7 +187,7 @@ class Paypal extends BasePayment
         if (empty($id)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $id,
-                'method_id' => $details->id
+                'method_id' => $details->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

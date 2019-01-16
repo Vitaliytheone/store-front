@@ -195,7 +195,7 @@ class Twocheckout extends BasePayment
        if (empty($messageVendorOrderId)
            || !($this->_checkout = Checkouts::findOne([
                'id' => $messageVendorOrderId,
-               'method_id' => $paymentMethod->id
+               'method_id' => $paymentMethod->method_id
            ]))
            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
            // no checkout

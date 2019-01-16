@@ -468,6 +468,9 @@ class SystemController extends CustomController
                 case 'mollie':
                     static::_checkPaymentMethodId($method, PaymentMethods::METHOD_MOLLIE);
                     break;
+                case 'stripe_3d_secure':
+                    static::_checkPaymentMethodId($method, PaymentMethods::METHOD_STRIPE_3D_SECURE);
+                    break;
                 default:
                     $method->id = $last + 1;
                     $last++;

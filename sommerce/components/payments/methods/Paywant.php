@@ -132,7 +132,7 @@ class Paywant extends BasePayment
         if (empty($extraData)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $extraData,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             if (@$this->_checkout->status == 1) echo 'OK';

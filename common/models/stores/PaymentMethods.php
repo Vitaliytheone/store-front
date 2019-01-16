@@ -46,6 +46,7 @@ class PaymentMethods extends ActiveRecord
     public const METHOD_MERCADOPAGO = 14;
     public const METHOD_PAYPAL_STANDARD = 15;
     public const METHOD_MOLLIE = 16;
+    public const METHOD_STRIPE_3D_SECURE = 17;
 
     public const FIELD_TYPE_INPUT = 'input';
     public const FIELD_TYPE_CHECKBOX = 'checkbox';
@@ -241,6 +242,7 @@ class PaymentMethods extends ActiveRecord
                 PaymentMethods::METHOD_PAYPAL,
                 PaymentMethods::METHOD_PAYPAL_STANDARD,
                 PaymentMethods::METHOD_MERCADOPAGO,
+                PaymentMethods::METHOD_STRIPE_3D_SECURE,
             ]])
             ->indexBy('class_name')
             ->all();

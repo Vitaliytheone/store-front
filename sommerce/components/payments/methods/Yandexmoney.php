@@ -94,7 +94,7 @@ class Yandexmoney extends BasePayment
         if (empty($label)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $label,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

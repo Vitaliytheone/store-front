@@ -74,7 +74,7 @@ abstract class BasePayment extends Component
      * Is shown processing & checkout errors messages
      * @var bool show errors (default False)
      */
-    public $showErrors = false;
+    public $showErrors = true;
 
     /**
      * BasePayment constructor.

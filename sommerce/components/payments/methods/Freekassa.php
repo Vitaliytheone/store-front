@@ -82,7 +82,7 @@ class Freekassa extends BasePayment {
         if (empty($merchantOrderId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $merchantOrderId,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

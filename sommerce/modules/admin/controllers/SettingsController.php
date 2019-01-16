@@ -18,6 +18,7 @@ use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use yii\filters\AjaxFilter;
@@ -99,6 +100,7 @@ class SettingsController extends CustomController
      * @return string|Response
      * @throws \Throwable
      * @throws \yii\base\Exception
+     * @throws NotFoundHttpException
      */
     public function actionIndex()
     {
@@ -109,7 +111,14 @@ class SettingsController extends CustomController
 
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
-        $storeForm->setUser(Yii::$app->user);
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
+        if (!$identity) {
+            throw new NotFoundHttpException();
+        }
+
+        $storeForm->setUser($identity);
 
         if ($storeForm->updateSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_updated'));

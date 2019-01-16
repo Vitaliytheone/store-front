@@ -2,6 +2,7 @@
 namespace sommerce\components\payments\methods;
 
 use common\helpers\SiteHelper;
+use common\models\stores\StorePaymentMethods;
 use Stripe\Stripe as StripeBase;
 use Stripe\Error\Base as StripeError;
 use Stripe\Charge as StripeCharge;
@@ -130,11 +131,7 @@ class Stripe3dSecure extends BasePayment {
      */
     public function processing($store)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_STRIPE_3D_SECURE,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_STRIPE_3D_SECURE);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -144,7 +141,7 @@ class Stripe3dSecure extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $webhookSecretKey = ArrayHelper::getValue($paymentMethodOptions, 'webhook_secret');
         StripeBase::setApiKey($secretKey);
@@ -202,7 +199,7 @@ class Stripe3dSecure extends BasePayment {
         $paymentMethod = PaymentMethods::findOne([
             'method' => PaymentMethods::METHOD_STRIPE_3D_SECURE,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
+            'active' => StorePaymentMethods::VISIBILITY_ENABLED
         ]);
 
         if (empty($paymentMethod)) {

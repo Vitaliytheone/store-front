@@ -144,7 +144,7 @@ class Pagseguro extends BasePayment
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $checkoutId,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
