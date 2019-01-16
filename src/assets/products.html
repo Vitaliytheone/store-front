@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Name panel</title>
+
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+<link rel="stylesheet" href="http://bgrins.github.io/spectrum/spectrum.css">
+
+
+<body class="m-page m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-aside--offcanvas-default">
+<!-- Navbar Start-->
+<!-- begin::Header -->
+<header class="m-grid__item		m-header "  data-minimize="minimize" data-minimize-offset="200" data-minimize-mobile-offset="200" >
+
+    <div class="m-header__top">
+        <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
+            <div class="m-stack m-stack--ver m-stack--desktop">
+                <!-- begin::Brand -->
+                <div class="m-stack__item m-brand">
+                    <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
+                        <div class="m-stack__item m-stack__item--middle m-brand__logo">
+                            <a href="order.html" class="m-brand__logo-wrapper">
+                                Name panel
+                            </a>
+                        </div>
+                        <div class="m-stack__item m-stack__item--middle m-brand__tools">
+                            <!-- begin::Responsive Header Menu Toggler-->
+                            <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
+                                <span></span>
+                            </a>
+                            <!-- end::Responsive Header Menu Toggler-->
+                        </div>
+                    </div>
+                </div>
+                <!-- end::Brand -->
+            </div>
+        </div>
+    </div>
+
+    <div class="m-header__bottom">
+        <div class="m-container m-container--responsive m-container--fuild m-container--full-height m-page__container">
+            <div class="m-stack m-stack--ver m-stack--desktop">
+                <!-- begin::Horizontal Menu -->
+                <div class="m-stack__item m-stack__item--middle m-stack__item--fluid">
+                    <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-light " id="m_aside_header_menu_mobile_close_btn">
+                        <i class="la la-close"></i>
+                    </button>
+                    <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light "  >
+                        <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+                            <li class="m-menu__item m-menu__item--active"  aria-haspopup="true">
+                                <a  href="order.html" class="m-menu__link ">
+                                    <span class="m-menu__link-text">
+													Orders
+												</span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item"  aria-haspopup="true">
+                                <a  href="payments.html" class="m-menu__link ">
+                                    <span class="m-menu__link-text">
+													Payments
+												</span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item"  aria-haspopup="true">
+                                <a  href="products.html" class="m-menu__link ">
+                                    <span class="m-menu__link-text">
+													Products
+												</span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item mobile-hidden"  aria-haspopup="true">
+                                <a  href="settings.html" class="m-menu__link ">
+                                    <span class="m-menu__link-text">
+													Settings
+												</span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--icon-only mobile-show" data-menu-submenu-toggle="hover" data-redirect="true" aria-haspopup="true">
+                                <a href="settings.html" class="m-menu__link m-menu__toggle">
+                                    <span class="m-menu__link-text"> Settings</span>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--pull">
+                                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon icon-settings"></i>
+                                                <span class="m-menu__link-text">
+																General
+															</span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon icon-wallet"></i>
+                                                <span class="m-menu__link-text">
+																Payments
+															</span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon icon-share"></i>
+                                                <span class="m-menu__link-text">
+																Providers
+															</span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-list-1"></i>
+                                                <span class="m-menu__link-text">
+																Navigation
+															</span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon icon-docs"></i>
+                                                <span class="m-menu__link-text">
+																Pages
+															</span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon icon-puzzle"></i>
+                                                <span class="m-menu__link-text">
+																Themes
+															</span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="inner.html" class="m-menu__link ">
+                                                <i class="m-menu__link-icon icon-layers"></i>
+                                                <span class="m-menu__link-text">
+																Blocks
+															</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- end::Horizontal Menu -->
+
+                <div class="m-stack__item m-stack__item--middle m-dropdown m-dropdown--arrow m-dropdown--large m-dropdown--mobile-full-width m-dropdown--align-right m-dropdown--skin-light m-header-search m-header-search--expandable m-header-search--skin-" id="m_quicksearch" data-search-type="default">
+                    <!--begin::Search Form -->
+                    <form class="m-header-search__form">
+                      <ul class="m-menu--right">
+                          <li>
+                              <a href="account.html">Account</a>
+                          </li>
+                          <li>
+                              <a href="#">Logout</a>
+                          </li>
+                      </ul>
+                    </form>
+                    <!--end::Search Form -->
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</header>
+<!-- end::Header -->
+    <!-- Navbar End-->
+<!-- Page Content Start -->
+<div class="page-container">
+<div class="m-container-sommerce container-fluid">
+    <div class="row sommerce-products__actions">
+
+        <div class="col-lg-12">
+            <div class="page-content">
+                <button class="btn btn-primary m-btn--air" data-toggle="modal" data-target=".add_product" data-backdrop="static">Add product</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="sommerce_dragtable">
+
+                <div class="sortable">
+                    <div class="row group-caption">
+                        <div class="col-12 sommerce_dragtable__category">
+                            <div class="sommerce_dragtable__category-title">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="sommerce_dragtable__category-move move">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                            </svg>
+                                        </div>
+                                        Buy Pinterest Followers
+                                        <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"  data-toggle="modal" data-target=".add_product">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 group-items">
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>100</strong> Easy
+                                </div>
+                                <div class="col-lg-2">
+                                    $0.30
+                                </div>
+                                <div class="col-lg-2">
+                                    provider1.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Фейсбук лайки
+                                </div>
+                                <div class="col-lg-2">
+                                    $30.10
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center disabled-product">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Твиттер подписчики
+                                </div>
+                                <div class="col-lg-2">
+                                    $35.30
+                                </div>
+                                <div class="col-lg-2">
+                                    Manul
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Disabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row group-caption">
+                        <div class="col-12 sommerce_dragtable__category">
+                            <div class="sommerce_dragtable__category-title">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="sommerce_dragtable__category-move move">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                            </svg>
+                                        </div>
+                                        Buy Pinterest Followers
+                                        <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"  data-toggle="modal" data-target=".add_product">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 group-items">
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>300</strong> Super
+                                </div>
+                                <div class="col-lg-2">
+                                    $0.25
+                                </div>
+                                <div class="col-lg-2">
+                                    sitecsdas.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    Manual
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>125000</strong> NamePackage
+                                </div>
+                                <div class="col-lg-2">
+                                    $0.99
+                                </div>
+                                <div class="col-lg-2">
+                                    Manual
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center disabled-product">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panpem.sdia.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Disabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    Manual
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row group-caption">
+                        <div class="col-12 sommerce_dragtable__category">
+                            <div class="sommerce_dragtable__category-title">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="sommerce_dragtable__category-move move">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                            </svg>
+                                        </div>
+                                        Buy Pinterest Followers
+                                        <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"  data-toggle="modal" data-target=".add_product">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 group-items">
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row group-caption">
+                        <div class="col-12 sommerce_dragtable__category">
+                            <div class="sommerce_dragtable__category-title">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="sommerce_dragtable__category-move move">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                            </svg>
+                                        </div>
+                                        Buy Pinterest Followers
+                                        <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"  data-toggle="modal" data-target=".add_product">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 group-items">
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>100</strong> Mega
+                                </div>
+                                <div class="col-lg-2">
+                                    $12.10
+                                </div>
+                                <div class="col-lg-2">
+                                    Manual
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row group-caption">
+                        <div class="col-12 sommerce_dragtable__category">
+                            <div class="sommerce_dragtable__category-title">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="sommerce_dragtable__category-move move">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                            </svg>
+                                        </div>
+                                        Buy Pinterest Followers
+                                        <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"  data-toggle="modal" data-target=".add_product">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 group-items">
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>1000000</strong> Reverbnation Indian Followers
+                                </div>
+                                <div class="col-lg-2">
+                                    $2.5
+                                </div>
+                                <div class="col-lg-2">
+                                    panel.greensocials.com
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="group-item sommerce_dragtable__tr align-items-center">
+                                <div class="col-lg-5 padding-null-left">
+                                    <div class="sommerce_dragtable__category-move move">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <title>Drag-Handle</title>
+                                            <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                        </svg>
+                                    </div>
+                                    <strong>100</strong> Mega
+                                </div>
+                                <div class="col-lg-2">
+                                    $12.10
+                                </div>
+                                <div class="col-lg-2">
+                                    Manual
+                                </div>
+                                <div class="col-lg-2 text-lg-center">
+                                    Enabled
+                                </div>
+                                <div class="col-lg-1 padding-null-lg-right text-lg-right text-sm-left">
+                                    <button type="button" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action" data-toggle="modal" data-target=".edit_package">
+                                        Edit
+                                    </button>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row group-caption">
+                        <div class="col-12 sommerce_dragtable__category">
+                            <div class="sommerce_dragtable__category-title">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="sommerce_dragtable__category-move move">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
+                                            </svg>
+                                        </div>
+                                        Buy Pinterest Followers
+                                        <a href="#" class="btn m-btn--pill m-btn--air btn-primary btn-sm sommerce_dragtable__action"  data-toggle="modal" data-target=".add_product">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 group-items">
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary btn-sm m-btn m-btn--icon btm-sm m-btn--air" data-toggle="modal" data-target=".add_package" data-backdrop="static">Add package</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+<div class="modal fade add_product" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <form action="/" method="post" id="form-go">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="edit-page-title">Product name</label>
+                    <input type="text" class="form-control" id="edit-page-title">
+                </div>
+
+                <div class="form-group">
+                    <label>Visibility</label>
+                    <select class="form-control">
+                        <option>Enabled</option>
+                        <option>Disabled</option>
+                    </select>
+                </div>
+
+
+                <style>
+                    .product-color__wrap{
+                        position: relative;
+                    }
+                    .product-color{
+                        display: inline-block!important;
+                        color: #575962;
+                        width: 200px;
+                        padding: 0.65rem 7px;
+                        font-size: 1rem;
+                        line-height: 1.25;
+                        background-color: #fff;
+                        background-image: none;
+                        background-clip: padding-box;
+                        border: 1px solid #ebedf2;
+                        border-radius: 0.25rem;
+                        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+                        list-style: none;
+                        outline: none;
+                    }
+                    .product-color:hover{
+                        outline: none;
+                    }
+                    .product-color:focus{
+                        outline: none;
+                        border: 1px solid #716aca;
+                    }
+                    .product-color__wrap .sp-replacer{
+                        position: absolute;
+                        left: 165px;
+                        top: 4px;
+                    }
+                </style>
+
+                <div class="form-group">
+                    <label>Color</label>
+                    <div class="product-color__wrap">
+                        <input type="text" class="product-color" id="package-color2" value="#ffffff">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <textarea id="summernote"></textarea>
+                </div>
+                <div class="card card-white mb-3">
+                    <div class="card-body">
+                        <div class="row seo-header align-items-center">
+                            <div class="col-sm-8">
+                                Properties
+                            </div>
+                            <div class="col-sm-4 text-sm-right">
+                                <div class="m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left" data-dropdown-toggle="hover" aria-expanded="true">
+                                    <a class="btn btn-sm btn-link m-dropdown__toggle" href="#"><span class="la 	la-clone"></span> Copy properties</a>
+                                    <div class="m-dropdown__wrapper">
+                                        <span class="m-dropdown__arrow m-dropdown__arrow--left"></span>
+                                        <div class="m-dropdown__inner">
+                                            <div class="m-dropdown__body">
+                                                <div class="m-dropdown__content dd-properties__max-height">
+                                                    <div class="m--font-primary dd-properties__alert" role="alert">
+                                                        Select the product from which you want to copy properties
+                                                    </div>
+                                                    <ul class="m-nav">
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Facebook likes</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Facebook followers</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Facebook photo/post likes</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Facebook vide views</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Twitter Followers</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Twitter Retweets</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Twitter Favorites</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link" data-toggle="modal" data-target="#copyProperties">
+                                                                <span class="m-nav__link-text">Buy Instagram Likes</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-properties">
+                                <span class="input-group-btn">
+                            <button class="btn btn-primary add-properies" type="button">Add</button>
+                        </span>
+                            </div>
+                        </div>
+
+                            <div class="alert m-alert--default" role="alert">
+                                Create a new property or <b><span class="la la-clone" style="font-size: 12px;"></span> copy properties</b> from another product
+                            </div>
+
+                    </div>
+
+                    <div class="dd-properties">
+                        <div class="dd" id="nestableProperties">
+                            <ol class="dd-list">
+                                <li class="dd-item" data-id="3">
+                                    <div class="dd-handle">
+                                        <div class="dd-handle__icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                            </svg>
+                                        </div>
+                                        Est.Delivery Time: 6-12 hrs</div>
+                                    <div class="dd-edit-button">
+                                        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                            <i class="la la-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="dd-item" data-id="3">
+                                    <div class="dd-handle">
+                                        <div class="dd-handle__icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                            </svg>
+                                        </div>
+                                        Password/Admin access Not Required</div>
+                                    <div class="dd-edit-button">
+                                        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                            <i class="la la-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="dd-item" data-id="3">
+                                    <div class="dd-handle">
+                                        <div class="dd-handle__icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                            </svg>
+                                        </div>
+                                        Follow Others Not Required</div>
+                                    <div class="dd-edit-button">
+                                        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                            <i class="la la-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="dd-item" data-id="3">
+                                    <div class="dd-handle">
+                                        <div class="dd-handle__icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                            </svg>
+                                        </div>
+                                        High Quality Followers</div>
+                                    <div class="dd-edit-button">
+                                        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                            <i class="la la-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="dd-item" data-id="3">
+                                    <div class="dd-handle">
+                                        <div class="dd-handle__icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <title>Drag-Handle</title>
+                                                <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#c6cad4"></path>
+                                            </svg>
+                                        </div>
+                                        Customer satisfection</div>
+                                    <div class="dd-edit-button">
+                                        <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" title="Delete">
+                                            <i class="la la-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="card card-white">
+                    <div class="card-body">
+
+                        <div class="row seo-header align-items-center">
+                            <div class="col-sm-8">
+                                Search engine listing preview
+                            </div>
+                            <div class="col-sm-4 text-sm-right">
+                                <a class="btn btn-sm btn-link" data-toggle="collapse" href="#seo-block">Edit website SEO</a>
+                            </div>
+                        </div>
+
+                        <div class="seo-preview">
+                            <div class="seo-preview__title edit-seo__title">Product</div>
+                            <div class="seo-preview__url">http://fastinsta.sommerce.net/<span class="edit-seo__url">product</span></div>
+                            <div class="seo-preview__description edit-seo__meta">
+                                A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people wil...
+                            </div>
+                        </div>
+
+                        <div class="collapse" id="seo-block">
+                            <div class="form-group">
+                                <label for="edit-seo__title">Page title</label>
+                                <input class="form-control" id="edit-seo__title" value="Product">
+                                <small class="form-text text-muted"><span class="edit-seo__title-muted"></span> of 70 characters used</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-seo__meta">Meta description</label>
+                                <textarea class="form-control" id="edit-seo__meta" rows="3">A great About Us page helps builds trust between you and your customers. The more content you provide about you and your business, the more confident people will text</textarea>
+                                <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span> of 160 characters used</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-seo__meta-keyword">Meta keywords</label>
+                                <textarea class="form-control" id="edit-seo__meta-keyword" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-seo__url">URL</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon3">http://fastinsta.sommerce.net/</span>
+                                    <input type="text" class="form-control" id="edit-seo__url" value="about-us">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer justify-content-start">
+                <button type="submit" class="btn btn-primary">Add product</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+<!--Add package-->
+<div class="modal fade add_package" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add package (ID: 23)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <!-- Alert Error -->
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        </button>
+                        <strong>Oh snap!</strong> Error message!
+                    </div>
+                    <!-- Alert Error END -->
+                    <div class="form-group">
+                        <label for="package-name">Package name *</label>
+                        <input type="email" class="form-control" id="package-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-price">Price *</label>
+                        <input type="email" class="form-control" id="package-price">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-quantity">Quantity *</label>
+                        <input type="email" class="form-control" id="package-quantity">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-best">Best package</label>
+                        <select id="package-best" class="form-control">
+                            <option value="1">Enabled</option>
+                            <option value="2">Disabled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="package-link-type">Link Type</label>
+                        <select id="package-link-type" class="form-control" >
+                            <option value="">None</option>
+                            <option value="1">Instagram Profile</option>
+                            <option value="2">Instagram Post</option>
+                            <option value="3">Facebook Page</option>
+                            <option value="4">Facebook Profile</option>
+                            <option value="5">Facebook Post</option>
+                            <option value="6">Facebook Group</option>
+                            <option value="7">Facebook Event</option>
+                            <option value="8">Twitter Profile</option>
+                            <option value="9">Twitter Post</option>
+                            <option value="10">Youtube Channel</option>
+                            <option value="11">Youtube Video</option>
+                            <option value="12">VINE Picture</option>
+                            <option value="13">VINE Profile</option>
+                            <option value="14">Pinterest Profile</option>
+                            <option value="15">Pinterest Board</option>
+                            <option value="16">Pinterest Post</option>
+                            <option value="17">Soundcloud Track</option>
+                            <option value="18">Soundcloud Profile</option>
+                            <option value="19">Mixcloud Track</option>
+                            <option value="20">Mixcloud Profile</option>
+                            <option value="21">Periscope Profile</option>
+                            <option value="22">Periscope Video</option>
+                            <option value="25">Linkedin Profile</option>
+                            <option value="26">Linkedin Group</option>
+                            <option value="27">Linkedin Post</option>
+                            <option value="28">Radiojavan Video</option>
+                            <option value="29">Radiojavan Track</option>
+                            <option value="30">Radiojavan Podcast</option>
+                            <option value="31">Radiojavan Playlist</option>
+                            <option value="32">Shazam Profile</option>
+                            <option value="33">Shazam Track</option>
+                            <option value="34">Reverbnation Track</option>
+                            <option value="35">Reverbnation Video</option>
+                            <option value="36">Reverbnation Profile</option>
+                            <option value="37">Tumblr Profile</option>
+                            <option value="38">Tumblr Post</option>
+                            <option value="39">Vimeo Channel</option>
+                            <option value="40">Vimeo Video</option>
+                            <option value="41">Fyuse Profile</option>
+                            <option value="42">Fyuse Picture</option>
+                            <option value="43">Google+ Profile</option>
+                            <option value="44">Google+ Post</option>
+                            <option value="45">Twitch Channel</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="package-availability">Availability</label>
+                        <select id="package-availability" class="form-control">
+                            <option value="1">Enabled</option>
+                            <option value="2">Disabled</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="package-mode">Mode</label>
+                        <select id="package-mode" class="form-control">
+                            <option value="1">Manual</option>
+                            <option value="2">Auto</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-primary">Add package</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Add package-->
+<div class="modal fade add_package2" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add package (ID: 23)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="package-name">Package name *</label>
+                                <input type="email" class="form-control" id="package-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="package-price">Price *</label>
+                                <input type="email" class="form-control" id="package-price">
+                            </div>
+                            <div class="form-group">
+                                <label for="package-quantity">Quantity *</label>
+                                <input type="email" class="form-control" id="package-quantity">
+                            </div>
+                            <div class="form-group">
+                                <label for="package-link-type">Link Type</label>
+                                <select id="package-link-type" class="form-control" >
+                                    <option value="">None</option>
+                                    <option value="1">Instagram Profile</option>
+                                    <option value="2">Instagram Post</option>
+                                    <option value="3">Facebook Page</option>
+                                    <option value="4">Facebook Profile</option>
+                                    <option value="5">Facebook Post</option>
+                                    <option value="6">Facebook Group</option>
+                                    <option value="7">Facebook Event</option>
+                                    <option value="8">Twitter Profile</option>
+                                    <option value="9">Twitter Post</option>
+                                    <option value="10">Youtube Channel</option>
+                                    <option value="11">Youtube Video</option>
+                                    <option value="12">VINE Picture</option>
+                                    <option value="13">VINE Profile</option>
+                                    <option value="14">Pinterest Profile</option>
+                                    <option value="15">Pinterest Board</option>
+                                    <option value="16">Pinterest Post</option>
+                                    <option value="17">Soundcloud Track</option>
+                                    <option value="18">Soundcloud Profile</option>
+                                    <option value="19">Mixcloud Track</option>
+                                    <option value="20">Mixcloud Profile</option>
+                                    <option value="21">Periscope Profile</option>
+                                    <option value="22">Periscope Video</option>
+                                    <option value="25">Linkedin Profile</option>
+                                    <option value="26">Linkedin Group</option>
+                                    <option value="27">Linkedin Post</option>
+                                    <option value="28">Radiojavan Video</option>
+                                    <option value="29">Radiojavan Track</option>
+                                    <option value="30">Radiojavan Podcast</option>
+                                    <option value="31">Radiojavan Playlist</option>
+                                    <option value="32">Shazam Profile</option>
+                                    <option value="33">Shazam Track</option>
+                                    <option value="34">Reverbnation Track</option>
+                                    <option value="35">Reverbnation Video</option>
+                                    <option value="36">Reverbnation Profile</option>
+                                    <option value="37">Tumblr Profile</option>
+                                    <option value="38">Tumblr Post</option>
+                                    <option value="39">Vimeo Channel</option>
+                                    <option value="40">Vimeo Video</option>
+                                    <option value="41">Fyuse Profile</option>
+                                    <option value="42">Fyuse Picture</option>
+                                    <option value="43">Google+ Profile</option>
+                                    <option value="44">Google+ Post</option>
+                                    <option value="45">Twitch Channel</option>
+                                </select>
+                            </div>
+
+                                <div class="form-group">
+                                    <label for="package-mode">Mode</label>
+                                    <select id="package-mode" class="form-control">
+                                        <option value="1">Manual</option>
+                                        <option value="2" selected>Auto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="package-mode">Provider</label>
+                                    <select id="package-mode" class="form-control">
+                                        <option value="1">perfectpanel.com</option>
+                                        <option value="2">Auto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="package-mode">Provider service</label>
+                                    <select id="package-mode" class="form-control">
+                                        <option value="1">Facebook likes</option>
+                                        <option value="2">Auto</option>
+                                    </select>
+                                </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+
+                            <div style="    border: 1px solid #ebedf2;
+    border-radius: 4px;
+    padding: 25px 15px 7px 15px;
+    position: relative;
+    margin-top: 27px;">
+                                <div class="package-option" style="position: absolute;
+    top: -12px;
+    background: #ffff;
+    padding: 0px 5px;
+    color: #9da2ab;
+    left: 7px;">Options</div>
+                                <div class="m-form__group form-group row">
+                                    <label class="col-7 col-form-label">Best package</label>
+                                    <div class="col-5 text-right">
+											<span class="m-switch">
+												<label>
+						                        <input type="checkbox" name="">
+						                        <span></span>
+						                        </label>
+						                    </span>
+                                    </div>
+                                </div>
+                                <div class="m-form__group form-group row">
+                                    <label class="col-7 col-form-label">Availability</label>
+                                    <div class="col-5 text-right">
+											<span class="m-switch">
+												<label>
+						                        <input type="checkbox" checked="checked" name="">
+						                        <span></span>
+						                        </label>
+						                    </span>
+                                    </div>
+                                </div>
+                                <div class="m-form__group form-group row">
+                                    <label class="col-7 col-form-label">Color</label>
+                                    <div class="col-5 text-right">
+
+                                        <style>
+                                            .sp-replacer {
+                                                margin: 0;
+                                                overflow: hidden;
+                                                width: 30px;
+                                                height: 30px;
+                                                cursor: pointer;
+                                                padding: 4px;
+                                                display: inline-block;
+                                                border: solid 1px #e6e8f1;
+                                                background: #ebedf3;
+                                                color: #333;
+                                                border-radius: 30px;
+                                                vertical-align: middle;
+                                                position: relative;
+                                            }
+                                            .sp-preview-inner, .sp-alpha-inner, .sp-thumb-inner {
+                                                display: block;
+                                                position: absolute;
+                                                top: 0;
+                                                left: 0;
+                                                bottom: 0;
+                                                right: 0;
+                                                border-radius: 30px;
+                                            }
+                                            .sp-preview {
+                                                width: 24px;
+                                                border-radius: 30px;
+                                                height: 24px;
+                                                margin-right: 5px;
+                                                left: 2px;
+                                                top: 2px;
+                                                position: absolute;
+                                                border: none;
+                                                z-index: 0;
+                                            }
+                                            .sp-palette .sp-thumb-el {
+                                                width: 16px;
+                                                height: 16px;
+                                                margin: 2px 1px;
+                                                background: #e9ebf2;
+                                                border: solid 1px #ececec;
+                                            }
+                                            .sp-container{
+                                                background: #ebedf3;
+                                                border: none;
+                                                border-radius: 5px;
+                                            }
+                                            .sp-replacer:hover, .sp-replacer.sp-active{
+                                                border: 1px solid #716aca;
+                                            }
+                                            .sp-palette .sp-thumb-el:hover, .sp-palette .sp-thumb-el.sp-thumb-active{
+                                                border-radius: 50%;
+                                            }
+                                            .sp-initial span{
+                                                width: 25px;
+                                            }
+                                            .sp-initial {
+                                                float: left;
+                                                border: solid 1px #ccc;
+                                            }
+                                            .sp-container button {
+                                                color: #fff;
+                                                background-color: #5867dd;
+                                                border-color: #5867dd;
+                                                background-image: none;
+                                                text-shadow: none;
+                                                border-radius: 30px;
+                                                font-size: 12px;
+                                                -webkit-box-shadow: 0px 5px 10px 2px rgba(88, 103, 221, 0.19);
+                                                -moz-box-shadow: 0px 5px 10px 2px rgba(88, 103, 221, 0.19);
+                                                box-shadow: 0px 5px 10px 2px rgba(88, 103, 221, 0.19);
+                                            }
+                                            .sp-container button:hover{
+                                                background-color: #5867dd!important;
+                                                background-image: none;
+                                                border-color: #5867dd;
+                                                text-shadow: none;
+                                            }
+                                            .sp-input{
+                                                background: #fff;
+                                                border: 1px solid #ebedf2;
+                                            }
+                                            .sp-cancel{
+                                                color: #333!important;
+                                            }
+
+                                            .sp-palette{
+                                                max-width: 380px;
+                                            }
+                                        </style>
+                                        <input type="text" id="package-color">
+                                        <!--
+                                        <div class="m-dropdown m-dropdown--down m-dropdown--inline m-dropdown--align-left" data-dropdown-toggle="click">
+                                            <a href="#" class="m-dropdown__toggle">
+                                                								<span style="    display: inline-block;
+    width: 57px;
+    height: 30px;
+    border-radius: 30px;
+    border: 1px solid #ebedf3;
+    cursor: pointer;">
+                                            </a>
+                                            <div class="m-dropdown__wrapper">
+                                                <div class="m-dropdown__inner">
+                                                    <div class="m-dropdown__body">
+                                                        <div class="m-dropdown__content">
+                                                            <input type="text" id="package-color">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+-->
+
+
+
+
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-primary">Add package</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit-->
+<div class="modal fade edit_package" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add package (ID: 25)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <!-- Alert Error -->
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        </button>
+                        <strong>Oh snap!</strong> Error message!
+                    </div>
+                    <!-- Alert Error END -->
+                    <div class="form-group">
+                        <label for="package-name">Package name *</label>
+                        <input type="email" class="form-control" id="package-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-price">Price *</label>
+                        <input type="email" class="form-control" id="package-price">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-quantity">Quantity *</label>
+                        <input type="email" class="form-control" id="package-quantity">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-overflow">Overflow, % *</label>
+                        <input type="email" class="form-control" id="package-overflow">
+                    </div>
+                    <div class="form-group">
+                        <label for="package-best">Best package</label>
+                        <select id="package-best" class="form-control">
+                            <option value="1">Enabled</option>
+                            <option value="2">Disabled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="package-link-type">Link Type</label>
+                        <select id="package-link-type" class="form-control" >
+                            <option value="">None</option>
+                            <option value="1">Instagram Profile</option>
+                            <option value="2">Instagram Post</option>
+                            <option value="3">Facebook Page</option>
+                            <option value="4">Facebook Profile</option>
+                            <option value="5">Facebook Post</option>
+                            <option value="6">Facebook Group</option>
+                            <option value="7">Facebook Event</option>
+                            <option value="8">Twitter Profile</option>
+                            <option value="9">Twitter Post</option>
+                            <option value="10">Youtube Channel</option>
+                            <option value="11">Youtube Video</option>
+                            <option value="12">VINE Picture</option>
+                            <option value="13">VINE Profile</option>
+                            <option value="14">Pinterest Profile</option>
+                            <option value="15">Pinterest Board</option>
+                            <option value="16">Pinterest Post</option>
+                            <option value="17">Soundcloud Track</option>
+                            <option value="18">Soundcloud Profile</option>
+                            <option value="19">Mixcloud Track</option>
+                            <option value="20">Mixcloud Profile</option>
+                            <option value="21">Periscope Profile</option>
+                            <option value="22">Periscope Video</option>
+                            <option value="25">Linkedin Profile</option>
+                            <option value="26">Linkedin Group</option>
+                            <option value="27">Linkedin Post</option>
+                            <option value="28">Radiojavan Video</option>
+                            <option value="29">Radiojavan Track</option>
+                            <option value="30">Radiojavan Podcast</option>
+                            <option value="31">Radiojavan Playlist</option>
+                            <option value="32">Shazam Profile</option>
+                            <option value="33">Shazam Track</option>
+                            <option value="34">Reverbnation Track</option>
+                            <option value="35">Reverbnation Video</option>
+                            <option value="36">Reverbnation Profile</option>
+                            <option value="37">Tumblr Profile</option>
+                            <option value="38">Tumblr Post</option>
+                            <option value="39">Vimeo Channel</option>
+                            <option value="40">Vimeo Video</option>
+                            <option value="41">Fyuse Profile</option>
+                            <option value="42">Fyuse Picture</option>
+                            <option value="43">Google+ Profile</option>
+                            <option value="44">Google+ Post</option>
+                            <option value="45">Twitch Channel</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="package-availability">Availability</label>
+                        <select id="package-availability" class="form-control">
+                            <option value="1">Enabled</option>
+                            <option value="2">Disabled</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="package-mode">Mode</label>
+                        <select id="package-mode" class="form-control">
+                            <option value="1">Manual</option>
+                            <option value="2" selected>Auto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="package-provider_id">Provider</label>
+                        <select id="package-provider_id" class="form-control form_field__provider_id" name="PackageForm[provider_id]">
+                            <option value="2" data-action-url="/admin/products/get-provider-services?provider_id=2">
+                                test.myperfectpanel.com                            </option>
+                            <option value="3" data-action-url="/admin/products/get-provider-services?provider_id=3">
+                                bulkfollows.com                            </option>
+                            <option value="4" data-action-url="/admin/products/get-provider-services?provider_id=4">
+                                demo.perfectpanel.com                            </option>
+                            <option value="5" data-action-url="/admin/products/get-provider-services?provider_id=5">
+                                autosmo.com                            </option>
+                        </select>
+                    </div>
+                    <span class="m--font-danger">API responce errors: Incorrect required</span>
+
+                </form>
+            </div>
+            <div class="modal-footer justify-content-start">
+                <button type="button" class="btn btn-primary">Add package</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Delete-->
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col modal-delete-block text-center">
+                        <span class="fa fa-trash-o"></span>
+                        <p>Are your sure that your want to delete this Package?</p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger" id="feature-delete m-btn--air" data-dismiss="modal">Yes, delete it!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit properties-->
+<div class="modal fade" id="copyProperties" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col modal-delete-block text-center">
+                        <span class="la la-warning" style="font-size: 60px;"></span>
+                        <p>All current properties will be deleted</p>
+                        <button class="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal">No</button>
+                        <button class="btn btn-primary" id="m-btn--air" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap, JQUERY, POPPER -->
+<script src="js/libs/bootstrap/jquery.js"></script>
+<script src="js/libs/bootstrap/popper.js"></script>
+<script src="js/libs/bootstrap/bootstrap.js"></script>
+
+<!-- Main scripts (ALL PAGE) -->
+<script src="js/libs/framework/base/app.js"></script>
+<script src="js/libs/framework/base/util.js"></script>
+<script src="js/libs/framework/components/general/animate.js"></script>
+<script src="js/libs/framework/components/general/datatable.js"></script>
+<script src="js/libs/framework/components/general/dropdown.js"></script>
+<script src="js/libs/framework/components/general/header.js"></script>
+<script src="js/libs/framework/components/general/menu.js"></script>
+<script src="js/libs/framework/components/general/offcanvas.js"></script>
+<script src="js/libs/framework/components/general/toggle.js"></script>
+<script src="js/libs/theme/base/layout.js"></script>
+<script src="js/libs/theme/custom/components/base/blockui.js"></script>
+<script src="js/libs/theme/custom/components/base/dropdown.js"></script>
+
+<!-- Custom JS -->
+<script src="js/main/main.js"></script>
+<!--Products -->
+<script src="js/main/summernote/summernote-bs4.js"></script>
+<script src="js/main/summernote/summernote.init.js"></script>
+
+<script src="js/libs/bootstrap/jquery-ui.js"></script>
+<script src="js/main/nestable/nestable.lib.js"></script>
+<script src="js/main/nestable/nestable-script.js"></script>
+
+<script src="js/main/notification/toastr.js"></script>
+<script src="js/main/notification/toastr.init.js"></script>
+
+
+<script src="js/main/nestable/nestable.lib.js"></script>
+<script src="js/main/nestable/nestable-script.js"></script>
+
+
+<script src="http://bgrins.github.io/spectrum/spectrum.js"></script>
+
+<script>
+
+
+
+    $("#package-color").spectrum({
+        allowEmpty:true,
+        color: "transparent",
+        showInput: true,
+        containerClassName: "full-spectrum",
+        showInitial: true,
+        showPalette: true,
+        showSelectionPalette: true,
+        showAlpha: false,
+        maxPaletteSize: 10,
+        preferredFormat: "hex",
+        localStorageKey: "spectrum.demo",
+        move: function (color) {
+            updateBorders(color);
+        },
+        show: function () {
+
+        },
+        beforeShow: function () {
+
+        },
+        hide: function (color) {
+            updateBorders(color);
+        },
+
+        palette: [
+            ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
+                "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"],
+            ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
+                "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"],
+            ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)",
+                "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)",
+                "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)",
+                "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)",
+                "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)",
+                "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
+                "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
+                "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
+                "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)",
+                "rgb(12, 52, 61)", "rgb(7, 55, 99)", "rgb(76, 17, 48)"]
+        ]
+    });
+
+  var spectrumInit = $("#package-color2").spectrum({
+      allowEmpty:true,
+      color: "#ffffff",
+      showInput: true,
+      containerClassName: "full-spectrum",
+      showInitial: true,
+      showPalette: true,
+      showSelectionPalette: true,
+      showAlpha: false,
+      maxPaletteSize: 19,
+      preferredFormat: "hex",
+      localStorageKey: "spectrum.color",
+      change: function(){
+
+      },
+      palette: [
+          ["#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"],
+          ["#ffebee", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6", "#E3F2FD", "#E1F5FE", "#E0F7FA", "#E0F2F1", "#E8F5E9", "#F1F8E9", "#F9FBE7", "#FFFDE7", "#FFF8E1", "#FFF3E0", "#FBE9E7", "#EFEBE9", "#FAFAFA", "#ECEFF1"],
+          ["#ffcdd2", "#F8BBD0", "#E1BEE7", "#D1C4E9", "#C5CAE9", "#BBDEFB", "#B3E5FC", "#B2EBF2", "#B2DFDB", "#C8E6C9", "#DCEDC8", "#F0F4C3", "#FFF9C4", "#FFECB3", "#FFE0B2", "#FFCCBC", "#D7CCC8", "#F5F5F5", "#CFD8DC"],
+          ["#ef9a9a", "#F48FB1", "#CE93D8", "#B39DDB", "#9FA8DA", "#90CAF9", "#81D4FA", "#80DEEA", "#80CBC4", "#A5D6A7", "#C5E1A5", "#E6EE9C", "#FFF59D", "#FFE082", "#FFCC80", "#FFAB91", "#BCAAA4", "#EEEEEE", "#B0BEC5"],
+          ["#e57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB", "#64B5F6", "#4FC3F7", "#4DD0E1", "#4DB6AC", "#81C784", "#AED581", "#DCE775", "#FFF176", "#FFD54F", "#FFB74D", "#FF8A65", "#A1887F", "#E0E0E0", "#90A4AE"],
+          ["#ef5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"],
+          ["#f44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"],
+          ["#e53935", "#D81B60", "#8E24AA", "#5E35B1", "#3949AB", "#1E88E5", "#039BE5", "#00ACC1", "#00897B", "#43A047", "#7CB342", "#C0CA33", "#FDD835", "#FFB300", "#FB8C00", "#F4511E", "#6D4C41", "#757575", "#546E7A"],
+          ["#d32f2f", "#C2185B", "#7B1FA2", "#512DA8", "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#00796B", "#388E3C", "#689F38", "#AFB42B", "#FBC02D", "#FFA000", "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"],
+          ["#c62828", "#AD1457", "#6A1B9A", "#4527A0", "#283593", "#1565C0", "#0277BD", "#00838F", "#00695C", "#2E7D32", "#558B2F", "#9E9D24", "#F9A825", "#FF8F00", "#EF6C00", "#D84315", "#4E342E", "#424242", "#37474F"],
+          ["#b71c1c", "#880E4F", "#4A148C", "#311B92", "#1A237E", "#0D47A1", "#01579B", "#006064", "#004D40", "#1B5E20", "#33691E", "#827717", "#F57F17", "#FF6F00", "#E65100", "#BF360C", "#3E2723", "#212121", "#263238"],
+      ]
+  });
+
+</script>
+</body>
+</html>

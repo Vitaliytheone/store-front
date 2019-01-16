@@ -12,7 +12,7 @@ import {
   updatePackage,
   deletePackage
 } from "./services/products";
-import { sortBy } from "lodash";
+import { sortBy, pick } from "lodash";
 import data from "./data.json";
 
 
@@ -42,6 +42,9 @@ class CategorieProducts extends Component {
       data: newData
     });
 
+    const products = newData.map((product) => pick(product, ["id", "position"]));
+    const Data = { id: productId, list: products};
+    console.log(Data);
     changePositionProduct({ oldIndex, newIndex });
   };
 
@@ -52,12 +55,14 @@ class CategorieProducts extends Component {
     product.packages = arrayMove(product.packages, oldIndex, newIndex).map((pack, index) => ({
       ...pack, position: index
     }));
-
     this.setState({
       data: newData
     });
 
-    changePositionPackage(productIndex, { oldIndex, newIndex });
+    const packages = product.packages.map((pack) => pick(pack, ["id", "position"]));
+    console.log(packages);
+    const Data  = { id: productIndex, list: packages }
+    changePositionPackage(productIndex, Data);
   };
 
   handleAddProduct = async (values, actions) => {
@@ -147,7 +152,6 @@ class CategorieProducts extends Component {
         data: editedPackage
       });
       const response = await updatePackage(productIndex, packageIndex, editedPackage[productIndex].packages[packageIndex]);
-      console.log(response);
       editedPackage[productIndex].packages[packageIndex] = response.data;
       this.setState({
       data: editedPackage
@@ -165,6 +169,7 @@ class CategorieProducts extends Component {
         data: newData
       });
       const response = await deletePackage(productIndex, packageIndex, newData[productIndex].packages);
+      console.log(newData[productIndex].packages);
       newData[productIndex].packages = response.data;
     //        this.setState({ 
     //          data: newData
@@ -193,6 +198,8 @@ class CategorieProducts extends Component {
                     useDragHandle={true}
                     onSortEnd={this.handleProductSwitch}
                     onPackageAdd={this.handleAddPackage}
+
+                    handleProductSwitch={this.handleProductSwitch}
                   />
                 </div>
               </Col>
