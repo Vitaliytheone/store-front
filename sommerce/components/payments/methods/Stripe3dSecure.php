@@ -38,12 +38,12 @@ class Stripe3dSecure extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $user
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $user, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $options = $checkout->getUserDetails();
 
@@ -95,12 +95,12 @@ class Stripe3dSecure extends BasePayment {
     /**
      * @param Stores $store
      * @param string $user
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function getJsEnvironments($store, $user, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $key = ArrayHelper::getValue($paymentMethodOptions, 'public_key');
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $image = ArrayHelper::getValue($paymentMethodOptions, 'image', static::DEFAULT_IMAGE);

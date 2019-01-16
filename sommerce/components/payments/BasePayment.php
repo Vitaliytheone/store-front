@@ -421,7 +421,15 @@ abstract class BasePayment extends Component
             'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 
+        if (empty($storeMethod)) {
+            return false;
+        }
+
         $currencyMethod = PaymentMethodsCurrency::findOne($storeMethod->currency_id);
+
+        if (empty($currencyMethod)) {
+            return false;
+        }
 
         if ($currencyMethod->currency !== $store->currency) {
             return false;

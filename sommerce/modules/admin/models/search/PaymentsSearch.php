@@ -199,13 +199,9 @@ class PaymentsSearch extends Model
      */
     public function countsByMethods()
     {
-        $storeId = yii::$app->store->getId();
-
         $methodsList = (new Query())
-            ->select(['payment_methods.id', 'payment_methods.method_name'])
-            ->from(StorePaymentMethods::tableName())
-            ->leftJoin('payment_methods', 'payment_methods.id = store_payment_methods.method_id')
-            ->where(['store_id' => $storeId])
+            ->select(['id', 'method_name'])
+            ->from(PaymentMethods::tableName())
             ->all();
 
         $methodsList = ArrayHelper::map($methodsList, 'id', 'method_name');
@@ -225,7 +221,7 @@ class PaymentsSearch extends Model
         foreach ($methodsList as $methodId => $methodName) {
             $result[] = [
                 'method_id' => $methodId,
-                'count' => isset($counts[$methodId]) ? $counts[$methodId] : 0,
+                'count' => $counts[$methodId] ?? 0,
             ];
         }
         return $result;
@@ -305,7 +301,7 @@ class PaymentsSearch extends Model
 
         $allMethodsMenuItem = [
             'method' => 'all',
-            'method_title' => Yii::t('admin', "payments.payment_method_all"),
+            'method_title' => Yii::t('admin', 'payments.payment_method_all'),
             'active' =>  UiHelper::isFilterActive('method', 'all'),
             'count' => array_sum(array_column($methodsFilterMenuItems,'count')),
             'url' => Url::current(['method' => null]),
@@ -349,7 +345,7 @@ class PaymentsSearch extends Model
                 $checkout = $checkouts[$payment['checkout_id']];
             }
 
-            $payment['method_title'] = isset($methodsNames[$checkout['method_id']]) ? $methodsNames[$checkout['method_id']] : '';
+            $payment['method_title'] = $methodsNames[$checkout['method_id']] ?? '';
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });
