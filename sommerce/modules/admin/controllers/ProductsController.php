@@ -39,6 +39,7 @@ class ProductsController extends CustomController
                 'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
+                    'list' => ['GET'],
                     'create-product' => ['POST'],
                     'update-product' => ['GET', 'POST'],
                     'move-product' => ['POST'],
@@ -50,25 +51,24 @@ class ProductsController extends CustomController
                     'get-provider-services' => ['GET'],
                 ],
             ],
-            'ajax' => [
-                'class' => AjaxFilter::class,
-                'only' => [
-                    'index',
-                    'create-product',
-                    'update-product',
-                    'move-product',
-                    'move-package',
-                    'create-product-menu',
-                    'create-package',
-                    'update-package',
-                    'delete-package',
-                    'get-provider-services',
-                ]
-            ],
+//            'ajax' => [
+//                'class' => AjaxFilter::class,
+//                'only' => [
+//                    'list',
+//                    'create-product',
+//                    'update-product',
+//                    'move-product',
+//                    'move-package',
+//                    'create-product-menu',
+//                    'create-package',
+//                    'update-package',
+//                    'delete-package',
+//                    'get-provider-services',
+//                ]
+//            ],
             'content' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
-                    'index',
                     'create-product',
                     'update-product',
                     'move-product',
@@ -78,6 +78,7 @@ class ProductsController extends CustomController
                     'update-package',
                     'delete-package',
                     'get-provider-services',
+                    'list',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -96,9 +97,20 @@ class ProductsController extends CustomController
 
     /**
      * Render found products-packages list
-     * @return array
+     * @return string
      */
     public function actionIndex()
+    {
+        $this->view->title = Yii::t('admin', 'products.page_title');
+        $this->layout = '@admin/views/layouts/react_app';
+
+        return $this->render('index');
+    }
+
+    /**
+     * @return array
+     */
+    public function actionList()
     {
         $search = new ProductsSearch();
         $search->setStore($this->store);
