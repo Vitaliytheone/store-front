@@ -31,6 +31,9 @@
 return [
     'Development' => [
         'path' => 'dev',
+        'skipFiles' => [
+            'common/config/config.json',
+        ],
         'setWritable' => [
             'gateway/runtime',
             'gateway/web/assets',
@@ -41,7 +44,6 @@ return [
         ],
         'setExecutable' => [
             'yii',
-            'yii_test',
         ],
         'setCookieValidationKey' => [
             'gateway/config/main-local.php',

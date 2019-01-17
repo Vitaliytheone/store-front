@@ -1,0 +1,34 @@
+{
+  "proxy": {
+    "ip": "",
+    "port": ""
+  },
+  "proxy_link_type": {
+    "ip": "",
+    "port": ""
+  },
+  "db": [
+    {
+      "host": "localhost",
+      "user": "root",
+      "password": "root"
+    },
+    {
+      "host": "localhost",
+      "user": "root",
+      "password": "root"
+    }
+  ],
+  "ftp": [
+    {
+      "host": "",
+      "user": "",
+      "password": "a"
+    },
+    {
+      "host": "",
+      "user": "",
+      "password": "1"
+    }
+  ]
+}
