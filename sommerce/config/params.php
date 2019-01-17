@@ -36,4 +36,8 @@ return [
     'currencies' => $currencies,
     'languages' => $languages,
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
+
+    'appConfigs' => [
+        'page_editor' => require(__DIR__ . '/app_configs/page_editor.php'),
+    ],
 ];

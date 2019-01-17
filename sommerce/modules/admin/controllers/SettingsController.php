@@ -57,7 +57,15 @@ class SettingsController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style'],
+                'response' => $this->module->get('response'),
+                'only' => [
+                    'theme-update-style',
+                    'get-page',
+                    'get-pages',
+                    'get-products',
+                    'save-dev-page',
+                    'save-page',
+                ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],

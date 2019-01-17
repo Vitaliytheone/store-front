@@ -15,6 +15,7 @@ return [
     '/admin/super-login' => 'admin/site/super-login',
 
     '/admin/settings/edit-block/<code:[\w\d-]+>' => 'admin/settings/edit-block',
+    '/admin/settings/edit-page/<id:\d++>' => 'admin/settings/edit-page',
 
     [
         'pattern' => '<filename:[\w\d]+>',

@@ -32,6 +32,9 @@ $config = [
                 'application/json' => 'yii\web\JsonParser'
             ],
         ],
+        'response' => [
+            'class' => 'sommerce\modules\admin\components\CustomResponse',
+        ],
         'devMailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'transport' => [
