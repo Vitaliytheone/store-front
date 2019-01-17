@@ -51,21 +51,21 @@ class ProductsController extends CustomController
                     'get-provider-services' => ['GET'],
                 ],
             ],
-//            'ajax' => [
-//                'class' => AjaxFilter::class,
-//                'only' => [
-//                    'list',
-//                    'create-product',
-//                    'update-product',
-//                    'move-product',
-//                    'move-package',
-//                    'create-product-menu',
-//                    'create-package',
-//                    'update-package',
-//                    'delete-package',
-//                    'get-provider-services',
-//                ]
-//            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => [
+                    'list',
+                    'create-product',
+                    'update-product',
+                    'move-product',
+                    'move-package',
+                    'create-product-menu',
+                    'create-package',
+                    'update-package',
+                    'delete-package',
+                    'get-provider-services',
+                ]
+            ],
             'content' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
@@ -365,6 +365,8 @@ class ProductsController extends CustomController
      * Move package AJAX action
      * @param int $id
      * @return array
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function actionMovePackage($id)
     {
