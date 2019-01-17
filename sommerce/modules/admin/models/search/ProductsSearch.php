@@ -86,11 +86,12 @@ class ProductsSearch extends Model
             ->orderBy(['pr.position' => SORT_ASC, 'pk.position' => SORT_ASC])
             ->all();
 
-        $providers = $this->getStoreProviders();
-
         // Make products packages
         $productIds = array_unique(array_column($productsRows, 'pr_id'));
-        $productsPackages = [];
+        $productsPackages = [
+            'products' => [],
+            'providers' => [],
+        ];
 
         foreach ($productIds as $productId) {
 
@@ -98,10 +99,7 @@ class ProductsSearch extends Model
             $productPackages = array_filter($productsRows, function($productRow) use ($productId){
                 return $productId == $productRow['pk_pr_id'];
             });
-            array_walk($productPackages, function (&$package, $key) use ($providers) {
-
-                $provider = ArrayHelper::getValue($providers, $package['provider_id'] . '.site', '');
-
+            array_walk($productPackages, function (&$package, $key) {
                 $package = [
                     'id' => $package['pk_id'],
                     'product_id' => $package['pr_id'],
@@ -111,20 +109,28 @@ class ProductsSearch extends Model
                     'mode' => $package['pk_mode'],
                     'price' => $package['pk_price'],
                     'quantity' => $package['pk_quantity'],
-                    'provider' => $provider,
-                    'deleted' => $package['pk_deleted'],
+                    'provider_id' => $package['provider_id']
                 ];
             });
 
             // Make product
             $currentProductKey = array_search($productId, array_column($productsRows, 'pr_id'));
             $currentRow = $productsRows[$currentProductKey];
-            $productsPackages[] = [
+            $productsPackages['products'][] = [
                 'id' => $productId,
                 'name' => $currentRow['pr_name'],
                 'position' => $currentRow['pr_position'],
                 'visibility' => $currentRow['pr_visibility'],
                 'packages' => $productPackages,
+            ];
+        }
+
+        $providers = $this->getStoreProviders();
+
+        foreach ($providers as $provider) {
+            $productsPackages['providers'][] = [
+                'id' => $provider['id'],
+                'name' => $provider['site'],
             ];
         }
 
