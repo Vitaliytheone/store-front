@@ -25,15 +25,15 @@ export function updatePackage(productId, packageId, payload) {
   return Promise.resolve(mockResponse);
 }
 
-export function changePositionProduct(payload) {
-  axiosInstance.post(`/products/change-position-product`, payload);
+export function changePositionProduct(product_id, payload) {
+  axiosInstance.post(`/move-product/${product_id}`, payload);
   const mockResponse = { ...payload };
   return Promise.resolve(mockResponse);
 }
 
-export function changePositionPackage(productId, payload) {
-  axiosInstance.post(`/product/${productId}/change-position-package`, payload);
-  const mockResponse = { productId, ...payload };
+export function changePositionPackage(package_id, payload) {
+  axiosInstance.post(`/move-package/${package_id}`, payload);
+  const mockResponse = { package_id, ...payload };
   return Promise.resolve(mockResponse);
 }
 

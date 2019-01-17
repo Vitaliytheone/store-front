@@ -1,9 +1,8 @@
 import React from "react";
-import { Col } from "reactstrap";
 import { SortableContainer } from "react-sortable-hoc";
 import SortableProduct from "./Product";
 
-const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage, handleDeletePackage, handleProductSwitch }) => (
+const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage, handleDeletePackage }) => (
     <div className="sortable">
         {data.map((product, index) => (
             <SortableProduct
@@ -15,7 +14,6 @@ const ProductList = SortableContainer(({ data, handlePackageSwitch, onPackageAdd
                 handleEditPackage={handleEditPackage(index)}
                 handleDeletePackage={handleDeletePackage(index)}
                 onPackageAdd={onPackageAdd(index)}
-                handleProductSwitch={handleProductSwitch(product.id)}
             />
         ))}
     </div>

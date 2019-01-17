@@ -75,7 +75,8 @@ class ProductModal extends Component {
               }}
               onChange={this.onChange}
             /> */}
-            <div class="summernote">summernote 1</div>
+            <Field class="summernote">
+            </Field>
           </FormGroup>
           
           <div className="card card-white mb-3">

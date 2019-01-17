@@ -33,36 +33,42 @@ class CategorieProducts extends Component {
 
   handleProductSwitch = ({ oldIndex, newIndex }) => {
     const { data } = this.state;
+    //take product index 
+    const productIndex  = this.state.data[oldIndex];
     const arrayData = arrayMove(data, oldIndex, newIndex);
     // new position = new index
     const newData = arrayData.map((product, index) => ({
       ...product, position: index
     }))
+
     this.setState({
       data: newData
     });
 
     const products = newData.map((product) => pick(product, ["id", "position"]));
-    const Data = { id: productId, list: products};
-    console.log(Data);
-    changePositionProduct({ oldIndex, newIndex });
+    const Data = { id: productIndex.id, list: products};
+    
+    changePositionProduct(productIndex.id, Data);
   };
 
   handlePackageSwitch = productIndex => ({ oldIndex, newIndex }) => {
     const newData = [...this.state.data];//copy state
-    const product = newData[productIndex];//initial product 
+    const product = newData[productIndex];//initial product
+    //take package index
+    const packageIndex = newData[productIndex].packages[oldIndex];
     //move package and assign package positon = package index
     product.packages = arrayMove(product.packages, oldIndex, newIndex).map((pack, index) => ({
       ...pack, position: index
     }));
+
     this.setState({
       data: newData
     });
 
     const packages = product.packages.map((pack) => pick(pack, ["id", "position"]));
-    console.log(packages);
-    const Data  = { id: productIndex, list: packages }
-    changePositionPackage(productIndex, Data);
+    const Data  = { id: packageIndex.id, list: packages }
+
+    changePositionPackage(packageIndex.id, Data);
   };
 
   handleAddProduct = async (values, actions) => {
