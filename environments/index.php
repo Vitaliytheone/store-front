@@ -31,9 +31,6 @@
 return [
     'Development' => [
         'path' => 'dev',
-        'skipFiles' => [
-            'common/config/config.json',
-        ],
         'setWritable' => [
             'gateway/runtime',
             'gateway/web/assets',
@@ -53,6 +50,28 @@ return [
     ],
     'Production' => [
         'path' => 'prod',
+        'setWritable' => [
+            'gateway/runtime',
+            'gateway/web/assets',
+            'sommerce/runtime',
+            'sommerce/web/assets',
+            'my/runtime',
+            'my/web/assets',
+        ],
+        'setExecutable' => [
+            'yii',
+        ],
+        'setCookieValidationKey' => [
+            'gateway/config/main-local.php',
+            'sommerce/config/main-local.php',
+            'my/config/main-local.php',
+        ],
+    ],
+    'Local Dev' => [
+        'path' => 'local',
+        'skipFiles' => [
+            'common/config/config.json',
+        ],
         'setWritable' => [
             'gateway/runtime',
             'gateway/web/assets',
