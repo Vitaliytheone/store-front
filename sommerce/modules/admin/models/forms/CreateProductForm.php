@@ -8,7 +8,7 @@ use common\models\stores\StoreAdminAuth;
 use yii;
 use yii\web\User;
 use yii\behaviors\AttributeBehavior;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use common\models\store\Products;
 
 /**
@@ -96,7 +96,7 @@ class CreateProductForm extends Products
             ['url', 'trim' ],
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique'],
-            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => Pages::DELETED_NO]],
+            ['url', 'unique', 'targetClass' => PagesOld::class, 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => PagesOld::DELETED_NO]],
         ];
     }
 
@@ -135,7 +135,7 @@ class CreateProductForm extends Products
         $_url = $url;
         $postfix = 1;
 
-        while (Pages::findOne(['url' => $_url, 'deleted' => Pages::DELETED_NO])) {
+        while (PagesOld::findOne(['url' => $_url, 'deleted' => PagesOld::DELETED_NO])) {
             $_url = $url . '-' . $postfix;
             $postfix++;
         };
@@ -168,7 +168,7 @@ class CreateProductForm extends Products
      */
     function validateNoConflictProductPage($attribute, $params, $validator)
     {
-        $pageModel = Pages::findOne(['url' => $this->getAttribute($attribute)]);
+        $pageModel = PagesOld::findOne(['url' => $this->getAttribute($attribute)]);
         if ($pageModel) {
             $this->addError($attribute, $validator->message);
         }

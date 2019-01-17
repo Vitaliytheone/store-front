@@ -4,11 +4,11 @@ namespace sommerce\modules\admin\models\search;
 
 use common\models\stores\Stores;
 use Yii;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
-class PagesSearch extends Pages
+class PagesOldSearch extends PagesOld
 {
     private $_db;
     private $_pagesTable;
@@ -19,7 +19,7 @@ class PagesSearch extends Pages
     public function setStore(Stores $store)
     {
         $this->_db = $store->db_name;
-        $this->_pagesTable = $this->_db . "." . Pages::tableName();
+        $this->_pagesTable = $this->_db . "." . PagesOld::tableName();
     }
 
     /**

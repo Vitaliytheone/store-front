@@ -1,7 +1,7 @@
 <?php
 
 namespace sommerce\modules\admin\models\forms;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 
 class SavePageForm extends EditPageForm
 {
@@ -14,7 +14,7 @@ class SavePageForm extends EditPageForm
     public function rules()
     {
         return array_merge (parent::rules(), [
-            ['template', 'default', 'value' => Pages::TEMPLATE_PAGE],
+            ['template', 'default', 'value' => PagesOld::TEMPLATE_PAGE],
             [['template'], 'string'],
         ]);
     }

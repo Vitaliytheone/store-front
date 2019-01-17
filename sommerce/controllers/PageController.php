@@ -3,9 +3,6 @@ namespace sommerce\controllers;
 use common\models\store\Pages;
 use yii\web\NotFoundHttpException;
 use Yii;
-use sommerce\models\forms\ContactForm;
-use common\components\ActiveForm;
-
 
 /**
  * Page controller
@@ -13,79 +10,47 @@ use common\components\ActiveForm;
 class PageController extends CustomController
 {
     /**
-     * Displays page.
-     * @param int $id
+     * Render page by url
+     * @param string $url
      * @return string
      */
-    public function actionIndex($id)
+    public function actionIndex($url)
     {
-        $page = $this->_findPage($id);
-        $this->pageTitle = $page->seo_title;
-        $this->seoDescription = $page->seo_description;
-        $this->seoKeywords = $page->seo_keywords;
+        $page = $this->_findPage($url);
 
-        switch ($page->url) {
-            case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page); break;
-        }
-
-        if ($page->template == Pages::TEMPLATE_FILE) {
-            $this->layout = false;
-            return $this->renderContent($page->content);
-        }
-
-        return $this->render($page->template . '.twig', [
-            'page' => [
-                'title' => $page->title,
-                'content' => $page->content,
-            ]
+        $content = $this->renderContentPartial($page->twig, [
+            'site' => 100,
+            'site2' => 100,
         ]);
+
+        return $content;
     }
 
     /**
-     * Render `contact form` page
-     * @param Pages $page
-     * @return string|\yii\web\Response
+     * Render page styles by url
+     * @param string $url
+     * @return string
      */
-    protected function _actionContactUs($page)
+    public function actionStyles($url)
     {
-        $request = Yii::$app->getRequest();
-        $contactForm = new ContactForm();
+        $page = $this->_findPage($url);
 
-        if ($contactForm->load($request->post()) && $contactForm->contact()) {
-            return $this->refresh();
-        }
-
-        return $this->render($page->template . '.twig', [
-            'page' => [
-                'title' => $page->title,
-                'content' => $page->content,
-            ],
-            'contact' => [
-                'form' => [
-                    'subject' => $contactForm->subject,
-                    'name' => $contactForm->name,
-                    'email' => $contactForm->email,
-                    'message' => $contactForm->message,
-                ],
-            ],
-
-            'error' => $contactForm->hasErrors(),
-            'error_message' => ActiveForm::firstError($contactForm),
-            'success' => $contactForm->getSentSuccess(),
-            'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
+        return Yii::$app->response->sendContentAsFile($page->styles, 'style.css', [
+            'mimeType' => 'text/css;charset=UTF-8',
+            'inline' => true,
         ]);
     }
 
     /**
      * Find page or return exception
-     * @param int $id
+     * @param string $url
      * @return Pages
      * @throws NotFoundHttpException
      */
-    protected function _findPage(int $id)
+    protected function _findPage(string $url)
     {
         $page = Pages::find()->active()->andWhere([
-            'id' => $id,
+            'url' => $url,
         ])->one();
 
         if (!$page) {

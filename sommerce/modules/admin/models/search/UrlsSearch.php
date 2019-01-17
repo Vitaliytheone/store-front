@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use common\models\store\Products;
 use common\models\stores\Stores;
 use yii\base\Model;
@@ -21,7 +21,7 @@ class UrlsSearch extends Model
     {
         $this->_storeDb = $store->db_name;
         $this->_productsTable = $this->_storeDb . "." . Products::tableName();
-        $this->_pagesTable = $this->_storeDb . "." . Pages::tableName();
+        $this->_pagesTable = $this->_storeDb . "." . PagesOld::tableName();
     }
 
     /**
@@ -37,7 +37,7 @@ class UrlsSearch extends Model
         $pageUrls = (new Query())
             ->select("url")
             ->from($this->_pagesTable)
-            ->where(['deleted' => Pages::DELETED_NO]);
+            ->where(['deleted' => PagesOld::DELETED_NO]);
 
         return $productUrls->union($pageUrls)->column();
     }

@@ -3,7 +3,7 @@
 namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\ActivityLog;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use common\models\store\Products;
 use common\models\stores\StoreAdminAuth;
 use yii\behaviors\AttributeBehavior;
@@ -52,7 +52,7 @@ class EditNavigationForm extends Navigation
                             $url = Products::findOne($this->link_id)->url;
                             break;
                         case self::LINK_PAGE:
-                            $url = Pages::findOne($this->link_id)->url;
+                            $url = PagesOld::findOne($this->link_id)->url;
                             break;
                         case self::LINK_WEB_ADDRESS:
                             $url = $this->url;

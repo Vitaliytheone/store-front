@@ -2,7 +2,7 @@
 
 use sommerce\modules\admin\components\Url;
 use yii\helpers\Html;
-use \common\models\store\Pages;
+use \common\models\store\PagesOld;
 
 /* @var $page array */
 /* @var $this \yii\web\View */
@@ -18,7 +18,7 @@ use \common\models\store\Pages;
         <a class="btn m-btn--pill m-btn--air btn-sm btn-primary" href="<?= Url::toRoute(['/settings/update-page', 'id' => $page['id']]) ?>">
             <?= Yii::t('admin', 'settings.pages_edit') ?>
         </a>
-        <a href="#" class="<?= !Pages::canDelete($page) ? 'disabled' : '' ?> m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-action_url="<?= Url::toRoute(['/settings/delete-page', 'id' => $page['id']]) ?>" title="<?= Yii::t('admin', 'settings.pages_delete') ?>">
+        <a href="#" class="<?= !PagesOld::canDelete($page) ? 'disabled' : '' ?> m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="modal" data-target="#delete-modal" data-action_url="<?= Url::toRoute(['/settings/delete-page', 'id' => $page['id']]) ?>" title="<?= Yii::t('admin', 'settings.pages_delete') ?>">
             <i class="la la-trash"></i>
         </a>
     </td>

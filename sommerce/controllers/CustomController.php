@@ -8,10 +8,11 @@ use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\helpers\LanguagesHelper;
+use yii\base\Exception;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
-use yii\web\View;
+use sommerce\components\View;
 
 /**
  * Custom controller for the Sommerce
@@ -224,6 +225,26 @@ class CustomController extends CommonController
         }
 
         return $content;
+    }
+
+    /**
+     * Render content partial without applying layout
+     * @param $content
+     * @param $params
+     * @return mixed
+     * @throws Exception
+     */
+    public function renderContentPartial($content, $params)
+    {
+        $renderer = $this->getView();
+
+        if (!method_exists($renderer, 'renderContent')) {
+            throw new Exception('This View does not support renderContent method!');
+        }
+
+        $content = $renderer->renderContent($content, $params);
+
+        return $renderer->renderContent($content, $params);
     }
 
     /**

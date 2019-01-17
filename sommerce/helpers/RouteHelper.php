@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\helpers;
 
+use common\models\store\PagesOld;
 use common\models\store\Pages;
 use common\models\store\Products;
 use Yii;
@@ -80,7 +81,7 @@ class RouteHelper {
             $urls[$page->url] = [
                 'rule' => "/^\/?{$url}$/i",
                 'options' => [
-                    'id' => $page->id,
+                    'url' => $page->url,
                 ],
                 'url' => '/page/index'
             ];

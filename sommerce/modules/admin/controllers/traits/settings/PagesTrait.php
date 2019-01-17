@@ -3,7 +3,7 @@ namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
 use common\models\store\ActivityLog;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use common\models\stores\StoreAdminAuth;
 use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
@@ -11,7 +11,7 @@ use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditFilePageForm;
 use sommerce\modules\admin\models\forms\EditPageForm;
 use sommerce\modules\admin\models\forms\SavePageForm;
-use sommerce\modules\admin\models\search\PagesSearch;
+use sommerce\modules\admin\models\search\PagesOldSearch;
 use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;
@@ -34,7 +34,7 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_page_title");
         $this->addModule('adminPages');
-        $search = new PagesSearch();
+        $search = new PagesOldSearch();
         $search->setStore($this->store);
         $pages = $search->searchPages();
 
@@ -53,7 +53,7 @@ trait PagesTrait {
 
         $pageForm = new SavePageForm();
         $pageForm->setUser(Yii::$app->user);
-        $pageForm->setPage(new Pages());
+        $pageForm->setPage(new PagesOld());
 
         $urlsModel = new UrlsSearch();
         $urlsModel->setStore($this->store);
@@ -84,9 +84,9 @@ trait PagesTrait {
 
         $pageForm = new EditPageForm();
         $pageForm->setUser(Yii::$app->user);
-        $pageForm->setPage(Pages::findOne($id));
+        $pageForm->setPage(PagesOld::findOne($id));
 
-        if (!$pageForm->getPage() instanceof Pages) {
+        if (!$pageForm->getPage() instanceof PagesOld) {
             throw new NotFoundHttpException();
         }
 
@@ -121,7 +121,7 @@ trait PagesTrait {
             exit;
         }
 
-        $page = Pages::findOne($id);
+        $page = PagesOld::findOne($id);
         if ($page->template == 'file') {
             $pageForm = new EditFilePageForm();
         } else {
@@ -195,12 +195,12 @@ trait PagesTrait {
             exit;
         }
 
-        $pageModel = Pages::findOne($id);
+        $pageModel = PagesOld::findOne($id);
         if (!$pageModel) {
             throw new NotFoundHttpException();
         }
 
-        if (!Pages::canDelete($pageModel->toArray())) {
+        if (!PagesOld::canDelete($pageModel->toArray())) {
             throw new ForbiddenHttpException();
         }
 

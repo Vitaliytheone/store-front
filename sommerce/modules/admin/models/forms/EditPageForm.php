@@ -5,7 +5,7 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\store\Products;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use yii\base\Model;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
@@ -23,7 +23,7 @@ class EditPageForm extends Model
 
     /**
      * Current page
-     * @var Pages|null
+     * @var PagesOld|null
      */
     protected $_page =  null;
 
@@ -69,9 +69,9 @@ class EditPageForm extends Model
 
     /**
      * Set page
-     * @param Pages $page
+     * @param PagesOld $page
      */
-    public function setPage(Pages $page)
+    public function setPage(PagesOld $page)
     {
         $this->_page = $page;
     }
@@ -99,8 +99,8 @@ class EditPageForm extends Model
 
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique', 'targetClass' => Products::class, 'targetAttribute' => ['url' => 'url']],
-            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => function(Query $query) {
-                $query->andWhere(['deleted' => Pages::DELETED_NO]);
+            ['url', 'unique', 'targetClass' => PagesOld::class, 'targetAttribute' => ['url' => 'url'], 'filter' => function(Query $query) {
+                $query->andWhere(['deleted' => PagesOld::DELETED_NO]);
                 $pageId = $this->getPage()->id;
                 if ($pageId) {
                     $query->andWhere('id <> :pageId', [':pageId' => $pageId]);
@@ -119,7 +119,7 @@ class EditPageForm extends Model
      */
     public function edit($postData, $id)
     {
-        $pageModel = empty($id) ? new Pages() : Pages::findOne($id);
+        $pageModel = empty($id) ? new PagesOld() : PagesOld::findOne($id);
 
         if (!empty($id) && empty($pageModel)) {
             throw new NotFoundHttpException();
@@ -164,7 +164,7 @@ class EditPageForm extends Model
             return;
         }
 
-        $url = Pages::NEW_PAGE_URL_PREFIX . $this->id;
+        $url = PagesOld::NEW_PAGE_URL_PREFIX . $this->id;
 
         $_url = $url;
         $postfix = 1;

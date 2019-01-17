@@ -4,7 +4,7 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
 use yii\web\User;
@@ -15,7 +15,7 @@ class EditFilePageForm extends Model
 
     /**
      * Current page
-     * @var Pages|null
+     * @var PagesOld|null
      */
     protected $_page =  null;
 
@@ -61,9 +61,9 @@ class EditFilePageForm extends Model
 
     /**
      * Set page
-     * @param Pages $page
+     * @param PagesOld $page
      */
-    public function setPage(Pages $page)
+    public function setPage(PagesOld $page)
     {
         $this->_page = $page;
     }
@@ -96,7 +96,7 @@ class EditFilePageForm extends Model
      */
     public function edit($postData, $id)
     {
-        $pageModel = empty($id) ? new Pages() : Pages::findOne($id);
+        $pageModel = empty($id) ? new PagesOld() : PagesOld::findOne($id);
 
         if (!empty($id) && empty($pageModel)) {
             throw new NotFoundHttpException();

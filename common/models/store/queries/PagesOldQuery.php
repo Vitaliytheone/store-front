@@ -2,26 +2,27 @@
 
 namespace common\models\store\queries;
 
-use common\models\store\Pages;
+use common\models\store\PagesOld;
 use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[Pages]].
  *
- * @see Pages
+ * @see PagesOld
  */
-class PagesQuery extends ActiveQuery
+class PagesOldQuery extends ActiveQuery
 {
     public function active()
     {
         return $this->andWhere([
-            'visibility' => Pages::VISIBILITY_ON,
+            'deleted' => PagesOld::DELETED_NO,
+            'visibility' => PagesOld::VISIBILITY_YES
         ]);
     }
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Pages[]|array
+     * @return \common\models\store\PagesOld[]|array
      */
     public function all($db = null)
     {
@@ -30,7 +31,7 @@ class PagesQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\store\Pages|array|null
+     * @return \common\models\store\PagesOld|array|null
      */
     public function one($db = null)
     {
