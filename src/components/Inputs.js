@@ -1,5 +1,5 @@
 import React from "react";
-import { Label, Input, FormGroup } from "reactstrap";
+import { Label, Input } from "reactstrap";
 
 export const ProductInput = ({
   field,
@@ -33,3 +33,11 @@ export const PackageInput = ({
     )}
   </div>
 );
+
+// export const CustomComponent = ({
+//   field,
+//   form,
+//   ...props
+// }) => (
+//   <div classname="summernote" {...field} {...props}></div>
+// );
