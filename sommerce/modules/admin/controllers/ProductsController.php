@@ -2,12 +2,10 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\components\ActiveForm;
 use common\models\store\ActivityLog;
 use common\models\store\Packages;
 use common\models\store\Products;
 use common\models\stores\StoreAdminAuth;
-use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditNavigationForm;
 use sommerce\modules\admin\models\forms\MovePackageForm;
 use Yii;
@@ -16,12 +14,9 @@ use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
-use yii\web\NotFoundHttpException;
-use yii\web\NotAcceptableHttpException;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\models\forms\CreateProductForm;
 use sommerce\modules\admin\models\forms\CreatePackageForm;
-use common\models\stores\Stores;
 use common\models\stores\StoreProviders;
 use common\helpers\ApiProviders;
 use sommerce\modules\admin\models\forms\MoveProductForm;
@@ -50,8 +45,9 @@ class ProductsController extends CustomController
                     'move-package' => ['POST'],
                     'create-product-menu' => ['POST'],
                     'create-package' => ['POST'],
-                    'update-package' => ['POST'],
+                    'update-package' => ['GET', 'POST'],
                     'delete-package' => ['POST'],
+                    'get-provider-services' => ['GET'],
                 ],
             ],
             'ajax' => [
@@ -66,6 +62,7 @@ class ProductsController extends CustomController
                     'create-package',
                     'update-package',
                     'delete-package',
+                    'get-provider-services',
                 ]
             ],
             'content' => [
@@ -80,6 +77,7 @@ class ProductsController extends CustomController
                     'create-package',
                     'update-package',
                     'delete-package',
+                    'get-provider-services',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -162,33 +160,6 @@ class ProductsController extends CustomController
     }
 
     /**
-     * Get Product AJAX action
-     * @param $id
-     * @return array
-     * @throws Yii\web\NotFoundHttpException
-     */
-    public function actionGetProduct($id)
-    {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $productModel = CreateProductForm::findOne($id);
-
-        if (!$productModel) {
-            throw new NotFoundHttpException();
-        }
-
-        return [
-            'product' => $productModel->getAttributes(),
-        ];
-    }
-
-    /**
      * Update Product AJAX action
      * @param int $id
      * @return array
@@ -197,7 +168,18 @@ class ProductsController extends CustomController
     {
         $request = Yii::$app->getRequest();
 
-        // TODO return date from db in case POST-query
+        if ($request->method === 'GET') {
+            $productModel = CreateProductForm::findOne($id);
+
+            if (!$productModel) {
+                Yii::error('Update product: model not found');
+                return static::apiResponseError();
+            }
+
+            $data = $productModel->getAttributes();
+
+            return static::apiResponseSuccess($data);
+        }
 
         $model = CreateProductForm::findOne($id);
         if (!$model) {
@@ -223,6 +205,8 @@ class ProductsController extends CustomController
      * Move product AJAX action
      * @param int $id
      * @return array
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function actionMoveProduct($id)
     {
@@ -236,11 +220,11 @@ class ProductsController extends CustomController
 
         $model->setUser(Yii::$app->user);
 
-        $newPosition = $model->changePosition($request->post('newIndex'));
+        $newPosition = $model->changePosition($request->post());
 
         if ($newPosition === false) {
             Yii::error('Change product position: bad data');
-            return static::apiResponseError();
+            return static::apiResponseError($model->firstErrors);
         }
 
         return static::apiResponseSuccess();
@@ -270,33 +254,6 @@ class ProductsController extends CustomController
     }
 
     /**
-     * Get Package AJAX action
-     * @param $id
-     * @return array
-     * @throws NotFoundHttpException
-     */
-    public function actionGetPackage($id)
-    {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $model = CreatePackageForm::findOne($id);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
-
-        return [
-            'package' => $model->getAttributes(),
-        ];
-    }
-
-    /**
      * Update Package AJAX action
      * @param int $id
      * @return array
@@ -304,6 +261,19 @@ class ProductsController extends CustomController
     public function actionUpdatePackage($id)
     {
         $request = Yii::$app->getRequest();
+
+        if ($request->method === 'GET') {
+            $model = CreatePackageForm::findOne($id);
+
+            if (!$model) {
+                Yii::error('Update package: model not found');
+                return static::apiResponseError();
+            }
+
+            $data = $model->getAttributes();
+
+            return static::apiResponseSuccess($data);
+        }
 
         $model = CreatePackageForm::findOne($id);
         if (!$model) {
@@ -326,20 +296,12 @@ class ProductsController extends CustomController
 
     /**
      * Get provider`s services list AJAX action
-     * @param $provider_id
+     * @param int $provider_id
      * @return array
-     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionGetProviderServices($provider_id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-        
         /* @var $storeProviders \common\models\stores\StoreProviders[] */
         $storeProvider = StoreProviders::findOne([
             'provider_id' => $provider_id,
@@ -347,14 +309,15 @@ class ProductsController extends CustomController
         ]);
 
         if (!$storeProvider) {
-            throw new NotFoundHttpException();
+            Yii::error('Get provider services: provider not found');
+            return static::apiResponseError();
         }
 
         $providerApi = new ApiProviders($storeProvider);
 
         $providerServices = $providerApi->services(['Default']);
 
-        return $providerServices;
+        return static::apiResponseSuccess($providerServices);
     }
 
     /**
@@ -366,8 +329,6 @@ class ProductsController extends CustomController
      */
     public function actionDeletePackage($id)
     {
-        $request = Yii::$app->getRequest();
-
         $model = Packages::findOne($id);
 
         if (!$model) {

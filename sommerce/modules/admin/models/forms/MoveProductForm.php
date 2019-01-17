@@ -38,40 +38,45 @@ class MoveProductForm extends Products
 
     /**
      * Move product to new position
-     * @param $newPosition
-     * @return bool|int
+     * @param array $postData
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
-    public function changePosition($newPosition)
+    public function changePosition(array $postData): bool
     {
-        $maxPosition = static::getMaxPosition();
-        $currentPosition = $this->getAttribute('position');
+        if (empty($postData) || !isset($postData['id']) || !isset($postData['list'])) {
+            $this->addError('Change position: bad data');
+            return false;
+        }
 
-        if ($newPosition < 0 || $newPosition > $maxPosition) {
+        if ($this->id !== $postData['id']) {
+            $this->addError('Change position: bad data (incorrect id)');
             return false;
         }
 
         $db = $this->getDb();
         $table = static::tableName();
 
-        $query = $db->createCommand("
-                  UPDATE $table SET
-                      `position` = CASE
-                          WHEN (`position` = :curPos) THEN 
-                                :newPos                       -- replace new within old
-                          WHEN (`position` > :curPos and `position` <= :newPos) THEN 
-                                `position`- 1                 -- moving up
-                          WHEN (`position` < :curPos and `position` >= :newPos) THEN 
-                                `position`+ 1                 -- moving down
-                          ELSE 
-                                `position`                    -- otherwise lets keep same value.
-                      END
-            ")
-            ->bindValue(':newPos', $newPosition)
-            ->bindValue(':curPos', $currentPosition)
-            ->execute();
+        $sqlQuery = "UPDATE $table SET
+                      `position` = CASE";
 
-        if ($query) {
-            $this->setAttribute('position', $newPosition);
+        foreach ($postData['list'] as $element) {
+            if (!isset($element['id']) || !isset($element['position'])) {
+                $this->addError('Change position: bad data (incorrect list)');
+                return false;
+            }
+
+            $sqlQuery .= "WHEN (`id` = " . $element['id'] . ") THEN " . $element['position'];
+        }
+
+        $sqlQuery .= "ELSE `position`
+                      END";
+        $query = $db->createCommand($sqlQuery)->execute();
+
+        if (!$query) {
+            $this->addError('Changing position error');
+            return false;
         }
 
         /** @var StoreAdminAuth $identity */
@@ -79,6 +84,6 @@ class MoveProductForm extends Products
 
         ActivityLog::log($identity, ActivityLog::E_PRODUCTS_PRODUCT_POSITION_CHANGED, $this->id, $this->id);
 
-        return $this->getAttribute('position');
+        return true;
     }
 }
