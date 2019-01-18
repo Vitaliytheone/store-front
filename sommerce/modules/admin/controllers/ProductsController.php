@@ -14,6 +14,7 @@ use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Response;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\models\forms\CreateProductForm;
@@ -103,7 +104,24 @@ class ProductsController extends CustomController
         $this->view->title = Yii::t('admin', 'products.page_title');
         $this->layout = '@admin/views/layouts/react_app';
 
-        return $this->render('index');
+        $endPoints = [
+            "add_listing" => Url::toRoute(['products/list']),
+            "add_product" => Url::toRoute(['products/create-product']),
+            "confirm_add_product" => Url::toRoute(['products/create-product-menu', 'id' => '']),
+            "add_package" => Url::toRoute(['products/create-package']),
+            "get_update_product" => Url::toRoute(['products/update-product', 'id' => '']),
+            "update_product" => Url::toRoute(['products/update-product', 'id' => '']),
+            "get_update_package" => Url::toRoute(['products/update-package', 'id' => '']),
+            "update_package" => Url::toRoute(['products/update-package', 'id' => '']),
+            "change_position_product" => Url::toRoute(['products/move-product', 'id' => '']),
+            "change_position_package" => Url::toRoute(['products/move-package', 'id' => '']),
+            "delete_package" => Url::toRoute(['products/delete-package', 'id' => '']),
+            "get_providers" => Url::toRoute(['products/get-provider-services', 'id' => '']),
+        ];
+
+        return $this->render('index', [
+            'endPoints' => $endPoints,
+        ]);
     }
 
     /**
