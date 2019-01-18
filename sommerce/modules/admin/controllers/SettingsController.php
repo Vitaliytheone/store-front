@@ -55,11 +55,18 @@ class SettingsController extends CustomController
                     'theme-update-style' => ['POST'],
                 ],
             ],
-            'content' => [
+            'jqueryApi' => [
                 'class' => ContentNegotiator::class,
-                'response' => $this->module->get('response'),
                 'only' => [
                     'theme-update-style',
+                ],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+            'ajaxApi' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
                     'get-page',
                     'get-pages',
                     'get-products',
@@ -67,7 +74,7 @@ class SettingsController extends CustomController
                     'save-page',
                 ],
                 'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+                    'application/json' => 'ajax_api',
                 ],
             ],
         ];

@@ -33,7 +33,9 @@ $config = [
             ],
         ],
         'response' => [
-            'class' => 'sommerce\modules\admin\components\CustomResponse',
+            'formatters' => [
+                'ajax_api' => 'common\components\response\AjaxApiFormatter',
+            ],
         ],
         'devMailer' => [
             'class' => 'yii\swiftmailer\Mailer',

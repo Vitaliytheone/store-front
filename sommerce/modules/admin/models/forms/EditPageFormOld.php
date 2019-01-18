@@ -11,7 +11,7 @@ use yii\db\Query;
 use yii\web\NotFoundHttpException;
 use yii\web\User;
 
-class EditPageForm extends Model
+class EditPageFormOld extends Model
 {
     public $title;
     public $content;

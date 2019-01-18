@@ -11,7 +11,7 @@ return [
          * Необязательные параметы:
          *      id (int) — ID страницы. Редактирование — если определен, создание — если не определен
          */
-        '/admin/settings/pages/get-page',
+        'get-page' => '/admin/settings/pages/get-page',
 
         /**
          * Получение списка страниц
@@ -20,7 +20,7 @@ return [
          * Обязательные параметры:
          * Необязательные параметы:
          */
-        '/admin/settings/pages/get-pages',
+        'get-pages' => '/admin/settings/pages/get-pages',
 
         /**
          * Получение списка продуктов
@@ -29,7 +29,7 @@ return [
          * Обязательные параметры:
          * Необязательные параметы:
          */
-        '/admin/settings/pages/get-products',
+        'get-products' => '/admin/settings/pages/get-products',
 
         /**
          * Сохранение dev-версии страницы
@@ -41,7 +41,7 @@ return [
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        '/admin/settings/pages/save-dev-page',
+        'save-dev-page' => '/admin/settings/pages/save-dev-page',
 
         /**
          * Сохранение страницы
@@ -53,6 +53,6 @@ return [
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        '/admin/settings/pages/save-page',
+        'save-page' => '/admin/settings/pages/save-page',
     ],
 ];

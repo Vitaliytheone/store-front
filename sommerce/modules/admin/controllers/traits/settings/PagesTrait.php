@@ -5,9 +5,11 @@ use common\models\store\Packages;
 use common\models\store\Pages;
 use common\models\store\Products;
 use sommerce\controllers\CommonController;
+use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
 use yii\helpers\BaseHtml;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -60,6 +62,8 @@ trait PagesTrait {
      */
     public function actionGetPage($id = null)
     {
+        Yii::$app->response->format = 'ajax_api';
+
         $data = null;
 
         if ($id) {
@@ -127,17 +131,60 @@ trait PagesTrait {
                 $products[$productId]['description'] = BaseHtml::encode($item['pr_description']);
                 $products[$productId]['properties'] = BaseHtml::encode($item['pr_properties']);
                 $products[$productId]['color'] = BaseHtml::encode($item['pr_color']);
+                $products[$productId]['packages'] = [];
             }
-            
-            $products[$productId]['packages'][] = [
-                'id' => $item['pk_id'],
-				'name' => BaseHtml::encode($item['pk_name']),
-				'price'  => $item['pk_price'],
-				'quantity' => $item['pk_quantity'],
-            ];
+
+            if ($item['pk_id']) {
+                $products[$productId]['packages'][] = [
+                    'id' => $item['pk_id'],
+                    'name' => BaseHtml::encode($item['pk_name']),
+                    'price'  => $item['pk_price'],
+                    'quantity' => $item['pk_quantity'],
+                ];
+            }
         }
 
         return array_values($products);
+    }
+
+    /**
+     * Save page
+     * @param $id
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionSaveDevPage($id)
+    {
+        $form = new SavePageForm();
+        $form->setStore($this->store);
+        $form->setPage(static::_getPage($id));
+        $form->setDev(true);
+
+        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
+            throw new BadRequestHttpException('Page cannot save!');
+        }
+
+        return $id;
+    }
+
+    /**
+     * Save page
+     * @param $id
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionSavePage($id)
+    {
+        $form = new SavePageForm();
+        $form->setStore($this->store);
+        $form->setPage(static::_getPage($id));
+        $form->setDev(false);
+
+        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
+            throw new BadRequestHttpException('Page cannot save!');
+        }
+
+        return $id;
     }
 
     /**
@@ -151,7 +198,7 @@ trait PagesTrait {
         $page = Pages::find()->active()->where(['id' => $id])->one();
 
         if (!$page) {
-            throw new NotFoundHttpException('Message!');
+            throw new NotFoundHttpException('Page not found!');
         }
 
         return $page;
