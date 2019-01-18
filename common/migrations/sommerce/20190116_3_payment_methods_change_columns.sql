@@ -1,3 +1,5 @@
+USE `stores`;
+
 ALTER TABLE payment_methods
   DROP COLUMN `currencies`;
 

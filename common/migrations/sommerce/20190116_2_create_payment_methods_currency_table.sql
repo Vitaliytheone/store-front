@@ -1,3 +1,5 @@
+USE `stores`;
+
 CREATE TABLE `payment_methods_currency` (
   id int(11) unsigned NOT NULL,
   method_id int(11) unsigned,

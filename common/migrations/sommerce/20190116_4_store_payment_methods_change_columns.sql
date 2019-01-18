@@ -1,3 +1,5 @@
+USE `stores`;
+
 ALTER TABLE `store_payment_methods`
   DROP FOREIGN KEY `fk_store_id_method`;
 
