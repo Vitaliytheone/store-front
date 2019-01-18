@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use common\components\response\CustomResponse;
 use common\models\store\Files;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
@@ -61,7 +62,7 @@ class SettingsController extends CustomController
                     'theme-update-style',
                 ],
                 'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+                    'application/json' => CustomResponse::FORMAT_JSON,
                 ],
             ],
             'ajaxApi' => [
@@ -74,7 +75,7 @@ class SettingsController extends CustomController
                     'save-page',
                 ],
                 'formats' => [
-                    'application/json' => 'ajax_api',
+                    'application/json' => CustomResponse::FORMAT_AJAX_API,
                 ],
             ],
         ];

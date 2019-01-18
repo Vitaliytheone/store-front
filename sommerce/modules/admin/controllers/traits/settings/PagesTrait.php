@@ -62,8 +62,6 @@ trait PagesTrait {
      */
     public function actionGetPage($id = null)
     {
-        Yii::$app->response->format = 'ajax_api';
-
         $data = null;
 
         if ($id) {

@@ -1,5 +1,6 @@
 <?php
 use yii\web\UrlNormalizer;
+use common\components\response\CustomResponse;
 
 $db = array_merge(
     require_once(__DIR__ . '/db.php'),
@@ -34,7 +35,7 @@ $config = [
         ],
         'response' => [
             'formatters' => [
-                'ajax_api' => 'common\components\response\AjaxApiFormatter',
+                CustomResponse::FORMAT_AJAX_API => 'common\components\response\AjaxApiFormatter',
             ],
         ],
         'devMailer' => [

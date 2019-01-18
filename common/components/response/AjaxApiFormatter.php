@@ -25,32 +25,30 @@ class AjaxApiFormatter extends JsonResponseFormatter
      */
     protected function formatJson($response)
     {
-        if ($response->data !== null) {
-            $options = $this->encodeOptions;
-            if ($this->prettyPrint) {
-                $options |= JSON_PRETTY_PRINT;
-            }
+        if ($response->isSuccessful) {
+            $data = [
+                'success' => true,
+                'error_message' => null,
+                'data' => $response->data,
+            ];
+        } else {
 
-            if ($response->isSuccessful) {
-                $data = [
-                    'success' => true,
-                    'error_message' => null,
-                    'data' => $response->data,
-                ];
-            } else {
+            $errorMessage = ArrayHelper::getValue($response->data, 'message', ArrayHelper::getValue($response->data, 'name', $this->defaultErrorMessage));
 
-                $errorMessage = ArrayHelper::getValue($response->data, 'message', ArrayHelper::getValue($response->data, 'name', $this->defaultErrorMessage));
-
-                $data = [
-                    'success' => false,
-                    'error_message' => $errorMessage,
-                    'data' => null,
-                ];
-            }
-
-            $response->data = $data;
-
-            $response->content = Json::encode($response->data, $options);
+            $data = [
+                'success' => false,
+                'error_message' => $errorMessage,
+                'data' => null,
+            ];
         }
+
+        $response->data = $data;
+
+        $options = $this->encodeOptions;
+        if ($this->prettyPrint) {
+            $options |= JSON_PRETTY_PRINT;
+        }
+
+        $response->content = Json::encode($response->data, $options);
     }
 }
