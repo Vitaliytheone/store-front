@@ -32,6 +32,11 @@ $config = [
                 'application/json' => 'yii\web\JsonParser'
             ],
         ],
+        'response' => [
+            'formatters' => [
+                'ajax_api' => 'common\components\response\AjaxApiFormatter',
+            ],
+        ],
         'devMailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'transport' => [

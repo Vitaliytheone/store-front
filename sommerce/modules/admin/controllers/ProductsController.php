@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use common\components\response\CustomResponse;
 use common\models\store\ActivityLog;
 use common\models\store\Packages;
 use common\models\store\Products;
@@ -15,7 +16,8 @@ use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-use yii\web\Response;
+use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\models\forms\CreateProductForm;
 use sommerce\modules\admin\models\forms\CreatePackageForm;
@@ -83,7 +85,7 @@ class ProductsController extends CustomController
                     'list',
                 ],
                 'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+                    'application/json' => CustomResponse::FORMAT_AJAX_API,
                 ],
             ],
         ]);
@@ -133,7 +135,7 @@ class ProductsController extends CustomController
         $search->setStore($this->store);
         $data = $search->getProductsPackages();
 
-        return static::apiResponseSuccess($data);
+        return $data;
     }
 
     /**
@@ -150,27 +152,29 @@ class ProductsController extends CustomController
 
         if (!$model->create($request->post())) {
             Yii::error($model->firstErrors);
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException('Product cannot save!');
         }
 
         UiHelper::message(Yii::t('admin', 'products.message_product_created'));
 
         $data = $model->getAttributes();
 
-        return static::apiResponseSuccess($data);
+        return $data;
     }
 
     /**
      * Create product menu item
      * @param $id
-     * @return array
+     * @return bool
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
     public function actionCreateProductMenu($id)
     {
         if (!($product = Products::findOne($id))) {
             Yii::error('Create product menu: model not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException('Product not found!');
         }
 
         $model = new EditNavigationForm();
@@ -182,16 +186,18 @@ class ProductsController extends CustomController
             'link_id' => $product->id
         ]])) {
             UiHelper::message(Yii::t('admin', 'settings.nav_message_created'));
-            return static::apiResponseSuccess();
+            return true;
         } else {
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException();
         }
     }
 
     /**
      * Update Product AJAX action
-     * @param int $id
+     * @param $id
      * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      */
     public function actionUpdateProduct($id)
     {
@@ -202,38 +208,40 @@ class ProductsController extends CustomController
 
             if (!$productModel) {
                 Yii::error('Update product: model not found');
-                return static::apiResponseError();
+                throw new NotFoundHttpException('Product not found!');
             }
 
             $data = $productModel->getAttributes();
 
-            return static::apiResponseSuccess($data);
+            return $data;
         }
 
         $model = CreateProductForm::findOne($id);
         if (!$model) {
             Yii::error('Update product: model not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException('Product not found!');
         }
 
         $model->setUser(Yii::$app->user);
 
         if (!$model->edit($request->post())) {
             Yii::error($model->firstErrors);
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException('Product cannot save!');
         };
 
         UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
 
         $data = $model->getAttributes();
 
-        return static::apiResponseSuccess($data);
+        return $data;
     }
 
     /**
      * Move product AJAX action
-     * @param int $id
-     * @return array
+     * @param $id
+     * @return bool
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      * @throws \Throwable
      * @throws \yii\db\Exception
      */
@@ -244,17 +252,17 @@ class ProductsController extends CustomController
         $model = MoveProductForm::findOne($id);
         if (!$model) {
             Yii::error('Change product position: model not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException('Product not found!');
         }
 
         $model->setUser(Yii::$app->user);
 
         if (!$model->changePosition($request->post())) {
             Yii::error('Change product position: ' . ActiveForm::firstError($model));
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException();
         }
 
-        return static::apiResponseSuccess();
+        return true;
     }
 
     /**
@@ -270,20 +278,22 @@ class ProductsController extends CustomController
         $model->setUser(Yii::$app->getUser());
 
         if (!$model->create($request->post())) {
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException('Package cannot save!');
         }
 
         UiHelper::message(Yii::t('admin', 'products.message_package_created'));
 
         $data = $model->getAttributes();
 
-        return static::apiResponseSuccess($data);
+        return $data;
     }
 
     /**
      * Update Package AJAX action
-     * @param int $id
+     * @param $id
      * @return array
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      */
     public function actionUpdatePackage($id)
     {
@@ -294,31 +304,31 @@ class ProductsController extends CustomController
 
             if (!$model) {
                 Yii::error('Update package: model not found');
-                return static::apiResponseError();
+                throw new NotFoundHttpException('Package not found!');
             }
 
             $data = $model->getAttributes();
 
-            return static::apiResponseSuccess($data);
+            return $data;
         }
 
         $model = CreatePackageForm::findOne($id);
         if (!$model) {
             Yii::error('Update package: model not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException('Package not found!');
         }
 
         $model->setUser(Yii::$app->user);
 
         if (!$model->edit($request->post())) {
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException('Package cannot save!');
         }
 
         UiHelper::message(Yii::t('admin', 'products.message_package_updated'));
 
         $data = $model->getAttributes();
 
-        return static::apiResponseSuccess($data);
+        return $data;
     }
 
     /**
@@ -337,21 +347,22 @@ class ProductsController extends CustomController
 
         if (!$storeProvider) {
             Yii::error('Get provider services: provider not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException();
         }
 
         $providerApi = new ApiProviders($storeProvider);
 
         $providerServices = $providerApi->services(['Default']);
 
-        return static::apiResponseSuccess($providerServices);
+        return $providerServices;
     }
 
     /**
      * Delete Package AJAX action
-     * Mark package as deleted
      * @param $id
-     * @return array
+     * @return bool
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      * @throws \Throwable
      */
     public function actionDeletePackage($id)
@@ -360,12 +371,12 @@ class ProductsController extends CustomController
 
         if (!$model) {
             Yii::error('Delete package: model not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException('Package not found!');
         }
 
         if (!$model->deleteVirtual()) {
             Yii::error('Delete package: delete error');
-            return static::apiResponseError();
+            throw new BadRequestHttpException();
         }
         /** @var StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
@@ -373,13 +384,15 @@ class ProductsController extends CustomController
 
         UiHelper::message(Yii::t('admin', 'products.message_package_deleted'));
 
-        return static::apiResponseSuccess();
+        return true;
     }
 
     /**
      * Move package AJAX action
-     * @param int $id
-     * @return array
+     * @param $id
+     * @return bool
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
      * @throws \Throwable
      * @throws \yii\db\Exception
      */
@@ -390,45 +403,16 @@ class ProductsController extends CustomController
         $model = MovePackageForm::findOne($id);
         if (!$model) {
             Yii::error('Change package position: model not found');
-            return static::apiResponseError();
+            throw new NotFoundHttpException('Package not found!');
         }
 
         $model->setUser(Yii::$app->user);
 
         if (!$model->changePosition($request->post())) {
             Yii::error('Change package position: ' . ActiveForm::firstError($model));
-            return static::apiResponseError($model->firstErrors);
+            throw new BadRequestHttpException();
         }
 
-        return static::apiResponseSuccess();
-    }
-
-    /**
-     * @param string|array $error
-     * @return array
-     */
-    public static function apiResponseError($error = 'Internal error')
-    {
-        if (is_array($error)) {
-            $error = !empty($firstErrors) ? reset($firstErrors) : 'Internal error';
-        }
-
-        return [
-            'success' => false,
-            'error_message' => $error,
-        ];
-    }
-
-    /**
-     * Api response success
-     * @param array|integer|string $data Response data array
-     * @return array
-     */
-    public static function apiResponseSuccess($data = [])
-    {
-        return [
-            'success' => true,
-            'data' => $data
-        ];
+        return true;
     }
 }
