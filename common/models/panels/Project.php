@@ -641,11 +641,12 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Enable domain (create panel domains and add domain to dns servers)
+     * @param bool $isSubdomain
      * @return bool
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function enableDomain()
+    public function enableDomain($isSubdomain = false)
     {
         $domain = $this->site;
 
@@ -670,7 +671,7 @@ class Project extends ActiveRecord implements ProjectInterface
             $result = false;
         }
 
-        if (!$this->enableMainDomain()) {
+        if (!$this->enableMainDomain($isSubdomain)) {
             $result = false;
         }
 
@@ -714,9 +715,10 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Enable main domain
+     * @param bool $isSubdomain
      * @return bool
      */
-    public function enableMainDomain()
+    public function enableMainDomain($isSubdomain = false)
     {
         $domain = $this->site;
 
@@ -725,7 +727,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ])) {
             $panelDomain = new PanelDomains();
-            $panelDomain->type = PanelDomains::TYPE_STANDARD;
+            $panelDomain->type = !$isSubdomain ? PanelDomains::TYPE_STANDARD : PanelDomains::TYPE_SUBDOMAIN;
             $panelDomain->panel_id = $this->id;
             $panelDomain->domain = $domain;
 

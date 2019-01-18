@@ -1,0 +1,2 @@
+INSERT INTO `content` (`id`, `name`, `text`, `updated_at`)
+VALUES (NULL, 'subdomain_nameservers', '<p class=\"help-block\" style=\"margin-bottom: 5px\">Please visit your registrar\'s dashboard to change nameservers to:</p>\r\n <ul style=\"color: #737373; padding-left: 20px\">\r\n <li>ns1.perfectdns.com\r\n </li>\r\n <li>ns2.perfectdns.com\r\n </li>\r\n </ul>', '')

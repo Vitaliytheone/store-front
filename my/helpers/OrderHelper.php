@@ -9,7 +9,6 @@ use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
 use common\models\gateways\Sites;
-use common\models\panels\Customers;
 use common\models\panels\Languages;
 use common\models\panels\PanelPaymentMethods;
 use common\models\panels\PaymentMethods;
@@ -18,7 +17,6 @@ use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
 use common\models\stores\StoreAdmins;
-use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
@@ -227,6 +225,8 @@ class OrderHelper {
      * @param Orders $order
      * @return bool
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public static function prolongationSsl(Orders $order)
     {
@@ -318,8 +318,12 @@ class OrderHelper {
     /**
      * Create project
      * @param Orders $order
-     * @param boolean $child
+     * @param bool $child
      * @return bool
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public static function panel(Orders $order, $child = false)
     {
@@ -327,6 +331,7 @@ class OrderHelper {
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
         $currency = ArrayHelper::getValue($orderDetails, 'currency');
+        $subdomain = ArrayHelper::getValue($orderDetails, 'subdomain');
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -340,6 +345,7 @@ class OrderHelper {
         $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
+        $project->subdomain = (bool)$subdomain ? 1 : 0;
 
         if ($child) {
             $project->child_panel = 1;
@@ -454,7 +460,7 @@ class OrderHelper {
             }
         }
 
-        if (!$project->enableDomain()) {
+        if (!$project->enableDomain((bool)$subdomain)) {
             $order->status = Orders::STATUS_ERROR;
         }
 
@@ -687,6 +693,11 @@ class OrderHelper {
      * Create store
      * @param Orders $order
      * @return bool
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public static function store(Orders $order)
     {
