@@ -10,7 +10,6 @@ use Stripe\Error\ApiConnection as StripeException;
 use Stripe\Webhook as StripeWebhook;
 use Stripe\Error\SignatureVerification as StripeSignatureVerification;
 use payments\BasePayment;
-use gateway\helpers\AssetsHelper;
 use common\models\gateway\Payments;
 use yii\helpers\ArrayHelper;
 use UnexpectedValueException;
@@ -86,8 +85,6 @@ class Stripe extends BasePayment {
 
         StripeBase::setApiKey($secretKey);
 
-        AssetsHelper::addCustomScriptFile($this->action);
-
         return [
             'code' => 'stripe',
             'type' => $this->_method_id,
@@ -105,7 +102,7 @@ class Stripe extends BasePayment {
                 'requestPayerName' => true,
                 'requestPayerEmail' => true,
                 'total' => [
-                    'amount' => $this->getPayment()->amount,
+                    'amount' => $this->getPayment()->amount * 100,
                     'label' => $this->getDescription(),
                 ],
             ],
@@ -217,9 +214,31 @@ class Stripe extends BasePayment {
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getFields()
     {
+        return [
+            "token" => [
+                "name" => "token",
+                "type" => "hidden"
+            ],
+            "email" => [
+                "name" => "email",
+                "type" => "hidden"
+            ]
+        ];
+    }
 
+    /**
+     * @return array
+     */
+    public function getScripts()
+    {
+        return [
+            $this->action
+        ];
     }
 
     /**
@@ -228,6 +247,10 @@ class Stripe extends BasePayment {
      */
     public function validateUserDetails($data)
     {
-        return false;
+        if (empty($data['token']) || empty($data['email']) || !is_string($data['token']) || !is_string($data['email'])) {
+            return false;
+        }
+
+        return true;
     }
 }

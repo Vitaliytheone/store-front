@@ -489,7 +489,11 @@ abstract class BasePayment extends Component {
      */
     public function getReturnUrl(): string
     {
-        return SiteHelper::hostUrl($this->getGateway()->ssl) . '/processing';
+        if (($payment = $this->getPayment())) {
+            return $payment->return_url;
+        }
+
+        return SiteHelper::hostUrl($this->getGateway()->ssl);
     }
 
     /**
@@ -499,5 +503,21 @@ abstract class BasePayment extends Component {
     public function validateUserDetails($data)
     {
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getScripts()
+    {
+        return [];
     }
 }

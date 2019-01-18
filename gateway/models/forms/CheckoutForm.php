@@ -66,6 +66,16 @@ class CheckoutForm extends Model {
     protected $_userDetails = [];
 
     /**
+     * @var array
+     */
+    protected $_paymentFields;
+
+    /**
+     * @var array
+     */
+    protected $_jsOptions = [];
+
+    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -131,7 +141,7 @@ class CheckoutForm extends Model {
         $this->method_id = $method->id;
         $this->_payment = new Payments();
         $this->_payment->attributes = $this->attributes;
-        $this->_payment->setUserDetails($this->_userDetails);
+        $this->_payment->setUserDetails($this->getUserDetails());
 
         if (!$this->_payment->save(false)) {
             $this->addError('method', '');
@@ -217,7 +227,32 @@ class CheckoutForm extends Model {
 
         $payment = $this->getPaymentMethod();
 
-        return $payment->validateUserDetails($this->_userDetails);
+
+        return $payment->validateUserDetails($this->getUserDetails());
+    }
+
+    /**
+     * @return array
+     */
+    public function getUserDetails()
+    {
+        if (null === $this->_userDetails) {
+            return $this->_userDetails;
+        }
+        $this->_userDetails = [];
+
+        $fields = $this->getPaymentMethod()->getFields();
+        if (empty($fields)) {
+            return $this->_userDetails;
+        }
+
+        foreach ((array)$this->fields as $name => $value) {
+            if (!empty($fields[$name])) {
+                $this->_userDetails[$name] = $value;
+            }
+        }
+
+        return $this->_userDetails;
     }
 
     /**
@@ -225,6 +260,104 @@ class CheckoutForm extends Model {
      */
     public function getCheckoutFormData()
     {
-        return [];
+        return [
+            'form' => [
+                'action' => '',
+                'method' => 'POST',
+                'charset' => 'utf8',
+            ],
+            'data' => $this->getAttributes([
+                'method',
+                'source_id',
+                'source_type',
+                'source_payment_id',
+                'method_id',
+                'currency',
+                'amount',
+                'success_url',
+                'fail_url',
+                'return_url',
+                'description',
+            ])
+        ];
+    }
+
+    /**
+     * Get available payments methods
+     * @return array
+     */
+    public function getPaymentsFields()
+    {
+        if ($this->_paymentFields) {
+            return $this->_paymentFields;
+        }
+
+        $this->_paymentFields = [];
+
+
+        $paymentMethod = $this->getPaymentMethod();
+        $fields = $paymentMethod->getFields();
+        $this->_paymentFields = [];
+
+        if (!empty($fields)) {
+            foreach ($fields as $name => $field) {
+                $field = ArrayHelper::merge($field, [
+                    'label' => Yii::t('app', ArrayHelper::getValue($field, 'label')),
+                    'type' => $field['type'],
+                    'value' => '',
+                ]);
+
+                if (in_array($field['type'], ['input', 'hidden', 'checkbox'])) {
+                    $field['name'] = $name;
+                }
+
+                if (!empty($field['texts'])) {
+                    foreach ($field['texts'] as &$text) {
+                        $text = Yii::t('app', $text);
+                    }
+                } else {
+                    $field['texts'] = [];
+                }
+
+                $this->_paymentFields[$name] = $field;
+            }
+        }
+
+
+        // Assign fields post data
+        foreach ($this->_paymentFields as $payment => $fields) {
+            foreach ($fields as $key => $field) {
+                $name = ArrayHelper::getValue($field, 'name');
+                if ($name) {
+                    $this->_paymentFields[$key]['value'] = ArrayHelper::getValue($this->fields, $name);
+                }
+            }
+        }
+
+        return $this->_paymentFields;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJsOptions()
+    {
+            $paymentMethod = $this->getPaymentMethod();
+            $jsEnvironments = $paymentMethod->getJsEnvironments();
+
+            if (!empty($jsEnvironments['code'])) {
+                $this->_jsOptions[$jsEnvironments['code']] = ArrayHelper::merge((array)ArrayHelper::getValue($this->_jsOptions, $jsEnvironments['code'], []), $jsEnvironments);
+            }
+
+
+        return $this->_jsOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getScripts()
+    {
+        return $this->getPaymentMethod()->getScripts();
     }
 }
