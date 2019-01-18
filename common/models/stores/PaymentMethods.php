@@ -35,6 +35,7 @@ class PaymentMethods extends ActiveRecord
     const METHOD_BILLPLZ = 'billplz';
     const METHOD_AUTHORIZE = 'authorize';
     const METHOD_STRIPE = 'stripe';
+    const METHOD_STRIPE_3D_SECURE = 'stripe_3d_secure';
     const METHOD_MERCADOPAGO = 'mercadopago';
     const METHOD_MOLLIE = 'mollie';
 

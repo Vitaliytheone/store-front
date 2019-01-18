@@ -162,6 +162,14 @@ class EditPaymentMethodForm extends PaymentMethods
                     ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_webhook_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][webhook_secret]', 'value' => $getDetailsField('webhook_secret'), 'label' => Yii::t('admin', 'settings.payments_stripe_webhook_secret')]
                 ]
             ],
+            PaymentMethods::METHOD_STRIPE_3D_SECURE => [
+                'icon' => '/img/pg/stripe_logo.png',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_secret_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][secret_key]', 'value' => $getDetailsField('secret_key'), 'label' => Yii::t('admin', 'settings.payments_stripe_secret_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_public_key', 'placeholder' => '', 'name' => 'PaymentsForm[details][public_key]', 'value' => $getDetailsField('public_key'), 'label' => Yii::t('admin', 'settings.payments_stripe_public_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_webhook_secret', 'placeholder' => '', 'name' => 'PaymentsForm[details][webhook_secret]', 'value' => $getDetailsField('webhook_secret'), 'label' => Yii::t('admin', 'settings.payments_stripe_webhook_secret')]
+                ]
+            ],
             PaymentMethods::METHOD_YANDEX_CARDS => [
                 'icon' => '/img/pg/yandex_money.png',
                 'form_fields' => [

@@ -452,7 +452,7 @@ class PaymentsController extends CustomController
 
                     $payments = Payments::findOne(['id' => $payment->id]);
                     $payments->comment = $_GET['address'];
-                    $payments->transaction_id = $_GET['tid'];
+                    $payments->transaction_id = $_GET['address'];
 
                     if ($signature != $_SERVER['HTTP_X_SIGNATURE']) {
                         $this->Errorlogging("bad signature", "Bitcoin", $paymentSignature);
@@ -477,7 +477,7 @@ class PaymentsController extends CustomController
                         exit;
                     }
 
-                    if (PaymentHash::findOne(['hash' => $_GET['tid']])) {
+                    if (PaymentHash::findOne(['hash' => $_GET['address']])) {
                         $payments->update();
                         $this->Errorlogging("bad hash", "Bitcoin", $paymentSignature);
                         exit;
@@ -492,7 +492,7 @@ class PaymentsController extends CustomController
 
                     $paymentHashModel = new PaymentHash();
                     $paymentHashModel->load(array('PaymentHash' => array(
-                        'hash' => $_GET['tid'],
+                        'hash' => $_GET['address'],
                     )));
                     $paymentHashModel->save();
 
