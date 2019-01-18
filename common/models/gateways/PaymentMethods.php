@@ -90,6 +90,7 @@ class PaymentMethods extends ActiveRecord
             ],
             static::METHOD_STRIPE => [
                 'icon' => '/img/pg/stripe_logo.png',
+                'icon_style' => 'margin: 10px;',
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_secret_key', 'placeholder' => '', 'name' => 'secret_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_secret_key')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_public_key', 'placeholder' => '', 'name' => 'public_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_public_key')],
@@ -105,6 +106,14 @@ class PaymentMethods extends ActiveRecord
     public function getIcon()
     {
         return (string)ArrayHelper::getValue(static::getViewData(), [$this->id, 'icon'], '');
+    }
+
+    /**
+     * @return string
+     */
+    public function getIconStyle()
+    {
+        return (string)ArrayHelper::getValue(static::getViewData(), [$this->id, 'icon_style'], '');
     }
 
     /**
