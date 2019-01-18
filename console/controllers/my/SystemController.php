@@ -831,73 +831,68 @@ class SystemController extends CustomController
      */
     public function actionChangeCloudnsIp($oldIp, $newIp): string
     {
-        $pagesCount = 42;
-        $domainRawList = '';
-        $domainList = [];
-        $count = 777;
+        if ($oldIp === $newIp) {
+            $this->stdout("You entered two identical IP.\n", Console::FG_RED);
+            exit;
+        }
 
+        $domainCount = 0;
+
+        $pagesCount = (int)$this->_getCloudnsApi('get-pages-count', '&rows-per-page=100');
+
+        if ($pagesCount === 0) {
+            $this->stdout("Could not get the number of pages. Try again.\n", Console::FG_RED);
+            exit;
+        }
+
+        $this->stdout("Got a list of {$pagesCount} pages. Start checking and updating IP. Please wait for the completion of the operation.\n");
+
+        // get all domains for all page one by one
+        for ($i = 1; $i <= $pagesCount; $i++) {
+
+            $domainRawList = $this->_getCloudnsApi('list-zones', "&page={$i}&rows-per-page=100");
+            $domainRawList = json_decode($domainRawList, true);
+
+            if (empty($domainRawList[0]['name'])) {
+                $this->stdout("Could not get a list of domains. Try again.\n", Console::FG_RED);
+                exit;
+            }
+
+            // check all domain for current page
+            foreach ($domainRawList as $domainArray) {
+                $domain = $domainArray['name'];
+
+                $rawResponse = $this->_getCloudnsApi('records', "&domain-name={$domain}");
+
+                $ip = json_decode($rawResponse, true);
+
+                $responseId = reset($ip)['id'];
+                $respIp = array_column($ip, 'record')[0];
+
+                if ($respIp == $oldIp) {
+                    $changeResponse = $this->_getCloudnsApi('mod-record', "&domain-name={$domain}&record-id={$responseId}&host=&record={$newIp}&ttl=60");
+                    $domainCount++;
+                }
+            }
+        }
+
+        return $this->stdout("\nSuccessfully changed {$domainCount} IP addresses\n\n", Console::FG_GREEN);
+    }
+
+    /**
+     * Use CURL to get data from Cloudns API
+     * @param string $method API method name
+     * @param string $link Optional get parameter if specified
+     * @return string
+     */
+    private function _getCloudnsApi($method, $link = ''): string
+    {
         $cloudId = Yii::$app->params['dnsId'];
         $cloudPass = Yii::$app->params['dnsPassword'];
 
-        $cloudCountLink = "https://api.cloudns.net/dns/get-pages-count.json?auth-id={$cloudId}&auth-password={$cloudPass}&page=1&rows-per-page=100";
-
-        // TODO вынести в функцию
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $cloudCountLink);
+        curl_setopt($ch, CURLOPT_URL, "https://api.cloudns.net/dns/{$method}.json?auth-id={$cloudId}&auth-password={$cloudPass}{$link}");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        $domainCount = curl_exec($ch);
-
-        $this->stdout("Got a list of {$pagesCount} pages\n");
-
-//        for ($i = 1; $i <= $domainCount; $i++) {
-//            $ch = curl_init();
-//            curl_setopt($ch, CURLOPT_URL, "https://api.cloudns.net/dns/list-zones.json?auth-id={$cloudId}&auth-password={$cloudPass}&page={$i}&rows-per-page=100");
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//            $domainRawList += curl_exec($ch);
-//        }
-
-        $domainRawList = '[{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.me","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.xyz","type":"master","zone":"domain","status":"1"},{"name":"domain.net","type":"master","zone":"domain","status":"1"},{"name":"domain.net","type":"master","zone":"domain","status":"1"},{"name":"domain.pro","type":"master","zone":"domain","status":"1"},{"name":"domain.name","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.net","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"},{"name":"domain.com","type":"master","zone":"domain","status":"1"}]';
-
-        $domainRawList = json_decode($domainRawList[], true);
-
-        Yii::debug($domainRawList);
-
-        foreach ($domainRawList as $item) {
-            $domains = $item['name'];
-        }
-
-        $domainCount = count($domains);
-
-        $this->stdout("Got a list of {$domainCount} domains\n");
-
-        foreach ($domains as $item) {
-//            $ch = curl_init();
-//            curl_setopt($ch, CURLOPT_URL, "https://api.cloudns.net/dns/records.json?auth-id={$cloudId}&auth-password={$cloudPass}&domain-name=$item");
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//            $domainRawList += curl_exec($ch);
-            Yii::debug($item);
-            //TODO часть операций в одном цикле
-        }
-
-        $rawResponse = '{"31749306":{"id":"31749306","type":"A","host":"","record":"51.255.71.105","dynamicurl_status":0,"failover":"0","ttl":"60","status":1},"33129686":{"id":"33129686","type":"NS","host":"","record":"ns1.perfectdns.com","failover":"0","ttl":"300","status":1},"33129687":{"id":"33129687","type":"NS","host":"","record":"ns2.perfectdns.com","failover":"0","ttl":"300","status":1},"33129688":{"id":"33129688","type":"NS","host":"","record":"ns3.perfectdns.com","failover":"0","ttl":"300","status":1},"31749312":{"id":"31749312","type":"CNAME","host":"www","record":"getyourpanel.com","failover":"0","ttl":"300","status":1}}';
-        $ip = json_decode($rawResponse, true);
-        $ip = array_column($ip, 'A');
-
-        if ($ip != $oldIp) {
-//            $ch = curl_init();
-//            curl_setopt($ch, CURLOPT_URL, "https://api.cloudns.net/dns/mod-record.json?sub-auth-id={$cloudId}&auth-password={$cloudPass}&domain-name={$item}&record-id={0000000}&host=&record={$newIp}&ttl=60");
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//            $domainRawList += curl_exec($ch);
-        }
-
-        $this->stdout("We are looking for the old IP ({$oldIp}) on the list of domains\n");
-
-
-        $this->stdout("We receive a list of DNS records for the domain\n");
-
-
-        $this->stdout("We change old ip on new ({$newIp})\n");
-
-        return $this->stdout("\nSuccessfully changed {$count} ip addresses\n", Console::FG_GREEN);
+        return curl_exec($ch);
     }
 }
