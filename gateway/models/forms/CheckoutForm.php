@@ -343,7 +343,9 @@ class CheckoutForm extends Model {
     public function getJsOptions()
     {
             $paymentMethod = $this->getPaymentMethod();
-            $paymentMethod->setPayment(new Payments($this->attributes));
+            $payment = new Payments();
+            $payment->attributes = $this->attributes;
+            $paymentMethod->setPayment((new Payments($payment)));
             $jsEnvironments = $paymentMethod->getJsEnvironments();
 
             if (!empty($jsEnvironments['code'])) {
