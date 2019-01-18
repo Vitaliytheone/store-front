@@ -34,7 +34,7 @@ class Mercadopago extends BasePayment
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param StorePaymentMethods; $details
+     * @param StorePaymentMethods $details
      * @return array|mixed
      * @throws MercadoPagoException
      */

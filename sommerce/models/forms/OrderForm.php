@@ -187,6 +187,7 @@ class OrderForm extends Model
                  ->active()
                  ->all() as $key => $method) {
                 /** @var StorePaymentMethods $method */
+                /** @var PaymentMethods $paymentMethod */
                 $paymentMethod = ArrayHelper::getValue($paymentMethods, $method->method_id);
 
                 $methods[$key] = [
@@ -198,6 +199,7 @@ class OrderForm extends Model
                     'fields' => [],
                     'jsOptions' => [],
                     'storePayId' => $method->id,
+                    'class_name' => $paymentMethod->class_name,
                 ];
 
                 $payment = Payment::getPayment($paymentMethod->class_name);
@@ -207,7 +209,7 @@ class OrderForm extends Model
 
             ArrayHelper::multisort($methods, 'position', SORT_ASC);
 
-            static::$_methods = ArrayHelper::index($methods, 'method');
+            static::$_methods = ArrayHelper::index($methods, 'id');
         }
 
         return static::$_methods;
@@ -245,18 +247,14 @@ class OrderForm extends Model
             return false;
         }
 
-        $payMethod = PaymentMethods::findOne($this->method);
-        if (empty($payMethod)) {
-            return false;
-        }
-
-        $storePayMethodArray = static::$_methods[$payMethod->method_name];
+        $storePayMethodArray = static::$_methods[$this->method];
 
         $storePayMethod = StorePaymentMethods::findOne($storePayMethodArray['storePayId']);
         if (empty($storePayMethod)) {
             return false;
         }
 
+        Yii::debug($this->_userData, '_userData'); // todo del
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
         $checkout->method_id = $storePayMethod->method_id;
@@ -271,7 +269,8 @@ class OrderForm extends Model
             return false;
         }
 
-        $result = Payment::getPayment($payMethod->class_name)->checkout($checkout, $this->_store, $this->email, $storePayMethod);
+        Yii::debug($storePayMethod, '$storePayMethod'); // todo del
+        $result = Payment::getPayment($storePayMethodArray['class_name'])->checkout($checkout, $this->_store, $this->email, $storePayMethod);
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;
@@ -364,8 +363,7 @@ class OrderForm extends Model
         $paymentMethods = ArrayHelper::index($this->getPaymentMethods(), 'id');
         $methodOptions = ArrayHelper::getValue($paymentMethods, $this->method, []);
         $fields = ArrayHelper::getValue($methodOptions, 'fields', []);
-        $payMethod = PaymentMethods::findOne($methodOptions['id']);
-        $paymentMethod = Payment::getPayment($payMethod->class_name);
+        $paymentMethod = Payment::getPayment($methodOptions['class_name']);
 
         if (empty($fields)) {
             return true;
@@ -374,8 +372,10 @@ class OrderForm extends Model
         $this->_userData = [];
         $rules = [];
 
+        Yii::debug($fields, '$fields'); //todo del
         foreach ($fields as $name => $field) {
             $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name);
+            Yii::debug($this->_userData[$name], 'userdata '.$name); //todo del
             if (empty($field['rules'])) {
                 continue;
             }
@@ -468,6 +468,10 @@ class OrderForm extends Model
             }
         }
 
+        Yii::debug($paymentsFields, '$paymentsFields'); //todo del
+
+        // пустой фиелдс, почему - потому что туда по идее ничего не записалось
+        Yii::debug($this->fields, '$this->fields'); //todo del
         // Assign fields post data
         foreach ($paymentsFields as $payment => $fields) {
             foreach ($fields as $key => $field) {

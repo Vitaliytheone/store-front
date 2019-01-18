@@ -102,7 +102,6 @@ trait BlocksTrait {
      * Update all blocks AJAX POST action
      * @return bool
      * @throws BadRequestHttpException
-     * @throws NotFoundHttpException
      * @throws \Throwable
      */
     public function actionUpdateBlocks()
@@ -116,10 +115,6 @@ trait BlocksTrait {
 
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
-
-        if (!$identity) {
-            throw new NotFoundHttpException();
-        }
 
         $form = new UpdateBlocksForm();
         $form->setUser($identity);
@@ -244,10 +239,6 @@ trait BlocksTrait {
 
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
-
-        if (!$identity) {
-            throw new NotFoundHttpException();
-        }
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_ACTIVE_STATUS_CHANGED, $block->id, $block->code);
     }

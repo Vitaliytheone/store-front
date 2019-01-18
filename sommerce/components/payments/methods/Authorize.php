@@ -31,7 +31,8 @@ use yii\helpers\ArrayHelper;
  * Class Authorize
  * @package sommerce\components\payments\methods
  */
-class Authorize extends BasePayment {
+class Authorize extends BasePayment
+{
 
     /**
      * @var MerchantAuthenticationType

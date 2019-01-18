@@ -20,10 +20,12 @@ $names = StorePaymentMethods::getNames();
                 </h3>
             </div>
             <div>
-                <div class="m-dropdown--align-right">
-                    <a href="<?= Url::toRoute(['/settings/add-payment-method']) ?>"
-                       class="btn btn-primary m-btn--air btn-brand cursor-pointer add-method"><?= Yii::t('admin', 'settings.payments_add') ?></a>
-                </div>
+                <?php if (!empty($availableMethods)) : ?>
+                    <div class="m-dropdown--align-right">
+                        <a href="<?= Url::toRoute(['/settings/add-payment-method']) ?>"
+                           class="btn btn-primary m-btn--air btn-brand cursor-pointer add-method"><?= Yii::t('admin', 'settings.payments_add') ?></a>
+                    </div>
+                <?php endif ?>
             </div>
         </div>
     </div>

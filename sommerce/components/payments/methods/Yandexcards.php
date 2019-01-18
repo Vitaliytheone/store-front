@@ -23,6 +23,12 @@ class Yandexcards extends Yandexmoney
     public $action = 'https://money.yandex.ru/quickpay/confirm.xml';
 
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * Checkout
      * @param Checkouts $checkout
      * @param Stores $store

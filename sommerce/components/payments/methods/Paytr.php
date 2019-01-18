@@ -24,6 +24,12 @@ class Paytr extends BasePayment
     public $action = 'https://www.paytr.com/odeme/';
 
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * Checkout
      * @param Checkouts $checkout
      * @param Stores $store

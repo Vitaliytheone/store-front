@@ -338,7 +338,7 @@ class PaymentsSearch extends Model
             ->orderBy(['id' => SORT_DESC])
             ->all();
         $checkout = [];
-        $methodsNames = PaymentMethods::getMethodNameList();
+        $methodsNames = PaymentMethods::getNamesList();
 
         array_walk($payments, function(&$payment) use ($checkouts, &$checkout, $methodsNames) {
             if (array_key_exists($payment['checkout_id'], $checkouts)) {

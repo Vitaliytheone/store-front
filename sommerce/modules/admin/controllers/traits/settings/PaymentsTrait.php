@@ -63,15 +63,11 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        $methodName = PaymentMethods::getMethodNameList();
-        $this->view->title = Yii::t('admin', "settings.payments_edit_{$methodName[$paymentModel->method_id]}");
+        $methodName = $paymentModel->paymentMethod->method_name;
+        $this->view->title = Yii::t('admin', "settings.payments_edit_{$methodName}");
 
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
-
-        if (!$identity) {
-            throw new NotFoundHttpException();
-        }
 
         $paymentModel->setUser($identity);
 
@@ -87,7 +83,7 @@ trait PaymentsTrait
 
         return $this->render('payments', [
             'method' => $method,
-            'methodName' => $methodName[$paymentModel->method_id],
+            'methodName' => $methodName,
             'paymentModel' => $paymentModel,
             'paymentData' => [
                 'icon' => $paymentMethod->icon,
@@ -128,10 +124,6 @@ trait PaymentsTrait
 
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
-
-        if (!$identity) {
-            throw new NotFoundHttpException();
-        }
 
         $paymentModel->setUser($identity);
 
@@ -177,10 +169,6 @@ trait PaymentsTrait
         $model = new UpdatePositionsPaymentsForm();
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
-
-        if (!$identity) {
-            throw new NotFoundHttpException();
-        }
 
         $model->setUser($identity);
 

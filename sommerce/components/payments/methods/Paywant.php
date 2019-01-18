@@ -23,6 +23,12 @@ class Paywant extends BasePayment
      */
     public $action = null;
 
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
     public function __construct(array $config = [])
     {
         $this->action = Yii::$app->params['store.paywant_proxy'];

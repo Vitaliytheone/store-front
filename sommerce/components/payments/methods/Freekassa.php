@@ -16,7 +16,8 @@ use common\models\stores\StorePaymentMethods;
  * @package app\components\payments\methods
  *
  */
-class Freekassa extends BasePayment {
+class Freekassa extends BasePayment
+{
 
     /**
      * @var string - url action
@@ -24,6 +25,12 @@ class Freekassa extends BasePayment {
     public $action = 'https://www.free-kassa.ru/merchant/cash.php';
 
     public $method = 'GET';
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     /**
      * Checkout

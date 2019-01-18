@@ -2,7 +2,6 @@
 
 namespace sommerce\controllers;
 
-use common\models\stores\PaymentMethods;
 use sommerce\components\payments\Payment;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
@@ -45,7 +44,7 @@ class PaymentsController extends CustomController
             }
         }
 
-        if (!in_array($method, PaymentMethods::getMethodsForRedirect())) {
+        if (!$paymentMethod->paymentResult) {
             return $this->redirect('/cart');
         }
 

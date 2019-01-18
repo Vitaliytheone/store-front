@@ -36,6 +36,12 @@ class Coinpayments extends BasePayment
     public $showErrors = false;
 
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * Incomming IPN messages url
      * @var string
      */

@@ -17,7 +17,8 @@ use common\models\stores\StorePaymentMethods;
  * Class Billplz
  * @package sommerce\components\payments\methods
  */
-class Billplz extends BasePayment {
+class Billplz extends BasePayment
+{
 
     /**
      * @var string - url action
@@ -27,6 +28,12 @@ class Billplz extends BasePayment {
     public $method = 'POST';
 
     public $redirectProcessing = true;
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     public function __construct(array $config = [])
     {

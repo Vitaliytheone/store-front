@@ -114,10 +114,6 @@ class SettingsController extends CustomController
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
-        if (!$identity) {
-            throw new NotFoundHttpException();
-        }
-
         $storeForm->setUser($identity);
 
         if ($storeForm->updateSettings($request->post())) {

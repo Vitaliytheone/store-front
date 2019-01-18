@@ -210,13 +210,13 @@ class EditStoreSettingsForm extends Stores
                 ->indexBy('method_id')
                 ->all();
 
-            $last = 0;
+            $first = 1; // first position number
 
             foreach ($storeMethods as $method) {
                 if (!array_key_exists($method->method_id, $currencyMethods)) {
                     $method->delete();
                 } else {
-                    $method->position = $last++;
+                    $method->position = $first++;
                     $method->currency_id = $currencyMethods[$method->method_id]['id'];
                     $method->save(false);
                 }

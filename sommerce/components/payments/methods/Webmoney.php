@@ -24,6 +24,12 @@ class Webmoney extends BasePayment
     public $action = 'https://merchant.wmtransfer.com/lmi/payment.asp';
 
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * @var string
      */
     public $charset = 'windows-1251';

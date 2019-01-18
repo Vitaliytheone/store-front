@@ -21,8 +21,14 @@ use Mollie\Api\Resources\Payment;
 class Mollie extends BasePayment
 {
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * Create checkout and redirect to Mollie pay site
-     *
+     * @param \common\models\stores\StorePaymentMethods $details
      * @inheritdoc
      */
     public function checkout($checkout, $store, $email, $details)

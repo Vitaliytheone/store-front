@@ -32,6 +32,12 @@ class Pagseguro extends BasePayment
      */
     public $action = null;
 
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
     public function __construct(array $config = [])
     {
         PagSeguroLibrary::init();

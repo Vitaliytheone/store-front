@@ -146,22 +146,22 @@ class PaymentMethods extends ActiveRecord
             return false;
         }
 
-        return isset($method->name) ? $method->name : $method->method_name;
+        return $method->name ?? $method->method_name;
     }
 
     /**
-     * Get list of methods names ['id' => 'method_name']
+     * Get list of methods names ['id' => 'name']
      * @return array
      */
-    public static function getMethodNameList(): array
+    public static function getNamesList(): array
     {
         $methodsNames = static::find()
-            ->select(['method_name', 'id'])
+            ->select(['name', 'id'])
             ->indexBy('id')
             ->asArray()
             ->all();
 
-        return ArrayHelper::map($methodsNames, 'id', 'method_name');
+        return ArrayHelper::map($methodsNames, 'id', 'name');
     }
 
     /**
@@ -229,24 +229,4 @@ class PaymentMethods extends ActiveRecord
         return !empty($this->settings_form_description) ? $this->settings_form_description : '';
     }
 
-    /**
-     * @return array
-     */
-    public static function getMethodsForRedirect(): array
-    {
-        $methods = static::find()
-            ->select(['class_name', 'id'])
-            ->where(['in', 'id', [
-                PaymentMethods::METHOD_AUTHORIZE,
-                PaymentMethods::METHOD_STRIPE,
-                PaymentMethods::METHOD_PAYPAL,
-                PaymentMethods::METHOD_PAYPAL_STANDARD,
-                PaymentMethods::METHOD_MERCADOPAGO,
-                PaymentMethods::METHOD_STRIPE_3D_SECURE,
-            ]])
-            ->indexBy('class_name')
-            ->all();
-
-        return array_keys($methods);
-    }
 }

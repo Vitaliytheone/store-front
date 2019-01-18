@@ -27,6 +27,12 @@ class Twocheckout extends BasePayment
     public $redirectProcessing = false;
     public $showErrors = false;
 
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
     const TEST_MODE_ON = 1;
     const MODE_TEST_OFF = 0;
 

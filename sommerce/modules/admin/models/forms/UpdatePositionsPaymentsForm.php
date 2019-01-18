@@ -5,7 +5,6 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
-use yii\web\User;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -45,6 +44,8 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
      */
     public function updatePositions($postData): bool
     {
+        $identity = $this->getUser();
+
         $positionsTree = ArrayHelper::getValue($postData, 'positions');
 
         if (!$positionsTree) {
@@ -68,13 +69,19 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
         $db = static::getDb();
         $table = static::tableName();
 
-        $positionsList = static::find()->where(['id' => $idsFront])->select('id')->indexBy('id')->asArray()->all();
+        $storePayIds = static::find()
+            ->where(['id' => $idsFront])
+            ->andWhere(['store_id' => $identity->store_id])
+            ->select('id')
+            ->indexBy('id')
+            ->asArray()
+            ->all();
 
-        if (empty($positionsList)) {
+        if (empty($storePayIds)) {
             return false;
         }
 
-        $idsDb = array_column($positionsList, 'id');
+        $idsDb = array_column($storePayIds, 'id');
 
         if (array_diff($idsFront, $idsDb)) {
             return false;
@@ -103,7 +110,7 @@ class UpdatePositionsPaymentsForm extends StorePaymentMethods
         foreach ($tree as $position => $node) {
             $flatArray[] = [
                 'id' => (int)$node['id'],
-                'position' => (int)$position,
+                'position' => (int)$position+1,
             ];
         }
 

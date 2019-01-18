@@ -22,6 +22,8 @@ use common\models\stores\queries\StorePaymentMethodsQuery;
  * @property int $position
  * @property int $created_at
  * @property int $updated_at
+ * @property PaymentMethods $paymentMethod
+ * @property PaymentMethodsCurrency $storePaymentMethodCurrency
  */
 class StorePaymentMethods extends ActiveRecord
 {
