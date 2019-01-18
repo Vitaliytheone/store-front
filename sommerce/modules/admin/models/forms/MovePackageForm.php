@@ -45,7 +45,7 @@ class MovePackageForm extends Packages
             return false;
         }
 
-        if ($this->id !== $postData['id']) {
+        if ($this->id !== (int)$postData['id']) {
             $this->addError('Change position: bad data (incorrect id)');
             return false;
         }
@@ -62,10 +62,10 @@ class MovePackageForm extends Packages
                 return false;
             }
 
-            $sqlQuery .= "WHEN (`id` = " . $element['id'] . ") THEN " . $element['position'];
+            $sqlQuery .= " WHEN (`id` = " . (int)$element['id'] . ") THEN " . (int)$element['position'];
         }
 
-        $sqlQuery .= "ELSE `position`
+        $sqlQuery .= " ELSE `position`
                       END";
         $query = $db->createCommand($sqlQuery)->execute();
 

@@ -6,6 +6,7 @@ use common\models\store\ActivityLog;
 use common\models\store\Packages;
 use common\models\store\Products;
 use common\models\stores\StoreAdminAuth;
+use my\components\ActiveForm;
 use sommerce\modules\admin\models\forms\EditNavigationForm;
 use sommerce\modules\admin\models\forms\MovePackageForm;
 use Yii;
@@ -89,9 +90,7 @@ class ProductsController extends CustomController
 
     public function beforeAction($action)
     {
-        // Add custom JS modules
-        $this->addModule('ordersDetails');
-
+        $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
     }
 
@@ -232,10 +231,8 @@ class ProductsController extends CustomController
 
         $model->setUser(Yii::$app->user);
 
-        $newPosition = $model->changePosition($request->post());
-
-        if ($newPosition === false) {
-            Yii::error('Change product position: bad data');
+        if (!$model->changePosition($request->post())) {
+            Yii::error('Change product position: ' . ActiveForm::firstError($model));
             return static::apiResponseError($model->firstErrors);
         }
 
@@ -379,11 +376,10 @@ class ProductsController extends CustomController
         }
 
         $model->setUser(Yii::$app->user);
-        $newPosition = $model->changePosition($request->post('newIndex'));
 
-        if ($newPosition === false) {
-            Yii::error('Change package position: bad data');
-            return static::apiResponseError();
+        if (!$model->changePosition($request->post())) {
+            Yii::error('Change package position: ' . ActiveForm::firstError($model));
+            return static::apiResponseError($model->firstErrors);
         }
 
         return static::apiResponseSuccess();
