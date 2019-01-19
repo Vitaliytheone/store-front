@@ -5,6 +5,10 @@ return [
     // ОБЩИЕ ПАРАМЕТРЫ
     'time' => '10800', // в данной переменной мы храним разницу между временем на сервере и времени админки
 
+    'noreplyEmail' => 'noreply@getyourpanel.local', // Адрес почты для отправки писем (from)
+    'supportEmail' => 'werewind@yandex.local', // Адрес почты саппорта
+    'sysmailSupportEmail' => 'werewind@yandex.local', // Адрес почты саппорта для sysmail метода
+
     'panelDomain' => 'mypanel.test', // Домен панели
     'my_domain' => 'mypanel.test', // Домен нашего сайта
 
@@ -14,8 +18,27 @@ return [
     'debugIps' => ['*'], // маска для ИП имеющих доступ к Yii2 Debug панели
     'debugEmail' => null, // отладочный эмейл на который будут отправляться все письма если он указан
 
+    'manualProviderId' => 6, // ИД провайдера используемый про сохранении истекшей панели
+
+    'referral_percent' => 20, // процент реферальных отчислений
+    'referral_expiry' => 10, // сколько месяцев действует рефералка для пользователя
+    'referral_link_expiry' => 120, // сколько дней действует реф ссылка (живут куки)
+
     'pending_orders' => 100, // Лимит создания доменов, панелей, ssl заказов
     'pending_tickets' => 50, // Лимит создания задач
+
+    'system.sslScriptUrl' => 'http://mydev.perfectpanel.net/nginx_config.php', // ссылка на скрипт создания конфига для SSL
+    'system.sslScriptKey' => '', // ключ для создания конфига SSL
+    'superadminUrl' => 'superadmin', // ссылка на суперадминку
+
+    'payment_verification_time' => 1 * 24 * 60 * 60, // таймаут проверки платежа
+    'curl.timeout' => '20', // таймаут операции для курла
+    'getstatus_info_url' => '', // если не пустой, то производится поиск статусов по этому пути
+
+    'paypal_fraud_settings' => [
+        'accept_high' => 1,
+        'accept_critical' => 1,
+    ], // настройки фрауд защиты от пейпала
 
     'mysqldump_exec_path' => '/Applications/MAMP/Library/bin/mysqldump', // для локальной работы указывам путь к бинарнику MySQL Dump
     'mysql_exec_path' => '/Applications/MAMP/Library/bin/mysql', // для локальной работы указывам путь к бинарнику MySQL
@@ -55,6 +78,13 @@ return [
     ],
 
     // ДАННЫЕ ИСПОЛЬЗУЕМЫЕ ДЛЯ ПОДКЛЮЧЕНИЯ ИЛИ АВТОРИЗАЦИИ
+    'sysmailSecret' => '461e058179caa43104004272284355d0ef6827553fc4fbb1948a697e757c12a0', // используется при проверки для отправки почты
+
+    // Данные для Swift mailer
+    'swift.host' => 'ssl://smtp.yandex.local',
+    'swift.username' => 'noreply@perfectpanel.com',
+    'swift.password' => 'aD213kfio34',
+    'swift.port' => '465',
 
     // Данные для сервиса по защите от DDOS
     'ddosGuardUrl' => 'http://mydev.perfectpanel.net/system/ddos-success',

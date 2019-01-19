@@ -8,6 +8,14 @@ return [
 
     'debugIps' => ['*'], // маска для ИП имеющих доступ к Yii2 Debug панели
 
+    'senderOrdersLimit' => 100, // Задает лимит получаемых через консоль данных отправки заказов в очереди
+    'getstatusOrdersLimit' => 100, // сколько статусов выполняемых заказов со всех магазинов можно получить через консоль за один раз
+
+
     // ДАННЫЕ ИСПОЛЬЗУЕМЫЕ ДЛЯ ПОДКЛЮЧЕНИЯ ИЛИ АВТОРИЗАЦИИ
+    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r', // ключ авторизации используемый как соль Must be a same as my/config/params.php 'auth_key'!
+
+    'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb', // ключ используется для доступа к http://getyourpanel.com для проверки провайдера
+
     'localApiDomain' => 'http://localapi2/api/v2', // ссылка на АПИ для сендера
 ];
