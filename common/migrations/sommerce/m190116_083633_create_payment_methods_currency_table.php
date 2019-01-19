@@ -13,6 +13,8 @@ class m190116_083633_create_payment_methods_currency_table extends Migration
     public function safeUp()
     {
         $this->execute('
+            USE `' . DB_STORES . '`;
+            
             CREATE TABLE `payment_methods_currency` (
               id int(11) unsigned NOT NULL,
               method_id int(11) unsigned,
@@ -44,6 +46,8 @@ class m190116_083633_create_payment_methods_currency_table extends Migration
      */
     public function safeDown()
     {
-        $this->execute('DROP TABLE `payment_methods_currency`;');
+        $this->execute('USE `' . DB_STORES . '`;
+        
+        DROP TABLE `payment_methods_currency`;');
     }
 }

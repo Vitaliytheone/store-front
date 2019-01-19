@@ -35,6 +35,8 @@ class m190116_083651_payment_methods_change_columns extends Migration
         }
 
         $this->execute('
+            USE `' . DB_STORES . '`;
+
             ALTER TABLE payment_methods
               DROP COLUMN `currencies`;
             
@@ -85,6 +87,8 @@ class m190116_083651_payment_methods_change_columns extends Migration
     public function safeDown()
     {
         $this->execute('
+            USE `' . DB_STORES . '`;
+
             ALTER TABLE payment_methods
               CHANGE `method_name` `method` varchar(255) NOT NULL;
 

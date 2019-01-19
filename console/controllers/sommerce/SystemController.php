@@ -283,7 +283,7 @@ class SystemController extends CustomController
     public function actionApplyCurrency(): string
     {
         if (Yii::$app->db->getTableSchema('{{%payment_methods_currency}}', true) === null) {
-            return print "Table `payment_methods_currency` does not exist. Apply SQL first.\n";
+            return $this->stdout("Table `payment_methods_currency` does not exist. Apply SQL first.\n", Console::FG_RED);
         }
 
         $methods = (new Query())
@@ -308,18 +308,19 @@ class SystemController extends CustomController
                 $count++;
             }
         }
-        return print "SUCCESS add {$count} currencies\n";
+        return $this->stdout("SUCCESS add {$count} currencies\n");
     }
 
     /**
      * 2) Change settings for store_payment_methods
      * @return string
      * @throws Exception
+     * @throws \Throwable
      */
     public function actionApplyStorePay(): string
     {
         if (Yii::$app->db->getTableSchema('{{%store_payment_methods}}', true) === null) {
-            return print "Table `store_payment_methods` does not exist. Apply SQL first.\n";
+            return $this->stdout("Table `store_payment_methods` does not exist. Apply SQL first.\n", Console::FG_RED);
         }
 
         $methods = (new Query())
@@ -331,13 +332,20 @@ class SystemController extends CustomController
         $count = $delete = 0;
 
         foreach ($methods as $key => $methodName) {
-            $method = PaymentMethods::findOne(['method_name' => $methodName['method']]);
-
             $storeMethod = StorePaymentMethods::findOne($key);
 
-            if (!$method || !$storeMethod) {
+            if (!$storeMethod) {
                 continue;
             }
+
+            $payMethod = PaymentMethods::findOne(['method_name' => $methodName['method']]);
+
+            if (!$payMethod) {
+                $storeMethod->delete();
+                $delete++;
+                continue;
+            }
+
             $store = (new Query())
                 ->from(DB_STORES . '.stores')
                 ->where(['id' => $storeMethod['store_id']])
@@ -347,7 +355,7 @@ class SystemController extends CustomController
                 continue;
             }
 
-            $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $method->id, 'currency' => $store['currency']]);
+            $storeCurrency = PaymentMethodsCurrency::findOne(['method_id' => $payMethod->id, 'currency' => $store['currency']]);
 
             if (!$storeCurrency) {
                 $storeMethod->delete();
@@ -359,9 +367,9 @@ class SystemController extends CustomController
                 ->where(['store_id' => $storeMethod->store_id])
                 ->max('position');
 
-            $storeMethod->method_id = $method->id;
+            $storeMethod->method_id = $payMethod->id;
             $storeMethod->currency_id = $storeCurrency->id;
-            $storeMethod->name = $method->name;
+            $storeMethod->name = $payMethod->name;
             $storeMethod->position = isset($lastPositions) ? $lastPositions + 1 : 1;
             $storeMethod->created_at = time();
             $storeMethod->updated_at = time();
@@ -370,9 +378,9 @@ class SystemController extends CustomController
             $count++;
         }
 
-        Yii::$app->db->createCommand('ALTER TABLE `store_payment_methods` DROP COLUMN `method`')->execute();
+        Yii::$app->db->createCommand('USE `' . DB_STORES . '`; ALTER TABLE `store_payment_methods` DROP COLUMN `method`')->execute();
 
-        return print "SUCCESS change in {$count} store_payment_methods settings and delete {$delete} unsupported methods\n";
+        return $this->stdout("SUCCESS change in {$count} store_payment_methods settings and delete {$delete} unsupported methods\n");
     }
 
     /**
@@ -404,7 +412,7 @@ class SystemController extends CustomController
             $count++;
         }
 
-        return print "SUCCESS add new column to {$count} checkouts dbs\n";
+        return $this->stdout("SUCCESS add new column to {$count} checkouts dbs\n");
     }
 
     /**
@@ -490,7 +498,7 @@ class SystemController extends CustomController
             }
             $count++;
         }
-        return print "SUCCESSFULLY change {$count} PaymentMethods IDS and delete {$delete} duplicates\n";
+        return $this->stdout("SUCCESSFULLY change {$count} PaymentMethods IDS and delete {$delete} duplicates\n");
     }
 
     /**

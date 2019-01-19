@@ -20,6 +20,8 @@ class m190116_083730_store_payment_methods_change_columns extends Migration
             ->all();
 
         $this->execute('
+            USE `' . DB_STORES . '`;
+
             ALTER TABLE `store_payment_methods`
               DROP FOREIGN KEY `fk_store_id_method`;
 
@@ -75,20 +77,27 @@ class m190116_083730_store_payment_methods_change_columns extends Migration
               ADD CONSTRAINT `fk_store_payment_methods_stores` FOREIGN KEY (`store_id`) REFERENCES `stores`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
         ');
 
-        $this->execute('ALTER TABLE `store_payment_methods` DROP COLUMN `method`;');
+        $this->execute('USE `' . DB_STORES . '`; ALTER TABLE `store_payment_methods` DROP COLUMN `method`;');
 
         foreach ($methods as $key => $methodName) {
-            $payMethod = (new Query())
-                ->from(DB_STORES . '.payment_methods')
-                ->where(['method_name' => $methodName['method']])
-                ->one();
-
             $storeMethod = (new Query())
                 ->from(DB_STORES . '.store_payment_methods')
                 ->where(['id' => $key])
                 ->one();
 
-            if (!$payMethod || !$storeMethod) {
+            if (!$storeMethod) {
+                continue;
+            }
+
+            $payMethod = (new Query())
+                ->from(DB_STORES . '.payment_methods')
+                ->where(['method_name' => $methodName['method']])
+                ->one();
+
+            if (!$payMethod) {
+                Yii::$app->db->createCommand()->delete(DB_STORES .'.store_payment_methods', [
+                    'id' => $storeMethod['id']
+                ])->execute();
                 continue;
             }
 
@@ -136,6 +145,8 @@ class m190116_083730_store_payment_methods_change_columns extends Migration
     public function safeDown()
     {
         $this->execute('
+            USE `' . DB_STORES . '`;
+
             ALTER TABLE `store_payment_methods`
               DROP FOREIGN KEY `fk_store_payment_methods_payment_methods`;
 
