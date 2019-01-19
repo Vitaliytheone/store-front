@@ -248,7 +248,7 @@ class Authorize extends BasePayment
         AssetsHelper::addCustomScriptFile($this->script);
 
         return [
-            'type' => $details->id,
+            'type' => $details->method_id,
             'configure' => [
                 'type' => 'button',
                 'class' => 'AcceptUI',

@@ -33,7 +33,7 @@ class Stripe extends BasePayment
      * @var string - url action
      */
     public $action = 'https://checkout.stripe.com/checkout.js';
-    public $redirectProcessing = false;
+    public $redirectProcessing = true;
 
     /**
      * Checkout
@@ -66,15 +66,11 @@ class Stripe extends BasePayment
             ));
         } catch (StripeException $e) {
             // заносим запись в таблицу payments_log
-            $log = new PaymentsLog();
-            $log->log($checkout->id, $e->getMessage() . $e->getTraceAsString());
-            $log->save(false);
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         } catch (StripeError $e) {
             // заносим запись в таблицу payments_log
-            $log = new PaymentsLog();
-            $log->log($checkout->id, $e->getMessage() . $e->getTraceAsString());
-            $log->save(false);
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         }
         Carts::clearCheckoutItems($checkout);
@@ -112,7 +108,7 @@ class Stripe extends BasePayment
         AssetsHelper::addCustomScriptFile('https://checkout.stripe.com/checkout.js');
 
         return [
-            'type' => $details->id,
+            'type' => $details->method_id,
             'configure' => [
                 'key' => $key,
                 'image' => $image,
@@ -195,11 +191,7 @@ class Stripe extends BasePayment
         $metadata = ArrayHelper::getValue($data, 'metadata');
         $checkoutId = ArrayHelper::getValue($metadata, 'payment_id');
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_STRIPE,
-            'store_id' => $store->id,
-            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+        $paymentMethod = PaymentMethods::findOne(PaymentMethods::METHOD_STRIPE);
 
         if (empty($paymentMethod)) {
             // no invoice

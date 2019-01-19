@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\helpers\SiteHelper;
@@ -64,15 +65,11 @@ class Stripe3dSecure extends BasePayment {
             ));
         } catch (StripeException $e) {
             // заносим запись в таблицу payments_log
-            $log = new PaymentsLog();
-            $log->log($checkout->id, $e->getMessage() . $e->getTraceAsString());
-            $log->save(false);
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         } catch (StripeError $e) {
             // заносим запись в таблицу payments_log
-            $log = new PaymentsLog();
-            $log->log($checkout->id, $e->getMessage() . $e->getTraceAsString());
-            $log->save(false);
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         }
         Carts::clearCheckoutItems($checkout);
@@ -110,7 +107,7 @@ class Stripe3dSecure extends BasePayment {
         AssetsHelper::addCustomScriptFile('https://js.stripe.com/v3/');
 
         return [
-            'type' => $details->id,
+            'type' => $details->method_id,
             'return_url' => $store->getSite() . '/cart',
             'error_url' => $store->getSite() . '/cart',
             'configure' => [
@@ -196,11 +193,7 @@ class Stripe3dSecure extends BasePayment {
         $metadata = ArrayHelper::getValue($data, 'metadata');
         $checkoutId = ArrayHelper::getValue($metadata, 'payment_id');
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_STRIPE_3D_SECURE,
-            'store_id' => $store->id,
-            'active' => StorePaymentMethods::VISIBILITY_ENABLED
-        ]);
+        $paymentMethod = PaymentMethods::findOne(PaymentMethods::METHOD_STRIPE_3D_SECURE);
 
         if (empty($paymentMethod)) {
             // no invoice

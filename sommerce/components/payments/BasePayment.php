@@ -74,7 +74,7 @@ abstract class BasePayment extends Component
      * Is shown processing & checkout errors messages
      * @var bool show errors (default False)
      */
-    public $showErrors = true; // todo false
+    public $showErrors = false;
 
     /**
      * @var bool $paymentResult Redirect to result (success page) or not. (default True)

@@ -254,7 +254,6 @@ class OrderForm extends Model
             return false;
         }
 
-        Yii::debug($this->_userData, '_userData'); // todo del
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
         $checkout->method_id = $storePayMethod->method_id;
@@ -269,7 +268,6 @@ class OrderForm extends Model
             return false;
         }
 
-        Yii::debug($storePayMethod, '$storePayMethod'); // todo del
         $result = Payment::getPayment($storePayMethodArray['class_name'])->checkout($checkout, $this->_store, $this->email, $storePayMethod);
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
@@ -372,10 +370,8 @@ class OrderForm extends Model
         $this->_userData = [];
         $rules = [];
 
-        Yii::debug($fields, '$fields'); //todo del
         foreach ($fields as $name => $field) {
             $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name);
-            Yii::debug($this->_userData[$name], 'userdata '.$name); //todo del
             if (empty($field['rules'])) {
                 continue;
             }
@@ -468,10 +464,6 @@ class OrderForm extends Model
             }
         }
 
-        Yii::debug($paymentsFields, '$paymentsFields'); //todo del
-
-        // пустой фиелдс, почему - потому что туда по идее ничего не записалось
-        Yii::debug($this->fields, '$this->fields'); //todo del
         // Assign fields post data
         foreach ($paymentsFields as $payment => $fields) {
             foreach ($fields as $key => $field) {
