@@ -175,20 +175,6 @@ class CreateProductForm extends Products
     }
 
     /**
-     * Check if exist `properties` array in post data on `create` or `update` action.
-     * Populate postData by empty `properties` array if `properties` array does not exist.
-     * @param array $postData
-     * @return array
-     */
-    public function checkPropertiesField($postData)
-    {
-        if (!isset($postData[$this->formName()]['properties'])) {
-            $postData[$this->formName()]['properties'] = [];
-        }
-        return $postData;
-    }
-
-    /**
      * Calculate `position` for new product record
      * @return array|bool|int
      */
@@ -207,9 +193,7 @@ class CreateProductForm extends Products
      */
     public function create($postData)
     {
-        $postData = $this->checkPropertiesField($postData);
-
-        if (!$this->load($postData) || !$this->save()) {
+        if (!$this->load($postData, '') || !$this->save()) {
             return false;
         }
 
