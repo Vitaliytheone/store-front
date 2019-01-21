@@ -1135,7 +1135,11 @@ class OrderHelper {
         $paypalGatewayMethod = PaymentMethods::findOne(PaymentMethods::METHOD_PAYPAL_GATEWAY);
         if ($paypalGatewayMethod) {
             $projects = Project::find()
-                ->andWhere(['cid' => $order->cid, 'act' => Project::STATUS_ACTIVE])
+                ->andWhere([
+                    'cid' => $order->cid,
+                    'act' => Project::STATUS_ACTIVE,
+                    'child_panel' => 0,
+                ])
                 ->andWhere("db <> ''")
                 ->all();
             foreach ($projects as $project) {

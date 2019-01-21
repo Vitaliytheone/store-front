@@ -35,6 +35,10 @@
             echo $this->render('rules/_stripe', ['store' => $store]);
             break;
 
+        case EditPaymentMethodForm::METHOD_STRIPE_3D_SECURE:
+            echo $this->render('rules/_stripe_3d_secure', ['store' => $store]);
+            break;
+
         case EditPaymentMethodForm::METHOD_YANDEX_CARDS:
             echo $this->render('rules/_yandex_money', ['store' => $store]);
             break;
@@ -43,7 +47,7 @@
             echo $this->render('rules/_pagseguro', ['store' => $store]);
             break;
 
-    case EditPaymentMethodForm::METHOD_FREE_KASSA:
+        case EditPaymentMethodForm::METHOD_FREE_KASSA:
             echo $this->render('rules/_free_kassa', ['store' => $store]);
             break;
 
