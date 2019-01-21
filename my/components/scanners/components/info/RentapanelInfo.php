@@ -14,18 +14,10 @@ class RentapanelInfo extends BasePanelInfo
     /**
      * Check if panel Active
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function checkStatusActive()
     {
-        $panelData = $this->currentPanelData;
-        $content = ArrayHelper::getValue($panelData, 'content');
-        $host = ArrayHelper::getValue($panelData, 'host');
-
-        if (strpos($content, '<script>window.top.location="login";</script>') === false) {
-            return false;
-        }
-
-        $this->getPanelInfo($host . '/api_docs');
         $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
 
