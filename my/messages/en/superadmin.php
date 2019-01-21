@@ -979,6 +979,14 @@ return [
     'panels.edit.payment_methods.select_payment_method' => 'Select payment method',
     'panels.edit.payment_methods.add_method' => 'Add payment',
 
+    'panels.edit_payment_methods.header_name' => 'Name',
+    'panels.edit_payment_methods.header_currency' => 'Currency',
+    'panels.edit_payment_methods.dropdown.delete' => 'Delete',
+    'panels.edit_payment_methods.dropdown.allow' => 'Allow for all users',
+    'panels.edit_payment_methods.dropdown.disallow' => 'Disallow for all users',
+    'panels.edit_payment_methods.dropdown.allow_confirm' => 'Allow for all users?',
+    'panels.edit_payment_methods.dropdown.disallow_confirm' => 'Disallow for all users?',
+
     'gateways.search' => 'Search gateway',
     'gateways.list.nav.all' => 'All ({count})',
     'gateways.list.nav.active' => 'Active ({count})',
