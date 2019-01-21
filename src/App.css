@@ -41640,8 +41640,13 @@ li.m-menu__item > a.active > span{
   padding-left: 3px;
 }
 
-/* opacity for draggable elements */
+/* opacity and z-index for draggable elements */
 .sortable-helper {
   opacity: 0.5;
+  z-index: 10000;
 }
 
+/* cursor move on modal's draghandle */
+.dd-handle__icon {
+  cursor: move;
+}

@@ -13,7 +13,9 @@ const SortableProduct = SortableElement(
                     <div className="sommerce_dragtable__category-title">
                         <Row className="align-items-center">
                             <Col sm="12">
-                                <DragHandle />
+                                <div className="sommerce_dragtable__category-move move">
+                                    <DragHandle />
+                                </div>
                                 {product.name}
                                 <EditProduct productValue={product} onSubmit={handleEditProduct} />
                             </Col>

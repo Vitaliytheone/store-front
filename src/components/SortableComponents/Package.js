@@ -9,7 +9,9 @@ const SortablePackage = SortableElement(({ pack, handleEditPackage, handleDelete
     return (
       <div className="group-item sommerce_dragtable__tr align-items-center">
         <Col lg="5" className="padding-null-left">
-          <DragHandle />
+          <div className="sommerce_dragtable__category-move move">
+              <DragHandle />
+           </div>
           <strong>{pack.name}</strong>
         </Col>
         <Col lg="2">{pack.price}</Col>

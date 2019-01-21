@@ -11,10 +11,10 @@ class App extends Component {
         <React.Fragment>
           <Header />
           <Route exact path="/" />
-          <Route exact path="/orders" />
-          <Route exact path="/payments"/>
-          <Route exact path="/products" component={CategorieProducts} />
-          <Route exact path="/settings" />
+          <Route exact path="/admin/orders" />
+          <Route exact path="/admin/payments"/>
+          <Route exact path="/admin/products" component={CategorieProducts} />
+          <Route exact path="/admin/settings" />
         </React.Fragment>
       </Router>
     );

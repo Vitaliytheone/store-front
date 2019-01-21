@@ -49,17 +49,17 @@ const Header = props => (
               >
                 <ul className="m-menu__nav  m-menu__nav--submenu-arrow ">
                   <li className="m-menu__item" aria-haspopup="true">
-                    <NavLink to="/orders" className="m-menu__link ">
+                    <NavLink to="/admin/orders" className="m-menu__link ">
                       <span className="m-menu__link-text">Orders</span>
                     </NavLink>
                   </li>
                   <li className="m-menu__item" aria-haspopup="true">
-                    <NavLink to="/payments" className="m-menu__link ">
+                    <NavLink to="/admin/payments" className="m-menu__link ">
                       <span className="m-menu__link-text">Payments</span>
                     </NavLink>
                   </li>
                   <li className="m-menu__item" aria-haspopup="true">
-                    <NavLink to="/products" className="m-menu__link">
+                    <NavLink to="/admin/products" className="m-menu__link">
                       <span className="m-menu__link-text">Products</span>
                     </NavLink>
                   </li>
@@ -67,7 +67,7 @@ const Header = props => (
                     className="m-menu__item mobile-hidden"
                     aria-haspopup="true"
                   >
-                    <NavLink to="/settings" className="m-menu__link ">
+                    <NavLink to="/admin/settings" className="m-menu__link ">
                       <span className="m-menu__link-text">Settings</span>
                     </NavLink>
                   </li>

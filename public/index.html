@@ -44,5 +44,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+    <script>
+        window.appConfig = {};
+        window.appConfig.api_endpoints = {
+          "add_listing": "http://www.mocky.io/v2/5c45ab92320000bf27af18b4",
+          "add_product": "/admin/products/create-product",
+          "confirm_add_product": "/admin/products/create-product-menu?id=${product_id}",
+          "add_package": "/admin/products/create-package",
+          "update_product": "/admin/products/update-product?id=${product_id}",
+          "update_package": "/admin/products/update-package?id=${package_id}",
+          "change_position_product": "/admin/products/move-product?id=",
+          "change_position_package": "/admin/products/move-package?id=${package_id}",
+          "delete_package": "/admin/products/delete-package?id=${package_id}",
+          "get_providers": "/admin/products/get-provider-services?id=${provider_id}"
+        };
+        //  http://www.mocky.io/v2/5c45b4343100000e0005f071
+        // current : http://www.mocky.io/v2/5c45ab92320000bf27af18b4
+  </script>
   </body>
 </html>

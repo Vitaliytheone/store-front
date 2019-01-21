@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter, Row, Col } from "reactstrap";
 import { Formik, Form } from "formik";
 import ProductModal from "./modals/ProductModal";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 class AddProduct extends Component {
   state = {
@@ -29,10 +29,7 @@ class AddProduct extends Component {
         <Row className="sommerce-products__actions">
           <Col lg="12">
             <div className="page-content">
-              <Button
-                onClick={this.toggle}
-                color="primary"
-              >
+              <Button onClick={this.toggle} color="primary">
                 Add product
               </Button>
             </div>
@@ -49,18 +46,20 @@ class AddProduct extends Component {
             onSubmit={this.handleSubmit}
             initialValues={this.props.initialValues}
           >
-            <Form>
-              <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
-              <ProductModal />
-              <ModalFooter className="justify-content-start">
-                <Button color="primary" type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Loading...' : 'Add product'}
-                </Button>{" "}
-                <Button color="secondary" onClick={this.toggle}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </Form>
+            {({ setFieldValue }) => (
+              <Form>
+                <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
+                <ProductModal setFieldValue={setFieldValue} />
+                <ModalFooter className="justify-content-start">
+                  <Button color="primary" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Loading..." : "Add product"}
+                  </Button>{" "}
+                  <Button color="secondary" onClick={this.toggle}>
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </Form>
+            )}
           </Formik>
         </Modal>
       </React.Fragment>
@@ -68,20 +67,22 @@ class AddProduct extends Component {
   }
 }
 
-
 AddProduct.propTypes = {
-  initialValues: {
+  initialValues: PropTypes.shape({
     name: PropTypes.string,
-    visibility: PropTypes.number
-  }
-}
-
-AddProduct.defaultProps = { 
-    initialValues: { 
-      name: " ",
-      visibility: 1
-  } 
+    visibility: PropTypes.number,
+    description: PropTypes.string,
+    properties: PropTypes.array
+  })
 };
 
+AddProduct.defaultProps = {
+  initialValues: {
+    name: " ",
+    visibility: 1,
+    someProp: "",
+    properties: []
+  }
+};
 
 export default AddProduct;

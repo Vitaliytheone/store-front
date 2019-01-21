@@ -1,5 +1,8 @@
 import axios from "axios";
 
+axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+axios.defaults.xsrfCookieName = "_csrf-frontend";
+
 const instance = axios.create({
   baseURL: " "
 });

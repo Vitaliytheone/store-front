@@ -1,5 +1,4 @@
 import React, { Component } from "react";
- import axios from "axios";
 import { Container, Row, Col, Jumbotron } from "reactstrap";
 import { arrayMove } from "react-sortable-hoc";
 import AddProduct from "./components/AddProduct";
@@ -17,7 +16,7 @@ import {
 import { sortBy, pick } from "lodash";
 import data from "./data.json";
 
-
+// console.log(window.appConfig.api_endpoints);  
 // //parse of json
 // const arrayDataParse = Object.values(data).map(item => ({
 //   ...item,
@@ -33,25 +32,18 @@ class CategorieProducts extends Component {
     data: []
   };
 
-  componentDidMount() {
-
-    axios.get(`http://www.mocky.io/v2/5c4097d30f0000e21ae7b59f`)
-      .then(res => {
-        const response = res.data; 
-         console.log(response.data.products);
-        const responseDataParse = response.data.products.map(item => ({
-          ...item,
-          position: +(item.position), //cast position to a number 
-          packages: sortBy(Object.values(item.packages), "position")//sort packages by position
-        }));
-        console.log(responseDataParse);
-        const responseData = sortBy(responseDataParse, "position");
-        this.setState({ data: responseData });
-  })
-}
-
- 
-
+async componentDidMount() {
+      const response = await addListing();
+      const data = response.data;
+      const dataParse = data.products.map(item => ({
+        ...item,
+        position: +(item.position), //cast position to a number 
+        packages: sortBy(Object.values(item.packages), "position")//sort packages by position
+      }));
+      const newData = sortBy(dataParse, "position");
+      this.setState({ data: newData});
+  }
+  
   handleProductSwitch = ({ oldIndex, newIndex }) => {
     const { data } = this.state;
     //take product index
@@ -93,6 +85,7 @@ class CategorieProducts extends Component {
     const packages = product.packages.map(pack =>
       pick(pack, ["id", "position"])
     );
+    console.log(packages);
     const Data = { id: packageIndex.id, list: packages };
 
     changePositionPackage(packageIndex.id, Data);
@@ -100,13 +93,22 @@ class CategorieProducts extends Component {
 
   handleAddProduct = async (values, actions) => {
     //let product position
+    console.log(values);
     const newProductIndex = this.state.data.length;
     const newProduct = {
       name: values.name,
       position: newProductIndex,
       visibility: values.visibility,
+      color: "",
+      properties: "",
+      seo_title: "",
+      seo_description: "",
+      seo_keywords: "",
+      url: "",
+      description: values.someProp,
       packages: []
     };
+    console.log(newProduct);
     this.setState(prevState => ({
       ...prevState,
       data: [...prevState.data, newProduct]
@@ -137,9 +139,7 @@ class CategorieProducts extends Component {
       provider: values.provider
     };
     const newData = this.state.data;
-    for (let i = 0; i <= 3000; i++) {
       newData[productIndex].packages.push(newPackage);
-    }
     this.setState({
       data: newData
     });
