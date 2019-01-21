@@ -262,6 +262,7 @@ return [
     'settings.payments_page_title' => 'Settings payments',
     'settings.payments_title' => 'Payments',
     'settings.payments_edit_method' => 'Edit',
+    'settings.payments_edit_method_name' => 'Edit this payment method name',
     'settings.payments_save_method' => 'Save changes',
     'settings.payments_cancel_method' => 'Cancel',
     'settings.message_settings_saved' => 'Changes successfully saved!',

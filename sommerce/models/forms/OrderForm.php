@@ -371,7 +371,7 @@ class OrderForm extends Model
         $rules = [];
 
         foreach ($fields as $name => $field) {
-            $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name);
+            $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name, '');
             if (empty($field['rules'])) {
                 continue;
             }
@@ -469,7 +469,7 @@ class OrderForm extends Model
             foreach ($fields as $key => $field) {
                 $name = ArrayHelper::getValue($field, 'name');
                 if ($name) {
-                    $paymentsFields[$payment][$key]['value'] = ArrayHelper::getValue($this->fields, $name);
+                    $paymentsFields[$payment][$key]['value'] = ArrayHelper::getValue($this->fields, $name, '');
                 }
             }
         }

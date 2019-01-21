@@ -3,6 +3,7 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\store\Checkouts;
+use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use Yii;
@@ -34,6 +35,9 @@ class PaymentsSearch extends Model
 
     private $_db;
     private $_paymentsTable;
+    /** @var Stores $_store */
+    private $_store;
+
 
     private $_queryActiveFilters;
     private $_dataProvider;
@@ -47,6 +51,8 @@ class PaymentsSearch extends Model
     {
         $this->_db = $store->db_name;
         $this->_paymentsTable = $this->_db . "." . Payments::tableName();
+        $this->_store = $store;
+
     }
 
     /**
@@ -199,13 +205,6 @@ class PaymentsSearch extends Model
      */
     public function countsByMethods()
     {
-        $methodsList = (new Query())
-            ->select(['id', 'method_name'])
-            ->from(PaymentMethods::tableName())
-            ->all();
-
-        $methodsList = ArrayHelper::map($methodsList, 'id', 'method_name');
-
         $countsByMethodsQuery = (new Query())
             ->select(['checkouts.method_id', 'COUNT(payments.id) count'])
             ->from($this->_paymentsTable)
@@ -217,14 +216,20 @@ class PaymentsSearch extends Model
 
         $counts = ArrayHelper::map($counts, 'method_id', 'count');
 
-        $result = [];
-        foreach ($methodsList as $methodId => $methodName) {
-            $result[] = [
+        $supCur = PaymentMethodsCurrency::getAllSupportPaymentMethods($this->_store);
+
+        $result = $counts + array_diff_key($supCur, $counts);
+
+
+        $resultPay = [];
+        foreach ($result as $methodId => $count) {
+            $resultPay[] = [
                 'method_id' => $methodId,
-                'count' => $counts[$methodId] ?? 0,
+                'count' => $count,
             ];
         }
-        return $result;
+
+        return $resultPay;
     }
 
     /**
@@ -290,13 +295,14 @@ class PaymentsSearch extends Model
     public function getMethodFilterItems()
     {
         $methodsFilterMenuItems = $this->countsByMethods();
-        $methodsNames = StorePaymentMethods::getNames();
+        $methodsNames = PaymentMethods::getNamesList();
+        $storeMethodsNames = StorePaymentMethods::getStoreNames($this->_store->id);
 
-        array_walk($methodsFilterMenuItems, function(&$menuItem) use ($methodsNames) {
+        array_walk($methodsFilterMenuItems, function(&$menuItem) use ($methodsNames, $storeMethodsNames) {
             $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = $methodsNames[$method];
+            $menuItem['method_title'] = $storeMethodsNames[$method] ?? $methodsNames[$method] ?? 'Deleted';
         });
 
         $allMethodsMenuItem = [
@@ -332,20 +338,21 @@ class PaymentsSearch extends Model
 
         $checkouts = (new Query())
             ->from($this->_db . '.checkouts')
-            ->where(['>=', 'id', $checkoutFirst])
-            ->andWhere(['<=', 'id', $checkoutLast])
+            ->where(['between', 'id', $checkoutFirst, $checkoutLast])
             ->indexBy('id')
             ->orderBy(['id' => SORT_DESC])
             ->all();
         $checkout = [];
         $methodsNames = PaymentMethods::getNamesList();
+        $storeMethodsNames = StorePaymentMethods::getStoreNames($this->_store->id);
 
-        array_walk($payments, function(&$payment) use ($checkouts, &$checkout, $methodsNames) {
+        array_walk($payments, function(&$payment) use ($checkouts, &$checkout, $methodsNames, $storeMethodsNames) {
             if (array_key_exists($payment['checkout_id'], $checkouts)) {
                 $checkout = $checkouts[$payment['checkout_id']];
+                $paymentName = ucfirst($payment['method']);
             }
 
-            $payment['method_title'] = $methodsNames[$checkout['method_id']] ?? '';
+            $payment['method_title'] = $storeMethodsNames[$checkout['method_id']] ?? $methodsNames[$checkout['method_id']] ?? $paymentName;
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
         });

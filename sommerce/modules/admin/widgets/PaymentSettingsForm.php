@@ -43,6 +43,7 @@ class PaymentSettingsForm extends Widget
             'paymentData' => $this->getMethodFormData($this->paymentModel),
             'submitUrl' => $this->submitUrl,
             'cancelUrl' => $this->cancelUrl,
+            'name' => $this->paymentModel->name,
         ]);
     }
 

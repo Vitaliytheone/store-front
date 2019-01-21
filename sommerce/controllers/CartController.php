@@ -111,20 +111,24 @@ class CartController extends CustomController
             return $this->renderPartial('checkout', $model->formData);
         }
 
-        $this->addModule('cartFrontend', [
-            'fieldOptions' => $model->getPaymentsFields(),
-            'options' => $model->getJsOptions(),
-            'cartTotal' => [
-                'amount' => $searchModel->getTotal(),
-                'currency' => $this->store->currency,
-            ]
-        ]);
+        if (!empty($items)) {
+            $this->addModule('cartFrontend', [
+                'fieldOptions' => $model->getPaymentsFields(),
+                'options' => $model->getJsOptions(),
+                'cartTotal' => [
+                    'amount' => $searchModel->getTotal(),
+                    'currency' => $this->store->currency,
+                ]
+            ]);
+
+            $payments = $model->getPaymentsMethodsForView();
+        }
 
         return $this->render('cart.twig', [
             'cart' => [
                 'orders' => $items,
                 'total_price' => $searchModel->getTotal(),
-                'payments' => $model->getPaymentsMethodsForView(),
+                'payments' => $payments ?? [],
                 'form' => [
                     'selected_method' => $model->method,
                     'email' => $model->email,

@@ -235,6 +235,6 @@ class Checkouts extends ActiveRecord
      */
     public function setUserDetails($userDetails)
     {
-        $this->user_details = json_encode($userDetails);
+        $this->user_details = !empty($userDetails) ? json_encode($userDetails) : null;
     }
 }

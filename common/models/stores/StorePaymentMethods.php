@@ -31,6 +31,7 @@ class StorePaymentMethods extends ActiveRecord
     public const VISIBILITY_ENABLED = 1;
 
     public static $paymentsNames = [];
+    public static $storePaymentsNames = [];
 
     /**
      * @inheritdoc
@@ -124,7 +125,7 @@ class StorePaymentMethods extends ActiveRecord
     }
 
     /**
-     * Get available payment method names
+     * Get available Names from payment_methods->name
      * @return array
      */
     public static function getNames(): array
@@ -138,6 +139,25 @@ class StorePaymentMethods extends ActiveRecord
         }
 
         return static::$paymentsNames;
+    }
+
+    /**
+     * Get available Names from store_payment_methods->name
+     * @param int $storeId current store id
+     * @return array
+     */
+    public static function getStoreNames($storeId): array
+    {
+        if (empty(static::$storePaymentsNames) || !is_array(static::$storePaymentsNames)) {
+            static::$storePaymentsNames = static::find()
+                ->select(['name'])
+                ->where(['store_id' => $storeId])
+                ->indexBy('method_id')
+                ->asArray()
+                ->column();
+        }
+
+        return static::$storePaymentsNames;
     }
 
     /**

@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\models\stores\queries\PaymentMethodsCurrencyQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%payment_methods_currency}}".
@@ -121,7 +122,7 @@ class PaymentMethodsCurrency extends ActiveRecord
     }
 
     /**
-     * Get PayMethods for store support by current currency
+     * Get only not yet added PayMethods for store support by current currency
      * @param Stores $store
      * @return array
      */
@@ -157,6 +158,27 @@ class PaymentMethodsCurrency extends ActiveRecord
         }
 
         return $result;
+    }
+
+    /**
+     * Get all ids of PayMethods support by current Store currency
+     * @param Stores $store
+     * @return array
+     */
+    public static function getAllSupportPaymentMethods(Stores $store): array
+    {
+        $currencies = self::find()
+            ->active()
+            ->andFilterWhere(['currency' => $store->currency])
+            ->select('method_id')
+            ->indexBy('method_id')
+            ->distinct()
+            ->asArray()
+            ->all();
+
+        $currencies = ArrayHelper::map($currencies, 'method_id', 'method_id');
+        $currencies = array_fill_keys($currencies, '0');
+        return $currencies;
     }
 
     /**
