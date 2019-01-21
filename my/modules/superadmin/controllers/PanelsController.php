@@ -68,7 +68,9 @@ class PanelsController extends CustomController
                     'generate-apikey' => ['GET'],
                     'downgrade' => ['POST'],
                     'change-status' => ['POST'],
-                    'edit-payment-methods' => ['POST', 'GET'],
+                    'edit-payment-methods' => ['GET'],
+                    'delete-payment-method' => ['POST'],
+                    'allow-payment' => ['POST'],
                 ],
             ],
             'content' => [
@@ -321,50 +323,59 @@ class PanelsController extends CustomController
     }
 
     /**
-     * @param $method_id
-     * @param $panel_id
+     * @param int $id - panel id
      * @return Response
      * @throws NotFoundHttpException
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function actionDeletePaymentMethod($method_id, $panel_id)
+    public function actionDeletePaymentMethod($id)
     {
+        $data = Yii::$app->request->post();
+
+        if (empty($data) || !isset($data['method_id'])) {
+            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
+        }
+
         $payment = $this->findPaymentMethodModel([
-            'panel_id' => $panel_id,
-            'method_id' => $method_id,
+            'panel_id' => $id,
+            'method_id' => $data['method_id'],
         ]);
 
         if (!isset($payment)) {
-            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $panel_id]));
+            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
         }
 
         $payment->delete();
 
-        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $panel_id]));
+        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
     }
 
     /**
-     * @param int $method_id
-     * @param int $panel_id
-     * @param int $allow 1 - allow; 0 - disallow
+     * @param int $id - panel id
      * @return Response
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
      * @throws \yii\db\Exception
      */
-    public function actionAllowPayment($method_id, $panel_id, $allow)
+    public function actionAllowPayment($id)
     {
-        $project = $this->findModel($panel_id);
+        $data = Yii::$app->request->post();
+
+        if (empty($data) || !isset($data['method_id']) || !isset($data['allow'])) {
+            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
+        }
+
+        $project = $this->findModel($id);
 
         $model = new EditPanelPaymentMethodsForm();
         $model->setPanel($project);
 
-        if (!$model->changeAvailability($method_id, $allow)) {
+        if (!$model->changeAvailability($data['method_id'], $data['allow'])) {
             throw new BadRequestHttpException();
         }
 
-        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $panel_id]));
+        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
     }
 
     /**

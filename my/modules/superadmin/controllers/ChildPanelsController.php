@@ -44,7 +44,6 @@ class ChildPanelsController extends PanelsController
                     'edit',
                     'generate-apikey',
                     'upgrade',
-                    'edit-payment-methods',
                     'change-provider',
                 ]
             ],
@@ -59,7 +58,9 @@ class ChildPanelsController extends PanelsController
                     'generate-apikey' => ['GET'],
                     'upgrade' => ['POST'],
                     'change-status' => ['POST'],
-                    'edit-payment-methods' => ['POST', 'GET'],
+                    'edit-payment-methods' => ['GET'],
+                    'delete-payment-method' => ['POST'],
+                    'allow-payment' => ['POST'],
                 ],
             ],
             'content' => [
@@ -72,7 +73,6 @@ class ChildPanelsController extends PanelsController
                     'providers',
                     'upgrade',
                     'edit',
-                    'edit-payment-methods',
                     'change-provider',
                     'get-providers',
                 ],
