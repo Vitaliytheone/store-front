@@ -1,4 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# phpstorm project files
+.idea
 
 # dependencies
 /node_modules
@@ -7,6 +9,9 @@
 
 # testing
 /coverage
+
+# react
+/sommerce/web/react
 
 # production
 

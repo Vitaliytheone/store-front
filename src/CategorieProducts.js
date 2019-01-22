@@ -99,13 +99,13 @@ async componentDidMount() {
       name: values.name,
       position: newProductIndex,
       visibility: values.visibility,
-      color: "",
+      color: values.color,
       properties: "",
       seo_title: "",
       seo_description: "",
       seo_keywords: "",
       url: "",
-      description: values.someProp,
+      description: values.description,
       packages: []
     };
     console.log(newProduct);

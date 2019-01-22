@@ -85,7 +85,7 @@ class ProductModal extends Component {
       window.$(".summernote").on("summernote.change", event => {
         // callback as jquery custom event
         this.props.setFieldValue(
-          "someProp",
+          "description",
         window.$(event.target).summernote("code")
         );
       });
