@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
-use yii\web\View;
+use gateway\components\View;
 
 /**
  * Custom controller for the Gateway
@@ -112,6 +112,7 @@ class CustomController extends CommonController
 
         if (!empty($this->customJs)) {
             foreach (AssetsHelper::getScripts() as $src) {
+                $this->getView()->registerJs($src);
                 $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
             }
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
@@ -211,6 +212,12 @@ class CustomController extends CommonController
             $renderer = $this->getView();
             if ($render && method_exists($renderer, 'renderContent')) {
                 $content = $renderer->renderContent($content, $params);
+            }
+
+            if (!is_file($layoutFile) && method_exists($renderer, 'renderContent')) {
+                return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
+                    'content' => $content,
+                ]));
             }
             return $renderer->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
                 'content' => $content,

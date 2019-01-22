@@ -2,6 +2,7 @@
 
 namespace common\models\gateway;
 
+use gateway\components\behaviors\ThemesFilesBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -38,7 +39,7 @@ class ThemesFiles extends ActiveRecord
     public function rules()
     {
         return [
-            [['theme_id', 'name', 'content'], 'required'],
+            [['theme_id', 'name'], 'required'],
             [['theme_id', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['name'], 'string', 'max' => 300],
@@ -88,6 +89,7 @@ class ThemesFiles extends ActiveRecord
                     return time();
                 },
             ],
+            'assets' => ThemesFilesBehavior::class,
         ];
     }
 }

@@ -6,7 +6,6 @@ use admin\models\search\ThemesSearch;
 use common\models\gateway\ThemesFiles;
 use common\models\gateways\DefaultThemes;
 use common\models\gateways\Sites;
-use gateway\helpers\ThemesFilesHelper;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -40,8 +39,12 @@ class EditThemeForm extends Model
             'page.twig',
             '404.twig',
         ],
-        /*self::FOLDER_CSS => [],
-        self::FOLDER_JS => [],*/
+        self::FOLDER_CSS => [
+            'styles.css',
+        ],
+        self::FOLDER_JS => [
+            'script.js',
+        ],
     ];
 
     /** @var  string */
@@ -225,8 +228,15 @@ class EditThemeForm extends Model
             sort($folder);
         }
 
-        $this->_filesTree['Templates'] = ArrayHelper::merge($this->_filesTree['Templates'], ArrayHelper::getColumn($customFiles, 'name'));
-
+        foreach (ArrayHelper::getColumn($customFiles, 'name') as $file) {
+            foreach ($this->_filesTree as $filesTree) {
+                if (in_array($file, (array)$filesTree)) {
+                    continue 2;
+                }
+            }
+            $this->_filesTree[static::FOLDER_TEMPLATES][] = $file;
+        }
+        
         // Populate files by files data
         foreach ($this->_filesTree as &$folder) {
             array_walk($folder, function(&$file) use ($themeFiles, $themeModel, $customFiles) {

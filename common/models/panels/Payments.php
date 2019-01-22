@@ -50,6 +50,7 @@ class Payments extends ActiveRecord
     const STATUS_REVIEW = 6;
     const STATUS_VERIFICATION = 7;
     const STATUS_UNVERIFIED = 8;
+    const STATUS_REVERSED = 9;
 
     const MODE_MANUAL = 0;
     const MODE_AUTO = 1;
@@ -191,6 +192,7 @@ class Payments extends ActiveRecord
             static::STATUS_REVIEW => Yii::t('app', 'payments.status.review'),
             static::STATUS_VERIFICATION => Yii::t('app', 'payments.status.verification'),
             static::STATUS_UNVERIFIED => Yii::t('app', 'payments.status.unverified'),
+            static::STATUS_REVERSED  => Yii::t('app', 'payments.status.reversed'),
         ];
     }
 
