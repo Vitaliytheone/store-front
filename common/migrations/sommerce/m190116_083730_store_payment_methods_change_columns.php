@@ -77,8 +77,6 @@ class m190116_083730_store_payment_methods_change_columns extends Migration
               ADD CONSTRAINT `fk_store_payment_methods_stores` FOREIGN KEY (`store_id`) REFERENCES `stores`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
         ');
 
-        $this->execute('USE `' . DB_STORES . '`; ALTER TABLE `store_payment_methods` DROP COLUMN `method`;');
-
         foreach ($methods as $key => $methodName) {
             $storeMethod = (new Query())
                 ->from(DB_STORES . '.store_payment_methods')
@@ -137,6 +135,8 @@ class m190116_083730_store_payment_methods_change_columns extends Migration
                 'updated_at' => time(),
             ], ['id' => $storeMethod['id']])->execute();
         }
+
+        $this->execute('USE `' . DB_STORES . '`; ALTER TABLE `store_payment_methods` DROP COLUMN `method`;');
     }
 
     /**
