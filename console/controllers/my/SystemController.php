@@ -862,15 +862,27 @@ class SystemController extends CustomController
             foreach ($domainRawList as $domainArray) {
                 $domain = $domainArray['name'];
 
-                $rawResponse = $this->_getCloudnsApi('records', "&domain-name={$domain}");
+//                $rawResponse = $this->_getCloudnsApi('records', "&domain-name={$domain}");
+                $rawResponse = '{"31749306":{"id":"31749306","type":"A","host":"","record":"51.255.71.105","dynamicurl_status":0,"failover":"0","ttl":"60","status":1},"33129686":{"id":"33129686","type":"NS","host":"","record":"ns1.perfectdns.com","failover":"0","ttl":"300","status":1},"33129687":{"id":"33129687","type":"NS","host":"","record":"ns2.perfectdns.com","failover":"0","ttl":"300","status":1},"33129688":{"id":"33129688","type":"NS","host":"","record":"ns3.perfectdns.com","failover":"0","ttl":"300","status":1},"31749312":{"id":"31749312","type":"CNAME","host":"www","record":"getyourpanel.com","failover":"0","ttl":"300","status":1}}';
 
                 $ip = json_decode($rawResponse, true);
 
-                $responseId = reset($ip)['id'];
-                $respIp = array_column($ip, 'record')[0];
+                // fixme проверка что именно А запись
+//                $responseId = reset($ip)['id'];
+                foreach ($ip as $value) {
+                    if (array_column($value, 'type') == 'A') {
+                        $respIp = array_column($ip, 'record')[0];
+                        break;
+                    }
+                }
 
                 if ($respIp == $oldIp) {
-                    $changeResponse = $this->_getCloudnsApi('mod-record', "&domain-name={$domain}&record-id={$responseId}&host=&record={$newIp}&ttl=60");
+                    $this->stdout("In the 'A' domain record {$domain} found the old ip address. Replace it with a new one.\n");
+//                    $changeResponse = $this->_getCloudnsApi('mod-record', "&domain-name={$domain}&record-id={$responseId}&host=&record={$newIp}&ttl=60");
+                    if ($changeResponse == false) {
+                        $this->stdout("Could not change the 'A' domain records {$domain}. Error - {$changeResponse}\n", Console::FG_RED);
+                        // todo правильный ответ
+                    }
                     $domainCount++;
                 }
             }
