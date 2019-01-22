@@ -50,6 +50,11 @@ return [
     'settings.payments_stripe_guide_3' => ' and add endpoint for ',
     'settings.payments_stripe_guide_4' => 'Click on created webhook to get Signing secret',
 
+    'settings.payments_edit_2' => 'Edit Stripe',
+    'settings.payments_stripe_secret_key' => 'Secret key',
+    'settings.payments_stripe_public_key' => 'Public key',
+    'settings.payments_stripe_webhook_secret' => 'Webhook secret',
+
     'settings.payments_edit_1' => 'Edit PayPal',
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
     'settings.payments_paypal_guide_2' => 'Get your {api_credentials_url}.',
