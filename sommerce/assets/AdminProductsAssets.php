@@ -26,7 +26,6 @@ class AdminProductsAssets extends AssetBundle
 
     public $depends = [
         'yii\web\YiiAsset',
-        'sommerce\assets\AdminAsset',
-        'sommerce\assets\ReactAsset'
+        'sommerce\assets\ProductsAsset',
     ];
 }

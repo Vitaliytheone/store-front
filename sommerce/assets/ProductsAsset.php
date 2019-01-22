@@ -19,7 +19,6 @@ class ProductsAsset extends AssetBundle
     ];
 
     public $js = [
-        'js/libs/jquery-ui.js',
         'js/libs/summernote/summernote-bs4.js',
         'js/libs/spectrum/spectrum.js',
     ];
