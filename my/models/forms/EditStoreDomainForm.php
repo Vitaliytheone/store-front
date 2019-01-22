@@ -110,6 +110,7 @@ class EditStoreDomainForm extends Model
 
         $this->_store->domain = $domain;
         $this->_store->subdomain = 0;
+        $this->_store->dns_status = 0;
 
         if (!$this->_store->save(false)) {
             $this->addError('domain', Yii::t('app', 'error.store.can_not_change_domain'));

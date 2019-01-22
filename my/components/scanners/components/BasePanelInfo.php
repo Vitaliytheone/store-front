@@ -94,6 +94,7 @@ abstract class BasePanelInfo extends Component
     /**
      * Check if requested host Perfect panel
      * @return bool
+     * @throws Exception
      */
     protected function checkStatusPerfectPanel()
     {
@@ -117,8 +118,9 @@ abstract class BasePanelInfo extends Component
 
     /**
      * Return panel status by panel info data
-     * @param string $url URL or Domain
+     * @param $url
      * @return array
+     * @throws Exception
      */
     public function getPanelInfo($url)
     {
@@ -129,8 +131,9 @@ abstract class BasePanelInfo extends Component
 
     /**
      * Return panel statuses by panels info data
-     * @param array $urls URL or Domains list
+     * @param array $urls
      * @return array
+     * @throws Exception
      */
     public function getPanelsInfo(array $urls)
     {
@@ -215,7 +218,6 @@ abstract class BasePanelInfo extends Component
      * Get panel info by panel host name
      * @param $url
      * @return mixed
-     * @throws Exception
      */
     public function getUrlInfo($url)
     {
