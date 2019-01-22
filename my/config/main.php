@@ -140,6 +140,7 @@ $config = [
             ],
         ],
         'db' => $db['db'],
+        'panelDb' => $db['panelDb'],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => false,

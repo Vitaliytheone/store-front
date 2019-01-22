@@ -68,7 +68,7 @@ class PanelsController extends CustomController
                     'generate-apikey' => ['GET'],
                     'downgrade' => ['POST'],
                     'change-status' => ['POST'],
-                    'edit-payment-methods' => ['GET'],
+                    'edit-payment-methods' => ['GET', 'POST'],
                     'delete-payment-method' => ['POST'],
                     'allow-payment' => ['POST'],
                 ],
@@ -132,9 +132,11 @@ class PanelsController extends CustomController
      * Change panel domain.
      *
      * @access public
-     * @param int $id
-     * @return mixed
-     * @throws NotFoundHttpException
+     * @param $id
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionChangeDomain($id)
     {
@@ -184,9 +186,10 @@ class PanelsController extends CustomController
      * Change panel providers.
      *
      * @access public
-     * @param int $id
-     * @return mixed
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionEditProviders($id)
     {
@@ -304,7 +307,7 @@ class PanelsController extends CustomController
 
     /**
      * @param $id
-     * @return string
+     * @return string|Response
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\di\NotInstantiableException
@@ -316,9 +319,17 @@ class PanelsController extends CustomController
         $model = new EditPanelPaymentMethodsForm();
         $model->setPanel($project);
 
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            $model->save();
+
+            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
+        }
+
         return $this->render('edit_payment_methods', [
             'payments' => $model->getPaymentMethods(),
             'panel' => $project,
+            'model' => $model,
         ]);
     }
 
@@ -331,22 +342,16 @@ class PanelsController extends CustomController
      */
     public function actionDeletePaymentMethod($id)
     {
+        $project = $this->findModel($id);
         $data = Yii::$app->request->post();
 
         if (empty($data) || !isset($data['method_id'])) {
             return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
         }
 
-        $payment = $this->findPaymentMethodModel([
-            'panel_id' => $id,
-            'method_id' => $data['method_id'],
-        ]);
-
-        if (!isset($payment)) {
-            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
-        }
-
-        $payment->delete();
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+        $model->deletePaymentMethod($data['method_id']);
 
         return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
     }
@@ -356,7 +361,8 @@ class PanelsController extends CustomController
      * @return Response
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
-     * @throws \yii\db\Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionAllowPayment($id)
     {
@@ -370,6 +376,7 @@ class PanelsController extends CustomController
 
         $model = new EditPanelPaymentMethodsForm();
         $model->setPanel($project);
+        $model->setConnection(Yii::$app->panelDb);
 
         if (!$model->changeAvailability($data['method_id'], $data['allow'])) {
             throw new BadRequestHttpException();

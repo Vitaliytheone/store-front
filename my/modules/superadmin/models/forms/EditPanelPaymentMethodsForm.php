@@ -3,13 +3,17 @@
 namespace superadmin\models\forms;
 
 use common\helpers\CurrencyHelper;
+use common\models\panel\Users;
 use common\models\panels\PaymentMethods;
+use common\models\panels\PanelPaymentMethods;
+use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\Project;
 use common\models\panels\services\GetPanelAvailablePaymentMethodsService;
 use common\models\panels\services\GetPanelPaymentMethodsService;
 use common\models\panels\services\GetPaymentMethodsCurrencyService;
 use yii\base\Model;
 use Yii;
+use yii\db\Connection;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -47,6 +51,11 @@ class EditPanelPaymentMethodsForm extends Model
     protected static $panelPaymentMethods;
 
     /**
+     * @var Connection
+     */
+    protected $db;
+
+    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -67,34 +76,122 @@ class EditPanelPaymentMethodsForm extends Model
     }
 
     /**
+     * @param $db
+     */
+    public function setConnection(Connection $db)
+    {
+        $this->db = $db;
+    }
+
+    /**
+     * @return bool
+     */
+    public function save(): bool
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $panelPaymentMethod = PanelPaymentMethods::findOne(['panel_id' => $this->_panel->id, 'currency_id' => $this->currency_id]);
+        $currencyPaymentMethod = PaymentMethodsCurrency::findOne($this->currency_id);
+
+        if ($panelPaymentMethod || !isset($currencyPaymentMethod)) {
+            return false;
+        }
+
+        $paymentMethods = CurrencyHelper::getPaymentMethods();
+        $paymentMethod = $paymentMethods[$currencyPaymentMethod->method_id];
+
+        $name = !empty($paymentMethod['name']) ? $paymentMethod['name'] : $paymentMethod['method_name'];
+        $model = new PanelPaymentMethods();
+        $model->currency_id = $this->currency_id;
+        $model->method_id = $currencyPaymentMethod->method_id;
+        $model->panel_id = $this->_panel->id;
+        $model->name = $name;
+        $model->setOptions([]);
+
+        if (!$model->save()) {
+            $this->addError('methods', Yii::t('app/superadmin', 'panels.edit.payment_methods.error'));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param int $methodId
      * @param int $allow 1 - allow; 0 - disallow
      * @return bool
-     * @throws \yii\db\Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function changeAvailability(int $methodId, $allow = 1): bool
     {
-        $range = [0, 1];
+        $range = [Users::PAYMENT_METHOD_DISALLOW, Users::PAYMENT_METHOD_ALLOW];
         $paymentMethod = PaymentMethods::findOne($methodId);
         if (!isset($paymentMethod) || !in_array($allow, $range)) {
             return false;
         }
 
-        $users = (new Query())
-            ->select(['id', 'payments'])
-            ->from($this->_panel->db . '.users')
-            ->all();
+        Yii::$app->panelDb->dsn .= ';dbname=' . $this->_panel->db;
+        $users = Users::find();
 
-        foreach ($users as $user) {
-            $payments = json_decode($user['payments'], true);
+        foreach ($users->batch() as $usersModels) {
+            foreach ($usersModels as $user) {
+                /** @var Users $user */
+                $payments = $user->getPayments();
 
-            if (!isset($payments[$methodId]) || (isset($payments[$methodId]) && $payments[$methodId] !== $allow)) {
-                $payments[$methodId] = $allow;
+                if (!isset($payments[$methodId]) || (isset($payments[$methodId]) && $payments[$methodId] !== $allow)) {
+                    $payments[$methodId] = $allow;
 
-                $paymentOptions = json_encode($payments);
-                Yii::$app->db->createCommand()
-                    ->update($this->_panel->db . '.users', ['payments' => $paymentOptions], ['id' => $user['id']])
-                    ->execute();
+                    $user->setPayments($payments);
+                    if (!$user->update(false)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete payment method
+     * @param int $methodId
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function deletePaymentMethod(int $methodId): bool
+    {
+        $payment = PanelPaymentMethods::findOne([
+            'panel_id' => $this->_panel->id,
+            'method_id' => $methodId,
+        ]);
+
+        if (!isset($payment)) {
+            return false;
+        }
+
+        if (!$payment->delete()) {
+            return false;
+        }
+
+        Yii::$app->panelDb->dsn .= ';dbname=' . $this->_panel->db;
+        $users = Users::find();
+
+        foreach ($users->batch() as $usersModels) {
+            foreach ($usersModels as $user) {
+                /** @var Users $user */
+                $payments = $user->getPayments();
+
+                if (array_key_exists($methodId, $payments)) {
+                    unset($payments[$methodId]);
+                    $user->setPayments($payments);
+                    if (!$user->update(false)) {
+                        return false;
+                    }
+                }
             }
         }
 

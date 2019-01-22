@@ -2,13 +2,54 @@
 /* @var $this yii\web\View */
 /* @var $payments array */
 /* @var $panel \common\models\panels\Project */
+/* @var $model EditPanelPaymentMethodsForm */
 
 use my\helpers\Url;
 use my\helpers\SpecialCharsHelper;
 use yii\helpers\Html;
+use my\components\ActiveForm;
+use superadmin\models\forms\EditPanelPaymentMethodsForm;
+use common\models\panel\Users;
 
 $this->context->addModule('superadminPanelsController');
 ?>
+<ul class="nav nav-pills mb-3" role="tablist">
+    <li>
+        <?php $form = ActiveForm::begin([
+            'id' => 'editPaymentMethodsForm',
+            'options' => [
+                'class' => "form",
+                'action' => Url::toRoute(['panels/edit-payment-methods', 'id' => $panel->id])
+            ],
+            'fieldClass' => 'yii\bootstrap\ActiveField',
+            'fieldConfig' => [
+                'template' => "{label}\n{input}",
+            ],
+        ]); ?>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <?= Html::activeDropDownList($model, 'currency_id', $model->getPaymentMethodDropdown(), [
+                        'prompt' => Yii::t('app/superadmin', 'panels.edit.payment_methods.select_payment_method'),
+                        'class' => 'form-control',
+                        'style' => 'max-width: 200px;'
+                    ]) ?>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="form-group">
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'panels.edit.payment_methods.add_method'), [
+                        'class' => 'btn btn-light',
+                        'name' => 'edit-expiry-button',
+                        'id' => 'addPaymentMethodBtn'
+                    ]) ?>
+                </div>
+            </div>
+        </div>
+        <?php ActiveForm::end(); ?>
+    </li>
+</ul>
+
 <div class="tab-pane fade show active" id="status-all" role="tabpanel">
     <table class="table table-sm table-custom">
         <thead>
@@ -40,14 +81,14 @@ $this->context->addModule('superadminPanelsController');
                                         'class' => 'dropdown-item allow-payment-method',
                                         'data-title' => Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.allow_confirm'),
                                         'data-method' => 'POST',
-                                        'data-params' => ['method_id' => $payment['id'], 'allow' => 1]
+                                        'data-params' => ['method_id' => $payment['id'], 'allow' => Users::PAYMENT_METHOD_ALLOW]
                                     ])?>
                                 <?= Html::a(Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.disallow'),
                                     Url::toRoute(['/panels/allow-payment', 'id' => $panel->id]), [
                                         'class' => 'dropdown-item disallow-payment-method',
                                         'data-title' => Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.disallow_confirm'),
                                         'data-method' => 'POST',
-                                        'data-params' => ['method_id' => $payment['id'], 'allow' => 0]
+                                        'data-params' => ['method_id' => $payment['id'], 'allow' => Users::PAYMENT_METHOD_DISALLOW]
                                     ])?>
                             </div>
                         </div>

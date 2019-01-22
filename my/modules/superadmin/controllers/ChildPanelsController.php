@@ -58,7 +58,7 @@ class ChildPanelsController extends PanelsController
                     'generate-apikey' => ['GET'],
                     'upgrade' => ['POST'],
                     'change-status' => ['POST'],
-                    'edit-payment-methods' => ['GET'],
+                    'edit-payment-methods' => ['GET', 'POST'],
                     'delete-payment-method' => ['POST'],
                     'allow-payment' => ['POST'],
                 ],
