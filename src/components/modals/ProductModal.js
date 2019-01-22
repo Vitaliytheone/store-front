@@ -5,6 +5,7 @@ import { ModalBody, Label, FormGroup, Input, Button } from "reactstrap";
 import { Field } from "formik";
 import { ProductInput } from "../Inputs";
 import { arrayMove } from "react-sortable-hoc";
+import { SketchPicker } from "react-color";
 
 // import $ from 'jquery';
 // import ReactSummernote from 'react-summernote';
@@ -16,12 +17,19 @@ import { arrayMove } from "react-sortable-hoc";
 // import 'bootstrap/js/src/tooltip';
 import "bootstrap/js/src/modal";
 
-
 class ProductModal extends Component {
   state = {
+    colorSchema: false,
+    color: "",
     item: "",
     properties: []
   };
+
+  // toggle = () => {
+  //   this.setState(prevstate => ({
+  //     colorSchema: !prevstate.colorSchema
+  //   }));
+  // };
 
   onChange = event => {
     this.setState({
@@ -33,6 +41,7 @@ class ProductModal extends Component {
     this.setState({
       properties: [...this.state.properties, this.state.item]
     });
+    this.props.setFieldValue("properties", this.state.properties)
   };
 
   deleteProperty = index => () => {
@@ -49,25 +58,54 @@ class ProductModal extends Component {
     });
   };
 
+  handleChangeComplete = color => {
+    this.setState({ color: color.hex });
+    this.props.setFieldValue("color", color.hex);
+  };
+
+  openColorSchema = () => {
+    this.setState({
+      colorSchema: !this.state.colorSchema
+    });
+  };
+
+  closeColorSchema = () => {
+    this.setState({
+      colorSchema: false
+    })
+  }
+
   componentDidMount() {
     window.$(document).ready(() => {
       window.$(".summernote").summernote({
         height: 300,
         minHeight: null,
-        maxHeight: null,
-        focus: true
+        maxHeight: null
       });
       window.$(".summernote").on("summernote.change", event => {
         // callback as jquery custom event
         this.props.setFieldValue(
           "someProp",
-          window.$(event.target).summernote("code")
+        window.$(event.target).summernote("code")
         );
       });
     });
   }
 
   render() {
+    const { values } = this.props;
+    const { color, colorSchema } = this.state;
+    const seoName = values.name.replace(/ /g, "-");
+
+    let colorHex;
+    if (colorSchema) {
+      colorHex = ( <div className="color-schema">
+          <div className="cover-schema" onClick={this.closeColorSchema} />
+          <SketchPicker color={this.state.background} onChangeComplete={this.handleChangeComplete} />
+        </div>
+      );
+    }
+
     return (
       <React.Fragment>
         <ModalBody>
@@ -76,7 +114,6 @@ class ProductModal extends Component {
               name="name"
               component={ProductInput}
               label="Product name"
-              placeholder="create a product"
               required
             />
           </FormGroup>
@@ -100,9 +137,19 @@ class ProductModal extends Component {
                 type="text"
                 className="product-color"
                 id="package-color2"
-                value="#ffffff"
+                value={color}
               />
+              <div class="sp-replacer sp-light" onClick={this.openColorSchema}>
+                <div class="sp-preview">
+                  <div
+                    class="sp-preview-inner sp-clear-display"
+                    style={{ backgroundColor: "transparent" }}
+                  />
+                </div>
+                <div class="sp-dd">▼</div>
+              </div>
             </div>
+              {colorHex}
           </FormGroup>
 
           <FormGroup>
@@ -131,7 +178,7 @@ class ProductModal extends Component {
               }}
               onChange={this.onChange}
             /> */}
-            <div class="summernote"></div>
+            <div class="summernote" />
           </FormGroup>
 
           <div className="card card-white mb-3">
@@ -270,7 +317,6 @@ class ProductModal extends Component {
               </div>
             </div>
           </div>
-
           <div className="card card-white">
             <div className="card-body">
               <div className="row seo-header align-items-center">
@@ -283,12 +329,18 @@ class ProductModal extends Component {
               </div>
 
               <div className="seo-preview">
-                <div className="seo-preview__title edit-seo__title">
-                  Product
-                </div>
+                {values.name ? (
+                  <div className="seo-preview__title edit-seo__title">
+                    {values.name}
+                  </div>
+                ) : (
+                  <div className="seo-preview__title edit-seo__title">
+                    Page title
+                  </div>
+                )}
                 <div className="seo-preview__url">
                   http://fastinsta.sommerce.net/
-                  <span className="edit-seo__url">product</span>
+                  <span className="edit-seo__url">{seoName}</span>
                 </div>
                 <div className="seo-preview__description edit-seo__meta">
                   A great About Us page helps builds trust between you and your
@@ -299,7 +351,7 @@ class ProductModal extends Component {
 
               <div className="collapse" id="seo-block">
                 <div className="form-group">
-                  <label for="edit-seo__title">Page title</label>
+                  <label htmlFor="edit-seo__title">Page title</label>
                   <input
                     className="form-control"
                     id="edit-seo__title"
@@ -311,7 +363,7 @@ class ProductModal extends Component {
                   </small>
                 </div>
                 <div className="form-group">
-                  <label for="edit-seo__meta">Meta description</label>
+                  <label htmlFor="edit-seo__meta">Meta description</label>
                   <textarea
                     className="form-control"
                     id="edit-seo__meta"
@@ -327,7 +379,7 @@ class ProductModal extends Component {
                   </small>
                 </div>
                 <div className="form-group">
-                  <label for="edit-seo__meta-keyword">Meta keywords</label>
+                  <label htmlFor="edit-seo__meta-keyword">Meta keywords</label>
                   <textarea
                     className="form-control"
                     id="edit-seo__meta-keyword"
@@ -335,7 +387,7 @@ class ProductModal extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label for="edit-seo__url">URL</label>
+                  <label htmlFor="edit-seo__url">URL</label>
                   <div className="input-group">
                     <span className="input-group-addon" id="basic-addon3">
                       http://fastinsta.sommerce.net/

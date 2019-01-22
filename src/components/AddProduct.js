@@ -46,10 +46,10 @@ class AddProduct extends Component {
             onSubmit={this.handleSubmit}
             initialValues={this.props.initialValues}
           >
-            {({ setFieldValue }) => (
+            {({ setFieldValue, values }) => (
               <Form>
                 <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
-                <ProductModal setFieldValue={setFieldValue} />
+                <ProductModal setFieldValue={setFieldValue} values={values}/>
                 <ModalFooter className="justify-content-start">
                   <Button color="primary" type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Loading..." : "Add product"}
@@ -71,17 +71,26 @@ AddProduct.propTypes = {
   initialValues: PropTypes.shape({
     name: PropTypes.string,
     visibility: PropTypes.number,
+    color: PropTypes.string,
     description: PropTypes.string,
-    properties: PropTypes.array
+    properties: PropTypes.array,
+    seo_title: PropTypes.string,
+    seo_keywords: PropTypes.string,
+    url: PropTypes.string
   })
 };
 
 AddProduct.defaultProps = {
   initialValues: {
-    name: " ",
+    name: "",
     visibility: 1,
-    someProp: "",
-    properties: []
+    color: "",
+    description: "",
+    properties: [],
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+    url: ""
   }
 };
 

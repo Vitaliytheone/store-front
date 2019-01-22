@@ -41650,3 +41650,84 @@ li.m-menu__item > a.active > span{
 .dd-handle__icon {
   cursor: move;
 }
+
+/* color input */
+.product-color__wrap .sp-replacer {
+    position: absolute;
+    left: 165px;
+    top: 32px;
+}
+
+.sp-replacer {
+    margin: 0;
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    padding: 4px;
+    display: inline-block;
+    border: solid 1px #e6e8f1;
+    background: #ebedf3;
+    color: #333;
+    border-radius: 30px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.sp-replacer:hover {
+    border: solid 1px lightblue;
+}
+
+.sp-preview {
+    width: 24px;
+    border-radius: 30px;
+    height: 24px;
+    margin-right: 5px;
+    left: 2px;
+    top: 2px;
+    position: absolute;
+    border: none;
+    z-index: 0;
+    position: relaive;  
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==);
+}
+
+.sp-clear-display {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(data:image/gif;base64,R0lGODlhFAAUAPcAAAAAAJmZmZ2dnZ6enqKioqOjo6SkpKWlpaamp…co9cqR6tKfY7GeBCuVwlipDNmefAtTrkSzB1RaIAoXodsABiZAEFB06gIBWC1mLVgBa0AAOw==);
+}
+
+/* styles for input with color schema */
+.product-color {
+    display: inline-block!important;
+    color: #575962;
+    width: 200px;
+    padding: 0.65rem 7px;
+    font-size: 1rem;
+    line-height: 1.25;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid #ebedf2;
+    border-radius: 0.25rem;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    list-style: none;
+    outline: none;
+}
+
+/*  position of color schema's component */
+
+.color-schema {
+  position: absolute;
+  z-index: 10000;
+  left: 200px;
+}
+
+.cover-schema {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
