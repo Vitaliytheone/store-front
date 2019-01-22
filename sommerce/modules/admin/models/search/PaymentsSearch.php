@@ -52,7 +52,6 @@ class PaymentsSearch extends Model
         $this->_db = $store->db_name;
         $this->_paymentsTable = $this->_db . "." . Payments::tableName();
         $this->_store = $store;
-
     }
 
     /**
@@ -109,9 +108,14 @@ class PaymentsSearch extends Model
             ])
             ->from($this->_paymentsTable)
             ->indexBy('id')
-            ->orderBy([
-                'id' => SORT_DESC,
-            ]);
+            ->orderBy(['id' => SORT_DESC]);
+
+        $query->leftJoin($this->_db . '.checkouts', 'checkouts.id = payments.checkout_id');
+        $query->addSelect('checkouts.method_id');
+
+        $min = (new Query())->from($this->_paymentsTable)->min('payments.checkout_id');
+        $max = (new Query())->from($this->_paymentsTable)->max('payments.checkout_id');
+        $query->andWhere(['between', 'checkouts.id', $min, $max]);
 
         $this->_dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -132,7 +136,6 @@ class PaymentsSearch extends Model
         }
 
         if (isset($this->method)) {
-            $query->leftJoin($this->_db . '.checkouts', 'checkouts.id = payments.checkout_id');
             $query->andFilterWhere(['checkouts.method_id' => $this->method]);
         }
 
@@ -212,14 +215,13 @@ class PaymentsSearch extends Model
             ->groupBy('checkouts.method_id');
 
         $this->_applyFilters($countsByMethodsQuery, $this->_queryActiveFilters, ['method']);
-        $counts = $countsByMethodsQuery->all();
 
+        $counts = $countsByMethodsQuery->all();
         $counts = ArrayHelper::map($counts, 'method_id', 'count');
 
         $supCur = PaymentMethodsCurrency::getAllSupportPaymentMethods($this->_store);
 
         $result = $counts + array_diff_key($supCur, $counts);
-
 
         $resultPay = [];
         foreach ($result as $methodId => $count) {
@@ -296,7 +298,7 @@ class PaymentsSearch extends Model
     {
         $methodsFilterMenuItems = $this->countsByMethods();
         $methodsNames = PaymentMethods::getNamesList();
-        $storeMethodsNames = StorePaymentMethods::getStoreNames($this->_store->id);
+        $storeMethodsNames = StorePaymentMethods::getStorePayNames($this->_store->id);
 
         array_walk($methodsFilterMenuItems, function(&$menuItem) use ($methodsNames, $storeMethodsNames) {
             $method = $menuItem['method_id'];
@@ -331,30 +333,13 @@ class PaymentsSearch extends Model
 
         $payments = $this->_dataProvider->getModels();
 
-        $checkoutLast = reset($payments);
-        $checkoutLast = $checkoutLast['checkout_id'];
-        $checkoutFirst = end($payments);
-        $checkoutFirst = $checkoutFirst['checkout_id'];
-
-        $checkouts = (new Query())
-            ->from($this->_db . '.checkouts')
-            ->where(['between', 'id', $checkoutFirst, $checkoutLast])
-            ->indexBy('id')
-            ->orderBy(['id' => SORT_DESC])
-            ->all();
-        $checkout = [];
         $methodsNames = PaymentMethods::getNamesList();
-        $storeMethodsNames = StorePaymentMethods::getStoreNames($this->_store->id);
+        $storeMethodsNames = StorePaymentMethods::getStorePayNames($this->_store->id);
 
-        array_walk($payments, function(&$payment) use ($checkouts, &$checkout, $methodsNames, $storeMethodsNames) {
-            if (array_key_exists($payment['checkout_id'], $checkouts)) {
-                $checkout = $checkouts[$payment['checkout_id']];
-                $paymentName = ucfirst($payment['method']);
-            }
-
-            $payment['method_title'] = $storeMethodsNames[$checkout['method_id']] ?? $methodsNames[$checkout['method_id']] ?? $paymentName;
+        array_walk($payments, function (&$payment) use ($methodsNames, $storeMethodsNames) {
+            $payment['method_title'] = $storeMethodsNames[$payment['method_id']] ?? $methodsNames[$payment['method_id']] ?? ucfirst($payment['method']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
-            $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'],'yyyy-MM-dd HH:mm:ss');
+            $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'], 'yyyy-MM-dd HH:mm:ss');
         });
 
         return $payments;

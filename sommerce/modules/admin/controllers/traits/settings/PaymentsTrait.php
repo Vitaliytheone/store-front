@@ -38,18 +38,19 @@ trait PaymentsTrait
         $store = Yii::$app->store->getInstance();
         $paymentMethods = new PaymentsSettingsSearch();
         $paymentMethods->setStore($store);
+        $paymentMethodsSearch = $paymentMethods->search();
 
-        $availableMethods = PaymentMethodsCurrency::getSupportPaymentMethods($store);
+        $availableMethods = PaymentMethodsCurrency::getSupportPaymentMethods($store, $paymentMethodsSearch);
 
         return $this->render('payments', [
-            'paymentMethods' => $paymentMethods->search(),
+            'paymentMethods' => $paymentMethodsSearch,
             'availableMethods' => $availableMethods,
         ]);
     }
 
     /**
      * Settings payments. Payment method settings
-     * @param $method integer method->id
+     * @param int $method method->id
      * @return string|Response
      * @throws NotFoundHttpException
      * @throws \Throwable

@@ -124,9 +124,10 @@ class PaymentMethodsCurrency extends ActiveRecord
     /**
      * Get only not yet added PayMethods for store support by current currency
      * @param Stores $store
+     * @param \common\models\stores\queries\StorePaymentMethodsQuery $query
      * @return array
      */
-    public static function getSupportPaymentMethods(Stores $store): array
+    public static function getSupportPaymentMethods(Stores $store, $query = null): array
     {
         $currencies = self::find()
             ->active()
@@ -135,11 +136,18 @@ class PaymentMethodsCurrency extends ActiveRecord
             ->asArray()
             ->all();
 
-        $storePaymentMethods = StorePaymentMethods::find()
-            ->where(['store_id' => $store->id])
-            ->indexBy('currency_id')
-            ->asArray()
-            ->all();
+        if ($query === null) {
+            $storePaymentMethods = StorePaymentMethods::find()
+                ->where(['store_id' => $store->id])
+                ->indexBy('currency_id')
+                ->asArray()
+                ->all();
+        } else {
+            $storePaymentMethods = $query;
+        }
+
+        $storePaymentMethods = ArrayHelper::toArray($storePaymentMethods);
+        $storePaymentMethods = ArrayHelper::index($storePaymentMethods, 'currency_id');
 
         $methodsIds = array_column($storePaymentMethods, 'method_id');
 

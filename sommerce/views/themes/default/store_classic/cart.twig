@@ -91,7 +91,7 @@
                 <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %}">
                     <div class="cart-page__sub-block {% if site.rtl %} rtl-direction {% endif %}">
                         <div class="cart-page__subtitle">{{ lang('cart.email') }}</div>
-                        <div class="cart-page__subcontent">
+                        <div class="cart-page__subcontent form-group">
                             <input type="email" name="OrderForm[email]" class="form-control" value="{{ cart.form.email }}" required>
                         </div>
                     </div>

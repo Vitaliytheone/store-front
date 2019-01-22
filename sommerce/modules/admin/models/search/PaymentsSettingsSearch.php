@@ -24,9 +24,9 @@ class PaymentsSettingsSearch
     }
 
     /**
-     * @return array
+     * @return \common\models\stores\queries\StorePaymentMethodsQuery
      */
-    public function search(): array
+    public function search()
     {
         return StorePaymentMethods::find()
             ->where(['store_id' => $this->store->id])

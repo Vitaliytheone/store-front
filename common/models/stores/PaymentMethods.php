@@ -155,13 +155,15 @@ class PaymentMethods extends ActiveRecord
      */
     public static function getNamesList(): array
     {
-        $methodsNames = static::find()
-            ->select(['name', 'id'])
-            ->indexBy('id')
-            ->asArray()
-            ->all();
-
-        return ArrayHelper::map($methodsNames, 'id', 'name');
+        if (empty(static::$allMethodsNames) || !is_array(static::$allMethodsNames)) {
+            $methodsNames = static::find()
+                ->select(['name', 'id'])
+                ->indexBy('id')
+                ->asArray()
+                ->all();
+            static::$allMethodsNames = ArrayHelper::map($methodsNames, 'id', 'name');
+        }
+        return static::$allMethodsNames;
     }
 
     /**

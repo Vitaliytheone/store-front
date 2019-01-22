@@ -13,6 +13,12 @@ customModule.adminPayments = {
                 method = $checkbox.data('payment_method'),
                 active = $checkbox.prop('checked') | 0;
 
+            if (active == true) {
+                $('#met-'+method).removeClass('text-muted');
+            } else {
+                $('#met-'+method).addClass('text-muted');
+            }
+
             $.ajax({
                 url: actionUrl,
                 type: "POST",

@@ -146,7 +146,7 @@ class StorePaymentMethods extends ActiveRecord
      * @param int $storeId current store id
      * @return array
      */
-    public static function getStoreNames($storeId): array
+    public static function getStorePayNames($storeId): array
     {
         if (empty(static::$storePaymentsNames) || !is_array(static::$storePaymentsNames)) {
             static::$storePaymentsNames = static::find()

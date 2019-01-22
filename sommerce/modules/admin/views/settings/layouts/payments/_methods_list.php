@@ -43,13 +43,13 @@ $names = StorePaymentMethods::getNames();
                                 <path d="M7 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm6-8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm0 6c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z" fill="#d4d4d4"></path>
                             </svg>
                         </div>
-                        <div class="sommerce-settings__payment-cart m-portlet <?= $method->visibility ? '' : 'text-muted' ?>">
+                        <div class="sommerce-settings__payment-cart m-portlet">
                             <div class="row align-items-center payment-main-block">
                                 <div class="col-12">
                                     <div class="payment-cart__preview">
                                         <img src="<?= $icons[$method->method_id]['icon'] ?>" alt="" class="img-fluid" style="">
                                     </div>
-                                    <div class="payment-cart__title">
+                                    <div id="met-<?= $method->method_id ?>" class="payment-cart__title <?= $method->visibility ? '' : 'text-muted' ?>">
                                         <?= $method->name ?: $names[$method->method_id] ?>
                                     </div>
                                     <div class="payment-cart__control d-flex justify-content-between align-items-center">
