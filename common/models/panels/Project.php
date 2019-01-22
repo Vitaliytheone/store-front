@@ -641,12 +641,12 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Enable domain (create panel domains and add domain to dns servers)
-     * @param bool $isSubdomain
+     * @param bool $externalSubDomain
      * @return bool
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function enableDomain($isSubdomain = false)
+    public function enableDomain($externalSubDomain = false)
     {
         $domain = $this->site;
 
@@ -667,11 +667,18 @@ class Project extends ActiveRecord implements ProjectInterface
 
         $result = true;
 
+        if ($externalSubDomain) {
+            if (!$this->enableExternalSubDomain()) {
+                return false;
+            }
+            return true;
+        }
+
         if (!$this->enableSubDomain()) {
             $result = false;
         }
 
-        if (!$this->enableMainDomain($isSubdomain)) {
+        if (!$this->enableMainDomain()) {
             $result = false;
         }
 
@@ -714,11 +721,38 @@ class Project extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Enable main domain
-     * @param bool $isSubdomain
+     * Enable external sub domain
      * @return bool
      */
-    public function enableMainDomain($isSubdomain = false)
+    public function enableExternalSubDomain(): bool
+    {
+        if (!PanelDomains::findOne([
+            'type' => PanelDomains::TYPE_SUBDOMAIN,
+            'panel_id' => $this->id
+        ])) {
+            if (!$this->enableSubDomain()) {
+                return false;
+            }
+
+            $panelDomain = new PanelDomains();
+            $panelDomain->type = PanelDomains::TYPE_SUBDOMAIN;
+            $panelDomain->panel_id = $this->id;
+            $panelDomain->domain = $this->site;
+
+            if (!$panelDomain->save(false)) {
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $this->id, $panelDomain->getErrors(), 'project.restore.domain');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Enable main domain
+     * @return bool
+     */
+    public function enableMainDomain()
     {
         $domain = $this->site;
 
@@ -727,7 +761,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ])) {
             $panelDomain = new PanelDomains();
-            $panelDomain->type = !$isSubdomain ? PanelDomains::TYPE_STANDARD : PanelDomains::TYPE_SUBDOMAIN;
+            $panelDomain->type = PanelDomains::TYPE_STANDARD;
             $panelDomain->panel_id = $this->id;
             $panelDomain->domain = $domain;
 
