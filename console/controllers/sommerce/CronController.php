@@ -82,7 +82,9 @@ class CronController extends CustomController
          */
         foreach ($storeQuery->batch() as $stores) {
             foreach ($stores as $store) {
-
+                if ($store->db_name === '') {
+                    continue;
+                }
                 // Init store
                 Yii::$app->store->setInstance($store);
                 foreach ($checkoutQuery->batch() as $checkouts) {
