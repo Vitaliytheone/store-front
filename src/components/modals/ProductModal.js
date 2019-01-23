@@ -32,6 +32,7 @@ class ProductModal extends Component {
         ...this.props.values.properties,
         this.props.values.item
       ]);
+      this.props.values.item = ""
     }
   };
 
@@ -49,6 +50,7 @@ class ProductModal extends Component {
           ...this.props.values.properties,
           this.props.values.item
         ]);
+        this.props.values.item = ""
       }
       event.preventDefault();
     }
