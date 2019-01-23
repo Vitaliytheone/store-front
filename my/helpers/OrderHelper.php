@@ -460,7 +460,7 @@ class OrderHelper {
             }
         }
 
-        if (!$project->enableDomain((bool)$subdomain)) {
+        if (!$project->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
         }
 

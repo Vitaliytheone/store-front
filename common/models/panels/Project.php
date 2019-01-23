@@ -641,7 +641,6 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Enable domain (create panel domains and add domain to dns servers)
-     * @param bool $externalSubDomain
      * @return bool
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
@@ -666,13 +665,6 @@ class Project extends ActiveRecord implements ProjectInterface
         }
 
         $result = true;
-
-        if ($externalSubDomain) {
-            if (!$this->enableExternalSubDomain()) {
-                return false;
-            }
-            return true;
-        }
 
         if (!$this->enableSubDomain()) {
             $result = false;
@@ -714,34 +706,6 @@ class Project extends ActiveRecord implements ProjectInterface
             if ($panelDomain->panel_id != $this->id) {
                 $panelDomain->panel_id = $this->id;
                 $panelDomain->save(false);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Enable external sub domain
-     * @return bool
-     */
-    public function enableExternalSubDomain(): bool
-    {
-        if (!PanelDomains::findOne([
-            'type' => PanelDomains::TYPE_SUBDOMAIN,
-            'panel_id' => $this->id
-        ])) {
-            if (!$this->enableSubDomain()) {
-                return false;
-            }
-
-            $panelDomain = new PanelDomains();
-            $panelDomain->type = PanelDomains::TYPE_SUBDOMAIN;
-            $panelDomain->panel_id = $this->id;
-            $panelDomain->domain = $this->site;
-
-            if (!$panelDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $this->id, $panelDomain->getErrors(), 'project.restore.domain');
-                return false;
             }
         }
 
