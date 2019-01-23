@@ -130,20 +130,21 @@ class PaymentsController extends CustomController
 
                                             if (PaymentsHelper::validatePaypalPayment($payments, $payerId, $payerEmail)) {
 
-                                                $payments->complete();
+                                                if ($payments->complete()) {
 
-                                                $paymentHashModel = new PaymentHash();
-                                                $paymentHashModel->load(array('PaymentHash' => array(
-                                                    'hash' => $response['PAYMENTINFO_0_TRANSACTIONID'],
-                                                )));
-                                                $paymentHashModel->save();
+                                                    $paymentHashModel = new PaymentHash();
+                                                    $paymentHashModel->load(array('PaymentHash' => array(
+                                                        'hash' => $response['PAYMENTINFO_0_TRANSACTIONID'],
+                                                    )));
+                                                    $paymentHashModel->save();
 
-                                                // Send email notification
-                                                $mail = new PaypalPassed([
-                                                    'payment' => $payments,
-                                                    'customer' => $invoice->customer
-                                                ]);
-                                                $mail->send();
+                                                    // Send email notification
+                                                    $mail = new PaypalPassed([
+                                                        'payment' => $payments,
+                                                        'customer' => $invoice->customer
+                                                    ]);
+                                                    $mail->send();
+                                                }
                                             } else {
 
                                                 $code = $payments->verification($payerId, $payerEmail);
@@ -531,18 +532,17 @@ class PaymentsController extends CustomController
             ]);
 			$payment = Payments::findOne(['id' => $_POST['item_id_1']]);
 
-	        if ($payment !== null) {
+	        if ($payment !== null && $payment->status != Payments::STATUS_COMPLETED) {
 
 	        	$this->paymentLog($_POST, $payment->id);
 
-	        	$payments = Payments::findOne(['id' => $_POST['item_id_1']]);
-                $payments->date_update = time();
-                $payments->response = 1;
-                $payments->update();
+                $payment->date_update = time();
+                $payment->response = 1;
+                $payment->update();
 
                 $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-                if ($invoice->status == 0 and $payment->status != 1) {
+                if ($invoice->status == 0) {
 
 					$account_number = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'account_number']);
 					$secret_word = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'secret_word']);
@@ -553,6 +553,7 @@ class PaymentsController extends CustomController
 					$StringToHash = strtoupper(md5($hashOrder . $hashSid . $hashInvoice . $secret_word));
 
                     $payments = Payments::findOne(['id' => $payment->id]);
+
                     $payments->comment = $hashOrder . '; ' . $hashInvoice;
                     $payments->transaction_id = $hashOrder;
 
@@ -563,20 +564,21 @@ class PaymentsController extends CustomController
 									$hash = PaymentHash::findOne(['hash' => $hashOrder]);
 			            			if ($hash === null) {
 
-                                        $payments->complete();
+                                        if ($payments->complete()) {
 
-	                					$paymentHashModel = new PaymentHash();
-										$paymentHashModel->load(array('PaymentHash' => array(
-											'hash' => $_POST['sale_id'],
-										)));
-										$paymentHashModel->save();
+                                            $paymentHashModel = new PaymentHash();
+                                            $paymentHashModel->load(array('PaymentHash' => array(
+                                                'hash' => $_POST['sale_id'],
+                                            )));
+                                            $paymentHashModel->save();
 
-										// Send email notification
-                                        $mail = new TwoCheckoutPass([
-                                            'payment' => $payments,
-                                            'customer' => $invoice->customer
-                                        ]);
-                                        $mail->send();
+                                            // Send email notification
+                                            $mail = new TwoCheckoutPass([
+                                                'payment' => $payments,
+                                                'customer' => $invoice->customer
+                                            ]);
+                                            $mail->send();
+                                        }
 
 										echo 'Ok';
 	                  					exit;
