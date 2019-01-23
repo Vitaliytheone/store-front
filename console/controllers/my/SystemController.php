@@ -837,8 +837,9 @@ class SystemController extends CustomController
         }
 
         $domainCount = 0;
+        $results = [];
 
-        $pagesCount = (int)$this->_getCloudnsApi('get-pages-count', '&rows-per-page=100');
+        $pagesCount = (int)Dns::pageCount();
 
         if ($pagesCount === 0) {
             $this->stdout("Could not get the number of pages. Try again.\n", Console::FG_RED);
@@ -847,64 +848,52 @@ class SystemController extends CustomController
 
         $this->stdout("Got a list of {$pagesCount} pages. Start checking and updating IP. Please wait for the completion of the operation.\n");
 
-        // get all domains for all page one by one
-        for ($i = 1; $i <= $pagesCount; $i++) {
+        $domainRawList = Dns::listZones([], $results);
 
-            $domainRawList = $this->_getCloudnsApi('list-zones', "&page={$i}&rows-per-page=100");
-            $domainRawList = json_decode($domainRawList, true);
+        if (empty($domainRawList) || !is_array($domainRawList)) {
+            $this->stdout("Could not get a list of domains. Try again.\n", Console::FG_RED);
+            exit;
+        }
 
-            if (empty($domainRawList[0]['name'])) {
-                $this->stdout("Could not get a list of domains. Try again.\n", Console::FG_RED);
-                exit;
+        // check all receive domains
+        foreach ($domainRawList as $domainArray) {
+
+            $domain = $domainArray['name'];
+            $results = [];
+
+            if (!Dns::getRecordInfo($domain, '', [], $results)) {
+                $this->stdout("Could not get 'А' record info for {$domain}. Moving to the next domain.\n", Console::FG_RED);
+                continue;
             }
 
-            // check all domain for current page
-            foreach ($domainRawList as $domainArray) {
-                $domain = $domainArray['name'];
+            $respType = strtolower($results['type']);
+            if ($respType != 'a') {
+                $this->stdout("Could not get 'А' record info for {$domain}. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
 
-//                $rawResponse = $this->_getCloudnsApi('records', "&domain-name={$domain}");
-                $rawResponse = '{"31749306":{"id":"31749306","type":"A","host":"","record":"51.255.71.105","dynamicurl_status":0,"failover":"0","ttl":"60","status":1},"33129686":{"id":"33129686","type":"NS","host":"","record":"ns1.perfectdns.com","failover":"0","ttl":"300","status":1},"33129687":{"id":"33129687","type":"NS","host":"","record":"ns2.perfectdns.com","failover":"0","ttl":"300","status":1},"33129688":{"id":"33129688","type":"NS","host":"","record":"ns3.perfectdns.com","failover":"0","ttl":"300","status":1},"31749312":{"id":"31749312","type":"CNAME","host":"www","record":"getyourpanel.com","failover":"0","ttl":"300","status":1}}';
+            $respIp = $results['record'];
+            if (empty($respIp)) {
+                $this->stdout("Could not get IP. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
 
-                $ip = json_decode($rawResponse, true);
+            $responseId = $results['id'];
+            if (empty($responseId)) {
+                $this->stdout("Could not get record ID. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
 
-                // fixme проверка что именно А запись
-//                $responseId = reset($ip)['id'];
-                foreach ($ip as $value) {
-                    if (array_column($value, 'type') == 'A') {
-                        $respIp = array_column($ip, 'record')[0];
-                        break;
-                    }
+            if ($respIp == $oldIp) {
+                $this->stdout("In the 'A' domain record {$domain} found the old ip address. Replace it with a new one.\n");
+                $changeResponse = Dns::modRecord($responseId, $domain, $newIp, $results);
+                if ($changeResponse == false) {
+                    $this->stdout("Could not change the 'A' domain records {$domain}. Error - {$changeResponse}\n", Console::FG_RED);
                 }
-
-                if ($respIp == $oldIp) {
-                    $this->stdout("In the 'A' domain record {$domain} found the old ip address. Replace it with a new one.\n");
-//                    $changeResponse = $this->_getCloudnsApi('mod-record', "&domain-name={$domain}&record-id={$responseId}&host=&record={$newIp}&ttl=60");
-                    if ($changeResponse == false) {
-                        $this->stdout("Could not change the 'A' domain records {$domain}. Error - {$changeResponse}\n", Console::FG_RED);
-                        // todo правильный ответ
-                    }
-                    $domainCount++;
-                }
+                $domainCount++;
             }
         }
 
         return $this->stdout("\nSuccessfully changed {$domainCount} IP addresses\n\n", Console::FG_GREEN);
-    }
-
-    /**
-     * Use CURL to get data from Cloudns API
-     * @param string $method API method name
-     * @param string $link Optional get parameter if specified
-     * @return string
-     */
-    private function _getCloudnsApi($method, $link = ''): string
-    {
-        $cloudId = Yii::$app->params['dnsId'];
-        $cloudPass = Yii::$app->params['dnsPassword'];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.cloudns.net/dns/{$method}.json?auth-id={$cloudId}&auth-password={$cloudPass}{$link}");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        return curl_exec($ch);
     }
 }
