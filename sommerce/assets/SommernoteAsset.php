@@ -26,6 +26,6 @@ class SommernoteAsset extends AssetBundle
 
     public $depends = [
         'sommerce\assets\JqueryAsset',
-        'sommerce\assets\JqueryUIAsset',
+        'sommerce\assets\JqueryUiAsset',
     ];
 }
