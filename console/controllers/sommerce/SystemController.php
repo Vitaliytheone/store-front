@@ -390,10 +390,9 @@ class SystemController extends CustomController
      */
     public function actionApplyCheckout(): string
     {
-
         $stores = (new Query())
             ->select('db_name')
-            ->from(DB_STORES)
+            ->from(DB_STORES . '.stores')
             ->where('db_name is not null')
             ->andWhere('db_name != ""')
             ->all();
@@ -530,6 +529,41 @@ class SystemController extends CustomController
                 Yii::$app->db->createCommand()->update($store->db_name . '.checkouts', [
                         'method_id' => $id
                     ], ['method_id' => $currentId])->execute();
+            }
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function actionCheckoutsDataPrepare()
+    {
+        $stores = (new Query())
+            ->select('db_name')
+            ->from(DB_STORES . '.stores')
+            ->where('db_name is not null')
+            ->andWhere('db_name != ""')
+            ->all();
+
+        foreach ($stores as $store) {
+            $payments = (new Query())
+                ->select(['checkout_id', 'method'])
+                ->from($store['db_name'] . '.payments')
+                ->all();
+
+            foreach ($payments as $payment) {
+                if ($payment['method'] == 'twocheckout') {
+                    $payment['method'] = '2checkout';
+                }
+                $method = PaymentMethods::findOne(['method_name' => $payment['method']]);
+
+                if (!isset($method)) {
+                    continue;
+                }
+
+                Yii::$app->db->createCommand()->update($store['db_name'] . '.checkouts', [
+                    'method_id' => $method->id
+                ], ['id' => $payment['checkout_id']])->execute();
             }
         }
     }
