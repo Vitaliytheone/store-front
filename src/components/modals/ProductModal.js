@@ -11,7 +11,6 @@ import { SketchPicker } from "react-color";
 // import ReactSummernote from 'react-summernote';
 // import 'react-summernote/dist/react-summernote.css'; // import styles
 
-
 // // Import bootstrap(v3 or v4) dependencies
 // import 'bootstrap/js/src/dropdown';
 // import 'bootstrap/js/src/tooltip';
@@ -20,60 +19,71 @@ import "bootstrap/js/src/modal";
 class ProductModal extends Component {
   state = {
     colorSchema: false,
-    color: "",
-    item: "",
-    properties: []
+    editSeo: false
   };
 
-  // toggle = () => {
-  //   this.setState(prevstate => ({
-  //     colorSchema: !prevstate.colorSchema
-  //   }));
-  // };
-
-  onChange = event => {
-    this.setState({
-      item: event.target.value
-    });
-  };
+  clearColor = (event) => {
+    this.props.setFieldValue("color", event.target.value)
+  }
 
   addProperty = () => {
-    this.setState({
-      properties: [...this.state.properties, this.state.item]
-    });
-    this.props.setFieldValue("properties", this.state.properties)
+    if (this.props.values.item.replace(/\s/g, "") !== "") {
+      this.props.setFieldValue("properties", [
+        ...this.props.values.properties,
+        this.props.values.item
+      ]);
+    }
   };
 
   deleteProperty = index => () => {
-    const newProperties = [...this.state.properties];
-    newProperties.splice(index, 1);
-    this.setState({ properties: newProperties });
+    this.props.setFieldValue(
+      "properties",
+      this.props.values.properties.filter((_, i) => i !== index)
+    );
+  };
+
+  handleKeyPress = event => {
+    if (event.key === "Enter") {
+      if (this.props.values.item.replace(/\s/g, "") !== "") {
+        this.props.setFieldValue("properties", [
+          ...this.props.values.properties,
+          this.props.values.item
+        ]);
+      }
+      event.preventDefault();
+    }
   };
 
   handlePropertiesSwitch = ({ oldIndex, newIndex }) => {
-    const { properties } = this.state;
-    const propertiesMove = arrayMove(properties, oldIndex, newIndex);
-    this.setState({
-      properties: propertiesMove
-    });
+    const propertiesMove = arrayMove(
+      this.props.values.properties,
+      oldIndex,
+      newIndex
+    );
+    this.props.setFieldValue("properties", propertiesMove);
   };
 
   handleChangeComplete = color => {
-    this.setState({ color: color.hex });
     this.props.setFieldValue("color", color.hex);
   };
 
+  openSeoEditor = () => {
+    this.setState(prevstate => ({
+      editSeo: !prevstate.editSeo
+    }));
+  }
+
   openColorSchema = () => {
-    this.setState({
-      colorSchema: !this.state.colorSchema
-    });
+    this.setState(prevstate => ({
+      colorSchema: !prevstate.colorSchema
+    }));
   };
 
   closeColorSchema = () => {
     this.setState({
       colorSchema: false
-    })
-  }
+    });
+  };
 
   componentDidMount() {
     window.$(document).ready(() => {
@@ -84,24 +94,28 @@ class ProductModal extends Component {
       });
       window.$(".summernote").on("summernote.change", event => {
         // callback as jquery custom event
-        this.props.setFieldValue(
+      this.props.setFieldValue(
           "description",
-        window.$(event.target).summernote("code")
+          window.$(event.target).summernote("code")
         );
       });
     });
   }
 
   render() {
-    const { values } = this.props;
-    const { color, colorSchema } = this.state;
-    const seoName = values.name.replace(/ /g, "-");
+    const { values, setFieldValue } = this.props;
+    const { colorSchema, editSeo } = this.state;
+    const seoUrl = values.url.replace(/ /g, "-");
 
     let colorHex;
     if (colorSchema) {
-      colorHex = ( <div className="color-schema">
+      colorHex = (
+        <div className="color-schema">
           <div className="cover-schema" onClick={this.closeColorSchema} />
-          <SketchPicker color={this.state.background} onChangeComplete={this.handleChangeComplete} />
+          <SketchPicker
+            color={this.props.values.color}
+            onChange={this.handleChangeComplete}
+          />
         </div>
       );
     }
@@ -125,8 +139,8 @@ class ProductModal extends Component {
               component="select"
               name="visibility"
             >
-              <option value="Enabled">Enabled</option>
-              <option value="Disabled">Disabled</option>
+              <option value="1">Enabled</option>
+              <option value="2">Disabled</option>
             </Field>
           </FormGroup>
 
@@ -137,10 +151,11 @@ class ProductModal extends Component {
                 type="text"
                 className="product-color"
                 id="package-color2"
-                value={color}
+                value={this.props.values.color}
+                onChange={this.clearColor}
               />
-              <div class="sp-replacer sp-light" onClick={this.openColorSchema}>
-                <div class="sp-preview">
+              <div class="sp-replacer sp-light"  onClick={this.openColorSchema}>
+                <div class="sp-preview" style={{background: this.props.values.color ? `${this.props.values.color}` : null }}>
                   <div
                     class="sp-preview-inner sp-clear-display"
                     style={{ backgroundColor: "transparent" }}
@@ -149,7 +164,7 @@ class ProductModal extends Component {
                 <div class="sp-dd">▼</div>
               </div>
             </div>
-              {colorHex}
+            {colorHex}
           </FormGroup>
 
           <FormGroup>
@@ -277,10 +292,13 @@ class ProductModal extends Component {
               <div className="form-group">
                 <div className="input-group">
                   <input
-                    value={this.state.item}
+                    value={values.item}
                     type="text"
                     className="form-control input-properties"
-                    onChange={this.onChange}
+                    onKeyPress={this.handleKeyPress}
+                    onChange={event =>
+                      setFieldValue("item", event.target.value)
+                    }
                   />
                   <span className="input-group-btn">
                     <button
@@ -306,7 +324,7 @@ class ProductModal extends Component {
             <div className="dd-properties">
               <div className="dd" id="nestableProperties">
                 <PropertiesList
-                  properties={this.state.properties}
+                  properties={values.properties}
                   deleteProperty={this.deleteProperty}
                   onSortEnd={this.handlePropertiesSwitch}
                   useDragHandle={true}
@@ -322,16 +340,16 @@ class ProductModal extends Component {
               <div className="row seo-header align-items-center">
                 <div className="col-sm-8">Search engine listing preview</div>
                 <div className="col-sm-4 text-sm-right">
-                  <a className="btn btn-sm btn-link" href="#seo-block">
+                  <a className="btn btn-sm btn-link" href="#" onClick={this.openSeoEditor}>
                     Edit website SEO
                   </a>
                 </div>
               </div>
 
               <div className="seo-preview">
-                {values.name ? (
+                {values.seo_title ? (
                   <div className="seo-preview__title edit-seo__title">
-                    {values.name}
+                    {values.seo_title}
                   </div>
                 ) : (
                   <div className="seo-preview__title edit-seo__title">
@@ -340,25 +358,25 @@ class ProductModal extends Component {
                 )}
                 <div className="seo-preview__url">
                   http://fastinsta.sommerce.net/
-                  <span className="edit-seo__url">{seoName}</span>
+                  <span className="edit-seo__url">{seoUrl}</span>
                 </div>
                 <div className="seo-preview__description edit-seo__meta">
-                  A great About Us page helps builds trust between you and your
-                  customers. The more content you provide about you and your
-                  business, the more confident people wil...
+                    {values.seo_description}
                 </div>
               </div>
 
-              <div className="collapse" id="seo-block">
+             
+              <div className={editSeo ? null : "collapse"} id="seo-block">
                 <div className="form-group">
                   <label htmlFor="edit-seo__title">Page title</label>
-                  <input
+                  <Input
                     className="form-control"
                     id="edit-seo__title"
-                    value="Product"
+                    value={values.seo_title}
+                    onChange={(event => setFieldValue("seo_title", event.target.value))}
                   />
                   <small className="form-text text-muted">
-                    <span className="edit-seo__title-muted" /> of 70 characters
+                    <span className="edit-seo__title-muted" />{values.seo_title.length} of 70 characters
                     used
                   </small>
                 </div>
@@ -368,13 +386,11 @@ class ProductModal extends Component {
                     className="form-control"
                     id="edit-seo__meta"
                     rows="3"
-                  >
-                    A great About Us page helps builds trust between you and
-                    your customers. The more content you provide about you and
-                    your business, the more confident people will text
+                    onChange={(event => setFieldValue("seo_description", event.target.value))}
+                >
                   </textarea>
                   <small className="form-text text-muted">
-                    <span className="edit-seo__meta-muted" /> of 160 characters
+                    <span className="edit-seo__meta-muted" /> {values.seo_description.length} of 160 characters
                     used
                   </small>
                 </div>
@@ -384,6 +400,7 @@ class ProductModal extends Component {
                     className="form-control"
                     id="edit-seo__meta-keyword"
                     rows="3"
+                    onChange={(event => setFieldValue("seo_keywords", event.target.value))}
                   />
                 </div>
                 <div className="form-group">
@@ -396,7 +413,8 @@ class ProductModal extends Component {
                       type="text"
                       className="form-control"
                       id="edit-seo__url"
-                      value="about-us"
+                      value={values.url}
+                      onChange={(event => setFieldValue("url", event.target.value))}
                     />
                   </div>
                 </div>
@@ -408,6 +426,5 @@ class ProductModal extends Component {
     );
   }
 }
-
 
 export default ProductModal;

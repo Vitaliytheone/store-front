@@ -49,7 +49,7 @@ class AddProduct extends Component {
             {({ setFieldValue, values }) => (
               <Form>
                 <ModalHeader toggle={this.toggle}>Add product</ModalHeader>
-                <ProductModal setFieldValue={setFieldValue} values={values}/>
+                <ProductModal setFieldValue={setFieldValue} values={values} />
                 <ModalFooter className="justify-content-start">
                   <Button color="primary" type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Loading..." : "Add product"}
@@ -82,8 +82,9 @@ AddProduct.propTypes = {
 
 AddProduct.defaultProps = {
   initialValues: {
+    item: "",
     name: "",
-    visibility: 1,
+    visibility: "1",
     color: "",
     description: "",
     properties: [],

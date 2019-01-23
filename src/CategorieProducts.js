@@ -13,7 +13,7 @@ import {
   deletePackage,
   addListing
 } from "./services/url";
-import { sortBy, pick } from "lodash";
+import { sortBy, pick, omit } from "lodash";
 import data from "./data.json";
 
 // console.log(window.appConfig.api_endpoints);  
@@ -100,27 +100,28 @@ async componentDidMount() {
       position: newProductIndex,
       visibility: values.visibility,
       color: values.color,
-      properties: "",
-      seo_title: "",
-      seo_description: "",
-      seo_keywords: "",
-      url: "",
       description: values.description,
+      properties: values.properties,
+      seo_title: values.seo_title,
+      seo_description: values.seo_description,
+      seo_keywords: values.seo_keywords,
+      url: values.url,
       packages: []
     };
-    console.log(newProduct);
+    const requestProduct = omit(newProduct, ["position", "packages"]);
+    console.log(requestProduct);
     this.setState(prevState => ({
       ...prevState,
       data: [...prevState.data, newProduct]
     }));
-    const response = await addProduct(newProduct);
+    const response = await addProduct(requestProduct);
     const newData = [...this.state.data];
     //add new product to array end (server return)
-    newData[newProductIndex] = response.data;
-    this.setState({
-      data: newData
-    });
-    actions.setSubmitting(false);
+    // newData[newProductIndex] = response.data;
+    // this.setState({
+    //   data: newData
+    // });
+    // actions.setSubmitting(false);
   };
 
   handleAddPackage = productIndex => async (values, actions) => {

@@ -17,11 +17,11 @@ class PackageModal extends Component {
         {/* Alert Error End */}
 
         <FormGroup>
-          <Field name="name" component={PackageInput} label="Package name *" placeholder="package" id="package-name" required />
+          <Field name="name" component={PackageInput} label="Package name *" placeholder="package" id="package-name"  required />
         </FormGroup>
 
         <FormGroup>
-          <Field name="price" component={PackageInput} label="Price *" placeholder="price" id="package-price" required />
+          <Field name="price" component={PackageInput} label="Price *" placeholder="price" id="package-price" type="number" required />
         </FormGroup>
       
         <FormGroup>
