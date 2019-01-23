@@ -534,10 +534,14 @@ class SystemController extends CustomController
     }
 
     /**
+     * 5) Update old checkouts.method_id ID in checkouts to new one
      * @throws Exception
+     * @return string
      */
-    public function actionCheckoutsDataPrepare()
+    public function actionCheckoutsDataPrepare(): string
     {
+        $count = $storeCount = 0;
+
         $stores = (new Query())
             ->select('db_name')
             ->from(DB_STORES . '.stores')
@@ -546,6 +550,9 @@ class SystemController extends CustomController
             ->all();
 
         foreach ($stores as $store) {
+            if (Yii::$app->db->getTableSchema($store['db_name'].'.payments', true) === null) {
+                continue;
+            }
             $payments = (new Query())
                 ->select(['checkout_id', 'method'])
                 ->from($store['db_name'] . '.payments')
@@ -561,10 +568,17 @@ class SystemController extends CustomController
                     continue;
                 }
 
+                if (Yii::$app->db->getTableSchema($store['db_name'].'.checkouts', true) === null) {
+                    continue;
+                }
                 Yii::$app->db->createCommand()->update($store['db_name'] . '.checkouts', [
                     'method_id' => $method->id
                 ], ['id' => $payment['checkout_id']])->execute();
+
+                $count++;
             }
+            $storeCount++;
         }
+        return $this->stdout("SUCCESSFULLY change {$count} checkouts.method_id in {$storeCount} stores.checkouts DB\n");
     }
 }
