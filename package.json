@@ -73,7 +73,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js && mv build ./public/js/react",
+    "build": "node scripts/build.js && mv build ./sommerce/web/react",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
