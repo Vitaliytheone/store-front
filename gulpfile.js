@@ -49,6 +49,8 @@ gulp.task('js-gateway', function(done) {
     return gulp.src([
         './gateway/web/js/app/*.js',
         './gateway/web/js/app/admin/*.js',
+        './gateway/web/js/app/controllers/*.js',
+        './gateway/web/js/app/controllers/*/*.js',
     ])
         .pipe(concat('main.js'))
         .pipe(uglify())
