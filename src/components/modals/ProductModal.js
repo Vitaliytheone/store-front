@@ -64,7 +64,6 @@ class ProductModal extends Component {
     );
     this.props.setFieldValue("properties", propertiesMove);
   };
-
   handleChangeComplete = color => {
     this.props.setFieldValue("color", color.hex);
   };
