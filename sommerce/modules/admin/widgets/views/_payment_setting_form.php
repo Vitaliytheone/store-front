@@ -16,7 +16,7 @@ use yii\base\Widget;
     <div id="editPaymentMethodOptions">
         <div class="form-group">
             <?= Html::label(Yii::t('admin', 'settings.payments_edit_method_name'), 'edit-name') ?>
-            <?= Html::input('text', 'pay-name', $name, ['id' => 'edit-name', 'class' => 'form-control']); ?>
+            <?= Html::input('text', 'pay-name', $name, ['id' => 'edit-name', 'class' => 'form-control', 'required' => true]); ?>
         </div>
 
         <?php foreach ($paymentData as $formField): ?>

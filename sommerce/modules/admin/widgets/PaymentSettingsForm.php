@@ -24,6 +24,9 @@ class PaymentSettingsForm extends Widget
     /** @var string  */
     public $cancelUrl = '';
 
+    /** @var string  */
+    public $name = '';
+
     /**
      * {@inheritdoc}
      */
@@ -43,7 +46,7 @@ class PaymentSettingsForm extends Widget
             'paymentData' => $this->getMethodFormData($this->paymentModel),
             'submitUrl' => $this->submitUrl,
             'cancelUrl' => $this->cancelUrl,
-            'name' => $this->paymentModel->name,
+            'name' => $this->name,
         ]);
     }
 

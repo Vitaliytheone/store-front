@@ -89,6 +89,7 @@ trait PaymentsTrait
             'paymentData' => [
                 'icon' => $paymentMethod->icon,
                 'description' => $paymentMethod->getSettingsFormDescription(),
+                'name' => !empty($paymentModel->name) ? $paymentModel->name : $paymentMethod->name,
             ],
         ]);
     }
