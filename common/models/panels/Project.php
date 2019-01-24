@@ -645,7 +645,7 @@ class Project extends ActiveRecord implements ProjectInterface
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function enableDomain($externalSubDomain = false)
+    public function enableDomain()
     {
         $domain = $this->site;
 

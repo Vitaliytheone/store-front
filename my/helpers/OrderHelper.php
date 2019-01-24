@@ -345,7 +345,6 @@ class OrderHelper {
         $project->dns_status = Project::DNS_STATUS_ALIEN;
         $project->generateDbName();
         $project->generateExpired();
-        $project->subdomain = (bool)$subdomain ? 1 : 0;
 
         if ($child) {
             $project->child_panel = 1;
