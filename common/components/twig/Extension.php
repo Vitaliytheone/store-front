@@ -59,7 +59,9 @@ class Extension extends \Twig_Extension {
     /** @inheritdoc */
     public function getFilters()
     {
-        $filters = [];
+        $filters = [
+            new \Twig_SimpleFilter('money', function () {})
+        ];
 
         return $filters;
     }
