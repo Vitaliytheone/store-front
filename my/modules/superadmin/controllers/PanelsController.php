@@ -69,8 +69,8 @@ class PanelsController extends CustomController
                     'downgrade' => ['POST'],
                     'change-status' => ['POST'],
                     'edit-payment-methods' => ['GET', 'POST'],
-                    'delete-payment-method' => ['POST'],
-                    'allow-payment' => ['POST'],
+                    'delete-payment-method' => ['GET'],
+                    'allow-payment' => ['GET'],
                 ],
             ],
             'content' => [
@@ -314,6 +314,7 @@ class PanelsController extends CustomController
      */
     public function actionEditPaymentMethods($id)
     {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.panels.edit_payment_methods');
         $project = $this->findModel($id);
 
         $model = new EditPanelPaymentMethodsForm();
@@ -335,50 +336,40 @@ class PanelsController extends CustomController
 
     /**
      * @param int $id - panel id
+     * @param int $method_id
      * @return Response
      * @throws NotFoundHttpException
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function actionDeletePaymentMethod($id)
+    public function actionDeletePaymentMethod($id, $method_id)
     {
         $project = $this->findModel($id);
-        $data = Yii::$app->request->post();
-
-        if (empty($data) || !isset($data['method_id'])) {
-            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
-        }
 
         $model = new EditPanelPaymentMethodsForm();
         $model->setPanel($project);
-        $model->deletePaymentMethod($data['method_id']);
+        $model->deletePaymentMethod($method_id);
 
         return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
     }
 
     /**
      * @param int $id - panel id
+     * @param int $method_id
+     * @param int $allow
      * @return Response
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws \yii\db\Exception
      */
-    public function actionAllowPayment($id)
+    public function actionAllowPayment($id, $method_id, $allow)
     {
-        $data = Yii::$app->request->post();
-
-        if (empty($data) || !isset($data['method_id']) || !isset($data['allow'])) {
-            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
-        }
-
         $project = $this->findModel($id);
 
         $model = new EditPanelPaymentMethodsForm();
         $model->setPanel($project);
-        $model->setConnection(Yii::$app->panelDb);
 
-        if (!$model->changeAvailability($data['method_id'], $data['allow'])) {
+        if (!$model->changeAvailability($method_id, $allow)) {
             throw new BadRequestHttpException();
         }
 

@@ -446,12 +446,7 @@ customModule.superadminPanelsController = {
             e.preventDefault();
             var link = $(this);
             custom.confirm(link.data('title'), '', function() {
-                $.ajax({
-                    url: link.attr('href'),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: link.data('params')
-                });
+                window.location.replace(link.attr('href'));
             });
             return false;
         });
@@ -460,12 +455,7 @@ customModule.superadminPanelsController = {
             e.preventDefault();
             var link = $(this);
             custom.confirm(link.data('title'), '', function() {
-                $.ajax({
-                    url: link.attr('href'),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: link.data('params')
-                });
+                window.location.replace(link.attr('href'));
             });
             return false;
         });

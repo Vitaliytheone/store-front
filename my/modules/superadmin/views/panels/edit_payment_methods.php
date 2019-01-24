@@ -71,24 +71,18 @@ $this->context->addModule('superadminPanelsController');
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <?= Html::a(Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.delete'),
-                                    Url::toRoute(['/panels/delete-payment-method', 'id' => $panel->id]), [
+                                    Url::toRoute(['/panels/delete-payment-method', 'id' => $panel->id, 'method_id' => $payment['id']]), [
                                         'class' => 'dropdown-item',
-                                        'data-method' => 'POST',
-                                        'data-params' => ['method_id' => $payment['id']]
                                     ])?>
                                 <?= Html::a(Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.allow'),
-                                    Url::toRoute(['/panels/allow-payment', 'id' => $panel->id]), [
+                                    Url::toRoute(['/panels/allow-payment', 'id' => $panel->id, 'method_id' => $payment['id'], 'allow' => Users::PAYMENT_METHOD_ALLOW]), [
                                         'class' => 'dropdown-item allow-payment-method',
                                         'data-title' => Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.allow_confirm'),
-                                        'data-method' => 'POST',
-                                        'data-params' => ['method_id' => $payment['id'], 'allow' => Users::PAYMENT_METHOD_ALLOW]
                                     ])?>
                                 <?= Html::a(Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.disallow'),
-                                    Url::toRoute(['/panels/allow-payment', 'id' => $panel->id]), [
+                                    Url::toRoute(['/panels/allow-payment', 'id' => $panel->id, 'method_id' => $payment['id'], 'allow' => Users::PAYMENT_METHOD_DISALLOW]), [
                                         'class' => 'dropdown-item disallow-payment-method',
                                         'data-title' => Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.disallow_confirm'),
-                                        'data-method' => 'POST',
-                                        'data-params' => ['method_id' => $payment['id'], 'allow' => Users::PAYMENT_METHOD_DISALLOW]
                                     ])?>
                             </div>
                         </div>

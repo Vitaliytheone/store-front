@@ -72,6 +72,7 @@ return [
     'pages.title.gateways' => 'Gateways',
     'pages.pagination.to' => ' to ',
     'pages.pagination.of' => ' of ',
+    'pages.title.panels.edit_payment_methods' => 'Panels - Edit Payment Methods',
 
     'panels.edit.header' => 'Edit {domain} panel',
     'panels.edit.panel_name' => 'Panel name',

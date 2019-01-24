@@ -13,8 +13,6 @@ use common\models\panels\services\GetPanelPaymentMethodsService;
 use common\models\panels\services\GetPaymentMethodsCurrencyService;
 use yii\base\Model;
 use Yii;
-use yii\db\Connection;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -51,11 +49,6 @@ class EditPanelPaymentMethodsForm extends Model
     protected static $panelPaymentMethods;
 
     /**
-     * @var Connection
-     */
-    protected $db;
-
-    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -73,14 +66,6 @@ class EditPanelPaymentMethodsForm extends Model
     public function setPanel(Project $panel)
     {
         $this->_panel = $panel;
-    }
-
-    /**
-     * @param $db
-     */
-    public function setConnection(Connection $db)
-    {
-        $this->db = $db;
     }
 
     /**
@@ -122,10 +107,9 @@ class EditPanelPaymentMethodsForm extends Model
      * @param int $methodId
      * @param int $allow 1 - allow; 0 - disallow
      * @return bool
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws \yii\db\Exception
      */
-    public function changeAvailability(int $methodId, $allow = 1): bool
+    public function changeAvailability(int $methodId, int $allow = 1): bool
     {
         $range = [Users::PAYMENT_METHOD_DISALLOW, Users::PAYMENT_METHOD_ALLOW];
         $paymentMethod = PaymentMethods::findOne($methodId);
