@@ -18,4 +18,6 @@ return [
     'getyourpanelKey' => 'j84GG5H6CfkjeHZxWzdSGqFw8TpfP2Tb', // ключ используется для доступа к http://getyourpanel.com для проверки провайдера
 
     'localApiDomain' => 'http://localapi2/api/v2', // ссылка на АПИ для сендера
+
+    'testPagseguro' => 'true', // включение тестового режима на Пагсегуро
 ];

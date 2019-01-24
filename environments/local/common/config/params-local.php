@@ -12,7 +12,7 @@ return [
 
     'panelSqlPath' => Yii::getAlias('@sommerce/runtime/sql/panel_template.sql'), // Путь к дампу базы данных соззданной панели
     'storeSqlPath' => Yii::getAlias('@sommerce/runtime/sql/store_template.sql'), // Путь к дампу базы данных созданного магазина
-    'gatewaySqlPath' => Yii::getAlias('@sommerce/runtime/sql/gateway_template.sql'),
+    'gatewaySqlPath' => Yii::getAlias('@sommerce/runtime/sql/gateway_template.sql'), // Путь к дампу базы данных созданного гейтвея
 
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
     'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых панелей
@@ -21,7 +21,7 @@ return [
     'myUrl' => 'http://sommerce.local/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.local', // Домен нашего сайта
     'storeDomain' => 'sommerce.local', // Домен нашего сайта
-    'gatewayDomain' => 'gateway.local',
+    'gatewayDomain' => 'gateway.local', // домен гейтвея
 
     'nginx_restart' => '/etc/init.d/nginx restart',
 

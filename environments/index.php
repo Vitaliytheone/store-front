@@ -38,6 +38,7 @@ return [
             'sommerce/web/assets',
             'my/runtime',
             'my/web/assets',
+            'console/runtime',
         ],
         'setExecutable' => [
             'yii',
@@ -57,6 +58,7 @@ return [
             'sommerce/web/assets',
             'my/runtime',
             'my/web/assets',
+            'console/runtime',
         ],
         'setExecutable' => [
             'yii',
@@ -79,6 +81,7 @@ return [
             'sommerce/web/assets',
             'my/runtime',
             'my/web/assets',
+            'console/runtime',
         ],
         'setExecutable' => [
             'yii',
