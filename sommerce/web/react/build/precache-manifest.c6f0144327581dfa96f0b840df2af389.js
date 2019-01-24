@@ -12,20 +12,20 @@ self.__precacheManifest = [
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.2d5f15f9.eot"
   },
   {
-    "revision": "d751a5f71030efec99def8070dad7a81",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.d751a5f7.woff2"
-  },
-  {
     "revision": "b9c91f8037ec3d998566b33feb1f4a83",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.b9c91f80.woff"
   },
   {
-    "revision": "6b6feb61813dddd403e663c2c307b51c",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
-  },
-  {
     "revision": "f69ee90505162eb58ad8bf12da674b66",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
+  },
+  {
+    "revision": "d751a5f71030efec99def8070dad7a81",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.d751a5f7.woff2"
+  },
+  {
+    "revision": "6b6feb61813dddd403e663c2c307b51c",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
   },
   {
     "revision": "608fd10666a860567740497e84492928",
@@ -56,12 +56,12 @@ self.__precacheManifest = [
     "url": "/static/media/Flaticon.d95fe953.ttf"
   },
   {
-    "revision": "6f261860669b4302acac7aefa3ec6609",
-    "url": "/static/media/Flaticon.6f261860.eot"
-  },
-  {
     "revision": "f33df365d6d0255b586f2920355e94d7",
     "url": "/static/media/Simple-Line-Icons.f33df365.eot"
+  },
+  {
+    "revision": "6f261860669b4302acac7aefa3ec6609",
+    "url": "/static/media/Flaticon.6f261860.eot"
   },
   {
     "revision": "8b1290595e57e1d49d95ff3fa1129ecc",
@@ -84,12 +84,12 @@ self.__precacheManifest = [
     "url": "/static/media/line-awesome.4d42f5f0.ttf"
   },
   {
-    "revision": "b06871f281fee6b241d60582ae9369b9",
-    "url": "/static/media/fontawesome-webfont.b06871f2.ttf"
-  },
-  {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
     "url": "/static/media/fontawesome-webfont.674f50d2.eot"
+  },
+  {
+    "revision": "b06871f281fee6b241d60582ae9369b9",
+    "url": "/static/media/fontawesome-webfont.b06871f2.ttf"
   },
   {
     "revision": "3fd7f4cf50e7716bf377b6296cf05619",
