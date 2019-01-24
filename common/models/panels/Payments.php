@@ -392,6 +392,13 @@ class Payments extends ActiveRecord
      */
     public function complete()
     {
+        $transaction = Yii::$app->db->beginTransaction();
+        $this->refresh();
+
+        if ($this->status == static::STATUS_COMPLETED) {
+            $transaction->rollBack();
+            return false;
+        }
         $invoice = $this->invoice;
 
         // Mark invoice paid
@@ -402,7 +409,13 @@ class Payments extends ActiveRecord
         }
 
         $this->status = static::STATUS_COMPLETED;
-        $this->update(false);
+        if (!$this->update(false)) {
+            $transaction->rollBack();
+            return false;
+        }
+
+        $transaction->commit();
+        return true;
     }
 
     /**
