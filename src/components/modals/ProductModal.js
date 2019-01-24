@@ -88,6 +88,7 @@ class ProductModal extends Component {
   };
 
   componentDidMount() {
+    // this.name.focus();
     window.$(document).ready(() => {
       window.$(".summernote").summernote({
         height: 300,
@@ -108,7 +109,7 @@ class ProductModal extends Component {
     const { values, setFieldValue } = this.props;
     const { colorSchema, editSeo } = this.state;
     const seoUrl = values.url.replace(/ /g, "-");
-
+    
     let colorHex;
     if (colorSchema) {
       colorHex = (
@@ -156,14 +157,14 @@ class ProductModal extends Component {
                 value={this.props.values.color}
                 onChange={this.clearColor}
               />
-              <div class="sp-replacer sp-light"  onClick={this.openColorSchema}>
-                <div class="sp-preview" style={{background: this.props.values.color ? `${this.props.values.color}` : null }}>
+              <div className="sp-replacer sp-light"  onClick={this.openColorSchema}>
+                <div className="sp-preview" style={{background: this.props.values.color ? `${this.props.values.color}` : null }}>
                   <div
-                    class="sp-preview-inner sp-clear-display"
+                    className="sp-preview-inner sp-clear-display"
                     style={{ backgroundColor: "transparent" }}
                   />
                 </div>
-                <div class="sp-dd">▼</div>
+                <div className="sp-dd">▼</div>
               </div>
             </div>
             {colorHex}
@@ -195,7 +196,7 @@ class ProductModal extends Component {
               }}
               onChange={this.onChange}
             /> */}
-            <div class="summernote" />
+            <div className="summernote" />
           </FormGroup>
 
           <div className="card card-white mb-3">

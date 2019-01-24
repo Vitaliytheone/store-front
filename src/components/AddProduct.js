@@ -70,7 +70,7 @@ class AddProduct extends Component {
 AddProduct.propTypes = {
   initialValues: PropTypes.shape({
     name: PropTypes.string,
-    visibility: PropTypes.number,
+    visibility: PropTypes.string,
     color: PropTypes.string,
     description: PropTypes.string,
     properties: PropTypes.array,

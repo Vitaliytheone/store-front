@@ -2,12 +2,19 @@ import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { Formik, Form } from "formik";
 import PackageModal from "./modals/PackageModal";
-
+import PropTypes from "prop-types";
 
 class EditPackage extends Component {
   state = {
     modalIsOpen: false
   };
+
+  handleGetPackage = (...params) => {
+    this.setState(prevstate => ({
+      modalIsOpen: !prevstate.modalIsOpen
+    }));
+    this.props.getPackage(...params);
+  }
 
   toggle = () => {
     this.setState(prevstate => ({
@@ -22,30 +29,34 @@ class EditPackage extends Component {
     this.props.onSubmit(...params);
   };
 
+
   render() {
-    const { packageValue } = this.props;
+    console.log(this.props.response.package);
+    const { response } = this.props;
     return (
       <React.Fragment>
         <Button 
-          onClick={this.toggle}
+          onClick={this.handleGetPackage}
           color="primary"
           size="sm"
           className="m-btn--pill sommerce_dragtable__action"
         >
           Edit
         </Button>
-        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggle}  backdrop='static'
+        <Modal isOpen={this.state.modalIsOpen} backdrop='static'
           keyboard={false}>
           <Formik
             onSubmit={this.handleSubmit}
+            enableReinitialize={true}
             initialValues={{
-              name: packageValue.name,
-              price: packageValue.price,
-              quantity: packageValue.quantity,
-              overflow: packageValue.overflow,
-              availability: packageValue.availability,
-              mode: packageValue.mode,
-              provider: packageValue.provider
+              name: response.package.name,
+              price: response.package.price,
+              quantity: response.package.quantity,
+              overflow: response.package.overflow,
+              availability: response.package.availability,
+              mode: response.package.mode,
+              provider_id: response.package.provider_id,
+              provider_service_id: response.package.provider_service_id
             }}
           >
             <Form>
@@ -68,5 +79,31 @@ class EditPackage extends Component {
     );
   }
 }
+
+EditPackage.propTypes = {
+  initialValues: PropTypes.shape({
+    name: PropTypes.string,
+    price: PropTypes.number,
+    quantity: PropTypes.number,
+    overflow: PropTypes.number,
+    availability: PropTypes.string,
+    mode: PropTypes.string,
+    provider: PropTypes.string
+  })
+};
+
+EditPackage.defaultProps = {
+  initialValues: {
+    name: "",
+    price: 0,
+    quantity: 0,
+    overflow: 0,
+    best: "2",
+    availability: "1",
+    mode: "2",
+    provider_id: "",
+    provider_service_id: ""
+  }
+};
 
 export default EditPackage;

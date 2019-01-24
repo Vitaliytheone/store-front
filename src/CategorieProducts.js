@@ -11,25 +11,19 @@ import {
   updateProduct,
   updatePackage,
   deletePackage,
-  addListing
+  addListing,
+  get_updatePackage,
+  get_updateProduct
 } from "./services/url";
 import { sortBy, pick, omit } from "lodash";
-import data from "./data.json";
-
-// console.log(window.appConfig.api_endpoints);  
-// //parse of json
-// const arrayDataParse = Object.values(data).map(item => ({
-//   ...item,
-//   position: +(item.position), //cast position to a number 
-//   packages: sortBy(Object.values(item.packages), "position")//sort packages by position
-// }));
-
-// //sort data of elements position
-// const arrayData = sortBy(arrayDataParse, "position");
 
 class CategorieProducts extends Component {
   state = {
-    data: []
+    data: [],
+    response: {
+      product: "",
+      package: ""
+    }
   };
 
 async componentDidMount() {
@@ -91,6 +85,7 @@ async componentDidMount() {
     changePositionPackage(packageIndex.id, Data);
   };
 
+
   handleAddProduct = async (values, actions) => {
     //let product position
     console.log(values);
@@ -109,7 +104,6 @@ async componentDidMount() {
       packages: []
     };
     const requestProduct = omit(newProduct, ["position", "packages"]);
-    console.log(requestProduct);
     this.setState(prevState => ({
       ...prevState,
       data: [...prevState.data, newProduct]
@@ -151,6 +145,22 @@ async componentDidMount() {
     });
     actions.setSubmitting(false);
   };
+  
+  handleGetEditProduct = productIndex => async () => {
+    const getProduct = this.state.data[productIndex].id;
+    const response = await get_updateProduct(getProduct);
+     this.setState({
+       response: { ...this.state.response, product: response }
+     });
+  }
+
+  handleGetEditPackage = productIndex => packageIndex => async () => {
+    const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
+    const response = await get_updatePackage(getPackageId);
+    this.setState({
+      response: { ...this.state.response, package: response }
+    })
+  }
 
   handleEditProduct = productIndex => async (values, actions) => {
     const editedProduct = [...this.state.data]; //сopy state
@@ -229,9 +239,8 @@ async componentDidMount() {
   };
 
   render() {
-    const { data } = this.state;
+    const { data,response } = this.state;
     const { isSubmitting } = this.props;
-    console.log(data);
     return (
       <React.Fragment>
         <Jumbotron className="page-container">
@@ -245,10 +254,13 @@ async componentDidMount() {
                 <div className="sommerce_dragtable">
                   <ProductList
                     helperClass="sortable-helper"
+                    handleGetEditProduct={this.handleEditProduct}
+                    handleGetEditPackage={this.handleGetEditPackage}
                     handleEditProduct={this.handleEditProduct}
                     handleEditPackage={this.handleEditPackage}
                     handlePackageSwitch={this.handlePackageSwitch}
                     handleDeletePackage={this.handleDeletePackage}
+                    response={response}
                     data={data}
                     useDragHandle={true}
                     onSortEnd={this.handleProductSwitch}

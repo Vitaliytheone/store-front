@@ -5,36 +5,35 @@ import { PackageInput } from "../Inputs";
 
 class PackageModal extends Component {
   render() {
-    return (
-      <ModalBody>
+    return <ModalBody>
         {/* Alert Error */}
 
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+        {/* <div className="alert alert-danger alert-dismissible fade show" role="alert">
           <button className="close" data-dismiss="alert" aria-label="Close" />
           <strong>Oh snap!</strong> Error message!
-        </div>
+        </div> */}
 
         {/* Alert Error End */}
 
         <FormGroup>
-          <Field name="name" component={PackageInput} label="Package name *" placeholder="package" id="package-name"  required />
+          <Field name="name" type="text" component={PackageInput} label="Package name *" id="package-name" required />
         </FormGroup>
 
         <FormGroup>
-          <Field name="price" component={PackageInput} label="Price *" placeholder="price" id="package-price" type="number" required />
+          <Field name="price" type="number" component={PackageInput} label="Price *" id="package-price" required />
         </FormGroup>
-      
+
         <FormGroup>
-          <Field name="quantity" component={PackageInput} label="Quantity *" placeholder="quantity" id="package-quantity" required />
+          <Field name="quantity" type="number" component={PackageInput} label="Quantity *" id="package-quantity" required />
         </FormGroup>
-        
+
         <FormGroup>
-          <Field name="overflow" component={PackageInput} label="Overflow, % *" placeholder="overflow" id="package-overflow" required />
+          <Field name="overflow" type="number" component={PackageInput} label="Overflow, % *" id="package-overflow" required />
         </FormGroup>
 
         <FormGroup>
           <Label htmlFor="package-best">Best package</Label>
-          <Field  component="select" id="package-best" className="form-control">
+          <Field name="best" component="select" id="package-best" className="form-control">
             <option value="1">Enabled</option>
             <option value="2">Disabled</option>
           </Field>
@@ -42,8 +41,8 @@ class PackageModal extends Component {
 
         <FormGroup>
           <Label htmlFor="package-link-type">Link Type</Label>
-          <Field component="select" id="package-link-type" className="form-control">
-            <option value="">None</option>
+          <Field name="link_type" component="select" id="package-link-type" className="form-control">
+            <option value="0">None</option>
             <option value="1">Instagram Profile</option>
             <option value="2">Instagram Post</option>
             <option value="3">Facebook Page</option>
@@ -87,41 +86,41 @@ class PackageModal extends Component {
             <option value="43">Google+ Profile</option>
             <option value="44">Google+ Post</option>
             <option value="45">Twitch Channel</option>
-            </Field>
+          </Field>
         </FormGroup>
         <hr />
 
         <FormGroup>
           <Label htmlFor="availability">Availability</Label>
-          <Field className="form-control" component="select" name="availability" label="Availability">
-            <option value="Enabled">Enabled</option>
-            <option value="Disabled">Disabled</option>
+          <Field name="availability"  className="form-control" component="select" label="Availability">
+            <option value="1">Enabled</option>
+            <option value="2">Disabled</option>
           </Field>
         </FormGroup>
-    
+
         <hr />
- 
+
         <FormGroup>
-          <Label htmlFor="mode">Mode</Label>
-          <Field className="form-control" component="select" name="mode">
-            <option value="Manual">Manual</option>
-            <option value="Auto">Auto</option>
+        <Label htmlFor="mode">Mode</Label>
+        <Field name="mode" className="form-control" component="select">
+            <option value="1">Manual</option>
+            <option value="2">Auto</option>
           </Field>
         </FormGroup>
-     
+
         <FormGroup>
           <Label htmlFor="provider">Provider</Label>
           <Field className="form-control" component="select" name="provider">
             <option value="test.myperfectpanel.com" data-action-url="/admin/products/get-provider-services?provider_id=2">
               test.myperfectpanel.com{" "}
             </option>
-          <option value="bulkfollows.com" data-action-url="/admin/products/get-provider-services?provider_id=3">
+            <option value="bulkfollows.com" data-action-url="/admin/products/get-provider-services?provider_id=3">
               bulkfollows.com{" "}
             </option>
-          <option value="demo.perfectpanel.com" data-action-url="/admin/products/get-provider-services?provider_id=4">
+            <option value="demo.perfectpanel.com" data-action-url="/admin/products/get-provider-services?provider_id=4">
               demo.perfectpanel.com{" "}
             </option>
-          <option value="autosmo.com" data-action-url="/admin/products/get-provider-services?provider_id=5">
+            <option value="autosmo.com" data-action-url="/admin/products/get-provider-services?provider_id=5">
               autosmo.com{" "}
             </option>
           </Field>
@@ -130,8 +129,7 @@ class PackageModal extends Component {
         <span className="m--font-danger">
           API responce errors: Incorrect required
         </span>
-      </ModalBody>
-    );
+      </ModalBody>;
   }
 }
 

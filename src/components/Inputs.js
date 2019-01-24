@@ -27,7 +27,7 @@ export const PackageInput = ({
 }) => (
   <div>
     <Label htmlFor={field.name}>{label}</Label>
-    <Input {...field} {...props}  />
+    <Input {...field} {...props} />
     {touched[field.name] && errors[field.name] && (
       <div className="invalid-feedback error">{errors[field.name]}</div>
     )}

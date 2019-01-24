@@ -56,24 +56,29 @@ class AddPackage extends Component {
 
 
 AddPackage.propTypes = {
+  initialValues: PropTypes.shape({
     name: PropTypes.string,
     price: PropTypes.number,
     quantity: PropTypes.number,
     overflow: PropTypes.number,
-    availability: PropTypes.number,
+    availability: PropTypes.string,
     mode: PropTypes.string,
-    provider: PropTypes.string
+    provider_id: PropTypes.string,
+    provider_service_id: PropTypes.string
+  })
 };
 
 AddPackage.defaultProps = {
   initialValues: {
-    name: " ",
-    price: 0.00,
+    name: "",
+    price: 0,
     quantity: 0,
     overflow: 0,
-    availability: 1,
-    mode: "Auto",
-    provider: "bulkfollows.com"
+    best: "2",
+    availability: "1",
+    mode: "2",
+    provider_id: "",
+    provider_service_id: ""
   }
 };
 

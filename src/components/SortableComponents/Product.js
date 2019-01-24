@@ -6,7 +6,7 @@ import EditProduct from "../EditProduct";
 import PackageList from "./PackageList";
 
 const SortableProduct = SortableElement(
-    ({ product, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage, handleDeletePackage }) => {
+    ({ product, response, handlePackageSwitch, onPackageAdd, handleEditProduct, handleEditPackage, handleDeletePackage, handleGetEditPackage, handleGetEditProduct }) => {
         return (
             <Row className="group-caption">
                 <Col className="sommerce_dragtable__category">
@@ -17,7 +17,7 @@ const SortableProduct = SortableElement(
                                     <DragHandle />
                                 </div>
                                 {product.name}
-                                <EditProduct productValue={product} onSubmit={handleEditProduct} />
+                                <EditProduct productValue={product} onSubmit={handleEditProduct} handleGetProduct={handleGetEditProduct} response={response} />
                             </Col>
                         </Row>
                     </div>
@@ -28,9 +28,11 @@ const SortableProduct = SortableElement(
                     product={product}
                     onSortEnd={handlePackageSwitch}
                     useDragHandle={true}
+                    response={response}
                     onPackageAdd={onPackageAdd}
                     handleEditPackage={handleEditPackage}
                     handleDeletePackage={handleDeletePackage}
+                    handleGetEditPackage={handleGetEditPackage}
                 />
             </Row>
         );

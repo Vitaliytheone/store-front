@@ -24,7 +24,7 @@ export function addPackage(payload) {
 }
 
 export function get_updateProduct(product_id) {
-  axiosInstance.get(`/admin/products/update-product?id=${product_id}`);
+  return axiosInstance.get(`/admin/products/update-product?id=${product_id}`);
 }
 
 export function updateProduct(product_id, payload) {
@@ -34,7 +34,7 @@ export function updateProduct(product_id, payload) {
 }
 
 export function get_updatePackage(package_id) {
-  axiosInstance.get(`/admin/products/update-package?id=${package_id}`);
+  return axiosInstance.get(point.get_updatePackage);//+ `${package_id}`
 }
 
 export function updatePackage(package_id, payload) {

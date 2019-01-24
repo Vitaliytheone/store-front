@@ -33,7 +33,7 @@ class EditProduct extends Component {
             <Formik onSubmit={this.handleSubmit} initialValues={{ name: productValue.name, visibility: productValue.visibility }}>
               <Form>
                 <ModalHeader toggle={this.toggle}>Edit product</ModalHeader>
-                {/* <ProductModal /> */}
+                <ProductModal />
                 <ModalFooter className="justify-content-start">
                   <Button color="primary" type="submit">
                     Edit product
