@@ -20,12 +20,12 @@ self.__precacheManifest = [
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.b9c91f80.woff"
   },
   {
-    "revision": "f69ee90505162eb58ad8bf12da674b66",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
-  },
-  {
     "revision": "6b6feb61813dddd403e663c2c307b51c",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
+  },
+  {
+    "revision": "f69ee90505162eb58ad8bf12da674b66",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
   },
   {
     "revision": "608fd10666a860567740497e84492928",
@@ -84,12 +84,12 @@ self.__precacheManifest = [
     "url": "/static/media/line-awesome.3f85d803.eot"
   },
   {
-    "revision": "b06871f281fee6b241d60582ae9369b9",
-    "url": "/static/media/fontawesome-webfont.b06871f2.ttf"
-  },
-  {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
     "url": "/static/media/fontawesome-webfont.674f50d2.eot"
+  },
+  {
+    "revision": "b06871f281fee6b241d60582ae9369b9",
+    "url": "/static/media/fontawesome-webfont.b06871f2.ttf"
   },
   {
     "revision": "3fd7f4cf50e7716bf377b6296cf05619",
