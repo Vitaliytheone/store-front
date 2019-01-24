@@ -152,6 +152,9 @@ class Project extends ActiveRecord implements ProjectInterface
     
     const AFFILIATE_SYSTEM_ENABLED = 1;
     const AFFILIATE_SYSTEM_DISABLED = 0;
+
+    /** @var bool */
+    private $isForeignSubdomain = false;
     
     use UnixTimeFormatTrait;
 
@@ -288,6 +291,14 @@ class Project extends ActiveRecord implements ProjectInterface
             'dns_checked_at' => Yii::t('app', 'Dns checked at'),
             'dns_status' => Yii::t('app', 'Dns status'),
         ];
+    }
+
+    /**
+     * @param bool $isForeign
+     */
+    public function setForeignSubdomain(bool $isForeign)
+    {
+        $this->isForeignSubdomain = $isForeign;
     }
 
     /**
@@ -721,11 +732,11 @@ class Project extends ActiveRecord implements ProjectInterface
         $domain = $this->site;
 
         if (!PanelDomains::findOne([
-            'type' => PanelDomains::TYPE_STANDARD,
+            'type' => [PanelDomains::TYPE_STANDARD, PanelDomains::TYPE_FOREIGN_SUBDOMAIN],
             'panel_id' => $this->id
         ])) {
             $panelDomain = new PanelDomains();
-            $panelDomain->type = PanelDomains::TYPE_STANDARD;
+            $panelDomain->type = !$this->isForeignSubdomain ? PanelDomains::TYPE_STANDARD : PanelDomains::TYPE_FOREIGN_SUBDOMAIN;
             $panelDomain->panel_id = $this->id;
             $panelDomain->domain = $domain;
 
@@ -734,7 +745,7 @@ class Project extends ActiveRecord implements ProjectInterface
                 return false;
             }
 
-            if (!$this->subdomain) {
+            if (!$this->subdomain && !$this->isForeignSubdomain) {
                 if (!DnsHelper::addMainDns($this)) {
                     return false;
                 }
@@ -779,7 +790,8 @@ class Project extends ActiveRecord implements ProjectInterface
         PanelDomains::deleteAll([
             'type' => [
                 PanelDomains::TYPE_SUBDOMAIN,
-                PanelDomains::TYPE_STANDARD
+                PanelDomains::TYPE_STANDARD,
+                PanelDomains::TYPE_FOREIGN_SUBDOMAIN,
             ],
             'panel_id' => $this->id
         ]);

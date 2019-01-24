@@ -459,6 +459,8 @@ class OrderHelper {
             }
         }
 
+        $project->setForeignSubdomain((bool)$subdomain);
+
         if (!$project->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
         }
