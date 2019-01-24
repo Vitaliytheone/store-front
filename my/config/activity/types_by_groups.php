@@ -39,8 +39,8 @@ return [
     [
         'title' => 'Drip-feed',
         'events' => [
-            82,
-            87
+            8001,
+            8002,
         ]
     ],
     [
