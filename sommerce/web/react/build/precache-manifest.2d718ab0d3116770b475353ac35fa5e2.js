@@ -16,16 +16,16 @@ self.__precacheManifest = [
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.d751a5f7.woff2"
   },
   {
-    "revision": "f69ee90505162eb58ad8bf12da674b66",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
-  },
-  {
     "revision": "b9c91f8037ec3d998566b33feb1f4a83",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.b9c91f80.woff"
   },
   {
     "revision": "6b6feb61813dddd403e663c2c307b51c",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
+  },
+  {
+    "revision": "f69ee90505162eb58ad8bf12da674b66",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
   },
   {
     "revision": "608fd10666a860567740497e84492928",
@@ -52,12 +52,12 @@ self.__precacheManifest = [
     "url": "/static/media/line-awesome.452a5b42.woff2"
   },
   {
-    "revision": "d95fe9532a217dd71bb5bdde25c778d7",
-    "url": "/static/media/Flaticon.d95fe953.ttf"
-  },
-  {
     "revision": "6f261860669b4302acac7aefa3ec6609",
     "url": "/static/media/Flaticon.6f261860.eot"
+  },
+  {
+    "revision": "d95fe9532a217dd71bb5bdde25c778d7",
+    "url": "/static/media/Flaticon.d95fe953.ttf"
   },
   {
     "revision": "f33df365d6d0255b586f2920355e94d7",
@@ -76,12 +76,12 @@ self.__precacheManifest = [
     "url": "/static/media/fontawesome-webfont.fee66e71.woff"
   },
   {
-    "revision": "3f85d8035b4ccd91d2a1808dd22b7684",
-    "url": "/static/media/line-awesome.3f85d803.eot"
-  },
-  {
     "revision": "4d42f5f0c62a8f51e876c14575354a6e",
     "url": "/static/media/line-awesome.4d42f5f0.ttf"
+  },
+  {
+    "revision": "3f85d8035b4ccd91d2a1808dd22b7684",
+    "url": "/static/media/line-awesome.3f85d803.eot"
   },
   {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
