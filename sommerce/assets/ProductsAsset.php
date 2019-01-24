@@ -14,13 +14,13 @@ class ProductsAsset extends AssetBundle
     public $baseUrl = '@web';
 
     public $css = [
-        'css/admin/spectrum/spectrum.css',
-        'css/admin/spectrum/spectrum-custom.css',
+        //'css/admin/spectrum/spectrum.css',
+        //'css/admin/spectrum/spectrum-custom.css',
     ];
 
     public $js = [
         'js/libs/summernote/summernote-bs4.js',
-        'js/libs/spectrum/spectrum.js',
+        //'js/libs/spectrum/spectrum.js',
     ];
 
     public $depends = [
