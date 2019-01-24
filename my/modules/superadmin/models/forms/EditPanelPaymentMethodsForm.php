@@ -133,10 +133,17 @@ class EditPanelPaymentMethodsForm extends Model
             return false;
         }
 
-        Yii::$app->panelDb->dsn .= ';dbname=' . $this->_panel->db;
-        $users = Users::find();
+        $db = Yii::$app->db;
+        Yii::$app->panel->setInstance($this->_panel);
 
-        foreach ($users->batch() as $usersModels) {
+        $users = Users::find()
+            ->select([
+                'id',
+                'payments',
+            ]);
+
+        foreach ($users->batch(100) as $usersModels) {
+            $update = [];
             foreach ($usersModels as $user) {
                 /** @var Users $user */
                 $payments = $user->getPayments();
@@ -145,10 +152,21 @@ class EditPanelPaymentMethodsForm extends Model
                     $payments[$methodId] = $allow;
 
                     $user->setPayments($payments);
-                    if (!$user->update(false)) {
-                        return false;
-                    }
+
+                    $update[] = [
+                        'id' => $user->id,
+                        'payments' => $user->payments,
+                    ];
                 }
+            }
+
+            if (!empty($update)) {
+                $sql = $db->createCommand()->batchInsert($this->_panel->db . '.' . Users::tableName(), [
+                    'id',
+                    'payments',
+                ], $update)->rawSql;
+
+                $db->createCommand($sql . ' ON DUPLICATE KEY UPDATE payments = VALUES(payments)')->execute();
             }
         }
 
@@ -177,10 +195,17 @@ class EditPanelPaymentMethodsForm extends Model
             return false;
         }
 
-        Yii::$app->panelDb->dsn .= ';dbname=' . $this->_panel->db;
-        $users = Users::find();
+        $db = Yii::$app->db;
+        Yii::$app->panel->setInstance($this->_panel);
 
-        foreach ($users->batch() as $usersModels) {
+        $users = Users::find()
+            ->select([
+                'id',
+                'payments',
+            ]);
+
+        foreach ($users->batch(100) as $usersModels) {
+            $update = [];
             foreach ($usersModels as $user) {
                 /** @var Users $user */
                 $payments = $user->getPayments();
@@ -188,10 +213,21 @@ class EditPanelPaymentMethodsForm extends Model
                 if (array_key_exists($methodId, $payments)) {
                     unset($payments[$methodId]);
                     $user->setPayments($payments);
-                    if (!$user->update(false)) {
-                        return false;
-                    }
+
+                    $update[] = [
+                        'id' => $user->id,
+                        'payments' => $user->payments,
+                    ];
                 }
+            }
+
+            if (!empty($update)) {
+                $sql = $db->createCommand()->batchInsert($this->_panel->db . '.' . Users::tableName(), [
+                    'id',
+                    'payments',
+                ], $update)->rawSql;
+
+                $db->createCommand($sql . ' ON DUPLICATE KEY UPDATE payments = VALUES(payments)')->execute();
             }
         }
 
