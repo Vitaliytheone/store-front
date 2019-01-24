@@ -246,7 +246,7 @@ class EditPanelPaymentMethodsForm extends Model
                 static::$paymentMethods[$method['currency_id']] = [
                     'id' => $method['method_id'],
                     'currency_id' => $method['currency_id'],
-                    'method_name' => $paymentMethods[$method['method_id']]['method_name'],
+                    'method_name' => ArrayHelper::getValue($paymentMethods, [$method['method_id'], 'method_name']),
                     'currency' => $currency['currency'],
                 ];
             }
