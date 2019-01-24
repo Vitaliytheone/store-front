@@ -225,7 +225,7 @@ class Authorize extends BasePayment
 
         static::success($this->_payment, $result, $store);
 
-        return static::returnRedirect(SiteHelper::hostUrl() . '/' . PaymentMethods::METHOD_AUTHORIZE . '?checkout_id=' . $checkout->id);
+        return static::returnRedirect(SiteHelper::hostUrl() . '/authorize?checkout_id=' . $checkout->id);
     }
 
     /**

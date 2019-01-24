@@ -86,7 +86,7 @@ class Stripe3dSecure extends BasePayment {
         }
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->save(false);
-        return static::returnRedirect(SiteHelper::hostUrl() . '/'  . PaymentMethods::METHOD_STRIPE_3D_SECURE . '?checkout_id=' . $checkout->id);
+        return static::returnRedirect(SiteHelper::hostUrl() . '/stripe_3d_secure?checkout_id=' . $checkout->id);
     }
 
     /**
