@@ -53,12 +53,12 @@ class ProductsSearch extends Model
 
             $this->_store_providers = (new Query())
                 ->select([
-                    'pr.res as id', 'pr.name as site',
+                    'pr.provider_id as id', 'pr.name as site',
                     'sp.store_id'
                 ])
                 ->from(['sp' => StoreProviders::tableName()])
                 ->where(['sp.store_id' => $store->id])
-                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.res = sp.provider_id')
+                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.provider_id = sp.provider_id')
                 ->indexBy('id')
                 ->all();
         }

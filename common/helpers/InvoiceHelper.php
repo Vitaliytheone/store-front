@@ -65,7 +65,6 @@ class InvoiceHelper
                 'item' => InvoiceDetails::ITEM_PROLONGATION_PANEL,
             ];
 
-
             if ($project->child_panel) {
                 $invoiceDetailsAttributes['item'] = InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL;
             }

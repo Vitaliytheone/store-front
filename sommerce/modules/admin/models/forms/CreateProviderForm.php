@@ -86,7 +86,7 @@ class CreateProviderForm extends Model {
         }
 
         $provider = new StoreProviders();
-        $provider->provider_id = $this->_provider->res;
+        $provider->provider_id = $this->_provider->provider_id;
         $provider->store_id = $this->_store->id;
 
         if (!$provider->save()) {
@@ -161,7 +161,7 @@ class CreateProviderForm extends Model {
         ]))) {
 
             if (StoreProviders::findOne([
-                'provider_id' => $this->_provider->res,
+                'provider_id' => $this->_provider->provider_id,
                 'store_id' => $this->_store->id
             ])) {
                 $this->addError($attribute, Yii::t('admin', 'settings.errors_providers_exist'));

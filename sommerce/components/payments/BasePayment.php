@@ -4,7 +4,6 @@ namespace sommerce\components\payments;
 
 use common\events\Events;
 use common\helpers\SiteHelper;
-use common\models\panels\Getstatus;
 use common\models\store\Carts;
 use common\models\store\Checkouts;
 use common\models\store\Orders;
@@ -12,7 +11,6 @@ use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\Suborders;
 use common\models\stores\PaymentMethods;
-use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
@@ -200,6 +198,7 @@ abstract class BasePayment extends Component {
              * @var Packages $package
              */
             $package = $packages[$item['package_id']];
+
             $orderItem = new Suborders();
             $orderItem->checkout_id = $checkout->id;
             $orderItem->order_id = $order->id;
@@ -222,22 +221,6 @@ abstract class BasePayment extends Component {
 
             $orderItem->save(false);
 
-            $getstatus = new Getstatus();
-            $getstatus->pid = $store->id;
-            $getstatus->oid = $orderItem->id;
-            $getstatus->roid = $orderItem->provider_order_id;
-            $storeProvider = StoreProviders::findOne(['provider_id' => $package->provider_id]);
-
-            $getstatus->login = $storeProvider->apikey;
-            $getstatus->res =  $orderItem->provider_id;;
-            $getstatus->reid = $orderItem->provider_service;
-            $getstatus->page_id = $orderItem->link;
-            $getstatus->count = $orderItem->overflow_quantity;
-            $getstatus->start_count = 0;
-            $getstatus->status = $orderItem->status;
-            $getstatus->type = Getstatus::TYPE_STORES_INTERNAL;
-            $getstatus->save(false);
-
             // Make queue for sender
             if (Suborders::MODE_AUTO == $orderItem->mode) {
                 $sendOrder = new StoresSendOrders();
@@ -247,6 +230,7 @@ abstract class BasePayment extends Component {
                 $sendOrder->suborder_id = $orderItem->id;
                 $sendOrder->save(false);
             }
+
             // Remove paid items from cart
             Carts::removeItemByKey($item['cart_key']);
         }
@@ -267,7 +251,6 @@ abstract class BasePayment extends Component {
         }
 
         $payment->save(false);
-
 
         // Event confirm
         Events::add(Events::EVENT_STORE_ORDER_CONFIRM, [
