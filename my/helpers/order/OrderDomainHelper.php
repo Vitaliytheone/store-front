@@ -1,9 +1,11 @@
 <?php
+
 namespace my\helpers\order;
 
+use common\components\domains\BaseDomain;
 use common\models\panels\Domains;
 use Yii;
-use my\components\domains\Ahnames;
+use common\components\domains\methods\Ahnames;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use yii\base\Exception;
@@ -13,12 +15,14 @@ use yii\helpers\ArrayHelper;
  * Class OrderDomainHelper
  * @package my\helpers\order
  */
-class OrderDomainHelper {
+class OrderDomainHelper
+{
 
     /**
      * Create order contact
      * @param Orders $order
      * @return mixed
+     * @throws \yii\base\UnknownClassException
      */
     public static function contactCreate(Orders $order)
     {
@@ -44,7 +48,8 @@ class OrderDomainHelper {
             'auth_password' => Yii::$app->params['ahnames.password'],
         ]), 'cron.order.send_domain_contact');
 
-        $contactResult = Ahnames::contactCreate($data);
+        $registrar = BaseDomain::getRegistrarClass($order->getDomain());
+        $contactResult = $registrar::contactCreate($data);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $contactResult, 'cron.order.domain_contact');
 
@@ -55,6 +60,7 @@ class OrderDomainHelper {
      * Register domain
      * @param Orders $order
      * @return array
+     * @throws \yii\base\UnknownClassException
      */
     public static function domainRegister(Orders $order)
     {
@@ -75,7 +81,8 @@ class OrderDomainHelper {
             'auth_password' => Yii::$app->params['ahnames.password'],
         ], 'cron.order.send_domain_register');
 
-        $domainResult = Ahnames::domainRegister($domain, $contactId, $period);
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $domainResult = $registrar::domainRegister($domain, $contactId, $period);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainResult, 'cron.order.domain_register');
 
@@ -98,7 +105,8 @@ class OrderDomainHelper {
             'auth_password' => Yii::$app->params['ahnames.password'],
         ], 'cron.order.send_domain_info');
 
-        $domainInfoResult = Ahnames::domainGetInfo($domain);
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $domainInfoResult = $registrar::domainGetInfo($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainInfoResult, 'cron.order.domain_info');
 
@@ -121,7 +129,8 @@ class OrderDomainHelper {
             'auth_password' => Yii::$app->params['ahnames.password'],
         ], 'cron.order.send_domain_assign');
 
-        $assignResult = Ahnames::domainEnableWhoisProtect($domain);
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $assignResult = $registrar::domainEnableWhoisProtect($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $assignResult, 'cron.order.domain_assign');
 
@@ -145,7 +154,8 @@ class OrderDomainHelper {
             'nss' => implode(",", array_filter(Yii::$app->params['ahnames.my.ns']))
         ], 'cron.order.send_domain_nss');
 
-        $setNss = Ahnames::domainSetNSs($domain);
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $setNss = $registrar::domainSetNSs($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $setNss, 'cron.order.domain_nss');
 
@@ -168,7 +178,8 @@ class OrderDomainHelper {
             'auth_password' => Yii::$app->params['ahnames.password'],
         ], 'cron.order.send_domain_lock');
 
-        $enableLock = Ahnames::domainEnableLock($domain);
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $enableLock = $registrar::domainEnableLock($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $enableLock, 'cron.order.domain_lock');
 
@@ -186,7 +197,7 @@ class OrderDomainHelper {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        $domainInfoResult = OrderDomainHelper::domainGetInfo($order);
+        $domainInfoResult = self::domainGetInfo($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.prolong.domain_info_result');
 
@@ -207,7 +218,8 @@ class OrderDomainHelper {
             'expiry' => $expiry
         ], 'cron.prolong.send_renew_domain');
 
-        $domainRenewResult = Ahnames::domainRenew($domain, $expiry);
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $domainRenewResult = $registrar::domainRenew($domain, $expiry);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainRenewResult, 'cron.prolong.renew_domain');
 

@@ -1,6 +1,7 @@
 <?php
 namespace my\helpers;
 
+use common\components\domains\BaseDomain;
 use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
@@ -542,6 +543,8 @@ class OrderHelper {
         $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
         $expiry = strtotime($expiry);
 
+        $registrar = BaseDomain::getRegistrarName($domain);
+
         $domainModel = new Domains();
         $domainModel->customer_id = $order->cid;
         $domainModel->zone_id = $zoneId;
@@ -555,6 +558,7 @@ class OrderHelper {
         $domainModel->expiry = $expiry;
         $domainModel->privacy_protection = (int)!empty($details['domain_protection']);
         $domainModel->transfer_protection = 1;
+        $domainModel->registrar = $registrar;
 
         if (!$domainModel->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainModel->getErrors(), 'cron.order.domain');

@@ -13,7 +13,7 @@ use common\models\panels\Orders;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\MyActivityLog;
 use my\helpers\UserHelper;
-use my\components\domains\Ahnames;
+use common\components\domains\methods\Ahnames;
 use common\models\panels\Auth;
 use yii\helpers\ArrayHelper;
 
@@ -159,7 +159,7 @@ class DomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $result = Ahnames::domainsCheck($domain);
+        $result = Ahnames::domainsCheck($domain); //fixme
 
         if (empty($result[$domain])) {
             return false;

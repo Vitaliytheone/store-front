@@ -1,7 +1,8 @@
 <?php
+
 namespace my\models\forms;
 
-use my\components\domains\Ahnames;
+use common\components\domains\methods\Ahnames;
 use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
 use my\helpers\ChildHelper;
@@ -457,7 +458,7 @@ class CreateChildForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $result = Ahnames::domainsCheck($domain);
+        $result = Ahnames::domainsCheck($domain); //fixme
 
         if (empty($result[$domain])) {
             return false;

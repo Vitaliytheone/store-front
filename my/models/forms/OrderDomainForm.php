@@ -1,7 +1,9 @@
 <?php
+
 namespace my\models\forms;
 
-use my\components\domains\Ahnames;
+use common\components\domains\BaseDomain;
+use common\components\domains\methods\Ahnames;
 use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
 use common\helpers\CurlHelper;
@@ -322,7 +324,9 @@ class OrderDomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $result = Ahnames::domainsCheck($domain);
+        Yii::debug($domain,'$domain'); //todo del
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
             return false;

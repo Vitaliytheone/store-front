@@ -1,24 +1,27 @@
 <?php
-namespace my\components\domains;
 
+namespace common\components\domains\methods;
+
+use common\components\domains\BaseDomain;
 use common\helpers\Request;
 use common\helpers\CurlHelper;
 use Yii;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 use yii\helpers\Json;
 
 /**
  * Class Ahnames
- * @package my\components\domains
+ * @package common\components\domains\methods
  */
-class Ahnames {
+class Ahnames extends BaseDomain
+{
 
     /**
      * Check domains
      * @param array $domains
      * @return array
      */
-    public static function domainsCheck($domains)
+    public static function domainsCheck($domains): array
     {
         if (empty($domains)) {
             return [];
@@ -47,7 +50,7 @@ class Ahnames {
      * @param array $options
      * @return array
      */
-    public static function contactCreate($options)
+    public static function contactCreate($options): array
     {
         $options = array_merge($options, [
             'auth_login' => Yii::$app->params['ahnames.login'],
@@ -68,7 +71,7 @@ class Ahnames {
      * @param int $period
      * @return array
      */
-    public static function domainRegister($domain, $contactId, $period = 1)
+    public static function domainRegister($domain, $contactId, $period = 1): array
     {
         $options = [
             'domain' => $domain,
@@ -93,7 +96,7 @@ class Ahnames {
      * @param string $domain
      * @return array
      */
-    public static function domainGetInfo($domain)
+    public static function domainGetInfo($domain): array
     {
         $options = [
             'domain' => $domain,
@@ -113,7 +116,7 @@ class Ahnames {
      * @param string $domain
      * @return array
      */
-    public static function domainEnableWhoisProtect($domain)
+    public static function domainEnableWhoisProtect($domain): array
     {
         $options = [
             'domain' => $domain,
@@ -134,7 +137,7 @@ class Ahnames {
      * @param array $ns
      * @return array
      */
-    public static function domainSetNSs($domain, $ns = [])
+    public static function domainSetNSs($domain, $ns = []): array
     {
         if (empty($ns)) {
             $ns = Yii::$app->params['ahnames.my.ns'];
@@ -161,7 +164,7 @@ class Ahnames {
      * @param string $domain
      * @return array
      */
-    public static function domainEnableLock($domain)
+    public static function domainEnableLock($domain): array
     {
         $options = [
             'domain' => $domain,
@@ -191,7 +194,7 @@ class Ahnames {
      *
      * @return array
      */
-    public static function domainRenew($domain, $expires, $period = 1)
+    public static function domainRenew($domain, $expires, $period = 1): array
     {
         $options = [
             'domain' => $domain,
@@ -215,7 +218,7 @@ class Ahnames {
      * @param bool $returnError
      * @return array
      */
-    protected static function _processResult($result, $returnError = true)
+    protected static function _processResult($result, $returnError = true): array
     {
         if (empty($result)) {
             return [];
@@ -223,7 +226,7 @@ class Ahnames {
 
         try {
             $result = Json::decode($result);
-        } catch (InvalidParamException $e) {
+        } catch (InvalidArgumentException $e) {
             return [];
         }
 

@@ -14,6 +14,7 @@ use common\models\panels\queries\DomainZonesQuery;
  * @property string $price_register
  * @property string $price_renewal
  * @property string $price_transfer
+ * @property string $registrar
  *
  * @property Domains[] $domains
  */
@@ -33,9 +34,9 @@ class DomainZones extends ActiveRecord
     public function rules()
     {
         return [
-            [['zone', 'price_register', 'price_renewal', 'price_transfer'], 'required'],
+            [['zone', 'price_register', 'price_renewal', 'price_transfer', 'registrar'], 'required'],
             [['price_register', 'price_renewal', 'price_transfer'], 'number'],
-            [['zone'], 'string', 'max' => 250],
+            [['zone', 'registrar'], 'string', 'max' => 250],
         ];
     }
 
@@ -50,6 +51,7 @@ class DomainZones extends ActiveRecord
             'price_register' => Yii::t('app', 'Price Register'),
             'price_renewal' => Yii::t('app', 'Price Renewal'),
             'price_transfer' => Yii::t('app', 'Price Transfer'),
+            'registrar' => Yii::t('app', 'Registrar'),
         ];
     }
 

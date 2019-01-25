@@ -130,4 +130,11 @@ return [
     'ssl_order_delay' => 2 * 60, // Задержка на выполнение заказа продления GoGet SSL -> Letsencrypt SSL
     'free_ssl.create' => true,  // Создавать заказ/выполнять заказ на бесплатный сертификат или нет
     'free_ssl.prolong' => true, // Создавать заказ/выполнять заказ на продление бесплатного сертификата или нет
+
+    // Namesilo auth data
+    'namesilo.url' => 'https://www.namesilo.com/api/',
+    'namesilo.key' => '',
+    'namesilo.payment_id' => '',
+    'namesilo.version' => '1',
+    'namesilo.type' => 'xml',
 ];

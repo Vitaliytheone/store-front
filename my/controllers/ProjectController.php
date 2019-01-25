@@ -2,9 +2,10 @@
 
 namespace my\controllers;
 
+use common\components\domains\BaseDomain;
 use common\models\panels\Customers;
 use my\components\ActiveForm;
-use my\components\domains\Ahnames;
+use common\components\domains\methods\Ahnames;
 use my\helpers\DomainsHelper;
 use common\models\panels\Auth;
 use common\models\panels\Content;
@@ -314,6 +315,8 @@ class ProjectController extends CustomController
             $domains[$id] = mb_strtolower($domain . $zone->zone);
         }
 
+        // todo для каждой зоны свой регистратор ищет свободные домены
+        //fixme
         $result = Ahnames::domainsCheck(array_map([new DomainsHelper, 'idnToAscii'], $domains));
         $existsDomains = Orders::find()->andWhere([
             'domain' => array_keys($result),
