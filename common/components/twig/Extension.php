@@ -5,7 +5,6 @@ use common\components\twig\parsers\TokenParser_Include;
 use Yii;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class Extension
