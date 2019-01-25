@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\EditPlanForm */
+    /* @var $model superadmin\models\forms\EditPlanForm */
     /* @var $form my\components\ActiveForm */
     
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\EditPlanForm;
+    use superadmin\models\forms\EditPlanForm;
     use my\helpers\Url;
     use common\models\panels\SuperAdmin;
     use yii\bootstrap\Html;
@@ -53,7 +53,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'plan.edit.modal_cancel_btn')?></button>
+                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'plan.edit.modal_cancel_btn')?></button>
                 <?= Html::submitButton(Yii::t('app/superadmin', 'plan.edit.modal_submit_btn'), [
                     'class' => 'btn btn-outline btn-primary',
                     'name' => 'edit-plan-button',

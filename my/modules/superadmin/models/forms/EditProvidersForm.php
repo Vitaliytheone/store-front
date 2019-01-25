@@ -1,7 +1,8 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\AdditionalServices;
+use common\models\panel\Services;
 use common\models\panels\UserServices;
 use Yii;
 use common\models\panels\Project;
@@ -10,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class EditProvidersForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditProvidersForm extends Model {
 
@@ -48,6 +49,7 @@ class EditProvidersForm extends Model {
     /**
      * Save expied
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -55,7 +57,7 @@ class EditProvidersForm extends Model {
             return false;
         }
 
-        $currentProviders = ArrayHelper::index($this->_project->userServices, 'aid');
+        $currentProviders = ArrayHelper::index($this->_project->userServices, 'provider_id');
         $this->providers = (array)ArrayHelper::getValue($this, 'providers', []);
         $this->providers = array_filter($this->providers);
 
@@ -67,8 +69,8 @@ class EditProvidersForm extends Model {
 
             $userService = new UserServices();
             $userService->attributes = [
-                'pid' => $this->_project->id,
-                'aid' => $provider,
+                'panel_id' => $this->_project->id,
+                'provider_id' => $provider,
             ];
 
             $userService->save(false);
@@ -84,8 +86,9 @@ class EditProvidersForm extends Model {
 
         if ($projectDbConnection && !empty($resIds)) {
             $projectDbConnection->createCommand()->update('services', [
-                'res' => Yii::$app->params['manualProviderId']
-            ], 'res IN (' . implode(",", $resIds) . ')')->execute();
+                'provider_id' => Yii::$app->params['manualProviderId'],
+                'mode' => Services::MODE_DISABLED,
+            ], 'provider_id IN (' . implode(",", $resIds) . ')')->execute();
         }
 
         return true;
@@ -100,7 +103,7 @@ class EditProvidersForm extends Model {
         $providers = [];
 
         foreach ($this->_getProviders() as $provider) {
-            $providers[$provider->res] = [
+            $providers[$provider->provider_id] = [
                 'name' => $provider->name,
                 'internal' => (AdditionalServices::TYPE_INTERNAL == $provider->type) ? true : false
             ];

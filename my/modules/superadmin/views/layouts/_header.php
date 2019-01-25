@@ -5,10 +5,10 @@
     use yii\bootstrap\Nav;
     use common\models\panels\SuperAdmin;
     use yii\helpers\ArrayHelper;
-    use my\modules\superadmin\widgets\ErrorOrdersWidget;
+    use superadmin\widgets\ErrorOrdersWidget;
     use my\helpers\Url;
-    use my\modules\superadmin\widgets\UnreadMessagesWidget;
-    use my\modules\superadmin\widgets\ErrorSslWidget;
+    use superadmin\widgets\UnreadMessagesWidget;
+    use superadmin\widgets\ErrorSslWidget;
 
     $activeTab = empty($this->context->activeTab) ? null : ArrayHelper::getValue($this->context, 'activeTab');
 
@@ -106,7 +106,9 @@
             'items' => [
                 ['label' => Yii::t('app/superadmin', 'header.nav.levopanel_scanner'), 'url' => Url::toRoute('/tools/levopanel')],
                 ['label' => Yii::t('app/superadmin', 'header.nav.panelfire_scanner'), 'url' => Url::toRoute('/tools/panelfire')],
-                ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')]
+                ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.db_helper'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/db-helper')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.fraud_reports'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/fraud-reports')],
             ]
         ];
     }
@@ -140,7 +142,7 @@
             'options' => ['class' => 'navbar-nav mr-auto'],
             'items' => $optionsLeft,
             'encodeLabels' => false,
-            'dropdownClass' => 'my\modules\superadmin\widgets\CustomDropdown',
+            'dropdownClass' => 'superadmin\widgets\CustomDropdown',
         ]);?>
 
         <?= Nav::widget([

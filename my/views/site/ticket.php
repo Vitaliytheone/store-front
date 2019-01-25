@@ -6,7 +6,7 @@
     /* @var $clear */
     /* @var $showForm */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
 ?>
 <div class="form-group" id="htmlText" data-action="<?= Url::toRoute("/ticket/ ". $ticket->id . '?clear=1')?>">
     <ul class="chat">

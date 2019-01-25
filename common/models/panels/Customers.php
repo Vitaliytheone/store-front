@@ -29,11 +29,13 @@ use yii\db\Query;
  * @property string $auth_ip
  * @property integer $timezone
  * @property string $auth_token
+ * @property integer $unpaid_earnings
  * @property integer $referrer_id
  * @property integer $referral_status
  * @property integer $paid
  * @property string $referral_link
  * @property integer $referral_expired_at
+ * @property integer $gateway
  *
  * @property Invoices[] $invoices
  * @property Payments[] $payments
@@ -73,6 +75,9 @@ class Customers extends ActiveRecord
     const BUY_DOMAIN_ACTIVE = 1;
     const BUY_DOMAIN_NOT_ACTIVE = 0;
 
+    const BUY_GATEWAY_ACTIVE = 1;
+    const BUY_GATEWAY_NOT_ACTIVE = 0;
+
     public $password_confirm;
 
     use UnixTimeFormatTrait;
@@ -93,7 +98,8 @@ class Customers extends ActiveRecord
         return [
             [['email', 'password', 'password_confirm', 'first_name', 'last_name'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['first_name', 'last_name'], 'required', 'on' => self::SCENARIO_SETTINGS],
-            [['status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores', 'buy_domain'], 'integer'],
+            [['unpaid_earnings', 'status', 'date_create', 'auth_date', 'timezone', 'referrer_id', 'referral_status', 'paid', 'referral_expired_at', 'child_panels', 'stores', 'buy_domain'], 'integer'],
+            [['gateway'], 'integer', 'max' => 1],
             [['referral_link'], 'string', 'max' => 5],
             [['first_name'], 'string', 'max' => 300],
             [['last_name'], 'string', 'max' => 300],
@@ -306,11 +312,13 @@ class Customers extends ActiveRecord
             'auth_ip' => Yii::t('app', 'Auth Ip'),
             'timezone' => Yii::t('app', 'Timezone'),
             'auth_token' => Yii::t('app', 'Auth Token'),
+            'unpaid_earnings' => Yii::t('app', 'Unpaid Earnings'),
             'referrer_id' => Yii::t('app', 'Referrer ID'),
             'referral_status' => Yii::t('app', 'Referral Status'),
             'paid' => Yii::t('app', 'Paid'),
             'referral_link' => Yii::t('app', 'Referral Link'),
             'referral_expired_at' => Yii::t('app', 'Referral Expired At'),
+            'gateway' => Yii::t('app', 'Gateway'),
         ];
     }
 
@@ -477,6 +485,46 @@ class Customers extends ActiveRecord
             case 'disable_referral':
                 return static::REFERRAL_ACTIVE == $this->referral_status;
             break;
+
+            case 'ssl':
+                $sslCerts = SslCert::find()
+                    ->leftJoin('ssl_cert_item', 'ssl_cert.item_id = ssl_cert_item.id')
+                    ->where([
+                        'ssl_cert.cid' => $this->id,
+                        'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                        'ssl_cert_item.provider' => SslCertItem::PROVIDER_GOGETSSL
+                    ])
+                    ->exists();
+
+                if ($sslCerts) {
+                    return true;
+                }
+
+                $panels = Project::find()
+                    ->where([
+                        'cid' => $this->id,
+                        'act' => Project::STATUS_ACTIVE,
+                        'ssl' => Project::SSL_MODE_OFF,
+                        'dns_status' => null,
+                    ]);
+
+                $stores = Stores::find()
+                    ->where([
+                        'customer_id' => $this->id,
+                        'status' => Stores::STATUS_ACTIVE,
+                        'ssl' => Stores::SSL_MODE_OFF,
+                        'dns_status' => null,
+                    ]);
+
+                if ($panels->exists() || $stores->exists()) {
+                    return true;
+                }
+                return false;
+            break;
+
+            case 'gateway':
+                return $this->gateway;
+            break;
         }
 
         return false;
@@ -570,5 +618,15 @@ class Customers extends ActiveRecord
         $this->buy_domain = self::BUY_DOMAIN_ACTIVE;
 
         return $this->save(false);
+    }
+
+    /**
+     * Activate gateways feature status
+     */
+    public function activateGateways()
+    {
+        $this->gateway = self::BUY_GATEWAY_ACTIVE;
+
+        return  $this->save(false);
     }
 }

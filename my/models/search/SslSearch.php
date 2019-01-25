@@ -76,7 +76,7 @@ class SslSearch
             ]);
 
         $ssl = (new Query())
-            ->select(['sc.id', '("ssl") AS type', 'sc.status', 'sc.created_at AS date', 'sc.expiry AS expired', 'sc.details', 'sc.domain', 'sc.item_id'])
+            ->select(['sc.id', '("ssl") AS type', 'sc.status', 'sc.created_at AS date', 'sc.expiry AS expired', 'sc.expiry_at_timestamp AS expired_timestamp', 'sc.details', 'sc.domain', 'sc.item_id'])
             ->from('ssl_cert sc')
             ->andWhere([
                 'sc.cid' => $customer,
@@ -141,6 +141,8 @@ class SslSearch
 
             $value['date'] = Yii::$app->formatter->asDate($value['date'] + ((int)$timezone), 'php:Y-m-d H:i:s');
             $value['domain'] = DomainsHelper::idnToUtf8($value['domain']);
+
+            $value['expired'] = isset($value['expired_timestamp']) ? Yii::$app->formatter->asDate($value['expired_timestamp'] + ((int)$timezone), 'php:Y-m-d H:i:s') : $value['expired'];
 
             return $value;
         };

@@ -1,10 +1,10 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model my\modules\superadmin\models\forms\EditStaffForm */
+/* @var $model superadmin\models\forms\EditStaffForm */
 /* @var $form my\components\ActiveForm */
 
 use my\components\ActiveForm;
-use my\modules\superadmin\models\forms\EditStaffForm;
+use superadmin\models\forms\EditStaffForm;
 use my\helpers\Url;
 use common\models\panels\SuperAdmin;
 use yii\bootstrap\Html;
@@ -16,7 +16,7 @@ $model = new EditStaffForm();
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit account</h4>
+                <h4 class="modal-title"><?= Yii::t('app/superadmin', 'staff.edit_staff.modal_header') ?></h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
 
@@ -56,8 +56,8 @@ $model = new EditStaffForm();
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <?= Html::submitButton('Edit account', [
+                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.edit_staff.modal_cancel_btn') ?></button>
+                <?= Html::submitButton(Yii::t('app/superadmin', 'staff.edit_staff.modal_edit_account'), [
                     'class' => 'btn btn-outline btn-primary',
                     'name' => 'edit-staff-button',
                     'id' => 'editStaffButton'

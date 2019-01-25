@@ -1,5 +1,8 @@
 customModule.superadminPanelsController = {
     run : function(params) {
+        var self = this;
+
+        self.editPaymentMethods(params);
 
         $('#search-providers').on('keyup', function(e) {
             if (e.keyCode == 13) {
@@ -124,6 +127,64 @@ customModule.superadminPanelsController = {
             return false;
         });
 
+        $('.change-providers').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var modal = $('#changeChildPanelProviderModal');
+            var url = link.data('providers');
+            var modalSelect = $('.providers-list select', modal);
+            var form = $('#changeChildPanelProviderForm');
+            var errorBlock = $('#changeChildPanelProviderError', form);
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $.get(url, function (response) {
+                $.each(response.content, function(index, name) {
+                    modalSelect.append($("<option></option>", {value: index, text: name}));
+                });
+            });
+
+
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('click', '#changeChildPanelProviderButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#changeChildPanelProviderForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#changeChildPanelProviderModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
+        $('.close-change-modal').click(function(e) {
+            e.preventDefault();
+
+            var modal = $('#changeChildPanelProviderModal');
+            var modalSelect = $('.providers-list select', modal);
+
+            modalSelect.html('');
+        });
+
+        $('#changeChildPanelProviderModal').keyup(function(e) {
+            if (e.keyCode == 27) {
+                var modalSelect = $('.providers-list select', $(this));
+                modalSelect.html('');
+            }
+        });
 
         $('.edit-panels').click(function(e) {
             e.preventDefault();
@@ -149,9 +210,10 @@ customModule.superadminPanelsController = {
             if (!panel) {
                 return;
             }
+
             var form = $('#edit-panel-form');
             var inputs = form.data('inputs');
-            var checkboxes =  inputs['checkboxes'];
+            var checkboxes = inputs['checkboxes'];
 
             for (var prop in checkboxes) {
                 var value = 1;
@@ -180,7 +242,7 @@ customModule.superadminPanelsController = {
             $('.selectpicker').selectpicker('refresh');
         }
 
-        new Clipboard('.copy', {
+        custom.clipboard('.copy', {
             container: document.getElementById('#editPanelsModal')
         });
 
@@ -375,6 +437,51 @@ customModule.superadminPanelsController = {
                 data: form.serialize(),
                 callback : function(response) {
                     $('#upgradePanelModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+    },
+    editPaymentMethods: function (params) {
+        var self = this;
+
+        $('.edit-payment-methods').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var modal = $('#editPaymentMethodsModal');
+            var form = $('#editPaymentMethodsForm');
+            var errorBlock = $('#editPaymentMethodsError', form);
+            var container = $('#editPaymentMethodsContainer', modal);
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+            container.html('');
+            container.append('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>');
+
+            $.get(link.attr('href'), function (response) {
+                if (response.content) {
+                    container.html(response.content);
+                }
+            });
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('click', '#editPaymentMethodsButton, #addPaymentMethodBtn', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#editPaymentMethodsForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#editPaymentMethodsModal').modal('hide');
                     location.reload();
                 }
             });

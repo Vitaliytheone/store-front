@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 use common\models\panels\Project;
 use my\helpers\SpecialCharsHelper;
 use yii\db\Query;
@@ -8,7 +8,7 @@ use yii\db\Query;
 
 /**
  * Class SubscriptionSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class SubscriptionSearch
 {
@@ -25,7 +25,7 @@ class SubscriptionSearch
      * Get models array
      * @return array
      */
-    public function search()
+    public function search(): array
     {
         $currentTime = time();
 
@@ -39,6 +39,8 @@ class SubscriptionSearch
             ->where(['act' => Project::STATUS_ACTIVE])
             ->andWhere('db != ""')
             ->all();
+
+        $result = [];
 
         foreach ($models as $key => $model) {
             $allCount = 0;
@@ -54,35 +56,79 @@ class SubscriptionSearch
                     '`' . $model['db'] . '`.auto_orders as updated_date',
                     'updated_date.id = auto_orders.id AND updated_date.updated_at > 0 AND updated_date.status = ' . static::AUTO_ORDERS_STATUS_ACTIVE
                 )
+                ->where(['auto_orders.not_checked' => 0])
                 ->groupBy('auto_orders.status')
                 ->all();
 
-            // Set default values
-            $models[$key]['allCount'] = 0;
-            $models[$key]['activeCount'] = 0;
-            $models[$key]['pausedCount'] = 0;
-            $models[$key]['completedCount'] = 0;
-            $models[$key]['expiredCount'] = 0;
-            $models[$key]['canceledCount'] = 0;
-            $models[$key]['avg'] = 0;
+            if (!empty($countQuery)) {
+                // Set default values
+                $result[$key] = $model;
+                $result[$key]['allCount'] = 0;
+                $result[$key]['activeCount'] = 0;
+                $result[$key]['pausedCount'] = 0;
+                $result[$key]['completedCount'] = 0;
+                $result[$key]['expiredCount'] = 0;
+                $result[$key]['canceledCount'] = 0;
+                $result[$key]['avg'] = 0;
 
-            for ($i = 0; $i < count($countQuery); $i++) {
-                $allCount += $countQuery[$i]['count'];
+                for ($i = 0; $i < count($countQuery); $i++) {
+                    $allCount += $countQuery[$i]['count'];
+                }
+
+                foreach ($countQuery as $value) {
+                    $result[$key]['allCount'] = $allCount;
+                    $result[$key]['activeCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_ACTIVE ? $value['count'] : $result[$key]['activeCount'];
+                    $result[$key]['pausedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_PAUSED ? $value['count'] : $result[$key]['pausedCount'];
+                    $result[$key]['completedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_COMPLETED ? $value['count'] : $result[$key]['completedCount'];
+                    $result[$key]['expiredCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_EXPIRED ? $value['count'] : $result[$key]['expiredCount'];
+                    $result[$key]['canceledCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_CANCELED ? $value['count'] : $result[$key]['canceledCount'];
+                    $result[$key]['avg'] = !empty($countQuery[0]['avg']) ? round($countQuery[0]['avg']) : $result[$key]['avg'];
+                }
             }
-
-            foreach ($countQuery as $value) {
-                $models[$key]['allCount'] = $allCount;
-                $models[$key]['activeCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_ACTIVE ? $value['count'] : $models[$key]['activeCount'];
-                $models[$key]['pausedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_PAUSED ? $value['count'] : $models[$key]['pausedCount'];
-                $models[$key]['completedCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_COMPLETED ? $value['count'] : $models[$key]['completedCount'];
-                $models[$key]['expiredCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_EXPIRED ? $value['count'] : $models[$key]['expiredCount'];
-                $models[$key]['canceledCount'] = $value['status'] == static::AUTO_ORDERS_STATUS_CANCELED ? $value['count'] : $models[$key]['canceledCount'];
-                $models[$key]['avg'] = !empty($countQuery[0]['avg']) ? $countQuery[0]['avg'] : $models[$key]['avg'];
-            }
-
-
         }
 
-        return $models;
+        return [
+            'models' => $result,
+            'totals' => $this->getTotals($result),
+        ];
+    }
+
+    /**
+     * @param array $models
+     * @return array
+     */
+    private function getTotals(array $models): array
+    {
+        $totals = [
+            'all' => 0,
+            'active' => 0,
+            'paused' => 0,
+            'completed' => 0,
+            'expired' => 0,
+            'canceled' => 0,
+            'avg' => 0,
+        ];
+
+        if (count($models) == 0) {
+            return $totals;
+        }
+
+        $fieldCount = 0;
+
+        foreach ($models as $model) {
+            $totals['all'] += $model['allCount'];
+            $totals['active'] += $model['activeCount'];
+            $totals['paused'] += $model['pausedCount'];
+            $totals['completed'] += $model['completedCount'];
+            $totals['expired'] += $model['expiredCount'];
+            $totals['canceled'] += $model['canceledCount'];
+            $totals['avg'] += $model['avg'];
+
+            $fieldCount++;
+        }
+
+        $totals['avg'] = round($totals['avg'] / $fieldCount);
+
+        return $totals;
     }
 }

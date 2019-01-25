@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\AddInvoicePaymentForm */
+    /* @var $model superadmin\models\forms\AddInvoicePaymentForm */
     /* @var $form my\components\ActiveForm */
 
-    use my\modules\superadmin\models\forms\AddInvoicePaymentForm;
+    use superadmin\models\forms\AddInvoicePaymentForm;
     use my\components\ActiveForm;
     use yii\bootstrap\Html;
     use my\helpers\Url;
@@ -40,6 +40,8 @@
                 <?= $form->field($model, 'method')->dropDownList($model->getMethods()) ?>
 
                 <?= $form->field($model, 'memo') ?>
+
+                <?= $form->field($model, 'fee') ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'invoices.add_payment.close_btn') ?></button>

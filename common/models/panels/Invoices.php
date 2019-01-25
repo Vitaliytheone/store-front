@@ -2,6 +2,8 @@
 
 namespace common\models\panels;
 
+use common\helpers\PaymentHelper;
+use common\models\panels\services\GetParentPanelService;
 use my\helpers\CustomerHelper;
 use my\helpers\StringHelper;
 use Yii;
@@ -203,7 +205,7 @@ class Invoices extends ActiveRecord
 
     /**
      * Paid invoice
-     * @param $method
+     * @param string $method
      * @return bool
      * @throws \yii\db\Exception
      */
@@ -330,8 +332,7 @@ class Invoices extends ActiveRecord
                     $referralEarning->earnings = $earnings;
                     $referralEarning->invoice_id = $this->id;
                     $referralEarning->status = ReferralEarnings::STATUS_COMPLETED;
-                    $referralEarning->save(false);
-
+                    $referralEarning->save();
                 }
             }
         }
@@ -355,34 +356,20 @@ class Invoices extends ActiveRecord
     }
 
     /**
-     * @return bool
+     * @param $allowTypes
+     * @return InvoiceDetails|null
      */
-    public function isDisabled() {
-        return false;
+    public function searchDetails($allowTypes)
+    {
         $details = $this->invoiceDetails;
-        $detail = null;
+
         foreach ($details as $item) {
-            if ($item->item == InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL || $item->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
-                $detail = $item;
+            if (ArrayHelper::isIn($item->item, $allowTypes)) {
+              return $item;
             }
         }
 
-        if ($this->status == Invoices::STATUS_UNPAID && $detail) {
-            if ($detail->order ) {
-                $orderDetails = $detail->order->getDetails();
-                $providerId = ArrayHelper::getValue($orderDetails, 'provider');
-            } else {
-                $providerId = $project = Project::findOne([
-                    'id'  => $detail->item_id
-                ])->provider_id;
-            }
-            $owner = Project::getOwnerChildPanel($providerId);
-            if ($owner && $owner->act == Project::STATUS_FROZEN) {
-               return true;
-            }
-        }
-
-        return false;
+        return null;
     }
 
     /**
@@ -415,9 +402,35 @@ class Invoices extends ActiveRecord
             break;
 
             case 'pay':
+
+                $detail = $this->searchDetails(array(
+                    InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                    InvoiceDetails::ITEM_BUY_CHILD_PANEL
+                ));
+
+
+
+
+                if ($this->status == Invoices::STATUS_UNPAID && $detail) {
+                    if ($detail->item == InvoiceDetails::ITEM_BUY_CHILD_PANEL) {
+                        $orderDetails = $detail->order->getDetails();
+                        $providerId = ArrayHelper::getValue($orderDetails, 'provider');
+                    } else {
+                        $providerId = $project = Project::findOne([
+                            'id'  => $detail->item_id
+                        ])->provider_id;
+                    }
+                    $owner = Yii::$container->get(GetParentPanelService::class, [$providerId])->get();
+
+                    if ($owner && $owner->act == Project::STATUS_FROZEN) {
+                        return false;
+                    }
+                }
+                
                 if (static::STATUS_UNPAID == $this->status) {
                     return true;
                 }
+                
             break;
         }
 
@@ -434,17 +447,17 @@ class Invoices extends ActiveRecord
 
         if ($this->isWait()) {
             $notes = [
-                PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_hold'),
-                PaymentGateway::METHOD_TWO_CHECKOUT => Content::getContent('2checkout_review'),
-                PaymentGateway::METHOD_BITCOIN => Content::getContent('bitcoin_not_confirmed'),
-                PaymentGateway::METHOD_COINPAYMENTS => Content::getContent('coinpayments_not_confirmed'),
+                Params::CODE_PAYPAL => Content::getContent('paypal_hold'),
+                Params::CODE_TWO_CHECKOUT => Content::getContent('2checkout_review'),
+                Params::CODE_BITCOIN => Content::getContent('bitcoin_not_confirmed'),
+                Params::CODE_COINPAYMENTS => Content::getContent('coinpayments_not_confirmed'),
             ];
         } else if (static::STATUS_UNPAID == $this->status) {
             $notes = [
-                PaymentGateway::METHOD_PAYPAL => Content::getContent('paypal_note'),
-                PaymentGateway::METHOD_TWO_CHECKOUT => Content::getContent('2checkout_note'),
-                PaymentGateway::METHOD_BITCOIN => Content::getContent('bitcoin_note'),
-                PaymentGateway::METHOD_COINPAYMENTS => Content::getContent('coinpayments_note'),
+                Params::CODE_PAYPAL => Content::getContent('paypal_note'),
+                Params::CODE_TWO_CHECKOUT => Content::getContent('2checkout_note'),
+                Params::CODE_BITCOIN => Content::getContent('bitcoin_note'),
+                Params::CODE_COINPAYMENTS => Content::getContent('coinpayments_note'),
             ];
         }
 

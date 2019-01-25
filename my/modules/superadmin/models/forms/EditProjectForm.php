@@ -1,21 +1,26 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
+use common\models\panel\Bonuses;
+use common\models\panels\AdditionalServices;
 use common\models\panels\Customers;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
+use common\models\panels\PanelPaymentMethods;
 use common\models\panels\PaymentGateway;
+use common\models\panels\PaymentMethodsCurrency;
 use common\models\panels\Tariff;
 use Yii;
 use common\models\panels\Project;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
-use common\helpers\CurrencyHelper;
+
 /**
  * Class EditProjectForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
-class EditProjectForm extends Model {
+class EditProjectForm extends Model
+{
 
     public $site;
     public $subdomain;
@@ -26,7 +31,6 @@ class EditProjectForm extends Model {
     public $auto_order;
     public $lang;
     public $theme;
-    public $currency;
     public $utc;
     public $package;
     public $seo;
@@ -46,6 +50,7 @@ class EditProjectForm extends Model {
     public $apikey;
     public $no_invoice;
     public $currency_code;
+    public $affiliate_system;
 
     /**
      * @var Project
@@ -72,7 +77,7 @@ class EditProjectForm extends Model {
                 'auto_order',
                 'lang',
                 'theme',
-                'currency',
+                'currency_code',
                 'utc',
                 'package',
                 'seo',
@@ -90,8 +95,10 @@ class EditProjectForm extends Model {
                 'custom',
                 'start_count',
                 'apikey',
-                'no_invoice'
+                'no_invoice',
+                'affiliate_system',
             ], 'safe'],
+            ['cid', 'checkOwnedChildPanel'],
             [['apikey'], 'string'],
             [['apikey'], 'uniqApikey'],
         ];
@@ -116,7 +123,7 @@ class EditProjectForm extends Model {
     public function getDropDownAttrs()
     {
         return [
-            'currency',
+            'currency_code',
             'plan',
             'utc',
             'cid'
@@ -164,7 +171,10 @@ class EditProjectForm extends Model {
     {
         return [
             'checkboxes' => array_merge(
-                ['subdomain'],
+                [
+                    'subdomain',
+                    'affiliate_system',
+                ],
                 $this->getAdvanced(),
                 $this->getServiceTypes()
             ),
@@ -206,6 +216,24 @@ class EditProjectForm extends Model {
     }
 
     /**
+     * Check panel to owned of child panel
+     * @param string
+     */
+    public function checkOwnedChildPanel($attribute)
+    {
+        $childPanels = $this->_project->getChildPanels();
+
+        foreach ($childPanels as $panel) {
+            if (
+                $this->cid != $this->_project->cid
+                && ($panel->act === Project::STATUS_ACTIVE || $panel->act === Project::STATUS_FROZEN)
+            ) {
+                $this->addError($attribute, Yii::t('app/superadmin', 'panels.edit.error_have_active_cp'));
+            }
+        }
+    }
+
+    /**
      * Save project changes
      * @return bool
      */
@@ -215,60 +243,73 @@ class EditProjectForm extends Model {
             return false;
         }
 
-        $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
-        if ($this->currency != $this->_project->currency) {
-            $isChangedCurrency = true;
-        }
+        $transaction = Yii::$app->db->beginTransaction();
 
-        if ($this->cid != $this->_project->cid) {
-            $isChangedCustomer = true;
-        }
+        try {
+            $isChangedCurrency = $isChangedCustomer = $isChangedNoInvoice = false;
+            if ($this->currency_code != $this->_project->getCurrencyCode()) {
+                $isChangedCurrency = true;
+            }
 
-        if ($this->no_invoice != $this->_project->no_invoice) {
-            $isChangedNoInvoice = true;
-        }
+            if ($this->cid != $this->_project->cid) {
+                $isChangedCustomer = true;
+            }
 
-        $this->_project->attributes = $this->attributes;
-        $this->_project->captcha = !$this->captcha;
+            if ($this->no_invoice != $this->_project->no_invoice) {
+                $isChangedNoInvoice = true;
+            }
 
-        if (!$this->_project->save(false)) {
-            $this->addErrors($this->_project->getErrors());
+            $this->_project->attributes = $this->attributes;
+            $this->_project->captcha = !$this->captcha;
+
+            if (!$this->_project->save(false)) {
+                $this->addErrors($this->_project->getErrors());
+                $transaction->rollBack();
+                return false;
+            }
+
+            $this->_project->refresh();
+
+            if ($isChangedCurrency) {
+                $this->updateCurrencies();
+                $this->legacyUpdateCurrency();
+            }
+
+            if ($isChangedCustomer) {
+                /**
+                 * @var $customer Customers
+                 */
+                $customer = $this->getCustomers()[$this->cid];
+
+                $customer->activateReferral();
+                $customer->activateChildPanels();
+            }
+
+            if ($isChangedNoInvoice && Project::NO_INVOICE_ENABLED == $this->_project->no_invoice) {
+                /**
+                 * @var Invoices $invoice
+                 */
+                foreach (Invoices::find()
+                             ->joinWith(['invoiceDetails'])
+                             ->andWhere([
+                                 'invoices.status' => Invoices::STATUS_UNPAID,
+                                 'invoice_details.item_id' => $this->_project->id,
+                                 'invoice_details.item' => [
+                                     InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
+                                     InvoiceDetails::ITEM_PROLONGATION_PANEL,
+                                 ],
+                             ])
+                             ->all() as $invoice) {
+                    $invoice->status = Invoices::STATUS_CANCELED;
+                    $invoice->save(false);
+                }
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
             return false;
         }
 
-        if ($isChangedCurrency) {
-           $this->updateCurrencies();
-        }
-
-        if ($isChangedCustomer) {
-            /**
-             * @var $customer Customers
-             */
-            $customer = $this->getCustomers()[$this->cid];
-
-            $customer->activateReferral();
-            $customer->activateChildPanels();
-        }
-
-        if ($isChangedNoInvoice && Project::NO_INVOICE_ENABLED == $this->_project->no_invoice) {
-            /**
-             * @var Invoices $invoice
-             */
-            foreach (Invoices::find()
-                 ->joinWith(['invoiceDetails'])
-                 ->andWhere([
-                     'invoices.status' => Invoices::STATUS_UNPAID,
-                     'invoice_details.item_id' => $this->_project->id,
-                     'invoice_details.item' => [
-                         InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-                         InvoiceDetails::ITEM_PROLONGATION_PANEL,
-                     ],
-                 ])
-                 ->all() as $invoice) {
-                $invoice->status = Invoices::STATUS_CANCELED;
-                $invoice->save(false);
-            }
-        }
+        $transaction->commit();
 
         return true;
     }
@@ -288,7 +329,7 @@ class EditProjectForm extends Model {
             'auto_order' => Yii::t('app/superadmin', 'panels.edit.auto_order'),
             'lang' => Yii::t('app/superadmin', 'panels.edit.lang'),
             'theme' => Yii::t('app/superadmin', 'panels.edit.theme'),
-            'currency' => Yii::t('app/superadmin', 'panels.edit.currency'),
+            'currency_code' => Yii::t('app/superadmin', 'panels.edit.currency'),
             'utc' => Yii::t('app/superadmin', 'panels.edit.utc'),
             'package' => Yii::t('app/superadmin', 'panels.edit.package'),
             'seo' => Yii::t('app/superadmin', 'panels.edit.seo'),
@@ -307,6 +348,7 @@ class EditProjectForm extends Model {
             'start_count' => Yii::t('app/superadmin', 'panels.edit.start_count'),
             'apikey' => Yii::t('app/superadmin', 'panels.edit.apikey'),
             'no_invoice' => Yii::t('app/superadmin', 'panels.edit.no_invoice'),
+            'affiliate_system' => Yii::t('app/superadmin', 'panels.edit.affiliate_system'),
         ];
     }
 
@@ -353,7 +395,7 @@ class EditProjectForm extends Model {
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
+            $currencies[$code] = $currency['name'] . ' (' . $code . ')';
         }
         return $currencies;
     }
@@ -386,9 +428,49 @@ class EditProjectForm extends Model {
     }
 
     /**
-     * Update payments geteway panel values
+     * Update panel payment methods
      */
     public function updateCurrencies()
+    {
+        $currency = $this->_project->getCurrencyCode();
+        $panelDb = $this->_project->db;
+        $db = Yii::$app->db;
+
+        $currentPaymentMethods = PanelPaymentMethods::find()->andWhere([
+            'panel_id' => $this->_project->id
+        ])->indexBy('method_id')->all();
+
+        $availablePaymentMethods = PaymentMethodsCurrency::find()->andWhere([
+            'currency' => $currency,
+        ])->indexBy('method_id')->all();
+
+        foreach ($currentPaymentMethods as $methodId => $currentPaymentMethod) {
+            if (empty($availablePaymentMethods[$methodId])) {
+                // Disable panel payment method bonus
+                $db->createCommand()->update($db->quoteTableName($panelDb) . '.' . Bonuses::tableName(), [
+                    'status' => Bonuses::STATUS_DISABLED
+                ], [
+                    'pgid' => $currentPaymentMethod->method_id
+                ])->execute();
+
+                $currentPaymentMethod->delete();
+                continue;
+            }
+
+            $currentPaymentMethod->currency_id = $availablePaymentMethods[$methodId]->id;
+            $currentPaymentMethod->save(false);
+        }
+
+        AdditionalServices::updateAll(
+            ['currency' => $currency],
+            ['type' => 1, 'name' => $this->_project->site]
+        );
+    }
+
+    /**
+     * Update legacy panel payment methods
+     */
+    public function legacyUpdateCurrency()
     {
         PaymentGateway::updateAll([
             'position' => 0,
@@ -396,7 +478,7 @@ class EditProjectForm extends Model {
             ':pid' => $this->_project->id
         ]);
 
-        $currencies = Yii::$app->params['currencies'];
+        $currencies = Yii::$app->params['legacy_currencies'];
         $currency = strtoupper($this->_project->getCurrencyCode());
 
         if (empty($currencies[$currency])) {

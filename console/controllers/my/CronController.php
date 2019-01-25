@@ -3,31 +3,39 @@
 namespace console\controllers\my;
 
 use common\helpers\InvoiceHelper;
-use common\models\common\ProjectInterface;
+use common\models\gateways\Sites;
 use common\models\panel\PaymentsLog;
-use common\models\panels\Logs;
+use common\models\panels\Domains;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
 use common\models\panels\MyCustomersHash;
 use common\models\panels\Orders;
-use common\models\panels\PaymentGateway;
+use common\models\panels\Params;
 use common\models\panels\PaymentHash;
 use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
+use console\components\crons\CronFreeSslOrder;
+use console\components\crons\CronPanelRenewSslOrder;
 use console\components\payments\PaymentsFee;
+use console\components\terminate\TerminateGateway;
+use console\components\terminate\TerminatePanel;
+use console\components\terminate\TerminateStore;
 use my\components\payments\Paypal;
 use my\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
 use my\helpers\PaymentsHelper;
 use my\mail\mailers\PanelExpired;
 use my\mail\mailers\PaypalVerificationNeeded;
-use sommerce\helpers\StoreHelper;
+use console\components\terminate\CancelOrder;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
-use yii\db\Exception as DbException;
+use console\components\UpdateServicesCount;
+use yii\helpers\Console;
 
 /**
  * Class CronController
@@ -62,6 +70,9 @@ class CronController extends CustomController
                 Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_GATEWAY,
             ]
         ])->all();
 
@@ -106,6 +117,22 @@ class CronController extends CustomController
                     case Orders::ITEM_PROLONGATION_DOMAIN:
                         OrderHelper::prolongationDomain($order);
                     break;
+
+                    case Orders::ITEM_FREE_SSL:
+                        if (Yii::$app->params['free_ssl.create']) {
+                            OrderHelper::freeSsl($order);
+                        }
+                    break;
+
+                    case Orders::ITEM_PROLONGATION_FREE_SSL:
+                        if (Yii::$app->params['free_ssl.prolong']) {
+                            OrderHelper::prolongationFreeSsl($order);
+                        }
+                    break;
+
+                    case Orders::ITEM_BUY_GATEWAY:
+                        OrderHelper::gateway($order);
+                    break;
                 }
             } catch (Exception $e) {
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $e->getMessage() . $e->getTraceAsString(), 'cron.order.exception');
@@ -130,6 +157,9 @@ class CronController extends CustomController
             'checked' => SslCert::CHECKED_NO
         ])->all();
 
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
+
         foreach ($sslList as $ssl) {
             OrderHelper::updateSslOrderStatus($ssl);
         }
@@ -144,68 +174,55 @@ class CronController extends CustomController
     {
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
-        InvoiceHelper::prolongSsl();
         InvoiceHelper::prolongStores();
+
+        if (Yii::$app->params['free_ssl.prolong']) {
+            InvoiceHelper::prolongFreeSsl();
+            InvoiceHelper::prolongGogetSsl2LetsencryptSsl();
+        }
     }
 
     /**
      * Update old frozen panel status
      * @access public
      * @return void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
-    public function actionTerminatePanel()
+    public function actionTerminate()
     {
-        $date = time() - (7 * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
+        Yii::$container->get(CancelOrder::class, [
+            time() - (7 * 24 * 60 * 60),
+            [
+                Orders::ITEM_BUY_PANEL,
+                Orders::ITEM_BUY_DOMAIN,
+                Orders::ITEM_BUY_SSL,
+                Orders::ITEM_BUY_CHILD_PANEL,
+                Orders::ITEM_BUY_STORE,
+                Orders::ITEM_BUY_TRIAL_STORE,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL,
+                Orders::ITEM_BUY_GATEWAY,
+            ]
+        ])->run();
 
-        /**
-         * @var $order Orders
-         */
-        foreach (Orders::find()->andWhere('status = :pending AND date < :date', [
-            ':pending' => Orders::STATUS_PENDING,
-            ':date' => $date // 7 дней; 24 часа; 60 минут; 60 секунд
-        ])->all() as $order) {
-            $order->cancel();
-        }
+        Yii::$container->get(CancelOrder::class, [
+            time() - (30 * 24 * 60 * 60),
+            [
+                Orders::ITEM_PROLONGATION_SSL,
+                Orders::ITEM_PROLONGATION_DOMAIN,
+            ]
+        ])->run();
 
-        $date = strtotime("-1 month", time()); // + 1 месяц
-
-        // Берем по 1 панели на обработку
-        $project = Project::find()
-            ->leftJoin('logs', 'logs.panel_id = project.id AND logs.project_type = :project_type AND logs.type = :type AND logs.created_at > :date', [
-                ':project_type' => ProjectInterface::PROJECT_TYPE_PANEL,
-                ':date' => $date,
-                ':type' => Logs::TYPE_RESTORED
-            ])
-            ->andWhere([
-                'project.act' => Project::STATUS_FROZEN
-            ])
-            ->andWhere('project.expired < :expired AND logs.id IS NULL', [
-                ':expired' => $date
-            ])
-            ->one();
-
-        /**
-         * @var Project $project
-         */
-        if ($project) {
-            $transaction = Yii::$app->db->beginTransaction();
-
-            try {
-                $project->act = Project::STATUS_TERMINATED;
-
-                if ($project->save(false)) {
-                    $project->terminate();
-                }
-            } catch (DbException $e) {
-                $transaction->rollBack();
-                Yii::error($e->getMessage() . $e->getTraceAsString());
-                return;
-            }
-
-            $transaction->commit();
-        }
-
-        StoreHelper::terminateOneStore($date);
+        Yii::$container->get(TerminateStore::class, [
+            strtotime("-1 month", time())
+        ])->run();
+        Yii::$container->get(TerminatePanel::class, [
+            strtotime("-1 month", time())
+        ])->run();
+        Yii::$container->get(TerminateGateway::class, [
+            strtotime("-1 month", time())
+        ])->run();
     }
 
     /**
@@ -248,6 +265,21 @@ class CronController extends CustomController
         foreach ($stores as $store) {
             $store->refresh();
             $store->checkExpired();
+        }
+
+        $sites = Sites::find()
+            ->andWhere([
+                'status' => Sites::STATUS_ACTIVE,
+            ])
+            ->andWhere('expired_at < :currentTime', [
+                ':currentTime' => $date
+            ])
+            ->all();
+
+        /** @var Stores $store */
+        foreach ($sites as $site) {
+            $site->refresh();
+            $site->checkExpired();
         }
     }
 
@@ -315,7 +347,7 @@ class CronController extends CustomController
         $paypal = new Paypal();
 
         foreach (Payments::find()->andWhere([
-            'type' => PaymentGateway::METHOD_PAYPAL,
+            'payment_method' => Params::CODE_PAYPAL,
             'status' => [
                 Payments::STATUS_WAIT,
                 Payments::STATUS_REVIEW,
@@ -326,7 +358,7 @@ class CronController extends CustomController
                 /**
                  * @var Payments $payment
                  */
-                if (PaymentGateway::METHOD_PAYPAL == $payment->type) {
+                if (Params::CODE_PAYPAL == $payment->payment_method) {
 
                     $GetTransactionDetails = $paypal->request('GetTransactionDetails', array(
                         'TRANSACTIONID' => $payment->transaction_id
@@ -432,5 +464,77 @@ class CronController extends CustomController
         Yii::$container->get(PaymentsFee::class, [
             Yii::$app->params['cron.check_payments_fee_days'], // days
         ])->run();
+    }
+
+    /**
+     * Update service_count & service_inuse_count in additional_services
+     */
+    public function actionUpdateServicesCount()
+    {
+        Yii::$container->get(UpdateServicesCount::class)->run();
+    }
+
+    /**
+     * New panel|store Letsencrypt SSL order maker
+     * @throws Exception
+     */
+    public function actionNewSslOrder()
+    {
+        if (Yii::$app->params['free_ssl.create']) {
+            $cron = new CronFreeSslOrder();
+            $cron->setConsole($this);
+            $cron->setDebug(true);
+            $cron->run();
+        }
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     */
+    public function actionUpdateDomainExpiry()
+    {
+        $domains = Domains::find()
+            ->where(['<', 'expiry', time()])
+            ->andWhere(['status' => Domains::STATUS_OK])
+            ->all();
+
+        foreach ($domains as $domain) {
+            $transaction = Yii::$app->db->beginTransaction();
+            $domain->status = Domains::STATUS_EXPIRED;
+
+            if (!$domain->save()) {
+                $transaction->rollBack();
+                continue;
+            }
+
+            $orders = Orders::find()->andWhere([
+                'item_id' => $domain->id,
+                'item' => Orders::ITEM_PROLONGATION_DOMAIN,
+                'status' => Orders::STATUS_PENDING,
+            ])->all();
+
+            /**
+             * @val Orders $order
+             */
+            foreach ($orders as $order) {
+                $invoiceDetails = InvoiceDetails::findOne(['item_id' => $order->id, 'item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN]);
+                if (!$invoiceDetails) {
+                    continue;
+                }
+                $invoiceId = $invoiceDetails->invoice_id;
+
+                try {
+                    InvoiceDetails::deleteAll(['invoice_id' => $invoiceId]);
+                    Invoices::deleteAll(['id' => $invoiceId]);
+                    $order->delete();
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    continue;
+                }
+            }
+
+            $transaction->commit();
+        }
     }
 }

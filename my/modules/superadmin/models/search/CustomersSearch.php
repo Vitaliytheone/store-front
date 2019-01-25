@@ -1,26 +1,29 @@
 <?php
-namespace my\modules\superadmin\models\search;
 
+namespace superadmin\models\search;
+
+
+use common\models\gateways\Sites;
 use common\models\stores\Stores;
-use my\helpers\SpecialCharsHelper;
+use superadmin\widgets\CountPagination;
 use Yii;
 use common\models\panels\Customers;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
 
 /**
  * Class CustomersSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
-class CustomersSearch extends Customers {
-
+class CustomersSearch extends Customers
+{
     public $countStores;
     public $countProjects;
     public $countChild;
     public $countDomains;
     public $countSslCerts;
     public $referrer_email;
+    public $countGateways;
 
     /**
      * @var Pagination
@@ -29,25 +32,7 @@ class CustomersSearch extends Customers {
 
     protected static $_customers;
 
-    /**
-     * @var array
-     */
-    public static $pageSizeList = [
-        100 => 100,
-        500 => 500,
-        1000 => 1000,
-        5000 => 5000,
-    ];
-
     use SearchTrait;
-
-    /**
-     * Set label for 'All'
-     */
-    private function setAllPageLabel()
-    {
-        static::$pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
-    }
 
     /**
      * Get parameters
@@ -67,7 +52,7 @@ class CustomersSearch extends Customers {
     public function getPageSize()
     {
         $pageSize = isset($this->params['page_size']) ? $this->params['page_size'] : 100;
-        return array_key_exists($pageSize, static::$pageSizeList) ? $pageSize : 100;
+        return array_key_exists($pageSize, CountPagination::$pageSizeList) ? $pageSize : 100;
     }
 
     /**
@@ -129,9 +114,11 @@ class CustomersSearch extends Customers {
                 'COUNT(DISTINCT child_project.id) AS countChild',
                 'COUNT(DISTINCT domains.id) AS countDomains',
                 'COUNT(DISTINCT ssl_cert.id) AS countSslCerts',
+                'COUNT(DISTINCT sites.id) AS countGateways',
             ])
             ->leftJoin(['referral' => Customers::tableName()], 'referral.id = customers.referrer_id')
-            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id', [':projectChildPanel' => 0])
+            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id')
+            ->leftJoin(['sites' => Sites::tableName()], 'sites.customer_id = customers.id')
             ->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [':projectChildPanel' => 0])
             ->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [':childPanel' => 1])
             ->leftJoin('domains', 'domains.customer_id = customers.id')
@@ -152,7 +139,7 @@ class CustomersSearch extends Customers {
         $status = ArrayHelper::getValue($this->params, 'status', 'all');
 
         $countQuery = $this->buildQuery($status)->count();
-        $this->setAllPageLabel();
+        //$this->setAllPageLabel();
         $pageSize = $this->getPageSize();
         if ($pageSize == 'all') {
             $pageSize = $countQuery;

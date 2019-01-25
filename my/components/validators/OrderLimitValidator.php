@@ -1,7 +1,7 @@
 <?php
 namespace my\components\validators;
 
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use common\models\panels\OrderLogs;
 use Yii;

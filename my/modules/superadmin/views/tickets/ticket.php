@@ -2,15 +2,17 @@
     /* @var $this yii\web\View */
     /* @var $ticketMessages array */
     /* @var $ticket \common\models\panels\Tickets */
-    /* @var $model \my\modules\superadmin\models\forms\CreateMessageForm */
+    /* @var $model \superadmin\models\forms\CreateMessageForm */
     /* @var $admins array */
     /* @var $statuses array */
-    /* @var $ticketMessagesSearch my\modules\superadmin\models\search\TicketMessagesSearch */
-    /* @var $stores  array */
-    /* @var $ssl  array */
-    /* @var $panels  array */
-    /* @var $childPanels  array */
-    /* @var $domains  array */
+    /* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
+    /* @var $stores array */
+    /* @var $ssl array */
+    /* @var $panels array */
+    /* @var $childPanels array */
+    /* @var $domains array */
+    /* @var $notes array */
+    /* @var $gateways array */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
@@ -58,11 +60,19 @@
                 'childPanels' => $childPanels,
                 'panels' => $panels,
                 'statuses' => $statuses,
-                'domains' => $domains
+                'domains' => $domains,
+                'gateways' => $gateways,
+            ])?>
+            <?= $this->render('layouts/_ticket_notes', [
+                    'notes' => $notes,
+                    'ticket' => $ticket,
             ])?>
         </div>
     </div>
 </div>
+
+<?= $this->render('layouts/_create_note')?>
+<?= $this->render('layouts/_edit_note')?>
 
 <?php $this->beginBlock('modals'); ?>
 <?= $this->render('layouts/_edit_message_modal.php')?>

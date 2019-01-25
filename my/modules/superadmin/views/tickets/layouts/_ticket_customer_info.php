@@ -7,6 +7,7 @@
 /* @var $panels array */
 /* @var $childPanels array */
 /* @var $domains array */
+/* @var $gateways array */
 
 use my\components\ActiveForm;
 use my\helpers\Url;
@@ -14,6 +15,8 @@ use yii\helpers\Url as BaseUrl;
 use yii\helpers\Html;
 use common\models\stores\Stores;
 use common\models\panels\Project;
+use common\models\gateways\Sites;
+
 ?>
 
 <div class="bg-light rounded ticket-block__right">
@@ -107,7 +110,7 @@ use common\models\panels\Project;
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <textarea name="comment" class="form-control" placeholder="Comment" rows="7"></textarea>
+                                    <textarea name="comment" class="form-control" placeholder="<?= Yii::t('app/superadmin', 'tickets.customer_info.textarea_placeholder') ?>" rows="7"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <button id="assigned" class="btn btn-block btn-primary"><?= Yii::t('app/superadmin', 'tickets.submit') ?></button>
@@ -216,6 +219,39 @@ use common\models\panels\Project;
                         </td>
                         <td class="text-right">
                             <a href="<?= $loginUrl ?>" data-placement="top" target="_blank" title="" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
+                                <span class="my-icons my-icons-autorization"></span>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($gateways) : ?>
+        <div class="ticket-info__block-header" data-toggle="collapse" href="#ticket-block-id-5">
+            <div class="ticket-info__block-header-title"><?= count($gateways)  ?> <?= Yii::t('app/superadmin', 'pages.title.gateways') ?></div>
+        </div>
+
+        <div class="ticket-info__block in collapse show" id="ticket-block-id-5">
+            <table class="table table-sm table-ticket">
+                <tbody>
+                <?php foreach ($gateways as $item) :
+                    $loginUrl = Url::toRoute(['/gateways/sign-in-as-admin', 'id' => $item->id]);
+                    ?>
+                    <tr>
+                        <td>
+                            <?= Html::a($item->getBaseDomain(), Url::toRoute(['/gateways', 'id' => $item['id']]), ['target' => '_blank'])?>
+                            <?php if (Sites::STATUS_ACTIVE != $item->status) : ?>
+                                <span class="badge badge-primary"><?= Sites::getStatuses()[$item->status] ?></span>
+                            <?php endif; ?>
+                            <a href="//<?= Yii::$app->params['my_domain'] . '/redirect?url=' . $item->getBaseDomain() ?>" target="_blank">
+                                <span class="fa fa-external-link"></span>
+                            </a>
+                        </td>
+                        <td class="text-right">
+                            <a href="<?= $loginUrl ?>" data-placement="top" title="" target="_blank" data-original-title="<?=Yii::t('app/superadmin', 'tickets.sign_in_as_admin')?>">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
                         </td>

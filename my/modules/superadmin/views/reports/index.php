@@ -7,15 +7,13 @@ use my\helpers\Url;
 /* @var $reportData array */
 /* @var $filters array */
 /* @var $years array */
-/* @var $paymentGateways array */
+/* @var $paymentParams array */
 
-$currentGatewayIndex = array_search(true, array_column($paymentGateways, 'active'));
-$currentGatewayName = ArrayHelper::getValue($paymentGateways, "$currentGatewayIndex.name");
+$currentParamsCode = array_search(true, array_column($paymentParams, 'active'));
+$currentParamsName = ArrayHelper::getValue($paymentParams, "$currentParamsCode.name");
 
 error_log(print_r($reportData,1));
-
 ?>
-<div class="container-fluid mt-3">
 
     <div class="row">
         <div class="col-md-6">
@@ -29,16 +27,16 @@ error_log(print_r($reportData,1));
             <div class="d-flex justify-content-md-end">
                 <div class="btn-group mr-3 mb-3" role="group" aria-label="Basic example">
                     <?php foreach ($years as $year): ?>
-                        <a href="<?= $year['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'year' => $year['year']])) ?>" class="btn btn-secondary <?= $year['active'] ? 'active' : '' ?>"><?= $year['year'] ?></a>
+                        <a href="<?= $year['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'year' => $year['year']])) ?>" class="btn btn-light <?= $year['active'] ? 'active' : '' ?>"><?= $year['year'] ?></a>
                     <?php endforeach; ?>
                 </div>
-                <div class="dropdown mb-3">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?= $currentGatewayName ?>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?= $currentParamsName ?>
                     </button>
-                    <div class="dropdown-menu dropdown-menu__right" aria-labelledby="dropdownMenuButton">
-                        <?php foreach ($paymentGateways as $gateway): ?>
-                            <a class="dropdown-item <?= $gateway['active'] ? 'active' : '' ?>" href="<?= $gateway['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'gateway' => $gateway['pgid']])) ?>"><?= $gateway['name'] ?></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <?php foreach ($paymentParams as $param): ?>
+                            <a class="dropdown-item <?= $param['active'] ? 'active' : '' ?>" href="<?= $param['active'] ? '#' : Url::toRoute(array_merge($filters, ['/reports/payments', 'params' => $param['code']])) ?>"><?= $param['name'] ?></a>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -48,7 +46,7 @@ error_log(print_r($reportData,1));
 
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-payments">
-                    <table class="table report-table">
+                    <table class="table table-sm table-custom">
                         <thead>
                         <tr>
                             <th>&nbsp;</th>
@@ -95,4 +93,3 @@ error_log(print_r($reportData,1));
                 </div>
             </div>
         </div>
-</div>

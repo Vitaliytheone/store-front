@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\CreateStaffForm */
+    /* @var $model superadmin\models\forms\CreateStaffForm */
     /* @var $form my\components\ActiveForm */
 
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\CreateStaffForm;
+    use superadmin\models\forms\CreateStaffForm;
     use my\helpers\Url;
     use common\models\panels\SuperAdmin;
     use yii\bootstrap\Html;
@@ -16,7 +16,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Create account</h4>
+                <h4 class="modal-title"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_header') ?></h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
 
@@ -43,11 +43,9 @@
                         <label for=""><?= $model->getAttributeLabel('password') ?></label>
                         <div class="input-group">
                             <?= Html::textInput('CreateStaffForm[password]', '', ['class' => 'form-control password'])?>
-                            <span class="input-group-addon">
-                                <span class="btn btn-default random-password pointer">
-                                    <i class="fa fa-random fa-fw" data-toggle="tooltip" data-placement="right" title="Generate password"></i>
-                                </span>
-                            </span>
+                            <div class="input-group-append random-password">
+                                <button class="btn btn-secondary" type="button"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_generate_password') ?></button>
+                            </div>
                         </div>
                     </div>
 
@@ -68,8 +66,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <?= Html::submitButton('Create account', [
+                    <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'staff.create_staff.modal_cancel_btn') ?></button>
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'staff.create_staff.modal_create_account'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'create-staff-button',
                         'id' => 'createStaffButton'

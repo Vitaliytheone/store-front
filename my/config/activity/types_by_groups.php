@@ -39,33 +39,42 @@ return [
     [
         'title' => 'Drip-feed',
         'events' => [
-            82,
-            87
+            8001,
+            8002,
         ]
     ],
     [
         'title' => 'Services',
         'events' => [
-            17,
-            18,
-            19,
-            20,
-            23,
-            24,
-            21,
-            22,
-            67,
-            60,
-            57,
-            68,
-            69,
+            2001,
+            2002,
+            2003,
+            2004,
+            2005,
+            2006,
+            2007,
+            2008,
+            2009,
+            2010,
+            2011,
+            2012,
+            2013,
+            2014,
+            2016,
+            2017,
+            2018,
+            21, // Only for old events support, without new records
+            22, // Only for old events support, without new records
         ]
     ],
     [
         'title' => 'Payments',
         'events' => [
-            13,
-            92,
+            4002,
+            4001,
+            4003,
+            4004,
+            4005,
         ]
     ],
     [
@@ -85,38 +94,69 @@ return [
     [
         'title' => 'Settings',
         'events' => [
-            27,
-            26,
-            51,
-            29,
-            52,
-            30,
-            31,
-            32,
-            64,
-            33,
+            3201,
+            3202,
+            3203,
+            3204,
+            3205,
+            3206,
+            3207,
+            3208,
+            3209,
+            3210,
+            3211,
+            3212,
+            3213,
+            3214,
+            3215,
+            3216,
+            3217,
+            33, // Only for old events support, without new records
         ]
     ],
     [
         'title' => 'Providers',
         'events' => [
-            25,
-            35
+            3001,
+            3002,
+            3003,
+            3004,
+            3005,
         ]
     ],
     [
         'title' => 'Payments',
         'events' => [
-            36,
-            83,
-            84
+            3301,
+            3302,
+            3303,
+            3304,
+        ]
+    ],
+    [
+        'title' => 'Affiliate',
+        'events' => [
+            5001,
+            5002,
+            5003,
+            5004,
+            5005,
+            5006,
+        ]
+    ],
+    [
+        'title' => 'Admin tasks',
+        'events' => [
+            6001,
+            6002,
+            6003,
         ]
     ],
     [
         'title' => 'Bonuses',
         'events' => [
-            70,
-            71
+            3101,
+            3102
         ]
     ],
     [

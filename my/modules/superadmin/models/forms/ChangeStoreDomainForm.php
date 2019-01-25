@@ -1,16 +1,15 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use common\models\stores\Stores;
-use sommerce\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use yii\base\Model;
 
 /**
  * Class ChangeStoreDomainForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class ChangeStoreDomainForm extends Model {
 
@@ -45,6 +44,9 @@ class ChangeStoreDomainForm extends Model {
     /**
      * Save domain
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function save()
     {
@@ -64,8 +66,8 @@ class ChangeStoreDomainForm extends Model {
             return true;
         }
 
-        if (!$this->_store->disableDomain()) {
-            $this->addError('domain', 'Can not change domain');
+        if (!$this->_store->disableDomain(true)) {
+            $this->addError('domain', Yii::t('app/superadmin', 'stores.modal.error_change_domain'));
             return false;
         }
 
@@ -73,7 +75,7 @@ class ChangeStoreDomainForm extends Model {
         $this->_store->subdomain = $this->subdomain;
 
         if (!$this->_store->save(false)) {
-            $this->addError('domain', 'Can not change domain');
+            $this->addError('domain', Yii::t('app/superadmin', 'stores.modal.error_change_domain'));
             return false;
         }
 

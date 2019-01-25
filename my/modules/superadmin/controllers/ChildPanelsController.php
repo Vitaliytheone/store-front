@@ -1,11 +1,11 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\ActiveForm;
-use common\models\panels\Project;
-use my\modules\superadmin\models\forms\UpgradePanelForm;
-use my\modules\superadmin\models\search\PanelsSearch;
+use superadmin\models\forms\ChangeChildPanelProvider;
+use superadmin\models\forms\UpgradePanelForm;
+use superadmin\models\search\PanelsSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -44,10 +44,12 @@ class ChildPanelsController extends PanelsController
                     'edit',
                     'generate-apikey',
                     'upgrade',
+                    'edit-payment-methods',
+                    'change-provider',
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'change-domain' => ['POST'],
@@ -56,7 +58,8 @@ class ChildPanelsController extends PanelsController
                     'edit' => ['POST'],
                     'generate-apikey' => ['GET'],
                     'upgrade' => ['POST'],
-                    'change-status' => ['POST']
+                    'change-status' => ['POST'],
+                    'edit-payment-methods' => ['POST', 'GET'],
                 ],
             ],
             'content' => [
@@ -68,7 +71,10 @@ class ChildPanelsController extends PanelsController
                     'generate-apikey',
                     'providers',
                     'upgrade',
-                    'edit'
+                    'edit',
+                    'edit-payment-methods',
+                    'change-provider',
+                    'get-providers',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -144,5 +150,46 @@ class ChildPanelsController extends PanelsController
     public function actionDowngrade($id)
     {
         throw new ForbiddenHttpException();
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetProviders($id)
+    {
+        $panel = $this->findModel($id);
+        $model = new ChangeChildPanelProvider();
+        $model->setProject($panel);
+
+        return [
+            'status' => 'success',
+            'content' => $model->getProviders()
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
+     */
+    public function actionChangeProvider($id)
+    {
+        $panel = $this->findModel($id);
+        $model = new ChangeChildPanelProvider();
+        $model->setProject($panel);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 }

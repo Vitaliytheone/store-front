@@ -9,8 +9,8 @@
     use my\models\forms\CreateChildForm;
     use yii\bootstrap\Html;
 
-    $this->context->addModule('orderPanelController');
     $this->context->addModule('orderDomainController');
+    $this->context->addModule('orderController');
 
 ?>
 <div class="row">
@@ -23,7 +23,7 @@
         <div class="panel panel-default">
 
             <?php $form = ActiveForm::begin([
-                'id' => 'order-panel-form',
+                'id' => 'order-form',
                 'fieldConfig' => [
                     'template' => "{label}{input}",
                     'options' => [
@@ -37,7 +37,7 @@
                         <?php foreach ($model->getHasDomainsLabels() as $id => $label) : ?>
                             <div class="radio">
                                 <label>
-                                    <?= Html::radio('CreateChildForm[has_domain]', $id == $model->has_domain, [
+                                    <?= Html::radio(Html::getInputName($model, 'has_domain'), $id == $model->has_domain, [
                                         'value' => $id,
                                         'class' => 'has_domain'
                                     ])?>
@@ -49,7 +49,7 @@
 
                     <?= $form->errorSummary($model); ?>
 
-                    <div class="<?= (CreateChildForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderPanelBlock">
+                    <div class="<?= (CreateChildForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
                         <?= $this->render('layouts/_order_panel_block', [
                             'form' => $form,
                             'model' => $model,

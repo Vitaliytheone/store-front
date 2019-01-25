@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use Yii;
 use common\models\panels\Domains;
@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class DomainsSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class DomainsSearch extends Domains {
 
@@ -96,7 +96,7 @@ class DomainsSearch extends Domains {
 
         $query = clone $this->buildQuery($status);
 
-        $pages = new Pagination(['totalCount' => $this->count($status)]);
+        $pages = new Pagination(['totalCount' => $query->count()]);
         $pages->setPageSize($this->pageSize);
         $pages->defaultPageSize = $this->pageSize;
 
@@ -116,50 +116,20 @@ class DomainsSearch extends Domains {
     }
 
     /**
-     * Get count panels by type
-     * @param int $status
-     * @param array $filters
-     * @return int|array
-     */
-    public function count($status = null, $filters = [])
-    {
-        $query = clone $this->buildQuery($status);
-
-        if (!empty($filters['group']['status'])) {
-            $query->select([
-                'domains.status as status',
-                'COUNT(DISTINCT domains.id) as rows'
-            ])->groupBy('domains.status');
-
-            return ArrayHelper::map(static::queryAllCache($query), 'status', 'rows');
-        }
-
-        $query->select('COUNT(DISTINCT domains.id)');
-
-        return (int)static::queryScalarCache($query);
-    }
-
-    /**
      * Get navs
      * @return array
      */
     public function navs()
     {
-        $statusCounters = $this->count(null, [
-            'group' => [
-                'status' => 1
-            ],
-        ]);
-
         return [
             null => Yii::t('app/superadmin', 'domains.list.navs_all', [
-                'count' => $this->count()
+                'count' => $this->buildQuery()->count()
             ]),
             Domains::STATUS_OK => Yii::t('app/superadmin', 'domains.list.navs_ok', [
-                'count' => ArrayHelper::getValue($statusCounters, Domains::STATUS_OK, 0)
+                'count' => $this->buildQuery(Domains::STATUS_OK)->count()
             ]),
             Domains::STATUS_EXPIRED => Yii::t('app/superadmin', 'domains.list.navs_expired', [
-                'count' => ArrayHelper::getValue($statusCounters, Domains::STATUS_EXPIRED, 0)
+                'count' => $this->buildQuery(Domains::STATUS_EXPIRED)->count()
             ]),
         ];
     }

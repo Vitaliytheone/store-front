@@ -24,16 +24,22 @@ $config = [
             'migrationPath' => '@common/migrations/sommerce/',
         ],
 
-        'migrate-my' => [
+        'migrate-gateway' => [
+            'class' => 'console\controllers\gateway\CustomMigrateController',
+            'migrationTable' => DB_GATEWAYS . '.system_migrations',
+            'migrationPath' => '@common/migrations/gateway/',
+        ],
+
+        'migrate' => [
             'class' => 'console\controllers\my\CustomMigrateController',
             'migrationTable' => DB_PANELS . '.system_migrations',
             'migrationPath' => '@common/migrations/my/',
         ],
 
-        'migrate-superadmin' => [
-            'class' => 'console\controllers\superadmin\CustomMigrateController',
+        'migrate-my' => [
+            'class' => 'console\controllers\my\CustomMigrateController',
             'migrationTable' => DB_PANELS . '.system_migrations',
-            'migrationPath' => '@common/migrations/superadmin/',
+            'migrationPath' => '@common/migrations/my/',
         ],
 
         'cron-sommerce' => [
@@ -42,10 +48,6 @@ $config = [
 
         'system-sommerce' => [
             'class' => 'console\controllers\sommerce\SystemController',
-        ],
-
-        'system-superadmin' => [
-            'class' => 'console\controllers\superadmin\SystemController',
         ],
 
         'blocks-sommerce' => [
@@ -67,6 +69,10 @@ $config = [
         'template-my' => [
             'class' => 'console\controllers\my\TemplateController',
         ],
+
+        'system-gateway' => [
+            'class' => 'console\controllers\gateway\SystemController',
+        ],
     ],
     'components' => [
         'log' => [
@@ -81,9 +87,12 @@ $config = [
         'store' => [
             'class' => 'common\components\stores\StoreComponent'
         ],
+        'gateway' => [
+            'class' => 'common\components\gateways\GatewayComponent'
+        ],
 
         'view' => [
-            'class' => 'common\components\View',
+            'class' => 'sommerce\components\View',
             'renderers' => [
                 'twig' => [
                     'class' => 'common\components\twig\ViewRenderer',
@@ -110,6 +119,12 @@ $config = [
                 'class' => 'Swift_MailTransport',
             ],
             'viewPath' => '@my/mail/views',
+        ],
+
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
         ],
     ],
     'params' => $params,

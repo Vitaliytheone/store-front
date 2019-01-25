@@ -26,6 +26,8 @@ class ExpiredLog extends ActiveRecord
     const TYPE_CREATE_EXPIRY = 22;
     const TYPE_CREATE_STORE_EXPIRY = 23;
     const TYPE_CHANGE_STORE_EXPIRY = 24;
+    const TYPE_CREATE_GATEWAY_EXPIRY = 25;
+    const TYPE_CHANGE_GATEWAY_EXPIRY = 26;
 
     /**
      * @inheritdoc
@@ -58,32 +60,32 @@ class ExpiredLog extends ActiveRecord
     }
 
     /**
-     * Get type by gateway method value
-     * @param integer $method
+     * Get type by code method value
+     * @param string $method
      * @return int|null
      */
-    public static function getTypeByGateway($method)
+    public static function getTypeByCode($method)
     {
         $type = 0;
 
         switch ($method) {
-            case PaymentGateway::METHOD_PAYPAL:
+            case Params::CODE_PAYPAL:
                 $type = ExpiredLog::TYPE_PAYPAL;
                 break;
 
-            case PaymentGateway::METHOD_WEBMONEY:
+            case Params::CODE_WEBMONEY:
                 $type = ExpiredLog::TYPE_WEBMONEY;
                 break;
 
-            case PaymentGateway::METHOD_PERFECT_MONEY:
+            case Params::CODE_PERFECT_MONEY:
                 $type = ExpiredLog::TYPE_PERFECT_MONEY;
                 break;
 
-            case PaymentGateway::METHOD_BITCOIN:
+            case Params::CODE_BITCOIN:
                 $type = ExpiredLog::TYPE_BITCOIN;
                 break;
 
-            case PaymentGateway::METHOD_TWO_CHECKOUT:
+            case Params::CODE_TWO_CHECKOUT:
                 $type = ExpiredLog::TYPE_TWO_CHECKOUT;
                 break;
         }

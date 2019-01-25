@@ -2,15 +2,15 @@
 
 namespace my\components\payments;
 
+use common\models\panels\Params;
 use Yii;
-use common\models\panels\PaymentGateway;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class TwoCheckout
  * @package my\components\payments
  */
-class TwoCheckout
+class TwoCheckout extends BasePayment
 {
     /**
      * Последние сообщения об ошибках
@@ -42,10 +42,16 @@ class TwoCheckout
     }
 
     /**
-     * @param $params array
+     * @param $params array | false
      * @return string
      */
     public function detailSale($params) {
+
+        if (!$this->_validateParams($params))  {
+            $this ->_errors = array('invalid params');
+            return false;
+        }
+
         $this->_endPoint .= 'sales/detail_sale';
 
         $response = $this->request($this->_endPoint, http_build_query($params));
@@ -78,6 +84,13 @@ class TwoCheckout
             CURLOPT_USERPWD => $auth,
         );
 
+        if (!empty(PROXY_CONFIG['main']['ip'])) {
+            $curlOptions += [
+                CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                CURLOPT_PROXY => PROXY_CONFIG['main']['ip'] . ':' . PROXY_CONFIG['main']['port']
+            ];
+        }
+
         $ch = curl_init();
         curl_setopt_array($ch,$curlOptions);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -103,19 +116,8 @@ class TwoCheckout
      */
     private function getAuth()
     {
-        $twoCheckoutInfo = PaymentGateway::findOne(['pgid' => PaymentGateway::METHOD_TWO_CHECKOUT, 'visibility' => 1, 'pid' => -1]);
-
-        if (empty($twoCheckoutInfo)) {
-            return null;
-        }
-        $twoCheckoutInfo = json_decode($twoCheckoutInfo->options);
-
-        if (!empty($twoCheckoutInfo->username)) {
-            $this->_credentials['username'] = $twoCheckoutInfo->username;
-        }
-        if (!empty($twoCheckoutInfo->password)) {
-            $this->_credentials['password'] = $twoCheckoutInfo->password;
-        }
+        $this->_credentials['username'] = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'username']);
+        $this->_credentials['password'] = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'password']);
 
         return $this->_credentials['username'] . ':' . $this->_credentials['password'];
     }

@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\EditContentForm */
+    /* @var $model superadmin\models\forms\EditContentForm */
     /* @var $form my\components\ActiveForm */
     
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\EditContentForm;
+    use superadmin\models\forms\EditContentForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
@@ -12,10 +12,10 @@
 ?>
 
 <div class="modal fade" id="editContentModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= Yii::t('app/superadmin', 'content.edit.modal_header')?></h4>
+                <h5 class="modal-title"><?= Yii::t('app/superadmin', 'content.edit.modal_header')?></h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
 
@@ -46,9 +46,9 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'content.edit.modal_cancel_btn')?></button>
+                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'content.edit.modal_cancel_btn')?></button>
                 <?= Html::submitButton(Yii::t('app/superadmin', 'content.edit.modal_submit_btn'), [
-                    'class' => 'btn btn-outline btn-primary',
+                    'class' => 'btn btn-primary',
                     'name' => 'edit-plan-button',
                     'id' => 'editContentButton'
                 ]) ?>

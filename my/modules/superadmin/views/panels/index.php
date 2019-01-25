@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $panels \my\modules\superadmin\models\search\PanelsSearch */
-    /* @var $navs \my\modules\superadmin\models\search\PanelsSearch */
+    /* @var $panels \superadmin\models\search\PanelsSearch */
+    /* @var $navs \superadmin\models\search\PanelsSearch */
     /* @var $status string*/
     /* @var $plans array*/
     /* @var $filters array */
@@ -52,9 +52,11 @@
     <?= $this->render('layouts/_downgrade_modal') ?>
 <?php else : ?>
     <?= $this->render('layouts/_upgrade_modal') ?>
+    <?= $this->render('layouts/_change_provider_modal') ?>
 <?php endif; ?>
 <?= $this->render('layouts/_change_domain_modal', ['action' => $action]) ?>
 <?= $this->render('layouts/_edit_expiry_modal', ['action' => $action]) ?>
 <?= $this->render('layouts/_edit_providers_modal', ['action' => $action]) ?>
 <?= $this->render('layouts/_edit_panels_modal', ['action' => $action]) ?>
+<?= $this->render('layouts/_edit_payment_methods_modal', ['action' => $action]) ?>
 <?= $this->endBlock();?>

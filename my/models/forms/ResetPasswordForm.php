@@ -56,7 +56,7 @@ class ResetPasswordForm extends Model
             $user = Auth::findOne($this->_customer->id);
             $user->setAuthKey();
             $user->save(false);
-            return Yii::$app->user->login($user);
+            return true;
         }
 
         return false;

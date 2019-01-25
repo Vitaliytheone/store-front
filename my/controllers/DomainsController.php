@@ -11,7 +11,11 @@ use my\models\search\DomainsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
-
+use yii\filters\VerbFilter;
+use my\models\forms\OrderStoreForm;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use my\models\forms\OrderPanelForm;
 
 /**
  * Class DomainsController
@@ -19,14 +23,33 @@ use yii\web\Response;
  */
 class DomainsController extends CustomController
 {
+    public $activeTab = 'domains';
+
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
         return [
+            'guestAccess' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            if (Yii::$app->user->isGuest) {
+                                $this->redirect('/');
+                                Yii::$app->end();
+                            }
+
+                            return true;
+                        }
+                    ],
+                ],
+            ],
             'access' => [
                 'class' => AccessControl::class,
+                'except' => ['order-domain'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -49,6 +72,25 @@ class DomainsController extends CustomController
                             return true;
                         }
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'index' => ['GET'],
+                    'order' => ['POST', 'GET'],
+                    'order-domain' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['order-domain']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['order-domain'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -74,7 +116,8 @@ class DomainsController extends CustomController
 
     /**
      * Create order
-     * @return string|\yii\web\Response
+     * @return array|string|Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {
@@ -117,5 +160,49 @@ class DomainsController extends CustomController
         return $this->render('order', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @param string $order
+     * @return array
+     * @throws \Throwable
+     */
+    public function actionOrderDomain($order)
+    {
+        $this->view->title = Yii::t('app', 'pages.title.order');
+
+        switch ($order) {
+            case 'store':
+                $model = new OrderStoreForm();
+                $model->setIp(Yii::$app->request->getUserIP());
+                break;
+            case 'panel':
+                $model = new OrderPanelForm();
+                break;
+            default:
+                return [
+                    'status' => 'error',
+                    'error' => Yii::t('app', 'domain.order.error_invalid_form_data')
+                ];
+        }
+
+        $model->scenario = OrderStoreForm::SCENARIO_CREATE_DOMAIN;
+
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->validate()) {
+                return [
+                    'status' => 'error',
+                    'error' => ActiveForm::firstError($model)
+                ];
+            }
+            return [
+                'status' => 'success'
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('app', 'domain.order.error_invalid_form_data')
+        ];
     }
 }

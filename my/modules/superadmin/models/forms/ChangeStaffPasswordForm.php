@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\SuperAdmin;
 use Yii;
@@ -65,7 +65,7 @@ class ChangeStaffPasswordForm extends Model
     public function attributeLabels()
     {
         return [
-            'password' => 'New password',
+            'password' => Yii::t('app/superadmin', 'staff.change_password.new_password'),
         ];
     }
 }

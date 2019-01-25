@@ -22,6 +22,7 @@ class PaymentMethods extends ActiveRecord
 {
     /* Payment methods names */
     const METHOD_PAYPAL = 'paypal';
+    const METHOD_PAYPAL_STANDARD = 'paypalstandard';
     const METHOD_2CHECKOUT = '2checkout';
     const METHOD_COINPAYMENTS = 'coinpayments';
     const METHOD_PAGSEGURO = 'pagseguro';
@@ -34,6 +35,9 @@ class PaymentMethods extends ActiveRecord
     const METHOD_BILLPLZ = 'billplz';
     const METHOD_AUTHORIZE = 'authorize';
     const METHOD_STRIPE = 'stripe';
+    const METHOD_STRIPE_3D_SECURE = 'stripe_3d_secure';
+    const METHOD_MERCADOPAGO = 'mercadopago';
+    const METHOD_MOLLIE = 'mollie';
 
     const ACTIVE_DISABLED = 0;
     const ACTIVE_ENABLED = 1;

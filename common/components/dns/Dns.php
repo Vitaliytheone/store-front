@@ -1,8 +1,10 @@
 <?php
+
 namespace common\components\dns;
 
 use Yii;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
@@ -11,7 +13,8 @@ use yii\helpers\Json;
  * Class Dns
  * @package common\components\dns
  */
-class Dns {
+class Dns
+{
 
     /**
      * Get domain info
@@ -220,6 +223,7 @@ class Dns {
      * @param string $host
      * @param array $options
      * @param array $result
+     * @return bool
      */
     public static function getRecordInfo($domain, $host = '', $options = [], &$result)
     {
@@ -372,4 +376,70 @@ class Dns {
 
         return $result;
     }
+
+    /**
+     * Get Dns records page count
+     * @param array $options
+     * @return string number of pages in digits
+     */
+    public static function pageCount($options = []): string
+    {
+        $options = array_merge([
+            'auth-id' => Yii::$app->params['dnsId'],
+            'auth-password' => Yii::$app->params['dnsPassword'],
+            'rows-per-page' => 100,
+        ], $options);
+
+        $host = Yii::$app->params['dnsService'];
+        $result = CurlHelper::request($host . '/dns/get-pages-count.json?' . http_build_query($options));
+
+        if (empty($result)) {
+            return 0;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Change old A record IP to new one in single record by id
+     * @param string $id
+     * @param string $domain
+     * @param string $newIp
+     * @param $result
+     * @return bool|null
+     */
+    public static function modRecord($id, $domain, $newIp, &$result): ?bool
+    {
+        $options = [
+            'auth-id' => Yii::$app->params['dnsId'],
+            'auth-password' => Yii::$app->params['dnsPassword'],
+            'domain-name' => $domain,
+            'record-id' => $id,
+            'host' => '',
+            'record' => $newIp,
+            'ttl' => 60,
+        ];
+
+        $host = Yii::$app->params['dnsService'];
+        $result = CurlHelper::request($host . '/dns/mod-record.json?' . http_build_query($options));
+
+        if (!$result) {
+            return false;
+        }
+
+        try {
+            $result = @Json::decode($result);
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
+
+        $status = ArrayHelper::getValue($result, 'status');
+
+        if ($status && 'success' == strtolower($status)) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

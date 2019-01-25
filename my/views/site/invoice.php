@@ -4,7 +4,7 @@
     /* @var $customer \common\models\panels\Customers */
     /* @var $pay2co \common\models\panels\Payments */
     /* @var $paymentsList array */
-    /* @var $pgid integer */
+    /* @var $code integer */
     /* @var $payWait boolean */
     /* @var $verificationWait null|string payment verification needed */
     /* @var $disabled boolean */
@@ -23,7 +23,7 @@
 
     $this->context->addModule('invoiceController', [
         'live' => !$payWait,
-        'pgid' => $pgid,
+        'code' => $code,
         'notes' => $invoice->getNotesByPaymentMethods()
     ]);
 ?>
@@ -44,21 +44,18 @@
                             'date' => $invoice->getFormattedDate('date', 'php:Y-m-d H:i:s', $customer->timezone)
                         ]); ?>
                         <br />
-                        <?= Yii::t('app', 'invoices.view.due_date', [
-                            'date' => $invoice->getFormattedDate('expired', 'php:Y-m-d H:i:s', $customer->timezone)
-                        ]); ?>
 
                         <h3 class="<?= $colors[$invoice->status] ?>"><?= $invoice->getStatusName() ?></h3>
 
                         <?php if ($invoice->can('pay')): ?>
                             <form class="form-inline" action="/checkout/<?= $invoice->code ?>" method="post">
                                 <div class="form-group">
-                                    <select class="form-control" <?= ($payWait ? 'disabled' : '') ?> name="pgid" id="pgid">
+                                    <select class="form-control" <?= ($payWait ? 'disabled' : '') ?> name="code" id="code">
                                         <?php foreach ($paymentsList as $key => $value): ?>
-                                            <option value="<?= $key ?>" <?= ($key == $pgid ? 'selected' : '') ?>><?= $value ?></option>
+                                            <option value="<?= $key ?>" <?= ($key == $code ? 'selected' : '') ?>><?= $value ?></option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <button <?= $disabled ? 'disabled' : ''?> type="submit" <?= ($payWait ? 'disabled' : '') ?> class="btn btn-default <?= $disabled ? 'disabled' : ''?>"><?= Yii::t('app', 'invoices.view.btn_pay'); ?></button>
+                                    <button type="submit" <?= ($payWait ? 'disabled' : '') ?> class="btn btn-default"><?= Yii::t('app', 'invoices.view.btn_pay'); ?></button>
                                 </div>
                             </form>
                         <?php endif ?>

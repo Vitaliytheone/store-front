@@ -55,6 +55,7 @@ class ProjectAdmin extends ActiveRecord
         'payments' => 1,
         'tickets' => 1,
         'reports' => 1,
+        'affiliates' => 1,
         'providers' => 0,
         'settings_general' => 1,
         'settings_providers' => 1,
@@ -144,6 +145,7 @@ class ProjectAdmin extends ActiveRecord
             'payments' => Yii::t('app', 'project_admin.rules_payments'),
             'tickets' => Yii::t('app', 'project_admin.rules_tickets'),
             'reports' => Yii::t('app', 'project_admin.rules_stats'),
+            'affiliates' => Yii::t('app', 'project_admin.rules_affiliate'),
             'providers' => Yii::t('app', 'project_admin.rules_providers'),
             'settings' => Yii::t('app', 'project_admin.rules_settings'),
             'settings_general' => Yii::t('app', 'project_admin.rules_settings_general'),
@@ -176,7 +178,14 @@ class ProjectAdmin extends ActiveRecord
      */
     public function getRules()
     {
-        return ArrayHelper::merge(static::$defaultRules, (array)json_decode($this->rules, true));
+        $rules = (array)json_decode($this->rules, true);
+        if (empty($rules)) {
+            return $rules;
+        }
+
+        $this->setRules($rules);
+
+        return json_decode($this->rules, true);
     }
 
     /**
@@ -222,6 +231,10 @@ class ProjectAdmin extends ActiveRecord
     public function isFullAccess()
     {
         $rules = $this->getRules();
+
+        if (empty($rules)) {
+            return false;
+        }
 
         if (0 != $rules['providers']) {
             return false;

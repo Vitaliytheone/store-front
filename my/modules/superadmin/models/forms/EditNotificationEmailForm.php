@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use common\models\panels\NotificationEmail;
@@ -7,7 +7,7 @@ use yii\base\Model;
 
 /**
  * Class EditNotificationEmailForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditNotificationEmailForm extends Model
 {
@@ -72,10 +72,10 @@ class EditNotificationEmailForm extends Model
     public function attributeLabels()
     {
         return [
-            'subject' => 'Subject',
-            'message' => 'Message',
-            'code' => 'Code',
-            'enabled' => 'Is Enabled',
+            'subject' => Yii::t('app/superadmin', 'email.create.subject'),
+            'message' => Yii::t('app/superadmin', 'email.create.message'),
+            'code' => Yii::t('app/superadmin', 'email.create.code'),
+            'enabled' => Yii::t('app/superadmin', 'email.create.is_enabled'),
         ];
     }
 }

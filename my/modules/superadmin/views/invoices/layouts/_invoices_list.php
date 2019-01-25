@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $invoices \my\modules\superadmin\models\search\InvoicesSearch[] */
-    /* @var $invoice \my\modules\superadmin\models\search\InvoicesSearch */
+    /* @var $invoices \superadmin\models\search\InvoicesSearch[] */
+    /* @var $invoice \superadmin\models\search\InvoicesSearch */
 
     use my\helpers\Url;
     use yii\helpers\Html;
@@ -10,17 +10,18 @@
     use my\helpers\PriceHelper;
     use my\helpers\SpecialCharsHelper;
 ?>
-<table class="table table-border">
+<table class="table table-sm table-custom">
     <thead>
     <tr>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_id')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_domain')?></th>
+        <th><?= Yii::t('app/superadmin', 'invoices.list.column_customer')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_total')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_credit')?></th>
         <th><?= Yii::t('app/superadmin', 'invoices.list.column_status')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'invoices.list.column_created')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'invoices.list.column_due_date')?></th>
-        <th class="w-1"></th>
+        <th class="table-custom__action-th"></th>
     </tr>
     </thead>
     <tbody>
@@ -32,6 +33,9 @@
                 </td>
                 <td>
                     <?= $invoice->getDomain() ?>
+                </td>
+                <td>
+                    <?= $invoice->email ?>
                 </td>
                 <td>
                     <?= PriceHelper::prepare($invoice->total) ?>
@@ -58,7 +62,7 @@
                 <td>
 
                         <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'ssl.list.actions_label')?></button>
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= Yii::t('app/superadmin', 'ssl.list.actions_label')?></button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <?= Html::tag('span', Yii::t('app/superadmin', 'invoices.list.action_get_link'), [
                                     'class' => 'dropdown-item copy pointer',
@@ -72,7 +76,7 @@
                                     ])?>
                                 <?php endif; ?>
 
-                                <?php if ($invoice->can('editTotal')) : ?>
+                                <?php if ($invoice->editTotal == 1) : ?>
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_edit'), Url::toRoute(['/invoices/edit', 'id' => $invoice->id]), [
                                         'class' => 'dropdown-item edit-invoice',
                                         'data-details' => $invoice->getAttributes(['total'])
@@ -112,8 +116,12 @@
     </tbody>
 </table>
 
-<div class="text-align-center pager">
-    <?= LinkPager::widget([
-        'pagination' => $invoices['pages'],
-    ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $invoices['pages'],]); ?>
+            </ul>
+        </nav>
+    </div>
 </div>

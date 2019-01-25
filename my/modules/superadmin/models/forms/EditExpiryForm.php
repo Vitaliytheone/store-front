@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use common\models\panels\ExpiredLog;
 use Yii;
@@ -8,7 +8,7 @@ use yii\base\Model;
 
 /**
  * Class EditExpityForm
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class EditExpiryForm extends Model {
 
@@ -53,7 +53,7 @@ class EditExpiryForm extends Model {
         $this->_project->expired = strtotime($this->expired) - Yii::$app->params['time'];
 
         if (!$this->_project->save(false)) {
-            $this->addError('expiry', 'Can not edit expired');
+            $this->addError('expiry', Yii::t('app/superadmin', 'panels.edit_expiry.error'));
             return false;
         }
 

@@ -3,6 +3,7 @@
 namespace my\controllers;
 
 use common\models\panels\Auth;
+use common\models\panels\Content;
 use common\models\panels\Customers;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
@@ -18,10 +19,12 @@ use my\models\forms\SetStoreStaffPasswordForm;
 use my\models\search\StoresSearch;
 use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\AjaxFilter;
 
 /**
  * Class StoreController
@@ -29,6 +32,8 @@ use yii\web\Response;
  */
 class StoreController extends CustomController
 {
+    public $activeTab = 'stores';
+
     /**
      * @inheritdoc
      */
@@ -59,6 +64,26 @@ class StoreController extends CustomController
                             return true;
                         }
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'edit-domain' => ['POST'],
+                    'staff-create' => ['POST'],
+                    'staff-edit' => ['POST'],
+                    'staff-password' => ['POST'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['edit-domain', 'staff-create', 'staff-edit', 'staff-password']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['edit-domain', 'staff-create', 'staff-edit', 'staff-password'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
                 ],
             ],
         ];
@@ -95,7 +120,8 @@ class StoreController extends CustomController
 
     /**
      * Create store order
-     * @return string
+     * @return string|Response
+     * @throws \Throwable
      */
     public function actionOrder()
     {
@@ -109,16 +135,12 @@ class StoreController extends CustomController
         $model = new OrderStoreForm();
         $model->setUser($user);
         $model->setIp($request->getUserIP());
-        $model->setTrial(!$user->hasStores());
 
-        if (!$model->load($request->post()) || !$model->orderStore()) {
+        if (!$model->load($request->post()) || !$model->save()) {
             return $this->render('order', [
                 'model' => $model,
+                'note' => Content::getContent('nameservers'),
             ]);
-        }
-
-        if ($model->getTrial()) {
-            return $this->redirect(Url::toRoute('/stores'));
         }
 
         return $this->redirect('/invoices/' . $model->getInvoiceCode());
@@ -128,12 +150,13 @@ class StoreController extends CustomController
      * Edit store domain
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionEditDomain($id)
     {
         $store = $this->_findStore($id);
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         /**
          * @var Customers $user
@@ -143,7 +166,8 @@ class StoreController extends CustomController
             'store_id' => $store->id,
             'type' => [
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
-                StoreDomains::DOMAIN_TYPE_SUBDOMAIN
+                StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                StoreDomains::DOMAIN_TYPE_SOMMERCE,
             ]
         ]);
 
@@ -188,9 +212,12 @@ class StoreController extends CustomController
 
     /**
      * Prolongation store
-     * @param $id
+     * @param int $id
      * @return Response
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionProlong($id)
     {
@@ -218,8 +245,11 @@ class StoreController extends CustomController
 
     /**
      * Render store staff list
-     * @param $id
+     * @param int $id
      * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaff($id)
     {
@@ -243,14 +273,15 @@ class StoreController extends CustomController
 
     /**
      * Create store staff ajax action
-     * @param $id integer store id
+     * @param int $id
      * @return array
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaffCreate($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $store = $this->_findStore($id);
 
         if (!Stores::hasAccess($store, Stores::CAN_STAFF_CREATE, [
@@ -284,14 +315,15 @@ class StoreController extends CustomController
 
     /**
      * Edit store staff ajax action
-     * @param $id integer staff user id
+     * @param int $id
      * @return array
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaffEdit($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $staff = StoreAdminAuth::findOne([
             'id' => $id,
         ]);
@@ -333,14 +365,15 @@ class StoreController extends CustomController
 
     /**
      * Update store staff password ajax action
-     * @param $id
+     * @param int $id
      * @return array
      * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function actionStaffPassword($id)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $staff = StoreAdminAuth::findOne([
             'id' => $id,
         ]);

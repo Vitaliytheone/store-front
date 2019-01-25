@@ -50,6 +50,9 @@ class CronController extends CustomController
      */
     public function actionGetstatus()
     {
+        Yii::$app->db->createCommand('SET SESSION wait_timeout = 28800;')->execute();
+        Yii::$app->db->createCommand('SET SESSION interactive_timeout = 28800;')->execute();
+        
         $getstatus = new GetstatusComponent([
             'ordersLimit' => Yii::$app->params['getstatusOrdersLimit'],
         ]);
@@ -79,7 +82,6 @@ class CronController extends CustomController
          */
         foreach ($storeQuery->batch() as $stores) {
             foreach ($stores as $store) {
-
                 // Init store
                 Yii::$app->store->setInstance($store);
                 foreach ($checkoutQuery->batch() as $checkouts) {
@@ -125,15 +127,15 @@ class CronController extends CustomController
      */
     protected function _checkAuthorize(Stores $store)
     {
-        $currencies = ArrayHelper::index(CurrencyHelper::getPaymentsByCurrency($store->currency), 'code');
-        $method = ArrayHelper::getValue($currencies, PaymentMethods::METHOD_AUTHORIZE);
+        $method = PaymentMethods::METHOD_AUTHORIZE;
+        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
 
-        if (!$method) {
+        if (empty($availableMethods[$method])) {
             return;
         }
 
         $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_AUTHORIZE,
+            'method' => $method,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED,
         ]);
@@ -145,10 +147,10 @@ class CronController extends CustomController
         /**
          * @var Authorize $component
          */
-        $component = Payment::getPayment(PaymentMethods::METHOD_AUTHORIZE);
+        $component = Payment::getPayment($method);
 
         foreach (Payments::find()->andWhere([
-            'method' => PaymentMethods::METHOD_AUTHORIZE,
+            'method' => $method,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {
@@ -162,8 +164,15 @@ class CronController extends CustomController
      */
     protected function _checkPaypalPayment(Stores $store)
     {
+        $method = PaymentMethods::METHOD_PAYPAL;
+        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
+
+        if (empty($availableMethods[$method])) {
+            return;
+        }
+
         $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYPAL,
+            'method' => $method,
             'store_id' => $store->id,
             'active' => PaymentMethods::ACTIVE_ENABLED,
         ]);
@@ -173,13 +182,15 @@ class CronController extends CustomController
             return;
         }
 
+        CurrencyHelper::getCurrencyOptions($store->currency);
+
         /**
          * @var $component Paypal
          */
-        $component = Payment::getPayment('paypal');
+        $component = Payment::getPayment($method);
 
         foreach (Payments::find()->andWhere([
-            'method' => PaymentMethods::METHOD_PAYPAL,
+            'method' => $method,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {

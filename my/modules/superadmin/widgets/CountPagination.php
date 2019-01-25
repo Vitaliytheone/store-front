@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\widgets;
+namespace superadmin\widgets;
 
 use yii\base\Widget;
 use yii\data\Pagination;
@@ -17,6 +17,14 @@ class CountPagination extends Widget
      */
     public $pages;
     public $params;
+
+    public static $pageSizeList = [
+        100 => 100,
+        500 => 500,
+        1000 => 1000,
+        5000 => 5000,
+        'all' => ''
+    ];
 
     /**
      * @var string
@@ -43,6 +51,7 @@ class CountPagination extends Widget
                 .$this->pages->totalCount;
         }
         unset($this->params['page_size']);
+        static::$pageSizeList['all'] = Yii::t('app/superadmin', 'customers.pagination.all');
     }
 
     /**

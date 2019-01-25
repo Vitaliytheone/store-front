@@ -1,5 +1,5 @@
 <?php
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use my\components\scanners\components\BasePanelInfo;
 use my\components\scanners\components\info\LevopanelInfo;
@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property string $domain
  *
- * @package my\modules\superadmin\models\forms
+ * @package superadmin\models\forms
  */
 class PanelsScannerAddDomainForm extends Model
 {
@@ -67,7 +67,7 @@ class PanelsScannerAddDomainForm extends Model
                 $this->_panelInfo = RentapanelInfo::class;
                 break;
             default :
-                exit('Unresolved panel type' . $panelType);
+                exit(Yii::t('app/superadmin', 'tools.panels_scanner.error.unresolved_type') . $panelType);
                 break;
         }
     }
@@ -152,7 +152,7 @@ class PanelsScannerAddDomainForm extends Model
         $value = parse_url('http://' . $value, PHP_URL_HOST);
 
         if (empty($value)) {
-            $this->addError($attribute, 'Incorrect ' . $attribute . ' value.');
+            $this->addError($attribute, Yii::t('app/superadmin', 'tools.panels_scanner.error.incorrect_value', ['attribute' => $attribute]));
             return false;
         }
 
@@ -170,7 +170,7 @@ class PanelsScannerAddDomainForm extends Model
         $panelInfoClassName = $this->getPanelInfo();
 
         if (empty($panelInfoClassName)) {
-            exit('Bad model class name!');
+            exit(Yii::t('app/superadmin', 'tools.panels_scanner.error.bad_model_name'));
         }
 
         /** @var BasePanelInfo $panelInfo */

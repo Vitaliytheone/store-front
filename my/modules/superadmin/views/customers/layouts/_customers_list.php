@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $customers array */
-    /* @var $customer \my\modules\superadmin\models\search\CustomersSearch */
+    /* @var $customer \superadmin\models\search\CustomersSearch */
     /* @var $filters array */
 
     use yii\helpers\Html;
@@ -9,7 +9,7 @@
     use my\helpers\Url;
     use yii\helpers\Json;
     use yii\widgets\LinkPager;
-    use my\modules\superadmin\widgets\CountPagination;
+    use superadmin\widgets\CountPagination;
     use my\helpers\SpecialCharsHelper;
 ?>
 
@@ -21,6 +21,7 @@
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_panels') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_stores') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_child') ?></th>
+                <th><?= Yii::t('app/superadmin', 'customers.list.header_gateway') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_domains') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_certificates') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_first_name') ?></th>
@@ -69,6 +70,17 @@
                         </td>
                         <td>
                             <?= Html::a($customer->countChild, Url::toRoute(['/child-panels', 'customer_id' => $customer->id])); ?>
+                        </td>
+                        <td>
+                            <?php if (!$customer->can('gateway')) : ?>
+                                <?= Html::a(Html::tag('span', Yii::t('app/superadmin', 'customers.list.activate_stores'),
+                                    ['class' => 'badge badge-light']),
+                                    Url::toRoute(['/customers/activate-gateways']),
+                                    ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
+                                )?>
+                            <?php else : ?>
+                                <?= Html::a($customer->countGateways, Url::toRoute(['/gateway', 'customer_id' => $customer->id])); ?>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <?php if (!$customer->can('domains')) : ?>
@@ -150,7 +162,6 @@
                         <?= LinkPager::widget(['pagination' => $customers['pages'],]); ?>
                     </ul>
                 </nav>
-                <!-- Pagination End -->
             </div>
             <div class="col-md-6 text-md-right">
                 <?= CountPagination::widget([

@@ -4,7 +4,7 @@
     /* @var \common\models\stores\Stores $store */
     /* @var $accesses */
 
-    use yii\helpers\Url;
+    use my\helpers\Url;
     use common\models\stores\Stores;
     use common\models\panels\Orders;
     use yii\bootstrap\Html;
@@ -37,15 +37,9 @@
     <div class="col-lg-12">
         <h2 class="page-header">
             <?= Yii::t('app', 'stores.list.header')?>
-            <?php if (!empty($stores)): ?>
                 <a href="<?= Url::toRoute('stores/order') ?>" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
                     <?= Yii::t('app', 'stores.list.order_store')?>
                 </a>
-            <?php else: ?>
-                <a href="<?= Url::toRoute('stores/order') ?>" class="btn btn-outline btn-success create-order" <?= $accesses['canCreate'] ? '' : 'data-error="Orders limit exceeded."' ?>>
-                    <?= Yii::t('app', 'stores.list.order_store_trial')?>
-                </a>
-            <?php endif; ?>
             <div class="alert alert-danger error-hint hidden" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <span class="content"></span>
@@ -121,12 +115,6 @@
                     <?php endforeach ?>
                 </tbody>
             </table>
-        </div>
-    </div>
-<?php else: ?>
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="alert alert-info" role="alert"> <?= Yii::t('app', 'stores.list.trial_info') ?></div>
         </div>
     </div>
 <?php endif; ?>

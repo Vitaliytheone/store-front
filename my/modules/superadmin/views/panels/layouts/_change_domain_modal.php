@@ -2,13 +2,13 @@
     /* @var $this yii\web\View */
     /* @var $form \my\components\ActiveForm */
     /* @var $action string */
-    /* @var $modal \my\modules\superadmin\models\forms\ChangeDomainForm */
+    /* @var $modal \superadmin\models\forms\ChangeDomainForm */
 
     use my\components\ActiveForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 
-    $model = new \my\modules\superadmin\models\forms\ChangeDomainForm();
+    $model = new superadmin\models\forms\ChangeDomainForm();
 ?>
 <div class="modal fade" id="changeDomainModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog" role="document">
@@ -40,8 +40,8 @@
                     <?= $form->field($model, 'subdomain')->checkbox() ?>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <?= Html::submitButton('Save changes', [
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app/superadmin', 'panels.edit.close') ?></button>
+                    <?= Html::submitButton(Yii::t('app/superadmin', 'panels.edit.save'), [
                         'class' => 'btn btn-outline btn-primary',
                         'name' => 'change-domain-button',
                         'id' => 'changeDomainButton'

@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\MainController;
 use my\components\SuperAccessControl;
@@ -16,7 +16,7 @@ class CustomController extends MainController
 {
     public $activeTab;
 
-    public $layout = 'superadmin.php';
+    public $layout = 'superadmin_v2.php';
 
     public function beforeAction($action)
     {

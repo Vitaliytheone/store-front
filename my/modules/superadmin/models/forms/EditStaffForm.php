@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\forms;
+namespace superadmin\models\forms;
 
 use Yii;
 use common\models\panels\SuperAdmin;
@@ -100,11 +100,11 @@ class EditStaffForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => 'Account',
-            'first_name' => 'First name',
-            'last_name' => 'Last name',
-            'status' => 'Status',
-            'access' => 'Access rules',
+            'username' => Yii::t('app/superadmin', 'staff.edit_staff.account'),
+            'first_name' => Yii::t('app/superadmin', 'staff.edit_staff.first_name'),
+            'last_name' => Yii::t('app/superadmin', 'staff.edit_staff.last_name'),
+            'status' => Yii::t('app/superadmin', 'staff.edit_staff.status'),
+            'access' => Yii::t('app/superadmin', 'staff.edit_staff.access_rules'),
         ];
     }
 }

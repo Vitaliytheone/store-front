@@ -4,9 +4,9 @@
 use my\components\ActiveForm;
 use my\helpers\Url;
 use yii\bootstrap\Html;
-use \my\modules\superadmin\models\forms\EditProjectForm;
+use superadmin\models\forms\EditProjectForm;
 use yii\helpers\Json;
-use my\modules\superadmin\widgets\SelectCustomer;
+use superadmin\widgets\SelectCustomer;
 
 $model = new EditProjectForm();
 $checkboxTemplate = "<div class=\"custom-control custom-checkbox mt-2\">{input} {label}</div>";
@@ -51,6 +51,14 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     'class' => 'custom-control-label'
                 ]); ?>
 
+                <?= $form->field($model, 'affiliate_system', [
+                    'checkboxTemplate' => $checkboxTemplate,
+                ])->checkbox([
+                    'class' => 'custom-control-input', 'id' => 'form-affiliate_system',
+                ])->label(null,[
+                    'class' => 'custom-control-label'
+                ]); ?>
+
                 <?= $form->field($model, 'name', ['options' => ['id' => 'form-name', 'class' => 'form-group']])->label(Yii::t('app/superadmin', 'panels.edit.panel_name')) ?>
                 <?= $form->field($model, 'skype', ['options' =>['id' => 'form-skype', 'class' => 'form-group']]) ?>
 
@@ -69,7 +77,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     ]) ?>
                 </div>
 
-                <?= $form->field($model, 'currency', ['options' => [
+                <?= $form->field($model, 'currency_code', ['options' => [
                     'id' => 'form-currency',
                     'class' => 'form-group']])
                     ->dropDownList($model->getCurrencies()) ?>
@@ -108,6 +116,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     </div>
                 </div>
 
+                <?php if ($action == 'panels') : ?>
                 <div class="form-group">
                     <label for="form-apikey"><?= Yii::t('app/superadmin', 'panels.edit.apikey') ?></label>
                     <div class="input-group mb-3">
@@ -121,6 +130,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                         </div>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'panels.edit.close') ?></button>

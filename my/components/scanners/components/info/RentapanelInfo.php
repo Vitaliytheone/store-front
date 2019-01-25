@@ -1,4 +1,5 @@
 <?php
+
 namespace my\components\scanners\components\info;
 
 use my\components\scanners\components\BasePanelInfo;
@@ -13,14 +14,19 @@ class RentapanelInfo extends BasePanelInfo
     /**
      * Check if panel Active
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function checkStatusActive()
     {
         $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
 
-        if (!boolval(stripos($content, '<a href="api_docs">Api</a>'))
-            || !boolval(strpos($content, '<a href="services">Services</a>'))) {
+        $matchesApiLink = [];
+        $matchesServicesLink = [];
+        preg_match('/<a href="api_docs">\s*API\s*<\/a>/i', $content, $matchesApiLink);
+        preg_match('/<a href="services">\s*Services\s*<\/a>/i', $content, $matchesServicesLink);
+
+        if (empty($matchesApiLink) || empty($matchesServicesLink)) {
             return false;
         }
 
@@ -54,6 +60,7 @@ class RentapanelInfo extends BasePanelInfo
     /**
      * Check if requested host is valid panel
      * @return bool
+     * @throws \yii\base\Exception
      */
     private function _isValid()
     {
@@ -74,7 +81,9 @@ class RentapanelInfo extends BasePanelInfo
             '<td>apiKey</td>',
             '<td>actionType</td>',
             '<td>orderType</td>',
-            '<td>orderID</td>'
+            '<td>orderID</td>',
+            '<td>orderUrl</td>',
+            '<td>orderQuantity</td>',
         ];
 
         foreach ($valid_html as $needle) {
@@ -86,5 +95,3 @@ class RentapanelInfo extends BasePanelInfo
         return true;
     }
 }
-
-

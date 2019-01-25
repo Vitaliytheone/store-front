@@ -6,9 +6,8 @@
 /* @var $dashboardServices array */
 
 use yii\helpers\Html;
-use \my\modules\superadmin\helpers\DashboardBlocks;
+use superadmin\helpers\DashboardBlocks;
 use my\helpers\Url;
-use my\helpers\SpecialCharsHelper;
 
 $this->context->addModule('superadminDashboardController', [
     'error' => Yii::t('app/superadmin', 'error'),

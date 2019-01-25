@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\widgets\SystemMessages;
+namespace superadmin\widgets\SystemMessages;
 
 class ChangedStatusMessage extends BaseSystemMessage
 {

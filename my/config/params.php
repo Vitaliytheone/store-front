@@ -20,6 +20,7 @@ return [
     'dnsLogin' => 'werewind',
     'dnsPasswd' => 'isoa41bh',
     'currencies' => require(__DIR__ . '/currency/currencies.php'),
+    'legacy_currencies' => require(__DIR__ . '/currency/legacy_currencies.php'),
     'timezones' => require(__DIR__ . '/timezone/timezones.php'),
     'countries' => require(__DIR__ . '/countries/countries.php'),
     'languages' => require(__DIR__ . '/languages/languages.php'),
@@ -29,23 +30,7 @@ return [
     'noreplyEmail' => 'noreply@getyourpanel.com', // Адрес почты для отправки писем (from)
     'supportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта
     'sysmailSupportEmail' => 'werewind@yandex.ru', // Адрес почты саппорта для sysmail метода
-
-    // Параметры по умолчанию при создании панели
-    'projectDefaults' => [
-        'theme_path' => 'default_light',
-        'lang' => 'en',
-        'plan' => 1,
-        'comments' => 1,
-        'mentions_wo_hashtag' => 1,
-        'mentions' => 1,
-        'mentions_custom' => 1,
-        'mentions_hashtag' => 1,
-        'mentions_follower' => 1,
-        'mentions_likes' => 1,
-        'start_count' => 1,
-        'custom' => 1,
-        'ticket_per_user' => 3,
-    ],
+    'provider_service_id_label_list' => require(__DIR__ . '/services/provider_service_id_label_list.php'),
 
     // Mailgun mailer
     'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
@@ -135,5 +120,14 @@ return [
 
     'payment_verification_time' => 1 * 24 * 60 * 60,
     'curl.timeout' => '20',
-    'getstatus_info_url' => ''
+    'getstatus_info_url' => '',
+
+    'paypal_fraud_settings' => [
+        'accept_high' => 1,
+        'accept_critical' => 1,
+    ],
+
+    'ssl_order_delay' => 2 * 60, // Задержка на выполнение заказа продления GoGet SSL -> Letsencrypt SSL
+    'free_ssl.create' => true,  // Создавать заказ/выполнять заказ на бесплатный сертификат или нет
+    'free_ssl.prolong' => true, // Создавать заказ/выполнять заказ на продление бесплатного сертификата или нет
 ];

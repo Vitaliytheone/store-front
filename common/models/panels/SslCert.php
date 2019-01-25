@@ -28,8 +28,10 @@ use my\mail\mailers\CreatedSSL;
  * @property string $domain
  * @property string $csr_code
  * @property string $csr_key
+ * @property string $csr_files
  * @property string $details
  * @property string $expiry
+ * @property string $expiry_at_timestamp
  * @property integer $created_at
  *
  * @property Project|Stores $project
@@ -49,6 +51,7 @@ class SslCert extends ActiveRecord
     const STATUS_INCOMPLETE = 5;
     const STATUS_EXPIRED = 6;
     const STATUS_ERROR = 7;
+    const STATUS_RENEWED = 8;
 
     const CHECKED_NO = 0;
     const CHECKED_YES = 1;
@@ -83,6 +86,8 @@ class SslCert extends ActiveRecord
             [['status'], 'default', 'value' => static::STATUS_PENDING],
             [['cid'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['cid' => 'id']],
             [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::class, 'targetAttribute' => ['item_id' => 'id']],
+            ['csr_files', 'string'],
+            ['expiry_at_timestamp', 'integer'],
         ];
     }
 
@@ -102,8 +107,10 @@ class SslCert extends ActiveRecord
             'checked' => Yii::t('app', 'Is Checked'),
             'csr_code' => Yii::t('app', 'CSR code'),
             'csr_key' => Yii::t('app', 'CSR key'),
+            'csr_files' => Yii::t('app', 'CSR files'),
             'details' => Yii::t('app', 'Details'),
             'expiry' => Yii::t('app', 'Expiry'),
+            'expiry_at_timestamp' => Yii::t('app', 'Expiry at'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
     }
@@ -249,7 +256,7 @@ class SslCert extends ActiveRecord
 
             // Create new unreaded ticket after activate ssl cert.
             // Not for SSL prolongation
-            if(!$isProlonged) {
+            if(!$isProlonged && $project->hasManualPaymentMethods()) {
                 $ticket = new Tickets();
                 $ticket->customer_id = $this->cid;
                 $ticket->is_admin = 1;

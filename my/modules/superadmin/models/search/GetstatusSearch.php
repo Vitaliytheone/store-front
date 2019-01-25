@@ -1,6 +1,6 @@
 <?php
 
-namespace my\modules\superadmin\models\search;
+namespace superadmin\models\search;
 
 use common\models\panels\Getstatus;
 use common\models\panels\AdditionalServices;
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class GetstatusSearch
- * @package my\modules\superadmin\models\search
+ * @package superadmin\models\search
  */
 class GetstatusSearch extends Getstatus
 {
@@ -131,9 +131,9 @@ class GetstatusSearch extends Getstatus
         }
 
         $statuses = AdditionalServices::find()
-            ->select(['res', 'name'])
-            ->where(['additional_services.res' => array_keys($data)])
-            ->groupBy('res')
+            ->select(['provider_id', 'name'])
+            ->where(['additional_services.provider_id' => array_keys($data)])
+            ->groupBy('provider_id')
             ->all();
 
         $countsList = (new Query())
@@ -145,11 +145,11 @@ class GetstatusSearch extends Getstatus
 
         $result = [];
         for ($i = 0; $i < count($statuses); $i++ ) {
-            $result[$statuses[$i]->res] = $data[$statuses[$i]->res];
-            $result[$statuses[$i]->res]['provider'] = $statuses[$i]->name;
-            $result[$statuses[$i]->res]['all_orders'] = isset($countsList[$statuses[$i]->res]) ? $countsList[$statuses[$i]->res] : 0;
-            $result[$statuses[$i]->res]['good'] = $data[$statuses[$i]->res]['requests'] - $data[$statuses[$i]->res]['status_error'] - $data[$statuses[$i]->res]['curl_error'];
-            $result[$statuses[$i]->res]['avg'] = round($data[$statuses[$i]->res]['avg'], 0);
+            $result[$statuses[$i]->provider_id] = $data[$statuses[$i]->provider_id];
+            $result[$statuses[$i]->provider_id]['provider'] = $statuses[$i]->name;
+            $result[$statuses[$i]->provider_id]['all_orders'] = isset($countsList[$statuses[$i]->provider_id]) ? $countsList[$statuses[$i]->provider_id] : 0;
+            $result[$statuses[$i]->provider_id]['good'] = $data[$statuses[$i]->provider_id]['requests'] - $data[$statuses[$i]->provider_id]['status_error'] - $data[$statuses[$i]->provider_id]['curl_error'];
+            $result[$statuses[$i]->provider_id]['avg'] = round($data[$statuses[$i]->provider_id]['avg'], 0);
         }
 
         return $result;

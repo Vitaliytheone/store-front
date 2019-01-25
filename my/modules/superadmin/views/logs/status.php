@@ -5,9 +5,8 @@ use yii\widgets\LinkPager;
 /** @var array $logs */
 ?>
 
-<div class="container-fluid mt-3">
 
-    <table class="table table-border">
+    <table class="table table-sm table-custom">
         <thead>
         <tr>
             <th><?= Yii::t('app/superadmin', 'logs.status.list.column_id') ?></th>
@@ -30,10 +29,12 @@ use yii\widgets\LinkPager;
         </tbody>
     </table>
 
-    <div class="text-align-center pager">
-        <?= LinkPager::widget([
-            'pagination' => $pagination,
-        ]); ?>
+<div class="row">
+    <div class="col-md-6">
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget(['pagination' => $pagination,]); ?>
+            </ul>
+        </nav>
     </div>
-
 </div>

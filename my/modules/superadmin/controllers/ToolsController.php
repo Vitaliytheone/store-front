@@ -1,20 +1,52 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
+
 
 use my\components\ActiveForm;
 use common\models\panels\SuperToolsScanner;
-use my\modules\superadmin\models\forms\PanelsScannerAddDomainForm;
-use my\modules\superadmin\models\search\PanelsScannerSearch;
+use superadmin\models\forms\PanelsScannerAddDomainForm;
+use superadmin\models\search\DbHelperSearch;
+use superadmin\models\search\PanelsScannerSearch;
 use Yii;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 
 /**
  * Class ToolsController
- * @package my\modules\superadmin\controllers
+ * @package superadmin\controllers
  */
 class ToolsController extends CustomController
 {
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'levopanel'=> ['GET'],
+                    'rentalpanel'=> ['GET'],
+                    'panelfire' => ['GET'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => ['add-domain']
+            ],
+            'content' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['add-domain'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+        ]);
+    }
+
     /** @var string Active navigation tab */
     public $activeTab = 'tools';
 
@@ -92,14 +124,31 @@ class ToolsController extends CustomController
     }
 
     /**
+     * Render DB helper page
+     * @return string
+     */
+    public function actionDbHelper()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'db_helper.title');
+
+        $search = new DbHelperSearch();
+        $search->setParams(Yii::$app->request->post());
+
+        return $this->render('db_helper', [
+            'model' => $search->search(),
+            'query' => $search->getQueryForInput(),
+            'selectedOption' => Yii::$app->request->post('db_name'),
+            'selectList' => $search->getSelectList(),
+        ]);
+    }
+
+    /**
      * Add new panel domain Ajax action
      * @param $panel string Name of the current scanner
      * @return array
      */
     public function actionAddDomain($panel)
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $form = new PanelsScannerAddDomainForm();
         $form->setPanelInfo($panel);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\SuperAdmin;
-use my\modules\superadmin\models\forms\PasswordUpdateForm;
+use superadmin\models\forms\PasswordUpdateForm;
 use Yii;
 
 /**
@@ -19,14 +19,14 @@ class AccountController extends CustomController
      */
     public function actionIndex()
     {
-        $this->view->title = 'Account';
+        $this->view->title = Yii::t('app/superadmin', 'account.title');
 
         $model = new PasswordUpdateForm();
 
         $model->setUser(Yii::$app->superadmin->identity);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->addFlash('success', 'Password changed');
+            Yii::$app->session->addFlash('success', Yii::t('app/superadmin', 'account.password_changed'));
             return $this->refresh();
         }
 

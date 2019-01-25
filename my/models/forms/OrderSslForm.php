@@ -30,30 +30,10 @@ class OrderSslForm extends Model
     public $pid;
     public $item_id;
 
-    // Details
-    public $admin_firstname;
-    public $admin_lastname;
-    public $admin_addressline1;
-    public $admin_phone;
-    public $admin_email;
-    public $admin_city;
-    public $admin_country;
-    public $admin_postalcode;
-    public $admin_region;
-    public $admin_job;
-    public $admin_organization;
-
-    public $code;
-
     /**
      * @var Customers
      */
     public $_customer;
-
-    /**
-     * @var string - user IP address
-     */
-    protected $_ip;
 
     /**
      * @var Project[]
@@ -72,25 +52,6 @@ class OrderSslForm extends Model
     {
         return [
             [['pid', 'item_id'], 'required'],
-            [[
-                'admin_firstname',
-                'admin_lastname',
-                'admin_phone',
-                'admin_job',
-                'admin_addressline1',
-                'admin_city',
-                'admin_region',
-                'admin_postalcode',
-                'admin_country',
-                'admin_email'
-            ], 'required'],
-            [$this->getDetails(), 'filter', 'filter' => 'trim'],
-            [['admin_email'], 'filter', 'filter' => function($value) {
-                return trim(strtolower($value));
-            }],
-            [['admin_country'], 'in', 'range' => array_keys($this->getCountries())],
-            [['admin_email'], 'email'],
-            [['admin_phone'], 'integer'],
             [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => SslCertItem::class, 'targetAttribute' => ['item_id' => 'id']],
             ['item_id', 'checkAllowSslCertItem', 'skipOnError' => true,],
             [['pid'], 'isDomainAllowedValidator'],
@@ -98,19 +59,14 @@ class OrderSslForm extends Model
     }
 
     /**
-     * Check is passed cert item id in allowed list
+     * Check is passed cert product item id in allowed list
      * @param $attribute
      * @param $params
      * @return bool
      */
     public function checkAllowSslCertItem($attribute, $params)
     {
-        /** @var SslCertItem $sslCertItem */
-        $sslCertItemId = $this->$attribute;
-
-        $allowedSslItems = array_keys($this->getSslItems());
-
-        if (!in_array($sslCertItemId, $allowedSslItems)) {
+        if (!in_array($this->$attribute,  array_keys($this->getSslItems()))) {
             $this->addError($attribute, Yii::t('app', 'error.ssl.can_not_order_ssl'));
 
             return false;
@@ -119,7 +75,6 @@ class OrderSslForm extends Model
         return true;
     }
 
-
     /**
      * Set customer
      * @param Customers $customer
@@ -127,20 +82,7 @@ class OrderSslForm extends Model
     public function setCustomer(Customers $customer)
     {
         $this->_customer = $customer;
-
-        // В формах заказа нового домена/ssl убираем временно автозаполнение формы включая выбор страны
-        /*$this->_ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
-        if ($this->_ip) {
-            $geoIp = Yii::$app->geoip->ip($this->_ip);
-
-            if ($geoIp && $geoIp->isoCode) {
-                $this->admin_country = $geoIp->isoCode;
-            }
-        }
-
-        $this->initLastSslDetails();*/
     }
-
 
     /**
      * Return current customer
@@ -149,40 +91,6 @@ class OrderSslForm extends Model
     public function getCustomer()
     {
         return $this->_customer;
-    }
-
-    /**
-     * Set user IP
-     * @param $ip
-     */
-    public function setIP($ip)
-    {
-        $this->_ip = $ip;
-    }
-
-    /**
-     * Init previous order ssl details
-     */
-    protected function initLastSslDetails()
-    {
-        if (empty($this->_customer)) {
-            return ;
-        }
-
-        $lastOrder = Orders::find()->andWhere([
-            'cid' => $this->_customer->id,
-            'item' => Orders::ITEM_BUY_SSL
-        ])->orderBy([
-            'id' => SORT_DESC
-        ])->one();
-
-        if (!$lastOrder) {
-            return ;
-        }
-
-        $details = ArrayHelper::getValue($lastOrder->getDetails(), 'details', []);
-
-        $this->setAttributes($details);
     }
 
     /**
@@ -203,54 +111,18 @@ class OrderSslForm extends Model
 
         $certItem = SslCertItem::findOne($this->item_id);
 
-        $orderModel = new Orders();
-        $orderModel->date = time();
-        $orderModel->cid = $this->_customer->id;
-        $orderModel->item = Orders::ITEM_BUY_SSL;
-        $orderModel->domain = $project->domain;
-        $orderModel->ip = $this->_ip;
-        $orderModel->setDetails([
-            'pid' => $project->id,
-            'project_type' => $project::getProjectType(),
-            'domain' => $project->domain,
-            'item_id' => $this->item_id,
-            'details' => $this->getAttributes($this->getDetails()),
-        ]);
-
-        $transaction = Yii::$app->db->beginTransaction();
-
-        if ($orderModel->save()) {
-            $invoiceModel = new Invoices();
-            $invoiceModel->total = $certItem->price;
-            $invoiceModel->cid = $orderModel->cid;
-            $invoiceModel->generateCode();
-            $invoiceModel->daysExpired(Yii::$app->params['invoice.sslDuration']);
-
-            if (!$invoiceModel->save()) {
-                $this->addError('pid', Yii::t('app', 'error.ssl.can_not_order_ssl'));
-                return false;
-            }
-
-            $invoiceDetailsModel = new InvoiceDetails();
-            $invoiceDetailsModel->invoice_id = $invoiceModel->id;
-            $invoiceDetailsModel->item_id = $orderModel->id;
-            $invoiceDetailsModel->amount = $certItem->price;
-            $invoiceDetailsModel->item = InvoiceDetails::ITEM_BUY_SSL;
-
-            if (!$invoiceDetailsModel->save()) {
-                $this->addError('pid', Yii::t('app', 'error.ssl.can_not_order_ssl'));
-                return false;
-            }
-        } else {
-            $this->addErrors($orderModel->getErrors());
-            return false;
+        if (!$certItem) {
+            throw new Exception('Cannot find SSL cert item!');
         }
 
-        $transaction->commit();
+        $project->dns_checked_at = null;
+        $project->dns_status = Project::DNS_STATUS_ALIEN;
 
-        $this->code = $invoiceModel->code;
+        if (!$project->save(false)) {
+            throw new Exception('Cannot update Panel!');
+        }
 
-        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_SSL_ORDER, $orderModel->id, $orderModel->id, UserHelper::getHash());
+        MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_SSL_ORDER, $certItem->id, $certItem->id, UserHelper::getHash());
 
         return true;
     }
@@ -326,11 +198,12 @@ class OrderSslForm extends Model
                 ])
                 ->leftJoin('orders o', 'project.site = o.domain AND o.status <> :orderStatus AND o.item = :orderItem', [
                     ':orderStatus' => Orders::STATUS_CANCELED,
-                    ':orderItem' => Orders::ITEM_BUY_SSL
+                    ':orderItem' => Orders::ITEM_FREE_SSL,
                 ])
                 ->andWhere([
                     'project.cid' => $this->_customer->id,
-                    'project.act' => Project::STATUS_ACTIVE
+                    'project.act' => Project::STATUS_ACTIVE,
+                    'project.dns_status' => Project::DNS_STATUS_NOT_DEFINED,
                 ])
                 ->groupBy('project.id')
                 ->having('COUNT(sc.id) = 0 AND COUNT(o.id) = 0')
@@ -354,8 +227,10 @@ class OrderSslForm extends Model
                 ->rightJoin(['s' => Stores::tableName()], 's.id = sd.store_id')
                 ->andWhere(['s.customer_id' => $this->_customer->id])
                 ->andWhere(['sd.type' => [
-                    StoreDomains::DOMAIN_TYPE_DEFAULT,
-                    StoreDomains::DOMAIN_TYPE_SUBDOMAIN]
+                        StoreDomains::DOMAIN_TYPE_DEFAULT,
+                        StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
+                        StoreDomains::DOMAIN_TYPE_SOMMERCE
+                    ]
                 ])
                 ->column();
 
@@ -382,24 +257,15 @@ class OrderSslForm extends Model
 
     /**
      * Return Stores & Panels & Child panels domains list
+     * @param $panelsOnly boolean Return panel projects only if true
      * @param $group bool Is needs group projects domains by groups (stores domains, panels domains)
      * @return array;
      */
-    public function getAllProjectsDomains($group = false)
+    public function getAllProjectsDomains($group = false, $panelsOnly = true)
     {
-        $stores = $this->_getStores();
-        $panels = $this->_getPanels();
-
         $storesDomains = $panelsDomains = $childPanelsDomains = [];
 
-        /** @var Stores $store */
-        foreach ($stores as $store) {
-            if ($group) {
-                $storesDomains[Yii::t('app', 'form.order_ssl.stores_group')][self::PROJECT_STORE_PREFIX.$store->id] = $store->getBaseDomain();
-            } else {
-                $storesDomains[$store->id] = $store->getBaseDomain();
-            }
-        }
+        $panels = $this->_getPanels();
 
         /** @var $panel Project */
         foreach ($panels as $panel) {
@@ -414,18 +280,43 @@ class OrderSslForm extends Model
             }
         }
 
+        if ($panelsOnly) {
+            return array_merge($panelsDomains, $childPanelsDomains);
+        }
+
+        $stores = $this->_getStores();
+
+        /** @var Stores $store */
+        foreach ($stores as $store) {
+            if ($group) {
+                $storesDomains[Yii::t('app', 'form.order_ssl.stores_group')][self::PROJECT_STORE_PREFIX.$store->id] = $store->getBaseDomain();
+            } else {
+                $storesDomains[$store->id] = $store->getBaseDomain();
+            }
+        }
+
         return array_merge($storesDomains, $panelsDomains, $childPanelsDomains);
     }
 
     /**
      * Get ssl certifications available items
+     * @param $freeOnly boolean Return only free Ssl products if true
      * @return array
      */
-    public function getSslItems()
+    public function getSslItems($freeOnly = true)
     {
         $products = [];
 
-        foreach (SslCertItem::find()->all() as $item) {
+        $sslCertItems = SslCertItem::find();
+
+        if ($freeOnly) {
+            $sslCertItems->andWhere([
+                'provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+                'product_id' => [SslCertItem::PRODUCT_ID_LETSENCRYPT_BASE],
+            ]);
+        }
+
+        foreach ($sslCertItems->all() as $item) {
 
             $allowIdList = $item->getAllow();
 
@@ -438,40 +329,6 @@ class OrderSslForm extends Model
         }
 
         return $products;
-    }
-
-    /**
-     * Get details fields
-     * @return array
-     */
-    public function getDetails()
-    {
-        return [
-            'admin_firstname',
-            'admin_lastname',
-            'admin_phone',
-            'admin_job',
-            'admin_organization',
-            'admin_addressline1',
-            'admin_city',
-            'admin_region',
-            'admin_postalcode',
-            'admin_country',
-            'admin_email'
-        ];
-    }
-
-    /**
-     * Get countries
-     * @return array
-     */
-    public function getCountries()
-    {
-        $countries = Yii::$app->params['countries'];
-
-        unset($countries['IR']); // в my из создания ssl уберите Iran - thirteen
-        
-        return $countries;
     }
 
     /**

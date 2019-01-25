@@ -1,14 +1,19 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\AdditionalServices;
-use my\modules\superadmin\models\search\ProvidersSearch;
+use superadmin\models\forms\CreateProviderForm;
+use superadmin\models\forms\EditProviderForm;
+use superadmin\models\search\ProvidersSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 
 /**
  * ProvidersController for the `superadmin` module
@@ -16,6 +21,34 @@ use yii\web\Response;
 class ProvidersController extends CustomController
 {
     public $activeTab = 'providers';
+
+    public $layout = 'superadmin_v2.php';
+
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'index' => ['GET'],
+                        'edit' => ['POST'],
+                        'create' => ['POST'],
+                    ],
+                ],
+                'ajax' => [
+                    'class' => AjaxFilter::class,
+                    'only' => ['create', 'edit']
+                ],
+                'content' => [
+                    'class' => ContentNegotiator::class,
+                    'only' => ['edit', 'get-panels', 'create'],
+                    'formats' => [
+                        'application/json' => Response::FORMAT_JSON,
+                    ],
+                ],
+            ]);
+    }
 
     /**
      * Renders the index view for the module
@@ -37,22 +70,53 @@ class ProvidersController extends CustomController
             'navs' => $providersSearch->navs(),
             'type' => is_numeric($type) ? (int)$type : $type,
             'filters' => $providersSearch->getParams(),
+            'scripts' => $providersSearch->getScripts(),
         ]);
     }
 
     /**
-     * Change provider status action
-     * @param integer $id
-     * @param integer $status
+     * Edit provider settings
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
      */
-    public function actionChangeStatus($id, $status)
+    public function actionEdit($id)
     {
         $provider = $this->findModel($id);
 
-        $provider->changeStatus($status);
+        $model = new EditProviderForm();
+        $model->setProvider($provider);
 
-        $this->redirect(Url::toRoute(['/providers']));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * Create new provider
+     * @return array
+     */
+    public function actionCreate()
+    {
+        $model = new CreateProviderForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**
@@ -75,8 +139,6 @@ class ProvidersController extends CustomController
     {
         $provider = $this->findModel($id);
         $use = Yii::$app->request->get('use');
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
 
         if ($use) {
             $projects = $provider->getUseProjects();

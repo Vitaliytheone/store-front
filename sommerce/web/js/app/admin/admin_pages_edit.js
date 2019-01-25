@@ -54,6 +54,10 @@ customModule.adminPageEdit = {
          * @param $element
          */
         function initSummernote($element){
+            if (!$formFields.content.length) {
+                return false;
+            }
+
             $formFields.content.summernote({
                 minHeight: 300,
                 focus: true,

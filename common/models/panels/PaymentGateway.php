@@ -15,8 +15,10 @@ use common\models\panels\queries\PaymentGatewayQuery;
  * @property integer $pgid
  * @property string $name
  * @property string $minimal
+ * @property string $maximal
  * @property integer $new_users
  * @property integer $visibility
+ * @property integer $fee
  * @property string $options
  * @property integer $type
  * @property string $dev_options
@@ -57,8 +59,8 @@ class PaymentGateway extends ActiveRecord
     {
         return [
             [['pid', 'pgid', 'name', 'minimal', 'new_users', 'visibility', 'options', 'type'], 'required'],
-            [['pid', 'pgid', 'new_users', 'visibility', 'type', 'position'], 'integer'],
-            [['minimal'], 'number'],
+            [['pid', 'pgid', 'new_users', 'visibility', 'type', 'position', 'fee'], 'integer'],
+            [['minimal', 'maximal'], 'number'],
             [['name'], 'string', 'max' => 100],
             [['options', 'dev_options'], 'string', 'max' => 1000],
         ];
@@ -75,8 +77,10 @@ class PaymentGateway extends ActiveRecord
             'pgid' => 'Pgid',
             'name' => 'Name',
             'minimal' => 'Minimal',
+            'maximal' => 'Maximal',
             'new_users' => 'New Users',
             'visibility' => 'Visibility',
+            'fee' => 'Fee',
             'options' => 'Options',
             'type' => 'Type',
             'dev_options' => 'Dev Options',

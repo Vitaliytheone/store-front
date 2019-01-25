@@ -1,22 +1,25 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $referrals \my\modules\superadmin\models\search\PanelsSearch */
+    /* @var $referrals \superadmin\models\search\PanelsSearch */
+    /* @var $filters array */
 
     use my\helpers\Url;
     use yii\bootstrap\Html;
     use my\helpers\SpecialCharsHelper;
+    use yii\widgets\LinkPager;
+    use superadmin\widgets\CountPagination;
 ?>
-<table class="table table-border tablesorter-bootstrap" id="referralsTable">
+<table class="table table-sm table-custom">
     <thead>
         <tr>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.customer_id')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.customer_email')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.total_visits')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.unpaid_referrals')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.paid_referrals')?></th>
+            <th><?= $referrals['sort']->link('customers.id', ['class' => 'sort_link', 'style' => 'color:inherit']) ?></th>
+            <th><?= $referrals['sort']->link('customers.email', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('total_visits', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('unpaid_referrals', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('paid_referrals', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
             <th><?= Yii::t('app/superadmin', 'referrals.list.conversion_rate')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.total_earnings')?></th>
-            <th><?= Yii::t('app/superadmin', 'referrals.list.unpaid_earnings')?></th>
+            <th><?= $referrals['sort']->link('total_earnings', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
+            <th><?= $referrals['sort']->link('unpaid_earnings', ['class' => 'sort_link', 'style' => 'color:inherit'])?></th>
         </tr>
     </thead>
     <tbody>
@@ -68,3 +71,23 @@
         <?php endif; ?>
     </tbody>
 </table>
+
+<div class="row">
+    <div class="col-md-6">
+        <!-- Pagination Start -->
+        <nav>
+            <ul class="pagination">
+                <?= LinkPager::widget([
+                    'pagination' => $referrals['pages'],
+                ]); ?>
+            </ul>
+        </nav>
+        <!-- Pagination End -->
+    </div>
+    <div class="col-md-6 text-md-right">
+        <?= CountPagination::widget([
+            'pages' => $referrals['pages'],
+            'params' => $filters,
+        ]) ?>
+    </div>
+</div>

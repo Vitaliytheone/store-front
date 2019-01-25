@@ -1,13 +1,14 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
+
 
 use my\components\ActiveForm;
 use my\helpers\Url;
 use common\models\panels\Customers;
-use my\modules\superadmin\models\forms\CustomerPasswordForm;
-use my\modules\superadmin\models\forms\EditCustomerForm;
-use my\modules\superadmin\models\search\CustomersSearch;
+use superadmin\models\forms\CustomerPasswordForm;
+use superadmin\models\forms\EditCustomerForm;
+use superadmin\models\search\CustomersSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -22,8 +23,6 @@ use yii\filters\ContentNegotiator;
  */
 class CustomersController extends CustomController
 {
-    public $layout = 'superadmin_v2.php';
-
     public $activeTab = 'customers';
 
     public function behaviors()
@@ -47,6 +46,7 @@ class CustomersController extends CustomController
                     'edit' => ['POST'],
                     'set-password' => ['POST'],
                     'activate-domain' => ['POST'],
+                    'activate-gateways' => ['POST'],
                 ],
             ],
             'ajax' => [
@@ -182,6 +182,22 @@ class CustomersController extends CustomController
         $customer = $this->findModel($request->post('id'));
 
         $customer->activateStores();
+
+        return $this->redirect(Url::toRoute('/customers'));
+    }
+
+    /**
+     * Activate stores feature
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionActivateGateways()
+    {
+        $request = Yii::$app->request;
+
+        $customer = $this->findModel($request->post('id'));
+
+        $customer->activateGateways();
 
         return $this->redirect(Url::toRoute('/customers'));
     }

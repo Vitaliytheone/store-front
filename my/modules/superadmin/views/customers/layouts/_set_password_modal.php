@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $model my\modules\superadmin\models\forms\CustomerPasswordForm */
+    /* @var $model superadmin\models\forms\CustomerPasswordForm */
     /* @var $form my\components\ActiveForm */
 
     use my\components\ActiveForm;
-    use my\modules\superadmin\models\forms\CustomerPasswordForm;
+    use superadmin\models\forms\CustomerPasswordForm;
     use my\helpers\Url;
     use yii\bootstrap\Html;
 

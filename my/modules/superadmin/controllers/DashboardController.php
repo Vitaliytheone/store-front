@@ -1,10 +1,10 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use my\components\SuperAccessControl;
-use my\modules\superadmin\helpers\DashboardServices;
-use my\modules\superadmin\helpers\DashboardBlocks;
+use superadmin\helpers\DashboardServices;
+use superadmin\helpers\DashboardBlocks;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
@@ -17,7 +17,6 @@ use \yii\filters\VerbFilter;
  */
 class DashboardController extends CustomController
 {
-    public $layout = 'superadmin_v2.php';
     public $activeTab = 'dashboard';
 
     public function behaviors()
@@ -57,6 +56,7 @@ class DashboardController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \ReflectionException
      */
     public function actionIndex()
     {
@@ -70,8 +70,9 @@ class DashboardController extends CustomController
 
     /**
      * Get dashboard blocks
-     * @param string $name
+     * @param $name
      * @return array
+     * @throws \ReflectionException
      */
     public function actionBlock($name)
     {

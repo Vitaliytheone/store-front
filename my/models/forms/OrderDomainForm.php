@@ -3,8 +3,8 @@ namespace my\models\forms;
 
 use my\components\domains\Ahnames;
 use my\components\validators\OrderLimitValidator;
-use my\components\validators\PanelDomainValidator;
-use my\helpers\CurlHelper;
+use my\components\validators\OrderDomainValidator;
+use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;
@@ -69,7 +69,7 @@ class OrderDomainForm extends Model
     {
         return [
             [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_ccountry')],
-            [['domain'], PanelDomainValidator::class],
+            [['domain'], OrderDomainValidator::class],
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
             [['domain_email'], 'email'],
@@ -98,18 +98,6 @@ class OrderDomainForm extends Model
     public function setUser(Auth $user)
     {
         $this->_user = $user;
-
-        // В формах заказа нового домена/ssl убираем временно автозаполнение формы включая выбор страны
-        /*$this->_ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
-        if ($this->_ip) {
-            $geoIp = Yii::$app->geoip->ip($this->_ip);
-
-            if ($geoIp && $geoIp->isoCode) {
-                $this->domain_country = $geoIp->isoCode;
-            }
-        }
-
-        $this->initLastOrderDetails();*/
     }
 
     /**
@@ -268,7 +256,7 @@ class OrderDomainForm extends Model
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
+            $currencies[$code] = $currency['name'] . ' (' . $code . ')';
         }
         return $currencies;
     }

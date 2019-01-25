@@ -175,15 +175,23 @@ class ActivitySearch extends Model
     }
 
     /**
+     * Check is hide child panel
+     * @return bool
+     */
+    public function isChildHidePanel(): bool
+    {
+        if ($this->_panel->child_panel == 1 && $this->_panel->hide == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Build sql query
      * @param null|array $event
      * @param null|array $account
      * @return Query
-     */
-    /**
-     * @param null $event
-     * @param null $account
-     * @return $this
      */
     public function buildQuery($event = null, $account = null)
     {
@@ -252,12 +260,14 @@ class ActivitySearch extends Model
         if (!Yii::$app->user->isGuest) {
             $timezone = Yii::$app->user->identity->timezone;
         }
-        return ((int)$timezone) + Yii::$app->params['time'];
+        return ((int)$timezone);
     }
 
     /**
      * Search panels
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function search()
     {
@@ -300,6 +310,8 @@ class ActivitySearch extends Model
      * Prepare log data
      * @param array $items
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function prepareData(array $items)
     {
@@ -324,6 +336,7 @@ class ActivitySearch extends Model
     /**
      * Get accounts
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getAccounts()
     {
@@ -353,6 +366,7 @@ class ActivitySearch extends Model
     /**
      * Get accounts
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getEvents()
     {
@@ -385,6 +399,7 @@ class ActivitySearch extends Model
     /**
      * Get events by group
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getEventsByGroups()
     {
@@ -416,6 +431,7 @@ class ActivitySearch extends Model
     /**
      * Get prepared activity data
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getActivity()
     {
@@ -446,7 +462,7 @@ class ActivitySearch extends Model
             static::$_interval = static::DAY_TIME / 24;
             $dateTo += static::DAY_TIME;
 
-            $query->groupBy("(HOUR(FROM_UNIXTIME(`created_at`)))");
+            $query->groupBy('created_at');
 
             for ($point = $dateFrom; $point <= $dateTo; $point = $point + static::$_interval) {
                 $activity[$point] = [
@@ -508,12 +524,31 @@ class ActivitySearch extends Model
             }
         }
 
-        foreach ($this->queryAll($query) as $item) {
+        $queryResult = $this->queryAll($query);
+        $pointsList = [];
+
+        if (in_array($days, [1, 2])) {
+            foreach ($queryResult as $value) {
+                $date = date('Y-m-d H', $value['created_at']) . ':00:00';
+                $dateTimestamp = strtotime($date);
+
+                if (!array_key_exists($date, $pointsList)) {
+                    $pointsList[$date] = [
+                        'created_at' => $dateTimestamp,
+                        'rows' => $value['rows'],
+                    ];
+                } else {
+                    $pointsList[$date]['rows'] = $pointsList[$date]['rows'] + 1;
+                }
+            }
+        } else {
+            $pointsList = $queryResult;
+        }
+
+        foreach ($pointsList as $item) {
             $this->_dateTime->setTimestamp($item['created_at']);
 
-            if ('hour' == $type) {
-                $this->_dateTime->setTime($this->_dateTime->format('h'), 0, 0);
-            } else {
+            if ('hour' !== $type) {
                 $this->_dateTime->setTime(0, 0, 0);
             }
 
@@ -537,6 +572,7 @@ class ActivitySearch extends Model
     /**
      * Get interval
      * @return int
+     * @throws \yii\db\Exception
      */
     public function getInterval()
     {
@@ -564,6 +600,7 @@ class ActivitySearch extends Model
      * Compare date validator
      * @param string $attribute
      * @param array $params
+     * @return bool
      */
     public function compareDateValidator($attribute, $params = [])
     {
@@ -581,6 +618,7 @@ class ActivitySearch extends Model
      * Query all and use cache 60 seconds
      * @param Query $query
      * @return array
+     * @throws \yii\db\Exception
      */
     public function queryAll(Query $query)
     {

@@ -19,6 +19,9 @@ $loginUrl = Url::toRoute(['/panels/sign-in-as-admin', 'id' => $panel['id']]);
     'class' => 'dropdown-item edit-providers',
     'data-providers' => Json::encode($panel['providers'])
 ])?>
+<?= Html::a(Yii::t('app/superadmin', 'panels.list.edit_payment_methods'), Url::toRoute(['/panels/edit-payment-methods', 'id' => $panel['id']]), [
+    'class' => 'dropdown-item edit-payment-methods',
+])?>
 <?= Html::a(Yii::t('app/superadmin', 'panels.list.expiry_date'), Url::toRoute(['/panels/edit-expiry', 'id' => $panel['id']]), [
     'class' => 'dropdown-item edit-expiry',
     'data-expired' => $panel['expired_datetime']

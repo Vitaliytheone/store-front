@@ -1,26 +1,40 @@
 <?php
 namespace console\controllers\my;
 
+use common\components\letsencrypt\AcmeInstaller;
+use common\helpers\PaymentHelper;
 use common\models\panels\Customers;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
+use common\models\panels\Languages;
 use common\models\panels\Orders;
 use common\models\panels\PanelDomains;
+use common\models\panels\Params;
+use common\models\panels\PaymentGateway;
+use common\models\panels\Payments;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
+use common\models\panels\SuperAdmin;
 use common\models\panels\Tickets;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;
 use common\components\dns\Dns;
-use my\helpers\DnsHelper;
+use my\components\ActiveForm;
+use common\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use Yii;
+use yii\console\ExitCode;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
+use common\models\panels\AdditionalServices;
+use common\helpers\CurrencyHelper;
+use Exception;
+use my\helpers\order\OrderSslHelper;
 
 /**
  * Class SystemController
@@ -502,5 +516,384 @@ class SystemController extends CustomController
             null, // days
             '2018-01-01'
         ])->run();
+    }
+
+    /**
+     * Create default panel languages for active panels if its empty
+     */
+    public function actionCreatePanelLanguage()
+    {
+        $panels = Project::find()
+            ->where(['act' => Project::STATUS_ACTIVE])
+            ->all();
+
+        foreach ($panels as $panel) {
+
+            /** @var Project $panel */
+
+            if (Languages::findOne(['panel_id' => $panel->id])) {
+                continue;
+            }
+
+            $language = new Languages();
+            $language->panel_id = $panel->id;
+            $language->language_code = 'en';
+            $language->name = Yii::$app->params['languages']['en'];
+            $language->position = 1;
+            $language->visibility = Languages::VISIBILITY_ON;
+            $language->edited = Languages::EDITED_OFF;
+            $language->save(false);
+
+            $this->stderr('Created language for panel  ' . '[' . $panel->id . ' ' . $panel->name . ']' . "\n", Console::FG_GREEN);
+        }
+    }
+
+    /**
+     * Change additional_services.currency
+     */
+    public function actionChangeCurrency()
+    {
+        $additionalServices = AdditionalServices::find()->where(['type' => 1])->all();
+
+        foreach ($additionalServices as $key => $service) {
+            $panel = (new Query())
+                ->select('currency')
+                ->from(DB_PANELS.'.project')
+                ->where(['site' => $service->name])
+                ->one();
+
+            if (empty($panel)) {
+                echo "Panel $service->name is not exist \n";
+            } else {
+                $service->currency = CurrencyHelper::getCurrencyCodeById($panel['currency']);
+                $service->save();
+                echo "Changed currency at $service->name panel \n";
+            }
+        }
+    }
+
+    /**
+     * Update the category column which it is empty
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionUpdateParams()
+    {
+        $methods = Params::find()
+            ->where('category IS NULL')
+            ->all();
+
+
+        foreach ($methods as $method) {
+            $this->stderr("Updating {$method->code} \n", Console::FG_GREEN);
+
+            $updateData = explode('.', $method->code);
+            $method->category = $updateData[0];
+            $method->code = $updateData[1];
+            $method->update(false);
+
+            $this->stderr("Successful update {$method->code} \n", Console::FG_GREEN);
+        }
+    }
+
+    /**
+     * Transfer data from payment_gateway to params
+     */
+    public function actionTransferToParams()
+    {
+        $payments = PaymentGateway::find()->where(['pid' => -1])->all();
+        $category = 'payment';
+
+        foreach ($payments as $payment) {
+            $this->stderr("Transfer {$payment->name} \n", Console::FG_GREEN);
+
+            $params = new Params();
+
+            $code = strtolower(str_replace(' ', '_', $payment->name));
+            $options = ['credentials' => $payment->getOptionsData()];
+            $options = array_merge((array)$options, $payment->getAttributes([
+                'name',
+                'minimal',
+                'maximal',
+                'visibility',
+                'fee',
+                'type',
+                'dev_options',
+            ]));
+            $params->code = $code;
+            $params->category = $category;
+            $params->setOptions($options);
+            $params->position = $payment->position;
+            if (!$params->save()) {
+                $this->stderr(ActiveForm::firstError($params) . "\n", Console::FG_RED);
+            } else {
+                $this->stderr("Successful \n", Console::FG_GREEN);
+            }
+        }
+    }
+
+    /**
+     * Change additional_services.currency
+     */
+    public function actionSslFix()
+    {
+        $sslQuery = SslCert::find()->andWhere([
+            'status' => SslCert::STATUS_ACTIVE
+        ]);
+
+        foreach ($sslQuery->batch() as $sslList) {
+            foreach ($sslList as $ssl) {
+                $this->stderr($ssl->domain . "\n", Console::FG_GREEN);
+
+                $json = json_decode($ssl->details);
+                if ($json !== false) {
+                    try {
+                        if (!empty($json->order_status->crt_code) and !empty($json->order_status->ca_code) and !empty($json->csr->csr_key)) {
+
+                            $crt = $json->order_status->crt_code;
+                            $ca = $json->order_status->ca_code;
+
+                            $crtKey = $crt . "\n" . $ca;
+                            $csrKey = $json->csr->csr_key;
+
+                            if (!OrderSslHelper::addConfig($ssl, [
+                                'domain' => $ssl->domain,
+                                'crt_cert' => $crtKey,
+                                'key_cert' => $csrKey,
+                            ])) {
+                                $this->stderr('Can not add config for ' . $ssl->domain . "\n", Console::FG_RED);
+                            } else {
+                                $this->stderr('Config for has been added for ' . $ssl->domain . "\n", Console::FG_GREEN);
+                            }
+                        } else {
+                            $this->stderr('Can not add config for ' . $ssl->domain . ". Details: empty required json data \n", Console::FG_RED);
+                        }
+
+
+                    } catch (Exception $e) {
+                        $this->stderr('Can not add config for ' . $ssl->domain . ". Details: " . $e->getMessage() . " \n", Console::FG_RED);
+                    }
+                } else {
+                    $this->stderr('Can not add config for ' . $ssl->domain . ". Details: invalid json details \n", Console::FG_RED);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update timezone
+     */
+    public function actionUpdateTimezones()
+    {
+        $timezoneList = Yii::$app->params['timezones'];
+
+        $customers = (new Query())
+            ->select(['id', 'timezone'])
+            ->from(DB_PANELS . '.customers')
+            ->all();
+
+        $panels = (new Query())
+            ->select(['id', 'utc'])
+            ->from(DB_PANELS . '.project')
+            ->all();
+
+        $stores = (new Query())
+            ->select(['id', 'timezone'])
+            ->from(DB_STORES . '.stores')
+            ->all();
+
+        $models = [
+            'customers' => $customers,
+            'panels' => $panels,
+            'stores' => $stores,
+        ];
+
+        foreach ($models as $key => $value) {
+            $column = '';
+            $class = '';
+
+            switch ($key) {
+                case 'customers' :
+                    $column = 'timezone';
+                    $class = 'common\models\panels\Customers';
+                    break;
+                case 'panels' :
+                    $column = 'utc';
+                    $class = 'common\models\panels\Project';
+                    break;
+                case 'stores' :
+                    $column = 'timezone';
+                    $class = 'common\models\stores\Stores';
+                    break;
+            }
+
+            $tabel = substr($key, 0, -1);
+
+            foreach ($value as $model) {
+                if (!isset($timezoneList[$model[$column]])) {
+                    $newTimezone = round($model[$column], -2);
+                    if (isset($timezoneList[$newTimezone])) {
+                        echo "Updating the $tabel ID = {$model['id']} \n";
+                        $updatedColumns = $class::updateAll([$column => $newTimezone], ['id' => $model['id']]);
+                        if ($updatedColumns == 0) {
+                            echo "Not updated \n";
+                        } else {
+                            echo "Successful update \n";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Set code to payment_method column of payments table
+     */
+    public function actionSetPaymentMethods()
+    {
+        $paymentQuery = Payments::find()
+            ->where('payment_method IS NULL');
+
+        foreach ($paymentQuery->batch() as $payments) {
+            foreach ($payments as $payment) {
+                /**
+                 * @var Payments $payment
+                 */
+                $payment->payment_method = PaymentHelper::getCodeByType($payment->type);
+                if ($payment->save(false)) {
+                    $this->stderr("Successful update the payment #{$payment->id} \n", Console::FG_GREEN);
+                } else {
+                    $this->stderr("Payment #{$payment->id} : " . ActiveForm::firstError($payment) . "\n", Console::FG_RED);
+                }
+            }
+        }
+    }
+
+    /**
+     * Installed ACME.sh library to the MY project
+     * @return int
+     */
+    public function actionAcme()
+    {
+        $this->stdout('Letsencrypt ACME.sh library management script'. PHP_EOL, Console::FG_GREEN);
+
+        $installer = new AcmeInstaller();
+        $installer->console = $this;
+
+        try{
+            $installer->run();
+        } catch (\Exception $exception) {
+             $this->stderr(PHP_EOL . $exception->getMessage() . PHP_EOL . PHP_EOL, Console::FG_RED);
+        }
+
+        if ($this->confirm('Exit from ACME?')) {
+            return ExitCode::OK;
+        }
+
+        return $this->run($this->route);
+    }
+
+    public function actionAdminFullAccess()
+    {
+        $staffsBatch = ProjectAdmin::find();
+
+        /**
+         * @var $staff ProjectAdmin
+         */
+        foreach ($staffsBatch->batch() as $staffs) {
+            foreach ($staffs as $staff) {
+                if ($staff->isFullAccess()) {
+                    $staff->setRules(ProjectAdmin::$defaultRules);
+                    $staff->save(false);
+                    $this->stderr('Migrated rules staff ' . $staff->id . "\n", Console::FG_GREEN);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update default affiliate parameters
+     */
+    public function actionUpdateDefaultAffiliates()
+    {
+        Project::updateAll([
+            'affiliate_minimum_payout' => 10,
+            'affiliate_commission_rate' => 5,
+            'affiliate_approve_payouts' => 0,
+        ], 'affiliate_minimum_payout IS NULL');
+    }
+
+    /**
+     * Updates the old IP address with the new one. Both values are passed as parameters (oldIp, newIp)
+     * @param string $oldIp Old IP address to be changed
+     * @param string $newIp new ip to be saved
+     * @return string
+     */
+    public function actionChangeCloudnsIp($oldIp, $newIp): string
+    {
+        if ($oldIp === $newIp) {
+            $this->stdout("You entered two identical IP.\n", Console::FG_RED);
+            exit;
+        }
+
+        $domainCount = 0;
+        $results = [];
+
+        $pagesCount = (int)Dns::pageCount();
+
+        if ($pagesCount === 0) {
+            $this->stdout("Could not get the number of pages. Try again.\n", Console::FG_RED);
+            exit;
+        }
+
+        $this->stdout("Got a list of {$pagesCount} pages. Start checking and updating IP. Please wait for the completion of the operation.\n");
+
+        $domainRawList = Dns::listZones([], $results);
+
+        if (empty($domainRawList) || !is_array($domainRawList)) {
+            $this->stdout("Could not get a list of domains. Try again.\n", Console::FG_RED);
+            exit;
+        }
+
+        // check all receive domains
+        foreach ($domainRawList as $domainArray) {
+
+            $domain = $domainArray['name'];
+            $results = [];
+
+            if (!Dns::getRecordInfo($domain, '', [], $results)) {
+                $this->stdout("Could not get 'А' record info for {$domain}. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            $respType = strtolower($results['type']);
+            if ($respType != 'a') {
+                $this->stdout("Could not get 'А' record info for {$domain}. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            $respIp = $results['record'];
+            if (empty($respIp)) {
+                $this->stdout("Could not get IP. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            $responseId = $results['id'];
+            if (empty($responseId)) {
+                $this->stdout("Could not get record ID. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            if ($respIp == $oldIp) {
+                $this->stdout("In the 'A' domain record {$domain} found the old ip address. Replace it with a new one.\n");
+                $changeResponse = Dns::modRecord($responseId, $domain, $newIp, $results);
+                if ($changeResponse == false) {
+                    $this->stdout("Could not change the 'A' domain records {$domain}. Error - {$changeResponse}\n", Console::FG_RED);
+                }
+                $domainCount++;
+            }
+        }
+
+        return $this->stdout("\nSuccessfully changed {$domainCount} IP addresses\n\n", Console::FG_GREEN);
     }
 }

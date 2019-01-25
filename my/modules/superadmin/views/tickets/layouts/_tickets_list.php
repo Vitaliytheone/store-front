@@ -1,6 +1,6 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $tickets \my\modules\superadmin\models\search\TicketsSearch */
+    /* @var $tickets \superadmin\models\search\TicketsSearch */
     /* @var $ticket \common\models\panels\Tickets */
     /* @var $superAdmins */
     /* @var $superAdminCount */
@@ -26,7 +26,7 @@
                     <?= Yii::t('app/superadmin', 'tickets.assignee') ?>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item <?= (is_numeric($assignee) ? '' : 'active') ?>" href="<?= Url::toRoute(array_merge($filters, ['/tickets', 'assignee' => null])) ?>">All (<?= $superAdminCount ?>)</a>
+                    <a class="dropdown-item <?= (is_numeric($assignee) ? '' : 'active') ?>" href="<?= Url::toRoute(array_merge($filters, ['/tickets', 'assignee' => null])) ?>"><?= Yii::t('app/superadmin', 'tickets.assignee_list.all', ['count' => $superAdminCount]) ?></a>
                     <?php foreach ($superAdmins as $admin) : ?>
                         <?php if (isset($admin['username'])) : ?>
                             <a class="dropdown-item <?= ($admin['assigned_admin_id'] == $assignee ? 'active' : '') ?>" href=" <?= Url::toRoute(array_merge($filters, ['/tickets', 'assignee' => $admin['assigned_admin_id']])) ?>"><?= $admin['username'] ?>(<?= $admin['count'] ?>)</a>
@@ -62,7 +62,7 @@
                         <?= $ticket->getStatusName() ?>
                     </td>
                     <td>
-                        <?= $ticket->getAssignedName() ?>
+                        <?= $ticket->assigned_name ?>
                     </td>
                     <td>
                         <span class="text-nowrap">

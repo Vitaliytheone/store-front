@@ -1,12 +1,12 @@
 <?php
-namespace my\modules\superadmin\components\services;
+namespace superadmin\components\services;
 
 use Exception;
 use Yii;
 
 /**
  * Class DNSLyticsService
- * @package my\modules\superadmin\components\services
+ * @package superadmin\components\services
  */
 class DNSLyticsService extends BaseService
 {

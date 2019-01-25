@@ -44,3 +44,6 @@ phpunit.phar
 
 # Custom Themes folder
 /sommerce/views/themes/custom
+
+# panel/stores ssl-certificates folder
+/ssl

@@ -2,17 +2,23 @@
 namespace common\helpers;
 
 use common\models\common\ProjectInterface;
+use common\models\gateways\Sites;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
+use common\models\panels\SslCertItem;
 use common\models\panels\Tariff;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
+use console\components\crons\exceptions\CronException;
+use my\helpers\ExpiryHelper;
+use my\helpers\order\OrderSslHelper;
 use my\mail\mailers\InvoiceCreated;
 use Yii;
+use yii\base\Exception;
 use yii\db\Query;
 
 /**
@@ -121,8 +127,11 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['domain.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $domains = Domains::find()
-            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :order_item', [
-                ':order_item' => Orders::ITEM_PROLONGATION_DOMAIN,
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = domains.id AND orders.item = :order_item 
+                AND orders.status NOT IN (:added, :canceled) ', [
+                    ':order_item' => Orders::ITEM_PROLONGATION_DOMAIN,
+                    ':added' => Orders::STATUS_ADDED,
+                    ':canceled' => Orders::STATUS_CANCELED
             ])
             ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
                 ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_DOMAIN
@@ -132,11 +141,13 @@ class InvoiceHelper
             ])
             ->andWhere([
                 'domains.status' => Domains::STATUS_OK,
-            ])->andWhere('domains.expiry < :expiry', [
+            ])
+            ->andWhere('domains.expiry < :expiry', [
                 ':expiry' => $date
             ])
             ->groupBy('domains.id')
-            ->having("COUNT(invoices.id) = 0")
+            ->having("COUNT(orders.id) = 0")
+            ->andHaving("COUNT(invoices.id) = 0")
             ->all();
 
         foreach ($domains as $domain) {
@@ -208,24 +219,26 @@ class InvoiceHelper
         $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
 
         $sslCerts = SslCert::find()
-            ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item', [
-                ':order_item' => Orders::ITEM_PROLONGATION_SSL,
-            ])
+
+           ->leftJoin(['orders' => Orders::tableName()], 'orders.item_id = ssl_cert.id AND orders.item = :order_item 
+                AND orders.status NOT IN (:added, :canceled) ', [
+                   ':order_item' => Orders::ITEM_PROLONGATION_SSL,
+                   ':added' => Orders::STATUS_ADDED,
+                   ':canceled' => Orders::STATUS_CANCELED
+           ])
             ->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.item_id = orders.id AND invoice_details.item = :invoice_item', [
                 ':invoice_item' => InvoiceDetails::ITEM_PROLONGATION_SSL
             ])
             ->leftJoin(['invoices' => Invoices::tableName()], 'invoices.id = invoice_details.invoice_id AND invoices.status = :status', [
                 ':status' => Invoices::STATUS_UNPAID
             ])
-            ->andWhere([
-                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
-            ])
-            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [
-                ':expiry' => $date
-            ])
-            ->groupBy('ssl_cert.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->all();
+           ->andWhere(['ssl_cert.status' => SslCert::STATUS_ACTIVE])
+           ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [':expiry' => $date])
+           ->groupBy('ssl_cert.id')
+           ->having("COUNT(orders.id) = 0")
+           ->andHaving("COUNT(invoices.id) = 0")
+           ->all();
+
 
         foreach ($sslCerts as $ssl) {
 
@@ -353,5 +366,242 @@ class InvoiceHelper
                 $mail->send();
             }
         }
+    }
+
+    /**
+     * Create invoices to prolong gateways
+     * @throws \yii\db\Exception
+     */
+    public static function prolongGateways()
+    {
+        $date = time() + (Yii::$app->params['gateway.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
+
+        $sites = Sites::find()
+            ->leftJoin('invoice_details', 'invoice_details.item_id = sites.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_GATEWAY)
+            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
+            ->andWhere([
+                'sites.status' => Sites::STATUS_ACTIVE,
+            ])->andWhere('sites.expired_at < :expiry', [
+                ':expiry' => $date
+            ])
+            ->groupBy('sites.id')
+            ->having("COUNT(invoices.id) = 0")
+            ->all();
+
+        foreach ($sites as $site) {
+            $transaction = Yii::$app->db->beginTransaction();
+
+            $invoice = new Invoices();
+            $invoice->cid = $site->customer_id;
+            $invoice->total = Yii::$app->params['gatewayDeployPrice'];
+            $invoice->generateCode();
+            $invoice->daysExpired(7);
+
+            if ($invoice->save()) {
+                $invoiceDetailsModel = new InvoiceDetails();
+                $invoiceDetailsModel->invoice_id = $invoice->id;
+                $invoiceDetailsModel->item_id = $site->id;
+                $invoiceDetailsModel->amount = $invoice->total;
+                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_GATEWAY;
+
+                if (!$invoiceDetailsModel->save()) {
+                    continue;
+                }
+
+                $transaction->commit();
+
+                $mail = new InvoiceCreated([
+                    'gateway' => $site
+                ]);
+                $mail->send();
+            }
+        }
+    }
+
+    /**
+     * Prolongation Goget SSL to Letsencrypt SSL order maker
+     */
+    public static function prolongGogetSsl2LetsencryptSsl()
+    {
+        $date = time() + (Yii::$app->params['ssl.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
+
+        $sslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item', [
+                ':order_item' => Orders::ITEM_FREE_SSL,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl_cert.pid')
+            ->andWhere(['panel.act' => Project::STATUS_ACTIVE])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_GOGETSSL,
+            ])
+            ->andWhere('UNIX_TIMESTAMP(ssl_cert.expiry) < :expiry', [':expiry' => $date])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED],['id' => array_column($sslCerts, 'id')]);
+
+        $sslCertsItem = SslCertItem::findOne([
+            'provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            'product_id' => SslCertItem::PRODUCT_ID_LETSENCRYPT_BASE
+        ]);
+
+        if (!$sslCertsItem) {
+            throw new CronException('Cannot find SSL Cert item!');
+        }
+
+        foreach ($sslCerts as $ssl) {
+
+            $order = new Orders();
+            $order->cid = $ssl['cid'];
+            $order->status = Orders::STATUS_PAID;
+            $order->hide = Orders::HIDDEN_OFF;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->domain = $ssl['domain'];
+            $order->item = Orders::ITEM_FREE_SSL;
+            $order->ip = '127.0.0.1';
+            $order->setDetails([
+                'pid' => $ssl['pid'],
+                'project_type' => Project::getProjectType(),
+                'domain' => $ssl['domain'],
+                'ssl_cert_item_id' => $sslCertsItem->id,
+                'delay' => Yii::$app->params['ssl_order_delay']
+            ]);
+
+            if (!$order->save(false)) {
+                throw new CronException('Cannot create order!');
+            }
+
+            // Reset Nginx config HTTPS -> HTTP
+            if (!OrderSslHelper::addDdos(SslCert::findOne($ssl['id']), [
+                'isSSL' => false,
+                'site' => $order->domain,
+                'crt' => null,
+                'key' => null,
+            ])) {
+                throw new CronException('Cannot reset HTTPS to HTTP at DDoS-guard!');
+            }
+        }
+
+        SslCert::updateAll(['status' => SslCert::STATUS_EXPIRED], ['id' => array_column($sslCerts, 'id')]);
+
+        $transaction->commit();
+    }
+
+    /**
+     * Prolongation Letsencrypt SSL order maker
+     */
+    public static function prolongFreeSsl()
+    {
+        $time = ExpiryHelper::days(Yii::$app->params['letsencrypt']['prolong.days.before']);
+
+        $panelSslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['panel' => Project::tableName()], 'panel.id = ssl_cert.pid')
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_PANEL,
+                'panel.act' => Project::STATUS_ACTIVE,
+            ])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $storesSslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_STORE,
+            ])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $activeStoresIds = Stores::find()
+            ->andWhere([
+                'id' => array_column($storesSslCerts, 'pid'),
+                'status' => Stores::STATUS_ACTIVE,
+            ])
+            ->asArray()
+            ->column();
+
+        $storesSslCerts = array_filter($storesSslCerts, function($sslCert) use ($activeStoresIds) {
+            return in_array($sslCert['pid'], $activeStoresIds);
+        });
+
+        $gatewaySslCerts = SslCert::find()
+            ->leftJoin(['orders' => Orders::tableName()], 'orders.domain = ssl_cert.domain AND orders.item = :order_item AND orders.processing = :orderProcessing', [
+                ':order_item' => Orders::ITEM_PROLONGATION_FREE_SSL,
+                ':orderProcessing' => Orders::PROCESSING_NO,
+            ])
+            ->leftJoin(['ssl_cert_item' => SslCertItem::tableName()], 'ssl_cert_item.id = ssl_cert.item_id')
+            ->leftJoin(['gateway' => Sites::tableName()], 'gateway.id = ssl_cert.pid')
+            ->andWhere([
+                'ssl_cert.project_type' => ProjectInterface::PROJECT_TYPE_GATEWAY,
+                'gateway.status' => Sites::STATUS_ACTIVE,
+            ])
+            ->andWhere([
+                'ssl_cert.status' => SslCert::STATUS_ACTIVE,
+                'ssl_cert_item.provider' => SslCertItem::PROVIDER_LETSENCRYPT,
+            ])
+            ->andWhere('ssl_cert.expiry_at_timestamp < :expiry', [':expiry' => $time])
+            ->groupBy('ssl_cert.id')
+            ->having("COUNT(orders.id) = 0")
+            ->asArray()
+            ->all();
+
+        $sslCerts = array_merge($panelSslCerts, $storesSslCerts, $gatewaySslCerts);
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        SslCert::updateAll(['status' => SslCert::STATUS_RENEWED], ['id' => array_column($sslCerts, 'id')]);
+
+        foreach ($sslCerts as $ssl) {
+
+            $order = new Orders();
+            $order->cid = $ssl['cid'];
+            $order->status = Orders::STATUS_PAID;
+            $order->hide = Orders::HIDDEN_OFF;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->domain = $ssl['domain'];
+            $order->ip = '127.0.0.1';
+            $order->item = Orders::ITEM_PROLONGATION_FREE_SSL;
+            $order->item_id = $ssl['id'];
+            $order->setDetails([
+                'pid' => $ssl['pid'],
+                'project_type' => $ssl['project_type'],
+                'domain' => $ssl['domain'],
+                'ssl_cert_item_id' => $ssl['item_id'],
+            ]);
+
+            if (!$order->save(false)) {
+                throw new CronException('Cannot create order!');
+            }
+        }
+
+        $transaction->commit();
     }
 }

@@ -62,7 +62,7 @@ var custom = new function() {
 
         var options = $.extend({}, true, settings);
 
-        options.url = btn.attr('href');
+        options.url = btn.attr('href') || btn.data('href');
 
         $('.spinner', btn).remove();
 
@@ -180,5 +180,16 @@ var custom = new function() {
         }
 
         return retVal;
+    }
+
+    self.clipboard = function(container, options)
+    {
+        if (typeof Clipboard === "function") {
+            new Clipboard(container, options);
+        }
+
+        if (typeof ClipboardJS === "function") {
+            new ClipboardJS(container, options);
+        }
     }
 };

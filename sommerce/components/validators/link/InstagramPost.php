@@ -9,6 +9,11 @@ use Yii;
  */
 class InstagramPost extends BaseLinkValidator
 {
+    /**
+     * @var bool
+     */
+    protected $useProxy = false;
+
     public function validate()
     {
         $this->link = "https://www." . parse_url($this->link, PHP_URL_HOST) . parse_url($this->link, PHP_URL_PATH);

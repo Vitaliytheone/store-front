@@ -50,6 +50,10 @@ class Orders extends ActiveRecord
     const ITEM_BUY_STORE = 5;
     const ITEM_PROLONGATION_SSL = 6;
     const ITEM_PROLONGATION_DOMAIN = 7;
+    const ITEM_BUY_TRIAL_STORE = 8;
+    const ITEM_FREE_SSL = 9;
+    const ITEM_PROLONGATION_FREE_SSL = 10;
+    const ITEM_BUY_GATEWAY = 11;
 
     use UnixTimeFormatTrait;
 
@@ -161,16 +165,21 @@ class Orders extends ActiveRecord
             static::ITEM_BUY_STORE => Yii::t('app', 'orders.item.buy_store'),
             static::ITEM_PROLONGATION_SSL => Yii::t('app', 'orders.item.prolongation_ssl'),
             static::ITEM_PROLONGATION_DOMAIN => Yii::t('app', 'orders.item.prolongation_domain'),
+            static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'orders.item.trial_store'),
+            static::ITEM_FREE_SSL => Yii::t('app', 'orders.item.free_ssl'),
+            static::ITEM_PROLONGATION_FREE_SSL => Yii::t('app', 'orders.item.prolongation_free_ssl'),
+            static::ITEM_BUY_GATEWAY => Yii::t('app', 'orders.item.buy_gateway'),
         ];
     }
 
     /**
      * Get item name
+     * @param int $item
      * @return string
      */
-    public function getItemName()
+    public static function getItemName($item)
     {
-        return static::getItems()[$this->item];
+        return ArrayHelper::getValue(static::getItems(), $item, '');
     }
 
     /**
@@ -260,6 +269,7 @@ class Orders extends ActiveRecord
     /**
      * Change status
      * @param int $status
+     * @param int $invoice_id
      * @return bool
      */
     public function changeStatus($status)
@@ -275,6 +285,11 @@ class Orders extends ActiveRecord
                 }
                 $this->status = static::STATUS_PAID;
                 break;
+
+            case static::STATUS_CANCELED:
+                $this->cancel();
+                break;
+
         }
 
         return $this->save(false);
@@ -317,16 +332,16 @@ class Orders extends ActiveRecord
                 if (empty($customerId)) {
                     return false;
                 }
-                
+
                 $flag = Project::find()->andWhere([
-                        'cid' => $customerId,
-                        'child_panel' => 0
-                    ])->andWhere([
-                        'act' => Project::STATUS_ACTIVE,
-                    ])->exists();
-                
+                    'cid' => $customerId,
+                    'child_panel' => 0
+                ])->andWhere([
+                    'act' => Project::STATUS_ACTIVE,
+                ])->exists();
+
                 return $flag;
-            break;
+                break;
 
             // TODO:: Dummy rules. Populate it for real conditions.
             case 'create_store':
@@ -335,6 +350,15 @@ class Orders extends ActiveRecord
                 }
 
                 return true;
+                break;
+
+            case 'create_gateway':
+                if (empty($customerId)) {
+                    return false;
+                }
+
+                return true;
+                break;
         }
 
         return false;
@@ -351,20 +375,19 @@ class Orders extends ActiveRecord
 
     /**
      * Cancel order
+     * @return bool
+     * @throws \yii\db\Exception
      */
     public function cancel()
     {
         $transaction = Yii::$app->db->beginTransaction();
 
-        $invoiceDetails = InvoiceDetails::findOne([
-            'item_id' => $this->id,
-            'item' => [
-                InvoiceDetails::ITEM_BUY_PANEL,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                InvoiceDetails::ITEM_BUY_DOMAIN,
-                InvoiceDetails::ITEM_BUY_SSL
-            ]
-        ]);
+        $invoiceDetails = InvoiceDetails::find()
+            ->where([
+                'item_id' => $this->id
+            ])
+            ->orders()
+            ->one();
 
         // При отмене инвойса проверить. Есть ли платежы в статусе wait, если есть инвойс не отменяем
         if (!empty($invoiceDetails)) {

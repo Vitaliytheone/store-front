@@ -5,7 +5,8 @@ namespace common\models\panels;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
-use my\helpers\DnsHelper;
+use common\models\panels\services\GetParentPanelService;
+use common\helpers\DnsHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use common\helpers\DbHelper;
@@ -22,76 +23,95 @@ use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "{{%project}}".
  *
- * @property integer $id
- * @property integer $cid
+ * @property int $id
+ * @property int $cid
  * @property string $site
  * @property string $name
- * @property integer $subdomain
+ * @property int $subdomain
  * @property string $skype
- * @property integer $expired
- * @property integer $date
- * @property integer $act
- * @property integer $hide
- * @property integer $child_panel
- * @property integer $provider_id
- * @property integer $theme
+ * @property int $expired
+ * @property int $date
+ * @property int $act 0 - frozen; 1 - active; 2 - terminated; 3 - pending; 4 - canceled
+ * @property int $hide
+ * @property int $child_panel
+ * @property int $provider_id
+ * @property string $folder
+ * @property string $folder_content
+ * @property int $theme
  * @property string $theme_custom
  * @property string $theme_default
- * @property integer $ssl
+ * @property int $ssl
  * @property string $theme_path
- * @property integer $utc
+ * @property int $rtl
+ * @property int $utc
  * @property string $db
  * @property string $apikey
- * @property integer $plan
- * @property integer $tariff
- * @property integer $last_count
- * @property integer $current_count
- * @property integer $forecast_count
- * @property integer $paypal
- * @property integer $type
+ * @property int $orders
+ * @property int $plan
+ * @property int $tariff
+ * @property int $last_count
+ * @property int $current_count
+ * @property int $forecast_count
+ * @property int $paypal
+ * @property int $type
  * @property string $lang
- * @property integer $currency
- * @property string $currency_code
- * @property integer $seo
- * @property integer $comments
- * @property integer $mentions
- * @property integer $mentions_wo_hashtag
- * @property integer $mentions_custom
- * @property integer $mentions_hashtag
- * @property integer $mentions_follower
- * @property integer $mentions_likes
- * @property integer $writing
- * @property integer $validation
- * @property integer $start_count
- * @property integer $getstatus
- * @property integer $custom
+ * @property int $language_id
+ * @property int $currency
+ * @property int $seo
+ * @property int $comments
+ * @property int $mentions
+ * @property int $mentions_wo_hashtag
+ * @property int $mentions_custom
+ * @property int $mentions_hashtag
+ * @property int $mentions_follower
+ * @property int $mentions_likes
+ * @property int $writing
+ * @property int $userpass
+ * @property int $validation
+ * @property int $start_count
+ * @property int $getstatus
+ * @property int $custom
  * @property string $custom_header
  * @property string $custom_footer
- * @property integer $hash_method
+ * @property int $hash_method (0 - md5, 1 - bcrypt)
  * @property string $seo_title
  * @property string $seo_desc
  * @property string $seo_key
- * @property integer $package
- * @property integer $captcha
+ * @property int $package
+ * @property int $captcha 0 - on, 1 - off
  * @property string $logo
  * @property string $favicon
- * @property integer $public_service_list
- * @property integer $ticket_system
- * @property integer $registration_page
- * @property integer $terms_checkbox
- * @property integer $skype_field
- * @property integer $service_description
- * @property integer $service_categories
- * @property integer $last_payment
- * @property integer $ticket_per_user
- * @property integer $auto_order
- * @property integer $drip_feed
- * @property integer $name_fields
- * @property integer $name_modal
+ * @property int $public_service_list
+ * @property int $ticket_system
+ * @property int $registration_page
+ * @property int $terms_checkbox
+ * @property int $skype_field
+ * @property int $service_description
+ * @property int $service_categories
+ * @property int $last_payment
+ * @property int $ticket_per_user
+ * @property int $auto_order
+ * @property int $drip_feed 0 - on, 1 - off
+ * @property int $currency_format
+ * @property string $currency_code
+ * @property int $tasks
+ * @property int $name_fields
+ * @property int $name_modal
  * @property string $notification_email
- * @property int $forgot_password
- * @property int $no_invoice
- * @property int $no_referral
+ * @property int $forgot_password 0 - disabled, 1 - enabled
+ * @property int $no_invoice 0 - disabled, 1 - enabled
+ * @property int $js_error_tracking 0 - disabled, 1 - enabled
+ * @property int $refiller 0    0 - not supported, 1 - supported
+ * @property string $whois_lookup Json domain data
+ * @property string $nameservers Json domain nameservers data
+ * @property int $dns_checked_at Last dns-check timestamp
+ * @property int $dns_status dns-check result: null-неизвестно, 0-не наши ns, 1-наш ns
+ * @property int $no_referral 0 - disabled, 1 - enabled
+ * @property string $paypal_fraud_settings Panel PayPal payments fraud system settings
+ * @property string $affiliate_minimum_payout
+ * @property string $affiliate_commission_rate
+ * @property int $affiliate_approve_payouts 0 - manual, 1 - auto
+ * @property int $affiliate_system 0 - off, 1 - active
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -127,6 +147,12 @@ class Project extends ActiveRecord implements ProjectInterface
     const NO_INVOICE_ENABLED = 1;
     const NO_INVOICE_DISABLED = 0;
 
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_HIGH = 'accept_high';
+    const CAN_ACCEPT_PAYPAL_FRAUD_LEVEL_CRITICAL = 'accept_critical';
+    
+    const AFFILIATE_SYSTEM_ENABLED = 1;
+    const AFFILIATE_SYSTEM_DISABLED = 0;
+    
     use UnixTimeFormatTrait;
 
     /**
@@ -150,17 +176,24 @@ class Project extends ActiveRecord implements ProjectInterface
                 'mentions_hashtag', 'mentions_follower', 'mentions_likes', 'writing', 'validation', 'start_count', 'getstatus', 'custom',
                 'package', 'captcha', 'public_service_list', 'ticket_system', 'registration_page', 'terms_checkbox', 'skype_field', 'service_description',
                 'service_categories', 'last_payment', 'ticket_per_user', 'auto_order', 'drip_feed', 'child_panel', 'provider_id', 'hash_method', 'forgot_password',
-                'name_fields', 'name_modal', 'no_invoice', 'no_referral'
+                'name_fields', 'name_modal', 'no_invoice', 'no_referral', 'rtl', 'orders', 'language_id', 'currency_format', 'tasks', 'js_error_tracking', 'refiller',
+                'affiliate_approve_payouts', 'affiliate_system'
             ], 'integer'],
+            [['affiliate_minimum_payout', 'affiliate_commission_rate'], 'number'],
             [['site', 'name', 'skype'], 'string', 'max' => 1000],
             [['theme_custom', 'theme_default', 'db', 'logo', 'favicon', 'notification_email'], 'string', 'max' => 300],
             [['theme_path'], 'string', 'max' => 500],
             [['apikey'], 'string', 'max' => 64],
             [['lang'], 'string', 'max' => 32],
+            [['folder'], 'string', 'max' => 6],
             [['currency_code'], 'string', 'max' => 3],
+            [['folder_content', 'paypal_fraud_settings'], 'string'],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
+            [['whois_lookup', 'nameservers'], 'string'],
+            [['dns_checked_at', 'dns_status'], 'integer'],
+            ['paypal_fraud_settings', 'string'],
         ];
     }
 
@@ -182,13 +215,17 @@ class Project extends ActiveRecord implements ProjectInterface
             'hide' => Yii::t('app', 'Hidden'),
             'child_panel' => Yii::t('app', 'Child Panel'),
             'provider_id' => Yii::t('app', 'Provider ID'),
+            'folder' => Yii::t('app', 'Folder'),
+            'folder_content' => Yii::t('app', 'Folder Content'),
             'theme' => Yii::t('app', 'Theme'),
             'theme_custom' => Yii::t('app', 'Theme Custom'),
             'theme_default' => Yii::t('app', 'Theme Default'),
             'theme_path' => Yii::t('app', 'Theme Path'),
+            'rtl' => Yii::t('app', 'Rtl'),
             'utc' => Yii::t('app', 'Utc'),
             'db' => Yii::t('app', 'Db'),
             'apikey' => Yii::t('app', 'Apikey'),
+            'orders' => Yii::t('app', 'Orders'),
             'plan' => Yii::t('app', 'Plan'),
             'tariff' => Yii::t('app', 'Tariff'),
             'last_count' => Yii::t('app', 'Last Count'),
@@ -197,6 +234,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'paypal' => Yii::t('app', 'Paypal'),
             'type' => Yii::t('app', 'Type'),
             'lang' => Yii::t('app', 'Lang'),
+            'language_id' => Yii::t('app', 'Language ID'),
             'currency' => Yii::t('app', 'Currency'),
             'seo' => Yii::t('app', 'Seo'),
             'comments' => Yii::t('app', 'Comments'),
@@ -238,29 +276,28 @@ class Project extends ActiveRecord implements ProjectInterface
             'notification_email' => Yii::t('app', 'Notification email'),
             'forgot_password' => Yii::t('app', 'Forgot password'),
             'no_invoice' => Yii::t('app', 'No Invoice'),
+            'currency_format' => Yii::t('app', 'Currency Format'),
             'currency_code' => Yii::t('app', 'Currency code'),
+            'tasks' => Yii::t('app', 'Tasks'),
+            'js_error_tracking' => Yii::t('app', 'JS Error Tracking'),
             'no_referral' => Yii::t('app', 'No Referral'),
+            'paypal_fraud_settings' => Yii::t('app', 'PayPal Fraud Settings'),
+            'refiller' => Yii::t('app', 'Refiller'),
+            'whois_lookup' => Yii::t('app', 'Who is'),
+            'nameservers' => Yii::t('app', 'Nameservers'),
+            'dns_checked_at' => Yii::t('app', 'Dns checked at'),
+            'dns_status' => Yii::t('app', 'Dns status'),
         ];
     }
-    
+
     /**
-     * @param $provider
-     * @return null|static
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
-    public static function getOwnerChildPanel($provider)
+    public function getParent()
     {
-        $owner = (new Query())
-            ->select(['additional_services.name'])
-            ->from('additional_services')
-            ->andWhere(['res' =>  $provider])
-            ->one()['name'];
-
-        if (empty($owner)) {
-            return null;
-        }
-
-
-        return Project::findOne(['site' => $owner]);
+        return Yii::$container->get(GetParentPanelService::class, [$this->provider_id])->get();
     }
     
     /**
@@ -358,7 +395,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function getUserServices()
     {
-        return $this->hasMany(UserServices::class, ['pid' => 'id']);
+        return $this->hasMany(UserServices::class, ['panel_id' => 'id']);
     }
 
     /**
@@ -443,9 +480,7 @@ class Project extends ActiveRecord implements ProjectInterface
             return false;
         }
 
-        if (!$this->currency_code) {
-            $this->currency_code = CurrencyHelper::getCurrencyCodeById($this->currency);
-        }
+        $this->currency = CurrencyHelper::getCurrencyIdByCode($this->currency_code);
 
         return true;
     }
@@ -467,11 +502,11 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Get currency code
-     * @return mixed
+     * @return string
      */
     public function getCurrencyCode()
     {
-        return CurrencyHelper::getCurrencyCodeById($this->currency);
+        return $this->currency_code;
     }
 
     /**
@@ -514,7 +549,7 @@ class Project extends ActiveRecord implements ProjectInterface
             case static::STATUS_TERMINATED:
                 if (static::STATUS_FROZEN == $this->act) {
                     $this->act = static::STATUS_TERMINATED;
-                    $this->terminate();
+                    $this->terminate(true);
                 }
             break;
         }
@@ -569,12 +604,15 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Terminate project
+     * @param bool $check
+     * @return bool
+     * @throws \yii\base\Exception
      */
-    public function terminate()
+    public function terminate($check = false)
     {
         if (!$this->subdomain) {
             // Удаляем главный домен
-            $this->disableMainDomain();
+            $this->disableMainDomain($check);
         }
 
         $item = $this->child_panel ? InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL : InvoiceDetails::ITEM_PROLONGATION_PANEL;
@@ -604,6 +642,8 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Enable domain (create panel domains and add domain to dns servers)
      * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function enableDomain()
     {
@@ -706,9 +746,10 @@ class Project extends ActiveRecord implements ProjectInterface
 
     /**
      * Disable main domain (remove panel domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableMainDomain()
+    public function disableMainDomain($check = false)
     {
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
@@ -718,16 +759,21 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ]);
 
-        DnsHelper::removeMainDns($this);
+        $domain = Domains::findOne(['domain' => $this->domain]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeMainDns($this);
+        }
 
         return true;
     }
 
     /**
      * Disable domain (remove panel domains and remove domain from dns servers)
+     * @param bool $check
      * @return bool
      */
-    public function disableDomain()
+    public function disableDomain($check = false)
     {
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
@@ -738,7 +784,11 @@ class Project extends ActiveRecord implements ProjectInterface
             'panel_id' => $this->id
         ]);
 
-        DnsHelper::removeDns($this);
+        $domain = Domains::findOne(['domain' => $this->site]);
+
+        if (!$check || !isset($domain)) {
+            DnsHelper::removeDns($this);
+        }
 
         return true;
     }
@@ -746,6 +796,7 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Create nginx config
      * @return bool
+     * @throws \Exception
      */
     public function createNginxConfig()
     {
@@ -755,6 +806,7 @@ class Project extends ActiveRecord implements ProjectInterface
     /**
      * Remove nginx config
      * @return bool
+     * @throws \Exception
      */
     public function deleteNginxConfig()
     {
@@ -848,7 +900,6 @@ class Project extends ActiveRecord implements ProjectInterface
                 if (in_array($status, [
                         Project::STATUS_ACTIVE,
                         Project::STATUS_FROZEN,
-                        Project::STATUS_TERMINATED
                     ]) && !empty($db)) {
                     return true;
                 }
@@ -882,6 +933,7 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->child_panel = 1;
         $this->plan = Project::DEFAULT_CHILD_TARIFF;
         $this->tariff = Project::DEFAULT_CHILD_TARIFF;
+        $this->apikey = '';
 
         return $this->save(false);
     }
@@ -902,4 +954,88 @@ class Project extends ActiveRecord implements ProjectInterface
 
         return $this->save(false);
     }
+
+    /**
+     * Get array of Project-objects which are child panels
+     * @return array|ActiveRecord[]
+     */
+    public function getChildPanels()
+    {
+        return Project::find()
+            ->select('child_panel.*')
+            ->leftJoin('additional_services', 'additional_services.name = project.site')
+            ->leftJoin('project as child_panel', 'child_panel.provider_id = additional_services.provider_id')
+            ->where(['project.site' => $this->site])
+            ->all();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasManualPaymentMethods()
+    {
+        return (new Query())
+            ->from(['ppm' => PanelPaymentMethods::tableName()])
+            ->innerJoin(['pm' => PaymentMethods::tableName()], 'pm.id = ppm.method_id AND pm.manual_callback_url = :manual_url', [':manual_url' => 1])
+            ->andWhere([
+                'ppm.panel_id' => $this->id,
+                'ppm.visibility' => 1
+            ])
+            ->exists();
+    }
+
+    /**
+     * Set whois_lookup
+     * @param array|mixed $whoisLookupData
+     */
+    public function setWhoisLookup($whoisLookupData)
+    {
+        $this->whois_lookup = json_encode($whoisLookupData, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get whois_lookup
+     * @return array|mixed
+     */
+    public function getWhoisLookup()
+    {
+        return json_decode($this->whois_lookup,true);
+    }
+
+    /**
+     * Set nameservers
+     * @param array|mixed $nameserversList
+     */
+    public function setNameservers($nameserversList)
+    {
+        $this->nameservers = json_encode($nameserversList, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get nameservers
+     * @return array|mixed
+     */
+    public function getNameservers()
+    {
+        return json_decode($this->nameservers,true);
+    }
+
+    /**
+     * Get paypal_fraud_settings
+     * @return array
+     */
+    public function getPaypalFraudSettings()
+    {
+        return json_decode($this->paypal_fraud_settings, true);
+    }
+
+    /**
+     * Set paypal_fraud_settings
+     * @param array $settings
+     */
+    public function setPaypalFraudSettings(array $settings)
+    {
+        $this->paypal_fraud_settings = json_encode($settings);
+    }
+
 }

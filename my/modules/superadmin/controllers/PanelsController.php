@@ -1,20 +1,22 @@
 <?php
 
-namespace my\modules\superadmin\controllers;
+namespace superadmin\controllers;
 
 use common\models\panels\PanelDomains;
+use common\models\panels\PanelPaymentMethods;
 use common\models\panels\SuperAdmin;
 use common\models\panels\SuperAdminToken;
 use my\components\ActiveForm;
 use my\helpers\StringHelper;
 use my\helpers\Url;
 use common\models\panels\Project;
-use my\modules\superadmin\models\forms\ChangeDomainForm;
-use my\modules\superadmin\models\forms\DowngradePanelForm;
-use my\modules\superadmin\models\forms\EditExpiryForm;
-use my\modules\superadmin\models\forms\EditProjectForm;
-use my\modules\superadmin\models\forms\EditProvidersForm;
-use my\modules\superadmin\models\search\PanelsSearch;
+use superadmin\models\forms\ChangeDomainForm;
+use superadmin\models\forms\DowngradePanelForm;
+use superadmin\models\forms\EditExpiryForm;
+use superadmin\models\forms\EditProjectForm;
+use superadmin\models\forms\EditProvidersForm;
+use superadmin\models\search\PanelsSearch;
+use superadmin\models\forms\EditPanelPaymentMethodsForm;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -30,7 +32,6 @@ use \yii\filters\VerbFilter;
 class PanelsController extends CustomController
 {
     public $activeTab = 'panels';
-    public $layout = 'superadmin_v2.php';
 
     public function behaviors()
     {
@@ -53,10 +54,11 @@ class PanelsController extends CustomController
                     'edit',
                     'generate-apikey',
                     'downgrade',
+                    //'edit-payment-methods',
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'change-domain' => ['POST'],
@@ -65,7 +67,8 @@ class PanelsController extends CustomController
                     'edit' => ['POST'],
                     'generate-apikey' => ['GET'],
                     'downgrade' => ['POST'],
-                    'change-status' => ['POST']
+                    'change-status' => ['POST'],
+                    'edit-payment-methods' => ['POST', 'GET'],
                 ],
             ],
             'content' => [
@@ -77,7 +80,8 @@ class PanelsController extends CustomController
                     'generate-apikey',
                     'providers',
                     'downgrade',
-                    'edit'
+                    'edit',
+                    'edit-payment-methods',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -298,14 +302,47 @@ class PanelsController extends CustomController
     }
 
     /**
+     * Get payment edit form or save data
+     * @param $id
+     */
+    public function actionEditPaymentMethods($id)
+    {
+        $project = $this->findModel($id);
+
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return [
+                    'status' => 'success',
+                ];
+            }
+
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+
+        return [
+            'content' => $this->renderPartial('layouts/_edit_payment_methods_form', [
+                'model' => $model,
+                'payments' => $model->getPaymentMethods()
+            ])
+        ];
+    }
+
+    /**
      * Sign in as admin panel
      *
      * @access public
      * @param int $id
+     * @param string $redirect link to redirect
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionSignInAsAdmin($id)
+    public function actionSignInAsAdmin($id, $redirect = null)
     {
         $project = $this->findModel($id);
         if (!($panelDomain = PanelDomains::find()->andWhere([
@@ -323,8 +360,9 @@ class PanelsController extends CustomController
          */
         $superUser = Yii::$app->superadmin->getIdentity();
         $token = SuperAdminToken::getToken($superUser->id, SuperAdminToken::ITEM_PANELS, $project->id);
+        $redirect = isset($redirect) ? '&redirect=' . urlencode($redirect) : '';
 
-        return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token);
+        return $this->redirect('http://' . $panelDomain->domain . '/admin/default/check?id=' . $token . $redirect);
     }
 
 
@@ -343,4 +381,18 @@ class PanelsController extends CustomController
         return $project;
     }
 
+    /**
+     * @param $id
+     * @return null|PanelPaymentMethods
+     * @throws NotFoundHttpException
+     */
+    protected function findPaymentMethodModel($id)
+    {
+        $paymentMethod = PanelPaymentMethods::findOne($id);
+
+        if (!$paymentMethod) {
+            throw new NotFoundHttpException();
+        }
+        return $paymentMethod;
+    }
 }

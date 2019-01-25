@@ -3,9 +3,9 @@ namespace my\models\forms;
 
 use my\components\domains\Ahnames;
 use my\components\validators\OrderLimitValidator;
-use my\components\validators\PanelDomainValidator;
+use my\components\validators\OrderDomainValidator;
 use my\helpers\ChildHelper;
-use my\helpers\CurlHelper;
+use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;
@@ -88,7 +88,7 @@ class CreateChildForm extends Model
             [['domain', 'currency', 'username', 'password', 'password_confirm', 'provider'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['provider'], 'in', 'range' => array_keys($this->getProviders()), 'message' => Yii::t('app', 'error.panel.bad_provider')],
-            [['domain'], PanelDomainValidator::class, 'child_panel' => true],
+            [['domain'], OrderDomainValidator::class, 'child_panel' => true],
             ['password', 'compare', 'compareAttribute' => 'password_confirm'],
             [['username'], 'safe'],
 
@@ -116,8 +116,6 @@ class CreateChildForm extends Model
     public function setUser(Auth $user)
     {
         $this->_user = $user;
-
-        // $this->initLastOrderDetails();
     }
 
     /**
@@ -341,20 +339,10 @@ class CreateChildForm extends Model
         $currencies = [];
 
         foreach (Yii::$app->params['currencies'] as $code => $currency) {
-            $currencies[$currency['id']] = $currency['name'] . ' (' . $code . ')';
+            $currencies[$code] = $currency['name'] . ' (' . $code . ')';
         }
 
-        asort($currencies);
-
-        $returnCurrencies = [
-            1 => $currencies[1]
-        ];
-
-        unset($currencies[1]);
-
-        $returnCurrencies = ArrayHelper::merge($returnCurrencies, $currencies);
-
-        return $returnCurrencies;
+        return $currencies;
     }
 
     /**
