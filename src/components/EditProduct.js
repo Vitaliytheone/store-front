@@ -12,7 +12,7 @@ class EditProduct extends Component {
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen
 		}));
-		this.props.handleGetProduct(...params);
+		this.props.getProduct(...params);
 	};
 
 	toggle = () => {
@@ -29,27 +29,21 @@ class EditProduct extends Component {
 	};
 
 	render() {
-		console.log(this.props);
 		const { response } = this.props;
 		return (
 			<React.Fragment>
 				<span className="edit_product">
 					<Button
-						onClick={this.toggle}
+						onClick={this.handleGetProduct}
 						color="primary"
 						size="sm"
 						className="m-btn--pill sommerce_dragtable__action"
 					>
 						Edit
 					</Button>
-					<Modal
-						isOpen={this.state.modalIsOpen}
-						toggle={this.toggle}
-						size="lg"
-						backdrop="static"
-						keyboard={false}
-					>
+					<Modal isOpen={this.state.modalIsOpen} size="lg" backdrop="static" keyboard={false}>
 						<Formik
+							enableReinitialize={true}
 							onSubmit={this.handleSubmit}
 							initialValues={{
 								name: response.product.name,

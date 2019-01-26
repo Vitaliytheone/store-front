@@ -28,9 +28,8 @@ const SortableProduct = SortableElement(
 								</div>
 								{product.name}
 								<EditProduct
-									productValue={product}
 									onSubmit={handleEditProduct}
-									handleGetProduct={handleGetEditProduct}
+									getProduct={handleGetEditProduct}
 									response={response}
 								/>
 							</Col>

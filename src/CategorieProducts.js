@@ -143,7 +143,9 @@ class CategorieProducts extends Component {
 
 	handleGetEditProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
+		console.log(getProduct);
 		const response = await get_updateProduct(getProduct);
+		console.log(response);
 		this.setState({
 			response: { ...this.state.response, product: response }
 		});

@@ -30,7 +30,6 @@ class EditPackage extends Component {
 	};
 
 	render() {
-		console.log(this.props.response.package);
 		const { response } = this.props;
 		return (
 			<React.Fragment>
@@ -88,18 +87,18 @@ EditPackage.propTypes = {
 	})
 };
 
-EditPackage.defaultProps = {
-	initialValues: {
-		name: '',
-		price: 0,
-		quantity: 0,
-		overflow: 0,
-		best: '2',
-		availability: '1',
-		mode: '2',
-		provider_id: '',
-		provider_service_id: ''
-	}
-};
+// EditPackage.defaultProps = {
+// 	initialValues: {
+// 		name: '',
+// 		price: 0,
+// 		quantity: 0,
+// 		overflow: 0,
+// 		best: '2',
+// 		availability: '1',
+// 		mode: '2',
+// 		provider_id: '',
+// 		provider_service_id: ''
+// 	}
+// };
 
 export default EditPackage;
