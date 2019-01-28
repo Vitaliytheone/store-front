@@ -69,7 +69,7 @@ $this->context->addModule('superadminPanelsController');
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <?= Yii::t('app/superadmin', 'panels.list.actions')?>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-menu dropdown-menu-right multi-level">
                                 <?= Html::a(Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.delete'),
                                     Url::toRoute(['/panels/delete-payment-method', 'id' => $panel->id, 'method_id' => $payment['id']]), [
                                         'class' => 'dropdown-item',
@@ -84,6 +84,24 @@ $this->context->addModule('superadminPanelsController');
                                         'class' => 'dropdown-item disallow-payment-method',
                                         'data-title' => Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.disallow_confirm'),
                                     ])?>
+                                <div class="dropdown-submenu">
+                                    <?= Html::a(Yii::t('app/superadmin', 'panels.edit_payment_methods.dropdown.same_as'), '', ['class' => 'dropdown-item']) ?>
+                                    <ul class="dropdown-menu">
+                                        <?php foreach (SpecialCharsHelper::multiPurifier($payments) as $sameMethod): ?>
+                                        <?php if ($payment['id'] == $sameMethod['id']) {
+                                            continue;
+                                            } ?>
+                                        <li>
+                                        <?= Html::a($sameMethod['method_name'], Url::toRoute([
+                                            '/panels/allow-payment-with-same',
+                                            'id' => $panel->id,
+                                            'method_id' => $payment['id'],
+                                            'same_method_id' => $sameMethod['id'],
+                                        ])) ?>
+                                        </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </td>

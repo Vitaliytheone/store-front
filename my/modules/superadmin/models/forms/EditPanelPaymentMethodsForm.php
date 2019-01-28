@@ -219,6 +219,63 @@ class EditPanelPaymentMethodsForm extends Model
     }
 
     /**
+     * @param int $methodId
+     * @param int $sameMethodId
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public function allowPaymentMethodWithSame(int $methodId, int $sameMethodId): bool
+    {
+        $paymentMethod = PaymentMethods::findOne($methodId);
+        if (!isset($paymentMethod)) {
+            return false;
+        }
+
+        $db = Yii::$app->db;
+        Yii::$app->panel->setInstance($this->_panel);
+
+        $users = Users::find()
+            ->select([
+                'id',
+                'payments',
+            ]);
+
+        foreach ($users->batch(100) as $usersModels) {
+            $update = [];
+            foreach ($usersModels as $user) {
+                /** @var Users $user */
+                $payments = $user->getPayments();
+
+                if (!isset($payments[$sameMethodId]) || $payments[$sameMethodId] == Users::PAYMENT_METHOD_DISALLOW) {
+                    continue;
+                }
+
+                if (!isset($payments[$methodId]) || $payments[$methodId] !== Users::PAYMENT_METHOD_ALLOW) {
+                    $payments[$methodId] = Users::PAYMENT_METHOD_ALLOW;
+
+                    $user->setPayments($payments);
+
+                    $update[] = [
+                        'id' => $user->id,
+                        'payments' => $user->payments,
+                    ];
+                }
+            }
+
+            if (!empty($update)) {
+                $sql = $db->createCommand()->batchInsert($this->_panel->db . '.' . Users::tableName(), [
+                    'id',
+                    'payments',
+                ], $update)->rawSql;
+
+                $db->createCommand($sql . ' ON DUPLICATE KEY UPDATE payments = VALUES(payments)')->execute();
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @inheritdoc
      */
     public function attributeLabels()

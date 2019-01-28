@@ -71,6 +71,7 @@ class PanelsController extends CustomController
                     'edit-payment-methods' => ['GET', 'POST'],
                     'delete-payment-method' => ['GET'],
                     'allow-payment' => ['GET'],
+                    'allow-payment-with-same' => ['GET'],
                 ],
             ],
             'content' => [
@@ -332,6 +333,25 @@ class PanelsController extends CustomController
             'panel' => $project,
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @param $id
+     * @param $method_id
+     * @param $same_method_id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
+     */
+    public function actionAllowPaymentWithSame($id, $method_id, $same_method_id)
+    {
+        $project = $this->findModel($id);
+
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+        $model->allowPaymentMethodWithSame($method_id, $same_method_id);
+
+        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
     }
 
     /**

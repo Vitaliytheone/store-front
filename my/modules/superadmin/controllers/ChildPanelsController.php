@@ -61,6 +61,7 @@ class ChildPanelsController extends PanelsController
                     'edit-payment-methods' => ['GET', 'POST'],
                     'delete-payment-method' => ['POST'],
                     'allow-payment' => ['POST'],
+                    'allow-payment-with-same' => ['GET'],
                 ],
             ],
             'content' => [

@@ -987,6 +987,7 @@ return [
     'panels.edit_payment_methods.dropdown.disallow' => 'Disallow for all users',
     'panels.edit_payment_methods.dropdown.allow_confirm' => 'Allow for all users?',
     'panels.edit_payment_methods.dropdown.disallow_confirm' => 'Disallow for all users?',
+    'panels.edit_payment_methods.dropdown.same_as' => 'Allow same as',
 
     'gateways.search' => 'Search gateway',
     'gateways.list.nav.all' => 'All ({count})',
