@@ -209,9 +209,11 @@ class PanelsController extends CustomController
      * Edit panel.
      *
      * @access public
-     * @param int $id
-     * @return mixed
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function actionEdit($id)
     {

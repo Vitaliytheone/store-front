@@ -118,6 +118,7 @@ return [
     'panels.edit.perfect_panel_providers' => 'Perfectpanel providers',
     'panels.edit.change_domain' => 'Change domain',
     'panels.edit.affiliate_system' => 'Affiliate system status',
+    'panels.edit.move_domain' => 'Move domain to new customer?',
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',

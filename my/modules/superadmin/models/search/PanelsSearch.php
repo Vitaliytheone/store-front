@@ -4,6 +4,7 @@ namespace superadmin\models\search;
 
 
 
+use common\models\panels\Domains;
 use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Project;
@@ -317,6 +318,10 @@ class PanelsSearch
 
         $tariffs = $this->getTariffs();
         $providers = $this->getProviders();
+        $domains = Domains::find()
+            ->where('domain != ""')
+            ->indexBy('domain')
+            ->all();
 
         foreach ($panels as $panel) {
             $tariff = ArrayHelper::getValue($tariffs, $panel['plan']);
@@ -377,7 +382,8 @@ class PanelsSearch
                 'start_count' => $panel['start_count'],
                 'apikey' => $panel['apikey'],
                 'affiliate_system' => $panel['affiliate_system'],
-                'child_panel' => $panel['child_panel']
+                'child_panel' => $panel['child_panel'],
+                'isOurDomain' => array_key_exists($panel['site'], $domains),
             ];
         }
 

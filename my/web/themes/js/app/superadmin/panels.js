@@ -202,6 +202,14 @@ customModule.superadminPanelsController = {
 
             var panel = link.data('panels');
             setForm(panel);
+
+            $('.move-domain-block').attr('checked', false)
+            if (panel.isOurDomain === false) {
+                $('.move-domain-block').hide();
+            } else {
+                $('.move-domain-block').show();
+            }
+
             modal.modal('show');
             return false;
         });

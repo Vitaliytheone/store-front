@@ -77,6 +77,15 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     ]) ?>
                 </div>
 
+                <?= $form->field($model, 'moveDomain', [
+                    'checkboxTemplate' => $checkboxTemplate,
+                    'options' => ['class' => 'form-group move-domain-block'],
+                ])->checkbox([
+                    'class' => 'custom-control-input', 'id' => 'move-domain',
+                ])->label(null,[
+                    'class' => 'custom-control-label'
+                ]); ?>
+
                 <?= $form->field($model, 'currency_code', ['options' => [
                     'id' => 'form-currency',
                     'class' => 'form-group']])
