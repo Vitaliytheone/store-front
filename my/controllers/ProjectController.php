@@ -5,7 +5,7 @@ namespace my\controllers;
 use common\components\domains\BaseDomain;
 use common\models\panels\Customers;
 use my\components\ActiveForm;
-use common\components\domains\methods\Ahnames;
+//use common\components\domains\methods\Namesilo;
 use my\helpers\DomainsHelper;
 use common\models\panels\Auth;
 use common\models\panels\Content;
@@ -296,15 +296,18 @@ class ProjectController extends CustomController
     /**
      * Search available domains
      * @return array
+     * @throws yii\base\UnknownClassException
      */
     public function actionSearchDomains()
     {
         $domain = trim(Yii::$app->request->get('search_domain'));
         $zone = trim(Yii::$app->request->get('zone'));
         $zones = ArrayHelper::index(DomainZones::find()->all(), 'id');
+        $registrars = DomainsHelper::getAllRegistrars();
+        $result = [];
 
         if (false !== strpos($domain, '.')) {
-            $domain = explode(".", $domain)[0];
+            $domain = explode('.', $domain)[0];
         }
 
         $domains = [
@@ -315,9 +318,21 @@ class ProjectController extends CustomController
             $domains[$id] = mb_strtolower($domain . $zone->zone);
         }
 
-        // todo для каждой зоны свой регистратор ищет свободные домены
-        //fixme
-        $result = Ahnames::domainsCheck(array_map([new DomainsHelper, 'idnToAscii'], $domains));
+
+        foreach ($registrars as $registrar) {
+            $registrarDomains = [];
+            foreach ($zones as $id => $zone) {
+                /** @var DomainZones $zone */
+                if ($zone->registrar === strtolower($registrar)) {
+                    $registrarDomains[$id] = mb_strtolower($domain . $zone->zone);
+                }
+            }
+
+            /** @var BaseDomain $registrar */
+            $registrar = BaseDomain::createRegistrarClass($registrar);
+            $result += $registrar::domainsCheck(array_map([new DomainsHelper, 'idnToAscii'], $registrarDomains));
+        }
+
         $existsDomains = Orders::find()->andWhere([
             'domain' => array_keys($result),
             'item' => Orders::ITEM_BUY_DOMAIN,

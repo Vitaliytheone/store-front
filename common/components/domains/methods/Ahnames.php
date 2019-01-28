@@ -17,26 +17,17 @@ class Ahnames extends BaseDomain
 {
 
     /**
-     * Check domains
-     * @param array $domains
-     * @return array
+     * @inheritdoc
      */
-    public static function domainsCheck($domains): array
+    protected static function _domainsCheckRegistrar($domains): array
     {
-        if (empty($domains)) {
-            return [];
-        }
-
-        if (!is_array($domains)) {
-            $domains = [$domains];
-        }
 
         $url = Yii::$app->params['ahnames.url'];
 
         $options = [
             'auth_login' => Yii::$app->params['ahnames.login'],
             'auth_password' => Yii::$app->params['ahnames.password'],
-            'domains' => implode(",", $domains)
+            'domains' => implode(',', $domains)
         ];
         
         
@@ -46,9 +37,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Create contact
-     * @param array $options
-     * @return array
+     * @inheritdoc
      */
     public static function contactCreate($options): array
     {
@@ -65,11 +54,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Register domain
-     * @param string $domain
-     * @param int $contactId
-     * @param int $period
-     * @return array
+     * @inheritdoc
      */
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
@@ -92,9 +77,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Get domain info
-     * @param string $domain
-     * @return array
+     * @inheritdoc
      */
     public static function domainGetInfo($domain): array
     {
@@ -112,9 +95,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Domain Enable Who is Protect
-     * @param string $domain
-     * @return array
+     * @inheritdoc
      */
     public static function domainEnableWhoisProtect($domain): array
     {
@@ -132,10 +113,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Domain set ns
-     * @param string $domain
-     * @param array $ns
-     * @return array
+     * @inheritdoc
      */
     public static function domainSetNSs($domain, $ns = []): array
     {
@@ -160,9 +138,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Domain enable lock
-     * @param string $domain
-     * @return array
+     * @inheritdoc
      */
     public static function domainEnableLock($domain): array
     {
@@ -180,19 +156,7 @@ class Ahnames extends BaseDomain
     }
 
     /**
-     * Renew exiting domain
-     *
-     * Domain name
-     * @param $domain string
-     *
-     * Current expiry date in ISO format
-     * example `2012—09—25`
-     * @param $expires
-     *
-     * Renewal period, year
-     * @param $period integer
-     *
-     * @return array
+     * @inheritdoc
      */
     public static function domainRenew($domain, $expires, $period = 1): array
     {
@@ -220,6 +184,7 @@ class Ahnames extends BaseDomain
      */
     protected static function _processResult($result, $returnError = true): array
     {
+        Yii::debug($result, 'RAW JSON');
         if (empty($result)) {
             return [];
         }
@@ -238,6 +203,7 @@ class Ahnames extends BaseDomain
             return [];
         }
 
+        Yii::debug($result, 'array Ahnames result');
         return $result;
     }
 }

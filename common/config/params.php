@@ -75,6 +75,13 @@ return [
         'ns_4' => null,
     ],
 
+    'namesilo.my.ns' => [
+        'ns1' => 'ns1.namesilo.com',
+        'ns2' => 'ns2.namesilo.com',
+        'ns3' => 'ns3.namesilo.com',
+        'ns4' => null,
+    ],
+
     'my.domains.stop_words' => [
         'perfect'
     ],

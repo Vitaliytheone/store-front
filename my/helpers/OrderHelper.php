@@ -1,4 +1,5 @@
 <?php
+
 namespace my\helpers;
 
 use common\components\domains\BaseDomain;
@@ -10,7 +11,7 @@ use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
 use common\models\gateways\Sites;
-use common\models\panels\Customers;
+//use common\models\panels\Customers;
 use common\models\panels\Languages;
 use common\models\panels\PanelPaymentMethods;
 use common\models\panels\PaymentMethods;
@@ -19,7 +20,7 @@ use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
 use common\models\stores\StoreAdmins;
-use common\models\stores\StoreDomains;
+//use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
@@ -475,6 +476,7 @@ class OrderHelper {
      * Create domain
      * @param Orders $order
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
     public static function domain(Orders $order)
     {

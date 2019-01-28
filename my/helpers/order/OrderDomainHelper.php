@@ -3,9 +3,9 @@
 namespace my\helpers\order;
 
 use common\components\domains\BaseDomain;
-use common\models\panels\Domains;
+//use common\models\panels\Domains;
 use Yii;
-use common\components\domains\methods\Ahnames;
+//use common\components\domains\methods\Namesilo;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use yii\base\Exception;
@@ -28,6 +28,7 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $details = ArrayHelper::getValue($orderDetails, 'details', []);
+        $domain = $order->getDomain();
 
         $data = [
             'email' => ArrayHelper::getValue($details, 'domain_email'),
@@ -43,12 +44,10 @@ class OrderDomainHelper
             'fax_phone' => ArrayHelper::getValue($details, 'domain_fax'),
         ];
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge($data, [
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ]), 'cron.order.send_domain_contact');
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge($data, BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_contact');
 
-        $registrar = BaseDomain::getRegistrarClass($order->getDomain());
+        Yii::debug($data, 'data');
+        $registrar = BaseDomain::getRegistrarClass($domain);
         $contactResult = $registrar::contactCreate($data);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $contactResult, 'cron.order.domain_contact');
@@ -62,26 +61,24 @@ class OrderDomainHelper
      * @return array
      * @throws \yii\base\UnknownClassException
      */
-    public static function domainRegister(Orders $order)
+    public static function domainRegister(Orders $order): array
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
         $contactResult = ArrayHelper::getValue($orderDetails, 'domain_contact');
         $contactId = ArrayHelper::getValue($contactResult, 'id');
         $period = 1;
+        $registrar = BaseDomain::getRegistrarClass($domain);
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
             'period' => $period,
             'registrant' => $contactId,
             'admin' => $contactId,
             'tech' => $contactId,
             'billing' => $contactId,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ], 'cron.order.send_domain_register');
+            ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_register');
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
         $domainResult = $registrar::domainRegister($domain, $contactId, $period);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainResult, 'cron.order.domain_register');
@@ -93,17 +90,16 @@ class OrderDomainHelper
      * Get domain info
      * @param Orders $order
      * @return mixed
+     * @throws yii\base\UnknownClassException
      */
     public static function domainGetInfo(Orders $order)
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ], 'cron.order.send_domain_info');
+            ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_info');
 
         $registrar = BaseDomain::getRegistrarClass($domain);
         $domainInfoResult = $registrar::domainGetInfo($domain);
@@ -117,17 +113,16 @@ class OrderDomainHelper
      * Enable Whois Protect
      * @param Orders $order
      * @return mixed
+     * @throws yii\base\UnknownClassException
      */
     public static function domainEnableWhoisProtect(Orders $order)
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ], 'cron.order.send_domain_assign');
+        ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_assign');
 
         $registrar = BaseDomain::getRegistrarClass($domain);
         $assignResult = $registrar::domainEnableWhoisProtect($domain);
@@ -141,20 +136,21 @@ class OrderDomainHelper
      * Domain Set NSs
      * @param Orders $order
      * @return mixed
+     * @throws yii\base\UnknownClassException
      */
     public static function domainSetNSs(Orders $order)
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
-
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, [
-            'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-            'nss' => implode(",", array_filter(Yii::$app->params['ahnames.my.ns']))
-        ], 'cron.order.send_domain_nss');
-
+        $registrarName = BaseDomain::getRegistrarName($domain);
         $registrar = BaseDomain::getRegistrarClass($domain);
+
+
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
+            'domain' => $domain,
+            'nss' => implode(",", array_filter(Yii::$app->params["{$registrarName}.my.ns"]))
+            ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_nss');
+
         $setNss = $registrar::domainSetNSs($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $setNss, 'cron.order.domain_nss');
@@ -166,17 +162,16 @@ class OrderDomainHelper
      * Domain Enable lock
      * @param Orders $order
      * @return mixed
+     * @throws yii\base\UnknownClassException
      */
     public static function domainEnableLock(Orders $order)
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, [
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ], 'cron.order.send_domain_lock');
+        ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_lock');
 
         $registrar = BaseDomain::getRegistrarClass($domain);
         $enableLock = $registrar::domainEnableLock($domain);
@@ -191,6 +186,7 @@ class OrderDomainHelper
      * @param Orders $order
      * @return array
      * @throws Exception
+     * @throws yii\base\UnknownClassException
      */
     public static function domainRenew(Orders $order)
     {

@@ -2,7 +2,7 @@
 
 namespace my\models\forms;
 
-
+use common\components\domains\BaseDomain;
 use yii\base\Model;
 use Yii;
 use my\components\validators\OrderLimitValidator;
@@ -13,7 +13,7 @@ use common\models\panels\Orders;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\MyActivityLog;
 use my\helpers\UserHelper;
-use common\components\domains\methods\Ahnames;
+//use common\components\domains\methods\Ahnames; //todo del
 use common\models\panels\Auth;
 use yii\helpers\ArrayHelper;
 
@@ -150,8 +150,9 @@ class DomainForm extends Model
      * Is domain available
      * @param string $domain
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
-    public function isDomainAvailable($domain)
+    public function isDomainAvailable($domain): bool
     {
         if (empty($domain)) {
             return false;
@@ -159,7 +160,9 @@ class DomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $result = Ahnames::domainsCheck($domain); //fixme
+        Yii::debug($domain,'$domain'); //todo del
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
             return false;

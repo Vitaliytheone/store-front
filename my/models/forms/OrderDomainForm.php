@@ -3,8 +3,8 @@
 namespace my\models\forms;
 
 use common\components\domains\BaseDomain;
-use common\components\domains\methods\Ahnames;
-use my\components\validators\OrderLimitValidator;
+//use common\components\domains\methods\Namesilo;
+//use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
 use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
@@ -14,10 +14,10 @@ use common\models\panels\DomainZones;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
-use common\models\panels\OrderLogs;
+//use common\models\panels\OrderLogs;
 use common\models\panels\Orders;
-use common\models\panels\Project;
-use common\models\panels\ProjectAdmin;
+//use common\models\panels\Project;
+//use common\models\panels\ProjectAdmin;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -315,6 +315,7 @@ class OrderDomainForm extends Model
      * Is domain available
      * @param string $domain
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
     public function isDomainAvailable($domain)
     {

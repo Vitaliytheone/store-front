@@ -2,11 +2,11 @@
 
 namespace my\models\forms;
 
-use common\components\domains\methods\Ahnames;
+use common\components\domains\BaseDomain;
+//use common\components\domains\methods\Ahnames; // todo del
 use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
 use my\helpers\ChildHelper;
-use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;
@@ -14,13 +14,11 @@ use common\models\panels\DomainZones;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
-use common\models\panels\OrderLogs;
 use common\models\panels\Orders;
 use common\models\panels\Project;
 use common\models\panels\ProjectAdmin;
 use Yii;
 use yii\base\Model;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -449,8 +447,9 @@ class CreateChildForm extends Model
      * Is domain available
      * @param string $domain
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
-    public function isDomainAvailable($domain)
+    public function isDomainAvailable($domain): bool
     {
         if (empty($domain)) {
             return false;
@@ -458,7 +457,9 @@ class CreateChildForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $result = Ahnames::domainsCheck($domain); //fixme
+        Yii::debug($domain,'$domain'); //todo del
+        $registrar = BaseDomain::getRegistrarClass($domain);
+        $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
             return false;

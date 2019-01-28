@@ -2,6 +2,7 @@
 
 namespace common\components\domains;
 
+use Yii;
 use yii\base\Component;
 use yii\base\UnknownClassException;
 use common\models\panels\DomainZones;
@@ -17,25 +18,39 @@ abstract class BaseDomain extends Component
 
 
     /**
-     * Creates an object of the required class by domain
+     * Returns the Class created depending on the domain zone.
      *
      * @param string $domain
-     * @throws UnknownClassException
      * @return BaseDomain
+     * @throws UnknownClassException
      */
     public static function getRegistrarClass($domain)
     {
-        $method = self::getRegistrarName($domain);
+        $name = self::getRegistrarName($domain);
 
-        // todo возможно надо добавить статическую переменную для хранения
-        $className =  __NAMESPACE__ . '\methods\\' . ucfirst($method);
+        $result = self::createRegistrarClass($name);
 
-        if (!class_exists($className)) {
-            throw new UnknownClassException("Class {$className} does not exist");
+        return $result;
+    }
+
+
+    /**
+     * Checks the domain on the possibility of registration
+     * @param array $domains
+     * @return array API response
+     */
+    public static function domainsCheck($domains): array
+    {
+        \Yii::debug($domains, '$domains');
+        if (empty($domains)) {
+            return [];
         }
-        $className = new $className;
 
-        return $className;
+        if (!is_array($domains)) {
+            $domains = [$domains];
+        }
+
+        return static::_domainsCheckRegistrar($domains);
     }
 
     /**
@@ -43,8 +58,7 @@ abstract class BaseDomain extends Component
      * @param array $domains
      * @return array API response
      */
-    abstract public static function domainsCheck($domains): array;
-
+    abstract protected static function _domainsCheckRegistrar($domains): array;
 
     /**
      * Creates a user contact for registration and WHOIS domain
@@ -117,10 +131,65 @@ abstract class BaseDomain extends Component
      */
     public static function getRegistrarName($domain): string
     {
-        $zone = strtoupper('.'.explode('.', $domain)[1]);
+        // todo возможно надо добавить статическую переменную для хранения
+
+        $zone = strtoupper('.' . explode('.', $domain)[1]);
+        if (empty($zone)) {
+            return '';
+        }
 
         $registrar = DomainZones::find()->where(['zone' => $zone])->one()->registrar;
-        \Yii::debug($registrar, '$registrar'); // todo del
+        Yii::debug($registrar, '$registrar'); // todo del
+
+        if (empty($registrar)) {
+            return '';
+        }
+
         return $registrar;
     }
+
+    /**
+     * Creates an object of the required Class by name
+     *
+     * @param string $name Class name
+     * @return BaseDomain
+     * @throws UnknownClassException
+     */
+    public static function createRegistrarClass($name)
+    {
+        $className = __NAMESPACE__ . '\methods\\' . ucfirst($name);
+
+        if (!class_exists($className)) {
+            throw new UnknownClassException("Class {$className} does not exist");
+        }
+        $className = new $className;
+
+        return $className;
+    }
+
+    /**
+     * Get authorization data from parameters for a Class as an array
+     * @param string $domain
+     * @return array
+     */
+    public static function getAuthDataLogs($domain): array
+    {
+
+        $name = strtolower(self::getRegistrarName($domain));
+
+        switch ($name) {
+            case self::REGISTRAR_AHNAMES:
+                return [
+                    'auth_login' => Yii::$app->params['ahnames.login'],
+                    'auth_password' => Yii::$app->params['ahnames.password'],
+                ];
+            case self::REGISTRAR_NAMESILO:
+                return [
+                    'auth_key' => Yii::$app->params['namesilo.key'],
+                ];
+            default:
+                return [];
+        }
+    }
+
 }
