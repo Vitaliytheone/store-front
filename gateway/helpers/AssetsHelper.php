@@ -69,10 +69,10 @@ class AssetsHelper {
         }
 
         foreach (static::$customScriptFiles as $scriptFile) {
-            $scripts[] =  $scriptFile;
+            $scripts[] = $scriptFile;
         }
 
-        $scripts[] = AssetsHelper::getFileUrl('/js/frontend.js');
+        $scripts[] = AssetsHelper::getFileUrl('/js/main.js');
 
         return $scripts;
     }

@@ -47,6 +47,7 @@ class PaymentMethodsSearch extends BaseSearch
                 'method' => $paymentMethod->id,
                 'title' => $paymentMethod->method_name,
                 'icon' => $paymentMethod->icon,
+                'icon_style' => $paymentMethod->iconStyle,
                 'active' => (int)ArrayHelper::getValue($sitePaymentMethods, [$methodId, 'visibility']),
             ];
         }
