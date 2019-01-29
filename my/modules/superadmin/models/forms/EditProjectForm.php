@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use common\models\panel\Bonuses;
@@ -23,7 +24,6 @@ use yii\helpers\ArrayHelper;
  */
 class EditProjectForm extends Model
 {
-
     public $site;
     public $subdomain;
     public $name;
@@ -243,7 +243,7 @@ class EditProjectForm extends Model
      * @throws \Throwable
      * @throws \yii\db\Exception
      */
-    public function save()
+    public function save(): bool
     {
         if (!$this->validate()) {
             return false;
@@ -290,7 +290,7 @@ class EditProjectForm extends Model
                 $customer->activateReferral();
                 $customer->activateChildPanels();
 
-                $ssl = SslCert::findOne(['pid' => $this->_project->id]);
+                $ssl = SslCert::findOne(['pid' => $this->_project->id, 'project_type' => SslCert::PROJECT_TYPE_PANEL]);
                 if ($ssl) {
                     $ssl->cid = $this->cid;
                     $ssl->update(false);
@@ -432,7 +432,6 @@ class EditProjectForm extends Model
 
 
     /**
-     * @param int|null $limit
      * @return array|Customers[]
      */
     public function getCustomers()
@@ -450,6 +449,9 @@ class EditProjectForm extends Model
 
     /**
      * Update panel payment methods
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function updateCurrencies()
     {

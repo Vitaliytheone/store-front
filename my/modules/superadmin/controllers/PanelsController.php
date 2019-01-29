@@ -93,6 +93,7 @@ class PanelsController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -128,12 +129,12 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Change panel domain.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
-     * @throws NotFoundHttpException
+     * Change panel domain
+     * @param $id
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionChangeDomain($id)
     {
@@ -180,12 +181,11 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Change panel providers.
-     *
-     * @access public
-     * @param int $id
-     * @return mixed
+     * Change panel providers
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionEditProviders($id)
     {
@@ -206,8 +206,7 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Edit panel.
-     *
+     * Edit panel
      * @access public
      * @param $id
      * @return array
@@ -306,6 +305,8 @@ class PanelsController extends CustomController
     /**
      * Get payment edit form or save data
      * @param $id
+     * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEditPaymentMethods($id)
     {

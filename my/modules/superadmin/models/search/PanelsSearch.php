@@ -2,8 +2,6 @@
 
 namespace superadmin\models\search;
 
-
-
 use common\models\panels\Domains;
 use my\helpers\DomainsHelper;
 use Yii;
@@ -190,10 +188,10 @@ class PanelsSearch
     /**
      * Search panels
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function search()
+    public function search(): array
     {
-        $searchQuery = $this->getQuery();
         $status = ArrayHelper::getValue($this->params, 'status', 'all');
         $plan = isset($this->params['plan']) ? (int)$this->params['plan'] : null;
 
@@ -308,11 +306,12 @@ class PanelsSearch
     }
 
     /**
-     * Get prefared panels
-     * @param array $panels
+     * Get prepared panels
+     * @param $panels
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    protected function preparePanelsData($panels)
+    protected function preparePanelsData($panels): array
     {
         $returnPanels = [];
 
