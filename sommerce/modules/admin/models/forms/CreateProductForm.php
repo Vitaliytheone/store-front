@@ -211,12 +211,11 @@ class CreateProductForm extends Products
      * Edit exiting product form
      * @param $postData
      * @return $this|bool
+     * @throws \Throwable
      */
     public function edit($postData)
     {
-        $postData = $this->checkPropertiesField($postData);
-
-        if (!$this->load($postData) || !$this->validate()) {
+        if (!$this->load($postData, '') || !$this->validate()) {
             return false;
         }
 
@@ -234,7 +233,7 @@ class CreateProductForm extends Products
     /**
      * Write changes to log
      * @param $changedAttributes
-     * @return bool
+     * @throws \Throwable
      */
     private function _changeLog($changedAttributes)
     {

@@ -198,6 +198,7 @@ class ProductsController extends CustomController
      * @return array
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionUpdateProduct($id)
     {

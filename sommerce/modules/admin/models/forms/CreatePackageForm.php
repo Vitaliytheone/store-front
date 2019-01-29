@@ -146,7 +146,7 @@ class CreatePackageForm extends Packages
      */
     public function edit($postData)
     {
-        if (!$this->load($postData) || !$this->validate()) {
+        if (!$this->load($postData, '') || !$this->validate()) {
             return false;
         }
 
