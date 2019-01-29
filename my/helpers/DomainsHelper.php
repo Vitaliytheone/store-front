@@ -8,7 +8,8 @@ use common\models\panels\DomainZones;
  * Class DomainsHelper
  * @package my\helpers
  */
-class DomainsHelper {
+class DomainsHelper
+{
 
     /**
      * Prepare domain to idn format

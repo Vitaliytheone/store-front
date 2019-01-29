@@ -16,6 +16,7 @@ abstract class BaseDomain extends Component
     public const REGISTRAR_AHNAMES = 'ahnames';
     public const REGISTRAR_NAMESILO = 'namesilo';
 
+    public static $registrar;
 
     /**
      * Returns the Class created depending on the domain zone.
@@ -138,7 +139,14 @@ abstract class BaseDomain extends Component
             return '';
         }
 
-        $registrar = DomainZones::find()->where(['zone' => $zone])->one()->registrar;
+//        $registrar = DomainZones::find()->where(['zone' => $zone])->one()->registrar;
+
+        if (!empty(static::$registrar[$zone]['registrar'])) {
+            return static::$registrar[$zone]['registrar'];
+        }
+
+        static::$registrar = DomainZones::find()->asArray()->indexBy('zone')->all();
+        $registrar = static::$registrar[$zone]['registrar'];
         Yii::debug($registrar, '$registrar'); // todo del
 
         if (empty($registrar)) {

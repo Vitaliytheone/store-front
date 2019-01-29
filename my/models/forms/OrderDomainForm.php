@@ -3,10 +3,7 @@
 namespace my\models\forms;
 
 use common\components\domains\BaseDomain;
-//use common\components\domains\methods\Namesilo;
-//use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
-use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;
@@ -14,10 +11,7 @@ use common\models\panels\DomainZones;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
-//use common\models\panels\OrderLogs;
 use common\models\panels\Orders;
-//use common\models\panels\Project;
-//use common\models\panels\ProjectAdmin;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

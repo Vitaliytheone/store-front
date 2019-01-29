@@ -5,7 +5,6 @@ namespace my\controllers;
 use common\components\domains\BaseDomain;
 use common\models\panels\Customers;
 use my\components\ActiveForm;
-//use common\components\domains\methods\Namesilo;
 use my\helpers\DomainsHelper;
 use common\models\panels\Auth;
 use common\models\panels\Content;

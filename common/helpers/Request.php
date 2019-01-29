@@ -25,7 +25,6 @@ class Request
             return @file_get_contents($url, false, $cxContext);
         }
 
-        \Yii::debug($url, '$url'); //todo del
         return @file_get_contents($url);
     }
 }

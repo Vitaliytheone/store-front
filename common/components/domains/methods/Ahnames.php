@@ -184,7 +184,6 @@ class Ahnames extends BaseDomain
      */
     protected static function _processResult($result, $returnError = true): array
     {
-        Yii::debug($result, 'RAW JSON');
         if (empty($result)) {
             return [];
         }
@@ -203,7 +202,6 @@ class Ahnames extends BaseDomain
             return [];
         }
 
-        Yii::debug($result, 'array Ahnames result');
         return $result;
     }
 }

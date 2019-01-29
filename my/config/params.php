@@ -134,7 +134,7 @@ return [
     // Namesilo auth data
     'namesilo.url' => 'http://sandbox.namesilo.com/api',
     'namesilo.key' => '6f3bb35a23962b15be15c3c',
-    'namesilo.payment_id' => '485',
+    'namesilo.payment_id' => '', //485
     'namesilo.version' => '1',
     'namesilo.type' => 'xml',
 ];

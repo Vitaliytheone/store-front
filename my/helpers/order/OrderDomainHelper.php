@@ -3,9 +3,7 @@
 namespace my\helpers\order;
 
 use common\components\domains\BaseDomain;
-//use common\models\panels\Domains;
 use Yii;
-//use common\components\domains\methods\Namesilo;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use yii\base\Exception;
@@ -46,7 +44,6 @@ class OrderDomainHelper
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge($data, BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_contact');
 
-        Yii::debug($data, 'data');
         $registrar = BaseDomain::getRegistrarClass($domain);
         $contactResult = $registrar::contactCreate($data);
 
