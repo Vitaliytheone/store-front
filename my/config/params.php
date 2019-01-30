@@ -131,10 +131,4 @@ return [
     'free_ssl.create' => true,  // Создавать заказ/выполнять заказ на бесплатный сертификат или нет
     'free_ssl.prolong' => true, // Создавать заказ/выполнять заказ на продление бесплатного сертификата или нет
 
-    // Namesilo auth data
-    'namesilo.url' => 'http://sandbox.namesilo.com/api',
-    'namesilo.key' => '6f3bb35a23962b15be15c3c',
-    'namesilo.payment_id' => '', //485
-    'namesilo.version' => '1',
-    'namesilo.type' => 'xml',
 ];

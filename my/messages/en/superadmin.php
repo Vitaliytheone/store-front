@@ -787,6 +787,7 @@ return [
     'dashboard.services.whoisapi' => 'WhoisAPI',
     'dashboard.services.dnslytics' => 'DNSlytics',
     'dashboard.services.opensrs' => 'OpenSRS',
+    'dashboard.services.namesilo' => 'NameSilo',
 
     'statuses.list.column_id' => 'ID',
     'statuses.list.column_provider' => 'Provider',

@@ -139,13 +139,12 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
-        $registrarName = BaseDomain::getRegistrarName($domain);
         $registrar = BaseDomain::getRegistrarClass($domain);
-
+        $registrarName = BaseDomain::getRegistrarName($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-            'nss' => implode(",", array_filter(Yii::$app->params["{$registrarName}.my.ns"]))
+            'nss' => implode(',', array_filter(Yii::$app->params["{$registrarName}.my.ns"]))
             ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_nss');
 
         $setNss = $registrar::domainSetNSs($domain);

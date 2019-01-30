@@ -456,7 +456,6 @@ class CreateChildForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        Yii::debug($domain,'$domain'); //todo del
         $registrar = BaseDomain::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 

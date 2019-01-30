@@ -76,9 +76,9 @@ return [
     ],
 
     'namesilo.my.ns' => [
-        'ns1' => 'ns1.namesilo.com',
-        'ns2' => 'ns2.namesilo.com',
-        'ns3' => 'ns3.namesilo.com',
+        'ns1' => 'ns1.perfectdns.com',
+        'ns2' => 'ns2.perfectdns.com',
+        'ns3' => 'ns3.perfectdns.com',
         'ns4' => null,
     ],
 

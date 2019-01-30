@@ -7,7 +7,6 @@ use common\helpers\Request;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\VarDumper;
 
 
 /**
@@ -23,16 +22,15 @@ class Namesilo extends BaseDomain
     protected static function _domainsCheckRegistrar($domains): array
     {
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
             'domains' => implode(',', $domains)
         ];
 
-        Yii::debug($options, '$options');
         $result = Request::getContents($url . '/checkRegisterAvailability?' . http_build_query($options));
 
         return static::_processResult($result, false);
@@ -57,17 +55,13 @@ class Namesilo extends BaseDomain
             'fx' => ArrayHelper::getValue($options, 'fax_phone'),
         ];
 
-        Yii::debug($options, '$options Contact');
-        //If country is US or CA, you must use the correct abbreviation
-        //Country must use the correct abbreviation
-
         $options = array_merge($options, [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
         ]);
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/contactAdd?' . http_build_query($options));
 
@@ -80,9 +74,9 @@ class Namesilo extends BaseDomain
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
 
             'domain' => $domain,
             'years' => $period,
@@ -92,11 +86,11 @@ class Namesilo extends BaseDomain
             'contact_id' => $contactId,
         ];
 
-        if (!empty(Yii::$app->params['namesilo.payment_id'])) {
-            $options = array_merge($options, ['payment_id' => Yii::$app->params['namesilo.payment_id']]);
+        if (!empty(static::$_paramsNamesilo['namesilo.payment_id'])) {
+            $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
         }
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/registerDomain?' . http_build_query($options));
 
@@ -109,13 +103,13 @@ class Namesilo extends BaseDomain
     public static function domainGetInfo($domain): array
     {
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
             'domain' => $domain,
         ];
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/getDomainInfo?' . http_build_query($options));
 
@@ -128,13 +122,13 @@ class Namesilo extends BaseDomain
     public static function domainEnableWhoisProtect($domain): array
     {
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
             'domain' => $domain,
         ];
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/addPrivacy?' . http_build_query($options));
 
@@ -153,15 +147,15 @@ class Namesilo extends BaseDomain
         $ns = array_filter($ns);
 
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
             'domain' => $domain,
         ];
 
         $options = array_merge($options, $ns);
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/changeNameServers?' . http_build_query($options));
 
@@ -174,13 +168,13 @@ class Namesilo extends BaseDomain
     public static function domainEnableLock($domain): array
     {
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
             'domain' => $domain,
         ];
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/domainLock?' . http_build_query($options));
 
@@ -193,18 +187,18 @@ class Namesilo extends BaseDomain
     public static function domainRenew($domain, $expires = null, $period = 1): array
     {
         $options = [
-            'version' => Yii::$app->params['namesilo.version'],
-            'type' => Yii::$app->params['namesilo.type'],
-            'key' => Yii::$app->params['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
             'domain' => $domain,
             'years' => $period,
         ];
 
-        if (!empty(Yii::$app->params['namesilo.payment_id'])) {
-            $options = array_merge($options, ['payment_id' => Yii::$app->params['namesilo.payment_id']]);
+        if (!empty(static::$_paramsNamesilo['namesilo.payment_id'])) {
+            $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
         }
 
-        $url = Yii::$app->params['namesilo.url'];
+        $url = static::$_paramsNamesilo['namesilo.url'];
 
         $result = Request::getContents($url . '/renewDomain?' . http_build_query($options));
 
@@ -220,8 +214,6 @@ class Namesilo extends BaseDomain
      */
     protected static function _processResult($result, $returnError = true): array
     {
-        Yii::debug($result, 'RAW XML'); //todo del
-//        VarDumper::dump($result."\n");
 
         if (empty($result)) {
             return [];
@@ -229,13 +221,11 @@ class Namesilo extends BaseDomain
 
         try {
             $resultRaw = json_decode(json_encode(simplexml_load_string($result)),true);
-            Yii::debug($resultRaw, 'array Namesilo RAW'); //todo del
 
             $resultCode = (int)ArrayHelper::getValue($resultRaw, 'reply.code');
 
             if ($returnError && (!in_array($resultCode, [300, 250, 251, 252, 253, 255, 256, 301, 302, 201]))) {
-                Yii::error($resultCode, '$resultCode');
-                return ['_error' => ArrayHelper::getValue($resultRaw, 'reply.detail')];
+                return ['_error' => ArrayHelper::getValue($resultRaw, 'reply.detail'), 'code' => $resultCode];
             }
 
             $resultType = (string)ArrayHelper::getValue($resultRaw, 'request.operation');
@@ -243,26 +233,22 @@ class Namesilo extends BaseDomain
             switch ($resultType) {
                 case 'checkRegisterAvailability':
                     $resultAvailable = $resultUnavailable = [];
+
                     $resultAvailableRaw = (array)ArrayHelper::getValue($resultRaw, 'reply.available.domain');
                     if (!empty($resultAvailableRaw)) {
                         foreach ($resultAvailableRaw as $item) {
                             $resultAvailable[$item] = 1;
                         }
-                        Yii::debug($resultAvailable, '$resultAvailable'); //todo del
                     }
-
 
                     $resultUnavailableRaw = (array)ArrayHelper::getValue($resultRaw, 'reply.unavailable.domain');
                     if (!empty($resultUnavailableRaw)) {
                         foreach ($resultUnavailableRaw as $item) {
                             $resultUnavailable[$item] = 0;
                         }
-                        Yii::debug($resultUnavailable, '$resultUnavailable');
                     }
 
                     $resultFinal = ArrayHelper::merge($resultAvailable, $resultUnavailable);
-
-                    Yii::debug($resultFinal, 'array Namesilo result'); //todo del
                     break;
 
                 case 'contactAdd':
@@ -288,7 +274,7 @@ class Namesilo extends BaseDomain
                     $resultFinal['email_verification_required'] = ArrayHelper::getValue($resultRaw, 'reply.email_verification_required');
                     $resultFinal['nameservers'] = ArrayHelper::getValue($resultRaw, 'reply.nameservers');
                     $resultFinal['contact_ids'] = ArrayHelper::getValue($resultRaw, 'reply.contact_ids');
-                    $resultFinal['registrar'] = 'namesilo';
+                    $resultFinal['registrar'] = parent::REGISTRAR_NAMESILO;
                     break;
 
                 case 'addPrivacy':
@@ -320,7 +306,6 @@ class Namesilo extends BaseDomain
             return [];
         }
 
-//        VarDumper::dump($resultFinal); //todo del
         return $resultFinal;
     }
 }

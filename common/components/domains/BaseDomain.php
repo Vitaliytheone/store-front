@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Component;
 use yii\base\UnknownClassException;
 use common\models\panels\DomainZones;
+use common\models\panels\Params;
 
 /**
  * Class BaseDomain
@@ -17,6 +18,17 @@ abstract class BaseDomain extends Component
     public const REGISTRAR_NAMESILO = 'namesilo';
 
     public static $registrar;
+
+    protected static $_paramsNamesilo;
+
+    public function init()
+    {
+        parent::init();
+
+        if (empty(static::$_paramsNamesilo)) {
+            static::$_paramsNamesilo = Params::get(Params::CATEGORY_SERVICE, Params::CODE_NAMESILO);
+        }
+    }
 
     /**
      * Returns the Class created depending on the domain zone.
@@ -42,7 +54,6 @@ abstract class BaseDomain extends Component
      */
     public static function domainsCheck($domains): array
     {
-        \Yii::debug($domains, '$domains');
         if (empty($domains)) {
             return [];
         }
@@ -132,28 +143,22 @@ abstract class BaseDomain extends Component
      */
     public static function getRegistrarName($domain): string
     {
-        // todo возможно надо добавить статическую переменную для хранения
 
         $zone = strtoupper('.' . explode('.', $domain)[1]);
         if (empty($zone)) {
             return '';
         }
 
-//        $registrar = DomainZones::find()->where(['zone' => $zone])->one()->registrar;
 
-        if (!empty(static::$registrar[$zone]['registrar'])) {
-            return static::$registrar[$zone]['registrar'];
+        if (empty(static::$registrar[$zone]['registrar'])) {
+            static::$registrar = DomainZones::find()->asArray()->indexBy('zone')->all();
         }
 
-        static::$registrar = DomainZones::find()->asArray()->indexBy('zone')->all();
-        $registrar = static::$registrar[$zone]['registrar'];
-        Yii::debug($registrar, '$registrar'); // todo del
-
-        if (empty($registrar)) {
+        if (empty(static::$registrar[$zone]['registrar'])) {
             return '';
         }
 
-        return $registrar;
+        return static::$registrar[$zone]['registrar'];
     }
 
     /**
@@ -193,7 +198,7 @@ abstract class BaseDomain extends Component
                 ];
             case self::REGISTRAR_NAMESILO:
                 return [
-                    'auth_key' => Yii::$app->params['namesilo.key'],
+                    'auth_key' => static::$_paramsNamesilo['namesilo.key'],
                 ];
             default:
                 return [];
