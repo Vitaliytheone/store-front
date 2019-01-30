@@ -14,7 +14,7 @@ use yii\base\Model;
 class EditApplicationsForm extends Model
 {
     public $code;
-    public $options;
+//    public $options;
 
     /** @var Params */
     protected $_params;
@@ -27,6 +27,7 @@ class EditApplicationsForm extends Model
         return [
             [['options'], 'safe'],
             [['options'], 'trim'],
+            ['credentials', 'safe']
         ];
     }
 
@@ -37,6 +38,10 @@ class EditApplicationsForm extends Model
     public function setParams(Params $params)
     {
         $this->_params = $params;
+        $options = $params->getOptions();
+
+        $this->code = $params->code;
+        $this->attributes = $options;
     }
 
     /**
@@ -49,7 +54,7 @@ class EditApplicationsForm extends Model
             return false;
         }
 
-        $this->_params->options = (string)$this->options;
+        $this->_params->setOptions($this->attributes);
 
         if (!$this->_params->save()) {
             $this->addErrors($this->_params->getErrors());

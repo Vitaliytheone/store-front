@@ -32,7 +32,33 @@ class ApplicationsSearch extends Params
     {
         $query = static::find();
 
+        $query->andWhere([
+            'category' => static::CATEGORY_SERVICE
+        ]);
+
         return $query;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    private function prepareData(array $data): array
+    {
+        $returnData = [];
+
+        foreach ($data as $key => $value) {
+            $options = json_decode($value['options'], true);
+
+            $returnData[] = [
+                'id' => $value['id'],
+                'code' => $value['code'],
+                'category' => $value['category'],
+                'options' => $options,
+            ];
+        }
+
+        return $returnData;
     }
 
     /**
@@ -54,8 +80,9 @@ class ApplicationsSearch extends Params
                 Params::CODE_NAMESILO
             ]])
             ->orderBy(['id' => SORT_ASC])
+            ->asArray()
             ->all();
 
-        return $models;
+        return $this->prepareData($models);
     }
 }

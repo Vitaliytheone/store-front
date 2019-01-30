@@ -1,6 +1,5 @@
 <?php
 /* @var $this yii\web\View */
-
 /* @var $params \superadmin\models\search\ApplicationsSearch */
 
 use my\helpers\Url;

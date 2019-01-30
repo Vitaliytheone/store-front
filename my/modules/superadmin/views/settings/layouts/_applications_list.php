@@ -8,7 +8,6 @@ use my\helpers\Url;
 use yii\bootstrap\Html;
 
 ?>
-
 <table class="table table-sm table-custom">
     <thead>
     <tr>
@@ -20,11 +19,11 @@ use yii\bootstrap\Html;
     <?php if (!empty($params)) : ?>
         <?php foreach ($params as $param) : ?>
             <tr>
-                <td><?= $param->code ?></td>
+                <td><?= $param['code'] ?></td>
                 <td class="text-right">
                     <?= Html::a(Yii::t('app/superadmin', 'settings.applications.edit_label'),
-                        Url::toRoute(['/settings/edit-applications', 'id' => $param->id]), ['class' => 'btn btn-primary btn-sm edit-applications',
-                            'data-details' => json_encode($param->getAttributes())]) ?>
+                        Url::toRoute(['/settings/edit-applications', 'code' => $param['code']]),
+                        ['class' => 'btn btn-primary btn-sm edit-applications',]) ?>
                 </td>
             </tr>
         <?php endforeach; ?>

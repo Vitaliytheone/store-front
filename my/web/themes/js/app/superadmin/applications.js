@@ -5,19 +5,13 @@ customModule.superadminApplicationsController = {
 
             var link = $(this);
             var modal = $('#editApplicationsModal');
-            var form = $('#editApplicationsForm');
-            var errorBlock = $('#editApplicationsError', form);
-            var details = link.data('details');
 
-            errorBlock.addClass('hidden');
-            errorBlock.html('');
-
-            $('#editapplicationsform-code', form).val(details.code);
-            $('#editapplicationsform-options', form).val(details.options);
-
-            form.attr('action', link.attr('href'));
-
-            modal.modal('show');
+            $.get(link.attr('href'), function (response) {
+                if (response.content) {
+                    $('.modal-body', modal).html(response.content);
+                    modal.modal('show');
+                }
+            });
 
             return false;
         });
@@ -30,8 +24,10 @@ customModule.superadminApplicationsController = {
             custom.sendFrom(btn, form, {
                 data: form.serialize(),
                 callback: function (response) {
-                    $('#editApplicationsModal').modal('hide');
-                    location.reload();
+                    if ('success' == response.status) {
+                        $('#editPaymentModal').modal('hide');
+                        location.reload();
+                    }
                 }
             });
 

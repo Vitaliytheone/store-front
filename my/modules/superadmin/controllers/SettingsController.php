@@ -76,7 +76,7 @@ class SettingsController extends CustomController
                     'edit-plan' => ['POST'],
                     'create-plan' => ['POST'],
                     'edit-content' => ['POST'],
-                    'edit-applications' => ['POST'],
+                    'edit-applications' => ['POST', 'GET'],
                 ],
             ],
             'content' => [
@@ -482,29 +482,45 @@ class SettingsController extends CustomController
      * Edit applications (services) options
      *
      * @access public
-     * @param int $id
+     * @param string $code
      * @return mixed
      * @throws NotFoundHttpException
      */
-    public function actionEditApplications($id)
+    public function actionEditApplications($code)
     {
-        if (!($params = Params::findOne($id))) {
+        $params = Params::findOne([
+            'category' => Params::CATEGORY_SERVICE,
+            'code' => $code
+        ]);
+
+        if (!$params) {
             throw new NotFoundHttpException();
         }
 
         $model = new EditApplicationsForm();
         $model->setParams($params);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->save()) {
+                return [
+                    'status' => 'error',
+                    'message' => ActiveForm::firstError($model)
+                ];
+            }
+
             return [
                 'status' => 'success',
             ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
         }
+
+        Yii::debug($model, 'model');
+        Yii::debug($params, '$params');
+        return [
+            'content' => $this->renderPartial('layouts/_edit_applications_form', [
+                'model' => $model,
+                'params' => $params
+            ])
+        ];
     }
 
 }
