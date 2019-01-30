@@ -16,13 +16,28 @@ use yii\helpers\ArrayHelper;
 class Namesilo extends BaseDomain
 {
 
+    public const URL_PROD = 'https://www.namesilo.com/api';
+    public const URL_DEV = 'http://sandbox.namesilo.com/api';
+
+    /**
+     * Return url depended from environment (dev/prod)
+     * @return string
+     */
+    private static function _setUrl(): string
+    {
+        if (Yii::$app->params['testNamesilo'] === 'dev') {
+            return self::URL_DEV;
+        }
+        return self::URL_PROD;
+    }
+
     /**
      * @inheritdoc
      */
     protected static function _domainsCheckRegistrar($domains): array
     {
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $options = [
             'version' => static::$_paramsNamesilo['namesilo.version'],
@@ -61,7 +76,7 @@ class Namesilo extends BaseDomain
             'key' => static::$_paramsNamesilo['namesilo.key'],
         ]);
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/contactAdd?' . http_build_query($options));
 
@@ -90,7 +105,7 @@ class Namesilo extends BaseDomain
             $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
         }
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/registerDomain?' . http_build_query($options));
 
@@ -109,7 +124,7 @@ class Namesilo extends BaseDomain
             'domain' => $domain,
         ];
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/getDomainInfo?' . http_build_query($options));
 
@@ -128,7 +143,7 @@ class Namesilo extends BaseDomain
             'domain' => $domain,
         ];
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/addPrivacy?' . http_build_query($options));
 
@@ -155,7 +170,7 @@ class Namesilo extends BaseDomain
 
         $options = array_merge($options, $ns);
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/changeNameServers?' . http_build_query($options));
 
@@ -174,7 +189,7 @@ class Namesilo extends BaseDomain
             'domain' => $domain,
         ];
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/domainLock?' . http_build_query($options));
 
@@ -198,7 +213,7 @@ class Namesilo extends BaseDomain
             $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
         }
 
-        $url = static::$_paramsNamesilo['namesilo.url'];
+        $url = static::_setUrl();
 
         $result = Request::getContents($url . '/renewDomain?' . http_build_query($options));
 
