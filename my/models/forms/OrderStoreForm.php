@@ -47,11 +47,12 @@ class OrderStoreForm extends DomainForm
         return array_merge(
             parent::rules(), [
             [['admin_username', 'admin_email'], 'trim'],
+            ['admin_username', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
+            ['admin_username', 'string', 'min' => 3, 'max' => 32],
             [['domain', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
             ['admin_email', 'email'],
             [['domain'], OrderDomainValidator::class, 'store' => true],
-            ['admin_username', 'string', 'max' => 255],
             ['admin_password', 'string', 'min' => 5],
             ['admin_password', 'compare', 'compareAttribute' => 'confirm_password'],
         ]);
