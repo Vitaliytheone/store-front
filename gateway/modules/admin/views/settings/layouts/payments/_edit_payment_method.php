@@ -22,7 +22,7 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
 
 <div class="m-content">
 
-    <div class="gateway-settings__well">
+    <div class="sommerce-settings__well">
         <div class="row align-items-center">
             <div class="col-md-3 text-center">
                 <img src="<?= $model->getPaymentMethod()->icon ?>" alt="" class="img-fluid">

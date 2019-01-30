@@ -2,6 +2,7 @@
 
 namespace common\models\gateway;
 
+use common\components\traits\UnixTimeFormatTrait;
 use gateway\components\behaviors\FilesBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -34,6 +35,8 @@ class Files extends ActiveRecord
     public const CAN_DELETE = 'delete';
     public const CAN_RENAME = 'rename';
     public const CAN_UPDATE = 'update';
+
+    use UnixTimeFormatTrait;
 
     public static function getDb()
     {

@@ -77,6 +77,20 @@ return [
     'settings.files_message_updated' => 'File was successfully updated!',
     'settings.files_message_created' => 'File was successfully created!',
     'settings.files_error' => 'Error',
+    'settings.files_delete_file' => 'Delete',
+    'settings.files_rename_file' => 'Rename',
+    'settings.files_add_file' => 'Add file',
+    'settings.files_add_image' => 'Add image',
+    'settings.files_confirm_delete_file' => 'Are you sure you want to delete this file?',
+
+    'settings.files.rename_file.save' => 'Save changes',
+    'settings.files.rename_file.cancel' => 'Cancel',
+
+    'settings.files.create_file.tab.create_file' => 'Create file',
+    'settings.files.create_file.tab.upload_file' => 'Upload file',
+    'settings.files.create_file.cancel' => 'Cancel',
+    'settings.files.create_file.save' => 'Create file',
+    'settings.files.create_file.upload' => 'Upload file',
 
     'settings.themes_page_title' => 'Themes',
     'settings.themes_active' => 'Active:',

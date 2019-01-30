@@ -4,7 +4,7 @@
     /* @var $method string */
     /** @var \common\models\gateways\Sites $gateway */
 
-    $gateway = Yii::$app->gateway->getInstance();
+    $gateway = Yii::$app->sommerce->getInstance();
 ?>
 
 <?php

@@ -13,6 +13,7 @@ use yii\base\Model;
 class CreateFileForm extends Model
 {
     public $name;
+    public $file;
     public $type;
 
     /**
@@ -46,15 +47,6 @@ class CreateFileForm extends Model
     }
 
     /**
-     * @param Files $file
-     */
-    public function setFile(Files $file)
-    {
-        $this->_file = $file;
-        $this->name = $file->name;
-    }
-
-    /**
      * @return bool
      */
     public function save()
@@ -63,10 +55,12 @@ class CreateFileForm extends Model
             return false;
         }
 
-        $this->_file->content = $this->content;
+        $model = new Files();
+        $model->file_type = $this->type;
+        $model->name = $this->name;
 
-        if (!$this->_file->save(true, ['content'])) {
-            $this->addError('content', Yii::t('admin', "settings.message_settings_error"));
+        if (!$model->save()) {
+            $this->addErrors($model->getErrors());
             return false;
         }
 

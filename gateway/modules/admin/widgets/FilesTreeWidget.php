@@ -53,56 +53,38 @@ class FilesTreeWidget extends Widget
             return null;
         }
 
-        $menuTree = '';
         $currentFileId = ArrayHelper::getValue($this->file, 'id');
+        $itemsTree = [];
+
         foreach ($this->files as $type => $files) {
             $folderName = Yii::t('admin', 'settings.files_type.' . $type);
-            $filesItems = '';
+
+            $items = [];
 
             foreach ($files as $file) {
-                $modified = '';
-
-                $selected = $currentFileId === $file['id'];
-                $modifiedAt = ArrayHelper::getValue($file, 'updated_at');
-
-                if ($modifiedAt) {
-                    $modified = Html::tag('span',
-                        Yii::t('admin', 'settings.themes_modified') . ' ' . $modifiedAt,
-                        ['class' => 'jstree-tooltip']
-                    );
-                }
-
-                if (Files::can(Files::CAN_UPDATE, $file)) {
-                    $fileItem = Html::tag('a', $file['name'] . $modified, [
-                        'class' => $selected ? 'jstree-clicked' : '',
-                        'href' => Url::toRoute([
-                            '/settings/files',
-                            'id' => $file['id'],
-                        ]),
-                    ]);
-                } else {
-                    $fileItem = Html::tag('span', $file['name'] . $modified, [
-                        'class' => $selected ? 'jstree-clicked' : '',
-                    ]);
-                }
-
-                $fileItem = Html::tag('li', $fileItem, [
-                    'id' => $file['name'],
-                    'data-jstree' => $modifiedAt ?
-                        '{ "type" : "file", "icon":"fa fa-file" }' :
-                        '{ "type" : "file", "icon":"fa fa-file-o" }'
+                $items[$file['id']] = ArrayHelper::merge($file, [
+                    'active' => $currentFileId == $file['id'],
+                    'modified' => !empty($file['updated_at']) ? Yii::t('admin', 'settings.files_modified') . ' ' . Files::formatDate($file['updated_at']) : null,
+                    'can' => [
+                        'update' => Files::can(Files::CAN_UPDATE, $file),
+                        'rename' => Files::can(Files::CAN_RENAME, $file),
+                        'delete' => Files::can(Files::CAN_DELETE, $file),
+                    ]
                 ]);
-
-                $filesItems .= $fileItem;
             }
 
-            $filesItems = Html::tag('ul', $filesItems, ['class' => 'my-ul']);
-
-            $menuTree .= Html::tag('li', $folderName . $filesItems, [
-                'data-jstree' => '{ "opened" : true }',
-            ]);
+            $itemsTree[$type] = [
+                'name' => $folderName,
+                'can' => [
+                    'add_file' => !in_array($type, [Files::FILE_TYPE_IMAGE]),
+                    'upload_file' => in_array($type, [Files::FILE_TYPE_IMAGE]),
+                ],
+                'files' => $items,
+            ];
         }
 
-        return $menuTree;
+        return $this->render('_files_tree', [
+            'items' => $itemsTree
+        ]);
     }
 }

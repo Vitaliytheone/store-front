@@ -12,9 +12,9 @@ customModule.adminFiles = {
             contentOnInit;
 
         var codeMirroSetting = {},
-            codeType = 'js';
+            codeType = 'twig';
 
-        switch (fileType){
+        switch (codeType){
             case 'twig':
                 codeMirroSetting = {
                     mode : "text/html",
@@ -62,34 +62,6 @@ customModule.adminFiles = {
         }
 
         /*****************************************************************************************************
-         *                     JS Tree Files init
-         *****************************************************************************************************/
-        var $filesTree = $('#m_tree_1');
-        $filesTree.jstree({
-            "core" : {
-                "themes" : {
-                    "responsive": false
-                }
-            },
-            "types" : {
-                "default" : {
-                    "icon" : "fa fa-folder"
-                },
-                "file" : {
-                    "icon" : "fa fa-file"
-                }
-            },
-            "plugins": ["types"]
-        });
-
-        $filesTree.on('select_node.jstree', function(e, node) {
-            var _node = node.node;
-            if (_node && _node.hasOwnProperty('a_attr') && (_node.a_attr.href !== '#')) {
-                window.location = _node.a_attr.href;
-            }
-        });
-
-        /*****************************************************************************************************
          *               Ajax submit form
          *****************************************************************************************************/
 
@@ -119,33 +91,15 @@ customModule.adminFiles = {
                     $modalLoader.addClass('hidden');
                     $editForm.removeClass('process');
                     if ('success' === data.status) {
-
-                        // Update JS-tree item icon
-                        if (data.filename) {
-
-                            var treeNode = $filesTree.jstree(true).get_node(data.filename),
-                                $nodeDoom = $filesTree.jstree(true).get_node(data.filename, true);
-
-                            // Update icon
-                            $filesTree.jstree(true).set_icon(treeNode, 'fa fa-file');
-
-                            // Add modified at
-                            if (data.modified_at && $nodeDoom) {
-                                $nodeDoom.find('a.jstree-anchor').prepend(data.modified_at);
-                            }
-                        }
-
                         // Send message
                         if (data.message !== undefined) {
                             toastr.success(data.message);
                         }
                     } else {
-
                         // Send message
                         if (data.message !== undefined) {
-                            toastr.success(data.message);
+                            toastr.error(data.message);
                         }
-                        toastr.error(data.message);
                     }
                 },
 
@@ -176,5 +130,102 @@ customModule.adminFiles = {
             // Else — show
             $(this).find('.submit_button').attr('href', href);
         });
+
+        $('.delete-file').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            custom.confirm(link.data('title'), '', function() {
+                $.ajax({
+                    url: link.attr('href'),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: link.data('params'),
+                    success: function (response) {
+                        if ('error' === data.status) {
+                            if (data.message !== undefined) {
+                                toastr.error(data.message);
+                            }
+                        } else {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+
+        $('.rename-file').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var form = $('#renameFileForm');
+            var modal = $('#renameFileModal');
+            var errorBlock = $('#renameFileError', form);
+            var details = link.data('details');
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $('#renamefileform-name', form).val(details.name);
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('click', '#renameFileButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#renameFileForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#renameFileModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
+        $('.create-file').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var form = $('#createFileForm');
+            var modal = $('#createFileModal');
+            var errorBlock = $('#createFileError', form);
+            var type = link.data('type');
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $('#createfileform-name', form).val('');
+            $('#createfileform-type', form).val(type);
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('click', '#createFileButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#createFileForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#createFileModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
     }
 };

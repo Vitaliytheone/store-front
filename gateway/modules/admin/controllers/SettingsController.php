@@ -27,6 +27,10 @@ class SettingsController extends CustomController
                 'only' => [
                     'payments-toggle-active',
                     'update-file',
+                    'rename-file',
+                    'delete-file',
+                    'create-file',
+                    'upload-file',
                 ]
             ],
             'verbs' => [
@@ -34,6 +38,10 @@ class SettingsController extends CustomController
                 'actions' => [
                     'payments-toggle-active' => ['POST'],
                     'update-file' => ['POST'],
+                    'rename-file' => ['POST'],
+                    'delete-file' => ['POST'],
+                    'create-file' => ['POST'],
+                    'upload-file' => ['POST'],
                 ],
             ],
             'content' => [
@@ -41,6 +49,10 @@ class SettingsController extends CustomController
                 'only' => [
                     'payments-toggle-active',
                     'update-file',
+                    'rename-file',
+                    'delete-file',
+                    'create-file',
+                    'upload-file',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
