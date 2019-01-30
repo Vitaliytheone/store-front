@@ -16,6 +16,7 @@
                 <a href="<?=Url::toRoute('/settings/email')?>" class="list-group-item list-group-item-action"><span class="fa fa-envelope-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_email')?></a>
                 <a href="<?=Url::toRoute('/settings/plan')?>" class="list-group-item list-group-item-action active"><span class="fa fa-list-alt"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_plan')?></a>
                 <a href="<?=Url::toRoute('/settings/content')?>" class="list-group-item list-group-item-action"><span class="fa fa-file-text-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.content')?></a>
+                <a href="<?=Url::toRoute('/settings/applications')?>" class="list-group-item list-group-item-action"><span class="fa fa-cogs"></span> <?=Yii::t('app/superadmin', 'pages.settings.applications')?></a>
             </div>
         </div>
         <div class="col-md-9">

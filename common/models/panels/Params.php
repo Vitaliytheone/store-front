@@ -38,6 +38,8 @@ class Params extends ActiveRecord
     public const CODE_GOGETSSL = 'gogetssl';
     public const CODE_AHNAMES = 'ahnames';
     public const CODE_OPENSRS = 'opensrs';
+    public const CODE_NAMESILO = 'namesilo';
+    public const CODE_SOCIALSAPI = 'socialsapi';
 
     public const CODE_LETSENCRYPT = 'letsencrypt';
 

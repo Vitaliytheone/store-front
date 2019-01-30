@@ -1,12 +1,13 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $contents \superadmin\models\search\ContentSearch */
+
+/* @var $params \superadmin\models\search\ApplicationsSearch */
 
 use my\helpers\Url;
-use yii\bootstrap\Html;
 
-$this->context->addModule('superadminContentController');
+$this->context->addModule('superadminApplicationsController');
 ?>
+
     <div class="container">
         <div class="row">
             <div class="col-md-2">
@@ -15,16 +16,17 @@ $this->context->addModule('superadminContentController');
                     <a href="<?=Url::toRoute('/settings/staff')?>" class="list-group-item list-group-item-action"><span class="fa fa-user"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_staff')?></a>
                     <a href="<?=Url::toRoute('/settings/email')?>" class="list-group-item list-group-item-action"><span class="fa fa-envelope-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_email')?></a>
                     <a href="<?=Url::toRoute('/settings/plan')?>" class="list-group-item list-group-item-action"><span class="fa fa-list-alt"></span> <?=Yii::t('app/superadmin', 'pages.settings.menu_plan')?></a>
-                    <a href="<?=Url::toRoute('/settings/content')?>" class="list-group-item list-group-item-action active"><span class="fa fa-file-text-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.content')?></a>
-                    <a href="<?=Url::toRoute('/settings/applications')?>" class="list-group-item list-group-item-action"><span class="fa fa-cogs"></span> <?=Yii::t('app/superadmin', 'pages.settings.applications')?></a>
+                    <a href="<?=Url::toRoute('/settings/content')?>" class="list-group-item list-group-item-action"><span class="fa fa-file-text-o"></span> <?=Yii::t('app/superadmin', 'pages.settings.content')?></a>
+                    <a href="<?=Url::toRoute('/settings/applications')?>" class="list-group-item list-group-item-action active"><span class="fa fa-cogs"></span> <?=Yii::t('app/superadmin', 'pages.settings.applications')?></a>
                 </div>
             </div>
             <div class="col-md-9">
-                <?= $this->render('layouts/_contents_list', [
-                        'contents' => $contents
+                <div class="mb-3"><?=Yii::t('app/superadmin', 'pages.settings.applications')?></div>
+                <?= $this->render('layouts/_applications_list', [
+                    'params' => $params
                 ]) ?>
             </div>
         </div>
     </div>
 
-<?= $this->render('layouts/_edit_content_modal'); ?>
+<?= $this->render('layouts/_edit_applications_modal'); ?>
