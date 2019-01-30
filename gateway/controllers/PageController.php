@@ -1,8 +1,7 @@
 <?php
 namespace gateway\controllers;
 
-use common\models\gateway\Pages;
-use common\models\gateway\ThemesFiles;
+use common\models\gateway\Files;
 use yii\web\NotFoundHttpException;
 use Yii;
 
@@ -18,26 +17,17 @@ class PageController extends CustomController
      */
     public function actionIndex($id = ['url' => 'index'])
     {
-        $page = $this->_findPage($id);
-        $this->pageTitle = $page->seo_title;
-        $this->seoDescription = $page->seo_description;
-        $this->seoKeywords = $page->seo_keywords;
-
-        return $this->renderContent($page->getThemeTemplate(), [
-            'page' => [
-                'title' => $page->title,
-                'content' => $page->content,
-            ]
-        ], true);
+        $file = $this->_findFile($id);
+        return $this->renderTwigContent($file->content);
     }
 
     /**
-     * Find page or return exception
+     * Find file or return exception
      * @param array|int $attributes
-     * @return Pages
+     * @return Files
      * @throws NotFoundHttpException
      */
-    protected function _findPage($attributes)
+    protected function _findFile($attributes)
     {
         if (is_int($attributes)) {
             $attributes = [
@@ -45,12 +35,12 @@ class PageController extends CustomController
             ];
         }
 
-        $page = Pages::find()->active()->andWhere($attributes)->one();
+        $file = Files::find()->active()->andWhere($attributes)->one();
 
-        if (!$page) {
+        if (!$file) {
             throw new NotFoundHttpException();
         }
 
-        return $page;
+        return $file;
     }
 }

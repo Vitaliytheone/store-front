@@ -10,10 +10,10 @@ use yii\base\Behavior;
 use yii\db\BaseActiveRecord;
 
 /**
- * Class ThemesFilesBehavior
+ * Class FilesBehavior
  * @package gateway\components\behaviors
  */
-class ThemesFilesBehavior extends Behavior {
+class FilesBehavior extends Behavior {
 
     /**
      * @var Sites

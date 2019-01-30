@@ -37,7 +37,7 @@ use gateway\helpers\UiHelper;
                                  <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
                                      <label>
                                         <input class="toggle-active" type="checkbox"
-                                               name="toggle-active" <?= UiHelper::toggleString($method['active'], 'checked') ?>
+                                               name="toggle-active" <?= ($method['active'] ? 'checked="checked"' : '') ?>
                                                data-payment_method="<?= $method['method'] ?>"
                                                data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method['method'],]) ?>">
                                          <span></span>

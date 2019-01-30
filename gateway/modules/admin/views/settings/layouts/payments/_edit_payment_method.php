@@ -1,6 +1,6 @@
 <?php
 use admin\components\Url;
-use yii\helpers\Html;
+use common\components\ActiveForm;
 
 /* @var $model \admin\models\forms\EditPaymentMethodForm; */
 
@@ -33,8 +33,14 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
         </div>
     </div>
 
-    <form id="paypalSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
-        <?= Html::beginForm(); ?>
+        <?php $form = ActiveForm::begin([
+            'id' => 'paypalSettingsForm',
+            'action' => $submitUrl,
+            'fieldClass' => 'yii\bootstrap\ActiveField',
+            'fieldConfig' => [
+                'template' => "{label}\n{input}",
+            ],
+        ]); ?>
 
         <?php foreach ($formData as $formField): ?>
 
@@ -67,8 +73,6 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
                 <?= Yii::t('admin', 'settings.payments_cancel_method') ?>
         </a>
 
-        <?= Html::endForm(); ?>
-    </form>
-
+        <?php ActiveForm::end(); ?>
 </div>
 

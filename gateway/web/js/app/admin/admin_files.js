@@ -1,8 +1,4 @@
-/**
- * /admin/settings/pages custom js module
- * @type {{run: customModule.settings.run}}
- */
-customModule.adminThemes = {
+customModule.adminFiles = {
     run: function (params) {
 
         /*****************************************************************************************************
@@ -65,22 +61,6 @@ customModule.adminThemes = {
             contentOnInit = codeMirror.getValue();
         }
 
-
-        // var $codeMirror = $('#codemirror'),
-        //     codeMirror,
-        //     contentOnInit;
-        //
-        // var $modalSubmitClose = $('#modal_submit_close');
-        // var $modalSubmitReset = $('#modal_submit_reset');
-        //
-        // if ($codeMirror.length > 0) {
-        //     codeMirror = CodeMirror.fromTextArea($codeMirror[0], {
-        //         lineNumbers: true
-        //     });
-        //
-        //     contentOnInit = codeMirror.getValue();
-        // }
-
         /*****************************************************************************************************
          *                     JS Tree Files init
          *****************************************************************************************************/
@@ -105,12 +85,6 @@ customModule.adminThemes = {
         $filesTree.on('select_node.jstree', function(e, node) {
             var _node = node.node;
             if (_node && _node.hasOwnProperty('a_attr') && (_node.a_attr.href !== '#')) {
-
-                // if (codeMirror && (codeMirror.getValue() !== contentOnInit)) {
-                //     $modal.modal('show');
-                //     return;
-                // }
-
                 window.location = _node.a_attr.href;
             }
         });
@@ -124,24 +98,27 @@ customModule.adminThemes = {
             "preventDuplicates": false
         };
 
-        var $editForm = $('#edit_theme_form'),
-            $resetFile = $('#reset_file'),
+        var $editForm = $('#editThemeForm'),
             $modalLoader = $editForm.find('.modal-loader'),
             actionUrl = $editForm.attr('action');
 
         $editForm.submit(function (e) {
             e.preventDefault();
+            if ($editForm.hasClass('process')) {
+                return false;
+            }
 
             $modalLoader.removeClass('hidden');
-
-            $.ajax({
+            $editForm.addClass('process');
+            custom.ajax({
                 url: actionUrl,
                 type: "POST",
                 data: $(this).serialize(),
 
                 success: function (data, textStatus, jqXHR){
                     $modalLoader.addClass('hidden');
-                    if (data.success === true) {
+                    $editForm.removeClass('process');
+                    if ('success' === data.status) {
 
                         // Update JS-tree item icon
                         if (data.filename) {
@@ -158,20 +135,23 @@ customModule.adminThemes = {
                             }
                         }
 
-                        // Update `reset file` button
-                        if (data.resetable) {
-                            $resetFile.removeClass('d-none');
+                        // Send message
+                        if (data.message !== undefined) {
+                            toastr.success(data.message);
                         }
+                    } else {
 
                         // Send message
                         if (data.message !== undefined) {
                             toastr.success(data.message);
                         }
+                        toastr.error(data.message);
                     }
                 },
 
                 error: function (jqXHR, textStatus, errorThrown){
                     $modalLoader.addClass('hidden');
+                    $editForm.removeClass('process');
                     console.log('Error on service save', jqXHR, textStatus, errorThrown);
                 }
             });
@@ -196,18 +176,5 @@ customModule.adminThemes = {
             // Else — show
             $(this).find('.submit_button').attr('href', href);
         });
-
-        /*****************************************************************************************************
-         *               Modal submit reset
-         *****************************************************************************************************/
-        var $modalSubmitReset = $('#modal_submit_reset');
-
-        $modalSubmitReset.on('show.bs.modal', function(event){
-            var $href = $(event.relatedTarget),
-                href = $href.attr('href');
-
-            $(this).find('.submit_button').attr('href', href);
-        });
-
     }
 };

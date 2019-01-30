@@ -1,9 +1,8 @@
 <?php
 namespace admin\controllers;
 
-use admin\controllers\traits\settings\PagesTrait;
+use admin\controllers\traits\settings\FilesTrait;
 use admin\controllers\traits\settings\PaymentsTrait;
-use admin\controllers\traits\settings\ThemesTrait;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -16,9 +15,8 @@ use \yii\filters\VerbFilter;
  */
 class SettingsController extends CustomController
 {
-    use ThemesTrait;
+    use FilesTrait;
     use PaymentsTrait;
-    use PagesTrait;
 
     public function behaviors()
     {
@@ -27,38 +25,22 @@ class SettingsController extends CustomController
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => [
-                    'theme-get-style',
-                    'theme-get-data',
-                    'theme-update-style',
                     'payments-toggle-active',
-                    'new-page',
-                    'delete-page',
-                    'edit-page',
+                    'update-file',
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'customize-theme' => ['GET'],
-                    'theme-get-style' => ['GET'],
-                    'theme-get-data' => ['GET'],
-                    'theme-update-style' => ['POST'],
-                    'new-page' => ['POST'],
-                    //'delete-page' => ['POST'],
-                    'edit-page' => ['POST'],
                     'payments-toggle-active' => ['POST'],
+                    'update-file' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
-                    'theme-get-style',
-                    'theme-get-data',
-                    'theme-update-style',
                     'payments-toggle-active',
-                    'new-page',
-                    'delete-page',
-                    'edit-page',
+                    'update-file',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -86,7 +68,7 @@ class SettingsController extends CustomController
     }
 
     /**
-     * @param int $id
+     * @param int|array $id
      * @param ActiveRecord $class
      * @return ActiveRecord
      * @throws NotFoundHttpException

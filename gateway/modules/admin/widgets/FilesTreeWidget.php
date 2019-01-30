@@ -3,27 +3,29 @@
 namespace admin\widgets;
 
 use admin\components\Url;
+use common\models\gateway\Files;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use Yii;
 
-class FilesTree extends Widget
+/**
+ * Class FilesTreeWidget
+ * @package admin\widgets
+ */
+class FilesTreeWidget extends Widget
 {
-    /** @var  string Current real Theme folder name */
-    public $themeFolder;
-
     /**
      * Current edited file
-     * @var $currentFile string
+     * @var Files
      */
-    public $currentFile;
+    public $file;
 
     /**
      * Theme folders/files structure
      * @var array
      */
-    public $filesTree = [];
+    public $files = [];
 
     /**
      * @return string
@@ -47,21 +49,21 @@ class FilesTree extends Widget
      */
     private function _filesTree()
     {
-        if (empty($this->filesTree) || !is_array($this->filesTree)) {
+        if (empty($this->files) || !is_array($this->files)) {
             return null;
         }
 
         $menuTree = '';
-
-        foreach ($this->filesTree as $folderName => $files) {
-
+        $currentFileId = ArrayHelper::getValue($this->file, 'id');
+        foreach ($this->files as $type => $files) {
+            $folderName = Yii::t('admin', 'settings.files_type.' . $type);
             $filesItems = '';
 
             foreach ($files as $file) {
                 $modified = '';
 
-                $selected = $this->currentFile === ArrayHelper::getValue($file, 'name');
-                $modifiedAt = ArrayHelper::getValue($file, 'modified_at');
+                $selected = $currentFileId === $file['id'];
+                $modifiedAt = ArrayHelper::getValue($file, 'updated_at');
 
                 if ($modifiedAt) {
                     $modified = Html::tag('span',
@@ -70,14 +72,19 @@ class FilesTree extends Widget
                     );
                 }
 
-                $fileItem = Html::tag('a', $file['name'] . $modified, [
-                    'class' => $selected ? 'jstree-clicked' : '',
-                    'href' => Url::toRoute([
-                        '/settings/edit-theme',
-                        'theme' => $this->themeFolder,
-                        'file' => $file['name'],
-                    ]),
-                ]);
+                if (Files::can(Files::CAN_UPDATE, $file)) {
+                    $fileItem = Html::tag('a', $file['name'] . $modified, [
+                        'class' => $selected ? 'jstree-clicked' : '',
+                        'href' => Url::toRoute([
+                            '/settings/files',
+                            'id' => $file['id'],
+                        ]),
+                    ]);
+                } else {
+                    $fileItem = Html::tag('span', $file['name'] . $modified, [
+                        'class' => $selected ? 'jstree-clicked' : '',
+                    ]);
+                }
 
                 $fileItem = Html::tag('li', $fileItem, [
                     'id' => $file['name'],

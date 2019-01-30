@@ -27,6 +27,8 @@ abstract class BaseSearch
     public function setGateway(Sites $gateway)
     {
         $this->_gateway = $gateway;
+
+        return $this;
     }
 
     /**
@@ -36,6 +38,8 @@ abstract class BaseSearch
     public function setParams($params)
     {
         $this->params = $params;
+
+        return $this;
     }
 
     abstract public function search();
