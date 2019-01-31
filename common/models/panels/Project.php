@@ -765,7 +765,8 @@ class Project extends ActiveRecord implements ProjectInterface
         // Remove all subdomains and domains
         PanelDomains::deleteAll([
             'type' => [
-                PanelDomains::TYPE_STANDARD
+                PanelDomains::TYPE_STANDARD,
+                PanelDomains::TYPE_FOREIGN_SUBDOMAIN,
             ],
             'panel_id' => $this->id
         ]);
