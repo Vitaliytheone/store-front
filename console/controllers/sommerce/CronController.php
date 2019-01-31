@@ -75,7 +75,7 @@ class CronController extends CustomController
     public function actionAbandonedCheckout()
     {
         $storeQuery = Stores::find()->active();
-        $checkoutQuery = Checkouts::find()->abandoned();
+        $checkoutQuery = Checkouts::find()->abandoned()->limit(50);
 
         /**
          * @var Checkouts $checkout
@@ -84,17 +84,15 @@ class CronController extends CustomController
             foreach ($stores as $store) {
                 // Init store
                 Yii::$app->store->setInstance($store);
-                foreach ($checkoutQuery->batch() as $checkouts) {
-                    foreach ($checkouts as $checkout) {
-                        // Send notify
-                        Events::add(Events::EVENT_STORE_ABANDONED_CHECKOUT, [
-                            'checkout' => $checkout,
-                            'store' => $store
-                        ]);
+                foreach ($checkoutQuery->all() as $checkout) {
+                    // Send notify
+                    Events::add(Events::EVENT_STORE_ABANDONED_CHECKOUT, [
+                        'checkout' => $checkout,
+                        'store' => $store
+                    ]);
 
-                        $checkout->status = Checkouts::STATUS_EXPIRED;
-                        $checkout->save(false);
-                    }
+                    $checkout->status = Checkouts::STATUS_EXPIRED;
+                    $checkout->save(false);
                 }
             }
         }
