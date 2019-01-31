@@ -26,7 +26,7 @@ use gateway\helpers\UiHelper;
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="payment-cart__preview">
-                        <img src="<?= $method['icon'] ?>" alt="" class="img-fluid">
+                        <img src="<?= $method['icon'] ?>" alt="" class="img-fluid" style="<?= $method['icon_style'] ?>">
                     </div>
                     <div class="payment-cart__title">
                         <?= $method['title'] ?>
