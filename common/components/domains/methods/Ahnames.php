@@ -16,6 +16,8 @@ use yii\helpers\Json;
 class Ahnames extends BaseDomain
 {
 
+    public const REGISTRAR_AHNAMES = 'ahnames';
+
     /**
      * @inheritdoc
      */
@@ -175,6 +177,16 @@ class Ahnames extends BaseDomain
         return static::_processResult($result);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public static function getRegistrarDataForLogs(): array
+    {
+        return [
+            'auth_login' => Yii::$app->params['ahnames.login'],
+            'auth_password' => Yii::$app->params['ahnames.password'],
+        ];
+    }
 
     /**
      * Get result

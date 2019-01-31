@@ -2,7 +2,7 @@
 
 namespace my\helpers\order;
 
-use common\components\domains\BaseDomain;
+use common\components\domains\Domain;
 use Yii;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
@@ -42,9 +42,9 @@ class OrderDomainHelper
             'fax_phone' => ArrayHelper::getValue($details, 'domain_fax'),
         ];
 
-        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge($data, BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_contact');
+        $registrar = Domain::getRegistrarClass($domain);
+        ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge($data, $registrar::getRegistrarDataForLogs()), 'cron.order.send_domain_contact');
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
         $contactResult = $registrar::contactCreate($data);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $contactResult, 'cron.order.domain_contact');
@@ -65,7 +65,7 @@ class OrderDomainHelper
         $contactResult = ArrayHelper::getValue($orderDetails, 'domain_contact');
         $contactId = ArrayHelper::getValue($contactResult, 'id');
         $period = 1;
-        $registrar = BaseDomain::getRegistrarClass($domain);
+        $registrar = Domain::getRegistrarClass($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
@@ -74,7 +74,7 @@ class OrderDomainHelper
             'admin' => $contactId,
             'tech' => $contactId,
             'billing' => $contactId,
-            ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_register');
+            ], $registrar::getRegistrarDataForLogs()), 'cron.order.send_domain_register');
 
         $domainResult = $registrar::domainRegister($domain, $contactId, $period);
 
@@ -94,11 +94,12 @@ class OrderDomainHelper
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
+        $registrar = Domain::getRegistrarClass($domain);
+
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-            ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_info');
+            ], $registrar::getRegistrarDataForLogs()), 'cron.order.send_domain_info');
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
         $domainInfoResult = $registrar::domainGetInfo($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainInfoResult, 'cron.order.domain_info');
@@ -117,11 +118,12 @@ class OrderDomainHelper
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
+        $registrar = Domain::getRegistrarClass($domain);
+
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-        ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_assign');
+        ], $registrar::getRegistrarDataForLogs()), 'cron.order.send_domain_assign');
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
         $assignResult = $registrar::domainEnableWhoisProtect($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $assignResult, 'cron.order.domain_assign');
@@ -139,13 +141,13 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
-        $registrar = BaseDomain::getRegistrarClass($domain);
-        $registrarName = BaseDomain::getRegistrarName($domain);
+        $registrar = Domain::getRegistrarClass($domain);
+        $registrarName = Domain::getRegistrarName($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
             'nss' => implode(',', array_filter(Yii::$app->params["{$registrarName}.my.ns"]))
-            ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_nss');
+            ], $registrar::getRegistrarDataForLogs()), 'cron.order.send_domain_nss');
 
         $setNss = $registrar::domainSetNSs($domain);
 
@@ -164,12 +166,12 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
+        $registrar = Domain::getRegistrarClass($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
-        ], BaseDomain::getAuthDataLogs($domain)), 'cron.order.send_domain_lock');
+        ], $registrar::getRegistrarDataForLogs()), 'cron.order.send_domain_lock');
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
         $enableLock = $registrar::domainEnableLock($domain);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $enableLock, 'cron.order.domain_lock');
@@ -210,7 +212,7 @@ class OrderDomainHelper
             'expiry' => $expiry
         ], 'cron.prolong.send_renew_domain');
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
+        $registrar = Domain::getRegistrarClass($domain);
         $domainRenewResult = $registrar::domainRenew($domain, $expiry);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainRenewResult, 'cron.prolong.renew_domain');

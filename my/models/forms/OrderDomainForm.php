@@ -2,7 +2,7 @@
 
 namespace my\models\forms;
 
-use common\components\domains\BaseDomain;
+use common\components\domains\Domain;
 use my\components\validators\OrderDomainValidator;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
@@ -107,6 +107,8 @@ class OrderDomainForm extends Model
 
     /**
      * Sign up method
+     * @throws yii\base\UnknownClassException
+     * @throws yii\db\Exception
      */
     public function save()
     {
@@ -144,6 +146,7 @@ class OrderDomainForm extends Model
      * Order domain
      * @param Invoices $invoiceModel
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
     protected function orderDomain(&$invoiceModel)
     {
@@ -319,7 +322,7 @@ class OrderDomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
+        $registrar = Domain::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {

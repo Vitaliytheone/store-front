@@ -2,7 +2,7 @@
 
 namespace my\helpers;
 
-use common\components\domains\BaseDomain;
+use common\components\domains\Domain;
 use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
@@ -543,7 +543,7 @@ class OrderHelper {
         $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
         $expiry = strtotime($expiry);
 
-        $registrar = BaseDomain::getRegistrarName($domain);
+        $registrar = Domain::getRegistrarName($domain);
 
         $domainModel = new Domains();
         $domainModel->customer_id = $order->cid;

@@ -2,11 +2,7 @@
 
 namespace common\components\domains;
 
-use Yii;
 use yii\base\Component;
-use yii\base\UnknownClassException;
-use common\models\panels\DomainZones;
-use common\models\panels\Params;
 
 /**
  * Class BaseDomain
@@ -14,38 +10,6 @@ use common\models\panels\Params;
  */
 abstract class BaseDomain extends Component
 {
-    public const REGISTRAR_AHNAMES = 'ahnames';
-    public const REGISTRAR_NAMESILO = 'namesilo';
-
-    public static $registrar;
-
-    protected static $_paramsNamesilo;
-
-    public function init()
-    {
-        parent::init();
-
-        if (empty(static::$_paramsNamesilo)) {
-            static::$_paramsNamesilo = Params::get(Params::CATEGORY_SERVICE, Params::CODE_NAMESILO);
-        }
-    }
-
-    /**
-     * Returns the Class created depending on the domain zone.
-     *
-     * @param string $domain
-     * @return BaseDomain
-     * @throws UnknownClassException
-     */
-    public static function getRegistrarClass($domain)
-    {
-        $name = self::getRegistrarName($domain);
-
-        $result = self::createRegistrarClass($name);
-
-        return $result;
-    }
-
 
     /**
      * Checks the domain on the possibility of registration
@@ -132,77 +96,14 @@ abstract class BaseDomain extends Component
      * Converts a response from an API into an array.
      * @param mixed $result
      * @param bool $returnError
-     * @return array result as an array
+     * @return mixed
      */
-    abstract protected static function _processResult($result, $returnError = true): array;
-
-    /**
-     * Get the name of the domain registrar
-     * @param string $domain Domain name
-     * @return string domain registrar name
-     */
-    public static function getRegistrarName($domain): string
-    {
-
-        $zone = strtoupper('.' . explode('.', $domain)[1]);
-        if (empty($zone)) {
-            return '';
-        }
-
-
-        if (empty(static::$registrar[$zone]['registrar'])) {
-            static::$registrar = DomainZones::find()->asArray()->indexBy('zone')->all();
-        }
-
-        if (empty(static::$registrar[$zone]['registrar'])) {
-            return '';
-        }
-
-        return static::$registrar[$zone]['registrar'];
-    }
-
-    /**
-     * Creates an object of the required Class by name
-     *
-     * @param string $name Class name
-     * @return BaseDomain
-     * @throws UnknownClassException
-     */
-    public static function createRegistrarClass($name)
-    {
-        $className = __NAMESPACE__ . '\methods\\' . ucfirst($name);
-
-        if (!class_exists($className)) {
-            throw new UnknownClassException("Class {$className} does not exist");
-        }
-        $className = new $className;
-
-        return $className;
-    }
+    abstract protected static function _processResult($result, $returnError = true);
 
     /**
      * Get authorization data from parameters for a Class as an array
-     * @param string $domain
      * @return array
      */
-    public static function getAuthDataLogs($domain): array
-    {
-
-        $name = strtolower(self::getRegistrarName($domain));
-
-        switch ($name) {
-            case self::REGISTRAR_AHNAMES:
-                return [
-                    'auth_login' => Yii::$app->params['ahnames.login'],
-                    'auth_password' => Yii::$app->params['ahnames.password'],
-                ];
-            case self::REGISTRAR_NAMESILO:
-                return [
-                    'auth_key' => static::$_paramsNamesilo['namesilo.key'],
-                ];
-            default:
-                return [];
-        }
-    }
+    abstract public static function getRegistrarDataForLogs(): array;
 
 }

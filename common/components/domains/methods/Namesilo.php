@@ -7,7 +7,7 @@ use common\helpers\Request;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
-
+use common\models\panels\Params;
 
 /**
  * Class Namesilo
@@ -15,9 +15,21 @@ use yii\helpers\ArrayHelper;
  */
 class Namesilo extends BaseDomain
 {
+    public const REGISTRAR_NAMESILO = 'namesilo';
 
     public const URL_PROD = 'https://www.namesilo.com/api';
     public const URL_DEV = 'http://sandbox.namesilo.com/api';
+
+    protected static $_paramsNamesilo;
+
+    public function init()
+    {
+        parent::init();
+
+        if (empty(static::$_paramsNamesilo)) {
+            static::$_paramsNamesilo = Params::get(Params::CATEGORY_SERVICE, Params::CODE_NAMESILO);
+        }
+    }
 
     /**
      * Return url depended from environment (dev/prod)
@@ -25,7 +37,7 @@ class Namesilo extends BaseDomain
      */
     private static function _setUrl(): string
     {
-        if (Yii::$app->params['testNamesilo'] === 'dev') {
+        if (!empty(static::$_paramsNamesilo['namesilo.testmode'])) {
             return self::URL_DEV;
         }
         return self::URL_PROD;
@@ -48,7 +60,30 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/checkRegisterAvailability?' . http_build_query($options));
 
-        return static::_processResult($result, false);
+        $resultRaw = static::_processResult($result, false);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultAvailable = $resultUnavailable = [];
+
+        $resultAvailableRaw = (array)ArrayHelper::getValue($resultRaw, 'reply.available.domain');
+        if (!empty($resultAvailableRaw)) {
+            foreach ($resultAvailableRaw as $item) {
+                $resultAvailable[$item] = 1;
+            }
+        }
+
+        $resultUnavailableRaw = (array)ArrayHelper::getValue($resultRaw, 'reply.unavailable.domain');
+        if (!empty($resultUnavailableRaw)) {
+            foreach ($resultUnavailableRaw as $item) {
+                $resultUnavailable[$item] = 0;
+            }
+        }
+
+        $resultFinal = ArrayHelper::merge($resultAvailable, $resultUnavailable);
+
+        return $resultFinal;
     }
 
     /**
@@ -80,7 +115,14 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/contactAdd?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.contact_id');
+
+        return $resultFinal;
     }
 
     /**
@@ -109,7 +151,17 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/registerDomain?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+        $resultFinal['domain'] = ArrayHelper::getValue($resultRaw, 'reply.domain');
+        $resultFinal['order_amount'] = ArrayHelper::getValue($resultRaw, 'reply.order_amount');
+        $resultFinal['password'] = '';
+
+        return $resultFinal;
     }
 
     /**
@@ -128,7 +180,25 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/getDomainInfo?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+        $resultFinal['created'] = ArrayHelper::getValue($resultRaw, 'reply.created');
+        $resultFinal['expires'] = ArrayHelper::getValue($resultRaw, 'reply.expires');
+        $resultFinal['status'] = ArrayHelper::getValue($resultRaw, 'reply.status');
+        $resultFinal['locked'] = ArrayHelper::getValue($resultRaw, 'reply.locked');
+        $resultFinal['private'] = ArrayHelper::getValue($resultRaw, 'reply.private');
+        $resultFinal['auto_renew'] = ArrayHelper::getValue($resultRaw, 'reply.auto_renew');
+        $resultFinal['traffic_type'] = ArrayHelper::getValue($resultRaw, 'reply.traffic_type');
+        $resultFinal['email_verification_required'] = ArrayHelper::getValue($resultRaw, 'reply.email_verification_required');
+        $resultFinal['nameservers'] = ArrayHelper::getValue($resultRaw, 'reply.nameservers');
+        $resultFinal['contact_ids'] = ArrayHelper::getValue($resultRaw, 'reply.contact_ids');
+        $resultFinal['registrar'] = self::REGISTRAR_NAMESILO;
+
+        return $resultFinal;
     }
 
     /**
@@ -147,7 +217,14 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/addPrivacy?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+
+        return $resultFinal;
     }
 
     /**
@@ -174,7 +251,14 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/changeNameServers?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+
+        return $resultFinal;
     }
 
     /**
@@ -193,7 +277,14 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/domainLock?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+
+        return $resultFinal;
     }
 
     /**
@@ -217,21 +308,40 @@ class Namesilo extends BaseDomain
 
         $result = Request::getContents($url . '/renewDomain?' . http_build_query($options));
 
-        return static::_processResult($result);
+        $resultRaw = static::_processResult($result);
+        if (!empty($resultRaw['_error'])) {
+            return $resultRaw;
+        }
+
+        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+        $resultFinal['domain'] = ArrayHelper::getValue($resultRaw, 'reply.domain');
+        $resultFinal['order_amount'] = ArrayHelper::getValue($resultRaw, 'reply.order_amount');
+
+        return $resultFinal;
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public static function getRegistrarDataForLogs(): array
+    {
+        return [
+            'auth_key' => static::$_paramsNamesilo['namesilo.key'],
+        ];
+    }
 
     /**
      * Convert result from XML to array
      * @param mixed $result
      * @param bool $returnError
-     * @return array
+     * @return mixed
      */
-    protected static function _processResult($result, $returnError = true): array
+    protected static function _processResult($result, $returnError = true)
     {
 
         if (empty($result)) {
-            return [];
+            return ['_error' => 'empty response'];
         }
 
         try {
@@ -243,84 +353,10 @@ class Namesilo extends BaseDomain
                 return ['_error' => ArrayHelper::getValue($resultRaw, 'reply.detail'), 'code' => $resultCode];
             }
 
-            $resultType = (string)ArrayHelper::getValue($resultRaw, 'request.operation');
-
-            switch ($resultType) {
-                case 'checkRegisterAvailability':
-                    $resultAvailable = $resultUnavailable = [];
-
-                    $resultAvailableRaw = (array)ArrayHelper::getValue($resultRaw, 'reply.available.domain');
-                    if (!empty($resultAvailableRaw)) {
-                        foreach ($resultAvailableRaw as $item) {
-                            $resultAvailable[$item] = 1;
-                        }
-                    }
-
-                    $resultUnavailableRaw = (array)ArrayHelper::getValue($resultRaw, 'reply.unavailable.domain');
-                    if (!empty($resultUnavailableRaw)) {
-                        foreach ($resultUnavailableRaw as $item) {
-                            $resultUnavailable[$item] = 0;
-                        }
-                    }
-
-                    $resultFinal = ArrayHelper::merge($resultAvailable, $resultUnavailable);
-                    break;
-
-                case 'contactAdd':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.contact_id');
-                    break;
-
-                case 'registerDomain':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-                    $resultFinal['domain'] = ArrayHelper::getValue($resultRaw, 'reply.domain');
-                    $resultFinal['order_amount'] = ArrayHelper::getValue($resultRaw, 'reply.order_amount');
-                    $resultFinal['password'] = '';
-                    break;
-
-                case 'getDomainInfo':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-                    $resultFinal['created'] = ArrayHelper::getValue($resultRaw, 'reply.created');
-                    $resultFinal['expires'] = ArrayHelper::getValue($resultRaw, 'reply.expires');
-                    $resultFinal['status'] = ArrayHelper::getValue($resultRaw, 'reply.status');
-                    $resultFinal['locked'] = ArrayHelper::getValue($resultRaw, 'reply.locked');
-                    $resultFinal['private'] = ArrayHelper::getValue($resultRaw, 'reply.private');
-                    $resultFinal['auto_renew'] = ArrayHelper::getValue($resultRaw, 'reply.auto_renew');
-                    $resultFinal['traffic_type'] = ArrayHelper::getValue($resultRaw, 'reply.traffic_type');
-                    $resultFinal['email_verification_required'] = ArrayHelper::getValue($resultRaw, 'reply.email_verification_required');
-                    $resultFinal['nameservers'] = ArrayHelper::getValue($resultRaw, 'reply.nameservers');
-                    $resultFinal['contact_ids'] = ArrayHelper::getValue($resultRaw, 'reply.contact_ids');
-                    $resultFinal['registrar'] = parent::REGISTRAR_NAMESILO;
-                    break;
-
-                case 'addPrivacy':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-                    break;
-
-                case 'changeNameServers':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-                    break;
-
-                case 'domainLock':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-                    break;
-
-                case 'renewDomain':
-                    $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-                    $resultFinal['domain'] = ArrayHelper::getValue($resultRaw, 'reply.domain');
-                    $resultFinal['order_amount'] = ArrayHelper::getValue($resultRaw, 'reply.order_amount');
-                    break;
-
-            }
-
-
         } catch (InvalidArgumentException $e) {
             return ['_error' => $e->getMessage()];
         }
 
-        if (empty($resultFinal)) {
-            return [];
-        }
-
-        return $resultFinal;
+        return $resultRaw;
     }
 }

@@ -57,16 +57,13 @@ class DomainsHelper
     }
 
     /**
-     * Get the names of all registrars with a capital letter
+     * Get the names of all registrars
      * @return array
      */
     public static function getAllRegistrars(): array
     {
         $result = DomainZones::find()->select('registrar')->distinct()->asArray()->all();
         $result = array_column($result, 'registrar');
-        array_walk($result, function(&$value) {
-            $value = ucfirst($value);
-        });
         return $result;
     }
 }

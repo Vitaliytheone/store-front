@@ -2,7 +2,7 @@
 
 namespace my\models\forms;
 
-use common\components\domains\BaseDomain;
+use common\components\domains\Domain;
 use yii\base\Model;
 use Yii;
 use my\components\validators\OrderLimitValidator;
@@ -159,7 +159,7 @@ class DomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
+        $registrar = Domain::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
@@ -225,6 +225,7 @@ class DomainForm extends Model
      * Order domain
      * @param Invoices $invoiceModel
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
     protected function orderDomain(&$invoiceModel)
     {

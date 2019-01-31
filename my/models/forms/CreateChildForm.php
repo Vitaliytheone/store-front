@@ -2,7 +2,7 @@
 
 namespace my\models\forms;
 
-use common\components\domains\BaseDomain;
+use common\components\domains\Domain;
 use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
 use my\helpers\ChildHelper;
@@ -173,6 +173,7 @@ class CreateChildForm extends Model
      * Order domain
      * @param Invoices $invoiceModel
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
     protected function orderDomain(&$invoiceModel)
     {
@@ -456,7 +457,7 @@ class CreateChildForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $registrar = BaseDomain::getRegistrarClass($domain);
+        $registrar = Domain::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
