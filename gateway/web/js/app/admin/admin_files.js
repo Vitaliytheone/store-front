@@ -141,11 +141,14 @@ customModule.adminFiles = {
                     dataType: 'json',
                     data: link.data('params'),
                     success: function (response) {
-                        if ('error' === data.status) {
-                            if (data.message !== undefined) {
-                                toastr.error(data.message);
+                        if ('error' === response.status) {
+                            if (response.message !== undefined) {
+                                toastr.error(response.message);
                             }
                         } else {
+                            if (response.message !== undefined) {
+                                toastr.success(response.message);
+                            }
                             location.reload();
                         }
                     }
@@ -198,6 +201,7 @@ customModule.adminFiles = {
             var modal = $('#createFileModal');
             var errorBlock = $('#createFileError', form);
             var type = link.data('type');
+            var extension = link.data('extension');
 
             form.attr('action', action);
 
@@ -205,7 +209,11 @@ customModule.adminFiles = {
             errorBlock.html('');
 
             $('#createfileform-name', form).val('');
-            $('#createfileform-type', form).val(type);
+            $('#createfileform-file_type', form).val(type);
+
+            if (extension) {
+                $('#extension', form).html('.' + extension);
+            }
 
             modal.modal('show');
             return false;
@@ -215,9 +223,13 @@ customModule.adminFiles = {
             e.preventDefault();
             var btn = $(this);
             var form = $('#createFileForm');
+            var formData = new FormData(form[0]);
 
             custom.sendFrom(btn, form, {
-                data: form.serialize(),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
                 callback : function(response) {
                     $('#createFileModal').modal('hide');
                     location.reload();
@@ -227,5 +239,41 @@ customModule.adminFiles = {
             return false;
         });
 
+        $('.upload-file').click(function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var action = link.attr('href');
+            var form = $('#uploadFileForm');
+            var modal = $('#uploadFileModal');
+            var errorBlock = $('#uploadFileError', form);
+
+            form.attr('action', action);
+
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            modal.modal('show');
+            return false;
+        });
+
+        $(document).on('click', '#uploadFileButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#uploadFileForm');
+            var formData = new FormData(form[0]);
+
+            custom.sendFrom(btn, form, {
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                callback : function(response) {
+                    $('#uploadFileModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
     }
 };

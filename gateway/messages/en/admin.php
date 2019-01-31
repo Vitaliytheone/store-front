@@ -65,7 +65,7 @@ return [
 
     'settings.files_edit_title' => 'Editing file',
     'settings.files_start_editing' => 'Pick a file from the right sidebar to start editing',
-    'settings.files_editing_save' => 'Save theme',
+    'settings.files_editing_save' => 'Save changes',
     'settings.files_editing_cancel' => 'Cancel',
     'settings.files_modified' => 'Modified',
     'settings.files_type.layout' => 'Layouts',
@@ -76,6 +76,7 @@ return [
     'settings.files_type.img' => 'Images',
     'settings.files_message_updated' => 'File was successfully updated!',
     'settings.files_message_created' => 'File was successfully created!',
+    'settings.files_message_deleted' => 'File was successfully deleted!',
     'settings.files_error' => 'Error',
     'settings.files_delete_file' => 'Delete',
     'settings.files_rename_file' => 'Rename',
@@ -85,12 +86,18 @@ return [
 
     'settings.files.rename_file.save' => 'Save changes',
     'settings.files.rename_file.cancel' => 'Cancel',
+    'settings.files.rename_file.field.name' => 'File name',
 
     'settings.files.create_file.tab.create_file' => 'Create file',
     'settings.files.create_file.tab.upload_file' => 'Upload file',
     'settings.files.create_file.cancel' => 'Cancel',
     'settings.files.create_file.save' => 'Create file',
     'settings.files.create_file.upload' => 'Upload file',
+    'settings.files.create_file.field.name' => 'File name',
+    'settings.files.create_file.field.file' => 'Choose file',
+
+    'settings.files.upload_file.cancel' => 'Cancel',
+    'settings.files.upload_file.upload' => 'Upload image',
 
     'settings.themes_page_title' => 'Themes',
     'settings.themes_active' => 'Active:',

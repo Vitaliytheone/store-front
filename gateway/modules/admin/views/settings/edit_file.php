@@ -39,15 +39,6 @@ FilesAsset::register($this);
                                 ],
                             ]); ?>
 
-                                <div class="row">
-                                    <div class="col-12 mb-3">
-                                        <?php if ($file && Files::can(Files::CAN_UPDATE, $file)): ?>
-                                            <button type="submit" class="btn btn-success m-btn--air"><?= Yii::t('admin', 'settings.files_editing_save') ?></button>
-                                            <a href="<?= Url::toRoute('/settings/files') ?>" class="btn btn-secondary m-btn--air"><?= Yii::t('admin', 'settings.files_editing_cancel') ?></a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-
                                 <div class="m-portlet sommerce-settings__editor">
                                     <div class="m-portlet__head">
                                         <div class="m-portlet__head-caption">
@@ -63,16 +54,27 @@ FilesAsset::register($this);
                                         </div>
 
                                         <div class="m-portlet__head-tools">
-                                            <!--Actions-->
+                                            <?php if ($file && Files::can(Files::CAN_UPDATE, $file)) : ?>
+                                                <button type="submit" class="btn btn-success m-btn--air"><?= Yii::t('admin', 'settings.files_editing_save') ?></button>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
+
                                     <div class="row sommerce-editorPage">
                                         <div class="col-lg-10 sommerce-editorPage__text order-2 order-lg-1">
 
-                                            <?php if ($file): ?>
-                                                <div class="sommerce-editorPage__codemirror">
-                                                    <?= Html::activeTextarea($model, 'content', ['id' => 'code'])?>
-                                                </div>
+                                            <?php if ($file) : ?>
+                                                <?php if (Files::can(Files::CAN_UPDATE, $file)) : ?>
+                                                    <div class="sommerce-editorPage__codemirror">
+                                                        <?= Html::activeTextarea($model, 'content', ['id' => 'code'])?>
+                                                    </div>
+                                                <?php endif; ?>
+
+                                                <?php if (Files::can(Files::CAN_PREVIEW, $file)) : ?>
+                                                    <div class="sommerce-editorPage__image-preview">
+                                                        <?= Html::img(Url::toRoute(['/settings/preview-file', 'id' => ArrayHelper::getValue($file, 'id')])) ?>
+                                                    </div>
+                                                <?php endif; ?>
                                             <?php else: ?>
                                                 <div class="col-12 text-center">
                                                     <div class="sommerce-editorPage__preview-icon"></div>
@@ -103,3 +105,5 @@ FilesAsset::register($this);
 </div>
 
 <?= $this->render('layouts/files/_rename_file'); ?>
+<?= $this->render('layouts/files/_create_file'); ?>
+<?= $this->render('layouts/files/_upload_file'); ?>

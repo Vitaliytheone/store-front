@@ -25,6 +25,9 @@ $model = new RenameFileForm();
                 ],
             ]); ?>
                 <div class="modal-body">
+                    <?= $form->errorSummary($model, [
+                        'id' => 'renameFileError'
+                    ]); ?>
 
                     <?= $form->field($model, 'name') ?>
 

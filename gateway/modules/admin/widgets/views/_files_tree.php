@@ -26,7 +26,8 @@ use admin\components\Url;
                         <?= Html::a(Yii::t('admin', 'settings.files_add_file'), Url::toRoute(['/settings/create-file',]), [
                             'class' => 'create-file',
                             'data' => [
-                                'type' => $type
+                                'type' => $type,
+                                'extension' => $folder['extension']
                             ]
                         ]) ?>
                     </div>
@@ -43,7 +44,7 @@ use admin\components\Url;
                 <ul>
                     <?php foreach ($folder['files'] as $file) : ?>
                         <li>
-                            <?php if ($file['can']['update']) : ?>
+                            <?php if ($file['can']['update'] || $file['can']['preview']) : ?>
                                 <?= Html::a(Html::tag('span', '', [
                                     'class' => 'fa fa-file' . (!$file['active'] ? '-o' : ''),
                                 ]) . Html::tag('span', $file['name'], [
@@ -74,7 +75,9 @@ use admin\components\Url;
                                                 <?= Html::a(Yii::t('admin', 'settings.files_rename_file'), Url::toRoute(['/settings/rename-file', 'id' => $file['id'],]), [
                                                     'class' => 'dropdown-item rename-file',
                                                     'data' => [
-                                                        'details' => $file
+                                                        'details' => [
+                                                            'name' => $file['name'],
+                                                        ]
                                                     ]
                                                 ])?>
                                             <?php endif; ?>

@@ -70,4 +70,14 @@ class RenameFileForm extends Model
 
         return true;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name' => Yii::t('admin', 'settings.files.rename_file.field.name'),
+        ];
+    }
 }

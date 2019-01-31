@@ -5,6 +5,7 @@ namespace common\models\gateway;
 use common\components\traits\UnixTimeFormatTrait;
 use gateway\components\behaviors\FilesBehavior;
 use Yii;
+use common\components\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\gateway\queries\FilesQuery;
@@ -17,6 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property string $url
  * @property string $file_type
+ * @property string $mime
  * @property string $content
  * @property int $is_default
  * @property int $is_deleted
@@ -35,6 +37,26 @@ class Files extends ActiveRecord
     public const CAN_DELETE = 'delete';
     public const CAN_RENAME = 'rename';
     public const CAN_UPDATE = 'update';
+    public const CAN_PREVIEW = 'preview';
+
+    public const TWIG_SIZE = (1024 * 500);
+    public const CSS_SIZE = (1024 * 500);
+    public const JS_SIZE = (1024 * 500);
+    public const IMAGE_SIZE = (1024 * 500);
+
+    public static $availableExtensions = [
+        self::FILE_TYPE_LAYOUT => 'twig',
+        self::FILE_TYPE_PAGE => 'twig',
+        self::FILE_TYPE_SNIPPET => 'twig',
+        self::FILE_TYPE_JS => 'js',
+        self::FILE_TYPE_CSS => 'css',
+        self::FILE_TYPE_IMAGE => [
+            'png',
+            'jpg',
+            'jpeg',
+            'gif',
+        ],
+    ];
 
     use UnixTimeFormatTrait;
 
@@ -58,8 +80,8 @@ class Files extends ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['theme_id', 'created_at', 'updated_at'], 'integer'],
-            [['content'], 'string'],
+            [['created_at', 'updated_at', 'is_default', 'is_deleted'], 'integer'],
+            [['content', 'url', 'file_type', 'mime'], 'string'],
             [['name'], 'string', 'max' => 300],
         ];
     }
@@ -73,6 +95,11 @@ class Files extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'theme_id' => Yii::t('app', 'Theme ID'),
             'name' => Yii::t('app', 'Name'),
+            'url' => Yii::t('app', 'Url'),
+            'file_type' => Yii::t('app', 'File type'),
+            'mime' => Yii::t('app', 'Mime'),
+            'is_default' => Yii::t('app', 'Is default'),
+            'is_deleted' => Yii::t('app', 'Is deleted'),
             'content' => Yii::t('app', 'Content'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -108,6 +135,14 @@ class Files extends ActiveRecord
                 },
             ],
             'assets' => FilesBehavior::class,
+            'url' => [
+                'class' => SluggableBehavior::class,
+                'attribute' => function() {
+                    return $this->getClearName();
+                },
+                'slugAttribute' => 'url',
+                'ensureUnique' => true,
+            ],
         ];
     }
 
@@ -158,9 +193,30 @@ class Files extends ActiveRecord
                     static::FILE_TYPE_PAGE,
                 ]);
             break;
+
+            case static::CAN_PREVIEW:
+                return !ArrayHelper::getValue($file, 'is_deleted') && in_array(ArrayHelper::getValue($file, 'file_type'), [
+                    static::FILE_TYPE_IMAGE,
+                ]);
+            break;
         }
 
         return false;
     }
 
+    /**
+     * @return mixed|null
+     */
+    public function getClearName()
+    {
+        return !empty($this->name) ? pathinfo($this->name, PATHINFO_FILENAME) : null;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getExtension()
+    {
+        return !empty($this->name) ? pathinfo($this->name, PATHINFO_EXTENSION) : null;
+    }
 }

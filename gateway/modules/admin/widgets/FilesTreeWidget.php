@@ -67,6 +67,7 @@ class FilesTreeWidget extends Widget
                     'modified' => !empty($file['updated_at']) ? Yii::t('admin', 'settings.files_modified') . ' ' . Files::formatDate($file['updated_at']) : null,
                     'can' => [
                         'update' => Files::can(Files::CAN_UPDATE, $file),
+                        'preview' => Files::can(Files::CAN_PREVIEW, $file),
                         'rename' => Files::can(Files::CAN_RENAME, $file),
                         'delete' => Files::can(Files::CAN_DELETE, $file),
                     ]
@@ -75,8 +76,9 @@ class FilesTreeWidget extends Widget
 
             $itemsTree[$type] = [
                 'name' => $folderName,
+                'extension' => ArrayHelper::getValue(Files::$availableExtensions, $type),
                 'can' => [
-                    'add_file' => !in_array($type, [Files::FILE_TYPE_IMAGE]),
+                    'add_file' => !in_array($type, [Files::FILE_TYPE_IMAGE, Files::FILE_TYPE_LAYOUT]),
                     'upload_file' => in_array($type, [Files::FILE_TYPE_IMAGE]),
                 ],
                 'files' => $items,

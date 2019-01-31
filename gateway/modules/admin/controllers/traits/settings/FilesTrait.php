@@ -4,13 +4,15 @@ namespace admin\controllers\traits\settings;
 use admin\models\forms\CreateFileForm;
 use admin\models\forms\EditFileForm;
 use admin\models\forms\RenameFileForm;
+use admin\models\forms\UploadFileForm;
 use admin\models\search\FilesSearch;
 use common\components\ActiveForm;
 use common\models\gateway\Files;
 use gateway\controllers\CommonController;
-use gateway\helpers\FilesHelper;
 use Yii;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Class FilesTrait
@@ -169,6 +171,37 @@ trait FilesTrait {
     }
 
     /**
+     * Upload file
+     * @return array
+     */
+    public function actionUploadFile()
+    {
+        $gateway = Yii::$app->gateway->getInstance();
+
+        $model = new UploadFileForm();
+        $model->setGateway($gateway);
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                return [
+                    'status' => 'success',
+                    'message' => Yii::t('admin', 'settings.files_message_created'),
+                ];
+            }
+
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model),
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => Yii::t('admin', 'settings.files_error'),
+        ];
+    }
+
+    /**
      * Delete file by file id
      * @param integer $id
      * @return array
@@ -198,5 +231,27 @@ trait FilesTrait {
             'status' => 'error',
             'message' => Yii::t('admin', 'settings.files_error'),
         ];
+    }
+
+    /**
+     * Preview file by file id
+     * @param integer $id
+     */
+    public function actionPreviewFile($id)
+    {
+        /**
+         * @var Files $file
+         */
+        $file = $this->_findModel($id, Files::class);
+
+        if (!Files::can(Files::CAN_PREVIEW, $file)) {
+            throw new ForbiddenHttpException();
+        }
+
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_RAW;
+        $response->headers->add('Content-Type', $file->mime);
+        $response->data = $file->content;
+        return $response;
     }
 }

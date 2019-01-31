@@ -19,6 +19,7 @@ $model = new CreateFileForm();
                 'action' => Url::toRoute("/settings/create-file"),
                 'options' => [
                     'class' => "modal-content",
+                    'enctype' => 'multipart/form-data',
                 ],
                 'fieldClass' => 'yii\bootstrap\ActiveField',
                 'fieldConfig' => [
@@ -35,9 +36,18 @@ $model = new CreateFileForm();
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="m_tabs_1_1" role="tabpanel">
-                        <?= $form->field($model, 'name') ?>
+                    <div class="tab-pane active" id="m_tabs_1_1" role="tabpanel" aria-expanded="true">
+                        <?= $form->errorSummary($model, [
+                            'id' => 'createFileError'
+                        ]); ?>
 
+                        <div class="form-group m-form__group">
+                            <?= Html::activeLabel($model, 'name')?>
+                            <div class="input-group">
+                                <?= Html::activeTextInput($model, 'name', ['class' => 'form-control m-input'])?>
+                                <div class="input-group-append"><span class="input-group-text" id="extension"></span></div>
+                            </div>
+                        </div>
                         <div class="text-right">
                             <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal"><?= Yii::t('admin', 'settings.files.create_file.cancel') ?></button>
                             <?= Html::submitButton(Yii::t('admin', 'settings.files.create_file.save'), [
@@ -47,9 +57,17 @@ $model = new CreateFileForm();
                             ]) ?>
                         </div>
                     </div>
-                    <div class="tab-pane" id="m_tabs_1_2" role="tabpanel">
+                    <div class="tab-pane" id="m_tabs_1_2" role="tabpanel" aria-expanded="false">
+                        <?= $form->errorSummary($model, [
+                            'id' => 'createFileError'
+                        ]); ?>
                         <div class="mb-4">
-                            <?= $form->field($model, 'file')->fileInput() ?>
+                            <div class="form-group">
+                                <div>
+                                    <?= Html::activeLabel($model, 'file')?>
+                                </div>
+                                <?= Html::activeFileInput($model, 'file')?>
+                            </div>
                         </div>
 
                         <div class="text-right">
@@ -62,7 +80,7 @@ $model = new CreateFileForm();
                         </div>
                     </div>
                 </div>
-                <?= Html::activeHiddenInput($model, 'type') ?>
+                <?= Html::activeHiddenInput($model, 'file_type') ?>
             </div>
             <?php ActiveForm::end(); ?>
         </div>

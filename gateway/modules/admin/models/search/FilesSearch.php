@@ -26,6 +26,7 @@ class FilesSearch extends BaseSearch
             Files::FILE_TYPE_SNIPPET => [],
             Files::FILE_TYPE_CSS => [],
             Files::FILE_TYPE_JS => [],
+            Files::FILE_TYPE_IMAGE => [],
         ];
 
         foreach (FilesHelper::getFiles() as $type => $items) {
