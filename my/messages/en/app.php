@@ -311,6 +311,7 @@ return [
     'invoice_details.description.buy_store' => 'First month maintenance for {domain}',
     'invoice_details.description.buy_trial_store' => 'One free month maintenance for trial store {domain}',
     'invoice_details.description.prolongation_store' => 'One month maintenance for {domain}',
+    'invoice_details.description.prolongation_gateway' => 'One month maintenance for {domain}',
     'invoice_details.description.buy_gateway' => 'First month maintenance for {domain}',
     'invoices.status.unpaid' => 'Unpaid',
     'invoices.status.paid' => 'Paid',
