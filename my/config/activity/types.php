@@ -75,6 +75,10 @@ return [
     '6002' => 'Admin task success',
     '6003' => 'Admin task reject',
 
+    '8001' => 'Change status',
+    '8002' => 'Cancel and refund',
+
+
     '8' => 'Resend order',
     '9' => 'Change status',
     '10' => 'Cancel and refund',
@@ -110,11 +114,9 @@ return [
     '79' => 'Edit language',
     '80' => 'Add language',
     '81' => 'Reset changes',
-    '82' => 'Change status',
     '83' => 'Up method',
     '84' => 'Down method',
     '86' => 'Set default',
-    '87' => 'Cancel and refund',
     '88' => 'Mark as unread',
     '89' => 'Delete message',
     '90' => 'Edit message',

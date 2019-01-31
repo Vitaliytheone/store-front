@@ -16,7 +16,8 @@ class StoresQuery extends ActiveQuery
         return $this->andWhere([
                 'status' => Stores::STATUS_ACTIVE
             ])
-            ->andWhere('db_name IS NOT NULL');
+            ->andWhere('db_name IS NOT NULL')
+            ->andWhere('db_name != ""');
     }
 
     /**
