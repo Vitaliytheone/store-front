@@ -175,6 +175,7 @@ class CronController extends CustomController
         InvoiceHelper::prolongPanels();
         InvoiceHelper::prolongDomains();
         InvoiceHelper::prolongStores();
+        InvoiceHelper::prolongGateways();
 
         if (Yii::$app->params['free_ssl.prolong']) {
             InvoiceHelper::prolongFreeSsl();

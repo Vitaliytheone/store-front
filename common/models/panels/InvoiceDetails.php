@@ -505,7 +505,7 @@ class InvoiceDetails extends ActiveRecord
                 $lastExpired = $gateway->expired_at;
 
                 if (!$gateway->updateExpired()) {
-                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $gateway->id, $gateway->getErrors(), 'paid.invoice_details.expired');
+                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_GATEWAY, $gateway->id, $gateway->getErrors(), 'paid.invoice_details.expired');
                     return false;
                 }
 
