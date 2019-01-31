@@ -1,8 +1,12 @@
 <?php
 
+$serverIp = '188.165.29.223';
+
 return [
     'time' => '10800',
 
+    'config.db' => DB_CONFIG,
+    'config.proxy' => PROXY_CONFIG,
     'panelNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
     'storeNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
     'gatewayNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги
@@ -28,15 +32,29 @@ return [
     // DNS параметры
     // адрес можно указать наш домен для отладки который возвращает успешное добавление всегда
     'dnsService' => 'http://mydev.perfectpanel.net', // можно указать наш домен для отладки который возвращает успешное добавление всегда
-    'dnsId' => '',
-    'dnsLogin' => '',
-    'dnsPassword' => '',
+    'dnsId' => '1181',
+    'dnsLogin' => '2njujbuhwrZSgW96JynTN7JASe6Q8X64',
+    'dnsPassword' => $serverIp,
 
-    'panelDeployPrice' => '50',
-    'childPanelDeployPrice' => '25',
-    'storeDeployPrice' => '35',
-    'gatewayDeployPrice' => '50',
-
+    // Параметры по умолчанию при создании панели
+    'projectDefaults' => [
+        'theme_path' => 'default_light',
+        'lang' => 'en',
+        'plan' => 1,
+        'comments' => 1,
+        'mentions_wo_hashtag' => 1,
+        'mentions' => 1,
+        'mentions_custom' => 1,
+        'mentions_hashtag' => 1,
+        'mentions_follower' => 1,
+        'mentions_likes' => 1,
+        'start_count' => 1,
+        'custom' => 1,
+        'ticket_per_user' => 3,
+        'affiliate_minimum_payout' => 10,
+        'affiliate_commission_rate' => 5,
+        'affiliate_approve_payouts' => 0,
+    ],
 
     // Default store attributes
     'store.defaults' => [
@@ -55,6 +73,8 @@ return [
         'theme_name' => 'Default',
         'theme_folder' => 'default',
     ],
+
+    'store.paywant_proxy' => 'http://37.1.207.99/scr/paywant.php',
 
     'mailgun.key' => '',
     'mailgun.domain' => 'mail-smm.local',

@@ -3,6 +3,12 @@
 return [
 
     // ОБЩИЕ ПАРАМЕТРЫ
+    'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r', // ключ авторизации используемый как соль, должен свопадать с таким-же тут sommerce/config/params-local.php 'auth_key'!
+    'admin_auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r',
+
+    'reCaptcha.siteKey' => '6LeAmT4UAAAAAKz1c-wjHdI2XDp_PglfA1rl8RbG',
+    'reCaptcha.secret' => '6LeAmT4UAAAAAI88eDxVJkusrAurV9A8EqwphqVw',
+
     'time' => '10800', // в данной переменной мы храним разницу между временем на сервере и времени админки
 
     'noreplyEmail' => 'noreply@getyourpanel.local', // Адрес почты для отправки писем (from)
@@ -43,10 +49,13 @@ return [
     'mysqldump_exec_path' => '/Applications/MAMP/Library/bin/mysqldump', // для локальной работы указывам путь к бинарнику MySQL Dump
     'mysql_exec_path' => '/Applications/MAMP/Library/bin/mysql', // для локальной работы указывам путь к бинарнику MySQL
 
+    'testTwoCheckout' => true, // Включение тестовых платежей в Twocheckout -- true - используем sandbox, false - рабочий аккаунт
     'testPayPal' => true, // Включение тестовых платежей в Пейпал -- true - используем sandbox, false - рабочий аккаунт
+    'testNamesilo' => 'dev', // dev - используем sandbox, prod - основной url
 
     'free_ssl.create' => false,  // Создавать заказ/выполнять заказ на бесплатный сертификат или нет
     'free_ssl.prolong' => false, // Создавать заказ/выполнять заказ на продление бесплатного сертификата или нет
+
 
     // Параметры по умолчанию при создании панели
     'projectDefaults' => [
@@ -80,6 +89,10 @@ return [
     // ДАННЫЕ ИСПОЛЬЗУЕМЫЕ ДЛЯ ПОДКЛЮЧЕНИЯ ИЛИ АВТОРИЗАЦИИ
     'sysmailSecret' => '461e058179caa43104004272284355d0ef6827553fc4fbb1948a697e757c12a0', // используется при проверки для отправки почты
 
+    // Mailgun mailer
+    'mailgun.key' => 'key-cf10921abd5862ddd4b4b55692031fad',
+    'mailgun.domain' => 'perfectpanel.local',
+
     // Данные для Swift mailer
     'swift.host' => 'ssl://smtp.yandex.local',
     'swift.username' => 'noreply@perfectpanel.com',
@@ -88,6 +101,12 @@ return [
 
     // Данные для сервиса по защите от DDOS
     'ddosGuardUrl' => 'http://mydev.perfectpanel.net/system/ddos-success',
+    'ddosGuardOptions' => [
+        'siteIP' => '5.45.78.24',
+        'sitePort' => '80',
+        'protectedIP' => '',
+        'isSSL' => true,
+    ],
 
     // SSL параметры для goGetSSL
     'goGetSSLUsername' => 'thirteen@13.uz', // dev account
