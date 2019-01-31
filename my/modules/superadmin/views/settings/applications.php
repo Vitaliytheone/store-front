@@ -20,7 +20,7 @@ $this->context->addModule('superadminApplicationsController');
                 </div>
             </div>
             <div class="col-md-9">
-                <div class="mb-3"><?=Yii::t('app/superadmin', 'pages.settings.applications')?></div>
+                <div class="mb-3"><?= Yii::t('app/superadmin', 'pages.settings.applications') ?></div>
                 <?= $this->render('layouts/_applications_list', [
                     'params' => $params
                 ]) ?>

@@ -1,13 +1,12 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $model superadmin\models\forms\EditApplicationsForm */
-/* @var $payment \common\models\panels\Params */
+/* @var $params \common\models\panels\Params */
 
 /* @var $form my\components\ActiveForm */
 
 use my\components\ActiveForm;
 use my\helpers\Url;
-use common\models\panels\Params;
 use yii\bootstrap\Html;
 
 ?>
@@ -29,11 +28,10 @@ use yii\bootstrap\Html;
 ]); ?>
 
 
-<?= $form->field($model, 'code') ?>
-<?php foreach ((array)$model as $name => $value) : ?>
+<?php foreach ((array)$model->options as $name => $value) : ?>
     <div class="form-group">
         <label for=""><?= $model->getAttributeLabel($name) ?></label>
-        <?= Html::textInput($model->formName() . "[{$name}]", $value, ['class' => 'form-control']) ?>
+        <?= Html::textInput($model->formName() . "[options][{$name}]", $value, ['class' => 'form-control']) ?>
     </div>
 <?php endforeach; ?>
 

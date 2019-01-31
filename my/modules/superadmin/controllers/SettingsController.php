@@ -513,8 +513,6 @@ class SettingsController extends CustomController
             ];
         }
 
-        Yii::debug($model, 'model');
-        Yii::debug($params, '$params');
         return [
             'content' => $this->renderPartial('layouts/_edit_applications_form', [
                 'model' => $model,
