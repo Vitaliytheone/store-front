@@ -46,7 +46,9 @@ class OrderStoreForm extends DomainForm
     {
         return array_merge(
             parent::rules(), [
-            [['admin_username', 'admin_email'], 'trim'],
+            [['admin_username', 'admin_email', 'admin_password'], 'filter', 'filter' => function($value) { // Trim input values
+                return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
+            }],
             ['admin_username', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
             ['admin_username', 'string', 'min' => 3, 'max' => 32],
             [['domain', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],

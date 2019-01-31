@@ -84,11 +84,13 @@ class CreateChildForm extends Model
     public function rules()
     {
         return [
-            [['username'], 'trim'],
-            ['username', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
-            ['username', 'string', 'min' => 3, 'max' => 32],
             [['domain'], OrderLimitValidator::class],
             [['domain', 'currency', 'username', 'password', 'password_confirm', 'provider'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
+            [['username', 'password'], 'filter', 'filter' => function($value) { // Trim input values
+                return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
+            }],
+            ['username', 'match', 'pattern' => '/^[a-z0-9\-\_\@\.]*$/i'],
+            ['username', 'string', 'min' => 3, 'max' => 32],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['provider'], 'in', 'range' => array_keys($this->getProviders()), 'message' => Yii::t('app', 'error.panel.bad_provider')],
             [['domain'], OrderDomainValidator::class, 'child_panel' => true],
