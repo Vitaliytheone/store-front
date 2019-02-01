@@ -46,13 +46,6 @@ FilesAsset::register($this);
                                                 <h3 class="m-portlet__head-text">
                                                     <?php if ($file) : ?>
                                                         <?= $file->name ?>
-                                                        <?php if (($url = $file->getUrl())) : ?>
-                                                            <small><?= $file->getUrl() ?></small>
-                                                        <?php endif; ?>
-
-                                                        <?php if ($file->updated_at) : ?>
-                                                            <small><?= $file->getFormattedDate('updated_at') ?></small>
-                                                        <?php endif; ?>
                                                     <?php endif; ?>
                                                 </h3>
                                             </div>

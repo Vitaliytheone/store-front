@@ -78,10 +78,10 @@ class GatewayHelper {
         }
 
         if (!empty($files[Files::FILE_TYPE_IMAGE])) {
-            FileHelper::createDirectory($assetsPath . 'img' . $sp);
+            FileHelper::createDirectory($assetsPath . 'images' . $sp);
 
             foreach ($files[Files::FILE_TYPE_IMAGE] as $file) {
-                if (file_put_contents($assetsPath . 'img' . $sp . $file['name'], $file['content'])) {
+                if (file_put_contents($assetsPath . 'images' . $sp . $file['name'], $file['content'])) {
                     $images[] = $file['name'];
                 }
             }
