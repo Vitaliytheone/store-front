@@ -181,12 +181,15 @@ class ChangeDomainForm extends Model {
     public function validateDomain($attribute, $params)
     {
         $domain = $this->prepareDomain();
-        $panelExist = Project::find()
-            ->where(['site' => $domain, 'act' => [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
-            ->exists();
 
-        if ($panelExist) {
-            $this->addError($attribute, Yii::t('app/superadmin', 'panels.change_domain.error_exist'));
+        if ($this->_project->site != $domain) {
+            $panelExist = Project::find()
+                ->where(['site' => $domain, 'act' => [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
+                ->exists();
+
+            if ($panelExist) {
+                $this->addError($attribute, Yii::t('app/superadmin', 'panels.change_domain.error_exist'));
+            }
         }
     }
 }
