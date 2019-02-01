@@ -13,7 +13,6 @@ use yii\base\Model;
  */
 class EditApplicationsForm extends Model
 {
-    public $code;
     /** @var array */
     public $options = [];
 
@@ -40,8 +39,6 @@ class EditApplicationsForm extends Model
         $this->_params = $params;
         $this->options = $params->getOptions();
 
-        $this->code = $params->code;
-        $this->attributes = $this->options;
     }
 
     /**
@@ -54,7 +51,7 @@ class EditApplicationsForm extends Model
             return false;
         }
 
-        $this->_params->setOptions($this->attributes);
+        $this->_params->setOptions($this->options);
 
         if (!$this->_params->save()) {
             $this->addErrors($this->_params->getErrors());
