@@ -246,11 +246,16 @@ class EditPanelPaymentMethodsForm extends Model
                 /** @var Users $user */
                 $payments = $user->getPayments();
 
-                if (!isset($payments[$sameMethodId]) || $payments[$sameMethodId] == Users::PAYMENT_METHOD_DISALLOW) {
-                    continue;
-                }
+                if (isset($payments[$sameMethodId]) && $payments[$sameMethodId] == Users::PAYMENT_METHOD_DISALLOW) {
+                    $payments[$methodId] = Users::PAYMENT_METHOD_DISALLOW;
 
-                if (!isset($payments[$methodId]) || $payments[$methodId] !== Users::PAYMENT_METHOD_ALLOW) {
+                    $user->setPayments($payments);
+
+                    $update[] = [
+                        'id' => $user->id,
+                        'payments' => $user->payments,
+                    ];
+                } elseif (!isset($payments[$methodId]) || $payments[$methodId] !== Users::PAYMENT_METHOD_ALLOW) {
                     $payments[$methodId] = Users::PAYMENT_METHOD_ALLOW;
 
                     $user->setPayments($payments);
