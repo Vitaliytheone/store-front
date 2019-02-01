@@ -32,15 +32,7 @@ class FilesTreeWidget extends Widget
      */
     public function run()
     {
-        $menuTree = $this->_filesTree();
-
-        $menuTree = Html::tag('ul', $menuTree, []);
-        $menuTree = Html::tag('div', $menuTree, [
-            'id' => 'm_tree_1',
-            'class' => 'tree-demo'
-        ]);
-
-        return $menuTree;
+        return $this->_filesTree();
     }
 
     /**
