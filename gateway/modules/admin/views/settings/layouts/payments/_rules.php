@@ -12,5 +12,9 @@
         case PaymentMethods::METHOD_PAYPAL:
             echo $this->render('rules/_paypal', ['gateway' => $gateway]);
         break;
+
+        case PaymentMethods::METHOD_STRIPE:
+            echo $this->render('rules/_stripe', ['gateway' => $gateway]);
+        break;
     }
 ?>
