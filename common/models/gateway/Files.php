@@ -239,7 +239,7 @@ class Files extends ActiveRecord
             break;
 
             case static::FILE_TYPE_IMAGE:
-                return '/img/' . $this->name;
+                return '/images/' . $this->name;
             break;
         }
 

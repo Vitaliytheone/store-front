@@ -20,7 +20,11 @@ class ViewRenderer extends \common\components\twig\ViewRenderer
     public function getLoader()
     {
         if (null == $this->loader) {
-            $files = ArrayHelper::map((array)ArrayHelper::getValue(FilesHelper::getFiles(), Files::FILE_TYPE_SNIPPET, []), 'name', 'content');
+            $files = [];
+
+            foreach((array)ArrayHelper::getValue(FilesHelper::getFiles(), Files::FILE_TYPE_SNIPPET, []) as $file) {
+                $files['/snippets/' . $file['name']] = $file['content'];
+            }
 
             $this->loader = new Twig_Loader_Array($files);
         }
