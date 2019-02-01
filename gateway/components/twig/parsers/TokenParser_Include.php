@@ -45,9 +45,13 @@ class TokenParser_Include extends Twig_TokenParser
         }
 
         $view = $expression->getAttribute('value');
-        $availableIncludes = ArrayHelper::index((array)ArrayHelper::getValue(FilesHelper::getFiles(), Files::FILE_TYPE_SNIPPET, []), 'name');
+        $files = [];
 
-        if (empty($view) || empty($availableIncludes[$view])) {
+        foreach((array)ArrayHelper::getValue(FilesHelper::getFiles(), Files::FILE_TYPE_SNIPPET, []) as $file) {
+            $files['/snippets/' . $file['name']] = $file['content'];
+        }
+
+        if (empty($view) || empty($files[$view])) {
             throw new Twig_Error_Syntax($view . ' file is not supported');
         }
 
