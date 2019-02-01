@@ -126,6 +126,7 @@ return [
     'panels.change_provider.save' => 'Save changes',
 
     'panels.change_domain.error' => 'Can not change domain',
+    'panels.change_domain.error_exist' => 'Domain already exists',
     'panels.edit_expiry.error' => 'Can not change domain',
     'panels.downgrade.error' => 'Can not downgrade.',
     'panels.change_domain.domain' => 'Domain',

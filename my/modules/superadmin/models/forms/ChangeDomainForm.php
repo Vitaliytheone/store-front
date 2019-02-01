@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use common\models\panels\Domains;
@@ -32,6 +33,7 @@ class ChangeDomainForm extends Model {
     {
         return [
             [['domain'], 'required'],
+            ['domain', 'validateDomain'],
             [['subdomain'], 'safe'],
         ];
     }
@@ -170,5 +172,21 @@ class ChangeDomainForm extends Model {
             'domain' => Yii::t('app/superadmin', 'panels.change_domain.domain'),
             'subdomain' => Yii::t('app/superadmin', 'panels.change_domain.subdomain'),
         ];
+    }
+
+    /**
+     * @param $attribute
+     * @param $params
+     */
+    public function validateDomain($attribute, $params)
+    {
+        $domain = $this->prepareDomain();
+        $panelExist = Project::find()
+            ->where(['site' => $domain, 'act' => [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
+            ->exists();
+
+        if ($panelExist) {
+            $this->addError($attribute, Yii::t('app/superadmin', 'panels.change_domain.error_exist'));
+        }
     }
 }
