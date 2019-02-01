@@ -18,6 +18,9 @@ class PageController extends CustomController
     public function actionIndex($id = ['url' => 'index'])
     {
         $file = $this->_findFile($id);
+
+        $this->pageTitle = $file->getTitle();
+
         return $this->renderTwigContent($file->content);
     }
 

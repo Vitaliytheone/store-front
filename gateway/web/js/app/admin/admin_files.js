@@ -12,7 +12,7 @@ customModule.adminFiles = {
             contentOnInit;
 
         var codeMirroSetting = {},
-            codeType = 'twig';
+            codeType = params.type;
 
         switch (codeType){
             case 'twig':

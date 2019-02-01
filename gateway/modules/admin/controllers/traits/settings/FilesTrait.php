@@ -36,13 +36,19 @@ trait FilesTrait {
 
         $model = new EditFileForm();
         $model->setGateway($gateway);
+        $jsOptions = [];
 
         if ($id) {
+            /**
+             * @var Files $file
+             */
             $file = $this->_findModel($id, Files::class);
             $model->setFile($file);
+
+            $jsOptions['type'] = $file->getExtension();
         }
 
-        $this->addModule('adminFiles');
+        $this->addModule('adminFiles', $jsOptions);
 
         return $this->render('edit_file', [
             'file' => $file,

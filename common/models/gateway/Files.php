@@ -245,4 +245,20 @@ class Files extends ActiveRecord
 
         return null;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getTitle()
+    {
+        $title = null;
+
+        if (empty($this->url) || static::FILE_TYPE_PAGE !== $this->file_type) {
+            return $title;
+        }
+
+        $title = ucfirst(str_replace(['_'], " ", $this->url));
+
+        return $title;
+    }
 }
