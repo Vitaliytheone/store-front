@@ -15,6 +15,7 @@ use yii\web\UploadedFile;
  */
 class CreateFileForm extends Model
 {
+    public $id;
     public $name;
     public $file;
     public $file_type;
@@ -54,7 +55,7 @@ class CreateFileForm extends Model
             }],
 
             [['name'], 'string'],
-            [['name'], 'match', 'pattern' => '/^([a-z0-1-_])*$/i'],
+            [['name'], 'match', 'pattern' => '/^([\w\d\-\_\s])*$/uis'],
             [['file_type'], 'in', 'range' => [
                 Files::FILE_TYPE_JS,
                 Files::FILE_TYPE_CSS,
@@ -98,6 +99,8 @@ class CreateFileForm extends Model
             $this->addErrors($model->getErrors());
             return false;
         }
+
+        $this->id = $model->id;
 
         return true;
     }

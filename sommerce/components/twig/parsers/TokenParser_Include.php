@@ -1,5 +1,5 @@
 <?php
-namespace common\components\twig\parsers;
+namespace sommerce\components\twig\parsers;
 
 use common\helpers\ThemesHelper;
 use Twig_TokenParser;

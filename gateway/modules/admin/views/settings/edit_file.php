@@ -44,10 +44,15 @@ FilesAsset::register($this);
                                         <div class="m-portlet__head-caption">
                                             <div class="m-portlet__head-title">
                                                 <h3 class="m-portlet__head-text">
-                                                    <?php if ($file): ?>
-                                                        <small>
-                                                            <?= $file->name ?>
-                                                        </small>
+                                                    <?php if ($file) : ?>
+                                                        <?= $file->name ?>
+                                                        <?php if (($url = $file->getUrl())) : ?>
+                                                            <small><?= $file->getUrl() ?></small>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($file->updated_at) : ?>
+                                                            <small><?= $file->getFormattedDate('updated_at') ?></small>
+                                                        <?php endif; ?>
                                                     <?php endif; ?>
                                                 </h3>
                                             </div>

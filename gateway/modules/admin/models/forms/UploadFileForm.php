@@ -14,6 +14,7 @@ use yii\web\UploadedFile;
  */
 class UploadFileForm extends Model
 {
+    public $id;
     public $file;
 
     /**
@@ -61,6 +62,8 @@ class UploadFileForm extends Model
             $this->addErrors($model->getErrors());
             return false;
         }
+
+        $this->id = $model->id;
 
         return true;
     }

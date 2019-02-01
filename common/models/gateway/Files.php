@@ -219,4 +219,30 @@ class Files extends ActiveRecord
     {
         return !empty($this->name) ? pathinfo($this->name, PATHINFO_EXTENSION) : null;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getUrl()
+    {
+        switch ($this->file_type) {
+            case static::FILE_TYPE_PAGE:
+                return '/' . $this->url;
+            break;
+
+            case static::FILE_TYPE_CSS:
+                return '/css/' . $this->name;
+            break;
+
+            case static::FILE_TYPE_JS:
+                return '/js/' . $this->name;
+            break;
+
+            case static::FILE_TYPE_IMAGE:
+                return '/img/' . $this->name;
+            break;
+        }
+
+        return null;
+    }
 }

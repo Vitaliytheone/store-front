@@ -10,4 +10,4 @@ ADD `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - not deleted; 1 - d
 RENAME TO `files`;
 
 ALTER TABLE `files`
-CHANGE `content` `content` blob NOT NULL AFTER `mime`;
+CHANGE `content` `content` longblob NOT NULL AFTER `mime`;

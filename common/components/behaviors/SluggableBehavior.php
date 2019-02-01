@@ -8,6 +8,12 @@ use yii\helpers\ArrayHelper;
  * @package common\components\behaviors
  */
 class SluggableBehavior extends \yii\behaviors\SluggableBehavior {
+
+    /**
+     * @var null|string
+     */
+    public $postfix;
+
     /**
      * {@inheritdoc}
      */

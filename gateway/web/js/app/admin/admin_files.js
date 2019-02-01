@@ -149,7 +149,13 @@ customModule.adminFiles = {
                             if (response.message !== undefined) {
                                 toastr.success(response.message);
                             }
-                            location.reload();
+
+                            if (response.redirect) {
+                                window.location.href = response.redirect;
+                                return;
+                            }
+
+                            location.reload()
                         }
                     }
                 });
@@ -186,6 +192,12 @@ customModule.adminFiles = {
                 data: form.serialize(),
                 callback : function(response) {
                     $('#renameFileModal').modal('hide');
+
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
+                        return;
+                    }
+
                     location.reload();
                 }
             });
@@ -232,6 +244,12 @@ customModule.adminFiles = {
                 processData: false,
                 callback : function(response) {
                     $('#createFileModal').modal('hide');
+
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
+                        return;
+                    }
+
                     location.reload();
                 }
             });
@@ -269,6 +287,12 @@ customModule.adminFiles = {
                 processData: false,
                 callback : function(response) {
                     $('#uploadFileModal').modal('hide');
+
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
+                        return;
+                    }
+
                     location.reload();
                 }
             });

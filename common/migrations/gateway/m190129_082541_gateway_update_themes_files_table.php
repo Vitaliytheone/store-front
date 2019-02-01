@@ -28,7 +28,7 @@ class m190129_082541_gateway_update_themes_files_table extends Migration
             RENAME TO `files`;
             
             ALTER TABLE `files`
-            CHANGE `content` `content` blob NOT NULL AFTER `mime`;
+            CHANGE `content` `content` longblob NOT NULL AFTER `mime`;
         ";
 
         $this->execute("

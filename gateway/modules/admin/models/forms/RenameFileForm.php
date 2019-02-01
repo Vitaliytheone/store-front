@@ -32,6 +32,27 @@ class RenameFileForm extends Model
         return [
             [['name'], 'required'],
             [['name'], 'string'],
+            [['name'], 'match', 'pattern' => '/^([\w\d\-\_\s])*\.' . Files::$availableExtensions[Files::FILE_TYPE_JS] . '$/uis', 'when' => function() {
+                return in_array($this->_file->file_type, [
+                    Files::FILE_TYPE_JS,
+                ]);
+            }],
+            [['name'], 'match', 'pattern' => '/^([\w\d\-\_\s])*\.' . Files::$availableExtensions[Files::FILE_TYPE_CSS] . '$/uis', 'when' => function() {
+                return in_array($this->_file->file_type, [
+                    Files::FILE_TYPE_CSS,
+                ]);
+            }],
+            [['name'], 'match', 'pattern' => '/^([\w\d\-\_\s])*\.' . Files::$availableExtensions[Files::FILE_TYPE_PAGE] . '$/uis', 'when' => function() {
+                return in_array($this->_file->file_type, [
+                    Files::FILE_TYPE_PAGE,
+                    Files::FILE_TYPE_SNIPPET,
+                ]);
+            }],
+            [['name'], 'match', 'pattern' => '/^([\w\d\-\_\s])*\.(' . implode("|", Files::$availableExtensions[Files::FILE_TYPE_IMAGE]) . ')$/uis', 'when' => function() {
+                return in_array($this->_file->file_type, [
+                    Files::FILE_TYPE_IMAGE,
+                ]);
+            }],
         ];
     }
 

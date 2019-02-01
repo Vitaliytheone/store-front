@@ -1,6 +1,7 @@
 <?php
 namespace admin\controllers\traits\settings;
 
+use admin\components\Url;
 use admin\models\forms\CreateFileForm;
 use admin\models\forms\EditFileForm;
 use admin\models\forms\RenameFileForm;
@@ -77,7 +78,7 @@ trait FilesTrait {
             if ($model->save()) {
                 return [
                     'status' => 'success',
-                    'filename' => $file->name,
+                    'redirect' => Url::toRoute(['settings/files', 'id' => $file->id]),
                     'message' => Yii::t('admin', 'settings.files_message_updated'),
                 ];
             }
@@ -121,7 +122,7 @@ trait FilesTrait {
             if ($model->save()) {
                 return [
                     'status' => 'success',
-                    'filename' => $model->name,
+                    'redirect' => Url::toRoute(['settings/files', 'id' => $file->id]),
                     'message' => Yii::t('admin', 'settings.files_message_updated'),
                 ];
             }
@@ -153,7 +154,7 @@ trait FilesTrait {
             if ($model->save()) {
                 return [
                     'status' => 'success',
-                    'filename' => $model->name,
+                    'redirect' => Url::toRoute(['settings/files', 'id' => $model->id]),
                     'message' => Yii::t('admin', 'settings.files_message_created'),
                 ];
             }
@@ -185,6 +186,7 @@ trait FilesTrait {
             if ($model->save()) {
                 return [
                     'status' => 'success',
+                    'redirect' => Url::toRoute(['settings/files', 'id' => $model->id]),
                     'message' => Yii::t('admin', 'settings.files_message_created'),
                 ];
             }
@@ -223,6 +225,7 @@ trait FilesTrait {
         if ($file->delete()) {
             return [
                 'status' => 'success',
+                'redirect' => Url::toRoute(['settings/files']),
                 'message' => Yii::t('admin', 'settings.files_message_deleted'),
             ];
         }

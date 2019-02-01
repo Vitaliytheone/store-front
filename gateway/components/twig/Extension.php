@@ -1,7 +1,7 @@
 <?php
 namespace gateway\components\twig;
 
-use common\components\twig\parsers\TokenParser_Include;
+use gateway\components\twig\parsers\TokenParser_Include;
 use common\models\gateway\Files;
 use gateway\helpers\AssetsHelper;
 use gateway\helpers\FilesHelper;
