@@ -2,7 +2,6 @@
 
 namespace my\models\forms;
 
-use common\components\domains\Domain;
 use yii\base\Model;
 use Yii;
 use my\components\validators\OrderLimitValidator;
@@ -159,7 +158,7 @@ class DomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $registrar = Domain::getRegistrarClass($domain);
+        $registrar = DomainsHelper::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {

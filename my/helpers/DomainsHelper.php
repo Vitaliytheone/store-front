@@ -2,6 +2,7 @@
 
 namespace my\helpers;
 
+use common\components\domains\Domain;
 use common\models\panels\DomainZones;
 
 /**
@@ -11,12 +12,15 @@ use common\models\panels\DomainZones;
 class DomainsHelper
 {
 
+    /** @var array registrars name */
+    public static $registrarName;
+
     /**
      * Prepare domain to idn format
      * @param string $domain
      * @return string
      */
-    public static function idnToAscii($domain)
+    public static function idnToAscii($domain): string
     {
         $domain = trim($domain);
 
@@ -25,7 +29,7 @@ class DomainsHelper
         }
 
         if (!preg_match('/^[a-z0-9-\.]+$/i', $domain)) {
-            $domain = idn_to_ascii($domain);
+            $domain = idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
         }
         return $domain;
     }
@@ -35,7 +39,7 @@ class DomainsHelper
      * @param string $domain
      * @return string
      */
-    public static function idnToUtf8($domain)
+    public static function idnToUtf8($domain): string
     {
         $domain = trim((string)$domain);
 
@@ -44,7 +48,7 @@ class DomainsHelper
         }
         
         if (false !== stripos($domain, 'xn--')) {
-            if (false === stripos($domain, ' ')) {
+            if (false === mb_stripos($domain, ' ')) {
                 return idn_to_utf8($domain);
             }
 
@@ -65,5 +69,46 @@ class DomainsHelper
         $result = DomainZones::find()->select('registrar')->distinct()->asArray()->all();
         $result = array_column($result, 'registrar');
         return $result;
+    }
+
+    /**
+     * Returns the Class created depending on the domain zone.
+     *
+     * @param string $domain
+     * @return \common\components\domains\BaseDomain
+     * @throws \yii\base\UnknownClassException
+     */
+    public static function getRegistrarClass($domain)
+    {
+        $name = self::getRegistrarName($domain);
+
+        $result = Domain::createRegistrarClass($name);
+
+        return $result;
+    }
+
+    /**
+     * Get the name of the domain registrar
+     * @param string $domain Domain name
+     * @return string domain registrar name
+     */
+    public static function getRegistrarName($domain): string
+    {
+
+        $zone = mb_strtoupper('.' . explode('.', $domain)[1]);
+        if (empty($zone)) {
+            return '';
+        }
+
+
+        if (empty(static::$registrarName[$zone]['registrar'])) {
+            static::$registrarName = DomainZones::find()->asArray()->indexBy('zone')->all();
+        }
+
+        if (empty(static::$registrarName[$zone]['registrar'])) {
+            return '';
+        }
+
+        return static::$registrarName[$zone]['registrar'];
     }
 }

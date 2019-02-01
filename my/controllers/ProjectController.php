@@ -12,7 +12,7 @@ use my\models\forms\EditStaffForm;
 use my\models\forms\SetStaffPasswordForm;
 use common\models\panels\Orders;
 use common\models\panels\ProjectAdmin;
-use my\models\search\DomainsSearch;
+use my\models\search\DomainsAvailableSearch;
 use my\models\search\PanelsSearch;
 use Yii;
 use common\models\panels\Project;
@@ -299,7 +299,7 @@ class ProjectController extends CustomController
         $domain = trim(Yii::$app->request->get('search_domain'));
         $zone = trim(Yii::$app->request->get('zone'));
 
-        $domainsSearch = new DomainsSearch();
+        $domainsSearch = new DomainsAvailableSearch();
 
         return [
             'content' => $this->renderPartial('layouts/_search_domains_result', [

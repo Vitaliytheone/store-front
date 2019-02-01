@@ -543,7 +543,7 @@ class OrderHelper {
         $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
         $expiry = strtotime($expiry);
 
-        $registrar = Domain::getRegistrarName($domain);
+        $registrar = DomainsHelper::getRegistrarName($domain);
 
         $domainModel = new Domains();
         $domainModel->customer_id = $order->cid;

@@ -2,7 +2,6 @@
 
 namespace my\models\forms;
 
-use common\components\domains\Domain;
 use my\components\validators\OrderDomainValidator;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
@@ -322,7 +321,7 @@ class OrderDomainForm extends Model
 
         $domain = mb_strtolower(trim($domain));
 
-        $registrar = Domain::getRegistrarClass($domain);
+        $registrar = DomainsHelper::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {

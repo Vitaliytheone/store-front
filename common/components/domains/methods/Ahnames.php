@@ -26,11 +26,10 @@ class Ahnames extends BaseDomain
 
         $url = Yii::$app->params['ahnames.url'];
 
-        $options = [
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domains' => implode(',', $domains)
-        ];
+        ]);
         
         
         $result = Request::getContents($url . '/domainsCheck?' . http_build_query($options));
@@ -43,10 +42,8 @@ class Ahnames extends BaseDomain
      */
     public static function contactCreate($options): array
     {
-        $options = array_merge($options, [
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ]);
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($options, $defaultOptions);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -60,16 +57,15 @@ class Ahnames extends BaseDomain
      */
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
-        $options = [
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
             'period' => $period,
             'registrant' => $contactId,
             'admin' => $contactId,
             'tech' => $contactId,
             'billing' => $contactId,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ];
+        ]);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -83,11 +79,10 @@ class Ahnames extends BaseDomain
      */
     public static function domainGetInfo($domain): array
     {
-        $options = [
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ];
+        ]);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -101,11 +96,10 @@ class Ahnames extends BaseDomain
      */
     public static function domainEnableWhoisProtect($domain): array
     {
-        $options = [
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ];
+        ]);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -125,12 +119,11 @@ class Ahnames extends BaseDomain
 
         $ns = array_filter($ns);
 
-        $options = [
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
             'nss' => implode(",", $ns)
-        ];
+        ]);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -144,11 +137,10 @@ class Ahnames extends BaseDomain
      */
     public static function domainEnableLock($domain): array
     {
-        $options = [
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ];
+        ]);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -162,13 +154,12 @@ class Ahnames extends BaseDomain
      */
     public static function domainRenew($domain, $expires, $period = 1): array
     {
-        $options = [
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
             'expires' => $expires,
             'period' => $period,
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
-        ];
+        ]);
 
         $url = Yii::$app->params['ahnames.url'];
 
@@ -180,7 +171,7 @@ class Ahnames extends BaseDomain
     /**
      * @inheritdoc
      */
-    public static function getRegistrarDataForLogs(): array
+    public static function getDefaultOptions(): array
     {
         return [
             'auth_login' => Yii::$app->params['ahnames.login'],

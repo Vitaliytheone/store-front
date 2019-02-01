@@ -104,6 +104,6 @@ abstract class BaseDomain extends Component
      * Get authorization data from parameters for a Class as an array
      * @return array
      */
-    abstract public static function getRegistrarDataForLogs(): array;
+    abstract public static function getDefaultOptions(): array;
 
 }

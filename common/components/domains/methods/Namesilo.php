@@ -4,6 +4,7 @@ namespace common\components\domains\methods;
 
 use common\components\domains\BaseDomain;
 use common\helpers\Request;
+use my\helpers\DomainsHelper;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
@@ -51,12 +52,10 @@ class Namesilo extends BaseDomain
 
         $url = static::_setUrl();
 
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domains' => implode(',', $domains)
-        ];
+        ]);
 
         $result = Request::getContents($url . '/checkRegisterAvailability?' . http_build_query($options));
 
@@ -105,11 +104,8 @@ class Namesilo extends BaseDomain
             'fx' => ArrayHelper::getValue($options, 'fax_phone'),
         ];
 
-        $options = array_merge($options, [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
-        ]);
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($options, $defaultOptions);
 
         $url = static::_setUrl();
 
@@ -120,7 +116,7 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.contact_id');
+        $resultFinal = ['id' => ArrayHelper::getValue($resultRaw, 'reply.contact_id')];
 
         return $resultFinal;
     }
@@ -130,18 +126,14 @@ class Namesilo extends BaseDomain
      */
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
-
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
             'years' => $period,
             'private' => 0,
             'auto_renew' => 0,
-
             'contact_id' => $contactId,
-        ];
+        ]);
 
         if (!empty(static::$_paramsNamesilo['namesilo.payment_id'])) {
             $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
@@ -156,10 +148,12 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-        $resultFinal['domain'] = ArrayHelper::getValue($resultRaw, 'reply.domain');
-        $resultFinal['order_amount'] = ArrayHelper::getValue($resultRaw, 'reply.order_amount');
-        $resultFinal['password'] = '';
+        $resultFinal = [
+            'id' => ArrayHelper::getValue($resultRaw, 'reply.detail'),
+            'domain' => ArrayHelper::getValue($resultRaw, 'reply.domain'),
+            'order_amount' => ArrayHelper::getValue($resultRaw, 'reply.order_amount'),
+            'password' => '',
+        ];
 
         return $resultFinal;
     }
@@ -169,12 +163,10 @@ class Namesilo extends BaseDomain
      */
     public static function domainGetInfo($domain): array
     {
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-        ];
+        ]);
 
         $url = static::_setUrl();
 
@@ -185,18 +177,20 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-        $resultFinal['created'] = ArrayHelper::getValue($resultRaw, 'reply.created');
-        $resultFinal['expires'] = ArrayHelper::getValue($resultRaw, 'reply.expires');
-        $resultFinal['status'] = ArrayHelper::getValue($resultRaw, 'reply.status');
-        $resultFinal['locked'] = ArrayHelper::getValue($resultRaw, 'reply.locked');
-        $resultFinal['private'] = ArrayHelper::getValue($resultRaw, 'reply.private');
-        $resultFinal['auto_renew'] = ArrayHelper::getValue($resultRaw, 'reply.auto_renew');
-        $resultFinal['traffic_type'] = ArrayHelper::getValue($resultRaw, 'reply.traffic_type');
-        $resultFinal['email_verification_required'] = ArrayHelper::getValue($resultRaw, 'reply.email_verification_required');
-        $resultFinal['nameservers'] = ArrayHelper::getValue($resultRaw, 'reply.nameservers');
-        $resultFinal['contact_ids'] = ArrayHelper::getValue($resultRaw, 'reply.contact_ids');
-        $resultFinal['registrar'] = self::REGISTRAR_NAMESILO;
+        $resultFinal = [
+            'id' => ArrayHelper::getValue($resultRaw, 'reply.detail'),
+            'created' => ArrayHelper::getValue($resultRaw, 'reply.created'),
+            'expires' => ArrayHelper::getValue($resultRaw, 'reply.expires'),
+            'status' => ArrayHelper::getValue($resultRaw, 'reply.status'),
+            'locked' => ArrayHelper::getValue($resultRaw, 'reply.locked'),
+            'private' => ArrayHelper::getValue($resultRaw, 'reply.private'),
+            'auto_renew' => ArrayHelper::getValue($resultRaw, 'reply.auto_renew'),
+            'traffic_type' => ArrayHelper::getValue($resultRaw, 'reply.traffic_type'),
+            'email_verification_required' => ArrayHelper::getValue($resultRaw, 'reply.email_verification_required'),
+            'nameservers' => ArrayHelper::getValue($resultRaw, 'reply.nameservers'),
+            'contact_ids' => ArrayHelper::getValue($resultRaw, 'reply.contact_ids'),
+            'registrar' => self::REGISTRAR_NAMESILO,
+        ];
 
         return $resultFinal;
     }
@@ -206,12 +200,10 @@ class Namesilo extends BaseDomain
      */
     public static function domainEnableWhoisProtect($domain): array
     {
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-        ];
+        ]);
 
         $url = static::_setUrl();
 
@@ -222,7 +214,7 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+        $resultFinal = ['id' => ArrayHelper::getValue($resultRaw, 'reply.detail')];
 
         return $resultFinal;
     }
@@ -238,12 +230,10 @@ class Namesilo extends BaseDomain
 
         $ns = array_filter($ns);
 
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-        ];
+        ]);
 
         $options = array_merge($options, $ns);
 
@@ -256,7 +246,7 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+        $resultFinal = ['id' => ArrayHelper::getValue($resultRaw, 'reply.detail')];
 
         return $resultFinal;
     }
@@ -266,12 +256,10 @@ class Namesilo extends BaseDomain
      */
     public static function domainEnableLock($domain): array
     {
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
-        ];
+        ]);
 
         $url = static::_setUrl();
 
@@ -282,7 +270,7 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
+        $resultFinal = ['id' => ArrayHelper::getValue($resultRaw, 'reply.detail')];
 
         return $resultFinal;
     }
@@ -292,13 +280,11 @@ class Namesilo extends BaseDomain
      */
     public static function domainRenew($domain, $expires = null, $period = 1): array
     {
-        $options = [
-            'version' => static::$_paramsNamesilo['namesilo.version'],
-            'type' => static::$_paramsNamesilo['namesilo.type'],
-            'key' => static::$_paramsNamesilo['namesilo.key'],
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, [
             'domain' => $domain,
             'years' => $period,
-        ];
+        ]);
 
         if (!empty(static::$_paramsNamesilo['namesilo.payment_id'])) {
             $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
@@ -313,9 +299,11 @@ class Namesilo extends BaseDomain
             return $resultRaw;
         }
 
-        $resultFinal['id'] = ArrayHelper::getValue($resultRaw, 'reply.detail');
-        $resultFinal['domain'] = ArrayHelper::getValue($resultRaw, 'reply.domain');
-        $resultFinal['order_amount'] = ArrayHelper::getValue($resultRaw, 'reply.order_amount');
+        $resultFinal = [
+            'id' => ArrayHelper::getValue($resultRaw, 'reply.detail'),
+            'domain' => ArrayHelper::getValue($resultRaw, 'reply.domain'),
+            'order_amount' => ArrayHelper::getValue($resultRaw, 'reply.order_amount'),
+        ];
 
         return $resultFinal;
     }
@@ -324,10 +312,12 @@ class Namesilo extends BaseDomain
     /**
      * @inheritdoc
      */
-    public static function getRegistrarDataForLogs(): array
+    public static function getDefaultOptions(): array
     {
         return [
-            'auth_key' => static::$_paramsNamesilo['namesilo.key'],
+            'version' => static::$_paramsNamesilo['namesilo.version'],
+            'type' => static::$_paramsNamesilo['namesilo.type'],
+            'key' => static::$_paramsNamesilo['namesilo.key'],
         ];
     }
 
@@ -345,7 +335,7 @@ class Namesilo extends BaseDomain
         }
 
         try {
-            $resultRaw = json_decode(json_encode(simplexml_load_string($result)),true);
+            $resultRaw = json_decode(json_encode(simplexml_load_string($result)), true);
 
             $resultCode = (int)ArrayHelper::getValue($resultRaw, 'reply.code');
 
