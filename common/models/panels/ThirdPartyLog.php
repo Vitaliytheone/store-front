@@ -35,6 +35,7 @@ class ThirdPartyLog extends ActiveRecord
     const ITEM_RENEW_LETSENCRYPT_SSL = 12;
     const ITEM_REVOKE_LETSENCRYPT_SSL = 13;
     const ITEM_BUY_GATEWAY = 14;
+    const ITEM_PROLONGATION_GATEWAY = 15;
 
     use UnixTimeFormatTrait;
 

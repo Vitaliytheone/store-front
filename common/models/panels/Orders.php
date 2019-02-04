@@ -55,6 +55,7 @@ class Orders extends ActiveRecord
     const ITEM_PROLONGATION_FREE_SSL = 10;
     const ITEM_BUY_GATEWAY = 11;
 
+
     use UnixTimeFormatTrait;
 
     /**

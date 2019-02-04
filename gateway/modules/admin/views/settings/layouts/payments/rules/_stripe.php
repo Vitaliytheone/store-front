@@ -1,5 +1,5 @@
 <?php
-/** @var $site \common\models\gateways\Sites */
+/** @var $gateway \common\models\gateways\Sites */
 ?>
 <ol>
     <li><?= Yii::t('admin', 'settings.payments_stripe_guide_1', [
@@ -11,7 +11,7 @@
             'url' => '<a href="https://dashboard.stripe.com/account/webhooks" target="_blank">https://dashboard.stripe.com/account/webhooks</a>'
         ]) ?>
 
-        <?= Yii::t('admin', 'settings.payments_stripe_guide_3') ?> <code><?= $site->getBaseSite() . '/stripe' ?></code>
+        <?= Yii::t('admin', 'settings.payments_stripe_guide_3') ?> <code><?= $gateway->getBaseSite() . '/stripe' ?></code>
     </li>
     <li>
         <?= Yii::t('admin', 'settings.payments_stripe_guide_4') ?>
