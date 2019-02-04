@@ -6,8 +6,8 @@ return [
     'auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r', // ключ авторизации используемый как соль, должен свопадать с таким-же тут sommerce/config/params-local.php 'auth_key'!
     'admin_auth_key' => '+^e91s&qm&9*hs9_z=1e8jq8rl@njmr#=ts16!f_23wo7-@s(r',
 
-    'reCaptcha.siteKey' => '6LeAmT4UAAAAAKz1c-wjHdI2XDp_PglfA1rl8RbG',
-    'reCaptcha.secret' => '6LeAmT4UAAAAAI88eDxVJkusrAurV9A8EqwphqVw',
+    'reCaptcha.siteKey' => '6LeQyxkUAAAAACZsRNUpGI-5rw7ifdLgP0mUyE4O',
+    'reCaptcha.secret' => '6LeQyxkUAAAAAEe6JEo4yITBbTqtCqzr9pzK1EgA',
 
     'time' => '10800', // в данной переменной мы храним разницу между временем на сервере и времени админки
 
