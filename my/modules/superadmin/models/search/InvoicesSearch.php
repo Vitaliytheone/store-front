@@ -77,6 +77,7 @@ class InvoicesSearch extends Invoices {
                         ['like', 'orders.domain', (string)$searchQuery],
                         ['like', 'project.site', (string)$searchQuery],
                         ['like', 'stores.domain', (string)$searchQuery],
+                        ['like', 'sites.domain', (string)$searchQuery],
                         ['like', 'customers.email', (string)$searchQuery],
                     ]);
                     break;
@@ -115,6 +116,9 @@ class InvoicesSearch extends Invoices {
         $query->leftJoin(DB_STORES . '.stores', 'stores.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_PROLONGATION_STORE,
         ]) . ')');
+        $query->leftJoin(DB_GATEWAYS . '.sites', 'sites.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+            InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
+        ]) . ')');
         $query->leftJoin(DB_PANELS . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
         $query->leftJoin(DB_PANELS . '.customers as customer_email', 'customer_email.id = invoices.cid');
 
@@ -144,7 +148,7 @@ class InvoicesSearch extends Invoices {
         $invoices = $query->select([
                 'invoices.*',
                 'customer_email.email as email',
-                'COALESCE(orders.domain, project.site, stores.domain, customers.email) as domain',
+                'COALESCE(orders.domain, project.site, stores.domain, sites.domain, customers.email) as domain',
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)
