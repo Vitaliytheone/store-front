@@ -61,6 +61,7 @@ class FilesTreeWidget extends Widget
                         'update' => Files::can(Files::CAN_UPDATE, $file),
                         'preview' => Files::can(Files::CAN_PREVIEW, $file),
                         'rename' => Files::can(Files::CAN_RENAME, $file),
+                        'download' => Files::can(Files::CAN_DOWNLOAD, $file),
                         'delete' => Files::can(Files::CAN_DELETE, $file),
                     ]
                 ]);

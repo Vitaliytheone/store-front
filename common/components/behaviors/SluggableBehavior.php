@@ -10,11 +10,6 @@ use yii\helpers\ArrayHelper;
 class SluggableBehavior extends \yii\behaviors\SluggableBehavior {
 
     /**
-     * @var null|string
-     */
-    public $postfix;
-
-    /**
      * {@inheritdoc}
      */
     protected function getValue($event)

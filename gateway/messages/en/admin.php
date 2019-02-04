@@ -81,6 +81,7 @@ return [
     'settings.files_error' => 'Error',
     'settings.files_delete_file' => 'Delete',
     'settings.files_rename_file' => 'Rename',
+    'settings.files_download_file' => 'Download',
     'settings.files_add_file' => 'Add file',
     'settings.files_add_image' => 'Add image',
     'settings.files_confirm_delete_file' => 'Are you sure you want to delete this file?',
@@ -96,6 +97,8 @@ return [
     'settings.files.create_file.upload' => 'Upload file',
     'settings.files.create_file.field.name' => 'File name',
     'settings.files.create_file.field.file' => 'Choose file',
+    'settings.files.field.name_unique_error' => 'File with the same name already exist',
+
 
     'settings.files.upload_file.cancel' => 'Cancel',
     'settings.files.upload_file.upload' => 'Upload image',

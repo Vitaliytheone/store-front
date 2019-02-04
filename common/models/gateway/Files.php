@@ -36,6 +36,7 @@ class Files extends ActiveRecord
 
     public const CAN_DELETE = 'delete';
     public const CAN_RENAME = 'rename';
+    public const CAN_DOWNLOAD = 'download';
     public const CAN_UPDATE = 'update';
     public const CAN_PREVIEW = 'preview';
 
@@ -83,6 +84,7 @@ class Files extends ActiveRecord
             [['created_at', 'updated_at', 'is_default', 'is_deleted'], 'integer'],
             [['content', 'url', 'file_type', 'mime'], 'string'],
             [['name'], 'string', 'max' => 300],
+            [['name'], 'uniqueNameValidation'],
         ];
     }
 
@@ -141,7 +143,6 @@ class Files extends ActiveRecord
                     return $this->getClearName();
                 },
                 'slugAttribute' => 'url',
-                'ensureUnique' => true,
             ],
         ];
     }
@@ -198,6 +199,10 @@ class Files extends ActiveRecord
                 return !ArrayHelper::getValue($file, 'is_deleted') && in_array(ArrayHelper::getValue($file, 'file_type'), [
                     static::FILE_TYPE_IMAGE,
                 ]);
+            break;
+
+            case static::CAN_DOWNLOAD:
+                return !ArrayHelper::getValue($file, 'is_deleted');
             break;
         }
 
@@ -260,5 +265,55 @@ class Files extends ActiveRecord
         $title = ucfirst(str_replace(['_'], " ", $this->url));
 
         return $title;
+    }
+
+    /**
+     * @param string $attribute
+     * @param array $options
+     * @return bool
+     */
+    public function uniqueNameValidation($attribute, $options = [])
+    {
+        if ($this->hasErrors()) {
+            return false;
+        }
+
+        if ((static::find()->andWhere([
+            'name' => $this->{$attribute},
+            'file_type' => $this->file_type
+        ])->active()->exists())) {
+            $this->addError($attribute, Yii::t('admin', 'settings.files.field.name_unique_error'));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMimeType()
+    {
+        if (!empty($this->mime)) {
+            return $this->mime;
+        }
+
+        switch ($this->file_type) {
+            case static::FILE_TYPE_LAYOUT;
+            case static::FILE_TYPE_PAGE;
+            case static::FILE_TYPE_SNIPPET;
+                return 'text/html';
+            break;
+
+            case static::FILE_TYPE_CSS;
+                return 'text/css';
+            break;
+
+            case static::FILE_TYPE_JS;
+                return 'text/javascript';
+            break;
+        }
+
+        return 'text/html';
     }
 }

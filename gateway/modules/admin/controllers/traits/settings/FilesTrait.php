@@ -243,6 +243,26 @@ trait FilesTrait {
     }
 
     /**
+     * Download file by file id
+     * @param integer $id
+     */
+    public function actionDownloadFile($id)
+    {
+        /**
+         * @var Files $file
+         */
+        $file = $this->_findModel($id, Files::class);
+
+        if (!Files::can(Files::CAN_DOWNLOAD, $file)) {
+            throw new ForbiddenHttpException();
+        }
+
+        $response = Yii::$app->response;
+        $response->sendContentAsFile($file->content, $file->name, ['mimeType' => $file->getMimeType()]);
+        return $response;
+    }
+
+    /**
      * Preview file by file id
      * @param integer $id
      */

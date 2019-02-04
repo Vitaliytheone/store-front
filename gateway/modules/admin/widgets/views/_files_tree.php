@@ -64,7 +64,7 @@ use admin\components\Url;
                                 ]))?>
                             <?php endif; ?>
 
-                            <?php if (!empty($file['can']['rename']) || !empty($file['can']['delete'])) : ?>
+                            <?php if (!empty($file['can']['rename']) || !empty($file['can']['delete']) || !empty($file['can']['download'])) : ?>
                                 <div class="sommerce-editorPage__list-block-actions">
                                     <div class="dropdown">
                                         <button class="action-btn" data-toggle="dropdown">
@@ -79,6 +79,11 @@ use admin\components\Url;
                                                             'name' => $file['name'],
                                                         ]
                                                     ]
+                                                ])?>
+                                            <?php endif; ?>
+                                            <?php if (!empty($file['can']['download'])) : ?>
+                                                <?= Html::a(Yii::t('admin', 'settings.files_download_file'), Url::toRoute(['/settings/download-file', 'id' => $file['id'],]), [
+                                                    'class' => 'dropdown-item download-file',
                                                 ])?>
                                             <?php endif; ?>
                                             <?php if (!empty($file['can']['delete'])) : ?>

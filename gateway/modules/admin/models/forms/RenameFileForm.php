@@ -84,7 +84,7 @@ class RenameFileForm extends Model
 
         $this->_file->name = $this->name;
 
-        if (!$this->_file->save(true, ['name'])) {
+        if (!$this->_file->save(true, ['name', 'url'])) {
             $this->addError('name', Yii::t('admin', "settings.message_settings_error"));
             return false;
         }
