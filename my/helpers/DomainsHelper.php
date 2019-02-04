@@ -4,6 +4,7 @@ namespace my\helpers;
 
 use common\components\domains\Domain;
 use common\models\panels\DomainZones;
+use common\models\panels\Orders;
 
 /**
  * Class DomainsHelper
@@ -29,7 +30,7 @@ class DomainsHelper
         }
 
         if (!preg_match('/^[a-z0-9-\.]+$/i', $domain)) {
-            $domain = idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
+            $domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
         }
         return $domain;
     }
@@ -46,14 +47,14 @@ class DomainsHelper
         if (!extension_loaded('intl')) {
             return $domain;
         }
-        
-        if (false !== stripos($domain, 'xn--')) {
+
+        if (false !== mb_stripos($domain, 'xn--')) {
             if (false === mb_stripos($domain, ' ')) {
-                return idn_to_utf8($domain);
+                return idn_to_utf8($domain, 0, INTL_IDNA_VARIANT_UTS46);
             }
 
             if (preg_match('/(xn\-\-[a-z0-9\.-]+)/is', $domain, $domainMatch)) {
-                $domain = str_replace($domainMatch[1], idn_to_utf8($domainMatch[1]), $domain);
+                $domain = str_replace($domainMatch[1], idn_to_utf8($domainMatch[1], IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46), $domain);
             }
         }
 
@@ -111,4 +112,44 @@ class DomainsHelper
 
         return static::$registrarName[$zone]['registrar'];
     }
+
+    /**
+     * Is domain available
+     * @param string $domain
+     * @return bool
+     * @throws \yii\base\UnknownClassException
+     */
+    public static function isDomainAvailable($domain): bool
+    {
+        if (empty($domain)) {
+            return false;
+        }
+
+        $domain = mb_strtolower(trim($domain));
+
+        $registrar = self::getRegistrarClass($domain);
+        $result = $registrar::domainsCheck($domain);
+
+        if (empty($result[$domain])) {
+            return false;
+        }
+
+        $existsDomain = Orders::find()->andWhere([
+            'domain' => self::idnToAscii($domain),
+            'item' => Orders::ITEM_BUY_DOMAIN,
+            'status' => [
+                Orders::STATUS_PENDING,
+                Orders::STATUS_PAID,
+                Orders::STATUS_ADDED,
+                Orders::STATUS_ERROR
+            ]
+        ])->exists();
+
+        if ($existsDomain) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

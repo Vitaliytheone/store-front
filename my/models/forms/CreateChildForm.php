@@ -194,13 +194,13 @@ class CreateChildForm extends Model
 
         $this->search_domain = trim($this->search_domain);
 
-        if (false !== strpos($this->search_domain, '.')) {
-            $this->search_domain = explode(".", $this->search_domain)[0];
+        if (false !== mb_strpos($this->search_domain, '.')) {
+            $this->search_domain = explode('.', $this->search_domain)[0];
         }
 
         $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
 
-        if (!$this->isDomainAvailable($this->domain)) {
+        if (!DomainsHelper::isDomainAvailable($this->domain)) {
             return false;
         }
 
@@ -388,7 +388,7 @@ class CreateChildForm extends Model
      * Get domain value
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return DomainsHelper::idnToUtf8($this->domain);
     }
@@ -409,7 +409,7 @@ class CreateChildForm extends Model
      * Get domain zones
      * @return array
      */
-    public function getDomainZones()
+    public function getDomainZones(): array
     {
         $zones = [];
 
@@ -442,42 +442,4 @@ class CreateChildForm extends Model
         return true;
     }
 
-    /**
-     * Is domain available
-     * @param string $domain
-     * @return bool
-     * @throws yii\base\UnknownClassException
-     */
-    public function isDomainAvailable($domain): bool
-    {
-        if (empty($domain)) {
-            return false;
-        }
-
-        $domain = mb_strtolower(trim($domain));
-
-        $registrar = DomainsHelper::getRegistrarClass($domain);
-        $result = $registrar::domainsCheck($domain);
-
-        if (empty($result[$domain])) {
-            return false;
-        }
-
-        $existsDomain = Orders::find()->andWhere([
-            'domain' => DomainsHelper::idnToAscii($domain),
-            'item' => Orders::ITEM_BUY_DOMAIN,
-            'status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID,
-                Orders::STATUS_ADDED,
-                Orders::STATUS_ERROR
-            ]
-        ])->exists();
-
-        if ($existsDomain) {
-            return false;
-        }
-
-        return true;
-    }
 }
