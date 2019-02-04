@@ -22,7 +22,7 @@ use yii\bootstrap\Html;
                 <td><?= $param['code'] ?></td>
                 <td class="text-right">
                     <?= Html::a(Yii::t('app/superadmin', 'settings.applications.edit_label'),
-                        Url::toRoute(['/settings/edit-applications', 'code' => $param['code']]),
+                        Url::toRoute(['/settings/edit-application', 'code' => $param['code']]),
                         ['class' => 'btn btn-primary btn-sm edit-applications',]) ?>
                 </td>
             </tr>

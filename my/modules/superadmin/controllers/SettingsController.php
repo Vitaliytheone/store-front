@@ -63,7 +63,7 @@ class SettingsController extends CustomController
                     'edit-plan',
                     'create-plan',
                     'edit-content',
-                    'edit-applications',
+                    'edit-application',
                 ]
             ],
             'verbs' => [
@@ -76,7 +76,7 @@ class SettingsController extends CustomController
                     'edit-plan' => ['POST'],
                     'create-plan' => ['POST'],
                     'edit-content' => ['POST'],
-                    'edit-applications' => ['POST', 'GET'],
+                    'edit-application' => ['POST', 'GET'],
                 ],
             ],
             'content' => [
@@ -89,7 +89,7 @@ class SettingsController extends CustomController
                     'edit-plan',
                     'create-plan',
                     'edit-content',
-                    'edit-applications',
+                    'edit-application',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -486,11 +486,11 @@ class SettingsController extends CustomController
      * @return mixed
      * @throws NotFoundHttpException
      */
-    public function actionEditApplications($code)
+    public function actionEditApplication($code)
     {
         $params = Params::findOne([
             'category' => Params::CATEGORY_SERVICE,
-            'code' => $code
+            'code' => $code,
         ]);
 
         if (!$params) {
@@ -513,10 +513,12 @@ class SettingsController extends CustomController
             ];
         }
 
+        Yii::debug($model,'$model');
+        Yii::debug($params,'$params');
         return [
             'content' => $this->renderPartial('layouts/_edit_applications_form', [
                 'model' => $model,
-                'params' => $params
+                'params' => $params,
             ])
         ];
     }

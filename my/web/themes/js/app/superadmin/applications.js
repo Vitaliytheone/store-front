@@ -6,10 +6,11 @@ customModule.superadminApplicationsController = {
             var link = $(this);
             var modal = $('#editApplicationsModal');
 
+            modal.modal('show');
+
             $.get(link.attr('href'), function (response) {
                 if (response.content) {
                     $('.modal-body', modal).html(response.content);
-                    modal.modal('show');
                 }
             });
 

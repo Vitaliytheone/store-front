@@ -33,7 +33,18 @@ class ApplicationsSearch extends Params
         $query = static::find();
 
         $query->andWhere([
-            'category' => static::CATEGORY_SERVICE
+            'category' => static::CATEGORY_SERVICE,
+        ]);
+        $query->andWhere([
+            'code' => [
+                Params::CODE_WHOISXML,
+                Params::CODE_SOCIALSAPI,
+                Params::CODE_WHOISXMLAPI,
+                Params::CODE_AHNAMES,
+                Params::CODE_GOGETSSL,
+                Params::CODE_DNSLYTICS,
+                Params::CODE_NAMESILO,
+            ]
         ]);
 
         return $query;
@@ -48,13 +59,10 @@ class ApplicationsSearch extends Params
         $returnData = [];
 
         foreach ($data as $key => $value) {
-            $options = json_decode($value['options'], true);
 
             $returnData[] = [
                 'id' => $value['id'],
                 'code' => $value['code'],
-                'category' => $value['category'],
-                'options' => $options,
             ];
         }
 
@@ -70,16 +78,10 @@ class ApplicationsSearch extends Params
         $query = clone $this->buildQuery();
 
         $models = $query
-            ->where(['code' => [
-                Params::CODE_WHOISXML,
-                Params::CODE_SOCIALSAPI,
-                Params::CODE_WHOISXMLAPI,
-                Params::CODE_AHNAMES,
-                Params::CODE_GOGETSSL,
-                Params::CODE_DNSLYTICS,
-                Params::CODE_NAMESILO
-            ]])
-            ->orderBy(['id' => SORT_ASC])
+            ->orderBy([
+                'id' => SORT_ASC,
+                'position' => SORT_ASC
+            ])
             ->asArray()
             ->all();
 

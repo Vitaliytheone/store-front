@@ -4,8 +4,7 @@
 use yii\bootstrap\Html;
 
 ?>
-<div class="modal fade" id="editApplicationsModal" tabindex="-1" data-backdrop="static" role="dialog"
-     aria-labelledby="ModalLabel" aria-hidden="true">
+<div class="modal fade" id="editApplicationsModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,11 +13,12 @@ use yii\bootstrap\Html;
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body">
+                <h1 id="loader" class="text-center"><i class="fa fa-spinner fa-spin" style="font-size: 48px;"></i></h1>
+            </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn  btn-light"
-                        data-dismiss="modal"><?= Yii::t('app/superadmin', 'applications.edit.modal_cancel_btn') ?></button>
+                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'applications.edit.modal_cancel_btn') ?></button>
                 <?= Html::submitButton(Yii::t('app/superadmin', 'applications.edit.modal_submit_btn'), [
                     'class' => 'btn btn-primary',
                     'name' => 'edit-plan-button',

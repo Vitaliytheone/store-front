@@ -13,7 +13,7 @@ use yii\bootstrap\Html;
 
 <?php $form = ActiveForm::begin([
     'id' => 'editApplicationsForm',
-    'action' => Url::toRoute(['/settings/edit-applications', 'code' => $params->code]),
+    'action' => Url::toRoute(['/settings/edit-application', 'code' => $params->code]),
     'options' => [
         'class' => 'form',
     ],
@@ -30,8 +30,8 @@ use yii\bootstrap\Html;
 
 <?php foreach ((array)$model->options as $name => $value) : ?>
     <div class="form-group">
-        <label for=""><?= $model->getAttributeLabel($name) ?></label>
-        <?= Html::textInput($model->formName() . "[options][{$name}]", $value, ['class' => 'form-control']) ?>
+        <?= Html::label($model->getAttributeLabel($name), $name) ?>
+        <?= Html::textInput($model->formName() . "[options][{$name}]", $value, ['id' => $name, 'class' => 'form-control']) ?>
     </div>
 <?php endforeach; ?>
 
