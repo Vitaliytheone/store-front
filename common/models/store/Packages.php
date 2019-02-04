@@ -147,6 +147,7 @@ class Packages extends ActiveRecord
      * Mark deleted items as 'deleted' and
      * level up items position with same product ID
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function deleteVirtual()
     {
