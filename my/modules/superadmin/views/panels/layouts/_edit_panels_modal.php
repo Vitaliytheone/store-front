@@ -77,7 +77,7 @@ $checkboxTemplateGroup = "<div class=\"custom-control custom-checkbox custom-che
                     ]) ?>
                 </div>
 
-                <?= $form->field($model, 'moveDomain', [
+                <?= $form->field($model, 'move_domain', [
                     'checkboxTemplate' => $checkboxTemplate,
                     'options' => ['class' => 'form-group move-domain-block'],
                 ])->checkbox([

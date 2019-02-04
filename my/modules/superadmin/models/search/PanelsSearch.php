@@ -318,7 +318,7 @@ class PanelsSearch
         $tariffs = $this->getTariffs();
         $providers = $this->getProviders();
         $domains = Domains::find()
-            ->where('domain != ""')
+            ->active()
             ->indexBy('domain')
             ->all();
 

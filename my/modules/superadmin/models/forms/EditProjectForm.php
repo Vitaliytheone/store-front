@@ -53,7 +53,7 @@ class EditProjectForm extends Model
     public $no_invoice;
     public $currency_code;
     public $affiliate_system;
-    public $moveDomain;
+    public $move_domain;
 
     /**
      * @var Project
@@ -100,7 +100,7 @@ class EditProjectForm extends Model
                 'apikey',
                 'no_invoice',
                 'affiliate_system',
-                'moveDomain',
+                'move_domain',
             ], 'safe'],
             ['cid', 'checkOwnedChildPanel'],
             [['apikey'], 'string'],
@@ -249,6 +249,7 @@ class EditProjectForm extends Model
             return false;
         }
 
+        $oldCustomerId = $this->_project->cid;
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
@@ -290,18 +291,17 @@ class EditProjectForm extends Model
                 $customer->activateReferral();
                 $customer->activateChildPanels();
 
-                $ssl = SslCert::findOne(['pid' => $this->_project->id, 'project_type' => SslCert::PROJECT_TYPE_PANEL]);
-                if ($ssl) {
-                    $ssl->cid = $this->cid;
-                    $ssl->update(false);
-                }
+                SslCert::updateAll(['cid' => $this->cid], [
+                    'pid' => $this->_project->id,
+                    'project_type' => SslCert::PROJECT_TYPE_PANEL,
+                    'cid' => $oldCustomerId,
+                ]);
 
-                if ((bool)$this->moveDomain) {
-                    $domain = Domains::findOne(['domain' => $this->_project->site]);
-                    if ($domain) {
-                        $domain->customer_id = $this->cid;
-                        $domain->update(false);
-                    }
+                if ((bool)$this->move_domain) {
+                    Domains::updateAll(['customer_id' => $this->cid], [
+                        'domain' => $this->_project->site,
+                        'customer_id' => $oldCustomerId,
+                    ]);
                 }
             }
 
@@ -369,7 +369,7 @@ class EditProjectForm extends Model
             'apikey' => Yii::t('app/superadmin', 'panels.edit.apikey'),
             'no_invoice' => Yii::t('app/superadmin', 'panels.edit.no_invoice'),
             'affiliate_system' => Yii::t('app/superadmin', 'panels.edit.affiliate_system'),
-            'moveDomain' => Yii::t('app/superadmin', 'panels.edit.move_domain'),
+            'move_domain' => Yii::t('app/superadmin', 'panels.edit.move_domain'),
         ];
     }
 

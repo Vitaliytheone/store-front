@@ -184,7 +184,7 @@ class StoresSearch {
     {
         $returnStores = [];
         $domains = Domains::find()
-            ->where('domain != ""')
+            ->active()
             ->indexBy('domain')
             ->all();
 

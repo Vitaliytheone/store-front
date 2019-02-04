@@ -48,7 +48,7 @@
                         ]) ?>
                     </div>
                 </div>
-                <?= $form->field($model, 'moveDomain', [
+                <?= $form->field($model, 'move_domain', [
                     'checkboxTemplate' => $checkboxTemplate,
                     'options' => ['class' => 'form-group move-domain-block'],
                 ])->checkbox([

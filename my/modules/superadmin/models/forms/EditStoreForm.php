@@ -19,7 +19,7 @@ class EditStoreForm extends Model
     public $name;
     public $customer_id;
     public $currency;
-    public $moveDomain;
+    public $move_domain;
 
     /**
      * @var Stores
@@ -33,7 +33,7 @@ class EditStoreForm extends Model
     public function rules()
     {
         return [
-            [['moveDomain'], 'safe'],
+            [['move_domain'], 'safe'],
             [['name', 'customer_id', 'currency'], 'required'],
             ['name', 'string', 'max' => 255],
             ['customer_id', 'in', 'range' => $this->setAllowableValueRange()],
@@ -67,9 +67,7 @@ class EditStoreForm extends Model
     /**
      * Save store
      * @return bool
-     * @throws \Throwable
      * @throws \yii\db\Exception
-     * @throws \yii\db\StaleObjectException
      */
     public function save(): bool
     {
@@ -78,6 +76,7 @@ class EditStoreForm extends Model
         }
 
         $isChangedCustomer = $this->_store->customer_id == $this->customer_id ? false : true;
+        $oldCustomerId = $this->_store->customer_id;
         $transaction = Yii::$app->db->beginTransaction();
 
         $this->_store->customer_id = $this->customer_id;
@@ -91,18 +90,17 @@ class EditStoreForm extends Model
         }
 
         if ($isChangedCustomer) {
-            $ssl = SslCert::findOne(['pid' => $this->_store->id, 'project_type' => SslCert::PROJECT_TYPE_STORE]);
-            if ($ssl) {
-                $ssl->cid = $this->customer_id;
-                $ssl->update(false);
-            }
+            SslCert::updateAll(['cid' => $this->customer_id], [
+                'pid' => $this->_store->id,
+                'project_type' => SslCert::PROJECT_TYPE_STORE,
+                'cid' => $oldCustomerId,
+            ]);
 
-            if ((bool)$this->moveDomain) {
-                $domain = Domains::findOne(['domain' => $this->_store->domain]);
-                if ($domain) {
-                    $domain->customer_id = $this->customer_id;
-                    $domain->update(false);
-                }
+            if ((bool)$this->move_domain) {
+                Domains::updateAll(['customer_id' => $this->customer_id], [
+                    'domain' => $this->_store->domain,
+                    'customer_id' => $oldCustomerId,
+                ]);
             }
         }
         $transaction->commit();
@@ -120,7 +118,7 @@ class EditStoreForm extends Model
             'customer_id' => Yii::t('app/superadmin', 'stores.list.column_customer'),
             'name' => Yii::t('app/superadmin', 'stores.list.column_name'),
             'currency' => Yii::t('app/superadmin', 'stores.list.column_currency'),
-            'moveDomain' => Yii::t('app/superadmin', 'stores.modal.edit.move_domain'),
+            'move_domain' => Yii::t('app/superadmin', 'stores.modal.edit.move_domain'),
         ];
     }
 
