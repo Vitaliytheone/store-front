@@ -12,16 +12,26 @@ import {
 	updatePackage,
 	deletePackage,
 	addListing,
-	get_updatePackage,
-	get_updateProduct
+	get_update_package,
+	get_update_product
 } from './services/url';
-import { sortBy, pick, omit } from 'lodash';
+import { sortBy, pick } from 'lodash';
 
 class CategorieProducts extends Component {
 	state = {
 		data: [],
 		response: {
-			product: '',
+			product: {
+				name: '',
+				visibility: '1',
+				color: '',
+				description: null,
+				properties: [],
+				seo_title: '',
+				seo_description: '',
+				seo_keywords: '',
+				url: ''
+			},
 			package: ''
 		}
 	};
@@ -75,7 +85,6 @@ class CategorieProducts extends Component {
 		});
 
 		const packages = product.packages.map((pack) => pick(pack, [ 'id', 'position' ]));
-		console.log(packages);
 		const Data = { id: packageIndex.id, list: packages };
 
 		changePositionPackage(packageIndex.id, Data);
@@ -83,7 +92,6 @@ class CategorieProducts extends Component {
 
 	handleAddProduct = async (values, actions) => {
 		//let product position
-		console.log(values);
 		const newProductIndex = this.state.data.length;
 		const newProduct = {
 			name: values.name,
@@ -98,19 +106,19 @@ class CategorieProducts extends Component {
 			url: values.url,
 			packages: []
 		};
-		const requestProduct = omit(newProduct, [ 'position', 'packages' ]);
+		// const requestProduct = omit(newProduct, [ 'position', 'packages' ]);
 		this.setState((prevState) => ({
 			...prevState,
 			data: [ ...prevState.data, newProduct ]
 		}));
-		const response = await addProduct(requestProduct);
+		const response = await addProduct(newProduct);
 		const newData = [ ...this.state.data ];
-		//add new product to array end (server return)
-		// newData[newProductIndex] = response.data;
-		// this.setState({
-		//   data: newData
-		// });
-		// actions.setSubmitting(false);
+		// add new product to array end (server return)
+		newData[newProductIndex] = response.data;
+		this.setState({
+			data: newData
+		});
+		actions.setSubmitting(false);
 	};
 
 	handleAddPackage = (productIndex) => async (values, actions) => {
@@ -126,51 +134,60 @@ class CategorieProducts extends Component {
 			overflow: values.overflow,
 			availability: values.availability,
 			mode: values.mode,
-			provider: values.provider
+			provider_id: values.provider_id,
+			provider_service_id: values.provider_service_id
 		};
 		const newData = this.state.data;
 		newData[productIndex].packages.push(newPackage);
 		this.setState({
 			data: newData
 		});
-		const response = await addPackage(productIndex, newPackage);
+		const response = await addPackage(newPackage);
 		newData[productIndex].packages[newPackageIndex] = response.data;
 		this.setState({
 			data: newData
 		});
 		actions.setSubmitting(false);
+		return response;
 	};
 
-	handleGetEditProduct = (productIndex) => async () => {
+	getProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
-		console.log(getProduct);
-		const response = await get_updateProduct(getProduct);
-		console.log(response);
+		const response = await get_update_product(getProduct);
 		this.setState({
-			response: { ...this.state.response, product: response }
+			response: { ...this.state.response, product: response.data }
 		});
 	};
 
-	handleGetEditPackage = (productIndex) => (packageIndex) => async () => {
+	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
-		const response = await get_updatePackage(getPackageId);
+		const response = await get_update_package(getPackageId);
+		console.log(response.data);
 		this.setState({
-			response: { ...this.state.response, package: response }
+			response: { ...this.state.response, package: response.data }
 		});
 	};
 
-	handleEditProduct = (productIndex) => async (values, actions) => {
+	editProduct = (productIndex) => async (values, actions) => {
 		const editedProduct = [ ...this.state.data ]; //сopy state
 		editedProduct[productIndex] = {
 			//change fields of product
 			...this.state.data[productIndex], //copy all  unchanged fields of product
 			name: values.name,
-			visibility: values.visibility
+			visibility: values.visibility,
+			color: values.color,
+			description: values.description,
+			properties: values.properties,
+			seo_title: values.seo_title,
+			seo_description: values.seo_description,
+			seo_keywords: values.seo_keywords,
+			url: values.url
 		};
+		const ProductId = editedProduct[productIndex].id;
 		this.setState({
 			data: editedProduct
 		});
-		const response = await updateProduct(productIndex, editedProduct[productIndex]);
+		const response = await updateProduct(ProductId, editedProduct[productIndex]);
 		editedProduct[productIndex] = response.data;
 		this.setState({
 			data: editedProduct
@@ -178,26 +195,26 @@ class CategorieProducts extends Component {
 		actions.setSubmitting(false);
 	};
 
-	handleEditPackage = (productIndex) => (packageIndex) => async (values, actions) => {
+	editPackage = (productIndex) => (packageIndex) => async (values, actions) => {
 		const editedPackage = [ ...this.state.data ];
 		editedPackage[productIndex].packages[packageIndex] = {
 			...this.state.data[productIndex].packages[packageIndex],
 			name: values.name,
+			visibility: values.visibility,
 			price: values.price,
 			quantity: values.quantity,
 			overflow: values.overflow,
 			availability: values.availability,
 			mode: values.mode,
-			provider: values.provider
+			provider_id: values.provider_id,
+			provider_service_id: values.provider_service_id
 		};
+		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
 		this.setState({
 			data: editedPackage
 		});
-		const response = await updatePackage(
-			productIndex,
-			packageIndex,
-			editedPackage[productIndex].packages[packageIndex]
-		);
+		console.log(editedPackage);
+		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
 		editedPackage[productIndex].packages[packageIndex] = response.data;
 		this.setState({
 			data: editedPackage
@@ -205,9 +222,10 @@ class CategorieProducts extends Component {
 		actions.setSubmitting(false);
 	};
 
-	handleDeletePackage = (productIndex) => (packageIndex) => async () => {
+	deletePackage = (productIndex) => (packageIndex) => async () => {
 		const newData = [ ...this.state.data ];
-		newData[productIndex].packages.splice(packageIndex, 1);
+		const deletePack = newData[productIndex].packages.splice(packageIndex, 1);
+		const PackId = deletePack.map((pack) => pack.id).join();
 		newData[productIndex].packages = newData[productIndex].packages.map((pack, index) => ({
 			...pack,
 			position: index
@@ -215,9 +233,7 @@ class CategorieProducts extends Component {
 		this.setState({
 			data: newData
 		});
-		const response = await deletePackage(productIndex, packageIndex, newData[productIndex].packages);
-		console.log(newData[productIndex].packages);
-		newData[productIndex].packages = response.data;
+		await deletePackage(PackId);
 		//        this.setState({
 		//          data: newData
 		// });
@@ -236,12 +252,12 @@ class CategorieProducts extends Component {
 								<div className="sommerce_dragtable">
 									<ProductList
 										helperClass="sortable-helper"
-										handleGetEditProduct={this.handleEditProduct}
-										handleGetEditPackage={this.handleGetEditPackage}
-										handleEditProduct={this.handleEditProduct}
-										handleEditPackage={this.handleEditPackage}
+										getProduct={this.getProduct}
+										getPackage={this.getPackage}
+										editProduct={this.editProduct}
+										editPackage={this.editPackage}
 										handlePackageSwitch={this.handlePackageSwitch}
-										handleDeletePackage={this.handleDeletePackage}
+										deletePackage={this.deletePackage}
 										response={response}
 										data={data}
 										useDragHandle={true}

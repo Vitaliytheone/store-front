@@ -41,11 +41,12 @@ class AddProduct extends Component {
 					size="lg"
 					backdrop="static"
 					keyboard={false}
+					autoFocus={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						{({ setFieldValue, values }) => (
 							<Form>
-								<ModalHeader toggle={this.toggle}>Add product</ModalHeader>
+								<ModalHeader toggle={this.toggle}>Create product</ModalHeader>
 								<ProductModal setFieldValue={setFieldValue} values={values} />
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit" disabled={isSubmitting}>

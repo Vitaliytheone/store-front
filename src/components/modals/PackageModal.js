@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
-import { ModalBody, Label, FormGroup, Button } from 'reactstrap';
+import { ModalBody, Label, FormGroup } from 'reactstrap';
 import { Field } from 'formik';
 import { PackageInput } from '../Inputs';
 
-class PackageModal extends Component {
+class PackageModal extends React.PureComponent {
+	componentDidMount = () => {
+		setTimeout(() => this.name.focus(), 200);
+	};
+
 	render() {
+		console.log(this.props.showError);
+		console.log(this.props);
 		return (
 			<ModalBody>
 				{/* Alert Error */}
 
-				{/* <div className="alert alert-danger alert-dismissible fade show" role="alert">
-          <button className="close" data-dismiss="alert" aria-label="Close" />
-          <strong>Oh snap!</strong> Error message!
-        </div> */}
+				{this.props.showError && (
+					<div className="alert alert-danger alert-dismissible fade show" role="alert">
+						<button className="close" data-dismiss="alert" aria-label="Close" />
+						<strong>Oh snap!</strong> Error message!
+					</div>
+				)}
 
 				{/* Alert Error End */}
 
@@ -23,19 +31,12 @@ class PackageModal extends Component {
 						component={PackageInput}
 						label="Package name *"
 						id="package-name"
-						required
+						innerRef={(input) => (this.name = input)}
 					/>
 				</FormGroup>
 
 				<FormGroup>
-					<Field
-						name="price"
-						type="number"
-						component={PackageInput}
-						label="Price *"
-						id="package-price"
-						required
-					/>
+					<Field name="price" type="number" component={PackageInput} label="Price" id="package-price" />
 				</FormGroup>
 
 				<FormGroup>
@@ -43,9 +44,8 @@ class PackageModal extends Component {
 						name="quantity"
 						type="number"
 						component={PackageInput}
-						label="Quantity *"
+						label="Quantity"
 						id="package-quantity"
-						required
 					/>
 				</FormGroup>
 
@@ -54,9 +54,8 @@ class PackageModal extends Component {
 						name="overflow"
 						type="number"
 						component={PackageInput}
-						label="Overflow, % *"
+						label="Overflow, %"
 						id="package-overflow"
-						required
 					/>
 				</FormGroup>
 

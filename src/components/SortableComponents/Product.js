@@ -11,11 +11,11 @@ const SortableProduct = SortableElement(
 		response,
 		handlePackageSwitch,
 		onPackageAdd,
-		handleEditProduct,
-		handleEditPackage,
-		handleDeletePackage,
-		handleGetEditPackage,
-		handleGetEditProduct
+		editProduct,
+		editPackage,
+		deletePackage,
+		getPackage,
+		getProduct
 	}) => {
 		return (
 			<Row className="group-caption">
@@ -27,11 +27,7 @@ const SortableProduct = SortableElement(
 									<DragHandle />
 								</div>
 								{product.name}
-								<EditProduct
-									onSubmit={handleEditProduct}
-									getProduct={handleGetEditProduct}
-									response={response}
-								/>
+								<EditProduct onSubmit={editProduct} getProduct={getProduct} response={response} />
 							</Col>
 						</Row>
 					</div>
@@ -44,9 +40,9 @@ const SortableProduct = SortableElement(
 					useDragHandle={true}
 					response={response}
 					onPackageAdd={onPackageAdd}
-					handleEditPackage={handleEditPackage}
-					handleDeletePackage={handleDeletePackage}
-					handleGetEditPackage={handleGetEditPackage}
+					editPackage={editPackage}
+					deletePackage={deletePackage}
+					getPackage={getPackage}
 				/>
 			</Row>
 		);

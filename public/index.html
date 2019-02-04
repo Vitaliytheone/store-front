@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css"
+      rel="stylesheet"
+    />
     <link rel="manifest" href="/manifest.json" />
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+    <link href="http://dev.sommerce.net/css/admin/fonts.css?v=1548945470" rel="stylesheet">
+    <link href="http://dev.sommerce.net/css/admin/main.css?v=1548945470" rel="stylesheet">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -26,8 +28,7 @@
     -->
     <title>React App</title>
   </head>
-  <body>
-    
+  <body class="m-page m-page--wide m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--offcanvas m-aside--offcanvas-default modal-open">
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root"></div>
     <!--
@@ -45,23 +46,21 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
     <script>
-        window.appConfig = {};
-        window.appConfig.api_endpoints = {
-          "add_listing": "http://www.mocky.io/v2/5c45ab92320000bf27af18b4",
-          "add_product": "/admin/products/create-product",
-          "confirm_add_product": "/admin/products/create-product-menu?id=${product_id}",
-          "add_package": "/admin/products/create-package",
-          "update_product": "/admin/products/update-product?id=${product_id}",
-          "get_updateProduct": "http://www.mocky.io/v2/5c4c31f7320000cf361fa82a", 
-          "get_updatePackage": "http://www.mocky.io/v2/5c497d59320000c7300b5872",
-          "update_package": "/admin/products/update-package?id=${package_id}",
-          "change_position_product": "/admin/products/move-product?id=",
-          "change_position_package": "/admin/products/move-package?id=",
-          "delete_package": "/admin/products/delete-package?id=${package_id}",
-          "get_providers": "/admin/products/get-provider-services?id=${provider_id}"
-        };
-        //  http://www.mocky.io/v2/5c45b4343100000e0005f071
-        // current : http://www.mocky.io/v2/5c45ab92320000bf27af18b4
-  </script>
+      window.appConfig = {};
+      window.appConfig.api_endpoints = {
+        add_listing: 'http://www.mocky.io/v2/5c45ab92320000bf27af18b4',
+        add_product: '/admin/products/create-product',
+        confirm_add_product: '/admin/products/create-product-menu?id=${product_id}',
+        add_package: '/admin/products/create-package',
+        update_product: '/admin/products/update-product?id=',
+        get_update_product: 'http://www.mocky.io/v2/5c5237e63200003003855a64',
+        get_update_package: 'http://www.mocky.io/v2/5c52362d320000fd02855a60',
+        update_package: '/admin/products/update-package?id=',
+        change_position_product: '/admin/products/move-product?id=',
+        change_position_package: '/admin/products/move-package?id=',
+        delete_package: '/admin/products/delete-package?id=',
+        get_providers: '/admin/products/get-provider-services?id=${provider_id}'
+      };
+    </script>
   </body>
 </html>

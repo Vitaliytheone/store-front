@@ -8,7 +8,7 @@ export function addListing() {
 }
 
 export function addProduct(payload) {
-	axiosInstance.post(point.add_product, payload);
+	return axiosInstance.post(point.add_product, payload);
 	const mockResponse = { data: { id: nanoid(), ...payload }, success: true };
 	return Promise.resolve(mockResponse);
 }
@@ -18,27 +18,27 @@ export function connfirm_addProduct(product_id) {
 }
 
 export function addPackage(payload) {
-	axiosInstance.post(point.add_package, payload);
+	return axiosInstance.post(point.add_package, payload);
 	const mockResponse = { data: { id: nanoid(), ...payload }, success: true };
 	return Promise.resolve(mockResponse);
 }
 
 export function get_update_product(product_id) {
-	return axiosInstance.get(point.get_update_product); //+ `${product_id}`
+	return axiosInstance.get(point.get_updateProduct + `${product_id}`); //+ `${product_id}`
 }
 
 export function updateProduct(product_id, payload) {
-	axiosInstance.post(point.update_product, payload); //+ `${product_id}`
+	return axiosInstance.post(point.update_product + `${product_id}`, payload); //+ `${product_id}`
 	const mockResponse = { data: { ...payload }, success: true };
 	return Promise.resolve(mockResponse);
 }
 
 export function get_update_package(package_id) {
-	return axiosInstance.get(point.get_update_package); //+ `${package_id}`
+	return axiosInstance.get(point.get_updatePackage + `${package_id}`); //+ `${package_id}`
 }
 
 export function updatePackage(package_id, payload) {
-	axiosInstance.post(point.update_package, payload); //+ `${package_id}`
+	return axiosInstance.post(point.update_package + `${package_id}`, payload); //+ `${package_id}`
 	const mockResponse = { data: { ...payload }, success: true };
 	return Promise.resolve(mockResponse);
 }

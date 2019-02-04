@@ -8,11 +8,11 @@ const ProductList = SortableContainer(
 		response,
 		handlePackageSwitch,
 		onPackageAdd,
-		handleEditProduct,
-		handleEditPackage,
-		handleDeletePackage,
-		handleGetEditPackage,
-		handleGetEditProduct
+		editProduct,
+		editPackage,
+		deletePackage,
+		getPackage,
+		getProduct
 	}) => (
 		<div className="sortable">
 			{data.map((product, index) => (
@@ -20,12 +20,12 @@ const ProductList = SortableContainer(
 					key={`item-${index}`}
 					product={product}
 					index={index}
-					handleGetEditProduct={handleGetEditProduct(index)}
-					handleGetEditPackage={handleGetEditPackage(index)}
+					getProduct={getProduct(index)}
+					getPackage={getPackage(index)}
 					handlePackageSwitch={handlePackageSwitch(index)}
-					handleEditProduct={handleEditProduct(index)}
-					handleEditPackage={handleEditPackage(index)}
-					handleDeletePackage={handleDeletePackage(index)}
+					editProduct={editProduct(index)}
+					editPackage={editPackage(index)}
+					deletePackage={deletePackage(index)}
 					onPackageAdd={onPackageAdd(index)}
 					response={response}
 				/>

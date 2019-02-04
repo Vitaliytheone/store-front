@@ -8,7 +8,7 @@ class EditProduct extends Component {
 		modalIsOpen: false
 	};
 
-	handleGetProduct = (...params) => {
+	getProduct = (...params) => {
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen
 		}));
@@ -34,29 +34,21 @@ class EditProduct extends Component {
 			<React.Fragment>
 				<span className="edit_product">
 					<Button
-						onClick={this.handleGetProduct}
+						onClick={this.getProduct}
 						color="primary"
 						size="sm"
 						className="m-btn--pill sommerce_dragtable__action"
 					>
 						Edit
 					</Button>
-					<Modal isOpen={this.state.modalIsOpen} size="lg" backdrop="static" keyboard={false}>
-						<Formik
-							enableReinitialize={true}
-							onSubmit={this.handleSubmit}
-							initialValues={{
-								name: response.product.name,
-								visibility: response.product.visibility,
-								color: response.product.color,
-								description: response.product.description,
-								properties: response.product.properties,
-								seo_title: response.product.seo_title,
-								seo_description: response.product.seo_description,
-								seo_keywords: response.product.seo_keywords,
-								url: response.product.url
-							}}
-						>
+					<Modal
+						isOpen={this.state.modalIsOpen}
+						size="lg"
+						backdrop="static"
+						keyboard={false}
+						autoFocus={true}
+					>
+						<Formik enableReinitialize={true} onSubmit={this.handleSubmit} initialValues={response.product}>
 							{({ setFieldValue, values }) => (
 								<Form>
 									<ModalHeader toggle={this.toggle}>Edit product</ModalHeader>

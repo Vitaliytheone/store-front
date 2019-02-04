@@ -1,22 +1,17 @@
 import React, { Component } from 'react';
-// import PropertiesList from "./Properties"
 import PropertiesList from './PropertiesList';
-import { ModalBody, Label, FormGroup, Input, Button } from 'reactstrap';
+import { ModalBody, Label, FormGroup, Input } from 'reactstrap';
 import { Field } from 'formik';
 import { ProductInput } from '../Inputs';
 import { arrayMove } from 'react-sortable-hoc';
 import { SketchPicker } from 'react-color';
-
-// import $ from 'jquery';
-// import ReactSummernote from 'react-summernote';
-// import 'react-summernote/dist/react-summernote.css'; // import styles
 
 // // Import bootstrap(v3 or v4) dependencies
 // import 'bootstrap/js/src/dropdown';
 // import 'bootstrap/js/src/tooltip';
 import 'bootstrap/js/src/modal';
 
-class ProductModal extends Component {
+class ProductModal extends React.PureComponent {
 	state = {
 		colorSchema: false,
 		editSeo: false
@@ -74,25 +69,14 @@ class ProductModal extends Component {
 		});
 	};
 
-	componentDidMount() {
-		// this.name.focus();
-		window.$(document).ready(() => {
-			window.$('.summernote').summernote({
-				height: 300,
-				minHeight: null,
-				maxHeight: null
-			});
-			window.$('.summernote').on('summernote.change', (event) => {
-				// callback as jquery custom event
-				this.props.setFieldValue('description', window.$(event.target).summernote('code'));
-			});
-		});
-	}
+	componentDidMount = () => {
+		setTimeout(() => this.name.focus(), 200);
+	};
 
 	render() {
 		const { values, setFieldValue } = this.props;
 		const { colorSchema, editSeo } = this.state;
-		const seoUrl = values.url.replace(/ /g, '-');
+		const seoUrl = values.url && values.url.replace(/ /g, '-');
 
 		let colorHex;
 		if (colorSchema) {
@@ -106,9 +90,17 @@ class ProductModal extends Component {
 
 		return (
 			<React.Fragment>
+				{(values.description === '' || values.description) && (
+					<SummerNote description={values.description} setFieldValue={setFieldValue} />
+				)}
 				<ModalBody>
 					<FormGroup>
-						<Field name="name" component={ProductInput} label="Product name" required />
+						<Field
+							name="name"
+							component={ProductInput}
+							label="Product name"
+							innerRef={(input) => (this.name = input)}
+						/>
 					</FormGroup>
 
 					<FormGroup>
@@ -148,31 +140,6 @@ class ProductModal extends Component {
 					</FormGroup>
 
 					<FormGroup>
-						{/* <ReactSummernote
-              value="Default value"
-              options={{
-                minHeight: 300,
-                focus: true,
-                toolbar: [
-                  ['style', ['style', 'bold', 'italic']],
-                  ['lists', ['ul', 'ol']],
-                  ['para', ['paragraph']],
-                  ['color', ['color']],
-                  ['insert', ['link', 'picture', 'video']],
-                  ['codeview', ['codeview']]
-                ],
-                disableDragAndDrop: true,
-                styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-                popover: {
-                  image: [
-                    ['float', ['floatLeft', 'floatRight', 'floatNone']],
-                    ['remove', ['removeMedia']]
-                  ],
-                },
-                dialogsFade: true
-              }}
-              onChange={this.onChange}
-            /> */}
 						<div className="summernote" />
 					</FormGroup>
 
@@ -289,13 +256,15 @@ class ProductModal extends Component {
 									</span>
 								</div>
 							</div>
-							<div className="alert m-alert--default" role="alert">
-								Create a new property or{' '}
-								<b>
-									<span className="la la-clone" style={{ fontSize: '12px' }} /> copy properties
-								</b>{' '}
-								from another product
-							</div>
+							{values.properties == false ? (
+								<div className="alert m-alert--default" role="alert">
+									Create a new property or{' '}
+									<b>
+										<span className="la la-clone" style={{ fontSize: '12px' }} /> copy properties
+									</b>{' '}
+									from another product
+								</div>
+							) : null}
 						</div>
 
 						<div className="dd-properties">
@@ -393,6 +362,41 @@ class ProductModal extends Component {
 				</ModalBody>
 			</React.Fragment>
 		);
+	}
+}
+
+class SummerNote extends React.Component {
+	componentDidMount() {
+		window.$(document).ready(() => {
+			window.$('.summernote').summernote({
+				minHeight: 300,
+				toolbar: [
+					[ 'style', [ 'style', 'bold', 'italic' ] ],
+					[ 'lists', [ 'ul', 'ol' ] ],
+					[ 'para', [ 'paragraph' ] ],
+					[ 'color', [ 'color' ] ],
+					[ 'insert', [ 'link', 'picture', 'video' ] ],
+					[ 'codeview', [ 'codeview' ] ]
+				],
+				disableDragAndDrop: true,
+				shortcuts: false,
+				styleTags: [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ],
+				popover: {
+					image: [ [ 'float', [ 'floatLeft', 'floatRight', 'floatNone' ] ], [ 'remove', [ 'removeMedia' ] ] ]
+				},
+				dialogsFade: true,
+				dialogsInBody: true
+			});
+
+			window.$('.summernote').summernote('code', this.props.description);
+			window.$('.summernote').on('summernote.change', (event) => {
+				// callback as jquery custom event
+				this.props.setFieldValue('description', window.$(event.target).summernote('code'));
+			});
+		});
+	}
+	render() {
+		return null;
 	}
 }
 
