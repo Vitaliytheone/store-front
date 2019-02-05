@@ -54,6 +54,7 @@ return [
     'settings.payments_stripe_secret_key' => 'Secret key',
     'settings.payments_stripe_public_key' => 'Public key',
     'settings.payments_stripe_webhook_secret' => 'Webhook secret',
+    'settings.payments_stripe_title' => 'Title',
 
     'settings.payments_edit_1' => 'Edit PayPal',
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
