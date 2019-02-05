@@ -12,7 +12,7 @@ class m190118_112412_20190118_content_add_record_subdomain extends Migration
      */
     public function safeUp()
     {
-        $text = "<p class=\"help-block\" style=\"margin-bottom: 5px\">Please visit your registrar\'s dashboard to change nameservers to:</p><ul style=\"color: #737373; padding-left: 20px\"><li>ns1.perfectdns.com</li><li>ns2.perfectdns.com</li></ul>";
+        $text = "<p class=\"help-block\" style=\"margin-bottom:5px\">Please visit your domain\'s DNS zone editor and set CNAME-record:</p>\r\n subdomain.yourdomain.com CNAME perfectpanel.com";
 
         Yii::$app->db->createCommand("INSERT INTO content (`id`, `name`, `text`, `updated_at`) VALUES (NULL, 'subdomain_nameservers', '" . $text . "', '')")
             ->execute();
