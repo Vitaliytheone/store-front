@@ -93,6 +93,23 @@ class Params extends ActiveRecord
     }
 
     /**
+     * Get list of services for settings
+     * @return array
+     */
+    public static function getServices(): array
+    {
+        return [
+            self::CODE_WHOISXML,
+            self::CODE_SOCIALSAPI,
+            self::CODE_WHOISXMLAPI,
+            self::CODE_AHNAMES,
+            self::CODE_GOGETSSL,
+            self::CODE_DNSLYTICS,
+            self::CODE_NAMESILO,
+        ];
+    }
+
+    /**
      * @return array
      */
     public static function getPayments(): array

@@ -36,15 +36,7 @@ class ApplicationsSearch extends Params
             'category' => static::CATEGORY_SERVICE,
         ]);
         $query->andWhere([
-            'code' => [
-                Params::CODE_WHOISXML,
-                Params::CODE_SOCIALSAPI,
-                Params::CODE_WHOISXMLAPI,
-                Params::CODE_AHNAMES,
-                Params::CODE_GOGETSSL,
-                Params::CODE_DNSLYTICS,
-                Params::CODE_NAMESILO,
-            ]
+            'code' => Params::getServices(),
         ]);
 
         return $query;
@@ -79,8 +71,7 @@ class ApplicationsSearch extends Params
 
         $models = $query
             ->orderBy([
-                'id' => SORT_ASC,
-                'position' => SORT_ASC
+                'position' => SORT_ASC,
             ])
             ->asArray()
             ->all();
