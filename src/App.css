@@ -1,4 +1,4 @@
-/* @font-face {
+@font-face {
   font-family: 'Poppins';
   font-style: italic;
   font-weight: 100;
@@ -216,7 +216,7 @@
   src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN8rsOUuhs.ttf) format('truetype');
 }
 
-/*
+/* 
   Flaticon icon font: Flaticon
   Creation date: 20/03/2017 20:02
   */
@@ -41612,13 +41612,6 @@ a:hover, a:focus {
 
               /* MY CUSTOM STYLES */
 
-/* reorder styles for nested drag-elements */
-body .group-item {
-  display: flex !important;
-  flex-direction: row !important;
-}
-
-
 /* active links in menu */
 li.m-menu__item > a.active > span{
   color: white !important;
@@ -41730,4 +41723,10 @@ li.m-menu__item > a.active > span{
     right: 0px;
     bottom: 0px;
     left: 0px;
+} 
+
+/* reorder styles for nested drag-elements */
+body .group-item {
+  display: flex !important;
+  flex-direction: row !important;
 }

@@ -18,7 +18,7 @@ class PackageModal extends React.PureComponent {
 				{this.props.showError && (
 					<div className="alert alert-danger alert-dismissible fade show" role="alert">
 						<button className="close" data-dismiss="alert" aria-label="Close" />
-						<strong>Oh snap!</strong> Error message!
+						<strong>Oh snap!</strong> {this.props.errorMessage}
 					</div>
 				)}
 
@@ -166,7 +166,9 @@ class PackageModal extends React.PureComponent {
 					</Field>
 				</FormGroup>
 
+				{this.props.showError && (
 				<span className="m--font-danger">API responce errors: Incorrect required</span>
+				)}
 			</ModalBody>
 		);
 	}

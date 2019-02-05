@@ -9,7 +9,7 @@ export function addListing() {
 
 export function addProduct(payload) {
 	axiosInstance.post(point.add_product, payload);
-	const mockResponse = { data: { id: nanoid(), ...payload }, success: true };
+	const mockResponse = { data: { id: nanoid(), ...payload }, success: false, error_message: 'afafafasfsafsafsa' };
 	return Promise.resolve(mockResponse);
 }
 
@@ -19,7 +19,7 @@ export function connfirm_addProduct(product_id) {
 
 export function addPackage(payload) {
 	axiosInstance.post(point.add_package, payload);
-	const mockResponse = { data: { id: nanoid(), ...payload }, success: true };
+	const mockResponse = { data: { id: nanoid(), ...payload }, success: false, error_message: 'erororororororooror' };
 	return Promise.resolve(mockResponse);
 }
 
@@ -29,7 +29,7 @@ export function get_update_product(product_id) {
 
 export function updateProduct(product_id, payload) {
 	axiosInstance.post(point.update_product, payload); //+ `${product_id}`
-	const mockResponse = { data: { ...payload }, success: true };
+	const mockResponse = { data: { ...payload }, success: false, error_message: 'dasdasdsadsa' };
 	return Promise.resolve(mockResponse);
 }
 
@@ -39,7 +39,7 @@ export function get_update_package(package_id) {
 
 export function updatePackage(package_id, payload) {
 	axiosInstance.post(point.update_package, payload); //+ `${package_id}`
-	const mockResponse = { data: { ...payload }, success: true };
+	const mockResponse = { data: { ...payload }, success: true, error_message: 'new error message here' };
 	return Promise.resolve(mockResponse);
 }
 

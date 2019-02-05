@@ -7,30 +7,23 @@ import PropTypes from 'prop-types';
 class AddPackage extends Component {
 	state = {
 		modalIsOpen: false,
-		showError: false
+		showError: false,
+		errorMessage: null
 	};
 
 	toggle = () => {
 		this.setState((prevstate) => ({
-			modalIsOpen: !prevstate.modalIsOpen
+			modalIsOpen: !prevstate.modalIsOpen,
+			showError: false,
+			errorMessage: null
 		}));
 	};
 
 	handleSubmit = async (...params) => {
-		// const response = await Promise.resolve({
-		// 	success: false
-		// });
 		const response = await this.props.onSubmit(...params);
-		console.log(response);
-		// this.setState({ showError: !response.success, modalIsOpen: !response.success });
+		this.setState({ showError: !response.success, modalIsOpen: !response.success, errorMessage: response.error_message });
+		console.log(this.state.showError);
 	};
-
-	// handleSubmit = (...params) => {
-	// 	this.setState({
-	// 		modalIsOpen: false
-	// 	});
-	// 	this.props.onSubmit(...params);
-	// };
 
 	render() {
 		return (
@@ -46,8 +39,7 @@ class AddPackage extends Component {
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						<Form>
 							<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
-							{/* showError={this.state.showError}  */}
-							<PackageModal />
+							<PackageModal showError={this.state.showError} errorMessage={this.state.errorMessage} />
 							<ModalFooter className="justify-content-start">
 								<Button color="primary" type="submit">
 									Add package

@@ -94,6 +94,17 @@ class ProductModal extends React.PureComponent {
 					<SummerNote description={values.description} setFieldValue={setFieldValue} />
 				)}
 				<ModalBody>
+          {/* Alert Error */}
+
+          {this.props.showError && (
+            <div className="alert alert-danger alert-dismissible fade show" role="alert">
+              <button className="close" data-dismiss="alert" aria-label="Close" />
+              <strong>Oh snap!</strong> {this.props.errorMessage}
+            </div>
+          )}
+
+          {/* Alert Error End */}
+          
 					<FormGroup>
 						<Field
 							name="name"
@@ -378,13 +389,12 @@ class SummerNote extends React.Component {
 					[ 'insert', [ 'link', 'picture', 'video' ] ],
 					[ 'codeview', [ 'codeview' ] ]
 				],
-				disableDragAndDrop: true,
-				shortcuts: false,
 				styleTags: [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ],
 				popover: {
 					image: [ [ 'float', [ 'floatLeft', 'floatRight', 'floatNone' ] ], [ 'remove', [ 'removeMedia' ] ] ]
 				},
-				dialogsFade: true,
+        dialogsFade: true,
+        disableDragAndDrop: true,
 				dialogsInBody: true
 			});
 

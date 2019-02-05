@@ -90,7 +90,7 @@ class CategorieProducts extends Component {
 		changePositionPackage(packageIndex.id, Data);
 	};
 
-	handleAddProduct = async (values, actions) => {
+	addProduct = async (values, actions) => {
 		//let product position
 		const newProductIndex = this.state.data.length;
 		const newProduct = {
@@ -107,21 +107,24 @@ class CategorieProducts extends Component {
 			packages: []
 		};
 		// const requestProduct = omit(newProduct, [ 'position', 'packages' ]);
-		this.setState((prevState) => ({
-			...prevState,
-			data: [ ...prevState.data, newProduct ]
-		}));
+		// this.setState((prevState) => ({
+		// 	...prevState,
+		// 	data: [ ...prevState.data, newProduct ]
+		// }));
 		const response = await addProduct(newProduct);
 		const newData = [ ...this.state.data ];
 		// add new product to array end (server return)
-		newData[newProductIndex] = response.data;
-		this.setState({
-			data: newData
-		});
-		actions.setSubmitting(false);
+		if (response.success) {
+			newData[newProductIndex] = response.data;
+			this.setState({
+				data: newData
+			});
+			actions.setSubmitting(false);
+	}
+		return response;
 	};
 
-	handleAddPackage = (productIndex) => async (values, actions) => {
+	addPackage = (productIndex) => async (values, actions) => {
 		//let packages position
 		const newPackageIndex = this.state.data[productIndex].packages.length;
 		const newPackage = {
@@ -137,17 +140,19 @@ class CategorieProducts extends Component {
 			provider_id: values.provider_id,
 			provider_service_id: values.provider_service_id
 		};
-		const newData = this.state.data;
-		newData[productIndex].packages.push(newPackage);
-		this.setState({
-			data: newData
-		});
+		const newData = [...this.state.data];
+		// newData[productIndex].packages.push(newPackage);
+		// this.setState({
+		// 	data: newData
+		// });
 		const response = await addPackage(newPackage);
-		newData[productIndex].packages[newPackageIndex] = response.data;
-		this.setState({
-			data: newData
-		});
-		actions.setSubmitting(false);
+		if (response.success) {
+			newData[productIndex].packages[newPackageIndex] = response.data;
+			this.setState({
+				data: newData
+			});
+			actions.setSubmitting(false);
+		}
 		return response;
 	};
 
@@ -162,7 +167,6 @@ class CategorieProducts extends Component {
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
 		const response = await get_update_package(getPackageId);
-		console.log(response.data);
 		this.setState({
 			response: { ...this.state.response, package: response.data }
 		});
@@ -184,15 +188,15 @@ class CategorieProducts extends Component {
 			url: values.url
 		};
 		const ProductId = editedProduct[productIndex].id;
-		this.setState({
-			data: editedProduct
-		});
 		const response = await updateProduct(ProductId, editedProduct[productIndex]);
+		if(response.success) {
 		editedProduct[productIndex] = response.data;
 		this.setState({
 			data: editedProduct
 		});
 		actions.setSubmitting(false);
+	}
+		return response;
 	};
 
 	editPackage = (productIndex) => (packageIndex) => async (values, actions) => {
@@ -210,16 +214,15 @@ class CategorieProducts extends Component {
 			provider_service_id: values.provider_service_id
 		};
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
-		this.setState({
-			data: editedPackage
-		});
-		console.log(editedPackage);
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
-		editedPackage[productIndex].packages[packageIndex] = response.data;
-		this.setState({
-			data: editedPackage
-		});
-		actions.setSubmitting(false);
+		if (response.success) {
+			editedPackage[productIndex].packages[packageIndex] = response.data;
+			this.setState({
+				data: editedPackage
+			});
+			actions.setSubmitting(false);
+	}
+		return response;
 	};
 
 	deletePackage = (productIndex) => (packageIndex) => async () => {
@@ -246,7 +249,7 @@ class CategorieProducts extends Component {
 			<React.Fragment>
 				<Jumbotron className="page-container">
 					<Container fluid className="m-container-sommerce">
-						<AddProduct onSubmit={this.handleAddProduct} isSubmitting={isSubmitting} />
+						<AddProduct onSubmit={this.addProduct} isSubmitting={isSubmitting} />
 						<Row>
 							<Col xs="12">
 								<div className="sommerce_dragtable">
@@ -262,7 +265,7 @@ class CategorieProducts extends Component {
 										data={data}
 										useDragHandle={true}
 										onSortEnd={this.handleProductSwitch}
-										onPackageAdd={this.handleAddPackage}
+										onPackageAdd={this.addPackage}
 										handleProductSwitch={this.handleProductSwitch}
 									/>
 								</div>

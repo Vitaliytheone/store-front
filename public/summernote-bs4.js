@@ -11,7 +11,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('jquery')) :
   typeof define === 'function' && define.amd ? define(['jquery'], factory) :
   (factory(global.jQuery));
-}(this, (function ($$1) { 'use strict';
+}(this, (function ($$1) { 
 
   $$1 = $$1 && $$1.hasOwnProperty('default') ? $$1['default'] : $$1;
 
@@ -240,10 +240,13 @@
           $dialog.one('hidden.bs.modal', handler);
       },
       showDialog: function ($dialog) {
-          $dialog.modal('show');
+          $dialog.modal('show'); 
       },
       hideDialog: function ($dialog) {
           $dialog.modal('hide');
+          var body = document.body;
+
+          body.classList.add("MyClass");
       },
       createLayout: function ($note, options) {
           var $editor = (options.airMode ? ui.airEditor([

@@ -5,64 +5,73 @@ import ProductModal from './modals/ProductModal';
 import PropTypes from 'prop-types';
 
 class AddProduct extends Component {
-	state = {
-		modalIsOpen: false
-	};
+  state = {
+	modalIsOpen: false,
+	showError: false,
+	errorMessage: null
+  };
 
-	toggle = () => {
-		this.setState((prevstate) => ({
-			modalIsOpen: !prevstate.modalIsOpen
-		}));
-	};
+  toggle = () => {
+    this.setState(prevstate => ({
+	  modalIsOpen: !prevstate.modalIsOpen,
+		showError: false,
+		errorMessage: null
+    }));
+  };
 
-	handleSubmit = (...params) => {
-		this.setState({
-			modalIsOpen: false
-		});
-		this.props.onSubmit(...params);
-	};
+  handleSubmit = async (...params) => {
+	const response = await this.props.onSubmit(...params);
+    this.setState({
+      showError: !response.success,
+      modalIsOpen: !response.success,
+      errorMessage: response.error_message
+	});
 
-	render() {
-		const { isSubmitting } = this.props;
-		return (
-			<React.Fragment>
-				<Row className="sommerce-products__actions">
-					<Col lg="12">
-						<div className="page-content">
-							<Button onClick={this.toggle} color="primary">
-								Add product
-							</Button>
-						</div>
-					</Col>
-				</Row>
-				<Modal
-					isOpen={this.state.modalIsOpen}
-					toggle={this.toggle}
-					size="lg"
-					backdrop="static"
-					keyboard={false}
-					autoFocus={true}
-				>
-					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue, values }) => (
-							<Form>
-								<ModalHeader toggle={this.toggle}>Create product</ModalHeader>
-								<ProductModal setFieldValue={setFieldValue} values={values} />
-								<ModalFooter className="justify-content-start">
-									<Button color="primary" type="submit" disabled={isSubmitting}>
-										{isSubmitting ? 'Loading...' : 'Add product'}
-									</Button>{' '}
-									<Button color="secondary" onClick={this.toggle}>
-										Cancel
-									</Button>
-								</ModalFooter>
-							</Form>
-						)}
-					</Formik>
-				</Modal>
-			</React.Fragment>
-		);
-	}
+  };
+
+  render() {
+    const { isSubmitting } = this.props;
+    return (
+      <React.Fragment>
+        <Row className="sommerce-products__actions">
+          <Col lg="12">
+            <div className="page-content">
+              <Button onClick={this.toggle} color="primary">
+                Add product
+              </Button>
+            </div>
+          </Col>
+        </Row>
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          toggle={this.toggle}
+          size="lg"
+          backdrop="static"
+          keyboard={false}
+        >
+          <Formik
+            onSubmit={this.handleSubmit}
+            initialValues={this.props.initialValues}
+          >
+            {({ setFieldValue, values }) => (
+              <Form>
+                <ModalHeader toggle={this.toggle}>Create product</ModalHeader>
+				<ProductModal setFieldValue={setFieldValue} values={values} showError={this.state.showError} errorMessage={this.state.errorMessage} />
+                <ModalFooter className="justify-content-start">
+                  <Button color="primary" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Loading..." : "Add product"}
+                  </Button>{" "}
+                  <Button color="secondary" onClick={this.toggle}>
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </Form>
+            )}
+          </Formik>
+        </Modal>
+      </React.Fragment>
+    );
+  }
 }
 
 AddProduct.propTypes = {
