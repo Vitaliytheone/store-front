@@ -4,7 +4,7 @@ namespace common\components\domains\methods;
 
 use common\components\domains\BaseDomain;
 use common\helpers\Request;
-use my\helpers\DomainsHelper;
+use common\models\panels\Domains;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
@@ -16,7 +16,6 @@ use common\models\panels\Params;
  */
 class Namesilo extends BaseDomain
 {
-    public const REGISTRAR_NAMESILO = 'namesilo';
 
     public const URL_PROD = 'https://www.namesilo.com/api';
     public const URL_DEV = 'http://sandbox.namesilo.com/api';
@@ -189,7 +188,7 @@ class Namesilo extends BaseDomain
             'email_verification_required' => ArrayHelper::getValue($resultRaw, 'reply.email_verification_required'),
             'nameservers' => ArrayHelper::getValue($resultRaw, 'reply.nameservers'),
             'contact_ids' => ArrayHelper::getValue($resultRaw, 'reply.contact_ids'),
-            'registrar' => self::REGISTRAR_NAMESILO,
+            'registrar' => Domains::REGISTRAR_NAMESILO,
         ];
 
         return $resultFinal;

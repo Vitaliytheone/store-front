@@ -16,7 +16,24 @@ use yii\helpers\Json;
 class Ahnames extends BaseDomain
 {
 
-    public const REGISTRAR_AHNAMES = 'ahnames';
+    /**
+     * Get result from request
+     * @param array $paramOptions
+     * @param string $paramLink
+     * @return array
+     */
+    protected static function _defaultAction($paramOptions, $paramLink): array
+    {
+
+        $url = Yii::$app->params['ahnames.url'];
+
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, $paramOptions);
+
+        $result = CurlHelper::request($url . $paramLink, $options);
+
+        return static::_processResult($result);
+    }
 
     /**
      * @inheritdoc
@@ -42,14 +59,14 @@ class Ahnames extends BaseDomain
      */
     public static function contactCreate($options): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($options, $defaultOptions);
+//        $defaultOptions = static::getDefaultOptions();
+//        $options = array_merge($options, $defaultOptions);
+//
+//        $url = Yii::$app->params['ahnames.url'];
+//
+//        $result = CurlHelper::request($url . '/contactCreate', $options);
 
-        $url = Yii::$app->params['ahnames.url'];
-
-        $result = CurlHelper::request($url . '/contactCreate', $options);
-
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/contactCreate');
     }
 
     /**
@@ -57,21 +74,21 @@ class Ahnames extends BaseDomain
      */
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+//        $defaultOptions = static::getDefaultOptions();
+        $options = [
             'domain' => $domain,
             'period' => $period,
             'registrant' => $contactId,
             'admin' => $contactId,
             'tech' => $contactId,
             'billing' => $contactId,
-        ]);
+        ];
 
-        $url = Yii::$app->params['ahnames.url'];
+//        $url = Yii::$app->params['ahnames.url'];
 
-        $result = CurlHelper::request($url . '/domainRegister', $options);
+//        $result = CurlHelper::request($url . '/domainRegister', $options);
 
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/domainRegister');
     }
 
     /**
@@ -79,16 +96,16 @@ class Ahnames extends BaseDomain
      */
     public static function domainGetInfo($domain): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+//        $defaultOptions = static::getDefaultOptions();
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
-        $url = Yii::$app->params['ahnames.url'];
+//        $url = Yii::$app->params['ahnames.url'];
 
-        $result = CurlHelper::request($url . '/domainGetInfo', $options);
+//        $result = CurlHelper::request($url . '/domainGetInfo', $options);
 
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/domainGetInfo');
     }
 
     /**
@@ -96,16 +113,16 @@ class Ahnames extends BaseDomain
      */
     public static function domainEnableWhoisProtect($domain): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+//        $defaultOptions = static::getDefaultOptions();
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
-        $url = Yii::$app->params['ahnames.url'];
+//        $url = Yii::$app->params['ahnames.url'];
 
-        $result = CurlHelper::request($url . '/domainEnableWhoisProtect', $options);
+//        $result = CurlHelper::request($url . '/domainEnableWhoisProtect', $options);
 
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/domainEnableWhoisProtect');
     }
 
     /**
@@ -119,17 +136,17 @@ class Ahnames extends BaseDomain
 
         $ns = array_filter($ns);
 
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+//        $defaultOptions = static::getDefaultOptions();
+        $options = [
             'domain' => $domain,
             'nss' => implode(",", $ns)
-        ]);
+        ];
 
-        $url = Yii::$app->params['ahnames.url'];
+//        $url = Yii::$app->params['ahnames.url'];
 
-        $result = CurlHelper::request($url . '/domainSetNSs', $options);
+//        $result = CurlHelper::request($url . '/domainSetNSs', $options);
 
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/domainSetNSs');
     }
 
     /**
@@ -137,16 +154,16 @@ class Ahnames extends BaseDomain
      */
     public static function domainEnableLock($domain): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+//        $defaultOptions = static::getDefaultOptions();
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
-        $url = Yii::$app->params['ahnames.url'];
+//        $url = Yii::$app->params['ahnames.url'];
 
-        $result = CurlHelper::request($url . '/domainEnableLock', $options);
+//        $result = CurlHelper::request($url . '/domainEnableLock', $options);
 
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/domainEnableLock');
     }
 
     /**
@@ -154,18 +171,18 @@ class Ahnames extends BaseDomain
      */
     public static function domainRenew($domain, $expires, $period = 1): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+//        $defaultOptions = static::getDefaultOptions();
+        $options = [
             'domain' => $domain,
             'expires' => $expires,
             'period' => $period,
-        ]);
+        ];
 
-        $url = Yii::$app->params['ahnames.url'];
+//        $url = Yii::$app->params['ahnames.url'];
 
-        $result = CurlHelper::request($url . '/domainRenew', $options);
+//        $result = CurlHelper::request($url . '/domainRenew', $options);
 
-        return static::_processResult($result);
+        return static::_defaultAction($options, '/domainRenew');
     }
 
     /**

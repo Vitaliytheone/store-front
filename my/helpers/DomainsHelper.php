@@ -67,8 +67,7 @@ class DomainsHelper
      */
     public static function getAllRegistrars(): array
     {
-        $result = DomainZones::find()->select('registrar')->distinct()->asArray()->all();
-        $result = array_column($result, 'registrar');
+        $result = DomainZones::find()->select('registrar')->distinct()->asArray()->column();
         return $result;
     }
 

@@ -291,13 +291,15 @@ class ProjectController extends CustomController
 
     /**
      * Search available domains
+     * @param string $search_domain
+     * @param string $zone
      * @return array
      * @throws yii\base\UnknownClassException
      */
-    public function actionSearchDomains(): array
+    public function actionSearchDomains(string $search_domain, string $zone): array
     {
-        $domain = trim(Yii::$app->request->get('search_domain'));
-        $zone = trim(Yii::$app->request->get('zone'));
+        $domain = trim($search_domain);
+        $zone = trim($zone);
 
         $domainsSearch = new DomainsAvailableSearch();
 

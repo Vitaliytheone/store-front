@@ -2,6 +2,7 @@
 
 namespace my\models\forms;
 
+use my\components\validators\OrderDomainValidator;
 use yii\base\Model;
 use Yii;
 use my\components\validators\OrderLimitValidator;
@@ -57,6 +58,7 @@ class DomainForm extends Model
     {
         return [
             [['domain'], OrderLimitValidator::class],
+            [['domain'], OrderDomainValidator::class],
             [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_country')],
             [['domain_zone'], 'integer'],
             [['domain_email'], 'email'],
@@ -209,11 +211,7 @@ class DomainForm extends Model
             $this->search_domain = explode('.', $this->search_domain)[0];
         }
 
-        $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
-
-        if (!DomainsHelper::isDomainAvailable($this->domain)) {
-            return false;
-        }
+        $this->domain = mb_strtolower($this->search_domain . $zone->zone);
 
         $this->preparedDomain = DomainsHelper::idnToAscii($this->domain);
 

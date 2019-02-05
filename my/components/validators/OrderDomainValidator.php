@@ -1,8 +1,10 @@
 <?php
+
 namespace my\components\validators;
 
 use common\models\gateways\Sites;
 use common\models\stores\Stores;
+use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Orders;
 use common\models\panels\Project;
@@ -33,6 +35,7 @@ class OrderDomainValidator extends BaseDomainValidator
      * @param Model $model
      * @param mixed $attribute
      * @return bool
+     * @throws \yii\base\UnknownClassException
      */
     public function validateAttribute($model, $attribute)
     {
@@ -60,6 +63,10 @@ class OrderDomainValidator extends BaseDomainValidator
 
         $domain = $this->prepareDomain();
 
+        if (empty($domain)) {
+            return false;
+        }
+
         if (!filter_var('info@' . $domain, FILTER_VALIDATE_EMAIL)) {
             $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain'));
             return false;
@@ -74,7 +81,7 @@ class OrderDomainValidator extends BaseDomainValidator
             }
 
             $domain = $result['domain'];
-            $domain = strtolower($domain);
+            $domain = mb_strtolower(trim($domain));
         }
 
         $model->preparedDomain = $domain;
@@ -157,6 +164,28 @@ class OrderDomainValidator extends BaseDomainValidator
 
         if ($hasOrder) {
             $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
+            return false;
+        }
+
+        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $result = $registrar::domainsCheck($domain);
+
+        if (empty($result[$domain])) {
+            return false;
+        }
+
+        $existsDomain = Orders::find()->andWhere([
+            'domain' => DomainsHelper::idnToAscii($domain),
+            'item' => Orders::ITEM_BUY_DOMAIN,
+            'status' => [
+                Orders::STATUS_PENDING,
+                Orders::STATUS_PAID,
+                Orders::STATUS_ADDED,
+                Orders::STATUS_ERROR
+            ]
+        ])->exists();
+
+        if ($existsDomain) {
             return false;
         }
     }

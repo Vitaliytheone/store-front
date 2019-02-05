@@ -198,11 +198,7 @@ class CreateChildForm extends Model
             $this->search_domain = explode('.', $this->search_domain)[0];
         }
 
-        $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
-
-        if (!DomainsHelper::isDomainAvailable($this->domain)) {
-            return false;
-        }
+        $this->domain = mb_strtolower($this->search_domain . $zone->zone);
 
         $this->preparedDomain = DomainsHelper::idnToAscii($this->domain);
 

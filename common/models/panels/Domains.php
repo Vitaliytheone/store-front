@@ -37,6 +37,9 @@ class Domains extends ActiveRecord
     const STATUS_OK = 1;
     const STATUS_EXPIRED = 2;
 
+    public const REGISTRAR_AHNAMES = 'ahnames';
+    public const REGISTRAR_NAMESILO = 'namesilo';
+
     use UnixTimeFormatTrait;
 
     /**
