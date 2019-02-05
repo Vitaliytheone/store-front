@@ -140,7 +140,7 @@ class CustomController extends CommonController
                 ],
                 'domain' => Yii::$app->getRequest()->getHostName(),
                 'name' => $this->gateway->getBaseDomain(),
-                'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
+                'url' => trim(Yii::$app->getRequest()->getUrl(), '/'),
                 'custom_header' => '',
                 'custom_footer' => '',
             ]
