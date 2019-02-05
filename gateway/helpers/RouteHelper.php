@@ -1,6 +1,7 @@
 <?php
 namespace gateway\helpers;
 
+use common\models\gateway\Files;
 use common\models\gateway\Pages;
 use common\models\gateways\SitePaymentMethods;
 use Yii;
@@ -80,7 +81,7 @@ class RouteHelper {
     {
         $urls = [];
 
-        foreach (Pages::find()->active()->all() as $page) {
+        foreach (Files::find()->page()->active()->all() as $page) {
             $url = trim($page->url);
             $url = !empty($url) ? $url : '/';
             $url = str_replace('/', '\/', $url);
