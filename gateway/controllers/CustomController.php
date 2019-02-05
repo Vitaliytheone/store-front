@@ -129,23 +129,17 @@ class CustomController extends CommonController
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
                 'page_title' => $this->pageTitle ? $this->pageTitle : $this->gateway->seo_title,
-                'menu' => [],
                 'language' => Yii::$app->language,
-                'rtl' => '',
-                'favicon' => '',
-                'logo' => '',
                 'meta' => [
                     'keywords' => $this->seoKeywords ? $this->seoKeywords : $this->gateway->seo_keywords,
                     'description' => $this->seoDescription ? $this->seoDescription : $this->gateway->seo_description,
                 ],
                 'domain' => Yii::$app->getRequest()->getHostName(),
                 'name' => $this->gateway->getBaseDomain(),
-                'url' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => '',
-                'custom_footer' => '',
+                'page' => trim(Yii::$app->getRequest()->getUrl(), '/'),
             ]
         ];
-
+        
         return $this->_globalParams;
     }
 
