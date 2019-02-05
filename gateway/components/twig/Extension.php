@@ -1,9 +1,10 @@
 <?php
 namespace gateway\components\twig;
 
-use common\components\twig\parsers\TokenParser_Include;
-use common\models\gateway\Pages;
+use gateway\components\twig\parsers\TokenParser_Include;
+use common\models\gateway\Files;
 use gateway\helpers\AssetsHelper;
+use gateway\helpers\FilesHelper;
 use Yii;
 use Twig_SimpleFunction;
 
@@ -44,13 +45,11 @@ class Extension extends \Twig_Extension {
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
             new Twig_SimpleFunction('asset', function($value) {
-                return AssetsHelper::getAssetPath() . $value;
+                return AssetsHelper::getAssetPath() . "/" . trim(((string)$value), "/");
             }),
             new Twig_SimpleFunction('page_url', function($pageId){
-                $page = Pages::find()->active()->andWhere([
-                    'id' => $pageId,
-                ])->one();
-                return '/' . ($page ? $page->url : '#');
+                $page = FilesHelper::getFileById(Files::FILE_TYPE_PAGE, $pageId);
+                return '/' . ($page ? $page['url'] : '#');
             }),
         ];
 
