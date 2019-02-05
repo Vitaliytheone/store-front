@@ -136,7 +136,7 @@ class CustomController extends CommonController
                 ],
                 'domain' => Yii::$app->getRequest()->getHostName(),
                 'name' => $this->gateway->getBaseDomain(),
-                'page' => trim(Yii::$app->getRequest()->getUrl(), '/'),
+                'url' => trim(Yii::$app->getRequest()->getUrl(), '/'),
             ]
         ];
         
