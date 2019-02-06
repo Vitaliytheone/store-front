@@ -2,6 +2,7 @@
 
 namespace my\controllers;
 
+use common\components\cdn\Cdn;
 use common\helpers\PaymentHelper;
 use common\models\panels\Params;
 use common\models\panels\services\GetGeneralPaymentMethodsService;
@@ -184,10 +185,13 @@ class SiteController extends CustomController
             ->ticketView($ticket->id)
             ->all();
 
+        $cdn = Cdn::getCdn();
+
         return $this->renderPartial('ticket', [
             'ticketMessages' => $ticketMessages,
             'ticket' => $ticket,
-            'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED
+            'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED,
+            'cdn' => $cdn,
         ]);
     }
 

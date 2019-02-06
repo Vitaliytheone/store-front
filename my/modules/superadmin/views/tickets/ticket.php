@@ -38,7 +38,8 @@
 
             <?= $this->render('layouts/_ticket_messages_form', [
                 'ticket' => $ticket,
-                'model' => $model
+                'model' => $model,
+                'cdn' => $cdn,
             ])?>
 
             <div class="ticket-message__block">

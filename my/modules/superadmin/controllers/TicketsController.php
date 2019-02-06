@@ -2,6 +2,7 @@
 
 namespace superadmin\controllers;
 
+use common\components\cdn\Cdn;
 use common\models\panels\CustomersNote;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
@@ -137,6 +138,8 @@ class TicketsController extends CustomController
         $ticketMessagesSearch->setUser($admin);
         $ticketMessages = $ticketMessagesSearch->getMessages();
 
+        $cdn = Cdn::getCdn();
+
         return $this->render('ticket', [
             'ticketMessages' => $ticketMessages,
             'ticketMessagesSearch' => $ticketMessagesSearch,
@@ -151,6 +154,7 @@ class TicketsController extends CustomController
             'gateways' => $blocks['gateways'],
             'childPanels' => $blocks['childPanels'],
             'notes' => $blocks['notes'],
+            'cdn' => $cdn,
         ]);
     }
 
