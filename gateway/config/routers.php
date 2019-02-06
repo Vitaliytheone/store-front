@@ -6,7 +6,7 @@ return [
     '/index' => 'page/index',
     '/admin/logout' => 'admin/site/logout',
     '/admin/frozen' => 'admin/site/frozen',
-    '/admin/settings' => 'admin/settings/themes',
+    '/admin/settings' => 'admin/settings/payments',
     '/admin/super-login' => 'admin/site/super-login',
     'checkout' => 'payments/checkout',
     'processing' => 'payments/processing',
