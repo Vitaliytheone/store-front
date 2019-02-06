@@ -3,6 +3,7 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\stores\StoreAdminAuth;
+use sommerce\components\filters\ApiAuthFilter;
 use Yii;
 use sommerce\controllers\CommonController;
 use yii\web\User;
@@ -14,6 +15,18 @@ use yii\web\User;
 class AdminController extends CommonController
 {
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'apiAuth' => [
+                'class' => ApiAuthFilter::class,
+            ],
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      * @param $action
      * @return bool
@@ -24,12 +37,6 @@ class AdminController extends CommonController
     {
         /** @var User $user */
         $user = Yii::$app->user;
-
-        // Allow request for react-application without authorization
-        if (Yii::$app->reactApi->setIdentityForApi()) {
-            $this->enableDomainValidation = false;
-            $this->enableCsrfValidation = false;
-        }
 
         // Frozen/terminated store routine
         if ($this->store->isInactive() && !$user->isGuest) {

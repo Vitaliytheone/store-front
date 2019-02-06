@@ -1,24 +1,41 @@
 <?php
-
-namespace sommerce\components;
+namespace sommerce\components\filters;
 
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
-use yii\base\Component;
+use yii\base\ActionFilter;
 use Yii;
 
-class ApiComponent extends Component
+/**
+ * ApiAuthFilter
+ *
+ * Example:
+ *
+ * public function behaviors()
+ * {
+ *     return => [
+ *         [
+ *             'class' => ApiAuthFilter::class,
+ *             'only' => ['view', 'index'],
+ *         ],
+ *     ];
+ * }
+ *
+ * Class ApiAuthFilter
+ * @package sommerce\components\filters
+ */
+class ApiAuthFilter extends ActionFilter
 {
+
     /**
-     * Set user identity for react api by reactApiKey
+     * {@inheritdoc}
+     * @param \yii\base\Action $action
      * @return bool
      */
-    public function setIdentityForApi()
+    public function beforeAction($action)
     {
         $user = Yii::$app->user;
-        $store = $this->getStoreInstance();
 
-        if (!$store->isInactive() && $user->isGuest && YII_ENV == 'dev') {
+        if ($user->isGuest && YII_ENV == 'dev') {
             $post = Yii::$app->getRequest()->post();
             $get = Yii::$app->getRequest()->get();
 
@@ -33,27 +50,11 @@ class ApiComponent extends Component
                     $admin = StoreAdminAuth::findOne(['status' => StoreAdminAuth::STATUS_ACTIVE]);
                 }
                 $user->setIdentity($admin);
-            } else {
-                return false;
+                Yii::$app->controller->enableCsrfValidation = false;
+                Yii::$app->controller->enableDomainValidation = false;
             }
         }
 
-        return true;
-    }
-
-    /**
-     * Get store instance
-     * @return mixed
-     */
-    private function getStoreInstance()
-    {
-        $store = Yii::$app->store->getInstance();
-
-        if (!$store || !($store instanceof Stores)) {
-            exit;
-        }
-
-        $store->checkExpired();
-        return $store;
+        return parent::beforeAction($action);
     }
 }
