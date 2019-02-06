@@ -92,7 +92,9 @@ class SettingsController extends CustomController
             'update-blocks',
             'block-upload',
             'update-theme',
-            'theme-update-style'
+            'theme-update-style',
+            'draft',
+            'publish',
         ])) {
             $this->enableCsrfValidation = false;
         }
