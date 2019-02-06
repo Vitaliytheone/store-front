@@ -4,6 +4,7 @@ namespace common\components\twig;
 use common\components\twig\parsers\TokenParser_Include;
 use Yii;
 use Twig_SimpleFunction;
+use Twig_SimpleFilter;
 
 /**
  * Class Extension
@@ -51,15 +52,17 @@ class Extension extends \Twig_Extension {
      */
     public function getTokenParsers()
     {
-        return [
-            new TokenParser_Include($this->twigOptions)
-        ];
+        return [];
     }
 
     /** @inheritdoc */
     public function getFilters()
     {
-        $filters = [];
+        $filters = [
+            new Twig_SimpleFilter('money', function($price) {
+                return $price;
+            })
+        ];
 
         return $filters;
     }

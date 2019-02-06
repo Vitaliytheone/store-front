@@ -3,6 +3,7 @@ namespace gateway\controllers;
 
 use common\components\filters\DisableCsrfToken;
 use common\models\gateway\Payments;
+use gateway\helpers\AssetsHelper;
 use gateway\models\forms\CheckoutForm;
 use payments\Payment;
 use Yii;
@@ -41,11 +42,25 @@ class PaymentsController extends CommonController
     {
         $model = new CheckoutForm();
         $model->setGateway(Yii::$app->gateway->getInstance());
-        if ($model->load(Yii::$app->request->post(), '') && $model->save()) {
-            if ($model->redirect) {
-                return $this->redirect($model->redirect);
-            } else if (!empty($model->formData)) {
-                return $this->renderPartial('checkout.php', $model->formData);
+        if ($model->load(Yii::$app->request->post(), '') && $model->validate()) {
+            if (!$model->validateUserDetails()) {
+                foreach ($model->getScripts() as $src) {
+                    $this->view->registerJsFile($src);
+                }
+
+                $this->addModule('paymentsCheckout', [
+                    'fieldOptions' => $model->getPaymentsFields(),
+                    'options' => $model->getJsOptions()
+                ]);
+                return $this->render('user_checkout', $model->getCheckoutFormData());
+            }
+
+            if ($model->save()) {
+                if ($model->redirect) {
+                    return $this->redirect($model->redirect);
+                } else if (!empty($model->formData)) {
+                    return $this->renderPartial('checkout.php', $model->formData);
+                }
             }
         }
 
@@ -96,5 +111,10 @@ class PaymentsController extends CommonController
         }
         
         return '';
+    }
+
+    public function getViewPath()
+    {
+        return Yii::getAlias('@gateway/views/site');
     }
 }

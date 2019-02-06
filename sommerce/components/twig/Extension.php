@@ -1,8 +1,8 @@
 <?php
 namespace sommerce\components\twig;
 
-use common\components\twig\parsers\TokenParser_Include;
-use common\models\store\PagesOld;
+use sommerce\components\twig\parsers\TokenParser_Include;
+use common\models\store\Pages;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;
 use Yii;
@@ -50,7 +50,7 @@ class Extension extends \Twig_Extension {
                 return AssetsHelper::getAssetPath() . $value;
             }),
             new Twig_SimpleFunction('page_url', function($pageId){
-                $page = PagesOld::find()->active()->andWhere([
+                $page = Pages::find()->active()->andWhere([
                     'id' => $pageId,
                 ])->one();
                 return '/' . ($page ? $page->url : '#');

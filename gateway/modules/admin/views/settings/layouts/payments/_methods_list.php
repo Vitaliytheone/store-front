@@ -22,11 +22,11 @@ use gateway\helpers\UiHelper;
 
     <?php foreach ($paymentMethods as $method): ?>
 
-        <div class="gateway-settings__payment-cart m-portlet">
+        <div class="sommerce-settings__payment-cart m-portlet">
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="payment-cart__preview">
-                        <img src="<?= $method['icon'] ?>" alt="" class="img-fluid">
+                        <img src="<?= $method['icon'] ?>" alt="" class="img-fluid" style="<?= $method['icon_style'] ?>">
                     </div>
                     <div class="payment-cart__title">
                         <?= $method['title'] ?>
@@ -37,7 +37,7 @@ use gateway\helpers\UiHelper;
                                  <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
                                      <label>
                                         <input class="toggle-active" type="checkbox"
-                                               name="toggle-active" <?= UiHelper::toggleString($method['active'], 'checked') ?>
+                                               name="toggle-active" <?= ($method['active'] ? 'checked="checked"' : '') ?>
                                                data-payment_method="<?= $method['method'] ?>"
                                                data-action_url="<?= Url::toRoute(['/settings/payments-toggle-active', 'method' => $method['method'],]) ?>">
                                          <span></span>

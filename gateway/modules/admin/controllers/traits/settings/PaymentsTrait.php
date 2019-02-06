@@ -54,7 +54,9 @@ trait PaymentsTrait {
         $model->setPaymentMethod($paymentMethod);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            UiHelper::message(Yii::t('admin', 'settings.message_settings_saved'));
+            Yii::$app->session->addFlash('messages', [
+                'success' => Yii::t('admin', 'settings.message_settings_saved')
+            ]);
             return $this->redirect(Url::toRoute(['/settings/payments']));
         }
 
