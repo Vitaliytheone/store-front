@@ -99,13 +99,13 @@ class Params extends ActiveRecord
     public static function getServices(): array
     {
         return [
-            self::CODE_WHOISXML,
-            self::CODE_SOCIALSAPI,
-            self::CODE_WHOISXMLAPI,
-            self::CODE_AHNAMES,
-            self::CODE_GOGETSSL,
-            self::CODE_DNSLYTICS,
-            self::CODE_NAMESILO,
+            static::CODE_WHOISXML => Yii::t('app', 'settings.services.whoisxml'),
+            static::CODE_SOCIALSAPI => Yii::t('app', 'settings.services.socialsapi'),
+            static::CODE_WHOISXMLAPI => Yii::t('app', 'settings.services.whoisxmlapi'),
+            static::CODE_AHNAMES => Yii::t('app', 'settings.services.ahnames'),
+            static::CODE_GOGETSSL => Yii::t('app', 'settings.services.gogetssl'),
+            static::CODE_DNSLYTICS => Yii::t('app', 'settings.services.dnslytics'),
+            static::CODE_NAMESILO => Yii::t('app', 'settings.services.namesilo'),
         ];
     }
 

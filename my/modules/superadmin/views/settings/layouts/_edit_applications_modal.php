@@ -8,17 +8,16 @@ use yii\bootstrap\Html;
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"
-                    id="ModalLabel"><?= Yii::t('app/superadmin', 'applications.edit.modal_header') ?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h1 id="loader" class="text-center"><i class="fa fa-spinner fa-spin" style="font-size: 48px;"></i></h1>
+                <h5 class="modal-title" id="ModalLabel"><?= Yii::t('app/superadmin', 'applications.edit.modal_header') ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
 
+            <div id="loader"><h1 class="text-center"><i class="fa fa-spinner fa-spin" style="font-size: 48px; margin-top: 20px;"></i></h1></div>
+
+            <div class="modal-body"></div>
+
             <div class="modal-footer">
-                <button type="button" class="btn  btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'applications.edit.modal_cancel_btn') ?></button>
+                <button type="button" class="btn btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'applications.edit.modal_cancel_btn') ?></button>
                 <?= Html::submitButton(Yii::t('app/superadmin', 'applications.edit.modal_submit_btn'), [
                     'class' => 'btn btn-primary',
                     'name' => 'edit-plan-button',

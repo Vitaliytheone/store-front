@@ -13,8 +13,6 @@ class ApplicationsSearch extends Params
 {
     private $params;
 
-    public $rows;
-
     /**
      * Set search parameters
      * @param array $params
@@ -36,29 +34,10 @@ class ApplicationsSearch extends Params
             'category' => static::CATEGORY_SERVICE,
         ]);
         $query->andWhere([
-            'code' => Params::getServices(),
+            'code' => array_keys(Params::getServices()),
         ]);
 
         return $query;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    private function prepareData(array $data): array
-    {
-        $returnData = [];
-
-        foreach ($data as $key => $value) {
-
-            $returnData[] = [
-                'id' => $value['id'],
-                'code' => $value['code'],
-            ];
-        }
-
-        return $returnData;
     }
 
     /**
@@ -70,12 +49,13 @@ class ApplicationsSearch extends Params
         $query = clone $this->buildQuery();
 
         $models = $query
+            ->select(['id', 'code'])
             ->orderBy([
                 'position' => SORT_ASC,
             ])
             ->asArray()
             ->all();
 
-        return $this->prepareData($models);
+        return $models;
     }
 }

@@ -2,8 +2,6 @@
 /* @var $this yii\web\View */
 /* @var $emails \superadmin\models\search\NotificationEmailSearch */
 
-use my\helpers\Url;
-use yii\bootstrap\Html;
 
 $this->context->addModule('superadminEmailSettingsController');
 ?>
@@ -11,12 +9,12 @@ $this->context->addModule('superadminEmailSettingsController');
     <div class="row">
         <div class="col-md-2">
             <div class="list-group list-group__custom">
-                <?= $this->render('layouts/_menu'); ?>
+                <?= $this->render('layouts/_menu', ['mailsActive' => 'active']); ?>
             </div>
         </div>
         <div class="col-lg-9">
             <?= $this->render('layouts/_emails_list', [
-                    'emails' => $emails
+                'emails' => $emails
             ]) ?>
         </div>
     </div>

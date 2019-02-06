@@ -1,17 +1,15 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $plans \superadmin\models\search\PlanSearch */
+/* @var $this yii\web\View */
+/* @var $plans \superadmin\models\search\PlanSearch */
 
-    use my\helpers\Url;
-    use yii\bootstrap\Html;
 
-    $this->context->addModule('superadminPlanController');
+$this->context->addModule('superadminPlanController');
 ?>
 <div class="container">
     <div class="row">
         <div class="col-md-2">
             <div class="list-group list-group__custom">
-                <?= $this->render('layouts/_menu'); ?>
+                <?= $this->render('layouts/_menu', ['plansActive' => 'active']); ?>
             </div>
         </div>
         <div class="col-md-9">

@@ -5,6 +5,7 @@ namespace superadmin\models\forms;
 use common\models\panels\Params;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * EditApplicationsForm
@@ -51,7 +52,20 @@ class EditApplicationsForm extends Model
             return false;
         }
 
-        $this->_params->setOptions($this->options);
+        $applicationsSettings = $this->_params->getOptions();
+
+        $cleanOptions = [];
+
+        foreach ($applicationsSettings as $key => $details) {
+            $data = ArrayHelper::getValue($this->options, $key);
+            if ($data !== null){
+                $cleanOptions[$key] = (string)$data;
+            } else {
+                $cleanOptions[$key] = $details;
+            }
+        }
+
+        $this->_params->setOptions($cleanOptions);
 
         if (!$this->_params->save()) {
             $this->addErrors($this->_params->getErrors());

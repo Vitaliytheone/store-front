@@ -7,14 +7,23 @@ customModule.superadminApplicationsController = {
             var modal = $('#editApplicationsModal');
 
             modal.modal('show');
+            $('#loader').show();
 
             $.get(link.attr('href'), function (response) {
                 if (response.content) {
                     $('.modal-body', modal).html(response.content);
+                    $('#loader').hide();
                 }
             });
 
             return false;
+        });
+
+
+        $('#editApplicationsModal').on('keyup', function(e) {
+            if (e.which == 13) {
+                $('#editApplicationsButton').click();
+            }
         });
 
         $(document).on('click', '#editApplicationsButton', function (e) {
