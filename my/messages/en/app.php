@@ -120,6 +120,7 @@ return [
     'support.create_ticket.btn_submit' => 'Submit ticket',
 
     'support.view_form.btn_submit' => 'Submit reply',
+    'support.view_form.attachment' => 'Attachments',
 
     'index.signup.header' => 'Create an account',
     'index.signup.btn_submit' => 'Create account',
