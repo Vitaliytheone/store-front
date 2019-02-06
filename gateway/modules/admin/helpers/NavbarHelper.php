@@ -17,37 +17,13 @@ class NavbarHelper {
      */
     private static function _NavbarItems(){
         return [
-            'settings' => [
-                'url' => '/admin/settings',
-                'label' => 'Settings',
-                'class' => 'mobile-hidden',
-                'submenuItems' => [
-                    'settings-general' => [
-                        'url' => '/admin/settings',
-                        'icon' => 'icon-settings',
-                        'label' => Yii::t('admin', 'header.menu_settings_general'),
-                    ],
-                    'settings-payments' => [
-                        'url' => '/admin/settings/payments',
-                        'icon' => 'icon-wallet',
-                        'label' => Yii::t('admin', 'header.menu_settings_payments'),
-                    ],
-                    'settings-navigation' => [
-                        'url' => '/admin/settings/navigation',
-                        'icon' => 'flaticon-list-1',
-                        'label' => Yii::t('admin', 'header.menu_settings_navigation'),
-                    ],
-                    'settings-pages' => [
-                        'url' => '/admin/settings/pages',
-                        'icon' => 'icon-docs',
-                        'label' => Yii::t('admin', 'header.menu_settings_pages'),
-                    ],
-                    'settings-themes' => [
-                        'url' => '/admin/settings/themes',
-                        'icon' => 'icon-puzzle',
-                        'label' => Yii::t('admin', 'header.menu_settings_themes'),
-                    ],
-                ],
+            'settings-payments' =>  [
+                'url' => '/admin/settings/payments',
+                'label' => Yii::t('admin', 'header.menu_settings_payments'),
+            ],
+            'settings-files' =>  [
+                'url' => '/admin/settings/files',
+                'label' => Yii::t('admin', 'header.menu_settings_files'),
             ],
         ];
     }

@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\components\twig;
 
-use common\components\twig\parsers\TokenParser_Include;
+use sommerce\components\twig\parsers\TokenParser_Include;
 use common\models\store\Pages;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;

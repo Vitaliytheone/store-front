@@ -1,7 +1,9 @@
 <?php
 namespace gateway\controllers;
 
+use common\models\gateway\Files;
 use common\models\panels\Params;
+use gateway\helpers\FilesHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -20,7 +22,13 @@ class SiteController extends CustomController
     {
         $this->view->title = Yii::t('app', '404.title');
 
-        return $this->renderPartialCustom('404.twig');
+        $page = FilesHelper::getPage('404');
+
+        if (empty($page)) {
+            return '';
+        }
+
+        return $this->renderTwigContent($page['content'], [], false);
     }
 
     /**

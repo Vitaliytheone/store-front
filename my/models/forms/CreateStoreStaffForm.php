@@ -41,11 +41,11 @@ class CreateStoreStaffForm extends Model
             [['account', 'password'], 'filter', 'filter' => function($value) { // Trim input values
                 return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
             }],
+            ['account', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
             [['account'], 'filter', 'filter' => 'strtolower'], // Strtolower
-
             [['account', 'password', 'status'], 'required'],
             [['password'], 'string', 'min' => 5, 'max' => 20],
-            [['account'], 'string', 'min' => 5, 'max' => 20],
+            [['account'], 'string', 'min' => 3, 'max' => 32],
             [['status'], 'in', 'range' => array_keys(StoreAdmins::getStatuses())],
             [['account'], 'uniqueAccount'],
             [['access'], 'safe'],
