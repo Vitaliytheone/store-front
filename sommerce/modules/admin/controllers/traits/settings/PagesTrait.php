@@ -171,15 +171,6 @@ trait PagesTrait {
      */
     public function actionDraft($id = null)
     {
-        Yii::$app->request->bodyParams = [
-            'styles' => '{"source":"page_files","name":"styles","content":"json_draft"}',
-            'layouts' => [
-                'header' => '{"source":"page_files","name":"header","content":"json_draft"}',
-                'footer' => '{"source":"page_files","name":"footer","content":"json_draft"}',
-            ],
-            'json' => '{"source":"pages","content":"json_draft"}',
-        ];
-
         $form = new SavePageDraftForm();
         $form->setStore($this->store);
 

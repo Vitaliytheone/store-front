@@ -87,7 +87,7 @@ class SavePageDraftForm extends Model
             [['json', 'styles'], function($attribute, $params) {
                 $json = $this->$attribute;
                 if (is_null(json_decode($json)) || json_last_error()) {
-                    $this->addError($attribute, 'Incorrect (' . $attribute . ') json format!');
+                    $this->addError($attribute, 'Incorrect {' . $attribute . '} json format!');
                     return false;
                 }
                 return true;
@@ -97,6 +97,12 @@ class SavePageDraftForm extends Model
                 if (!is_array($layouts) || !isset($layouts['header'], $layouts['footer'])) {
                     $this->addError($attribute, 'Missed layouts data!');
                     return false;
+                }
+                foreach ($this->layouts as $name => $content) {
+                    if (is_null(json_decode($content)) || json_last_error()) {
+                        $this->addError($attribute, 'Incorrect {' . $attribute . ' : ' . $name . '} json format!');
+                        return false;
+                    }
                 }
                 return true;
             }],
