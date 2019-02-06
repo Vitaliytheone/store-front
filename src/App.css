@@ -41730,3 +41730,13 @@ body .group-item {
   display: flex !important;
   flex-direction: row !important;
 }
+
+/* Scrolling when nested modal (summernote) open */
+
+.modal {
+  overflow: auto;
+}
+
+.scroll-off {
+  overflow: hidden;
+}

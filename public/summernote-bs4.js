@@ -241,12 +241,10 @@
       },
       showDialog: function ($dialog) {
           $dialog.modal('show'); 
+          document.body.classList.add("scroll-off");
       },
       hideDialog: function ($dialog) {
           $dialog.modal('hide');
-          var body = document.body;
-
-          body.classList.add("MyClass");
       },
       createLayout: function ($note, options) {
           var $editor = (options.airMode ? ui.airEditor([

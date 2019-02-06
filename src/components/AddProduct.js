@@ -1,35 +1,56 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalFooter, Row, Col } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Row, Col } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import ProductModal from './modals/ProductModal';
+import ConfirmProduct from './ConfirmProduct';
 import PropTypes from 'prop-types';
+import { Scrollbars } from "react-custom-scrollbars";
+import  { ScrollArea } from 'react-scrollbar';
 
 class AddProduct extends Component {
   state = {
-	modalIsOpen: false,
-	showError: false,
-	errorMessage: null
+    confirmModal: false,
+    modalIsOpen: false,
+    showError: false,
+    errorMessage: null,
+    id: null
   };
 
-  toggle = () => {
+  closeModal = () => {
     this.setState(prevstate => ({
-	  modalIsOpen: !prevstate.modalIsOpen,
-		showError: false,
-		errorMessage: null
+      confirmModal: !prevstate.confirmModal
+    }));
+  }
+
+  toggle = () => {
+    document.body.classList.remove("scroll-off");
+      this.setState(prevstate => ({
+      modalIsOpen: !prevstate.modalIsOpen,
+      showError: false,
+      errorMessage: null
     }));
   };
 
   handleSubmit = async (...params) => {
-	const response = await this.props.onSubmit(...params);
+  const response = await this.props.onSubmit(...params);
+  console.log(response)
     this.setState({
       showError: !response.success,
       modalIsOpen: !response.success,
-      errorMessage: response.error_message
-	});
-
+      errorMessage: response.error_message,
+      id: response.data.id
+  });
+	  if (this.state.showError) {
+		alert('zalypa');
+	  } else {
+		  this.setState(prevstate => ({
+			  confirmModal: !prevstate.confirmModal
+		  }));
+	  }
   };
 
-  render() {
+
+  render() {	
     const { isSubmitting } = this.props;
     return (
       <React.Fragment>
@@ -42,33 +63,46 @@ class AddProduct extends Component {
             </div>
           </Col>
         </Row>
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          toggle={this.toggle}
-          size="lg"
-          backdrop="static"
-          keyboard={false}
-        >
-          <Formik
-            onSubmit={this.handleSubmit}
-            initialValues={this.props.initialValues}
+          <Modal
+            ref={el => (this.modal = el)}
+            isOpen={this.state.modalIsOpen}
+            toggle={this.toggle}
+            size="lg"
+            backdrop="static"
+            keyboard={false}
           >
-            {({ setFieldValue, values }) => (
-              <Form>
-                <ModalHeader toggle={this.toggle}>Create product</ModalHeader>
-				<ProductModal setFieldValue={setFieldValue} values={values} showError={this.state.showError} errorMessage={this.state.errorMessage} />
-                <ModalFooter className="justify-content-start">
-                  <Button color="primary" type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Loading..." : "Add product"}
-                  </Button>{" "}
-                  <Button color="secondary" onClick={this.toggle}>
-                    Cancel
-                  </Button>
-                </ModalFooter>
-              </Form>
-            )}
-          </Formik>
-        </Modal>
+            <Formik
+              onSubmit={this.handleSubmit}
+              initialValues={this.props.initialValues}
+            >
+              {({ setFieldValue, values }) => (
+                <Form>
+                  <ModalHeader toggle={this.toggle}>
+                    Create product
+                  </ModalHeader>
+                  <ProductModal
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    showError={this.state.showError}
+                    errorMessage={this.state.errorMessage}
+                  />
+                  <ModalFooter className="justify-content-start">
+                    <Button
+                      color="primary"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Loading..." : "Add product"}
+                    </Button>{" "}
+                    <Button color="secondary" onClick={this.toggle}>
+                      Cancel
+                    </Button>
+                  </ModalFooter>
+                </Form>
+              )}
+            </Formik>
+          </Modal>
+        <ConfirmProduct response={this.props.response} modalIsOpen={this.state.confirmModal} toggle={this.closeModal} />
       </React.Fragment>
     );
   }

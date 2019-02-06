@@ -18,6 +18,7 @@ class EditProduct extends Component {
 	};
 
 	toggle = () => {
+		document.body.classList.remove("scroll-off");
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen,
 			showError: false,

@@ -117,8 +117,9 @@ class CategorieProducts extends Component {
 		if (response.success) {
 			newData[newProductIndex] = response.data;
 			this.setState({
-				data: newData
-			});
+			data: newData,
+			response: { ...this.state.response, product: response.data }
+      });
 			actions.setSubmitting(false);
 	}
 		return response;
@@ -249,7 +250,7 @@ class CategorieProducts extends Component {
 			<React.Fragment>
 				<Jumbotron className="page-container">
 					<Container fluid className="m-container-sommerce">
-						<AddProduct onSubmit={this.addProduct} isSubmitting={isSubmitting} />
+						<AddProduct onSubmit={this.addProduct} response={this.state.response} isSubmitting={isSubmitting} />
 						<Row>
 							<Col xs="12">
 								<div className="sommerce_dragtable">

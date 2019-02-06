@@ -94,17 +94,16 @@ class ProductModal extends React.PureComponent {
 					<SummerNote description={values.description} setFieldValue={setFieldValue} />
 				)}
 				<ModalBody>
-          {/* Alert Error */}
+          				{/* Alert Error */}
 
-          {this.props.showError && (
-            <div className="alert alert-danger alert-dismissible fade show" role="alert">
-              <button className="close" data-dismiss="alert" aria-label="Close" />
-              <strong>Oh snap!</strong> {this.props.errorMessage}
-            </div>
-          )}
+				{this.props.showError && (
+					<div className="alert alert-danger alert-dismissible fade show" role="alert">
+						<button className="close" data-dismiss="alert" aria-label="Close" />
+						<strong>Oh snap!</strong> {this.props.errorMessage}
+					</div>
+				)}
 
-          {/* Alert Error End */}
-          
+				{/* Alert Error End */}
 					<FormGroup>
 						<Field
 							name="name"
