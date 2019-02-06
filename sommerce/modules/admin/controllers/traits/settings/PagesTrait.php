@@ -101,7 +101,6 @@ trait PagesTrait {
                 'title' => 'title',
                 'url' => 'url',
             ])
-            ->active()
             ->asArray()
             ->all();
 
