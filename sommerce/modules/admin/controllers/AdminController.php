@@ -3,7 +3,6 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
 use Yii;
 use sommerce\controllers\CommonController;
 use yii\web\User;
@@ -14,13 +13,23 @@ use yii\web\User;
  */
 class AdminController extends CommonController
 {
-    /** @inheritdoc */
+    /**
+     * {@inheritdoc}
+     * @param $action
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\web\ForbiddenHttpException
+     */
     public function beforeAction($action)
     {
         /** @var User $user */
         $user = Yii::$app->user;
 
-
+        // Allow request for react-application without authorization
+        if (Yii::$app->reactApi->setIdentityForApi()) {
+            $this->enableDomainValidation = false;
+            $this->enableCsrfValidation = false;
+        }
 
         // Frozen/terminated store routine
         if ($this->store->isInactive() && !$user->isGuest) {

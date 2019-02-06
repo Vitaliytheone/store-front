@@ -124,6 +124,9 @@ $config = [
         ],
         'db' => $db['db'],
         'storeDb' => $db['storeDb'],
+        'reactApi' => [
+            'class' => 'sommerce\components\ApiComponent'
+        ],
     ],
     'params' => $params,
     'modules' => [
