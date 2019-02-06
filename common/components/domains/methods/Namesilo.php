@@ -46,6 +46,21 @@ class Namesilo extends BaseDomain
     /**
      * @inheritdoc
      */
+    protected static function _defaultAction($paramOptions, $paramLink): array
+    {
+        $url = static::_setUrl();
+
+        $defaultOptions = static::getDefaultOptions();
+        $options = array_merge($defaultOptions, $paramOptions);
+
+        $result = Request::getContents($url . $paramLink . http_build_query($options));
+
+        return static::_processResult($result);
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected static function _domainsCheckRegistrar($domains): array
     {
 
@@ -80,6 +95,9 @@ class Namesilo extends BaseDomain
         }
 
         $resultFinal = ArrayHelper::merge($resultAvailable, $resultUnavailable);
+        if (empty($resultFinal)) {
+            $resultFinal = array_fill_keys($domains, 0);
+        }
 
         return $resultFinal;
     }
@@ -103,14 +121,7 @@ class Namesilo extends BaseDomain
             'fx' => ArrayHelper::getValue($options, 'fax_phone'),
         ];
 
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($options, $defaultOptions);
-
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/contactAdd?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/contactAdd?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }
@@ -125,24 +136,19 @@ class Namesilo extends BaseDomain
      */
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domain' => $domain,
             'years' => $period,
             'private' => 0,
             'auto_renew' => 0,
             'contact_id' => $contactId,
-        ]);
+        ];
 
         if (!empty(static::$_paramsNamesilo['namesilo.payment_id'])) {
             $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
         }
 
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/registerDomain?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/registerDomain?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }
@@ -162,16 +168,11 @@ class Namesilo extends BaseDomain
      */
     public static function domainGetInfo($domain): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/getDomainInfo?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/getDomainInfo?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }
@@ -199,16 +200,11 @@ class Namesilo extends BaseDomain
      */
     public static function domainEnableWhoisProtect($domain): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/addPrivacy?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/addPrivacy?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }
@@ -229,18 +225,13 @@ class Namesilo extends BaseDomain
 
         $ns = array_filter($ns);
 
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
         $options = array_merge($options, $ns);
 
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/changeNameServers?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/changeNameServers?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }
@@ -255,16 +246,11 @@ class Namesilo extends BaseDomain
      */
     public static function domainEnableLock($domain): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domain' => $domain,
-        ]);
+        ];
 
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/domainLock?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/domainLock?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }
@@ -279,21 +265,16 @@ class Namesilo extends BaseDomain
      */
     public static function domainRenew($domain, $expires = null, $period = 1): array
     {
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domain' => $domain,
             'years' => $period,
-        ]);
+        ];
 
         if (!empty(static::$_paramsNamesilo['namesilo.payment_id'])) {
             $options = array_merge($options, ['payment_id' => static::$_paramsNamesilo['namesilo.payment_id']]);
         }
 
-        $url = static::_setUrl();
-
-        $result = Request::getContents($url . '/renewDomain?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result);
+        $resultRaw = static::_defaultAction($options, '/renewDomain?');
         if (!empty($resultRaw['_error'])) {
             return $resultRaw;
         }

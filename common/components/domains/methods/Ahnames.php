@@ -17,10 +17,7 @@ class Ahnames extends BaseDomain
 {
 
     /**
-     * Get result from request
-     * @param array $paramOptions
-     * @param string $paramLink
-     * @return array
+     * @inheritdoc
      */
     protected static function _defaultAction($paramOptions, $paramLink): array
     {

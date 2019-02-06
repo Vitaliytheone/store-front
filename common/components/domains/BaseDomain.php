@@ -30,6 +30,14 @@ abstract class BaseDomain extends Component
     }
 
     /**
+     * Get result from request
+     * @param array $paramOptions
+     * @param string $paramLink
+     * @return array
+     */
+    abstract protected static function _defaultAction($paramOptions, $paramLink): array;
+
+    /**
      * Checks the domain on the possibility of registration
      * @param array $domains
      * @return array API response

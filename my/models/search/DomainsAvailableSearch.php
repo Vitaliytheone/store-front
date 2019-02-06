@@ -78,8 +78,8 @@ class DomainsAvailableSearch
         }
 
         foreach ($domains as $id => $domain) {
-            $domain = DomainsHelper::idnToAscii($domain);
-            if (!isset($convertedResult[$domain])) {
+            $domainAscii = DomainsHelper::idnToAscii($domain);
+            if (!isset($convertedResult[$domainAscii])) {
                 continue;
             }
 
@@ -87,7 +87,7 @@ class DomainsAvailableSearch
                 'zone' => $id,
                 'domain' => $domain,
                 'price' => $zones[$id]->price_register,
-                'is_available' => $convertedResult[$domain] && !in_array($domain, $existsDomains)
+                'is_available' => $convertedResult[$domainAscii] && !in_array($domainAscii, $existsDomains)
             ];
         }
 
