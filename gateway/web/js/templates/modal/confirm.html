@@ -1,5 +1,5 @@
 <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <% if (typeof(confirm_message) !== "undefined" && confirm_message != '') { %>
             <div class="modal-header">
@@ -8,23 +8,25 @@
             </div>
 
             <div class="modal-body">
-                <p><%= confirm_message %></p>
+                <h5 class="text-center mb-3">
+                    <%= confirm_message %>
+                </h5>
             </div>
 
 
             <div class="modal-footer justify-content-start">
-                <button class="btn btn-primary m-btn--air" id="confirm_yes"><%= confirm_button %></button>
-                <button class="btn btn-secondary m-btn--air" data-dismiss="modal" aria-hidden="true"><%= cancel_button %></button>
+                <button class="btn btn-secondary mr-2" data-dismiss="modal" aria-hidden="true"><%= cancel_button %></button>
+                <button class="btn btn-danger" id="confirm_yes"><%= confirm_button %></button>
             </div>
             <% } else { %>
             <div class="modal-body">
-                <div class="text-center">
-                    <h3 id="conrirm_label"><%= title %></h3>
-                </div>
+                <h5 class="text-center mb-3">
+                    <%= title %>
+                </h5>
 
                 <div class="text-center">
-                    <button class="btn btn-primary m-btn--air" id="confirm_yes"><%= confirm_button %></button>
-                    <button class="btn btn-secondary m-btn--air" data-dismiss="modal" aria-hidden="true"><%= cancel_button %></button>
+                    <button class="btn btn-secondary mr-2" data-dismiss="modal" aria-hidden="true"><%= cancel_button %></button>
+                    <button class="btn btn-danger" id="confirm_yes"><%= confirm_button %></button>
                 </div>
             </div>
             <% } %>
