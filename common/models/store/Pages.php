@@ -15,9 +15,8 @@ use common\models\store\queries\PagesQuery;
  * @property string $title
  * @property int $visibility
  * @property string $twig editor twig source
- * @property string $styles editor styles source
  * @property string $json editor published json
- * @property string $json_dev editor unpublished json
+ * @property string $json_draft editor unpublished json
  * @property int $created_at
  * @property int $updated_at
  */
@@ -70,10 +69,9 @@ class Pages extends ActiveRecord
     public function rules()
     {
         return [
-            [['twig', 'styles', 'json', 'json_dev'], 'string'],
-            [['created_at', 'updated_at'], 'integer'],
+            [['twig', 'json', 'json_draft'], 'string'],
+            [['visibility', 'created_at', 'updated_at'], 'integer'],
             [['url', 'title'], 'string', 'max' => 300],
-            [['visibility'], 'string', 'max' => 1],
         ];
     }
 
@@ -87,12 +85,12 @@ class Pages extends ActiveRecord
             'url' => Yii::t('app', 'Url'),
             'title' => Yii::t('app', 'Title'),
             'visibility' => Yii::t('app', 'Visibility'),
-            'twig' => Yii::t('app', 'editor twig source'),
-            'styles' => Yii::t('app', 'editor styles source'),
-            'json' => Yii::t('app', 'editor published json'),
-            'json_dev' => Yii::t('app', 'editor unpublished json'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'twig' => Yii::t('app', 'Editor twig source'),
+            'styles' => Yii::t('app', 'Editor styles source'),
+            'json' => Yii::t('app', 'Editor published json'),
+            'json_draft' => Yii::t('app', 'Editor draft json'),
+            'created_at' => Yii::t('app', 'Created'),
+            'updated_at' => Yii::t('app', 'Updated'),
         ];
     }
 

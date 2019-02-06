@@ -1,11 +1,13 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use common\components\exceptions\FirstValidationErrorHttpException;
 use common\models\store\Packages;
+use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\store\Products;
 use sommerce\controllers\CommonController;
-use sommerce\modules\admin\models\forms\SavePageForm;
+use sommerce\modules\admin\models\forms\SavePageDraftForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
 use yii\helpers\BaseHtml;
@@ -38,6 +40,7 @@ trait PagesTrait {
 
     /**
      * Initialize Pages ReactJs app
+     * /admin/settings/edit-page
      * @param int $id
      * @return array
      * @throws NotFoundHttpException
@@ -57,18 +60,33 @@ trait PagesTrait {
 
     /**
      * Return page data
-     * @param null $id
+     * @param integer $id
      * @return array
      */
-    public function actionGetPage($id = null)
+    public function actionGetPage($id)
     {
-        $data = null;
+        $page = static::_getPage($id);
+        $pageFiles = PageFiles::find()
+            ->select(['json_draft'])
+            ->andWhere([
+                'name' => [
+                    PageFiles::NAME_STYLES,
+                    PageFiles::NAME_HEADER,
+                    PageFiles::NAME_FOOTER,
+                ]
+            ])
+            ->asArray()
+            ->indexBy('name')
+            ->column();
 
-        if ($id) {
-            $data = static::_getPage($id)->json_dev;
-        }
-
-        return ['json' => $data];
+        return [
+            'styles' => $pageFiles[PageFiles::NAME_STYLES],
+            'layouts' => [
+                'header' => $pageFiles[PageFiles::NAME_HEADER],
+                'footer' => $pageFiles[PageFiles::NAME_FOOTER],
+            ],
+            'json' => $page->json_draft,
+        ];
     }
 
     /**
@@ -149,20 +167,35 @@ trait PagesTrait {
      * Save page
      * @param $id
      * @return mixed
-     * @throws BadRequestHttpException
+     * @throws
      */
-    public function actionSaveDevPage($id)
+    public function actionDraft($id = null)
     {
-        $form = new SavePageForm();
-        $form->setStore($this->store);
-        $form->setPage(static::_getPage($id));
-        $form->setDev(true);
+        Yii::$app->request->bodyParams = [
+            'styles' => '{"source":"page_files","name":"styles","content":"json_draft"}',
+            'layouts' => [
+                'header' => '{"source":"page_files","name":"header","content":"json_draft"}',
+                'footer' => '{"source":"page_files","name":"footer","content":"json_draft"}',
+            ],
+            'json' => '{"source":"pages","content":"json_draft"}',
+        ];
 
-        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
-            throw new BadRequestHttpException('Page cannot save!');
+        $form = new SavePageDraftForm();
+        $form->setStore($this->store);
+
+        if ($id) {
+            $form->setPage(static::_getPage($id));
         }
 
-        return $id;
+        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
+            if ($form->hasErrors()) {
+                throw new FirstValidationErrorHttpException($form);
+            } else {
+                throw new BadRequestHttpException('Cannot save page!');
+            }
+        }
+
+        return $form->getPage()->id;
     }
 
     /**
@@ -171,17 +204,8 @@ trait PagesTrait {
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionSavePage($id)
+    public function actionPublish($id)
     {
-        $form = new SavePageForm();
-        $form->setStore($this->store);
-        $form->setPage(static::_getPage($id));
-        $form->setDev(false);
-
-        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
-            throw new BadRequestHttpException('Page cannot save!');
-        }
-
         return $id;
     }
 

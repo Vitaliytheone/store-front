@@ -68,11 +68,12 @@ class SettingsController extends CustomController
             'ajaxApi' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
+                    // Pages trait
                     'get-page',
                     'get-pages',
                     'get-products',
-                    'save-dev-page',
-                    'save-page',
+                    'draft',
+                    'publish',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_AJAX_API,

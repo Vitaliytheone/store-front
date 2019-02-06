@@ -1,15 +1,14 @@
 <?php
 
 return [
-
     'api_endpoints' => [
         /**
          * Получение данных о странице
          *
          * Тип запроса: GET
          * Обязательные параметры:
+         *      id (int) — ID страницы.
          * Необязательные параметы:
-         *      id (int) — ID страницы. Редактирование — если определен, создание — если не определен
          */
         'get-page' => '/admin/settings/pages/get-page',
 
@@ -32,27 +31,27 @@ return [
         'get-products' => '/admin/settings/pages/get-products',
 
         /**
-         * Сохранение dev-версии страницы
+         * Сохранение draft-версии страницы
          *
          * Тип запроса: POST
          * Обязательные параметры:
          * Необязательные параметы:
-         *      {{id}} (int) – ID услуги. Обновление — если определен, создание — если не определен
+         *      {{id}} (int) – ID страницы. Обновление — если определен, создание — если не определен
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        'save-dev-page' => '/admin/settings/pages/save-dev-page',
+        'save-draft-page' => '/admin/settings/pages/draft/{{id}}',
 
         /**
          * Сохранение страницы
          *
          * Тип запроса: POST
          * Обязательные параметры:
+         *      {{id}} (int) – ID страницы
          * Необязательные параметы:
-         *      {{id}} (int) – ID услуги. Обновление — если определен, создание — если не определен
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        'save-page' => '/admin/settings/pages/save-page',
+        'save-publish-page' => '/admin/settings/pages/publish/{{id}}',
     ],
 ];
