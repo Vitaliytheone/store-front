@@ -50,11 +50,11 @@ class DomainsHelper
 
         if (false !== mb_stripos($domain, 'xn--')) {
             if (false === mb_stripos($domain, ' ')) {
-                return idn_to_utf8($domain, 0, INTL_IDNA_VARIANT_UTS46);
+                return idn_to_utf8($domain, IDNA_NONTRANSITIONAL_TO_UNICODE, INTL_IDNA_VARIANT_UTS46);
             }
 
             if (preg_match('/(xn\-\-[a-z0-9\.-]+)/is', $domain, $domainMatch)) {
-                $domain = str_replace($domainMatch[1], idn_to_utf8($domainMatch[1], IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46), $domain);
+                $domain = str_replace($domainMatch[1], idn_to_utf8($domainMatch[1], IDNA_NONTRANSITIONAL_TO_UNICODE, INTL_IDNA_VARIANT_UTS46), $domain);
             }
         }
 
