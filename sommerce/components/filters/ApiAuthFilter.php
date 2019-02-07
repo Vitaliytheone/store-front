@@ -50,7 +50,6 @@ class ApiAuthFilter extends ActionFilter
                     $admin = StoreAdminAuth::findOne(['status' => StoreAdminAuth::STATUS_ACTIVE]);
                 }
                 $user->setIdentity($admin);
-                header("Access-Control-Allow-Origin: *");
                 Yii::$app->controller->enableCsrfValidation = false;
                 Yii::$app->controller->enableDomainValidation = false;
             }
