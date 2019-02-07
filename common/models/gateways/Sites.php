@@ -50,9 +50,6 @@ use yii\base\Exception;
  * @property Admins[] $admins
  * @property SitePaymentMethods[] $sitePaymentMethods
  * @property Customers $customer
- *
- * @method getThemeModel
- * @method getThemeFiles
  */
 class Sites extends ActiveRecord implements ProjectInterface
 {
@@ -124,7 +121,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         return ArrayHelper::merge(parent::behaviors(), [
             'timestamp' => TimestampBehavior::class,
-            'theme' => SiteBehavior::class,
         ]);
     }
 

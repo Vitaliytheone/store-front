@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
 class PaymentMethods extends ActiveRecord
 {
     public const METHOD_PAYPAL = 1;
+    public const METHOD_STRIPE = 2;
 
     /**
      * @inheritdoc
@@ -87,6 +88,16 @@ class PaymentMethods extends ActiveRecord
                     ['tag' => 'input', 'type' => 'checkbox', 'name' => 'test_mode', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_paypal_test_mode')],
                 ]
             ],
+            static::METHOD_STRIPE => [
+                'icon' => '/img/pg/stripe_logo.png',
+                'icon_style' => 'margin: 10px;',
+                'form_fields' => [
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_secret_key', 'placeholder' => '', 'name' => 'secret_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_secret_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_public_key', 'placeholder' => '', 'name' => 'public_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_public_key')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_webhook_secret', 'placeholder' => '', 'name' => 'webhook_secret', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_webhook_secret')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_title', 'placeholder' => '', 'name' => 'title', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_title')],
+            ]
+            ],
         ];
     }
 
@@ -96,6 +107,14 @@ class PaymentMethods extends ActiveRecord
     public function getIcon()
     {
         return (string)ArrayHelper::getValue(static::getViewData(), [$this->id, 'icon'], '');
+    }
+
+    /**
+     * @return string
+     */
+    public function getIconStyle()
+    {
+        return (string)ArrayHelper::getValue(static::getViewData(), [$this->id, 'icon_style'], '');
     }
 
     /**

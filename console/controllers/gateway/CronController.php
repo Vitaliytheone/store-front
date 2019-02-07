@@ -99,7 +99,8 @@ class CronController extends CustomController
             'response' => 1,
         ])->andWhere("transaction_id <> ''")->batch() as $payments) {
             foreach ($payments as $payment) {
-                $component->checkStatus($payment);
+                $component->setPayment($payment);
+                $component->checkStatus();
             }
         }
     }
