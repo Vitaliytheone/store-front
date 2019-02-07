@@ -2,6 +2,7 @@
 
 namespace common\components\cdn\providers;
 
+use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use common\components\cdn\BaseCdn;
@@ -84,6 +85,26 @@ class Uploadcare extends BaseCdn
     }
 
     /**
+     * @inheritdoc
+     */
+    public function store($fileId)
+    {
+        if (! $this->_file instanceof File) {
+            $this->_file = $this->_api->getFile($fileId);
+        }
+
+        try {
+            $this->_file->store(true);
+        } catch (Exception $e) {
+//            echo $e->getMessage()."\n";
+//            echo $e->getTraceAsString()."\n";
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return
      */
     public function getScript()
@@ -113,6 +134,6 @@ class Uploadcare extends BaseCdn
      */
     public function getWidget()
     {
-        return $this->_api->widget->getInputTag('qs-file');
+        return $this->_api->widget->getInputTag('qs-file', ['data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'], ]);
     }
 }

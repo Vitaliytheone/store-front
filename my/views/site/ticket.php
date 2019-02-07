@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $ticketMessages \common\models\panels\TicketMessages */
+/* @var $ticketFiles \common\models\panels\TicketFiles */
 /* @var $ticket \common\models\panels\Tickets */
 /* @var $message \common\models\panels\TicketMessages */
 /* @var $clear */
@@ -17,11 +18,14 @@ use my\helpers\Url;
                         <div class="chat-body clearfix text-right">
                             <div class="header">
                                 <strong class="primary-font"><?= $message->customer->getFullName() ?></strong>
-                                <small class="text-muted"><i
-                                            class="fa fa-clock-o fa-fw"></i> <?= $message->getFormattedDate('created_at') ?>
+                                <small class="text-muted"><i class="fa fa-clock-o fa-fw"></i> <?= $message->getFormattedDate('created_at') ?>
                                 </small>
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
+                            <div class="attachments-block"><span class="fa fa-paperclip"></span> <a href="#" class="attachments-file">screen-2i3120.jpg</a>
+                                <?php foreach ($ticketFiles as $file) : ?>
+                                <?php endforeach ?>
+                            </div>
                         </div>
                     </li>
                 <?php else: ?>
@@ -29,11 +33,11 @@ use my\helpers\Url;
                         <div class="chat-body clearfix">
                             <div class="header">
                                 <strong class="primary-font"><?= $message->admin->getFullName() ?></strong>
-                                <small class="text-muted"><i
-                                            class="fa fa-clock-o fa-fw"></i> <?= $message->getFormattedDate('created_at') ?>
+                                <small class="text-muted"><i class="fa fa-clock-o fa-fw"></i> <?= $message->getFormattedDate('created_at') ?>
                                 </small>
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
+                            <div class="attachments-block"><span class="fa fa-paperclip"></span> <a href="#" class="attachments-file">mem1rh.jpg</a>, <a href="#" class="attachments-file">buildjs.zip</a></div>
                         </div>
                     </li>
                 <?php endif ?>

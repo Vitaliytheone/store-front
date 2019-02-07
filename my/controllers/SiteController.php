@@ -136,16 +136,22 @@ class SiteController extends CustomController
      * Create ticket message
      * @param int $id
      * @return array
+     * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
+     * @throws \yii\base\UnknownClassException
      */
     public function actionMessage($id)
     {
         $ticket = $this->findModel($id, 'Tickets');
         $customer = Customers::findOne(Yii::$app->user->identity->id);
+        $cdn = Cdn::getCdn();
 
         $model = new CreateMessageForm();
         $model->setCustomer($customer);
         $model->setTicket($ticket);
+        $model->setCdn($cdn);
+        $model->post = Yii::$app->request->post('qs-file');
+
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
@@ -171,7 +177,9 @@ class SiteController extends CustomController
      * @param int $id
      * @param bool $clear
      * @return string
+     * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
+     * @throws \yii\base\UnknownClassException
      */
     public function actionTicket($id, $clear = false)
     {
@@ -185,6 +193,10 @@ class SiteController extends CustomController
             ->ticketView($ticket->id)
             ->all();
 
+        $ticketFiles = TicketMessages::find()
+            ->ticketView($ticket->id)
+            ->all();
+
         $cdn = Cdn::getCdn();
 
         return $this->renderPartial('ticket', [
@@ -192,6 +204,7 @@ class SiteController extends CustomController
             'ticket' => $ticket,
             'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED,
             'cdn' => $cdn,
+            'ticketFiles' => $ticketFiles,
         ]);
     }
 
@@ -228,6 +241,8 @@ class SiteController extends CustomController
     /**
      * Support page
      * @return string
+     * @throws \yii\base\Exception
+     * @throws \yii\base\UnknownClassException
      */
     public function actionSupport()
     {

@@ -29,6 +29,7 @@ $model = new CreateMessageForm();
     </div>
     <div class="form-group">
         <label><?= Yii::t('app', 'support.view_form.attachment') ?></label>
+        <br>
         <?php echo $cdn->getWidget(); ?>
     </div>
     <div class="text-right">

@@ -1,7 +1,10 @@
 <?php
+
 namespace my\models\forms;
 
+use common\components\cdn\BaseCdn;
 use common\helpers\CurlHelper;
+use common\models\panels\TicketFiles;
 use my\helpers\UserHelper;
 use common\models\panels\Customers;
 use common\models\panels\Invoices;
@@ -17,25 +20,29 @@ use yii\base\Model;
 /**
  * Class CreateMessageForm
  * @package my\models\forms
+ *
+ * @property Tickets $ticket
+ * @property string $ip
+ * @property BaseCdn $cdn
+ * @property Customers $customer
  */
 class CreateMessageForm extends Model
 {
     public $message;
 
-    /**
-     * @var Tickets
-     */
+    public $post;
+
+    /** @var Tickets */
     public $_ticket;
 
-    /**
-     * @var Customers
-     */
+    /** @var Customers */
     public $_customer;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $_ip;
+
+    /** @var BaseCdn */
+    public $_cdn;
 
     /**
      * @return array the validation rules.
@@ -79,6 +86,15 @@ class CreateMessageForm extends Model
     }
 
     /**
+     * Set cdn
+     * @param BaseCdn $cdn
+     */
+    public function setCdn(BaseCdn $cdn)
+    {
+        $this->_cdn = $cdn;
+    }
+
+    /**
      * Sign up method
      */
     public function save()
@@ -110,6 +126,20 @@ class CreateMessageForm extends Model
 
         if (!$ticketModel->save()) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));
+            return false;
+        }
+
+        $ticketFilesModel = new TicketFiles();
+        $ticketFilesModel->customer_id = $this->_customer->id;
+        $ticketFilesModel->ticket_id = $this->_ticket->id;
+        $ticketFilesModel->message_id = $ticketModel->id;
+        $ticketFilesModel->link = $this->post;
+        $ticketFilesModel->cdn_id = $this->_cdn->getId($this->post);
+
+        $ticketFilesModel->created_at = time();
+
+        if (!$ticketFilesModel->save()) {
+            $this->addError('message', Yii::t('app', 'error.ticket.can_not_attach_files'));
             return false;
         }
 

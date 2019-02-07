@@ -139,6 +139,8 @@ class TicketsController extends CustomController
         $ticketMessages = $ticketMessagesSearch->getMessages();
 
         $cdn = Cdn::getCdn();
+        $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END );
+        $this->view->registerJsFile($cdn->getScript());
 
         return $this->render('ticket', [
             'ticketMessages' => $ticketMessages,
