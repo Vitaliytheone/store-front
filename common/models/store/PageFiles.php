@@ -112,9 +112,9 @@ class PageFiles extends ActiveRecord
      * Set json_draft field
      * @param array $json
      */
-    public function setJsonDraft(array $json)
+    public function setJsonDraft($json)
     {
-        $this->json_draft = json_encode($json);
+        $this->json_draft = json_encode($json, JSON_PRETTY_PRINT);
     }
 
     /**
@@ -130,7 +130,7 @@ class PageFiles extends ActiveRecord
      * Set json_draft field
      * @param array $json
      */
-    public function setJson(array $json)
+    public function setJson($json)
     {
         $this->json = json_encode($json, JSON_PRETTY_PRINT);
     }
