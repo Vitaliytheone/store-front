@@ -17,6 +17,8 @@ use common\models\stores\Stores;
  * @property string $json
  * @property string $json_draft
  * @property integer $file_type
+ * @property integer $is_draft
+ * @property integer $publish_at
  * @property integer $created_at
  * @property integer $updated_at
  *
@@ -75,7 +77,7 @@ class PageFiles extends ActiveRecord
     {
         return [
             [['name', 'content', 'json', 'json_draft', 'file_type'], 'string'],
-            [['created_at', 'updated_at'], 'integer'],
+            [['is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
         ];
     }
 
@@ -93,6 +95,7 @@ class PageFiles extends ActiveRecord
             'file_type' => Yii::t('app', 'file_type'),
             'created_at' => Yii::t('app', 'Created'),
             'updated_at' => Yii::t('app', 'Updated'),
+            'publish_at' => Yii::t('app', 'Publish'),
         ];
     }
 
@@ -103,5 +106,41 @@ class PageFiles extends ActiveRecord
     public static function find()
     {
         return new FilesQuery(get_called_class());
+    }
+
+    /**
+     * Set json_draft field
+     * @param array $json
+     */
+    public function setJsonDraft(array $json)
+    {
+        $this->json_draft = json_encode($json);
+    }
+
+    /**
+     * Get json_draft field
+     * @return array|mixed
+     */
+    public function getJsonDraft()
+    {
+        return json_decode($this->json_draft, true);
+    }
+
+    /**
+     * Set json_draft field
+     * @param array $json
+     */
+    public function setJson(array $json)
+    {
+        $this->json = json_encode($json, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get json_draft field
+     * @return array|mixed
+     */
+    public function getJson()
+    {
+        return json_decode($this->json, true);
     }
 }

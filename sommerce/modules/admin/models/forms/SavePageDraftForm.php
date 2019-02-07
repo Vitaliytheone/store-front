@@ -83,26 +83,13 @@ class SavePageDraftForm extends Model
     public function rules()
     {
         return [
-            [['styles',], 'safe'],
-            [['json', 'styles'], function($attribute, $params) {
-                $json = $this->$attribute;
-                if (is_null(json_decode($json)) || json_last_error()) {
-                    $this->addError($attribute, 'Incorrect {' . $attribute . '} json format!');
-                    return false;
-                }
-                return true;
-            }],
+            [['json', 'styles', 'layouts'], 'required'],
+            [['json', 'styles'], 'safe'],
             ['layouts', function($attribute, $params) {
                 $layouts = $this->$attribute;
                 if (!is_array($layouts) || !isset($layouts['header'], $layouts['footer'])) {
                     $this->addError($attribute, 'Missed layouts data!');
                     return false;
-                }
-                foreach ($this->layouts as $name => $content) {
-                    if (is_null(json_decode($content)) || json_last_error()) {
-                        $this->addError($attribute, 'Incorrect {' . $attribute . ' : ' . $name . '} json format!');
-                        return false;
-                    }
                 }
                 return true;
             }],
@@ -129,7 +116,8 @@ class SavePageDraftForm extends Model
             $page->visibility = Pages::VISIBILITY_OFF;
         }
 
-        $page->json_draft = $this->json;
+        $page->setJsonDraft($this->json);
+        $page->is_draft = Pages::IS_DRAFT_ON;
 
         if (!$page->save(false)) {
             $transaction->rollBack();
@@ -152,7 +140,7 @@ class SavePageDraftForm extends Model
                 $styles->file_type = PageFiles::FILE_TYPE_STYLE;
             }
 
-            $styles->json_draft = $this->styles;
+            $styles->setJsonDraft($this->styles);
 
             if (!$styles->save(false)) {
                 $transaction->rollBack();
@@ -176,7 +164,7 @@ class SavePageDraftForm extends Model
                     $layout->file_type = PageFiles::FILE_TYPE_TWIG;
                 }
 
-                $layout->json_draft = $content;
+                $layout->setJsonDraft($content);
 
                 if (!$layout->save(false)) {
                     $transaction->rollBack();
