@@ -38,37 +38,37 @@ class ProductsController extends CustomController
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
-//            'verbs' => [
-//                'class' => VerbFilter::class,
-//                'actions' => [
-//                    'index' => ['GET'],
-//                    'list' => ['GET'],
-//                    'create-product' => ['POST'],
-//                    'update-product' => ['GET', 'POST'],
-//                    'move-product' => ['POST'],
-//                    'move-package' => ['POST'],
-//                    'create-product-menu' => ['POST'],
-//                    'create-package' => ['POST'],
-//                    'update-package' => ['GET', 'POST'],
-//                    'delete-package' => ['POST'],
-//                    'get-provider-services' => ['GET'],
-//                ],
-//            ],
-//            'ajax' => [
-//                'class' => AjaxFilter::class,
-//                'only' => [
-//                    'list',
-//                    'create-product',
-//                    'update-product',
-//                    'move-product',
-//                    'move-package',
-//                    'create-product-menu',
-//                    'create-package',
-//                    'update-package',
-//                    'delete-package',
-//                    'get-provider-services',
-//                ]
-//            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'index' => ['GET'],
+                    'list' => ['GET'],
+                    'create-product' => ['POST'],
+                    'update-product' => ['GET', 'POST'],
+                    'move-product' => ['POST'],
+                    'move-package' => ['POST'],
+                    'create-product-menu' => ['POST'],
+                    'create-package' => ['POST'],
+                    'update-package' => ['GET', 'POST'],
+                    'delete-package' => ['POST'],
+                    'get-provider-services' => ['GET'],
+                ],
+            ],
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => [
+                    'list',
+                    'create-product',
+                    'update-product',
+                    'move-product',
+                    'move-package',
+                    'create-product-menu',
+                    'create-package',
+                    'update-package',
+                    'delete-package',
+                    'get-provider-services',
+                ]
+            ],
             'content' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
