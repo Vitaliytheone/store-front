@@ -78,25 +78,21 @@ class PaymentsController extends CustomController
 
                 $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response), 'Paypalexpress', $paymentSignature);
 
-                $payment = Payments::findOne([
-                    'id' => $_GET['id'],
-                    'type' => PaymentHelper::getTypeByCode(Params::CODE_PAYPAL),
-                ]);
+                $payments = Payments::findActual($_GET['id'], Params::CODE_PAYPAL);
 
-                if ($payment !== null) {
+                if ($payments !== null) {
 
                     $this->paymentLog([
                         'DoExpressCheckoutPayment' => $response
-                    ], $payment->id);
+                    ], $payments->id);
 
-                    $payments = Payments::findOne(['id' => $_GET['id']]);
                     $payments->date_update = time();
                     $payments->response = 1;
-                    $payments->update();
+                    $payments->update(false);
 
-                    $invoice = Invoices::findOne(['id' => $payment->iid]);
+                    $invoice = Invoices::findOne(['id' => $payments->iid]);
 
-                    if ($invoice->status == 0 and $payment->status == 0) {
+                    if ($invoice->status == Invoices::STATUS_UNPAID && $payments->status == Payments::STATUS_PENDING) {
                         if (is_array($response) && $response['ACK'] == 'Success') {
                             $GetTransactionDetails = $paypal->request('GetTransactionDetails', [
                                 'TRANSACTIONID' => $response['PAYMENTINFO_0_TRANSACTIONID']
@@ -111,23 +107,28 @@ class PaymentsController extends CustomController
 
                             $this->paymentLog([
                                 'GetTransactionDetails' => $GetTransactionDetails
-                            ], $payment->id);
+                            ], $payments->id);
 
                             $payments->refresh();
                             $payments->comment = $GetTransactionDetails['EMAIL'] . '; ' . $response['PAYMENTINFO_0_TRANSACTIONID'];
                             $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
                             $payments->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
+                            $payments->update(false);
+
                             $getTransactionDetailsStatus = ArrayHelper::getValue($GetTransactionDetails, 'PAYMENTSTATUS', '');
                             $doExpressCheckoutPaymentStatus = ArrayHelper::getValue($response, 'PAYMENTINFO_0_PAYMENTSTATUS', $getTransactionDetailsStatus);
                             $getTransactionDetailsStatus = strtolower($getTransactionDetailsStatus);
                             $doExpressCheckoutPaymentStatus = strtolower($doExpressCheckoutPaymentStatus);
 
+                            $responseCurrency = $GetTransactionDetails['CURRENCYCODE'];
+                            $responseAmount = $checkoutDetails['AMT'];
+
                             if ($getTransactionDetailsStatus == 'completed' && $getTransactionDetailsStatus == $doExpressCheckoutPaymentStatus) {
                                 $hash = PaymentHash::findOne(['hash' => $response['PAYMENTINFO_0_TRANSACTIONID']]);
                                 if ($hash === null) {
-                                    if ($checkoutDetails['AMT'] == $payments->amount) {
+                                    if ($responseAmount == $payments->amount) {
 
-                                        if ($GetTransactionDetails['CURRENCYCODE'] == 'USD') {
+                                        if ($responseCurrency == 'USD') {
 
                                             $payerId = $GetTransactionDetails['PAYERID'];
                                             $payerEmail = $GetTransactionDetails['EMAIL'];
@@ -163,10 +164,10 @@ class PaymentsController extends CustomController
                                                 }
                                             }
                                         } else {
-                                            $this->Errorlogging("bad currency", "Paypalexpress", $paymentSignature);
+                                            $this->Errorlogging("bad currency: " . $responseCurrency, "Paypalexpress", $paymentSignature);
                                         }
                                     } else {
-                                        $this->Errorlogging("bad amount", "Paypalexpress", $paymentSignature);
+                                        $this->Errorlogging("bad amount: " . $responseAmount, "Paypalexpress", $paymentSignature);
                                     }
                                 } else {
                                     $this->Errorlogging("dublicate response", "Paypalexpress", $paymentSignature);
@@ -174,6 +175,7 @@ class PaymentsController extends CustomController
                             } else {
                                 if ('pending' == $doExpressCheckoutPaymentStatus) {
                                     $payments->status = Payments::STATUS_WAIT;
+                                    $payments->update(false);
 
                                     // Send email notification
                                     $mail = new PaypalReviewed([
@@ -184,6 +186,8 @@ class PaymentsController extends CustomController
 
                                 } elseif ('failed' == $doExpressCheckoutPaymentStatus) {
                                     $payments->status = Payments::STATUS_FAIL;
+                                    $payments->update(false);
+
                                     $payments->makeNotActive();
 
                                     // Send email notification
@@ -194,11 +198,10 @@ class PaymentsController extends CustomController
                                     $mail->send();
                                 } else {
                                     $payments->status = Payments::STATUS_PENDING;
+                                    $payments->update(false);
                                 }
 
-                                $payments->update();
-
-                                $this->Errorlogging("no final status", "Paypalexpress", $paymentSignature);
+                                $this->Errorlogging("no final status: " . $getTransactionDetailsStatus, "Paypalexpress", $paymentSignature);
                             }
                         } else {
                             $this->Errorlogging("bad response", "Paypalexpress", $paymentSignature);
@@ -232,7 +235,6 @@ class PaymentsController extends CustomController
         $purse = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_WEBMONEY), ['credentials', 'purse']);
 		$secret_key = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_WEBMONEY), ['credentials', 'secret_key']);
 
-
 		if(!empty($_POST['LMI_PREREQUEST'])) {
 			if(trim($_POST['LMI_PAYEE_PURSE']) != $purse) {
 				echo "ERR: НЕВЕРНЫЙ КОШЕЛЕК ПОЛУЧАТЕЛЯ ".$_POST['LMI_PAYEE_PURSE'];
@@ -255,10 +257,7 @@ class PaymentsController extends CustomController
                     'LMI_PAYER_PURSE',
                     'LMI_PAYER_WM'
                 ]);
-                $payment = Payments::findOne([
-                    'id' => $_POST['id'],
-                    'type' => PaymentHelper::getTypeByCode(Params::CODE_WEBMONEY),
-                ]);
+                $payment = Payments::findActual($_POST['id'], Params::CODE_WEBMONEY);
 
                 if ($payment !== null) {
 
@@ -267,11 +266,11 @@ class PaymentsController extends CustomController
                     $payments = Payments::findOne(['id' => $_POST['id']]);
                     $payments->date_update = time();
                     $payments->response = 1;
-                    $payments->update();
+                    $payments->update(false);
 
                     $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-                    if ($invoice->status == 0 and $payment->status == 0) {
+                    if ($invoice->status == Invoices::STATUS_UNPAID && $payment->status == Payments::STATUS_PENDING) {
                         $common_string = $_POST['LMI_PAYEE_PURSE'] .
                         $_POST['LMI_PAYMENT_AMOUNT'] .
                         $_POST['LMI_PAYMENT_NO'] .
@@ -297,7 +296,7 @@ class PaymentsController extends CustomController
                                     $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
                                     $payments->comment = $_POST['LMI_PAYER_PURSE'];
                                     $payments->status = Payments::STATUS_COMPLETED;
-                                    $payments->update();
+                                    $payments->update(false);
 
                                     $paymentHashModel = new PaymentHash();
                                     $paymentHashModel->load(array('PaymentHash' => array(
@@ -349,10 +348,7 @@ class PaymentsController extends CustomController
                 'PAYMENT_AMOUNT'
             ]);
 
-			$payment = Payments::findOne([
-			    'id' => $_POST['PAYMENT_ID'],
-                'type' => PaymentHelper::getTypeByCode(Params::CODE_PERFECT_MONEY),
-            ]);
+			$payment = Payments::findActual($_POST['PAYMENT_ID'], Params::CODE_PERFECT_MONEY);
 
 	        if ($payment !== null) {
 
@@ -361,11 +357,11 @@ class PaymentsController extends CustomController
 	        	$payments = Payments::findOne(['id' => $_POST['PAYMENT_ID']]);
 	            $payments->date_update = time();
 	            $payments->response = 1;
-	            $payments->update();
+	            $payments->update(false);
 
 	            $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-	            if ($invoice->status == 0 and $payment->status == 0) {
+	            if ($invoice->status == Invoices::STATUS_UNPAID && $payment->status == Payments::STATUS_PENDING) {
 
 					$account = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PERFECT_MONEY), ['credentials', 'account']);
 					$passphrase = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_PERFECT_MONEY), ['credentials', 'passphrase']);
@@ -391,7 +387,7 @@ class PaymentsController extends CustomController
                                     $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
 						            $payments->comment = $_POST['PAYER_ACCOUNT'];
                                     $payments->status = Payments::STATUS_COMPLETED;
-						            $payments->update();
+						            $payments->update(false);
 
                 					$paymentHashModel = new PaymentHash();
 									$paymentHashModel->load(array('PaymentHash' => array(
@@ -441,10 +437,7 @@ class PaymentsController extends CustomController
                 'address',
                 'tid'
             ]);
-      		$payment = Payments::findOne([
-      		    'id' => $_GET['callback_data'],
-                'type' => PaymentHelper::getTypeByCode(Params::CODE_BITCOIN),
-            ]);
+      		$payment = Payments::findActual($_GET['callback_data'], Params::CODE_BITCOIN);
 
 	        if ($payment !== null) {
 
@@ -453,11 +446,11 @@ class PaymentsController extends CustomController
 	        	$payments = Payments::findOne(['id' => $_GET['callback_data']]);
 	            $payments->date_update = time();
 	            $payments->response = 1;
-	            $payments->update();
+	            $payments->update(false);
 
 	            $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-	            if ($invoice->status == 0 && in_array($payment->status, [0, 2])) {
+	            if ($invoice->status == Invoices::STATUS_UNPAID && in_array($payment->status, [Payments::STATUS_PENDING, Payments::STATUS_WAIT])) {
 
                     $id = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_BITCOIN), ['credentials', 'id']);
                     $secret = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_BITCOIN), ['credentials', 'secret']);
@@ -470,7 +463,7 @@ class PaymentsController extends CustomController
 
                     if ($signature != $_SERVER['HTTP_X_SIGNATURE']) {
                         $this->Errorlogging("bad signature", "Bitcoin", $paymentSignature);
-                        $payments->update();
+                        $payments->update(false);
                         exit;
                     }
 
@@ -479,20 +472,20 @@ class PaymentsController extends CustomController
 
                     if ($amountPaid < $amount) {
                         $this->Errorlogging("bad amount", "Bitcoin", $paymentSignature);
-                        $payments->update();
+                        $payments->update(false);
                         exit;
                     }
 
                     if (!in_array($_GET['status'], [2, 4])) {
                         $payments->status = Payments::STATUS_PENDING;
-                        $payments->update();
+                        $payments->update(false);
 
                         $this->Errorlogging("no final status", "Bitcoin", $paymentSignature);
                         exit;
                     }
 
                     if (PaymentHash::findOne(['hash' => $_GET['address']])) {
-                        $payments->update();
+                        $payments->update(false);
                         $this->Errorlogging("bad hash", "Bitcoin", $paymentSignature);
                         exit;
                     }
@@ -501,7 +494,7 @@ class PaymentsController extends CustomController
                     $invoice->paid(Params::CODE_BITCOIN);
 
                     $payments->status = Payments::STATUS_COMPLETED;
-                    $payments->update();
+                    $payments->update(false);
 
 
                     $paymentHashModel = new PaymentHash();
@@ -543,10 +536,7 @@ class PaymentsController extends CustomController
                 'md5_hash',
                 'invoice_list_amount'
             ]);
-			$payment = Payments::findOne([
-			    'id' => $_POST['item_id_1'],
-                'type' => PaymentHelper::getTypeByCode(Params::CODE_TWO_CHECKOUT),
-            ]);
+			$payment = Payments::findActual($_POST['item_id_1'], Params::CODE_TWO_CHECKOUT);
 
 	        if ($payment !== null && $payment->status != Payments::STATUS_COMPLETED) {
 
@@ -554,11 +544,11 @@ class PaymentsController extends CustomController
 
                 $payment->date_update = time();
                 $payment->response = 1;
-                $payment->update();
+                $payment->update(false);
 
                 $invoice = Invoices::findOne(['id' => $payment->iid]);
 
-                if ($invoice->status == 0) {
+                if ($invoice->status == Invoices::STATUS_UNPAID) {
 
 					$account_number = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'account_number']);
 					$secret_word = ArrayHelper::getValue(Params::get(Params::CATEGORY_PAYMENT, Params::CODE_TWO_CHECKOUT), ['credentials', 'secret_word']);
@@ -571,11 +561,16 @@ class PaymentsController extends CustomController
                     $payment->refresh();
                     $payment->comment = $hashOrder . '; ' . $hashInvoice;
                     $payment->transaction_id = $hashOrder;
+                    $payment->update(false);
+
+                    $responseStatus = strtolower($_POST['fraud_status']);
+                    $responseCurrency = strtolower($_POST['list_currency']);
+                    $responseAmount = $_POST['invoice_list_amount'];
 
 					if ($StringToHash == $_POST['md5_hash']) {
-						if (strtolower($_POST['list_currency']) == "usd") {
-							if (strtolower($_POST['fraud_status']) == 'pass') {
-								if ($payment->amount <= $_POST['invoice_list_amount']) {
+						if ($responseCurrency == "usd") {
+							if ($responseStatus == 'pass') {
+								if ($payment->amount <= $responseAmount) {
 									$hash = PaymentHash::findOne(['hash' => $hashOrder]);
 			            			if ($hash === null) {
 
@@ -602,11 +597,12 @@ class PaymentsController extends CustomController
 			            				$this->Errorlogging("bad hash", "2Checkout", $paymentSignature);
 			            			}
 								} else {
-									$this->Errorlogging("bad amount", "2Checkout", $paymentSignature);
+									$this->Errorlogging("bad amount: " . $responseAmount, "2Checkout", $paymentSignature);
 								}
 							} else {
-								if (strtolower($_POST['fraud_status']) == 'wait') {
+								if ($responseStatus == 'wait') {
                                     $payment->status = Payments::STATUS_WAIT;
+                                    $payment->update(false);
 
                                     // Send email notification
                                     $mail = new TwoCheckoutReview([
@@ -615,8 +611,10 @@ class PaymentsController extends CustomController
                                     ]);
                                     $mail->send();
 
-								} elseif (strtolower($_POST['fraud_status']) == 'fail') {
+								} elseif ($responseStatus == 'fail') {
                                     $payment->status = Payments::STATUS_FAIL;
+                                    $payment->update(false);
+
                                     $payment->makeNotActive();
 
                                     // Send email notification
@@ -627,14 +625,13 @@ class PaymentsController extends CustomController
                                     $mail->send();
 								} else {
                                     $payment->status = Payments::STATUS_PENDING;
+                                    $payment->update(false);
                                 }
 
-                                $payment->update();
-
-								$this->Errorlogging("no final status", "2Checkout", $paymentSignature);
+								$this->Errorlogging("no final status: " . $responseStatus, "2Checkout", $paymentSignature);
 							}
 						} else {
-							$this->Errorlogging("bad currency", "2Checkout", $paymentSignature);
+							$this->Errorlogging("bad currency: " . $responseCurrency, "2Checkout", $paymentSignature);
 						}
 					} else {
 						$this->Errorlogging("bad signature", "2Checkout", $paymentSignature);
@@ -679,10 +676,7 @@ class PaymentsController extends CustomController
             exit;
         }
 
-        $payment = Payments::findOne([
-            'id' => $ipn['my_payment_id'],
-            'type' => PaymentHelper::getTypeByCode(Params::CODE_COINPAYMENTS),
-        ]);
+        $payment = Payments::findActual($ipn['my_payment_id'], Params::CODE_COINPAYMENTS);
 
         if ($payment === null) {
             $this->Errorlogging("no invoice", "CoinPayments", $paymentSignature);
@@ -694,7 +688,7 @@ class PaymentsController extends CustomController
         $payments = Payments::findOne(['id' => $payment->id]);
         $payments->date_update = time();
         $payments->response = 1;
-        $payments->update();
+        $payments->update(false);
 
         $invoice = Invoices::findOne(['id' => $payment->iid]);
 
@@ -737,7 +731,7 @@ class PaymentsController extends CustomController
             $invoice->paid(Params::CODE_COINPAYMENTS);
 
             $payments->status = Payments::STATUS_COMPLETED;
-            $payments->update();
+            $payments->update(false);
 
             $paymentHashModel = new PaymentHash();
             $paymentHashModel->setAttribute('hash', $ipn['hmac_signature']);
@@ -747,7 +741,7 @@ class PaymentsController extends CustomController
             exit;
         } elseif ($ipnStatus === 1) {
             $payments->status = Payments::STATUS_WAIT;
-            $payments->update();
+            $payments->update(false);
         } else {
             $this->Errorlogging("no final status", "CoinPayments", $paymentSignature);
         }
