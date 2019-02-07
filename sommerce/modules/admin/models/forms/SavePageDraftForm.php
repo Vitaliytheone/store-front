@@ -87,7 +87,11 @@ class SavePageDraftForm extends Model
             [['json', 'styles'], 'safe'],
             ['layouts', function($attribute, $params) {
                 $layouts = $this->$attribute;
-                if (!is_array($layouts) || !isset($layouts['header'], $layouts['footer'])) {
+                if (
+                    !is_array($layouts) ||
+                    !array_key_exists('header', $layouts) ||
+                    !array_key_exists('footer', $layouts)
+                ) {
                     $this->addError($attribute, 'Missed layouts data!');
                     return false;
                 }
