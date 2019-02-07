@@ -114,10 +114,7 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.page_title');
         $this->addModule('adminGeneral');
 
-        
-
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
-
 
         $storeForm->setUser(Yii::$app->user);
 

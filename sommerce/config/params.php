@@ -41,5 +41,5 @@ return [
         'page_editor' => require(__DIR__ . '/app_configs/page_editor.php'),
     ],
 
-    'reactApiKey' => '3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd', // api key dev-окружения для тестирования реакта
+    'reactApiKey' => '2Vdqu1eG0fKhpr86AZn184X0fkx31YXZ', // api key dev-окружения для тестирования реакта
 ];
