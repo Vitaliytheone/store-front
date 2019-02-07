@@ -34,8 +34,24 @@ class Ahnames extends BaseDomain
     /**
      * @inheritdoc
      */
+    protected static function _validateDomain($domain): bool
+    {
+        if (preg_match('/^[a-zA-Z0-9\.-]+$/iu', $domain) === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected static function _domainsCheckRegistrar($domains): array
     {
+        if (!static::validate(reset($domains))){
+            return array_fill_keys($domains, 0);
+        }
+
         $url = Yii::$app->params['ahnames.url'];
 
         $defaultOptions = static::getDefaultOptions();
@@ -66,6 +82,10 @@ class Ahnames extends BaseDomain
      */
     public static function domainRegister($domain, $contactId, $period = 1): array
     {
+        if (!static::validate($domain)){
+            return ['_error' => 'Not support IDN'];
+        }
+
         $options = [
             'domain' => $domain,
             'period' => $period,

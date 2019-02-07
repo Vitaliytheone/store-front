@@ -30,6 +30,31 @@ abstract class BaseDomain extends Component
     }
 
     /**
+     * Validate domain for registration
+     * @param string $domain
+     * @return bool
+     */
+    public static function validate($domain): bool
+    {
+        if (mb_stripos($domain, '.') !== false) {
+            $domain = explode('.', $domain)[0];
+        }
+
+        if (mb_stripos($domain, 'xn--') !== false) {
+            return false;
+        }
+
+        return static::_validateDomain($domain);
+    }
+
+    /**
+     * Validate domain for registration with registrar condition
+     * @param string $domain
+     * @return bool
+     */
+    abstract protected static function _validateDomain($domain): bool;
+
+    /**
      * Get result from request
      * @param array $paramOptions
      * @param string $paramLink
