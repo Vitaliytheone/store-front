@@ -10,6 +10,7 @@ use sommerce\controllers\CommonController;
 use sommerce\modules\admin\models\forms\SavePageDraftForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
@@ -80,10 +81,10 @@ trait PagesTrait {
             ->column();
 
         return [
-            'styles' => json_decode($pageFiles[PageFiles::NAME_STYLES], true),
+            'styles' => json_decode(ArrayHelper::getValue($pageFiles, PageFiles::NAME_STYLES), true),
             'layouts' => [
-                'header' => json_decode($pageFiles[PageFiles::NAME_HEADER], true),
-                'footer' => json_decode($pageFiles[PageFiles::NAME_FOOTER], true),
+                'header' => json_decode(ArrayHelper::getValue($pageFiles, PageFiles::NAME_HEADER), true),
+                'footer' => json_decode(ArrayHelper::getValue($pageFiles, PageFiles::NAME_FOOTER), true),
             ],
             'json' => $page->getJsonDraft(),
         ];
