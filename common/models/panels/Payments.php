@@ -257,6 +257,7 @@ class Payments extends ActiveRecord
      */
     public function can($code)
     {
+        $this->refresh();
         switch ($code) {
             case 'makeActive':
                 if (in_array($this->payment_method, [
@@ -365,6 +366,8 @@ class Payments extends ActiveRecord
         $this->project->expired = ArrayHelper::getValue($options, 'project_expired', $this->project->expired);
         $this->project->act = ArrayHelper::getValue($options, 'project_status', $this->project->act);
         $this->project->save(false);
+
+        return true;
     }
 
     /**

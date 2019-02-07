@@ -2,6 +2,7 @@
 
 namespace my\controllers;
 
+use common\helpers\PaymentHelper;
 use common\models\panels\Params;
 use my\components\bitcoin\Bitcoin;
 use common\components\filters\DisableCsrfToken;
@@ -77,7 +78,10 @@ class PaymentsController extends CustomController
 
                 $this->logging(array("POST" => $_POST, "GET" => $_GET, "SERVER" => $_SERVER, 'response' => $response), 'Paypalexpress', $paymentSignature);
 
-                $payment = Payments::findOne(['id' => $_GET['id']]);
+                $payment = Payments::findOne([
+                    'id' => $_GET['id'],
+                    'type' => PaymentHelper::getTypeByCode(Params::CODE_PAYPAL),
+                ]);
 
                 if ($payment !== null) {
 
@@ -109,7 +113,7 @@ class PaymentsController extends CustomController
                                 'GetTransactionDetails' => $GetTransactionDetails
                             ], $payment->id);
 
-                            $payments = Payments::findOne(['id' => $payment->id]);
+                            $payments->refresh();
                             $payments->comment = $GetTransactionDetails['EMAIL'] . '; ' . $response['PAYMENTINFO_0_TRANSACTIONID'];
                             $payments->transaction_id = $response['PAYMENTINFO_0_TRANSACTIONID'];
                             $payments->fee = ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT');
@@ -251,7 +255,10 @@ class PaymentsController extends CustomController
                     'LMI_PAYER_PURSE',
                     'LMI_PAYER_WM'
                 ]);
-                $payment = Payments::findOne(['id' => $_POST['id']]);
+                $payment = Payments::findOne([
+                    'id' => $_POST['id'],
+                    'type' => PaymentHelper::getTypeByCode(Params::CODE_WEBMONEY),
+                ]);
 
                 if ($payment !== null) {
 
@@ -286,7 +293,7 @@ class PaymentsController extends CustomController
                                     // Mark invoice paid
                                     $invoice->paid(Params::CODE_WEBMONEY);
 
-                                    $payments = Payments::findOne(['id' => $payment->id]);
+                                    $payments->refresh();
                                     $payments->transaction_id = $_POST['LMI_PAYER_PURSE'];
                                     $payments->comment = $_POST['LMI_PAYER_PURSE'];
                                     $payments->status = Payments::STATUS_COMPLETED;
@@ -342,7 +349,10 @@ class PaymentsController extends CustomController
                 'PAYMENT_AMOUNT'
             ]);
 
-			$payment = Payments::findOne(['id' => $_POST['PAYMENT_ID']]);
+			$payment = Payments::findOne([
+			    'id' => $_POST['PAYMENT_ID'],
+                'type' => PaymentHelper::getTypeByCode(Params::CODE_PERFECT_MONEY),
+            ]);
 
 	        if ($payment !== null) {
 
@@ -377,7 +387,7 @@ class PaymentsController extends CustomController
                                     // Mark invoice paid
                                     $invoice->paid(Params::CODE_PERFECT_MONEY);
 
-					                $payments = Payments::findOne(['id' => $payment->id]);
+					                $payments->refresh();
                                     $payments->transaction_id = $_POST['PAYER_ACCOUNT'];
 						            $payments->comment = $_POST['PAYER_ACCOUNT'];
                                     $payments->status = Payments::STATUS_COMPLETED;
@@ -431,7 +441,10 @@ class PaymentsController extends CustomController
                 'address',
                 'tid'
             ]);
-      		$payment = Payments::findOne(['id' => $_GET['callback_data']]);
+      		$payment = Payments::findOne([
+      		    'id' => $_GET['callback_data'],
+                'type' => PaymentHelper::getTypeByCode(Params::CODE_BITCOIN),
+            ]);
 
 	        if ($payment !== null) {
 
@@ -451,7 +464,7 @@ class PaymentsController extends CustomController
 
                     $signature = Bitcoin::generateSignature($_SERVER['REQUEST_URI'], $secret);
 
-                    $payments = Payments::findOne(['id' => $payment->id]);
+                    $payments->refresh();
                     $payments->comment = $_GET['address'];
                     $payments->transaction_id = $_GET['address'];
 
@@ -530,7 +543,10 @@ class PaymentsController extends CustomController
                 'md5_hash',
                 'invoice_list_amount'
             ]);
-			$payment = Payments::findOne(['id' => $_POST['item_id_1']]);
+			$payment = Payments::findOne([
+			    'id' => $_POST['item_id_1'],
+                'type' => PaymentHelper::getTypeByCode(Params::CODE_TWO_CHECKOUT),
+            ]);
 
 	        if ($payment !== null && $payment->status != Payments::STATUS_COMPLETED) {
 
@@ -552,19 +568,18 @@ class PaymentsController extends CustomController
 					$hashInvoice = $_POST['invoice_id'];
 					$StringToHash = strtoupper(md5($hashOrder . $hashSid . $hashInvoice . $secret_word));
 
-                    $payments = Payments::findOne(['id' => $payment->id]);
-
-                    $payments->comment = $hashOrder . '; ' . $hashInvoice;
-                    $payments->transaction_id = $hashOrder;
+                    $payment->refresh();
+                    $payment->comment = $hashOrder . '; ' . $hashInvoice;
+                    $payment->transaction_id = $hashOrder;
 
 					if ($StringToHash == $_POST['md5_hash']) {
 						if (strtolower($_POST['list_currency']) == "usd") {
 							if (strtolower($_POST['fraud_status']) == 'pass') {
-								if ($payments->amount <= $_POST['invoice_list_amount']) {
+								if ($payment->amount <= $_POST['invoice_list_amount']) {
 									$hash = PaymentHash::findOne(['hash' => $hashOrder]);
 			            			if ($hash === null) {
 
-                                        if ($payments->complete()) {
+                                        if ($payment->complete()) {
 
                                             $paymentHashModel = new PaymentHash();
                                             $paymentHashModel->load(array('PaymentHash' => array(
@@ -574,7 +589,7 @@ class PaymentsController extends CustomController
 
                                             // Send email notification
                                             $mail = new TwoCheckoutPass([
-                                                'payment' => $payments,
+                                                'payment' => $payment,
                                                 'customer' => $invoice->customer
                                             ]);
                                             $mail->send();
@@ -591,30 +606,30 @@ class PaymentsController extends CustomController
 								}
 							} else {
 								if (strtolower($_POST['fraud_status']) == 'wait') {
-						            $payments->status = Payments::STATUS_WAIT;
+                                    $payment->status = Payments::STATUS_WAIT;
 
                                     // Send email notification
                                     $mail = new TwoCheckoutReview([
-                                        'payment' => $payments,
+                                        'payment' => $payment,
                                         'customer' => $invoice->customer
                                     ]);
                                     $mail->send();
 
 								} elseif (strtolower($_POST['fraud_status']) == 'fail') {
-                                    $payments->status = Payments::STATUS_FAIL;
-						            $payments->makeNotActive();
+                                    $payment->status = Payments::STATUS_FAIL;
+                                    $payment->makeNotActive();
 
                                     // Send email notification
 						            $mail = new TwoCheckoutFailed([
-						                'payment' => $payments,
+						                'payment' => $payment,
                                         'customer' => $invoice->customer
                                     ]);
                                     $mail->send();
 								} else {
-                                    $payments->status = Payments::STATUS_PENDING;
+                                    $payment->status = Payments::STATUS_PENDING;
                                 }
 
-                                $payments->update();
+                                $payment->update();
 
 								$this->Errorlogging("no final status", "2Checkout", $paymentSignature);
 							}
@@ -664,7 +679,10 @@ class PaymentsController extends CustomController
             exit;
         }
 
-        $payment = Payments::findOne(['id' => $ipn['my_payment_id']]);
+        $payment = Payments::findOne([
+            'id' => $ipn['my_payment_id'],
+            'type' => PaymentHelper::getTypeByCode(Params::CODE_COINPAYMENTS),
+        ]);
 
         if ($payment === null) {
             $this->Errorlogging("no invoice", "CoinPayments", $paymentSignature);
@@ -709,7 +727,7 @@ class PaymentsController extends CustomController
 
         $ipnStatus = (int)$ipn['ipn_status'];
 
-        $payments = Payments::findOne(['id' => $payment->id]);
+        $payments->refresh();
         $payments->comment = $ipn['payment_email'] . '; ' . $ipn['transaction_id'];
         $payments->transaction_id = $ipn['transaction_id'];
 
