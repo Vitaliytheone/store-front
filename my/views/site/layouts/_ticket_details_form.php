@@ -1,7 +1,7 @@
 <?php
 /* @var $ticket \common\models\panels\Tickets */
 
-/* @var $cdn \common\components\cdn\BaseCdn */
+/* @var $cdn \common\components\cdn\providers\Uploadcare */
 
 use my\models\forms\CreateMessageForm;
 use my\components\ActiveForm;
@@ -29,7 +29,7 @@ $model = new CreateMessageForm();
     </div>
     <div class="form-group">
         <label><?= Yii::t('app', 'support.view_form.attachment') ?></label>
-        <?php echo $cdn->_api->widget->getInputTag('qs-file'); ?>
+        <?php echo $cdn->getWidget(); ?>
     </div>
     <div class="text-right">
         <button type="submit" class="btn btn-outline btn-primary"><?= Yii::t('app', 'support.view_form.btn_submit') ?></button>

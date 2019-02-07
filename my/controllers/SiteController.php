@@ -242,6 +242,10 @@ class SiteController extends CustomController
             return $this->redirect('/support');
         }
 
+        $cdn = Cdn::getCdn();
+        $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END );
+        $this->view->registerJsFile($cdn->getScript());
+
         $tickets = new TicketsSearch();
         $tickets->setParams([
             'customer_id' => $customer->id

@@ -40,8 +40,7 @@ class DashboardServices
                 'name' => Yii::t('app/superadmin', 'dashboard.services.whoisapi'),
                 'params' => [
                     $whoisxmlParams['whoisxml.url'],
-                    $whoisxmlParams['dnsLogin'],
-                    $whoisxmlParams['dnsPasswd'],
+                    $whoisxmlParams['apiKey'],
                     Yii::$app->params['curl.timeout']
                 ]
             ],

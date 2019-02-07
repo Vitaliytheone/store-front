@@ -82,4 +82,37 @@ class Uploadcare extends BaseCdn
 
         return $this->_file->delete();
     }
+
+    /**
+     * @return
+     */
+    public function getScript()
+    {
+        return $this->_api->widget->getScriptSrc();
+    }
+
+    /**
+     * @return
+     */
+    public function getConfigCode()
+    {
+        $code = 'UPLOADCARE_PUBLIC_KEY = "'.$this->_api->getPublicKey().'";';
+        return $code;
+    }
+
+    /**
+     * @return
+     */
+    public function getScriptWithConfig()
+    {
+        return $this->_api->widget->getScriptTag();
+    }
+
+    /**
+     * @return
+     */
+    public function getWidget()
+    {
+        return $this->_api->widget->getInputTag('qs-file');
+    }
 }

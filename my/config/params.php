@@ -131,5 +131,19 @@ return [
     'free_ssl.create' => true,  // Создавать заказ/выполнять заказ на бесплатный сертификат или нет
     'free_ssl.prolong' => true, // Создавать заказ/выполнять заказ на продление бесплатного сертификата или нет
 
+    'cdn' => [
+        'uploadcare' => [
+            'active' => true,
+            'class_name' => 'Uploadcare',
+            'public_key' => '2b57ca4e85ca588704a4',
+            'secret_key' => '15b9d150192983929861',
+        ],
+    ],
+
+//    'cdn_host' => 'paneldev.perfectpanel.net',
+//    'cdn_protocol' => 'http',
+//    'public_key' => '2b57ca4e85ca588704a4',
+//    'secret_key' => '15b9d150192983929861',
+
     'uploadFileLimit' => 3,
 ];
