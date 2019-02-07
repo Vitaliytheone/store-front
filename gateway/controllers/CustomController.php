@@ -2,8 +2,9 @@
 
 namespace gateway\controllers;
 
-use gateway\helpers\ThemesHelper;
+use common\models\gateway\Files;
 use gateway\helpers\AssetsHelper;
+use gateway\helpers\FilesHelper;
 use yii\helpers\Url;
 use yii\base\InvalidParamException;
 use Yii;
@@ -40,7 +41,7 @@ class CustomController extends CommonController
     /**
      * @var string
      */
-    public $layout = '@gateway/views/site/layout.php';
+    public $layout = 'layout';
 
     /**
      * @var
@@ -58,8 +59,6 @@ class CustomController extends CommonController
     public function init()
     {
         parent::init();
-
-        $this->layout = "layout.twig";
     }
 
     /**
@@ -130,23 +129,17 @@ class CustomController extends CommonController
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
                 'page_title' => $this->pageTitle ? $this->pageTitle : $this->gateway->seo_title,
-                'menu' => [],
                 'language' => Yii::$app->language,
-                'rtl' => '',
-                'favicon' => '',
-                'logo' => '',
                 'meta' => [
                     'keywords' => $this->seoKeywords ? $this->seoKeywords : $this->gateway->seo_keywords,
                     'description' => $this->seoDescription ? $this->seoDescription : $this->gateway->seo_description,
                 ],
                 'domain' => Yii::$app->getRequest()->getHostName(),
                 'name' => $this->gateway->getBaseDomain(),
-                'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => '',
-                'custom_footer' => '',
+                'url' => trim(Yii::$app->getRequest()->getUrl(), '/'),
             ]
         ];
-
+        
         return $this->_globalParams;
     }
 
@@ -199,88 +192,37 @@ class CustomController extends CommonController
     /**
      * Renders a static string by applying a layout.
      * @param string $content the static string being rendered
-     * @param mixed $params
-     * @param boolean $render
+     * @param array $params
+     * @param boolean $layout
      * @return string the rendering result of the layout with the given static string as the `$content` variable.
      * If the layout is disabled, the string will be returned back.
      * @since 2.0.1
      */
-    public function renderContent($content, $params = [], $render = false)
+    public function renderTwigContent($content, $params = [], $layout = true)
     {
-        $layoutFile = $this->findLayoutFile($this->getView());
-        if ($layoutFile !== false) {
-            $renderer = $this->getView();
-            if ($render && method_exists($renderer, 'renderContent')) {
-                $content = $renderer->renderContent($content, $params);
-            }
+        $renderer = $this->getView();
 
-            if (!is_file($layoutFile) && method_exists($renderer, 'renderContent')) {
-                return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
-                    'content' => $content,
-                ]));
-            }
-            return $renderer->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
-                'content' => $content,
-            ]), $this);
+        if (!method_exists($renderer, 'renderContent')) {
+            return '';
         }
 
-        return $content;
-    }
+        $content = $renderer->renderContent($content, $params);
 
-    /**
-     * Custom render partial
-     * @param $view
-     * @param array $params
-     * @return string
-     */
-    public function renderPartialCustom($view, $params = [])
-    {
-        $filename = ThemesHelper::getView($view) ? $view : pathinfo($view, PATHINFO_FILENAME);
-
-        return $this->renderPartial($filename, $params);
-    }
-
-    /**
-     * Finds the applicable layout file.
-     * @param View $view the view object to render the layout file.
-     * @return string|bool the layout file path, or false if layout is not needed.
-     * Please refer to [[render()]] on how to specify this parameter.
-     * @throws InvalidParamException if an invalid path alias is used to specify the layout.
-     */
-    public function findLayoutFile($view)
-    {
-        $module = $this->module;
-        if (is_string($this->layout)) {
-            $layout = $this->layout;
-        } elseif ($this->layout === null) {
-            while ($module !== null && $module->layout === null) {
-                $module = $module->module;
-            }
-            if ($module !== null && is_string($module->layout)) {
-                $layout = $module->layout;
-            }
+        if (!$layout) {
+            return $content;
         }
 
-        if (!isset($layout)) {
-            return false;
+        /**
+         * @var Files
+         */
+        $layoutFile = FilesHelper::getLayout();
+
+        if (!$layoutFile) {
+            return '';
         }
 
-        if (strncmp($layout, '@', 1) === 0) {
-            $file = Yii::getAlias($layout);
-        } elseif (strncmp($layout, '/', 1) === 0) {
-            $file = $view->getThemeViewFile(substr($layout, 1));
-        } else {
-            $file = $view->getThemeViewFile($layout);
-        }
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-        $path = $file . '.' . $view->defaultExtension;
-        if ($view->defaultExtension !== 'php' && !is_file($path)) {
-            $path = $file . '.php';
-        }
-
-        return $path;
+        return $renderer->renderContent($layoutFile['content'], array_merge($this->_getGlobalParams(), [
+            'content' => $content,
+        ]));
     }
 }
