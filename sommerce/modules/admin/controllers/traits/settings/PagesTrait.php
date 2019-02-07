@@ -80,12 +80,12 @@ trait PagesTrait {
             ->column();
 
         return [
-            'styles' => $pageFiles[PageFiles::NAME_STYLES],
+            'styles' => json_decode($pageFiles[PageFiles::NAME_STYLES], true),
             'layouts' => [
-                'header' => $pageFiles[PageFiles::NAME_HEADER],
-                'footer' => $pageFiles[PageFiles::NAME_FOOTER],
+                'header' => json_decode($pageFiles[PageFiles::NAME_HEADER], true),
+                'footer' => json_decode($pageFiles[PageFiles::NAME_FOOTER], true),
             ],
-            'json' => $page->json_draft,
+            'json' => $page->getJsonDraft(),
         ];
     }
 
@@ -185,7 +185,7 @@ trait PagesTrait {
             }
         }
 
-        return $form->getPage()->id;
+        return ['id' => $form->getPage()->id];
     }
 
     /**
