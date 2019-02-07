@@ -13,8 +13,8 @@ export function addProduct(payload) {
 	return Promise.resolve(mockResponse);
 }
 
-export function connfirm_addProduct(product_id) {
-	axiosInstance.post(`/admin/products/create-product-menu?id=${product_id}`);
+export function connfirm_add_product(product_id) {
+	axiosInstance.post(point.confirm_add_product + `${product_id}`);
 }
 
 export function addPackage(payload) {
@@ -39,7 +39,7 @@ export function get_update_package(package_id) {
 
 export function updatePackage(package_id, payload) {
 	axiosInstance.post(point.update_package, payload); //+ `${package_id}`
-	const mockResponse = { data: { ...payload }, success: true, error_message: 'new error message here' };
+	const mockResponse = { data: { ...payload }, success: false, error_message: 'new error message here' };
 	return Promise.resolve(mockResponse);
 }
 

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalFooter } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import ProductModal from './modals/ProductModal';
+import { toast } from "react-toastify";
+import { css } from "glamor";
 
 class EditProduct extends Component {
 	state = {
@@ -32,7 +34,21 @@ class EditProduct extends Component {
 			showError: !response.success,
 			modalIsOpen: !response.success,
 			errorMessage: response.error_message
-		});
+    });
+    console.log(response.success)
+    response.success ? toast("Product was successfully updated!", options) : alert('error');
+
+    const options = {
+      type: "success",
+      autoClose: 5000,
+      hideProgressBar: true,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      pauseOnHover: false,
+      className: "toast-background",
+      bodyClassName: "toast-background-body",
+      progressClassName: 'toast-background'
+    };
+
 	};
 
 	render() {

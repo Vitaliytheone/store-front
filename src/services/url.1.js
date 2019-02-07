@@ -4,17 +4,15 @@ import nanoid from 'nanoid';
 const point = { ...window.appConfig.api_endpoints };
 
 export function addListing() {
-	return axiosInstance.get(point.add_listing);
+	return axiosInstance.get(point.add_listing + 'key=3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd');
 }
 
 export function addProduct(payload) {
-	return axiosInstance.post(point.add_product, payload);
-	const mockResponse = { data: { id: nanoid(), ...payload }, success: true };
-	return Promise.resolve(mockResponse);
+	return axiosInstance.post(point.add_product + 'key=3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd', payload);
 }
 
-export function connfirm_addProduct(product_id) {
-	axiosInstance.post(`/admin/products/create-product-menu?id=${product_id}`);
+export function connfirm_add_product(product_id) {
+  axiosInstance.post(point.confirm_add_product + `${product_id}`);
 }
 
 export function addPackage(payload) {

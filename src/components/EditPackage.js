@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalFooter } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import PackageModal from './modals/PackageModal';
+import { toast } from "react-toastify";
 
 class EditPackage extends Component {
   state = {
@@ -10,7 +11,7 @@ class EditPackage extends Component {
 	errorMessage: null
   };
 
-  GetPackage = (...params) => {
+  getPackage = (...params) => {
     this.setState(prevstate => ({
       modalIsOpen: !prevstate.modalIsOpen
     }));
@@ -32,6 +33,14 @@ class EditPackage extends Component {
       modalIsOpen: !response.success,
       errorMessage: response.error_message
     });
+    toast("🦄 Product was successfully updated!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
+    });
   };
 
   render() {
@@ -39,7 +48,7 @@ class EditPackage extends Component {
     return (
       <React.Fragment>
         <Button
-          onClick={this.GetPackage}
+          onClick={this.getPackage}
           color="primary"
           size="sm"
           className="m-btn--pill sommerce_dragtable__action"
@@ -60,7 +69,7 @@ class EditPackage extends Component {
               <ModalHeader toggle={this.toggle}>
                 Edit package (ID: {response.package.id})
               </ModalHeader>
-			<PackageModal showError={this.state.showError} errorMessage={this.state.errorMessage}  />
+		        	<PackageModal showError={this.state.showError} errorMessage={this.state.errorMessage}  />
               <ModalFooter className="justify-content-start">
                 <Button color="primary" type="submit">
                   Save package

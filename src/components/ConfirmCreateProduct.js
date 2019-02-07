@@ -1,17 +1,17 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 
-const ConfirmProduct = ({ response, modalIsOpen, toggle }) => (
+const ConfirmProduct = ({ response, modalIsOpen, toggle, confirmCreate }) => (
     <React.Fragment>
         <Modal isOpen={modalIsOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>
                 <h3 id="conrirm_label">
                     Confirm</h3></ModalHeader>
             <ModalBody>
-                <p>Do you want to create menu {response.product.name}</p>
+                <p>Do you want to create menu item {response.product.name}</p>
             </ModalBody>
             <ModalFooter className="justify-content-start">
-                <Button id="confirm_yes" color="primary" onClick={() => alert('dsdas')}>Yes</Button>{' '}
+                <Button id="confirm_yes" color="primary" onClick={confirmCreate}>Yes</Button>{' '}
                 <Button color="secondary" onClick={toggle}>No</Button>
             </ModalFooter>
         </Modal>

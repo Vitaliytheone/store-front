@@ -3,6 +3,8 @@ import { Button, Modal, ModalHeader, ModalFooter, Col, Row } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import PackageModal from './modals/PackageModal';
 import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
+
 
 class AddPackage extends Component {
 	state = {
@@ -22,7 +24,14 @@ class AddPackage extends Component {
 	handleSubmit = async (...params) => {
 		const response = await this.props.onSubmit(...params);
 		this.setState({ showError: !response.success, modalIsOpen: !response.success, errorMessage: response.error_message });
-		console.log(this.state.showError);
+		toast("🦄 Package was successfully created!", {
+			position: "bottom-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true
+		});
 	};
 
 	render() {
