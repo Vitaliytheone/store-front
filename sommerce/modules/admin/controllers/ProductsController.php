@@ -43,14 +43,14 @@ class ProductsController extends CustomController
                 'actions' => [
                     'index' => ['GET'],
                     'list' => ['GET'],
-                    'create-product' => ['POST'],
+                    'create-product' => ['POST', 'GET'],
                     'update-product' => ['GET', 'POST'],
-                    'move-product' => ['POST'],
-                    'move-package' => ['POST'],
-                    'create-product-menu' => ['POST'],
-                    'create-package' => ['POST'],
+                    'move-product' => ['POST', 'GET'],
+                    'move-package' => ['POST', 'GET'],
+                    'create-product-menu' => ['POST', 'GET'],
+                    'create-package' => ['POST', 'GET'],
                     'update-package' => ['GET', 'POST'],
-                    'delete-package' => ['POST'],
+                    'delete-package' => ['POST', 'GET'],
                     'get-provider-services' => ['GET'],
                 ],
             ],
@@ -58,7 +58,7 @@ class ProductsController extends CustomController
                 'class' => AjaxFilter::class,
                 'only' => [
                     'list',
-                    'create-product',
+                 //   'create-product',
                     'update-product',
                     'move-product',
                     'move-package',
@@ -148,10 +148,10 @@ class ProductsController extends CustomController
 
         $model = new CreateProductForm();
         $model->setUser(Yii::$app->user);
-print_r($request->post());die;
+
         if (!$model->create($request->post())) {
             Yii::error($model->firstErrors);
-            throw new BadRequestHttpException('Product cannot save!');
+            throw new BadRequestHttpException($model->firstErrors);
         }
 
         UiHelper::message(Yii::t('admin', 'products.message_product_created'));
