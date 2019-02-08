@@ -69,7 +69,13 @@ class DomainForm extends Model
                 'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
                 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
             ], 'safe'],
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection'], 'required', 'on' => static::SCENARIO_CREATE_DOMAIN],
+            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', ], 'required',
+                'on' => static::SCENARIO_CREATE_DOMAIN,
+                'when' => function() {
+                    $zone = DomainZones::findOne($this->domain_zone);
+                    return DomainsHelper::checkContactExist($zone->zone);
+            }
+                ],
         ];
     }
 
@@ -161,11 +167,19 @@ class DomainForm extends Model
 
     /**
      * Get domain zones
+     * @param bool $registrar
      * @return array
      */
-    public function getDomainZones(): array
+    public function getDomainZones($registrar = false): array
     {
         $zones = [];
+
+        if ($registrar) {
+            foreach (DomainZones::find()->all() as $zone) {
+                $zones[$zone->id] = ['data-value'  => (int)DomainsHelper::checkContactExist($zone->registrar)];
+            }
+            return $zones;
+        }
 
         foreach (DomainZones::find()->all() as $zone) {
             $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
@@ -187,21 +201,23 @@ class DomainForm extends Model
      * Order domain
      * @param Invoices $invoiceModel
      * @return bool
-     * @throws yii\base\UnknownClassException
      */
     protected function orderDomain(&$invoiceModel)
     {
         $model = new static();
-        $model->scenario = static::SCENARIO_CREATE_DOMAIN;
         $model->attributes = $this->attributes;
-
-        if (!$this->validate()) {
-            return false;
-        }
 
         $zone = DomainZones::findOne($this->domain_zone);
 
         if (!$zone) {
+            return false;
+        }
+
+        if (!DomainsHelper::checkContactExist($zone->zone)){
+            $model->scenario = static::SCENARIO_CREATE_DOMAIN;
+        }
+
+        if (!$this->validate()) {
             return false;
         }
 
@@ -235,7 +251,7 @@ class DomainForm extends Model
                 'domain_country' => $this->domain_country,
                 'domain_phone' => $this->domain_phone,
                 'domain_fax' => $this->domain_fax,
-                'domain_protection' => $this->domain_protection,
+                'domain_protection' => 1, // force domain privacy protect - old -- $this->domain_protection,
             ]
         ]);
 

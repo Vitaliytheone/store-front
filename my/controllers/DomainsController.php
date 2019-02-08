@@ -74,6 +74,19 @@ class DomainsController extends CustomController
                     ],
                 ],
             ],
+            'orderAccess' => [
+                'class' => AccessControl::class,
+                'only' => ['order-domain2', 'order2'], // FIXME 2
+                'rules' => [
+                    [
+                        'allow' => false,
+                        'matchCallback' => function () {
+                            $this->redirect('/domains');
+                            Yii::$app->end();
+                        }
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

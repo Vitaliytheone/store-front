@@ -3,6 +3,7 @@
 namespace my\helpers;
 
 use common\components\domains\Domain;
+use common\models\panels\Domains;
 use common\models\panels\DomainZones;
 use common\models\panels\Orders;
 
@@ -149,6 +150,30 @@ class DomainsHelper
         }
 
         return true;
+    }
+
+    /**
+     * Check if contact exist contact
+     * @param string $registrar
+     * @return bool
+     */
+    public static function checkContactExist($registrar)
+    {
+// fixme namespaces
+        if ($registrar == Domains::REGISTRAR_NAMESILO) {
+            $namesiloParams = \common\models\panels\Params::get(\common\models\panels\Params::CATEGORY_SERVICE, \common\models\panels\Params::CODE_NAMESILO);
+            if (!empty($namesiloParams['contact_id'])) {
+                return true;
+            }
+        }
+
+        if ($registrar == Domains::REGISTRAR_AHNAMES) {
+            if (!empty(\Yii::$app->params['ahnames.contact_id'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

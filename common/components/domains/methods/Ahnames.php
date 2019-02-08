@@ -74,6 +74,10 @@ class Ahnames extends BaseDomain
      */
     public static function contactCreate($options): array
     {
+        if (!empty(Yii::$app->params['ahnames.contact_id'])) {
+            return ['id' => Yii::$app->params['ahnames.contact_id']];
+        }
+
         return static::_defaultAction($options, '/contactCreate');
     }
 

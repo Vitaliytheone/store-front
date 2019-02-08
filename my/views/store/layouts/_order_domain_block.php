@@ -16,6 +16,7 @@ use yii\helpers\Url;
 
             <div class="input-group-btn">
                 <?= $form->field($model, 'domain_zone')->dropDownList($model->getDomainZones(), [
+                    'options' => $model->getDomainZones(true),
                     'class' => 'selectpicker',
                     'id' => 'domain_zone'
                 ])?>

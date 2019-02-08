@@ -96,7 +96,7 @@ class CreateChildForm extends Model
 
             ['has_domain', 'in', 'range' => array_keys($this->getHasDomainsLabels()), 'message' => Yii::t('app', 'error.child_panel.bad_domain')],
 
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection'], 'required', 'on' => static::SCENARIO_CREATE_DOMAIN],
+            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone',], 'required', 'on' => static::SCENARIO_CREATE_DOMAIN],
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
             [['domain_email'], 'email'],
@@ -183,17 +183,19 @@ class CreateChildForm extends Model
     {
         $model = new static();
         $model->setUser($this->getUser());
-
-        $model->scenario = static::SCENARIO_CREATE_DOMAIN;
         $model->attributes = $this->attributes;
-
-        if (!$this->validate()) {
-            return false;
-        }
 
         $zone = DomainZones::findOne($this->domain_zone);
 
         if (!$zone) {
+            return false;
+        }
+
+        if (!DomainsHelper::checkContactExist($zone->zone)){
+            $model->scenario = static::SCENARIO_CREATE_DOMAIN;
+        }
+
+        if (!$this->validate()) {
             return false;
         }
 
@@ -227,7 +229,7 @@ class CreateChildForm extends Model
                 'domain_country' => $this->domain_country,
                 'domain_phone' => $this->domain_phone,
                 'domain_fax' => $this->domain_fax,
-                'domain_protection' => $this->domain_protection,
+                'domain_protection' => 1, // force domain privacy protect - old -- $this->domain_protection,
             ]
         ]);
 
@@ -408,11 +410,19 @@ class CreateChildForm extends Model
 
     /**
      * Get domain zones
+     * @param bool $registrar
      * @return array
      */
-    public function getDomainZones(): array
+    public function getDomainZones($registrar = false): array
     {
         $zones = [];
+
+        if ($registrar) {
+            foreach (DomainZones::find()->all() as $zone) {
+                $zones[$zone->id] = ['data-value'  => (int)DomainsHelper::checkContactExist($zone->registrar)];
+            }
+            return $zones;
+        }
 
         foreach (DomainZones::find()->all() as $zone) {
             $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;

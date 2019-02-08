@@ -52,7 +52,15 @@ customModule.orderDomainController = {
             var errorBlock = $('#orderDomainError', modal);
             var domain = $('.domain_zone:checked').data('domain');
 
-            modal.modal('show');
+            var select = $('#domain_zone').find(':selected').data('value');
+            if (select == 1) {
+                $('#orderDomainModal').show();
+                modal.modal('show');
+                $('#orderDomainBtn').click();
+                $('#orderDomainModal').hide();
+            } else {
+                modal.modal('show');
+            }
 
             errorBlock.addClass('hidden');
             errorBlock.html('');

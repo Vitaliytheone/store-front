@@ -78,6 +78,7 @@ return [
     'ahnames.url' => 'https://api.ahnames.com',
     'ahnames.login' => '',
     'ahnames.password' => '',
+    'ahnames.contact_id' => '',
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,

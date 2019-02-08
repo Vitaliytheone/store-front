@@ -122,6 +122,10 @@ class Namesilo extends BaseDomain
      */
     public static function contactCreate($options): array
     {
+        if (!empty(static::$_paramsNamesilo['namesilo.contact_id'])) {
+            return ['id' => static::$_paramsNamesilo['namesilo.contact_id']];
+        }
+
         $options = [
             'em' => ArrayHelper::getValue($options, 'email'),
             'fn' => ArrayHelper::getValue($options, 'first_name'),

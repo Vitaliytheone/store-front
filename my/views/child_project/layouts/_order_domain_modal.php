@@ -160,12 +160,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <?= $form->field($model, 'domain_protection')->checkbox()?>
-                            </div>
-                        </div>
-
                         <?= $form->field($model, 'domain_name')->hiddenInput([
                             'id' => 'modal_domain_name',
                             'class' => 'form-control'
