@@ -7,9 +7,10 @@ use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\store\Products;
 use sommerce\controllers\CommonController;
-use sommerce\modules\admin\models\forms\SavePageDraftForm;
+use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
 use yii\web\BadRequestHttpException;
@@ -171,8 +172,9 @@ trait PagesTrait {
      */
     public function actionDraft($id = null)
     {
-        $form = new SavePageDraftForm();
+        $form = new SavePageForm();
         $form->setStore($this->store);
+        $form->setIsDraft(true);
 
         if ($id) {
             $form->setPage(static::_getPage($id));
@@ -193,11 +195,27 @@ trait PagesTrait {
      * Save page
      * @param $id
      * @return mixed
-     * @throws BadRequestHttpException
+     * @throws
      */
     public function actionPublish($id)
     {
-        return $id;
+        $form = new SavePageForm();
+        $form->setStore($this->store);
+        $form->setIsDraft(false);
+
+        if ($id) {
+            $form->setPage(static::_getPage($id));
+        }
+
+        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
+            if ($form->hasErrors()) {
+                throw new FirstValidationErrorHttpException($form);
+            } else {
+                throw new BadRequestHttpException('Cannot save page!');
+            }
+        }
+
+        return ['id' => $form->getPage()->id];
     }
 
     /**

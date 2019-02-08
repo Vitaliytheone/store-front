@@ -35,6 +35,9 @@ class PageFiles extends ActiveRecord
     const FILE_TYPE_STYLE = 'css';
     const FILE_TYPE_TWIG = 'twig';
 
+    const IS_DRAFT_ON = 1;
+    const IS_DRAFT_OFF = 0;
+
     public static function getDb()
     {
         return Yii::$app->storeDb;
@@ -142,5 +145,14 @@ class PageFiles extends ActiveRecord
     public function getJson()
     {
         return json_decode($this->json, true);
+    }
+
+    /**
+     * Return is src draft version has changes
+     * @return bool
+     */
+    public function isDraftHasChanges()
+    {
+        return $this->json !== $this->json_draft;
     }
 }
