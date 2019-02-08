@@ -9,8 +9,7 @@ class PackageModal extends React.PureComponent {
 	};
 
 	render() {
-		console.log(this.props.showError);
-		console.log(this.props);
+		const { providers } = this.props;
 		return (
 			<ModalBody>
 				{/* Alert Error */}
@@ -18,7 +17,7 @@ class PackageModal extends React.PureComponent {
 				{this.props.showError && (
 					<div className="alert alert-danger alert-dismissible fade show" role="alert">
 						<button className="close" data-dismiss="alert" aria-label="Close" />
-						<strong>Oh snap!</strong> {this.props.errorMessage}
+						<strong>{this.props.errorMessage}</strong> 
 					</div>
 				)}
 
@@ -137,28 +136,35 @@ class PackageModal extends React.PureComponent {
 				</FormGroup>
 
 				<FormGroup>
-					<Label htmlFor="provider">Provider</Label>
-					<Field className="form-control" component="select" name="provider">
+					<Label htmlFor="provider_id">Provider</Label>
+					<Field className="form-control" component="select" name="provider_id">
+					{providers.map((item) => <option value={item.id}>{item.name}</option>)}
+					</Field>
+				</FormGroup>
+
+				<FormGroup>
+					<Label htmlFor="provider_service_id">Provider service</Label>
+					<Field className="form-control" component="select" name="provider_service_id">
 						<option
-							value="test.myperfectpanel.com"
+							value="1"
 							data-action-url="/admin/products/get-provider-services?provider_id=2"
 						>
 							test.myperfectpanel.com{' '}
 						</option>
 						<option
-							value="bulkfollows.com"
+							value="2"
 							data-action-url="/admin/products/get-provider-services?provider_id=3"
 						>
 							bulkfollows.com{' '}
 						</option>
 						<option
-							value="demo.perfectpanel.com"
+							value="3"
 							data-action-url="/admin/products/get-provider-services?provider_id=4"
 						>
 							demo.perfectpanel.com{' '}
 						</option>
 						<option
-							value="autosmo.com"
+							value="4"
 							data-action-url="/admin/products/get-provider-services?provider_id=5"
 						>
 							autosmo.com{' '}

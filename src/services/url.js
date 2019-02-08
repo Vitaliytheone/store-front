@@ -61,6 +61,6 @@ export function deletePackage(package_id) {
 	// return Promise.resolve(mockResponse);
 }
 
-export function get_providers(provider_id) {
-	axiosInstance.get(`/admin/products/get-provider-services?id=${provider_id}`);
+export function get_providers_services(provider_id) {
+	axiosInstance.get(point.get_providers_services + `${provider_id}`);
 }

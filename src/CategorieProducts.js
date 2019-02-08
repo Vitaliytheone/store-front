@@ -20,6 +20,7 @@ import { sortBy, pick } from 'lodash';
 class CategorieProducts extends Component {
 	state = {
 		data: [],
+		providers: [],
 		response: {
 			product: {
 				name: '',
@@ -39,13 +40,15 @@ class CategorieProducts extends Component {
 	async componentDidMount() {
 		const response = await addListing();
 		const data = response.data;
+		const providers = response.data.providers;
+		console.log(providers);
 		const dataParse = data.products.map((item) => ({
 			...item,
 			position: +item.position, //cast position to a number
 			packages: sortBy(Object.values(item.packages), 'position') //sort packages by position
 		}));
 		const newData = sortBy(dataParse, 'position');
-		this.setState({ data: newData });
+		this.setState({ data: newData, providers: providers });
 	}
 
 	handleProductSwitch = ({ oldIndex, newIndex }) => {
@@ -238,13 +241,10 @@ class CategorieProducts extends Component {
 			data: newData
 		});
 		await deletePackage(PackId);
-		//        this.setState({
-		//          data: newData
-		// });
 	};
 
 	render() {
-		const { data, response } = this.state;
+		const { data, response, providers } = this.state;
 		const { isSubmitting } = this.props;
 		return (
 			<React.Fragment>
@@ -264,6 +264,7 @@ class CategorieProducts extends Component {
 										deletePackage={this.deletePackage}
 										response={response}
 										data={data}
+										providers={providers}
 										useDragHandle={true}
 										onSortEnd={this.handleProductSwitch}
 										onPackageAdd={this.addPackage}

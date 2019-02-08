@@ -41512,6 +41512,7 @@ body {
   overflow: hidden;
 }
 
+/* Stylization of react-toastify notification */
 .toast-background {
   opacity: 0.5;
 }

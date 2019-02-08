@@ -3,7 +3,8 @@ import { Button, Modal, ModalHeader, ModalFooter } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import ProductModal from './modals/ProductModal';
 import { toast } from "react-toastify";
-import { css } from "glamor";
+import { options } from "../helpers/toast";
+import { scrollModalTop } from '../helpers/scrolling';
 
 class EditProduct extends Component {
 	state = {
@@ -35,20 +36,11 @@ class EditProduct extends Component {
 			modalIsOpen: !response.success,
 			errorMessage: response.error_message
     });
-    console.log(response.success)
-    response.success ? toast("Product was successfully updated!", options) : alert('error');
-
-    const options = {
-      type: "success",
-      autoClose: 5000,
-      hideProgressBar: true,
-      position: toast.POSITION.BOTTOM_RIGHT,
-      pauseOnHover: false,
-      className: "toast-background",
-      bodyClassName: "toast-background-body",
-      progressClassName: 'toast-background'
-    };
-
+    if(this.state.showError) {
+      scrollModalTop(this.modal);
+    } else {
+    toast("Product was successfully updated!", options);
+    }
 	};
 
 	render() {
@@ -65,6 +57,7 @@ class EditProduct extends Component {
             Edit
           </Button>
           <Modal
+            innerRef={(el) => (this.modal = el)}
             isOpen={this.state.modalIsOpen}
             size="lg"
             backdrop="static"

@@ -99,7 +99,7 @@ class ProductModal extends React.PureComponent {
 				{this.props.showError && (
 					<div className="alert alert-danger alert-dismissible fade show" role="alert">
 						<button className="close" data-dismiss="alert" aria-label="Close" />
-						<strong>Oh snap!</strong> {this.props.errorMessage}
+							<strong>{this.props.errorMessage}</strong> 
 					</div>
 				)}
 

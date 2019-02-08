@@ -3,6 +3,9 @@ import { Button, Modal, ModalHeader, ModalFooter } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import PackageModal from './modals/PackageModal';
 import { toast } from "react-toastify";
+import { options } from '../helpers/toast';
+import { scrollModalTop } from '../helpers/scrolling';
+
 
 class EditPackage extends Component {
   state = {
@@ -33,14 +36,11 @@ class EditPackage extends Component {
       modalIsOpen: !response.success,
       errorMessage: response.error_message
     });
-    toast("🦄 Product was successfully updated!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true
-    });
+    if(this.state.showError) {
+      scrollModalTop(this.modal);
+    } else {
+    toast("Package was successfully updated!", options)
+    }
   };
 
   render() {
@@ -56,6 +56,7 @@ class EditPackage extends Component {
           Edit
         </Button>
         <Modal
+          innerRef={(el) => (this.modal = el)}
           isOpen={this.state.modalIsOpen}
           backdrop="static"
           keyboard={false}

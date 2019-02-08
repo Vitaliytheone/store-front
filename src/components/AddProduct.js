@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { connfirm_add_product } from '../services/url';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { options } from '../helpers/toast';
+import { scrollModalTop } from '../helpers/scrolling';
 
 class AddProduct extends Component {
 	state = {
@@ -21,14 +23,7 @@ class AddProduct extends Component {
 		this.setState((prevstate) => ({
 			confirmModal: !prevstate.confirmModal
 		}));
-		toast('🦄 Product was successfully created!', {
-			position: 'bottom-right',
-			autoClose: 5000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true
-		});
+		toast("Product was successfully created!", options)
 	};
 
 	confirmCreate = async () => {
@@ -37,24 +32,8 @@ class AddProduct extends Component {
 		this.setState((prevstate) => ({
 			confirmModal: !prevstate.confirmModal
 		}));
-
-		toast('🦄 Product was successfully created!', {
-			position: 'bottom-right',
-			autoClose: 5000,
-			hideProgressBar: true,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true
-		});
-
-		toast('🦄 Menu item successfully created!', {
-			position: 'bottom-right',
-			autoClose: 5000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true
-		});
+		toast("Product was successfully created!", options)
+		toast("Product was successfully created!", options)
 	};
 
 	toggle = () => {
@@ -75,7 +54,7 @@ class AddProduct extends Component {
 			productId: response.data.id
 		});
 		if (this.state.showError) {
-			this.modal.scrollTop = 0;
+			scrollModalTop(this.modal);
 		} else {
 			this.setState((prevstate) => ({
 				confirmModal: !prevstate.confirmModal
@@ -96,7 +75,7 @@ class AddProduct extends Component {
 						</div>
 					</Col>
 				</Row>
-				<ToastContainer />
+        <ToastContainer animation="fade"/>
 				<Modal
 					innerRef={(el) => (this.modal = el)}
 					isOpen={this.state.modalIsOpen}

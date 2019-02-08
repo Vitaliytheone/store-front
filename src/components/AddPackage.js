@@ -4,6 +4,8 @@ import { Formik, Form } from 'formik';
 import PackageModal from './modals/PackageModal';
 import PropTypes from 'prop-types';
 import { toast } from "react-toastify";
+import { options } from '../helpers/toast';
+import { scrollModalTop } from '../helpers/scrolling';
 
 
 class AddPackage extends Component {
@@ -24,14 +26,11 @@ class AddPackage extends Component {
 	handleSubmit = async (...params) => {
 		const response = await this.props.onSubmit(...params);
 		this.setState({ showError: !response.success, modalIsOpen: !response.success, errorMessage: response.error_message });
-		toast("🦄 Package was successfully created!", {
-			position: "bottom-right",
-			autoClose: 5000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true
-		});
+		if(this.state.showError) {
+			scrollModalTop(this.modal);
+		} else {
+		toast("Package was successfully created!", options)
+		}
 	};
 
 	render() {
@@ -44,11 +43,11 @@ class AddPackage extends Component {
 						</Button>
 					</Col>
 				</Row>
-				<Modal isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop="static" keyboard={false}>
+				<Modal innerRef={(el) => (this.modal = el)} isOpen={this.state.modalIsOpen} toggle={this.toggle} backdrop="static" keyboard={false}>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						<Form>
 							<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
-							<PackageModal showError={this.state.showError} errorMessage={this.state.errorMessage} />
+							<PackageModal showError={this.state.showError} errorMessage={this.state.errorMessage} providers={this.props.providers} />
 							<ModalFooter className="justify-content-start">
 								<Button color="primary" type="submit">
 									Add package
