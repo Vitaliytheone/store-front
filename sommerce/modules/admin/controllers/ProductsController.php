@@ -151,7 +151,7 @@ class ProductsController extends CustomController
 
         if (!$model->create($request->post())) {
             Yii::error($model->firstErrors);
-            throw new BadRequestHttpException($model->firstErrors);
+            throw new BadRequestHttpException(!empty($model->firstErrors) ? $model->firstErrors : 'Product cannot save!');
         }
 
         UiHelper::message(Yii::t('admin', 'products.message_product_created'));
