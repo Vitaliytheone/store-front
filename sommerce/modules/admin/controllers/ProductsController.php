@@ -148,7 +148,7 @@ class ProductsController extends CustomController
 
         $model = new CreateProductForm();
         $model->setUser(Yii::$app->user);
-
+print_r($request->post());die;
         if (!$model->create($request->post())) {
             Yii::error($model->firstErrors);
             throw new BadRequestHttpException('Product cannot save!');
