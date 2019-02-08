@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -30,6 +31,11 @@ use yii\db\ActiveRecord;
  */
 class Getstatus extends ActiveRecord
 {
+    const TYPE_PANELS_EXTERNAL = 0;
+    const TYPE_PANELS_INTERNAL = 1;
+    const TYPE_STORES_EXTERNAL = 2;
+    const TYPE_STORES_INTERNAL = 3;
+
     /**
      * @inheritdoc
      */
@@ -48,6 +54,30 @@ class Getstatus extends ActiveRecord
             [['hash'], 'required'],
             [['roid', 'login', 'passwd', 'apikey', 'proxy', 'reid', 'page_id'], 'string', 'max' => 1000],
             [['hash'], 'string', 'max' => 32],
+            ['type', 'in', 'range' => [
+                self::TYPE_PANELS_EXTERNAL,
+                self::TYPE_PANELS_INTERNAL,
+                self::TYPE_STORES_EXTERNAL,
+                self::TYPE_STORES_INTERNAL
+            ]],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['date_create', 'updated_at']
+                ],
+                'value' => function() {
+                    return time();
+                }
+            ]
         ];
     }
 
