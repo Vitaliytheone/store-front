@@ -63,7 +63,7 @@ class Namesilo extends BaseDomain
      */
     protected static function _validateDomain($domain): bool
     {
-        if (preg_match('/^[a-zA-Z0-9\.-]+$/iu', $domain) === 0) {
+        if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]$/iu', $domain) === 0) {
             return false;
         }
 
@@ -90,7 +90,7 @@ class Namesilo extends BaseDomain
 
         $resultRaw = static::_processResult($result, false);
         if (!empty($resultRaw['_error'])) {
-            return $resultRaw;
+            return array_fill_keys($domains, 0);
         }
 
         $resultAvailable = $resultUnavailable = [];

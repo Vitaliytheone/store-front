@@ -36,7 +36,7 @@ class Ahnames extends BaseDomain
      */
     protected static function _validateDomain($domain): bool
     {
-        if (preg_match('/^[a-zA-Z0-9\.-]+$/iu', $domain) === 0) {
+        if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]$/iu', $domain) === 0) {
             return false;
         }
 
