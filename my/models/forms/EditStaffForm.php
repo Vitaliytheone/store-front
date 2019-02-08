@@ -33,9 +33,9 @@ class EditStaffForm extends Model
             [['account'], 'filter', 'filter' => function($value) { // Trim input values
                 return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
             }],
-
+            ['account', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
             [['account', 'status'], 'required'],
-            [['account'], 'string', 'min' => 5, 'max' => 20],
+            [['account'], 'string', 'min' => 3, 'max' => 32],
             [['status'], 'in', 'range' => array_keys(ProjectAdmin::getStatuses())],
             [['account'], 'uniqAccount'],
             [['access'], 'safe'],
