@@ -167,7 +167,7 @@ class PackageModal extends React.PureComponent {
 				</FormGroup>
 
 				{this.props.showError && (
-				<span className="m--font-danger">API responce errors: Incorrect required</span>
+					<span className="m--font-danger">API responce errors: Incorrect required</span>
 				)}
 			</ModalBody>
 		);
