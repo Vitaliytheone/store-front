@@ -118,6 +118,12 @@ class SavePageForm extends Model
             [['styles', 'header', 'footer', 'page'], function($attribute, $params) {
 
                 $data = $this->$attribute;
+                
+                if (!is_array($data)) {
+                    $this->addError($attribute, 'Bad (' . $attribute . ') format!');
+
+                    return false;
+                }
 
                 // Check draft and publish
                 if (!array_key_exists('json', $data)) {
