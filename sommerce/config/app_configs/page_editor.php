@@ -64,5 +64,16 @@ return [
          */
         'get_product' => '/admin/settings/pages/get-product',
 
+        /**
+         * Сохранение продукта
+         *
+         * Тип запроса: POST
+         * Обязательные параметры:
+         *      {{id}} (int) – ID продукта
+         * Необязательные параметы:
+         * Данные формы:
+         *      JSON SERIALIZE DATA {}
+         */
+        'save_product' => '/admin/settings/pages/set-product/{{id}}',
     ],
 ];

@@ -8,6 +8,7 @@ use common\models\store\Pages;
 use common\models\store\Products;
 use sommerce\controllers\CommonController;
 use sommerce\modules\admin\models\forms\SavePageForm;
+use sommerce\modules\admin\models\forms\SaveProductForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
 use yii\base\Exception;
@@ -186,11 +187,42 @@ trait PagesTrait {
      */
     public function actionGetProduct($id)
     {
-        if(!$product = array_values(static::_getProducts($id))) {
+        if (!$product = array_values(static::_getProducts($id))) {
             throw new NotFoundHttpException('Product not found!');
         }
 
         return $product;
+    }
+
+    /**
+     * Update product data
+     * @param $id
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws FirstValidationErrorHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionSetProduct($id)
+    {
+        if (
+            !$product = Products::findOne(['id' => $id])
+        ) {
+            throw new NotFoundHttpException('Product not found!');
+        }
+
+        $form = new SaveProductForm();
+        $form->setStore($this->store);
+        $form->setProduct($product);
+
+        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
+            if ($form->hasErrors()) {
+                throw new FirstValidationErrorHttpException($form);
+            } else {
+                throw new BadRequestHttpException('Cannot save product!');
+            }
+        }
+
+        return ['id' => $form->getProduct()->id];
     }
 
     /**

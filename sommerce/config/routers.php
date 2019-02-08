@@ -36,9 +36,10 @@ return [
 
     'admin/settings/pages/get-page' => 'admin/settings/get-page',
     'admin/settings/pages/get-pages' => 'admin/settings/get-pages',
-    'admin/settings/pages/get-products' => 'admin/settings/get-products',
     'admin/settings/pages/draft' => 'admin/settings/draft',
     'admin/settings/pages/draft/<id:\d++>' => 'admin/settings/draft',
     'admin/settings/pages/publish/<id:\d++>' => 'admin/settings/publish',
+    'admin/settings/pages/get-products' => 'admin/settings/get-products',
     'admin/settings/pages/get-product' => 'admin/settings/get-product',
+    'admin/settings/pages/set-product/<id:\d++>' => 'admin/settings/set-product',
 ];
