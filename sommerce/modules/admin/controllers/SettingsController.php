@@ -76,6 +76,7 @@ class SettingsController extends CustomController
                     'get-products',
                     'get-product',
                     'set-product',
+                    'set-package',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_AJAX_API,

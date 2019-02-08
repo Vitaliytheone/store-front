@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\models\forms;
 
+use common\models\store\Packages;
 use common\models\store\PageFiles;
 use common\models\store\Products;
 use Yii;
@@ -11,15 +12,15 @@ use yii\base\Model;
 use yii\db\Transaction;
 
 /**
- * Class SaveProductForm
+ * Class SavePackageForm
  * @package sommerce\modules\admin\models\forms
  */
-class SaveProductForm extends Model
+class SavePackageForm extends Model
 {
     /**
      * @var string
      */
-    public $properties;
+    public $icon;
 
     /**
      * @var Stores
@@ -27,9 +28,9 @@ class SaveProductForm extends Model
     protected $_store;
 
     /**
-     * @var Products
+     * @var Packages
      */
-    protected $_product;
+    protected $_package;
 
     /**
      * Set store
@@ -51,19 +52,19 @@ class SaveProductForm extends Model
 
     /**
      * Set page
-     * @param Products $product
+     * @param Packages $package
      */
-    public function setProduct(Products $product) {
-        $this->_product = $product;
+    public function setPackage(Packages $package) {
+        $this->_package = $package;
     }
 
     /**
-     * Get product
-     * @return Products
+     * Get package
+     * @return Packages
      */
-    public function getProduct()
+    public function getPackage()
     {
-        return $this->_product;
+        return $this->_package;
     }
 
     /**
@@ -80,9 +81,9 @@ class SaveProductForm extends Model
     public function rules()
     {
         return [
-            [['properties'], 'required'],
-            [['properties'], 'string', 'max' => 180],
-            [['properties'], 'trim'],
+            [['icon'], 'required'],
+            [['icon'], 'string', 'max' => 180],
+            [['icon'], 'trim'],
         ];
     }
 
@@ -98,12 +99,12 @@ class SaveProductForm extends Model
         /** @var Transaction $transaction */
         $transaction = Yii::$app->storeDb->beginTransaction();
 
-        $product = $this->getProduct();
+        $package = $this->getPackage();
 
-        $product->properties = $this->properties;
+        $package->icon = $this->icon;
 
-        if (!$product->save(false)) {
-            $this->addError('page_file', 'Cannot save product!');
+        if (!$package->save(false)) {
+            $this->addError('page_file', 'Cannot save package!');
             $transaction->rollBack();
 
             return false;

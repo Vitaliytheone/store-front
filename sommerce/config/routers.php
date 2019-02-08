@@ -42,4 +42,5 @@ return [
     'admin/settings/pages/get-products' => 'admin/settings/get-products',
     'admin/settings/pages/get-product' => 'admin/settings/get-product',
     'admin/settings/pages/set-product/<id:\d++>' => 'admin/settings/set-product',
+    'admin/settings/pages/set-package/<id:\d++>' => 'admin/settings/set-package',
 ];

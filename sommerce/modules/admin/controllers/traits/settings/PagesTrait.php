@@ -7,6 +7,7 @@ use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\store\Products;
 use sommerce\controllers\CommonController;
+use sommerce\modules\admin\models\forms\SavePackageForm;
 use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\forms\SaveProductForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
@@ -223,6 +224,40 @@ trait PagesTrait {
         }
 
         return ['id' => $form->getProduct()->id];
+    }
+
+    /**
+     * Update package data
+     * @param $id
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws FirstValidationErrorHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionSetPackage($id)
+    {
+        if (
+            !$package = Packages::findOne([
+                'id' => $id,
+                'deleted' => Packages::DELETED_NO,
+            ])
+        ) {
+            throw new NotFoundHttpException('Product not found!');
+        }
+
+        $form = new SavePackageForm();
+        $form->setStore($this->store);
+        $form->setPackage($package);
+
+        if (!$form->load(Yii::$app->request->post()) || !$form->save()) {
+            if ($form->hasErrors()) {
+                throw new FirstValidationErrorHttpException($form);
+            } else {
+                throw new BadRequestHttpException('Cannot save package!');
+            }
+        }
+
+        return ['id' => $form->getPackage()->id];
     }
 
     /**

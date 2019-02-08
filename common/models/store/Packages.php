@@ -24,6 +24,7 @@ use common\models\store\queries\PackagesQuery;
  * @property string $provider_service
  * @property integer $deleted
  * @property integer $position
+ * @property string $icon
  *
  * @property Products $product
  * @property Suborders[] $suborders
@@ -64,6 +65,7 @@ class Packages extends ActiveRecord
             [['name', 'provider_service'], 'string', 'max' => 255],
             ['overflow', 'integer', 'min' => -100, 'max' => 100],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::class, 'targetAttribute' => ['product_id' => 'id']],
+            [['icon'], 'string', 'max' => 180],
         ];
     }
 
@@ -87,6 +89,7 @@ class Packages extends ActiveRecord
             'provider_service' => Yii::t('app', 'Provider Service'),
             'deleted' => Yii::t('app', 'Deleted'),
             'position' => Yii::t('app', 'Position'),
+            'icon' => Yii::t('app', 'Icon'),
         ];
     }
 
