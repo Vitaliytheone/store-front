@@ -22,15 +22,6 @@ return [
         'get_pages' => '/admin/settings/pages/get-pages',
 
         /**
-         * Получение списка продуктов
-         *
-         * Тип запроса: GET
-         * Обязательные параметры:
-         * Необязательные параметы:
-         */
-        'get_products' => '/admin/settings/pages/get-products',
-
-        /**
          * Сохранение draft-версии страницы
          *
          * Тип запроса: POST
@@ -53,5 +44,25 @@ return [
          *      JSON SERIALIZE DATA {}
          */
         'save_publish_page' => '/admin/settings/pages/publish/{{id}}',
+
+        /**
+         * Получение списка продуктов
+         *
+         * Тип запроса: GET
+         * Обязательные параметры:
+         * Необязательные параметы:
+         */
+        'get_products' => '/admin/settings/pages/get-products',
+
+        /**
+         * Получение данных о продукте и его пакатах
+         *
+         * Тип запроса: GET
+         * Обязательные параметры:
+         *      id (int) — ID продукта.
+         * Необязательные параметы:
+         */
+        'get_product' => '/admin/settings/pages/get-product',
+
     ],
 ];

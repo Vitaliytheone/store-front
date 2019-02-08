@@ -71,9 +71,10 @@ class SettingsController extends CustomController
                     // Pages trait
                     'get-page',
                     'get-pages',
-                    'get-products',
                     'draft',
                     'publish',
+                    'get-products',
+                    'get-product',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_AJAX_API,

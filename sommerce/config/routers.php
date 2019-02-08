@@ -40,4 +40,5 @@ return [
     'admin/settings/pages/draft' => 'admin/settings/draft',
     'admin/settings/pages/draft/<id:\d++>' => 'admin/settings/draft',
     'admin/settings/pages/publish/<id:\d++>' => 'admin/settings/publish',
+    'admin/settings/pages/get-product' => 'admin/settings/get-product',
 ];

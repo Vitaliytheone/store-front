@@ -116,55 +116,6 @@ trait PagesTrait {
     }
 
     /**
-     * Return products with packages list
-     * @return array
-     */
-    public function actionGetProducts()
-    {
-        $productPackages = Products::find()
-            ->alias('pr')
-            ->select([
-                'pr_id' =>'pr.id', 'pr_name' => 'pr.name', 'pr_description' => 'pr.description', 'pr_properties' => 'pr.properties', 'pr_color' => 'pr.color',
-                'pk_id' => 'pk.id', 'pk_name' => 'pk.name',  'pk_price' => 'pk.price', 'pk_quantity' => 'pk.quantity'
-            ])
-            ->leftJoin(['pk' => Packages::tableName()], 'pk.product_id = pr.id AND pk.visibility = :pk_visibility AND pk.deleted = :pk_deleted', [
-                'pk_visibility' => Packages::VISIBILITY_YES,
-                'pk_deleted' => Packages::DELETED_NO,
-            ])
-            ->andWhere(['pr.visibility' => Products::VISIBILITY_YES])
-            ->orderBy(['pr.position' => SORT_DESC, 'pk.position' => SORT_DESC])
-            ->asArray()
-            ->all();
-
-        $products = [];
-
-        foreach ($productPackages as $item) {
-
-            $productId = $item['pr_id'];
-            
-            if (empty($products[$productId])) {
-                $products[$productId]['id'] = $productId;
-                $products[$productId]['name'] = BaseHtml::encode($item['pr_name']);
-                $products[$productId]['description'] = BaseHtml::encode($item['pr_description']);
-                $products[$productId]['properties'] = BaseHtml::encode($item['pr_properties']);
-                $products[$productId]['color'] = BaseHtml::encode($item['pr_color']);
-                $products[$productId]['packages'] = [];
-            }
-
-            if ($item['pk_id']) {
-                $products[$productId]['packages'][] = [
-                    'id' => $item['pk_id'],
-                    'name' => BaseHtml::encode($item['pk_name']),
-                    'price'  => $item['pk_price'],
-                    'quantity' => $item['pk_quantity'],
-                ];
-            }
-        }
-
-        return array_values($products);
-    }
-
-    /**
      * Save page
      * @param $id
      * @return mixed
@@ -219,6 +170,30 @@ trait PagesTrait {
     }
 
     /**
+     * Return products with packages list
+     * @return array
+     */
+    public function actionGetProducts()
+    {
+        return array_values(static::_getProducts());
+    }
+
+    /**
+     * Return product with packages by product id
+     * @param $id
+     * @return array
+     * @throws
+     */
+    public function actionGetProduct($id)
+    {
+        if(!$product = array_values(static::_getProducts($id))) {
+            throw new NotFoundHttpException('Product not found!');
+        }
+
+        return $product;
+    }
+
+    /**
      * Return page by page id
      * @param $id
      * @return array|Pages|null
@@ -233,5 +208,56 @@ trait PagesTrait {
         }
 
         return $page;
+    }
+
+    /**
+     * Return products packages list
+     * @param $productId null|integer
+     * @return array
+     */
+    private static function _getProducts($productId = null)
+    {
+        $productPackages = Products::find()
+            ->alias('pr')
+            ->select([
+                'pr_id' =>'pr.id', 'pr_name' => 'pr.name', 'pr_description' => 'pr.description', 'pr_properties' => 'pr.properties', 'pr_color' => 'pr.color',
+                'pk_id' => 'pk.id', 'pk_name' => 'pk.name',  'pk_price' => 'pk.price', 'pk_quantity' => 'pk.quantity'
+            ])
+            ->leftJoin(['pk' => Packages::tableName()], 'pk.product_id = pr.id AND pk.visibility = :pk_visibility AND pk.deleted = :pk_deleted', [
+                'pk_visibility' => Packages::VISIBILITY_YES,
+                'pk_deleted' => Packages::DELETED_NO,
+            ])
+            ->andWhere(['pr.visibility' => Products::VISIBILITY_YES])
+            ->andFilterWhere(['pr.id' => $productId])
+            ->orderBy(['pr.position' => SORT_DESC, 'pk.position' => SORT_DESC])
+            ->asArray()
+            ->all();
+
+        $products = [];
+
+        foreach ($productPackages as $item) {
+
+            $productId = $item['pr_id'];
+
+            if (empty($products[$productId])) {
+                $products[$productId]['id'] = $productId;
+                $products[$productId]['name'] = BaseHtml::encode($item['pr_name']);
+                $products[$productId]['description'] = BaseHtml::encode($item['pr_description']);
+                $products[$productId]['properties'] = BaseHtml::encode($item['pr_properties']);
+                $products[$productId]['color'] = BaseHtml::encode($item['pr_color']);
+                $products[$productId]['packages'] = [];
+            }
+
+            if ($item['pk_id']) {
+                $products[$productId]['packages'][] = [
+                    'id' => $item['pk_id'],
+                    'name' => BaseHtml::encode($item['pk_name']),
+                    'price'  => $item['pk_price'],
+                    'quantity' => $item['pk_quantity'],
+                ];
+            }
+        }
+
+        return $products;
     }
 }
