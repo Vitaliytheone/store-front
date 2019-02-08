@@ -288,13 +288,11 @@ trait PagesTrait {
             ->alias('pr')
             ->select([
                 'pr_id' =>'pr.id', 'pr_name' => 'pr.name', 'pr_description' => 'pr.description', 'pr_properties' => 'pr.properties', 'pr_color' => 'pr.color',
-                'pk_id' => 'pk.id', 'pk_name' => 'pk.name',  'pk_price' => 'pk.price', 'pk_quantity' => 'pk.quantity'
+                'pk_id' => 'pk.id', 'pk_name' => 'pk.name',  'pk_price' => 'pk.price', 'pk_quantity' => 'pk.quantity', 'pk_icon' => 'pk.icon',
             ])
-            ->leftJoin(['pk' => Packages::tableName()], 'pk.product_id = pr.id AND pk.visibility = :pk_visibility AND pk.deleted = :pk_deleted', [
-                'pk_visibility' => Packages::VISIBILITY_YES,
+            ->leftJoin(['pk' => Packages::tableName()], 'pk.product_id = pr.id AND pk.deleted = :pk_deleted', [
                 'pk_deleted' => Packages::DELETED_NO,
             ])
-            ->andWhere(['pr.visibility' => Products::VISIBILITY_YES])
             ->andFilterWhere(['pr.id' => $productId])
             ->orderBy(['pr.position' => SORT_DESC, 'pk.position' => SORT_DESC])
             ->asArray()
@@ -321,6 +319,7 @@ trait PagesTrait {
                     'name' => BaseHtml::encode($item['pk_name']),
                     'price'  => $item['pk_price'],
                     'quantity' => $item['pk_quantity'],
+                    'icon' => $item['pk_icon'],
                 ];
             }
         }
