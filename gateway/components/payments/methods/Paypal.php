@@ -132,7 +132,7 @@ class Paypal extends BasePayment
 
         $requestParams = [
             'RETURNURL' => $this->getNotifyUrl() . '/' . $this->getPayment()->id,
-            'CANCELURL' => $this->getReturnUrl()
+            'CANCELURL' => $this->getNotifyUrl() . '/' . $this->getPayment()->id,
         ];
 
         $orderParams = [
