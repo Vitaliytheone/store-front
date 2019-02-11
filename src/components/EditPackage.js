@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { options } from '../helpers/toast';
 import { scrollModalTop } from '../helpers/scrolling';
 
-
 class EditPackage extends Component {
   state = {
 	modalIsOpen: false,

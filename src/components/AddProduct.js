@@ -89,7 +89,6 @@ class AddProduct extends Component {
 							<Form>
 								<ModalHeader toggle={this.toggle}>Create product</ModalHeader>
 								<ProductModal
-									setFieldValue={setFieldValue}
 									values={values}
 									showError={this.state.showError}
 									errorMessage={this.state.errorMessage}

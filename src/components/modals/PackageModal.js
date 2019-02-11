@@ -3,13 +3,30 @@ import { ModalBody, Label, FormGroup } from 'reactstrap';
 import { Field } from 'formik';
 import { PackageInput } from '../Inputs';
 import { Select } from '../SelectProviders';
+import { get_providers_services } from '../../services/url';
 
 class PackageModal extends React.PureComponent {
+	state = {
+		providerServices: [{ service: "none", name: "Chose provider service" }]
+	}
+
+	async choseService(provider_id, e) {
+		console.log(provider_id);
+		const response = await get_providers_services(provider_id);
+		console.log(response.data);
+		this.props.setFieldValue('provider_id', provider_id);
+		response.data.unshift( { service: "none", name: "Chose provider service"});
+		this.setState({
+			providerServices: response.data
+		})
+	};
+
 	componentDidMount = () => {
 		setTimeout(() => this.name.focus(), 200);
 	};
 
 	render() {
+		const { providerServices } = this.state;
 		const { providers } = this.props;
 		return (
 			<ModalBody>
@@ -144,25 +161,15 @@ class PackageModal extends React.PureComponent {
 						name="provider_id"
 						type="select"
 						label="Provider"
-						choseService={this.props.choseService}
-					/>
+						choseService={this.choseService}
+						values={this.props.values}
+				/>
 				</FormGroup>
 
 				<FormGroup>
 					<Label htmlFor="provider_service_id">Provider service</Label>
 					<Field className="form-control" component="select" name="provider_service_id">
-						<option value="1" data-action-url="/admin/products/get-provider-services?provider_id=2">
-							test.myperfectpanel.com{' '}
-						</option>
-						<option value="2" data-action-url="/admin/products/get-provider-services?provider_id=3">
-							bulkfollows.com{' '}
-						</option>
-						<option value="3" data-action-url="/admin/products/get-provider-services?provider_id=4">
-							demo.perfectpanel.com{' '}
-						</option>
-						<option value="4" data-action-url="/admin/products/get-provider-services?provider_id=5">
-							autosmo.com{' '}
-						</option>
+					{providerServices.map(item => <option key={item.service} value={item.service}>{item.name}</option>)}
 					</Field>
 				</FormGroup>
 

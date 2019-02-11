@@ -10,7 +10,6 @@ import { get_providers_services } from '../services/url';
 
 class AddPackage extends Component {
 	state = {
-		providerServices: [],
 		modalIsOpen: false,
 		showError: false,
 		errorMessage: null
@@ -38,14 +37,7 @@ class AddPackage extends Component {
 		}
 	};
 
-	choseService = (provider_id) => async () => {
-		console.log(provider_id);
-		const response = await get_providers_services(provider_id);
-		console.log(response);
-	};
-
 	render() {
-		console.log(this.props.providers);
 		return (
 			<React.Fragment>
 				<Row>
@@ -63,9 +55,13 @@ class AddPackage extends Component {
 					keyboard={false}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
+						{({ setFieldValue, values, handleChange }) => (
 						<Form>
 							<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
-							<PackageModal
+							<PackageModal 
+								handleChange={handleChange}
+								setFieldValue={setFieldValue}
+								values={values}
 								showError={this.state.showError}
 								errorMessage={this.state.errorMessage}
 								providers={this.props.providers}
@@ -80,6 +76,7 @@ class AddPackage extends Component {
 								</Button>
 							</ModalFooter>
 						</Form>
+						)}
 					</Formik>
 				</Modal>
 			</React.Fragment>
@@ -109,8 +106,8 @@ AddPackage.defaultProps = {
 		best: '2',
 		availability: '1',
 		mode: '2',
-		provider_id: 'none',
-		provider_service_id: ''
+		provider_id: '1',
+		provider_service_id: 'none'
 	}
 };
 
