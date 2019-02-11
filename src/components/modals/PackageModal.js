@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ModalBody, Label, FormGroup } from 'reactstrap';
 import { Field } from 'formik';
 import { PackageInput } from '../Inputs';
+import { Select } from '../SelectProviders';
 
 class PackageModal extends React.PureComponent {
 	componentDidMount = () => {
@@ -17,7 +18,7 @@ class PackageModal extends React.PureComponent {
 				{this.props.showError && (
 					<div className="alert alert-danger alert-dismissible fade show" role="alert">
 						<button className="close" data-dismiss="alert" aria-label="Close" />
-						<strong>{this.props.errorMessage}</strong> 
+						<strong>{this.props.errorMessage}</strong>
 					</div>
 				)}
 
@@ -136,37 +137,30 @@ class PackageModal extends React.PureComponent {
 				</FormGroup>
 
 				<FormGroup>
-					<Label htmlFor="provider_id">Provider</Label>
-					<Field className="form-control" component="select" name="provider_id">
-					{providers.map((item) => <option value={item.id}>{item.name}</option>)}
-					</Field>
+					<Field
+						providers={providers}
+						className="form-control"
+						component={Select}
+						name="provider_id"
+						type="select"
+						label="Provider"
+						choseService={this.props.choseService}
+					/>
 				</FormGroup>
 
 				<FormGroup>
 					<Label htmlFor="provider_service_id">Provider service</Label>
 					<Field className="form-control" component="select" name="provider_service_id">
-						<option
-							value="1"
-							data-action-url="/admin/products/get-provider-services?provider_id=2"
-						>
+						<option value="1" data-action-url="/admin/products/get-provider-services?provider_id=2">
 							test.myperfectpanel.com{' '}
 						</option>
-						<option
-							value="2"
-							data-action-url="/admin/products/get-provider-services?provider_id=3"
-						>
+						<option value="2" data-action-url="/admin/products/get-provider-services?provider_id=3">
 							bulkfollows.com{' '}
 						</option>
-						<option
-							value="3"
-							data-action-url="/admin/products/get-provider-services?provider_id=4"
-						>
+						<option value="3" data-action-url="/admin/products/get-provider-services?provider_id=4">
 							demo.perfectpanel.com{' '}
 						</option>
-						<option
-							value="4"
-							data-action-url="/admin/products/get-provider-services?provider_id=5"
-						>
+						<option value="4" data-action-url="/admin/products/get-provider-services?provider_id=5">
 							autosmo.com{' '}
 						</option>
 					</Field>

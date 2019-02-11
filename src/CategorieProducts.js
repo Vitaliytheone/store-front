@@ -41,7 +41,7 @@ class CategorieProducts extends Component {
 		const response = await addListing();
 		const data = response.data;
 		const providers = response.data.providers;
-		console.log(providers);
+		providers.unshift({ id: 'none', name: 'Chose providers' });
 		const dataParse = data.products.map((item) => ({
 			...item,
 			position: +item.position, //cast position to a number
@@ -120,11 +120,11 @@ class CategorieProducts extends Component {
 		if (response.success) {
 			newData[newProductIndex] = response.data;
 			this.setState({
-			data: newData,
-			response: { ...this.state.response, product: response.data }
-      });
+				data: newData,
+				response: { ...this.state.response, product: response.data }
+			});
 			actions.setSubmitting(false);
-	}
+		}
 		return response;
 	};
 
@@ -144,7 +144,7 @@ class CategorieProducts extends Component {
 			provider_id: values.provider_id,
 			provider_service_id: values.provider_service_id
 		};
-		const newData = [...this.state.data];
+		const newData = [ ...this.state.data ];
 		// newData[productIndex].packages.push(newPackage);
 		// this.setState({
 		// 	data: newData
@@ -193,13 +193,13 @@ class CategorieProducts extends Component {
 		};
 		const ProductId = editedProduct[productIndex].id;
 		const response = await updateProduct(ProductId, editedProduct[productIndex]);
-		if(response.success) {
-		editedProduct[productIndex] = response.data;
-		this.setState({
-			data: editedProduct
-		});
-		actions.setSubmitting(false);
-	}
+		if (response.success) {
+			editedProduct[productIndex] = response.data;
+			this.setState({
+				data: editedProduct
+			});
+			actions.setSubmitting(false);
+		}
 		return response;
 	};
 
@@ -225,7 +225,7 @@ class CategorieProducts extends Component {
 				data: editedPackage
 			});
 			actions.setSubmitting(false);
-	}
+		}
 		return response;
 	};
 
@@ -250,7 +250,11 @@ class CategorieProducts extends Component {
 			<React.Fragment>
 				<Jumbotron className="page-container">
 					<Container fluid className="m-container-sommerce">
-						<AddProduct onSubmit={this.addProduct} response={this.state.response} isSubmitting={isSubmitting} />
+						<AddProduct
+							onSubmit={this.addProduct}
+							response={this.state.response}
+							isSubmitting={isSubmitting}
+						/>
 						<Row>
 							<Col xs="12">
 								<div className="sommerce_dragtable">
