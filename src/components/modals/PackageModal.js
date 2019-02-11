@@ -10,7 +10,7 @@ class PackageModal extends React.PureComponent {
 		providerServices: [{ service: "none", name: "Chose provider service" }]
 	}
 
-	async choseService(provider_id, e) {
+	choseService = (provider_id) => async (e) => {
 		console.log(provider_id);
 		const response = await get_providers_services(provider_id);
 		console.log(response.data);
