@@ -227,7 +227,6 @@ class CheckoutForm extends Model {
 
         $payment = $this->getPaymentMethod();
 
-
         return $payment->validateUserDetails($this->getUserDetails());
     }
 
@@ -278,7 +277,8 @@ class CheckoutForm extends Model {
                 'fail_url',
                 'return_url',
                 'description',
-            ])
+            ]),
+            'auto_redirect' => !$this->referrerDomainValidate(),
         ];
     }
 
@@ -362,5 +362,17 @@ class CheckoutForm extends Model {
     public function getScripts()
     {
         return $this->getPaymentMethod()->getScripts();
+    }
+
+    /**
+     * @param $attribute
+     * @param array $params
+     */
+    public function referrerDomainValidate()
+    {
+        $referrer = parse_url((string)Yii::$app->request->referrer, PHP_URL_HOST);
+        $current = parse_url((string)Yii::$app->request->absoluteUrl, PHP_URL_HOST);
+
+        return $referrer == $current;
     }
 }
