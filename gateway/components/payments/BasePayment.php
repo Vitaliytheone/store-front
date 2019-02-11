@@ -489,11 +489,7 @@ abstract class BasePayment extends Component {
      */
     public function getReturnUrl(): string
     {
-        if (($payment = $this->getPayment())) {
-            return $payment->return_url;
-        }
-
-        return SiteHelper::hostUrl($this->getGateway()->ssl);
+        return SiteHelper::hostUrl($this->getGateway()->ssl) . '/return/' . $this->getPayment()->id;
     }
 
     /**
