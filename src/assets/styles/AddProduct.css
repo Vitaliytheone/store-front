@@ -1,0 +1,31 @@
+.product-color__wrap {
+  position: relative;
+}
+.product-color {
+  display: inline-block !important;
+  color: #575962;
+  width: 200px;
+  padding: 0.65rem 7px;
+  font-size: 1rem;
+  line-height: 1.25;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid #ebedf2;
+  border-radius: 0.25rem;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  list-style: none;
+  outline: none;
+}
+.product-color:hover {
+  outline: none;
+}
+.product-color:focus {
+  outline: none;
+  border: 1px solid #716aca;
+}
+.product-color__wrap .sp-replacer {
+  position: absolute;
+  left: 165px;
+  top: 4px;
+}
