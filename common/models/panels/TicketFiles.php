@@ -72,6 +72,21 @@ class TicketFiles extends ActiveRecord
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+                'value' => function() {
+                    return time();
+                },
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      * @return TicketFilesQuery the active query used by this AR class.
@@ -106,6 +121,7 @@ class TicketFiles extends ActiveRecord
     }
 
     /**
+     * Save data array as json
      * @param $data
      */
     public function setDetails($data)
@@ -114,26 +130,20 @@ class TicketFiles extends ActiveRecord
     }
 
     /**
-     * @return mixed
+     * Get prepared array from json
+     * @return array
      */
-    public function getDetails()
+    public function getDetails(): array
     {
          return json_decode($this->details, true);
     }
 
-    public function behaviors()
+    /**
+     * @return mixed
+     */
+    public function getPrepaired()
     {
-        return [
-            'timestamp' => [
-                'class' => TimestampBehavior::class,
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                ],
-                'value' => function() {
-                    return time();
-                },
-            ],
-        ];
+        return json_decode($this->details, true);
     }
 
 }

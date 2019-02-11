@@ -11,7 +11,7 @@
 <div class="row">
   <div class="col-lg-12">
     <h2 class="page-header">
-        <?= Yii::t('app', 'support.list.header')?></small> <button class="btn btn-outline btn-success" data-toggle="modal" data-target="#submitTicket"><?= Yii::t('app', 'support.list.create_ticket')?></button>
+        <?= Yii::t('app', 'support.list.header'); ?> <button class="btn btn-outline btn-success" data-toggle="modal" data-target="#submitTicket"><?= Yii::t('app', 'support.list.create_ticket')?></button>
         <div class="alert alert-danger error-hint hidden" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <span class="content"></span>
@@ -82,4 +82,4 @@
 
 <?= $this->render('layouts/_view_ticket_modal') ?>
 
-<?= $this->render('layouts/_create_ticket_modal', ['model' => $model]) ?>
+<?= $this->render('layouts/_create_ticket_modal', ['model' => $model, 'cdn' => $cdn,]) ?>

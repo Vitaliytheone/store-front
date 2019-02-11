@@ -3,15 +3,10 @@
 namespace my\models\forms;
 
 use common\components\cdn\BaseCdn;
-use common\helpers\CurlHelper;
 use common\models\panels\TicketFiles;
 use my\helpers\UserHelper;
 use common\models\panels\Customers;
-use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
-use common\models\panels\OrderLogs;
-use common\models\panels\Orders;
-use common\models\panels\Project;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
 use Yii;
@@ -41,7 +36,7 @@ class CreateMessageForm extends Model
     /** @var string */
     public $_ip;
 
-    /** @var BaseCdn */
+    /** @var BaseCdn|\common\components\cdn\providers\Uploadcare */
     public $_cdn;
 
     /**
@@ -129,18 +124,23 @@ class CreateMessageForm extends Model
             return false;
         }
 
-        $ticketFilesModel = new TicketFiles();
-        $ticketFilesModel->customer_id = $this->_customer->id;
-        $ticketFilesModel->ticket_id = $this->_ticket->id;
-        $ticketFilesModel->message_id = $ticketModel->id;
-        $ticketFilesModel->link = $this->post;
-        $ticketFilesModel->cdn_id = $this->_cdn->getId($this->post);
 
-        $ticketFilesModel->created_at = time();
+        $link = $this->post;
+        if (!empty($link)) {
+            $ticketFilesModel = new TicketFiles();
+            $ticketFilesModel->customer_id = $this->_customer->id;
+            $ticketFilesModel->ticket_id = $this->_ticket->id;
+            $ticketFilesModel->message_id = $ticketModel->id;
+            $ticketFilesModel->link = $link;
+            $ticketFilesModel->cdn_id = $this->_cdn->getId($link);
+            $ticketFilesModel->created_at = time();
+            $ticketFilesModel->setDetails($this->_cdn->getFiles($link, true));
 
-        if (!$ticketFilesModel->save()) {
-            $this->addError('message', Yii::t('app', 'error.ticket.can_not_attach_files'));
-            return false;
+            if (!$ticketFilesModel->save()) {
+                $this->addError('message', Yii::t('app', 'error.ticket.can_not_attach_files'));
+                return false;
+            }
+            $this->_cdn->storeGroup($link);
         }
 
         MyActivityLog::log(MyActivityLog::E_TICKETS_REPLY_TICKET, $ticketModel->id, $ticketModel->id, UserHelper::getHash());

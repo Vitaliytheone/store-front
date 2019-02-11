@@ -23,8 +23,8 @@ class Uploadcare extends BaseCdn
 
     public function __construct($settings = [])
     {
-        $publicKey = ArrayHelper::getValue($settings, 'public_key', null);
-        $secretKey = ArrayHelper::getValue($settings, 'secret_key', null);
+        $publicKey = ArrayHelper::getValue($settings, 'public_key');
+        $secretKey = ArrayHelper::getValue($settings, 'secret_key');
 
         if (!$publicKey || !$secretKey) {
             throw new Exception('MESSAGE_BAD_CONFIG');
@@ -53,7 +53,7 @@ class Uploadcare extends BaseCdn
      */
     public function getId($cdnUrl)
     {
-        if (! $this->_file instanceof File) {
+        if (!$this->_file instanceof File) {
             $this->_file = $this->_api->getFile($cdnUrl);
         }
 
@@ -65,7 +65,7 @@ class Uploadcare extends BaseCdn
      */
     public function getUrl($cdnId)
     {
-        if (! $this->_file instanceof File) {
+        if (!$this->_file instanceof File) {
             $this->_file = $this->_api->getFile($cdnId);
         }
 
@@ -77,7 +77,7 @@ class Uploadcare extends BaseCdn
      */
     public function delete($cdnId)
     {
-        if (! $this->_file instanceof File) {
+        if (!$this->_file instanceof File) {
             $this->_file = $this->_api->getFile($cdnId);
         }
 
@@ -89,7 +89,7 @@ class Uploadcare extends BaseCdn
      */
     public function store($fileId)
     {
-        if (! $this->_file instanceof File) {
+        if (!$this->_file instanceof File) {
             $this->_file = $this->_api->getFile($fileId);
         }
 
@@ -105,7 +105,7 @@ class Uploadcare extends BaseCdn
     }
 
     /**
-     * @return
+     * @return string
      */
     public function getScript()
     {
@@ -113,16 +113,16 @@ class Uploadcare extends BaseCdn
     }
 
     /**
-     * @return
+     * @return string
      */
     public function getConfigCode()
     {
-        $code = 'UPLOADCARE_PUBLIC_KEY = "'.$this->_api->getPublicKey().'";';
+        $code = 'UPLOADCARE_PUBLIC_KEY = "' . $this->_api->getPublicKey() . '";';
         return $code;
     }
 
     /**
-     * @return
+     * @return string
      */
     public function getScriptWithConfig()
     {
@@ -130,10 +130,81 @@ class Uploadcare extends BaseCdn
     }
 
     /**
-     * @return
+     * @return string
      */
     public function getWidget()
     {
-        return $this->_api->widget->getInputTag('qs-file', ['data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'], ]);
+        return $this->_api->widget->getInputTag('qs-file', ['data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'],]);
     }
+
+    /**
+     * Get Files
+     * @param $cdnId string CDN object `id`
+     * @param bool $links if set return array of upload files [name, link]
+     * @return array
+     * @throws \Exception
+     */
+    public function getFiles($cdnId, $links = false)
+    {
+        $this->_file = $this->_api->getGroup($cdnId);
+
+        $files = $this->_file->getFiles();
+        Yii::debug($files, 'files RAW'); // todo del
+
+        if ($links === true) {
+            $result = [];
+            foreach ($files as $file) {
+                $result[] = [
+                    'uuid' => $file->data['uuid'],
+                    'name' => $file->data['original_filename'],
+                    'link' => $file->data['original_file_url'],
+                    'size' => round ($file->data['size'] / 1000, 2) . ' Kb',
+                ];
+            }
+            Yii::debug($result, '$result array'); // todo del
+            return $result;
+        }
+
+        return $files;
+    }
+
+    /**
+     * Store group of uploaded files
+     * @param $cdnId string CDN object `id`
+     * @return bool
+     * @throws \Exception
+     */
+    public function storeGroup($cdnId): bool
+    {
+        try {
+            $this->_file = $this->_api->getGroup($cdnId);
+            $this->_file->store();
+        } catch (Exception $e) {
+            echo $e->getMessage()."\n";
+            echo $e->getTraceAsString()."\n";
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Delete group of uploaded files
+     * @param $cdnIds array CDN object `id`
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteGroup($cdnIds): bool
+    {
+        try {
+            $result = $this->_api->deleteMultipleFiles($cdnIds);
+            Yii::debug($result, '$result');
+        } catch (Exception $e) {
+            echo $e->getMessage()."\n";
+            echo $e->getTraceAsString()."\n";
+            return false;
+        }
+
+        return true;
+    }
+
 }

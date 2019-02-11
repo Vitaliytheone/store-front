@@ -26,6 +26,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property Tickets $ticket
  * @property Customers $customer
+ * @property TicketFiles $file
  * @property SuperAdmin $admin
  */
 class TicketMessages extends ActiveRecord
@@ -102,6 +103,14 @@ class TicketMessages extends ActiveRecord
     public function getAdmin()
     {
         return $this->hasOne(SuperAdmin::class, ['id' => 'admin_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFile()
+    {
+        return $this->hasOne(TicketFiles::class, ['message_id' => 'id']);
     }
 
     /**

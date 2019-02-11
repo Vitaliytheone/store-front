@@ -7,6 +7,8 @@
 /* @var $clear */
 /* @var $showForm */
 
+/* @var $cdn \common\components\cdn\providers\Uploadcare */
+
 use my\helpers\Url;
 
 ?>
@@ -22,10 +24,22 @@ use my\helpers\Url;
                                 </small>
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
-                            <div class="attachments-block"><span class="fa fa-paperclip"></span> <a href="#" class="attachments-file">screen-2i3120.jpg</a>
-                                <?php foreach ($ticketFiles as $file) : ?>
-                                <?php endforeach ?>
-                            </div>
+
+                            <?php // todo widget
+                            if (!empty($message->file)) {
+                                if (!empty($message->file->details)) {
+                                        $files = $message->file->getDetails();
+                                    } elseif (!empty($message->file)) {
+                                        $files = $cdn->getFiles($message->file->link, true);
+                                    }
+                                    echo '<div class="attachments-block"><span class="fa fa-paperclip"></span>';
+
+                                    foreach ($files as $file) {
+                                        echo ' <a href = "' . $file['link'] . '" target="_blank" class="attachments-file">' . $file['name'] . '</a> ('.$file['size'].')';
+                                    }
+                                    echo '</div>';
+                            } ?>
+
                         </div>
                     </li>
                 <?php else: ?>
@@ -37,7 +51,19 @@ use my\helpers\Url;
                                 </small>
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
-                            <div class="attachments-block"><span class="fa fa-paperclip"></span> <a href="#" class="attachments-file">mem1rh.jpg</a>, <a href="#" class="attachments-file">buildjs.zip</a></div>
+
+
+                            <?php // todo widget
+                            if (!empty($message->file)) {
+//                                echo '<div class="attachments-block"><span class="fa fa-paperclip"></span>';
+//                                $files = $cdn->getFiles($message->file->link, true);
+//
+//                                foreach ($files as $file) {
+//                                    echo ' <a href = "' . $file['link'] . '" target="_blank" class="attachments-file">' . $file['name'] . '</a>';
+//                                }
+//                                echo '</div>';
+                            } ?>
+
                         </div>
                     </li>
                 <?php endif ?>

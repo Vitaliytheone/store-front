@@ -25,6 +25,7 @@ $model = new CreateMessageForm();
         <?= $form->field($model, 'message')->textarea([
             'rows' => 5,
             'id' => 'message',
+            'required' => true,
         ]) ?>
     </div>
     <div class="form-group">

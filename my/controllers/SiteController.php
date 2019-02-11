@@ -193,10 +193,6 @@ class SiteController extends CustomController
             ->ticketView($ticket->id)
             ->all();
 
-        $ticketFiles = TicketMessages::find()
-            ->ticketView($ticket->id)
-            ->all();
-
         $cdn = Cdn::getCdn();
 
         return $this->renderPartial('ticket', [
@@ -204,20 +200,24 @@ class SiteController extends CustomController
             'ticket' => $ticket,
             'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED,
             'cdn' => $cdn,
-            'ticketFiles' => $ticketFiles,
         ]);
     }
 
     /**
      * Create ticket message
      * @return array
+     * @throws \yii\base\Exception
+     * @throws \yii\base\UnknownClassException
      */
     public function actionCreateTicket()
     {
         $customer = Customers::findOne(Yii::$app->user->identity->id);
+        $cdn = Cdn::getCdn();
 
         $model = new CreateTicketForm();
         $model->setCustomer($customer);
+        $model->setCdn($cdn);
+        $model->post = Yii::$app->request->post('qs-file');
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
@@ -272,7 +272,8 @@ class SiteController extends CustomController
             'note' => Content::getContent('support'),
             'accesses' => [
                 'canCreate' => Tickets::canCreate(Yii::$app->user->identity->id)
-            ]
+            ],
+            'cdn' => $cdn,
         ]);
     }
 
