@@ -6,6 +6,7 @@ use common\components\domains\Domain;
 use common\models\panels\Domains;
 use common\models\panels\DomainZones;
 use common\models\panels\Orders;
+use common\models\panels\Params;
 
 /**
  * Class DomainsHelper
@@ -159,9 +160,8 @@ class DomainsHelper
      */
     public static function checkContactExist($registrar)
     {
-// fixme namespaces
         if ($registrar == Domains::REGISTRAR_NAMESILO) {
-            $namesiloParams = \common\models\panels\Params::get(\common\models\panels\Params::CATEGORY_SERVICE, \common\models\panels\Params::CODE_NAMESILO);
+            $namesiloParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_NAMESILO);
             if (!empty($namesiloParams['contact_id'])) {
                 return true;
             }
@@ -176,4 +176,19 @@ class DomainsHelper
         return false;
     }
 
+
+    /**
+     * Get domain zones
+     * @return array
+     */
+    public static function getDomainZones(): array
+    {
+        $zones = [];
+
+        foreach (DomainZones::find()->all() as $zone) {
+            $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
+        }
+
+        return $zones;
+    }
 }

@@ -96,7 +96,6 @@ class CreateChildForm extends Model
 
             ['has_domain', 'in', 'range' => array_keys($this->getHasDomainsLabels()), 'message' => Yii::t('app', 'error.child_panel.bad_domain')],
 
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone',], 'required', 'on' => static::SCENARIO_CREATE_DOMAIN],
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
             [['domain_email'], 'email'],
@@ -191,7 +190,7 @@ class CreateChildForm extends Model
             return false;
         }
 
-        if (!DomainsHelper::checkContactExist($zone->zone)){
+        if (!DomainsHelper::checkContactExist($zone->registrar)){
             $model->scenario = static::SCENARIO_CREATE_DOMAIN;
         }
 
@@ -406,29 +405,6 @@ class CreateChildForm extends Model
             static::HAS_DOMAIN => Yii::t('app', 'form.order_child_panel.have_domain'),
             static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_child_panel.want_to_register_new_domain')
         ];
-    }
-
-    /**
-     * Get domain zones
-     * @param bool $registrar
-     * @return array
-     */
-    public function getDomainZones($registrar = false): array
-    {
-        $zones = [];
-
-        if ($registrar) {
-            foreach (DomainZones::find()->all() as $zone) {
-                $zones[$zone->id] = ['data-value'  => (int)DomainsHelper::checkContactExist($zone->registrar)];
-            }
-            return $zones;
-        }
-
-        foreach (DomainZones::find()->all() as $zone) {
-            $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
-        }
-
-        return $zones;
     }
 
     /**

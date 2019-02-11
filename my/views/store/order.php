@@ -44,7 +44,9 @@
                     </div>
                 <?php endforeach; ?>
 
-                <?= $form->errorSummary($model); ?>
+                <?= $form->errorSummary($model, [
+                    'id' => 'orderDomainError'
+                ]); ?>
 
                 <div class="<?= (OrderStoreForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
                     <?= $this->render('layouts/_order_store_block', [
@@ -60,11 +62,6 @@
                         'model' => $model
                     ])?>
                 </div>
-
-                <?= $this->render('layouts/_order_domain_modal', [
-                    'form' => $form,
-                    'model' => $model
-                ])?>
 
             <?php ActiveForm::end(); ?>
         </div>

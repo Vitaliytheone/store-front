@@ -69,13 +69,6 @@ class DomainForm extends Model
                 'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
                 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
             ], 'safe'],
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', ], 'required',
-                'on' => static::SCENARIO_CREATE_DOMAIN,
-                'when' => function() {
-                    $zone = DomainZones::findOne($this->domain_zone);
-                    return DomainsHelper::checkContactExist($zone->zone);
-            }
-                ],
         ];
     }
 
@@ -166,29 +159,6 @@ class DomainForm extends Model
     }
 
     /**
-     * Get domain zones
-     * @param bool $registrar
-     * @return array
-     */
-    public function getDomainZones($registrar = false): array
-    {
-        $zones = [];
-
-        if ($registrar) {
-            foreach (DomainZones::find()->all() as $zone) {
-                $zones[$zone->id] = ['data-value'  => (int)DomainsHelper::checkContactExist($zone->registrar)];
-            }
-            return $zones;
-        }
-
-        foreach (DomainZones::find()->all() as $zone) {
-            $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
-        }
-
-        return $zones;
-    }
-
-    /**
      * Get domain value
      * @return string
      */
@@ -205,7 +175,12 @@ class DomainForm extends Model
     protected function orderDomain(&$invoiceModel)
     {
         $model = new static();
+        $model->scenario = static::SCENARIO_CREATE_DOMAIN;
         $model->attributes = $this->attributes;
+
+        if (!$this->validate()) {
+            return false;
+        }
 
         $zone = DomainZones::findOne($this->domain_zone);
 
@@ -213,15 +188,10 @@ class DomainForm extends Model
             return false;
         }
 
-        if (!DomainsHelper::checkContactExist($zone->zone)){
-            $model->scenario = static::SCENARIO_CREATE_DOMAIN;
-        }
-
         if (!$this->validate()) {
             return false;
         }
 
-        $this->search_domain = trim($this->search_domain);
 
         if (false !== mb_strpos($this->search_domain, '.')) {
             $this->search_domain = explode('.', $this->search_domain)[0];

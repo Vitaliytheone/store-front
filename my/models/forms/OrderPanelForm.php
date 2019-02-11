@@ -9,7 +9,6 @@ use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\panels\ProjectAdmin;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderPanelForm

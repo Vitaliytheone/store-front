@@ -45,7 +45,9 @@
                             </div>
                         <?php endforeach; ?>
 
-                    <?= $form->errorSummary($model); ?>
+                    <?= $form->errorSummary($model, [
+                        'id' => 'orderDomainError'
+                    ]); ?>
 
                 <div class="<?= (OrderPanelForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
                     <?= $this->render('layouts/_order_panel_block', [
@@ -61,11 +63,6 @@
                         'model' => $model
                     ])?>
                 </div>
-
-                <?= $this->render('layouts/_order_domain_modal', [
-                        'form' => $form,
-                        'model' => $model
-                ])?>
 
             <?php ActiveForm::end(); ?>
         </div>

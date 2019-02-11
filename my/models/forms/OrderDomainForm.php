@@ -57,8 +57,6 @@ class OrderDomainForm extends Model
      */
     protected $_ip;
 
-    const SCENARIO_CREATE_DOMAIN = 'domain';
-
     /**
      * @return array the validation rules.
      */
@@ -75,9 +73,6 @@ class OrderDomainForm extends Model
                 'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
                 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
             ], 'safe'],
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', ], 'required',
-                'on' => static::SCENARIO_CREATE_DOMAIN,
-            ],
         ];
     }
 
@@ -156,17 +151,13 @@ class OrderDomainForm extends Model
         $model = new static();
         $model->attributes = $this->attributes;
 
-        $zone = DomainZones::findOne($this->domain_zone);
-
-        if (!$zone) {
+        if (!$this->validate()) {
             return false;
         }
 
-        if (!DomainsHelper::checkContactExist($zone->zone)){
-            $model->scenario = static::SCENARIO_CREATE_DOMAIN;
-        }
+        $zone = DomainZones::findOne($this->domain_zone);
 
-        if (!$this->validate()) {
+        if (!$zone) {
             return false;
         }
 

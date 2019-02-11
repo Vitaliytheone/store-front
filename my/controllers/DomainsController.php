@@ -76,7 +76,7 @@ class DomainsController extends CustomController
             ],
             'orderAccess' => [
                 'class' => AccessControl::class,
-                'only' => ['order-domain2', 'order2'], // FIXME 2
+                'only' => ['order'],
                 'rules' => [
                     [
                         'allow' => false,

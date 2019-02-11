@@ -41,10 +41,6 @@
                     ])?>
                 </div>
 
-                <?= $this->render('/project/layouts/_order_domain_modal', [
-                    'form' => $form,
-                    'model' => $model
-                ])?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>
