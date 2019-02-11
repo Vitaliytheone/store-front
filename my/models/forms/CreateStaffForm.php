@@ -137,6 +137,7 @@ class CreateStaffForm extends Model
             'affiliates' => ArrayHelper::getValue($labels, 'affiliates'),
             'providers' => ArrayHelper::getValue($labels, 'providers'),
             'settings' => ArrayHelper::getValue($labels, 'settings'),
+            'appearance' => ArrayHelper::getValue($labels, 'appearance'),
         ];
     }
 
@@ -156,8 +157,20 @@ class CreateStaffForm extends Model
             'settings_pages' => ArrayHelper::getValue($labels, 'settings_pages'),
             'settings_menu' => ArrayHelper::getValue($labels, 'settings_menu'),
             'settings_preferences' => ArrayHelper::getValue($labels, 'settings_preferences'),
-            'settings_themes' => ArrayHelper::getValue($labels, 'settings_themes'),
-            'settings_languages' => ArrayHelper::getValue($labels, 'settings_languages'),
+        ];
+    }
+
+    /**
+     * Get appearance list
+     * @return array
+     */
+    public function getAccessAppearance()
+    {
+        $labels = ProjectAdmin::getRulesLabels();
+
+        return [
+            'appearance_themes' => ArrayHelper::getValue($labels, 'appearance_themes'),
+            'appearance_languages' => ArrayHelper::getValue($labels, 'appearance_languages'),
         ];
     }
 }

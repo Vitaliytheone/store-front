@@ -146,11 +146,19 @@ customModule.indexController = {
             var settingsBlock = $('#wrap-settings', modal);
             var settings = $('.settings[type="checkbox"]', modal);
 
+            var appearanceRules = $('input[name="EditStaffForm[access][appearance]"], input[name="CreateStaffForm[access][appearance]"]', modal);
+            var appearanceBlock = $('#wrap-appearance', modal);
+            var appearance = $('.appearance[type="checkbox"]', modal);
+
             modal.on('show.bs.modal', function () {
                 settings.trigger('change');
+                appearance.trigger('change');
                 
                 var settingsStatus = settingsRules.prop('checked');
                 settingsStatus ? settingsBlock.show() : settingsBlock.hide();
+
+                var appearanceStatus = appearanceRules.prop('checked');
+                appearanceStatus ? appearanceBlock.show() : appearanceBlock.hide();
             });
 
             settingsRules.on('change', function () {
@@ -169,6 +177,25 @@ customModule.indexController = {
                 } else {
                     settingsBlock.hide();
                     settingsRules.prop('checked', false)
+                }
+            });
+
+            appearanceRules.on('change', function () {
+                if (this.checked) {
+                    appearanceBlock.show();
+                    appearance.prop('checked', true);
+                } else {
+                    appearanceBlock.hide();
+                    appearance.prop('checked', false);
+                }
+            });
+
+            appearance.on('change', function () {
+                if ($('.appearance[type="checkbox"]:checked', modal).length) {
+                    appearanceRules.prop('checked', true)
+                } else {
+                    appearanceBlock.hide();
+                    appearanceRules.prop('checked', false)
                 }
             });
         });
