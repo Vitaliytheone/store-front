@@ -2,6 +2,7 @@
 
 namespace my\controllers;
 
+use common\components\cdn\BaseCdn;
 use common\components\cdn\Cdn;
 use common\helpers\PaymentHelper;
 use common\models\panels\Params;
@@ -240,6 +241,7 @@ class SiteController extends CustomController
 
     /**
      * Support page
+     * @var BaseCdn $cdn
      * @return string
      * @throws \yii\base\Exception
      * @throws \yii\base\UnknownClassException
@@ -260,6 +262,7 @@ class SiteController extends CustomController
         $cdn = Cdn::getCdn();
         $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END );
         $this->view->registerJsFile($cdn->getScript());
+        $this->view->registerJs($cdn->setMaxSize(), yii\web\View::POS_END );
 
         $tickets = new TicketsSearch();
         $tickets->setParams([

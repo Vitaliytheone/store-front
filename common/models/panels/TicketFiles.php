@@ -139,11 +139,18 @@ class TicketFiles extends ActiveRecord
     }
 
     /**
-     * @return mixed
+     * Get all UUIDs from files group and return it as array
+     * @return array
      */
-    public function getPrepaired()
+    public function getPreparedIds(): array
     {
-        return json_decode($this->details, true);
+        $result = [];
+        $files = json_decode($this->details, true);
+        foreach ($files as $file) {
+            $result[] = $file['uuid'];
+        }
+
+        return $result;
     }
 
 }

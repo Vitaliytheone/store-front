@@ -107,18 +107,50 @@ class Uploadcare extends BaseCdn
     /**
      * @return string
      */
-    public function getScript()
+    public function getScript(): string
     {
         return $this->_api->widget->getScriptSrc();
     }
 
     /**
+     * Get public key code
      * @return string
      */
-    public function getConfigCode()
+    public function getConfigCode(): string
     {
         $code = 'UPLOADCARE_PUBLIC_KEY = "' . $this->_api->getPublicKey() . '";';
         return $code;
+    }
+
+    /**
+     * @return string
+     */
+    public function setMaxSize(): string
+    {
+        $script = <<< JS
+            function fileSizeLimit(max) {
+              return function(fileInfo) {
+                if (fileInfo.size === null) {
+                  return;
+                }
+                if (max && fileInfo.size > max) {
+                  throw new Error("fileMaximumSize");
+                }
+              };
+            }
+            $(function() {
+              $('[role=uploadcare-uploader]').each(function() {
+                var input = $(this);
+                if (!input.data('maxSize')) {
+                  return;
+                }
+                var widget = uploadcare.Widget(input);
+                widget.validators.push(input.data('maxSize'));
+              });
+            });
+JS;
+
+        return $script;
     }
 
     /**
@@ -134,12 +166,12 @@ class Uploadcare extends BaseCdn
      */
     public function getWidget()
     {
-        return $this->_api->widget->getInputTag('qs-file', ['data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'],]);
+        return $this->_api->widget->getInputTag('qs-file', ['data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'], 'data-max-size' => '524']);
     }
 
     /**
      * Get Files
-     * @param $cdnId string CDN object `id`
+     * @param string $cdnId CDN object `id`
      * @param bool $links if set return array of upload files [name, link]
      * @return array
      * @throws \Exception
@@ -158,7 +190,7 @@ class Uploadcare extends BaseCdn
                     'uuid' => $file->data['uuid'],
                     'name' => $file->data['original_filename'],
                     'link' => $file->data['original_file_url'],
-                    'size' => round ($file->data['size'] / 1000, 2) . ' Kb',
+                    'size' => round($file->data['size'] / 1000, 1) . ' Kb',
                 ];
             }
             Yii::debug($result, '$result array'); // todo del
@@ -170,7 +202,7 @@ class Uploadcare extends BaseCdn
 
     /**
      * Store group of uploaded files
-     * @param $cdnId string CDN object `id`
+     * @param string $cdnId CDN object `id`
      * @return bool
      * @throws \Exception
      */
@@ -180,8 +212,8 @@ class Uploadcare extends BaseCdn
             $this->_file = $this->_api->getGroup($cdnId);
             $this->_file->store();
         } catch (Exception $e) {
-            echo $e->getMessage()."\n";
-            echo $e->getTraceAsString()."\n";
+            echo $e->getMessage() . "\n";
+            echo $e->getTraceAsString() . "\n";
             return false;
         }
         return true;
@@ -199,8 +231,8 @@ class Uploadcare extends BaseCdn
             $result = $this->_api->deleteMultipleFiles($cdnIds);
             Yii::debug($result, '$result');
         } catch (Exception $e) {
-            echo $e->getMessage()."\n";
-            echo $e->getTraceAsString()."\n";
+            echo $e->getMessage() . "\n";
+            echo $e->getTraceAsString() . "\n";
             return false;
         }
 
