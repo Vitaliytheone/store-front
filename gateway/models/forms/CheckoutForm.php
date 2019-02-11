@@ -278,7 +278,6 @@ class CheckoutForm extends Model {
                 'return_url',
                 'description',
             ]),
-            'auto_redirect' => !$this->referrerDomainValidate(),
         ];
     }
 
