@@ -12,7 +12,6 @@ $this->context->addModule('superadminApplicationsController');
                 <?= $this->render('layouts/_menu', ['applicationsActive' => 'active']); ?>
             </div>
             <div class="col-md-9">
-                <div class="mb-3"><?= Yii::t('app/superadmin', 'pages.settings.applications') ?></div>
                 <?= $this->render('layouts/_applications_list', [
                     'params' => $params
                 ]) ?>
