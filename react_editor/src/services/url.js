@@ -9,7 +9,7 @@ export function addListing() {
 
 export function addProduct(payload) {
 	axiosInstance.post(point.add_product, payload);
-	const mockResponse = { data: { id: nanoid(), ...payload }, success: true, error_message: 'afafafasfsafsafsa' };
+	const mockResponse = { data: { id: nanoid(), ...payload }, success: false, error_message: 'afafafasfsafsafsa' };
 	return Promise.resolve(mockResponse);
 }
 

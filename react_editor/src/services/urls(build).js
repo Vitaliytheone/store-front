@@ -10,7 +10,7 @@ export function addProduct(payload) {
     return axiosInstance.post(point.add_product, payload);
 }
 
-export function connfirm_add_product(product_id) {
+export function confirm_add_product(product_id) {
     axiosInstance.post(point.confirm_add_product + `${product_id}`);
 }
 
@@ -49,3 +49,4 @@ export function deletePackage(package_id) {
 
 export function get_providers_services(provider_id) {
     return axiosInstance.get(point.get_providers_services + `${provider_id}`);
+}
