@@ -95,6 +95,7 @@ class PanelsController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -130,7 +131,7 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Change panel domain.
+     * Change panel domain
      *
      * @access public
      * @param $id
@@ -184,7 +185,7 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Change panel providers.
+     * Change panel providers
      *
      * @access public
      * @param $id
@@ -211,12 +212,13 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Edit panel.
-     *
+     * Edit panel
      * @access public
-     * @param int $id
-     * @return mixed
+     * @param $id
+     * @return array
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function actionEdit($id)
     {

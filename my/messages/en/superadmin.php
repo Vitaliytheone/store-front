@@ -119,6 +119,7 @@ return [
     'panels.edit.perfect_panel_providers' => 'Perfectpanel providers',
     'panels.edit.change_domain' => 'Change domain',
     'panels.edit.affiliate_system' => 'Affiliate system status',
+    'panels.edit.move_domain' => 'Move domain to new customer?',
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
@@ -770,6 +771,7 @@ return [
     'stores.modal.confirm_terminate' => 'Terminate store?',
     'stores.modal.error_edit_expiry' => 'Can not edit expired',
     'stores.modal.error_change_domain' => 'Can not change domain',
+    'stores.modal.edit.move_domain' => 'Move domain to new customer?',
 
     'dashboard.child_panels' => 'Child panels',
     'dashboard.panels' => 'Panels',
