@@ -31,7 +31,10 @@ $model = new CreateMessageForm();
     <div class="form-group">
         <label><?= Yii::t('app', 'support.view_form.attachment') ?></label>
         <br>
-        <?php echo $cdn->getWidget(); ?>
+        <?php //todo widget
+        echo $cdn->getWidget();
+        $this->registerJs('', yii\web\View::POS_END );
+        ?>
     </div>
     <div class="text-right">
         <button type="submit" class="btn btn-outline btn-primary"><?= Yii::t('app', 'support.view_form.btn_submit') ?></button>

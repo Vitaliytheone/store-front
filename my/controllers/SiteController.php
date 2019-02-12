@@ -260,9 +260,9 @@ class SiteController extends CustomController
         }
 
         $cdn = Cdn::getCdn();
-        $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END );
+        $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END);
         $this->view->registerJsFile($cdn->getScript());
-        $this->view->registerJs($cdn->setMaxSize(), yii\web\View::POS_END );
+        $this->view->registerJs($cdn->setMaxSize(), yii\web\View::POS_END);
 
         $tickets = new TicketsSearch();
         $tickets->setParams([

@@ -118,36 +118,44 @@ class Uploadcare extends BaseCdn
      */
     public function getConfigCode(): string
     {
-        $code = 'UPLOADCARE_PUBLIC_KEY = "' . $this->_api->getPublicKey() . '";';
+        $code = 'UPLOADCARE_PUBLIC_KEY = "' . $this->_api->getPublicKey() . '";
+        UPLOADCARE_CLEARABLE = true;
+        UPLOADCARE_LOCALE_TRANSLATIONS = {
+            errors: {
+                "fileMaximumSize": "File is too large (Limit 5 Mb)"
+            },
+        };';
         return $code;
     }
 
     /**
+     * Limit max file size for upload
      * @return string
      */
     public function setMaxSize(): string
     {
         $script = <<< JS
-            function fileSizeLimit(max) {
-              return function(fileInfo) {
-                if (fileInfo.size === null) {
-                  return;
-                }
-                if (max && fileInfo.size > max) {
-                  throw new Error("fileMaximumSize");
-                }
-              };
-            }
-            $(function() {
-              $('[role=uploadcare-uploader]').each(function() {
-                var input = $(this);
-                if (!input.data('maxSize')) {
-                  return;
-                }
-                var widget = uploadcare.Widget(input);
-                widget.validators.push(input.data('maxSize'));
-              });
-            });
+function fileSizeLimit(max) {
+  return function(fileInfo) {
+    if (fileInfo.size === null) {
+      return;
+    }
+    if (max && fileInfo.size > max) {
+      throw new Error("fileMaximumSize");
+    }
+  };
+}
+function setSize() {
+  $('[role=uploadcare-uploader]').each(function() {
+    var input = $(this);
+    if (!input.data('maxSize')) {
+      return;
+    }
+    var widget = uploadcare.Widget(input);
+    widget.validators.push(fileSizeLimit(input.data('maxSize')));
+  });
+}
+$(setSize());
 JS;
 
         return $script;
@@ -166,7 +174,7 @@ JS;
      */
     public function getWidget()
     {
-        return $this->_api->widget->getInputTag('qs-file', ['data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'], 'data-max-size' => '524']);
+        return $this->_api->widget->getInputTag('qs-file', ['id' => 'file-uploader', 'data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'], 'data-max-size' => '5240']);
     }
 
     /**
