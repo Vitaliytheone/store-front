@@ -72,8 +72,9 @@ class CreateChildForm extends Model
      */
     protected $_providers;
 
-    const HAS_DOMAIN = 1;
-    const HAS_NOT_DOMAIN = 2;
+    public const HAS_DOMAIN = 1;
+    public const HAS_NOT_DOMAIN = 2;
+    public const HAS_SUBDOMAIN = 3;
 
     const SCENARIO_CREATE_PROJECT = 'project';
     const SCENARIO_CREATE_DOMAIN = 'domain';
@@ -279,7 +280,8 @@ class CreateChildForm extends Model
             'password' => ProjectAdmin::hashPassword($this->password),
             'domain' => $this->domain,
             'clean_domain' => $this->preparedDomain,
-            'currency' => $this->currency
+            'currency' => $this->currency,
+            'subdomain' => static::HAS_SUBDOMAIN == $this->has_domain ? 1 : 0,
         ]);
 
         if ($model->save()) {
@@ -408,7 +410,8 @@ class CreateChildForm extends Model
     {
         return [
             static::HAS_DOMAIN => Yii::t('app', 'form.order_child_panel.have_domain'),
-            static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_child_panel.want_to_register_new_domain')
+            static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_child_panel.want_to_register_new_domain'),
+            static::HAS_SUBDOMAIN => Yii::t('app', 'form.order_child_panel.want_use_on_subdomain'),
         ];
     }
 

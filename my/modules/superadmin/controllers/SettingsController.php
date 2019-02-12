@@ -14,11 +14,13 @@ use superadmin\models\forms\ChangeStaffPasswordForm;
 use superadmin\models\forms\CreateNotificationEmailForm;
 use superadmin\models\forms\CreatePlanForm;
 use superadmin\models\forms\CreateStaffForm;
+use superadmin\models\forms\EditApplicationsForm;
 use superadmin\models\forms\EditContentForm;
 use superadmin\models\forms\EditNotificationEmailForm;
 use superadmin\models\forms\EditPaymentForm;
 use superadmin\models\forms\EditPlanForm;
 use superadmin\models\forms\EditStaffForm;
+use superadmin\models\search\ApplicationsSearch;
 use superadmin\models\search\ContentSearch;
 use superadmin\models\search\NotificationEmailSearch;
 use superadmin\models\search\PaymentMethodsSearch;
@@ -61,6 +63,7 @@ class SettingsController extends CustomController
                     'edit-plan',
                     'create-plan',
                     'edit-content',
+                    'edit-application',
                 ]
             ],
             'verbs' => [
@@ -73,6 +76,7 @@ class SettingsController extends CustomController
                     'edit-plan' => ['POST'],
                     'create-plan' => ['POST'],
                     'edit-content' => ['POST'],
+                    'edit-application' => ['POST', 'GET'],
                 ],
             ],
             'content' => [
@@ -85,6 +89,7 @@ class SettingsController extends CustomController
                     'edit-plan',
                     'create-plan',
                     'edit-content',
+                    'edit-application',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -457,4 +462,63 @@ class SettingsController extends CustomController
 
         return $model;
     }
+
+    /**
+     * Show services list
+     * @return string
+     */
+    public function actionApplications(): string
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.applications');
+
+        $applications = new ApplicationsSearch();
+
+        return $this->render('applications', [
+            'params' => $applications->search()
+        ]);
+    }
+
+    /**
+     * Edit applications (services) options
+     *
+     * @access public
+     * @param string $code
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionEditApplication($code)
+    {
+        $params = Params::findOne([
+            'category' => Params::CATEGORY_SERVICE,
+            'code' => $code,
+        ]);
+
+        if (!$params) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new EditApplicationsForm();
+        $model->setParams($params);
+
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->save()) {
+                return [
+                    'status' => 'error',
+                    'message' => ActiveForm::firstError($model)
+                ];
+            }
+
+            return [
+                'status' => 'success',
+            ];
+        }
+
+        return [
+            'content' => $this->renderPartial('layouts/_edit_applications_form', [
+                'model' => $model,
+                'params' => $params,
+            ])
+        ];
+    }
+
 }

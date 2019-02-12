@@ -9,6 +9,7 @@ use sommerce\modules\admin\models\forms\LoginForm;
 use sommerce\modules\admin\models\forms\SuperLoginForm;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**
@@ -65,9 +66,9 @@ class SiteController extends AdminController
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(), [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['index'],
                 'rules' => [
                     [
@@ -92,7 +93,7 @@ class SiteController extends AdminController
 
                 }
             ],
-        ];
+        ]);
     }
 
     /**
