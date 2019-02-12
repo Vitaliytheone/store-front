@@ -4,6 +4,7 @@ namespace superadmin\models\forms;
 
 use common\models\panels\Domains;
 use common\helpers\DnsHelper;
+use common\models\panels\PanelDomains;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
@@ -62,6 +63,11 @@ class ChangeDomainForm extends Model {
 
         $oldSubdomain = $this->project->subdomain;
         $oldDomain = $this->project->site;
+        $isForeignDomain = PanelDomains::find()->where([
+            'panel_id' => $this->project,
+            'type' => PanelDomains::TYPE_FOREIGN_SUBDOMAIN
+        ])->exists();
+        $this->project->setForeignSubdomain($isForeignDomain);
 
         $domain = $this->prepareDomain();
 
@@ -126,10 +132,10 @@ class ChangeDomainForm extends Model {
                 // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
                 $domain = Domains::findOne(['domain' => $this->project->site]);
 
-                if (!isset($domain)) {
+                if (!isset($domain) && !$isForeignDomain) {
                     DnsHelper::removeDns($this->project);
                 }
-            } else {
+            } elseif (!$isForeignDomain) {
                 // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
                 DnsHelper::addMainDns($this->project);
             }

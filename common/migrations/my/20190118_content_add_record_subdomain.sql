@@ -1,0 +1,2 @@
+INSERT INTO `content` (`id`, `name`, `text`, `updated_at`)
+VALUES (NULL, 'subdomain_nameservers', '<p class=\"help-block\" style=\"margin-bottom: 5px\">Please visit your domain\'s DNS zone editor and set CNAME-record:</p>\r\n subdomain.yourdomain.com CNAME perfectpanel.com', '')

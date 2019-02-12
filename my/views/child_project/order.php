@@ -3,6 +3,7 @@
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\CreateChildForm */
     /* @var $note string */
+    /* @var $subdomainNote string */
     /* @var $user \common\models\panels\Customers */
 
     use my\components\ActiveForm;
@@ -11,7 +12,6 @@
 
     $this->context->addModule('orderDomainController');
     $this->context->addModule('orderController');
-
 ?>
 <div class="row">
   <div class="col-lg-12">
@@ -49,11 +49,12 @@
 
                     <?= $form->errorSummary($model); ?>
 
-                    <div class="<?= (CreateChildForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
+                    <div class="<?= (CreateChildForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() || CreateChildForm::HAS_SUBDOMAIN == $model->has_domain ? '' : 'hidden') ?>" id="orderBlock">
                         <?= $this->render('layouts/_order_panel_block', [
                             'form' => $form,
                             'model' => $model,
-                            'note' => $note
+                            'note' => $note,
+                            'subdomainNote' => $subdomainNote,
                         ])?>
                     </div>
 
