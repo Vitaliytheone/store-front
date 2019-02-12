@@ -52,9 +52,7 @@ class Extension extends \Twig_Extension {
      */
     public function getTokenParsers()
     {
-        return [
-            new TokenParser_Include($this->twigOptions)
-        ];
+        return [];
     }
 
     /** @inheritdoc */

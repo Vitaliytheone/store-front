@@ -19,6 +19,7 @@ use superadmin\models\search\PanelsSearch;
 use superadmin\models\forms\EditPanelPaymentMethodsForm;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use my\components\SuperAccessControl;
@@ -54,7 +55,6 @@ class PanelsController extends CustomController
                     'edit',
                     'generate-apikey',
                     'downgrade',
-                    //'edit-payment-methods',
                 ]
             ],
             'verbs' => [
@@ -68,7 +68,10 @@ class PanelsController extends CustomController
                     'generate-apikey' => ['GET'],
                     'downgrade' => ['POST'],
                     'change-status' => ['POST'],
-                    'edit-payment-methods' => ['POST', 'GET'],
+                    'edit-payment-methods' => ['GET', 'POST'],
+                    'delete-payment-method' => ['GET'],
+                    'allow-payment' => ['GET'],
+                    'allow-payment-with-same' => ['GET'],
                 ],
             ],
             'content' => [
@@ -81,7 +84,6 @@ class PanelsController extends CustomController
                     'providers',
                     'downgrade',
                     'edit',
-                    'edit-payment-methods',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -130,6 +132,8 @@ class PanelsController extends CustomController
 
     /**
      * Change panel domain
+     *
+     * @access public
      * @param $id
      * @return array
      * @throws \Throwable
@@ -182,6 +186,8 @@ class PanelsController extends CustomController
 
     /**
      * Change panel providers
+     *
+     * @access public
      * @param $id
      * @return array
      * @throws NotFoundHttpException
@@ -303,37 +309,93 @@ class PanelsController extends CustomController
     }
 
     /**
-     * Get payment edit form or save data
      * @param $id
-     * @return array
+     * @return string|Response
      * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function actionEditPaymentMethods($id)
     {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.panels.edit_payment_methods');
         $project = $this->findModel($id);
 
         $model = new EditPanelPaymentMethodsForm();
         $model->setPanel($project);
 
         if (Yii::$app->request->isPost) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return [
-                    'status' => 'success',
-                ];
-            }
+            $model->load(Yii::$app->request->post());
+            $model->save();
 
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
+            return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
         }
 
-        return [
-            'content' => $this->renderPartial('layouts/_edit_payment_methods_form', [
-                'model' => $model,
-                'payments' => $model->getPaymentMethods()
-            ])
-        ];
+        return $this->render('edit_payment_methods', [
+            'payments' => $model->getPaymentMethods(),
+            'panel' => $project,
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @param $method_id
+     * @param $same_method_id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
+     */
+    public function actionAllowPaymentWithSame($id, $method_id, $same_method_id)
+    {
+        $project = $this->findModel($id);
+
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+        $model->allowPaymentMethodWithSame($method_id, $same_method_id);
+
+        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
+    }
+
+    /**
+     * @param int $id - panel id
+     * @param int $method_id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDeletePaymentMethod($id, $method_id)
+    {
+        $project = $this->findModel($id);
+
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+        $model->deletePaymentMethod($method_id);
+
+        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
+    }
+
+    /**
+     * @param int $id - panel id
+     * @param int $method_id
+     * @param int $allow
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
+     */
+    public function actionAllowPayment($id, $method_id, $allow)
+    {
+        $project = $this->findModel($id);
+
+        $model = new EditPanelPaymentMethodsForm();
+        $model->setPanel($project);
+
+        if (!$model->changeAvailability($method_id, $allow)) {
+            throw new BadRequestHttpException();
+        }
+
+        return $this->redirect(Url::toRoute(['panels/edit-payment-methods', 'id' => $id]));
     }
 
     /**

@@ -140,6 +140,7 @@ $config = [
             ],
         ],
         'db' => $db['db'],
+        'panelDb' => $db['panelDb'],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => false,
@@ -185,6 +186,9 @@ $config = [
                     ],
                 ],
             ],
+        ],
+        'panel' => [
+            'class' => \common\components\panels\PanelComponent::class,
         ],
     ],
     'params' => $params,
