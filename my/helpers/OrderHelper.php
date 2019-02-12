@@ -418,15 +418,6 @@ class OrderHelper {
             $userService->save(false);
         }
 
-        // Create default panel language
-        $panelLanguage = new Languages();
-        $panelLanguage->panel_id = $project->id;
-        $panelLanguage->language_code = 'en';
-        $panelLanguage->name = Yii::$app->params['languages']['en'];
-        $panelLanguage->position = 1;
-        $panelLanguage->visibility = Languages::VISIBILITY_ON;
-        $panelLanguage->edited = Languages::EDITED_OFF;
-        $panelLanguage->save(false);
 
         // Create nginx config
         SuperTaskHelper::setTasksNginx($project, [
@@ -456,7 +447,20 @@ class OrderHelper {
             if (!DbHelper::dumpSql($project->db, $sqlPanelPath)) {
                 $order->status = Orders::STATUS_ERROR;
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $sqlPanelPath, 'cron.order.deploy_sql_dump');
+            } else {
+                // Create default panel language
+                $table = Yii::$app->db->quoteTableName($project->db) . '.languages';
+                Yii::$app->db->createCommand()
+                    ->insert($table, [
+                        'code' => 'en',
+                        'name' =>  Yii::$app->params['languages']['en'],
+                        'position' => 1,
+                        'active' => 1,
+                        'rtl' => 0,
+                        'default' => 1
+                    ])->execute();
             }
+
         }
 
         $project->setForeignSubdomain((bool)$subdomain);

@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\PaymentHelper;
 use my\helpers\PaymentsHelper;
 use Yii;
 use yii\base\Exception;
@@ -257,6 +258,7 @@ class Payments extends ActiveRecord
      */
     public function can($code)
     {
+        $this->refresh();
         switch ($code) {
             case 'makeActive':
                 if (in_array($this->payment_method, [
@@ -365,6 +367,8 @@ class Payments extends ActiveRecord
         $this->project->expired = ArrayHelper::getValue($options, 'project_expired', $this->project->expired);
         $this->project->act = ArrayHelper::getValue($options, 'project_status', $this->project->act);
         $this->project->save(false);
+
+        return true;
     }
 
     /**
@@ -494,5 +498,18 @@ class Payments extends ActiveRecord
             $this->status = Payments::STATUS_UNVERIFIED;
             $this->save(false);
         }
+    }
+
+    /**
+     * @param int $id
+     * @param string $code
+     * @return array|Payments|null
+     */
+    public static function findActual($id, $code)
+    {
+        return static::find()->andWhere([
+            'id' => $id,
+            'type' => PaymentHelper::getTypeByCode($code),
+        ])->andWhere('status <> ' . Payments::STATUS_COMPLETED)->one();
     }
 }
