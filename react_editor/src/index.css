@@ -1,0 +1,30 @@
+/* body {
+	font-family: "Open Sans", sans-serif;
+}
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	font-weight: 300;
+	font-family: Poppins;
+	-ms-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+body {
+	margin: 0;
+	font-family: "Poppins";
+	font-size: 1rem;
+	font-weight: normal;
+	line-height: 1.5;
+	color: #212529;
+	background-color: #fff;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+} */

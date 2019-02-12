@@ -80,8 +80,8 @@ class CreateProductForm extends Products
     public function rules()
     {
         return [
-            [['name', 'visibility'], 'required'],
-            [['id', 'visibility'], 'integer'],
+            [['name'], 'required'],
+            [['id'], 'integer'],
             [['seo_title', 'seo_description'], 'trim'],
             [['name', 'url'], 'string', 'max' => 255],
             [['description'], 'string'],
@@ -89,7 +89,6 @@ class CreateProductForm extends Products
             [['seo_description', ], 'string', 'max' => 1000],
             [['seo_keywords', ], 'string', 'max' => 2000],
             [['properties', 'position'], 'safe'],
-            ['visibility', 'filter', 'filter' => function($value){ return (int)$value; }],
             ['color', 'string', 'max' => 255],
             ['color', 'filter', 'filter' => function($color){ return empty($color) ? null : $color; }],
 
@@ -177,11 +176,18 @@ class CreateProductForm extends Products
     }
 
     /** Get result data
+     * @param bool $packages
      * @return array
      */
-    public function getData()
+    public function getData($packages = false)
     {
         $data = $this->getAttributes();
+        $data['properties'] = isset($data['properties']) ? $data['properties'] : [];
+
+        if (!$packages) {
+            return $data;
+        }
+
         $data['packages'] = [];
 
         return $data;
