@@ -116,64 +116,6 @@ class CreateProductForm extends Products
         return $this->_user;
     }
 
-
-    /**
-     * Filter and generate URL for empty product url
-     */
-    private function _filterUrl()
-    {
-        $url = trim($this->url, ' ');
-        $url = trim($url, '_');
-        $url = trim($url, '-');
-
-        if (!empty($url)) {
-            return;
-        }
-
-        $url = Products::NEW_PRODUCT_URL_PREFIX . $this->id;
-
-        $_url = $url;
-        $postfix = 1;
-
-        while (Pages::findOne(['url' => $_url, 'deleted' => Pages::DELETED_NO])) {
-            $_url = $url . '-' . $postfix;
-            $postfix++;
-        };
-
-        $this->url = $_url;
-        $this->save(false);
-    }
-
-    /**
-     * Custom model Validator
-     * Validate does already exist _another_ `Product` with same `url`
-     * @param $attribute
-     * @param $params
-     * @param $validator
-     */
-    function validateNoConflictUrl($attribute, $params, $validator)
-    {
-        $productModel = self::findOne(['url' => $this->getAttribute($attribute)]);
-        if ($productModel && $productModel->id !== $this->id) {
-            $this->addError($attribute, $validator->message);
-        }
-    }
-
-    /**
-     * Custom model Validator
-     * Validate does already exist `Page` with same `url`
-     * @param $attribute
-     * @param $params
-     * @param $validator
-     */
-    function validateNoConflictProductPage($attribute, $params, $validator)
-    {
-        $pageModel = Pages::findOne(['url' => $this->getAttribute($attribute)]);
-        if ($pageModel) {
-            $this->addError($attribute, $validator->message);
-        }
-    }
-
     /**
      * Calculate `position` for new product record
      * @return array|bool|int
@@ -234,6 +176,47 @@ class CreateProductForm extends Products
         return $this;
     }
 
+    /** Get result data
+     * @return array
+     */
+    public function getData()
+    {
+        $data = $this->getAttributes();
+        $data['packages'] = [];
+
+        return $data;
+    }
+
+    /**
+     * Custom model Validator
+     * Validate does already exist _another_ `Product` with same `url`
+     * @param $attribute
+     * @param $params
+     * @param $validator
+     */
+    function validateNoConflictUrl($attribute, $params, $validator)
+    {
+        $productModel = self::findOne(['url' => $this->getAttribute($attribute)]);
+        if ($productModel && $productModel->id !== $this->id) {
+            $this->addError($attribute, $validator->message);
+        }
+    }
+
+    /**
+     * Custom model Validator
+     * Validate does already exist `Page` with same `url`
+     * @param $attribute
+     * @param $params
+     * @param $validator
+     */
+    function validateNoConflictProductPage($attribute, $params, $validator)
+    {
+        $pageModel = Pages::findOne(['url' => $this->getAttribute($attribute)]);
+        if ($pageModel) {
+            $this->addError($attribute, $validator->message);
+        }
+    }
+
     /**
      * Write changes to log
      * @param $changedAttributes
@@ -255,4 +238,30 @@ class CreateProductForm extends Products
         }
     }
 
+    /**
+     * Filter and generate URL for empty product url
+     */
+    private function _filterUrl()
+    {
+        $url = trim($this->url, ' ');
+        $url = trim($url, '_');
+        $url = trim($url, '-');
+
+        if (!empty($url)) {
+            return;
+        }
+
+        $url = Products::NEW_PRODUCT_URL_PREFIX . $this->id;
+
+        $_url = $url;
+        $postfix = 1;
+
+        while (Pages::findOne(['url' => $_url, 'deleted' => Pages::DELETED_NO])) {
+            $_url = $url . '-' . $postfix;
+            $postfix++;
+        };
+
+        $this->url = $_url;
+        $this->save(false);
+    }
 }
