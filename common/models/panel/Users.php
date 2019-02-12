@@ -125,9 +125,9 @@ class Users extends ActiveRecord
 
     /**
      * Get payments
-     * @return array
+     * @return array|null
      */
-    public function getPayments(): array
+    public function getPayments(): ?array
     {
         return json_decode($this->payments, true);
     }
