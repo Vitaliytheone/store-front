@@ -58,7 +58,7 @@ class ProductsController extends CustomController
                 'class' => AjaxFilter::class,
                 'only' => [
                     'list',
-              //      'create-product',
+                    'create-product',
                     'update-product',
                     'move-product',
                     'move-package',
