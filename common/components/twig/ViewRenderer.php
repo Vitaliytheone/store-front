@@ -8,6 +8,7 @@ use Twig_Environment;
 use Twig_Loader_Array;
 use Twig_Loader_Filesystem;
 use yii\helpers\FileHelper;
+use Twig_LoaderInterface;
 
 /**
  * Class ViewRenderer
@@ -80,6 +81,11 @@ class ViewRenderer extends BaseViewRenderer
     }
 
     /**
+     * @var Twig_LoaderInterface
+     */
+    protected $loader;
+
+    /**
      * @return Twig_Environment
      */
     protected function getTwig()
@@ -102,13 +108,39 @@ class ViewRenderer extends BaseViewRenderer
             $options['cache'] = new TwigCache($path);
         }
 
-        $this->twig = new Twig_Environment(new Twig_Loader_Filesystem(), array_merge($options, $this->options));
+        $this->twig = new Twig_Environment($this->getLoader(), array_merge($options, $this->options));
 
         $this->addExtensions($this->twig, [
             new $this->extension($this->options),
         ]);
 
         return $this->twig;
+    }
+
+    /**
+     * Render content by string template
+     * @param string $content
+     * @param array $params
+     * @return string
+     */
+    public function renderContent($content, $params = [])
+    {
+        $twig = $this->getTwigContent();
+        $twig->setLoader($this->getLoader());
+
+        return $twig->createTemplate($content)->render($params);
+    }
+
+    /**
+     * @return Twig_LoaderInterface
+     */
+    public function getLoader()
+    {
+        if (null == $this->loader) {
+            $this->loader = new Twig_Loader_Filesystem();
+        }
+
+        return $this->loader;
     }
 
     /**
@@ -162,17 +194,6 @@ class ViewRenderer extends BaseViewRenderer
         }
 
         return $content;
-    }
-
-    /**
-     * Render content by string template
-     * @param string $content
-     * @param array $params
-     * @return string
-     */
-    public function renderContent($content, $params = [])
-    {
-        return $this->getTwigContent()->createTemplate($content)->render($params);
     }
 
     /**

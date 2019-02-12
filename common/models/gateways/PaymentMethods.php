@@ -94,8 +94,9 @@ class PaymentMethods extends ActiveRecord
                 'form_fields' => [
                     ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_secret_key', 'placeholder' => '', 'name' => 'secret_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_secret_key')],
                     ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_public_key', 'placeholder' => '', 'name' => 'public_key', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_public_key')],
-                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_webhook_secret', 'placeholder' => '', 'name' => 'webhook_secret', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_webhook_secret')]
-                ]
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_webhook_secret', 'placeholder' => '', 'name' => 'webhook_secret', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_webhook_secret')],
+                    ['tag' => 'input', 'type' => 'text', 'id' => 'stripe_title', 'placeholder' => '', 'name' => 'title', 'value' => '', 'label' => Yii::t('admin', 'settings.payments_stripe_title')],
+            ]
             ],
         ];
     }

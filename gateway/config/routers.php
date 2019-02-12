@@ -6,10 +6,12 @@ return [
     '/index' => 'page/index',
     '/admin/logout' => 'admin/site/logout',
     '/admin/frozen' => 'admin/site/frozen',
-    '/admin/settings' => 'admin/settings/themes',
+    '/admin/settings' => 'admin/settings/payments',
     '/admin/super-login' => 'admin/site/super-login',
     'checkout' => 'payments/checkout',
     'processing' => 'payments/processing',
+    'return' => 'payments/return',
+    'return/<id:\d+>' => 'payments/return',
 
     [
         'pattern' => '/.well-known/acme-challenge/<filename:[-_a-zA-Z0-9]+>',
