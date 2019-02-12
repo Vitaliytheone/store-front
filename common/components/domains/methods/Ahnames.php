@@ -19,14 +19,18 @@ class Ahnames extends BaseDomain
     /**
      * @inheritdoc
      */
-    protected static function _defaultAction($paramOptions, $paramLink): array
+    protected static function _defaultAction($paramOptions, $paramLink, $method = 'post'): array
     {
         $url = Yii::$app->params['ahnames.url'];
 
         $defaultOptions = static::getDefaultOptions();
         $options = array_merge($defaultOptions, $paramOptions);
 
-        $result = CurlHelper::request($url . $paramLink, $options);
+        if ($method === 'post') {
+            $result = CurlHelper::request($url . $paramLink, $options);
+        } elseif ($method === 'get') {
+            $result = Request::getContents($url . $paramLink . http_build_query($options));
+        }
 
         return static::_processResult($result);
     }
@@ -52,17 +56,11 @@ class Ahnames extends BaseDomain
             return array_fill_keys($domains, 0);
         }
 
-        $url = Yii::$app->params['ahnames.url'];
-
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domains' => implode(',', $domains)
-        ]);
-        
-        
-        $result = Request::getContents($url . '/domainsCheck?' . http_build_query($options));
+        ];
 
-        $resultFinal = static::_processResult($result, false);
+        $resultFinal = static::_defaultAction($options, '/domainsCheck?', 'get');
         if (empty($resultFinal)) {
             $resultFinal = array_fill_keys($domains, 0);
         }

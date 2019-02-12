@@ -153,6 +153,7 @@ class OrderDomainForm extends Model
         $this->domain = mb_strtolower($this->search_domain . $zone->zone);
 
         $this->preparedDomain = DomainsHelper::idnToAscii($this->domain);
+        $contact_id = DomainsHelper::checkContactExist($zone->registrar, true);
 
         $model = new Orders();
         $model->cid = $this->_user->id;
@@ -163,10 +164,11 @@ class OrderDomainForm extends Model
             'zone' => $zone->id,
             'domain' => $this->domain,
             'domain_contact' => [
-                'id' => DomainsHelper::checkContactExist($zone->registrar, true),
+                'id' => $contact_id,
             ],
             'details' => [
-                'domain_protection' => 1, // force domain privacy protect - old -- $this->domain_protection,
+                'domain_contact_id' => $contact_id,
+                'domain_protection' => 1, // force domain privacy protect
             ]
         ]);
 

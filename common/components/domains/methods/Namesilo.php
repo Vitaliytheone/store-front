@@ -79,16 +79,11 @@ class Namesilo extends BaseDomain
             return array_fill_keys($domains, 0);
         }
 
-        $url = static::_setUrl();
-
-        $defaultOptions = static::getDefaultOptions();
-        $options = array_merge($defaultOptions, [
+        $options = [
             'domains' => implode(',', $domains)
-        ]);
+        ];
 
-        $result = Request::getContents($url . '/checkRegisterAvailability?' . http_build_query($options));
-
-        $resultRaw = static::_processResult($result, false);
+        $resultRaw = static::_defaultAction($options, '/checkRegisterAvailability?');
         if (!empty($resultRaw['_error'])) {
             return array_fill_keys($domains, 0);
         }
