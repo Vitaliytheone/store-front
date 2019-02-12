@@ -54,6 +54,17 @@
                             </label>
                         <?php endforeach; ?>
                     </div>
+
+                    <div class="form-group" id="wrap-appearance">
+                        <?php foreach ($model->getAccessAppearance() as $code => $label) : ?>
+                            <?php if ('providers' == $code) continue; ?>
+                            <label class="checkbox-inline">
+                                <?= Html::checkbox('EditStaffForm[access][' . $code . ']', true, ['class' => 'access appearance'])?>
+                                <?= $label ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+
                     <div class="form-group">
                         <label for="hide-providers"><?= Yii::t('app', 'form.edit_staff.rules_providers')?></label>
                         <div class="form-group">

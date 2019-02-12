@@ -71,6 +71,7 @@
 
                     <div class="form-group" id="wrap-appearance">
                         <?php foreach ($model->getAccessAppearance() as $code => $label) : ?>
+                            <?php if ('providers' == $code) continue; ?>
                             <label class="checkbox-inline">
                                 <?= Html::checkbox('CreateStaffForm[access][' . $code . ']', true, ['class' => 'access appearance'])?>
                                 <?= $label ?>
