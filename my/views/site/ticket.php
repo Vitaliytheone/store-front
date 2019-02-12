@@ -7,9 +7,8 @@
 /* @var $clear */
 /* @var $showForm */
 
-/* @var $cdn \common\components\cdn\providers\Uploadcare */
-
 use my\helpers\Url;
+use common\components\cdn\providers\widgets\UploadcareWidget;
 
 ?>
     <div class="form-group" id="htmlText" data-action="<?= Url::toRoute("/ticket/ " . $ticket->id . '?clear=1') ?>">
@@ -25,21 +24,10 @@ use my\helpers\Url;
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
 
-                            <?php // todo widget
-                            if (!empty($message->file)) {
-                                if (!empty($message->file->details)) {
-                                        $files = $message->file->getDetails();
-                                    } elseif (!empty($message->file)) {
-                                        $files = $cdn->getFiles($message->file->link, true);
-                                    }
-                                    echo '<div class="attachments-block"><span class="fa fa-paperclip"></span>';
-
-                                    foreach ($files as $file) {
-                                        echo ' <a href = "' . $file['link'] . '" target="_blank" class="attachments-file">' . $file['name'] . '</a> ('.$file['size'].')';
-                                    }
-                                    echo '</div>';
+                            <?php if (!empty($message->file->details)) {
+                                $files = $message->file->getDetails();
+                                echo UploadcareWidget::widget(['files' => $files]);
                             } ?>
-
                         </div>
                     </li>
                 <?php else: ?>
@@ -52,18 +40,10 @@ use my\helpers\Url;
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
 
-
-                            <?php // todo widget
-                            if (!empty($message->file)) {
-//                                echo '<div class="attachments-block"><span class="fa fa-paperclip"></span>';
-//                                $files = $cdn->getFiles($message->file->link, true);
-//
-//                                foreach ($files as $file) {
-//                                    echo ' <a href = "' . $file['link'] . '" target="_blank" class="attachments-file">' . $file['name'] . '</a>';
-//                                }
-//                                echo '</div>';
+                            <?php if (!empty($message->file->details)) {
+                                $files = $message->file->getDetails();
+                                echo UploadcareWidget::widget(['files' => $files]);
                             } ?>
-
                         </div>
                     </li>
                 <?php endif ?>
@@ -74,6 +54,5 @@ use my\helpers\Url;
 <?php if ($showForm): ?>
     <?= $this->render('layouts/_ticket_details_form', [
         'ticket' => $ticket,
-        'cdn' => $cdn,
     ]) ?>
 <?php endif ?>

@@ -18,6 +18,8 @@ use Uploadcare\File;
  */
 class Uploadcare extends BaseCdn
 {
+    public const FILE_SIZE = '5242880'; // in byte
+
     private $_api;
     private $_file;
 
@@ -85,7 +87,9 @@ class Uploadcare extends BaseCdn
     }
 
     /**
-     * @inheritdoc
+     * Store file in cdn
+     * @param string $fileId
+     * @throws \Exception
      */
     public function store($fileId)
     {
@@ -93,18 +97,11 @@ class Uploadcare extends BaseCdn
             $this->_file = $this->_api->getFile($fileId);
         }
 
-        try {
-            $this->_file->store(true);
-        } catch (Exception $e) {
-//            echo $e->getMessage()."\n";
-//            echo $e->getTraceAsString()."\n";
-            return false;
-        }
-
-        return true;
+        $this->_file->store();
     }
 
     /**
+     * Get link to script source
      * @return string
      */
     public function getScript(): string
@@ -116,65 +113,19 @@ class Uploadcare extends BaseCdn
      * Get public key code
      * @return string
      */
-    public function getConfigCode(): string
+    public function getPublicKey(): string
     {
-        $code = 'UPLOADCARE_PUBLIC_KEY = "' . $this->_api->getPublicKey() . '";
-        UPLOADCARE_CLEARABLE = true;
-        UPLOADCARE_LOCALE_TRANSLATIONS = {
-            errors: {
-                "fileMaximumSize": "File is too large (Limit 5 Mb)"
-            },
-        };';
-        return $code;
+        return $this->_api->getPublicKey();
     }
 
     /**
-     * Limit max file size for upload
+     * Get generated input for widget with options
+     * @param array $options
      * @return string
      */
-    public function setMaxSize(): string
+    public function getWidget($options = [])
     {
-        $script = <<< JS
-function fileSizeLimit(max) {
-  return function(fileInfo) {
-    if (fileInfo.size === null) {
-      return;
-    }
-    if (max && fileInfo.size > max) {
-      throw new Error("fileMaximumSize");
-    }
-  };
-}
-function setSize() {
-  $('[role=uploadcare-uploader]').each(function() {
-    var input = $(this);
-    if (!input.data('maxSize')) {
-      return;
-    }
-    var widget = uploadcare.Widget(input);
-    widget.validators.push(fileSizeLimit(input.data('maxSize')));
-  });
-}
-$(setSize());
-JS;
-
-        return $script;
-    }
-
-    /**
-     * @return string
-     */
-    public function getScriptWithConfig()
-    {
-        return $this->_api->widget->getScriptTag();
-    }
-
-    /**
-     * @return string
-     */
-    public function getWidget()
-    {
-        return $this->_api->widget->getInputTag('qs-file', ['id' => 'file-uploader', 'data-multiple' => true, 'data-multiple-max' => Yii::$app->params['uploadFileLimit'], 'data-max-size' => '5240']);
+        return $this->_api->widget->getInputTag('qs-file', $options);
     }
 
     /**

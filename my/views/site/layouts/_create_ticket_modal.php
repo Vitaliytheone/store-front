@@ -4,9 +4,8 @@
 /* @var $ticket \common\models\panels\Tickets */
 /* @var $model \my\models\forms\CreateTicketForm */
 
-/* @var $cdn \common\components\cdn\providers\Uploadcare */
-
 use my\components\ActiveForm;
+use common\components\cdn\providers\widgets\UploadcareWidget;
 
 ?>
 <div class="modal fade" id="submitTicket" tabindex="-1">
@@ -37,7 +36,7 @@ use my\components\ActiveForm;
                 <div class="form-group">
                     <label><?= Yii::t('app', 'support.view_form.attachment') ?></label>
                     <br>
-                    <?php echo $cdn->getWidget(); ?>
+                    <?= UploadcareWidget::widget(); ?>
                 </div>
                 <div class="text-right">
                     <button type="submit" class="btn btn-outline btn-primary">

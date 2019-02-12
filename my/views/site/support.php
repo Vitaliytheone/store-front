@@ -1,12 +1,13 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $tickets \common\models\panels\Tickets */
-    /* @var $ticket \common\models\panels\Tickets */
-    /* @var $model \my\models\forms\CreateTicketForm */
-    /* @var $accesses */
+/* @var $this yii\web\View */
+/* @var $tickets \common\models\panels\Tickets */
+/* @var $ticket \common\models\panels\Tickets */
+/* @var $model \my\models\forms\CreateTicketForm */
+/* @var $accesses */
 
-    use yii\bootstrap\Html;
-    use yii\widgets\LinkPager;
+use yii\bootstrap\Html;
+use yii\widgets\LinkPager;
+
 ?>
 <div class="row">
   <div class="col-lg-12">
@@ -82,4 +83,4 @@
 
 <?= $this->render('layouts/_view_ticket_modal') ?>
 
-<?= $this->render('layouts/_create_ticket_modal', ['model' => $model, 'cdn' => $cdn,]) ?>
+<?= $this->render('layouts/_create_ticket_modal', ['model' => $model]) ?>

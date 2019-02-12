@@ -194,13 +194,10 @@ class SiteController extends CustomController
             ->ticketView($ticket->id)
             ->all();
 
-        $cdn = Cdn::getCdn();
-
         return $this->renderPartial('ticket', [
             'ticketMessages' => $ticketMessages,
             'ticket' => $ticket,
             'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED,
-            'cdn' => $cdn,
         ]);
     }
 
@@ -259,11 +256,6 @@ class SiteController extends CustomController
             return $this->redirect('/support');
         }
 
-        $cdn = Cdn::getCdn();
-        $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END);
-        $this->view->registerJsFile($cdn->getScript());
-        $this->view->registerJs($cdn->setMaxSize(), yii\web\View::POS_END);
-
         $tickets = new TicketsSearch();
         $tickets->setParams([
             'customer_id' => $customer->id
@@ -276,7 +268,6 @@ class SiteController extends CustomController
             'accesses' => [
                 'canCreate' => Tickets::canCreate(Yii::$app->user->identity->id)
             ],
-            'cdn' => $cdn,
         ]);
     }
 

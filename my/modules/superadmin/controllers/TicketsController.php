@@ -122,9 +122,13 @@ class TicketsController extends CustomController
             'id' => $id
         ]);
 
+        $cdn = Cdn::getCdn();
+
         $model = new CreateMessageForm();
         $model->setTicket($ticket);
         $model->setUser($admin);
+        $model->setCdn($cdn);
+        $model->post = Yii::$app->request->post('qs-file');
 
         $blocks = TicketBlocksSearch::search($ticket->customer_id);
 
@@ -137,10 +141,6 @@ class TicketsController extends CustomController
         $ticketMessagesSearch = new TicketMessagesSearch($ticket->id);
         $ticketMessagesSearch->setUser($admin);
         $ticketMessages = $ticketMessagesSearch->getMessages();
-
-        $cdn = Cdn::getCdn();
-        $this->view->registerJs($cdn->getConfigCode(), yii\web\View::POS_END );
-        $this->view->registerJsFile($cdn->getScript());
 
         return $this->render('ticket', [
             'ticketMessages' => $ticketMessages,

@@ -1,12 +1,12 @@
 <?php
 /* @var $ticket \common\models\panels\Tickets */
 
-/* @var $cdn \common\components\cdn\providers\Uploadcare */
-
 use my\models\forms\CreateMessageForm;
 use my\components\ActiveForm;
+use common\components\cdn\providers\widgets\UploadcareWidget;
 
 $model = new CreateMessageForm();
+
 ?>
 
 <?php $form = ActiveForm::begin([
@@ -31,10 +31,7 @@ $model = new CreateMessageForm();
     <div class="form-group">
         <label><?= Yii::t('app', 'support.view_form.attachment') ?></label>
         <br>
-        <?php //todo widget
-        echo $cdn->getWidget();
-        $this->registerJs('', yii\web\View::POS_END );
-        ?>
+        <?= UploadcareWidget::widget(); ?>
     </div>
     <div class="text-right">
         <button type="submit" class="btn btn-outline btn-primary"><?= Yii::t('app', 'support.view_form.btn_submit') ?></button>

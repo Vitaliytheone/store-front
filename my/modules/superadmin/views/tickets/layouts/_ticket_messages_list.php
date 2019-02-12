@@ -1,14 +1,15 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $ticketMessages array */
-    /* @var $message \common\models\panels\TicketMessages */
-    /* @var $admins array */
-    /* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
+/* @var $this yii\web\View */
+/* @var $ticketMessages array */
+/* @var $message \common\models\panels\TicketMessages */
+/* @var $admins array */
+/* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
 
-    use superadmin\helpers\SystemMessages;
-    use superadmin\widgets\DeleteMessageWidget;
+use superadmin\helpers\SystemMessages;
+use superadmin\widgets\DeleteMessageWidget;
+use common\components\cdn\providers\widgets\UploadcareWidget;
 
-    $i = 0;
+$i = 0;
 ?>
 
 <?php foreach ($ticketMessages as $message) : ?>
@@ -21,6 +22,12 @@
             </div>
             <div class="ticket-message__card-text">
                 <?= nl2br(htmlspecialchars($message->message)) ?>
+
+                <?php if (!empty($message->file->details)) {
+                    // todo widget
+                    $files = $message->file->getDetails();
+                    echo UploadcareWidget::widget(['files' => $files]);
+                } ?>
             </div>
         </div>
     <?php else: ?>
@@ -40,6 +47,7 @@
                 </div>
                 <div class="ticket-message__card-text">
                     <?= nl2br(htmlspecialchars($message->message)) ?>
+
                 </div>
             <?php if ($ticketMessagesSearch->canEdit($i)):?>
                 <div class="ticket-message__card-footer">
