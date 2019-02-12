@@ -209,6 +209,7 @@ abstract class BasePayment extends Component {
         Yii::$app->db->beginTransaction();
 
         $payment->status = Payments::STATUS_COMPLETED;
+        $payment->fee = ArrayHelper::getValue($result, 'fee');
         $payment->response = 1;
 
         if (empty($payment->transaction_id)) {

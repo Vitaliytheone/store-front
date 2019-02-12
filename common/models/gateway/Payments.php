@@ -20,6 +20,8 @@ use common\models\gateway\queries\PaymentsQuery;
  * @property int $status 0 - pending; 1 - completed; 2 - expired; 3 - writing; 4 - fail; 5 - hold
  * @property string $user_details
  * @property string $transaction_id
+ * @property int $take_fee_from_user
+ * @property string $fee
  * @property string $response_status
  * @property string $response
  * @property string $success_url
@@ -62,14 +64,15 @@ class Payments extends ActiveRecord
     {
         return [
             [['source_type', 'source_id', 'source_payment_id', 'method_id', 'currency', 'amount'], 'required'],
-            [['source_id', 'source_payment_id', 'method_id', 'created_at', 'updated_at'], 'integer'],
-            [['amount'], 'number'],
+            [['source_id', 'source_payment_id', 'method_id', 'created_at', 'updated_at', 'take_fee_from_user'], 'integer'],
+            [['amount', 'fee'], 'number'],
             [['source_type', 'status'], 'string', 'max' => 1],
             [['currency'], 'string', 'max' => 3],
             [['response_status', 'success_url', 'fail_url', 'return_url', 'transaction_id'], 'string', 'max' => 300],
             [['response'], 'string', 'max' => 1000],
             [['user_details'], 'safe'],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
+            [['take_fee_from_user'], 'default', 'value' => 0]
         ];
     }
 
@@ -89,6 +92,8 @@ class Payments extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'user_details' => Yii::t('app', 'User Details'),
             'transaction_id' => Yii::t('app', 'Transaction ID'),
+            'take_fee_from_user' => Yii::t('app', 'Take fee from user'),
+            'fee' => Yii::t('app', 'Fee'),
             'response_status' => Yii::t('app', 'Response Status'),
             'response' => Yii::t('app', 'Response'),
             'success_url' => Yii::t('app', 'Success Url'),

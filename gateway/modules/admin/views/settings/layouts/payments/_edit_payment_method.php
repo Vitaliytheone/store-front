@@ -64,6 +64,7 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
             <?php endif; ?>
 
         <?php endforeach; ?>
+
         <hr>
 
         <button type="submit" class="btn btn-success">
