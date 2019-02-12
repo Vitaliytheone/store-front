@@ -103,7 +103,7 @@ class ProductsController extends CustomController
     public function actionIndex()
     {
         $this->view->title = Yii::t('admin', 'products.page_title');
-        $this->layout = '@admin/views/layouts/react_app';
+        $this->layout = '@admin/views/layouts/main';
 
         $endPoints = [
             "add_listing" => Url::toRoute(['products/list']),
@@ -154,9 +154,7 @@ class ProductsController extends CustomController
             throw new BadRequestHttpException(!empty($model->firstErrors) ? $model->firstErrors : 'Product cannot save!');
         }
 
-        $data = $model->getData();
-
-        return $data;
+        return $model->getData(true);
     }
 
     /**
@@ -208,9 +206,7 @@ class ProductsController extends CustomController
                 throw new NotFoundHttpException('Product not found!');
             }
 
-            $data = $productModel->getAttributes();
-
-            return $data;
+            return $productModel->getData();
         }
 
         $model = CreateProductForm::findOne($id);
@@ -226,9 +222,7 @@ class ProductsController extends CustomController
             throw new BadRequestHttpException('Product cannot save!');
         };
 
-        $data = $model->getAttributes();
-
-        return $data;
+        return $model->getData(true);
     }
 
     /**

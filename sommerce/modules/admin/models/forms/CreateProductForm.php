@@ -177,11 +177,18 @@ class CreateProductForm extends Products
     }
 
     /** Get result data
+     * @param bool $packages
      * @return array
      */
-    public function getData()
+    public function getData($packages = false)
     {
         $data = $this->getAttributes();
+        $data['properties'] = isset($data['properties']) ? $data['properties'] : [];
+
+        if (!$packages) {
+            return $data;
+        }
+
         $data['packages'] = [];
 
         return $data;
