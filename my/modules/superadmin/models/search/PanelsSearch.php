@@ -2,8 +2,7 @@
 
 namespace superadmin\models\search;
 
-
-
+use common\models\panels\Domains;
 use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Project;
@@ -189,10 +188,10 @@ class PanelsSearch
     /**
      * Search panels
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function search()
+    public function search(): array
     {
-        $searchQuery = $this->getQuery();
         $status = ArrayHelper::getValue($this->params, 'status', 'all');
         $plan = isset($this->params['plan']) ? (int)$this->params['plan'] : null;
 
@@ -307,16 +306,21 @@ class PanelsSearch
     }
 
     /**
-     * Get prefared panels
-     * @param array $panels
+     * Get prepared panels
+     * @param $panels
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    protected function preparePanelsData($panels)
+    protected function preparePanelsData($panels): array
     {
         $returnPanels = [];
 
         $tariffs = $this->getTariffs();
         $providers = $this->getProviders();
+        $domains = Domains::find()
+            ->active()
+            ->indexBy('domain')
+            ->all();
 
         foreach ($panels as $panel) {
             $tariff = ArrayHelper::getValue($tariffs, $panel['plan']);
@@ -377,7 +381,8 @@ class PanelsSearch
                 'start_count' => $panel['start_count'],
                 'apikey' => $panel['apikey'],
                 'affiliate_system' => $panel['affiliate_system'],
-                'child_panel' => $panel['child_panel']
+                'child_panel' => $panel['child_panel'],
+                'isOurDomain' => array_key_exists($panel['site'], $domains),
             ];
         }
 

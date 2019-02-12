@@ -73,6 +73,7 @@ return [
     'pages.title.gateways' => 'Gateways',
     'pages.pagination.to' => ' to ',
     'pages.pagination.of' => ' of ',
+    'pages.title.panels.edit_payment_methods' => 'Panels - Edit Payment Methods',
 
     'panels.edit.header' => 'Edit {domain} panel',
     'panels.edit.panel_name' => 'Panel name',
@@ -119,6 +120,7 @@ return [
     'panels.edit.perfect_panel_providers' => 'Perfectpanel providers',
     'panels.edit.change_domain' => 'Change domain',
     'panels.edit.affiliate_system' => 'Affiliate system status',
+    'panels.edit.move_domain' => 'Move domain to new customer?',
     'panels.downgrade.confirm' => 'Downgrade to child panel?',
     'panels.list.freeze'=> 'Freeze panel?',
     'panels.list.terminated'=> 'Terminated panel?',
@@ -779,6 +781,7 @@ return [
     'stores.modal.confirm_terminate' => 'Terminate store?',
     'stores.modal.error_edit_expiry' => 'Can not edit expired',
     'stores.modal.error_change_domain' => 'Can not change domain',
+    'stores.modal.edit.move_domain' => 'Move domain to new customer?',
 
     'dashboard.child_panels' => 'Child panels',
     'dashboard.panels' => 'Panels',
@@ -988,6 +991,15 @@ return [
     'panels.edit.payment_method_modal.select.available_for' => 'Available for {currency}',
     'panels.edit.payment_methods.select_payment_method' => 'Select payment method',
     'panels.edit.payment_methods.add_method' => 'Add payment',
+
+    'panels.edit_payment_methods.header_name' => 'Name',
+    'panels.edit_payment_methods.header_currency' => 'Currency',
+    'panels.edit_payment_methods.dropdown.delete' => 'Delete',
+    'panels.edit_payment_methods.dropdown.allow' => 'Allow for all users',
+    'panels.edit_payment_methods.dropdown.disallow' => 'Disallow for all users',
+    'panels.edit_payment_methods.dropdown.allow_confirm' => 'Allow for all users?',
+    'panels.edit_payment_methods.dropdown.disallow_confirm' => 'Disallow for all users?',
+    'panels.edit_payment_methods.dropdown.same_as' => 'Allow same as',
 
     'gateways.search' => 'Search gateway',
     'gateways.list.nav.all' => 'All ({count})',

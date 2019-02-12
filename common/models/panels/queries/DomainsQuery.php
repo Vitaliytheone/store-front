@@ -2,6 +2,8 @@
 
 namespace common\models\panels\queries;
 
+use common\models\panels\Domains;
+
 /**
  * This is the ActiveQuery class for [[\common\models\panels\Domains]].
  *
@@ -9,10 +11,13 @@ namespace common\models\panels\queries;
  */
 class DomainsQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
+    /**
+     * @return DomainsQuery
+     */
+    public function active()
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere(['status' => Domains::STATUS_OK]);
+    }
 
     /**
      * @inheritdoc

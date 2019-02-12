@@ -49,6 +49,13 @@ customModule.superadminStoresController = {
             var option = $select.find('option').eq(index);
             $select.val(option.val()).change();
 
+            $('.move-domain-block').attr('checked', false)
+            if (details.isOurDomain === false) {
+                $('.move-domain-block').hide();
+            } else {
+                $('.move-domain-block').show();
+            }
+
             modal.modal('show');
 
             return false

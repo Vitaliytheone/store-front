@@ -14,7 +14,7 @@ return [
     'layouts.header.child_panels' => 'Child panels',
     'layouts.header.stores' => 'Stores',
     'layouts.header.beta' => 'Beta',
-    'layouts.header.gateway' => 'Gateway',
+    'layouts.header.gateway' => 'Gateways',
 
     'pages.title.domains' => 'Domains',
     'pages.title.staff' => 'Staff',
