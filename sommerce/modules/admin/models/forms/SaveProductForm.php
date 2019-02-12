@@ -81,7 +81,7 @@ class SaveProductForm extends Model
     {
         return [
             [['properties'], 'required'],
-            [['properties'], 'string', 'max' => 180],
+            [['properties'], 'string',],
             [['properties'], 'trim'],
         ];
     }

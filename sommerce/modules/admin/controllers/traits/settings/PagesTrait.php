@@ -308,7 +308,7 @@ trait PagesTrait {
                 $products[$productId]['id'] = $productId;
                 $products[$productId]['name'] = BaseHtml::encode($item['pr_name']);
                 $products[$productId]['description'] = BaseHtml::encode($item['pr_description']);
-                $products[$productId]['properties'] = BaseHtml::encode($item['pr_properties']);
+                $products[$productId]['properties'] = $item['pr_properties'];
                 $products[$productId]['color'] = BaseHtml::encode($item['pr_color']);
                 $products[$productId]['packages'] = [];
             }
