@@ -58,7 +58,7 @@ class ProductsController extends CustomController
                 'class' => AjaxFilter::class,
                 'only' => [
                     'list',
-                    'create-product',
+              //      'create-product',
                     'update-product',
                     'move-product',
                     'move-package',
@@ -154,9 +154,7 @@ class ProductsController extends CustomController
             throw new BadRequestHttpException(!empty($model->firstErrors) ? $model->firstErrors : 'Product cannot save!');
         }
 
-        UiHelper::message(Yii::t('admin', 'products.message_product_created'));
-
-        $data = $model->getAttributes();
+        $data = $model->getData();
 
         return $data;
     }
@@ -184,7 +182,6 @@ class ProductsController extends CustomController
             'link' => EditNavigationForm::LINK_PRODUCT,
             'link_id' => $product->id
         ]])) {
-            UiHelper::message(Yii::t('admin', 'settings.nav_message_created'));
             return true;
         } else {
             throw new BadRequestHttpException();
@@ -228,8 +225,6 @@ class ProductsController extends CustomController
             Yii::error($model->firstErrors);
             throw new BadRequestHttpException('Product cannot save!');
         };
-
-        UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
 
         $data = $model->getAttributes();
 
@@ -281,8 +276,6 @@ class ProductsController extends CustomController
             throw new BadRequestHttpException('Package cannot save!');
         }
 
-        UiHelper::message(Yii::t('admin', 'products.message_package_created'));
-
         $data = $model->getAttributes();
 
         return $data;
@@ -323,8 +316,6 @@ class ProductsController extends CustomController
         if (!$model->edit($request->post())) {
             throw new BadRequestHttpException('Package cannot save!');
         }
-
-        UiHelper::message(Yii::t('admin', 'products.message_package_updated'));
 
         $data = $model->getAttributes();
 
@@ -381,8 +372,6 @@ class ProductsController extends CustomController
         /** @var StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
         ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_DELETED, $model->id, $model->id);
-
-        UiHelper::message(Yii::t('admin', 'products.message_package_deleted'));
 
         return true;
     }
