@@ -18,6 +18,7 @@ Thumbs.db
 
 # composer vendor dir
 /node_modules
+react/node_modules
 
 # composer vendor dir
 /vendor
