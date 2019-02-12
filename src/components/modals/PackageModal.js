@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ModalBody, Label, FormGroup } from 'reactstrap';
 import { Field } from 'formik';
 import { PackageInput } from '../Inputs';
@@ -10,15 +10,15 @@ class PackageModal extends React.PureComponent {
 		providerServices: [{ service: "none", name: "Chose provider service" }]
 	}
 
-	choseService = (provider_id) => async (e) => {
-		console.log(provider_id);
+	choseService = async (provider_id) => {
+		if (provider_id !== "none") {
 		const response = await get_providers_services(provider_id);
-		console.log(response.data);
 		this.props.setFieldValue('provider_id', provider_id);
 		response.data.unshift( { service: "none", name: "Chose provider service"});
 		this.setState({
 			providerServices: response.data
 		})
+		}
 	};
 
 	componentDidMount = () => {
@@ -162,10 +162,9 @@ class PackageModal extends React.PureComponent {
 						type="select"
 						label="Provider"
 						choseService={this.choseService}
-						values={this.props.values}
 				/>
 				</FormGroup>
-
+				
 				<FormGroup>
 					<Label htmlFor="provider_service_id">Provider service</Label>
 					<Field className="form-control" component="select" name="provider_service_id">

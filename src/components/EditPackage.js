@@ -44,6 +44,7 @@ class EditPackage extends Component {
 
   render() {
     const { response } = this.props;
+    console.log(response);
     return (
       <React.Fragment>
         <Button

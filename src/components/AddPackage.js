@@ -55,17 +55,14 @@ class AddPackage extends Component {
 					keyboard={false}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue, values, handleChange }) => (
+						{({ setFieldValue}) => (
 						<Form>
 							<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
 							<PackageModal 
-								handleChange={handleChange}
 								setFieldValue={setFieldValue}
-								values={values}
 								showError={this.state.showError}
 								errorMessage={this.state.errorMessage}
 								providers={this.props.providers}
-								choseService={this.choseService}
 							/>
 							<ModalFooter className="justify-content-start">
 								<Button color="primary" type="submit">
@@ -106,7 +103,7 @@ AddPackage.defaultProps = {
 		best: '2',
 		availability: '1',
 		mode: '2',
-		provider_id: '1',
+		provider_id: 'none', 
 		provider_service_id: 'none'
 	}
 };
