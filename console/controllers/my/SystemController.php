@@ -896,4 +896,20 @@ class SystemController extends CustomController
 
         return $this->stdout("\nSuccessfully changed {$domainCount} IP addresses\n\n", Console::FG_GREEN);
     }
+
+    /**
+     * Update existed staffs passwords
+     */
+    public function actionUpdateServicesPosition()
+    {
+        $pos = 0;
+        $count = 1;
+        /** @var Params $service */
+        foreach (Params::find()->where(['category' => Params::CATEGORY_SERVICE])->all() as $service) {
+            $service->updateAttributes(['position' => $pos++]);
+            $count++;
+        }
+        return $this->stdout("\nSuccessfully changed {$count} service\n\n", Console::FG_GREEN);
+    }
+
 }

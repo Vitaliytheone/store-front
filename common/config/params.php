@@ -69,8 +69,8 @@ return [
     ],
 
     'ahnames.gateway.ns' => [
-        'ns_1' => 'ns1.perfectdns.com',
-        'ns_2' => 'ns2.perfectdns.com',
+        'ns_1' => 'ns1.managerdns.com',
+        'ns_2' => 'ns2.managerdns.com',
         'ns_3' => null,
         'ns_4' => null,
     ],

@@ -10,6 +10,8 @@ return [
     '/admin/super-login' => 'admin/site/super-login',
     'checkout' => 'payments/checkout',
     'processing' => 'payments/processing',
+    'return' => 'payments/return',
+    'return/<id:\d+>' => 'payments/return',
 
     [
         'pattern' => '/.well-known/acme-challenge/<filename:[-_a-zA-Z0-9]+>',
