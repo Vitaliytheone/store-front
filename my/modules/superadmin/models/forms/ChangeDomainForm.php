@@ -1,8 +1,10 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use common\models\panels\Domains;
 use common\helpers\DnsHelper;
+use common\models\panels\PanelDomains;
 use my\helpers\DomainsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\panels\AdditionalServices;
@@ -23,7 +25,7 @@ class ChangeDomainForm extends Model {
     /**
      * @var Project
      */
-    private $_project;
+    private $project;
 
     /**
      * @return array the validation rules.
@@ -32,6 +34,7 @@ class ChangeDomainForm extends Model {
     {
         return [
             [['domain'], 'required'],
+            ['domain', 'validateDomain'],
             [['subdomain'], 'safe'],
         ];
     }
@@ -42,7 +45,7 @@ class ChangeDomainForm extends Model {
      */
     public function setProject(Project $project)
     {
-        $this->_project = $project;
+        $this->project = $project;
     }
 
     /**
@@ -58,8 +61,13 @@ class ChangeDomainForm extends Model {
             return false;
         }
 
-        $oldSubdomain = $this->_project->subdomain;
-        $oldDomain = $this->_project->site;
+        $oldSubdomain = $this->project->subdomain;
+        $oldDomain = $this->project->site;
+        $isForeignDomain = PanelDomains::find()->where([
+            'panel_id' => $this->project,
+            'type' => PanelDomains::TYPE_FOREIGN_SUBDOMAIN
+        ])->exists();
+        $this->project->setForeignSubdomain($isForeignDomain);
 
         $domain = $this->prepareDomain();
 
@@ -71,11 +79,11 @@ class ChangeDomainForm extends Model {
         }
 
         if ($isChangedSubdomain) {
-            $this->_project->subdomain = $this->subdomain;
+            $this->project->subdomain = $this->subdomain;
         }
 
         if ($isChangedDomain) {
-            if (!$this->_project->disableDomain(true)) {
+            if (!$this->project->disableDomain(true)) {
                 $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
                 return false;
             }
@@ -95,41 +103,41 @@ class ChangeDomainForm extends Model {
                 }
             }
 
-            $this->_project->site = $domain;
+            $this->project->site = $domain;
         }
 
-        $this->_project->dns_status = Project::DNS_STATUS_ALIEN;
-        $this->_project->dns_checked_at = null;
+        $this->project->dns_status = Project::DNS_STATUS_ALIEN;
+        $this->project->dns_checked_at = null;
 
-        if (!$this->_project->save(false)) {
+        if (!$this->project->save(false)) {
             $this->addError('domain', Yii::t('app/superadmin', 'panels.change_domain.error'));
             return false;
         }
 
         // Если был изменен домен, то необходимо провести еще операции с БД, рестартом нгинкса, добавлением
         if ($isChangedDomain) {
-            $this->_project->refresh();
+            $this->project->refresh();
 
-            $this->_project->ssl = 0;
+            $this->project->ssl = 0;
 
-            SuperTaskHelper::setTasksNginx($this->_project);
+            SuperTaskHelper::setTasksNginx($this->project);
 
-            $this->_project->enableDomain();
-            $this->_project->renameDb();
-            $this->_project->save(false);
+            $this->project->enableDomain();
+            $this->project->renameDb();
+            $this->project->save(false);
         }
 
         if ($isChangedSubdomain) {
             if ($this->subdomain) {
                 // Если выделен и project.subdomain = 0, удаляем домен из cloudns и новый не создаем, меняем project.subdomain = 1.
-                $domain = Domains::findOne(['domain' => $this->_project->site]);
+                $domain = Domains::findOne(['domain' => $this->project->site]);
 
-                if (!isset($domain)) {
-                    DnsHelper::removeDns($this->_project);
+                if (!isset($domain) && !$isForeignDomain) {
+                    DnsHelper::removeDns($this->project);
                 }
-            } else {
+            } elseif (!$isForeignDomain) {
                 // Если он не выделен и project.subdomain = 1 старый домен не удаляем, новый домен создаем в cloudns и ставим project.subdomain = 0.
-                DnsHelper::addMainDns($this->_project);
+                DnsHelper::addMainDns($this->project);
             }
         }
 
@@ -170,5 +178,24 @@ class ChangeDomainForm extends Model {
             'domain' => Yii::t('app/superadmin', 'panels.change_domain.domain'),
             'subdomain' => Yii::t('app/superadmin', 'panels.change_domain.subdomain'),
         ];
+    }
+
+    /**
+     * @param $attribute
+     * @param $params
+     */
+    public function validateDomain($attribute, $params)
+    {
+        $domain = $this->prepareDomain();
+
+        if ($this->project->site != $domain) {
+            $panelExist = Project::find()
+                ->where(['site' => $domain, 'act' => [Project::STATUS_ACTIVE, Project::STATUS_FROZEN]])
+                ->exists();
+
+            if ($panelExist) {
+                $this->addError($attribute, Yii::t('app/superadmin', 'panels.change_domain.error_exist'));
+            }
+        }
     }
 }

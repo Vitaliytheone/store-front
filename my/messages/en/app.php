@@ -14,7 +14,7 @@ return [
     'layouts.header.child_panels' => 'Child panels',
     'layouts.header.stores' => 'Stores',
     'layouts.header.beta' => 'Beta',
-    'layouts.header.gateway' => 'Gateway',
+    'layouts.header.gateway' => 'Gateways',
 
     'pages.title.domains' => 'Domains',
     'pages.title.staff' => 'Staff',
@@ -268,6 +268,7 @@ return [
     'form.order_panel.domain_protection' => 'Privacy protected',
     'form.order_panel.have_domain' => 'I have a domain name',
     'form.order_panel.want_to_register_new_domain' => 'I want to register new domain',
+    'form.order_panel.want_use_on_subdomain' => 'I want to place panel on subdomain',
 
     'form.settings_change_password.old_password' => 'Current password',
     'form.settings_change_password.password' => 'New password',
@@ -413,6 +414,13 @@ return [
     'payments.status.verification' => 'Verification',
     'payments.status.unverified' => 'Unverified',
     'payments.status.reversed' => 'Reversed',
+    'settings.services.whoisxml' => 'Whoisxml',
+    'settings.services.socialsapi' => 'Socialsapi',
+    'settings.services.whoisxmlapi' => 'Whoisxmlapi',
+    'settings.services.ahnames' => 'Ahnames',
+    'settings.services.gogetssl' => 'Gogetssl',
+    'settings.services.dnslytics' => 'Dnslytics',
+    'settings.services.namesilo' => 'Namesilo',
 
     'error.staff.can_not_change_password' => 'Can not set staff password',
     'error.staff.can_not_edit' => 'Can not edit staff',
@@ -513,6 +521,7 @@ return [
 
     'form.order_child_panel.have_domain' => 'I have a domain name',
     'form.order_child_panel.want_to_register_new_domain' => 'I want to register new domain',
+    'form.order_child_panel.want_use_on_subdomain' => 'I want to place panel on subdomain',
     'error.child_panel.bad_domain' => 'Bad domain',
     'child_panels.order.registrant_modal_header' => 'Registrant information',
     'child_panels.order.registrant_modal_btn_close' => 'Close',

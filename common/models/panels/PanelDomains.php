@@ -22,6 +22,7 @@ class PanelDomains extends ActiveRecord
     const TYPE_STANDARD = 0;
     const TYPE_ADDITIONAL = 1;
     const TYPE_SUBDOMAIN = 2;
+    const TYPE_FOREIGN_SUBDOMAIN = 3;
 
     /**
      * @inheritdoc

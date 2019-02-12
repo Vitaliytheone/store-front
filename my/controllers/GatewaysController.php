@@ -86,7 +86,7 @@ class GatewaysController extends CustomController
 
         return $this->render('order', [
             'model' => $model,
-            'note' => Content::getContent('nameservers'),
+            'note' => Content::getContent('gateways_nameservers'),
             'user' => $user,
         ]);
     }

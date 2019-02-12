@@ -125,7 +125,8 @@ class OrderPanelForm extends DomainForm
             'password' => ProjectAdmin::hashPassword($this->password),
             'domain' => $this->domain,
             'clean_domain' => $this->preparedDomain,
-            'currency' => $this->currency
+            'currency' => $this->currency,
+            'subdomain' => static::HAS_SUBDOMAIN == $this->has_domain ? 1 : 0,
         ]);
 
         if ($model->save()) {
