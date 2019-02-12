@@ -65,6 +65,7 @@ class OrderDomainValidator extends BaseDomainValidator
         $domain = $this->prepareDomain();
 
         if (empty($domain)) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.empty_domain'));
             return false;
         }
 

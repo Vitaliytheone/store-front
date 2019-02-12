@@ -41,17 +41,6 @@ class CreateChildForm extends Model
     public $domain_zone;
 
     public $domain_name;
-    public $domain_firstname;
-    public $domain_lastname;
-    public $domain_email;
-    public $domain_company;
-    public $domain_address;
-    public $domain_city;
-    public $domain_postalcode;
-    public $domain_state;
-    public $domain_country;
-    public $domain_phone;
-    public $domain_fax;
     public $domain_protection;
 
     /**
@@ -92,22 +81,12 @@ class CreateChildForm extends Model
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['provider'], 'in', 'range' => array_keys($this->getProviders()), 'message' => Yii::t('app', 'error.panel.bad_provider')],
             [['domain'], OrderDomainValidator::class, 'child_panel' => true],
-            ['password', 'compare', 'compareAttribute' => 'password_confirm'],
+            ['password', 'compare', 'compareAttribute' => 'password_confirm', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['username'], 'safe'],
-
             ['has_domain', 'in', 'range' => array_keys($this->getHasDomainsLabels()), 'message' => Yii::t('app', 'error.child_panel.bad_domain')],
-
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
-            [['domain_email'], 'email'],
-            [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_ccountry')],
             [['search_domain',], 'safe'],
-
-            [['domain_fax'], 'integer', 'message' => Yii::t('app', 'error.domain.bad_fax')],
-            [[
-                'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
-                'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
-            ], 'safe'],
         ];
     }
 
@@ -217,18 +196,10 @@ class CreateChildForm extends Model
         $model->setDetails([
             'zone' => $zone->id,
             'domain' => $this->domain,
+            'domain_contact' => [
+                'id' => DomainsHelper::checkContactExist($zone->registrar, true),
+            ],
             'details' => [
-                'domain_firstname' => $this->domain_firstname,
-                'domain_lastname' => $this->domain_lastname,
-                'domain_email' => $this->domain_email,
-                'domain_company' => $this->domain_company,
-                'domain_address' => $this->domain_address,
-                'domain_city' => $this->domain_city,
-                'domain_postalcode' => $this->domain_postalcode,
-                'domain_state' => $this->domain_state,
-                'domain_country' => $this->domain_country,
-                'domain_phone' => $this->domain_phone,
-                'domain_fax' => $this->domain_fax,
                 'domain_protection' => 1, // force domain privacy protect - old -- $this->domain_protection,
             ]
         ]);

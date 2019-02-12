@@ -2,6 +2,7 @@
 
 namespace my\helpers;
 
+use Yii;
 use common\components\domains\Domain;
 use common\models\panels\Domains;
 use common\models\panels\DomainZones;
@@ -154,22 +155,25 @@ class DomainsHelper
     }
 
     /**
-     * Check if contact exist contact
-     * @param string $registrar
-     * @return bool
+     * Check if contact_id exist
+     * @param string $registrar name of registrar for check
+     * @param bool $contact if True return contact_id
+     * @return bool|string
      */
-    public static function checkContactExist($registrar)
+    public static function checkContactExist($registrar, $contact = false)
     {
         if ($registrar == Domains::REGISTRAR_NAMESILO) {
             $namesiloParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_NAMESILO);
-            if (!empty($namesiloParams['contact_id'])) {
-                return true;
+            $cid = $namesiloParams['namesilo.contact_id'] ?? '';
+            if (!empty($cid)) {
+                return $contact ? $cid : true;
             }
         }
 
         if ($registrar == Domains::REGISTRAR_AHNAMES) {
-            if (!empty(\Yii::$app->params['ahnames.contact_id'])) {
-                return true;
+            $cid = Yii::$app->params['ahnames.contact_id'] ?? '';
+            if (!empty($cid)) {
+                return $contact ? $cid : true;
             }
         }
 

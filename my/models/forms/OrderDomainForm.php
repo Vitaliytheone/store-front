@@ -34,17 +34,6 @@ class OrderDomainForm extends Model
     public $domain_zone;
 
     public $domain_name;
-    public $domain_firstname;
-    public $domain_lastname;
-    public $domain_email;
-    public $domain_company;
-    public $domain_address;
-    public $domain_city;
-    public $domain_postalcode;
-    public $domain_state;
-    public $domain_country;
-    public $domain_phone;
-    public $domain_fax;
     public $domain_protection;
 
     /**
@@ -63,16 +52,10 @@ class OrderDomainForm extends Model
     public function rules()
     {
         return [
-            [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_ccountry')],
             [['domain'], OrderDomainValidator::class],
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
-            [['domain_email'], 'email'],
-            [['domain_fax'], 'integer', 'message' => Yii::t('app', 'error.domain.bad_fax')],
-            [[
-                'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
-                'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
-            ], 'safe'],
+            [['search_domain',], 'safe'],
         ];
     }
 
@@ -179,18 +162,10 @@ class OrderDomainForm extends Model
         $model->setDetails([
             'zone' => $zone->id,
             'domain' => $this->domain,
+            'domain_contact' => [
+                'id' => DomainsHelper::checkContactExist($zone->registrar, true),
+            ],
             'details' => [
-                'domain_firstname' => $this->domain_firstname,
-                'domain_lastname' => $this->domain_lastname,
-                'domain_email' => $this->domain_email,
-                'domain_company' => $this->domain_company,
-                'domain_address' => $this->domain_address,
-                'domain_city' => $this->domain_city,
-                'domain_postalcode' => $this->domain_postalcode,
-                'domain_state' => $this->domain_state,
-                'domain_country' => $this->domain_country,
-                'domain_phone' => $this->domain_phone,
-                'domain_fax' => $this->domain_fax,
                 'domain_protection' => 1, // force domain privacy protect - old -- $this->domain_protection,
             ]
         ]);

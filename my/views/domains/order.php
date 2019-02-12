@@ -31,7 +31,9 @@
             ]);?>
 
                 <div class="panel-body">
-                    <?= $form->errorSummary($model); ?>
+                    <?= $form->errorSummary($model, [
+                        'id' => 'orderDomainError'
+                    ]); ?>
                 </div>
 
                 <div id="orderDomainBlock">

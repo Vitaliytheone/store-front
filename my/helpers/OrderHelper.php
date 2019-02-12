@@ -499,22 +499,9 @@ class OrderHelper {
         $domainResult = ArrayHelper::getValue($orderDetails, 'domain_register');
         $domainInfoResult = ArrayHelper::getValue($orderDetails, 'domain_info');
 
-        if (empty($contactResult)) {
-            $contactResult = OrderDomainHelper::contactCreate($order);
-
-            if (empty($contactResult['id'])) {
-                if (!empty($contactResult['_error']) && false === strpos(strtolower($contactResult['_error']), 'wait')) {
-                    $order->makeError();
-                    return false;
-                }
-
-                $order->finish();
-                return false;
-            }
-
-            $order->setItemDetails($contactResult, 'domain_contact');
-            $order->save(false);
-            $order->refresh();
+        if (empty($contactResult['id'])) {
+            $order->makeError();
+            return false;
         }
 
         if (empty($domainResult)) {

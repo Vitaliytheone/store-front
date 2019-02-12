@@ -1,4 +1,5 @@
 <?php
+
 namespace my\models\forms;
 
 use common\models\panels\InvoiceDetails;
@@ -53,7 +54,7 @@ class OrderStoreForm extends DomainForm
             ['admin_email', 'email'],
             [['domain'], OrderDomainValidator::class, 'store' => true],
             ['admin_password', 'string', 'min' => 5],
-            ['admin_password', 'compare', 'compareAttribute' => 'confirm_password'],
+            ['admin_password', 'compare', 'compareAttribute' => 'confirm_password', 'except' => static::SCENARIO_CREATE_DOMAIN],
         ]);
     }
 

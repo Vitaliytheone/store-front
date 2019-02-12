@@ -45,7 +45,7 @@ class OrderPanelForm extends DomainForm
             [['domain', 'currency', 'username', 'password', 'password_confirm'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['domain'], OrderDomainValidator::class, 'panel' => true, 'child_panel' => false],
-            ['password', 'compare', 'compareAttribute' => 'password_confirm'],
+            ['password', 'compare', 'compareAttribute' => 'password_confirm', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['username'], 'safe'],
         ]);
     }
