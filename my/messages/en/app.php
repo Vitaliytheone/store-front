@@ -563,6 +563,7 @@ return [
     'project_admin.rules_providers' => 'Hide providers details',
     'project_admin.rules_affiliate' => 'Affiliates',
     'project_admin.rules_appearance' => 'Appearance',
+    'project_admin.access_label' => 'Access',
     'stores.status.active' => 'Active',
     'stores.status.frozen' => 'Frozen',
     'stores.status.terminated' => 'Terminated',

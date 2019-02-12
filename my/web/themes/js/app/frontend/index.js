@@ -143,30 +143,15 @@ customModule.indexController = {
         $('#editStaffModal, #createStaffModal').each(function() {
             var modal = $(this);
             var settingsRules = $('input[name="EditStaffForm[access][settings]"], input[name="CreateStaffForm[access][settings]"]', modal);
-            var settingsBlock = $('#wrap-settings', modal);
             var settings = $('.settings[type="checkbox"]', modal);
 
             var appearanceRules = $('input[name="EditStaffForm[access][appearance]"], input[name="CreateStaffForm[access][appearance]"]', modal);
-            var appearanceBlock = $('#wrap-appearance', modal);
             var appearance = $('.appearance[type="checkbox"]', modal);
-
-            modal.on('show.bs.modal', function () {
-                settings.trigger('change');
-                appearance.trigger('change');
-                
-                var settingsStatus = settingsRules.prop('checked');
-                settingsStatus ? settingsBlock.show() : settingsBlock.hide();
-
-                var appearanceStatus = appearanceRules.prop('checked');
-                appearanceStatus ? appearanceBlock.show() : appearanceBlock.hide();
-            });
 
             settingsRules.on('change', function () {
                 if (this.checked) {
-                    settingsBlock.show();
                     settings.prop('checked', true);
                 } else {
-                    settingsBlock.hide();
                     settings.prop('checked', false);
                 }
             });
@@ -175,17 +160,14 @@ customModule.indexController = {
                 if ($('.settings[type="checkbox"]:checked', modal).length) {
                     settingsRules.prop('checked', true)
                 } else {
-                    settingsBlock.hide();
                     settingsRules.prop('checked', false)
                 }
             });
 
             appearanceRules.on('change', function () {
                 if (this.checked) {
-                    appearanceBlock.show();
                     appearance.prop('checked', true);
                 } else {
-                    appearanceBlock.hide();
                     appearance.prop('checked', false);
                 }
             });
@@ -194,7 +176,6 @@ customModule.indexController = {
                 if ($('.appearance[type="checkbox"]:checked', modal).length) {
                     appearanceRules.prop('checked', true)
                 } else {
-                    appearanceBlock.hide();
                     appearanceRules.prop('checked', false)
                 }
             });

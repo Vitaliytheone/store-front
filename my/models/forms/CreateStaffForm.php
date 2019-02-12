@@ -121,7 +121,7 @@ class CreateStaffForm extends Model
      * Get access list
      * @return array
      */
-    public function getAccessRules()
+    public function getAccessRules(): array
     {
         $labels = ProjectAdmin::getRulesLabels();
         return [
@@ -135,21 +135,10 @@ class CreateStaffForm extends Model
             'tickets' => ArrayHelper::getValue($labels, 'tickets'),
             'reports' => ArrayHelper::getValue($labels, 'reports'),
             'affiliates' => ArrayHelper::getValue($labels, 'affiliates'),
-            'providers' => ArrayHelper::getValue($labels, 'providers'),
-            'settings' => ArrayHelper::getValue($labels, 'settings'),
             'appearance' => ArrayHelper::getValue($labels, 'appearance'),
-        ];
-    }
-
-    /**
-     * Get access list
-     * @return array
-     */
-    public function getAccessSettings()
-    {
-        $labels = ProjectAdmin::getRulesLabels();
-
-        return [
+            'appearance_themes' => ArrayHelper::getValue($labels, 'appearance_themes'),
+            'appearance_languages' => ArrayHelper::getValue($labels, 'appearance_languages'),
+            'settings' => ArrayHelper::getValue($labels, 'settings'),
             'settings_general' => ArrayHelper::getValue($labels, 'settings_general'),
             'settings_providers' => ArrayHelper::getValue($labels, 'settings_providers'),
             'settings_payments' => ArrayHelper::getValue($labels, 'settings_payments'),
@@ -157,20 +146,26 @@ class CreateStaffForm extends Model
             'settings_pages' => ArrayHelper::getValue($labels, 'settings_pages'),
             'settings_menu' => ArrayHelper::getValue($labels, 'settings_menu'),
             'settings_preferences' => ArrayHelper::getValue($labels, 'settings_preferences'),
+            'providers' => ArrayHelper::getValue($labels, 'providers'),
         ];
     }
 
     /**
-     * Get appearance list
+     * Get access list of wrapped items
      * @return array
      */
-    public function getAccessAppearance()
+    public function getWrappedRules(): array
     {
-        $labels = ProjectAdmin::getRulesLabels();
-
         return [
-            'appearance_themes' => ArrayHelper::getValue($labels, 'appearance_themes'),
-            'appearance_languages' => ArrayHelper::getValue($labels, 'appearance_languages'),
+            'settings_general' => 'settings',
+            'settings_providers' => 'settings',
+            'settings_payments' => 'settings',
+            'settings_bonuses' => 'settings',
+            'settings_pages' => 'settings',
+            'settings_menu' => 'settings',
+            'settings_preferences' => 'settings',
+            'appearance_themes' => 'appearance',
+            'appearance_languages' => 'appearance',
         ];
     }
 }
