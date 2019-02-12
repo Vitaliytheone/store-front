@@ -20,8 +20,14 @@
     </div>
 
     <?php if (!empty($note)) : ?>
-        <div class="alert alert-info" id="orderNote">
+        <div class="alert alert-info <?= OrderPanelForm::HAS_DOMAIN == $model->has_domain ? '' : 'hidden' ?>" id="orderNote">
             <?= $note ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($subdomainNote)) : ?>
+        <div class="alert alert-info <?= OrderPanelForm::HAS_SUBDOMAIN == $model->has_domain ? '' : 'hidden' ?>" id="orderSubdomainNote">
+            <?= $subdomainNote ?>
         </div>
     <?php endif; ?>
 

@@ -3,6 +3,7 @@ namespace my\components\validators;
 
 use common\models\gateways\Sites;
 use common\models\stores\Stores;
+use my\models\forms\OrderPanelForm;
 use Yii;
 use common\models\panels\Orders;
 use common\models\panels\Project;
@@ -73,7 +74,7 @@ class OrderDomainValidator extends BaseDomainValidator
                 return false;
             }
 
-            $domain = $result['domain'];
+            $domain = $model->has_domain == OrderPanelForm::HAS_SUBDOMAIN ? $domain : $result['domain'];
             $domain = strtolower($domain);
         }
 

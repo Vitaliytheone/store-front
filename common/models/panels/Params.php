@@ -38,6 +38,8 @@ class Params extends ActiveRecord
     public const CODE_GOGETSSL = 'gogetssl';
     public const CODE_AHNAMES = 'ahnames';
     public const CODE_OPENSRS = 'opensrs';
+    public const CODE_NAMESILO = 'namesilo';
+    public const CODE_SOCIALSAPI = 'socialsapi';
 
     public const CODE_LETSENCRYPT = 'letsencrypt';
 
@@ -87,6 +89,23 @@ class Params extends ActiveRecord
             'updated_at' => 'Updated At',
             'position' => 'Position',
             'category' => 'Category',
+        ];
+    }
+
+    /**
+     * Get list of services for settings
+     * @return array
+     */
+    public static function getServices(): array
+    {
+        return [
+            static::CODE_WHOISXML => Yii::t('app', 'settings.services.whoisxml'),
+            static::CODE_SOCIALSAPI => Yii::t('app', 'settings.services.socialsapi'),
+            static::CODE_WHOISXMLAPI => Yii::t('app', 'settings.services.whoisxmlapi'),
+            static::CODE_AHNAMES => Yii::t('app', 'settings.services.ahnames'),
+            static::CODE_GOGETSSL => Yii::t('app', 'settings.services.gogetssl'),
+            static::CODE_DNSLYTICS => Yii::t('app', 'settings.services.dnslytics'),
+            static::CODE_NAMESILO => Yii::t('app', 'settings.services.namesilo'),
         ];
     }
 

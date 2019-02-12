@@ -146,6 +146,7 @@ class ChildProjectController extends CustomController
             'model' => $model,
             'note' => Content::getContent('nameservers_child'),
             'user' => $user,
+            'subdomainNote' => Content::getContent('subdomain_nameservers'),
         ]);
     }
 

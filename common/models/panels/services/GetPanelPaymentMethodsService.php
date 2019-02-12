@@ -22,14 +22,21 @@ class GetPanelPaymentMethodsService {
     private $_visibility;
 
     /**
+     * @var string
+     */
+    private $sortBy;
+
+    /**
      * GetPanelPaymentMethodsService constructor.
      * @param Project $panel
+     * @param string $sortBy
      * @param integer|null $visibility
      */
-    public function __construct(Project $panel, ?int $visibility = null)
+    public function __construct(Project $panel, $sortBy = 'position', ?int $visibility = null)
     {
         $this->_panel = $panel;
         $this->_visibility = $visibility;
+        $this->sortBy = $sortBy;
     }
 
     /**
@@ -55,7 +62,7 @@ class GetPanelPaymentMethodsService {
                 'ppm.panel_id' => $this->_panel->id
             ])
             ->orderBy([
-                'position' => SORT_ASC
+                $this->sortBy => SORT_ASC
             ]);
 
         $paymentMethods = [];
