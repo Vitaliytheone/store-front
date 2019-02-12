@@ -1,6 +1,7 @@
 <?php
 namespace superadmin\models\search;
 
+use common\models\panels\Domains;
 use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\helpers\DomainsHelper;
@@ -34,7 +35,7 @@ class StoresSearch {
      * Get parameters
      * @return array
      */
-    public function getParams()
+    public function getParams(): array
     {
         return [
             'query' => $this->getQuery(),
@@ -120,10 +121,10 @@ class StoresSearch {
     /**
      * Search stores
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function search()
+    public function search(): array
     {
-        $searchQuery = $this->getQuery();
         $status = isset($this->params['status']) ? $this->params['status'] : 'all';
 
         $query = clone $this->buildQuery($status);
@@ -177,10 +178,15 @@ class StoresSearch {
      * Get prepared stores
      * @param array $stores
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    protected function prepareStoresData($stores)
+    protected function prepareStoresData(array $stores): array
     {
         $returnStores = [];
+        $domains = Domains::find()
+            ->active()
+            ->indexBy('domain')
+            ->all();
 
         foreach ($stores as $store) {
             $returnStores[] = [
@@ -205,6 +211,7 @@ class StoresSearch {
                 'last_count' => $store['last_count'],
                 'current_count' => $store['current_count'],
                 'name' => $store['name'],
+                'isOurDomain' => array_key_exists($store['domain'], $domains),
             ];
         }
 
@@ -215,7 +222,7 @@ class StoresSearch {
      * Get navs
      * @return array
      */
-    public function navs()
+    public function navs(): array
     {
         return [
             'all' => Yii::t('app/superadmin', 'stores.list.navs_all', [

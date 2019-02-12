@@ -195,9 +195,9 @@ class OrderStoreForm extends DomainForm
         $model->setDetails([
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
-            'domain' => $this->storeDomain,
+            'domain' => $this->preparedDomain,
             'currency' => $this->store_currency,
-            'name' => $this->storeDomain,
+            'name' => $this->preparedDomain,
             'admin_email' => $this->admin_email,
         ]);
 

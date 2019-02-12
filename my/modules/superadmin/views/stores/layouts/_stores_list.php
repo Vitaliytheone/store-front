@@ -97,7 +97,8 @@ $now = time();
                                         'name' => htmlspecialchars_decode($store['name']),
                                     'customer_id' => $store['customer_id'],
                                     'customer_email' => htmlspecialchars_decode($store['customer_email']),
-                                    'currency' => htmlspecialchars_decode($store['currency'])
+                                    'currency' => htmlspecialchars_decode($store['currency']),
+                                    'isOurDomain' => $store['isOurDomain']
                                 ])
                             ])?>
                             <?php if (Stores::STATUS_ACTIVE == $store['status']) : ?>
