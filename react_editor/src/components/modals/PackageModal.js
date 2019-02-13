@@ -7,7 +7,9 @@ import { get_providers_services } from '../../services/url';
 
 class PackageModal extends React.PureComponent {
 	state = {
-		providerServices: [{ service: "none", name: "Chose provider service" }]
+		providerServices: [{ service: "none", name: "Chose provider service" }],
+		error: null,
+		message: null
 	}
 
 	choseService = async (provider_id) => {
@@ -16,8 +18,13 @@ class PackageModal extends React.PureComponent {
 		console.log(response);
 		this.props.setFieldValue('provider_id', provider_id);
 		response.data.unshift( { service: "none", name: "Chose provider service"});
+		const error = response.data[1].error;
+		const message = response.data[1].message;
+		console.log(error);
 		this.setState({
-			providerServices: response.data
+			providerServices: response.data,
+			error: error,
+			message: message
 		})
 		} else {
 			this.setState({
@@ -169,16 +176,24 @@ class PackageModal extends React.PureComponent {
 				/>
 				</FormGroup>
 				
-				<FormGroup>
+				{/* <FormGroup>
 					<Label htmlFor="provider_service">Provider service</Label>
 					<Field className="form-control" component="select" name="provider_service">
 					{providerServices.map(item => <option key={item.service} value={item.service}>{item.name}</option>)}
 					</Field>
-				</FormGroup>
+				</FormGroup> */}
 
-				{this.props.showError && (
-					<span className="m--font-danger">API responce errors: Incorrect required</span>
-				)}
+				{this.state.error ? (
+					<span className="m--font-danger">{this.state.message}</span>
+				) : (
+						<FormGroup>
+							<Label htmlFor="provider_service">Provider service</Label>
+							<Field className="form-control" component="select" name="provider_service">
+								{providerServices.map(item => <option key={item.service} value={item.service}>{item.name}</option>)}
+							</Field>
+						</FormGroup>
+				)
+				}
 			</ModalBody>
 		);
 	}

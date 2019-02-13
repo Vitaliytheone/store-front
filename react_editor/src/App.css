@@ -41516,3 +41516,53 @@ body {
 .toast-background {
   opacity: 0.5;
 }
+
+
+  .sommerce-colopicker{
+            width: 600px;
+            background: #ebedf3;
+            border: none;
+            border-radius: 5px;
+        }
+        .sommerce-colopicker__body{
+            position: relative;
+        }
+        .sommerce-colopicker__body-right{
+            position: absolute;
+            right: 0;
+            width: 207px;
+            padding: 10px;
+            top: 0;
+        }
+        .sommerce-colopicker__color-pie{
+            width: 16px;
+            height: 16px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            border: 1px solid transparent;
+            margin: 0px 1px;
+        }
+        .sommerce-colopicker__color-pie:hover{
+            border: 1px solid rgba(38, 39, 53, 0.32)
+        }
+
+        .sommerce-colopicker__body-left{
+            margin-right: 207px;
+            border-right: solid 1px #ccc;
+            padding: 10px;
+                padding: 10px 10px 40px 10px;
+        }
+        .sommerce-colopicker__picker{
+            position: relative;
+        }
+
+        .chrome-picker {
+          background: none !important;
+          box-shadow: none !important;
+          border: none !important;
+          width: 100% !important;
+        }

@@ -100,6 +100,7 @@ AddPackage.defaultProps = {
 		quantity: 0,
 		overflow: 0,
 		best: '2',
+		link_type: '1',
 		visibility: '1',
 		mode: '2',
 		provider_id: 'none', 

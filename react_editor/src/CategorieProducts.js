@@ -137,12 +137,13 @@ class CategorieProducts extends Component {
 			// position: newPackageIndex,
 			price: values.price,
 			best: values.best,
+			link_type: values.link_type,
 			quantity: values.quantity,
 			overflow: values.overflow,
-			visibility: values.availability,
+			visibility: values.visibility,
 			mode: values.mode,
 			provider_id: values.provider_id,
-			provider_service_id: values.provider_service_id
+			provider_service: values.provider_service
 		};
 		const newData = [ ...this.state.data ];
 		// newData[productIndex].packages.push(newPackage);
@@ -214,18 +215,19 @@ class CategorieProducts extends Component {
 		editedPackage[productIndex].packages[packageIndex] = {
 			...this.state.data[productIndex].packages[packageIndex],
 			name: values.name,
-			visibility: values.visibility,
 			price: values.price,
 			quantity: values.quantity,
 			overflow: values.overflow,
 			best: values.best,
-			availability: values.availability,
+			link_type: values.link_type,
+			visibility: values.visibility,
 			mode: values.mode,
 			provider_id: values.provider_id,
-			provider_service_id: values.provider_service_id
+			provider_service: values.provider_service
 		};
 		delete editedPackage[productIndex].packages[packageIndex].position;
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
+		console.log(editedPackage[productIndex].packages[packageIndex]);
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
 		if (response.success) {
 			editedPackage[productIndex].packages[packageIndex] = response.data;
