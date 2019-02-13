@@ -29,7 +29,7 @@ export function get_update_product(product_id) {
 
 export function updateProduct(product_id, payload) {
 	axiosInstance.post(point.update_product, payload); //+ `${product_id}`
-	const mockResponse = { data: { ...payload }, success: false, error_message: 'dasdasdsadsa' };
+	const mockResponse = { data: { ...payload }, success: true, error_message: 'dasdasdsadsa' };
 	return Promise.resolve(mockResponse);
 }
 

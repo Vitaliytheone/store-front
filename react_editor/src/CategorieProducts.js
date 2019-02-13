@@ -163,7 +163,6 @@ class CategorieProducts extends Component {
 	getProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
 		const response = await get_update_product(getProduct);
-		console.log(response);
 		this.setState({
 			response: { ...this.state.response, product: response.data }
 		});
@@ -192,12 +191,15 @@ class CategorieProducts extends Component {
 			seo_keywords: values.seo_keywords,
 			url: values.url
 		};
-		console.log(editedProduct[productIndex]);
 		const ProductId = editedProduct[productIndex].id;
-		console.log(ProductId);
 		const response = await updateProduct(ProductId, editedProduct[productIndex]);
+		const productPackages = editedProduct[productIndex].packages;
 		if (response.success) {
-			editedProduct[productIndex] = response.data;
+			editedProduct[productIndex] = {
+				...response.data,
+				packages: productPackages
+			}
+			console.log(editedProduct);
 			this.setState({
 				data: editedProduct
 			});
