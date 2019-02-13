@@ -284,11 +284,15 @@ trait PagesTrait {
      */
     private static function _getProducts($productId = null)
     {
+
+//        'pr_properties' => 'pr.properties'
+
         $productPackages = Products::find()
             ->alias('pr')
             ->select([
-                'pr_id' =>'pr.id', 'pr_name' => 'pr.name', 'pr_description' => 'pr.description', 'pr_properties' => 'pr.properties', 'pr_color' => 'pr.color',
-                'pk_id' => 'pk.id', 'pk_name' => 'pk.name',  'pk_price' => 'pk.price', 'pk_quantity' => 'pk.quantity', 'pk_icon' => 'pk.icon',
+                'pr_id' =>'pr.id', 'pr_name' => 'pr.name', 'pr_description' => 'pr.description', 'pr_color' => 'pr.color',
+                'pk_id' => 'pk.id', 'pk_name' => 'pk.name',  'pk_price' => 'pk.price', 'pk_quantity' => 'pk.quantity',
+                'pk_icon' => 'pk.icon', 'pk_properties' => 'pk.properties',
             ])
             ->leftJoin(['pk' => Packages::tableName()], 'pk.product_id = pr.id AND pk.deleted = :pk_deleted', [
                 'pk_deleted' => Packages::DELETED_NO,
@@ -308,7 +312,6 @@ trait PagesTrait {
                 $products[$productId]['id'] = $productId;
                 $products[$productId]['name'] = BaseHtml::encode($item['pr_name']);
                 $products[$productId]['description'] = BaseHtml::encode($item['pr_description']);
-                $products[$productId]['properties'] = $item['pr_properties'];
                 $products[$productId]['color'] = BaseHtml::encode($item['pr_color']);
                 $products[$productId]['packages'] = [];
             }
@@ -320,6 +323,7 @@ trait PagesTrait {
                     'price'  => $item['pk_price'],
                     'quantity' => $item['pk_quantity'],
                     'icon' => $item['pk_icon'],
+                    'properties' => $item['pk_properties'],
                 ];
             }
         }
