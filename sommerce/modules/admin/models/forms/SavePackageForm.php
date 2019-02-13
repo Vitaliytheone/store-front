@@ -3,10 +3,7 @@
 namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\Packages;
-use common\models\store\PageFiles;
-use common\models\store\Products;
 use Yii;
-use common\models\store\Pages;
 use common\models\stores\Stores;
 use yii\base\Model;
 use yii\db\Transaction;
@@ -21,6 +18,11 @@ class SavePackageForm extends Model
      * @var string
      */
     public $icon;
+
+    /**
+     * @var string
+     */
+    public $properties;
 
     /**
      * @var Stores
@@ -81,9 +83,9 @@ class SavePackageForm extends Model
     public function rules()
     {
         return [
-            [['icon'], 'required'],
+            [['icon', 'properties'], 'string'],
+            [['icon', 'properties'], 'trim'],
             [['icon'], 'string', 'max' => 180],
-            [['icon'], 'trim'],
         ];
     }
 
@@ -102,6 +104,7 @@ class SavePackageForm extends Model
         $package = $this->getPackage();
 
         $package->icon = $this->icon;
+        $package->properties = $this->properties;
 
         if (!$package->save(false)) {
             $this->addError('page_file', 'Cannot save package!');

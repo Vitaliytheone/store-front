@@ -17,11 +17,6 @@ use yii\db\Transaction;
 class SaveProductForm extends Model
 {
     /**
-     * @var string
-     */
-    public $properties;
-
-    /**
      * @var Stores
      */
     protected $_store;
@@ -79,11 +74,7 @@ class SaveProductForm extends Model
      */
     public function rules()
     {
-        return [
-            [['properties'], 'required'],
-            [['properties'], 'string',],
-            [['properties'], 'trim'],
-        ];
+        return [];
     }
 
     /**
