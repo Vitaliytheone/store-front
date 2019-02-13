@@ -79,7 +79,7 @@
 	},
 	"scripts": {
 		"start": "node scripts/start.js",
-		"build": "node scripts/build.js && mv build /sommerce/web/react_apps/products",
+		"build": "node scripts/build.js && mv build ../sommerce/web/react_apps/products",
 		"test": "node scripts/test.js"
 	},
 	"eslintConfig": {
