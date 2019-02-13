@@ -865,11 +865,20 @@ class OrderHelper {
             return true;
         }
 
-        if (SslCert::findOne([
+        $sslCert = SslCert::findOne([
             'domain' => $order->domain,
             'status' => SslCert::STATUS_ACTIVE
-        ])) {
-            throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
+        ]);
+        if ($sslCert) {
+            $sslCert->status = SslCert::STATUS_CANCELED;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->status = Orders::STATUS_PAID;
+
+            if (!$sslCert->save(false) || ! $order->save(false)) {
+                throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+            }
+
+            return true;
         }
 
         $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);

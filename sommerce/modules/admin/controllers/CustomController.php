@@ -5,6 +5,7 @@ namespace sommerce\modules\admin\controllers;
 use common\models\stores\StoreAdminAuth;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\User;
 
 /**
@@ -63,9 +64,9 @@ class CustomController extends AdminController
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(), [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => false,
@@ -81,7 +82,7 @@ class CustomController extends AdminController
                     Yii::$app->user->loginRequired();
                 }
             ],
-        ];
+        ]);
     }
 
     /**

@@ -6,4 +6,6 @@
 /prod/common/config/*
 /prod/console/config/*
 /prod/sommerce/config/*
+!*-local.php
+!/dev/common/config/config.json
 !.gitignore
