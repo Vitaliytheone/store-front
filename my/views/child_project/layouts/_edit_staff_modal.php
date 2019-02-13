@@ -8,6 +8,7 @@
     use yii\bootstrap\Html;
 
     $model = new EditStaffForm();
+    $wrappedRules = $model->getWrappedRules();
 ?>
 <div class="modal fade" id="editStaffModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog">
@@ -35,25 +36,17 @@
                     <?= $form->field($model, 'status')->dropDownList(ProjectAdmin::getStatuses()) ?>
 
                     <div class="form-group">
-                        <label for="">Access</label><br>
+                        <label for=""><?= Yii::t('app', 'project_admin.access_label') ?></label><br>
                         <?php foreach ($model->getAccessRules() as $code => $label) : ?>
                             <?php if ('providers' == $code) continue; ?>
+                            <?php $customClass = array_key_exists($code, $wrappedRules) ? $wrappedRules[$code] : '' ?>
                             <label class="checkbox-inline">
-                                <?= Html::checkbox('EditStaffForm[access][' . $code . ']', true, ['class' => 'access'])?>
+                                <?= Html::checkbox('EditStaffForm[access][' . $code . ']', true, ['class' => 'access ' . $customClass])?>
                                 <?= $label ?>
                             </label>
                         <?php endforeach; ?>
                     </div>
 
-                    <div class="form-group" id="wrap-settings">
-                        <?php foreach ($model->getAccessSettings() as $code => $label) : ?>
-                            <?php if ('providers' == $code) continue; ?>
-                            <label class="checkbox-inline">
-                                <?= Html::checkbox('EditStaffForm[access][' . $code . ']', true, ['class' => 'access settings'])?>
-                                <?= $label ?>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
                     <div class="form-group">
                         <label for="hide-providers"><?= Yii::t('app', 'form.edit_staff.rules_providers')?></label>
                         <div class="form-group">
