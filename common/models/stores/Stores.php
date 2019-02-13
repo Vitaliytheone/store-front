@@ -464,8 +464,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function checkExpired()
     {
         if ($this->isExpired() && $this->status != self::STATUS_FROZEN) {
-            $this->status = self::STATUS_FROZEN;
-            $this->save(false);
             return true;
         }
         return false;

@@ -209,6 +209,7 @@ abstract class BasePayment extends Component {
         Yii::$app->db->beginTransaction();
 
         $payment->status = Payments::STATUS_COMPLETED;
+        $payment->fee = ArrayHelper::getValue($result, 'fee');
         $payment->response = 1;
 
         if (empty($payment->transaction_id)) {
@@ -489,11 +490,7 @@ abstract class BasePayment extends Component {
      */
     public function getReturnUrl(): string
     {
-        if (($payment = $this->getPayment())) {
-            return $payment->return_url;
-        }
-
-        return SiteHelper::hostUrl($this->getGateway()->ssl);
+        return SiteHelper::hostUrl($this->getGateway()->ssl) . '/return/' . $this->getPayment()->id;
     }
 
     /**

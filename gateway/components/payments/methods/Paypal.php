@@ -132,7 +132,7 @@ class Paypal extends BasePayment
 
         $requestParams = [
             'RETURNURL' => $this->getNotifyUrl() . '/' . $this->getPayment()->id,
-            'CANCELURL' => $this->getReturnUrl()
+            'CANCELURL' => $this->getReturnUrl(),
         ];
 
         $orderParams = [
@@ -278,6 +278,7 @@ class Paypal extends BasePayment
             'transaction_id' => $transactionId,
             'amount' => $this->getPayment()->amount,
             'payment_id' => $this->getPayment()->id,
+            'fee' => $this->getPayment()->take_fee_from_user ? ArrayHelper::getValue($this->_transactionDetails, 'FEEAMT', 0) : 0,
         ];
     }
 
@@ -405,6 +406,7 @@ class Paypal extends BasePayment
             'transaction_id' => $this->getPayment()->transaction_id,
             'amount' => $this->getPayment()->amount,
             'payment_id' => $this->getPayment()->id,
+            'fee' => $this->getPayment()->take_fee_from_user ? ArrayHelper::getValue($GetTransactionDetails, 'FEEAMT', 0) : 0,
         ]);
     }
 }

@@ -41,6 +41,8 @@ class OrderPanelForm extends DomainForm
             [['username', 'password'], 'filter', 'filter' => function($value) { // Trim input values
                 return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
             }],
+            ['username', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
+            ['username', 'string', 'min' => 3, 'max' => 32],
             [['domain', 'currency', 'username', 'password', 'password_confirm'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['domain'], OrderDomainValidator::class, 'panel' => true, 'child_panel' => false],
@@ -123,7 +125,8 @@ class OrderPanelForm extends DomainForm
             'password' => ProjectAdmin::hashPassword($this->password),
             'domain' => $this->domain,
             'clean_domain' => $this->preparedDomain,
-            'currency' => $this->currency
+            'currency' => $this->currency,
+            'subdomain' => static::HAS_SUBDOMAIN == $this->has_domain ? 1 : 0,
         ]);
 
         if ($model->save()) {

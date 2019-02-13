@@ -78,6 +78,7 @@ class Stripe extends BasePayment {
         $key = ArrayHelper::getValue($paymentMethodOptions, 'public_key');
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $image = ArrayHelper::getValue($paymentMethodOptions, 'image', static::DEFAULT_IMAGE);
+        $title = trim((string)ArrayHelper::getValue($paymentMethodOptions, 'title'));
 
         if (empty($secretKey)) {
             return parent::getJsEnvironments();
@@ -94,7 +95,7 @@ class Stripe extends BasePayment {
                 'locale' => 'auto'
             ],
             'open' => [
-                'name' => $this->getGateway()->domain,
+                'name' => !empty($title) ? $title : $this->getGateway()->domain,
             ],
             'payment_request' => [
                 'country' => 'US',
@@ -210,6 +211,7 @@ class Stripe extends BasePayment {
             'transaction_id' => $transactionId,
             'amount' => $this->getPayment()->amount,
             'payment_id' => $this->getPayment()->id,
+            'fee' => 0,
             'content' => 'Ok'
         ];
     }

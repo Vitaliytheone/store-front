@@ -822,4 +822,94 @@ class SystemController extends CustomController
             'affiliate_approve_payouts' => 0,
         ], 'affiliate_minimum_payout IS NULL');
     }
+
+    /**
+     * Updates the old IP address with the new one. Both values are passed as parameters (oldIp, newIp)
+     * @param string $oldIp Old IP address to be changed
+     * @param string $newIp new ip to be saved
+     * @return string
+     */
+    public function actionChangeCloudnsIp($oldIp, $newIp): string
+    {
+        if ($oldIp === $newIp) {
+            $this->stdout("You entered two identical IP.\n", Console::FG_RED);
+            exit;
+        }
+
+        $domainCount = 0;
+        $results = [];
+
+        $pagesCount = (int)Dns::pageCount();
+
+        if ($pagesCount === 0) {
+            $this->stdout("Could not get the number of pages. Try again.\n", Console::FG_RED);
+            exit;
+        }
+
+        $this->stdout("Got a list of {$pagesCount} pages. Start checking and updating IP. Please wait for the completion of the operation.\n");
+
+        $domainRawList = Dns::listZones([], $results);
+
+        if (empty($domainRawList) || !is_array($domainRawList)) {
+            $this->stdout("Could not get a list of domains. Try again.\n", Console::FG_RED);
+            exit;
+        }
+
+        // check all receive domains
+        foreach ($domainRawList as $domainArray) {
+
+            $domain = $domainArray['name'];
+            $results = [];
+
+            if (!Dns::getRecordInfo($domain, '', [], $results)) {
+                $this->stdout("Could not get 'А' record info for {$domain}. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            $respType = strtolower($results['type']);
+            if ($respType != 'a') {
+                $this->stdout("Could not get 'А' record info for {$domain}. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            $respIp = $results['record'];
+            if (empty($respIp)) {
+                $this->stdout("Could not get IP. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            $responseId = $results['id'];
+            if (empty($responseId)) {
+                $this->stdout("Could not get record ID. Moving to the next domain.\n", Console::FG_RED);
+                continue;
+            }
+
+            if ($respIp == $oldIp) {
+                $this->stdout("In the 'A' domain record {$domain} found the old ip address. Replace it with a new one.\n");
+                $changeResponse = Dns::modRecord($responseId, $domain, $newIp, $results);
+                if ($changeResponse == false) {
+                    $this->stdout("Could not change the 'A' domain records {$domain}. Error - {$changeResponse}\n", Console::FG_RED);
+                }
+                $domainCount++;
+            }
+        }
+
+        return $this->stdout("\nSuccessfully changed {$domainCount} IP addresses\n\n", Console::FG_GREEN);
+    }
+
+    /**
+     * Update existed staffs passwords
+     */
+    public function actionUpdateServicesPosition()
+    {
+        $pos = 0;
+        $count = 1;
+        /** @var Params $service */
+        foreach (Params::find()->where(['category' => Params::CATEGORY_SERVICE])->all() as $service) {
+            $service->updateAttributes(['position' => $pos++]);
+            $count++;
+        }
+        return $this->stdout("\nSuccessfully changed {$count} service\n\n", Console::FG_GREEN);
+    }
+
 }

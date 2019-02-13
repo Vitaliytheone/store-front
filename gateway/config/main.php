@@ -55,7 +55,15 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error'],
+                    'except' => [
+                        'yii\web\HttpException:400',
+                        'yii\web\HttpException:403',
+                        'yii\web\HttpException:404',
+                        'yii\web\MethodNotAllowedHttpException:405',
+                        'yii\i18n\PhpMessageSource::loadMessages',
+                        'yii\i18n\PhpMessageSource::loadFallbackMessages'
+                    ],
                 ],
             ],
         ],
@@ -110,7 +118,7 @@ $config = [
             'class' => 'gateway\components\View',
             'renderers' => [
                 'twig' => [
-                    'class' => 'common\components\twig\ViewRenderer',
+                    'class' => \gateway\components\twig\ViewRenderer::class,
                     'cachePath' => null,
                     'extension' => \gateway\components\twig\Extension::class,
                     'options' => [
@@ -151,6 +159,7 @@ if (!empty($params['devEmail'])) {
             'yii\web\HttpException:400',
             'yii\web\HttpException:403',
             'yii\web\HttpException:404',
+            'yii\web\MethodNotAllowedHttpException:405',
             'yii\i18n\PhpMessageSource::loadMessages',
             'yii\i18n\PhpMessageSource::loadFallbackMessages',
         ],

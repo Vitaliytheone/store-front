@@ -29,6 +29,8 @@ class MainController extends Controller
 
     public function beforeAction($action)
     {
+        $result = parent::beforeAction($action);
+
         // Validate post requests
         if (Yii::$app->request->isPost && $this->enableDomainValidation) {
             $refererDomain = !empty($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : null;
@@ -38,6 +40,6 @@ class MainController extends Controller
             }
         }
 
-        return parent::beforeAction($action);
+        return $result;
     }
 }
