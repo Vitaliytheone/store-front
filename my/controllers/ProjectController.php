@@ -118,6 +118,7 @@ class ProjectController extends CustomController
         return $this->render('order', [
             'model' => $model,
             'note' => Content::getContent('nameservers'),
+            'subdomainNote' => Content::getContent('subdomain_nameservers'),
             'user' => $user,
         ]);
     }
@@ -134,12 +135,6 @@ class ProjectController extends CustomController
         $model = new OrderPanelForm();
         $model->scenario = OrderPanelForm::SCENARIO_CREATE_DOMAIN;
 
-        /**
-         * @var $customer Customers
-         */
-        $customer = Yii::$app->user->getIdentity();
-
-        // if ($customer->can('domains') && $model->load(Yii::$app->request->post())) { TODO:: Temporary allowed buy domain with panel for new customer
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->validate()) {
                 return [

@@ -83,6 +83,7 @@ class ChangeStoreDomainForm extends Model {
 
         $this->_store->refresh();
 
+        $this->_store->ssl = 0;
         $this->_store->enableDomain();
 
         if ($isChangedDomain) {

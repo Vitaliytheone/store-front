@@ -9,14 +9,23 @@ customModule.orderController = {
                 $('#orderBlock').removeClass('hidden');
                 $('#orderDomainBlock').addClass('hidden');
                 $('#orderNote').removeClass('hidden');
+                $('#orderSubdomainNote').addClass('hidden');
 
                 $('#domain').val('').prop('readonly', false);
-            } else {
+            } else if (2 == radio) {
                 $('#orderDomainBlock').removeClass('hidden');
                 $('#orderBlock').addClass('hidden');
                 $('#searchResult').addClass('hidden');
                 $('#searchResultContainer').html('');
                 $('#orderNote').addClass('hidden');
+                $('#orderSubdomainNote').addClass('hidden');
+            } else if (3 == radio) {
+                $('#orderBlock').removeClass('hidden');
+                $('#orderDomainBlock').addClass('hidden');
+                $('#orderSubdomainNote').removeClass('hidden');
+                $('#orderNote').addClass('hidden');
+
+                $('#domain').val('').prop('readonly', false);
             }
 
             return false;

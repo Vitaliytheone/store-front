@@ -28,6 +28,7 @@ class CheckoutForm extends Model {
     public $fail_url;
     public $return_url;
     public $description;
+    public $take_fee_from_user;
     public $fields;
 
     /**
@@ -91,7 +92,7 @@ class CheckoutForm extends Model {
             [['amount',], 'number'],
             [['currency',], 'string', 'length' => 3],
             [['success_url', 'fail_url', 'return_url', 'method', 'description'], 'string'],
-            [['method_id', 'method_id', 'source_id', 'source_type', 'source_payment_id',], 'integer'],
+            [['method_id', 'method_id', 'source_id', 'source_type', 'source_payment_id', 'take_fee_from_user'], 'integer'],
             ['fields', 'safe'],
         ];
     }
@@ -136,7 +137,6 @@ class CheckoutForm extends Model {
             $this->addError('method', '');
             return false;
         }
-
 
         $this->method_id = $method->id;
         $this->_payment = new Payments();
@@ -227,7 +227,6 @@ class CheckoutForm extends Model {
 
         $payment = $this->getPaymentMethod();
 
-
         return $payment->validateUserDetails($this->getUserDetails());
     }
 
@@ -278,6 +277,7 @@ class CheckoutForm extends Model {
                 'fail_url',
                 'return_url',
                 'description',
+                'take_fee_from_user',
             ])
         ];
     }
@@ -362,5 +362,17 @@ class CheckoutForm extends Model {
     public function getScripts()
     {
         return $this->getPaymentMethod()->getScripts();
+    }
+
+    /**
+     * @param $attribute
+     * @param array $params
+     */
+    public function referrerDomainValidate()
+    {
+        $referrer = parse_url((string)Yii::$app->request->referrer, PHP_URL_HOST);
+        $current = parse_url((string)Yii::$app->request->absoluteUrl, PHP_URL_HOST);
+
+        return $referrer == $current;
     }
 }
