@@ -270,12 +270,16 @@ class DnsHelper
     }
 
     /**
-     * Get name for params
+     * Get name for params, return 'ahnames' if unknown domain
      * @param $domain
      * @return string
      */
     protected static function _getDns($domain)
     {
-        return DomainsHelper::getRegistrarName($domain);
+        $ns = DomainsHelper::getRegistrarName($domain);
+        if (empty($ns)) {
+            return 'ahnames';
+        }
+        return $ns;
     }
 }
