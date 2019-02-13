@@ -91,8 +91,6 @@ class SaveProductForm extends Model
 
         $product = $this->getProduct();
 
-        $product->properties = $this->properties;
-
         if (!$product->save(false)) {
             $this->addError('page_file', 'Cannot save product!');
             $transaction->rollBack();

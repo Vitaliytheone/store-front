@@ -43,7 +43,6 @@ class Products extends ActiveRecord
         return '{{%products}}';
     }
 
-
     /**
      * @inheritdoc
      */
