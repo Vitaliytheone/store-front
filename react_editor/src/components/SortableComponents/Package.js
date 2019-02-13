@@ -17,7 +17,7 @@ const SortablePackage = SortableElement(({ providers, pack, response, editPackag
 			<Col lg="2">{pack.price}</Col>
 			<Col lg="2">{pack.provider}</Col>
 			<Col lg="2" className="ext-lg-center">
-				Enabled
+				{pack.visibility}
 			</Col>
 			<Col lg="1" className="padding-null-lg-right text-lg-right text-sm-left">
 				<EditPackage response={response} onSubmit={editPackage} getPackage={getPackage} providers={providers}/>

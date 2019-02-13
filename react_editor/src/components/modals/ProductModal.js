@@ -4,7 +4,7 @@ import { ModalBody, Label, FormGroup, Input } from 'reactstrap';
 import { Field } from 'formik';
 import { ProductInput } from '../Inputs';
 import { arrayMove } from 'react-sortable-hoc';
-import { SketchPicker, ChromePicker } from 'react-color';
+import {  ChromePicker } from 'react-color';
 
 // // Import bootstrap(v3 or v4) dependencies
 // import 'bootstrap/js/src/dropdown';
@@ -105,7 +105,6 @@ class ProductModal extends React.PureComponent {
 							</div>
 							<div className="sommerce-colopicker__body-right">
 								<div className="sommerce-colopicker__picker">
-									{/* <SketchPicker color={this.props.values.color} onChange={this.handleChangeComplete} /> */}
 									<ChromePicker className="chrome-picker" color={this.props.values.color} onChange={this.handleChangeComplete} />
 									</div>
 								<div className="sommerce-colopicker__picker-actions text-right">

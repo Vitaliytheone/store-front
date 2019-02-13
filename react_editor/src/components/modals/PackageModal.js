@@ -91,7 +91,7 @@ class PackageModal extends React.PureComponent {
 					<Label htmlFor="package-best">Best package</Label>
 					<Field name="best" component="select" id="package-best" className="form-control">
 						<option value="1">Enabled</option>
-						<option value="2">Disabled</option>
+						<option value="0">Disabled</option>
 					</Field>
 				</FormGroup>
 
@@ -150,7 +150,7 @@ class PackageModal extends React.PureComponent {
 					<Label htmlFor="visibility">Availability</Label>
 					<Field name="visibility" className="form-control" component="select">
 						<option value="1">Enabled</option>
-						<option value="2">Disabled</option>
+						<option value="0">Disabled</option>
 					</Field>
 				</FormGroup>
 
@@ -159,8 +159,8 @@ class PackageModal extends React.PureComponent {
 				<FormGroup>
 					<Label htmlFor="mode">Mode</Label>
 					<Field name="mode" className="form-control" component="select">
-						<option value="1">Manual</option>
-						<option value="2">Auto</option>
+						<option value="0">Manual</option>
+						<option value="1">Auto</option>
 					</Field>
 				</FormGroup>
 
