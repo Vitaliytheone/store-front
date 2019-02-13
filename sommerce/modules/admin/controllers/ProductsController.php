@@ -343,7 +343,7 @@ class ProductsController extends CustomController
 
         $providerServices = $providerApi->services(['Default']);
 
-        return $providerServices;
+        return [$providerServices];
     }
 
     /**
