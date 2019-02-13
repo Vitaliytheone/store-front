@@ -117,7 +117,7 @@ class ProductsController extends CustomController
             "change_position_product" => Url::toRoute(['products/move-product', 'id' => '']),
             "change_position_package" => Url::toRoute(['products/move-package', 'id' => '']),
             "delete_package" => Url::toRoute(['products/delete-package', 'id' => '']),
-            "get_providers" => Url::toRoute(['products/get-provider-services', 'id' => '']),
+            "get_providers_services" => Url::toRoute(['products/get-provider-services', 'id' => '']),
         ];
 
         return $this->render('index', [
@@ -151,7 +151,8 @@ class ProductsController extends CustomController
 
         if (!$model->create($request->post())) {
             Yii::error($model->firstErrors);
-            throw new BadRequestHttpException(!empty($model->firstErrors) ? $model->firstErrors : 'Product cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Product cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         }
 
         return $model->getData(true);
@@ -219,7 +220,8 @@ class ProductsController extends CustomController
 
         if (!$model->edit($request->post())) {
             Yii::error($model->firstErrors);
-            throw new BadRequestHttpException('Product cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Product cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         };
 
         return $model->getData(true);
@@ -267,7 +269,8 @@ class ProductsController extends CustomController
         $model->setUser(Yii::$app->getUser());
 
         if (!$model->create($request->post())) {
-            throw new BadRequestHttpException('Package cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Package cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         }
 
         $data = $model->getAttributes();
@@ -308,7 +311,8 @@ class ProductsController extends CustomController
         $model->setUser(Yii::$app->user);
 
         if (!$model->edit($request->post())) {
-            throw new BadRequestHttpException('Package cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Package cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         }
 
         $data = $model->getAttributes();
@@ -318,15 +322,15 @@ class ProductsController extends CustomController
 
     /**
      * Get provider`s services list AJAX action
-     * @param int $provider_id
+     * @param int $id
      * @return array
      * @throws \yii\base\Exception
      */
-    public function actionGetProviderServices($provider_id)
+    public function actionGetProviderServices($id)
     {
         /* @var $storeProviders \common\models\stores\StoreProviders[] */
         $storeProvider = StoreProviders::findOne([
-            'provider_id' => $provider_id,
+            'provider_id' => $id,
             'store_id' => $this->store->id
         ]);
 
@@ -397,5 +401,18 @@ class ProductsController extends CustomController
         }
 
         return true;
+    }
+
+    /**
+     * @param $model
+     * @param string $default
+     * @return string
+     */
+    private function getFirstError($model, $default = 'Internal error'): string
+    {
+        $error = $model->firstErrors;
+        $result = !empty($error) ? reset($error) : $default;
+
+        return $result;
     }
 }
