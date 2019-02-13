@@ -58,6 +58,10 @@ class SavePackageForm extends Model
      */
     public function setPackage(Packages $package) {
         $this->_package = $package;
+
+        // Init default values;
+        $this->icon = $package->icon;
+        $this->properties = $package->properties;
     }
 
     /**
