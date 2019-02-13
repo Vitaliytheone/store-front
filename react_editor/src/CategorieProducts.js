@@ -99,7 +99,7 @@ class CategorieProducts extends Component {
 		const newProduct = {
 			name: values.name,
 			// position: newProductIndex,
-			// visibility: values.visibility,
+			visibility: values.visibility,
 			color: values.color,
 			description: values.description,
 			properties: values.properties,
@@ -134,12 +134,12 @@ class CategorieProducts extends Component {
 		const newPackage = {
 			product_id: this.state.data[productIndex].id,
 			name: values.name,
-			position: newPackageIndex,
-			visibility: this.state.data[productIndex].visibility,
+			// position: newPackageIndex,
 			price: values.price,
+			best: values.best,
 			quantity: values.quantity,
 			overflow: values.overflow,
-			availability: values.availability,
+			visibility: values.availability,
 			mode: values.mode,
 			provider_id: values.provider_id,
 			provider_service_id: values.provider_service_id
@@ -163,7 +163,6 @@ class CategorieProducts extends Component {
 	getProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
 		const response = await get_update_product(getProduct);
-		console.log(response);
 		this.setState({
 			response: { ...this.state.response, product: response.data }
 		});
@@ -192,12 +191,16 @@ class CategorieProducts extends Component {
 			seo_keywords: values.seo_keywords,
 			url: values.url
 		};
-		console.log(editedProduct[productIndex]);
+		delete editedProduct[productIndex].position;
 		const ProductId = editedProduct[productIndex].id;
-		console.log(ProductId);
 		const response = await updateProduct(ProductId, editedProduct[productIndex]);
+		const productPackages = editedProduct[productIndex].packages;
 		if (response.success) {
-			editedProduct[productIndex] = response.data;
+			editedProduct[productIndex] = {
+				...response.data,
+				packages: productPackages
+			}
+			console.log(editedProduct);
 			this.setState({
 				data: editedProduct
 			});
@@ -215,11 +218,13 @@ class CategorieProducts extends Component {
 			price: values.price,
 			quantity: values.quantity,
 			overflow: values.overflow,
+			best: values.best,
 			availability: values.availability,
 			mode: values.mode,
 			provider_id: values.provider_id,
 			provider_service_id: values.provider_service_id
 		};
+		delete editedPackage[productIndex].packages[packageIndex].position;
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
 		if (response.success) {
@@ -229,7 +234,6 @@ class CategorieProducts extends Component {
 			});
 			actions.setSubmitting(false);
 		}
-		console.log(response);
 		return response;
 	};
 

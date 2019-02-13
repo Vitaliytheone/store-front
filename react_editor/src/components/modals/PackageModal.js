@@ -140,8 +140,8 @@ class PackageModal extends React.PureComponent {
 				<hr />
 
 				<FormGroup>
-					<Label htmlFor="availability">Availability</Label>
-					<Field name="availability" className="form-control" component="select" label="Availability">
+					<Label htmlFor="visibility">Availability</Label>
+					<Field name="visibility" className="form-control" component="select">
 						<option value="1">Enabled</option>
 						<option value="2">Disabled</option>
 					</Field>
@@ -170,8 +170,8 @@ class PackageModal extends React.PureComponent {
 				</FormGroup>
 				
 				<FormGroup>
-					<Label htmlFor="provider_service_id">Provider service</Label>
-					<Field className="form-control" component="select" name="provider_service_id">
+					<Label htmlFor="provider_service">Provider service</Label>
+					<Field className="form-control" component="select" name="provider_service">
 					{providerServices.map(item => <option key={item.service} value={item.service}>{item.name}</option>)}
 					</Field>
 				</FormGroup>
