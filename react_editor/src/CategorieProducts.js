@@ -140,7 +140,7 @@ class CategorieProducts extends Component {
 			link_type: values.link_type,
 			quantity: values.quantity,
 			overflow: values.overflow,
-			visibility: values.availability,
+			visibility: values.visibility,
 			mode: values.mode,
 			provider_id: values.provider_id,
 			provider_service: values.provider_service
@@ -215,13 +215,12 @@ class CategorieProducts extends Component {
 		editedPackage[productIndex].packages[packageIndex] = {
 			...this.state.data[productIndex].packages[packageIndex],
 			name: values.name,
-			visibility: values.visibility,
 			price: values.price,
 			quantity: values.quantity,
 			overflow: values.overflow,
 			best: values.best,
 			link_type: values.link_type,
-			availability: values.availability,
+			visibility: values.visibility,
 			mode: values.mode,
 			provider_id: values.provider_id,
 			provider_service: values.provider_service
