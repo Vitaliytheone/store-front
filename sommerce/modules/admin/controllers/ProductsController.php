@@ -343,7 +343,8 @@ class ProductsController extends CustomController
 
         $providerServices = $providerApi->services(['Default']);
 
-        return [$providerServices];
+
+        return isset($providerServices['error']) ? [$providerServices] : $providerServices;
     }
 
     /**
