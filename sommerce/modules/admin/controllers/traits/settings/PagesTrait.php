@@ -285,8 +285,6 @@ trait PagesTrait {
     private static function _getProducts($productId = null)
     {
 
-//        'pr_properties' => 'pr.properties'
-
         $productPackages = Products::find()
             ->alias('pr')
             ->select([
@@ -322,8 +320,8 @@ trait PagesTrait {
                     'name' => BaseHtml::encode($item['pk_name']),
                     'price'  => $item['pk_price'],
                     'quantity' => $item['pk_quantity'],
-                    'icon' => $item['pk_icon'],
-                    'properties' => $item['pk_properties'],
+                    'icon' => $item['pk_icon'] ? $item['pk_icon'] : null,
+                    'properties' => $item['pk_icon'] ? $item['pk_properties'] : null,
                 ];
             }
         }
