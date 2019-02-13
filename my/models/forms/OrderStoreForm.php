@@ -230,7 +230,7 @@ class OrderStoreForm extends DomainForm
      * Get has domain labels
      * @return array
      */
-    public function getHasDomainsLabels()
+    public function getHasDomainsLabels(): array
     {
         return [
             static::HAS_DOMAIN => Yii::t('app', 'form.order_store.have_domain'),
