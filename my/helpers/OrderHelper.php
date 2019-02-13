@@ -343,6 +343,7 @@ class OrderHelper {
         $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
         $project->paypal_fraud_settings = json_encode(Yii::$app->params['paypal_fraud_settings']);
         $project->dns_status = Project::DNS_STATUS_ALIEN;
+        $project->subdomain = $subdomain;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -864,11 +865,20 @@ class OrderHelper {
             return true;
         }
 
-        if (SslCert::findOne([
+        $sslCert = SslCert::findOne([
             'domain' => $order->domain,
             'status' => SslCert::STATUS_ACTIVE
-        ])) {
-            throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
+        ]);
+        if ($sslCert) {
+            $sslCert->status = SslCert::STATUS_CANCELED;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->status = Orders::STATUS_PAID;
+
+            if (!$sslCert->save(false) || ! $order->save(false)) {
+                throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+            }
+
+            return true;
         }
 
         $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
