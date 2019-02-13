@@ -151,7 +151,8 @@ class ProductsController extends CustomController
 
         if (!$model->create($request->post())) {
             Yii::error($model->firstErrors);
-            throw new BadRequestHttpException(!empty($model->firstErrors) ? $model->firstErrors : 'Product cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Product cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         }
 
         return $model->getData(true);
@@ -219,7 +220,8 @@ class ProductsController extends CustomController
 
         if (!$model->edit($request->post())) {
             Yii::error($model->firstErrors);
-            throw new BadRequestHttpException('Product cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Product cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         };
 
         return $model->getData(true);
@@ -267,7 +269,8 @@ class ProductsController extends CustomController
         $model->setUser(Yii::$app->getUser());
 
         if (!$model->create($request->post())) {
-            throw new BadRequestHttpException('Package cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Package cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         }
 
         $data = $model->getAttributes();
@@ -308,7 +311,8 @@ class ProductsController extends CustomController
         $model->setUser(Yii::$app->user);
 
         if (!$model->edit($request->post())) {
-            throw new BadRequestHttpException('Package cannot save!');
+            $errorMessage = $this->getFirstError($model, 'Package cannot save!');
+            throw new BadRequestHttpException($errorMessage);
         }
 
         $data = $model->getAttributes();
@@ -397,5 +401,18 @@ class ProductsController extends CustomController
         }
 
         return true;
+    }
+
+    /**
+     * @param $model
+     * @param string $default
+     * @return string
+     */
+    private function getFirstError($model, $default = 'Internal error'): string
+    {
+        $error = $model->firstErrors;
+        $result = !empty($error) ? reset($error) : $default;
+
+        return $result;
     }
 }
