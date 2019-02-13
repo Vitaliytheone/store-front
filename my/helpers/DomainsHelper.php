@@ -173,7 +173,8 @@ class DomainsHelper
         }
 
         if ($registrar == Domains::REGISTRAR_AHNAMES) {
-            $cid = Yii::$app->params['ahnames.contact_id'] ?? '';
+            $ahnamesParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_AHNAMES);
+            $cid = $ahnamesParams['ahnames.contact_id'] ?? '';
             if (!empty($cid)) {
                 return $contact ? $cid : true;
             }

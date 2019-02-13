@@ -5,6 +5,7 @@ namespace common\components\domains\methods;
 use common\components\domains\BaseDomain;
 use common\helpers\Request;
 use common\helpers\CurlHelper;
+use common\models\panels\Params;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\helpers\Json;
@@ -16,12 +17,23 @@ use yii\helpers\Json;
 class Ahnames extends BaseDomain
 {
 
+    protected static $_paramsAhnames;
+
+    public function init()
+    {
+        parent::init();
+
+        if (empty(static::$_paramsAhnames)) {
+            static::$_paramsAhnames = Params::get(Params::CATEGORY_SERVICE, Params::CODE_AHNAMES);
+        }
+    }
+
     /**
      * @inheritdoc
      */
     protected static function _defaultAction($paramOptions, $paramLink, $method = 'post'): array
     {
-        $url = Yii::$app->params['ahnames.url'];
+        $url = static::$_paramsAhnames['ahnames.url'];
 
         $defaultOptions = static::getDefaultOptions();
         $options = array_merge($defaultOptions, $paramOptions);
@@ -72,8 +84,8 @@ class Ahnames extends BaseDomain
      */
     public static function contactCreate($options): array
     {
-        if (!empty(Yii::$app->params['ahnames.contact_id'])) {
-            return ['id' => Yii::$app->params['ahnames.contact_id']];
+        if (!empty(static::$_paramsAhnames['ahnames.contact_id'])) {
+            return ['id' => static::$_paramsAhnames['ahnames.contact_id']];
         }
 
         return static::_defaultAction($options, '/contactCreate');
@@ -175,8 +187,8 @@ class Ahnames extends BaseDomain
     public static function getDefaultOptions(): array
     {
         return [
-            'auth_login' => Yii::$app->params['ahnames.login'],
-            'auth_password' => Yii::$app->params['ahnames.password'],
+            'auth_login' => static::$_paramsAhnames['ahnames.login'],
+            'auth_password' => static::$_paramsAhnames['ahnames.password'],
         ];
     }
 
