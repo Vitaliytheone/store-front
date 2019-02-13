@@ -126,6 +126,7 @@ class OrderStoreForm extends DomainForm
     }
 
     /**
+     * Order store
      * @return bool
      * @throws Exception
      * @throws \yii\db\Exception
@@ -155,7 +156,7 @@ class OrderStoreForm extends DomainForm
                 return false;
             }
         } else {
-             $this->domain = $this->preparedDomain;
+            $this->domain = $this->preparedDomain;
         }
 
         $result = $this->orderStore($invoiceModel);
@@ -193,7 +194,8 @@ class OrderStoreForm extends DomainForm
         $model->setDetails([
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
-            'domain' => $this->preparedDomain,
+            'domain' => $this->domain,
+            'clean_domain' => $this->preparedDomain,
             'currency' => $this->store_currency,
             'name' => $this->preparedDomain,
             'admin_email' => $this->admin_email,
