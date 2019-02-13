@@ -38,10 +38,10 @@ return [
             'sommerce/web/assets',
             'my/runtime',
             'my/web/assets',
+            'console/runtime',
         ],
         'setExecutable' => [
             'yii',
-            'yii_test',
         ],
         'setCookieValidationKey' => [
             'gateway/config/main-local.php',
@@ -58,6 +58,30 @@ return [
             'sommerce/web/assets',
             'my/runtime',
             'my/web/assets',
+            'console/runtime',
+        ],
+        'setExecutable' => [
+            'yii',
+        ],
+        'setCookieValidationKey' => [
+            'gateway/config/main-local.php',
+            'sommerce/config/main-local.php',
+            'my/config/main-local.php',
+        ],
+    ],
+    'Local Dev' => [
+        'path' => 'local',
+        'skipFiles' => [
+            'common/config/config.json',
+        ],
+        'setWritable' => [
+            'gateway/runtime',
+            'gateway/web/assets',
+            'sommerce/runtime',
+            'sommerce/web/assets',
+            'my/runtime',
+            'my/web/assets',
+            'console/runtime',
         ],
         'setExecutable' => [
             'yii',
