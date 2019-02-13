@@ -39,7 +39,7 @@ export function get_update_package(package_id) {
 
 export function updatePackage(package_id, payload) {
 	axiosInstance.post(point.update_package, payload); //+ `${package_id}`
-	const mockResponse = { data: { ...payload }, success: false, error_message: 'new error message here' };
+	const mockResponse = { data: { ...payload }, success: true, error_message: 'new error message here' };
 	return Promise.resolve(mockResponse);
 }
 

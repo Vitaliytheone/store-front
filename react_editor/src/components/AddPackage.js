@@ -103,7 +103,7 @@ AddPackage.defaultProps = {
 		visibility: '1',
 		mode: '2',
 		provider_id: 'none', 
-		provider_service_id: 'none'
+		provider_service: 'none'
 	}
 };
 
