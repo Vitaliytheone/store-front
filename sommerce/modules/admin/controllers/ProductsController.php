@@ -322,15 +322,15 @@ class ProductsController extends CustomController
 
     /**
      * Get provider`s services list AJAX action
-     * @param int $provider_id
+     * @param int $id
      * @return array
      * @throws \yii\base\Exception
      */
-    public function actionGetProviderServices($provider_id)
+    public function actionGetProviderServices($id)
     {
         /* @var $storeProviders \common\models\stores\StoreProviders[] */
         $storeProvider = StoreProviders::findOne([
-            'provider_id' => $provider_id,
+            'provider_id' => $id,
             'store_id' => $this->store->id
         ]);
 
