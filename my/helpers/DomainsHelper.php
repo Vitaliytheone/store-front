@@ -98,6 +98,8 @@ class DomainsHelper
     public static function getRegistrarName($domain): string
     {
 
+        $domain = self::idnToUtf8($domain);
+
         $zone = mb_strtoupper('.' . explode('.', $domain)[1]);
         if (empty($zone)) {
             return '';

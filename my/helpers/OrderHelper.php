@@ -487,10 +487,10 @@ class OrderHelper {
     /**
      * Create domain
      * @param Orders $order
-     * @return bool
+     * @return bool|null
      * @throws yii\base\UnknownClassException
      */
-    public static function domain(Orders $order): ?bool
+    public static function domain(Orders $order)
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');

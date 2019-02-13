@@ -169,12 +169,16 @@ class OrderDomainValidator extends BaseDomainValidator
             return false;
         }
 
+        // uncomment to enable only (a-Z\d-) validation for all domains (including user domains)
+        /*
         $registrar = DomainsHelper::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.invalid_domain_name'));
             return false;
         }
+        */
 
         $existsDomain = Orders::find()->andWhere([
             'domain' => DomainsHelper::idnToAscii($domain),
@@ -188,6 +192,7 @@ class OrderDomainValidator extends BaseDomainValidator
         ])->exists();
 
         if ($existsDomain) {
+            $model->addError($attribute, Yii::t('app', 'error.panel.domain_is_already_exist'));
             return false;
         }
     }
