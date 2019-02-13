@@ -114,7 +114,7 @@ class EditStaffForm extends Model
      * Get access list
      * @return array
      */
-    public function getAccessRules()
+    public function getAccessRules() : array
     {
         $labels = ProjectAdmin::getRulesLabels();
         return [
