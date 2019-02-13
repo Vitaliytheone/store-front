@@ -138,9 +138,8 @@ class ProductModal extends React.PureComponent {
 									}}
 								>
 									<div
-										className="sp-preview-inner sp-clear-display"
-										style={{ backgroundColor: 'transparent' }}
-									/>
+										className={"sp-preview-inner " + (this.props.values.color ? null : "sp-clear-display")}
+					/>
 								</div>
 								<div className="sp-dd">▼</div>
 							</div>

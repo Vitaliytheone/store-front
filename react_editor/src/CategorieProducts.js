@@ -99,7 +99,7 @@ class CategorieProducts extends Component {
 		const newProduct = {
 			name: values.name,
 			// position: newProductIndex,
-			// visibility: values.visibility,
+			visibility: values.visibility,
 			color: values.color,
 			description: values.description,
 			properties: values.properties,
@@ -135,11 +135,11 @@ class CategorieProducts extends Component {
 			product_id: this.state.data[productIndex].id,
 			name: values.name,
 			position: newPackageIndex,
-			visibility: this.state.data[productIndex].visibility,
 			price: values.price,
+			best: values.best,
 			quantity: values.quantity,
 			overflow: values.overflow,
-			availability: values.availability,
+			visibility: values.availability,
 			mode: values.mode,
 			provider_id: values.provider_id,
 			provider_service_id: values.provider_service_id
@@ -217,6 +217,7 @@ class CategorieProducts extends Component {
 			price: values.price,
 			quantity: values.quantity,
 			overflow: values.overflow,
+			best: values.best,
 			availability: values.availability,
 			mode: values.mode,
 			provider_id: values.provider_id,
@@ -231,7 +232,6 @@ class CategorieProducts extends Component {
 			});
 			actions.setSubmitting(false);
 		}
-		console.log(response);
 		return response;
 	};
 

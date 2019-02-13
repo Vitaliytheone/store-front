@@ -140,8 +140,8 @@ class PackageModal extends React.PureComponent {
 				<hr />
 
 				<FormGroup>
-					<Label htmlFor="availability">Availability</Label>
-					<Field name="availability" className="form-control" component="select" label="Availability">
+					<Label htmlFor="visibility">Availability</Label>
+					<Field name="visibility" className="form-control" component="select">
 						<option value="1">Enabled</option>
 						<option value="2">Disabled</option>
 					</Field>
