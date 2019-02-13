@@ -1,0 +1,10 @@
+{
+  "main.css": "/static/css/main.css",
+  "main.js": "/static/js/main.js",
+  "main.js.map": "/static/js/main.js.map",
+  "static/media/App.css": "/static/media/fontawesome-webfont.912ec66d.svg",
+  "static/css/main.css.map": "/static/css/main.css.map",
+  "index.html": "/index.html",
+  "precache-manifest.4e88d1b3d7f12d54e9b0e1422f1a4d0d.js": "/precache-manifest.4e88d1b3d7f12d54e9b0e1422f1a4d0d.js",
+  "service-worker.js": "/service-worker.js"
+}
