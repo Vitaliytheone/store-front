@@ -124,13 +124,32 @@ customModule.indexController = {
             $('#editstaffform-account', form).val(details.login);
             $('#editstaffform-status', form).val(details.status);
 
+            var settingsCount = 0;
+            var appearanceCount = 0;
             if ('undefined' !== typeof details.accessList) {
                 $.each(details.accessList, function(key, value) {
+                    if (key.match(/settings/g)) {
+                        settingsCount++;
+                    } else if (key.match(/appearance/g)) {
+                        appearanceCount++;
+                    }
+
                     if (!value) {
                         return;
                     }
                     $('input[name="EditStaffForm[access][' + key +']"]').prop('checked', 'checked');
                 });
+            }
+
+            var settingsRules = $('.settings[type="checkbox"]:checked', modal);
+            var appearanceRules = $('.appearance[type="checkbox"]:checked', modal);
+
+            if (settingsRules.length === settingsCount) {
+                $('input[name="EditStaffForm[access][settings]"]', modal).prop('checked', true);
+            }
+
+            if (appearanceRules.length === appearanceCount) {
+                $('input[name="EditStaffForm[access][appearance]"]', modal).prop('checked', true);
             }
 
             form.attr('action', link.attr('href'));
