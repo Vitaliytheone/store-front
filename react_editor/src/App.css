@@ -41566,3 +41566,7 @@ body {
           border: none !important;
           width: 100% !important;
         }
+
+.opacity {
+    opacity: 1 !important;
+}

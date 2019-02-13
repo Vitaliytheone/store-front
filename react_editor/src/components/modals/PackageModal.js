@@ -7,29 +7,29 @@ import { get_providers_services } from '../../services/url';
 
 class PackageModal extends React.PureComponent {
 	state = {
-		providerServices: [{ service: "none", name: "Chose provider service" }],
+		providerServices: [ { service: 'none', name: 'Chose provider service' } ],
 		error: null,
 		message: null
-	}
+	};
 
 	choseService = async (provider_id) => {
-		if (provider_id !== "none") {
-		var response = await get_providers_services(provider_id);
-		console.log(response);
-		this.props.setFieldValue('provider_id', provider_id);
-		response.data.unshift( { service: "none", name: "Chose provider service"});
-		const error = response.data[1].error;
-		const message = response.data[1].message;
-		console.log(error);
-		this.setState({
-			providerServices: response.data,
-			error: error,
-			message: message
-		})
+		if (provider_id !== 'none') {
+			var response = await get_providers_services(provider_id);
+			console.log(response);
+			this.props.setFieldValue('provider_id', provider_id);
+			response.data.unshift({ service: 'none', name: 'Chose provider service' });
+			const error = response.data[1].error;
+			const message = response.data[1].message;
+			console.log(error);
+			this.setState({
+				providerServices: response.data,
+				error: error,
+				message: message
+			});
 		} else {
 			this.setState({
-				providerServices: [{ service: "none", name: "Chose provider service" }]
-			})
+				providerServices: [ { service: 'none', name: 'Chose provider service' } ]
+			});
 		}
 	};
 
@@ -173,9 +173,9 @@ class PackageModal extends React.PureComponent {
 						type="select"
 						label="Provider"
 						choseService={this.choseService}
-				/>
+					/>
 				</FormGroup>
-				
+
 				{/* <FormGroup>
 					<Label htmlFor="provider_service">Provider service</Label>
 					<Field className="form-control" component="select" name="provider_service">
@@ -186,14 +186,17 @@ class PackageModal extends React.PureComponent {
 				{this.state.error ? (
 					<span className="m--font-danger">{this.state.message}</span>
 				) : (
-						<FormGroup>
-							<Label htmlFor="provider_service">Provider service</Label>
-							<Field className="form-control" component="select" name="provider_service">
-								{providerServices.map(item => <option key={item.service} value={item.service}>{item.name}</option>)}
-							</Field>
-						</FormGroup>
-				)
-				}
+					<FormGroup>
+						<Label htmlFor="provider_service">Provider service</Label>
+						<Field className="form-control" component="select" name="provider_service">
+							{providerServices.map((item) => (
+								<option key={item.service} value={item.service}>
+									{item.name}
+								</option>
+							))}
+						</Field>
+					</FormGroup>
+				)}
 			</ModalBody>
 		);
 	}
