@@ -23,11 +23,12 @@ use common\components\cdn\providers\widgets\UploadcareWidget;
                                 </small>
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
-
-                            <?php if (!empty($message->file->details)) {
-                                $files = $message->file->getDetails();
-                                echo UploadcareWidget::widget(['files' => $files]);
-                            } ?>
+                            <div class="attachments-block">
+                                <?php if (!empty($message->file->details)) {
+                                    $files = $message->file->getDetails();
+                                    echo UploadcareWidget::widget(['files' => $files]);
+                                } ?>
+                            </div>
                         </div>
                     </li>
                 <?php else: ?>
@@ -39,11 +40,12 @@ use common\components\cdn\providers\widgets\UploadcareWidget;
                                 </small>
                             </div>
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
-
-                            <?php if (!empty($message->file->details)) {
-                                $files = $message->file->getDetails();
-                                echo UploadcareWidget::widget(['files' => $files]);
-                            } ?>
+                            <div class="attachments-block">
+                                <?php if (!empty($message->file->details)) {
+                                    $files = $message->file->getDetails();
+                                    echo UploadcareWidget::widget(['files' => $files]);
+                                } ?>
+                            </div>
                         </div>
                     </li>
                 <?php endif ?>

@@ -22,12 +22,13 @@ $i = 0;
             </div>
             <div class="ticket-message__card-text">
                 <?= nl2br(htmlspecialchars($message->message)) ?>
-
-                <?php if (!empty($message->file->details)) {
-                    // todo widget
-                    $files = $message->file->getDetails();
-                    echo UploadcareWidget::widget(['files' => $files]);
-                } ?>
+                <div class="ticket-message__card-attach">
+                    <?php if (!empty($message->file->details)) {
+                        // todo widget
+                        $files = $message->file->getDetails();
+                        echo UploadcareWidget::widget(['files' => $files]);
+                    } ?>
+                </div>
             </div>
         </div>
     <?php else: ?>
@@ -47,7 +48,13 @@ $i = 0;
                 </div>
                 <div class="ticket-message__card-text">
                     <?= nl2br(htmlspecialchars($message->message)) ?>
-
+                    <div class="ticket-message__card-attach">
+                        <?php if (!empty($message->file->details)) {
+                            // todo widget
+                            $files = $message->file->getDetails();
+                            echo UploadcareWidget::widget(['files' => $files]);
+                        } ?>
+                    </div>
                 </div>
             <?php if ($ticketMessagesSearch->canEdit($i)):?>
                 <div class="ticket-message__card-footer">
@@ -55,9 +62,10 @@ $i = 0;
                         <li>
                             <a href="#" data-content="<?= htmlspecialchars($message->message) ?>" data-ticket="<?= $message->ticket_id ?>" data-id="<?= $message->id ?>"  class="ticket-message__card-link open-edit-modal" data-toggle="modal" data-target="#edit-message-modal">
                                 <?= Yii::t('app/superadmin', 'tickets.modal.edit') ?>
-                            </a></li>
+                            </a>
+                        </li>
                         <li>
-                            <?= DeleteMessageWidget::widget(['message' => $message]) ?>
+                            <?= DeleteMessageWidget::widget(['message' => $message]) //todo del - delete from files ?>
                         </li>
                     </ul>
                 </div>
