@@ -117,7 +117,7 @@ class ProductsController extends CustomController
             "change_position_product" => Url::toRoute(['products/move-product', 'id' => '']),
             "change_position_package" => Url::toRoute(['products/move-package', 'id' => '']),
             "delete_package" => Url::toRoute(['products/delete-package', 'id' => '']),
-            "get_providers" => Url::toRoute(['products/get-provider-services', 'id' => '']),
+            "get_providers_services" => Url::toRoute(['products/get-provider-services', 'id' => '']),
         ];
 
         return $this->render('index', [
