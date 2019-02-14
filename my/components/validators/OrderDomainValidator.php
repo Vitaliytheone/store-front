@@ -62,6 +62,7 @@ class OrderDomainValidator extends BaseDomainValidator
 
         $this->user_id = $model->getUser()->id;
 
+        $originalDomain = $this->domain;
         $domain = $this->prepareDomain();
 
         if (empty($domain)) {
@@ -106,7 +107,7 @@ class OrderDomainValidator extends BaseDomainValidator
             ->joinWith([
                 'storeDomains'
             ])->andWhere([
-                'store_domains.domain' => $domain,
+                'store_domains.domain' => $originalDomain,
                 'stores.status' => [
                     Stores::STATUS_ACTIVE,
                     Stores::STATUS_FROZEN
@@ -121,7 +122,7 @@ class OrderDomainValidator extends BaseDomainValidator
 
         $hasAvailableGateway = Sites::find()
             ->where([
-                'domain' => $domain,
+                'domain' => $originalDomain,
                 'status' => [
                     Sites::STATUS_ACTIVE,
                     Sites::STATUS_FROZEN
@@ -138,13 +139,16 @@ class OrderDomainValidator extends BaseDomainValidator
          * @var Orders $hasOrder
          */
         // Если есть заказы отличные неоплаченные или оплаченные и не добавленные
-        $hasOrder = Orders::find()->andWhere([
-            'status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID
-            ],
-            'domain' => $domain
-        ])->one();
+        $hasOrder = Orders::find()
+            ->andWhere([
+                'status' => [
+                    Orders::STATUS_PENDING,
+                    Orders::STATUS_PAID,
+                ],
+                'domain' => $domain,
+            ])
+            ->orderBy('id DESC')
+            ->one();
 
         if (!empty($hasOrder)) {
             if (Orders::STATUS_PENDING == $hasOrder->status) {

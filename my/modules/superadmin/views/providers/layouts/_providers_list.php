@@ -5,7 +5,6 @@
 /* @var $scripts array */
 
 use my\helpers\Url;
-use my\helpers\DomainsHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use my\helpers\SpecialCharsHelper;
@@ -55,7 +54,7 @@ use superadmin\widgets\CountPagination;
                     <?= $provider['provider_id'] ?>
                 </td>
                 <td>
-                    <?= DomainsHelper::idnToUtf8($provider['name']) ?>
+                    <?= $provider['name'] ?>
                 </td>
                 <td>
                     <?php if ($provider['count']) : ?>
