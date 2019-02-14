@@ -132,7 +132,7 @@ class StorePaymentMethods extends ActiveRecord
     {
         if (empty(static::$paymentsNames) || !is_array(static::$paymentsNames)) {
             static::$paymentsNames = PaymentMethods::find()
-                ->select(['name'])
+                ->select(['method_name'])
                 ->indexBy('id')
                 ->asArray()
                 ->column();

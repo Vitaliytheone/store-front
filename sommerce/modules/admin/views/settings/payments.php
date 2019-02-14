@@ -1,6 +1,5 @@
 <?php
 
-use sommerce\assets\NavigationPaymentAsset;
 use sommerce\modules\admin\components\Url;
 use sommerce\assets\SommernoteAsset;
 
@@ -15,7 +14,6 @@ use sommerce\assets\SommernoteAsset;
 /* @var $paymentData array */
 
 SommernoteAsset::register($this);
-NavigationPaymentAsset::register($this);
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver	m-container m-container--responsive m-container--xxl m-page__container">

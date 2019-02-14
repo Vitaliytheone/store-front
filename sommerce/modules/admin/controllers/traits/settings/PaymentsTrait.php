@@ -64,9 +64,6 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        $methodName = $paymentModel->paymentMethod->method_name;
-        $this->view->title = Yii::t('admin', "settings.payments_edit_{$methodName}");
-
         /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
@@ -82,6 +79,9 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
+        $methodName = $paymentMethod->method_name;
+        $this->view->title = Yii::t('admin', "settings.payments_edit_{$methodName}");
+
         return $this->render('payments', [
             'method' => $method,
             'methodName' => $methodName,
@@ -89,7 +89,7 @@ trait PaymentsTrait
             'paymentData' => [
                 'icon' => $paymentMethod->icon,
                 'description' => $paymentMethod->getSettingsFormDescription(),
-                'name' => !empty($paymentModel->name) ? $paymentModel->name : $paymentMethod->name,
+                'name' => !empty($paymentMethod->method_name) ? $paymentMethod->method_name : $paymentModel->name,
             ],
         ]);
     }
@@ -155,30 +155,6 @@ trait PaymentsTrait
                 'message' => ActiveForm::firstError($model)
             ];
         }
-    }
-
-    /**
-     * Update Store Payments methods positions after drag&drop AJAX action
-     * @return array
-     * @throws BadRequestHttpException
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     */
-    public function actionUpdatePaymentPositions(): array
-    {
-        $request = Yii::$app->getRequest();
-
-        $model = new UpdatePositionsPaymentsForm();
-        /** @var \common\models\stores\StoreAdminAuth $identity */
-        $identity = Yii::$app->user->getIdentity(false);
-
-        $model->setUser($identity);
-
-        if (!$model->updatePositions($request->post())) {
-            throw new BadRequestHttpException('Change in POST detected');
-        }
-
-        return [true];
     }
 
 }

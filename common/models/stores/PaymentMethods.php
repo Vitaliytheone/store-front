@@ -157,11 +157,11 @@ class PaymentMethods extends ActiveRecord
     {
         if (empty(static::$allMethodsNames) || !is_array(static::$allMethodsNames)) {
             $methodsNames = static::find()
-                ->select(['name', 'id'])
+                ->select(['method_name', 'id'])
                 ->indexBy('id')
                 ->asArray()
                 ->all();
-            static::$allMethodsNames = ArrayHelper::map($methodsNames, 'id', 'name');
+            static::$allMethodsNames = ArrayHelper::map($methodsNames, 'id', 'method_name');
         }
         return static::$allMethodsNames;
     }

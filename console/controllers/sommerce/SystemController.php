@@ -581,4 +581,16 @@ class SystemController extends CustomController
         }
         return $this->stdout("SUCCESSFULLY change {$count} checkouts.method_id in {$storeCount} stores.checkouts DB\n");
     }
+
+    /**
+     * 6) Rename payment_methods.method_name as payment_methods.name
+     * @return string
+     * @throws Exception
+     */
+    public function actionRenamePaymentsMethodname(): string
+    {
+        Yii::$app->db->createCommand('USE `' . DB_STORES . '`; UPDATE payment_methods SET `method_name` = `name`;')->execute();
+
+        return $this->stdout("SUCCESS rename values in method_name \n");
+    }
 }

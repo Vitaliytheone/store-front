@@ -304,7 +304,7 @@ class PaymentsSearch extends Model
             $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = $storeMethodsNames[$method] ?? $methodsNames[$method] ?? 'Deleted';
+            $menuItem['method_title'] = $methodsNames[$method] ?? $storeMethodsNames[$method] ?? 'Deleted';
         });
 
         $allMethodsMenuItem = [
@@ -337,7 +337,7 @@ class PaymentsSearch extends Model
         $storeMethodsNames = StorePaymentMethods::getStorePayNames($this->_store->id);
 
         array_walk($payments, function (&$payment) use ($methodsNames, $storeMethodsNames) {
-            $payment['method_title'] = $storeMethodsNames[$payment['method_id']] ?? $methodsNames[$payment['method_id']] ?? ucfirst($payment['method']);
+            $payment['method_title'] = $methodsNames[$payment['method_id']] ?? $storeMethodsNames[$payment['method_id']] ?? ucfirst($payment['method']);
             $payment['status_title'] = Payments::getStatusName($payment['status']);
             $payment['updated_at_formatted'] = Yii::$app->formatter->asDatetime($payment['updated_at'], 'yyyy-MM-dd HH:mm:ss');
         });

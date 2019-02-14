@@ -5,8 +5,6 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\StorePaymentMethods;
-use yii\helpers\HtmlPurifier;
-use yii\helpers\StringHelper;
 
 /**
  * Class EditPaymentMethodForm
@@ -79,11 +77,6 @@ class EditPaymentMethodForm extends StorePaymentMethods
         $data = $postData[$this->formName()];
 
         $this->setOptions($data);
-
-        $payName = $postData['pay-name'] ?? null;
-        if ($payName !== null) {
-            $this->name = HtmlPurifier::process(StringHelper::truncate(trim($payName), 50, ''));
-        }
 
         if (!$this->save()) {
             return false;
