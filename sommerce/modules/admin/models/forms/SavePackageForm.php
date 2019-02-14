@@ -20,7 +20,7 @@ class SavePackageForm extends Model
     public $icon;
 
     /**
-     * @var string
+     * @var array
      */
     public $properties;
 
@@ -59,9 +59,9 @@ class SavePackageForm extends Model
     public function setPackage(Packages $package) {
         $this->_package = $package;
 
-        // Init default values;
-        $this->icon = $package->icon ? $package->icon : null;
-        $this->properties = $package->properties ? $package->properties : null;
+        // Init model values;
+        $this->icon = $package->icon;
+        $this->properties = $package->getProperties();
     }
 
     /**
@@ -87,9 +87,9 @@ class SavePackageForm extends Model
     public function rules()
     {
         return [
-            [['icon', 'properties'], 'string'],
-            [['icon', 'properties'], 'trim'],
-            [['icon'], 'string', 'max' => 180],
+            ['icon', 'trim'],
+            ['icon', 'string', 'max' => 180],
+            ['properties', 'safe'],
         ];
     }
 
@@ -108,7 +108,7 @@ class SavePackageForm extends Model
         $package = $this->getPackage();
 
         $package->icon = $this->icon;
-        $package->properties = $this->properties;
+        $package->setProperties($this->properties);
 
         if (!$package->save(false)) {
             $this->addError('page_file', 'Cannot save package!');

@@ -175,4 +175,21 @@ class Packages extends ActiveRecord
         return true;
     }
 
+    /**
+     * Get properties
+     * @return mixed
+     */
+    public function getProperties()
+    {
+        return json_decode($this->properties, true);
+    }
+
+    /**
+     * Set properties
+     * @param $properties
+     */
+    public function setProperties($properties)
+    {
+        $this->properties = json_encode($properties);
+    }
 }
