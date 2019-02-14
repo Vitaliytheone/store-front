@@ -87,9 +87,7 @@ AddPackage.propTypes = {
 		quantity: PropTypes.number,
 		overflow: PropTypes.number,
 		availability: PropTypes.string,
-		mode: PropTypes.string,
-		provider_id: PropTypes.string,
-		provider_service_id: PropTypes.string
+		mode: PropTypes.string
 	})
 };
 
@@ -103,7 +101,7 @@ AddPackage.defaultProps = {
 		link_type: '1',
 		visibility: '1',
 		mode: '2',
-		provider_id: 'none', 
+		provider_id: 'none',
 		provider_service: 'none'
 	}
 };

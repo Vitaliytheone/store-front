@@ -21,7 +21,7 @@ const SortablePackage = SortableElement(({ providers, pack, response, editPackag
 			</Col>
 			<Col lg="2">{pack.price}</Col>
 			<Col lg="2">{providerName.name}</Col>
-			<Col lg="2" className="ext-lg-center">
+			<Col lg="2" className="ext-lg-center active-center">
 				{pack.visibility == 1 ? 'Enabled' : 'Disabled'}
 			</Col>
 			<Col lg="1" className="padding-null-lg-right text-lg-right text-sm-left">

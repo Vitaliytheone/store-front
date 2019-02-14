@@ -41584,3 +41584,14 @@ body {
 .feature-delete {
   margin-left: 5px;
 }
+
+/* Position of package's visibility */
+.active-center {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+
+.m-dropdown:hover #dropdown {
+	display:block;
+}

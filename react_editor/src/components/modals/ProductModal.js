@@ -15,7 +15,7 @@ import 'bootstrap/js/src/modal';
 class ProductModal extends React.PureComponent {
 	state = {
 		colorSchema: false,
-		editSeo: false
+		editSeo: false,
 	};
 
 	clearColor = (event) => {
@@ -84,7 +84,6 @@ class ProductModal extends React.PureComponent {
 			colorHex = (
 				<div className="color-schema">
 					<div className="cover-schema" onClick={this.closeColorSchema} />
-					{/* <SketchPicker color={this.props.values.color} onChange={this.handleChangeComplete} /> */}
 					<div className="sommerce-colopicker">
 						<div className="sommerce-colopicker__body">
 							<div className="sommerce-colopicker__body-left">
@@ -188,19 +187,19 @@ class ProductModal extends React.PureComponent {
 						<div className="card-body">
 							<div className="row seo-header align-items-center">
 								<div className="col-sm-8">Properties</div>
-								{/* <div className="col-sm-4 text-sm-right">
+								<div className="col-sm-4 text-sm-right">
                   <div
-                    className="m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left"
+                    className={"m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left" }
                     data-dropdown-toggle="hover"
                     aria-expanded="true"
                   >
-                    <a
+                    <button
                       className="btn btn-sm btn-link m-dropdown__toggle"
                       href="#"
                     >
-                      <span className="la 	la-clone" /> Copy properties
-                    </a>
-                    <div className="m-dropdown__wrapper">
+                      <span className="la la-clone" /> Copy properties
+                    </button>
+                    <div id="dropdown" className="m-dropdown__wrapper">
                       <span className="m-dropdown__arrow m-dropdown__arrow--left" />
                       <div className="m-dropdown__inner">
                         <div className="m-dropdown__body">
@@ -275,7 +274,7 @@ class ProductModal extends React.PureComponent {
                       </div>
                     </div>
                   </div>
-                </div> */}
+                </div>
 							</div>
 							<div className="form-group">
 								<div className="input-group">

@@ -7,7 +7,7 @@ import { get_providers_services } from '../../services/url';
 
 class PackageModal extends React.PureComponent {
 	state = {
-		providerServices: [ { service: 'none', name: 'Chose provider service' } ],
+		providerServices: [ { service: null, name: 'Chose provider service' } ],
 		error: null,
 		message: null
 	};
@@ -17,7 +17,7 @@ class PackageModal extends React.PureComponent {
 			var response = await get_providers_services(provider_id);
 			console.log(response);
 			this.props.setFieldValue('provider_id', provider_id);
-			response.data.unshift({ service: 'none', name: 'Chose provider service' });
+			response.data.unshift({ service: null, name: 'Chose provider service' });
 			const error = response.data[1].error;
 			const message = response.data[1].message;
 			console.log(error);
@@ -28,7 +28,7 @@ class PackageModal extends React.PureComponent {
 			});
 		} else {
 			this.setState({
-				providerServices: [ { service: 'none', name: 'Chose provider service' } ]
+				providerServices: [ { service: null, name: 'Chose provider service' } ]
 			});
 		}
 	};
