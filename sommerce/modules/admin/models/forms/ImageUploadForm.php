@@ -14,13 +14,17 @@ use yii\web\UploadedFile;
  * Class BlockUploadForm
  * @package app\modules\superadmin\models\forms
  */
-class ImageUploadForm extends Model {
-
+class ImageUploadForm extends Model
+{
     const MAX_IMAGE_SIZE = 1024 * 1024 * 5;
 
     const PREVIEW_WIDTH = 40;
     const PREVIEW_HEIGHT = 40;
 
+    /**
+     * Uploaded file
+     * @var UploadedFile
+     */
     public $file;
 
     /**
@@ -111,25 +115,25 @@ class ImageUploadForm extends Model {
      */
     public function upload()
     {
+        $this->file = UploadedFile::getInstanceByName('image');
+
         if (!$this->validate()) {
             return false;
         }
 
-        $fileInstance = UploadedFile::getInstanceByName('image');
-
-        if (!($fileInstance instanceof UploadedFile)) {
+        if (!($this->file instanceof UploadedFile)) {
             $this->addError('file', Yii::t('admin', 'settings.message_upload_error'));
             return false;
         }
 
-        if (!$content = file_get_contents($fileInstance->tempName)) {
+        if (!$content = file_get_contents($this->file->tempName)) {
             $this->addError('file', Yii::t('admin', 'settings.message_upload_error'));
             return false;
         }
 
         $this->setCdn(Cdn::getCdn());
 
-        if (!$cdnId = $this->uploadFile($fileInstance->tempName, $fileInstance->type)) {
+        if (!$cdnId = $this->uploadFile($this->file->tempName, $this->file->type)) {
             return false;
         }
 
@@ -146,7 +150,7 @@ class ImageUploadForm extends Model {
         }
 
         $image = new Images();
-        $image->file_name = $fileInstance->name;
+        $image->file_name = $this->file->name;
         $image->file = $content;
         $image->cdn_id = $cdnId;
         $image->cdn_data = json_encode($cdnInfo);
