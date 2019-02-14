@@ -45,7 +45,7 @@ class DeletePackage extends Component {
 									<Button color="secondary" className="m-btn--air" onClick={this.toggle}>
 										Cancel
 									</Button>
-									<Button color="danger" id="feature-delete m-btn--air" onClick={this.handleSubmit}>
+									<Button color="danger" className="feature-delete m-btn--air" onClick={this.handleSubmit}>
 										Yes, delete it!
 									</Button>
 								</Col>

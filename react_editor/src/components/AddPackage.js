@@ -41,7 +41,7 @@ class AddPackage extends Component {
 			<React.Fragment>
 				<Row>
 					<Col className="mt-2 mb-3">
-						<Button color="primary" size="sm" onClick={this.toggle}>
+						<Button color="primary" className="m-btn--air" size="sm" onClick={this.toggle}>
 							Add package
 						</Button>
 					</Col>
@@ -51,7 +51,7 @@ class AddPackage extends Component {
 					isOpen={this.state.modalIsOpen}
 					toggle={this.toggle}
 					backdrop="static"
-					keyboard={false}
+					keyboard={this.toggle}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						{({ setFieldValue}) => (

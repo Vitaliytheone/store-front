@@ -52,17 +52,17 @@ class EditProduct extends Component {
             onClick={this.getProduct}
             color="primary"
             size="sm"
-            className="m-btn--pill sommerce_dragtable__action"
+            className="m-btn--pill sommerce_dragtable__action m-btn--air"
           >
             Edit
           </Button>
           <Modal
-            innerRef={(el) => (this.modal = el)}
+            innerRef={el => (this.modal = el)}
             isOpen={this.state.modalIsOpen}
+            toggle={this.toggle}
             size="lg"
             backdrop="static"
-            keyboard={false}
-            autoFocus={true}
+            keyboard={this.toggle}
           >
             <Formik
               enableReinitialize={true}

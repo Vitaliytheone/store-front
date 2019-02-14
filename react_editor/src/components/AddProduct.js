@@ -69,7 +69,7 @@ class AddProduct extends Component {
 				<Row className="sommerce-products__actions">
 					<Col lg="12">
 						<div className="page-content">
-							<Button onClick={this.toggle} color="primary">
+							<Button onClick={this.toggle} className="m-btn--air" color="primary">
 								Add product
 							</Button>
 						</div>
@@ -82,7 +82,7 @@ class AddProduct extends Component {
 					toggle={this.toggle}
 					size="lg"
 					backdrop="static"
-					keyboard={false}
+					keyboard={this.toggle}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						{({ setFieldValue, values }) => (

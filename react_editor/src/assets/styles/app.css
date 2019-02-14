@@ -41567,6 +41567,6 @@ body {
           width: 100% !important;
         }
 
-        .sommerce-colopicker__color-pie:active {
-            border: 1px solid black;
-        }
+.opacity {
+    opacity: 1 !important;
+}

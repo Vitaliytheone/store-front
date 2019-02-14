@@ -88,9 +88,9 @@ class ProductModal extends React.PureComponent {
 					<div className="sommerce-colopicker">
 						<div className="sommerce-colopicker__body">
 							<div className="sommerce-colopicker__body-left">
-								{colors.map((item) => (
+								{colors.map((item, index) => (
 									<div
-										className="sommerce-colopicker__color-pie"
+										className="sommerce-colopicker__color-pie" key={index}
 										style={{ background: item }}
 										onClick={() => setFieldValue('color', item)}
 									/>
@@ -147,7 +147,7 @@ class ProductModal extends React.PureComponent {
 						<Label htmlFor="visibility">Visibility</Label>
 						<Field className="form-control" component="select" name="visibility">
 							<option value="1">Enabled</option>
-							<option value="2">Disabled</option>
+							<option value="0">Disabled</option>
 						</Field>
 					</FormGroup>
 
