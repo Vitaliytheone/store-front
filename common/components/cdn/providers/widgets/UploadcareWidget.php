@@ -66,6 +66,7 @@ JS;
 
 
     /**
+     * Generate code with options for widget
      * @return string
      */
     public function getWidget(): string
@@ -74,7 +75,7 @@ JS;
             'id' => 'file-uploader',
             'data-multiple' => true,
             'data-multiple-max' => Yii::$app->params['uploadFileLimit'],
-            'data-max-size' =>  Uploadcare::FILE_SIZE,
+            'data-max-size' => Uploadcare::FILE_SIZE,
         ]);
         $code .= "<script>if (typeof setSize === 'function') {setSize()}</script>";
         return $code;
@@ -93,10 +94,6 @@ JS;
         }
     }
 
-    /**
-     * @var
-     * @return string
-     */
     public function run()
     {
         $this->view->registerJs($this->getConfigCode(), yii\web\View::POS_END);

@@ -317,7 +317,7 @@ class TicketsController extends CustomController
                 /** @var \common\components\cdn\providers\Uploadcare $cdn */
                 $cdn = Cdn::getCdn();
                 $files = $message->file;
-                $res = $cdn->deleteGroup($files->getPreparedIds());
+                $res = $cdn->deleteGroup($files->prepareIds());
                 Yii::debug($res,'$res');
                 $message->delete();
 

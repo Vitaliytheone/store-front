@@ -11,7 +11,7 @@ use my\helpers\Url;
 use common\components\cdn\providers\widgets\UploadcareWidget;
 
 ?>
-    <div class="form-group" id="htmlText" data-action="<?= Url::toRoute("/ticket/ " . $ticket->id . '?clear=1') ?>">
+    <div class="form-group" id="htmlText" data-action="<?= Url::toRoute('/ticket/' . $ticket->id . '?clear=1') ?>">
         <ul class="chat">
             <?php foreach ($ticketMessages as $message) : ?>
                 <?php if ($message->customer_id != 0): ?>

@@ -178,9 +178,7 @@ class SiteController extends CustomController
      * @param int $id
      * @param bool $clear
      * @return string
-     * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
-     * @throws \yii\base\UnknownClassException
      */
     public function actionTicket($id, $clear = false)
     {

@@ -48,7 +48,8 @@
                 <?= $form->field($model, 'subject') ?>
 
                 <?= $form->field($model, 'message')->textarea([
-                    'rows' => 5
+                    'rows' => 5,
+                    'required' => true,
                 ]) ?>
             </div>
             <div class="modal-footer">

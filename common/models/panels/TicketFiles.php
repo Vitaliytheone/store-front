@@ -26,7 +26,6 @@ use yii\behaviors\TimestampBehavior;
  * @property Tickets $ticket
  * @property Customers $customer
  * @property SuperAdmin $admin
-
  */
 class TicketFiles extends ActiveRecord
 {
@@ -142,7 +141,7 @@ class TicketFiles extends ActiveRecord
      * Get all UUIDs from files group and return it as array
      * @return array
      */
-    public function getPreparedIds(): array
+    public function prepareIds(): array
     {
         $result = [];
         $files = json_decode($this->details, true);
