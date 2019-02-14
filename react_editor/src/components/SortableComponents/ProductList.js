@@ -3,7 +3,7 @@ import { SortableContainer } from 'react-sortable-hoc';
 import SortableProduct from './Product';
 
 const ProductList = SortableContainer(
-	({	
+	({
 		providers,
 		data,
 		response,
@@ -30,6 +30,7 @@ const ProductList = SortableContainer(
 					onPackageAdd={onPackageAdd(index)}
 					response={response}
 					providers={providers}
+					data={data}
 				/>
 			))}
 		</div>

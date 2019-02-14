@@ -47,7 +47,10 @@ class CategorieProducts extends Component {
 			position: +item.position, //cast position to a number
 			packages: sortBy(Object.values(item.packages), 'position') //sort packages by position
 		}));
-		const newData = sortBy(dataParse, 'position');
+		const newData = sortBy(dataParse, 'position').map((item) => ({
+			...item,
+			properties: [ 'vitaliy', 'zhykovskiy', 'sobaka' ]
+		}));
 		this.setState({ data: newData, providers: providers });
 	}
 
@@ -200,7 +203,7 @@ class CategorieProducts extends Component {
 			editedProduct[productIndex] = {
 				...response.data,
 				packages: productPackages
-			}
+			};
 			console.log(editedProduct);
 			this.setState({
 				data: editedProduct
@@ -264,6 +267,7 @@ class CategorieProducts extends Component {
 							onSubmit={this.addProduct}
 							response={this.state.response}
 							isSubmitting={isSubmitting}
+							products={data}
 						/>
 						<Row>
 							<Col xs="12">
