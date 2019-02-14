@@ -357,7 +357,7 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         $domain = Yii::$app->params['gatewayDomain'];
 
-        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', $this->domain));
+        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
 
         $postfix = null;
 
