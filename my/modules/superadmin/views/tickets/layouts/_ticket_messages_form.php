@@ -27,7 +27,8 @@ use common\components\cdn\providers\widgets\UploadcareWidget;
         <?= $form->field($model, 'message')->textarea([
             'rows' => '7',
             'class' => 'form-control',
-            'id' => 'createmessageform-message'
+            'id' => 'createmessageform-message',
+            'required' => true,
         ])->label(false) ?>
     </div>
 

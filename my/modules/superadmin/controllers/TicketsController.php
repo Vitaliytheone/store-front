@@ -303,6 +303,10 @@ class TicketsController extends CustomController
 
     /**
      * Delete ticket message
+     *
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws \Throwable
      */
     public function actionDeleteMessage()
     {
@@ -310,7 +314,13 @@ class TicketsController extends CustomController
         if (!empty($params['ticketId']) && !empty($params['messageId'])) {
             $message = $this->findMessage($params['messageId']);
             if ($message->canAdminEdit()) {
+                /** @var \common\components\cdn\providers\Uploadcare $cdn */
+                $cdn = Cdn::getCdn();
+                $files = $message->file;
+                $res = $cdn->deleteGroup($files->getPreparedIds());
+                Yii::debug($res,'$res');
                 $message->delete();
+
             }
 
             return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $params['ticketId']]));
@@ -337,6 +347,8 @@ class TicketsController extends CustomController
                     'message' => Yii::t('app', 'error.ticket.can_not_edit_message')
                 ];
             }
+
+            $cdn = Cdn::getCdn();
 
             $model = new EditMessageForm();
             $model->setMessage($message);

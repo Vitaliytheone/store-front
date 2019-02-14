@@ -131,7 +131,7 @@ class Uploadcare extends BaseCdn
     /**
      * Get Files
      * @param string $cdnId CDN object `id`
-     * @param bool $links if set return array of upload files [name, link]
+     * @param bool $links if set return array of upload files [uuid, name, link, size]
      * @return array
      * @throws \Exception
      */
@@ -188,10 +188,11 @@ class Uploadcare extends BaseCdn
     {
         try {
             $result = $this->_api->deleteMultipleFiles($cdnIds);
-            Yii::debug($result, '$result');
+            Yii::debug($result, '$result'); // todo del
         } catch (Exception $e) {
             echo $e->getMessage() . "\n";
             echo $e->getTraceAsString() . "\n";
+            Yii::debug($e->getMessage() . "\n" . $e->getTraceAsString() . "\n" );
             return false;
         }
 
