@@ -50,7 +50,8 @@ class EditPackage extends Component {
           onClick={this.getPackage}
           color="primary"
           size="sm"
-          className="m-btn--pill sommerce_dragtable__action"
+          className="m-btn--pill sommerce_dragtable__action m-btn--air"
+          active
         >
           Edit
         </Button>
@@ -58,7 +59,8 @@ class EditPackage extends Component {
           innerRef={(el) => (this.modal = el)}
           isOpen={this.state.modalIsOpen}
           backdrop="static"
-          keyboard={false}
+          keyboard={true}
+          toggle={this.toggle}
         >
           <Formik
             onSubmit={this.handleSubmit}

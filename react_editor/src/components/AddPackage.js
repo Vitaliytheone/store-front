@@ -41,7 +41,7 @@ class AddPackage extends Component {
 			<React.Fragment>
 				<Row>
 					<Col className="mt-2 mb-3">
-						<Button color="primary" size="sm" onClick={this.toggle}>
+						<Button color="primary" className="m-btn--air" size="sm" onClick={this.toggle}>
 							Add package
 						</Button>
 					</Col>
@@ -51,7 +51,7 @@ class AddPackage extends Component {
 					isOpen={this.state.modalIsOpen}
 					toggle={this.toggle}
 					backdrop="static"
-					keyboard={false}
+					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						{({ setFieldValue}) => (
@@ -87,9 +87,7 @@ AddPackage.propTypes = {
 		quantity: PropTypes.number,
 		overflow: PropTypes.number,
 		availability: PropTypes.string,
-		mode: PropTypes.string,
-		provider_id: PropTypes.string,
-		provider_service_id: PropTypes.string
+		mode: PropTypes.string
 	})
 };
 
@@ -103,7 +101,7 @@ AddPackage.defaultProps = {
 		link_type: '1',
 		visibility: '1',
 		mode: '2',
-		provider_id: 'none', 
+		provider_id: 'none',
 		provider_service: 'none'
 	}
 };

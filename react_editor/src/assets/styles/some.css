@@ -1,0 +1,194 @@
+
+              /* MY CUSTOM STYLES */
+
+/* active links in menu */
+li.m-menu__item > a.active > span{
+  color: white !important;
+}
+
+/* without top margin after header */
+/* .m-container-sommerce {
+  margin-top: 60px; } */
+
+/* padding between categories in the header */
+  @media (min-width: 993px) {
+    .m-page__container {
+      padding: 0 30px;
+  }
+}
+
+/* padding between name of product and button  */
+.edit_product {
+  padding-left: 3px;
+}
+
+/* opacity and z-index for draggable elements */
+.sortable-helper {
+  opacity: 0.5;
+  z-index: 10000;
+}
+
+/* cursor move on modal's draghandle */
+.dd-handle__icon {
+  cursor: move;
+}
+
+/* color input */
+.product-color__wrap .sp-replacer {
+    position: absolute;
+    left: 165px;
+    top: 32px;
+}
+
+.sp-replacer {
+    margin: 0;
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    padding: 4px;
+    display: inline-block;
+    border: solid 1px #e6e8f1;
+    background: #ebedf3;
+    color: #333;
+    border-radius: 30px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.sp-replacer:hover {
+    border: solid 1px lightblue;
+}
+
+.sp-preview {
+    width: 24px;
+    border-radius: 30px;
+    height: 24px;
+    margin-right: 5px;
+    left: 2px;
+    top: 2px;
+    position: absolute;
+    border: none;
+    z-index: 0;
+    position: relaive;  
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==);
+}
+
+.sp-clear-display {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(data:image/gif;base64,R0lGODlhFAAUAPcAAAAAAJmZmZ2dnZ6enqKioqOjo6SkpKWlpaampqenp6ioqKmpqaqqqqurq/Hx8fLy8vT09PX19ff39/j4+Pn5+fr6+vv7+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAUABQAAAihAP9FoPCvoMGDBy08+EdhQAIJCCMybCDAAYUEARBAlFiQQoMABQhKUJBxY0SPICEYHBnggEmDKAuoPMjS5cGYMxHW3IiT478JJA8M/CjTZ0GgLRekNGpwAsYABHIypcAgQMsITDtWJYBR6NSqMico9cqR6tKfY7GeBCuVwlipDNmefAtTrkSzB1RaIAoXodsABiZAEFB06gIBWC1mLVgBa0AAOw==);
+}
+
+/* styles for input with color schema */
+.product-color {
+    display: inline-block!important;
+    color: #575962;
+    width: 200px;
+    padding: 0.65rem 7px;
+    font-size: 1rem;
+    line-height: 1.25;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid #ebedf2;
+    border-radius: 0.25rem;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    list-style: none;
+    outline: none;
+}
+
+/*  position of color schema's component */
+
+.color-schema {
+  position: absolute;
+  z-index: 10000;
+  left: 200px;
+}
+
+.cover-schema {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+} 
+
+/* reorder styles for nested drag-elements */
+body .group-item {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+body {
+  padding-right: 0px !important;
+}
+
+/* Scrolling when nested modal (summernote) open */
+
+.modal {
+  overflow: auto;
+}
+
+.scroll-off {
+  overflow: hidden;
+}
+
+/* Stylization of react-toastify notification */
+.toast-background {
+  opacity: 0.5;
+}
+
+
+  .sommerce-colopicker{
+            width: 600px;
+            background: #ebedf3;
+            border: none;
+            border-radius: 5px;
+        }
+        .sommerce-colopicker__body{
+            position: relative;
+        }
+        .sommerce-colopicker__body-right{
+            position: absolute;
+            right: 0;
+            width: 207px;
+            padding: 10px;
+            top: 0;
+        }
+        .sommerce-colopicker__color-pie{
+            width: 16px;
+            height: 16px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            border: 1px solid transparent;
+            margin: 0px 1px;
+        }
+        .sommerce-colopicker__color-pie:hover{
+            border: 1px solid rgba(38, 39, 53, 0.32)
+        }
+
+        .sommerce-colopicker__body-left{
+            margin-right: 207px;
+            border-right: solid 1px #ccc;
+            padding: 10px;
+                padding: 10px 10px 40px 10px;
+        }
+        .sommerce-colopicker__picker{
+            position: relative;
+        }
+
+        .chrome-picker {
+          background: none !important;
+          box-shadow: none !important;
+          border: none !important;
+          width: 100% !important;
+        }
+
+.opacity {
+    opacity: 1 !important;
+}
