@@ -25,7 +25,7 @@ class DeletePackage extends Component {
 				<Button
 					onClick={this.toggle}
 					color="light"
-					className="m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
+					className="m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill delete-package"
 				>
 					<i className="la la-trash" />
 				</Button>

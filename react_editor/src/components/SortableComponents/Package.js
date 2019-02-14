@@ -8,8 +8,8 @@ import DeletePackage from '../DeletePackage';
 const SortablePackage = SortableElement(({ providers, pack, response, editPackage, deletePackage, getPackage }) => {
 	return (
 		<div
-			className=
-				'group-item sommerce_dragtable__tr align-items-center ' 
+			className={
+			'group-item sommerce_dragtable__tr align-items-center ' + (pack.visibility == 0 ? 'opacity' : null)}
 			
 		>
 			{/* <div className={(pack.visibility == 0 ? 'toast-background' : null)}> */}
@@ -25,7 +25,7 @@ const SortablePackage = SortableElement(({ providers, pack, response, editPackag
 				{pack.visibility == 1 ? 'Enabled' : 'Disabled'}
 			</Col>
 			{/* </div> */}
-			<Col lg="1" className="padding-null-lg-right text-lg-right text-sm-left opacity">
+			<Col lg="1" className="padding-null-lg-right text-lg-right text-sm-left">
 				<EditPackage response={response} onSubmit={editPackage} getPackage={getPackage} providers={providers} />
 				<DeletePackage onSubmit={deletePackage} />
 			</Col>

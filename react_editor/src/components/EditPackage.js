@@ -51,6 +51,7 @@ class EditPackage extends Component {
           color="primary"
           size="sm"
           className="m-btn--pill sommerce_dragtable__action m-btn--air"
+          active
         >
           Edit
         </Button>

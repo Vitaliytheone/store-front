@@ -41570,3 +41570,12 @@ body {
         .sommerce-colopicker__color-pie:active {
             border: 1px solid black;
         }
+
+        .opacity {
+          background: rgba(0, 0, 0, 0.5)) !important;
+          color: lightgrey !important;
+        }
+
+        .delete-package {
+          border: none;
+        }
