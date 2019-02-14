@@ -82,4 +82,39 @@ class Uploadcare extends BaseCdn
 
         return $this->_file->delete();
     }
+
+    /**
+     * @inheritdoc
+     * @param $cdnId
+     * @return File
+     */
+    public function getInfo($cdnId)
+    {
+        if (! $this->_file instanceof File) {
+            $this->_file = $this->_api->getFile($cdnId);
+        }
+
+        return $this->_file->data;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function makePreview($cdnId, int $width, int $height)
+    {
+        if (! $this->_file instanceof File) {
+            $this->_file = $this->_api->getFile($cdnId);
+        }
+
+        $url = $this->_file->preview($width, $height)->getUrl();
+
+        if (!$url) {
+            throw new \Exception('Cannot make preview!');
+        }
+
+        return [
+            'id' => $this->_file->getUuid(),
+            'url' => $url,
+        ];
+    }
 }

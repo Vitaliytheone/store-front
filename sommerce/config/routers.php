@@ -43,4 +43,7 @@ return [
     'admin/settings/pages/get-product' => 'admin/settings/get-product',
     'admin/settings/pages/set-product/<id:\d++>' => 'admin/settings/set-product',
     'admin/settings/pages/set-package/<id:\d++>' => 'admin/settings/set-package',
+    'admin/settings/pages/set-image' => 'admin/settings/set-image',
+    'admin/settings/pages/get-images' => 'admin/settings/get-images',
+    'admin/settings/pages/unset-image/<id:\d++>' => 'admin/settings/unset-image',
 ];

@@ -630,4 +630,7 @@ return [
 
     'settings.notification_preview_m_header' => 'Preview',
     'settings.notification_preview_m_cancel' => 'Cancel',
+
+    'cdn.error.common' => 'CDN error, try again later',
+    'cdn.error.bad_upload' => 'Error uploading file to CDN!',
 ];
