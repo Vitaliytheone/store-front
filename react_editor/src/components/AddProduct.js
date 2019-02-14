@@ -82,7 +82,7 @@ class AddProduct extends Component {
 					toggle={this.toggle}
 					size="lg"
 					backdrop="static"
-					keyboard={this.toggle}
+					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						{({ setFieldValue, values }) => (

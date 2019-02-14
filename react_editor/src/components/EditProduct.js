@@ -62,7 +62,7 @@ class EditProduct extends Component {
             toggle={this.toggle}
             size="lg"
             backdrop="static"
-            keyboard={this.toggle}
+            keyboard={true}
           >
             <Formik
               enableReinitialize={true}

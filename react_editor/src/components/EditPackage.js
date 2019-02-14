@@ -59,7 +59,7 @@ class EditPackage extends Component {
           innerRef={(el) => (this.modal = el)}
           isOpen={this.state.modalIsOpen}
           backdrop="static"
-          keyboard={this.toggle}
+          keyboard={true}
           toggle={this.toggle}
         >
           <Formik

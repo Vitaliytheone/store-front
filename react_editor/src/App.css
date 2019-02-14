@@ -41475,7 +41475,7 @@ li.m-menu__item > a.active > span{
     list-style: none;
     outline: none;
 }
-
+/* 
 /*  position of color schema's component */
 
 .color-schema {
@@ -41483,14 +41483,14 @@ li.m-menu__item > a.active > span{
   z-index: 10000;
   left: 200px;
 }
-
+/* 
 .cover-schema {
     position: fixed;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
-} 
+}   */
 
 /* reorder styles for nested drag-elements */
 body .group-item {
@@ -41517,65 +41517,70 @@ body {
   opacity: 0.5;
 }
 
+/* Stylization of  сcolor picker */
+.sommerce-colopicker{
+  width: 600px;
+  background: #ebedf3;
+  border: none;
+  border-radius: 5px;
+}
+.sommerce-colopicker__body{
+  position: relative;
+}
+.sommerce-colopicker__body-right{
+  position: absolute;
+  right: 0;
+  width: 207px;
+  padding: 10px;
+  top: 0;
+}
+.sommerce-colopicker__color-pie{
+  width: 16px;
+  height: 16px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin: 0px 1px;
+}
+.sommerce-colopicker__color-pie:hover{
+  border: 1px solid rgba(38, 39, 53, 0.32)
+}
+.sommerce-colopicker__body-left{
+  margin-right: 207px;
+  border-right: solid 1px #ccc;
+  padding: 10px;
+  padding: 10px 10px 40px 10px;
+}
+.sommerce-colopicker__picker{
+  position: relative;
+}
+.chrome-picker {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  width: 100% !important;
+}
 
-  .sommerce-colopicker{
-            width: 600px;
-            background: #ebedf3;
-            border: none;
-            border-radius: 5px;
-        }
-        .sommerce-colopicker__body{
-            position: relative;
-        }
-        .sommerce-colopicker__body-right{
-            position: absolute;
-            right: 0;
-            width: 207px;
-            padding: 10px;
-            top: 0;
-        }
-        .sommerce-colopicker__color-pie{
-            width: 16px;
-            height: 16px;
-            -webkit-border-radius: 50%;
-            -moz-border-radius: 50%;
-            border-radius: 50%;
-            display: inline-block;
-            vertical-align: middle;
-            cursor: pointer;
-            border: 1px solid transparent;
-            margin: 0px 1px;
-        }
-        .sommerce-colopicker__color-pie:hover{
-            border: 1px solid rgba(38, 39, 53, 0.32)
-        }
+.sommerce-colopicker__color-pie:active {
+    border: 1px solid black;
+}
 
-        .sommerce-colopicker__body-left{
-            margin-right: 207px;
-            border-right: solid 1px #ccc;
-            padding: 10px;
-                padding: 10px 10px 40px 10px;
-        }
-        .sommerce-colopicker__picker{
-            position: relative;
-        }
+/* Style for package if it disable mode */
 
-        .chrome-picker {
-          background: none !important;
-          box-shadow: none !important;
-          border: none !important;
-          width: 100% !important;
-        }
+.disabled-package {
+  background: rgba(255, 255, 255, 0.7) !important;
+  color: lightgrey !important;
+}
 
-        .sommerce-colopicker__color-pie:active {
-            border: 1px solid black;
-        }
+/* Reorder styles of delete-button */
+.delete-package {
+  border: none;
+}
 
-        .opacity {
-          background: rgba(0, 0, 0, 0.5)) !important;
-          color: lightgrey !important;
-        }
-
-        .delete-package {
-          border: none;
-        }
+.feature-delete {
+  margin-left: 5px;
+}

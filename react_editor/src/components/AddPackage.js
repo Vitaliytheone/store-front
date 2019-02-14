@@ -51,7 +51,7 @@ class AddPackage extends Component {
 					isOpen={this.state.modalIsOpen}
 					toggle={this.toggle}
 					backdrop="static"
-					keyboard={this.toggle}
+					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
 						{({ setFieldValue}) => (
