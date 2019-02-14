@@ -134,6 +134,7 @@ class CreateStaffForm extends Model
             'payments' => ArrayHelper::getValue($labels, 'payments'),
             'tickets' => ArrayHelper::getValue($labels, 'tickets'),
             'reports' => ArrayHelper::getValue($labels, 'reports'),
+            'tools' => ArrayHelper::getValue($labels, 'tools'),
             'affiliates' => ArrayHelper::getValue($labels, 'affiliates'),
             'appearance' => ArrayHelper::getValue($labels, 'appearance'),
             'appearance_themes' => ArrayHelper::getValue($labels, 'appearance_themes'),
