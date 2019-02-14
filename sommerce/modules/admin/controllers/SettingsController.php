@@ -7,6 +7,7 @@ use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
+use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
@@ -37,6 +38,7 @@ class SettingsController extends CustomController
     use LanguageTrait;
     use NotificationsTrait;
     use ThemesCustomizerTrait;
+    use IntegrationsTrait;
 
     public function behaviors()
     {
@@ -95,11 +97,7 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.page_title');
         $this->addModule('adminGeneral');
 
-        
-
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
-
-
         $storeForm->setUser(Yii::$app->user);
 
         if ($storeForm->updateSettings($request->post())) {
@@ -121,6 +119,7 @@ class SettingsController extends CustomController
      * Delete Store Favicon or Logo
      * @param $type
      * @return Response
+     * @throws \yii\base\Exception
      */
     public function actionDeleteImage($type)
     {
@@ -137,6 +136,7 @@ class SettingsController extends CustomController
      * Return links list by link type AJAX action
      * @param $link_type
      * @return array
+     * @throws \yii\base\Exception
      */
     public function actionGetLinks($link_type)
     {
