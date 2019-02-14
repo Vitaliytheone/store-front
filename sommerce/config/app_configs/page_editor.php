@@ -87,5 +87,37 @@ return [
          *      JSON SERIALIZE DATA {}
          */
         'save_package' => '/admin/settings/pages/set-package/{{id}}',
+
+        /**
+         * Загрузка картинки
+         *
+         * Тип запроса: POST
+         * Обязательные параметры:
+         * Необязательные параметы:
+         * Данные формы:
+         *      MULTIPART/FORM-DATA
+         */
+        'upload_image' => '/admin/settings/pages/set-image',
+
+        /**
+         * Удаление картинки
+         *
+         * Тип запроса: POST
+         * Обязательные параметры:
+         *  {{id}} (int) – ID картинки
+         * Необязательные параметы:
+         * Данные формы:
+         *     NULL
+         */
+        'delete_image' => '/admin/settings/pages/unset-image/{{id}}',
+
+        /**
+         * Получение списка картинок
+         *
+         * Тип запроса: GET
+         * Обязательные параметры:
+         * Необязательные параметы:
+         */
+        'get_images' => '/admin/settings/pages/get-images',
     ],
 ];

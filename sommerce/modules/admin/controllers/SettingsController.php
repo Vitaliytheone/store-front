@@ -77,6 +77,9 @@ class SettingsController extends CustomController
                     'get-product',
                     'set-product',
                     'set-package',
+                    'set-image',
+                    'unset-image',
+                    'get-images',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_AJAX_API,
@@ -96,8 +99,6 @@ class SettingsController extends CustomController
             'block-upload',
             'update-theme',
             'theme-update-style',
-            'draft',
-            'publish',
         ])) {
             $this->enableCsrfValidation = false;
         }

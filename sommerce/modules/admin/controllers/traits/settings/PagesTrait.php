@@ -2,11 +2,13 @@
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\exceptions\FirstValidationErrorHttpException;
+use common\models\store\Images;
 use common\models\store\Packages;
 use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\store\Products;
 use sommerce\controllers\CommonController;
+use sommerce\modules\admin\models\forms\ImageUploadForm;
 use sommerce\modules\admin\models\forms\SavePackageForm;
 use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\forms\SaveProductForm;
@@ -15,6 +17,7 @@ use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
+use yii\helpers\Html;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -258,6 +261,73 @@ trait PagesTrait {
         }
 
         return ['id' => $form->getPackage()->id];
+    }
+
+    /**
+     * Upload image
+     * @return array
+     * @throws BadRequestHttpException
+     * @throws FirstValidationErrorHttpException
+     */
+    public function actionSetImage()
+    {
+        $form = new ImageUploadForm();
+
+        if (!$form->upload()) {
+            if ($form->hasErrors()) {
+                throw new FirstValidationErrorHttpException($form);
+            } else {
+                throw new BadRequestHttpException('Cannot save package!');
+            }
+        }
+
+        return $form->getImage()->getAttributes(['id', 'file_name', 'url', 'thumbnail_url']);
+    }
+
+    /**
+     * Delete image
+     * @param $id integer
+     * @throws BadRequestHttpException
+     * @throws FirstValidationErrorHttpException
+     * @throws NotFoundHttpException
+     * @return boolean
+     */
+    public function actionUnsetImage($id)
+    {
+        if (!$image = Images::findOne(['id' => $id])) {
+            throw new NotFoundHttpException('Image not found!');
+        }
+
+        $form = new ImageUploadForm();
+        $form->setImage($image);
+
+        if (!$form->delete()) {
+            if ($form->hasErrors()) {
+                throw new FirstValidationErrorHttpException($form);
+            } else {
+                throw new BadRequestHttpException('Cannot delete image!');
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Return uploaded images list
+     * @return array
+     */
+    public function actionGetImages()
+    {
+        $images = Images::find()
+            ->select(['id', 'file_name', 'url', 'thumbnail_url'])
+            ->asArray()
+            ->all();
+
+        array_walk($images, function(&$image){
+           $image['file_name'] = Html::encode($image['file_name']);
+        });
+
+        return $images;
     }
 
     /**
