@@ -637,4 +637,7 @@ return [
     'settings.integrations_edit_title' => 'Edit',
     'settings.integrations_chats_title' => 'Online chats',
     'settings.integrations_analytics_title' => 'Analytics',
+    'settings.integrations_edit.code_label' => 'Code snippet',
+    'settings.integrations_edit.cancel_button' => 'Cancel',
+    'settings.integrations_edit.save_button' => 'Save changes',
 ];

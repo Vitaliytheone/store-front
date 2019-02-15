@@ -1,9 +1,11 @@
 <?php
 
-use sommerce\modules\admin\components\Url;
+use common\models\stores\StoreIntegrations;
 
 /* @var $this \yii\web\View */
 /* @var $integrations array */
+/* @var $integration StoreIntegrations */
+/* @var $editPage bool|null */
 
 ?>
 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor-desktop m-grid--desktop m-body">
@@ -17,9 +19,15 @@ use sommerce\modules\admin\components\Url;
             ])?>
         </div>
             <?php
-                echo $this->render('layouts/integrations/_integrations_list', [
-                    'integrations' => $integrations,
-                ]);
+                if (isset($editPage)) {
+                    echo $this->render('layouts/integrations/_edit_integration', [
+                        'integration' => $integration,
+                    ]);
+                } else {
+                    echo $this->render('layouts/integrations/_integrations_list', [
+                        'integrations' => $integrations,
+                    ]);
+                }
             ?>
     </div>
 </div>

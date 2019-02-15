@@ -40,8 +40,7 @@ use my\helpers\Url;
                                         <label>
                                             <input class="toggle-active" type="checkbox"
                                                name="toggle-active" <?= (bool)$chat['visibility'] ? 'checked' : '' ?>
-                                               data-payment_method=""
-                                               data-action_url="<?= Url::toRoute(['/settings/integrations-toggle-active', 'code' => $chat['code']]) ?>">
+                                               data-action_url="<?= Url::toRoute(['/settings/integrations-toggle-active', 'id' => $chat['id']]) ?>">
                                             <span></span>
                                         </label>
                                     </span>
@@ -77,8 +76,7 @@ use my\helpers\Url;
                                         <label>
                                             <input class="toggle-active" type="checkbox"
                                                    name="toggle-active" <?= (bool)$analytics['visibility'] ? 'checked' : '' ?>
-                                                   data-payment_method=""
-                                                   data-action_url="<?= Url::toRoute(['/settings/integrations-toggle-active', 'code' => $analytics['code']]) ?>">
+                                                   data-action_url="<?= Url::toRoute(['/settings/integrations-toggle-active', 'id' => $analytics['id']]) ?>">
                                             <span></span>
                                         </label>
                                     </span>

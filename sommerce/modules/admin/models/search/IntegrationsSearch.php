@@ -6,6 +6,7 @@ use common\models\stores\Integrations;
 use common\models\stores\StoreIntegrations;
 use common\models\stores\Stores;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 
 /**
  * Class IntegrationsSearch
@@ -16,6 +17,9 @@ class IntegrationsSearch extends Model
     /** @var Stores */
     private $store;
 
+    /** @var null|int */
+    private $integrationId = null;
+
     /**
      * Set store
      * @param Stores $store
@@ -25,15 +29,31 @@ class IntegrationsSearch extends Model
         $this->store = $store;
     }
 
+    /**
+     * Set integration id
+     * @param int $id
+     */
+    public function setIntegrationId(int $id)
+    {
+        $this->integrationId = $id;
+    }
+
+    /**
+     * @return array|ActiveQuery
+     */
     public function search(): array
     {
         $integrations = StoreIntegrations::find()
-            ->where(['store_id' => $this->store->id])
-            ->orderBy(['position' => SORT_ASC])
-            ->asArray()
-            ->all();
+            ->where(['store_id' => $this->store->id]);
 
-        return $this->prepareData($integrations);
+        if ($this->integrationId) {
+            $integrations->andWhere(['id' => $this->integrationId]);
+        }
+
+        $integrations->orderBy(['position' => SORT_ASC])
+            ->asArray();
+
+        return $this->prepareData($integrations->all());
     }
 
     /**
@@ -59,11 +79,17 @@ class IntegrationsSearch extends Model
                 'id' => $storeIntegration['id'],
                 'category' => $integrationCategory,
                 'code' => $inegration['code'],
-                'options' => $storeIntegration['options'],
+                'options' => isset($storeIntegration['options']) ? json_decode($storeIntegration['options'], true) : [],
                 'position' => isset($storeIntegration['position']) ? $storeIntegration['position'] : $inegration['position'],
                 'visibility' => $storeIntegration['visibility'],
                 'name' => $inegration['name'],
+                'settings_description' => $inegration['settings_description'],
+                'settings_form' => isset($inegration['settings_form']) ? json_decode($inegration['settings_form'], true) : [],
             ];
+
+            if ($this->integrationId) {
+                return $item;
+            }
 
             switch ($integrationCategory) {
                 case Integrations::CATEGORY_CHATS:

@@ -119,6 +119,15 @@ class Integrations extends ActiveRecord
     }
 
     /**
+     * Get settings form
+     * @return array
+     */
+    public function getSettingsForm(): array
+    {
+        return isset($this->settings_form) ? json_decode($this->settings_form, true) : [];
+    }
+
+    /**
      * Get icons
      * @return array
      */
@@ -140,5 +149,17 @@ class Integrations extends ActiveRecord
     public static function getIconByCode(string $code): string
     {
         return ArrayHelper::getValue(static::getIcons(), $code, '');
+    }
+
+    /**
+     * Get integration name
+     * @param int $id
+     * @return string
+     */
+    public static function getIntegrationName(int $id): string
+    {
+        $integration = static::findOne($id);
+
+        return $integration->name ?? '';
     }
 }

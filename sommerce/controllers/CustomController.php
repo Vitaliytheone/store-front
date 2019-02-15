@@ -8,6 +8,7 @@ use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\helpers\LanguagesHelper;
+use sommerce\modules\admin\widgets\IntegrationsWidget;
 use yii\base\InvalidParamException;
 use Yii;
 use yii\bootstrap\Html;
@@ -85,6 +86,9 @@ class CustomController extends CommonController
         if ($this->store->isInactive() && $action->id !== 'frozen') {
             $this->redirect(Url::to('/frozen'));
         }
+
+        // Add integrations code in <head> of page
+        echo IntegrationsWidget::widget();
 
         return parent::beforeAction($action);
     }

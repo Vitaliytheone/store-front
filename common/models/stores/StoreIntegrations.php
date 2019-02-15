@@ -120,4 +120,22 @@ class StoreIntegrations extends ActiveRecord
     {
         return static::find()->max('position') ?? 0;
     }
+
+    /**
+     * Get options
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return isset($this->options) ? json_decode($this->options, true) : [];
+    }
+
+    /**
+     * Set options
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = json_encode($options);
+    }
 }
