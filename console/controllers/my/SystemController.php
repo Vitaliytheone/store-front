@@ -912,4 +912,54 @@ class SystemController extends CustomController
         return $this->stdout("\nSuccessfully changed {$count} service\n\n", Console::FG_GREEN);
     }
 
+    /**
+     * Set staff `tools` rule for `Full access` staff accounts
+     * @throws Exception
+     */
+    public function actionActivateAdminTools()
+    {
+        $staffsBatch = ProjectAdmin::find();
+
+        /**
+         * @var $staff ProjectAdmin
+         */
+        foreach ($staffsBatch->batch() as $staffs) {
+            foreach ($staffs as $staff) {
+
+                $rules = json_decode($staff->rules,1);
+
+                if (json_last_error()) {
+                    $this->stderr('JSON decode error! Skipped [Staff ID: ' . $staff->id .']' . "\n", Console::FG_RED);
+
+                    continue;
+                }
+
+                if (isset($rules['tools'])) {
+                    $this->stderr('Rule already defined! Skipped [Staff ID: ' . $staff->id .']' . "\n", Console::FG_YELLOW);
+
+                    continue;
+                }
+
+                if (0 != $rules['providers']) {
+                    continue;
+                }
+
+                if (in_array(0, array_filter($rules, function($value, $key){ return $key !== 'providers'; }, ARRAY_FILTER_USE_BOTH))) {
+                    continue;
+                }
+
+                $rules['tools'] = 1;
+
+                $staff->rules = json_encode($rules);
+
+                if (!$staff->save(false)) {
+                    throw new Exception('Cannot save staff!');
+                }
+
+                $this->stderr('Updated staff "tool" rule  [Staff ID: ' . $staff->id . ']' . "\n", Console::FG_GREEN);
+            }
+        }
+    }
+
+
 }

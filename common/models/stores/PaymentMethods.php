@@ -10,7 +10,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "{{%payment_methods}}".
+ * This is the model class for table "{{%payment_methods_last}}".
  *
  * @property integer $id
  * @property string $method_name
@@ -66,7 +66,7 @@ class PaymentMethods extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.payment_methods';
+        return DB_STORES . '.payment_methods_last';
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace my\models\forms;
 
 use my\helpers\UserHelper;
@@ -55,6 +56,7 @@ class EditStaffForm extends Model
      * Validate account
      * @param $attribute
      * @param $params
+     * @return bool
      */
     public function uniqAccount($attribute, $params)
     {
@@ -74,8 +76,9 @@ class EditStaffForm extends Model
 
     /**
      * Create ticket method
+     * @return bool
      */
-    public function save()
+    public function save(): bool
     {
         if (!$this->validate()) {
             return false;
@@ -102,7 +105,7 @@ class EditStaffForm extends Model
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'account' => Yii::t('app', 'form.edit_staff.account'),
@@ -114,7 +117,7 @@ class EditStaffForm extends Model
      * Get access list
      * @return array
      */
-    public function getAccessRules()
+    public function getAccessRules(): array
     {
         $labels = ProjectAdmin::getRulesLabels();
         return [
@@ -127,21 +130,12 @@ class EditStaffForm extends Model
             'payments' => ArrayHelper::getValue($labels, 'payments'),
             'tickets' => ArrayHelper::getValue($labels, 'tickets'),
             'reports' => ArrayHelper::getValue($labels, 'reports'),
+            'tools' => ArrayHelper::getValue($labels, 'tools'),
             'affiliates' => ArrayHelper::getValue($labels, 'affiliates'),
-            'providers' => ArrayHelper::getValue($labels, 'providers'),
+            'appearance' => ArrayHelper::getValue($labels, 'appearance'),
+            'appearance_themes' => ArrayHelper::getValue($labels, 'appearance_themes'),
+            'appearance_languages' => ArrayHelper::getValue($labels, 'appearance_languages'),
             'settings' => ArrayHelper::getValue($labels, 'settings'),
-        ];
-    }
-
-    /**
-     * Get access list
-     * @return array
-     */
-    public function getAccessSettings()
-    {
-        $labels = ProjectAdmin::getRulesLabels();
-
-        return [
             'settings_general' => ArrayHelper::getValue($labels, 'settings_general'),
             'settings_providers' => ArrayHelper::getValue($labels, 'settings_providers'),
             'settings_payments' => ArrayHelper::getValue($labels, 'settings_payments'),
@@ -149,8 +143,26 @@ class EditStaffForm extends Model
             'settings_pages' => ArrayHelper::getValue($labels, 'settings_pages'),
             'settings_menu' => ArrayHelper::getValue($labels, 'settings_menu'),
             'settings_preferences' => ArrayHelper::getValue($labels, 'settings_preferences'),
-            'settings_themes' => ArrayHelper::getValue($labels, 'settings_themes'),
-            'settings_languages' => ArrayHelper::getValue($labels, 'settings_languages'),
+            'providers' => ArrayHelper::getValue($labels, 'providers'),
+        ];
+    }
+
+    /**
+     * Get access list of wrapped items
+     * @return array
+     */
+    public function getWrappedRules(): array
+    {
+        return [
+            'settings_general' => 'settings',
+            'settings_providers' => 'settings',
+            'settings_payments' => 'settings',
+            'settings_bonuses' => 'settings',
+            'settings_pages' => 'settings',
+            'settings_menu' => 'settings',
+            'settings_preferences' => 'settings',
+            'appearance_themes' => 'appearance',
+            'appearance_languages' => 'appearance',
         ];
     }
 

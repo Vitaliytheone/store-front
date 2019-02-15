@@ -56,6 +56,7 @@ class ProjectAdmin extends ActiveRecord
         'tickets' => 1,
         'reports' => 1,
         'affiliates' => 1,
+        'tools' => 1,
         'providers' => 0,
         'settings_general' => 1,
         'settings_providers' => 1,
@@ -64,8 +65,8 @@ class ProjectAdmin extends ActiveRecord
         'settings_pages' => 1,
         'settings_menu' => 1,
         'settings_preferences' => 1,
-        'settings_themes' => 1,
-        'settings_languages' => 1,
+        'appearance_themes' => 1,
+        'appearance_languages' => 1,
     ];
 
     use UnixTimeFormatTrait;
@@ -146,6 +147,7 @@ class ProjectAdmin extends ActiveRecord
             'tickets' => Yii::t('app', 'project_admin.rules_tickets'),
             'reports' => Yii::t('app', 'project_admin.rules_stats'),
             'affiliates' => Yii::t('app', 'project_admin.rules_affiliate'),
+            'tools' => Yii::t('app', 'project_admin.rules_tools'),
             'providers' => Yii::t('app', 'project_admin.rules_providers'),
             'settings' => Yii::t('app', 'project_admin.rules_settings'),
             'settings_general' => Yii::t('app', 'project_admin.rules_settings_general'),
@@ -155,8 +157,9 @@ class ProjectAdmin extends ActiveRecord
             'settings_pages' => Yii::t('app', 'project_admin.rules_settings_pages'),
             'settings_menu' => Yii::t('app', 'project_admin.rules_settings_menu'),
             'settings_preferences' => Yii::t('app', 'project_admin.rules_settings_preferences'),
-            'settings_themes' => Yii::t('app', 'project_admin.rules_settings_themes'),
-            'settings_languages' => Yii::t('app', 'project_admin.rules_settings_languages'),
+            'appearance_themes' => Yii::t('app', 'project_admin.rules_settings_themes'),
+            'appearance_languages' => Yii::t('app', 'project_admin.rules_settings_languages'),
+            'appearance' => Yii::t('app', 'project_admin.rules_appearance'),
         ];
     }
 
