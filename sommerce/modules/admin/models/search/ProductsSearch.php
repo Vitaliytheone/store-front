@@ -24,7 +24,6 @@ class ProductsSearch extends Model
     private $_packagesTable;
     private $_providersTable;
 
-
     /**
      * Cached Store providers
      * @var array
@@ -77,7 +76,7 @@ class ProductsSearch extends Model
     {
         $productsRows = (new Query())
             ->select([
-                'pr.id pr_id', 'pr.name pr_name', 'pr.position pr_position', 'pr.visibility pr_visibility',
+                'pr.id pr_id', 'pr.name pr_name', 'pr.position pr_position', 'pr.visibility pr_visibility', 'pr.properties pr_properties',
                 'pk.id pk_id', 'pk.product_id pk_pr_id', 'pk.name pk_name', 'pk.position pk_position', 'pk.visibility pk_visibility', 'pk.mode pk_mode', 'pk.price pk_price', 'pk.quantity pk_quantity', 'pk.deleted pk_deleted',
                 'pk.provider_id'
             ])
@@ -122,6 +121,7 @@ class ProductsSearch extends Model
                 'position' => $currentRow['pr_position'],
                 'visibility' => $currentRow['pr_visibility'],
                 'packages' => $productPackages,
+                'properties' => isset($currentRow['pr_properties']) ? json_decode($currentRow['pr_properties'], true) : [],
             ];
         }
 
@@ -135,27 +135,5 @@ class ProductsSearch extends Model
         }
 
         return $productsPackages;
-    }
-
-    /**
-     * Return products-properties list
-     * @return array
-     */
-    public function getProductsProperties()
-    {
-        $products = (new Query())
-            ->select(['id', 'name', 'properties'])
-            ->from($this->_productsTable)
-            ->where([
-                'not',
-                ['properties' => null]
-            ])
-            ->all();
-
-        array_walk($products, function(&$product) {
-            $product['properties'] = json_decode($product['properties'], true);
-        });
-
-        return $products;
     }
 }
