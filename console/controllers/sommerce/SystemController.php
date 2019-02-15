@@ -583,7 +583,7 @@ class SystemController extends CustomController
     }
 
     /**
-     * 6) Rename payment_methods.method_name as payment_methods.name
+     * 6) Rename values in payment_methods.method_name as payment_methods.name
      * @return string
      * @throws Exception
      */
@@ -593,4 +593,93 @@ class SystemController extends CustomController
 
         return $this->stdout("SUCCESS rename values in method_name \n");
     }
+
+    /**
+     * Copy settings from payment_methods_last to store_payment_methods
+     * @return string
+     * @throws Exception
+     * @throws \Throwable
+     */
+    public function actionCopySettingsToStorepaymethod(): string
+    {
+        if (Yii::$app->db->getTableSchema('{{%store_payment_methods}}', true) === null) {
+            return $this->stdout("Table `store_payment_methods` does not exist. Create new.\n", Console::FG_RED);
+        }
+
+        $methods = (new Query())
+            ->select('id, method, details')
+            ->from(DB_STORES . '.payment_methods_last')
+            ->indexBy('id')
+            ->all();
+
+        $count = $delete = 0;
+
+        foreach ($methods as $key => $methodName) {
+            $storeMethod = (new Query())
+                ->from(DB_STORES . '.store_payment_methods')
+                ->where(['id' => $key])
+                ->one();
+
+            if (!$storeMethod) {
+                continue;
+            }
+
+            $payMethod = (new Query())
+                ->from(DB_STORES . '.payment_methods')
+                ->where(['method_name' => $methodName['method']])
+                ->one();
+
+            if (!$payMethod) {
+                Yii::$app->db->createCommand()->delete(DB_STORES .'.store_payment_methods', [
+                    'id' => $storeMethod['id']
+                ])->execute();
+                $delete++;
+                continue;
+            }
+
+            $store = (new Query())
+                ->from(DB_STORES . '.stores')
+                ->where(['id' => $storeMethod['store_id']])
+                ->one();
+
+            if (!$store) {
+                continue;
+            }
+
+            $storeCurrency = (new Query())
+                ->from(DB_STORES . '.payment_methods_currency')
+                ->where(['method_id' => $payMethod['id']])
+                ->andWhere(['currency' => $store['currency']])
+                ->one();
+
+            if (!$storeCurrency) {
+                Yii::$app->db->createCommand()->delete(DB_STORES .'.store_payment_methods', [
+                    'id' => $storeMethod['id']
+                ])->execute();
+                $delete++;
+                continue;
+            }
+
+            $lastPositions = (new Query())
+                ->from(DB_STORES . '.store_payment_methods')
+                ->where(['store_id' => $storeMethod['store_id']])
+                ->max('position');
+
+            Yii::$app->db->createCommand()->update(DB_STORES .'.store_payment_methods', [
+                'method_id' => $payMethod['id'],
+                'currency_id' => $storeCurrency['id'],
+                'name' => $payMethod['name'],
+                'position' => isset($lastPositions) ? $lastPositions + 1 : 1,
+                'created_at' => time(),
+                'updated_at' => time(),
+                'options' => $methodName['details'],
+            ], ['id' => $storeMethod['id']])->execute();
+
+            $count++;
+        }
+
+        return $this->stdout("SUCCESS change in {$count} store_payment_methods settings and delete {$delete} unsupported methods\n");
+    }
+
+
 }
