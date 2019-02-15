@@ -24,7 +24,6 @@ $i = 0;
                 <?= nl2br(htmlspecialchars($message->message)) ?>
                 <div class="ticket-message__card-attach">
                     <?php if (!empty($message->file->details)) {
-                        // todo widget
                         $files = $message->file->getDetails();
                         echo UploadcareWidget::widget(['files' => $files]);
                     } ?>
@@ -33,7 +32,7 @@ $i = 0;
         </div>
     <?php else: ?>
         <?php if ($message->is_system != 0) : ?>
-            <?= (SystemMessages::getSystemMessageWidget($message->getSystemInfo()))::widget([
+            <?= SystemMessages::getSystemMessageWidget($message->getSystemInfo())::widget([
                 'admin' => $message->admin->getFullName(),
                 'data' => $message->getSystemInfo(),
                 'date' => $message->getFormattedDate('created_at'),
@@ -50,7 +49,6 @@ $i = 0;
                     <?= nl2br(htmlspecialchars($message->message)) ?>
                     <div class="ticket-message__card-attach">
                         <?php if (!empty($message->file->details)) {
-                            // todo widget
                             $files = $message->file->getDetails();
                             echo UploadcareWidget::widget(['files' => $files]);
                         } ?>
@@ -65,7 +63,7 @@ $i = 0;
                             </a>
                         </li>
                         <li>
-                            <?= DeleteMessageWidget::widget(['message' => $message]) //todo del - delete from files ?>
+                            <?= DeleteMessageWidget::widget(['message' => $message]); ?>
                         </li>
                     </ul>
                 </div>

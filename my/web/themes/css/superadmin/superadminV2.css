@@ -82,3 +82,8 @@
     max-height: 400px;
     overflow-y: auto;
 }
+
+.btn-uploadcare .uploadcare--widget__button_type_open{
+    padding: .438rem .865rem;
+    border-radius: .25rem;
+}

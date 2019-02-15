@@ -317,8 +317,9 @@ class TicketsController extends CustomController
                 /** @var \common\components\cdn\providers\Uploadcare $cdn */
                 $cdn = Cdn::getCdn();
                 $files = $message->file;
-                $res = $cdn->deleteGroup($files->prepareIds());
-                Yii::debug($res,'$res');
+                if (!empty($files)) {
+                    $cdn->deleteGroup($files->prepareIds());
+                }
                 $message->delete();
 
             }
@@ -347,8 +348,6 @@ class TicketsController extends CustomController
                     'message' => Yii::t('app', 'error.ticket.can_not_edit_message')
                 ];
             }
-
-            $cdn = Cdn::getCdn();
 
             $model = new EditMessageForm();
             $model->setMessage($message);

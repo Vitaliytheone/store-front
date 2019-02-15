@@ -18,7 +18,7 @@ use Uploadcare\File;
  */
 class Uploadcare extends BaseCdn
 {
-    public const FILE_SIZE = '5242880'; // in byte
+    public const FILE_SIZE = '5242880'; // max file size in byte
 
     private $_api;
     private $_file;
@@ -123,16 +123,16 @@ class Uploadcare extends BaseCdn
      * @param array $options
      * @return string
      */
-    public function getWidget($options = [])
+    public function getWidget($options = []): string
     {
         return $this->_api->widget->getInputTag('qs-file', $options);
     }
 
     /**
-     * Get Files
+     * Get Files from group
      * @param string $cdnId CDN object `id`
-     * @param bool $links if set return array of upload files [uuid, name, link, size]
-     * @return array
+     * @param bool $links if FALSE return array of "Files objects"
+     * @return array return array of upload files [uuid, name, link, size]
      * @throws \Exception
      */
     public function getFiles($cdnId, $links = false)
@@ -140,7 +140,6 @@ class Uploadcare extends BaseCdn
         $this->_file = $this->_api->getGroup($cdnId);
 
         $files = $this->_file->getFiles();
-        Yii::debug($files, 'files RAW'); // todo del
 
         if ($links === true) {
             $result = [];
@@ -149,10 +148,11 @@ class Uploadcare extends BaseCdn
                     'uuid' => $file->data['uuid'],
                     'name' => $file->data['original_filename'],
                     'link' => $file->data['original_file_url'],
+                    'mime' => $file->data['mime_type'],
                     'size' => round($file->data['size'] / 1000, 1) . ' Kb',
                 ];
             }
-            Yii::debug($result, '$result array'); // todo del
+
             return $result;
         }
 
@@ -171,8 +171,7 @@ class Uploadcare extends BaseCdn
             $this->_file = $this->_api->getGroup($cdnId);
             $this->_file->store();
         } catch (Exception $e) {
-            echo $e->getMessage() . "\n";
-            echo $e->getTraceAsString() . "\n";
+            Yii::error($e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
             return false;
         }
         return true;
@@ -188,11 +187,8 @@ class Uploadcare extends BaseCdn
     {
         try {
             $result = $this->_api->deleteMultipleFiles($cdnIds);
-            Yii::debug($result, '$result'); // todo del
         } catch (Exception $e) {
-            echo $e->getMessage() . "\n";
-            echo $e->getTraceAsString() . "\n";
-            Yii::debug($e->getMessage() . "\n" . $e->getTraceAsString() . "\n" );
+            Yii::error($e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
             return false;
         }
 

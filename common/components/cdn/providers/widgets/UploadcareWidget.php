@@ -21,7 +21,7 @@ class UploadcareWidget extends Widget
      * Get config for widget
      * @return string
      */
-    public function getConfigCode(): string
+    public function generateConfigCode(): string
     {
         $code = <<< TXT
 UPLOADCARE_PUBLIC_KEY = "{$this->cdn->getPublicKey()}";
@@ -69,7 +69,7 @@ JS;
      * Generate code with options for widget
      * @return string
      */
-    public function getWidget(): string
+    public function generateWidget(): string
     {
         $code = $this->cdn->getWidget([
             'id' => 'file-uploader',
@@ -96,12 +96,12 @@ JS;
 
     public function run()
     {
-        $this->view->registerJs($this->getConfigCode(), yii\web\View::POS_END);
+        $this->view->registerJs($this->generateConfigCode(), yii\web\View::POS_END);
         $this->view->registerJsFile($this->cdn->getScript());
         $this->view->registerJs($this->setMaxSize(), yii\web\View::POS_END);
 
         if (empty($this->files)) {
-            $result = $this->getWidget();
+            $result = $this->generateWidget();
         } else {
             $result = $this->render('_uploadcare', ['files' => $this->files]);
         }

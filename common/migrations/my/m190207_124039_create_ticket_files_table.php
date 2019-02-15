@@ -13,7 +13,7 @@ class m190207_124039_create_ticket_files_table extends Migration
     public function safeUp()
     {
         $this->execute('
-
+            USE `' . DB_PANELS . '`;
             CREATE TABLE `ticket_files` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `customer_id` int(11) NOT NULL,
