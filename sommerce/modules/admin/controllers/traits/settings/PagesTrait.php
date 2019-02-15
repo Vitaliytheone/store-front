@@ -391,7 +391,7 @@ trait PagesTrait {
                     'price'  => $item['pk_price'],
                     'quantity' => $item['pk_quantity'],
                     'icon' => $item['pk_icon'] ? $item['pk_icon'] : null,
-                    'properties' => $item['pk_properties'] ? $item['pk_properties'] : null,
+                    'properties' => $item['pk_properties'] ? json_decode($item['pk_properties'], true) : null,
                 ];
             }
         }
