@@ -225,4 +225,17 @@ class OrderStoreForm extends DomainForm
 
         return true;
     }
+
+    /**
+     * Get has domain labels
+     * @return array
+     */
+    public function getHasDomainsLabels(): array
+    {
+        return [
+            static::HAS_DOMAIN => Yii::t('app', 'form.order_store.have_domain'),
+            static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_store.want_to_register_new_domain'),
+            static::HAS_SUBDOMAIN => Yii::t('app', 'form.order_store.want_use_on_subdomain'),
+        ];
+    }
 }

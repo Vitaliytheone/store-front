@@ -109,12 +109,23 @@ class DomainForm extends Model
      * Get has domain labels
      * @return array
      */
-    public function getHasDomainsLabels()
+    public function getHasDomainsLabels(): array
     {
         return [
             static::HAS_DOMAIN => Yii::t('app', 'form.order_panel.have_domain'),
             static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_panel.want_to_register_new_domain'),
             static::HAS_SUBDOMAIN => Yii::t('app', 'form.order_panel.want_use_on_subdomain'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getStoreHasDomainsLabels(): array
+    {
+        return [
+            static::HAS_DOMAIN => Yii::t('app', 'form.order_panel.have_domain'),
+            static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_panel.want_to_register_new_domain'),
         ];
     }
 
