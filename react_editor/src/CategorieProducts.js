@@ -16,6 +16,7 @@ import {
 	get_update_product
 } from './services/url';
 import { sortBy, pick } from 'lodash';
+import { get_providers_services } from './services/url';
 
 class CategorieProducts extends Component {
 	state = {
@@ -33,7 +34,8 @@ class CategorieProducts extends Component {
 				seo_keywords: '',
 				url: ''
 			},
-			package: ''
+			package: '',
+			providerServices: []
 		}
 	};
 
@@ -175,8 +177,9 @@ class CategorieProducts extends Component {
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
 		const response = await get_update_package(getPackageId);
+		const responseServices = await get_providers_services(response.data.provider_id);
 		this.setState({
-			response: { ...this.state.response, package: response.data }
+			response: { ...this.state.response, package: response.data, providerServices: responseServices.data }
 		});
 	};
 

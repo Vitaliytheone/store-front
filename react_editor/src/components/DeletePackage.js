@@ -33,7 +33,7 @@ class DeletePackage extends Component {
 					isOpen={this.state.modalIsOpen}
 					toggle={this.toggle}
 					backdrop="static"
-					keyboard={false}
+					keyboard={true}
 					size="sm"
 				>
 					<ModalBody>

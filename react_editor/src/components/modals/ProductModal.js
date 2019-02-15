@@ -7,18 +7,31 @@ import { arrayMove } from 'react-sortable-hoc';
 import { ChromePicker } from 'react-color';
 import { colors } from '../../helpers/colors';
 import { filter } from 'lodash';
+import ConfirmRemove from "../ConfirmRemoveProperties";
 
 // // Import bootstrap(v3 or v4) dependencies
 // import 'bootstrap/js/src/dropdown';
 // import 'bootstrap/js/src/tooltip';
 import 'bootstrap/js/src/modal';
 
+
 class ProductModal extends React.PureComponent {
 	state = {
 		colorSchema: false,
-		editSeo: false
+		editSeo: false,
+		removeCurrentProperties: false
 	};
 
+	togglePropertyModal() {
+		this.setState((prevstate) => ({
+			removeCurrentProperties: !prevstate.removeCurrentProperties
+		}));
+	};
+
+	// setProperties() {
+	// 	this.props.setFieldValue("color", event.target.value);
+	// }
+	
 	clearColor = (event) => {
 		this.props.setFieldValue('color', event.target.value);
 	};
@@ -213,16 +226,12 @@ class ProductModal extends React.PureComponent {
 															Select the product from which you want to copy properties
 														</div>
 														<ul className="m-nav">
-															{properties.map((item) => (
-																<li className="m-nav__item">
+															{properties.map((item, index) => (
+																<li className="m-nav__item" key={index}>
 																	<a
 																		className="m-nav__link"
 																		style={{ cursor: 'pointer' }}
-																		onClick={() =>
-																			setFieldValue(
-																				'properties',
-																				item.properties
-																			)}
+																		onClick={() => { values.properties.length ? this.togglePropertyModal() : setFieldValue('properties', item.properties) }}
 																	>
 																		<span className="m-nav__link-text">
 																			{item.name}
@@ -362,6 +371,7 @@ class ProductModal extends React.PureComponent {
 						</div>
 					</div>
 				</ModalBody>
+				<ConfirmRemove toggle={this.togglePropertyModal} modalIsOpen={this.state.removeCurrentProperties} setFieldValue={this.props.setFieldValue}/>
 			</React.Fragment>
 		);
 	}
