@@ -150,7 +150,10 @@ return [
             'ip' => $serverIp,
         ],
         'CNAME' => [
-            'target' => 'perfectpanel.com',
+            'target' => [
+                'perfectpanel.com',
+                'managerdns.com',
+            ],
         ],
     ],
 

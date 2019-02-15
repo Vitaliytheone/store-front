@@ -331,7 +331,7 @@ class OrderHelper {
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
         $currency = ArrayHelper::getValue($orderDetails, 'currency');
-        $subdomain = ArrayHelper::getValue($orderDetails, 'subdomain');
+        $subdomain = ArrayHelper::getValue($orderDetails, 'subdomain', 0);
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -343,7 +343,7 @@ class OrderHelper {
         $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
         $project->paypal_fraud_settings = json_encode(Yii::$app->params['paypal_fraud_settings']);
         $project->dns_status = Project::DNS_STATUS_ALIEN;
-        $project->subdomain = $subdomain;
+        $project->subdomain = (int)$subdomain;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -949,7 +949,7 @@ class OrderHelper {
 
         if($project->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
             $ticket = new Tickets();
-            $ticket->customer_id =$ssl->cid;
+            $ticket->customer_id = $ssl->cid;
             $ticket->is_admin = 1;
             $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
             if ($ticket->save(false)) {
