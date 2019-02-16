@@ -6,18 +6,32 @@ import { ProductInput } from '../Inputs';
 import { arrayMove } from 'react-sortable-hoc';
 import { ChromePicker } from 'react-color';
 import { colors } from '../../helpers/colors';
+import { filter } from 'lodash';
+import ConfirmRemove from "../ConfirmRemoveProperties";
 
 // // Import bootstrap(v3 or v4) dependencies
 // import 'bootstrap/js/src/dropdown';
 // import 'bootstrap/js/src/tooltip';
 import 'bootstrap/js/src/modal';
 
+
 class ProductModal extends React.PureComponent {
 	state = {
 		colorSchema: false,
 		editSeo: false,
+		removeCurrentProperties: false
 	};
 
+	togglePropertyModal() {
+		this.setState((prevstate) => ({
+			removeCurrentProperties: !prevstate.removeCurrentProperties
+		}));
+	};
+
+	// setProperties() {
+	// 	this.props.setFieldValue("color", event.target.value);
+	// }
+	
 	clearColor = (event) => {
 		this.props.setFieldValue('color', event.target.value);
 	};
@@ -75,9 +89,10 @@ class ProductModal extends React.PureComponent {
 	};
 
 	render() {
-		const { values, setFieldValue } = this.props;
+		const { values, setFieldValue, products } = this.props;
 		const { colorSchema, editSeo } = this.state;
 		const seoUrl = values.url && values.url.replace(/ /g, '-');
+		const properties = filter(products, (item) => item.properties);
 
 		let colorHex;
 		if (colorSchema) {
@@ -89,7 +104,8 @@ class ProductModal extends React.PureComponent {
 							<div className="sommerce-colopicker__body-left">
 								{colors.map((item, index) => (
 									<div
-										className="sommerce-colopicker__color-pie" key={index}
+										className="sommerce-colopicker__color-pie"
+										key={index}
 										style={{ background: item }}
 										onClick={() => setFieldValue('color', item)}
 									/>
@@ -188,93 +204,48 @@ class ProductModal extends React.PureComponent {
 							<div className="row seo-header align-items-center">
 								<div className="col-sm-8">Properties</div>
 								<div className="col-sm-4 text-sm-right">
-                  <div
-                    className={"m-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left" }
-                    data-dropdown-toggle="hover"
-                    aria-expanded="true"
-                  >
-                    <button
-                      className="btn btn-sm btn-link m-dropdown__toggle"
-                      href="#"
-                    >
-                      <span className="la la-clone" /> Copy properties
-                    </button>
-                    <div id="dropdown" className="m-dropdown__wrapper">
-                      <span className="m-dropdown__arrow m-dropdown__arrow--left" />
-                      <div className="m-dropdown__inner">
-                        <div className="m-dropdown__body">
-                          <div className="m-dropdown__content dd-properties__max-height">
-                            <div
-                              className="m--font-primary dd-properties__alert"
-                              role="alert"
-                            >
-                              Select the product from which you want to copy
-                              properties
-                            </div>
-                            <ul className="m-nav">
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Facebook likes
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Facebook followers
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Facebook photo/post likes
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Facebook vide views
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Twitter Followers
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Twitter Retweets
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Twitter Favorites
-                                  </span>
-                                </a>
-                              </li>
-                              <li className="m-nav__item">
-                                <a href="" className="m-nav__link">
-                                  <span className="m-nav__link-text">
-                                    Buy Instagram Likes
-                                  </span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+									<div
+										className={
+											'm-dropdown m-dropdown--inline m-dropdown--large m-dropdown--arrow m-dropdown--align-left'
+										}
+										data-dropdown-toggle="hover"
+										aria-expanded="true"
+									>
+										<button className="btn btn-sm btn-link m-dropdown__toggle" href="#">
+											<span className="la la-clone" /> Copy properties
+										</button>
+										<div id="dropdown" className="m-dropdown__wrapper">
+											<span className="m-dropdown__arrow m-dropdown__arrow--left" />
+											<div className="m-dropdown__inner">
+												<div className="m-dropdown__body">
+													<div className="m-dropdown__content dd-properties__max-height">
+														<div
+															className="m--font-primary dd-properties__alert"
+															role="alert"
+														>
+															Select the product from which you want to copy properties
+														</div>
+														<ul className="m-nav">
+															{properties.map((item, index) => (
+																<li className="m-nav__item" key={index}>
+																	<a
+																		className="m-nav__link"
+																		style={{ cursor: 'pointer' }}
+																		onClick={() => { values.properties.length ? this.togglePropertyModal() : setFieldValue('properties', item.properties) }}
+																	>
+																		<span className="m-nav__link-text">
+																			{item.name}
+																		</span>
+																	</a>
+																</li>
+															))}
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div className="form-group">
 								<div className="input-group">
@@ -400,6 +371,7 @@ class ProductModal extends React.PureComponent {
 						</div>
 					</div>
 				</ModalBody>
+				<ConfirmRemove toggle={this.togglePropertyModal} modalIsOpen={this.state.removeCurrentProperties} setFieldValue={this.props.setFieldValue}/>
 			</React.Fragment>
 		);
 	}

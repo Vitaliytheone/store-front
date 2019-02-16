@@ -16,6 +16,7 @@ import {
 	get_update_product
 } from './services/url';
 import { sortBy, pick } from 'lodash';
+import { get_providers_services } from './services/url';
 
 class CategorieProducts extends Component {
 	state = {
@@ -33,7 +34,8 @@ class CategorieProducts extends Component {
 				seo_keywords: '',
 				url: ''
 			},
-			package: ''
+			package: '',
+			providerServices: []
 		}
 	};
 
@@ -47,7 +49,10 @@ class CategorieProducts extends Component {
 			position: +item.position, //cast position to a number
 			packages: sortBy(Object.values(item.packages), 'position') //sort packages by position
 		}));
-		const newData = sortBy(dataParse, 'position');
+		const newData = sortBy(dataParse, 'position').map((item) => ({
+			...item,
+			properties: [ 'vitaliy', 'zhykovskiy', 'sobaka' ]
+		}));
 		this.setState({ data: newData, providers: providers });
 	}
 
@@ -172,8 +177,9 @@ class CategorieProducts extends Component {
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
 		const response = await get_update_package(getPackageId);
+		const responseServices = await get_providers_services(response.data.provider_id);
 		this.setState({
-			response: { ...this.state.response, package: response.data }
+			response: { ...this.state.response, package: response.data, providerServices: responseServices.data }
 		});
 	};
 
@@ -200,7 +206,7 @@ class CategorieProducts extends Component {
 			editedProduct[productIndex] = {
 				...response.data,
 				packages: productPackages
-			}
+			};
 			console.log(editedProduct);
 			this.setState({
 				data: editedProduct
@@ -264,6 +270,7 @@ class CategorieProducts extends Component {
 							onSubmit={this.addProduct}
 							response={this.state.response}
 							isSubmitting={isSubmitting}
+							products={data}
 						/>
 						<Row>
 							<Col xs="12">

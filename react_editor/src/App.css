@@ -41483,14 +41483,14 @@ li.m-menu__item > a.active > span{
   z-index: 10000;
   left: 200px;
 }
-/* 
+
 .cover-schema {
     position: fixed;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
-}   */
+}  
 
 /* reorder styles for nested drag-elements */
 body .group-item {

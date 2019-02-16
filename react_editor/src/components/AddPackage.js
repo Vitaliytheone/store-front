@@ -6,12 +6,43 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { options } from '../helpers/toast';
 import { scrollModalTop } from '../helpers/scrolling';
+import { get_providers_services } from '../services/url';
 
 class AddPackage extends Component {
 	state = {
 		modalIsOpen: false,
 		showError: false,
-		errorMessage: null
+		errorMessage: null,
+
+		services: {
+			providerServices: [{ service: null, name: 'Chose provider service' }],
+			errorService: null,
+			messageService: null
+		}
+	};
+
+	choseService = async (provider_id) => {
+		if (provider_id !== 'none') {
+			var response = await get_providers_services(provider_id);
+			response.data.unshift({ service: null, name: 'Chose provider service' });
+			const error = response.data[1].error;
+			const message = response.data[1].message;
+			this.setState(prevstate => ({
+				services: {
+					...prevstate,
+					providerServices: response.data,
+					errorService: error,
+					messageService: message
+				}
+			}));
+		} else {
+			this.setState(prevstate => ({
+				services: {
+					...prevstate,
+					providerServices: [{ service: null, name: 'Chose provider service' }]
+				}
+			}));
+		}
 	};
 
 	toggle = () => {
@@ -62,6 +93,8 @@ class AddPackage extends Component {
 								showError={this.state.showError}
 								errorMessage={this.state.errorMessage}
 								providers={this.props.providers}
+								choseService={this.choseService}
+								services={this.state.services}
 							/>
 							<ModalFooter className="justify-content-start">
 								<Button color="primary" type="submit">

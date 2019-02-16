@@ -1,7 +1,7 @@
 import React from 'react';
 import { Label, Input } from 'reactstrap';
 
-export const Select = ({ choseService, providers, field, label, ...props }) => (
+export const Select = ({ choseService, providers, field, form, label, ...props }) => (
 	<div>
 		<Label htmlFor={field.name}>{label}</Label>
 		<Input
@@ -9,6 +9,7 @@ export const Select = ({ choseService, providers, field, label, ...props }) => (
 			{...props}
 			onChange={(event) => {
 				choseService(event.target.value);
+				form.setFieldValue('provider_id', event.target.value);
 				field.onChange(event)
 			}}
 		>

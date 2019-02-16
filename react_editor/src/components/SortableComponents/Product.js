@@ -7,6 +7,7 @@ import PackageList from './PackageList';
 
 const SortableProduct = SortableElement(
 	({
+		data,
 		providers,
 		product,
 		response,
@@ -28,7 +29,12 @@ const SortableProduct = SortableElement(
 									<DragHandle />
 								</div>
 								{product.name}
-								<EditProduct onSubmit={editProduct} getProduct={getProduct} response={response} />
+								<EditProduct
+									onSubmit={editProduct}
+									getProduct={getProduct}
+									response={response}
+									products={data}
+								/>
 							</Col>
 						</Row>
 					</div>

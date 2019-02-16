@@ -23,7 +23,7 @@ class AddProduct extends Component {
 		this.setState((prevstate) => ({
 			confirmModal: !prevstate.confirmModal
 		}));
-		toast("Product was successfully created!", options)
+		toast('Product was successfully created!', options);
 	};
 
 	confirmCreate = async () => {
@@ -32,8 +32,8 @@ class AddProduct extends Component {
 		this.setState((prevstate) => ({
 			confirmModal: !prevstate.confirmModal
 		}));
-		toast("Product was successfully created!", options)
-		toast("Product was successfully created!", options)
+		toast('Product was successfully created!', options);
+		toast('Product was successfully created!', options);
 	};
 
 	toggle = () => {
@@ -63,7 +63,8 @@ class AddProduct extends Component {
 	};
 
 	render() {
-		const { isSubmitting } = this.props;
+		const { isSubmitting, products } = this.props;
+		console.log(this.props);
 		return (
 			<React.Fragment>
 				<Row className="sommerce-products__actions">
@@ -75,7 +76,7 @@ class AddProduct extends Component {
 						</div>
 					</Col>
 				</Row>
-        <ToastContainer animation="fade"/>
+				<ToastContainer animation="fade" />
 				<Modal
 					innerRef={(el) => (this.modal = el)}
 					isOpen={this.state.modalIsOpen}
@@ -93,6 +94,8 @@ class AddProduct extends Component {
 									showError={this.state.showError}
 									errorMessage={this.state.errorMessage}
 									setFieldValue={setFieldValue}
+									products={products}
+									properties={this.props.initialValues.properties}
 								/>
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit" disabled={isSubmitting}>
