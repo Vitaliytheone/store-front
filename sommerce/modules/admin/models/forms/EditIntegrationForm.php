@@ -80,9 +80,6 @@ class EditIntegrationForm extends Model
      */
     public function setActive($active)
     {
-        $transaction = Yii::$app->db->transaction;
-        $transaction->begin();
-
         $currentIntegration = Integrations::findOne($this->storeIntegration->integration_id);
 
         $activeIntegrations = StoreIntegrations::find()
@@ -98,8 +95,7 @@ class EditIntegrationForm extends Model
             foreach ($activeIntegrations as $integration) {
                 /** @var $integration StoreIntegrations*/
                 $integration->visibility = StoreIntegrations::VISIBILITY_OFF;
-                if (!$integration->save()) {
-                    $transaction->rollBack();
+                if (!$integration->save(false)) {
                     return false;
                 }
             }
@@ -107,11 +103,9 @@ class EditIntegrationForm extends Model
 
         $this->storeIntegration->setAttribute('visibility', $active);
         if (!$this->storeIntegration->save(false)) {
-            $transaction->rollBack();
             return false;
         }
 
-        $transaction->commit();
         return $active;
     }
 }

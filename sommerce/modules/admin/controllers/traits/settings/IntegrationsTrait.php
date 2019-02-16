@@ -51,9 +51,12 @@ trait IntegrationsTrait
         $search->setIntegrationId($id);
 
         if ($request->method === 'GET') {
+            $integration = $search->search();
+            $this->view->title = $integration['name'];
+
             return $this->render('integrations', [
                 'editPage' => true,
-                'integration' => $search->search(),
+                'integration' => $integration,
             ]);
         }
 

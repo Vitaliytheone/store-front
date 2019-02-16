@@ -73,6 +73,9 @@ class StoreIntegrations extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'position',
                 ],
                 'value' => function ($event) {
+                    if (isset($this->position)) {
+                        return $this->position;
+                    }
                     return $this->getLastPosition() + 1;
                 },
             ],
@@ -118,7 +121,7 @@ class StoreIntegrations extends ActiveRecord
      */
     public function getLastPosition(): int
     {
-        return static::find()->max('position') ?? 0;
+        return static::find()->where(['store_id' => $this->store_id])->max('position') ?? 0;
     }
 
     /**

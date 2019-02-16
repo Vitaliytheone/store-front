@@ -41,7 +41,11 @@ class IntegrationsWidget extends Widget
                 /** @var StoreIntegrations $storeIntegration */
                 $integration = $allIntegrations[$storeIntegration->integration_id];
                 $snippet = $storeIntegration->getOptions();
-                $snippet = $snippet['snippet'];
+                $snippet = $snippet['snippet'] ?? null;
+
+                if (!isset($snippet) || empty($snippet)) {
+                    continue;
+                }
 
                 if (!isset($integration['widget_class']) || $integration['widget_class'] === '') {
                     continue;

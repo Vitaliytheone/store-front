@@ -38,8 +38,9 @@ use my\helpers\Url;
                                 <div class="payment-cart__active">
                                     <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
                                         <label>
-                                            <input class="toggle-active" type="checkbox"
+                                            <input class="toggle-active chats" type="checkbox"
                                                name="toggle-active" <?= (bool)$chat['visibility'] ? 'checked' : '' ?>
+                                               data-category="chats"
                                                data-action_url="<?= Url::toRoute(['/settings/integrations-toggle-active', 'id' => $chat['id']]) ?>">
                                             <span></span>
                                         </label>
@@ -74,8 +75,9 @@ use my\helpers\Url;
                                 <div class="payment-cart__active">
                                     <span class="m-switch m-switch--outline m-switch--icon m-switch--primary">
                                         <label>
-                                            <input class="toggle-active" type="checkbox"
+                                            <input class="toggle-active analytics" type="checkbox"
                                                    name="toggle-active" <?= (bool)$analytics['visibility'] ? 'checked' : '' ?>
+                                                   data-category="analytics"
                                                    data-action_url="<?= Url::toRoute(['/settings/integrations-toggle-active', 'id' => $analytics['id']]) ?>">
                                             <span></span>
                                         </label>

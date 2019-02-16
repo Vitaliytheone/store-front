@@ -11,6 +11,7 @@ customModule.adminIntegrations = {
             var $checkbox = $(e.currentTarget),
                 actionUrl = $checkbox.data('action_url'),
                 active = $checkbox.prop('checked') | 0;
+                category = $checkbox.data('category');
 
             $.ajax({
                 url: actionUrl,
@@ -19,6 +20,7 @@ customModule.adminIntegrations = {
                     active: active
                 },
                 success: function (data, textStatus, jqXHR) {
+                    $('.toggle-active' + '.' + category).not($checkbox).prop('checked', false);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('Error on update', jqXHR, textStatus, errorThrown);

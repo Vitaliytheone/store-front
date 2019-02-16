@@ -20,7 +20,7 @@ class m190214_074353_20190214_add_table_integrations extends Migration
             'widget_class' => $this->string(255),
             'settings_form' => $this->text(),
             'settings_description' => $this->text(),
-            'visibility' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('1- видема для всех, 0 - не видима для всех'),
+            'visibility' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('1- видима для всех, 0 - не видима для всех'),
             'position' => $this->integer(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
