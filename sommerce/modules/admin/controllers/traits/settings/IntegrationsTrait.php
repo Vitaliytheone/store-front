@@ -76,11 +76,6 @@ trait IntegrationsTrait
     public function actionIntegrationsToggleActive($id)
     {
         $request = Yii::$app->getRequest();
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
 
         $active = $request->post('active', null);
 

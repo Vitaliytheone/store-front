@@ -5,7 +5,6 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\stores\Integrations;
 use common\models\stores\StoreIntegrations;
 use yii\base\Model;
-use Yii;
 
 /**
  * Class EditIntegrationForm
