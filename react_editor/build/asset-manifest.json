@@ -2,9 +2,9 @@
   "main.css": "/static/css/main.css",
   "main.js": "/static/js/main.js",
   "main.js.map": "/static/js/main.js.map",
-  "static/media/App.css": "/static/media/fontawesome-webfont.912ec66d.svg",
+  "static/media/App.css": "/static/media/summernote.ce9ce49a.ttf",
   "static/css/main.css.map": "/static/css/main.css.map",
   "index.html": "/index.html",
-  "precache-manifest.d3e219de1198f8985e6eafabd1e1beef.js": "/precache-manifest.d3e219de1198f8985e6eafabd1e1beef.js",
+  "precache-manifest.1b992f6108c1ca546e657d0787c6eba7.js": "/precache-manifest.1b992f6108c1ca546e657d0787c6eba7.js",
   "service-worker.js": "/service-worker.js"
 }

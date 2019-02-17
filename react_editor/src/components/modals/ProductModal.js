@@ -7,31 +7,28 @@ import { arrayMove } from 'react-sortable-hoc';
 import { ChromePicker } from 'react-color';
 import { colors } from '../../helpers/colors';
 import { filter } from 'lodash';
-import ConfirmRemove from "../ConfirmRemoveProperties";
+import ConfirmRemove from '../ConfirmRemoveProperties';
 
 // // Import bootstrap(v3 or v4) dependencies
 // import 'bootstrap/js/src/dropdown';
 // import 'bootstrap/js/src/tooltip';
 import 'bootstrap/js/src/modal';
 
-
 class ProductModal extends React.PureComponent {
 	state = {
 		colorSchema: false,
 		editSeo: false,
-		removeCurrentProperties: false
+		removeCurrentProperties: false,
+		addPropertie: null
 	};
 
-	togglePropertyModal() {
+	togglePropertyModal = (value) => {
 		this.setState((prevstate) => ({
-			removeCurrentProperties: !prevstate.removeCurrentProperties
+			removeCurrentProperties: !prevstate.removeCurrentProperties,
+			addPropertie: value
 		}));
 	};
 
-	// setProperties() {
-	// 	this.props.setFieldValue("color", event.target.value);
-	// }
-	
 	clearColor = (event) => {
 		this.props.setFieldValue('color', event.target.value);
 	};
@@ -211,7 +208,7 @@ class ProductModal extends React.PureComponent {
 										data-dropdown-toggle="hover"
 										aria-expanded="true"
 									>
-										<button className="btn btn-sm btn-link m-dropdown__toggle" href="#">
+										<button className="btn btn-sm btn-link m-dropdown__toggle">
 											<span className="la la-clone" /> Copy properties
 										</button>
 										<div id="dropdown" className="m-dropdown__wrapper">
@@ -231,7 +228,16 @@ class ProductModal extends React.PureComponent {
 																	<a
 																		className="m-nav__link"
 																		style={{ cursor: 'pointer' }}
-																		onClick={() => { values.properties.length ? this.togglePropertyModal() : setFieldValue('properties', item.properties) }}
+																		onClick={() => {
+																			values.properties.length
+																				? this.togglePropertyModal(
+																						item.properties
+																					)
+																				: setFieldValue(
+																						'properties',
+																						item.properties
+																					);
+																		}}
 																	>
 																		<span className="m-nav__link-text">
 																			{item.name}
@@ -370,8 +376,13 @@ class ProductModal extends React.PureComponent {
 							</div>
 						</div>
 					</div>
+					<ConfirmRemove
+						toggle={this.togglePropertyModal}
+						modalIsOpen={this.state.removeCurrentProperties}
+						setFieldValue={this.props.setFieldValue}
+						properties={this.state.addPropertie}
+					/>
 				</ModalBody>
-				<ConfirmRemove toggle={this.togglePropertyModal} modalIsOpen={this.state.removeCurrentProperties} setFieldValue={this.props.setFieldValue}/>
 			</React.Fragment>
 		);
 	}

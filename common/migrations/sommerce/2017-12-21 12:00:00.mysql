@@ -1,3 +1,0 @@
-# Navigation migration
-USE `stores`;
-ALTER TABLE `stores` ADD `theme_folder` varchar(255) NULL;

@@ -41595,3 +41595,7 @@ body {
 .m-dropdown:hover #dropdown {
 	display:block;
 }
+
+.btn__submit_copy {
+  margin-left: 10px;
+}

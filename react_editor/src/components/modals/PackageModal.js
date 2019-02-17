@@ -5,7 +5,6 @@ import { PackageInput } from '../Inputs';
 import { Select } from '../SelectProviders';
 
 class PackageModal extends React.PureComponent {
-
 	componentDidMount = () => {
 		setTimeout(() => this.name.focus(), 200);
 	};
@@ -159,7 +158,7 @@ class PackageModal extends React.PureComponent {
 
 				{services.errorService ? (
 					<span className="m--font-danger">{services.messageService}</span>
-				) : (services.providerServices.length == true && (
+				) : (
 					<FormGroup>
 						<Label htmlFor="provider_service">Provider service</Label>
 						<Field className="form-control" component="select" name="provider_service">
@@ -170,7 +169,7 @@ class PackageModal extends React.PureComponent {
 							))}
 						</Field>
 					</FormGroup>
-				))}
+				)}
 			</ModalBody>
 		);
 	}
