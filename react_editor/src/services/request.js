@@ -4,9 +4,9 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.xsrfCookieName = '_csrf-frontend';
 
 const instance = axios.create({
-	baseURL: ' '
+  baseURL: ' '
 });
 
-instance.interceptors.response.use((response) => response.data, (error) => Promise.reject(error.response));
+instance.interceptors.response.use(response => response.data, error => Promise.reject(error));
 
 export default instance;
