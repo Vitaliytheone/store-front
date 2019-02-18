@@ -7,6 +7,7 @@ import PackageList from './PackageList';
 
 const SortableProduct = SortableElement(
 	({
+		choseProviders,
 		data,
 		providers,
 		product,
@@ -51,6 +52,7 @@ const SortableProduct = SortableElement(
 					deletePackage={deletePackage}
 					getPackage={getPackage}
 					providers={providers}
+					choseProviders={choseProviders}
 				/>
 			</Row>
 		);

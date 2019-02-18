@@ -13,54 +13,51 @@ class EditPackage extends React.PureComponent {
     showError: false,
     errorMessage: null,
 
-    services: {
-      providerServices: [{ service: null, name: 'Chose provider service' }],
-      errorService: null,
-      messageService: null
-    }
+    // services: {
+    //   providerServices: [{ service: null, name: 'Chose provider service' }],
+    //   errorService: null,
+    //   messageService: null
+    // }
   };
 
-  // static getDerivedStateFromProps(props, state) {
-  //   return { ...state, services: { providerServices: props.response.providerServices} }
-  // }
 
-  choseService = async provider_id => {
-    if (provider_id !== 'none') {
-      var response = await get_providers_services(provider_id);
-      response.data.unshift({ service: null, name: 'Chose provider service' });
-      const error = response.data[1].error;
-      const message = response.data[1].message;
-      this.setState(prevState => ({
-        ...prevState,
-        services: {
-          providerServices: response.data,
-          errorService: error,
-          messageService: message
-        }
-      }));
-    } else {
-      this.setState(prevState => ({
-        ...prevState,
-        services: {
-          providerServices: [{ service: null, name: 'Chose provider service' }]
-        }
-      }));
-    }
-  };
+  // choseService = async provider_id => {
+  //   if (provider_id !== 'none') {
+  //     var response = await get_providers_services(provider_id);
+  //     response.data.unshift({ service: null, name: 'Chose provider service' });
+  //     const error = response.data[1].error;
+  //     const message = response.data[1].message;
+  //     this.setState(prevState => ({
+  //       ...prevState,
+  //       services: {
+  //         providerServices: response.data,
+  //         errorService: error,
+  //         messageService: message
+  //       }
+  //     }));
+  //   } else {
+  //     this.setState(prevState => ({
+  //       ...prevState,
+  //       services: {
+  //         providerServices: [{ service: null, name: 'Chose provider service' }]
+  //       }
+  //     }));
+  //   }
+  // };
 
   getPackage = (...params) => {
     this.setState(prevstate => ({
       modalIsOpen: !prevstate.modalIsOpen
     }));
     this.props.getPackage(...params);
-    const services = this.props.response.providerServices;
-    this.setState(prevState => ({
-      ...prevState,
-      services: {
-        providerServices: services
-      }
-    }));
-    console.log(services);
+    // const services = this.props.response.providerServices;
+    // this.setState(prevState => ({
+    //   ...prevState,
+    //   services: {
+    //     providerServices: services
+    //   }
+    // }));
+    // console.log(services);
   };
 
   toggle = () => {
@@ -86,7 +83,8 @@ class EditPackage extends React.PureComponent {
   };
 
   render() {
-    const { response } = this.props;
+    const { response, providers, choseProviders } = this.props;
+    console.log(response);
     return (
       <React.Fragment>
         <Button
@@ -119,9 +117,9 @@ class EditPackage extends React.PureComponent {
                   setFieldValue={setFieldValue}
                   showError={this.state.showError}
                   errorMessage={this.state.errorMessage}
-                  providers={this.props.providers}
-                  choseService={this.choseService}
-                  services={this.props.response.providerServices}
+                  providers={providers}
+                  choseService={choseProviders}
+                  services={response.services}
                 />
                 <ModalFooter className="justify-content-start">
                   <Button color="primary" type="submit">

@@ -134,7 +134,7 @@ AddPackage.defaultProps = {
 		link_type: '1',
 		visibility: '1',
 		mode: '2',
-		provider_id: 'none',
+		provider_id: null,
 		provider_service: 'none'
 	}
 };

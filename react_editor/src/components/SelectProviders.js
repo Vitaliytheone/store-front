@@ -14,8 +14,8 @@ export const Select = ({ name, choseService, entities, field, form, label, ...pr
       }}
     >
       {' '}
-      {entities.map(item => (
-        <option key={item.id} value={item.id}>
+      {entities.map((item,index) => (
+        <option key={index} value={item.id}>
           {item.name}
         </option>
       ))}

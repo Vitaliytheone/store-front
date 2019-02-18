@@ -5,7 +5,7 @@ import { SortableElement } from 'react-sortable-hoc';
 import EditPackage from '../EditPackage';
 import DeletePackage from '../DeletePackage';
 
-const SortablePackage = SortableElement(({ providers, pack, response, editPackage, deletePackage, getPackage }) => {
+const SortablePackage = SortableElement(({ choseProviders, providers, pack, response, editPackage, deletePackage, getPackage }) => {
 	const providerName = providers.filter(item => item.id == pack.provider_id)[0];
 	return (
 		<div
@@ -25,7 +25,7 @@ const SortablePackage = SortableElement(({ providers, pack, response, editPackag
 				{pack.visibility == 1 ? 'Enabled' : 'Disabled'}
 			</Col>
 			<Col lg="1" className="padding-null-lg-right text-lg-right text-sm-left">
-				<EditPackage response={response} onSubmit={editPackage} getPackage={getPackage} providers={providers} />
+				<EditPackage response={response} onSubmit={editPackage} getPackage={getPackage} providers={providers} choseProviders={choseProviders} />
 				<DeletePackage onSubmit={deletePackage} />
 			</Col>
 		</div>

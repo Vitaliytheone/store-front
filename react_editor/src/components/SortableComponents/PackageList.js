@@ -4,7 +4,7 @@ import { SortableContainer } from 'react-sortable-hoc';
 import AddPackage from '../AddPackage';
 import SortablePackage from './Package';
 
-const PackageList = SortableContainer(({ providers, product, response, onPackageAdd, editPackage, deletePackage, getPackage }) => (
+const PackageList = SortableContainer(({ choseProviders, providers, product, response, onPackageAdd, editPackage, deletePackage, getPackage }) => (
 	<Col sm="12" className="group-items">
 		{product.packages.map((pack, index) => (
 			<SortablePackage
@@ -16,6 +16,7 @@ const PackageList = SortableContainer(({ providers, product, response, onPackage
 				deletePackage={deletePackage(index)}
 				getPackage={getPackage(index)}
 				providers={providers}
+				choseProviders={choseProviders}
 			/>
 		))}
 		<AddPackage onSubmit={onPackageAdd} providers={providers} />
