@@ -39,29 +39,6 @@ customModule.orderDomainController = {
             return false;
         });
 
-        $('#continueDomainSearch').click(function(e) {
-            e.preventDefault();
-
-            var link = $(this);
-
-            if (link.hasClass('disabled')) {
-                return false;
-            }
-
-            var modal =  $('#orderDomainModal');
-            var errorBlock = $('#orderDomainError', modal);
-            var domain = $('.domain_zone:checked').data('domain');
-
-            modal.modal('show');
-
-            errorBlock.addClass('hidden');
-            errorBlock.html('');
-
-            $('#modal_domain_name', modal).val(domain);
-
-            return false;
-        });
-
         $(document).on('change', '.domain_zone', function() {
             if ($('.domain_zone:checked').length) {
                 $('#domain_zone').selectpicker('val', $('.domain_zone:checked').val());
@@ -71,14 +48,16 @@ customModule.orderDomainController = {
             }
         });
 
-        $('#orderDomainBtn').click(function (e) {
+        $('#continueDomainSearch').click(function (e) {
             e.preventDefault();
 
             var btn = $(this);
-            var modal =  $('#orderDomainModal');
-            var errorBlock = $("#orderDomainError", modal);
+            var errorBlock = $("#orderDomainError");
             var action = btn.data('action');
-            var data = modal.find("select, textarea, input").serialize();
+            var data = $("#order-form").serialize();
+            var domain = $('.domain_zone:checked').data('domain');
+
+            $('#modal_domain_name').val(domain);
 
             errorBlock.addClass('hidden');
 
@@ -94,7 +73,6 @@ customModule.orderDomainController = {
                 btn.removeClass('active');
 
                 if ('success' == response.status) {
-                    modal.modal('hide');
 
                     if ('undefined' !== typeof response.redirect) {
                         window.location.href = response.redirect;
@@ -106,7 +84,7 @@ customModule.orderDomainController = {
 
                     $('#helpDomain').addClass('hidden');
 
-                    $('#domain').val($('#modal_domain_name', modal).val()).prop('readonly', true);
+                    $('#domain').val($('#modal_domain_name').val()).prop('readonly', true);
                 }
 
                 if ('error' == response.status) {

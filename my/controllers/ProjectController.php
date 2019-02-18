@@ -4,21 +4,18 @@ namespace my\controllers;
 
 use common\models\panels\Customers;
 use my\components\ActiveForm;
-use my\components\domains\Ahnames;
-use my\helpers\DomainsHelper;
 use common\models\panels\Auth;
 use common\models\panels\Content;
-use common\models\panels\DomainZones;
 use my\models\forms\OrderPanelForm;
 use my\models\forms\CreateStaffForm;
 use my\models\forms\EditStaffForm;
 use my\models\forms\SetStaffPasswordForm;
 use common\models\panels\Orders;
 use common\models\panels\ProjectAdmin;
+use my\models\search\DomainsAvailableSearch;
 use my\models\search\PanelsSearch;
 use Yii;
 use common\models\panels\Project;
-use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -289,57 +286,21 @@ class ProjectController extends CustomController
 
     /**
      * Search available domains
+     * @param string $search_domain
+     * @param string $zone
      * @return array
+     * @throws yii\base\UnknownClassException
      */
-    public function actionSearchDomains()
+    public function actionSearchDomains(string $search_domain, string $zone): array
     {
-        $domain = trim(Yii::$app->request->get('search_domain'));
-        $zone = trim(Yii::$app->request->get('zone'));
-        $zones = ArrayHelper::index(DomainZones::find()->all(), 'id');
+        $domain = trim($search_domain);
+        $zone = trim($zone);
 
-        if (false !== strpos($domain, '.')) {
-            $domain = explode(".", $domain)[0];
-        }
-
-        $domains = [
-            $zone => ''
-        ];
-
-        foreach ($zones as $id => $zone) {
-            $domains[$id] = mb_strtolower($domain . $zone->zone);
-        }
-
-        $result = Ahnames::domainsCheck(array_map([new DomainsHelper, 'idnToAscii'], $domains));
-        $existsDomains = Orders::find()->andWhere([
-            'domain' => array_keys($result),
-            'item' => Orders::ITEM_BUY_DOMAIN,
-            'status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID,
-                Orders::STATUS_ADDED,
-                Orders::STATUS_ERROR
-            ]
-        ])->all();
-        $existsDomains = ArrayHelper::getColumn($existsDomains, 'domain');
-
-        $return = [];
-
-        foreach ($domains as $id => $domain) {
-            if (!isset($result[$domain])) {
-                continue;
-            }
-
-            $return[] = [
-                'zone' => $id,
-                'domain' => $domain,
-                'price' => $zones[$id]->price_register,
-                'is_available' => $result[$domain] && !in_array($domain, $existsDomains)
-            ];
-        }
+        $domainsSearch = new DomainsAvailableSearch();
 
         return [
             'content' => $this->renderPartial('layouts/_search_domains_result', [
-                'domains' => $return
+                'domains' => $domainsSearch->searchDomains($domain, $zone)
             ])
         ];
     }

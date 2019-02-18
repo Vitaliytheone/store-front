@@ -78,6 +78,7 @@ return [
     'ahnames.url' => 'https://api.ahnames.com',
     'ahnames.login' => '',
     'ahnames.password' => '',
+    'ahnames.contact_id' => '',
 
     'gearmanIp' => '127.0.0.1',
     'gearmanPort' => 4730,
@@ -130,4 +131,5 @@ return [
     'ssl_order_delay' => 2 * 60, // Задержка на выполнение заказа продления GoGet SSL -> Letsencrypt SSL
     'free_ssl.create' => true,  // Создавать заказ/выполнять заказ на бесплатный сертификат или нет
     'free_ssl.prolong' => true, // Создавать заказ/выполнять заказ на продление бесплатного сертификата или нет
+
 ];

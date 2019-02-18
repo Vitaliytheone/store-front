@@ -106,7 +106,7 @@ class Sites extends ActiveRecord implements ProjectInterface
             'theme_folder' => Yii::t('app', 'Theme Folder'),
             'whois_lookup' => Yii::t('app', 'Whois Lookup'),
             'nameservers' => Yii::t('app', 'Nameservers'),
-            'dns_status' => Yii::t('app', 'dns-check result: null-неизвестно, 0-не наши ns, 1-наш ns'),
+            'dns_status' => Yii::t('app', 'Dns status'),
             'dns_checked_at' => Yii::t('app', 'Dns Checked At'),
             'expired_at' => Yii::t('app', 'Expired At'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -357,7 +357,7 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         $domain = Yii::$app->params['gatewayDomain'];
 
-        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', $this->domain));
+        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
 
         $postfix = null;
 

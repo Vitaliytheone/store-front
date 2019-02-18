@@ -27,6 +27,7 @@ use yii\helpers\Json;
  * @property integer $privacy_protection
  * @property integer $transfer_protection
  * @property string $details
+ * @property string $registrar
  *
  * @property Customers $customer
  * @property DomainZones $zone
@@ -35,6 +36,9 @@ class Domains extends ActiveRecord
 {
     const STATUS_OK = 1;
     const STATUS_EXPIRED = 2;
+
+    public const REGISTRAR_AHNAMES = 'ahnames';
+    public const REGISTRAR_NAMESILO = 'namesilo';
 
     use UnixTimeFormatTrait;
 
@@ -54,7 +58,7 @@ class Domains extends ActiveRecord
         return [
             [['customer_id', 'zone_id', 'contact_id', 'status', 'domain'], 'required'],
             [['customer_id', 'zone_id', 'status', 'created_at', 'expiry', 'privacy_protection', 'transfer_protection'], 'integer'],
-            [['details'], 'string'],
+            [['details', 'registrar'], 'string'],
             [['contact_id', 'domain', 'password'], 'string', 'max' => 250],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
             [['zone_id'], 'exist', 'skipOnError' => true, 'targetClass' => DomainZones::class, 'targetAttribute' => ['zone_id' => 'id']],
@@ -79,6 +83,7 @@ class Domains extends ActiveRecord
             'privacy_protection' => Yii::t('app', 'Privacy Protection'),
             'transfer_protection' => Yii::t('app', 'Transfer Protection'),
             'details' => Yii::t('app', 'Details'),
+            'registrar' => Yii::t('app', 'Registrar'),
         ];
     }
 

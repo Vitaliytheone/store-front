@@ -2,7 +2,7 @@
 
 namespace my\models\forms;
 
-
+use my\components\validators\OrderDomainValidator;
 use yii\base\Model;
 use Yii;
 use my\components\validators\OrderLimitValidator;
@@ -13,7 +13,6 @@ use common\models\panels\Orders;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\MyActivityLog;
 use my\helpers\UserHelper;
-use my\components\domains\Ahnames;
 use common\models\panels\Auth;
 use yii\helpers\ArrayHelper;
 
@@ -32,17 +31,6 @@ class DomainForm extends Model
     public $domain_zone;
 
     public $domain_name;
-    public $domain_firstname;
-    public $domain_lastname;
-    public $domain_email;
-    public $domain_company;
-    public $domain_address;
-    public $domain_city;
-    public $domain_postalcode;
-    public $domain_state;
-    public $domain_country;
-    public $domain_phone;
-    public $domain_fax;
     public $domain_protection;
 
     public const HAS_DOMAIN = 1;
@@ -60,17 +48,11 @@ class DomainForm extends Model
     {
         return [
             [['domain'], OrderLimitValidator::class],
-            [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_country')],
+            [['domain'], OrderDomainValidator::class],
             [['domain_zone'], 'integer'],
-            [['domain_email'], 'email'],
             ['has_domain', 'in', 'range' => array_keys($this->getHasDomainsLabels()), 'message' => Yii::t('app', 'error.panel.bad_domain')],
-            [['domain_fax'], 'integer', 'message' => Yii::t('app', 'error.domain.bad_fax')],
             [['search_domain'], 'string'],
-            [[
-                'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
-                'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
-            ], 'safe'],
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection'], 'required', 'on' => static::SCENARIO_CREATE_DOMAIN],
+            [['search_domain', ], 'safe'],
         ];
     }
 
@@ -80,18 +62,6 @@ class DomainForm extends Model
     public function attributeLabels()
     {
         return [
-            'search_domain' => Yii::t('app', 'form.order_panel.search_domain'),
-            'domain_lastname' => Yii::t('app', 'form.order_panel.domain_lastname'),
-            'domain_firstname' => Yii::t('app', 'form.order_panel.domain_firstname'),
-            'domain_email' => Yii::t('app', 'form.order_panel.domain_email'),
-            'domain_company' => Yii::t('app', 'form.order_panel.domain_company'),
-            'domain_address' => Yii::t('app', 'form.order_panel.domain_address'),
-            'domain_city' => Yii::t('app', 'form.order_panel.domain_city'),
-            'domain_postalcode' => Yii::t('app', 'form.order_panel.domain_postalcode'),
-            'domain_state' => Yii::t('app', 'form.order_panel.domain_state'),
-            'domain_country' => Yii::t('app', 'form.order_panel.domain_country'),
-            'domain_phone' => Yii::t('app', 'form.order_panel.domain_phone'),
-            'domain_fax' => Yii::t('app', 'form.order_panel.domain_fax'),
             'domain_protection' => Yii::t('app', 'form.order_panel.domain_protection'),
         ];
     }
@@ -160,43 +130,6 @@ class DomainForm extends Model
     }
 
     /**
-     * Is domain available
-     * @param string $domain
-     * @return bool
-     */
-    public function isDomainAvailable($domain)
-    {
-        if (empty($domain)) {
-            return false;
-        }
-
-        $domain = mb_strtolower(trim($domain));
-
-        $result = Ahnames::domainsCheck($domain);
-
-        if (empty($result[$domain])) {
-            return false;
-        }
-
-        $existsDomain = Orders::find()->andWhere([
-            'domain' => DomainsHelper::idnToAscii($domain),
-            'item' => Orders::ITEM_BUY_DOMAIN,
-            'status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID,
-                Orders::STATUS_ADDED,
-                Orders::STATUS_ERROR
-            ]
-        ])->exists();
-
-        if ($existsDomain) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Is validate domain
      * @return bool
      */
@@ -210,25 +143,10 @@ class DomainForm extends Model
     }
 
     /**
-     * Get domain zones
-     * @return array
-     */
-    public function getDomainZones()
-    {
-        $zones = [];
-
-        foreach (DomainZones::find()->all() as $zone) {
-            $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
-        }
-
-        return $zones;
-    }
-
-    /**
      * Get domain value
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return DomainsHelper::idnToUtf8($this->domain);
     }
@@ -254,19 +172,19 @@ class DomainForm extends Model
             return false;
         }
 
-        $this->search_domain = trim($this->search_domain);
-
-        if (false !== strpos($this->search_domain, '.')) {
-            $this->search_domain = explode(".", $this->search_domain)[0];
-        }
-
-        $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
-
-        if (!$this->isDomainAvailable($this->domain)) {
+        if (!$this->validate()) {
             return false;
         }
 
+
+        if (false !== mb_strpos($this->search_domain, '.')) {
+            $this->search_domain = explode('.', $this->search_domain)[0];
+        }
+
+        $this->domain = mb_strtolower($this->search_domain . $zone->zone);
+
         $this->preparedDomain = DomainsHelper::idnToAscii($this->domain);
+        $contact_id = DomainsHelper::checkContactExist($zone->registrar, true);
 
         $model = new Orders();
         $model->cid = $this->_user->id;
@@ -276,19 +194,12 @@ class DomainForm extends Model
         $model->setDetails([
             'zone' => $zone->id,
             'domain' => $this->domain,
+            'domain_contact' => [
+                'id' => $contact_id,
+            ],
             'details' => [
-                'domain_firstname' => $this->domain_firstname,
-                'domain_lastname' => $this->domain_lastname,
-                'domain_email' => $this->domain_email,
-                'domain_company' => $this->domain_company,
-                'domain_address' => $this->domain_address,
-                'domain_city' => $this->domain_city,
-                'domain_postalcode' => $this->domain_postalcode,
-                'domain_state' => $this->domain_state,
-                'domain_country' => $this->domain_country,
-                'domain_phone' => $this->domain_phone,
-                'domain_fax' => $this->domain_fax,
-                'domain_protection' => $this->domain_protection,
+                'domain_contact_id' => $contact_id,
+                'domain_protection' => 1, // force domain privacy protect
             ]
         ]);
 

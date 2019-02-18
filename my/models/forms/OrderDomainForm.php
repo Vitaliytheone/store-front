@@ -1,10 +1,8 @@
 <?php
+
 namespace my\models\forms;
 
-use my\components\domains\Ahnames;
-use my\components\validators\OrderLimitValidator;
 use my\components\validators\OrderDomainValidator;
-use common\helpers\CurlHelper;
 use my\helpers\DomainsHelper;
 use my\helpers\UserHelper;
 use common\models\panels\Auth;
@@ -12,10 +10,7 @@ use common\models\panels\DomainZones;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
-use common\models\panels\OrderLogs;
 use common\models\panels\Orders;
-use common\models\panels\Project;
-use common\models\panels\ProjectAdmin;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -39,17 +34,6 @@ class OrderDomainForm extends Model
     public $domain_zone;
 
     public $domain_name;
-    public $domain_firstname;
-    public $domain_lastname;
-    public $domain_email;
-    public $domain_company;
-    public $domain_address;
-    public $domain_city;
-    public $domain_postalcode;
-    public $domain_state;
-    public $domain_country;
-    public $domain_phone;
-    public $domain_fax;
     public $domain_protection;
 
     /**
@@ -68,17 +52,10 @@ class OrderDomainForm extends Model
     public function rules()
     {
         return [
-            [['domain_country'], 'in', 'range' => array_keys($this->getCountries()), 'message' => Yii::t('app', 'error.panel.bad_ccountry')],
             [['domain'], OrderDomainValidator::class],
             [['domain_zone'], 'integer'],
             [['search_domain'], 'string'],
-            [['domain_email'], 'email'],
-            [['domain_fax'], 'integer', 'message' => Yii::t('app', 'error.domain.bad_fax')],
-            [[
-                'search_domain', 'domain_firstname', 'domain_lastname', 'domain_email', 'domain_company', 'domain_address', 'domain_city',
-                'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection',
-            ], 'safe'],
-            [['domain_firstname', 'domain_lastname', 'domain_email', 'domain_address', 'domain_city', 'domain_postalcode', 'domain_state', 'domain_country', 'domain_phone', 'domain_protection'], 'required'],
+            [['search_domain',], 'safe'],
         ];
     }
 
@@ -111,6 +88,8 @@ class OrderDomainForm extends Model
 
     /**
      * Sign up method
+     * @throws yii\base\UnknownClassException
+     * @throws yii\db\Exception
      */
     public function save()
     {
@@ -148,6 +127,7 @@ class OrderDomainForm extends Model
      * Order domain
      * @param Invoices $invoiceModel
      * @return bool
+     * @throws yii\base\UnknownClassException
      */
     protected function orderDomain(&$invoiceModel)
     {
@@ -166,17 +146,14 @@ class OrderDomainForm extends Model
 
         $this->search_domain = trim($this->search_domain);
 
-        if (false !== strpos($this->search_domain, '.')) {
-            $this->search_domain = explode(".", $this->search_domain)[0];
+        if (false !== mb_strpos($this->search_domain, '.')) {
+            $this->search_domain = explode('.', $this->search_domain)[0];
         }
 
-        $this->domain = $this->preparedDomain = mb_strtolower($this->search_domain . $zone->zone);
-
-        if (!$this->isDomainAvailable($this->domain)) {
-            return false;
-        }
+        $this->domain = mb_strtolower($this->search_domain . $zone->zone);
 
         $this->preparedDomain = DomainsHelper::idnToAscii($this->domain);
+        $contact_id = DomainsHelper::checkContactExist($zone->registrar, true);
 
         $model = new Orders();
         $model->cid = $this->_user->id;
@@ -186,19 +163,12 @@ class OrderDomainForm extends Model
         $model->setDetails([
             'zone' => $zone->id,
             'domain' => $this->domain,
+            'domain_contact' => [
+                'id' => $contact_id,
+            ],
             'details' => [
-                'domain_firstname' => $this->domain_firstname,
-                'domain_lastname' => $this->domain_lastname,
-                'domain_email' => $this->domain_email,
-                'domain_company' => $this->domain_company,
-                'domain_address' => $this->domain_address,
-                'domain_city' => $this->domain_city,
-                'domain_postalcode' => $this->domain_postalcode,
-                'domain_state' => $this->domain_state,
-                'domain_country' => $this->domain_country,
-                'domain_phone' => $this->domain_phone,
-                'domain_fax' => $this->domain_fax,
-                'domain_protection' => $this->domain_protection,
+                'domain_contact_id' => $contact_id,
+                'domain_protection' => 1, // force domain privacy protect
             ]
         ]);
 
@@ -272,11 +242,19 @@ class OrderDomainForm extends Model
 
     /**
      * Get domain zones
+     * @param bool $registrar
      * @return array
      */
-    public function getDomainZones()
+    public function getDomainZones($registrar = false): array
     {
         $zones = [];
+
+        if ($registrar) {
+            foreach (DomainZones::find()->all() as $zone) {
+                $zones[$zone->id] = ['data-value'  => (int)DomainsHelper::checkContactExist($zone->registrar)];
+            }
+            return $zones;
+        }
 
         foreach (DomainZones::find()->all() as $zone) {
             $zones[$zone->id] = $zone->zone . ' — $' . $zone->price_register;
@@ -310,47 +288,10 @@ class OrderDomainForm extends Model
     }
 
     /**
-     * Is domain available
-     * @param string $domain
-     * @return bool
-     */
-    public function isDomainAvailable($domain)
-    {
-        if (empty($domain)) {
-            return false;
-        }
-
-        $domain = mb_strtolower(trim($domain));
-
-        $result = Ahnames::domainsCheck($domain);
-
-        if (empty($result[$domain])) {
-            return false;
-        }
-
-        $existsDomain = Orders::find()->andWhere([
-            'domain' => DomainsHelper::idnToAscii($domain),
-            'item' => Orders::ITEM_BUY_DOMAIN,
-            'status' => [
-                Orders::STATUS_PENDING,
-                Orders::STATUS_PAID,
-                Orders::STATUS_ADDED,
-                Orders::STATUS_ERROR
-            ]
-        ])->exists();
-
-        if ($existsDomain) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Get domain value
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return DomainsHelper::idnToUtf8($this->domain);
     }

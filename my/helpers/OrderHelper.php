@@ -1,6 +1,8 @@
 <?php
+
 namespace my\helpers;
 
+use common\components\domains\Domain;
 use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
@@ -331,7 +333,7 @@ class OrderHelper {
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
         $currency = ArrayHelper::getValue($orderDetails, 'currency');
-        $subdomain = ArrayHelper::getValue($orderDetails, 'subdomain');
+        $subdomain = ArrayHelper::getValue($orderDetails, 'subdomain', 0);
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -343,7 +345,7 @@ class OrderHelper {
         $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
         $project->paypal_fraud_settings = json_encode(Yii::$app->params['paypal_fraud_settings']);
         $project->dns_status = Project::DNS_STATUS_ALIEN;
-        $project->subdomain = $subdomain;
+        $project->subdomain = (int)$subdomain;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -485,7 +487,8 @@ class OrderHelper {
     /**
      * Create domain
      * @param Orders $order
-     * @return bool
+     * @return bool|null
+     * @throws yii\base\UnknownClassException
      */
     public static function domain(Orders $order)
     {
@@ -497,22 +500,9 @@ class OrderHelper {
         $domainResult = ArrayHelper::getValue($orderDetails, 'domain_register');
         $domainInfoResult = ArrayHelper::getValue($orderDetails, 'domain_info');
 
-        if (empty($contactResult)) {
-            $contactResult = OrderDomainHelper::contactCreate($order);
-
-            if (empty($contactResult['id'])) {
-                if (!empty($contactResult['_error']) && false === strpos(strtolower($contactResult['_error']), 'wait')) {
-                    $order->makeError();
-                    return false;
-                }
-
-                $order->finish();
-                return false;
-            }
-
-            $order->setItemDetails($contactResult, 'domain_contact');
-            $order->save(false);
-            $order->refresh();
+        if (empty($contactResult['id'])) {
+            $order->makeError();
+            return false;
         }
 
         if (empty($domainResult)) {
@@ -554,6 +544,8 @@ class OrderHelper {
         $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
         $expiry = strtotime($expiry);
 
+        $registrar = DomainsHelper::getRegistrarName($domain);
+
         $domainModel = new Domains();
         $domainModel->customer_id = $order->cid;
         $domainModel->zone_id = $zoneId;
@@ -567,6 +559,7 @@ class OrderHelper {
         $domainModel->expiry = $expiry;
         $domainModel->privacy_protection = (int)!empty($details['domain_protection']);
         $domainModel->transfer_protection = 1;
+        $domainModel->registrar = $registrar;
 
         if (!$domainModel->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainModel->getErrors(), 'cron.order.domain');
@@ -949,7 +942,7 @@ class OrderHelper {
 
         if($project->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
             $ticket = new Tickets();
-            $ticket->customer_id =$ssl->cid;
+            $ticket->customer_id = $ssl->cid;
             $ticket->is_admin = 1;
             $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
             if ($ticket->save(false)) {
