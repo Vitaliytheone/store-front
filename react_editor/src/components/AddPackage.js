@@ -15,7 +15,7 @@ class AddPackage extends Component {
 		errorMessage: null,
 
 		services: {
-			providerServices: [{ service: null, name: 'Chose provider service' }],
+			providerServices: [ { service: null, name: 'Chose provider service' } ],
 			errorService: null,
 			messageService: null
 		}
@@ -27,7 +27,7 @@ class AddPackage extends Component {
 			response.data.unshift({ service: null, name: 'Chose provider service' });
 			const error = response.data[1].error;
 			const message = response.data[1].message;
-			this.setState(prevstate => ({
+			this.setState((prevstate) => ({
 				services: {
 					...prevstate,
 					providerServices: response.data,
@@ -36,10 +36,10 @@ class AddPackage extends Component {
 				}
 			}));
 		} else {
-			this.setState(prevstate => ({
+			this.setState((prevstate) => ({
 				services: {
 					...prevstate,
-					providerServices: [{ service: null, name: 'Chose provider service' }]
+					providerServices: [ { service: null, name: 'Chose provider service' } ]
 				}
 			}));
 		}
@@ -85,26 +85,26 @@ class AddPackage extends Component {
 					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue}) => (
-						<Form>
-							<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
-							<PackageModal 
-								setFieldValue={setFieldValue}
-								showError={this.state.showError}
-								errorMessage={this.state.errorMessage}
-								providers={this.props.providers}
-								choseService={this.choseService}
-								services={this.state.services}
-							/>
-							<ModalFooter className="justify-content-start">
-								<Button color="primary" type="submit">
-									Add package
-								</Button>
-								<Button color="secondary" onClick={this.toggle}>
-									Cancel
-								</Button>
-							</ModalFooter>
-						</Form>
+						{({ setFieldValue }) => (
+							<Form>
+								<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
+								<PackageModal
+									setFieldValue={setFieldValue}
+									showError={this.state.showError}
+									errorMessage={this.state.errorMessage}
+									providers={this.props.providers}
+									choseService={this.choseService}
+									services={this.state.services}
+								/>
+								<ModalFooter className="justify-content-start">
+									<Button color="primary" type="submit">
+										Add package
+									</Button>
+									<Button color="secondary" onClick={this.toggle}>
+										Cancel
+									</Button>
+								</ModalFooter>
+							</Form>
 						)}
 					</Formik>
 				</Modal>
@@ -134,7 +134,7 @@ AddPackage.defaultProps = {
 		link_type: '1',
 		visibility: '1',
 		mode: '2',
-		provider_id: null,
+		provider_id: 'none',
 		provider_service: 'none'
 	}
 };
