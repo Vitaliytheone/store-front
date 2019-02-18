@@ -1,15 +1,16 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $providers \superadmin\models\search\ProvidersSearch */
-    /* @var $provider \common\models\panels\AdditionalServices */
-    /* @var $scripts array */
+/* @var $this yii\web\View */
+/* @var $providers \superadmin\models\search\ProvidersSearch */
+/* @var $provider \common\models\panels\AdditionalServices */
+/* @var $scripts array */
 
-    use my\helpers\Url;
-    use yii\helpers\Html;
-    use yii\helpers\Json;
-    use my\helpers\SpecialCharsHelper;
-    use yii\widgets\LinkPager;
-    use superadmin\widgets\CountPagination;
+use my\helpers\Url;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use my\helpers\SpecialCharsHelper;
+use yii\widgets\LinkPager;
+use superadmin\widgets\CountPagination;
+
 ?>
 <table class="table table-sm table-custom" id="providersTable">
     <thead>

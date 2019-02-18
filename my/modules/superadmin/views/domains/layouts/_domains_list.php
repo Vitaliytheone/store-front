@@ -36,7 +36,7 @@
                         <a href="<?= Url::toRoute('/customers#' . $customer->id); ?>"><?= $customer->email ?></a>
                     </td>
                     <td>
-                        <?= $domain->getDomain() ?>
+                        <?= $domain->domain ?>
                     </td>
                     <td>
                         <span class="text-nowrap">

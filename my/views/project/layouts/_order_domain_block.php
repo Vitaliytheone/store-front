@@ -1,9 +1,10 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $form yii\bootstrap\ActiveForm */
-    /* @var $model \my\models\forms\OrderPanelForm */
+/* @var $this yii\web\View */
+/* @var $form yii\bootstrap\ActiveForm */
+/* @var $model \my\models\forms\OrderPanelForm */
 
-    use my\helpers\Url;
+use my\helpers\Url;
+use my\helpers\DomainsHelper;
 ?>
 
 <div class="panel-body">
@@ -15,12 +16,16 @@
             ])->label(false)?>
 
             <div class="input-group-btn">
-                <?= $form->field($model, 'domain_zone')->dropDownList($model->getDomainZones(), [
+                <?= $form->field($model, 'domain_zone')->dropDownList(DomainsHelper::getDomainZones(), [
                     'class' => 'selectpicker',
                     'id' => 'domain_zone'
                 ])?>
             </div>
 
+            <?= $form->field($model, 'domain_name')->hiddenInput([
+                'id' => 'modal_domain_name',
+                'class' => 'form-control'
+            ])->label(false)?>
         </div>
     </div>
 
@@ -32,7 +37,7 @@
         <div id="searchResultContainer"></div>
 
         <div class="input-group">
-            <button type="button" class="btn btn-primary disabled" id="continueDomainSearch"><?= Yii::t('app', 'panels.order.btn_continue_domain_search')?></button>
+            <button type="button" class="btn btn-primary disabled" id="continueDomainSearch" data-action="<?= Url::toRoute(['/domains/order-domain', 'order' => 'panel']) ?>"><?= Yii::t('app', 'panels.order.btn_continue_domain_search')?></button>
         </div>
 
     </div>

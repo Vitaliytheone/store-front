@@ -29,8 +29,13 @@ class OrderLimitValidator extends Validator
             return false;
         }
 
+        $customerId = $model->getUser()->id ?? null;
+        if (empty($customerId)) {
+            return false;
+        }
+
         if (!Orders::can('create_panel', [
-            'customerId' => $model->getUser()->id
+            'customerId' => $customerId
         ])) {
             $model->addError($attribute, Yii::t('app', 'error.panel.orders_limit_exceeded'));
             return false;

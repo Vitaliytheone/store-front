@@ -1,6 +1,8 @@
 <?php
+
 namespace my\helpers;
 
+use common\components\domains\Domain;
 use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
@@ -485,7 +487,8 @@ class OrderHelper {
     /**
      * Create domain
      * @param Orders $order
-     * @return bool
+     * @return bool|null
+     * @throws yii\base\UnknownClassException
      */
     public static function domain(Orders $order)
     {
@@ -497,22 +500,9 @@ class OrderHelper {
         $domainResult = ArrayHelper::getValue($orderDetails, 'domain_register');
         $domainInfoResult = ArrayHelper::getValue($orderDetails, 'domain_info');
 
-        if (empty($contactResult)) {
-            $contactResult = OrderDomainHelper::contactCreate($order);
-
-            if (empty($contactResult['id'])) {
-                if (!empty($contactResult['_error']) && false === strpos(strtolower($contactResult['_error']), 'wait')) {
-                    $order->makeError();
-                    return false;
-                }
-
-                $order->finish();
-                return false;
-            }
-
-            $order->setItemDetails($contactResult, 'domain_contact');
-            $order->save(false);
-            $order->refresh();
+        if (empty($contactResult['id'])) {
+            $order->makeError();
+            return false;
         }
 
         if (empty($domainResult)) {
@@ -554,6 +544,8 @@ class OrderHelper {
         $expiry = ArrayHelper::getValue($domainInfoResult, 'expires');
         $expiry = strtotime($expiry);
 
+        $registrar = DomainsHelper::getRegistrarName($domain);
+
         $domainModel = new Domains();
         $domainModel->customer_id = $order->cid;
         $domainModel->zone_id = $zoneId;
@@ -567,6 +559,7 @@ class OrderHelper {
         $domainModel->expiry = $expiry;
         $domainModel->privacy_protection = (int)!empty($details['domain_protection']);
         $domainModel->transfer_protection = 1;
+        $domainModel->registrar = $registrar;
 
         if (!$domainModel->save(false)) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, $domainModel->getErrors(), 'cron.order.domain');

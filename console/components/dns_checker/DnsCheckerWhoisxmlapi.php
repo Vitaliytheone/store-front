@@ -4,6 +4,7 @@ namespace console\components\dns_checker;
 
 use common\models\panels\Params;
 use common\helpers\CurlHelper;
+use my\helpers\DomainsHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -108,7 +109,7 @@ class DnsCheckerWhoisxmlapi extends DnsCheckerBase
 
         $this->setNameservers($whoisNameservers);
 
-        $configNameservers = array_values(array_filter(Yii::$app->params['ahnames.my.ns'], function($nameserver) { return !empty($nameserver); }));
+        $configNameservers = array_values(array_filter(Yii::$app->params[DomainsHelper::getRegistrarName($this->getDomain()).'.my.ns'], function($nameserver) { return !empty($nameserver); }));
 
         if (array_udiff($configNameservers, $whoisNameservers, 'strcasecmp')) {
 
