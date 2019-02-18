@@ -7,7 +7,7 @@
 
 use superadmin\helpers\SystemMessages;
 use superadmin\widgets\DeleteMessageWidget;
-use common\components\cdn\providers\widgets\UploadcareWidget;
+use common\components\cdn\providers\widgets\UploadcareSuperadminWidget;
 
 $i = 0;
 ?>
@@ -24,19 +24,18 @@ $i = 0;
                 <?= nl2br(htmlspecialchars($message->message)) ?>
                 <div class="ticket-message__card-attach">
                     <?php if (!empty($message->file->details)) {
-                        $files = $message->file->getDetails();
-                        echo UploadcareWidget::widget(['files' => $files]);
+                        echo UploadcareSuperadminWidget::widget(['files' => $message->file]);
                     } ?>
                 </div>
             </div>
         </div>
     <?php else: ?>
         <?php if ($message->is_system != 0) : ?>
-            <?= SystemMessages::getSystemMessageWidget($message->getSystemInfo())::widget([
+            <?= (SystemMessages::getSystemMessageWidget($message->getSystemInfo()))::widget([
                 'admin' => $message->admin->getFullName(),
                 'data' => $message->getSystemInfo(),
                 'date' => $message->getFormattedDate('created_at'),
-                'admins' => $admins
+                'admins' => $admins,
             ]) ?>
         <?php endif; ?>
         <?php if ($message->is_system == 0): ?>
@@ -49,8 +48,7 @@ $i = 0;
                     <?= nl2br(htmlspecialchars($message->message)) ?>
                     <div class="ticket-message__card-attach">
                         <?php if (!empty($message->file->details)) {
-                            $files = $message->file->getDetails();
-                            echo UploadcareWidget::widget(['files' => $files]);
+                            echo UploadcareSuperadminWidget::widget(['files' => $message->file]);
                         } ?>
                     </div>
                 </div>

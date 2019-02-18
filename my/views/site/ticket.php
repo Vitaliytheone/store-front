@@ -1,7 +1,6 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $ticketMessages \common\models\panels\TicketMessages */
-/* @var $ticketFiles \common\models\panels\TicketFiles */
 /* @var $ticket \common\models\panels\Tickets */
 /* @var $message \common\models\panels\TicketMessages */
 /* @var $clear */
@@ -25,8 +24,8 @@ use common\components\cdn\providers\widgets\UploadcareWidget;
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
                             <div class="attachments-block">
                                 <?php if (!empty($message->file->details)) {
-                                    $files = $message->file->getDetails();
-                                    echo UploadcareWidget::widget(['files' => $files]);
+
+                                    echo UploadcareWidget::widget(['files' => $message->file]);
                                 } ?>
                             </div>
                         </div>
@@ -42,8 +41,7 @@ use common\components\cdn\providers\widgets\UploadcareWidget;
                             <p class=""><?= nl2br(htmlspecialchars($message->message)) ?></p>
                             <div class="attachments-block">
                                 <?php if (!empty($message->file->details)) {
-                                    $files = $message->file->getDetails();
-                                    echo UploadcareWidget::widget(['files' => $files]);
+                                    echo UploadcareWidget::widget(['files' => $message->file]);
                                 } ?>
                             </div>
                         </div>

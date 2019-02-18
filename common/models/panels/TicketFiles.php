@@ -26,6 +26,7 @@ use yii\behaviors\TimestampBehavior;
  * @property Tickets $ticket
  * @property Customers $customer
  * @property SuperAdmin $admin
+ * @property TicketMessages $message
  */
 class TicketFiles extends ActiveRecord
 {
@@ -117,6 +118,14 @@ class TicketFiles extends ActiveRecord
     public function getAdmin()
     {
         return $this->hasOne(SuperAdmin::class, ['id' => 'admin_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMessage()
+    {
+        return $this->hasOne(TicketMessages::class, ['id' => 'message_id']);
     }
 
     /**

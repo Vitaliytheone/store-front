@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\traits\UnixTimeFormatTrait;
+use my\components\behaviors\TicketFilesBehavior;
 use Yii;
 use common\models\panels\queries\TicketMessagesQuery;
 use yii\db\ActiveRecord;
@@ -189,7 +190,8 @@ class TicketMessages extends ActiveRecord
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'user_agent'
                 ]
-            ]
+            ],
+            'tickets' => TicketFilesBehavior::class,
         ];
     }
 

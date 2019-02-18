@@ -7,7 +7,7 @@ use common\components\cdn\providers\Uploadcare;
 use common\models\panels\TicketFiles;
 use yii\base\Widget;
 
-class UploadcareWidget extends Widget
+class UploadcareSuperadminWidget extends Widget
 {
 
     /** @var Uploadcare */

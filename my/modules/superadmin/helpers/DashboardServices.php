@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\helpers;
 
 use common\models\panels\Params;
@@ -12,7 +13,6 @@ use superadmin\components\services\OpenSRSService;
 use superadmin\components\services\WhoisxmlService;
 use ReflectionClass;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class DashboardServices
@@ -43,7 +43,8 @@ class DashboardServices
                 'name' => Yii::t('app/superadmin', 'dashboard.services.whoisapi'),
                 'params' => [
                     $whoisxmlParams['whoisxml.url'],
-                    $whoisxmlParams['apiKey'],
+                    $whoisxmlParams['dnsLogin'],
+                    $whoisxmlParams['dnsPasswd'],
                     Yii::$app->params['curl.timeout']
                 ]
             ],

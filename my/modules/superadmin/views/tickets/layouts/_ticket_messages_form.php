@@ -6,7 +6,7 @@
 use my\helpers\Url;
 use my\components\ActiveForm;
 use yii\bootstrap\Html;
-use common\components\cdn\providers\widgets\UploadcareWidget;
+use common\components\cdn\providers\widgets\UploadcareUploadWidget;
 
 ?>
 
@@ -36,7 +36,7 @@ use common\components\cdn\providers\widgets\UploadcareWidget;
         <div class="col-md-8 d-md-flex align-items-center">
             <?= Html::submitButton(Yii::t('app/superadmin', 'tickets.btn.submit_reply'), ['class' => 'btn btn-primary', 'name' => 'save-button']) ?>
             <div class="form-control-file ml-md-3 btn-uploadcare">
-                <?= UploadcareWidget::widget(); ?>
+                <?= UploadcareUploadWidget::widget(); ?>
             </div>
         </div>
         <div class="col-md-4 text-md-right">

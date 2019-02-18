@@ -7,6 +7,7 @@ use common\models\panels\CustomersNote;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use my\components\ActiveForm;
+use my\components\behaviors\TicketFilesBehavior;
 use my\helpers\Url;
 use my\components\SuperAccessControl;
 use common\models\panels\Tickets;
@@ -73,6 +74,7 @@ class TicketsController extends CustomController
                     'application/json' => Response::FORMAT_JSON,
                 ],
             ],
+            'tickets' => TicketFilesBehavior::class,
         ];
     }
 
@@ -314,14 +316,13 @@ class TicketsController extends CustomController
         if (!empty($params['ticketId']) && !empty($params['messageId'])) {
             $message = $this->findMessage($params['messageId']);
             if ($message->canAdminEdit()) {
-                /** @var \common\components\cdn\providers\Uploadcare $cdn */
-                $cdn = Cdn::getCdn();
-                $files = $message->file;
-                if (!empty($files)) {
-                    $cdn->deleteGroup($files->prepareIds());
+                $transaction = Yii::$app->db->beginTransaction();
+                if (!$message->delete()) {
+                    $transaction->rollBack();
+                } else {
+                    $this->message = $message;
+                    $transaction->commit();
                 }
-                $message->delete();
-
             }
 
             return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $params['ticketId']]));

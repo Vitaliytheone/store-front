@@ -3,7 +3,7 @@
 
 use my\models\forms\CreateMessageForm;
 use my\components\ActiveForm;
-use common\components\cdn\providers\widgets\UploadcareWidget;
+use common\components\cdn\providers\widgets\UploadcareUploadWidget;
 
 $model = new CreateMessageForm();
 
@@ -31,7 +31,7 @@ $model = new CreateMessageForm();
     <div class="form-group">
         <label><?= Yii::t('app', 'support.view_form.attachment') ?></label>
         <br>
-        <?= UploadcareWidget::widget(); ?>
+        <?= UploadcareUploadWidget::widget(); ?>
     </div>
     <div class="text-right">
         <button type="submit" class="btn btn-outline btn-primary"><?= Yii::t('app', 'support.view_form.btn_submit') ?></button>
