@@ -3,7 +3,7 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
+use sommerce\components\filters\ApiAuthFilter;
 use Yii;
 use sommerce\controllers\CommonController;
 use yii\web\User;
@@ -14,13 +14,29 @@ use yii\web\User;
  */
 class AdminController extends CommonController
 {
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'apiAuth' => [
+                'class' => ApiAuthFilter::class,
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @param $action
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\web\ForbiddenHttpException
+     */
     public function beforeAction($action)
     {
         /** @var User $user */
         $user = Yii::$app->user;
-
-
 
         // Frozen/terminated store routine
         if ($this->store->isInactive() && !$user->isGuest) {

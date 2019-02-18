@@ -50,9 +50,6 @@ use yii\base\Exception;
  * @property Admins[] $admins
  * @property SitePaymentMethods[] $sitePaymentMethods
  * @property Customers $customer
- *
- * @method getThemeModel
- * @method getThemeFiles
  */
 class Sites extends ActiveRecord implements ProjectInterface
 {
@@ -109,7 +106,7 @@ class Sites extends ActiveRecord implements ProjectInterface
             'theme_folder' => Yii::t('app', 'Theme Folder'),
             'whois_lookup' => Yii::t('app', 'Whois Lookup'),
             'nameservers' => Yii::t('app', 'Nameservers'),
-            'dns_status' => Yii::t('app', 'dns-check result: null-неизвестно, 0-не наши ns, 1-наш ns'),
+            'dns_status' => Yii::t('app', 'Dns status'),
             'dns_checked_at' => Yii::t('app', 'Dns Checked At'),
             'expired_at' => Yii::t('app', 'Expired At'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -124,7 +121,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         return ArrayHelper::merge(parent::behaviors(), [
             'timestamp' => TimestampBehavior::class,
-            'theme' => SiteBehavior::class,
         ]);
     }
 
@@ -339,8 +335,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     public function checkExpired()
     {
         if ($this->isExpired() && $this->status != self::STATUS_FROZEN) {
-            $this->status = self::STATUS_FROZEN;
-            $this->save(false);
             return true;
         }
         return false;

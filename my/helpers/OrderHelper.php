@@ -9,7 +9,6 @@ use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
 use common\models\gateways\Sites;
-use common\models\panels\Customers;
 use common\models\panels\Languages;
 use common\models\panels\PanelPaymentMethods;
 use common\models\panels\PaymentMethods;
@@ -18,7 +17,6 @@ use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use common\models\panels\Tickets;
 use common\models\stores\StoreAdmins;
-use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use my\helpers\order\OrderDomainHelper;
 use common\models\panels\AdditionalServices;
@@ -227,6 +225,8 @@ class OrderHelper {
      * @param Orders $order
      * @return bool
      * @throws Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public static function prolongationSsl(Orders $order)
     {
@@ -318,8 +318,12 @@ class OrderHelper {
     /**
      * Create project
      * @param Orders $order
-     * @param boolean $child
+     * @param bool $child
      * @return bool
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public static function panel(Orders $order, $child = false)
     {
@@ -327,6 +331,7 @@ class OrderHelper {
         $projectDefaults = Yii::$app->params['projectDefaults'];
         $domain = ArrayHelper::getValue($orderDetails, 'clean_domain');
         $currency = ArrayHelper::getValue($orderDetails, 'currency');
+        $subdomain = ArrayHelper::getValue($orderDetails, 'subdomain', 0);
 
         $project = new Project();
         $project->attributes = $projectDefaults;
@@ -338,6 +343,7 @@ class OrderHelper {
         $project->currency_code = is_numeric($currency) ? CurrencyHelper::getCurrencyCodeById($currency) : $currency; // TODO: Remove after full migrate 999 ticket
         $project->paypal_fraud_settings = json_encode(Yii::$app->params['paypal_fraud_settings']);
         $project->dns_status = Project::DNS_STATUS_ALIEN;
+        $project->subdomain = (int)$subdomain;
         $project->generateDbName();
         $project->generateExpired();
 
@@ -413,15 +419,6 @@ class OrderHelper {
             $userService->save(false);
         }
 
-        // Create default panel language
-        $panelLanguage = new Languages();
-        $panelLanguage->panel_id = $project->id;
-        $panelLanguage->language_code = 'en';
-        $panelLanguage->name = Yii::$app->params['languages']['en'];
-        $panelLanguage->position = 1;
-        $panelLanguage->visibility = Languages::VISIBILITY_ON;
-        $panelLanguage->edited = Languages::EDITED_OFF;
-        $panelLanguage->save(false);
 
         // Create nginx config
         SuperTaskHelper::setTasksNginx($project, [
@@ -451,8 +448,23 @@ class OrderHelper {
             if (!DbHelper::dumpSql($project->db, $sqlPanelPath)) {
                 $order->status = Orders::STATUS_ERROR;
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $sqlPanelPath, 'cron.order.deploy_sql_dump');
+            } else {
+                // Create default panel language
+                $table = Yii::$app->db->quoteTableName($project->db) . '.languages';
+                Yii::$app->db->createCommand()
+                    ->insert($table, [
+                        'code' => 'en',
+                        'name' =>  Yii::$app->params['languages']['en'],
+                        'position' => 1,
+                        'active' => 1,
+                        'rtl' => 0,
+                        'default' => 1
+                    ])->execute();
             }
+
         }
+
+        $project->setForeignSubdomain((bool)$subdomain);
 
         if (!$project->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
@@ -687,6 +699,11 @@ class OrderHelper {
      * Create store
      * @param Orders $order
      * @return bool
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public static function store(Orders $order)
     {
@@ -848,11 +865,20 @@ class OrderHelper {
             return true;
         }
 
-        if (SslCert::findOne([
+        $sslCert = SslCert::findOne([
             'domain' => $order->domain,
             'status' => SslCert::STATUS_ACTIVE
-        ])) {
-            throw new Exception('Already exist active SSL for domain [' . $order->domain . ']!');
+        ]);
+        if ($sslCert) {
+            $sslCert->status = SslCert::STATUS_CANCELED;
+            $order->processing = Orders::PROCESSING_NO;
+            $order->status = Orders::STATUS_PAID;
+
+            if (!$sslCert->save(false) || ! $order->save(false)) {
+                throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
+            }
+
+            return true;
         }
 
         $sslCertItem = SslCertItem::findOne($orderDetails['ssl_cert_item_id']);
@@ -923,7 +949,7 @@ class OrderHelper {
 
         if($project->hasManualPaymentMethods() && $order->ip != '127.0.0.1' && $order->ip != '') {
             $ticket = new Tickets();
-            $ticket->customer_id =$ssl->cid;
+            $ticket->customer_id = $ssl->cid;
             $ticket->is_admin = 1;
             $ticket->subject = Yii::t('app', "ssl.$messagePrefix.created.ticket_subject");
             if ($ticket->save(false)) {

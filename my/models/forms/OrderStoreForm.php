@@ -46,12 +46,15 @@ class OrderStoreForm extends DomainForm
     {
         return array_merge(
             parent::rules(), [
-            [['admin_username', 'admin_email'], 'trim'],
+            [['admin_username', 'admin_email', 'admin_password'], 'filter', 'filter' => function($value) { // Trim input values
+                return is_string($value) || is_numeric($value) ? trim((string)$value) : null;
+            }],
+            ['admin_username', 'match', 'pattern' => '/^[a-z0-9-_@.]*$/i'],
+            ['admin_username', 'string', 'min' => 3, 'max' => 32],
             [['domain', 'store_currency', 'admin_username', 'admin_password', 'confirm_password'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             ['store_currency', 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.store.bad_currency')],
             ['admin_email', 'email'],
             [['domain'], OrderDomainValidator::class, 'store' => true],
-            ['admin_username', 'string', 'max' => 255],
             ['admin_password', 'string', 'min' => 5],
             ['admin_password', 'compare', 'compareAttribute' => 'confirm_password'],
         ]);
@@ -192,9 +195,9 @@ class OrderStoreForm extends DomainForm
         $model->setDetails([
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
-            'domain' => $this->storeDomain,
+            'domain' => $this->preparedDomain,
             'currency' => $this->store_currency,
-            'name' => $this->storeDomain,
+            'name' => $this->preparedDomain,
             'admin_email' => $this->admin_email,
         ]);
 
@@ -221,5 +224,18 @@ class OrderStoreForm extends DomainForm
         MyActivityLog::log(MyActivityLog::E_ORDERS_CREATE_STORE_ORDER, $model->id, $model->id, UserHelper::getHash());
 
         return true;
+    }
+
+    /**
+     * Get has domain labels
+     * @return array
+     */
+    public function getHasDomainsLabels(): array
+    {
+        return [
+            static::HAS_DOMAIN => Yii::t('app', 'form.order_store.have_domain'),
+            static::HAS_NOT_DOMAIN => Yii::t('app', 'form.order_store.want_to_register_new_domain'),
+            static::HAS_SUBDOMAIN => Yii::t('app', 'form.order_store.want_use_on_subdomain'),
+        ];
     }
 }

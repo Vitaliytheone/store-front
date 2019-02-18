@@ -10,6 +10,7 @@
     use superadmin\widgets\SelectCustomer;
 
     $model = new EditStoreForm();
+    $checkboxTemplate = "<div class=\"custom-control custom-checkbox mt-2\">{input} {label}</div>";
 ?>
 <div class="modal fade" id="editStoreModal" data-backdrop="static" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -47,6 +48,14 @@
                         ]) ?>
                     </div>
                 </div>
+                <?= $form->field($model, 'move_domain', [
+                    'checkboxTemplate' => $checkboxTemplate,
+                    'options' => ['class' => 'form-group move-domain-block'],
+                ])->checkbox([
+                    'class' => 'custom-control-input', 'id' => 'move-domain',
+                ])->label(null,[
+                    'class' => 'custom-control-label'
+                ]); ?>
                 <div class="form-group">
                     <label><?= $model->getAttributeLabel('currency') ?></label>
                     <?= Html::dropDownList('EditStoreForm[currency]',

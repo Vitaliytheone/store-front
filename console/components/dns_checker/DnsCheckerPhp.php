@@ -134,14 +134,12 @@ class DnsCheckerPhp extends DnsCheckerBase
             }
 
             $dnsCNAME = reset($dnsCNAME);
-            $dnsValidCNAME = Yii::$app->params['dns.checker.records']['CNAME'];
-
+            $dnsValidCNAMES = (array)ArrayHelper::getValue(Yii::$app->params, ['dns.checker.records', 'CNAME', 'target']);
+            $target = ArrayHelper::getValue($dnsCNAME, 'target');
             $this->setDnsCheckoutRecord($dnsCNAME);
 
-            if (ArrayHelper::getValue($dnsCNAME, 'target') !== $dnsValidCNAME['target']) {
-
+            if (!in_array($target, $dnsValidCNAMES)) {
                 $this->addError('match_subdomain_domain_cname_record', 'Subdomain CNAME does not match expected CNAME');
-
                 return false;
             }
 

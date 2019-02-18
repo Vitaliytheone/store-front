@@ -36,4 +36,6 @@ return [
     'currencies' => $currencies,
     'languages' => $languages,
     'devEmail' => ['myerror@13.uz'], // Адреса почты на которые шлем ошибки
+
+    'reactApiKey' => '3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd', // api key dev-окружения для тестирования реакта
 ];

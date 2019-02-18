@@ -1,6 +1,6 @@
 <?php
 use admin\components\Url;
-use yii\helpers\Html;
+use common\components\ActiveForm;
 
 /* @var $model \admin\models\forms\EditPaymentMethodForm; */
 
@@ -22,7 +22,7 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
 
 <div class="m-content">
 
-    <div class="gateway-settings__well">
+    <div class="sommerce-settings__well">
         <div class="row align-items-center">
             <div class="col-md-3 text-center">
                 <img src="<?= $model->getPaymentMethod()->icon ?>" alt="" class="img-fluid">
@@ -33,8 +33,14 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
         </div>
     </div>
 
-    <form id="paypalSettingsForm" action="<?= $submitUrl ?>" method="post" role="form">
-        <?= Html::beginForm(); ?>
+        <?php $form = ActiveForm::begin([
+            'id' => 'paypalSettingsForm',
+            'action' => $submitUrl,
+            'fieldClass' => 'yii\bootstrap\ActiveField',
+            'fieldConfig' => [
+                'template' => "{label}\n{input}",
+            ],
+        ]); ?>
 
         <?php foreach ($formData as $formField): ?>
 
@@ -58,6 +64,7 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
             <?php endif; ?>
 
         <?php endforeach; ?>
+
         <hr>
 
         <button type="submit" class="btn btn-success">
@@ -67,8 +74,6 @@ $cancelUrl = Url::toRoute(['/settings/payments']);
                 <?= Yii::t('admin', 'settings.payments_cancel_method') ?>
         </a>
 
-        <?= Html::endForm(); ?>
-    </form>
-
+        <?php ActiveForm::end(); ?>
 </div>
 

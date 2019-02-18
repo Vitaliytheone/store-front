@@ -211,6 +211,7 @@ class Stripe extends BasePayment {
             'transaction_id' => $transactionId,
             'amount' => $this->getPayment()->amount,
             'payment_id' => $this->getPayment()->id,
+            'fee' => 0,
             'content' => 'Ok'
         ];
     }
