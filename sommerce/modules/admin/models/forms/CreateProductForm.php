@@ -134,11 +134,11 @@ class CreateProductForm extends Products
      */
     public function create($postData)
     {
-        if (isset($postData['packages'])) {
-            unset($postData['packages']);
+        if (!$this->load($postData, '') || !$this->validate()) {
+            return false;
         }
 
-        if (!$this->load($postData, '') || !$this->validate() || !$this->save(false)) {
+        if (!$this->save()) {
             return false;
         }
 
