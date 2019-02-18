@@ -4,6 +4,7 @@ namespace common\helpers;
 
 
 use common\models\gateways\Sites;
+use my\helpers\DomainsHelper;
 use Yii;
 use common\components\dns\Dns;
 use common\models\panels\ThirdPartyLog;
@@ -42,10 +43,10 @@ class DnsHelper
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $params['domain'],
             'zone-type' => 'master',
-            'ns' => implode(",", $params['ahnamesParams']),
+            'ns' => implode(",", $params['registrarParams']),
         ], $logCodes['send_master_dns']);
         // Add master
-        if (!Dns::addMaster($params['domain'], $params['ahnamesParams'], $results)) {
+        if (!Dns::addMaster($params['domain'], $params['registrarParams'], $results)) {
             $result = false;
         }
         ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['master_dns']);
@@ -245,7 +246,7 @@ class DnsHelper
                 'projectDomainName' => Yii::$app->params['storeDomain'],
                 'logCodes' => static::getLogCodes('store'),
                 'logItem' => ThirdPartyLog::ITEM_BUY_STORE,
-                'ahnamesParams' => Yii::$app->params['ahnames.sommerce.ns'],
+                'registrarParams' => Yii::$app->params[static::_getDns($project->domain).'.sommerce.ns'],
             ];
         } elseif ($project instanceof Project) {
             return [
@@ -253,7 +254,7 @@ class DnsHelper
                 'projectDomainName' => Yii::$app->params['panelDomain'],
                 'logCodes' => static::getLogCodes('panel'),
                 'logItem' => ThirdPartyLog::ITEM_BUY_PANEL,
-                'ahnamesParams' => Yii::$app->params['ahnames.my.ns'],
+                'registrarParams' => Yii::$app->params[static::_getDns($project->domain).'.my.ns'],
             ];
         } elseif ($project instanceof Sites) {
             return [
@@ -261,10 +262,24 @@ class DnsHelper
                 'projectDomainName' => Yii::$app->params['gatewayDomain'],
                 'logCodes' => static::getLogCodes('gateway'),
                 'logItem' => ThirdPartyLog::ITEM_BUY_GATEWAY,
-                'ahnamesParams' => Yii::$app->params['ahnames.gateway.ns'],
+                'registrarParams' => Yii::$app->params[static::_getDns($project->domain).'.gateway.ns'],
             ];
         } else {
             return false;
         }
+    }
+
+    /**
+     * Get name for params, return 'ahnames' if unknown domain
+     * @param $domain
+     * @return string
+     */
+    protected static function _getDns($domain)
+    {
+        $ns = DomainsHelper::getRegistrarName($domain);
+        if (empty($ns)) {
+            return 'ahnames';
+        }
+        return $ns;
     }
 }

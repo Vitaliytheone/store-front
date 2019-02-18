@@ -5,6 +5,7 @@ use common\models\panels\Params;
 use superadmin\components\services\AHnamesService;
 use superadmin\components\services\BaseService;
 use superadmin\components\services\DNSLyticsService;
+use superadmin\components\services\NamesiloService;
 use superadmin\models\search\dashboard\DashboardService;
 use superadmin\components\services\GoGetSSLService;
 use superadmin\components\services\OpenSRSService;
@@ -25,6 +26,7 @@ class DashboardServices
     const SERVICE_GOGETSSL = 'ggssl';
     const SERVICE_OPENSRS = 'opensrs';
     const SERVICE_DNSLYTICS = 'dnslytics';
+    const SERVICE_NAMESILO = 'namesilo';
 
     private static function _getConfig()
     {
@@ -33,6 +35,7 @@ class DashboardServices
         $gogetsslParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_GOGETSSL);
         $dnslyticsParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_DNSLYTICS);
         $opensrsParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_OPENSRS);
+        $namesiloParams = Params::get(Params::CATEGORY_SERVICE, Params::CODE_NAMESILO);
 
         return [
             self::SERVICE_WHOISXML => [
@@ -79,7 +82,17 @@ class DashboardServices
                     $dnslyticsParams['dnslytics.url'],
                     Yii::$app->params['curl.timeout'],
                 ]
-            ]
+            ],
+            self::SERVICE_NAMESILO => [
+                'class' => NamesiloService::class,
+                'name' => Yii::t('app/superadmin', 'dashboard.services.namesilo'),
+                'params' => [
+                    $namesiloParams['namesilo.url'],
+                    $namesiloParams['namesilo.key'],
+                    $namesiloParams['namesilo.version'],
+                    $namesiloParams['namesilo.type'],
+                ]
+            ],
         ];
     }
 

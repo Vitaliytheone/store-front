@@ -92,7 +92,7 @@ $this->context->addModule('superadminDashboardController', [
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
-                        <h1 id="loader" class="text-center" style="display: none"class="text-center"><i class="fa fa-spinner fa-spin" style="font-size: 24px;"></i></h1>
+                        <h1 id="loader" class="text-center" style="display: none"><i class="fa fa-spinner fa-spin" style="font-size: 24px;"></i></h1>
                     </div>
                 </div>
             </div>

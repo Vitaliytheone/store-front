@@ -448,6 +448,8 @@ return [
     'error.panel.can_not_order_domain' => 'Can not order domain',
     'error.panel.can_not_order_panel' => 'Can not order panel',
     'error.panel.invalid_domain' => 'Invalid domain',
+    'error.panel.empty_domain' => 'Empty domain',
+    'error.panel.invalid_domain_name' => 'Invalid domain name',
     'error.panel.domain_is_not_registered' => 'Domain is not registered',
     'error.panel.domain_is_already_exist' => 'Domain is already exist',
     'error.panel.orders_limit_exceeded' => 'Orders limit exceeded.',

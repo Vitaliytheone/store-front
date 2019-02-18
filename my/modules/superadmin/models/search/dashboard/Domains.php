@@ -4,6 +4,7 @@ namespace superadmin\models\search\dashboard;
 
 use common\models\panels\Customers;
 use common\models\panels\Domains as DomainsModel;
+use my\helpers\DomainsHelper;
 use my\helpers\SpecialCharsHelper;
 
 /*
@@ -37,6 +38,7 @@ class Domains extends BaseBlock
 
         $items = $query->all();
         foreach ($items as &$item) {
+            $item['domain'] = DomainsHelper::idnToUtf8($item['domain']);
             $item['status'] = DomainsModel::getStatuses()[$item['status']];
             $item['created'] = static::_formatDate($item['created']);
             $item['expired'] = static::_formatDate($item['expired']);

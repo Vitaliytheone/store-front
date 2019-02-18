@@ -29,7 +29,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h2 class="page-header"><?= Yii::t('app', 'domains.list.header')?> <a href="/domains/order" class="btn btn-outline btn-success"><?= Yii::t('app', 'domains.list.order_domain')?></a></h2>
+        <h2 class="page-header"><?= Yii::t('app', 'domains.list.header')?></h2>
     </div>
 </div>
 <?php if (!empty($domains)): ?>
