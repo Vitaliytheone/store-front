@@ -12,35 +12,23 @@ class m190214_081527_20190214_add_table_store_integrations extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('store_integrations', [
-            'id' => $this->primaryKey()->notNull(),
-            'integration_id' => $this->integer(),
-            'store_id' => $this->integer(),
-            'options' => $this->text(),
-            'visibility' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('1- активна, 0 - не активна'),
-            'position' => $this->integer(),
-            'created_at' => $this->integer(),
-            'updated_at' => $this->integer(),
-        ]);
+        $this->execute(
+            "USE `" . DB_STORES . "`;
 
-        $this->addForeignKey(
-            'FK_integration_id',
-            'store_integrations',
-            'integration_id',
-            'integrations',
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            'FK_store_id',
-            'store_integrations',
-            'store_id',
-            'stores',
-            'id',
-            'CASCADE',
-            'CASCADE'
+            CREATE TABLE store_integrations (
+              id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+              integration_id int,
+              store_id int,
+              options text,
+              visibility tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 - active, 0 - inactive',
+              position int,
+              created_at int,
+              updated_at int,
+              CONSTRAINT fk_store_integrations_integrations FOREIGN KEY (integration_id)
+                REFERENCES integrations(id),
+              CONSTRAINT fk_store_integrations_stores FOREIGN KEY (store_id)
+                REFERENCES stores(id)
+            );"
         );
     }
 

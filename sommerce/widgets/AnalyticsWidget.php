@@ -1,6 +1,6 @@
 <?php
 
-namespace sommerce\modules\admin\widgets;
+namespace sommerce\widgets;
 
 use yii\base\Widget;
 
@@ -26,10 +26,6 @@ class AnalyticsWidget extends Widget
      */
     public function run()
     {
-        ob_start();
-        echo $this->content;
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
+        return $this->content;
     }
 }

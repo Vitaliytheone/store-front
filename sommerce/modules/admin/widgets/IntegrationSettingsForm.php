@@ -51,17 +51,9 @@ class IntegrationSettingsForm extends Widget
         foreach ($this->settingsForm as $key => $value) {
             switch ($value['type']) {
                 case static::TYPE_TEXTAREA:
-                    $label = Html::label(Yii::t('admin', $value['label']), 'settings-custom__header');
-
-                    $options = $this->options[$key] ?? '';
-                    $input = Html::textarea('options[' . $value['name'] . ']', $options, [
-                        'class' => 'form-control m-input',
-                        'id' => 'settings-custom__header',
-                        'rows' => '14',
-                    ]);
-
-                    $form .= Html::tag('div', $label . $input, [
-                        'class' => 'form-group m-form__group',
+                    $form .= $this->render('integration_settings_form/_textarea', [
+                        'value' => $value,
+                        'options' => $this->options[$key] ?? '',
                     ]);
                     break;
             }

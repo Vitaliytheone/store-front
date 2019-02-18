@@ -54,8 +54,7 @@ trait IntegrationsTrait
             $integration = $search->search();
             $this->view->title = $integration['name'];
 
-            return $this->render('integrations', [
-                'editPage' => true,
+            return $this->render('layouts/integrations/_edit_integration', [
                 'integration' => $integration,
             ]);
         }

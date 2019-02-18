@@ -176,6 +176,9 @@ class ViewRenderer extends BaseViewRenderer
      * @param array $params the parameters to be passed to the view file.
      *
      * @return string the rendering result
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render($view, $file, $params)
     {
@@ -191,6 +194,10 @@ class ViewRenderer extends BaseViewRenderer
         $content = $this->twig->render(pathinfo($file, PATHINFO_BASENAME), $params);
         if (!empty($view->context->endContent)) {
             $content = preg_replace("/\<\/html.*?\>/uis", "\r\n" . implode("\r\n", $view->context->endContent) . "\r\n</html>", $content);
+        }
+
+        if (!empty($view->context->startHeadContent)) {
+            $content = preg_replace("/\<head.*?\>/uis", "<head>\r\n" . implode("\r\n", $view->context->startHeadContent) . "\r\n", $content);
         }
 
         return $content;

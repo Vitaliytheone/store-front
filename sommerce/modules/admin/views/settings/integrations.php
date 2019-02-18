@@ -18,16 +18,8 @@ use common\models\stores\StoreIntegrations;
                 'active' => 'integrations'
             ])?>
         </div>
-            <?php
-                if (isset($editPage)) {
-                    echo $this->render('layouts/integrations/_edit_integration', [
-                        'integration' => $integration,
-                    ]);
-                } else {
-                    echo $this->render('layouts/integrations/_integrations_list', [
-                        'integrations' => $integrations,
-                    ]);
-                }
-            ?>
+            <?= $this->render('layouts/integrations/_integrations_list', [
+                'integrations' => $integrations,
+            ]); ?>
     </div>
 </div>

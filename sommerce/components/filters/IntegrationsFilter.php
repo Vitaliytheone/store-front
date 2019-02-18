@@ -1,17 +1,24 @@
 <?php
 
-namespace sommerce\modules\admin\widgets;
+namespace sommerce\components\filters;
 
 use common\models\stores\Integrations;
 use common\models\stores\StoreIntegrations;
 use common\models\stores\Stores;
-use yii\base\Widget;
+use sommerce\components\integrations\IntegrationsFactory;
+use sommerce\widgets\AnalyticsWidget;
+use sommerce\widgets\ChatsWidget;
+use yii\base\ActionFilter;
 use Yii;
 
-class IntegrationsWidget extends Widget
+/**
+ * Class IntegrationsFilter
+ * @package sommerce\components\filters
+ */
+class IntegrationsFilter extends ActionFilter
 {
     /** @var Stores */
-    private $store;
+    public $store;
 
     /**
      * {@inheritdoc}
@@ -19,13 +26,15 @@ class IntegrationsWidget extends Widget
     public function init()
     {
         $this->store = Yii::$app->store->getInstance();
+
         parent::init();
     }
 
     /**
-     * @return string
+     * @param \yii\base\Action $action
+     * @return bool
      */
-    public function run()
+    public function beforeAction($action)
     {
         $storeIntegrations = StoreIntegrations::find()
             ->where([
@@ -50,13 +59,21 @@ class IntegrationsWidget extends Widget
                 if (!isset($integration['widget_class']) || $integration['widget_class'] === '') {
                     continue;
                 }
-                $widgetClass = 'sommerce\modules\admin\widgets\\' . $integration['widget_class'];
-                $integrationsContent .= $widgetClass::widget([
-                    'content' => $snippet,
-                ]);
+
+                $factory = new IntegrationsFactory();
+                /** @var ChatsWidget|AnalyticsWidget $widgetObject */
+                $widgetObject = $factory->getWidget($integration['widget_class']);
+                if (!isset($widgetObject)) {
+                    continue;
+                }
+
+                $widgetObject->content = $snippet;
+                $integrationsContent .= $widgetObject->run();
             }
         }
 
-        return $integrationsContent;
+        $this->owner->startHeadContent[] = $integrationsContent;
+
+        return parent::beforeAction($action);
     }
 }

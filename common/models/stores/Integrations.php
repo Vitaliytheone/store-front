@@ -150,16 +150,4 @@ class Integrations extends ActiveRecord
     {
         return ArrayHelper::getValue(static::getIcons(), $code, '');
     }
-
-    /**
-     * Get integration name
-     * @param int $id
-     * @return string
-     */
-    public static function getIntegrationName(int $id): string
-    {
-        $integration = static::findOne($id);
-
-        return $integration->name ?? '';
-    }
 }
