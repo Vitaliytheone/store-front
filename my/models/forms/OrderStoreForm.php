@@ -1,4 +1,5 @@
 <?php
+
 namespace my\models\forms;
 
 use common\models\panels\InvoiceDetails;
@@ -6,12 +7,9 @@ use common\models\panels\Invoices;
 use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreDomains;
 use my\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
 use Yii;
-use common\models\panels\Auth;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use my\components\validators\OrderDomainValidator;
 use yii\base\Exception;
@@ -56,7 +54,7 @@ class OrderStoreForm extends DomainForm
             ['admin_email', 'email'],
             [['domain'], OrderDomainValidator::class, 'store' => true],
             ['admin_password', 'string', 'min' => 5],
-            ['admin_password', 'compare', 'compareAttribute' => 'confirm_password'],
+            ['admin_password', 'compare', 'compareAttribute' => 'confirm_password', 'except' => static::SCENARIO_CREATE_DOMAIN],
         ]);
     }
 
@@ -128,6 +126,7 @@ class OrderStoreForm extends DomainForm
     }
 
     /**
+     * Order store
      * @return bool
      * @throws Exception
      * @throws \yii\db\Exception
@@ -157,7 +156,7 @@ class OrderStoreForm extends DomainForm
                 return false;
             }
         } else {
-             $this->domain = $this->preparedDomain;
+            $this->domain = $this->preparedDomain;
         }
 
         $result = $this->orderStore($invoiceModel);
@@ -195,7 +194,8 @@ class OrderStoreForm extends DomainForm
         $model->setDetails([
             'username' => $this->admin_username,
             'password' => StoreAdminAuth::hashPassword($this->admin_password),
-            'domain' => $this->preparedDomain,
+            'domain' => $this->domain,
+            'clean_domain' => $this->preparedDomain,
             'currency' => $this->store_currency,
             'name' => $this->preparedDomain,
             'admin_email' => $this->admin_email,
