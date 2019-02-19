@@ -86,8 +86,8 @@ class Paypal extends BasePayment
         ];
 
         $requestParams = [
-            'RETURNURL' => SiteHelper::hostUrl() . '/paypalexpress/' . $checkout->id,
-            'CANCELURL' => SiteHelper::hostUrl() . '/cart'
+            'RETURNURL' => SiteHelper::hostUrl($store->ssl) . '/paypalexpress/' . $checkout->id,
+            'CANCELURL' => SiteHelper::hostUrl($store->ssl) . '/cart'
         ];
 
         $orderParams = [

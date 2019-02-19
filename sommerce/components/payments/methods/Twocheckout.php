@@ -88,7 +88,7 @@ class Twocheckout extends BasePayment
         }
 
         $amount = number_format($checkout->price, 2, '.', '');
-        $receiptLinkUrl = SiteHelper::hostUrl() . '/cart';
+        $receiptLinkUrl = SiteHelper::hostUrl($store->ssl) . '/cart';
 
         /**
          * `sid`    Your 2Checkout account number.

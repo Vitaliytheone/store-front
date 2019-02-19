@@ -57,9 +57,9 @@ class Paypalstandard extends BasePayment
             'cmd' => '_xclick',
             'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
             'currency_code' => $store->currency,
-            'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'cancel_return' => SiteHelper::hostUrl() . '/cart',
+            'return' => SiteHelper::hostUrl($store->ssl) . '/paypalstandard/' . $checkout->id,
+            'notify_url' => SiteHelper::hostUrl($store->ssl) . '/paypalstandard/' . $checkout->id,
+            'cancel_return' => SiteHelper::hostUrl($store->ssl) . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
         ]);

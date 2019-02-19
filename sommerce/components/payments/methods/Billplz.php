@@ -66,8 +66,8 @@ class Billplz extends BasePayment
             'description' => static::getDescription($checkout->id),
             'name' => $email,
             'amount' => $checkout->price * 100, // A positive integer in the smallest currency unit (e.g 100 cents to charge RM 1.00)
-            'callback_url' => SiteHelper::hostUrl() . '/billplz?checkoutId=' . $checkout->id,
-            'redirect_url' => SiteHelper::hostUrl() . '/billplz?checkoutId=' . $checkout->id,
+            'callback_url' => SiteHelper::hostUrl($store->ssl) . '/billplz?checkoutId=' . $checkout->id,
+            'redirect_url' => SiteHelper::hostUrl($store->ssl) . '/billplz?checkoutId=' . $checkout->id,
         ]);
 
         if (!empty($result)) {

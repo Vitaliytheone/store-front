@@ -49,7 +49,7 @@ class Yandexcards extends Yandexmoney
             'sum' => $checkout->price,
             'quickpay-form' => 'shop',
             'paymentType' => 'AC',
-            'successURL' => SiteHelper::hostUrl() . '/cart'
+            'successURL' => SiteHelper::hostUrl($store->ssl) . '/cart'
         ]);
     }
 

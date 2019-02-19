@@ -50,7 +50,7 @@ class Yandexmoney extends BasePayment
             'sum' => $checkout->price,
             'quickpay-form' => 'shop',
             'paymentType' => 'PC',
-            'successURL' => SiteHelper::hostUrl() . '/cart'
+            'successURL' => SiteHelper::hostUrl($store->ssl) . '/cart'
         ]);
     }
 
