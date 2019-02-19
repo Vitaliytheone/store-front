@@ -7,6 +7,6 @@ const instance = axios.create({
   baseURL: ' '
 });
 
-instance.interceptors.response.use(response => response.data, error => Promise.reject(error));
+instance.interceptors.response.use(response => response.data, error => Promise.reject(error.response.data));
 
 export default instance;

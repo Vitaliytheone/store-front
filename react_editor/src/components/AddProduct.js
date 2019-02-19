@@ -46,13 +46,23 @@ class AddProduct extends Component {
 	};
 
 	handleSubmit = async (...params) => {
+	try {
 		const response = await this.props.onSubmit(...params);
 		this.setState({
-			showError: !response.success,
-			modalIsOpen: !response.success,
-			errorMessage: response.error_message,
-			productId: response.data.id
-		});
+      showError: !response.success,
+      modalIsOpen: !response.success,
+      errorMessage: response.error_message,
+      productId: response.data.id
+    });
+	} catch(error) {
+		console.log(error);
+	}
+			// this.setState({
+			// 	showError: !response.success,
+			// 	modalIsOpen: !response.success,
+			// 	errorMessage: response.error_message,
+			// 	productId: response.data.id
+			// });
 		if (this.state.showError) {
 			scrollModalTop(this.modal);
 		} else {
@@ -64,7 +74,6 @@ class AddProduct extends Component {
 
 	render() {
 		const { isSubmitting, products } = this.props;
-		console.log(this.props);
 		return (
 			<React.Fragment>
 				<Row className="sommerce-products__actions">

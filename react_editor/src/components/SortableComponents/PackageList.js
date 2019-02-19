@@ -19,7 +19,7 @@ const PackageList = SortableContainer(({ choseProviders, providers, product, res
 				choseProviders={choseProviders}
 			/>
 		))}
-		<AddPackage onSubmit={onPackageAdd} providers={providers} />
+		<AddPackage onSubmit={onPackageAdd} providers={providers} choseProviders={choseProviders} response={response}/>
 	</Col>
 ));
 

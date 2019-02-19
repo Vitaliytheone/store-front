@@ -9,14 +9,13 @@ export function addListing() {
 	);
 }
 
+
 export function addProduct(payload) {
-	axiosInstance.post(point.add_product, payload);
-	const mockResponse = {
-		data: { id: nanoid(), ...payload },
-		success: true,
-		error_message: 'afafafasfsafsafsa'
-	};
-	return Promise.resolve(mockResponse);
+  return axiosInstance.post(
+    point.add_product +
+      "key=3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd",
+    payload
+  );
 }
 
 export function confirm_add_product(product_id) {

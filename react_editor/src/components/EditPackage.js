@@ -5,7 +5,6 @@ import PackageModal from './modals/PackageModal';
 import { toast } from 'react-toastify';
 import { options } from '../helpers/toast';
 import { scrollModalTop } from '../helpers/scrolling';
-import { get_providers_services } from '../services/url';
 
 class EditPackage extends React.PureComponent {
   state = {
@@ -84,7 +83,6 @@ class EditPackage extends React.PureComponent {
 
   render() {
     const { response, providers, choseProviders } = this.props;
-    console.log(response);
     return (
       <React.Fragment>
         <Button
@@ -118,7 +116,7 @@ class EditPackage extends React.PureComponent {
                   showError={this.state.showError}
                   errorMessage={this.state.errorMessage}
                   providers={providers}
-                  choseService={choseProviders}
+                  choseProviders={choseProviders}
                   services={response.services}
                 />
                 <ModalFooter className="justify-content-start">

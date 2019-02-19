@@ -11,8 +11,7 @@ class PackageModal extends React.PureComponent {
 	};
 
 	render() {
-		const { providers, services, choseService } = this.props;
-		console.log(services);
+		const { providers, services, choseProviders} = this.props;
 		return (
 			<ModalBody>
 				{/* Alert Error */}
@@ -145,7 +144,7 @@ class PackageModal extends React.PureComponent {
 						name="provider_id"
 						type="select"
 						label="Provider"
-						choseService={choseService}
+						choseProviders={choseProviders}
 					/>
 				</FormGroup>
 

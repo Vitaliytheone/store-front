@@ -16,10 +16,11 @@ import {
 	get_update_product,
 	get_providers_services
 } from './services/url';
-import { sortBy, pick, find } from 'lodash';
+import { sortBy, pick } from 'lodash';
 
 class CategorieProducts extends Component {
 	state = {
+		loading: true,
 		data: [],
 		providers: [],
 		response: {
@@ -46,7 +47,6 @@ class CategorieProducts extends Component {
 	async componentDidMount() {
 		const response = await addListing();
 		const data = response.data;
-		console.log(data);
 		const providers = response.data.providers;
 		providers.unshift({ id: 'none', name: 'Chose providers' });
 		const dataParse = data.products.map((item) => ({
@@ -56,6 +56,7 @@ class CategorieProducts extends Component {
 		}));
 		const newData = sortBy(dataParse, 'position');
 		this.setState({
+			loading: false,
 			data: newData,
 			providers: providers,
 			response: {
@@ -63,7 +64,7 @@ class CategorieProducts extends Component {
 				services: { providerServices: [ { service: 'none', name: 'Chose provider service' } ] }
 			}
 		});
-		console.log(this.state.data);
+		console.log(response);
 	}
 
 	handleProductSwitch = ({ oldIndex, newIndex }) => {
@@ -129,7 +130,6 @@ class CategorieProducts extends Component {
 		// 	...prevState,
 		// 	data: [ ...prevState.data, newProduct ]
 		// }));
-		console.log(newProduct);
 		const response = await addProduct(newProduct);
 		const newData = [ ...this.state.data ];
 		// add new product to array end (server return)
@@ -189,23 +189,22 @@ class CategorieProducts extends Component {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
 		const response = await get_update_package(getPackageId);
 		const responseServices = await get_providers_services(response.data.provider_id);
-		const a = [ ...this.state.response.services.providerServices, ...responseServices.data ];
+		const newServices = [ ...this.state.response.services.providerServices, ...responseServices.data ];
 		this.setState({
 			response: {
 				...this.state.response,
 				package: response.data,
 				services: {
-					providerServices: a
+					providerServices: newServices
 				}
 			}
 		});
-		console.log(response);
 	};
 
 	choseProviders = async (provider_id) => {
 		if (provider_id !== 'none') {
 			var response = await get_providers_services(provider_id);
-			response.data.unshift({ service: null, name: 'Chose provider service' });
+			response.data.unshift({ service: 'none', name: 'Chose provider service' });
 			const error = response.data[1].error;
 			const message = response.data[1].message;
 			this.setState({
@@ -223,7 +222,7 @@ class CategorieProducts extends Component {
 				response: {
 					...this.state.response,
 					services: {
-						providerServices: [ { service: null, name: 'Chose provider service' } ]
+						providerServices: [{ service: 'none', name: 'Chose provider service' }]
 					}
 				}
 			});
@@ -247,15 +246,13 @@ class CategorieProducts extends Component {
 		};
 		delete editedProduct[productIndex].position;
 		const ProductId = editedProduct[productIndex].id;
-		const response = await updateProduct(ProductId, editedProduct[productIndex]);
-		console.log(editedProduct[productIndex]);
+		const response = await updateProduct(ProductId, editedProduct[productIndex]);	
 		const productPackages = editedProduct[productIndex].packages;
 		if (response.success) {
 			editedProduct[productIndex] = {
 				...response.data,
 				packages: productPackages
 			};
-			console.log(editedProduct);
 			this.setState({
 				data: editedProduct
 			});
@@ -281,7 +278,6 @@ class CategorieProducts extends Component {
 		};
 		delete editedPackage[productIndex].packages[packageIndex].position;
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
-		console.log(editedPackage[productIndex].packages[packageIndex]);
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
 		if (response.success) {
 			editedPackage[productIndex].packages[packageIndex] = response.data;
@@ -310,6 +306,24 @@ class CategorieProducts extends Component {
 	render() {
 		const { data, response, providers } = this.state;
 		const { isSubmitting } = this.props;
+		if(this.state.loading) {
+			return ( 
+			<div className="sk-circle">
+				<div className="sk-circle1 sk-child"></div>
+				<div className="sk-circle2 sk-child"></div>
+				<div className="sk-circle3 sk-child"></div>
+				<div className="sk-circle4 sk-child"></div>
+				<div className="sk-circle5 sk-child"></div>
+				<div className="sk-circle6 sk-child"></div>
+				<div className="sk-circle7 sk-child"></div>
+				<div className="sk-circle8 sk-child"></div>
+				<div className="sk-circle9 sk-child"></div>
+				<div className="sk-circle10 sk-child"></div>
+				<div className="sk-circle11 sk-child"></div>
+				<div className="sk-circle12 sk-child"></div>
+			</div>
+		  )
+		}
 		return (
 			<React.Fragment>
 				<Jumbotron className="page-container">

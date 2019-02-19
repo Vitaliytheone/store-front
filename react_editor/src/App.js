@@ -5,7 +5,7 @@ import CategorieProducts from './CategorieProducts';
 class App extends Component {
 	render() {
 		return (
-			<CategorieProducts/>
+			<CategorieProducts />
 			// <Router>
 			// 	<React.Fragment>
 			// 		{/* <Header /> */}

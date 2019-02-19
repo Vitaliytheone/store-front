@@ -1,15 +1,16 @@
 import React from 'react';
 import { Label, Input } from 'reactstrap';
 
-export const Select = ({ name, choseService, entities, field, form, label, ...props }) => (
+export const Select = ({ name, choseProviders, entities, field, form, label, ...props }) => (
 	<div>
 		<Label htmlFor={field.name}>{label}</Label>
 		<Input
 			{...field}
 			{...props}
 			onChange={(event) => {
-				choseService && choseService(event.target.value);
+				choseProviders && choseProviders(event.target.value);
 				form.setFieldValue(name, event.target.value);
+				form.setFieldValue('provider_service', 'none');
 				field.onChange(event);
 			}}
 		>
