@@ -2,8 +2,6 @@
 
 namespace my\controllers;
 
-use common\components\cdn\BaseCdn;
-use common\components\cdn\Cdn;
 use common\helpers\PaymentHelper;
 use common\models\panels\Params;
 use common\models\panels\services\GetGeneralPaymentMethodsService;
@@ -139,18 +137,15 @@ class SiteController extends CustomController
      * @return array
      * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
-     * @throws \yii\base\UnknownClassException
      */
     public function actionMessage($id)
     {
         $ticket = $this->findModel($id, 'Tickets');
         $customer = Customers::findOne(Yii::$app->user->identity->id);
-        $cdn = Cdn::getCdn();
 
         $model = new CreateMessageForm();
         $model->setCustomer($customer);
         $model->setTicket($ticket);
-        $model->setCdn($cdn);
         $model->post = Yii::$app->request->post('qs-file');
 
 
@@ -202,17 +197,13 @@ class SiteController extends CustomController
     /**
      * Create ticket message
      * @return array
-     * @throws \yii\base\Exception
-     * @throws \yii\base\UnknownClassException
      */
     public function actionCreateTicket()
     {
         $customer = Customers::findOne(Yii::$app->user->identity->id);
-        $cdn = Cdn::getCdn();
 
         $model = new CreateTicketForm();
         $model->setCustomer($customer);
-        $model->setCdn($cdn);
         $model->post = Yii::$app->request->post('qs-file');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -236,10 +227,7 @@ class SiteController extends CustomController
 
     /**
      * Support page
-     * @var BaseCdn $cdn
      * @return string
-     * @throws \yii\base\Exception
-     * @throws \yii\base\UnknownClassException
      */
     public function actionSupport()
     {

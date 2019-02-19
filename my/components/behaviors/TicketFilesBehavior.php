@@ -8,10 +8,7 @@ use common\models\panels\TicketFiles;
 use common\models\panels\TicketMessages;
 use Yii;
 use yii\base\Behavior;
-use yii\base\Event;
-use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
-use yii\db\BaseActiveRecord;
 
 class TicketFilesBehavior extends Behavior
 {
@@ -19,13 +16,14 @@ class TicketFilesBehavior extends Behavior
     /** @var Uploadcare */
     public $cdn;
 
-    /** @var TicketMessages */
-    public $message;
+    /** @var string */
+    public $link;
 
     public function events()
     {
         return [
-            ActiveRecord::EVENT_AFTER_DELETE => 'deleteFiles',
+            ActiveRecord::EVENT_BEFORE_DELETE => 'deleteFiles',
+            ActiveRecord::EVENT_AFTER_INSERT => 'createFile',
         ];
     }
 
@@ -46,14 +44,47 @@ class TicketFilesBehavior extends Behavior
      */
     public function deleteFiles($event)
     {
-        Yii::debug($event->sender);
-
         $files = TicketFiles::findOne(['message_id' => $event->sender->id]);
-        Yii::debug($files, '$files');
         if (!empty($files)) {
             $this->cdn->deleteGroup($files->prepareIds());
         }
-        Yii::debug('Deleted');
+    }
+
+    /**
+     * Create ticket files
+     * @param \yii\base\Event $event
+     * @return bool
+     * @throws \Exception
+     */
+    public function createFile($event)
+    {
+        $link = $this->owner->post;
+
+        /** @var TicketMessages $ticket */
+        $ticket = $event->sender;
+
+        if (!empty($link)) {
+            $transaction = Yii::$app->db->beginTransaction();
+
+            $ticketFilesModel = new TicketFiles();
+            $ticketFilesModel->customer_id = $ticket->customer_id ?? 0;
+            $ticketFilesModel->ticket_id = $ticket->ticket_id;
+            $ticketFilesModel->admin_id = $ticket->admin_id ?? 0;
+            $ticketFilesModel->message_id = $ticket->id;
+            $ticketFilesModel->link = $link;
+            $ticketFilesModel->cdn_id = $this->cdn->getId($link);
+            $ticketFilesModel->created_at = time();
+            $ticketFilesModel->setDetails($this->cdn->getFiles($link, true));
+
+            if (!$ticketFilesModel->save()) {
+                $transaction->rollBack();
+                return false;
+            }
+            $this->cdn->storeGroup($link);
+
+            $transaction->commit();
+            return true;
+        }
     }
 
 }

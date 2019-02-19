@@ -4,7 +4,6 @@ namespace common\components\cdn\providers\widgets;
 
 use common\components\cdn\Cdn;
 use common\components\cdn\providers\Uploadcare;
-use Yii;
 use yii\base\Widget;
 
 class UploadcareUploadWidget extends Widget

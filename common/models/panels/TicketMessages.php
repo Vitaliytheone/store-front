@@ -34,6 +34,9 @@ class TicketMessages extends ActiveRecord
 {
     use UnixTimeFormatTrait;
 
+    /** @var string */
+    public $post;
+
     /**
      * @inheritdoc
      */
@@ -50,7 +53,7 @@ class TicketMessages extends ActiveRecord
         return [
             [['ticket_id', 'message'], 'required'],
             [['customer_id', 'ticket_id', 'admin_id', 'created_at', 'is_system'], 'integer'],
-            [['message'], 'string', 'max' => 1000],
+            [['message', 'post'], 'string', 'max' => 1000],
             [['user_agent', 'ip'], 'string', 'max' => 300],
         ];
     }
@@ -191,7 +194,9 @@ class TicketMessages extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'user_agent'
                 ]
             ],
-            'tickets' => TicketFilesBehavior::class,
+            'tickets' => [
+                'class' => TicketFilesBehavior::class,
+            ],
         ];
     }
 

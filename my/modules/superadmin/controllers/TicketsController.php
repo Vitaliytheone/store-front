@@ -2,12 +2,10 @@
 
 namespace superadmin\controllers;
 
-use common\components\cdn\Cdn;
 use common\models\panels\CustomersNote;
 use common\models\panels\SuperAdmin;
 use common\models\panels\TicketMessages;
 use my\components\ActiveForm;
-use my\components\behaviors\TicketFilesBehavior;
 use my\helpers\Url;
 use my\components\SuperAccessControl;
 use common\models\panels\Tickets;
@@ -74,7 +72,6 @@ class TicketsController extends CustomController
                     'application/json' => Response::FORMAT_JSON,
                 ],
             ],
-            'tickets' => TicketFilesBehavior::class,
         ];
     }
 
@@ -110,6 +107,7 @@ class TicketsController extends CustomController
      * @param $id
      * @return string
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionView($id)
     {
@@ -124,12 +122,9 @@ class TicketsController extends CustomController
             'id' => $id
         ]);
 
-        $cdn = Cdn::getCdn();
-
         $model = new CreateMessageForm();
         $model->setTicket($ticket);
         $model->setUser($admin);
-        $model->setCdn($cdn);
         $model->post = Yii::$app->request->post('qs-file');
 
         $blocks = TicketBlocksSearch::search($ticket->customer_id);
@@ -158,7 +153,6 @@ class TicketsController extends CustomController
             'gateways' => $blocks['gateways'],
             'childPanels' => $blocks['childPanels'],
             'notes' => $blocks['notes'],
-            'cdn' => $cdn,
         ]);
     }
 
@@ -320,7 +314,6 @@ class TicketsController extends CustomController
                 if (!$message->delete()) {
                     $transaction->rollBack();
                 } else {
-                    $this->message = $message;
                     $transaction->commit();
                 }
             }
