@@ -9,7 +9,6 @@ export function addListing() {
 	);
 }
 
-
 export function addProduct(payload) {
   return axiosInstance.post(
     point.add_product +
@@ -17,6 +16,7 @@ export function addProduct(payload) {
     payload
   );
 }
+
 
 export function confirm_add_product(product_id) {
 	axiosInstance.post(point.confirm_add_product + `${product_id}`);

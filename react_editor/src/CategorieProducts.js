@@ -180,6 +180,7 @@ class CategorieProducts extends Component {
 	getProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
 		const response = await get_update_product(getProduct);
+		console.log(response);
 		this.setState({
 			response: { ...this.state.response, product: response.data }
 		});
