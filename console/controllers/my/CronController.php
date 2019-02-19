@@ -265,7 +265,7 @@ class CronController extends CustomController
         /** @var Stores $store */
         foreach ($stores as $store) {
             $store->refresh();
-            if (!$store->checkExpired()) {
+            if ($store->checkExpired()) {
                 $store->status = Stores::STATUS_FROZEN;
                 $store->save(false);
             }
@@ -283,7 +283,7 @@ class CronController extends CustomController
         /** @var Sites $site */
         foreach ($sites as $site) {
             $site->refresh();
-            if (!$site->checkExpired()) {
+            if ($site->checkExpired()) {
                 $site->status = Sites::STATUS_FROZEN;
                 $site->save(false);
             }
