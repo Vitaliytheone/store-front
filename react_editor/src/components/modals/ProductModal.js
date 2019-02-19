@@ -90,7 +90,7 @@ class ProductModal extends React.PureComponent {
 		const { colorSchema, editSeo } = this.state;
 		const seoUrl = values.url && values.url.replace(/ /g, '-');
 		const properties = filter(products, (item) => item.properties);
-
+		console.log(this.props.status);
 		let colorHex;
 		if (colorSchema) {
 			colorHex = (
@@ -208,7 +208,10 @@ class ProductModal extends React.PureComponent {
 										data-dropdown-toggle="hover"
 										aria-expanded="true"
 									>
-										<button className="btn btn-sm btn-link m-dropdown__toggle" onClick = { (event) => event.preventDefault()}>
+										<button
+											className="btn btn-sm btn-link m-dropdown__toggle"
+											onClick={(event) => event.preventDefault()}
+										>
 											<span className="la la-clone" /> Copy properties
 										</button>
 										<div id="dropdown" className="m-dropdown__wrapper">

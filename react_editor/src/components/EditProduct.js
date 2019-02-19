@@ -13,12 +13,11 @@ class EditProduct extends Component {
 		errorMessage: null
 	};
 
-	getProduct = (...params) => {
+	getProduct() {
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen
 		}));
-		this.props.getProduct(...params);
-	};
+	}
 
 	toggle = () => {
 		document.body.classList.remove('scroll-off');
@@ -43,6 +42,10 @@ class EditProduct extends Component {
 		}
 	};
 
+	componentDidMount(...params) {
+		this.props.getProduct(...params);
+	}
+
 	render() {
 		const { response, products } = this.props;
 
@@ -50,7 +53,10 @@ class EditProduct extends Component {
 			<React.Fragment>
 				<span className="edit_product">
 					<Button
-						onClick={this.getProduct}
+						onClick={() => {
+							this.getProduct();
+							this.props.getProduct();
+						}}
 						color="primary"
 						size="sm"
 						className="m-btn--pill sommerce_dragtable__action m-btn--air"

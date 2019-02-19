@@ -45,24 +45,26 @@ class AddProduct extends Component {
 		}));
 	};
 
-	handleSubmit = async (...params) => {
-	try {
-		const response = await this.props.onSubmit(...params);
-		this.setState({
-      showError: !response.success,
-      modalIsOpen: !response.success,
-      errorMessage: response.error_message,
-      productId: response.data.id
-    });
-	} catch(error) {
-		console.log(error);
-	}
-			// this.setState({
-			// 	showError: !response.success,
-			// 	modalIsOpen: !response.success,
-			// 	errorMessage: response.error_message,
-			// 	productId: response.data.id
-			// });
+	handleSubmit = async (values, actions) => {
+		try {
+			const response = await this.props.onSubmit(values, actions);
+			this.setState({
+				showError: !response.success,
+				modalIsOpen: !response.success,
+				errorMessage: response.error_message,
+				productId: response.data.id
+			});
+		} catch (error) {
+			console.log(error);
+			console.log(actions);
+			actions.setStatus([ error.success, error.error_message ]);
+		}
+		// this.setState({
+		// 	showError: !response.success,
+		// 	modalIsOpen: !response.success,
+		// 	errorMessage: response.error_message,
+		// 	productId: response.data.id
+		// });
 		if (this.state.showError) {
 			scrollModalTop(this.modal);
 		} else {
@@ -95,7 +97,7 @@ class AddProduct extends Component {
 					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue, values }) => (
+						{({ setFieldValue, values, status }) => (
 							<Form>
 								<ModalHeader toggle={this.toggle}>Create product</ModalHeader>
 								<ProductModal
@@ -105,6 +107,7 @@ class AddProduct extends Component {
 									setFieldValue={setFieldValue}
 									products={products}
 									properties={this.props.initialValues.properties}
+									status={status}
 								/>
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit" disabled={isSubmitting}>
