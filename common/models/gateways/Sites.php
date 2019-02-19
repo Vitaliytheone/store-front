@@ -390,6 +390,7 @@ class Sites extends ActiveRecord implements ProjectInterface
             $time = time();
         }
 
+        $this->status = static::STATUS_ACTIVE;
         $this->expired_at = ExpiryHelper::month($time);
 
         return $this->save(false);
