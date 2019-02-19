@@ -13,7 +13,7 @@ SET `settings_form` = '{\"account_number\":{\"code\":\"account_number\",\"name\"
 WHERE `payment_methods`.`method_name` = '2checkout';
 
 UPDATE `payment_methods`
-SET `settings_form` = '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_merchant_id\"},\"secret\":{\"code\":\"secret\",\"name\":\"secret\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_ipn_secret\"}}',
+SET `settings_form` = '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_merchant_id\"},\"ipn_secret\":{\"code\":\"ipn_secret\",\"name\":\"ipn_secret\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_ipn_secret\"}}',
     `settings_form_description` = '<ol>\r\n<li>Login to CoinPayments</li>\r\n<li>Go to <b>Account → Account Settings → Merchant Settings</b></li>\r\n<ul>\r\n<li>Generate IPN Secret</li>\r\n<li>Apply Changes</li>\r\n</ul>\r\n<li>Enter your Merchant ID and IPN Secret below.</li>\r\n</ol>',
     `icon` = '/img/pg/coinpayments.png'
 WHERE `payment_methods`.`method_name` = 'coinpayments';

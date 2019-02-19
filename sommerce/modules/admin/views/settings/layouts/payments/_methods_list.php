@@ -22,7 +22,7 @@ $names = StorePaymentMethods::getNames();
             <div>
                 <?php if (!empty($availableMethods)) : ?>
                     <div class="m-dropdown--align-right">
-                        <a href="<?= Url::toRoute(['/settings/add-payment-method']) ?>"
+                        <a href="<?= Url::toRoute(['/settings/add-payment-method']) ?>" onclick="return false"
                            class="btn btn-primary m-btn--air btn-brand cursor-pointer add-method"><?= Yii::t('admin', 'settings.payments_add') ?></a>
                     </div>
                 <?php endif ?>
@@ -31,7 +31,7 @@ $names = StorePaymentMethods::getNames();
     </div>
 
     <div class="m-content">
-        <div class="dd" id="nestable">
+        <div class="dd">
             <ol class="dd-list">
 
                 <?php foreach ($paymentMethods as $method): ?>

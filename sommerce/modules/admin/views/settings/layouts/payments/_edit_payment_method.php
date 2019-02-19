@@ -14,7 +14,7 @@ $this->context->addModule('adminPayments');
     <div class="d-flex align-items-center">
         <div class="mr-auto">
             <h3 class="m-subheader__title">
-                <?= Yii::t('admin', "settings.payments_edit_method") . ' ' . $paymentData['name'] ?>
+                <?= Yii::t('admin', 'settings.payments_edit_method') . ' ' . $paymentData['name'] ?>
             </h3>
         </div>
     </div>
