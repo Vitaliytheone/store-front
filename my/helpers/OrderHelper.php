@@ -7,6 +7,7 @@ use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
+use common\helpers\IntegrationsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
@@ -731,6 +732,10 @@ class OrderHelper {
             return false;
         }
 
+        if (!IntegrationsHelper::addStoreIntegrations($store->id)) {
+            return false;
+        }
+
         $expiredLog = new ExpiredLog();
         $expiredLog->setAttributes([
             'pid' => $store->id,
@@ -793,7 +798,6 @@ class OrderHelper {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
-
 
         // Change status
         if (Orders::STATUS_ADDED != $order->status) {

@@ -39,7 +39,7 @@ class Integrations extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'integrations';
+        return DB_STORES . '.integrations';
     }
 
     /**

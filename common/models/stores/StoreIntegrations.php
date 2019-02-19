@@ -30,7 +30,7 @@ class StoreIntegrations extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'store_integrations';
+        return DB_STORES . '.store_integrations';
     }
 
     /**

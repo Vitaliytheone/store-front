@@ -44,6 +44,7 @@ class IntegrationsFilter extends ActionFilter
             ->all();
         $allIntegrations = Integrations::find()->asArray()->indexBy('id')->all();
         $integrationsContent = '';
+        $firstContentElement = null;
 
         if (isset($storeIntegrations)) {
             foreach ($storeIntegrations as $storeIntegration) {
@@ -68,10 +69,18 @@ class IntegrationsFilter extends ActionFilter
                 }
 
                 $widgetObject->content = $snippet;
+
+                if ($integration['code'] === Integrations::CODE_ANALYTICS_GOOGLE) {
+                    $firstContentElement.= $widgetObject->run();
+                    continue;
+                }
                 $integrationsContent .= $widgetObject->run();
             }
         }
 
+        if (isset($firstContentElement)) {
+            $this->owner->startHeadContent[0] = $firstContentElement;
+        }
         $this->owner->startHeadContent[] = $integrationsContent;
 
         return parent::beforeAction($action);
