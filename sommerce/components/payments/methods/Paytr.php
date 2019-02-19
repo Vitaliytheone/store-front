@@ -60,8 +60,8 @@ class Paytr extends BasePayment
         $userName = $email;
         $userAddress = "-";
         $userPhone = ArrayHelper::getValue($options, 'phone', "-");
-        $merchantSuccess = SiteHelper::hostUrl() . '/addfunds';
-        $merchantFail = SiteHelper::hostUrl() . '/addfunds';
+        $merchantSuccess = SiteHelper::hostUrl($store->ssl) . '/addfunds';
+        $merchantFail = SiteHelper::hostUrl($store->ssl) . '/addfunds';
 
         $userBasket = base64_encode(json_encode(array(
             array("BAKIYE YUKLEME", $paymentAmount, 1),

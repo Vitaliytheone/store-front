@@ -63,8 +63,8 @@ class Pagseguro extends BasePayment
         $directPaymentRequest->setCurrency("BRL");
         $directPaymentRequest->setReference($checkout->id);
 
-        $directPaymentRequest->setNotificationURL(SiteHelper::hostUrl() . '/pagseguro');
-        $directPaymentRequest->setRedirectURL(SiteHelper::hostUrl() . '/cart');
+        $directPaymentRequest->setNotificationURL(SiteHelper::hostUrl($store->ssl) . '/pagseguro');
+        $directPaymentRequest->setRedirectURL(SiteHelper::hostUrl($store->ssl) . '/cart');
         $credentials = new PagSeguroAccountCredentials(ArrayHelper::getValue($paymentMethodOptions, 'email'), ArrayHelper::getValue($paymentMethodOptions, 'token'));
 
         if (!empty(Yii::$app->params['testPagseguro'])) {

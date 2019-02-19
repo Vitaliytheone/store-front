@@ -55,8 +55,8 @@ class Mollie extends BasePayment
                     'value' => $amount
                 ],
                 'description' => static::getDescription($checkout->id),
-                'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
+                'redirectUrl' => SiteHelper::hostUrl($store->ssl) . '/cart',
+                'webhookUrl' => SiteHelper::hostUrl($store->ssl) . '/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
