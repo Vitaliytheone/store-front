@@ -4,6 +4,7 @@
 /* @var $model \my\models\forms\OrderStoreForm */
 
 use yii\helpers\Url;
+use my\helpers\DomainsHelper;
 ?>
 
 <div class="panel-body">
@@ -15,12 +16,16 @@ use yii\helpers\Url;
             ])->label(false)?>
 
             <div class="input-group-btn">
-                <?= $form->field($model, 'domain_zone')->dropDownList($model->getDomainZones(), [
+                <?= $form->field($model, 'domain_zone')->dropDownList(DomainsHelper::getDomainZones(), [
                     'class' => 'selectpicker',
                     'id' => 'domain_zone'
                 ])?>
             </div>
 
+            <?= $form->field($model, 'domain_name')->hiddenInput([
+                'id' => 'modal_domain_name',
+                'class' => 'form-control'
+            ])->label(false)?>
         </div>
     </div>
 
@@ -32,7 +37,7 @@ use yii\helpers\Url;
         <div id="searchResultContainer"></div>
 
         <div class="input-group">
-            <button type="button" class="btn btn-primary disabled" id="continueDomainSearch"><?= Yii::t('app', 'stores.order.btn_continue_domain_search')?></button>
+            <button type="button" class="btn btn-primary disabled" id="continueDomainSearch" data-action="<?= Url::toRoute(['/domains/order-domain', 'order' => 'store']) ?>"><?= Yii::t('app', 'stores.order.btn_continue_domain_search')?></button>
         </div>
 
     </div>

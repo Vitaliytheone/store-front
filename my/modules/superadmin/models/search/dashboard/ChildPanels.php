@@ -4,6 +4,7 @@ namespace superadmin\models\search\dashboard;
 
 use common\models\panels\Project;
 use common\models\panels\Customers;
+use my\helpers\DomainsHelper;
 use my\helpers\SpecialCharsHelper;
 
 /*
@@ -60,6 +61,7 @@ class ChildPanels extends BaseBlock
         $query->asArray();
         $items = $query->all();
         foreach ($items as &$item) {
+            $item['domain'] = DomainsHelper::idnToUtf8($item['domain']);
             $item['status'] = Project::getStatuses()[$item['status']];
             $item['created'] = static::_formatDate($item['created']);
             $item['expired'] = static::_formatDate($item['expired']);
