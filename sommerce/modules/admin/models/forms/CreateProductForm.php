@@ -164,13 +164,15 @@ class CreateProductForm extends Products
             return false;
         }
 
-        $changedAttributes = $this->getDirtyAttributes();
+        // TODO: uncomment after api testing
+        //$changedAttributes = $this->getDirtyAttributes();
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->_changeLog($changedAttributes);
+        // TODO: uncomment after api testing
+        //$this->_changeLog($changedAttributes);
 
         return $this;
     }
