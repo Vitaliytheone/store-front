@@ -82,9 +82,6 @@ class Coinpayments extends BasePayment
     {
         $paymentMethodOptions = $details->getOptions();
 
-        print_r($paymentMethodOptions);
-        exit;
-
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id', null);
         $ipnSecret = ArrayHelper::getValue($paymentMethodOptions, 'ipn_secret', null);
 
