@@ -84,52 +84,5 @@ customModule.adminGeneral = {
                 }
             });
         });
-        /*****************************************************************************************************
-         *                      Delete unsupported currency
-         *****************************************************************************************************/
-        var payChange = false;
-        var settingForm = $('#settingsgeneralform-currency');
-        var submitButton = $('#generalSettingsSubmit');
-        var oldValue = settingForm.val();
-        var curValue = '';
-
-        settingForm.on('change', function () {
-            curValue = settingForm.val();
-        });
-
-        submitButton.on('click', function (e) {
-
-            if (oldValue != curValue && curValue != '') {
-                payChange = true;
-            }
-
-            if (payChange === true) {
-                $.ajax({
-                    url: submitButton.data('action-url'),
-                    type: "POST",
-                    data: {currency: curValue},
-                    async: false,
-
-                    success: function (data) {
-                        if (data == true) {
-                            e.preventDefault();
-
-                            custom.confirm(submitButton.data('message'), undefined, {
-                                confirm_button: submitButton.data('confirm_button'),
-                                cancel_button: submitButton.data('cancel_button')
-                            }, function () {
-                                $('#settings-general-form').submit();
-                            });
-                        }
-                    },
-
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log('Error on post request', jqXHR, textStatus, errorThrown);
-                    }
-                });
-            }
-
-        });
-
     }
 };
