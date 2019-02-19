@@ -41,7 +41,7 @@ class IntegrationsSearch extends Model
     /**
      * @return array|ActiveQuery
      */
-    public function search(): array
+    public function search(): ?array
     {
         $integrations = StoreIntegrations::find()
             ->where(['store_id' => $this->store->id]);
@@ -52,6 +52,10 @@ class IntegrationsSearch extends Model
 
         $integrations->orderBy(['position' => SORT_ASC])
             ->asArray();
+
+        if (!$integrations->all()) {
+            return null;
+        }
 
         return $this->prepareData($integrations->all());
     }

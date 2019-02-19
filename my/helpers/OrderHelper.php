@@ -733,6 +733,8 @@ class OrderHelper {
         }
 
         if (!IntegrationsHelper::addStoreIntegrations($store->id)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, 'Error adding store integration', 'cron.order.store');
             return false;
         }
 

@@ -27,5 +27,31 @@ customModule.adminIntegrations = {
                 }
             });
         });
+
+        $(document).on('click', '#editIntegrationButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#editIntegrationForm');
+            var errorBlock = $('#editIntegrationError', form);
+
+            errorBlock.addClass('hidden');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+
+                    if ('success' == response.status) {
+                        location.replace(response.redirect);
+                    }
+
+                    if ('error' == response.status) {
+                        errorBlock.removeClass('hidden');
+                        errorBlock.html(response.error);
+                    }
+                }
+            });
+
+            return false;
+        });
     }
 };

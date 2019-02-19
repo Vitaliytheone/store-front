@@ -2,12 +2,14 @@
 
 namespace sommerce\modules\admin\controllers\traits\settings;
 
+use my\components\ActiveForm;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditIntegrationForm;
 use sommerce\modules\admin\models\search\IntegrationsSearch;
 use Yii;
 use common\models\stores\Stores;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
@@ -40,9 +42,11 @@ trait IntegrationsTrait
     /**
      * @param $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionEditIntegration($id)
     {
+        $this->addModule('adminIntegrations');
         $request = Yii::$app->request;
         $store = Yii::$app->store->getInstance();
 
@@ -52,18 +56,32 @@ trait IntegrationsTrait
 
         if ($request->method === 'GET') {
             $integration = $search->search();
-            $this->view->title = $integration['name'];
+            if (!$integration) {
+                throw new NotFoundHttpException();
+            }
 
+            $this->view->title = $integration['name'];
             return $this->render('layouts/integrations/_edit_integration', [
                 'integration' => $integration,
             ]);
         }
 
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $form = new EditIntegrationForm();
         $form->setStoreIntegration($id);
         $form->load($request->post(), '');
-        $form->save();
-        return $this->redirect(Url::toRoute('/settings/integrations'));
+
+        if (!$form->save()) {
+            return [
+                'status' => 'error',
+                'error' => ActiveForm::firstError($form),
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'redirect' => Url::toRoute('/settings/integrations'),
+        ];
     }
 
     /**

@@ -39,6 +39,7 @@ use my\helpers\Url;
                         <?php endif; ?>
                         <form id="editIntegrationForm" action="<?= Url::toRoute(['/settings/edit-integration', 'id' => $integration['id']]) ?>" method="post" role="form">
                             <?= Html::beginForm(); ?>
+                            <?= Html::tag('div', '', ['class' => 'error-summary alert alert-danger hidden', 'id' => 'editIntegrationError']) ?>
                             <?= IntegrationSettingsForm::widget([
                                     'settingsForm' => $integration['settings_form'],
                                     'options' => $integration['options'],
@@ -48,7 +49,7 @@ use my\helpers\Url;
                                 <a href="<?= Url::toRoute(['/settings/integrations']) ?>" class="btn btn-secondary mr-3">
                                     <?= Yii::t('admin', 'settings.integrations_edit.cancel_button') ?>
                                 </a>
-                                <button type="submit" class="btn btn-success m-btn--air"><?= Yii::t('admin', 'settings.integrations_edit.save_button') ?></button>
+                                <button type="submit" id="editIntegrationButton" class="btn btn-success m-btn--air"><?= Yii::t('admin', 'settings.integrations_edit.save_button') ?></button>
                             </div>
                             <?= Html::endForm(); ?>
                         </form>
