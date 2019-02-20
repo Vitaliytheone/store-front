@@ -631,17 +631,23 @@ class SystemController extends CustomController
         foreach ($methods as $key => $methodName) {
 
             $payMethodId = PaymentMethods::getPaymentsId($methodName['method']);
-            $payMethod = $payMethods[$payMethodId];
+            if (isset($payMethods[$payMethodId])) {
+                $payMethod = $payMethods[$payMethodId];
+            }
 
-            if (!$payMethod) {
+            if (empty($payMethod)) {
                 $delete++;
+                $this->stdout("Payment Method {$methodName['method']} do not exist, skip adding settings.\n", Console::FG_RED);
                 continue;
             }
 
-            $store = $stores[$methodName['store_id']];
+            if (isset($stores[$methodName['store_id']])) {
+                $store = $stores[$methodName['store_id']];
+            }
 
-            if (!$store) {
+            if (empty($store)) {
                 $delete++;
+                $this->stdout("Store ({$methodName['store_id']}) do not exist, skip adding settings.\n", Console::FG_RED);
                 continue;
             }
 
@@ -669,6 +675,8 @@ class SystemController extends CustomController
                 'created_at' => time(),
                 'updated_at' => time(),
             ])->execute();
+
+            $this->stdout("Added new settings for {$payMethod['name']} -> store_id = {$methodName['store_id']} ({$store['currency']}) \n");
 
             $count++;
         }
