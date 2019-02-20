@@ -2,10 +2,8 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\PageFiles;
 use common\models\store\Products;
 use Yii;
-use common\models\store\Pages;
 use common\models\stores\Stores;
 use yii\base\Model;
 use yii\db\Transaction;

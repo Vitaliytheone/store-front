@@ -76,14 +76,14 @@ trait PagesTrait {
         $pageFiles = PageFiles::find()
             ->select(['json_draft'])
             ->andWhere([
-                'name' => [
+                'name_react' => [
                     PageFiles::NAME_STYLES,
                     PageFiles::NAME_HEADER,
                     PageFiles::NAME_FOOTER,
                 ]
             ])
             ->asArray()
-            ->indexBy('name')
+            ->indexBy('name_react')
             ->column();
 
         return [

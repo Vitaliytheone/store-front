@@ -12,7 +12,8 @@ use common\models\stores\Stores;
  * This is the model class for table "{{%files}}".
  *
  * @property integer $id
- * @property integer $name
+ * @property string $filename
+ * @property string $name_react
  * @property string $content
  * @property string $json
  * @property string $json_draft
@@ -79,7 +80,7 @@ class PageFiles extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'content', 'json', 'json_draft', 'file_type'], 'string'],
+            [['filename', 'name_react', 'content', 'json', 'json_draft', 'file_type'], 'string'],
             [['is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
         ];
     }
@@ -91,7 +92,8 @@ class PageFiles extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
+            'filename' => Yii::t('app', 'File name'),
+            'name_react' => Yii::t('app', 'Name react'),
             'content' => Yii::t('app', 'Content'),
             'json' => Yii::t('app', 'Json'),
             'json_draft' => Yii::t('app', 'Json draft'),

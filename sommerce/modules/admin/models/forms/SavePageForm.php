@@ -206,13 +206,13 @@ class SavePageForm extends Model
         foreach ($files as $name => $file) {
 
             $pageFile = PageFiles::findOne([
-                'name' => $name,
+                'name_react' => $name,
                 'file_type' => $file['type']
             ]);
 
             if (!$pageFile) {
                 $pageFile = new PageFiles();
-                $pageFile->name = $name;
+                $pageFile->name_react = $name;
                 $pageFile->file_type = $file['type'];
             }
 
