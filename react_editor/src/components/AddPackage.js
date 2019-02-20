@@ -49,7 +49,7 @@ class AddPackage extends React.PureComponent {
 					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue, status }) => (
+						{({ setFieldValue, status, values }) => (
 							<Form>
 								<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
 								<PackageModal
@@ -59,6 +59,7 @@ class AddPackage extends React.PureComponent {
 									services={this.props.response.services}
 									choseProviders={this.props.choseProviders}
 									status={status}
+									values={values}
 								/>
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit">
@@ -95,9 +96,9 @@ AddPackage.defaultProps = {
 		quantity: 0,
 		overflow: 0,
 		best: '2',
-		link_type: '1',
+		link_type: '0',
 		visibility: '1',
-		mode: '2',
+		mode: '1',
 		provider_id: 'none',
 		provider_service: 'none'
 	}

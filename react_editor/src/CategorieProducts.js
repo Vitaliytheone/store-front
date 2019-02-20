@@ -64,6 +64,7 @@ class CategorieProducts extends Component {
 				services: { providerServices: [ { service: 'none', name: 'Chose provider service' } ] }
 			}
 		});
+		console.log(data);
 	}
 
 	handleProductSwitch = ({ oldIndex, newIndex }) => {
@@ -187,17 +188,18 @@ class CategorieProducts extends Component {
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
 		const response = await get_update_package(getPackageId);
+		console.log(response.data);
 		const responseServices = await get_providers_services(response.data.provider_id);
-		const newServices = [ ...this.state.response.services.providerServices, ...responseServices.data ];
-		this.setState({
-			response: {
-				...this.state.response,
-				package: response.data,
-				services: {
-					providerServices: newServices
+		const newServices = [{ service: 'none', name: 'Chose provider service' }, ...responseServices.data ];
+			this.setState({
+				response: {
+					...this.state.response,
+					package: response.data,
+					services: {
+						providerServices: newServices
+					}
 				}
-			}
-		});
+			});
 	};
 
 	choseProviders = async (provider_id) => {

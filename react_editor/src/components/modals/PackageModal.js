@@ -11,7 +11,8 @@ class PackageModal extends React.PureComponent {
 	};
 
 	render() {
-		const { providers, services, choseProviders, status} = this.props;
+		const { providers, services, choseProviders, status, values} = this.props;
+		console.log(values);
 		return (
 			<ModalBody>
 				{/* Alert Error */}
@@ -23,7 +24,7 @@ class PackageModal extends React.PureComponent {
 				)}
 
 				{/* Alert Error End */}
-
+				
 				<FormGroup>
 					<Field
 						name="name"
@@ -135,7 +136,8 @@ class PackageModal extends React.PureComponent {
 						<option value="1">Auto</option>
 					</Field>
 				</FormGroup>
-
+			
+			{values.mode ? (
 				<FormGroup>
 					<Field
 						entities={providers}
@@ -147,13 +149,6 @@ class PackageModal extends React.PureComponent {
 						choseProviders={choseProviders}
 					/>
 				</FormGroup>
-
-				{/* <FormGroup>
-					<Label htmlFor="provider_service">Provider service</Label>
-					<Field className="form-control" component="select" name="provider_service">
-					{providerServices.map(item => <option key={item.service} value={item.service}>{item.name}</option>)}
-					</Field>
-				</FormGroup> */}
 
 				{services.errorService	? (
 					<span className="m--font-danger">{services.messageService}</span>
@@ -168,7 +163,9 @@ class PackageModal extends React.PureComponent {
 								label="Provider service"
 							/>
 						</FormGroup>
-					 )} 
+					 )}
+			) : (null)
+		)}
 
 			</ModalBody>
 		);

@@ -20,7 +20,7 @@ const SortablePackage = SortableElement(({ choseProviders, providers, pack, resp
 				<strong>{pack.name}</strong>
 			</Col>
 			<Col lg="2">{pack.price}</Col>
-			<Col lg="2">{providerName.name}</Col>
+			<Col lg="2">{pack.provider_id == null ? "" : providerName.name}</Col>
 			<Col lg="2" className="ext-lg-center active-center">
 				{pack.visibility == 1 ? 'Enabled' : 'Disabled'}
 			</Col>

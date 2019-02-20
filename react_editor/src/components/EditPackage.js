@@ -47,7 +47,6 @@ class EditPackage extends React.PureComponent {
 				<Button
 					onClick={() => {
 						this.getPackage();
-						this.props.getPackage();
 					}}
 					color="primary"
 					size="sm"
@@ -64,7 +63,7 @@ class EditPackage extends React.PureComponent {
 					toggle={this.toggle}
 				>
 					<Formik onSubmit={this.handleSubmit} enableReinitialize={true} initialValues={response.package}>
-						{({ setFieldValue, status }) => (
+						{({ setFieldValue, status, values }) => (
 							<Form>
 								<ModalHeader toggle={this.toggle}>Edit package (ID: {response.package.id})</ModalHeader>
 								<PackageModal
@@ -73,6 +72,7 @@ class EditPackage extends React.PureComponent {
 									choseProviders={choseProviders}
 									services={response.services}
 									status={status}
+									values={values}
 								/>
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit">
