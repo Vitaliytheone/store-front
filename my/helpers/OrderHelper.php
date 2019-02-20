@@ -732,12 +732,6 @@ class OrderHelper {
             return false;
         }
 
-        if (!IntegrationsHelper::addStoreIntegrations($store->id)) {
-            $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, 'Error adding store integration', 'cron.order.store');
-            return false;
-        }
-
         $expiredLog = new ExpiredLog();
         $expiredLog->setAttributes([
             'pid' => $store->id,
@@ -770,6 +764,11 @@ class OrderHelper {
         if (!$store->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $store->getErrors(), 'cron.order.store_domain');
+        }
+
+        if (!IntegrationsHelper::addStoreIntegrations($store->id)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, 'Error adding store integration', 'cron.order.store_integrations');
         }
 
         // Create nginx config
