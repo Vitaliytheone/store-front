@@ -182,7 +182,7 @@ class SystemController extends CustomController
 
         $this->stderr("Finished sync messages\n", Console::FG_GREEN);
     }
-    
+
     public function actionMigrateAdminEmails()
     {
         foreach ((new \yii\db\Query())->select([
@@ -623,14 +623,14 @@ class SystemController extends CustomController
 
         $storeCurrencys = (new Query())
             ->from(DB_STORES . '.payment_methods_currency')
-            ->indexBy('method_id')
+            ->indexBy('id')
             ->all();
 
         $count = $delete = 0;
 
         foreach ($methods as $key => $methodName) {
 
-            $payMethodId = static::_getPaymentsId($methodName['method']);
+            $payMethodId = PaymentMethods::getPaymentsId($methodName['method']);
             $payMethod = $payMethods[$payMethodId];
 
             if (!$payMethod) {
@@ -645,17 +645,11 @@ class SystemController extends CustomController
                 continue;
             }
 
-//            $storeCurrency = (new Query())
-//                ->from(DB_STORES . '.payment_methods_currency')
-//                ->where(['method_id' => $payMethodId])
-//                ->andWhere(['currency' => $store['currency']])
-//                ->one();
-
-            $storeCurrency = $storeCurrencys[$payMethodId];
-            $storeCurrencyKey = array_search($store['currency'], $storeCurrency);
-
-            if (!$storeCurrencyKey) {
-                $storeCurrency = $storeCurrencys[$payMethodId];
+            foreach ($storeCurrencys as $storeCurrencyLocal) {
+                $storeCurrency = $storeCurrencyLocal;
+                if ($storeCurrencyLocal['method_id'] == $payMethodId && $storeCurrencyLocal['currency'] == $store['currency']) {
+                    break;
+                }
             }
 
             $lastPositions = (new Query())
@@ -680,51 +674,6 @@ class SystemController extends CustomController
         }
 
         return $this->stdout("SUCCESS add {$count} store_payment_methods settings and skip {$delete} unsupported methods\n", Console::FG_GREEN);
-    }
-
-    /**
-     * Return id of method
-     * @param string $method_name
-     * @return integer
-     */
-    protected static function _getPaymentsId($method_name)
-    {
-        switch (strtolower($method_name)) {
-            case 'paypal':
-                return PaymentMethods::METHOD_PAYPAL;
-            case '2checkout':
-                return PaymentMethods::METHOD_2CHECKOUT;
-            case 'coinpayments':
-                return PaymentMethods::METHOD_COINPAYMENTS;
-            case 'pagseguro':
-                return PaymentMethods::METHOD_PAGSEGURO;
-            case 'webmoney':
-                return PaymentMethods::METHOD_WEBMONEY;
-            case 'yandexmoney':
-                return PaymentMethods::METHOD_YANDEX_MONEY;
-            case 'freekassa':
-                return PaymentMethods::METHOD_FREE_KASSA;
-            case 'paytr':
-                return PaymentMethods::METHOD_PAYTR;
-            case 'paywant':
-                return PaymentMethods::METHOD_PAYWANT;
-            case 'billplz':
-                return PaymentMethods::METHOD_BILLPLZ;
-            case 'authorize':
-                return PaymentMethods::METHOD_AUTHORIZE;
-            case 'yandexcards':
-                return PaymentMethods::METHOD_YANDEX_CARDS;
-            case 'stripe':
-                return PaymentMethods::METHOD_STRIPE;
-            case 'mercadopago':
-                return PaymentMethods::METHOD_MERCADOPAGO;
-            case 'paypalstandard':
-                return PaymentMethods::METHOD_PAYPAL_STANDARD;
-            case 'mollie':
-                return PaymentMethods::METHOD_MOLLIE;
-            case 'stripe_3d_secure':
-                return PaymentMethods::METHOD_STRIPE_3D_SECURE;
-        }
     }
 
 }
