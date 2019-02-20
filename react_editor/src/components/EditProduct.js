@@ -42,8 +42,7 @@ class EditProduct extends React.PureComponent {
   }
 
   render() {
-    const { response, products } = this.props;
-
+	const { response, products } = this.props;
     return (
       <React.Fragment>
         <span className="edit_product">
