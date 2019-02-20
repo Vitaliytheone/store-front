@@ -134,7 +134,8 @@ class CreatePackageForm extends Packages
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity(false);
 
-        ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_ADDED, $this->id, $this->id);
+        // TODO: uncomment this after API testing
+        //ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_ADDED, $this->id, $this->id);
 
         return $this->attributes;
     }
@@ -150,7 +151,8 @@ class CreatePackageForm extends Packages
             return false;
         }
 
-        $this->_changeLog(clone $this);
+        // TODO: uncomment this after API testing
+        //$this->_changeLog(clone $this);
 
         if (!$this->save(false)) {
             return false;
