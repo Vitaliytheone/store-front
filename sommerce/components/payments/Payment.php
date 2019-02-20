@@ -34,7 +34,7 @@ class Payment {
             throw new UnknownClassException();
         }
 
-        static::$methods[$method] = new $className(['method' => $method]);
+        static::$methods[$method] = new $className();
 
         return static::$methods[$method];
     }
