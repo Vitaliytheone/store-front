@@ -21,15 +21,6 @@ class RentapanelInfo extends BasePanelInfo
         $panelData = $this->currentPanelData;
         $content = ArrayHelper::getValue($panelData, 'content');
 
-        $matchesApiLink = [];
-        $matchesServicesLink = [];
-        preg_match('/<a href="api_docs">\s*API\s*<\/a>/i', $content, $matchesApiLink);
-        preg_match('/<a href="services">\s*Services\s*<\/a>/i', $content, $matchesServicesLink);
-
-        if (empty($matchesApiLink) || empty($matchesServicesLink)) {
-            return false;
-        }
-
         if (empty($content) || ArrayHelper::getValue($panelData, 'info.http_code') != self::HTTP_STATUS_200 || $this->checkStatusDisabled()) {
             return false;
         }
