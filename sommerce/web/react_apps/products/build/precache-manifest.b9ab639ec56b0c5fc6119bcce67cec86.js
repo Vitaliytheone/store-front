@@ -1,15 +1,19 @@
 self.__precacheManifest = [
   {
-    "revision": "84fe4b430315398f736c",
+    "revision": "ad0755f0a572a6e78f62",
     "url": "/static/css/main.css"
   },
   {
-    "revision": "84fe4b430315398f736c",
+    "revision": "ad0755f0a572a6e78f62",
     "url": "/static/js/main.js"
   },
   {
     "revision": "2d5f15f92161454f1e3c4498d247f150",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.2d5f15f9.eot"
+  },
+  {
+    "revision": "6b6feb61813dddd403e663c2c307b51c",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
   },
   {
     "revision": "b9c91f8037ec3d998566b33feb1f4a83",
@@ -24,20 +28,16 @@ self.__precacheManifest = [
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
   },
   {
-    "revision": "6b6feb61813dddd403e663c2c307b51c",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
-  },
-  {
     "revision": "608fd10666a860567740497e84492928",
     "url": "/static/media/summernote.608fd106.woff"
   },
   {
-    "revision": "372a2830643e759ed61f6a8590900192",
-    "url": "/static/media/summernote.372a2830.eot"
-  },
-  {
     "revision": "ce9ce49a0e1ca283fa242ba2cf8e24d9",
     "url": "/static/media/summernote.ce9ce49a.ttf"
+  },
+  {
+    "revision": "372a2830643e759ed61f6a8590900192",
+    "url": "/static/media/summernote.372a2830.eot"
   },
   {
     "revision": "0cb0b9c589c0624c9c78dd3d83e946f6",
@@ -72,12 +72,12 @@ self.__precacheManifest = [
     "url": "/static/media/line-awesome.4d42f5f0.ttf"
   },
   {
-    "revision": "b06871f281fee6b241d60582ae9369b9",
-    "url": "/static/media/fontawesome-webfont.b06871f2.ttf"
-  },
-  {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
     "url": "/static/media/fontawesome-webfont.674f50d2.eot"
+  },
+  {
+    "revision": "b06871f281fee6b241d60582ae9369b9",
+    "url": "/static/media/fontawesome-webfont.b06871f2.ttf"
   },
   {
     "revision": "5207295c5bccd6e7442cfb261446c1f7",
