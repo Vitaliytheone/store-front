@@ -228,7 +228,7 @@ class PaymentMethods extends ActiveRecord
      */
     public function getSettingsFormDescription(): string
     {
-        return !empty($this->settings_form_description) ? $this->settings_form_description : '';
+        return !empty($this->settings_form_description) ? str_replace('{store_site}', Yii::$app->store->getInstance()->getBaseSite(), $this->settings_form_description) : '';
     }
 
     /**
