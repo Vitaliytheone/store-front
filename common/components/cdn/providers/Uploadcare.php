@@ -18,7 +18,6 @@ use Uploadcare\File;
  */
 class Uploadcare extends BaseCdn
 {
-    public const FILE_SIZE = '5242880'; // max file size in byte
 
     private $_api;
     private $_file;
@@ -137,23 +136,28 @@ class Uploadcare extends BaseCdn
      */
     public function getFiles($cdnId, $links = false)
     {
-        $this->_file = $this->_api->getGroup($cdnId);
+        try {
+            $this->_file = $this->_api->getGroup($cdnId);
 
-        $files = $this->_file->getFiles();
+            $files = $this->_file->getFiles();
 
-        if ($links === true) {
-            $result = [];
-            foreach ($files as $file) {
-                $result[] = [
-                    'uuid' => $file->data['uuid'],
-                    'name' => $file->data['original_filename'],
-                    'link' => $file->data['original_file_url'],
-                    'mime' => $file->data['mime_type'],
-                    'size' => round($file->data['size'] / 1000, 1) . ' Kb',
-                ];
+            if ($links === true) {
+                $result = [];
+                foreach ($files as $file) {
+                    $result[] = [
+                        'uuid' => $file->data['uuid'],
+                        'name' => $file->data['original_filename'],
+                        'link' => $file->data['original_file_url'],
+                        'mime' => $file->data['mime_type'],
+                        'size' => $file->data['size'],
+                    ];
+                }
+
+                return $result;
             }
-
-            return $result;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage() . "\n" . $e->getTraceAsString() . "\n");
+            return [];
         }
 
         return $files;
