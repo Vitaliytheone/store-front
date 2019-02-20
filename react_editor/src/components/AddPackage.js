@@ -7,33 +7,28 @@ import { toast } from 'react-toastify';
 import { options } from '../helpers/toast';
 import { scrollModalTop } from '../helpers/scrolling';
 
-class AddPackage extends Component {
+class AddPackage extends React.PureComponent {
 	state = {
-		modalIsOpen: false,
-		showError: false,
-		errorMessage: null,
+		modalIsOpen: false
 	};
 
 	toggle = () => {
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen,
-			showError: false,
-			errorMessage: null
 		}));
 	};
 
-	handleSubmit = async (...params) => {
-		const response = await this.props.onSubmit(...params);
+	handleSubmit = async (values, actions) => {
+	   try{
+		const response = await this.props.onSubmit(values, actions);
 		this.setState({
-			showError: !response.success,
 			modalIsOpen: !response.success,
-			errorMessage: response.error_message
 		});
-		if (this.state.showError) {
-			scrollModalTop(this.modal);
-		} else {
-			toast('Package was successfully created!', options);
-		}
+		toast("Package was successfully created!", options);
+	 } catch(error) {
+		   actions.setStatus([error.success, error.error_message]);
+		   scrollModalTop(this.modal);
+	 }
 	};
 
 	render() {
@@ -54,17 +49,16 @@ class AddPackage extends Component {
 					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue }) => (
+						{({ setFieldValue, status }) => (
 							<Form>
 								<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
 								<PackageModal
 									setFieldValue={setFieldValue}
-									showError={this.state.showError}
-									errorMessage={this.state.errorMessage}
 									providers={this.props.providers}
 									choseService={this.choseService}
 									services={this.props.response.services}
 									choseProviders={this.props.choseProviders}
+									status={status}
 								/>
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit">

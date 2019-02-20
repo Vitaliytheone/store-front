@@ -11,14 +11,14 @@ class PackageModal extends React.PureComponent {
 	};
 
 	render() {
-		const { providers, services, choseProviders} = this.props;
+		const { providers, services, choseProviders, status} = this.props;
 		return (
 			<ModalBody>
 				{/* Alert Error */}
 
-				{this.props.showError && (
+				{status && (
 					<div className="alert alert-danger alert-dismissible fade show" role="alert">
-						<strong>{this.props.errorMessage}</strong>
+						<strong>{status[1]}</strong>
 					</div>
 				)}
 

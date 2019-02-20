@@ -10,126 +10,112 @@ import 'react-toastify/dist/ReactToastify.css';
 import { options } from '../helpers/toast';
 import { scrollModalTop } from '../helpers/scrolling';
 
-class AddProduct extends Component {
-	state = {
-		confirmModal: false,
-		modalIsOpen: false,
-		showError: false,
-		errorMessage: null,
-		productId: ''
-	};
+class AddProduct extends React.PureComponent {
+  state = {
+    confirmModal: false,
+    modalIsOpen: false,
+    productId: ""
+  };
 
-	closeConfirmModal = () => {
-		this.setState((prevstate) => ({
-			confirmModal: !prevstate.confirmModal
-		}));
-		toast('Product was successfully created!', options);
-	};
+  closeConfirmModal = () => {
+    this.setState(prevstate => ({
+      confirmModal: !prevstate.confirmModal
+    }));
+    toast("Product was successfully created!", options);
+  };
 
-	confirmCreate = async () => {
-		const productId = this.state.productId;
-		await confirm_add_product(productId);
-		this.setState((prevstate) => ({
-			confirmModal: !prevstate.confirmModal
-		}));
-		toast('Product was successfully created!', options);
-		toast('Product was successfully created!', options);
-	};
+  confirmCreate = async () => {
+    const productId = this.state.productId;
+    await confirm_add_product(productId);
+    this.setState(prevstate => ({
+      confirmModal: !prevstate.confirmModal
+    }));
+    toast("Product was successfully created!", options);
+    toast("Product was successfully created!", options);
+  };
 
-	toggle = () => {
-		document.body.classList.remove('scroll-off');
-		this.setState((prevstate) => ({
-			modalIsOpen: !prevstate.modalIsOpen,
-			showError: false,
-			errorMessage: null
-		}));
-	};
+  toggle = () => {
+    document.body.classList.remove("scroll-off");
+    this.setState(prevstate => ({
+      modalIsOpen: !prevstate.modalIsOpen,
+    }));
+  };
 
-	handleSubmit = async (values, actions) => {
-		try {
-			const response = await this.props.onSubmit(values, actions);
-			this.setState({
-				showError: !response.success,
-				modalIsOpen: !response.success,
-				errorMessage: response.error_message,
-				productId: response.data.id
-			});
-		} catch (error) {
-			console.log(error);
-			console.log(actions);
-			actions.setStatus([ error.success, error.error_message ]);
-		}
-		// this.setState({
-		// 	showError: !response.success,
-		// 	modalIsOpen: !response.success,
-		// 	errorMessage: response.error_message,
-		// 	productId: response.data.id
-		// });
-		if (this.state.showError) {
-			scrollModalTop(this.modal);
-		} else {
-			this.setState((prevstate) => ({
-				confirmModal: !prevstate.confirmModal
-			}));
-		}
-	};
+  handleSubmit = async (values, actions) => {
+    try {
+      const response = await this.props.onSubmit(values, actions);
+      this.setState(prevstate => ({
+        modalIsOpen: !response.success,
+        productId: response.data.id,
+        confirmModal: !prevstate.confirmModal
+      }));
+    } catch (error) {
+		actions.setStatus([error.success, error.error_message]);
+		scrollModalTop(this.modal);
+    }
+  };
 
-	render() {
-		const { isSubmitting, products } = this.props;
-		return (
-			<React.Fragment>
-				<Row className="sommerce-products__actions">
-					<Col lg="12">
-						<div className="page-content">
-							<Button onClick={this.toggle} className="m-btn--air" color="primary">
-								Add product
-							</Button>
-						</div>
-					</Col>
-				</Row>
-				<ToastContainer animation="fade" />
-				<Modal
-					innerRef={(el) => (this.modal = el)}
-					isOpen={this.state.modalIsOpen}
-					toggle={this.toggle}
-					size="lg"
-					backdrop="static"
-					keyboard={true}
-				>
-					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue, values, status }) => (
-							<Form>
-								<ModalHeader toggle={this.toggle}>Create product</ModalHeader>
-								<ProductModal
-									values={values}
-									showError={this.state.showError}
-									errorMessage={this.state.errorMessage}
-									setFieldValue={setFieldValue}
-									products={products}
-									properties={this.props.initialValues.properties}
-									status={status}
-								/>
-								<ModalFooter className="justify-content-start">
-									<Button color="primary" type="submit" disabled={isSubmitting}>
-										{isSubmitting ? 'Loading...' : 'Add product'}
-									</Button>{' '}
-									<Button color="secondary" onClick={this.toggle}>
-										Cancel
-									</Button>
-								</ModalFooter>
-							</Form>
-						)}
-					</Formik>
-				</Modal>
-				<ConfirmProduct
-					response={this.props.response}
-					modalIsOpen={this.state.confirmModal}
-					toggle={this.closeConfirmModal}
-					confirmCreate={this.confirmCreate}
-				/>
-			</React.Fragment>
-		);
-	}
+  render() {
+    const { isSubmitting, products } = this.props;
+    return (
+      <React.Fragment>
+        <Row className="sommerce-products__actions">
+          <Col lg="12">
+            <div className="page-content">
+              <Button
+                onClick={this.toggle}
+                className="m-btn--air"
+                color="primary"
+              >
+                Add product
+              </Button>
+            </div>
+          </Col>
+        </Row>
+        <ToastContainer animation="fade" />
+        <Modal
+          innerRef={el => (this.modal = el)}
+          isOpen={this.state.modalIsOpen}
+          toggle={this.toggle}
+          size="lg"
+          backdrop="static"
+          keyboard={true}
+        >
+          <Formik
+            onSubmit={this.handleSubmit}
+            initialValues={this.props.initialValues}
+          >
+            {({ setFieldValue, values, status }) => (
+              <Form>
+                <ModalHeader toggle={this.toggle}>Create product</ModalHeader>
+                <ProductModal
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  products={products}
+                  properties={this.props.initialValues.properties}
+                  status={status}
+                />
+                <ModalFooter className="justify-content-start">
+                  <Button color="primary" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Loading..." : "Add product"}
+                  </Button>{" "}
+                  <Button color="secondary" onClick={this.toggle}>
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </Form>
+            )}
+          </Formik>
+        </Modal>
+        <ConfirmProduct
+          response={this.props.response}
+          modalIsOpen={this.state.confirmModal}
+          toggle={this.closeConfirmModal}
+          confirmCreate={this.confirmCreate}
+        />
+      </React.Fragment>
+    );
+  }
 }
 
 AddProduct.propTypes = {

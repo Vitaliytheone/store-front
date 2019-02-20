@@ -86,11 +86,11 @@ class ProductModal extends React.PureComponent {
 	};
 
 	render() {
-		const { values, setFieldValue, products } = this.props;
+		const { values, setFieldValue, products, status } = this.props;
 		const { colorSchema, editSeo } = this.state;
 		const seoUrl = values.url && values.url.replace(/ /g, '-');
 		const properties = filter(products, (item) => item.properties);
-		console.log(this.props.status);
+
 		let colorHex;
 		if (colorSchema) {
 			colorHex = (
@@ -139,13 +139,13 @@ class ProductModal extends React.PureComponent {
 				<ModalBody>
 					{/* Alert Error */}
 
-					{this.props.showError && (
+					{status && (
 						<div className="alert alert-danger alert-dismissible fade show" role="alert">
-							<strong>{this.props.errorMessage}</strong>
+							<strong>{status[1]}</strong>
 						</div>
 					)}
 
-					{/* Alert Error End */}
+					{/* Alert Error End */}	
 					<FormGroup>
 						<Field
 							name="name"

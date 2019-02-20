@@ -9,74 +9,31 @@ import { scrollModalTop } from '../helpers/scrolling';
 class EditPackage extends React.PureComponent {
 	state = {
 		modalIsOpen: false,
-		showError: false,
-		errorMessage: null
-
-		// services: {
-		//   providerServices: [{ service: null, name: 'Chose provider service' }],
-		//   errorService: null,
-		//   messageService: null
-		// }
 	};
-
-	// choseService = async provider_id => {
-	//   if (provider_id !== 'none') {
-	//     var response = await get_providers_services(provider_id);
-	//     response.data.unshift({ service: null, name: 'Chose provider service' });
-	//     const error = response.data[1].error;
-	//     const message = response.data[1].message;
-	//     this.setState(prevState => ({
-	//       ...prevState,
-	//       services: {
-	//         providerServices: response.data,
-	//         errorService: error,
-	//         messageService: message
-	//       }
-	//     }));
-	//   } else {
-	//     this.setState(prevState => ({
-	//       ...prevState,
-	//       services: {
-	//         providerServices: [{ service: null, name: 'Chose provider service' }]
-	//       }
-	//     }));
-	//   }
-	// };
 
 	getPackage() {
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen
 		}));
-		// const services = this.props.response.providerServices;
-		// this.setState(prevState => ({
-		//   ...prevState,
-		//   services: {
-		//     providerServices: services
-		//   }
-		// }));
-		// console.log(services);
 	}
 
 	toggle = () => {
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen,
-			showError: false,
-			errorMessage: null
 		}));
 	};
 
-	handleSubmit = async (...params) => {
-		const response = await this.props.onSubmit(...params);
+	handleSubmit = async (values, actions) => {
+	  try{
+		const response = await this.props.onSubmit(values, actions);
 		this.setState({
-			showError: !response.success,
 			modalIsOpen: !response.success,
-			errorMessage: response.error_message
 		});
-		if (this.state.showError) {
-			scrollModalTop(this.modal);
-		} else {
-			toast('Package was successfully updated!', options);
-		}
+		toast("Package was successfully updated!", options);
+	  } catch(error) {
+		  actions.setStatus([error.success, error.error_message]);
+		  scrollModalTop(this.modal);
+	  }
 	};
 
 	componentDidMount(...params) {
@@ -107,16 +64,15 @@ class EditPackage extends React.PureComponent {
 					toggle={this.toggle}
 				>
 					<Formik onSubmit={this.handleSubmit} enableReinitialize={true} initialValues={response.package}>
-						{({ setFieldValue }) => (
+						{({ setFieldValue, status }) => (
 							<Form>
 								<ModalHeader toggle={this.toggle}>Edit package (ID: {response.package.id})</ModalHeader>
 								<PackageModal
 									setFieldValue={setFieldValue}
-									showError={this.state.showError}
-									errorMessage={this.state.errorMessage}
 									providers={providers}
 									choseProviders={choseProviders}
 									services={response.services}
+									status={status}
 								/>
 								<ModalFooter className="justify-content-start">
 									<Button color="primary" type="submit">
