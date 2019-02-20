@@ -21,7 +21,7 @@ class AdminProductsAssets extends AssetBundle
     ];
 
     public $js = [
-        'js/libs/summernote/summernote-bs4.js',
+        'summernote-bs4.js',
         'static/js/main.js'
     ];
 

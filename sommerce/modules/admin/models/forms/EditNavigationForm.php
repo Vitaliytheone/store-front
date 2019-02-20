@@ -154,7 +154,8 @@ class EditNavigationForm extends Navigation
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity();
 
-        ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_ADDED, $this->id, $this->name);
+        // TODO: uncomment this after API testing
+        //ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_ADDED, $this->id, $this->name);
 
         return true;
     }
@@ -173,7 +174,8 @@ class EditNavigationForm extends Navigation
         /** @var StoreAdminAuth $identity */
         $identity = $this->getUser()->getIdentity();
 
-        ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_UPDATED, $this->id, $this->name);
+        // TODO: uncomment this after API testing
+        //ActivityLog::log($identity, ActivityLog::E_SETTINGS_NAVIGATION_MENU_ITEM_UPDATED, $this->id, $this->name);
 
         return true;
     }

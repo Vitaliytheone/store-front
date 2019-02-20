@@ -134,11 +134,11 @@ class CreateProductForm extends Products
      */
     public function create($postData)
     {
-        if (isset($postData['packages'])) {
-            unset($postData['packages']);
+        if (!$this->load($postData, '') || !$this->validate()) {
+            return false;
         }
 
-        if (!$this->load($postData, '') || !$this->validate() || !$this->save(false)) {
+        if (!$this->save()) {
             return false;
         }
 
@@ -164,13 +164,15 @@ class CreateProductForm extends Products
             return false;
         }
 
-        $changedAttributes = $this->getDirtyAttributes();
+        // TODO: uncomment after api testing
+        //$changedAttributes = $this->getDirtyAttributes();
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->_changeLog($changedAttributes);
+        // TODO: uncomment after api testing
+        //$this->_changeLog($changedAttributes);
 
         return $this;
     }
