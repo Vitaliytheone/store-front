@@ -142,4 +142,5 @@ return [
     ],
 
     'uploadFileLimit' => 3,
+    'uploadFileSize' => 5242880, // max file size in byte
 ];

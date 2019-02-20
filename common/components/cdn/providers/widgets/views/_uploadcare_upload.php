@@ -2,7 +2,6 @@
 /* @var $this yii\web\View */
 /* @var $cdn \common\components\cdn\providers\Uploadcare */
 
-use common\components\cdn\providers\Uploadcare;
 
 /** Get config for widget */
 $configCode = <<< TXT
@@ -47,7 +46,7 @@ $code = $cdn->getWidget([
     'id' => 'file-uploader',
     'data-multiple' => true,
     'data-multiple-max' => Yii::$app->params['uploadFileLimit'],
-    'data-max-size' => Uploadcare::FILE_SIZE,
+    'data-max-size' => Yii::$app->params['uploadFileSize'],
 ]);
 $code .= "<script>if (typeof setSize === 'function') {setSize();}if (typeof removeClass === 'function') {removeClass();}</script>";
 
