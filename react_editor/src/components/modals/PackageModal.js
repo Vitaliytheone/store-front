@@ -5,26 +5,21 @@ import { PackageInput } from '../Inputs';
 import { Select } from '../SelectProviders';
 
 class PackageModal extends React.PureComponent {
-
 	componentDidMount = () => {
 		setTimeout(() => this.name.focus(), 200);
 	};
 
 	render() {
-		const { providers, services, choseProviders, status, values} = this.props;
-		console.log(values);
+		const { providers, services, choseProviders, status, values } = this.props;
 		return (
 			<ModalBody>
 				{/* Alert Error */}
-
 				{status && (
 					<div className="alert alert-danger alert-dismissible fade show" role="alert">
 						<strong>{status[1]}</strong>
 					</div>
 				)}
-
 				{/* Alert Error End */}
-				
 				<FormGroup>
 					<Field
 						name="name"
@@ -35,11 +30,9 @@ class PackageModal extends React.PureComponent {
 						innerRef={(input) => (this.name = input)}
 					/>
 				</FormGroup>
-
 				<FormGroup>
 					<Field name="price" type="number" component={PackageInput} label="Price" id="package-price" />
 				</FormGroup>
-
 				<FormGroup>
 					<Field
 						name="quantity"
@@ -49,7 +42,6 @@ class PackageModal extends React.PureComponent {
 						id="package-quantity"
 					/>
 				</FormGroup>
-
 				<FormGroup>
 					<Field
 						name="overflow"
@@ -59,7 +51,6 @@ class PackageModal extends React.PureComponent {
 						id="package-overflow"
 					/>
 				</FormGroup>
-
 				<FormGroup>
 					<Label htmlFor="package-best">Best package</Label>
 					<Field name="best" component="select" id="package-best" className="form-control">
@@ -67,7 +58,6 @@ class PackageModal extends React.PureComponent {
 						<option value="0">Disabled</option>
 					</Field>
 				</FormGroup>
-
 				<FormGroup>
 					<Label htmlFor="package-link-type">Link Type</Label>
 					<Field name="link_type" component="select" id="package-link-type" className="form-control">
@@ -118,7 +108,6 @@ class PackageModal extends React.PureComponent {
 					</Field>
 				</FormGroup>
 				<hr />
-
 				<FormGroup>
 					<Label htmlFor="visibility">Availability</Label>
 					<Field name="visibility" className="form-control" component="select">
@@ -126,9 +115,7 @@ class PackageModal extends React.PureComponent {
 						<option value="0">Disabled</option>
 					</Field>
 				</FormGroup>
-
 				<hr />
-
 				<FormGroup>
 					<Label htmlFor="mode">Mode</Label>
 					<Field name="mode" className="form-control" component="select">
@@ -136,37 +123,33 @@ class PackageModal extends React.PureComponent {
 						<option value="1">Auto</option>
 					</Field>
 				</FormGroup>
-			
-			{values.mode ? (
-				<FormGroup>
-					<Field
-						entities={providers}
-						className="form-control"
-						component={Select}
-						name="provider_id"
-						type="select"
-						label="Provider"
-						choseProviders={choseProviders}
-					/>
-				</FormGroup>
-
-				{services.errorService	? (
+				{values.mode == 1 ? (
+					<FormGroup>
+						<Field
+							entities={providers}
+							className="form-control"
+							component={Select}
+							name="provider_id"
+							type="select"
+							label="Provider"
+							choseProviders={choseProviders}
+						/>
+					</FormGroup>
+				) : null}
+				{values.mode == 1 ? services.errorService ? (
 					<span className="m--font-danger">{services.messageService}</span>
 				) : (
-						<FormGroup>
-							<Field
-								entities={services.providerServices}
-								className="form-control"
-								component={Select}
-								name="provider_service"
-								type="select"
-								label="Provider service"
-							/>
-						</FormGroup>
-					 )}
-			) : (null)
-		)}
-
+					<FormGroup>
+						<Field
+							entities={services.providerServices}
+							className="form-control"
+							component={Select}
+							name="provider_service"
+							type="select"
+							label="Provider service"
+						/>
+					</FormGroup>
+				) : null}
 			</ModalBody>
 		);
 	}

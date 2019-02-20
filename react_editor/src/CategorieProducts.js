@@ -147,7 +147,7 @@ class CategorieProducts extends Component {
 	addPackage = (productIndex) => async (values, actions) => {
 		//let packages position
 		const newPackageIndex = this.state.data[productIndex].packages.length;
-		const newPackage = {
+		var newPackage = {
 			product_id: this.state.data[productIndex].id,
 			name: values.name,
 			// position: newPackageIndex,
@@ -161,11 +161,15 @@ class CategorieProducts extends Component {
 			provider_id: values.provider_id,
 			provider_service: values.provider_service
 		};
+		if (newPackage.mode == 0) {
+			newPackage = {
+				...newPackage,
+				provider_id: '1',
+				provider_service: '1'
+			};
+		}
+		console.log(newPackage);
 		const newData = [ ...this.state.data ];
-		// newData[productIndex].packages.push(newPackage);
-		// this.setState({
-		// 	data: newData
-		// });
 		const response = await addPackage(newPackage);
 		if (response.success) {
 			newData[productIndex].packages[newPackageIndex] = response.data;
@@ -187,10 +191,23 @@ class CategorieProducts extends Component {
 
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
+		console.log(getPackageId);
 		const response = await get_update_package(getPackageId);
 		console.log(response.data);
-		const responseServices = await get_providers_services(response.data.provider_id);
-		const newServices = [{ service: 'none', name: 'Chose provider service' }, ...responseServices.data ];
+		if (response.data.provider_id == null) {
+			response.data.provider_id = 'none';
+			this.setState({
+				response: {
+					...this.state.response,
+					package: response.data,
+					services: {
+						providerServices: [ { service: 'none', name: 'Chose provider service' } ]
+					}
+				}
+			});
+		} else {
+			const responseServices = await get_providers_services(response.data.provider_id);
+			const newServices = [ { service: 'none', name: 'Chose provider service' }, ...responseServices.data ];
 			this.setState({
 				response: {
 					...this.state.response,
@@ -200,6 +217,7 @@ class CategorieProducts extends Component {
 					}
 				}
 			});
+		}
 	};
 
 	choseProviders = async (provider_id) => {

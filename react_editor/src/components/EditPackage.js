@@ -8,7 +8,7 @@ import { scrollModalTop } from '../helpers/scrolling';
 
 class EditPackage extends React.PureComponent {
 	state = {
-		modalIsOpen: false,
+		modalIsOpen: false
 	};
 
 	getPackage() {
@@ -19,25 +19,25 @@ class EditPackage extends React.PureComponent {
 
 	toggle = () => {
 		this.setState((prevstate) => ({
-			modalIsOpen: !prevstate.modalIsOpen,
+			modalIsOpen: !prevstate.modalIsOpen
 		}));
 	};
 
 	handleSubmit = async (values, actions) => {
-	  try{
-		const response = await this.props.onSubmit(values, actions);
-		this.setState({
-			modalIsOpen: !response.success,
-		});
-		toast("Package was successfully updated!", options);
-	  } catch(error) {
-		  actions.setStatus([error.success, error.error_message]);
-		  scrollModalTop(this.modal);
-	  }
+		try {
+			const response = await this.props.onSubmit(values, actions);
+			this.setState({
+				modalIsOpen: !response.success
+			});
+			toast('Package was successfully updated!', options);
+		} catch (error) {
+			actions.setStatus([ error.success, error.error_message ]);
+			scrollModalTop(this.modal);
+		}
 	};
 
-	componentDidMount(...params) {
-		this.props.getPackage(...params);
+	async componentDidMount(...params) {
+		await this.props.getPackage(...params);
 	}
 
 	render() {
@@ -47,6 +47,7 @@ class EditPackage extends React.PureComponent {
 				<Button
 					onClick={() => {
 						this.getPackage();
+						this.props.getPackage();
 					}}
 					color="primary"
 					size="sm"
