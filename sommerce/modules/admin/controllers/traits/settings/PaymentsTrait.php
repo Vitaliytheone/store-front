@@ -80,7 +80,7 @@ trait PaymentsTrait
         }
 
         $methodName = $paymentMethod->method_name;
-        $this->view->title = Yii::t('admin', "settings.payments_edit_{$methodName}");
+        $this->view->title = Yii::t('admin', 'settings.payments_edit_method') . ' ' . $methodName;
 
         return $this->render('payments', [
             'method' => $method,
