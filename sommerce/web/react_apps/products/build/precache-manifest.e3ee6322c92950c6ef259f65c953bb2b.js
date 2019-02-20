@@ -12,20 +12,20 @@ self.__precacheManifest = [
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.2d5f15f9.eot"
   },
   {
-    "revision": "6b6feb61813dddd403e663c2c307b51c",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
+    "revision": "d751a5f71030efec99def8070dad7a81",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.d751a5f7.woff2"
   },
   {
     "revision": "b9c91f8037ec3d998566b33feb1f4a83",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.b9c91f80.woff"
   },
   {
-    "revision": "d751a5f71030efec99def8070dad7a81",
-    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.d751a5f7.woff2"
-  },
-  {
     "revision": "f69ee90505162eb58ad8bf12da674b66",
     "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.f69ee905.ttf"
+  },
+  {
+    "revision": "6b6feb61813dddd403e663c2c307b51c",
+    "url": "/static/media/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.6b6feb61.svg"
   },
   {
     "revision": "608fd10666a860567740497e84492928",
