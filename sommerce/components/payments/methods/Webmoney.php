@@ -58,8 +58,8 @@ class Webmoney extends BasePayment
             'LMI_PAYMENT_DESC' => static::getDescription($checkout->id),
             'LMI_PAYEE_PURSE' => ArrayHelper::getValue($paymentMethodOptions, 'purse'),
             'LMI_RESULT_URL' => SiteHelper::hostUrl($store->ssl) . '/webmoney',
-            'LMI_FAIL_URL' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
-            'LMI_SUCCESS_URL' => SiteHelper::hostUrl($store->ssl) . '/addfunds',
+            'LMI_FAIL_URL' => SiteHelper::hostUrl($store->ssl) . '/cart',
+            'LMI_SUCCESS_URL' => SiteHelper::hostUrl($store->ssl) . '/cart',
             'id' => $checkout->id,
             'email' => $checkout->id . '@' . SiteHelper::host(),
         ]);
