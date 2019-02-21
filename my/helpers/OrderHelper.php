@@ -7,6 +7,7 @@ use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
+use common\helpers\IntegrationsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Admins;
@@ -765,6 +766,11 @@ class OrderHelper {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $store->getErrors(), 'cron.order.store_domain');
         }
 
+        if (!IntegrationsHelper::addStoreIntegrations($store->id)) {
+            $order->status = Orders::STATUS_ERROR;
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, 'Error adding store integration', 'cron.order.store_integrations');
+        }
+
         // Create nginx config
         SuperTaskHelper::setTasksNginx($store, [
             'order_id' => $order->id
@@ -793,7 +799,6 @@ class OrderHelper {
             $order->status = Orders::STATUS_ERROR;
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
-
 
         // Change status
         if (Orders::STATUS_ADDED != $order->status) {
