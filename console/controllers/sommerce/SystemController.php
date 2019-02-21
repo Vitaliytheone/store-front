@@ -748,4 +748,25 @@ class SystemController extends CustomController
         return $this->stdout("SUCCESS add {$count} store_payment_methods settings and skip {$delete} unsupported methods\n", Console::FG_GREEN);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function actionUpdateStoreMessages()
+    {
+        $stores = Stores::find()
+            ->select(['db_name'])
+            ->andWhere('db_name IS NOT NULL')
+            ->andWhere('db_name != ""')
+            ->asArray()
+            ->all();
+
+        foreach ($stores as $store) {
+            $rows = Yii::$app->db->createCommand()->update($store['db_name'] . '.messages',
+                ['value' => 'Incorrect phone'],
+                ['value' => 'Incorrect phone.']
+            )->execute();
+
+            $this->stdout("Updated $rows rows in {$store['db_name']} .messages\n", Console::FG_GREEN);
+        }
+    }
 }
