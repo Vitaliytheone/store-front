@@ -54,6 +54,7 @@ class SettingsController extends CustomController
                     'update-payment-positions',
                     'delete-invalid-currency',
                     'integrations-toggle-active',
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
