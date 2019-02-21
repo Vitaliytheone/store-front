@@ -74,7 +74,7 @@ class SiteController extends CustomController
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword']
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword', 'ticket']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,

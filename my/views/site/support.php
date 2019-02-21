@@ -53,13 +53,15 @@ use yii\widgets\LinkPager;
                                     <?= Html::a('<b>'.htmlspecialchars($ticket->subject).'</b>', '/ticket/' . $ticket->id, [
                                         'data-subject' => htmlspecialchars($ticket->subject),
                                         'style' => 'cursor:pointer;',
-                                        'class' => 'show-ticket'
+                                        'class' => 'show-ticket',
+                                        'onclick' => 'return false',
                                     ])?>
                                 <?php else : ?>
                                     <?= Html::a(htmlspecialchars($ticket->subject), '/ticket/' . $ticket->id, [
                                         'data-subject' => htmlspecialchars($ticket->subject),
                                         'style' => 'cursor:pointer;',
-                                        'class' => 'show-ticket'
+                                        'class' => 'show-ticket',
+                                        'onclick' => 'return false',
                                     ])?>
                                 <?php endif; ?>
                             </td>
