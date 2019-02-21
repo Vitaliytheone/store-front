@@ -30,7 +30,7 @@ class PaymentsSettingsSearch
     {
         return StorePaymentMethods::find()
             ->where(['store_id' => $this->store->id])
-            ->orderBy('position')
+            ->orderBy('name')
             ->all();
     }
 }

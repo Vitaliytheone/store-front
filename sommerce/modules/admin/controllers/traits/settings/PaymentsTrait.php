@@ -9,7 +9,6 @@ use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\AddPaymentMethodForm;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
-use sommerce\modules\admin\models\forms\UpdatePositionsPaymentsForm;
 use sommerce\modules\admin\models\search\PaymentsSettingsSearch;
 use Yii;
 use yii\web\BadRequestHttpException;

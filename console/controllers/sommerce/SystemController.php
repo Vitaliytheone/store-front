@@ -749,6 +749,8 @@ class SystemController extends CustomController
     }
 
     /**
+     * Update "Incorrect phone" message in all store db
+     * @return string
      * @throws Exception
      */
     public function actionUpdateStoreMessages()
@@ -760,13 +762,21 @@ class SystemController extends CustomController
             ->asArray()
             ->all();
 
+        $count = 0;
+
         foreach ($stores as $store) {
+            if (Yii::$app->db->getTableSchema($store['db_name'].'.messages', true) === null) {
+                continue;
+            }
             $rows = Yii::$app->db->createCommand()->update($store['db_name'] . '.messages',
                 ['value' => 'Incorrect phone'],
                 ['value' => 'Incorrect phone.']
             )->execute();
 
-            $this->stdout("Updated $rows rows in {$store['db_name']} .messages\n", Console::FG_GREEN);
+            $this->stdout("Update {$rows} rows in {$store['db_name']}.messages\n");
+            $count++;
         }
+
+        return $this->stdout("Updated Paytr 'Incorrect phone' messages in {$count} dbs\n", Console::FG_GREEN);
     }
 }

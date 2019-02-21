@@ -30,7 +30,7 @@ class Yandexmoney extends BasePayment
     public $paymentResult = false;
 
     /**
-     * Checkout
+     * Checkout Yandex Money method
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
@@ -68,7 +68,7 @@ class Yandexmoney extends BasePayment
         $currency = ArrayHelper::getValue($_POST, 'currency'); // Код валюты — всегда 643 (рубль РФ согласно ISO 4217).
         $datetime = ArrayHelper::getValue($_POST, 'datetime'); // Дата и время совершения перевода.
         $sender = ArrayHelper::getValue($_POST, 'sender'); // Для переводов из кошелька — номер счета отправителя. Для переводов с произвольной карты — параметр содержит пустую строку.
-        $coderpro = ArrayHelper::getValue($_POST, 'codepro'); // Для переводов из кошелька — перевод защищен кодом протекции. Для переводов с произвольной карты — всегда false.
+        $coderpro = (string)ArrayHelper::getValue($_POST, 'codepro'); // Для переводов из кошелька — перевод защищен кодом протекции. Для переводов с произвольной карты — всегда false.
         $label = intval(ArrayHelper::getValue($_POST, 'label')); // Метка платежа. Если ее нет, параметр содержит пустую строку.
         $sha1Hash = ArrayHelper::getValue($_POST, 'sha1_hash'); // SHA-1 hash параметров уведомления.
 
@@ -80,14 +80,16 @@ class Yandexmoney extends BasePayment
             ];
         }
 
-        if ('card-incoming' != $notificationType && empty($sender)) {
+        if ($notificationType == 'p2p-incoming' && !empty($sender)) {
+            $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
+        } elseif ($notificationType == 'card-incoming' && empty($sender)) {
+            $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_YANDEX_CARDS);
+        } else {
             return [
                 'result' => 2,
-                'content' => 'no data'
+                'content' => 'no type'
             ];
         }
-
-        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
 
         if (empty($paymentMethod)) {
             // no invoice

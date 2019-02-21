@@ -13,6 +13,60 @@ class m190116_083651_payment_methods_change_columns extends Migration
      */
     public function safeUp()
     {
+        Yii::$app->db->createCommand('USE `' . DB_STORES . '`;
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"INR\",\"IDR\",\"KRW\"]\' 
+        WHERE `payment_methods`.`class_name` = \'Paypal\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"TRY\"]\' 
+        WHERE `payment_methods`.`class_name` = \'Twocheckout\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"INR\",\"IDR\",\"TRY\",\"KRW\"]\' 
+        WHERE `payment_methods`.`class_name` = \'Coinpayments\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"BRL\"]\'
+        WHERE `payment_methods`.`class_name` = \'Pagseguro\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Webmoney\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Yandexmoney\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Freekassa\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"TRY\"]\'
+        WHERE `payment_methods`.`class_name` = \'Paytr\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"TRY\"]\'
+        WHERE `payment_methods`.`class_name` = \'Paywant\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"MYR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Billplz\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\"]\'
+        WHERE `payment_methods`.`class_name` = \'Authorize\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Yandexcards\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\", \"EUR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Stripe\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"BRL\"]\'
+        WHERE `payment_methods`.`class_name` = \'Mercadopago\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\"]\'
+        WHERE `payment_methods`.`class_name` = \'Paypalstandard\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"EUR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Mollie\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\", \"EUR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Stripe3dSecure\';
+        ')->execute();
+
         $methods = (new Query())
             ->select(['id', 'currencies', 'options', 'position'])
             ->from(DB_STORES . '.payment_methods')

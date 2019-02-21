@@ -140,6 +140,7 @@ class PaymentMethodsCurrency extends ActiveRecord
             $storePaymentMethods = StorePaymentMethods::find()
                 ->where(['store_id' => $store->id])
                 ->indexBy('currency_id')
+                ->orderBy('name')
                 ->asArray()
                 ->all();
         } else {
@@ -165,6 +166,7 @@ class PaymentMethodsCurrency extends ActiveRecord
             $result[$id] = $methodsNames[$method['method_id']];
         }
 
+        asort($result);
         return $result;
     }
 
