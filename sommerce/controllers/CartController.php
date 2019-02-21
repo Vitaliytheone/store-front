@@ -13,6 +13,7 @@ use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\UnknownClassException;
 use yii\bootstrap\Html;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\ContentNegotiator;
@@ -27,7 +28,7 @@ class CartController extends CustomController
 {
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(), [
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => ['validate']
@@ -50,7 +51,7 @@ class CartController extends CustomController
                 'class' => DisableCsrfToken::class,
                 'only' => ['index'],
             ],
-        ];
+        ]);
     }
 
     public function beforeAction($action)
@@ -65,7 +66,6 @@ class CartController extends CustomController
 
     /**
      * Displays cart.
-     *
      * @return string|Response
      * @throws UnknownClassException
      * @throws \yii\base\InvalidConfigException
@@ -166,7 +166,7 @@ class CartController extends CustomController
 
     /**
      * Delete cart item
-     * @param $key
+     * @param string|integer $key
      * @return Response
      * @throws NotFoundHttpException
      * @throws \Throwable
@@ -184,9 +184,10 @@ class CartController extends CustomController
 
     /**
      * Displays add to cart page.
-     * @param $id
+     * @param integer $id
      * @return string
      * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionOrder($id)
     {

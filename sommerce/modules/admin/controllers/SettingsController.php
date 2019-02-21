@@ -7,6 +7,7 @@ use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
+use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
@@ -52,7 +53,7 @@ class SettingsController extends CustomController
                     'add-payment-method',
                     'update-payment-positions',
                     'delete-invalid-currency',
-                ]
+                    'integrations-toggle-active',
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -64,6 +65,9 @@ class SettingsController extends CustomController
                     'add-payment-method' => ['POST'],
                     'update-payment-positions' => ['POST'],
                     'delete-invalid-currency' => ['POST'],
+                    'edit-integration' => ['GET', 'POST'],
+                    'integrations' => ['GET'],
+                    'integrations-toggle-active' => ['POST'],
                 ],
             ],
             'content' => [
@@ -73,6 +77,7 @@ class SettingsController extends CustomController
                     'add-payment-method',
                     'update-payment-positions',
                     'delete-invalid-currency',
+                    'integrations-toggle-active',
                 ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,

@@ -2,11 +2,16 @@
 
 namespace console\controllers\sommerce;
 
+use common\models\store\Languages;
+use common\models\store\Messages;
+use common\models\stores\Integrations;
 use common\models\stores\StoreAdmins;
+use common\models\stores\StoreIntegrations;
 use my\components\ActiveForm;
 use sommerce\helpers\MessagesHelper;
 use yii\db\Exception;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 use common\models\stores\Stores;
 use sommerce\helpers\StoreHelper;
@@ -779,4 +784,31 @@ class SystemController extends CustomController
 
         return $this->stdout("Updated Paytr 'Incorrect phone' messages in {$count} dbs\n", Console::FG_GREEN);
     }
+
+    /**
+     * Add integrations for stores
+     */
+    public function actionAddIntegrations()
+    {
+        $stores = Stores::find()->all();
+        $integrations = Integrations::find()->all();
+
+        foreach ($stores as $store) {
+            foreach ($integrations as $integration) {
+                /** @var Integrations $integration*/
+                $storeIntegration = new StoreIntegrations();
+                $storeIntegration->integration_id = $integration->id;
+                $storeIntegration->store_id = $store->id;
+                $storeIntegration->visibility = StoreIntegrations::VISIBILITY_OFF;
+                $storeIntegration->position = $integration->position;
+
+                if (!$storeIntegration->save(false)) {
+                    $this->stderr('Save error, integration: ' . $integration->name . "\n", Console::FG_RED);
+                } else {
+                    $this->stderr('Integration saved: ' . $integration->name . "\n", Console::FG_GREEN);
+                }
+            }
+        }
+    }
+
 }
