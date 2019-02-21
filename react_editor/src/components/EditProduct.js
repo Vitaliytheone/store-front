@@ -15,6 +15,7 @@ class EditProduct extends React.PureComponent {
     this.setState(prevstate => ({
       modalIsOpen: !prevstate.modalIsOpen
     }));
+
   }
 
   toggle = () => {
@@ -37,7 +38,7 @@ class EditProduct extends React.PureComponent {
     }
   };
 
-  componentDidMount(...params) {
+ componentDidMount(...params) {
     this.props.getProduct(...params);
   }
 
@@ -48,8 +49,8 @@ class EditProduct extends React.PureComponent {
         <span className="edit_product">
           <Button
             onClick={() => {
-              this.getProduct();
-              this.props.getProduct();
+              this.getProduct()
+              this.props.getProduct()
             }}
             color="primary"
             size="sm"

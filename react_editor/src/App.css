@@ -41724,3 +41724,7 @@ body {
             transform: scale(1);
   }
 }
+
+body {
+  background-color: #f2f3f8;
+}

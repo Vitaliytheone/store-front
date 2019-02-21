@@ -112,7 +112,7 @@ class ProductModal extends React.PureComponent {
 								<div className="sommerce-colopicker__picker">
 									<ChromePicker
 										className="chrome-picker"
-										color={this.props.values.color}
+										color={values.color == null ? values.color = "" : values.color} 
 										onChange={this.handleChangeComplete}
 									/>
 								</div>

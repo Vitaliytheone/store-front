@@ -23,7 +23,7 @@ const SortableProduct = SortableElement(
 	}) => {
 		return (
 			<Row className="group-caption">
-				<Col className="sommerce_dragtable__category">
+				<Col className={"sommerce_dragtable__category " + (product.visibility == 0 ? 'disabled-package' : null)}>
 					<div className="sommerce_dragtable__category-title">
 						<Row className="align-items-center">
 							<Col sm="12">
