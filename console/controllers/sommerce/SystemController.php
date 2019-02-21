@@ -279,12 +279,67 @@ class SystemController extends CustomController
     /**
      * 1) Create currency list from pay_methods
      * @return string
+     * @throws Exception
      */
     public function actionApplyCurrency(): string
     {
         if (Yii::$app->db->getTableSchema('{{%payment_methods_currency}}', true) === null) {
             return $this->stdout("Table `payment_methods_currency` does not exist. Apply SQL first.\n", Console::FG_RED);
         }
+
+        Yii::$app->db->createCommand('USE `' . DB_STORES . '`;
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"INR\",\"IDR\",\"KRW\"]\' 
+        WHERE `payment_methods`.`class_name` = \'Paypal\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"TRY\"]\' 
+        WHERE `payment_methods`.`class_name` = \'Twocheckout\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\",\"AUD\",\"BRL\",\"CAD\",\"CZK\",\"DKK\",\"EUR\",\"HKD\",\"HUF\",\"ILS\",\"JPY\",\"MYR\",\"MXN\",\"NZD\",\"NOK\",\"PHP\",\"PLN\",\"GBP\",\"RUB\",\"SGD\",\"SEK\",\"CHF\",\"TWD\",\"THB\",\"INR\",\"IDR\",\"TRY\",\"KRW\"]\' 
+        WHERE `payment_methods`.`class_name` = \'Coinpayments\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"BRL\"]\'
+        WHERE `payment_methods`.`class_name` = \'Pagseguro\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Webmoney\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Yandexmoney\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Freekassa\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"TRY\"]\'
+        WHERE `payment_methods`.`class_name` = \'Paytr\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"TRY\"]\'
+        WHERE `payment_methods`.`class_name` = \'Paywant\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"MYR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Billplz\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\"]\'
+        WHERE `payment_methods`.`class_name` = \'Authorize\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"RUB\"]\'
+        WHERE `payment_methods`.`class_name` = \'Yandexcards\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\", \"EUR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Stripe\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"BRL\"]\'
+        WHERE `payment_methods`.`class_name` = \'Mercadopago\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\"]\'
+        WHERE `payment_methods`.`class_name` = \'Paypalstandard\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"EUR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Mollie\';
+        
+        UPDATE `payment_methods` SET `currencies` = \'[\"USD\", \"EUR\"]\'
+        WHERE `payment_methods`.`class_name` = \'Stripe3dSecure\';
+        ')->execute();
 
         $methods = (new Query())
             ->select(['id', 'currencies', 'options', 'position'])
@@ -630,6 +685,8 @@ class SystemController extends CustomController
 
         foreach ($methods as $key => $methodName) {
 
+            unset($payMethod, $store, $storeCurrency);
+
             $payMethodId = PaymentMethods::getPaymentsId($methodName['method']);
             if (isset($payMethods[$payMethodId])) {
                 $payMethod = $payMethods[$payMethodId];
@@ -651,11 +708,18 @@ class SystemController extends CustomController
                 continue;
             }
 
+
             foreach ($storeCurrencys as $storeCurrencyLocal) {
-                $storeCurrency = $storeCurrencyLocal;
                 if ($storeCurrencyLocal['method_id'] == $payMethodId && $storeCurrencyLocal['currency'] == $store['currency']) {
+                    $storeCurrency = $storeCurrencyLocal;
                     break;
                 }
+            }
+
+            if (empty($storeCurrency)) {
+                $delete++;
+                $this->stdout("This payment method ({$methodName['method']}) is not supported by the store currency ({$store['currency']}), skip adding settings.\n", Console::FG_RED);
+                continue;
             }
 
             $lastPositions = (new Query())
@@ -666,8 +730,8 @@ class SystemController extends CustomController
 
             Yii::$app->db->createCommand()->insert(DB_STORES .'.store_payment_methods', [
                 'store_id' => $methodName['store_id'],
-                'visibility' => $methodName['active'],
-                'options' => $methodName['details'],
+                'visibility' => $methodName['active'] ?? 0,
+                'options' => $methodName['details'] ?? '',
                 'method_id' => $payMethod['id'],
                 'currency_id' => $storeCurrency['id'],
                 'name' => $payMethod['name'],
