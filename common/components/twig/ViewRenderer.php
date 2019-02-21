@@ -193,11 +193,11 @@ class ViewRenderer extends BaseViewRenderer
         // Add custom scripts/styles/code before </html> tag
         $content = $this->twig->render(pathinfo($file, PATHINFO_BASENAME), $params);
         if (!empty($view->context->endContent)) {
-            $content = preg_replace("/\<\/html.*?\>/uis", "\r\n" . implode("\r\n", $view->context->endContent) . "\r\n</html>", $content);
+            $content = preg_replace("/\<\/html[^\w\d]*\>/uis", "\r\n" . implode("\r\n", $view->context->endContent) . "\r\n</html>", $content, 1);
         }
 
         if (!empty($view->context->startHeadContent)) {
-            $content = preg_replace("/\<head.*?\>/uis", "<head>\r\n" . implode("\r\n", $view->context->startHeadContent) . "\r\n", $content);
+            $content = preg_replace("/\<head[^\w\d]*\>/uis", "<head>\r\n" . implode("\r\n", $view->context->startHeadContent) . "\r\n", $content, 1);
         }
 
         return $content;
