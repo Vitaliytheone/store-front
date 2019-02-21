@@ -174,13 +174,20 @@ class CategorieProducts extends Component {
 			provider_id: values.provider_id,
 			provider_service: values.provider_service
 		};
-		if (newPackage.mode == 0) {
+		if (newPackage.mode == 0 || newPackage.provider_id == 'none') {
 			newPackage = {
 				...newPackage,
 				provider_id: null,
 				provider_service: null
 			};
 		}
+		if(newPackage.provider_service == 'none') {
+			newPackage = {
+				...newPackage,
+				provider_service: null
+			}
+		}
+		console.log(newPackage);
 		const newData = [ ...this.state.data ];
 		const response = await addPackage(newPackage);
 		console.log(response);	
@@ -308,13 +315,19 @@ class CategorieProducts extends Component {
 			provider_service: values.provider_service
 		};
 		delete editedPackage[productIndex].packages[packageIndex].position;
-		if (editedPackage[productIndex].packages[packageIndex].mode == 0) {
+		if (editedPackage[productIndex].packages[packageIndex].mode == 0 || editedPackage[productIndex].packages[packageIndex].provider_id == 'none' ) {
 			editedPackage[productIndex].packages[packageIndex]= {
 				...editedPackage[productIndex].packages[packageIndex],
 					provider_id: null,
 					provider_service: null
       };
 	}
+		if (editedPackage[productIndex].packages[packageIndex].provider_service == 'none') {
+			editedPackage[productIndex].packages[packageIndex] = {
+				...editedPackage[productIndex].packages[packageIndex],
+				provider_service: null
+			};
+		}
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
 		if (response.success) {
