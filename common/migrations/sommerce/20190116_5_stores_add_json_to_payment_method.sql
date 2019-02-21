@@ -71,7 +71,8 @@ WHERE `payment_methods`.`method_name` = 'authorize';
 UPDATE `payment_methods`
 SET `settings_form` = '{\"wallet_number\":{\"code\":\"wallet_number\",\"name\":\"wallet_number\",\"type\":\"input\",\"label\":\"settings.payments_yandex_cards_wallet_number\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_yandex_cards_secret_word\"}}',
     `settings_form_description` = '<ol>\r\n<li>Go to <a href=\"https://money.yandex.ru/myservices/online.xml\" target=\"_blank\">https://money.yandex.ru/myservices/online.xml</a></li>\r\n<li>Enter login details.</li>\r\n<ul>\r\n<li>Secret word: set strong password</li>\r\n<li>HTTP-notices URL: <code>{site}/yandexmoney</code></li>\r\n</ul>\r\n<li>Enter your Yandex money details below.</li>\r\n</ol>',
-    `icon` = '/img/pg/yandex_money.png'
+    `icon` = '/img/pg/yandex_money.png',
+    `url` = 'yandexmoney'
 WHERE `payment_methods`.`method_name` = 'yandexcards';
 
 UPDATE `payment_methods`
