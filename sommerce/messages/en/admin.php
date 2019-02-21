@@ -12,6 +12,7 @@ return [
     'header.menu_settings_general' => 'General',
     'header.menu_settings_payments' => 'Payments',
     'header.menu_settings_providers' => 'Providers',
+    'header.menu_settings_integrations' => 'Integrations',
     'header.menu_settings_navigation' => 'Navigation',
     'header.menu_settings_pages' => 'Pages',
     'header.menu_settings_themes' => 'Themes',
@@ -211,6 +212,7 @@ return [
     'settings.left_menu_general' => 'General',
     'settings.left_menu_payments' => 'Payments',
     'settings.left_menu_providers' => 'Providers',
+    'settings.left_menu_integrations' => 'Integrations',
     'settings.left_menu_navigation' => 'Navigation',
     'settings.left_menu_pages' => 'Pages',
     'settings.left_menu_themes' => 'Themes',
@@ -633,4 +635,12 @@ return [
 
     'cdn.error.common' => 'CDN error, try again later',
     'cdn.error.bad_upload' => 'Error uploading file to CDN!',
+
+    'settings.integrations_page_title' => 'Integrations',
+    'settings.integrations_edit_title' => 'Edit',
+    'settings.integrations_chats_title' => 'Online chats',
+    'settings.integrations_analytics_title' => 'Analytics',
+    'settings.integrations_edit.code_label' => 'Code snippet',
+    'settings.integrations_edit.cancel_button' => 'Cancel',
+    'settings.integrations_edit.save_button' => 'Save changes',
 ];

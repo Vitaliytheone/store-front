@@ -4,6 +4,7 @@ namespace superadmin\models\search\dashboard;
 
 use common\models\panels\Customers;
 use common\models\stores\Stores as StoresModel;
+use my\helpers\DomainsHelper;
 use my\helpers\SpecialCharsHelper;
 
 /*
@@ -51,7 +52,7 @@ class Stores extends  BaseBlock
         $customers = $queryCustomer->all();
 
         foreach ($stores as &$store) {
-           
+            $store['domain'] = DomainsHelper::idnToUtf8($store['domain']);
             $store['customer'] = $customers[$store['customer']]['email'];
             $store['status'] = StoresModel::getStatuses()[$store['status']];
             $store['created'] = static::_formatDate($store['created']);

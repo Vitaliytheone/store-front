@@ -6,12 +6,9 @@ use my\helpers\DomainsHelper;
 use common\models\panels\Domains;
 use Yii;
 use common\models\panels\Orders;
-use common\models\panels\Project;
-use common\models\panels\Tariff;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
-use yii\helpers\Json;
 
 /**
  * Class DomainsSearch
@@ -132,4 +129,5 @@ class DomainsSearch
 
         return $return;
     }
+
 }

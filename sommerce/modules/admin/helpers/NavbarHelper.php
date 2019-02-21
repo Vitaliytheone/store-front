@@ -48,6 +48,11 @@ class NavbarHelper {
                         'icon' => 'icon-share',
                         'label' => Yii::t('admin', 'header.menu_settings_providers'),
                     ],
+                    'settings-integrations' => [
+                        'url' => '/admin/settings/integrations',
+                        'icon' => 'flaticon-app',
+                        'label' => Yii::t('admin', 'header.menu_settings_integrations'),
+                    ],
                     'settings-navigation' => [
                         'url' => '/admin/settings/navigation',
                         'icon' => 'flaticon-list-1',

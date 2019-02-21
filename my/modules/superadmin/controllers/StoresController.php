@@ -66,6 +66,7 @@ class StoresController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -91,6 +92,9 @@ class StoresController extends CustomController
      * @param $id
      * @return array
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionEditStore($id)
     {

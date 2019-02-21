@@ -8,6 +8,7 @@ use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
+use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
@@ -38,6 +39,7 @@ class SettingsController extends CustomController
     use LanguageTrait;
     use NotificationsTrait;
     use ThemesCustomizerTrait;
+    use IntegrationsTrait;
 
     public function behaviors()
     {
@@ -45,7 +47,10 @@ class SettingsController extends CustomController
         return $parentBehaviors + [
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style']
+                'only' => [
+                    'theme-get-style', 'theme-get-data', 'theme-update-style',
+                    'integrations-toggle-active',
+                ]
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -54,12 +59,16 @@ class SettingsController extends CustomController
                     'theme-get-style' => ['GET'],
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
+                    'edit-integration' => ['GET', 'POST'],
+                    'integrations' => ['GET'],
+                    'integrations-toggle-active' => ['POST'],
                 ],
             ],
             'jqueryApi' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
                     'theme-update-style',
+                    'integrations-toggle-active',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_JSON,
@@ -141,6 +150,7 @@ class SettingsController extends CustomController
      * Delete Store Favicon or Logo
      * @param $type
      * @return Response
+     * @throws \yii\base\Exception
      */
     public function actionDeleteImage($type)
     {
@@ -157,6 +167,7 @@ class SettingsController extends CustomController
      * Return links list by link type AJAX action
      * @param $link_type
      * @return array
+     * @throws \yii\base\Exception
      */
     public function actionGetLinks($link_type)
     {
