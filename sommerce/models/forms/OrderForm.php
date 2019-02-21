@@ -421,7 +421,8 @@ class OrderForm extends Model
         $jsOptions = [];
 
         foreach ($this->getPaymentMethods() as $key => $method) {
-            $jsOptions[$method['method']] = $method['jsOptions'];
+            $methodName = str_replace(' ', '_', $method['method']);
+            $jsOptions[$methodName] = $method['jsOptions'];
         }
 
         return $jsOptions;
