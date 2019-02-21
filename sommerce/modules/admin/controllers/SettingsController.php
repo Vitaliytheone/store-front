@@ -68,7 +68,12 @@ class SettingsController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style', 'add-payment-method','update-payment-positions','delete-invalid-currency'],
+                'only' => [
+                    'theme-update-style',
+                    'add-payment-method',
+                    'update-payment-positions',
+                    'delete-invalid-currency',
+                ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
