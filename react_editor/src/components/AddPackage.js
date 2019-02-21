@@ -13,6 +13,7 @@ class AddPackage extends React.PureComponent {
 	};
 
 	toggle = () => {
+		this.props.clearServices();
 		this.setState((prevstate) => ({
 			modalIsOpen: !prevstate.modalIsOpen,
 		}));

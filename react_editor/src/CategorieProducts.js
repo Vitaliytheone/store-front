@@ -17,6 +17,7 @@ import {
 	get_providers_services
 } from './services/url';
 import { sortBy, pick } from 'lodash';
+import ModalExample from './testmodal';
 
 class CategorieProducts extends Component {
 	state = {
@@ -64,7 +65,6 @@ class CategorieProducts extends Component {
 				services: { providerServices: [ { service: 'none', name: 'Chose provider service' } ] }
 			}
 		});
-		console.log(data);
 	}
 
 	handleProductSwitch = ({ oldIndex, newIndex }) => {
@@ -144,10 +144,21 @@ class CategorieProducts extends Component {
 		return response;
 	};
 
+	clearServices = () => {
+		this.setState({
+			response: {
+				...this.state.response,
+				services: {
+					providerServices: [{ service: 'none', name: 'Chose provider service' }] 
+				}
+			}
+		})
+	}
+
 	addPackage = (productIndex) => async (values, actions) => {
 		//let packages position
 		const newPackageIndex = this.state.data[productIndex].packages.length;
-		var newPackage = {
+		let newPackage = {
 			product_id: this.state.data[productIndex].id,
 			name: values.name,
 			// position: newPackageIndex,
@@ -164,13 +175,13 @@ class CategorieProducts extends Component {
 		if (newPackage.mode == 0) {
 			newPackage = {
 				...newPackage,
-				provider_id: '1',
-				provider_service: '1'
+				provider_id: null,
+				provider_service: null
 			};
 		}
-		console.log(newPackage);
 		const newData = [ ...this.state.data ];
 		const response = await addPackage(newPackage);
+		console.log(response);	
 		if (response.success) {
 			newData[productIndex].packages[newPackageIndex] = response.data;
 			this.setState({
@@ -191,9 +202,7 @@ class CategorieProducts extends Component {
 
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
-		console.log(getPackageId);
 		const response = await get_update_package(getPackageId);
-		console.log(response.data);
 		if (response.data.provider_id == null) {
 			response.data.provider_id = 'none';
 			this.setState({
@@ -296,6 +305,13 @@ class CategorieProducts extends Component {
 			provider_service: values.provider_service
 		};
 		delete editedPackage[productIndex].packages[packageIndex].position;
+		if (editedPackage[productIndex].packages[packageIndex].mode == 0) {
+			editedPackage[productIndex].packages[packageIndex]= {
+				...editedPackage[productIndex].packages[packageIndex],
+					provider_id: null,
+					provider_service: null
+      };
+	}
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
 		if (response.success) {
@@ -353,10 +369,12 @@ class CategorieProducts extends Component {
 							isSubmitting={isSubmitting}
 							products={data}
 						/>
+						{/* <ModalExample /> */}
 						<Row>
 							<Col xs="12">
 								<div className="sommerce_dragtable">
 									<ProductList
+										clearServices={this.clearServices}
 										helperClass="sortable-helper"
 										getProduct={this.getProduct}
 										getPackage={this.getPackage}

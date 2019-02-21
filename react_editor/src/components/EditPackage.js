@@ -36,8 +36,8 @@ class EditPackage extends React.PureComponent {
 		}
 	};
 
-	async componentDidMount(...params) {
-		await this.props.getPackage(...params);
+	componentDidMount(...params) {
+		this.props.getPackage(...params);
 	}
 
 	render() {

@@ -7,6 +7,7 @@ import PackageList from './PackageList';
 
 const SortableProduct = SortableElement(
 	({
+		clearServices,
 		choseProviders,
 		data,
 		providers,
@@ -41,6 +42,7 @@ const SortableProduct = SortableElement(
 					</div>
 				</Col>
 				<PackageList
+					clearServices={clearServices}
 					lockAxis={'y'}
 					lockToContainerEdges={true}
 					product={product}

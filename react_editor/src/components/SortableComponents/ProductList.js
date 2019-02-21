@@ -4,6 +4,7 @@ import SortableProduct from './Product';
 
 const ProductList = SortableContainer(
 	({	
+		clearServices,
 		choseProviders,
 		providers,
 		data,
@@ -33,6 +34,7 @@ const ProductList = SortableContainer(
 					providers={providers}
 					data={data}
 					choseProviders={choseProviders}
+					clearServices={clearServices}
 				/>
 			))}
 		</div>

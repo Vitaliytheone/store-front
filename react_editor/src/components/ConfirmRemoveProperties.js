@@ -3,7 +3,7 @@ import { Button, Modal, ModalBody, Row, Col } from 'reactstrap';
 
 const ConfirmRemove = ({ toggle, modalIsOpen, setFieldValue, properties }) => {
 	return (
-		<Modal isOpen={modalIsOpen} toggle={() => toggle} backdrop="static" keyboard={false}>
+		<Modal isOpen={modalIsOpen} backdrop="static">
 			<ModalBody>
 				<Row>
 					<Col className="modal-delete-block text-center">
@@ -29,12 +29,4 @@ const ConfirmRemove = ({ toggle, modalIsOpen, setFieldValue, properties }) => {
 	);
 };
 
-{
-	/* <div className="col modal-delete-block text-center">
-    <span className="la la-warning" style={{ fontSize: '60px' }}></span>
-    <p>All current properties will be deleted</p>
-    <button className="btn btn-secondary cursor-pointer m-btn--air" data-dismiss="modal">No</button>
-    <button className="btn btn-primary btn__submit_copy" id="m-btn--air" data-dismiss="modal">Ok</button>
-</div> */
-}
 export default ConfirmRemove;
