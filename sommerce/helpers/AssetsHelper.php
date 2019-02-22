@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\helpers;
 
+use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\stores\Stores;
 use Yii;
@@ -59,9 +60,21 @@ class AssetsHelper {
         /**
          * @var $store Stores
          */
-        $store = Yii::$app->store->getInstance();
+//        $store = Yii::$app->store->getInstance();
 
-        Pages::find();
+        $file = '';
+        Yii::debug($value); // todo del
+
+        if (stripos('styles.css', $value) !== false) {
+            Yii::debug('Hi1111'); // todo del
+            $file = PageFiles::find()->where(['file_name' => 'styles.css'])->one()->content;
+        }
+        if (stripos('scripts.js', $value) !== false) {
+            $file = PageFiles::find()->where(['file_name' => 'scripts.js'])->one()->content;
+        }
+
+        Yii::debug($file, 'content'); // todo del
+        return $file;
     }
 
     /**

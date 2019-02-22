@@ -2,6 +2,7 @@
 namespace sommerce\components\twig\parsers;
 
 use common\helpers\ThemesHelper;
+use common\models\store\PageFiles;
 use Twig_TokenParser;
 use Twig_Token;
 use Twig_Node_Include;
@@ -42,6 +43,13 @@ class TokenParser_Include extends Twig_TokenParser
         }
 
         $view = $expression->getAttribute('value');
+
+        $twigView = str_replace('snippets/', '', $view);
+        if (!empty($view) || in_array($twigView, ['header.twig', 'footer.twig'])) {
+            $view = PageFiles::find()->where(['file_name' => $twigView])->one();
+            $expression->setAttribute('value', $view->content);
+            return $node;
+        }
 
         if (empty($view) || !in_array($view, ThemesHelper::getAvailableIncludes())) {
             throw new Twig_Error_Syntax($view . ' file is not supported');

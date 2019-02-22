@@ -1,15 +1,15 @@
 <html>
 <head>
-    <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="{{ assets(css/styles.css) }}">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ assets('css/styles.css') }}">
 </head>
 <body>
-{% include('snippets/header.twig') %}
+{#{% include('snippets/header.twig') %}#}
 
-{{ page_content }}
+{{ content }}
 
-{% include('snippets/footer.twig') %}
+{#{% include('snippets/footer.twig') %}#}
 
-<script src="{{ assets(js/scripts.js) }}"></script>
+<script src="{{ assets('js/scripts.js') }}"></script>
 </body>
 </html>
