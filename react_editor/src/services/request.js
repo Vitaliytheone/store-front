@@ -7,14 +7,12 @@ const instance = axios.create({
   baseURL: ' '
 });
 
-instance.interceptors.response.use(
-  response => response.data,
-  error => {
-    if (error.response && error.response.data && error.response.data.url) {
-      window.location = error.response.data.url;
-    } else {
-      return Promise.reject(error);
-    }
+instance.interceptors.response.use(response => response.data, error => {
+  if (error.response && error.response.data && error.response.data.url) {
+    window.location = error.response.data.url
+  } else {
+    return Promise.reject(error.response.data)
   }
-);
+});
+
 export default instance;

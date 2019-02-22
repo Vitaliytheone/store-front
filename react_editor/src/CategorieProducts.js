@@ -132,9 +132,7 @@ class CategorieProducts extends Component {
 		// 	...prevState,
 		// 	data: [ ...prevState.data, newProduct ]
 		// }));
-		console.log(newProduct);
 		const response = await addProduct(newProduct);
-		console.log(response.data);
 		const newData = [ ...this.state.data ];
 		// add new product to array end (server return)
 		if (response.success) {
