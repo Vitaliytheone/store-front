@@ -8,6 +8,7 @@ $configCode = <<< TXT
 UPLOADCARE_PUBLIC_KEY = "{$cdn->getPublicKey()}";
 UPLOADCARE_CLEARABLE = true;
 UPLOADCARE_LOCALE_TRANSLATIONS = {errors: {"fileMaximumSize": "File is too large (limit 5 Mb)"}};
+UPLOADCARE_SYSTEM_DIALOG = true;
 TXT;
 
 
