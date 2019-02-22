@@ -1,6 +1,7 @@
 <?php
 namespace sommerce\helpers;
 
+use common\models\store\Pages;
 use common\models\stores\Stores;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -46,6 +47,21 @@ class AssetsHelper {
         $store = Yii::$app->store->getInstance();
 
         return '/assets/' . $store->getFolder();
+    }
+
+    /**
+     * Get assets from pages_files
+     * @pararm string $value
+     * @return string
+     */
+    public static function getAssets($value)
+    {
+        /**
+         * @var $store Stores
+         */
+        $store = Yii::$app->store->getInstance();
+
+        Pages::find();
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
+
 namespace sommerce\controllers;
+
 use common\models\store\Pages;
 use yii\web\NotFoundHttpException;
 use Yii;
@@ -13,15 +15,14 @@ class PageController extends CustomController
      * Render page by url
      * @param string $url
      * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionIndex($url)
     {
         $page = $this->_findPage($url);
 
-        $content = $this->renderContentPartial($page->twig, [
-            'site' => 100,
-            'site2' => 100,
-        ]);
+        $content = $this->renderContent($page->twig);
 
         return $content;
     }
@@ -30,6 +31,8 @@ class PageController extends CustomController
      * Render page styles by url
      * @param string $url
      * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
      */
     public function actionStyles($url)
     {

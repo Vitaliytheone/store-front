@@ -3,6 +3,7 @@ namespace sommerce\controllers;
 
 use common\models\panels\Params;
 use common\models\panels\SslValidation;
+use common\models\store\Pages;
 use sommerce\models\search\BlocksSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -17,12 +18,24 @@ class SiteController extends CustomController
     /**
      * Error action
      * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionError()
     {
         $this->view->title = Yii::t('app', '404.title');
 
-        return $this->renderPartialCustom('404.twig');
+//        return $this->renderPartialCustom('404.twig'); // todo del
+
+        $page = Pages::find()->active()->andWhere([
+            'url' => '404',
+        ])->one();
+
+        if (!$page) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->renderContentPartial($page->twig, ['title' => 1234, 'code' => 404]);
     }
 
     /**
