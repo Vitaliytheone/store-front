@@ -38,14 +38,20 @@ class CustomersCountersBehavior extends Behavior
     public function afterInsert($event)
     {
         $count = $this->getCounter();
+        $customerId = $this->getCustomerId();
+        $column = $this->getColumnName();
+
+        if (!isset($column)) {
+            throw new Exception('column does not exist');
+        }
 
         if (!isset($count)) {
             $count = new CustomersCounters();
-            $count->customer_id = $this->customerId;
-            $count->{$this->column} = 0;
+            $count->customer_id = $customerId;
+            $count->$column = 0;
         }
 
-        $count->{$this->column} += 1;
+        $count->$column += 1;
         if (!$count->save(false)) {
             throw new Exception(ActiveForm::firstError($count));
         }
@@ -70,9 +76,39 @@ class CustomersCountersBehavior extends Behavior
 
     /**
      * @return CustomersCounters|null
+     * @throws Exception
      */
     private function getCounter(): ?CustomersCounters
     {
-        return CustomersCounters::findOne(['customer_id' => $this->customerId]);
+        $customerId = $this->getCustomerId();
+        if (!isset($customerId)) {
+            throw new Exception('customer_id does not exist');
+        }
+
+        return CustomersCounters::findOne(['customer_id' => $customerId]);
+    }
+
+    /**
+     * @return int|null
+     */
+    private function getCustomerId(): ?int
+    {
+        if ($this->customerId instanceof \Closure || (is_array($this->customerId) && is_callable($this->customerId))) {
+            return call_user_func($this->customerId);
+        }
+
+        return $this->customerId;
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getColumnName(): ?string
+    {
+        if ($this->column instanceof \Closure || (is_array($this->column) && is_callable($this->column))) {
+            return call_user_func($this->column);
+        }
+
+        return $this->column;
     }
 }

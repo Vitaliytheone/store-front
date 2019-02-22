@@ -511,8 +511,12 @@ class Project extends ActiveRecord implements ProjectInterface
             ],
             [
                 'class' => CustomersCountersBehavior::class,
-                'column' => (bool)$this->child_panel ? 'child_panels' : 'panels',
-                'customerId' => $this->cid,
+                'column' => function() {
+                    return (bool)$this->child_panel ? 'child_panels' : 'panels';
+                },
+                'customerId' => function() {
+                    return $this->cid;
+                },
             ],
         ];
     }

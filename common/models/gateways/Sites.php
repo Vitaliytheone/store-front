@@ -125,7 +125,9 @@ class Sites extends ActiveRecord implements ProjectInterface
             [
                 'class' => CustomersCountersBehavior::class,
                 'column' => 'gateways',
-                'customerId' => $this->customer_id,
+                'customerId' => function() {
+                    return $this->customer_id;
+                },
             ],
         ]);
     }
