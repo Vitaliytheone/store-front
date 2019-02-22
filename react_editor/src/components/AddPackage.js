@@ -82,8 +82,8 @@ class AddPackage extends React.PureComponent {
 AddPackage.propTypes = {
 	initialValues: PropTypes.shape({
 		name: PropTypes.string,
-		price: PropTypes.number,
-		quantity: PropTypes.number,
+		// price: PropTypes.number,
+		// quantity: PropTypes.number,
 		overflow: PropTypes.number,
 		availability: PropTypes.string,
 		mode: PropTypes.string
@@ -93,10 +93,10 @@ AddPackage.propTypes = {
 AddPackage.defaultProps = {
 	initialValues: {
 		name: '',
-		price: 0,
-		quantity: 0,
+		price: '',
+		quantity: '',
 		overflow: 0,
-		best: '2',
+		best: '0',
 		link_type: '0',
 		visibility: '1',
 		mode: '1',

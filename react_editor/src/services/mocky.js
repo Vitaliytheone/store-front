@@ -3,6 +3,13 @@ import nanoid from 'nanoid';
 
 const point = { ...window.appConfig.api_endpoints };
 
+
+export function addTest() {
+	return axiosInstance.get(
+		"http://1327-products.sommerce.team/admin/products/301-test?key=3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd"
+	);
+}
+
 export function addListing() {
 	return axiosInstance.get(
 		point.add_listing + `key=3!b8bc0)a(a3ff470fc$f1b)89b0*f*4c535!(7f3b21e44@4f9a6dffc(bc*5fd`

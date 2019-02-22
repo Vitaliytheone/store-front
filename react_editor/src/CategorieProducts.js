@@ -14,10 +14,12 @@ import {
 	addListing,
 	get_update_package,
 	get_update_product,
-	get_providers_services
+	get_providers_services,
+	addTest
 } from './services/url';
 import { sortBy, pick } from 'lodash';
 import ModalExample from './testmodal';
+import Axios from 'axios';
 
 class CategorieProducts extends Component {
 	state = {
@@ -204,7 +206,6 @@ class CategorieProducts extends Component {
 	getProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
 		const response = await get_update_product(getProduct);
-		console.log(response.data);
 		this.setState({
 			response: { ...this.state.response, product: response.data }
 		});
@@ -386,6 +387,7 @@ class CategorieProducts extends Component {
 							products={data}
 						/>
 						{/* <ModalExample /> */}
+						{/* <button onClick={() => addTest()}></button> */}
 						<Row>
 							<Col xs="12">
 								<div className="sommerce_dragtable">

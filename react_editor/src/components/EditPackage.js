@@ -8,7 +8,8 @@ import { scrollModalTop } from '../helpers/scrolling';
 
 class EditPackage extends React.PureComponent {
 	state = {
-		modalIsOpen: false
+		modalIsOpen: false,
+		isFetched: false
 	};
 
 	getPackage() {
@@ -36,8 +37,11 @@ class EditPackage extends React.PureComponent {
 		}
 	};
 
-	componentDidMount(...params) {
-		this.props.getPackage(...params);
+	async componentDidMount(...params) {
+		await this.props.getPackage(...params);
+		this.setState({
+			isFetched: true
+		})
 	}
 
 	render() {
@@ -63,6 +67,7 @@ class EditPackage extends React.PureComponent {
 					keyboard={true}
 					toggle={this.toggle}
 				>
+					{this.state.isFetched ? (
 					<Formik onSubmit={this.handleSubmit} enableReinitialize={true} initialValues={response.package}>
 						{({ setFieldValue, status, values }) => (
 							<Form>
@@ -86,6 +91,7 @@ class EditPackage extends React.PureComponent {
 							</Form>
 						)}
 					</Formik>
+					) : (null)}
 				</Modal>
 			</React.Fragment>
 		);

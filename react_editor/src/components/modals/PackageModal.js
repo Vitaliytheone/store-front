@@ -123,6 +123,7 @@ class PackageModal extends React.PureComponent {
 						<option value="1">Auto</option>
 					</Field>
 				</FormGroup>
+				<hr />
 				{values.mode == 1 ? (
 					<FormGroup>
 						<Field
@@ -136,7 +137,7 @@ class PackageModal extends React.PureComponent {
 						/>
 					</FormGroup>
 				) : null}
-				{values.mode == 1 ? services.errorService ? (
+				{values.provider_id !== 'none' || values.mode == 1 ? services.errorService ? (
 					<span className="m--font-danger">{services.messageService}</span>
 				) : (
 					<FormGroup>
