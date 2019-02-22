@@ -5,14 +5,11 @@ use sommerce\modules\admin\components\Url;
 use yii\helpers\ArrayHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\widgets\CustomLinkPager;
-use sommerce\assets\OrdersAsset;
 use common\models\store\Suborders;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider yii\data\ActiveDataProvider */
 /* @var $ordersSearchModel sommerce\modules\admin\models\search\OrdersSearch */
-
-OrdersAsset::register($this);
 
 $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
     Suborders::STATUS_AWAITING => [
