@@ -187,10 +187,8 @@ class CategorieProducts extends Component {
 				provider_service: null
 			}
 		}
-		console.log(newPackage);
 		const newData = [ ...this.state.data ];
-		const response = await addPackage(newPackage);
-		console.log(response);	
+		const response = await addPackage(newPackage);	
 		if (response.success) {
 			newData[productIndex].packages[newPackageIndex] = response.data;
 			this.setState({
@@ -329,6 +327,7 @@ class CategorieProducts extends Component {
 		}
 		const PackageId = editedPackage[productIndex].packages[packageIndex].id;
 		const response = await updatePackage(PackageId, editedPackage[productIndex].packages[packageIndex]);
+		console.log(response);
 		if (response.success) {
 			editedPackage[productIndex].packages[packageIndex] = response.data;
 			this.setState({
@@ -384,7 +383,6 @@ class CategorieProducts extends Component {
 							isSubmitting={isSubmitting}
 							products={data}
 						/>
-						{/* <ModalExample /> */}
 						{/* <button onClick={() => addTest()}></button> */}
 						<Row>
 							<Col xs="12">

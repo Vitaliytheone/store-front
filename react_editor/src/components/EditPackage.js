@@ -38,21 +38,23 @@ class EditPackage extends React.PureComponent {
 	};
 
 	async componentDidMount(...params) {
+	  if(this.state.modalIsOpen) {
 		await this.props.getPackage(...params);
-		this.setState({
+		this.state({
 			isFetched: true
 		})
+	  }
 	}
 
 	render() {
 		const { response, providers, choseProviders } = this.props;
+		console.log(this.state.isFetched);
 		return (
 			<React.Fragment>
 				<Button
-					onClick={() => {
-						this.getPackage();
-						this.props.getPackage();
-					}}
+					onClick={() => 
+						this.getPackage()
+					}
 					color="primary"
 					size="sm"
 					className="m-btn--pill sommerce_dragtable__action m-btn--air"
@@ -67,7 +69,7 @@ class EditPackage extends React.PureComponent {
 					keyboard={true}
 					toggle={this.toggle}
 				>
-					{this.state.isFetched ? (
+				{this.state.isFetched ? ( 
 					<Formik onSubmit={this.handleSubmit} enableReinitialize={true} initialValues={response.package}>
 						{({ setFieldValue, status, values }) => (
 							<Form>
@@ -89,9 +91,9 @@ class EditPackage extends React.PureComponent {
 									</Button>
 								</ModalFooter>
 							</Form>
-						)}
+				)}
 					</Formik>
-					) : (null)}
+						) : null}
 				</Modal>
 			</React.Fragment>
 		);
