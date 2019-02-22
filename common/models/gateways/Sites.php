@@ -3,6 +3,7 @@
 namespace common\models\gateways;
 
 
+use common\components\behaviors\CustomersCountersBehavior;
 use common\helpers\DbHelper;
 use common\helpers\DnsHelper;
 use common\helpers\NginxHelper;
@@ -121,6 +122,11 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         return ArrayHelper::merge(parent::behaviors(), [
             'timestamp' => TimestampBehavior::class,
+            [
+                'class' => CustomersCountersBehavior::class,
+                'column' => 'gateways',
+                'customerId' => $this->customer_id,
+            ],
         ]);
     }
 

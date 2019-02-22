@@ -3,7 +3,9 @@ namespace console\controllers\my;
 
 use common\components\letsencrypt\AcmeInstaller;
 use common\helpers\PaymentHelper;
+use common\models\gateways\Sites;
 use common\models\panels\Customers;
+use common\models\panels\CustomersCounters;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -18,6 +20,7 @@ use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
 use common\models\panels\SuperAdmin;
 use common\models\panels\Tickets;
+use common\models\stores\Stores;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;
 use common\components\dns\Dns;
@@ -957,6 +960,50 @@ class SystemController extends CustomController
                 }
 
                 $this->stderr('Updated staff "tool" rule  [Staff ID: ' . $staff->id . ']' . "\n", Console::FG_GREEN);
+            }
+        }
+    }
+
+    /**
+     * Set customers counters
+     */
+    public function actionSetCustomersCounters()
+    {
+        $customers = (new Query())
+            ->select([
+                'customers.id as id',
+                'COUNT(DISTINCT stores.id) AS countStores',
+                'COUNT(DISTINCT project.id) AS countProjects',
+                'COUNT(DISTINCT child_project.id) AS countChild',
+                'COUNT(DISTINCT domains.id) AS countDomains',
+                'COUNT(DISTINCT ssl_cert.id) AS countSslCerts',
+                'COUNT(DISTINCT sites.id) AS countGateways',
+            ])
+            ->from('customers')
+            ->leftJoin(['stores' => Stores::tableName()], 'stores.customer_id = customers.id')
+            ->leftJoin(['sites' => Sites::tableName()], 'sites.customer_id = customers.id')
+            ->leftJoin('project', 'project.cid = customers.id AND project.child_panel = :projectChildPanel', [':projectChildPanel' => 0])
+            ->leftJoin('project AS child_project', 'child_project.cid = customers.id AND child_project.child_panel = :childPanel', [':childPanel' => 1])
+            ->leftJoin('domains', 'domains.customer_id = customers.id')
+            ->leftJoin('ssl_cert', 'ssl_cert.cid = customers.id')
+            ->orderBy(['customers.id' => SORT_DESC])
+            ->groupBy('customers.id')
+            ->all();
+
+        foreach ($customers as $customer) {
+            $counter = new CustomersCounters();
+            $counter->customer_id = $customer['id'];
+            $counter->stores = $customer['countStores'];
+            $counter->panels = $customer['countProjects'];
+            $counter->child_panels = $customer['countChild'];
+            $counter->domains = $customer['countDomains'];
+            $counter->ssl_certs = $customer['countSslCerts'];
+            $counter->gateways = $customer['countGateways'];
+
+            if (!$counter->save(false)) {
+                $this->stderr("Counter save error: customer_id: {$customer['id']}\n", Console::FG_RED);
+            } else {
+                $this->stderr("Counter saved: customer_id: {$customer['id']}\n", Console::FG_GREEN);
             }
         }
     }

@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\components\behaviors\CustomersCountersBehavior;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
@@ -507,6 +508,11 @@ class Project extends ActiveRecord implements ProjectInterface
                 'value' => function() {
                     return time();
                 },
+            ],
+            [
+                'class' => CustomersCountersBehavior::class,
+                'column' => (bool)$this->child_panel ? 'child_panels' : 'panels',
+                'customerId' => $this->cid,
             ],
         ];
     }

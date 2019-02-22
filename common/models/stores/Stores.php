@@ -2,6 +2,7 @@
 
 namespace common\models\stores;
 
+use common\components\behaviors\CustomersCountersBehavior;
 use common\helpers\DbHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
@@ -256,6 +257,11 @@ class Stores extends ActiveRecord implements ProjectInterface
                 'value' => function() {
                     return time();
                 },
+            ],
+            [
+                'class' => CustomersCountersBehavior::class,
+                'column' => 'stores',
+                'customerId' => $this->customer_id,
             ],
         ];
     }

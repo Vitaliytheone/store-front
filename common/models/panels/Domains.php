@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\components\behaviors\CustomersCountersBehavior;
 use common\components\traits\UnixTimeFormatTrait;
 use my\mail\mailers\CreatedDomain;
 use my\helpers\DomainsHelper;
@@ -123,6 +124,11 @@ class Domains extends ActiveRecord
                 'value' => function() {
                     return time();
                 },
+            ],
+            [
+                'class' => CustomersCountersBehavior::class,
+                'column' => 'domains',
+                'customerId' => $this->customer_id,
             ],
         ];
     }
