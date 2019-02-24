@@ -127,11 +127,6 @@ class CategorieProducts extends Component {
 			url: values.url,
 			packages: []
 		};
-		// const requestProduct = omit(newProduct, [ 'position', 'packages' ]);
-		// this.setState((prevState) => ({
-		// 	...prevState,
-		// 	data: [ ...prevState.data, newProduct ]
-		// }));
 		const response = await addProduct(newProduct);
 		const newData = [ ...this.state.data ];
 		// add new product to array end (server return)
@@ -151,11 +146,11 @@ class CategorieProducts extends Component {
 			response: {
 				...this.state.response,
 				services: {
-					providerServices: [{ service: 'none', name: 'Chose provider service' }] 
+					providerServices: [ { service: 'none', name: 'Chose provider service' } ]
 				}
 			}
-		})
-	}
+		});
+	};
 
 	addPackage = (productIndex) => async (values, actions) => {
 		//let packages position
@@ -181,14 +176,14 @@ class CategorieProducts extends Component {
 				provider_service: null
 			};
 		}
-		if(newPackage.provider_service == 'none') {
+		if (newPackage.provider_service == 'none') {
 			newPackage = {
 				...newPackage,
 				provider_service: null
-			}
+			};
 		}
 		const newData = [ ...this.state.data ];
-		const response = await addPackage(newPackage);	
+		const response = await addPackage(newPackage);
 		if (response.success) {
 			newData[productIndex].packages[newPackageIndex] = response.data;
 			this.setState({
@@ -210,30 +205,34 @@ class CategorieProducts extends Component {
 	getPackage = (productIndex) => (packageIndex) => async () => {
 		const getPackageId = this.state.data[productIndex].packages[packageIndex].id;
 		const response = await get_update_package(getPackageId);
+		let newState = null;
 		if (response.data.provider_id == null) {
 			response.data.provider_id = 'none';
-			this.setState({
-				response: {
-					...this.state.response,
-					package: response.data,
-					services: {
-						providerServices: [ { service: 'none', name: 'Chose provider service' } ]
-					}
+			newState = {
+				...this.state.response,
+				package: response.data,
+				services: {
+					providerServices: [ { service: 'none', name: 'Chose provider service' } ]
 				}
+			};
+			this.setState({
+				response: newState
 			});
 		} else {
 			const responseServices = await get_providers_services(response.data.provider_id);
 			const newServices = [ { service: 'none', name: 'Chose provider service' }, ...responseServices.data ];
-			this.setState({
-				response: {
-					...this.state.response,
-					package: response.data,
-					services: {
-						providerServices: newServices
-					}
+			newState = {
+				...this.state.response,
+				package: response.data,
+				services: {
+					providerServices: newServices
 				}
+			};
+			this.setState({
+				response: newState
 			});
 		}
+		return newState;
 	};
 
 	choseProviders = async (provider_id) => {
@@ -312,13 +311,16 @@ class CategorieProducts extends Component {
 			provider_service: values.provider_service
 		};
 		delete editedPackage[productIndex].packages[packageIndex].position;
-		if (editedPackage[productIndex].packages[packageIndex].mode == 0 || editedPackage[productIndex].packages[packageIndex].provider_id == 'none' ) {
-			editedPackage[productIndex].packages[packageIndex]= {
+		if (
+			editedPackage[productIndex].packages[packageIndex].mode == 0 ||
+			editedPackage[productIndex].packages[packageIndex].provider_id == 'none'
+		) {
+			editedPackage[productIndex].packages[packageIndex] = {
 				...editedPackage[productIndex].packages[packageIndex],
-					provider_id: null,
-					provider_service: null
-      };
-	}
+				provider_id: null,
+				provider_service: null
+			};
+		}
 		if (editedPackage[productIndex].packages[packageIndex].provider_service == 'none') {
 			editedPackage[productIndex].packages[packageIndex] = {
 				...editedPackage[productIndex].packages[packageIndex],
