@@ -16,23 +16,13 @@ class EditPackageModal extends React.Component {
 
 	async componentDidMount() {
 		const response = await this.props.getPackage();
-		await new Promise((res) => setTimeout(res, 1000));
+		// await new Promise((res) => setTimeout(res, 10000));
 		console.log(response);
 		this.setState({
 			isFetched: true,
 			response
 		});
 	}
-
-	//Loader container styles
-	//   position: absolute;
-	//   height: 100%;
-	// width: 100 %;
-	// background: rgba(55, 55, 55, 0.1);
-	// z - index: 10000;
-	// display: flex;
-	// justify - content: center;
-	// align - items: center;
 
 	render() {
 		const { providers, choseProviders } = this.props;
@@ -45,12 +35,12 @@ class EditPackageModal extends React.Component {
 				keyboard={true}
 				toggle={this.props.toggle}
 			>
-				{!this.state.isFetched && <div>Loading...</div>}
+				{!this.state.isFetched && <div className="loader" />}
 				<Formik onSubmit={this.handleSubmit} enableReinitialize={true} initialValues={response.package}>
 					{({ setFieldValue, status, values }) => (
 						<Form>
 							<ModalHeader toggle={this.props.toggle}>
-								{/* Edit package (ID: {response.package.id}) */}
+								Edit package (ID: {response.package.id})
 							</ModalHeader>
 							<PackageModal
 								setFieldValue={setFieldValue}

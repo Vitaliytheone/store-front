@@ -215,9 +215,9 @@ class CategorieProducts extends Component {
 					providerServices: [ { service: 'none', name: 'Chose provider service' } ]
 				}
 			};
-			this.setState({
-				response: newState
-			});
+			// this.setState({
+			// 	response: newState
+			// });
 		} else {
 			const responseServices = await get_providers_services(response.data.provider_id);
 			const newServices = [ { service: 'none', name: 'Chose provider service' }, ...responseServices.data ];
@@ -228,9 +228,9 @@ class CategorieProducts extends Component {
 					providerServices: newServices
 				}
 			};
-			this.setState({
-				response: newState
-			});
+			// this.setState({
+			// 	response: newState
+			// });
 		}
 		return newState;
 	};
