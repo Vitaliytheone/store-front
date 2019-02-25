@@ -39,7 +39,6 @@ class SettingsController extends CustomController
     use LanguageTrait;
     use NotificationsTrait;
     use ThemesCustomizerTrait;
-    use IntegrationsTrait;
 
     public function behaviors()
     {
@@ -48,7 +47,9 @@ class SettingsController extends CustomController
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => [
-                    'theme-get-style', 'theme-get-data', 'theme-update-style',
+                    'theme-get-style',
+                    'theme-get-data',
+                    'theme-update-style',
                     'integrations-toggle-active',
                 ]
             ],
