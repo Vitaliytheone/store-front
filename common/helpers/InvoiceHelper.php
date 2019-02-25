@@ -476,13 +476,7 @@ class InvoiceHelper
                 throw new CronException('Cannot create order!');
             }
 
-            /**
-             * 25.02.2019 от Александра
-             * надо времено закоментировать отправку ssl сертфиката letsencrypt и prolong letsencrypt в ddos защиту https://control.ddosa.net
-             * но при этом оставить отправку сертифката в нашу защиту
-             */
             // Reset Nginx config HTTPS -> HTTP
-            /*
             if (!OrderSslHelper::addDdos(SslCert::findOne($ssl['id']), [
                 'isSSL' => false,
                 'site' => $order->domain,
@@ -491,7 +485,6 @@ class InvoiceHelper
             ])) {
                 throw new CronException('Cannot reset HTTPS to HTTP at DDoS-guard!');
             }
-            */
         }
 
         SslCert::updateAll(['status' => SslCert::STATUS_EXPIRED], ['id' => array_column($sslCerts, 'id')]);

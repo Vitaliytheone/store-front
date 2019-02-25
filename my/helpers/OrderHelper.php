@@ -184,15 +184,19 @@ class OrderHelper {
 
             $crtKey = $crt . "\n" . $ca;
 
-
+            /**
+             * 25.02.2019 от Александра
+             * надо времено закоментировать отправку ssl сертфиката letsencrypt и prolong letsencrypt в ddos защиту https://control.ddosa.net
+             * но при этом оставить отправку сертифката в нашу защиту
+             */
             // $crt + $ca code
-            if (!(OrderSslHelper::addDdos($ssl, [
+            /*if (!(OrderSslHelper::addDdos($ssl, [
                 'site' => $project->domain,
                 'crt' => $crtKey,
                 'key' => $ssl->csr_key,
             ]))) {
                 $status = SslCert::STATUS_ERROR;
-            }
+            }*/
 
             ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SSL, $ssl->id, [
                 'domain' => $project->domain,
@@ -911,12 +915,6 @@ class OrderHelper {
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
 
-        /**
-         * 25.02.2019 от Александра
-         * надо времено закоментировать отправку ssl сертфиката letsencrypt и prolong letsencrypt в ddos защиту https://control.ddosa.net
-         * но при этом оставить отправку сертифката в нашу защиту
-         */
-        /*
         if (!OrderSslHelper::addDdos($ssl, [
             'site' => $order->domain,
             'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
@@ -924,7 +922,7 @@ class OrderHelper {
         ])) {
             throw new Exception('Cannot add SSL to DDoS!');
         }
-        */
+
         if (!OrderSslHelper::addConfig($ssl, [
             'domain' => $order->domain,
             'crt_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
@@ -1035,19 +1033,13 @@ class OrderHelper {
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
 
-        /**
-         * 25.02.2019 от Александра
-         * надо времено закоментировать отправку ssl сертфиката letsencrypt и prolong letsencrypt в ddos защиту https://control.ddosa.net
-         * но при этом оставить отправку сертифката в нашу защиту
-         */
-        /*
         if (!OrderSslHelper::addDdos($ssl, [
             'site' => $order->domain,
             'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
             'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
         ])) {
             throw new Exception('Cannot add SSL to DDoS!');
-        }*/
+        }
 
         if (!OrderSslHelper::addConfig($ssl, [
             'domain' => $order->domain,
