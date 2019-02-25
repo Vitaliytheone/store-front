@@ -235,6 +235,9 @@ class ProjectAdmin extends ActiveRecord
     {
         $rules = $this->getRules();
 
+        // 25.02.2019 Александр http://prntscr.com/mpi176
+        //надо пока закоментировать это, сделайте это срочно
+        unset($rules['tools']);
         if (empty($rules)) {
             return false;
         }
