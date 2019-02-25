@@ -449,6 +449,10 @@ class Customers extends ActiveRecord
             break;
 
             case 'domains':
+                if (!Domains::find()->where(['customer_id' => $this->id])->exists()) {
+                    return false;
+                }
+
                 return $this->buy_domain;
             break;
 
