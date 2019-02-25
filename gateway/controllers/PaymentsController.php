@@ -9,6 +9,7 @@ use payments\Payment;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * Payments controller
@@ -43,6 +44,7 @@ class PaymentsController extends CommonController
         $model = new CheckoutForm();
         $model->setGateway(Yii::$app->gateway->getInstance());
         if ($model->load(Yii::$app->request->post(), '') && $model->validate()) {
+
             if (!$model->validateUserDetails()) {
                 foreach ($model->getScripts() as $src) {
                     $this->view->registerJsFile($src);
@@ -52,7 +54,12 @@ class PaymentsController extends CommonController
                     'fieldOptions' => $model->getPaymentsFields(),
                     'options' => $model->getJsOptions()
                 ]);
+
                 return $this->render('user_checkout', $model->getCheckoutFormData());
+            }
+
+            if (!$model->referrerDomainValidate()) {
+                return $this->renderPartial('checkout.php', $model->getCheckoutFormData());
             }
 
             if ($model->save()) {
@@ -113,8 +120,42 @@ class PaymentsController extends CommonController
         return '';
     }
 
+    /**
+     * Cancel payment
+     * @param integer $id
+     * @return string|\yii\web\Response
+     */
+    public function actionReturn($id)
+    {
+        $payment = $this->_findModel($id);
+
+        $redirect = "/";
+
+        if ($payment->return_url) {
+            $redirect = $payment->return_url;
+        }
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @return string
+     */
     public function getViewPath()
     {
         return Yii::getAlias('@gateway/views/site');
+    }
+
+    /**
+     * @param integer $id
+     * @return Payments
+     */
+    protected function _findModel($id)
+    {
+        if (!($model = Payments::findOne($id))) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
     }
 }

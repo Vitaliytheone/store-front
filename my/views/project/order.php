@@ -3,6 +3,7 @@
     /* @var $form yii\bootstrap\ActiveForm */
     /* @var $model \my\models\forms\OrderPanelForm */
     /* @var $note string */
+    /* @var $subdomainNote string */
     /* @var $user \common\models\panels\Customers */
 
     use my\components\ActiveForm;
@@ -45,13 +46,16 @@
                             </div>
                         <?php endforeach; ?>
 
-                    <?= $form->errorSummary($model); ?>
+                    <?= $form->errorSummary($model, [
+                        'id' => 'orderDomainError'
+                    ]); ?>
 
-                <div class="<?= (OrderPanelForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() ? '' : 'hidden') ?>" id="orderBlock">
+                <div class="<?= (OrderPanelForm::HAS_DOMAIN == $model->has_domain || $model->hasErrors() || OrderPanelForm::HAS_SUBDOMAIN == $model->has_domain ? '' : 'hidden') ?>" id="orderBlock">
                     <?= $this->render('layouts/_order_panel_block', [
                         'form' => $form,
                         'model' => $model,
-                        'note' => $note
+                        'note' => $note,
+                        'subdomainNote' => $subdomainNote,
                     ])?>
                 </div>
 
@@ -61,11 +65,6 @@
                         'model' => $model
                     ])?>
                 </div>
-
-                <?= $this->render('layouts/_order_domain_modal', [
-                        'form' => $form,
-                        'model' => $model
-                ])?>
 
             <?php ActiveForm::end(); ?>
         </div>

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\controllers;
 
 use common\components\ActiveForm;
@@ -11,13 +12,13 @@ use sommerce\models\forms\OrderForm;
 use sommerce\models\search\CartSearch;
 use Yii;
 use yii\bootstrap\Html;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
 use yii\filters\AjaxFilter;
 use \yii\filters\VerbFilter;
-
 
 /**
  * Cart controller
@@ -26,7 +27,7 @@ class CartController extends CustomController
 {
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(), [
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => ['validate']
@@ -49,7 +50,7 @@ class CartController extends CustomController
                 'class' => DisableCsrfToken::class,
                 'only' => ['index'],
             ],
-        ];
+        ]);
     }
 
     public function beforeAction($action)
@@ -64,8 +65,8 @@ class CartController extends CustomController
 
     /**
      * Displays homepage.
-     *
-     * @return string
+     * @return string|Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -158,7 +159,10 @@ class CartController extends CustomController
     /**
      * Delete cart item
      * @param string|integer $key
-     * @return string
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($key)
     {
@@ -174,6 +178,8 @@ class CartController extends CustomController
      * Displays add to cart page.
      * @param integer $id
      * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionOrder($id)
     {

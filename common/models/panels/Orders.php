@@ -369,7 +369,7 @@ class Orders extends ActiveRecord
      * Get domain
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return DomainsHelper::idnToUtf8($this->domain);
     }

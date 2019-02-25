@@ -36,6 +36,16 @@
                 </span>
             </a>
         </li>
+        <?php /*
+        <li class="m-nav__item <?=('integrations' == $active ? 'm-nav__item--active' : '') ?>">
+            <a href="<?= Url::toRoute('/settings/integrations')?>" class="m-nav__link">
+                <i class="m-nav__link-icon flaticon-app"></i>
+                <span class="m-nav__link-text">
+                    <?= Yii::t('admin', 'settings.left_menu_integrations') ?>
+                </span>
+            </a>
+        </li>
+ */ ?>
         <li class="m-nav__item <?=('navigation' == $active ? 'm-nav__item--active' : '') ?>">
             <a href="<?= Url::toRoute('/settings/navigation')?>" class="m-nav__link">
                 <i class="m-nav__link-icon flaticon-list-1"></i>

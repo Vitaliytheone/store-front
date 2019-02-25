@@ -69,8 +69,29 @@ return [
     ],
 
     'ahnames.gateway.ns' => [
-        'ns_1' => 'ns1.perfectdns.com',
-        'ns_2' => 'ns2.perfectdns.com',
+        'ns_1' => 'ns1.managerdns.com',
+        'ns_2' => 'ns2.managerdns.com',
+        'ns_3' => null,
+        'ns_4' => null,
+    ],
+
+    'namesilo.my.ns' => [
+        'ns1' => 'ns1.perfectdns.com',
+        'ns2' => 'ns2.perfectdns.com',
+        'ns3' => 'ns3.perfectdns.com',
+        'ns4' => null,
+    ],
+
+    'namesilo.sommerce.ns' => [
+        'ns_1' => 'ns1.sommerce.com',
+        'ns_2' => 'ns2.sommerce.com',
+        'ns_3' => null,
+        'ns_4' => null,
+    ],
+
+    'namesilo.gateway.ns' => [
+        'ns_1' => 'ns1.managerdns.com',
+        'ns_2' => 'ns2.managerdns.com',
         'ns_3' => null,
         'ns_4' => null,
     ],
@@ -150,7 +171,10 @@ return [
             'ip' => $serverIp,
         ],
         'CNAME' => [
-            'target' => 'perfectpanel.com',
+            'target' => [
+                'perfectpanel.com',
+                'managerdns.com',
+            ],
         ],
     ],
 

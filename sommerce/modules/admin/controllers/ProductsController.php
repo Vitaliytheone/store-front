@@ -22,7 +22,6 @@ use common\helpers\ApiProviders;
 use sommerce\modules\admin\models\forms\MoveProductForm;
 use sommerce\modules\admin\models\search\ProductsSearch;
 
-
 /**
  * Class ProductsController
  * @package sommerce\modules\admin\controllers

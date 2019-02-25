@@ -1,8 +1,10 @@
 <?php
+
 namespace superadmin\models\search;
 
 use common\models\panels\AdditionalServices;
 use common\models\panels\Project;
+use my\helpers\DomainsHelper;
 use my\helpers\Url;
 use Yii;
 use yii\data\Sort;
@@ -240,7 +242,7 @@ class ProvidersSearch
                 'form_data' => $provider,
                 'id' => $provider['id'],
                 'provider_id' => $provider['provider_id'],
-                'name' => $provider['name'],
+                'name' => DomainsHelper::idnToUtf8($provider['name']),
                 'count' => $provider['service_count'],
                 'projects' => array_values($projects),
                 'in_use' => $provider['service_inuse_count'],

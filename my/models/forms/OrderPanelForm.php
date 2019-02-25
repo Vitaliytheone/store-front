@@ -9,7 +9,6 @@ use common\models\panels\MyActivityLog;
 use common\models\panels\Orders;
 use common\models\panels\ProjectAdmin;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderPanelForm
@@ -46,7 +45,7 @@ class OrderPanelForm extends DomainForm
             [['domain', 'currency', 'username', 'password', 'password_confirm'], 'required', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['currency'], 'in', 'range' => array_keys($this->getCurrencies()), 'message' => Yii::t('app', 'error.panel.bad_currency')],
             [['domain'], OrderDomainValidator::class, 'panel' => true, 'child_panel' => false],
-            ['password', 'compare', 'compareAttribute' => 'password_confirm'],
+            ['password', 'compare', 'compareAttribute' => 'password_confirm', 'except' => static::SCENARIO_CREATE_DOMAIN],
             [['username'], 'safe'],
         ]);
     }
@@ -125,7 +124,8 @@ class OrderPanelForm extends DomainForm
             'password' => ProjectAdmin::hashPassword($this->password),
             'domain' => $this->domain,
             'clean_domain' => $this->preparedDomain,
-            'currency' => $this->currency
+            'currency' => $this->currency,
+            'subdomain' => static::HAS_SUBDOMAIN == $this->has_domain ? 1 : 0,
         ]);
 
         if ($model->save()) {
