@@ -34,7 +34,7 @@ const ProductList = SortableContainer(
 					providers={providers}
 					data={data}
 					choseProviders={choseProviders}
-					clearServices={clearServices}
+					clearServices={clearServices}	
 				/>
 			))}
 		</div>

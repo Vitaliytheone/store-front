@@ -14,37 +14,23 @@ import {
 	addListing,
 	get_update_package,
 	get_update_product,
-	get_providers_services,
-	addTest
+	get_providers_services
 } from './services/url';
 import { sortBy, pick } from 'lodash';
-import ModalExample from './testmodal';
-import Axios from 'axios';
+
 
 class CategorieProducts extends Component {
 	state = {
 		loading: true,
 		data: [],
 		providers: [],
-		response: {
-			product: {
-				name: '',
-				visibility: '1',
-				color: '',
-				description: null,
-				properties: [],
-				seo_title: '',
-				seo_description: '',
-				seo_keywords: '',
-				url: ''
-			},
-			package: '',
-			services: {
-				providerServices: [],
-				serviceError: null,
-				messageError: null
-			}
-		}
+		// response: {
+		// 	services: {
+		// 		providerServices: [],
+		// 		serviceError: null,
+		// 		messageError: null
+		// 	}
+		// }
 	};
 
 	async componentDidMount() {
@@ -136,7 +122,6 @@ class CategorieProducts extends Component {
 				data: newData,
 				response: { ...this.state.response, product: response.data }
 			});
-			actions.setSubmitting(false);
 		}
 		return response;
 	};
@@ -189,7 +174,6 @@ class CategorieProducts extends Component {
 			this.setState({
 				data: newData
 			});
-			actions.setSubmitting(false);
 		}
 		return response;
 	};
@@ -197,9 +181,10 @@ class CategorieProducts extends Component {
 	getProduct = (productIndex) => async () => {
 		const getProduct = this.state.data[productIndex].id;
 		const response = await get_update_product(getProduct);
-		this.setState({
+		let newState = {
 			response: { ...this.state.response, product: response.data }
-		});
+		};
+		return newState;
 	};
 
 	getPackage = (productIndex) => (packageIndex) => async () => {
@@ -232,6 +217,7 @@ class CategorieProducts extends Component {
 			// 	response: newState
 			// });
 		}
+		console.log(newState)
 		return newState;
 	};
 
@@ -290,7 +276,6 @@ class CategorieProducts extends Component {
 			this.setState({
 				data: editedProduct
 			});
-			actions.setSubmitting(false);
 		}
 		return response;
 	};
@@ -335,7 +320,6 @@ class CategorieProducts extends Component {
 			this.setState({
 				data: editedPackage
 			});
-			actions.setSubmitting(false);
 		}
 		return response;
 	};

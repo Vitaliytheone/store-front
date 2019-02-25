@@ -27,6 +27,7 @@ class AddPackage extends React.PureComponent {
 		});
 		toast("Package was successfully created!", options);
 	 } catch(error) {
+		   actions.setSubmitting(false);
 		   actions.setStatus([error.success, error.error_message]);
 		   scrollModalTop(this.modal);
 	 }
@@ -50,8 +51,9 @@ class AddPackage extends React.PureComponent {
 					keyboard={true}
 				>
 					<Formik onSubmit={this.handleSubmit} initialValues={this.props.initialValues}>
-						{({ setFieldValue, status, values }) => (
+						{({ setFieldValue, status, values, isSubmitting }) => (
 							<Form>
+								{isSubmitting && <div className="loader" />}
 								<ModalHeader toggle={this.toggle}>Create package</ModalHeader>
 								<PackageModal
 									setFieldValue={setFieldValue}

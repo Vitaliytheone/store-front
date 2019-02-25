@@ -14,7 +14,8 @@ class AddProduct extends React.PureComponent {
   state = {
     confirmModal: false,
     modalIsOpen: false,
-    productId: ""
+    productId: "",
+    productName: ""
   };
 
   closeConfirmModal = () => {
@@ -44,19 +45,23 @@ class AddProduct extends React.PureComponent {
   handleSubmit = async (values, actions) => {
     try {
       const response = await this.props.onSubmit(values, actions);
+      console.log(response);
       this.setState(prevstate => ({
+        productName: response.data.name,
         modalIsOpen: !response.success,
         productId: response.data.id,
         confirmModal: !prevstate.confirmModal
       }));
     } catch (error) {
+    actions.setSubmitting(false)
 		actions.setStatus([error.success, error.error_message]);
 		scrollModalTop(this.modal);
     }
   };
 
   render() {
-    const { isSubmitting, products } = this.props;
+    console.log(this.props);
+    const { products } = this.props;
     return (
       <React.Fragment>
         <Row className="sommerce-products__actions">
@@ -85,8 +90,9 @@ class AddProduct extends React.PureComponent {
             onSubmit={this.handleSubmit}
             initialValues={this.props.initialValues}
           >
-            {({ setFieldValue, values, status }) => (
+            {({ setFieldValue, values, status, isSubmitting }) => (
               <Form>
+                {isSubmitting && <div className="loader" />}
                 <ModalHeader toggle={this.toggle}>Create product</ModalHeader>
                 <ProductModal
                   values={values}
@@ -96,8 +102,8 @@ class AddProduct extends React.PureComponent {
                   status={status}
                 />
                 <ModalFooter className="justify-content-start">
-                  <Button color="primary" type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Loading..." : "Add product"}
+                  <Button color="primary" type="submit">
+                   Add Product 
                   </Button>{" "}
                   <Button color="secondary" onClick={this.toggle}>
                     Cancel
@@ -108,7 +114,7 @@ class AddProduct extends React.PureComponent {
           </Formik>
         </Modal>
         <ConfirmProduct
-          response={this.props.response}
+          productName = {this.state.productName}
           modalIsOpen={this.state.confirmModal}
           toggle={this.closeConfirmModal}
           confirmCreate={this.confirmCreate}

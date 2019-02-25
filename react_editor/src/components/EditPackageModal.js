@@ -2,6 +2,9 @@ import React from 'react';
 import { Formik, Form } from 'formik';
 import { Button, Modal, ModalHeader, ModalFooter } from 'reactstrap';
 import PackageModal from './modals/PackageModal';
+import { toast } from "react-toastify";
+import { options } from "../helpers/toast";
+import { scrollModalTop } from "../helpers/scrolling";
 
 class EditPackageModal extends React.Component {
 	state = {
@@ -9,8 +12,22 @@ class EditPackageModal extends React.Component {
 		response: {
 			package: {},
 			services: {
-				providerServices: []
+				providerServices: [],
+				serviceError: null,
+				messageError: null
 			}
+		}
+	};
+
+ 
+	handleSubmit = async (values, actions) => {
+		try {
+			await this.props.onSubmit(values, actions);
+			this.props.toggle();
+			toast('Package was successfully updated!', options);
+		} catch (error) {
+			actions.setStatus([error.success, error.error_message]);
+			scrollModalTop(this.modal);
 		}
 	};
 
@@ -19,7 +36,7 @@ class EditPackageModal extends React.Component {
 		// await new Promise((res) => setTimeout(res, 10000));
 		console.log(response);
 		this.setState({
-			isFetched: true,
+			isFetching: true,
 			response
 		});
 	}
@@ -35,10 +52,11 @@ class EditPackageModal extends React.Component {
 				keyboard={true}
 				toggle={this.props.toggle}
 			>
-				{!this.state.isFetched && <div className="loader" />}
+				{!this.state.isFetching && <div className="loader" />}
 				<Formik onSubmit={this.handleSubmit} enableReinitialize={true} initialValues={response.package}>
-					{({ setFieldValue, status, values }) => (
+					{({ setFieldValue, status, values, isSubmitting }) => (
 						<Form>
+							{isSubmitting && <div className="loader" />}
 							<ModalHeader toggle={this.props.toggle}>
 								Edit package (ID: {response.package.id})
 							</ModalHeader>

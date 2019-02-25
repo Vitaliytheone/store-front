@@ -320,7 +320,7 @@ class ProductModal extends React.PureComponent {
 								)}
 								<div className="seo-preview__url">
 									http://fastinsta.sommerce.net/
-									<span className="edit-seo__url">{seoUrl}</span>
+									<span className="edit-seo__url">{values.url}</span>
 								</div>
 								<div className="seo-preview__description edit-seo__meta">{values.seo_description}</div>
 							</div>
