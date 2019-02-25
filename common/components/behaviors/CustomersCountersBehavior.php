@@ -117,8 +117,17 @@ class CustomersCountersBehavior extends Behavior
      */
     private function getCurrentCounter(int $customerId)
     {
+        $column = $this->getColumnName();
         $modelName = get_class($this->owner);
         /** @var $modelName ActiveRecord */
-        return $modelName::find()->andWhere([$this->customerId => $customerId])->count();
+        $model = $modelName::find()->andWhere([$this->customerId => $customerId]);
+
+        if ($column === 'panels') {
+            $model->andWhere(['child_panel' => 0]);
+        } elseif ($column === 'child_panels') {
+            $model->andWhere(['child_panel' => 1]);
+        }
+
+        return $model->count();
     }
 }
