@@ -128,9 +128,7 @@ class Domains extends ActiveRecord
             [
                 'class' => CustomersCountersBehavior::class,
                 'column' => 'domains',
-                'customerId' => function() {
-                    return $this->customer_id;
-                },
+                'customerId' => 'customer_id',
             ],
         ];
     }

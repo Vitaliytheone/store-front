@@ -51,7 +51,7 @@ class CustomersCountersBehavior extends Behavior
             $count->$column = 0;
         }
 
-        $count->$column += 1;
+        $count->$column = $this->getCurrentCounter($customerId);
         if (!$count->save(false)) {
             throw new Exception(ActiveForm::firstError($count));
         }
@@ -63,13 +63,14 @@ class CustomersCountersBehavior extends Behavior
      */
     public function afterDelete($event)
     {
-        $count = $this->getCounter();
+        $counter = $this->getCounter();
+        $customerId = $this->getCustomerId();
 
-        if (isset($count)) {
-            $count->{$this->column} -= 1;
+        if (isset($counter)) {
+            $counter->{$this->column} = $this->getCurrentCounter($customerId);
 
-            if (!$count->save(false)) {
-                throw new Exception(ActiveForm::firstError($count));
+            if (!$counter->save(false)) {
+                throw new Exception(ActiveForm::firstError($counter));
             }
         }
     }
@@ -81,23 +82,21 @@ class CustomersCountersBehavior extends Behavior
     private function getCounter(): ?CustomersCounters
     {
         $customerId = $this->getCustomerId();
-        if (!isset($customerId)) {
-            throw new Exception('customer_id does not exist');
-        }
 
         return CustomersCounters::findOne(['customer_id' => $customerId]);
     }
 
     /**
      * @return int|null
+     * @throws Exception
      */
     private function getCustomerId(): ?int
     {
-        if ($this->customerId instanceof \Closure || (is_array($this->customerId) && is_callable($this->customerId))) {
-            return call_user_func($this->customerId);
+        if (!isset($this->customerId)) {
+            throw new Exception('customer_id does not exist');
         }
 
-        return $this->customerId;
+        return $this->owner->{$this->customerId};
     }
 
     /**
@@ -110,5 +109,16 @@ class CustomersCountersBehavior extends Behavior
         }
 
         return $this->column;
+    }
+
+    /**
+     * @param int $customerId
+     * @return int|string
+     */
+    private function getCurrentCounter(int $customerId)
+    {
+        $modelName = get_class($this->owner);
+        /** @var $modelName ActiveRecord */
+        return $modelName::find()->andWhere([$this->customerId => $customerId])->count();
     }
 }

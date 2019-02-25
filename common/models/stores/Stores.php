@@ -261,9 +261,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             [
                 'class' => CustomersCountersBehavior::class,
                 'column' => 'stores',
-                'customerId' => function() {
-                    return $this->customer_id;
-                },
+                'customerId' => 'customer_id',
             ],
         ];
     }

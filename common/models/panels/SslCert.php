@@ -174,9 +174,7 @@ class SslCert extends ActiveRecord
             [
                 'class' => CustomersCountersBehavior::class,
                 'column' => 'ssl_certs',
-                'customerId' => function() {
-                    return $this->cid;
-                },
+                'customerId' => 'cid',
             ],
         ];
     }

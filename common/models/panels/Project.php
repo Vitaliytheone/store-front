@@ -514,9 +514,7 @@ class Project extends ActiveRecord implements ProjectInterface
                 'column' => function() {
                     return (bool)$this->child_panel ? 'child_panels' : 'panels';
                 },
-                'customerId' => function() {
-                    return $this->cid;
-                },
+                'customerId' => 'cid',
             ],
         ];
     }
