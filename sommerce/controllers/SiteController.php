@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\controllers;
 
 use common\models\panels\Params;
@@ -25,8 +26,6 @@ class SiteController extends CustomController
     {
         $this->view->title = Yii::t('app', '404.title');
 
-//        return $this->renderPartialCustom('404.twig'); // todo del
-
         $page = Pages::find()->active()->andWhere([
             'url' => '404',
         ])->one();
@@ -35,7 +34,7 @@ class SiteController extends CustomController
             throw new NotFoundHttpException();
         }
 
-        return $this->renderContentPartial($page->twig, ['title' => 1234, 'code' => 404]);
+        return $this->renderContentPartial($page->twig, ['title' => $this->view->title, 'code' => 404]);
     }
 
     /**

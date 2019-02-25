@@ -33,6 +33,9 @@ return [
     ],
 
     '/<url:[\w*-]+>/css/style.css' => 'page/styles',
+    '/<url:[\w*-]+>/js/scripts.js' => 'page/scripts',
+    '/css/styles.css' => 'page/styles',
+    '/js/scripts.js' => 'page/scripts',
 
     'admin/settings/pages/get-page' => 'admin/settings/get-page',
     'admin/settings/pages/get-pages' => 'admin/settings/get-pages',

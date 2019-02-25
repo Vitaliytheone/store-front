@@ -7,6 +7,7 @@ use common\models\store\Packages;
 use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\store\Products;
+use console\helpers\ConsoleHelper;
 use sommerce\controllers\CommonController;
 use sommerce\modules\admin\models\forms\ImageUploadForm;
 use sommerce\modules\admin\models\forms\SavePackageForm;
@@ -170,6 +171,8 @@ trait PagesTrait {
                 throw new BadRequestHttpException('Cannot save page!');
             }
         }
+
+        ConsoleHelper::execConsoleCommand('system-sommerce/clear-twig-cache');
 
         return ['id' => $form->getPage()->id];
     }

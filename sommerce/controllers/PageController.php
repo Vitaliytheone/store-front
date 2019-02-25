@@ -3,6 +3,7 @@
 namespace sommerce\controllers;
 
 use common\models\store\Pages;
+use sommerce\helpers\PageFilesHelper;
 use yii\web\NotFoundHttpException;
 use Yii;
 
@@ -29,17 +30,32 @@ class PageController extends CustomController
 
     /**
      * Render page styles by url
-     * @param string $url
      * @return string
      * @throws NotFoundHttpException
      * @throws \yii\web\RangeNotSatisfiableHttpException
      */
-    public function actionStyles($url)
+    public function actionStyles()
     {
-        $page = $this->_findPage($url);
+        $files = PageFilesHelper::getFileByName('css', 'styles.css');
 
-        return Yii::$app->response->sendContentAsFile($page->styles, 'style.css', [
+        return Yii::$app->response->sendContentAsFile($files['content'], 'styles.css', [
             'mimeType' => 'text/css;charset=UTF-8',
+            'inline' => true,
+        ]);
+    }
+
+    /**
+     * Render page scripts by url
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function actionScripts()
+    {
+        $files = PageFilesHelper::getFileByName('js', 'scripts.js');
+
+        return Yii::$app->response->sendContentAsFile($files['content'], 'scripts.js', [
+            'mimeType' => 'text/javascript;charset=UTF-8',
             'inline' => true,
         ]);
     }

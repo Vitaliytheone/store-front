@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\helpers;
 
 use common\models\store\PageFiles;
@@ -53,28 +54,16 @@ class AssetsHelper {
     /**
      * Get assets from pages_files
      * @pararm string $value
+     * @param string $value
      * @return string
+     * @throws \yii\web\NotFoundHttpException
      */
     public static function getAssets($value)
     {
-        /**
-         * @var $store Stores
-         */
-//        $store = Yii::$app->store->getInstance();
 
-        $file = '';
-        Yii::debug($value); // todo del
+        $link = PageFilesHelper::generateFileVersionLink($value);
 
-        if (stripos('styles.css', $value) !== false) {
-            Yii::debug('Hi1111'); // todo del
-            $file = PageFiles::find()->where(['file_name' => 'styles.css'])->one()->content;
-        }
-        if (stripos('scripts.js', $value) !== false) {
-            $file = PageFiles::find()->where(['file_name' => 'scripts.js'])->one()->content;
-        }
-
-        Yii::debug($file, 'content'); // todo del
-        return $file;
+        return $link;
     }
 
     /**
@@ -96,7 +85,7 @@ class AssetsHelper {
             $scripts[] =  $scriptFile;
         }
 
-        $scripts[] = AssetsHelper::getFileUrl('/js/frontend.js');
+        $scripts[] = static::getFileUrl('/js/frontend.js');
 
         return $scripts;
     }
