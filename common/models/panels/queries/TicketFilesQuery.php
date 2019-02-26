@@ -3,25 +3,24 @@
 namespace common\models\panels\queries;
 
 /**
- * This is the ActiveQuery class for [[\common\models\panels\TicketMessages]].
+ * This is the ActiveQuery class for [[\common\models\panels\TicketFiles]].
  *
- * @see \common\models\panels\TicketMessages
+ * @see \common\models\panels\TicketFiles
  */
-class TicketMessagesQuery extends \yii\db\ActiveQuery
+class TicketFilesQuery extends \yii\db\ActiveQuery
 {
     public function ticketView($ticketId)
     {
         return $this->andWhere([
-            'ticket_messages.ticket_id' => $ticketId,
-            'is_system' => 0
+            'ticket_id' => $ticketId,
         ])
-            ->joinWith(['customer', 'admin', 'file'])
+            ->joinWith(['customer', 'admin'])
             ->orderBy(['created_at' => SORT_ASC]);
     }
 
     /**
      * @inheritdoc
-     * @return \common\models\panels\TicketMessages[]|array
+     * @return \common\models\panels\TicketFiles[]|array
      */
     public function all($db = null)
     {
@@ -30,7 +29,7 @@ class TicketMessagesQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \common\models\panels\TicketMessages|array|null
+     * @return \common\models\panels\TicketFiles|array|null
      */
     public function one($db = null)
     {
