@@ -22,7 +22,6 @@ class PageFilesHelper {
      */
     public static function getFiles()
     {
-
         if (null === static::$pageFiles) {
             static::$pageFiles = ArrayHelper::index(PageFiles::find()->select([
                 'id',
@@ -51,7 +50,6 @@ class PageFilesHelper {
 
     /**
      * Get files by name
-     * @param string $type
      * @param string $name
      * @return mixed
      * @throws NotFoundHttpException
@@ -68,28 +66,26 @@ class PageFilesHelper {
     }
 
     /**
-     * Get files by name
+     * Generate link with version param
      * @param string $value
      * @return string
      * @throws NotFoundHttpException
      */
     public static function generateFileVersionLink($value)
     {
-        $type = $name = '';
+        $name = '';
 
         if (stripos($value, 'styles.css') !== false) {
-            $type = PageFiles::FILE_TYPE_STYLE;
             $name = 'styles.css';
         }
         if (stripos($value, 'scripts.js') !== false) {
-            $type = PageFiles::FILE_TYPE_JS;
             $name = 'scripts.js';
         }
 
         /** @var array $files */
-        $files = self::getFileByName($name);
+        $file = self::getFileByName($name);
 
-        return "/{$value}?v={$files['updated_at']}";
+        return "/{$value}?v={$file['updated_at']}";
     }
 
 }

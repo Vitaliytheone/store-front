@@ -4,7 +4,6 @@ namespace sommerce\helpers;
 
 use common\helpers\ThemesHelper;
 use common\models\store\Pages;
-use common\models\stores\Stores;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -23,7 +22,7 @@ class PagesHelper {
     /**
      * @return mixed
      */
-    public static function getFiles()
+    public static function getPages()
     {
         if (null === static::$pages) {
             static::$pages = ArrayHelper::index(Pages::find()->select([
@@ -44,33 +43,34 @@ class PagesHelper {
     }
 
     /**
-     * Find page or return exception
+     * Find page or return "Not found" exception
      * @param string $url
      * @return array
      * @throws NotFoundHttpException
      */
     public static function getPage($url)
     {
-        $page = ArrayHelper::getValue(static::getFiles(), $url);
+        $page = ArrayHelper::getValue(static::getPages(), $url);
 
         if (!$page) {
-            throw new NotFoundHttpException('Not found page by url '. $url);
+            throw new NotFoundHttpException("Page by url '{$url}' not found");
         }
         return $page;
     }
 
     /**
-     * Get current layout
+     * Get current layout from file if exist
      * @param string $name
      * @return mixed|null
      * @throws NotFoundHttpException
      */
     public static function getLayout($name = 'layout.twig')
     {
-        $layouts = PageFilesHelper::getFileByName($name);
+        $layouts = file_get_contents(ThemesHelper::getView($name));
 
         if (empty($layouts)){
-            $layouts = ThemesHelper::getView($name);
+            $layouts = PageFilesHelper::getFileByName($name);
+            $layouts = $layouts['content'];
         }
 
         return $layouts;

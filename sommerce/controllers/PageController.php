@@ -41,7 +41,7 @@ class PageController extends CustomController
      */
     public function actionStyles()
     {
-        $files = PageFilesHelper::getFileByName(PageFiles::FILE_TYPE_STYLE, 'styles.css');
+        $files = PageFilesHelper::getFileByName('styles.css');
 
         return Yii::$app->response->sendContentAsFile($files['content'], 'styles.css', [
             'mimeType' => 'text/css;charset=UTF-8',
@@ -57,7 +57,7 @@ class PageController extends CustomController
      */
     public function actionScripts()
     {
-        $files = PageFilesHelper::getFileByName(PageFiles::FILE_TYPE_JS, 'scripts.js');
+        $files = PageFilesHelper::getFileByName('scripts.js');
 
         return Yii::$app->response->sendContentAsFile($files['content'], 'scripts.js', [
             'mimeType' => 'text/javascript;charset=UTF-8',

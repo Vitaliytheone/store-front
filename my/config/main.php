@@ -205,7 +205,9 @@ $config = [
         ],
         'debug' => [
             'class' => 'yii\debug\Module',
-            'allowedIPs' => $params['debugIps']
+            'allowedIPs' => $params['debugIps'],
+            'historySize' => 500,
+            'traceLine' => '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>',
         ]
     ],
 ];

@@ -233,38 +233,6 @@ class CustomController extends CommonController
     }
 
     /**
-     * Renders a static string by applying a layout.
-     * @param string $content the static string being rendered
-     * @param array $params
-     * @return string the rendering result of the layout with the given static string as the `$content` variable.
-     * If the layout is disabled, the string will be returned back.
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function renderContent($content, $params = [])
-    {
-
-        $renderer = $this->getView();
-
-        if (!method_exists($renderer, 'renderContent')) {
-            return '';
-        }
-
-        $content = $renderer->renderContent($content, $params);
-
-        $layoutFile = file_get_contents($this->findLayoutFile($renderer));
-        Yii::debug($layoutFile, '$layoutFile content'); //todo del
-
-        if ($layoutFile === false) {
-            return $content;
-        }
-
-        return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
-            'page_content' => $content,
-        ]));
-    }
-
-    /**
      * Render content partial without applying layout
      * @param $content
      * @param $params
@@ -282,64 +250,6 @@ class CustomController extends CommonController
         $content = $renderer->renderContent($content, $params);
 
         return $renderer->renderContent($content, $params);
-    }
-
-    /**
-     * Custom render partial
-     * @param $view
-     * @param array $params
-     * @return string
-     */
-    public function renderPartialCustom($view, $params = [])
-    {
-        $filename = ThemesHelper::getView($view) ? $view : pathinfo($view, PATHINFO_FILENAME);
-
-        return $this->renderPartial($filename, $params);
-    }
-
-    /**
-     * Finds the applicable layout file.
-     * @param View $view the view object to render the layout file.
-     * @return string|bool the layout file path, or false if layout is not needed.
-     * Please refer to [[render()]] on how to specify this parameter.
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function findLayoutFile($view)
-    {
-        $module = $this->module;
-        if (is_string($this->layout)) {
-            $layout = $this->layout;
-        } elseif ($this->layout === null) {
-            while ($module !== null && $module->layout === null) {
-                $module = $module->module;
-            }
-            if ($module !== null && is_string($module->layout)) {
-                $layout = $module->layout;
-            }
-        }
-
-        if (!isset($layout)) {
-            return false;
-        }
-        Yii::debug($layout, '$layout');
-
-        if (strncmp($layout, '@', 1) === 0) {
-            $file = Yii::getAlias($layout);
-        } elseif (strncmp($layout, '/', 1) === 0) {
-            $file = $view->getThemeViewFile(substr($layout, 1));
-        } else {
-            $file = $view->getThemeViewFile($layout);
-        }
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-        $path = $file . '.' . $view->defaultExtension;
-        if ($view->defaultExtension !== 'php' && !is_file($path)) {
-            $path = $file . '.php';
-        }
-
-        return $path;
     }
 
     /**
@@ -374,7 +284,7 @@ class CustomController extends CommonController
             return $content;
         }
 
-        return $renderer->renderContent($layoutFile['content'], array_merge($this->_getGlobalParams(), [
+        return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
             'page_content' => $content,
         ]));
     }

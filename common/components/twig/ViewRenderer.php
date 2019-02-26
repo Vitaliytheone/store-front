@@ -190,8 +190,6 @@ class ViewRenderer extends BaseViewRenderer
         $this->addAliases($loader, Yii::$aliases);
         $this->twig->setLoader($loader);
 
-        Yii::debug($file,'$file'); //todo del
-        Yii::debug($params,'$params'); //todo del
         // Add custom scripts/styles/code before </html> tag
         $content = $this->twig->render(pathinfo($file, PATHINFO_BASENAME), $params);
         if (!empty($view->context->endContent)) {
