@@ -3,9 +3,6 @@ namespace common\mail\mailers\store;
 
 use common\models\store\Checkouts;
 use common\models\store\Packages;
-use common\models\store\Payments;
-use common\models\stores\PaymentGateways;
-use Yii;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 

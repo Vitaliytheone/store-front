@@ -2,18 +2,14 @@
 namespace common\mail\mailers\store;
 
 use common\models\store\Orders;
-use common\models\store\Payments;
-use common\models\store\Suborders;
-use common\models\stores\PaymentGateways;
-use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderAdminMailer
  * @package common\mail\mailers\store
  */
-class OrderAdminMailer extends BaseNotificationMailer {
-
+class OrderAdminMailer extends BaseNotificationMailer
+{
     /**
      * Init options
      */

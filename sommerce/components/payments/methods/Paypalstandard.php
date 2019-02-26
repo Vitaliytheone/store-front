@@ -6,6 +6,7 @@ use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use Yii;
 use sommerce\components\payments\BasePayment;
@@ -18,16 +19,10 @@ use yii\helpers\ArrayHelper;
  */
 class Paypalstandard extends BasePayment
 {
-
     /**
      * @var string - url action
      */
     public $action = 'https://www.paypal.com/cgi-bin/webscr';
-
-    /**
-     * @var string
-     */
-    protected $_method = PaymentMethods::METHOD_PAYPAL_STANDARD;
 
     public $redirectProcessing = true;
 
@@ -44,12 +39,12 @@ class Paypalstandard extends BasePayment
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -62,9 +57,9 @@ class Paypalstandard extends BasePayment
             'cmd' => '_xclick',
             'business' => ArrayHelper::getValue($paymentMethodOptions, 'email'),
             'currency_code' => $store->currency,
-            'return' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'notify_url' => SiteHelper::hostUrl() . '/paypalstandard/' . $checkout->id,
-            'cancel_return' => SiteHelper::hostUrl() . '/cart',
+            'return' => SiteHelper::hostUrl($store->ssl) . '/paypalstandard/' . $checkout->id,
+            'notify_url' => SiteHelper::hostUrl($store->ssl) . '/paypalstandard/' . $checkout->id,
+            'cancel_return' => SiteHelper::hostUrl($store->ssl) . '/cart',
             'item_name' => static::getDescription($checkout->id),
             'amount' => $amount,
         ]);
@@ -78,11 +73,7 @@ class Paypalstandard extends BasePayment
      */
     public function processing($store)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYPAL_STANDARD,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYPAL_STANDARD);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -92,7 +83,7 @@ class Paypalstandard extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         if (ArrayHelper::getValue($paymentMethodOptions, 'test_mode')) {
             $this->testMode();
@@ -105,13 +96,11 @@ class Paypalstandard extends BasePayment
     /**
      * Processing standard payments result
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array|boolean array or false if curl failure
      */
     protected function standardProcessing($store, $details)
     {
-        // paypal standard отвечаем ok если платеж добавлен
-
         $itemNumber = ArrayHelper::getValue($_POST, 'item_number', ArrayHelper::getValue($_GET, 'id'));
         $business = ArrayHelper::getValue($_POST, 'business');
         $paymentStatus = strtolower(trim(ArrayHelper::getValue($_POST, 'payment_status')));
@@ -138,7 +127,7 @@ class Paypalstandard extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (strtolower($business) != strtolower(ArrayHelper::getValue($paymentMethodOptions, 'email'))) {
             return [
@@ -150,7 +139,7 @@ class Paypalstandard extends BasePayment
         if (empty($id)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $itemNumber,
-                'method_id' => $details->id
+                'method_id' => $details->method_id
             ]))
             // Changed Checkouts::STATUS_PENDING to PAID, otherwise it does not work
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
@@ -332,7 +321,7 @@ class Paypalstandard extends BasePayment
 
         if (empty($checkout)) {
             $paymentsResult['failed'] = true;
-        } elseif (empty($payment = Payments::findOne(['checkout_id' => $checkoutId, 'method' => PaymentMethods::METHOD_PAYPAL_STANDARD]))) {
+        } elseif (empty($payment = Payments::findOne(['checkout_id' => $checkoutId]))) {
             $paymentsResult['awaiting'] = true; // force use Awaiting status if payment not yet created (POST is empty)
         } else {
             $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);

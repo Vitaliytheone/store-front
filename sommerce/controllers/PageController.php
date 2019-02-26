@@ -1,11 +1,12 @@
 <?php
+
 namespace sommerce\controllers;
+
 use common\models\store\Pages;
 use yii\web\NotFoundHttpException;
 use Yii;
 use sommerce\models\forms\ContactForm;
 use common\components\ActiveForm;
-
 
 /**
  * Page controller
@@ -14,8 +15,9 @@ class PageController extends CustomController
 {
     /**
      * Displays page.
-     * @param int $id
-     * @return string
+     * @param $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      */
     public function actionIndex($id)
     {

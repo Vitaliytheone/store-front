@@ -184,7 +184,6 @@ class OrderHelper {
 
             $crtKey = $crt . "\n" . $ca;
 
-
             // $crt + $ca code
             if (!(OrderSslHelper::addDdos($ssl, [
                 'site' => $project->domain,
@@ -717,7 +716,7 @@ class OrderHelper {
         $store->subdomain = 0;
         $store->name = ArrayHelper::getValue($orderDetails,'name');
         $store->status = Stores::STATUS_ACTIVE;
-        $store->trial = $isTrial;
+        $store->trial = (int)$isTrial;
         $store->generateExpired($isTrial);
         $store->dns_status = Stores::DNS_STATUS_ALIEN;
 
@@ -911,12 +910,6 @@ class OrderHelper {
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_OBTAIN_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.obtain');
 
-        /**
-         * 25.02.2019 от Александра
-         * надо времено закоментировать отправку ssl сертфиката letsencrypt и prolong letsencrypt в ddos защиту https://control.ddosa.net
-         * но при этом оставить отправку сертифката в нашу защиту
-         */
-        /*
         if (!OrderSslHelper::addDdos($ssl, [
             'site' => $order->domain,
             'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
@@ -924,7 +917,7 @@ class OrderHelper {
         ])) {
             throw new Exception('Cannot add SSL to DDoS!');
         }
-        */
+
         if (!OrderSslHelper::addConfig($ssl, [
             'domain' => $order->domain,
             'crt_cert' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
@@ -1035,19 +1028,13 @@ class OrderHelper {
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_RENEW_LETSENCRYPT_SSL, $order->item_id, $letsencrypt->getExecResult(), 'cron.le-ssl.renew');
 
-        /**
-         * 25.02.2019 от Александра
-         * надо времено закоментировать отправку ssl сертфиката letsencrypt и prolong letsencrypt в ddos защиту https://control.ddosa.net
-         * но при этом оставить отправку сертифката в нашу защиту
-         */
-        /*
         if (!OrderSslHelper::addDdos($ssl, [
             'site' => $order->domain,
             'crt' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_FULLCHAIN),
             'key' => $ssl->getCsrFile(SslCertLetsencrypt::SSL_FILE_KEY),
         ])) {
             throw new Exception('Cannot add SSL to DDoS!');
-        }*/
+        }
 
         if (!OrderSslHelper::addConfig($ssl, [
             'domain' => $order->domain,

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\helpers\SiteHelper;
@@ -18,14 +19,16 @@ use common\models\store\PaymentsLog;
 use yii\helpers\ArrayHelper;
 use UnexpectedValueException;
 use common\models\store\Carts;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Stripe
  * @package sommerce\components\payments\methods
  */
-class Stripe extends BasePayment {
-
+class Stripe extends BasePayment
+{
     const DEFAULT_IMAGE = 'https://stripe.com/img/documentation/checkout/marketplace.png';
+
     /**
      * @var string - url action
      */
@@ -37,12 +40,12 @@ class Stripe extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $user
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $user, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $options = $checkout->getUserDetails();
 
@@ -63,15 +66,11 @@ class Stripe extends BasePayment {
             ));
         } catch (StripeException $e) {
             // заносим запись в таблицу payments_log
-            $log = new PaymentsLog();
-            $log->log($checkout->id, $e->getMessage() . $e->getTraceAsString());
-            $log->save(false);
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         } catch (StripeError $e) {
             // заносим запись в таблицу payments_log
-            $log = new PaymentsLog();
-            $log->log($checkout->id, $e->getMessage() . $e->getTraceAsString());
-            $log->save(false);
+            PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         }
         Carts::clearCheckoutItems($checkout);
@@ -88,19 +87,19 @@ class Stripe extends BasePayment {
         }
         $this->_payment->status = Payments::STATUS_AWAITING;
         $this->_payment->save(false);
-        return static::returnRedirect(SiteHelper::hostUrl() . '/'  . PaymentMethods::METHOD_STRIPE . '?checkout_id=' . $checkout->id);
+        return static::returnRedirect(SiteHelper::hostUrl($store->ssl) . '/stripe?checkout_id=' . $checkout->id);
     }
 
 
     /**
      * @param Stores $store
      * @param string $user
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function getJsEnvironments($store, $user, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $key = ArrayHelper::getValue($paymentMethodOptions, 'public_key');
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $image = ArrayHelper::getValue($paymentMethodOptions, 'image', static::DEFAULT_IMAGE);
@@ -109,7 +108,7 @@ class Stripe extends BasePayment {
         AssetsHelper::addCustomScriptFile('https://checkout.stripe.com/checkout.js');
 
         return [
-            'type' => $details->id,
+            'type' => $details->method_id,
             'configure' => [
                 'key' => $key,
                 'image' => $image,
@@ -128,11 +127,7 @@ class Stripe extends BasePayment {
      */
     public function processing($store)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_STRIPE,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_STRIPE);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -142,7 +137,7 @@ class Stripe extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
         $secretKey = ArrayHelper::getValue($paymentMethodOptions, 'secret_key');
         $webhookSecretKey = ArrayHelper::getValue($paymentMethodOptions, 'webhook_secret');
         StripeBase::setApiKey($secretKey);
@@ -196,11 +191,7 @@ class Stripe extends BasePayment {
         $metadata = ArrayHelper::getValue($data, 'metadata');
         $checkoutId = ArrayHelper::getValue($metadata, 'payment_id');
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_STRIPE,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = PaymentMethods::findOne(PaymentMethods::METHOD_STRIPE);
 
         if (empty($paymentMethod)) {
             // no invoice

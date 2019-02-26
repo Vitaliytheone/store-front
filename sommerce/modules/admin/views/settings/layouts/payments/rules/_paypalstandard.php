@@ -1,1 +1,0 @@
-<p><?= Yii::t('admin', 'settings.payments_paypal_standard_guide_1') ?></p>

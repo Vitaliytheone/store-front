@@ -1,8 +1,10 @@
 <?php
+
 namespace common\helpers;
 
 use common\models\panels\services\GetPaymentMethodsService;
-use common\models\stores\PaymentGateways;
+use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -10,8 +12,8 @@ use yii\helpers\ArrayHelper;
  * Class CurrencyHelper
  * @package common\helpers
  */
-class CurrencyHelper {
-
+class CurrencyHelper
+{
     /**
      * @var array
      */
@@ -21,7 +23,7 @@ class CurrencyHelper {
 
     /**
      * Get currency options by code
-     * @param string $code
+     * @param string $code currency code (USD, RUB, etc.)
      * @return array
      */
     public static function getCurrencyOptions(string $code):array
@@ -32,23 +34,23 @@ class CurrencyHelper {
 
         static::$currencyOptions[$code] = [];
 
-        /**
-         * @var PaymentGateways $method
-         */
-        foreach (PaymentGateways::getMethods() as $method) {
-            $availableCurrencies = (array)$method->getCurrencies();
+        $availableCurrencies = PaymentMethodsCurrency::getMethodsByCurrency($code, 'method_id');
 
-            if (!in_array($code, $availableCurrencies)) {
+        /**
+         * @var PaymentMethods $method
+         */
+        foreach (PaymentMethods::getMethods() as $method) {
+            if (!isset($availableCurrencies[$method->id])) {
                 continue;
             }
 
-            static::$currencyOptions[$code][$method->method] = [
+            static::$currencyOptions[$code][$method->class_name] = [
                 'url' => $method->url,
                 'class_name' => $method->class_name,
                 'name' => $method->name,
-                'code' => $method->method,
-                'position' => $method->position,
-                'options' => $method->getOptions()
+                'code' => $method->class_name,
+                'position' => $availableCurrencies[$method->id]['position'],
+                'options' => $method->getSettingsForm(),
             ];
         }
 
@@ -108,6 +110,8 @@ class CurrencyHelper {
     /**
      * Get all payment methods
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public static function getPaymentMethods(): array
     {

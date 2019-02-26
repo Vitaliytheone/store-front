@@ -34,7 +34,7 @@ class Getstatus extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'getstatus';
+        return DB_PANELS . '.getstatus';
     }
 
     /**

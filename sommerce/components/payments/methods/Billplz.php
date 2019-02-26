@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use Yii;
@@ -10,12 +11,14 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Billplz
  * @package sommerce\components\payments\methods
  */
-class Billplz extends BasePayment {
+class Billplz extends BasePayment
+{
 
     /**
      * @var string - url action
@@ -25,6 +28,12 @@ class Billplz extends BasePayment {
     public $method = 'POST';
 
     public $redirectProcessing = true;
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     public function __construct(array $config = [])
     {
@@ -40,12 +49,12 @@ class Billplz extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $collectionId = ArrayHelper::getValue($paymentMethodOptions, 'collectionId');
         $secret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
@@ -57,8 +66,8 @@ class Billplz extends BasePayment {
             'description' => static::getDescription($checkout->id),
             'name' => $email,
             'amount' => $checkout->price * 100, // A positive integer in the smallest currency unit (e.g 100 cents to charge RM 1.00)
-            'callback_url' => SiteHelper::hostUrl() . '/billplz?checkoutId=' . $checkout->id,
-            'redirect_url' => SiteHelper::hostUrl() . '/billplz?checkoutId=' . $checkout->id,
+            'callback_url' => SiteHelper::hostUrl($store->ssl) . '/billplz?checkoutId=' . $checkout->id,
+            'redirect_url' => SiteHelper::hostUrl($store->ssl) . '/billplz?checkoutId=' . $checkout->id,
         ]);
 
         if (!empty($result)) {
@@ -93,11 +102,7 @@ class Billplz extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_BILLPLZ,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_BILLPLZ);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -110,7 +115,7 @@ class Billplz extends BasePayment {
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $checkoutId,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
@@ -139,7 +144,7 @@ class Billplz extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $collectionId = ArrayHelper::getValue($paymentMethodOptions, 'collectionId');
         $secret = ArrayHelper::getValue($paymentMethodOptions, 'secret');

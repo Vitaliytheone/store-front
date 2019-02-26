@@ -1,7 +1,7 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
-use Yii;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
 use common\models\store\Checkouts;
@@ -10,29 +10,36 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Paywant
  * @package sommerce\components\payments\methods
  */
-class Paytr extends BasePayment {
-
+class Paytr extends BasePayment
+{
     /**
      * @var string - url action
      */
     public $action = 'https://www.paytr.com/odeme/';
 
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * Checkout
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $options = $checkout->getUserDetails();
 
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id');
@@ -53,8 +60,8 @@ class Paytr extends BasePayment {
         $userName = $email;
         $userAddress = "-";
         $userPhone = ArrayHelper::getValue($options, 'phone', "-");
-        $merchantSuccess = SiteHelper::hostUrl() . '/addfunds';
-        $merchantFail = SiteHelper::hostUrl() . '/addfunds';
+        $merchantSuccess = SiteHelper::hostUrl($store->ssl) . '/addfunds';
+        $merchantFail = SiteHelper::hostUrl($store->ssl) . '/addfunds';
 
         $userBasket = base64_encode(json_encode(array(
             array("BAKIYE YUKLEME", $paymentAmount, 1),
@@ -155,11 +162,7 @@ class Paytr extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYTR,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYTR);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -172,7 +175,7 @@ class Paytr extends BasePayment {
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $checkoutId,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
@@ -203,7 +206,7 @@ class Paytr extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id');
         $merchantKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_key');
