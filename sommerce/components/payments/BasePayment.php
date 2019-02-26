@@ -10,7 +10,8 @@ use common\models\store\Orders;
 use common\models\store\Packages;
 use common\models\store\Payments;
 use common\models\store\Suborders;
-use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
 use Yii;
@@ -22,8 +23,8 @@ use yii\helpers\ArrayHelper;
  * Class BasePayment
  * @package app\components\payments
  */
-abstract class BasePayment extends Component {
-
+abstract class BasePayment extends Component
+{
     /**
      * @var string - url action
      */
@@ -70,17 +71,24 @@ abstract class BasePayment extends Component {
     public $redirectProcessing = false;
 
     /**
-     * @var bool - show errors
+     * Is shown processing & checkout errors messages
+     * @var bool show errors (default False)
      */
     public $showErrors = false;
 
     /**
+     * @var bool $paymentResult Redirect to result (success page) or not. (default True)
+     */
+    public $paymentResult = true;
+
+    /**
      * BasePayment constructor.
      * @param array $config
+     * @throws \ReflectionException
      */
     public function __construct(array $config = [])
     {
-        $this->_method = ArrayHelper::getValue($config, 'method');
+        $this->_method = strtolower((new \ReflectionClass($this))->getShortName());
 
         parent::__construct($config);
     }
@@ -97,7 +105,7 @@ abstract class BasePayment extends Component {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return mixed -
      * [
      *  'result' => 1,
@@ -377,7 +385,7 @@ abstract class BasePayment extends Component {
      * Get js payment environment
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function getJsEnvironments($store, $email, $details)
@@ -402,5 +410,36 @@ abstract class BasePayment extends Component {
     public function fields()
     {
         return [];
+    }
+
+    /**
+     * Get visible store pay method
+     * @param Stores $store
+     * @param int $methodId - payment_methods.id
+     * @return StorePaymentMethods|bool
+     */
+    public function getPaymentMethod(Stores $store, int $methodId)
+    {
+        $storeMethod = StorePaymentMethods::findOne([
+            'method_id' => $methodId,
+            'store_id' => $store->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
+        ]);
+
+        if (empty($storeMethod)) {
+            return false;
+        }
+
+        $currencyMethod = PaymentMethodsCurrency::findOne($storeMethod->currency_id);
+
+        if (empty($currencyMethod)) {
+            return false;
+        }
+
+        if ($currencyMethod->currency !== $store->currency) {
+            return false;
+        }
+
+        return $storeMethod;
     }
 }

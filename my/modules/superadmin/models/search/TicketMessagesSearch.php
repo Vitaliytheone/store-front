@@ -57,9 +57,9 @@ class TicketMessagesSearch
     {
         if ($this->_messages == null) {
             $this->_messages = TicketMessages::find()->where([
-                'ticket_id' => $this->_ticketId
+                'ticket_messages.ticket_id' => $this->_ticketId
             ])
-                ->joinWith(['customer', 'admin', 'customer.actualProjects'])
+                ->joinWith(['customer', 'admin', 'customer.actualProjects', 'file'])
                 ->orderBy(['created_at' => SORT_DESC])
                 ->all();
         }

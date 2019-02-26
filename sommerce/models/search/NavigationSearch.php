@@ -9,7 +9,10 @@ use yii\db\Connection;
 use yii\db\Query;
 use common\models\stores\Stores;
 
-
+/**
+ * Class NavigationSearch
+ * @package sommerce\models\search
+ */
 class NavigationSearch extends Model
 {
     private $_storeDb;
@@ -166,6 +169,7 @@ class NavigationSearch extends Model
      * Return first-level children ids of the parent id node
      * @param $parentId
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getFirstLevelChildrenIds($parentId)
     {

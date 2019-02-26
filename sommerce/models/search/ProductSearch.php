@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\models\search;
 
 use sommerce\models\forms\ProductViewForm;

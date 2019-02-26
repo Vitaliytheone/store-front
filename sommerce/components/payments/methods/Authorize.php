@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\helpers\SiteHelper;
@@ -7,6 +8,7 @@ use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use net\authorize\api\contract\v1\ANetApiResponseType;
 use net\authorize\api\contract\v1\CreateTransactionRequest;
@@ -29,7 +31,8 @@ use yii\helpers\ArrayHelper;
  * Class Authorize
  * @package sommerce\components\payments\methods
  */
-class Authorize extends BasePayment {
+class Authorize extends BasePayment
+{
 
     /**
      * @var MerchantAuthenticationType
@@ -71,12 +74,12 @@ class Authorize extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $options = $checkout->getUserDetails();
 
         if (!empty($paymentMethodOptions['test_mode'])) {
@@ -204,7 +207,7 @@ class Authorize extends BasePayment {
 
             return static::returnError([
                 'result' => 2,
-                'redirect' => SiteHelper::hostUrl() . '/' . PaymentMethods::METHOD_AUTHORIZE . '?checkout_id=' . $checkout->id,
+                'redirect' => SiteHelper::hostUrl($store->ssl) . '/authorize?checkout_id=' . $checkout->id,
                 'content' => 'no final status',
             ]);
         }
@@ -222,19 +225,19 @@ class Authorize extends BasePayment {
 
         static::success($this->_payment, $result, $store);
 
-        return static::returnRedirect(SiteHelper::hostUrl() . '/' . PaymentMethods::METHOD_AUTHORIZE . '?checkout_id=' . $checkout->id);
+        return static::returnRedirect(SiteHelper::hostUrl($store->ssl) . '/authorize?checkout_id=' . $checkout->id);
     }
 
     /**
      * Get js payment environment
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function getJsEnvironments($store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $clientKey = ArrayHelper::getValue($paymentMethodOptions, 'merchant_client_key');
         $loginId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_login_id');
 
@@ -245,7 +248,7 @@ class Authorize extends BasePayment {
         AssetsHelper::addCustomScriptFile($this->script);
 
         return [
-            'type' => $details->id,
+            'type' => $details->method_id,
             'configure' => [
                 'type' => 'button',
                 'class' => 'AcceptUI',
@@ -274,7 +277,7 @@ class Authorize extends BasePayment {
 
     /**
      * Get payment method auth
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return MerchantAuthenticationType
      */
     public function getAuth($details)
@@ -283,7 +286,7 @@ class Authorize extends BasePayment {
             return $this->_auth;
         }
 
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         if (!empty($paymentMethodOptions['test_mode'])) {
             $this->initTestMode();
@@ -305,7 +308,7 @@ class Authorize extends BasePayment {
      * Get transaction details
      * @param string $transactionId
      * @param Payments $payment
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return AnetApiResponseType|null
      */
     public function getTransactionDetails($transactionId, $payment, $details)
@@ -330,7 +333,7 @@ class Authorize extends BasePayment {
      * Check payment status
      * @param Payments $payment
      * @param Stores $store
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return boolean
      */
     public function checkStatus($payment, $store, $details)

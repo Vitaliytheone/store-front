@@ -20,10 +20,11 @@ use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use yii\filters\AjaxFilter;
-use \yii\filters\VerbFilter;
+use yii\filters\VerbFilter;
 
 /**
  * Settings controller for the `admin` module
@@ -39,7 +40,6 @@ class SettingsController extends CustomController
     use LanguageTrait;
     use NotificationsTrait;
     use ThemesCustomizerTrait;
-    use IntegrationsTrait;
 
     public function behaviors()
     {
@@ -48,9 +48,14 @@ class SettingsController extends CustomController
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => [
-                    'theme-get-style', 'theme-get-data', 'theme-update-style',
+                    'theme-get-style',
+                    'theme-get-data',
+                    'theme-update-style',
+                    'add-payment-method',
+                    'update-payment-positions',
+                    'delete-invalid-currency',
                     'integrations-toggle-active',
-                ]
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -59,6 +64,9 @@ class SettingsController extends CustomController
                     'theme-get-style' => ['GET'],
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
+                    'add-payment-method' => ['POST'],
+                    'update-payment-positions' => ['POST'],
+                    'delete-invalid-currency' => ['POST'],
                     'edit-integration' => ['GET', 'POST'],
                     'integrations' => ['GET'],
                     'integrations-toggle-active' => ['POST'],
@@ -68,6 +76,9 @@ class SettingsController extends CustomController
                 'class' => ContentNegotiator::class,
                 'only' => [
                     'theme-update-style',
+                    'add-payment-method',
+                    'update-payment-positions',
+                    'delete-invalid-currency',
                     'integrations-toggle-active',
                 ],
                 'formats' => [
@@ -118,7 +129,10 @@ class SettingsController extends CustomController
 
     /**
      * Settings general
-     * @return string
+     * @return string|Response
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws NotFoundHttpException
      */
     public function actionIndex()
     {
@@ -130,6 +144,9 @@ class SettingsController extends CustomController
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
         $storeForm->setUser(Yii::$app->user);
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+        $storeForm->setUser($identity);
 
         if ($storeForm->updateSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_updated'));
@@ -183,5 +200,31 @@ class SettingsController extends CustomController
         $searchModel->setStore($this->store);
 
         return ['links' => $searchModel->searchLinksByType($link_type|0)];
+    }
+
+    /**
+     * Check if currency changes and return bool
+     * @var $postData string
+     * @return bool|null
+     */
+    public function actionCheckCurrency(): ?bool
+    {
+        if (!Yii::$app->getRequest()->isAjax) {
+            exit;
+        }
+
+        $postData = Yii::$app->getRequest()->post('currency');
+
+        if (empty($postData)) {
+            return null;
+        }
+
+        $storeForm = EditStoreSettingsForm::findOne($this->store->id);
+
+        if (empty($storeForm)) {
+            return null;
+        }
+
+        return $storeForm->currencyChange($postData);
     }
 }

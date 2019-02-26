@@ -16,3 +16,31 @@
 .m-dropdown.m-dropdown--small li.active {
     background-color: #f2f3f9;
 }
+
+/* Payments drag icon - begin */
+.dd-item {
+    cursor: default!important;
+}
+
+.dd-handle-pay {
+    height: 100%;
+    position: absolute;
+    z-index: 99;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    text-align: center;
+    padding: 5px 0;
+    cursor: move;
+}
+
+.dd-handle-pay svg {
+    height: 22px;
+}
+
+.payment-main-block {
+    padding-left: 6px;
+}
+/* Payments drag icon - end */

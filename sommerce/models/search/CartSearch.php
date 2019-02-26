@@ -1,7 +1,7 @@
 <?php
+
 namespace sommerce\models\search;
 
-use common\helpers\PriceHelper;
 use common\models\store\Packages;
 use common\models\stores\Stores;
 use sommerce\helpers\UserHelper;
@@ -12,13 +12,12 @@ use yii\helpers\ArrayHelper;
  * Class CartSearch
  * @package sommerce\models\search
  */
-class CartSearch {
-
+class CartSearch
+{
     /**
      * @var Stores
      */
     protected $_store;
-
 
     /**
      * @var array
@@ -118,6 +117,9 @@ class CartSearch {
         return $query;
     }
 
+    /**
+     * @return array
+     */
     public function search()
     {
         if (null === static::$_items) {

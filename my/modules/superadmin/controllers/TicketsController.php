@@ -107,6 +107,7 @@ class TicketsController extends CustomController
      * @param $id
      * @return string
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionView($id)
     {
@@ -124,6 +125,7 @@ class TicketsController extends CustomController
         $model = new CreateMessageForm();
         $model->setTicket($ticket);
         $model->setUser($admin);
+        $model->post = Yii::$app->request->post('qs-file');
 
         $blocks = TicketBlocksSearch::search($ticket->customer_id);
 
@@ -297,6 +299,10 @@ class TicketsController extends CustomController
 
     /**
      * Delete ticket message
+     *
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws \Throwable
      */
     public function actionDeleteMessage()
     {
@@ -304,7 +310,12 @@ class TicketsController extends CustomController
         if (!empty($params['ticketId']) && !empty($params['messageId'])) {
             $message = $this->findMessage($params['messageId']);
             if ($message->canAdminEdit()) {
-                $message->delete();
+                $transaction = Yii::$app->db->beginTransaction();
+                if (!$message->delete()) {
+                    $transaction->rollBack();
+                } else {
+                    $transaction->commit();
+                }
             }
 
             return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $params['ticketId']]));

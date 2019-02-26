@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\models\forms;
 
 use common\models\store\Carts;
@@ -6,15 +7,14 @@ use common\models\store\Packages;
 use common\models\stores\Stores;
 use sommerce\components\validators\LinkValidator;
 use sommerce\helpers\UserHelper;
-use Yii;
 use yii\base\Model;
 
 /**
  * Class AddToCartForm
  * @package app\models\forms
  */
-class AddToCartForm extends Model {
-
+class AddToCartForm extends Model
+{
     public $link;
 
     /**

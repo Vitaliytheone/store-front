@@ -74,7 +74,7 @@ class SiteController extends CustomController
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword']
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword', 'ticket']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
@@ -135,6 +135,7 @@ class SiteController extends CustomController
      * Create ticket message
      * @param int $id
      * @return array
+     * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
      */
     public function actionMessage($id)
@@ -145,6 +146,8 @@ class SiteController extends CustomController
         $model = new CreateMessageForm();
         $model->setCustomer($customer);
         $model->setTicket($ticket);
+        $model->post = Yii::$app->request->post('qs-file');
+
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
@@ -187,7 +190,7 @@ class SiteController extends CustomController
         return $this->renderPartial('ticket', [
             'ticketMessages' => $ticketMessages,
             'ticket' => $ticket,
-            'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED
+            'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED,
         ]);
     }
 
@@ -201,6 +204,7 @@ class SiteController extends CustomController
 
         $model = new CreateTicketForm();
         $model->setCustomer($customer);
+        $model->post = Yii::$app->request->post('qs-file');
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
@@ -249,7 +253,7 @@ class SiteController extends CustomController
             'note' => Content::getContent('support'),
             'accesses' => [
                 'canCreate' => Tickets::canCreate(Yii::$app->user->identity->id)
-            ]
+            ],
         ]);
     }
 

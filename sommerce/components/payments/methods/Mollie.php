@@ -20,18 +20,20 @@ use Mollie\Api\Resources\Payment;
  */
 class Mollie extends BasePayment
 {
-
-    protected $_method = PaymentMethods::METHOD_MOLLIE;
-
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     /**
      * Create checkout and redirect to Mollie pay site
-     *
+     * @param \common\models\stores\StorePaymentMethods $details
      * @inheritdoc
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $amount = number_format((float)$checkout->price, 2, '.', '');
 
@@ -53,8 +55,8 @@ class Mollie extends BasePayment
                     'value' => $amount
                 ],
                 'description' => static::getDescription($checkout->id),
-                'redirectUrl' => SiteHelper::hostUrl() . '/cart',
-                'webhookUrl' => SiteHelper::hostUrl() . '/mollie',
+                'redirectUrl' => SiteHelper::hostUrl($store->ssl) . '/cart',
+                'webhookUrl' => SiteHelper::hostUrl($store->ssl) . '/mollie',
                 'metadata' => [
                     'paymentId' => $checkout->id,
                 ],
@@ -86,11 +88,7 @@ class Mollie extends BasePayment
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_MOLLIE,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_MOLLIE);
 
         if (empty($paymentMethod)) {
             return [
@@ -99,7 +97,7 @@ class Mollie extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         try {
             $mollie = new MollieApiClient();
@@ -110,7 +108,7 @@ class Mollie extends BasePayment
             $profileId = $payment->profileId;
             $country = $payment->countryCode ?? null;
 
-            if (empty($paymentId) || !($this->_checkout = Checkouts::findOne(['id' => $paymentId, 'method_id' => $paymentMethod->id]))) {
+            if (empty($paymentId) || !($this->_checkout = Checkouts::findOne(['id' => $paymentId, 'method_id' => $paymentMethod->method_id]))) {
                 return [
                     'result' => 2,
                     'content' => 'no invoice'
@@ -233,5 +231,4 @@ class Mollie extends BasePayment
 
         PaymentsLog::log($this->_checkout->id, $response);
     }
-
 }
