@@ -24,7 +24,6 @@ use superadmin\models\search\ApplicationsSearch;
 use superadmin\models\search\ContentSearch;
 use superadmin\models\search\NotificationEmailSearch;
 use superadmin\models\search\PaymentMethodsSearch;
-use superadmin\models\search\PlanSearch;
 use superadmin\models\search\StaffSearch;
 use Yii;
 use yii\filters\AjaxFilter;
@@ -40,7 +39,9 @@ class SettingsController extends CustomController
 {
     public $activeTab = 'settings';
 
-
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [
@@ -140,21 +141,6 @@ class SettingsController extends CustomController
 
         return $this->render('email', [
             'emails' => $emails->search()
-        ]);
-    }
-
-    /**
-     * List plan list
-     * @return string
-     */
-    public function actionPlan()
-    {
-        $this->view->title = Yii::t('app/superadmin', 'pages.title.plan');
-
-        $plans = new PlanSearch();
-
-        return $this->render('plan', [
-            'plans' => $plans->search()
         ]);
     }
 

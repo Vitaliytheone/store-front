@@ -49,7 +49,7 @@ class CreateStaffForm extends Model
         $model->first_name = $this->first_name;
         $model->last_name = $this->last_name;
         $model->status = $this->status;
-        $model->setAccessRules($this->access);
+        $model->setSommerceAccessRules($this->access);
         $model->generateAuthKey();
 
         if (!$model->save()) {

@@ -1,11 +1,12 @@
 <?php
+
 namespace superadmin\components\services;
 
 use opensrs\Request;
 use Exception;
 use Yii;
 
-require_once(Yii::getAlias('@my/config/services/open_srs.php'));
+require_once(Yii::getAlias('@control_panel/config/services/open_srs.php'));
 
 /**
  * Class OpenSRSService

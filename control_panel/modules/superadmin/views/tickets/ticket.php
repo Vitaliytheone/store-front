@@ -8,15 +8,8 @@
     /* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
     /* @var $stores array */
     /* @var $ssl array */
-    /* @var $panels array */
-    /* @var $childPanels array */
     /* @var $domains array */
     /* @var $notes array */
-    /* @var $gateways array */
-
-    use control_panel\components\ActiveForm;
-    use control_panel\helpers\Url;
-    use yii\helpers\Html;
 
     $this->context->addModule('superadminTicketsEditController');
 ?>
@@ -57,11 +50,8 @@
                 'admins' => $admins,
                 'stores' => $stores,
                 'ssl' => $ssl,
-                'childPanels' => $childPanels,
-                'panels' => $panels,
                 'statuses' => $statuses,
                 'domains' => $domains,
-                'gateways' => $gateways,
             ])?>
             <?= $this->render('layouts/_ticket_notes', [
                     'notes' => $notes,

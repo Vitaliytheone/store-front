@@ -16,7 +16,7 @@ class CustomController extends MainController
 {
     public $activeTab;
 
-    public $layout = 'superadmin_v2.php';
+    public $layout = 'superadmin.php';
 
     public function beforeAction($action)
     {

@@ -15,7 +15,7 @@ $db = array_merge(
 $routes = require(__DIR__ . '/routes.php');
 
 $config = [
-    'id' => 'app-my',
+    'id' => 'app-control_panel',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'debug'],
     'controllerNamespace' => 'control_panel\controllers',

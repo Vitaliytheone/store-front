@@ -2,7 +2,6 @@
 
 namespace superadmin\controllers;
 
-use common\models\panels\SuperAdmin;
 use superadmin\models\forms\PasswordUpdateForm;
 use Yii;
 

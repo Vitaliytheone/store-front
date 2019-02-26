@@ -20,9 +20,9 @@ $config = yii\helpers\ArrayHelper::merge(
     file_exists(__DIR__ . '/../../common/config/main-local.php') ?
         require(__DIR__ . '/../../common/config/main-local.php') : [],
 
-    require(__DIR__ . '/../../my/config/main.php'),
-    file_exists(__DIR__ . '/../../my/config/main-local.php') ?
-        require(__DIR__ . '/../../my/config/main-local.php') : []
+    require(__DIR__ . '/../../control_panel/config/main.php'),
+    file_exists(__DIR__ . '/../../control_panel/config/main-local.php') ?
+        require(__DIR__ . '/../../control_panel/config/main-local.php') : []
 );
 
 (new yii\web\Application($config))->run();

@@ -1,7 +1,6 @@
 <?php
 namespace control_panel\models\forms;
 
-use control_panel\helpers\ReferralHelper;
 use common\models\panels\Customers;
 use common\models\panels\MyActivityLog;
 use Yii;
@@ -73,22 +72,9 @@ class SignupForm extends Model
 
         $model->buy_domain = Customers::BUY_DOMAIN_NOT_ACTIVE;
 
-        if (ReferralHelper::has()) {
-            $code = ReferralHelper::get();
-            if ($code && ($referrerCompany = Customers::findOne([
-                'referral_link' => $code
-            ])) && $referrerCompany->can('referral')) {
-                $model->referrer_id = $referrerCompany->id;
-            }
-        }
-
         if (!$model->save()) {
             $this->addErrors($model->getErrors());
             return false;
-        }
-
-        if ($model->referrer_id) {
-            ReferralHelper::remove();
         }
 
         MyActivityLog::log(MyActivityLog::E_CUSTOMER_REGISTRATION, $model->id, $model->id, null, $model->id);

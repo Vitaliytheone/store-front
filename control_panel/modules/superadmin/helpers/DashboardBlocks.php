@@ -3,9 +3,7 @@
 namespace superadmin\helpers;
 
 use superadmin\models\search\dashboard\BaseBlock;
-use superadmin\models\search\dashboard\ChildPanels;
 use superadmin\models\search\dashboard\Domains;
-use superadmin\models\search\dashboard\Panels;
 use superadmin\models\search\dashboard\SSL;
 use superadmin\models\search\dashboard\Stores;
 use ReflectionClass;
@@ -16,8 +14,6 @@ use Yii;
  */
 class DashboardBlocks
 {
-    const BLOCK_PANELS = 'panels';
-    const BLOCK_CHILD_PANELS = 'child-panels';
     const BLOCK_STORES = 'stores';
     const BLOCK_DOMAINS = 'domains';
     const BLOCK_SSL = 'ssl';
@@ -53,14 +49,6 @@ class DashboardBlocks
     private static function _getConfig()
     {
         return [
-            self::BLOCK_PANELS => [
-                'source' => Panels::class,
-                'name' => Yii::t('app/superadmin', 'dashboard.panels')
-            ],
-            self::BLOCK_CHILD_PANELS => [
-                'source' => ChildPanels::class,
-                'name' => Yii::t('app/superadmin', 'dashboard.child_panels')
-            ],
             self::BLOCK_STORES => [
                 'source' => Stores::class,
                 'name' => Yii::t('app/superadmin', 'dashboard.stores')

@@ -63,7 +63,7 @@ class DashboardController extends CustomController
         $this->view->title = Yii::t('app/superadmin', 'pages.title.dashboard');
         return $this->render('index', [
             'dashboardBlocks' => DashboardBlocks::getBlocks(),
-            'activePanel' => DashboardBlocks::BLOCK_PANELS,
+            'activePanel' => DashboardBlocks::BLOCK_STORES,
             'dashboardServices' => DashboardServices::getServices(),
         ]);
     }

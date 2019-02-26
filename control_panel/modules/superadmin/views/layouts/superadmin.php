@@ -22,7 +22,7 @@ SuperAdminV2Asset::register($this);
     <body>
     <?php $this->beginBody() ?>
 
-        <?= $this->render('_header_v2.php') ?>
+        <?= $this->render('_header.php') ?>
 
     <div class="container-fluid">
         <?= $content ?>

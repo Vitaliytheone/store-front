@@ -19,6 +19,7 @@ use control_panel\models\forms\ResetPasswordForm;
 use control_panel\models\forms\RestoreForm;
 use control_panel\models\forms\SettingsForm;
 use control_panel\models\forms\SignupForm;
+use control_panel\models\search\DomainsAvailableSearch;
 use control_panel\models\search\InvoicesSearch;
 use control_panel\models\search\TicketsSearch;
 use common\models\panels\TicketMessages;
@@ -57,7 +58,12 @@ class SiteController extends CustomController
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['signin', 'signup', 'restore', 'reset', 'checkout', 'invoice', 'payer-verify', 'error', 'redirect', 'paypal-verify'],
+                        'actions' => [
+                            'signin', 'signup', 'restore', 'reset',
+                            'checkout', 'invoice', 'payer-verify',
+                            'error', 'redirect', 'paypal-verify',
+                            'search-domains',
+                        ],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -74,11 +80,11 @@ class SiteController extends CustomController
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword']
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword', 'search-domains']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword'],
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword', 'search-domains'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -752,5 +758,26 @@ class SiteController extends CustomController
         }
 
         return $model;
+    }
+
+    /**
+     * Search available domains
+     * @param string $search_domain
+     * @param string $zone
+     * @return array
+     * @throws yii\base\UnknownClassException
+     */
+    public function actionSearchDomains(string $search_domain, string $zone): array
+    {
+        $domain = trim($search_domain);
+        $zone = trim($zone);
+
+        $domainsSearch = new DomainsAvailableSearch();
+
+        return [
+            'content' => $this->renderPartial('layouts/_search_domains_result', [
+                'domains' => $domainsSearch->searchDomains($domain, $zone)
+            ])
+        ];
     }
 }

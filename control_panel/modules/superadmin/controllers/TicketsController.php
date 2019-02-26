@@ -147,9 +147,6 @@ class TicketsController extends CustomController
             'stores' => $blocks['stores'],
             'domains' => $blocks['domains'],
             'ssl' => $blocks['ssl'],
-            'panels' => $blocks['panels'],
-            'gateways' => $blocks['gateways'],
-            'childPanels' => $blocks['childPanels'],
             'notes' => $blocks['notes'],
         ]);
     }
