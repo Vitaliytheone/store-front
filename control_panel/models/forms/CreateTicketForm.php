@@ -1,4 +1,5 @@
 <?php
+
 namespace control_panel\models\forms;
 
 use control_panel\helpers\UserHelper;
@@ -17,6 +18,9 @@ class CreateTicketForm extends Model
 {
     public $subject;
     public $message;
+
+    /** @var string */
+    public $post;
 
     /**
      * @var Customers
@@ -85,6 +89,8 @@ class CreateTicketForm extends Model
 
     /**
      * Create ticket method
+     * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -107,8 +113,10 @@ class CreateTicketForm extends Model
         $ticketModel->message = $this->message;
         $ticketModel->customer_id = $this->_customer->id;
         $ticketModel->ticket_id = $model->id;
+        $ticketModel->admin_id = 0;
         $ticketModel->created_at = time();
         $ticketModel->ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
+        $ticketModel->post = $this->post;
 
         if (!$ticketModel->save()) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));

@@ -18,10 +18,7 @@
             <tr>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_id') ?></th>
                 <th class="table-custom__customer-th"><?= Yii::t('app/superadmin', 'customers.list.header_email') ?></th>
-                <th><?= Yii::t('app/superadmin', 'customers.list.header_panels') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_stores') ?></th>
-                <th><?= Yii::t('app/superadmin', 'customers.list.header_child') ?></th>
-                <th><?= Yii::t('app/superadmin', 'customers.list.header_gateway') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_domains') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_certificates') ?></th>
                 <th><?= Yii::t('app/superadmin', 'customers.list.header_first_name') ?></th>
@@ -38,24 +35,10 @@
                     <tr id="<?= $customer->id ?>">
                         <td><?= $customer->id ?></td>
                         <td class="table-custom__customer-td">
-                            <?php
-                            $referralView = Html::a(
-                                Html::tag(
-                                    'span',
-                                    '',
-                                    [
-                                        'class' => 'my-icons my-icons-referral',
-                                        'data-placement' => 'top',
-                                    ]
-                                ), Url::toRoute(['/customers', 'query' => $customer->referrer_email]), ['target' => '_blank']
-                            );  ?>
-                            <?= $customer->email ?> <?= ($customer->referrer_id ? ' ' . $referralView : '')?>
+                            <?= $customer->email ?>
                             <a href="<?= Url::toRoute(['/customers/auth', 'id' => $customer->id]) ?>" class="table-custom__customer-button" target="_blank" data-placement="top">
                                 <span class="my-icons my-icons-autorization"></span>
                             </a>
-                        </td>
-                        <td>
-                            <?= Html::a($customer->countProjects, Url::toRoute(['/panels', 'customer_id' => $customer->id])); ?>
                         </td>
                         <td>
                             <?php if (!$customer->can('stores')) : ?>
@@ -66,20 +49,6 @@
                                 )?>
                             <?php else : ?>
                                 <?= Html::a($customer->countStores, Url::toRoute(['/stores', 'customer_id' => $customer->id])); ?>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <?= Html::a($customer->countChild, Url::toRoute(['/child-panels', 'customer_id' => $customer->id])); ?>
-                        </td>
-                        <td>
-                            <?php if (!$customer->can('gateway')) : ?>
-                                <?= Html::a(Html::tag('span', Yii::t('app/superadmin', 'customers.list.activate_stores'),
-                                    ['class' => 'badge badge-light']),
-                                    Url::toRoute(['/customers/activate-gateways']),
-                                    ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
-                                )?>
-                            <?php else : ?>
-                                <?= Html::a($customer->countGateways, Url::toRoute(['/gateway', 'customer_id' => $customer->id])); ?>
                             <?php endif; ?>
                         </td>
                         <td>

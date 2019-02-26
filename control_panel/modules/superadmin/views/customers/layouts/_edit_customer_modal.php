@@ -36,13 +36,6 @@
                 <div class="form-group">
                     <?= $form->field($model, 'email'); ?>
                 </div>
-                <div class="form-group">
-                <?= $form->field($model, 'referral_status')
-                    ->dropDownList(
-                            $model->getReferrals(),
-                            ['class' => 'form-control', 'id' => 'edit-customer-referral']
-                    ) ?>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal"><?= Yii::t('app/superadmin', 'customers.edit.btn_cancel') ?></button>

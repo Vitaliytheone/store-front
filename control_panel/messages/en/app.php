@@ -406,4 +406,6 @@ return [
     'panels.order.search_result_price_column' => 'Price',
     'panels.order.search_result_status_column' => 'Status',
     'panels.order.search_result_taken_value' => 'Taken',
+
+    'support.view_form.attachment' => 'Attachments',
 ];
