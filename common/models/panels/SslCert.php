@@ -2,6 +2,7 @@
 
 namespace common\models\panels;
 
+use common\components\behaviors\CustomersCountersBehavior;
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\common\ProjectInterface;
 use common\models\stores\Stores;
@@ -169,7 +170,12 @@ class SslCert extends ActiveRecord
                 'value' => function() {
                     return time();
                 },
-            ]
+            ],
+            [
+                'class' => CustomersCountersBehavior::class,
+                'column' => 'ssl_certs',
+                'customerId' => 'cid',
+            ],
         ];
     }
 

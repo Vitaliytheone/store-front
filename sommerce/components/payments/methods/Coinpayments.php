@@ -2,7 +2,6 @@
 
 namespace sommerce\components\payments\methods;
 
-use Yii;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
@@ -11,6 +10,7 @@ use common\models\stores\Stores;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 class Coinpayments extends BasePayment
 {
@@ -34,6 +34,12 @@ class Coinpayments extends BasePayment
      * @var bool
      */
     public $showErrors = false;
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     /**
      * Incomming IPN messages url
@@ -69,12 +75,12 @@ class Coinpayments extends BasePayment
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $merchantId = ArrayHelper::getValue($paymentMethodOptions, 'merchant_id', null);
         $ipnSecret = ArrayHelper::getValue($paymentMethodOptions, 'ipn_secret', null);
@@ -94,9 +100,9 @@ class Coinpayments extends BasePayment
             'amountf' => $amount,
             'item_desc' => static::getDescription($checkout->id),
             'item_name' => static::getDescription($checkout->id),
-            'success_url' => SiteHelper::hostUrl(),
-            'cancel_url' => SiteHelper::hostUrl(),
-            'ipn_url' => SiteHelper::hostUrl() . static::$ipnUrl,
+            'success_url' => SiteHelper::hostUrl($store->ssl),
+            'cancel_url' => SiteHelper::hostUrl($store->ssl),
+            'ipn_url' => SiteHelper::hostUrl($store->ssl) . static::$ipnUrl,
             'invoice' => $checkout->id,
             'email' => $email,
             'allow_extra' => '1',
@@ -138,11 +144,7 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_COINPAYMENTS,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_COINPAYMENTS);
 
         if (empty($paymentMethod)) {
             return [
@@ -151,7 +153,7 @@ class Coinpayments extends BasePayment
             ];
         }
 
-        $methodDetails = $paymentMethod->getDetails();
+        $methodDetails = $paymentMethod->getOptions();
         $methodMerchantId = ArrayHelper::getValue($methodDetails, 'merchant_id');
         $methodIPNSecret = ArrayHelper::getValue($methodDetails, 'ipn_secret');
 
@@ -190,7 +192,7 @@ class Coinpayments extends BasePayment
         if (empty($ipnData['sommerce_checkout_id'])
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $ipnData['sommerce_checkout_id'],
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no checkout

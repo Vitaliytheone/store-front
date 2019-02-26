@@ -1,26 +1,33 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use Yii;
 use sommerce\components\payments\BasePayment;
-use common\helpers\SiteHelper;
 use common\models\store\Checkouts;
 use common\models\stores\PaymentMethods;
 use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Paywant
  * @package sommerce\components\payments\methods
  */
-class Paywant extends BasePayment {
-
+class Paywant extends BasePayment
+{
     /**
      * @var string - url action
      */
     public $action = null;
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     public function __construct(array $config = [])
     {
@@ -33,12 +40,12 @@ class Paywant extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
 
         $hashOlustur = base64_encode(hash_hmac('sha256', implode("|", [
@@ -118,11 +125,7 @@ class Paywant extends BasePayment {
         $urunTutari = ArrayHelper::getValue($_POST, 'UrunTutari', '');
         $hash = ArrayHelper::getValue($_POST, 'Hash', '');
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAYWANT,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAYWANT);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -135,7 +138,7 @@ class Paywant extends BasePayment {
         if (empty($extraData)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $extraData,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             if (@$this->_checkout->status == 1) echo 'OK';
@@ -165,7 +168,7 @@ class Paywant extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);

@@ -1,29 +1,37 @@
 <?php
+
 namespace sommerce\models\forms;
 
 use common\components\ActiveForm;
 use common\helpers\CurrencyHelper;
-use common\models\store\Carts;
 use common\models\store\Checkouts;
-use common\models\stores\PaymentGateways;
 use common\models\stores\PaymentMethods;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\UserHelper;
 use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\DynamicModel;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderForm
  * @package app\models\forms
  */
-class OrderForm extends Model {
-
+class OrderForm extends Model
+{
+    /** @var string customer (buyer) email */
     public $email;
+
+    /** @var int current PaymentMethod - ID */
     public $method;
+
+    /** @var int ID of current StorePaymentMethod */
+    public $storePayMethod;
 
     /**
      * @var array
@@ -77,6 +85,7 @@ class OrderForm extends Model {
 
     /**
      * @return array the validation rules.
+     * @throws UnknownClassException
      */
     public function rules()
     {
@@ -104,9 +113,11 @@ class OrderForm extends Model {
 
     /**
      * Validate data
-     * @param string[]|string $attributeNames
+     * @param null $attributeNames
      * @param bool $clearErrors
      * @return bool
+     * @throws InvalidConfigException
+     * @throws UnknownClassException
      */
     public function validate($attributeNames = null, $clearErrors = true)
     {
@@ -160,42 +171,45 @@ class OrderForm extends Model {
     /**
      * Get available payment methods
      * @return array
+     * @throws UnknownClassException
      */
-    public function getPaymentMethods()
+    public function getPaymentMethods(): array
     {
         if (null === static::$_methods) {
 
-            $currencyPayments = $this->getCurrencyPayments();
-
             static::$_methods = [];
             $methods = [];
+            $paymentMethods = PaymentMethods::getMethods();
+            $names = StorePaymentMethods::getNames();
 
-            foreach (PaymentMethods::find()
-                 ->andWhere([
-                     'method' => array_keys($currencyPayments)
-                 ])
+            foreach (StorePaymentMethods::find()
                  ->store($this->_store)
                  ->active()
                  ->all() as $key => $method) {
+                /** @var StorePaymentMethods $method */
+                /** @var PaymentMethods $paymentMethod */
+                $paymentMethod = ArrayHelper::getValue($paymentMethods, $method->method_id);
 
                 $methods[$key] = [
-                    'id' => $method->id,
-                    'name' => $method->getName(),
-                    'method' => $method->method,
-                    'details' => $method->getDetails(),
-                    'position' => ArrayHelper::getValue($currencyPayments, [$method->method, 'position'], 0),
+                    'id' => $method->method_id,
+                    'name' => $method->name ?: $names[$method->method_id],
+                    'method' => strtolower($paymentMethod->method_name),
+                    'details' => $method->getOptions(),
+                    'position' => $method->position,
                     'fields' => [],
-                    'jsOptions' => []
+                    'jsOptions' => [],
+                    'storePayId' => $method->id,
+                    'class_name' => $paymentMethod->class_name,
                 ];
 
-                $payment = Payment::getPayment($method->method);
+                $payment = Payment::getPayment($paymentMethod->class_name);
                 $methods[$key]['fields'] = $payment->fields();
                 $methods[$key]['jsOptions'] = $payment->getJsEnvironments($this->_store, $this->email, $method);
             }
 
             ArrayHelper::multisort($methods, 'position', SORT_ASC);
 
-            static::$_methods = ArrayHelper::index($methods, 'method');
+            static::$_methods = ArrayHelper::index($methods, 'id');
         }
 
         return static::$_methods;
@@ -204,8 +218,9 @@ class OrderForm extends Model {
     /**
      * Return Payments methods list for view
      * @return array
+     * @throws UnknownClassException
      */
-    public function getPaymentsMethodsForView()
+    public function getPaymentsMethodsForView(): array
     {
         $methods = [];
         foreach ($this->getPaymentMethods() as $method) {
@@ -221,8 +236,10 @@ class OrderForm extends Model {
     /**
      * Save to cart
      * @return bool
+     * @throws InvalidConfigException
+     * @throws UnknownClassException
      */
-    public function save()
+    public function save(): bool
     {
         $attributes = $this->attributes;
         if (!$this->validate()) {
@@ -230,11 +247,19 @@ class OrderForm extends Model {
             return false;
         }
 
+        $storePayMethodArray = static::$_methods[$this->method];
+
+        $storePayMethod = StorePaymentMethods::findOne($storePayMethodArray['storePayId']);
+        if (empty($storePayMethod)) {
+            return false;
+        }
+
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
-        $checkout->method_id = $this->method;
+        $checkout->method_id = $storePayMethod->method_id;
         $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
+        $checkout->currency_id = $storePayMethod->currency_id;
         $checkout->setDetails($this->getItems());
         $checkout->setUserDetails($this->_userData);
 
@@ -243,19 +268,14 @@ class OrderForm extends Model {
             return false;
         }
 
-        $paymentMethod = PaymentMethods::find()
-            ->andWhere([
-                'id' => $this->method
-            ])->store($this->_store)->active()->one();
-
-        $result = Payment::getPayment($paymentMethod->method)->checkout($checkout, $this->_store, $this->email, $paymentMethod);
+        $result = Payment::getPayment($storePayMethodArray['class_name'])->checkout($checkout, $this->_store, $this->email, $storePayMethod);
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;
-        } else if (2 == $result['result']) {
+        } elseif (2 == $result['result']) {
             $this->redirect = $result['redirect'];
             return true;
-        } else if (1 == $result['result']) {
+        } elseif (1 == $result['result']) {
             $this->formData = $result['formData'];
             return true;
         }
@@ -267,7 +287,7 @@ class OrderForm extends Model {
      * Get currency payments
      * @return array
      */
-    public function getCurrencyPayments()
+    public function getCurrencyPayments(): array
     {
         if ($this->_currencyPayments) {
             return $this->_currencyPayments;
@@ -303,7 +323,7 @@ class OrderForm extends Model {
      * @param $attribute
      * @return bool
      */
-    public function validateCarItems($attribute)
+    public function validateCarItems($attribute): bool
     {
         if ($this->hasErrors()) {
             return false;
@@ -313,6 +333,8 @@ class OrderForm extends Model {
             $this->addError($attribute, 'Cart can not be empty.');
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -326,8 +348,10 @@ class OrderForm extends Model {
     /**
      * @param $attribute
      * @return bool
+     * @throws UnknownClassException
+     * @throws InvalidConfigException
      */
-    public function validateUserOptions($attribute)
+    public function validateUserOptions($attribute): bool
     {
         if ($this->hasErrors()) {
             return false;
@@ -337,7 +361,7 @@ class OrderForm extends Model {
         $paymentMethods = ArrayHelper::index($this->getPaymentMethods(), 'id');
         $methodOptions = ArrayHelper::getValue($paymentMethods, $this->method, []);
         $fields = ArrayHelper::getValue($methodOptions, 'fields', []);
-        $paymentMethod = Payment::getPayment($methodOptions['method']);
+        $paymentMethod = Payment::getPayment($methodOptions['class_name']);
 
         if (empty($fields)) {
             return true;
@@ -347,7 +371,7 @@ class OrderForm extends Model {
         $rules = [];
 
         foreach ($fields as $name => $field) {
-            $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name);
+            $this->_userData[$name] = ArrayHelper::getValue($this->$attribute, $name, '');
             if (empty($field['rules'])) {
                 continue;
             }
@@ -390,21 +414,24 @@ class OrderForm extends Model {
 
     /**
      * @return array
+     * @throws UnknownClassException
      */
-    public function getJsOptions()
+    public function getJsOptions(): array
     {
         $jsOptions = [];
 
         foreach ($this->getPaymentMethods() as $key => $method) {
-            $jsOptions[$method['method']] = $method['jsOptions'];
+            $methodName = str_replace(' ', '_', $method['method']);
+            $jsOptions[$methodName] = $method['jsOptions'];
         }
 
         return $jsOptions;
     }
 
     /**
-     * Get available payments methods
+     * Get Fields for available payments methods
      * @return array
+     * @throws UnknownClassException
      */
     public function getPaymentsFields()
     {
@@ -443,7 +470,7 @@ class OrderForm extends Model {
             foreach ($fields as $key => $field) {
                 $name = ArrayHelper::getValue($field, 'name');
                 if ($name) {
-                    $paymentsFields[$payment][$key]['value'] = ArrayHelper::getValue($this->fields, $name);
+                    $paymentsFields[$payment][$key]['value'] = ArrayHelper::getValue($this->fields, $name, '');
                 }
             }
         }

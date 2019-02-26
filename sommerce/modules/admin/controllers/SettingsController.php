@@ -7,6 +7,7 @@ use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
+use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
@@ -18,10 +19,11 @@ use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\ContentNegotiator;
 use yii\filters\AjaxFilter;
-use \yii\filters\VerbFilter;
+use yii\filters\VerbFilter;
 
 /**
  * Settings controller for the `admin` module
@@ -44,7 +46,15 @@ class SettingsController extends CustomController
         return $parentBehaviors + [
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['theme-get-style', 'theme-get-data', 'theme-update-style']
+                'only' => [
+                    'theme-get-style',
+                    'theme-get-data',
+                    'theme-update-style',
+                    'add-payment-method',
+                    'update-payment-positions',
+                    'delete-invalid-currency',
+                    'integrations-toggle-active',
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -53,11 +63,23 @@ class SettingsController extends CustomController
                     'theme-get-style' => ['GET'],
                     'theme-get-data' => ['GET'],
                     'theme-update-style' => ['POST'],
+                    'add-payment-method' => ['POST'],
+                    'update-payment-positions' => ['POST'],
+                    'delete-invalid-currency' => ['POST'],
+                    'edit-integration' => ['GET', 'POST'],
+                    'integrations' => ['GET'],
+                    'integrations-toggle-active' => ['POST'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['theme-update-style'],
+                'only' => [
+                    'theme-update-style',
+                    'add-payment-method',
+                    'update-payment-positions',
+                    'delete-invalid-currency',
+                    'integrations-toggle-active',
+                ],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -86,7 +108,10 @@ class SettingsController extends CustomController
 
     /**
      * Settings general
-     * @return string
+     * @return string|Response
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws NotFoundHttpException
      */
     public function actionIndex()
     {
@@ -95,12 +120,12 @@ class SettingsController extends CustomController
         $this->view->title = Yii::t('admin', 'settings.page_title');
         $this->addModule('adminGeneral');
 
-        
-
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
 
-        $storeForm->setUser(Yii::$app->user);
+        $storeForm->setUser($identity);
 
         if ($storeForm->updateSettings($request->post())) {
             UiHelper::message(Yii::t('admin', 'settings.message_settings_updated'));
@@ -121,6 +146,7 @@ class SettingsController extends CustomController
      * Delete Store Favicon or Logo
      * @param $type
      * @return Response
+     * @throws \yii\base\Exception
      */
     public function actionDeleteImage($type)
     {
@@ -137,6 +163,7 @@ class SettingsController extends CustomController
      * Return links list by link type AJAX action
      * @param $link_type
      * @return array
+     * @throws \yii\base\Exception
      */
     public function actionGetLinks($link_type)
     {
@@ -152,5 +179,31 @@ class SettingsController extends CustomController
         $searchModel->setStore($this->store);
 
         return ['links' => $searchModel->searchLinksByType($link_type|0)];
+    }
+
+    /**
+     * Check if currency changes and return bool
+     * @var $postData string
+     * @return bool|null
+     */
+    public function actionCheckCurrency(): ?bool
+    {
+        if (!Yii::$app->getRequest()->isAjax) {
+            exit;
+        }
+
+        $postData = Yii::$app->getRequest()->post('currency');
+
+        if (empty($postData)) {
+            return null;
+        }
+
+        $storeForm = EditStoreSettingsForm::findOne($this->store->id);
+
+        if (empty($storeForm)) {
+            return null;
+        }
+
+        return $storeForm->currencyChange($postData);
     }
 }

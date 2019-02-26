@@ -1,11 +1,12 @@
 <?php
+
 namespace common\mail\mailers\store;
 
+use common\models\store\Checkouts;
 use common\models\store\Orders;
 use common\models\store\Payments;
 use common\models\store\Suborders;
-use common\models\stores\PaymentGateways;
-use Yii;
+use common\models\stores\PaymentMethods;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 
@@ -13,7 +14,8 @@ use yii\helpers\ArrayHelper;
  * Class OrderWithItemsMailer
  * @package common\mail\mailers\store
  */
-class OrderWithItemsMailer extends BaseNotificationMailer {
+class OrderWithItemsMailer extends BaseNotificationMailer
+{
 
     /**
      * @var Orders
@@ -41,6 +43,7 @@ class OrderWithItemsMailer extends BaseNotificationMailer {
         $suborders = (array)ArrayHelper::getValue($this->options, 'suborders', $this->_order->suborders);
         $payment = ArrayHelper::getValue($this->options, 'payment', $this->_order->payment);
         $options = $this->getGlobalVars();
+        $checkout = Checkouts::findOne($payment->checkout_id);
 
         $data = [];
         $total = 0;
@@ -64,7 +67,7 @@ class OrderWithItemsMailer extends BaseNotificationMailer {
             'sub_total' => $total,
             'total' => $total,
             'url' => $this->store->getSite() . '/vieworder/' . $this->_order->code,
-            'payment_method' => $payment ? PaymentGateways::getMethodName($payment->method) : null
+            'payment_method' => $checkout ? PaymentMethods::getName($checkout->method_id) : null
         ];
 
         $this->html = $this->renderTwig((string)$this->template->body, $options);

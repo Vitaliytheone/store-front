@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\stores\PaymentMethods;
@@ -12,6 +13,7 @@ use common\helpers\SiteHelper;
 use common\models\store\Payments;
 use common\models\store\PaymentsLog;
 use common\models\store\Checkouts;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Mercadopago
@@ -29,16 +31,16 @@ class Mercadopago extends BasePayment
 
     /**
      * Checkout
-     * @param \common\models\store\Checkouts $checkout
-     * @param \common\models\stores\Stores $store
+     * @param Checkouts $checkout
+     * @param Stores $store
      * @param string $email
-     * @param \common\models\stores\PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array|mixed
      * @throws MercadoPagoException
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
@@ -133,13 +135,9 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $paymentGateway = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_MERCADOPAGO,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_MERCADOPAGO);
 
-        if (empty($paymentGateway)) {
+        if (empty($paymentMethod)) {
             // no invoice
             return [
                 'result' => 2,
@@ -147,7 +145,7 @@ class Mercadopago extends BasePayment
             ];
         }
 
-        $paymentMethodOptions = $paymentGateway->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $clientId = ArrayHelper::getValue($paymentMethodOptions, 'client_id');
         $clientSecret = ArrayHelper::getValue($paymentMethodOptions, 'secret');
@@ -190,12 +188,12 @@ class Mercadopago extends BasePayment
         $checkoutId = $paymentInfoResponse['collection']['external_reference'];
         $status = $paymentInfoResponse['collection']['status'];
         $amount = $paymentInfoResponse['collection']['transaction_amount'];
-        $currency = $paymentInfoResponse["collection"]["currency_id"];
+        $currency = $paymentInfoResponse['collection']['currency_id'];
 
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $checkoutId,
-                'method_id' => $paymentGateway->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

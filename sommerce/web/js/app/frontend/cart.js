@@ -137,27 +137,29 @@ customModule.cartFrontend = {
     {
         var self = this;
 
-        var stripe = Stripe(params.configure.key);
+        if (Boolean(params.configure.key.trim())) {
+            var stripe = Stripe(params.configure.key);
 
-        // Create Checkout's handler
-        var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
-            token: function(token) {
+            // Create Checkout's handler
+            var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
+                token: function (token) {
 
-                // use Checkout's card token to create a card source
-                stripe.createSource({
-                    type: 'card',
-                    token: token.id
-                }).then(function(result){
-                    if (result.error || !result.source) {
-                        console.log('ERROR!', result.error.message);
-                        window.location.replace(params.return_url);
-                    } else {
-                        // Send the source to your server
-                        stripeSourceHandler(result.source);
-                    }
-                });
-            }
-        }));
+                    // use Checkout's card token to create a card source
+                    stripe.createSource({
+                        type: 'card',
+                        token: token.id
+                    }).then(function (result) {
+                        if (result.error || !result.source) {
+                            console.log('ERROR!', result.error.message);
+                            window.location.replace(params.return_url);
+                        } else {
+                            // Send the source to your server
+                            stripeSourceHandler(result.source);
+                        }
+                    });
+                }
+            }));
+        }
 
         $('button', self.fieldsContainer).on('click', function(e) {
             if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
