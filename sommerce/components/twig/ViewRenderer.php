@@ -6,34 +6,30 @@ use common\models\store\PageFiles;
 use sommerce\components\View;
 use sommerce\helpers\PageFilesHelper;
 use Twig_LoaderInterface;
-use Twig_Environment;
 use Twig_Loader_Array;
-use Twig_Loader_Filesystem;
-use yii\helpers\FileHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class ViewRenderer
- * @package app\components\twig
+ * @package sommerce\components\twig
  */
 class ViewRenderer extends \common\components\twig\ViewRenderer
 {
-
     /**
      * @var array
      */
     public static $pages;
 
     /**
-     * @return Twig_LoaderInterface
+     * @return Twig_Loader_Array|Twig_LoaderInterface
      */
     public function getLoader()
     {
-        if (null === $this->loader) {
+        if (null == $this->loader) {
             $files = [];
 
-            foreach((array)ArrayHelper::getValue(PageFilesHelper::getFiles(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
+            foreach ((array)ArrayHelper::getValue(PageFilesHelper::getFiles(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
                 $files['snippets/' . $file['file_name']] = $file['content'];
             }
 
