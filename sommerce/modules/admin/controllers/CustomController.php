@@ -4,8 +4,10 @@ namespace sommerce\modules\admin\controllers;
 
 use common\models\stores\StoreAdminAuth;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 use yii\web\User;
 
 /**
@@ -102,5 +104,21 @@ class CustomController extends AdminController
         }
 
         return parent::render($view, $params);
+    }
+
+    /**
+     * Find model
+     * @param int|mixed $attributes
+     * @param ActiveRecord $class
+     * @return null|ActiveRecord
+     * @throws NotFoundHttpException
+     */
+    protected function findClassModel($attributes, $class)
+    {
+        if (!($model = $class::findOne($attributes))) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
     }
 }

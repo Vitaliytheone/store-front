@@ -118,7 +118,7 @@ return [
     'payments.t_date' => 'Date',
 
     'products.page_title' => 'Products',
-    'products.add_product' => 'Add product',
+    'products.create_product' => 'Create new product',
     'products.edit_product' => 'Edit',
     'products.add_package' => 'Add package',
     'products.edit_package' => 'Edit',
