@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\store\PaymentsLog;
@@ -18,17 +19,24 @@ use PagSeguroNotificationService;
 use PagSeguroNotificationType;
 use Exception;
 use PagSeguroLibrary;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Pagseguro
  * @package sommerce\components\payments\methods
  */
-class Pagseguro extends BasePayment {
-
+class Pagseguro extends BasePayment
+{
     /**
      * @var string - url action
      */
     public $action = null;
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     public function __construct(array $config = [])
     {
@@ -42,20 +50,21 @@ class Pagseguro extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
-     * @return array
+     * @param StorePaymentMethods $details
+     * @return array|mixed
+     * @throws Exception
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $directPaymentRequest = new PagSeguroPaymentRequest();
         $directPaymentRequest->addItem($checkout->id, static::getDescription($checkout->id), 1, $checkout->price);
         $directPaymentRequest->setCurrency("BRL");
         $directPaymentRequest->setReference($checkout->id);
 
-        $directPaymentRequest->setNotificationURL(SiteHelper::hostUrl() . '/pagseguro');
-        $directPaymentRequest->setRedirectURL(SiteHelper::hostUrl() . '/cart');
+        $directPaymentRequest->setNotificationURL(SiteHelper::hostUrl($store->ssl) . '/pagseguro');
+        $directPaymentRequest->setRedirectURL(SiteHelper::hostUrl($store->ssl) . '/cart');
         $credentials = new PagSeguroAccountCredentials(ArrayHelper::getValue($paymentMethodOptions, 'email'), ArrayHelper::getValue($paymentMethodOptions, 'token'));
 
         if (!empty(Yii::$app->params['testPagseguro'])) {
@@ -78,7 +87,8 @@ class Pagseguro extends BasePayment {
     /**
      * Processing payments result
      * @param Stores $store
-     * @return array
+     * @return array|mixed
+     * @throws Exception
      */
     public function processing($store)
     {
@@ -94,11 +104,7 @@ class Pagseguro extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_PAGSEGURO,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_PAGSEGURO);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -108,7 +114,7 @@ class Pagseguro extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $credentials = new PagSeguroAccountCredentials(ArrayHelper::getValue($paymentMethodOptions, 'email'), ArrayHelper::getValue($paymentMethodOptions, 'token'));
 
@@ -144,7 +150,7 @@ class Pagseguro extends BasePayment {
         if (empty($checkoutId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $checkoutId,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

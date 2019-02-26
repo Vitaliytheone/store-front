@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use common\models\store\Checkouts;
@@ -9,8 +10,8 @@ use common\models\stores\Stores;
 use Yii;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Twocheckout
@@ -19,12 +20,18 @@ use yii\helpers\ArrayHelper;
  *
  * @package app\components\payments\methods
  */
-class Twocheckout extends BasePayment {
-
+class Twocheckout extends BasePayment
+{
     public $action;
     public $method = 'GET';
     public $redirectProcessing = false;
     public $showErrors = false;
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     const TEST_MODE_ON = 1;
     const MODE_TEST_OFF = 0;
@@ -66,12 +73,12 @@ class Twocheckout extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
         $mode = (int)ArrayHelper::getValue($paymentMethodOptions, 'test_mode', null);
         $accountNumber = ArrayHelper::getValue($paymentMethodOptions, 'account_number', null);
         $secretWord = ArrayHelper::getValue($paymentMethodOptions, 'secret_word', null);
@@ -81,7 +88,7 @@ class Twocheckout extends BasePayment {
         }
 
         $amount = number_format($checkout->price, 2, '.', '');
-        $receiptLinkUrl = SiteHelper::hostUrl() . '/cart';
+        $receiptLinkUrl = SiteHelper::hostUrl($store->ssl) . '/cart';
 
         /**
          * `sid`    Your 2Checkout account number.
@@ -162,11 +169,7 @@ class Twocheckout extends BasePayment {
            ];
        }
 
-       $paymentMethod = PaymentMethods::findOne([
-           'method' => PaymentMethods::METHOD_2CHECKOUT,
-           'store_id' => $store->id,
-           'active' => PaymentMethods::ACTIVE_ENABLED
-       ]);
+       $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_2CHECKOUT);
 
        if (empty($paymentMethod)) {
            return [
@@ -175,7 +178,7 @@ class Twocheckout extends BasePayment {
            ];
        }
 
-       $paymentDetails = $paymentMethod->getDetails();
+       $paymentDetails = $paymentMethod->getOptions();
        $secretWord = ArrayHelper::getValue($paymentDetails, 'secret_word', null);
 
        if (empty($secretWord)) {
@@ -198,7 +201,7 @@ class Twocheckout extends BasePayment {
        if (empty($messageVendorOrderId)
            || !($this->_checkout = Checkouts::findOne([
                'id' => $messageVendorOrderId,
-               'method_id' => $paymentMethod->id
+               'method_id' => $paymentMethod->method_id
            ]))
            || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
            // no checkout

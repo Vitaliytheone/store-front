@@ -4,6 +4,7 @@
  */
 customModule.adminGeneral = {
     run: function (params) {
+
         /******************************************************************
          *            General settings SEO part interaction
          *******************************************************************/
@@ -83,6 +84,5 @@ customModule.adminGeneral = {
                 }
             });
         });
-
     }
 };

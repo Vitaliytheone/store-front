@@ -1,9 +1,9 @@
 <?php
+
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
 use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;
 use sommerce\controllers\CommonController;
 use sommerce\helpers\BlockHelper;
@@ -13,7 +13,6 @@ use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
 use sommerce\modules\admin\models\search\BlocksSearch;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -103,6 +102,7 @@ trait BlocksTrait {
      * Update all blocks AJAX POST action
      * @return bool
      * @throws BadRequestHttpException
+     * @throws \Throwable
      */
     public function actionUpdateBlocks()
     {
@@ -113,8 +113,11 @@ trait BlocksTrait {
             throw new BadRequestHttpException('Ajax request expected!');
         }
 
+        /** @var \common\models\stores\StoreAdminAuth $identity */
+        $identity = Yii::$app->user->getIdentity(false);
+
         $form = new UpdateBlocksForm();
-        $form->setUser(Yii::$app->user);
+        $form->setUser($identity);
         $form->setBlocks($request->post());
 
         if (!$form->save()) {
@@ -224,6 +227,7 @@ trait BlocksTrait {
      * Logging change block active status event
      * @param $code
      * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     private function _logToggleBlockStatus($code)
     {
@@ -233,7 +237,7 @@ trait BlocksTrait {
             throw new NotFoundHttpException();
         }
 
-        /** @var StoreAdminAuth $identity */
+        /** @var \common\models\stores\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_ACTIVE_STATUS_CHANGED, $block->id, $block->code);

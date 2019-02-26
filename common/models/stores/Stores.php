@@ -69,7 +69,7 @@ use yii\helpers\ArrayHelper;
  * @property int $dns_checked_at
  * @property int $dns_status
  *
- * @property PaymentMethods[] $paymentMethods
+ * @property StorePaymentMethods[] $paymentMethods
  * @property StoreAdmins[] $storeAdmins
  * @property StoreDomains[] $storeDomains
  * @property StoreProviders[] $storeProviders
@@ -183,9 +183,9 @@ class Stores extends ActiveRecord implements ProjectInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPaymentMethods()
+    public function getStorePaymentMethods()
     {
-        return $this->hasMany(PaymentMethods::class, ['store_id' => 'id']);
+        return $this->hasMany(StorePaymentMethods::class, ['store_id' => 'id']);
     }
 
     /**
