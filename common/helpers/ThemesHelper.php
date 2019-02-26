@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 use Yii;
@@ -16,31 +17,15 @@ class ThemesHelper {
      * @param string $defaultExtension
      * @return string|null
      */
-    public static function getView($view, $defaultExtension = 'php')
+    public static function getView($view, $defaultExtension = 'twig')
     {
         $view = ltrim($view, '/');
-
         $sp = DIRECTORY_SEPARATOR;
-
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-
-        $themeFolder = $store->getThemeFolder();
-
         $viewsPath = Yii::getAlias('@sommerce' . DIRECTORY_SEPARATOR . 'views');
+        $rootPath = $viewsPath . $sp . $view;
 
-        $custom = $sp . 'themes' . $sp . 'custom' . $sp . $store->id . $sp . $themeFolder . $sp . $view;
-        $standard = $sp . 'themes' . $sp . 'default' . $sp . $themeFolder . $sp . $view;
-
-        $customPath = $viewsPath . $custom;
-        $standardPath = $viewsPath . $standard;
-
-        if (is_file($customPath) || is_file($customPath . '.' . $defaultExtension) || is_file($customPath . '.php')) {
-            return $custom;
-        } else if (is_file($standardPath) || is_file($standardPath . '.' . $defaultExtension) || is_file($standardPath . '.php')) {
-            return $standard;
+        if (is_file($rootPath) || is_file($rootPath . '.' . $defaultExtension) || is_file($rootPath . '.php')) {
+            return $rootPath;
         }
 
         return null;
@@ -57,6 +42,8 @@ class ThemesHelper {
             'features.twig',
             'reviews.twig',
             'process.twig',
+            '/snippets/header.twig',
+            '/snippets/footer.twig',
         ];
     }
 
@@ -66,7 +53,7 @@ class ThemesHelper {
      */
     public static function getEnabledIncludes()
     {
-        $enabledList = [];
+        $enabledList = ['/snippets/header.twig', '/snippets/footer.twig'];
 
         /**
          * @var $store Stores

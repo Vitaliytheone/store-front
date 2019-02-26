@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\twig\parsers;
 
 use common\helpers\ThemesHelper;
@@ -45,30 +46,19 @@ class TokenParser_Include extends Twig_TokenParser
         }
 
         $view = $expression->getAttribute('value');
-
         $files = [];
-        if (!empty($view) && in_array($view, ['snippets/header.twig', 'snippets/footer.twig'])) {
-            foreach((array)ArrayHelper::getValue(PageFilesHelper::getFiles(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
-                $files['snippets/' . $file['file_name']] = $file['content'];
-            }
 
-            if (empty($files[$view])) {
-                throw new Twig_Error_Syntax($view . ' file is not supported');
-            }
-
-            $expression->setAttribute('value', $view);
-            return $node;
+        foreach((array)ArrayHelper::getValue(PageFilesHelper::getFiles(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
+            $files['/snippets/' . $file['file_name']] = $file['content'];
         }
 
-        if (empty($view) || !in_array($view, ThemesHelper::getAvailableIncludes())) {
+        if (empty($view) || empty($files[$view]) || !in_array($view, ThemesHelper::getAvailableIncludes())) {
             throw new Twig_Error_Syntax($view . ' file is not supported');
         }
 
         if (!in_array($view, ThemesHelper::getEnabledIncludes())) {
             return null;
         }
-
-        $view = ThemesHelper::getView($view);
 
         if (!$view) {
             return null;

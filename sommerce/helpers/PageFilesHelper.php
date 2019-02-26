@@ -16,6 +16,7 @@ class PageFilesHelper {
     /** @var array */
     public static $page_files;
 
+
     /**
      * @return mixed
      */
@@ -31,7 +32,20 @@ class PageFilesHelper {
                 'created_at',
                 'publish_at',
                 'content',
-            ])->asArray()->all(), 'file_name', 'file_type');
+            ])->asArray()->all(), 'file_name');
+        }
+
+        return static::$page_files;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public static function getFilesGroupByType()
+    {
+        if (null === static::$page_files) {
+            static::$page_files = ArrayHelper::index(static::getFiles(), 'file_name', 'file_type');
         }
 
         return static::$page_files;
@@ -44,11 +58,14 @@ class PageFilesHelper {
      * @return mixed
      * @throws NotFoundHttpException
      */
-    public static function getFileByName($type, $name)
+    public static function getFileByName($name)
     {
-        $file = ArrayHelper::getValue(static::getFiles(), [$type, $name]);
+        $file = ArrayHelper::index(static::getFiles(), 'file_name');
+        Yii::debug($file,'$file');
+        $file = ArrayHelper::getValue($file, $name);
+
         if (empty($file)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException("File {$name} not found");
         }
 
         return $file;
@@ -65,16 +82,16 @@ class PageFilesHelper {
         $type = $name = '';
 
         if (stripos($value, 'styles.css') !== false) {
-            $type = 'css';
+            $type = PageFiles::FILE_TYPE_STYLE;
             $name = 'styles.css';
         }
         if (stripos($value, 'scripts.js') !== false) {
-            $type = 'js';
+            $type = PageFiles::FILE_TYPE_JS;
             $name = 'scripts.js';
         }
 
         /** @var array $files */
-        $files = self::getFileByName($type, $name);
+        $files = self::getFileByName($name);
 
         return "/{$value}?v={$files['updated_at']}";
     }

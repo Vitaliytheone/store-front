@@ -1,7 +1,8 @@
 <?php
+
 namespace sommerce\components;
 
-use sommerce\helpers\ThemesHelper;
+use common\helpers\ThemesHelper;
 use Yii;
 use yii\base\InvalidCallException;
 use yii\base\ViewContextInterface;
@@ -25,61 +26,60 @@ class View extends \yii\web\View {
      * @throws InvalidCallException if a relative view name is given while there is no active context to
      * determine the corresponding view file.
      */
-    protected function findViewFile($view, $context = null)
-    {
-        if (pathinfo($view, PATHINFO_EXTENSION) !== 'twig') {
-            return parent::findViewFile($view, $context);
-        }
-
-        if (strncmp($view, '@', 1) === 0) {
-            // e.g. "@app/views/main"
-            $file = Yii::getAlias($view);
-        } elseif (strncmp($view, '//', 2) === 0) {
-            // e.g. "//layouts/main"
-            $file = Yii::$app->getViewPath() . DIRECTORY_SEPARATOR . ltrim($view, '/');
-            $file = $this->getThemeViewFile($view);
-        } elseif (strncmp($view, '/', 1) === 0) {
-            $file = $this->getThemeViewFile($view);
-        } elseif ($context instanceof ViewContextInterface) {
-            $file = $this->getThemeViewFile($view);
-        } elseif (($currentViewFile = $this->getViewFile()) !== false) {
-            $file = dirname($currentViewFile) . DIRECTORY_SEPARATOR . $view;
-        } else {
-            throw new InvalidCallException("Unable to resolve view file for view '$view': no active view context.");
-        }
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-
-        $path = $file . '.' . $this->defaultExtension;
-        if ($this->defaultExtension !== 'php' && !is_file($path)) {
-            $path = $file . '.php';
-        }
-
-        return $path;
-    }
+//    protected function findViewFile($view, $context = null)
+//    {
+//        if (pathinfo($view, PATHINFO_EXTENSION) !== 'twig') {
+//            return parent::findViewFile($view, $context);
+//        }
+//
+//        if (strncmp($view, '@', 1) === 0) {
+//            // e.g. "@app/views/main"
+//            $file = Yii::getAlias($view);
+//        } elseif (strncmp($view, '//', 2) === 0) {
+//            // e.g. "//layouts/main"
+//            $file = Yii::$app->getViewPath() . DIRECTORY_SEPARATOR . ltrim($view, '/');
+//            $file = $this->getThemeViewFile($view);
+//        } elseif (strncmp($view, '/', 1) === 0) {
+//            $file = $this->getThemeViewFile($view);
+//        } elseif ($context instanceof ViewContextInterface) {
+//            $file = $this->getThemeViewFile($view);
+//        } elseif (($currentViewFile = $this->getViewFile()) !== false) {
+//            $file = dirname($currentViewFile) . DIRECTORY_SEPARATOR . $view;
+//        } else {
+//            throw new InvalidCallException("Unable to resolve view file for view '$view': no active view context.");
+//        }
+//
+//        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
+//            return $file;
+//        }
+//
+//        $path = $file . '.' . $this->defaultExtension;
+//        if ($this->defaultExtension !== 'php' && !is_file($path)) {
+//            $path = $file . '.php';
+//        }
+//
+//        return $path;
+//    }
 
     /**
      * Get view themes file path
-     * @param string $view
+     * @param string|null $view
      * @return string
+     * @throws NotFoundHttpException
      */
-    public function getThemeViewFile($view)
-    {
-        $view = ThemesHelper::getView($view);
-
-        if (!$view) {
-            if (pathinfo($view, PATHINFO_EXTENSION) == 'twig') {
-                throw new NotFoundHttpException();
-            }
-            throw new InvalidCallException("Unable to locate view file for view '$view': no active controller.");
-        }
-
-        $viewsPath = Yii::getAlias('@sommerce' . DIRECTORY_SEPARATOR . 'views');
-
-        return $viewsPath . $view;
-    }
+//    public function getThemeViewFile($view)
+//    {
+//        $view = ThemesHelper::getView($view);
+//
+//        if (!$view) {
+//            if (pathinfo($view, PATHINFO_EXTENSION) == 'twig') {
+//                throw new NotFoundHttpException();
+//            }
+//            throw new InvalidCallException("Unable to locate view file for view '$view': no active controller.");
+//        }
+//
+//        return $view;
+//    }
 
     /**
      * Render content
@@ -87,6 +87,7 @@ class View extends \yii\web\View {
      * @param array $params
      * @param string $ext
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function renderContent($content, $params = [], $ext = 'twig'): string
     {

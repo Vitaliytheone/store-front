@@ -3,8 +3,10 @@
 namespace sommerce\controllers;
 
 use common\helpers\ThemesHelper;
+use common\models\store\Pages;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\helpers\AssetsHelper;
+use sommerce\helpers\PagesHelper;
 use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
@@ -158,8 +160,8 @@ class CustomController extends CommonController
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
-            'site' => [
-                'page_title' => $this->pageTitle ? $this->pageTitle : $this->store->seo_title,
+            'page' => [
+                'title' => $this->pageTitle ?: $this->store->seo_title,
                 'menu' => $search->getSiteMenuTree(Yii::$app->request->url),
                 'cart' => [
                     'item_count' => (int)(new CartSearch())->setStore($this->store)->getCount(),
@@ -170,8 +172,8 @@ class CustomController extends CommonController
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
                 'meta' => [
-                    'keywords' => $this->seoKeywords ? $this->seoKeywords : $this->store->seo_keywords,
-                    'description' => $this->seoDescription ? $this->seoDescription : $this->store->seo_description,
+                    'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
+                    'description' => $this->seoDescription ?: $this->store->seo_description,
                 ],
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
                 'story_name' => Yii::$app->store->getInstance()->name,
@@ -233,20 +235,33 @@ class CustomController extends CommonController
     /**
      * Renders a static string by applying a layout.
      * @param string $content the static string being rendered
+     * @param array $params
      * @return string the rendering result of the layout with the given static string as the `$content` variable.
      * If the layout is disabled, the string will be returned back.
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\NotFoundHttpException
      */
-    public function renderContent($content)
+    public function renderContent($content, $params = [])
     {
-        $layoutFile = $this->findLayoutFile($this->getView());
-        if ($layoutFile !== false) {
-            return $this->getView()->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
-                'content' => $content,
-            ]), $this);
+
+        $renderer = $this->getView();
+
+        if (!method_exists($renderer, 'renderContent')) {
+            return '';
         }
 
-        return $content;
+        $content = $renderer->renderContent($content, $params);
+
+        $layoutFile = file_get_contents($this->findLayoutFile($renderer));
+        Yii::debug($layoutFile, '$layoutFile content'); //todo del
+
+        if ($layoutFile === false) {
+            return $content;
+        }
+
+        return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
+            'page_content' => $content,
+        ]));
     }
 
     /**
@@ -287,7 +302,7 @@ class CustomController extends CommonController
      * @param View $view the view object to render the layout file.
      * @return string|bool the layout file path, or false if layout is not needed.
      * Please refer to [[render()]] on how to specify this parameter.
-     * @throws InvalidParamException if an invalid path alias is used to specify the layout.
+     * @throws \yii\web\NotFoundHttpException
      */
     public function findLayoutFile($view)
     {
@@ -306,6 +321,7 @@ class CustomController extends CommonController
         if (!isset($layout)) {
             return false;
         }
+        Yii::debug($layout, '$layout');
 
         if (strncmp($layout, '@', 1) === 0) {
             $file = Yii::getAlias($layout);
@@ -324,5 +340,42 @@ class CustomController extends CommonController
         }
 
         return $path;
+    }
+
+    /**
+     * Renders a static string by applying a layout.
+     * @param string $content the static string being rendered
+     * @param array $params
+     * @param boolean $layout
+     * @return string the rendering result of the layout with the given static string as the `$content` variable.
+     * If the layout is disabled, the string will be returned back.
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\NotFoundHttpException
+     * @since 2.0.1
+     */
+    public function renderTwigContent($content, $params = [], $layout = true)
+    {
+        $renderer = $this->getView();
+
+        if (!method_exists($renderer, 'renderContent')) {
+            return '';
+        }
+
+        $content = $renderer->renderContent($content, $params);
+
+        if (!$layout) {
+            return $content;
+        }
+
+
+        $layoutFile = PagesHelper::getLayout();
+
+        if ($layoutFile === false) {
+            return $content;
+        }
+
+        return $renderer->renderContent($layoutFile['content'], array_merge($this->_getGlobalParams(), [
+            'page_content' => $content,
+        ]));
     }
 }

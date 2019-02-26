@@ -13,6 +13,8 @@ use common\models\store\queries\PagesQuery;
  * @property int $id
  * @property string $url
  * @property string $title
+ * @property string $seo_description
+ * @property string $seo_keywords
  * @property int $visibility
  * @property int $is_draft
  * @property string $twig editor twig source
@@ -74,9 +76,10 @@ class Pages extends ActiveRecord
     public function rules()
     {
         return [
-            [['twig', 'json', 'json_draft'], 'string'],
+            [['twig', 'json', 'json_draft', 'seo_description', 'seo_keywords'], 'string'],
             [['visibility', 'is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
             [['url', 'title'], 'string', 'max' => 300],
+            [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
         ];
     }
 
@@ -89,10 +92,11 @@ class Pages extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'url' => Yii::t('app', 'Url'),
             'title' => Yii::t('app', 'Title'),
+            'seo_description' => Yii::t('app', 'Seo Descriptiondescription'),
+            'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'visibility' => Yii::t('app', 'Visibility'),
             'is_draft' => Yii::t('app', 'Is Draft'),
             'twig' => Yii::t('app', 'Editor twig source'),
-            'styles' => Yii::t('app', 'Editor styles source'),
             'json' => Yii::t('app', 'Editor published json'),
             'json_draft' => Yii::t('app', 'Editor draft json'),
             'created_at' => Yii::t('app', 'Created'),

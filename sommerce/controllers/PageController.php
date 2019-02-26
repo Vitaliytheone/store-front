@@ -2,8 +2,9 @@
 
 namespace sommerce\controllers;
 
-use common\models\store\Pages;
+use common\models\store\PageFiles;
 use sommerce\helpers\PageFilesHelper;
+use sommerce\helpers\PagesHelper;
 use yii\web\NotFoundHttpException;
 use Yii;
 
@@ -21,9 +22,13 @@ class PageController extends CustomController
      */
     public function actionIndex($url)
     {
-        $page = $this->_findPage($url);
+        $page = PagesHelper::getPage($url);
 
-        $content = $this->renderContent($page->twig);
+        $this->pageTitle = $page['title'];
+        $this->seoKeywords = $page['seo_keywords'];
+        $this->seoDescription = $page['seo_description'];
+
+        $content = $this->renderTwigContent($page['twig']);
 
         return $content;
     }
@@ -36,7 +41,7 @@ class PageController extends CustomController
      */
     public function actionStyles()
     {
-        $files = PageFilesHelper::getFileByName('css', 'styles.css');
+        $files = PageFilesHelper::getFileByName(PageFiles::FILE_TYPE_STYLE, 'styles.css');
 
         return Yii::$app->response->sendContentAsFile($files['content'], 'styles.css', [
             'mimeType' => 'text/css;charset=UTF-8',
@@ -52,7 +57,7 @@ class PageController extends CustomController
      */
     public function actionScripts()
     {
-        $files = PageFilesHelper::getFileByName('js', 'scripts.js');
+        $files = PageFilesHelper::getFileByName(PageFiles::FILE_TYPE_JS, 'scripts.js');
 
         return Yii::$app->response->sendContentAsFile($files['content'], 'scripts.js', [
             'mimeType' => 'text/javascript;charset=UTF-8',
@@ -60,22 +65,4 @@ class PageController extends CustomController
         ]);
     }
 
-    /**
-     * Find page or return exception
-     * @param string $url
-     * @return Pages
-     * @throws NotFoundHttpException
-     */
-    protected function _findPage(string $url)
-    {
-        $page = Pages::find()->active()->andWhere([
-            'url' => $url,
-        ])->one();
-
-        if (!$page) {
-            throw new NotFoundHttpException();
-        }
-
-        return $page;
-    }
 }
