@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\helpers;
 
 use common\models\panels\Params;
@@ -12,7 +13,6 @@ use superadmin\components\services\OpenSRSService;
 use superadmin\components\services\WhoisxmlService;
 use ReflectionClass;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class DashboardServices

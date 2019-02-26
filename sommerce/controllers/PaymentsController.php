@@ -2,11 +2,9 @@
 
 namespace sommerce\controllers;
 
-use common\models\stores\PaymentMethods;
 use sommerce\components\payments\Payment;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
-
 
 /**
  * Class PaymentsController
@@ -20,14 +18,15 @@ class PaymentsController extends CustomController
 
     /**
      * Process payment method
-     * @param $method
+     * @param string $method
      * @return string|\yii\web\Response
+     * @throws \yii\base\UnknownClassException
      * @throws UnknownClassException
      */
     public function actionResult($method)
     {
-
         $paymentMethod = Payment::getPayment($method);
+
         $result = $paymentMethod->process($this->store);
 
         if (!empty($result['content']) && !$paymentMethod->redirectProcessing) {
@@ -45,14 +44,7 @@ class PaymentsController extends CustomController
             }
         }
 
-        if (!in_array($method, [
-            PaymentMethods::METHOD_AUTHORIZE,
-            PaymentMethods::METHOD_STRIPE,
-            PaymentMethods::METHOD_STRIPE_3D_SECURE,
-            PaymentMethods::METHOD_PAYPAL,
-            PaymentMethods::METHOD_PAYPAL_STANDARD,
-            PaymentMethods::METHOD_MERCADOPAGO,
-        ])) {
+        if (!$paymentMethod->paymentResult) {
             return $this->redirect('/cart');
         }
 

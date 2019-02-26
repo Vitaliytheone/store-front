@@ -7,7 +7,9 @@ use common\helpers\CurrencyHelper;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
 use common\models\stores\PaymentMethods;
+use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StoreAdminsHash;
+use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use console\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
@@ -16,7 +18,6 @@ use sommerce\components\payments\methods\Paypal;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\StoresHelper;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class CronController
@@ -100,6 +101,8 @@ class CronController extends CustomController
 
     /**
      * Cron to check payments status with status pending
+     * @throws \yii\base\UnknownClassException
+     * @throws \yii\db\Exception
      */
     public function actionCheckPayments()
     {
@@ -122,20 +125,28 @@ class CronController extends CustomController
 
     /**
      * @param Stores $store
+     * @throws \yii\base\UnknownClassException
      */
     protected function _checkAuthorize(Stores $store)
     {
-        $method = PaymentMethods::METHOD_AUTHORIZE;
-        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
-
-        if (empty($availableMethods[$method])) {
+        $method = PaymentMethods::findOne(PaymentMethods::METHOD_AUTHORIZE);
+        if (!$method) {
             return;
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => $method,
+        $paymentCurrency = PaymentMethodsCurrency::findOne([
+            'method_id' => $method->id,
+            'currency' => $store->currency
+        ]);
+        if (!$paymentCurrency) {
+            return;
+        }
+
+        $paymentMethod = StorePaymentMethods::findOne([
+            'method_id' => $method->id,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED,
+            'currency_id' => $paymentCurrency->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 
         if (!$paymentMethod) {
@@ -145,10 +156,10 @@ class CronController extends CustomController
         /**
          * @var Authorize $component
          */
-        $component = Payment::getPayment($method);
+        $component = Payment::getPayment($method->class_name);
 
         foreach (Payments::find()->andWhere([
-            'method' => $method,
+            'method' => $method->method_name,
             'payments.status' => Payments::STATUS_AWAITING,
         ])->batch() as $payments) {
             foreach ($payments as $payment) {
@@ -159,20 +170,28 @@ class CronController extends CustomController
 
     /**
      * @param Stores $store
+     * @throws \yii\base\UnknownClassException
      */
     protected function _checkPaypalPayment(Stores $store)
     {
-        $method = PaymentMethods::METHOD_PAYPAL;
-        $availableMethods = CurrencyHelper::getCurrencyOptions($store->currency);
-
-        if (empty($availableMethods[$method])) {
+        $method = PaymentMethods::findOne(PaymentMethods::METHOD_PAYPAL);
+        if (!$method) {
             return;
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => $method,
+         $paymentCurrency = PaymentMethodsCurrency::findOne([
+            'method_id' => $method->id,
+            'currency' => $store->currency
+        ]);
+        if (!$paymentCurrency) {
+            return;
+        }
+
+        $paymentMethod = StorePaymentMethods::findOne([
+            'method_id' => $method->id,
             'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED,
+            'currency_id' => $paymentCurrency->id,
+            'visibility' => StorePaymentMethods::VISIBILITY_ENABLED,
         ]);
 
         // Only for express checkout
@@ -185,7 +204,7 @@ class CronController extends CustomController
         /**
          * @var $component Paypal
          */
-        $component = Payment::getPayment($method);
+        $component = Payment::getPayment($method->class_name);
 
         foreach (Payments::find()->andWhere([
             'method' => $method,

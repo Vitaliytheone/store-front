@@ -1,6 +1,8 @@
 <?php
+
 namespace sommerce\models\search;
 
+use common\models\stores\Stores;
 use sommerce\helpers\BlockHelper;
 use common\models\store\Blocks;
 
@@ -8,10 +10,10 @@ use common\models\store\Blocks;
  * Class BlocksSearch
  * @package sommerce\models\search
  */
-class BlocksSearch {
-
+class BlocksSearch
+{
     /**
-     * @param $store
+     * @param Stores $store
      * @return array
      */
     public static function search($store)

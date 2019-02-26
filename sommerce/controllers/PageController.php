@@ -1,5 +1,7 @@
 <?php
+
 namespace sommerce\controllers;
+
 use common\models\store\Pages;
 use yii\web\NotFoundHttpException;
 use Yii;
@@ -12,6 +14,7 @@ class PageController extends CustomController
     /**
      * Render page by url
      * @param string $url
+     * @throws NotFoundHttpException
      * @return string
      */
     public function actionIndex($url)
@@ -29,6 +32,7 @@ class PageController extends CustomController
     /**
      * Render page styles by url
      * @param string $url
+     * @throws NotFoundHttpException
      * @return string
      */
     public function actionStyles($url)

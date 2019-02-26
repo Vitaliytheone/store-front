@@ -12,7 +12,7 @@ use sommerce\modules\admin\components\Url;
     <td><?= $payment['customer'] ?></td>
     <td><?= $payment['amount'] ?></td>
     <td><?= $payment['method_title'] ?></td>
-    <td ><?= $payment['fee'] ?></td>
+    <td><?= $payment['fee'] ?></td>
     <td><?= $payment['memo'] ?></td>
     <td><?= $payment['status_title'] ?></td>
     <td nowrap=""><?= $payment['updated_at_formatted'] ?></td>
@@ -29,7 +29,10 @@ use sommerce\modules\admin\components\Url;
                         <div class="m-dropdown__content">
                             <ul class="m-nav">
                                 <li class="m-nav__item">
-                                    <a href="#" class="m-nav__link" data-toggle="modal" data-target=".payments_detail" data-backdrop="static" data-id="<?= $payment['id'] ?>" data-modal_title="<?= Yii::t('admin', 'payments.details_title', ['payment_id' => $payment['id']] ) ?>" data-action_url="<?= Url::toRoute(['/payments/get-details', 'id' => $payment['id']]) ?>">
+                                    <a href="#" class="m-nav__link" data-toggle="modal" data-target=".payments_detail"
+                                       data-backdrop="static" data-id="<?= $payment['id'] ?>"
+                                       data-modal_title="<?= Yii::t('admin', 'payments.details_title', ['payment_id' => $payment['id']] ) ?>"
+                                       data-action_url="<?= Url::toRoute(['/payments/get-details', 'id' => $payment['id']]) ?>">
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'payments.action_details') ?>
                                         </span>

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\models\forms;
 
 use yii\behaviors\AttributeBehavior;

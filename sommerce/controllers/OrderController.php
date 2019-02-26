@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\controllers;
 
 use common\models\store\Orders;
@@ -14,8 +15,9 @@ class OrderController extends CustomController
 {
     /**
      * Displays view order page.
-     * @param string $code
+     * @param $code
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionView($code)
     {

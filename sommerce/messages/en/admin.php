@@ -236,6 +236,7 @@ return [
     'settings.general_custom_header_placeholder' => '<style type="text/css">...</style>',
     'settings.general_custom_footer' => 'Custom footer code',
     'settings.general_custom_footer_placeholder' => '<script>...</script>',
+    'settings.general_currency_change_approving' => 'If the currency has been changed, payment methods with this currency will be deleted.',
 
 
     'settings.general_seo' => 'Search engine listing preview',
@@ -250,10 +251,12 @@ return [
     'settings.general_save' => 'Save changes',
 
     'settings.general_delete_agree' => 'Are your sure that your want to delete this image?',
+    'settings.general_delete_payments_agree' => 'This action will remove all unsupported payment methods and their settings. Are you sure?',
     'settings.general_delete_submit' => 'Delete',
     'settings.general_delete_cancel' => 'Cancel',
 
     'settings.message_settings_updated' => 'Settings was successfully updated!',
+    'settings.message_payments_deleted' => 'Image was successfully deleted!',
     'settings.message_image_deleted' => 'Image was successfully deleted!',
     'settings.message_image_delete_error' => 'Error while deleting image!',
     'settings.message_cdn_upload_error' => 'Error uploading file to CDN!',
@@ -261,9 +264,19 @@ return [
     'settings.payments_page_title' => 'Settings payments',
     'settings.payments_title' => 'Payments',
     'settings.payments_edit_method' => 'Edit',
+    'settings.payments_edit_method_name' => 'Edit this payment method name',
     'settings.payments_save_method' => 'Save changes',
     'settings.payments_cancel_method' => 'Cancel',
     'settings.message_settings_saved' => 'Changes successfully saved!',
+    'settings.payments_add' => 'Add method',
+    'settings.payments_modal_title' => 'Add payment',
+    'settings.payments_modal_method' => 'Method',
+    'settings.payments_modal_select_item' => 'Please select…',
+    'settings.payments_modal_save' => 'Add method',
+    'settings.payments_modal_cancel' => 'Cancel',
+    'settings.payments_modal_payment_method' => 'Payment method',
+    'settings.payments_test_mode' => 'Use test mode',
+
     'settings.payments_edit_2checkout' => 'Edit 2Checkout',
 
     'settings.payments_stripe_guide_1' => 'Publishable key and Secret key you may find on {signup_url}',
@@ -309,6 +322,7 @@ return [
     'settings.payments_bitcoin_guide_3' => 'Enter your Gateway secret and API Gateway ID below.',
     'settings.payments_bitcoin_gateway_id' => 'API Gateway ID',
     'settings.payments_bitcoin_gateway_secret' => 'Gateway secret',
+
     'settings.payments_edit_paypal' => 'Edit PayPal',
     'settings.payments_edit_paypalstandard' => 'Edit PayPal Standard',
     'settings.payments_paypal_guide_1' => 'Login to your PayPal account.',
@@ -320,6 +334,7 @@ return [
     'settings.payments_paypal_password' => 'Api password',
     'settings.payments_paypal_signature' => 'Api signature',
     'settings.payments_paypal_test_mode' => 'Use test mode',
+
     'settings.payments_edit_coinpayments' => 'Edit CoinPayments',
     'settings.payments_coinpayments_merchant_id' => 'Merchant ID',
     'settings.payments_coinpayments_ipn_secret' => 'IPN secret',
@@ -329,15 +344,18 @@ return [
     'settings.payments_coinpayments_guide_2_2' => 'Apply changes',
     'settings.payments_coinpayments_guide_3' => 'Enter your Merchant ID and IPN Secret bellow',
 
-    'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
-    'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
     'settings.payments_edit_stripe' => 'Edit Stripe',
     'settings.payments_edit_stripe_3d_secure' => 'Edit Stripe 3D Secure',
-    'settings.payments_yandex_money_wallet_number' => 'Wallet number',
-    'settings.payments_yandex_money_secret_word' => 'Secret word',
     'settings.payments_stripe_secret_key' => 'Secret key',
     'settings.payments_stripe_public_key' => 'Public key',
     'settings.payments_stripe_webhook_secret' => 'Webhook secret',
+
+    'settings.payments_edit_yandexmoney' => 'Edit Yandex.Money',
+    'settings.payments_edit_yandexcards' => 'Edit Yandex.Cards',
+    'settings.payments_yandex_money_wallet_number' => 'Wallet number',
+    'settings.payments_yandex_cards_wallet_number' => 'Wallet number',
+    'settings.payments_yandex_money_secret_word' => 'Secret word',
+    'settings.payments_yandex_cards_secret_word' => 'Secret word',
     'settings.payments_yandex_money_guide_1' => 'Go to',
     'settings.payments_yandex_money_guide_2' => 'Enter login details.',
     'settings.payments_yandex_money_guide_2-1' => 'Secret word: set strong password',
@@ -362,12 +380,14 @@ return [
     'settings.payments_paytr_merchant_id' => 'Merchant id',
     'settings.payments_paytr_merchant_key' => 'Merchant key',
     'settings.payments_paytr_merchant_salt' => 'Merchant salt',
+    'settings.payments_paytr_merchant_comission' => 'Merchant Comission',
     'settings.payments_paytr_guide_1' => 'Go to Merchant Settings',
     'settings.payments_paytr_guide_2' => 'Set callback url: ',
 
     'settings.payments_edit_paywant' => 'Edit PayWant',
     'settings.payments_paywant_apiKey' => 'API Key',
     'settings.payments_paywant_apiSecret' => 'API Secret',
+    'settings.payments_paywant_fee' => 'Fee',
     'settings.payments_paywant_guide_1' => 'Store Site: ',
     'settings.payments_paywant_guide_2' => 'Ip address (Site): ',
     'settings.payments_paywant_guide_2-1' => '54.36.105.233',
@@ -411,6 +431,7 @@ return [
     'settings.payments_mercadopago_course' => 'Course',
     'settings.payments_mercadopago_test_mode' => 'Use test mode',
 
+    'settings.payments.multi_input.add_description' => 'Add descriptions',
     'settings.payments_edit_mollie' => 'Edit Mollie',
     'settings.payments_mollie_api' => 'Enter your API key',
     'settings.payments_mollie_guide_1' => 'Go to Mollie website → {website_url} and get your <b>Live API key</b>',
@@ -635,6 +656,8 @@ return [
 
     'cdn.error.common' => 'CDN error, try again later',
     'cdn.error.bad_upload' => 'Error uploading file to CDN!',
+    'addfunds.phone' => 'Phone',
+    'addfunds.error.phone' => 'Phone error',
 
     'settings.integrations_page_title' => 'Integrations',
     'settings.integrations_edit_title' => 'Edit',

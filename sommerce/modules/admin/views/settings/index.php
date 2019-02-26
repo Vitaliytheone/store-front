@@ -200,7 +200,12 @@ $storeUrl = $store->getBaseSite();
                     </div>
                     <hr>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success m-btn--air" name="save-button">
+                        <button type="submit" class="btn btn-success m-btn--air 3333222" id="generalSettingsSubmit" name="save-button"
+                                data-title="<?= Yii::t('admin', 'settings.general_currency_change_approving') ?>"
+                                data-action-url="<?= Url::toRoute(['/settings/check-currency']) ?>"
+                                data-message="<?= Yii::t('admin', 'settings.general_delete_payments_agree') ?>"
+                                data-confirm_button="<?= Yii::t('admin', 'settings.general_delete_submit') ?>"
+                                data-cancel_button="<?= Yii::t('admin', 'settings.general_delete_cancel') ?>">
                             <?= Yii::t('admin', 'settings.general_save') ?>
                         </button>
                     </div>

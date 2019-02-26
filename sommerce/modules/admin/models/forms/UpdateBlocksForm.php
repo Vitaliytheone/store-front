@@ -16,7 +16,7 @@ use yii\web\User;
 class UpdateBlocksForm extends Model {
 
     /**
-     * @var
+     * @var StoreAdminAuth
      */
     private $_user;
 
@@ -38,16 +38,16 @@ class UpdateBlocksForm extends Model {
 
     /**
      * Set current user
-     * @param User $user
+     * @param StoreAdminAuth $user
      */
-    public function setUser($user)
+    public function setUser(StoreAdminAuth $user)
     {
         $this->_user = $user;
     }
 
     /**
      * Get current user
-     * @return User
+     * @return StoreAdminAuth
      */
     public function getUser()
     {
@@ -79,7 +79,7 @@ class UpdateBlocksForm extends Model {
     public function save()
     {
         /** @var StoreAdminAuth $identity */
-        $identity = $this->getUser()->getIdentity(false);
+        $identity = $this->getUser();
 
         $blocksContent = $this->getBlocks();
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use sommerce\components\payments\BasePayment;
@@ -8,13 +9,15 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Freekassa
  * @package app\components\payments\methods
  *
  */
-class Freekassa extends BasePayment {
+class Freekassa extends BasePayment
+{
 
     /**
      * @var string - url action
@@ -24,16 +27,22 @@ class Freekassa extends BasePayment {
     public $method = 'GET';
 
     /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
      * Checkout
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $sign = md5(ArrayHelper::getValue($paymentMethodOptions, 'merchant_id') . ':' . $checkout->price . ':' . ArrayHelper::getValue($paymentMethodOptions, 'secret_word') . ':' . $checkout->id);
 
@@ -67,11 +76,7 @@ class Freekassa extends BasePayment {
             ];
         }
 
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_FREE_KASSA,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_FREE_KASSA);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -84,7 +89,7 @@ class Freekassa extends BasePayment {
         if (empty($merchantOrderId)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $merchantOrderId,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
@@ -116,7 +121,7 @@ class Freekassa extends BasePayment {
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $signature = [
             ArrayHelper::getValue($paymentMethodOptions, 'merchant_id'),

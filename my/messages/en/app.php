@@ -120,6 +120,7 @@ return [
     'support.create_ticket.btn_submit' => 'Submit ticket',
 
     'support.view_form.btn_submit' => 'Submit reply',
+    'support.view_form.attachment' => 'Attachments',
 
     'index.signup.header' => 'Create an account',
     'index.signup.btn_submit' => 'Create account',
@@ -433,6 +434,7 @@ return [
     'error.login.incorrect_captcha' => 'Incorrect captcha',
     'error.login.incorrect_email_or_password' => 'Incorrect email or password.',
     'error.ticket.can_not_create_message' => 'Can not create message',
+    'error.ticket.can_not_attach_files' => 'Can not attach files',
     'error.ticket.can_not_edit_message' => 'Can not edit message',
     'error.ticket.tickets_limit_exceeded' => 'Tickets limit exceeded.',
     'error.customer.can_not_change_email' => 'Can not change email',
