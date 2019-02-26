@@ -12,10 +12,10 @@ class TicketMessagesQuery extends \yii\db\ActiveQuery
     public function ticketView($ticketId)
     {
         return $this->andWhere([
-            'ticket_id' => $ticketId,
+            'ticket_messages.ticket_id' => $ticketId,
             'is_system' => 0
         ])
-            ->joinWith(['customer', 'admin'])
+            ->joinWith(['customer', 'admin', 'file'])
             ->orderBy(['created_at' => SORT_ASC]);
     }
 

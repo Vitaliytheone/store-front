@@ -24,6 +24,21 @@
   width: 100%;
 }
 
+.attachments-block{
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+.attachments-block .attachments-file{
+  border-bottom: 1px dotted #333;
+  color: #333;
+}
+.attachments-block .attachments-file:hover, .attachments-block .attachments-file:focus{
+  text-decoration: none;
+  color: #337ab7;
+  border-bottom: 1px dotted #337ab7;
+}
+
 .search-block{
   padding-top: 15px;
   padding-bottom: 15px;

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\models\search;
 
 use common\models\store\Orders;
@@ -12,8 +13,8 @@ use yii\helpers\ArrayHelper;
  * Class OrdersSearch
  * @package sommerce\models\search
  */
-class OrdersSearch {
-
+class OrdersSearch
+{
     /**
      * @var Stores
      */
@@ -114,6 +115,9 @@ class OrdersSearch {
         return $query;
     }
 
+    /**
+     * @return array
+     */
     public function search()
     {
         if (null === static::$_items) {

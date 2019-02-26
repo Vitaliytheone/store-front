@@ -346,6 +346,7 @@ customModule.indexController = {
             $.post(form.attr('action'), form.serialize(), function(response) {
                 if ('success' == response.status) {
                     $("#message").val("");
+                    uploadcare.Widget('#file-uploader').value(null);
                 }
 
                 if ('error' == response.status) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use sommerce\components\payments\BasePayment;
@@ -9,29 +10,36 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Yandexmoney
  * @package sommerce\components\payments\methods
  */
-class Yandexmoney extends BasePayment {
-
+class Yandexmoney extends BasePayment
+{
     /**
      * @var string - url action
      */
     public $action = 'https://money.yandex.ru/quickpay/confirm.xml';
 
     /**
-     * Checkout
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
+
+    /**
+     * Checkout Yandex Money method
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         return static::returnForm($this->getFrom(), [
             'receiver' => ArrayHelper::getValue($paymentMethodOptions, 'wallet_number'),
@@ -42,7 +50,7 @@ class Yandexmoney extends BasePayment {
             'sum' => $checkout->price,
             'quickpay-form' => 'shop',
             'paymentType' => 'PC',
-            'successURL' => SiteHelper::hostUrl() . '/cart'
+            'successURL' => SiteHelper::hostUrl($store->ssl) . '/cart'
         ]);
     }
 
@@ -60,7 +68,7 @@ class Yandexmoney extends BasePayment {
         $currency = ArrayHelper::getValue($_POST, 'currency'); // Код валюты — всегда 643 (рубль РФ согласно ISO 4217).
         $datetime = ArrayHelper::getValue($_POST, 'datetime'); // Дата и время совершения перевода.
         $sender = ArrayHelper::getValue($_POST, 'sender'); // Для переводов из кошелька — номер счета отправителя. Для переводов с произвольной карты — параметр содержит пустую строку.
-        $coderpro = ArrayHelper::getValue($_POST, 'codepro'); // Для переводов из кошелька — перевод защищен кодом протекции. Для переводов с произвольной карты — всегда false.
+        $coderpro = (string)ArrayHelper::getValue($_POST, 'codepro'); // Для переводов из кошелька — перевод защищен кодом протекции. Для переводов с произвольной карты — всегда false.
         $label = intval(ArrayHelper::getValue($_POST, 'label')); // Метка платежа. Если ее нет, параметр содержит пустую строку.
         $sha1Hash = ArrayHelper::getValue($_POST, 'sha1_hash'); // SHA-1 hash параметров уведомления.
 
@@ -72,18 +80,16 @@ class Yandexmoney extends BasePayment {
             ];
         }
 
-        if ('card-incoming' != $notificationType && empty($sender)) {
+        if ($notificationType == 'p2p-incoming' && !empty($sender)) {
+            $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_YANDEX_MONEY);
+        } elseif ($notificationType == 'card-incoming' && empty($sender)) {
+            $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_YANDEX_CARDS);
+        } else {
             return [
                 'result' => 2,
-                'content' => 'no data'
+                'content' => 'no type'
             ];
         }
-
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_YANDEX_MONEY,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -96,7 +102,7 @@ class Yandexmoney extends BasePayment {
         if (empty($label)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $label,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice
@@ -128,7 +134,7 @@ class Yandexmoney extends BasePayment {
         // заносим запись в таблицу payments_log
         PaymentsLog::log($this->_checkout->id, $_POST);
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
 
         $hash = sha1(implode('&', [
             $notificationType,

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\payments\methods;
 
 use sommerce\components\payments\BasePayment;
@@ -9,17 +10,24 @@ use common\models\stores\Stores;
 use common\models\store\PaymentsLog;
 use common\models\store\Payments;
 use yii\helpers\ArrayHelper;
+use common\models\stores\StorePaymentMethods;
 
 /**
  * Class Webmoney
  * @package sommerce\components\payments\methods
  */
-class Webmoney extends BasePayment {
-
+class Webmoney extends BasePayment
+{
     /**
      * @var string - url action
      */
     public $action = 'https://merchant.wmtransfer.com/lmi/payment.asp';
+
+    /**
+     * Redirect to result page
+     * @inheritdoc
+     */
+    public $paymentResult = false;
 
     /**
      * @var string
@@ -31,12 +39,12 @@ class Webmoney extends BasePayment {
      * @param Checkouts $checkout
      * @param Stores $store
      * @param string $email
-     * @param PaymentMethods $details
+     * @param StorePaymentMethods $details
      * @return array
      */
     public function checkout($checkout, $store, $email, $details)
     {
-        $paymentMethodOptions = $details->getDetails();
+        $paymentMethodOptions = $details->getOptions();
 
         $code = $store->currency;
 
@@ -49,9 +57,9 @@ class Webmoney extends BasePayment {
             'LMI_PAYMENT_AMOUNT' => $checkout->price,
             'LMI_PAYMENT_DESC' => static::getDescription($checkout->id),
             'LMI_PAYEE_PURSE' => ArrayHelper::getValue($paymentMethodOptions, 'purse'),
-            'LMI_RESULT_URL' => SiteHelper::hostUrl() . '/webmoney',
-            //'LMI_FAIL_URL' => SiteHelper::hostUrl($panel->ssl) . '/balance',
-            //'LMI_SUCCESS_URL' => SiteHelper::hostUrl($panel->ssl) . '/balance',
+            'LMI_RESULT_URL' => SiteHelper::hostUrl($store->ssl) . '/webmoney',
+            'LMI_FAIL_URL' => SiteHelper::hostUrl($store->ssl) . '/cart',
+            'LMI_SUCCESS_URL' => SiteHelper::hostUrl($store->ssl) . '/cart',
             'id' => $checkout->id,
             'email' => $checkout->id . '@' . SiteHelper::host(),
         ]);
@@ -64,11 +72,7 @@ class Webmoney extends BasePayment {
      */
     public function processing($store)
     {
-        $paymentMethod = PaymentMethods::findOne([
-            'method' => PaymentMethods::METHOD_WEBMONEY,
-            'store_id' => $store->id,
-            'active' => PaymentMethods::ACTIVE_ENABLED
-        ]);
+        $paymentMethod = $this->getPaymentMethod($store, PaymentMethods::METHOD_WEBMONEY);
 
         if (empty($paymentMethod)) {
             // no invoice
@@ -78,7 +82,7 @@ class Webmoney extends BasePayment {
             ];
         }
 
-        $paymentMethodOptions = $paymentMethod->getDetails();
+        $paymentMethodOptions = $paymentMethod->getOptions();
         $payeePurse = ArrayHelper::getValue($_POST, 'LMI_PAYEE_PURSE', '');
         $id = ArrayHelper::getValue($_POST, 'id');
         $purse = ArrayHelper::getValue($paymentMethodOptions, 'purse');
@@ -104,7 +108,7 @@ class Webmoney extends BasePayment {
         if (empty($id)
             || !($this->_checkout = Checkouts::findOne([
                 'id' => $id,
-                'method_id' => $paymentMethod->id
+                'method_id' => $paymentMethod->method_id
             ]))
             || in_array($this->_checkout->status, [Checkouts::STATUS_PAID])) {
             // no invoice

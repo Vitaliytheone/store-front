@@ -1,17 +1,18 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $tickets \common\models\panels\Tickets */
-    /* @var $ticket \common\models\panels\Tickets */
-    /* @var $model \my\models\forms\CreateTicketForm */
-    /* @var $accesses */
+/* @var $this yii\web\View */
+/* @var $tickets \common\models\panels\Tickets */
+/* @var $ticket \common\models\panels\Tickets */
+/* @var $model \my\models\forms\CreateTicketForm */
+/* @var $accesses */
 
-    use yii\bootstrap\Html;
-    use yii\widgets\LinkPager;
+use yii\bootstrap\Html;
+use yii\widgets\LinkPager;
+
 ?>
 <div class="row">
   <div class="col-lg-12">
     <h2 class="page-header">
-        <?= Yii::t('app', 'support.list.header')?></small> <button class="btn btn-outline btn-success" data-toggle="modal" data-target="#submitTicket"><?= Yii::t('app', 'support.list.create_ticket')?></button>
+        <?= Yii::t('app', 'support.list.header'); ?> <button class="btn btn-outline btn-success" data-toggle="modal" data-target="#submitTicket"><?= Yii::t('app', 'support.list.create_ticket')?></button>
         <div class="alert alert-danger error-hint hidden" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <span class="content"></span>
@@ -52,13 +53,15 @@
                                     <?= Html::a('<b>'.htmlspecialchars($ticket->subject).'</b>', '/ticket/' . $ticket->id, [
                                         'data-subject' => htmlspecialchars($ticket->subject),
                                         'style' => 'cursor:pointer;',
-                                        'class' => 'show-ticket'
+                                        'class' => 'show-ticket',
+                                        'onclick' => 'return false',
                                     ])?>
                                 <?php else : ?>
                                     <?= Html::a(htmlspecialchars($ticket->subject), '/ticket/' . $ticket->id, [
                                         'data-subject' => htmlspecialchars($ticket->subject),
                                         'style' => 'cursor:pointer;',
-                                        'class' => 'show-ticket'
+                                        'class' => 'show-ticket',
+                                        'onclick' => 'return false',
                                     ])?>
                                 <?php endif; ?>
                             </td>

@@ -716,7 +716,7 @@ class OrderHelper {
         $store->subdomain = 0;
         $store->name = ArrayHelper::getValue($orderDetails,'name');
         $store->status = Stores::STATUS_ACTIVE;
-        $store->trial = $isTrial;
+        $store->trial = (int)$isTrial;
         $store->generateExpired($isTrial);
         $store->dns_status = Stores::DNS_STATUS_ALIEN;
 
