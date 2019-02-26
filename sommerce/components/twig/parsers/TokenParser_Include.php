@@ -48,7 +48,7 @@ class TokenParser_Include extends Twig_TokenParser
         $view = $expression->getAttribute('value');
         $files = [];
 
-        foreach((array)ArrayHelper::getValue(PageFilesHelper::getFiles(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
+        foreach((array)ArrayHelper::getValue(PageFilesHelper::getFilesGroupByType(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
             $files['/snippets/' . $file['file_name']] = $file['content'];
         }
 

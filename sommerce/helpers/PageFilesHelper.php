@@ -14,7 +14,7 @@ use yii\web\NotFoundHttpException;
 class PageFilesHelper {
 
     /** @var array */
-    public static $page_files;
+    public static $pageFiles;
 
 
     /**
@@ -23,8 +23,8 @@ class PageFilesHelper {
     public static function getFiles()
     {
 
-        if (null === static::$page_files) {
-            static::$page_files = ArrayHelper::index(PageFiles::find()->select([
+        if (null === static::$pageFiles) {
+            static::$pageFiles = ArrayHelper::index(PageFiles::find()->select([
                 'id',
                 'file_name',
                 'file_type',
@@ -35,7 +35,7 @@ class PageFilesHelper {
             ])->asArray()->all(), 'file_name');
         }
 
-        return static::$page_files;
+        return static::$pageFiles;
     }
 
 
@@ -44,11 +44,9 @@ class PageFilesHelper {
      */
     public static function getFilesGroupByType()
     {
-        if (null === static::$page_files) {
-            static::$page_files = ArrayHelper::index(static::getFiles(), 'file_name', 'file_type');
-        }
+        $pageFileGroup = ArrayHelper::index(static::getFiles(), 'file_name', 'file_type');
 
-        return static::$page_files;
+        return $pageFileGroup;
     }
 
     /**
@@ -60,9 +58,7 @@ class PageFilesHelper {
      */
     public static function getFileByName($name)
     {
-        $file = ArrayHelper::index(static::getFiles(), 'file_name');
-        Yii::debug($file,'$file');
-        $file = ArrayHelper::getValue($file, $name);
+        $file = ArrayHelper::getValue(static::getFiles(), $name);
 
         if (empty($file)) {
             throw new NotFoundHttpException("File {$name} not found");
