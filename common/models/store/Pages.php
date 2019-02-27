@@ -76,9 +76,9 @@ class Pages extends ActiveRecord
     public function rules()
     {
         return [
-            [['twig', 'json', 'json_draft', 'seo_description', 'seo_keywords'], 'string'],
+            [['twig', 'json', 'json_draft'], 'string'],
             [['visibility', 'is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
-            [['url', 'title'], 'string', 'max' => 300],
+            [['url', 'seo_title', 'name'], 'string', 'max' => 300],
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
         ];
     }
@@ -91,8 +91,9 @@ class Pages extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'url' => Yii::t('app', 'Url'),
-            'title' => Yii::t('app', 'Title'),
-            'seo_description' => Yii::t('app', 'Seo Descriptiondescription'),
+            'name' => Yii::t('app', 'Name'),
+            'seo_title' => Yii::t('app', 'Seo Title'),
+            'seo_description' => Yii::t('app', 'Seo Description'),
             'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'visibility' => Yii::t('app', 'Visibility'),
             'is_draft' => Yii::t('app', 'Is Draft'),
