@@ -4,6 +4,7 @@ namespace common\helpers;
 use common\models\gateways\Sites;
 use common\super_tasks\CreateGatewayNginxConfigTask;
 use common\super_tasks\CreatePanelNginxConfigTask;
+use common\super_tasks\CreateSommerceNginxConfigTask;
 use common\super_tasks\CreateStoreNginxConfigTask;
 use common\super_tasks\RestartNginxTask;
 use Yii;
@@ -40,15 +41,15 @@ class SuperTaskHelper
 
     /**
      * Run common tasks
-     * @param bool $isSommerce
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\di\NotInstantiableException
      */
-    public static function runTasks($isSommerce = false)
+    public static function runTasks()
     {
         Yii::$container->get(CreatePanelNginxConfigTask::class, [])->run();
-        Yii::$container->get(CreateStoreNginxConfigTask::class, ['isSommerce' => $isSommerce])->run();
+        Yii::$container->get(CreateStoreNginxConfigTask::class, [])->run();
         Yii::$container->get(CreateGatewayNginxConfigTask::class, [])->run();
+        Yii::$container->get(CreateSommerceNginxConfigTask::class, [])->run();
         Yii::$container->get(RestartNginxTask::class, [])->run();
     }
 

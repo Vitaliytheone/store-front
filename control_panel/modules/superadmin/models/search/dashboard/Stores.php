@@ -3,7 +3,7 @@
 namespace superadmin\models\search\dashboard;
 
 use common\models\panels\Customers;
-use common\models\stores\Stores as StoresModel;
+use common\models\sommerces\Stores as StoresModel;
 use control_panel\helpers\DomainsHelper;
 use control_panel\helpers\SpecialCharsHelper;
 

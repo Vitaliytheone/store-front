@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $store \common\models\stores\Stores */
+    /* @var $store \common\models\sommerces\Stores */
     /* @var $model \control_panel\models\forms\CreateStoreStaffForm */
 
     use control_panel\models\forms\CreateStoreStaffForm;
-    use common\models\stores\StoreAdmins;
+    use common\models\sommerces\StoreAdmins;
     use control_panel\components\ActiveForm;
     use yii\bootstrap\Html;
     use control_panel\helpers\Url;

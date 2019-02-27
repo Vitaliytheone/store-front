@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use common\models\panels\queries\InvoiceDetailsQuery;
 use yii\helpers\ArrayHelper;
+use common\models\sommerces\Stores as Sommerce;
 
 /**
  * This is the model class for table "{{%invoice_details}}".
@@ -46,6 +47,8 @@ class InvoiceDetails extends ActiveRecord
     const ITEM_PROLONGATION_STORE = 13;
     const ITEM_BUY_GATEWAY = 14;
     const ITEM_PROLONGATION_GATEWAY = 15;
+    const ITEM_BUY_SOMMERCE = 16;
+    const ITEM_PROLONGATION_SOMMERCE = 17;
 
     /**
      * @inheritdoc
@@ -158,8 +161,10 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_CUSTOM_CUSTOMER => Yii::t('app', 'invoice_details.item.custom'),
             static::ITEM_CUSTOM_PANEL => Yii::t('app', 'invoice_details.item.custom'),
             static::ITEM_BUY_STORE => Yii::t('app', 'invoice_details.item.buy_store'),
+            static::ITEM_BUY_SOMMERCE => Yii::t('app', 'invoice_details.item.buy_store'),
             static::ITEM_BUY_TRIAL_STORE => Yii::t('app', 'invoice_details.item.buy_trial_store'),
             static::ITEM_PROLONGATION_STORE => Yii::t('app', 'invoice_details.item.prolongation_store'),
+            static::ITEM_PROLONGATION_SOMMERCE => Yii::t('app', 'invoice_details.item.prolongation_store'),
             static::ITEM_BUY_GATEWAY => Yii::t('app', 'invoice_details.item.buy_gateway'),
             static::ITEM_PROLONGATION_GATEWAY => Yii::t('app', 'invoice_details.item.prolongation_gateway'),
         ];
@@ -180,6 +185,17 @@ class InvoiceDetails extends ActiveRecord
             static::ITEM_PROLONGATION_SSL,
             static::ITEM_PROLONGATION_DOMAIN,
             static::ITEM_BUY_GATEWAY,
+        ];
+    }
+
+    public static function getSommerceOrderItems(): array
+    {
+        return [
+            static::ITEM_BUY_SSL,
+            static::ITEM_BUY_DOMAIN,
+            static::ITEM_PROLONGATION_SSL,
+            static::ITEM_PROLONGATION_DOMAIN,
+            static::ITEM_BUY_SOMMERCE,
         ];
     }
 
@@ -277,6 +293,13 @@ class InvoiceDetails extends ActiveRecord
                     ]);
                     break;
 
+                case static::ITEM_BUY_SOMMERCE:
+                    $order = Orders::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.buy_store', [
+                        'domain' => $order->domain
+                    ]);
+                    break;
+
                 case static::ITEM_BUY_TRIAL_STORE:
                     $order = Orders::findOne($this->item_id);
                     $this->description = Yii::t('app', 'invoice_details.description.buy_trial_store', [
@@ -285,6 +308,13 @@ class InvoiceDetails extends ActiveRecord
                     break;
 
                 case static::ITEM_PROLONGATION_STORE:
+                    $store = Stores::findOne($this->item_id);
+                    $this->description = Yii::t('app', 'invoice_details.description.prolongation_store', [
+                        'domain' => $store->domain
+                    ]);
+                break;
+
+                case static::ITEM_PROLONGATION_SOMMERCE:
                     $store = Stores::findOne($this->item_id);
                     $this->description = Yii::t('app', 'invoice_details.description.prolongation_store', [
                         'domain' => $store->domain
@@ -323,6 +353,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_CHILD_PANEL:
             case static::ITEM_BUY_STORE:
             case static::ITEM_BUY_TRIAL_STORE:
+            case static::ITEM_BUY_SOMMERCE:
                 $order = Orders::findOne($this->item_id);
                 return $order ? $order->getDomain() : '';
             break;
@@ -336,6 +367,11 @@ class InvoiceDetails extends ActiveRecord
 
             case static::ITEM_PROLONGATION_STORE:
                 $store = Stores::findOne($this->item_id);
+                return $store ? $store->getBaseDomain() : '';
+            break;
+
+            case static::ITEM_PROLONGATION_SOMMERCE:
+                $store = Sommerce::findOne($this->item_id);
                 return $store ? $store->getBaseDomain() : '';
             break;
 
@@ -387,6 +423,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_BUY_TRIAL_STORE:
             case static::ITEM_PROLONGATION_SSL:
             case static::ITEM_PROLONGATION_DOMAIN:
+            case static::ITEM_BUY_SOMMERCE:
                 $order = Orders::findOne($this->item_id);
                 return $order;
             break;
@@ -400,6 +437,11 @@ class InvoiceDetails extends ActiveRecord
 
             case static::ITEM_PROLONGATION_STORE:
                 $store = Stores::findOne($this->item_id);
+                return $store;
+            break;
+
+            case static::ITEM_PROLONGATION_SOMMERCE:
+                $store = Sommerce::findOne($this->item_id);
                 return $store;
             break;
 
@@ -433,6 +475,7 @@ class InvoiceDetails extends ActiveRecord
             case static::ITEM_PROLONGATION_SSL:
             case static::ITEM_PROLONGATION_DOMAIN:
             case static::ITEM_BUY_GATEWAY:
+            case static::ITEM_BUY_SOMMERCE:
                 $order = Orders::findOne($this->item_id);
                 $order->status = Orders::STATUS_PAID;
                 return $order->save(false);
@@ -484,6 +527,32 @@ class InvoiceDetails extends ActiveRecord
                 }
 
                 if ($store->trial == Stores::TRIAL_MODE_ON && !$store->activateFullMode()) {
+                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $store->id, $store->getErrors(), 'paid.invoice_details.trial_off');
+                    return false;
+                }
+
+                $ExpiredLogModel = new ExpiredLog();
+                $ExpiredLogModel->attributes = [
+                    'pid' => $store->id,
+                    'expired_last' => $lastExpired,
+                    'expired' => $store->expired,
+                    'created_at' => time(),
+                    'type' => ExpiredLog::getTypeByCode($method)
+                ];
+                $ExpiredLogModel->save(false);
+
+            return true;
+
+            case static::ITEM_PROLONGATION_SOMMERCE:
+                $store = Sommerce::findOne($this->item_id);
+                $lastExpired = $store->expired;
+
+                if (!$store->updateExpired()) {
+                    ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $store->id, $store->getErrors(), 'paid.invoice_details.expired');
+                    return false;
+                }
+
+                if ($store->trial == Sommerce::TRIAL_MODE_ON && !$store->activateFullMode()) {
                     ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_STORE, $store->id, $store->getErrors(), 'paid.invoice_details.trial_off');
                     return false;
                 }

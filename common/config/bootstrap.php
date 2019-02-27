@@ -43,6 +43,7 @@ defined('PROXY_CONFIG') or define('PROXY_CONFIG', (function() use ($configParams
 })());
 
 defined('DB_STORES') or define('DB_STORES', 'stores');
+defined('DB_SOMMERCES') or define('DB_SOMMERCES', 'sommerces');
 defined('DB_PANELS') or define('DB_PANELS', 'panels');
 defined('DB_GATEWAYS') or define('DB_GATEWAYS', 'gateways');
 defined('DB_GATEWAY') or define('DB_GATEWAY', 'gateway');

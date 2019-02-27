@@ -6,7 +6,7 @@
 use control_panel\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use yii\helpers\Json;
 use superadmin\widgets\CountPagination;
 

@@ -475,6 +475,7 @@ return [
     'orders.list.item_domains' => 'Domains ({count})',
     'orders.list.item_certificates' => 'Certificates ({count})',
     'orders.list.item_stores' => 'Stores ({count})',
+    'orders.list.item_sommerce' => 'Sommerce ({count})',
     'orders.list.item_prolongation_ssl' => 'Prolongation SSL ({count})',
     'orders.list.item_prolongation_free_ssl' => 'Prolongation Free SSL ({count})',
     'orders.list.item_prolongation_domain' => 'Prolongation Domain ({count})',

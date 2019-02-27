@@ -6,7 +6,7 @@ use common\models\common\ProjectInterface;
 use common\models\panels\Orders;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use control_panel\helpers\order\OrderSslHelper;
 use Yii;
 use yii\base\Exception;

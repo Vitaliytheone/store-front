@@ -2,11 +2,11 @@
 
 namespace control_panel\models\search;
 
-use common\models\stores\StoreDomains;
+use common\models\sommerces\StoreDomains;
 use control_panel\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Orders;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;

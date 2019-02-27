@@ -6,7 +6,7 @@ use common\models\panels\Domains;
 use common\models\panels\SslCert;
 use Yii;
 use yii\base\Model;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use common\models\panels\Customers;
 use sommerce\helpers\ConfigHelper;
 

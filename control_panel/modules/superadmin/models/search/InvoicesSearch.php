@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\search;
 
 use control_panel\helpers\DomainsHelper;
@@ -63,6 +64,7 @@ class InvoicesSearch extends Invoices {
         }
 
         $invoices->leftJoin(DB_PANELS . '.invoice_details', 'invoice_details.invoice_id = invoices.id');
+        $invoices->andWhere(['invoice_details.item' => InvoiceDetails::getSommerceOrderItems()]);
 
         if ($searchQuery && !empty($searchType)) {
             switch ($searchType) {
@@ -75,9 +77,7 @@ class InvoicesSearch extends Invoices {
                     $invoices->andFilterWhere([
                         'or',
                         ['like', 'orders.domain', (string)$searchQuery],
-                        ['like', 'project.site', (string)$searchQuery],
                         ['like', 'stores.domain', (string)$searchQuery],
-                        ['like', 'sites.domain', (string)$searchQuery],
                         ['like', 'customers.email', (string)$searchQuery],
                     ]);
                     break;
@@ -106,18 +106,10 @@ class InvoicesSearch extends Invoices {
     protected function addDomainJoinQuery($query)
     {
         $query->leftJoin(
-            DB_PANELS . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
+            DB_PANELS . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", InvoiceDetails::getSommerceOrderItems()) . ')'
         );
-        $query->leftJoin(DB_PANELS . '.project', 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
-                InvoiceDetails::ITEM_PROLONGATION_PANEL,
-                InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-                InvoiceDetails::ITEM_CUSTOM_PANEL,
-        ]) . ')');
-        $query->leftJoin(DB_STORES . '.stores', 'stores.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
+        $query->leftJoin(DB_SOMMERCES . '.stores', 'stores.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_PROLONGATION_STORE,
-        ]) . ')');
-        $query->leftJoin(DB_GATEWAYS . '.sites', 'sites.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
-            InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
         ]) . ')');
         $query->leftJoin(DB_PANELS . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
         $query->leftJoin(DB_PANELS . '.customers as customer_email', 'customer_email.id = invoices.cid');
@@ -148,7 +140,7 @@ class InvoicesSearch extends Invoices {
         $invoices = $query->select([
                 'invoices.*',
                 'customer_email.email as email',
-                'COALESCE(orders.domain, project.site, stores.domain, sites.domain, customers.email) as domain',
+                'COALESCE(orders.domain, stores.domain, customers.email) as domain',
                 'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)
@@ -169,6 +161,7 @@ class InvoicesSearch extends Invoices {
      */
     private function canEditTotal($invoices)
     {
+        // TODO delete this code block
         $invoiceDetails = (new Query())
             ->select([
                 'invoice_id',

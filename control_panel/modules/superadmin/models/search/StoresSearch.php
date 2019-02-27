@@ -2,8 +2,8 @@
 namespace superadmin\models\search;
 
 use common\models\panels\Domains;
-use common\models\stores\StoreDomains;
-use common\models\stores\Stores;
+use common\models\sommerces\StoreDomains;
+use common\models\sommerces\Stores;
 use control_panel\helpers\DomainsHelper;
 use Yii;
 use yii\data\Pagination;
@@ -65,7 +65,7 @@ class StoresSearch {
         $id = ArrayHelper::getValue($this->params, 'id');
 
         $stores = (new Query())
-            ->from(DB_STORES . '.stores');
+            ->from(DB_SOMMERCES . '.stores');
 
         if (!('all' === $status || null === $status)) {
 
@@ -155,7 +155,7 @@ class StoresSearch {
                 'customers.referrer_id AS referrer_id',
                 'store_domains.domain AS store_domain',
             ])
-            ->leftJoin(DB_STORES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
+            ->leftJoin(DB_SOMMERCES . '.store_domains', 'store_domains.store_id = stores.id AND store_domains.type IN (' . implode(",", [
                 StoreDomains::DOMAIN_TYPE_DEFAULT,
                 StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
                 StoreDomains::DOMAIN_TYPE_SOMMERCE

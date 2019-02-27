@@ -42,8 +42,7 @@ class CreateStoreNginxConfigTask extends BaseTask
                 continue;
             }
 
-            $isSommerse = $this->options['isSommerce'];
-            $result = $store->createNginxConfig($isSommerse);
+            $result = $store->createNginxConfig();
 
             $task->status = $result ? SuperTasks::STATUS_COMPLETED : SuperTasks::STATUS_ERROR;
             $task->save(false);

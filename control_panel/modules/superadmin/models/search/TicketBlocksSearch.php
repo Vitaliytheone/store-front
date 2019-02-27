@@ -5,7 +5,7 @@ namespace superadmin\models\search;
 use common\models\panels\CustomersNote;
 use common\models\panels\Domains;
 use common\models\panels\SslCert;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 
 /**
  * Search info by customer

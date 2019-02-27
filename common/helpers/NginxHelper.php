@@ -2,7 +2,6 @@
 
 namespace common\helpers;
 
-
 use common\models\gateways\Sites;
 use ReflectionClass;
 use common\models\panels\Project;
@@ -10,6 +9,7 @@ use common\models\stores\Stores;
 use Yii;
 use common\models\panels\ThirdPartyLog;
 use Exception;
+use common\models\sommerces\Stores as Sommerce;
 
 /**
  * Class NginxHelper
@@ -19,7 +19,7 @@ class NginxHelper
 {
     /**
      * Create nginx config file by object
-     * @param Project|Stores|Sites $object
+     * @param Project|Stores|Sites|Sommerce $object
      * @param bool $isSommerce
      * @return bool
      * @throws \ReflectionException
@@ -41,7 +41,7 @@ class NginxHelper
 
             case 'Stores':
                 /**
-                 * @var Stores $object
+                 * @var Stores|Sommerce $object
                  */
                 $domain = $object->domain;
                 $logItem = ThirdPartyLog::ITEM_BUY_STORE;
@@ -93,12 +93,13 @@ class NginxHelper
 
     /**
      * Delete nginx config file by object
-     * @param Project|Stores|Sites $object
+     * @param Project|Stores|Sites|Sommerce $object
+     * @param bool $isSommerce
      * @return bool
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public static function delete($object)
+    public static function delete($object, $isSommerce = false)
     {
         switch ((new ReflectionClass($object))->getShortName()) {
             case 'Project':
@@ -113,12 +114,16 @@ class NginxHelper
 
             case 'Stores':
                 /**
-                 * @var Stores $object
+                 * @var Stores|Sommerce $object
                  */
                 $domain = $object->domain;
                 $logItem = ThirdPartyLog::ITEM_BUY_STORE;
                 $logCode = 'store.remove_nginx_config';
-                $configPath = Yii::$app->params['storeNginxConfigPath'];
+                if ($isSommerce) {
+                    $configPath = Yii::$app->params['sommerceNginxConfigPath'];
+                } else {
+                    $configPath = Yii::$app->params['storeNginxConfigPath'];
+                }
             break;
 
             case 'Sites':

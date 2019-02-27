@@ -14,9 +14,10 @@ use common\models\panels\PaymentHash;
 use common\models\panels\Payments;
 use common\models\panels\SslCert;
 use common\models\panels\ThirdPartyLog;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use console\components\crons\CronFreeSslOrder;
 use console\components\payments\PaymentsFee;
+use console\components\terminate\TerminateSommerce;
 use console\components\terminate\TerminateStore;
 use control_panel\components\payments\Paypal;
 use control_panel\helpers\OrderHelper;
@@ -58,7 +59,7 @@ class CronController extends CustomController
             'item' => [
                 Orders::ITEM_BUY_SSL,
                 Orders::ITEM_BUY_DOMAIN,
-                Orders::ITEM_BUY_STORE,
+                Orders::ITEM_BUY_SOMMERCE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
                 Orders::ITEM_FREE_SSL,
@@ -82,7 +83,7 @@ class CronController extends CustomController
                         OrderHelper::domain($order);
                         break;
 
-                    case Orders::ITEM_BUY_STORE:
+                    case Orders::ITEM_BUY_SOMMERCE:
                         // Создаем триальный магазин сразу
                         $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
                         if ($isTrial) {
@@ -173,8 +174,7 @@ class CronController extends CustomController
             [
                 Orders::ITEM_BUY_DOMAIN,
                 Orders::ITEM_BUY_SSL,
-                Orders::ITEM_BUY_STORE,
-                Orders::ITEM_BUY_TRIAL_STORE,
+                Orders::ITEM_BUY_SOMMERCE,
                 Orders::ITEM_FREE_SSL,
                 Orders::ITEM_PROLONGATION_FREE_SSL,
             ]
@@ -188,7 +188,7 @@ class CronController extends CustomController
             ]
         ])->run();
 
-        Yii::$container->get(TerminateStore::class, [
+        Yii::$container->get(TerminateSommerce::class, [
             strtotime("-1 month", time())
         ])->run();
     }

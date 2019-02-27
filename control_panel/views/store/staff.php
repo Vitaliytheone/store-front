@@ -3,11 +3,11 @@
     /* @var $canCreate */
     /* @var $staffs StoreAdmins[] */
     /* @var $staff StoreAdmins */
-    /* @var $store \common\models\stores\Stores */
+    /* @var $store \common\models\sommerces\Stores */
 
     use yii\bootstrap\Html;
     use yii\helpers\Json;
-    use common\models\stores\StoreAdmins;
+    use common\models\sommerces\StoreAdmins;
 ?>
 <div class="row">
   <div class="col-lg-12">

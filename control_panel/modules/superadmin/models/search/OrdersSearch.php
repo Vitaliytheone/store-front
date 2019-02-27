@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\search;
 
 use common\models\panels\InvoiceDetails;
@@ -47,6 +48,17 @@ class OrdersSearch extends Orders {
 
         $orders = new Query();
         $orders->from('orders');
+        $orders->andWhere([
+            'orders.item' => [
+                Orders::ITEM_BUY_DOMAIN,
+                Orders::ITEM_BUY_SSL,
+                Orders::ITEM_PROLONGATION_SSL,
+                Orders::ITEM_PROLONGATION_DOMAIN,
+                Orders::ITEM_FREE_SSL,
+                Orders::ITEM_PROLONGATION_FREE_SSL ,
+                Orders::ITEM_BUY_SOMMERCE ,
+            ]
+        ]);
         if (null === $status || '' === $status) {
             if (empty($searchQuery)) {
                 $orders->andWhere([
@@ -112,7 +124,7 @@ class OrdersSearch extends Orders {
 
         $orders = $query
             ->leftJoin(
-                'invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
+                'invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", InvoiceDetails::getSommerceOrderItems()) . ')'
             )
             ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id')
             ->offset($pages->offset)
@@ -246,20 +258,14 @@ class OrdersSearch extends Orders {
             0 => Yii::t('app/superadmin', 'orders.list.item_all', [
                 'count' => $this->count($status)
             ]),
-            Orders::ITEM_BUY_PANEL => Yii::t('app/superadmin', 'orders.list.item_panels', [
-                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_PANEL, 0)
-            ]),
-            Orders::ITEM_BUY_CHILD_PANEL => Yii::t('app/superadmin', 'orders.list.item_child_panels', [
-                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_CHILD_PANEL, 0)
-            ]),
             Orders::ITEM_BUY_DOMAIN => Yii::t('app/superadmin', 'orders.list.item_domains', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_DOMAIN, 0)
             ]),
             Orders::ITEM_BUY_SSL => Yii::t('app/superadmin', 'orders.list.item_certificates', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0)
             ]),
-            Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_stores', [
-                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0)
+            Orders::ITEM_BUY_SOMMERCE => Yii::t('app/superadmin', 'orders.list.item_sommerce', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SOMMERCE, 0)
             ]),
             Orders::ITEM_PROLONGATION_SSL => Yii::t('app/superadmin', 'orders.list.item_prolongation_ssl', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_SSL, 0)
@@ -267,17 +273,11 @@ class OrdersSearch extends Orders {
             Orders::ITEM_PROLONGATION_DOMAIN => Yii::t('app/superadmin', 'orders.list.item_prolongation_domain', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_DOMAIN, 0)
             ]),
-            Orders::ITEM_BUY_TRIAL_STORE => Yii::t('app/superadmin', 'orders.list.item_trial_store', [
-                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_TRIAL_STORE, 0)
-            ]),
             Orders::ITEM_FREE_SSL => Yii::t('app/superadmin', 'orders.list.item_free_ssl', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_FREE_SSL, 0)
             ]),
             Orders::ITEM_PROLONGATION_FREE_SSL => Yii::t('app/superadmin', 'orders.list.item_prolongation_free_ssl', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_FREE_SSL, 0)
-            ]),
-            Orders::ITEM_BUY_GATEWAY => Yii::t('app/superadmin', 'orders.list.item_gateway', [
-                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_GATEWAY, 0)
             ]),
         ];
 

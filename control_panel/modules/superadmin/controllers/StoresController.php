@@ -5,7 +5,7 @@ namespace superadmin\controllers;
 use common\models\panels\SuperAdmin;
 use common\models\panels\SuperAdminToken;
 use control_panel\components\SuperAccessControl;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
 use superadmin\models\forms\ChangeStoreDomainForm;

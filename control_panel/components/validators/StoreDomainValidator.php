@@ -1,7 +1,7 @@
 <?php
 namespace control_panel\components\validators;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use Yii;
 use common\models\panels\Orders;
 use common\models\panels\Project;

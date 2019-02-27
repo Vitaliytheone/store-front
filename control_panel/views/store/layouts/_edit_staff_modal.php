@@ -4,7 +4,7 @@
 
     use control_panel\models\forms\EditStoreStaffForm;
     use control_panel\components\ActiveForm;
-    use common\models\stores\StoreAdmins;
+    use common\models\sommerces\StoreAdmins;
     use yii\bootstrap\Html;
 
     $model = new EditStoreStaffForm();

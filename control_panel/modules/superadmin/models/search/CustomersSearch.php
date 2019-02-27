@@ -5,7 +5,7 @@ namespace superadmin\models\search;
 
 use common\models\gateways\Sites;
 use common\models\panels\CustomersCounters;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use superadmin\widgets\CountPagination;
 use Yii;
 use common\models\panels\Customers;

@@ -1,12 +1,8 @@
 <?php
 namespace control_panel\components\validators;
 
-use common\helpers\CurlHelper;
-use control_panel\helpers\DomainsHelper;
-use common\models\panels\OrderLogs;
 use Yii;
 use common\models\panels\Orders;
-use common\models\panels\Project;
 use yii\base\Model;
 use yii\validators\Validator;
 

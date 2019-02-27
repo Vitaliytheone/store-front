@@ -1,7 +1,7 @@
 <?php
 namespace control_panel\models\forms;
 
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerces\StoreAdminAuth;
 use control_panel\helpers\UserHelper;
 use common\models\panels\MyActivityLog;
 use Yii;

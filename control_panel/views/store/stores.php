@@ -1,11 +1,11 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var \common\models\stores\Stores  $stores[] */
-    /* @var \common\models\stores\Stores $store */
+    /* @var \common\models\sommerces\Stores  $stores[] */
+    /* @var \common\models\sommerces\Stores $store */
     /* @var $accesses */
 
     use control_panel\helpers\Url;
-    use common\models\stores\Stores;
+    use common\models\sommerces\Stores;
     use common\models\panels\Orders;
     use yii\bootstrap\Html;
 
