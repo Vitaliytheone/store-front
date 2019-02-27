@@ -2,17 +2,14 @@
 
 namespace sommerce\helpers;
 
-use common\models\store\PageFiles;
-use common\models\store\Pages;
-use common\models\stores\Stores;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class AssetsHelper
  * @package sommerce\helpers
  */
-class AssetsHelper {
+class AssetsHelper
+{
 
     static $customScriptFiles = [];
 
@@ -38,43 +35,27 @@ class AssetsHelper {
     }
 
     /**
-     * Get store assets path
-     * @return string
-     */
-    public static function getAssetPath()
-    {
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-
-        return '/assets/' . $store->getFolder();
-    }
-
-    /**
      * Get assets from pages_files
      * @pararm string $value
      * @param string $value
      * @return string
-     * @throws \yii\web\NotFoundHttpException
      */
     public static function getAssets($value)
     {
 
-        $link = PageFilesHelper::generateFileVersionLink($value);
-
-        return $link;
+        return PageFilesHelper::generateFileVersionLink($value);
     }
 
     /**
      * Get store script files list
      * @return array
      */
-    public static function getStoreScripts() {
+    public static function getStoreScripts()
+    {
 
         $nodePath = Yii::getAlias('@node_modules');
 
-        $scripts= [];
+        $scripts = [];
 
         $asset = Yii::$app->assetManager->publish($nodePath . '/underscore/underscore-min.js');
         if (!empty($asset[1])) {
@@ -82,7 +63,7 @@ class AssetsHelper {
         }
 
         foreach (static::$customScriptFiles as $scriptFile) {
-            $scripts[] =  $scriptFile;
+            $scripts[] = $scriptFile;
         }
 
         $scripts[] = static::getFileUrl('/js/frontend.js');

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\exceptions\FirstValidationErrorHttpException;
@@ -7,7 +8,6 @@ use common\models\store\Packages;
 use common\models\store\PageFiles;
 use common\models\store\Pages;
 use common\models\store\Products;
-use console\helpers\ConsoleHelper;
 use sommerce\controllers\CommonController;
 use sommerce\modules\admin\models\forms\ImageUploadForm;
 use sommerce\modules\admin\models\forms\SavePackageForm;
@@ -15,7 +15,6 @@ use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\forms\SaveProductForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
 use yii\helpers\Html;
@@ -171,8 +170,6 @@ trait PagesTrait {
                 throw new BadRequestHttpException('Cannot save page!');
             }
         }
-
-        ConsoleHelper::execConsoleCommand('system-sommerce/clear-twig-cache');
 
         return ['id' => $form->getPage()->id];
     }

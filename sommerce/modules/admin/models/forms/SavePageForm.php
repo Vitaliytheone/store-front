@@ -3,6 +3,7 @@
 namespace sommerce\modules\admin\models\forms;
 
 use common\models\store\PageFiles;
+use console\helpers\ConsoleHelper;
 use Yii;
 use common\models\store\Pages;
 use common\models\stores\Stores;
@@ -240,6 +241,8 @@ class SavePageForm extends Model
         }
 
         $transaction->commit();
+
+        ConsoleHelper::execConsoleCommand('system-sommerce/clear-twig-cache');
 
         return true;
     }

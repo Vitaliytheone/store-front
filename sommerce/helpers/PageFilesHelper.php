@@ -3,15 +3,14 @@
 namespace sommerce\helpers;
 
 use common\models\store\PageFiles;
-use Yii;
 use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
  * Class FilesHelper
  * @package gateway\helpers
  */
-class PageFilesHelper {
+class PageFilesHelper
+{
 
     /** @var array */
     public static $pageFiles;
@@ -31,7 +30,10 @@ class PageFilesHelper {
                 'created_at',
                 'publish_at',
                 'content',
-            ])->asArray()->all(), 'file_name');
+            ])
+                ->where(['is_draft' => 0])
+                ->asArray()
+                ->all(), 'file_name');
         }
 
         return static::$pageFiles;
@@ -43,47 +45,32 @@ class PageFilesHelper {
      */
     public static function getFilesGroupByType()
     {
-        $pageFileGroup = ArrayHelper::index(static::getFiles(), 'file_name', 'file_type');
-
-        return $pageFileGroup;
+        return ArrayHelper::index(static::getFiles(), 'file_name', 'file_type');
     }
 
     /**
      * Get files by name
      * @param string $name
      * @return mixed
-     * @throws NotFoundHttpException
      */
     public static function getFileByName($name)
     {
-        $file = ArrayHelper::getValue(static::getFiles(), $name);
-
-        if (empty($file)) {
-            throw new NotFoundHttpException("File {$name} not found");
-        }
-
-        return $file;
+        return ArrayHelper::getValue(static::getFiles(), $name);
     }
 
     /**
      * Generate link with version param
      * @param string $value
      * @return string
-     * @throws NotFoundHttpException
      */
-    public static function generateFileVersionLink($value)
+    public static function generateFileVersionLink($value): string
     {
-        $name = '';
-
-        if (stripos($value, 'styles.css') !== false) {
-            $name = 'styles.css';
-        }
-        if (stripos($value, 'scripts.js') !== false) {
-            $name = 'scripts.js';
-        }
+        $value = ltrim($value, '/');
+        $valueTrim = explode('/', $value);
+        $valueTrim = $valueTrim[1] ?? $valueTrim[0];
 
         /** @var array $files */
-        $file = self::getFileByName($name);
+        $file = self::getFileByName($valueTrim);
 
         return "/{$value}?v={$file['updated_at']}";
     }

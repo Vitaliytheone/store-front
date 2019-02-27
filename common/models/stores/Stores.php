@@ -3,11 +3,12 @@
 namespace common\models\stores;
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\DbHelper;
+use common\helpers\DnsHelper;
+use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
-use common\components\traits\UnixTimeFormatTrait;
-use common\helpers\NginxHelper;
 use common\models\panels\Domains;
 use common\models\panels\InvoiceDetails;
 use common\models\panels\Invoices;
@@ -16,16 +17,15 @@ use common\models\panels\ThirdPartyLog;
 use common\models\store\Blocks;
 use common\models\store\Languages;
 use common\models\store\NotificationAdminEmails;
+use common\models\stores\queries\StoresQuery;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
-use common\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\stores\queries\StoresQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -414,7 +414,6 @@ class Stores extends ActiveRecord implements ProjectInterface
         if (empty($this->folder) || !is_dir($assetsPath . $this->folder)) {
             $this->generateFolderName();
             $this->save(false);
-            StoreHelper::generateAssets($this->id);
         }
 
         return $this->folder;

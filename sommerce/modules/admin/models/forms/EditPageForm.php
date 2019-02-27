@@ -24,15 +24,14 @@ class AddPageForm extends PageForm
 
         $transaction = Pages::getDb()->beginTransaction();
         try {
-
             $page = new Pages();
 
             $page->attributes = [
                 'seo_title' => $this->title,
-                'name' => '',
+                'name' => $this->name,
                 'seo_keywords' => $this->keywords,
                 'seo_description' => $this->description,
-                'visibility' => $this->visibility,
+                'visibility' => intval($this->visibility),
                 'is_draft' => 1,
                 'url' => $this->url
             ];
@@ -51,7 +50,6 @@ class AddPageForm extends PageForm
             $this->addError('', $e->getMessage());
             return false;
         }
-
 
         return true;
     }
