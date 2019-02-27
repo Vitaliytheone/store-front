@@ -2,10 +2,13 @@
 
 namespace common\models\store;
 
+use sommerce\components\validators\product\UrlValidator;
 use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\db\Query;
 use common\models\store\queries\ProductsQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%products}}".
@@ -102,6 +105,7 @@ class Products extends ActiveRecord
             [['seo_title',], 'string', 'max' => 300],
             [['seo_description'], 'string', 'max' => 1000],
             [['seo_keywords'], 'string', 'max' => 2000],
+            [['url'], UrlValidator::class],
         ];
     }
 
@@ -139,6 +143,24 @@ class Products extends ActiveRecord
     public static function find()
     {
         return new ProductsQuery(get_called_class());
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'position' => [
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'position',
+                ],
+                'value' => function ($event) {
+                    return static::find()->max('position') + 1;
+                },
+            ],
+        ]);
     }
 
     /**

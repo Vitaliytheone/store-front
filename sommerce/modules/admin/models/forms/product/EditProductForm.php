@@ -62,6 +62,9 @@ class EditProductForm extends BaseForm
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function attributeLabels()
     {
         return [

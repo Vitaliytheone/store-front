@@ -1,7 +1,97 @@
 <?php
+
+namespace admin\models\forms\package;
+
+use admin\models\forms\BaseForm;
+use common\models\store\ActivityLog;
+use common\models\store\Products;
+use common\models\store\Packages;
+use Yii;
+use yii\db\Transaction;
+
 /**
- * Created by PhpStorm.
- * User: vshulyak
- * Date: 2019-02-27
- * Time: 14:52
+ * Class CreatePackageForm
+ * @package admin\models\forms\package
  */
+class CreatePackageForm extends BaseForm
+{
+    public $name;
+    public $price;
+    public $quantity;
+    public $overflow;
+    public $mode;
+    public $best;
+    public $visibility;
+    public $product_id;
+    public $provider_service;
+    public $deleted;
+
+    /**
+     * @var Products
+     */
+    protected $_product;
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['product_id', 'name', 'price', 'quantity',], 'required'],
+            [['id', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
+            ['quantity', 'integer', 'min' => 1],
+            ['overflow', 'integer', 'min' => -100, 'max' => 100],
+            ['price', 'number', 'min' => 0.01],
+            [['name', 'provider_service'], 'string', 'max' => 255],
+            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::class, 'targetAttribute' => ['product_id' => 'id']],
+
+            ['provider_id', 'required', 'when' => function(Packages $model){
+                return $model->getAttribute('mode') == Packages::MODE_AUTO;
+            }, 'message' => Yii::t('admin', 'products.message_choose_provider')],
+            ['provider_service', 'required', 'when' => function(Packages $model){
+                return $model->getAttribute('mode') == Packages::MODE_AUTO;
+            }, 'message' => Yii::t('admin', 'products.message_choose_service')],
+        ];
+    }
+
+    /**
+     * @param Products $product
+     */
+    public function setProduct(Products $product)
+    {
+        $this->_product = $product;
+    }
+
+    /**
+     * @return bool
+     */
+    public function save()
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $model = new Packages();
+        $model->attributes = $this->attributes;
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->storeDb->beginTransaction();
+
+        if (!$model->save()) {
+            $this->addErrors($model->getErrors());
+            $transaction->rollBack();
+            return false;
+        }
+
+        ActivityLog::log($this->_user, ActivityLog::E_PACKAGES_PACKAGE_ADDED, $model->id, $model->id);
+
+        $transaction->commit();
+        return true;
+    }
+
+    public function attributeLabels()
+    {
+        return [
+
+        ];
+    }
+}

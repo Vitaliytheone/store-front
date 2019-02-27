@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use admin\models\forms\package\EditPackageForm;
 use admin\models\forms\product\EditProductForm;
 use common\components\ActiveForm;
 use common\components\response\CustomResponse;
@@ -9,9 +10,7 @@ use common\models\store\ActivityLog;
 use common\models\store\Packages;
 use common\models\store\Products;
 use common\models\stores\StoreAdminAuth;
-use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\models\forms\EditNavigationForm;
-use sommerce\modules\admin\models\forms\MovePackageForm;
+use admin\models\forms\package\MovePackageForm;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
@@ -20,10 +19,10 @@ use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\NotAcceptableHttpException;
 use sommerce\helpers\UiHelper;
-use sommerce\modules\admin\models\forms\CreatePackageForm;
+use admin\models\forms\package\CreatePackageForm;
 use common\models\stores\StoreProviders;
 use common\helpers\ApiProviders;
-use sommerce\modules\admin\models\forms\MoveProductForm;
+use admin\models\forms\product\MoveProductForm;
 use sommerce\modules\admin\models\search\ProductsSearch;
 use admin\models\forms\product\CreateProductForm;
 
@@ -152,7 +151,7 @@ class ProductsController extends CustomController
         $product = $this->findClassModel($id, Products::class);
 
         $model = new EditProductForm();
-        $model->setUser(Yii::$app->user);
+        $model->setUser(Yii::$app->user->getIdentity());
         $model->setProduct($product);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -184,6 +183,7 @@ class ProductsController extends CustomController
         $productModel = $this->findClassModel($id, Products::class);
 
         return [
+            'status' => 'success',
             'product' => $productModel->getAttributes(),
         ];
     }
@@ -199,41 +199,58 @@ class ProductsController extends CustomController
     public function actionMoveProduct($id, $position)
     {
         /**
-         * @var MoveProductForm $model
+         * @var Products $product
          */
-        $model = $this->findClassModel($id, MoveProductForm::class);
-        $model->setUser(Yii::$app->user);
+        $product = $this->findClassModel($id, Products::class);
+
+        $model = new MoveProductForm();
+        $model->setProduct($product);
+        $model->setUser(Yii::$app->user->getIdentity());
 
         $newPosition = $model->changePosition($position);
 
         if ($newPosition === false) {
-            throw new NotAcceptableHttpException();
+            return [
+                'status' => 'error',
+                'error' => ActiveForm::firstError($model),
+            ];
         }
 
-        return ['position' => $newPosition];
+        return [
+            'status' => 'success',
+            'position' => $newPosition,
+        ];
     }
 
     /**
      * Create new Package AJAX action
+     * @param integer $id
      * @return array
      * @throws NotAcceptableHttpException
      */
-    public function actionCreatePackage()
+    public function actionCreatePackage($id)
     {
-        $model = new CreatePackageForm();
-        $model->setUser(Yii::$app->getUser());
+        /**
+         * @var Products $product
+         */
+        $product = $this->findClassModel($id, Products::class);
 
-        if (!$model->create(Yii::$app->request->post())) {
-            return ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
+        $model = new CreatePackageForm();
+        $model->setProduct($product);
+        $model->setUser(Yii::$app->user->getIdentity());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_package_created'));
+
+            return [
+                'status' => 'success',
+                'product' => $model->getAttributes(),
+            ];
         }
 
-        UiHelper::message(Yii::t('admin', 'products.message_package_created'));
-
         return [
-            'package' => $model->getAttributes(),
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
         ];
     }
 
@@ -246,18 +263,19 @@ class ProductsController extends CustomController
     public function actionGetPackage($id)
     {
         /**
-         * @var CreatePackageForm $model
+         * @var Packages $package
          */
-        $model = $this->findClassModel($id, CreatePackageForm::class);
+        $package = $this->findClassModel($id, Packages::class);
 
         return [
-            'package' => $model->getAttributes(),
+            'status' => 'success',
+            'package' => $package->getAttributes(),
         ];
     }
 
     /**
      * Update Package AJAX action
-     * @param $id
+     * @param integer $id
      * @return array
      * @throws NotAcceptableHttpException
      * @throws NotFoundHttpException
@@ -265,22 +283,26 @@ class ProductsController extends CustomController
     public function actionUpdatePackage($id)
     {
         /**
-         * @var CreatePackageForm $model
+         * @var Packages $package
          */
-        $model = $this->findClassModel($id, CreatePackageForm::class);
-        $model->setUser(Yii::$app->user);
+        $package = $this->findClassModel($id, Packages::class);
 
-        if (!$model->edit(Yii::$app->request->post())) {
-            return ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
+        $model = new EditPackageForm();
+        $model->setPackage($package);
+        $model->setUser(Yii::$app->user->getIdentity());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_package_updated'));
+
+            return [
+                'status' => 'success',
+                'product' => $model->getAttributes(),
+            ];
         }
 
-        UiHelper::message(Yii::t('admin', 'products.message_package_updated'));
-
         return [
-            'package' => $model,
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
         ];
     }
 
@@ -332,6 +354,7 @@ class ProductsController extends CustomController
         UiHelper::message(Yii::t('admin', 'products.message_package_deleted'));
 
         return [
+            'status' => 'success',
             'package' => $model->getAttributes(),
         ];
     }
@@ -347,16 +370,26 @@ class ProductsController extends CustomController
     public function actionMovePackage($id, $position)
     {
         /**
-         * @var MovePackageForm $model
+         * @var Packages $package
          */
-        $model = $this->findClassModel($id, MovePackageForm::class);
-        $model->setUser(Yii::$app->user);
+        $package = $this->findClassModel($id, Packages::class);
+
+        $model = new MovePackageForm();
+        $model->setProduct($package);
+        $model->setUser(Yii::$app->user->getIdentity());
+
         $newPosition = $model->changePosition($position);
 
         if ($newPosition === false) {
-            throw new NotAcceptableHttpException();
+            return [
+                'status' => 'error',
+                'error' => ActiveForm::firstError($model),
+            ];
         }
 
-        return ['position' => $newPosition];
+        return [
+            'status' => 'success',
+            'position' => $newPosition,
+        ];
     }
 }
