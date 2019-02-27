@@ -1,35 +1,29 @@
 <?php
 
-namespace sommerce\modules\admin\models\forms;
+namespace  admin\models\forms\package;
 
+use admin\models\forms\BaseForm;
 use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use yii\web\User;
 use common\models\store\Packages;
 
-class MovePackageForm extends Packages
+/**
+ * Class MovePackageForm
+ * @package admin\models\forms\package
+ */
+class MovePackageForm extends BaseForm
 {
     /**
-     * @var User
+     * @var Packages
      */
-    protected $_user;
+    protected $_package;
 
     /**
-     * @param User $user
+     * @param Packages $package
      */
-    public function setUser(User $user)
+    public function setProduct(Packages $package)
     {
-        $this->_user = $user;
+        $this->_package = $package;
     }
-
-    /**
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->_user;
-    }
-
 
     /**
      * Move package to new position
@@ -38,16 +32,16 @@ class MovePackageForm extends Packages
      */
     public function changePosition($newPosition)
     {
-        $maxPosition = $this->getMaxPosition();
-        $currentPosition = $this->getAttribute('position');
-        $productId = $this->getAttribute('product_id');
+        $maxPosition = $this->_package->getMaxPosition();
+        $currentPosition = $this->_package->getAttribute('position');
+        $productId = $this->_package->getAttribute('product_id');
 
         if ($newPosition < 0 || $newPosition > $maxPosition) {
             return false;
         }
 
-        $db = $this->getDb();
-        $packagesTable = static::tableName();
+        $db = $this->_package->getDb();
+        $packagesTable = Packages::tableName();
 
         $query = $db->createCommand("
                   UPDATE $packagesTable SET
@@ -65,19 +59,16 @@ class MovePackageForm extends Packages
             ")
             ->bindValue(':newPos', $newPosition)
             ->bindValue(':curPos', $currentPosition)
-            ->bindValue(':deleted', self::DELETED_NO)
+            ->bindValue(':deleted', Packages::DELETED_NO)
             ->bindValue(':product', $productId)
             ->execute();
 
         if ($query) {
-            $this->setAttribute('position', $newPosition);
+            $this->_package->setAttribute('position', $newPosition);
         }
 
-        /** @var StoreAdminAuth $identity */
-        $identity = $this->getUser()->getIdentity(false);
+        ActivityLog::log($this->_user, ActivityLog::E_PACKAGES_PACKAGE_POSITION_CHANGED, $this->_package->id, $this->_package->id);
 
-        ActivityLog::log($identity, ActivityLog::E_PACKAGES_PACKAGE_POSITION_CHANGED, $this->id, $this->id);
-
-        return $this->getAttribute('position');
+        return $this->_package->getAttribute('position');
     }
 }
