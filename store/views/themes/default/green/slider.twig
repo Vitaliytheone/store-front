@@ -1,0 +1,41 @@
+{% if block.slider %}
+    <!-- Slider Section Start -->
+    <div id="banner">
+        <!-- Banner Slider Start -->
+        <div class="banner--slider owl-carousel bg--color-lightgray" 
+             data-owl-effect="{{ block.slider.settings.effect }}"
+             data-owl-interval="{{ block.slider.settings.interval }}"
+             data-owl-dots="true">
+            {% for slide in block.slider.data %}
+            <!-- Banner Item Start -->
+            <div class="banner--item">
+                <div class="container">
+                    <div class="row">
+                        <!-- Slider Image Start -->
+                        <div class="banner--img col-md-6">
+                            {% if slide.image  %}
+                                <img src="{{ slide.image }}" alt="{{ slide.title }}" class="img-responsive">
+                            {% endif %}
+                        </div>
+                        <!-- Slider Image End -->
+                        <!-- Slider Content Start -->
+                          <div class="banner--content col-md-6 {% if site.rtl %} rtl-content {% endif %}">
+                              <h2 class="h2">{{ slide.title }}</h2>
+                              {% if slide.description %}
+                                  <p>{{ slide.description }}</p>
+                              {% endif %}
+                              {% if slide.button %}
+                                  <a href="{{ slide.button.link }}" class="btn btn-default white">{{ slide.button.title }}</a>
+                              {% endif %}
+                          </div>
+                        <!-- Slider Content End -->
+                    </div>
+                </div>
+            </div>
+            <!-- Banner Item End -->
+            {% endfor %}
+        </div>
+        <!-- Banner Slider End -->
+    </div>
+    <!-- Slider Section End -->
+{% endif %}
