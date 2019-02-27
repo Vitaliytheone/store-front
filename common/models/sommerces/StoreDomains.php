@@ -37,7 +37,7 @@ class StoreDomains extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.store_domains';
+        return DB_SOMMERCES . '.store_domains';
     }
 
     /**

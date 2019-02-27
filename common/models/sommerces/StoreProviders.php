@@ -24,7 +24,7 @@ class StoreProviders extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.store_providers';
+        return DB_SOMMERCES . '.store_providers';
     }
 
     /**

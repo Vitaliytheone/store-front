@@ -107,7 +107,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public static function tableName()
     {
-        return DB_STORES . '.stores';
+        return DB_SOMMERCES . '.stores';
     }
 
     /**

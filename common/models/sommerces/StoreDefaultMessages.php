@@ -22,7 +22,7 @@ class StoreDefaultMessages extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.store_default_messages';
+        return DB_SOMMERCES . '.store_default_messages';
     }
 
     /**

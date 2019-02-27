@@ -35,7 +35,7 @@ class Providers extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.providers';
+        return DB_SOMMERCES . '.providers';
     }
 
     /**

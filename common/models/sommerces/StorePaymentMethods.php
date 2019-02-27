@@ -38,7 +38,7 @@ class StorePaymentMethods extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'store_payment_methods';
+        return DB_SOMMERCES . '.store_payment_methods';
     }
 
     /**

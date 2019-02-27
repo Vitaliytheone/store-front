@@ -32,7 +32,7 @@ class LinkValidations extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.link_validations';
+        return DB_SOMMERCES . '.link_validations';
     }
 
     /**

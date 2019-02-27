@@ -68,7 +68,7 @@ class StoreAdmins extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.store_admins';
+        return DB_SOMMERCES . '.store_admins';
     }
 
     /**

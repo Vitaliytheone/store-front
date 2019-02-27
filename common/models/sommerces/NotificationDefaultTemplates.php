@@ -48,7 +48,7 @@ class NotificationDefaultTemplates extends ActiveRecord
      */
     public static function tableName()
     {
-        return DB_STORES . '.notification_default_templates';
+        return DB_SOMMERCES . '.notification_default_templates';
     }
 
     /**
