@@ -102,9 +102,8 @@ class ProductsController extends CustomController
         $search = new ProductsSearch();
         $search->setStore($this->store);
 
-        $this->addModule('adminProductsList');
+        /*$this->addModule('adminProductsList');
         $this->addModule('adminProductEdit', [
-            'products' => $search->getProductsProperties(),
             'confirmMenu' => [
                 'url' => Url::toRoute('/products/create-product-menu'),
                 'labels' => [
@@ -115,7 +114,7 @@ class ProductsController extends CustomController
                 ]
             ]
         ]);
-        $this->addModule('adminPackageEdit');
+        $this->addModule('adminPackageEdit');*/
 
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),

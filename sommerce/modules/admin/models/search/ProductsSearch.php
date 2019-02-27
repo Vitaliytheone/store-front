@@ -130,26 +130,4 @@ class ProductsSearch extends Model
 
         return $productsPackages;
     }
-
-    /**
-     * Return products-properties list
-     * @return array
-     */
-    public function getProductsProperties()
-    {
-        $products = (new Query())
-            ->select(['id', 'name', 'properties'])
-            ->from($this->_productsTable)
-            ->where([
-                'not',
-                ['properties' => null]
-            ])
-            ->all();
-
-        array_walk($products, function(&$product) {
-            $product['properties'] = json_decode($product['properties'], true);
-        });
-
-        return $products;
-    }
 }
