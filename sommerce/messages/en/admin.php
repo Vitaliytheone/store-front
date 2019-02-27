@@ -149,6 +149,15 @@ return [
     'settings.product_seo_meta_keywords' => 'Meta keywords',
     'products.product_seo_url' => 'URL',
 
+    'product.error.can_not_save' => 'Can not save product',
+    'products.create_product.header' => 'Create new product',
+    'products.create_product.cancel_btn' => 'Cancel',
+    'products.create_product.submit_btn' => 'Create product',
+    'products.create_product.name' => 'Product name',
+    'products.create_product.create_page' => 'Create new product page',
+    'products.create_product.url' => 'Url',
+    'products.edit_product.name' => 'Product name',
+
     'products.product_properties_copy' => ' Copy properties',
     'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',
     'products.product_properties_create_new_1' => 'Create a new property or',

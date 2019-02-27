@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use admin\models\forms\product\EditProductForm;
 use common\components\ActiveForm;
 use common\components\response\CustomResponse;
 use common\models\store\ActivityLog;
@@ -19,12 +20,12 @@ use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\NotAcceptableHttpException;
 use sommerce\helpers\UiHelper;
-use sommerce\modules\admin\models\forms\CreateProductForm;
 use sommerce\modules\admin\models\forms\CreatePackageForm;
 use common\models\stores\StoreProviders;
 use common\helpers\ApiProviders;
 use sommerce\modules\admin\models\forms\MoveProductForm;
 use sommerce\modules\admin\models\search\ProductsSearch;
+use admin\models\forms\product\CreateProductForm;
 
 /**
  * Class ProductsController
@@ -102,19 +103,7 @@ class ProductsController extends CustomController
         $search = new ProductsSearch();
         $search->setStore($this->store);
 
-        /*$this->addModule('adminProductsList');
-        $this->addModule('adminProductEdit', [
-            'confirmMenu' => [
-                'url' => Url::toRoute('/products/create-product-menu'),
-                'labels' => [
-                    'title' => Yii::t('admin', 'products.product_menu_header'),
-                    'message' => Yii::t('admin', 'products.product_menu_message'),
-                    'confirm_button' => Yii::t('admin', 'products.product_menu_success'),
-                    'cancel_button' => Yii::t('admin', 'products.product_menu_cancel'),
-                ]
-            ]
-        ]);
-        $this->addModule('adminPackageEdit');*/
+        $this->addModule('adminProducts');
 
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),
@@ -131,70 +120,20 @@ class ProductsController extends CustomController
     public function actionCreateProduct()
     {
         $model = new CreateProductForm();
-        $model->setUser(Yii::$app->user);
+        $model->setUser(Yii::$app->user->getIdentity());
 
-        if (!$model->create(Yii::$app->request->post())) {
-            return ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
-        }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_product_created'));
 
-        UiHelper::message(Yii::t('admin', 'products.message_product_created'));
-
-        return [
-            'product' => $model->getAttributes(),
-        ];
-    }
-
-    /**
-     * Create product menu item
-     * @param integer $id
-     * @return array
-     * @throws NotFoundHttpException
-     */
-    public function actionCreateProductMenu($id)
-    {
-        /**
-         * @var Products $product
-         */
-        $product = $this->findClassModel($id, Products::class);
-
-        $model = new EditNavigationForm();
-        $model->setUser(Yii::$app->user);
-
-        if ($model->create([$model->formName() => [
-            'name' => $product->name,
-            'link' => EditNavigationForm::LINK_PRODUCT,
-            'link_id' => $product->id
-        ]])) {
-            UiHelper::message(Yii::t('admin', 'settings.nav_message_created'));
             return [
                 'status' => 'success',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
+                'product' => $model->getAttributes(),
             ];
         }
-    }
-
-    /**
-     * Get Product AJAX action
-     * @param $id
-     * @return array
-     * @throws NotFoundHttpException
-     */
-    public function actionGetProduct($id)
-    {
-        /**
-         * @var CreateProductForm $productModel
-         */
-        $productModel = $this->findClassModel($id, CreateProductForm::class);
 
         return [
-            'product' => $productModel->getAttributes(),
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
         ];
     }
 
@@ -208,24 +147,44 @@ class ProductsController extends CustomController
     public function actionUpdateProduct($id)
     {
         /**
-         * @var CreateProductForm $model
+         * @var Products $model
          */
-        $model = $this->findClassModel($id, CreateProductForm::class);
+        $product = $this->findClassModel($id, Products::class);
+
+        $model = new EditProductForm();
         $model->setUser(Yii::$app->user);
+        $model->setProduct($product);
 
-        if (!$model->edit(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
+
             return [
-                'error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-                ]
+                'status' => 'success',
+                'product' => $model->getAttributes(),
             ];
-        };
-
-        UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
+        }
 
         return [
-            'product' => $model->getAttributes(),
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
+        ];
+    }
+
+    /**
+     * Get Product AJAX action
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetProduct($id)
+    {
+        /**
+         * @var Products $productModel
+         */
+        $productModel = $this->findClassModel($id, Products::class);
+
+        return [
+            'product' => $productModel->getAttributes(),
         ];
     }
 

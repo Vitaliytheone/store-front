@@ -7,7 +7,7 @@
     "bower": "^1.8.4",
     "clipboard": "^1.7.1",
     "ejs-brunch": "^1.0.2",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.1",
     "gulp-minify-css": "^1.2.4",
@@ -19,7 +19,7 @@
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
     "node-bourbon": "^4.2.8",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.11.0",
     "tablesorter": "^2.30.6",
     "underscore": "^1.9.1"
   },

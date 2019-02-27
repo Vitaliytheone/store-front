@@ -96,7 +96,6 @@ class Products extends ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'position', 'visibility'], 'integer'],
             [['description'], 'string'],
             [['name', 'url', 'color'], 'string', 'max' => 255],

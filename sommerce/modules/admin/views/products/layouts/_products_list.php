@@ -21,7 +21,8 @@ use yii\helpers\ArrayHelper;
                         <?= Html::a(Yii::t('admin', 'products.edit_product'), Url::to(['products/update-product', 'id' => $product['id']]), [
                             'class' => 'sommerce-products-editor__product-edit',
                             'data' => [
-                                //'details' => $product
+                                'id' => $product['id'],
+                                'name' => $product['name'],
                             ],
                         ])?>
                     </div>
