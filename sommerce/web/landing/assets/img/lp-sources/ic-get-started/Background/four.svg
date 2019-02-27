@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="112px" height="115px" viewBox="0 0 112 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.1 (72631) - https://sketchapp.com -->
+    <title>Component / Get started / Background / Four</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="91.0012637%" y1="71.1961917%" x2="17.2393557%" y2="22.6973768%" id="linearGradient-1">
+            <stop stop-color="#F1EFFA" offset="0%"></stop>
+            <stop stop-color="#F1EFFA" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Component-/-Get-started-/-Background-/-Four" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M45.3338135,0.155403452 C99.3696884,2.80523253 93.5878538,-0.880906871 107.288832,24.9645759 C120.989811,50.8100586 100.082445,37.769043 103.713422,75.2384876 C107.344399,112.707932 57.3404,128.682414 13.5901447,99.6499888 C-8.50179348,84.989902 2.16295228,58.9931305 5.63637214,37.113235 C9.04161562,15.6627988 4.62869302,-1.84070769 45.3338135,0.155403452 Z" id="Rectangle-Copy-11" fill="url(#linearGradient-1)"></path>
+    </g>
+</svg>
