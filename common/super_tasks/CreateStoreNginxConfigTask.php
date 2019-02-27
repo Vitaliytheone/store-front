@@ -1,10 +1,9 @@
 <?php
+
 namespace common\super_tasks;
 
 use common\models\panels\Orders;
-use common\models\panels\Project;
 use common\models\stores\Stores;
-use Yii;
 use yii\base\Exception;
 use common\models\panels\SuperTasks;
 use yii\helpers\ArrayHelper;
@@ -13,8 +12,11 @@ use yii\helpers\ArrayHelper;
  * Class CreateStoreNginxConfigTask
  * @package common\super_tasks
  */
-class CreateStoreNginxConfigTask extends BaseTask {
-
+class CreateStoreNginxConfigTask extends BaseTask
+{
+    /**
+     * @throws \Exception
+     */
     public function run(): void
     {
         $tasks = SuperTasks::findAll([
@@ -40,7 +42,8 @@ class CreateStoreNginxConfigTask extends BaseTask {
                 continue;
             }
 
-            $result = $store->createNginxConfig();
+            $isSommerse = $this->options['isSommerce'];
+            $result = $store->createNginxConfig($isSommerse);
 
             $task->status = $result ? SuperTasks::STATUS_COMPLETED : SuperTasks::STATUS_ERROR;
             $task->save(false);

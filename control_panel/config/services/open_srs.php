@@ -1,9 +1,9 @@
 <?php
 // Paths
 // Setting default path to the same directory this file is in
-//define('DS', DIRECTORY_SEPARATOR);
-//define('PS', PATH_SEPARATOR);
-//define('CRLF', "\r\n");
+define('DS', DIRECTORY_SEPARATOR);
+define('PS', PATH_SEPARATOR);
+define('CRLF', "\r\n");
 
 
 define('OPENSRSURI', dirname(__FILE__));

@@ -200,6 +200,7 @@ class SiteController extends CustomController
     /**
      * Create ticket message
      * @return array
+     * @throws \yii\db\Exception
      */
     public function actionCreateTicket()
     {
@@ -229,7 +230,8 @@ class SiteController extends CustomController
 
     /**
      * Support page
-     * @return string
+     * @return string|Response
+     * @throws \yii\db\Exception
      */
     public function actionSupport()
     {
@@ -262,7 +264,9 @@ class SiteController extends CustomController
     /**
      * Invoice page
      * @param $id
-     * @return string|\yii\web\Response
+     * @return string|Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function actionInvoice($id)
     {
@@ -710,7 +714,9 @@ class SiteController extends CustomController
      * Paypal payer payment verification
      * @param $code
      * @return Response
+     * @throws \Throwable
      * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function actionPaypalVerify($code)
     {

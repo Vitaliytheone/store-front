@@ -20,11 +20,12 @@ class NginxHelper
     /**
      * Create nginx config file by object
      * @param Project|Stores|Sites $object
+     * @param bool $isSommerce
      * @return bool
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public static function create($object)
+    public static function create($object, $isSommerce = false)
     {
         switch ((new ReflectionClass($object))->getShortName()) {
             case 'Project':
@@ -45,8 +46,13 @@ class NginxHelper
                 $domain = $object->domain;
                 $logItem = ThirdPartyLog::ITEM_BUY_STORE;
                 $logCode = 'store.create_nginx_config';
-                $configPath = Yii::$app->params['storeNginxConfigPath'];
-                $defaultConfigPath = Yii::$app->params['storeNginxDefaultConfigPath'];
+                if ($isSommerce) {
+                    $configPath = Yii::$app->params['sommerceNginxConfigPath'];
+                    $defaultConfigPath = Yii::$app->params['sommerceNginxDefaultConfigPath'];
+                } else {
+                    $configPath = Yii::$app->params['storeNginxConfigPath'];
+                    $defaultConfigPath = Yii::$app->params['storeNginxDefaultConfigPath'];
+                }
             break;
 
             case 'Sites':

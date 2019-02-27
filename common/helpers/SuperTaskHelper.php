@@ -40,13 +40,14 @@ class SuperTaskHelper
 
     /**
      * Run common tasks
+     * @param bool $isSommerce
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\di\NotInstantiableException
      */
-    public static function runTasks()
+    public static function runTasks($isSommerce = false)
     {
         Yii::$container->get(CreatePanelNginxConfigTask::class, [])->run();
-        Yii::$container->get(CreateStoreNginxConfigTask::class, [])->run();
+        Yii::$container->get(CreateStoreNginxConfigTask::class, ['isSommerce' => $isSommerce])->run();
         Yii::$container->get(CreateGatewayNginxConfigTask::class, [])->run();
         Yii::$container->get(RestartNginxTask::class, [])->run();
     }

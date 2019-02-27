@@ -42,6 +42,12 @@ $config = [
             'migrationPath' => '@common/migrations/my/',
         ],
 
+        'migrate-control-panel' => [
+            'class' => 'console\controllers\control_panel\CustomMigrateController',
+            'migrationTable' => DB_PANELS . '.system_migrations',
+            'migrationPath' => '@common/migrations/control_panel/',
+        ],
+
         'cron-sommerce' => [
             'class' => 'console\controllers\sommerce\CronController',
         ],
@@ -72,6 +78,18 @@ $config = [
 
         'system-gateway' => [
             'class' => 'console\controllers\gateway\SystemController',
+        ],
+
+        'system-control-panel' => [
+            'class' => 'console\controllers\control_panel\SystemController',
+        ],
+
+        'cron-control-panel' => [
+            'class' => 'console\controllers\control_panel\CronController',
+        ],
+
+        'template-control-panel' => [
+            'class' => 'console\controllers\control_panel\TemplateController',
         ],
     ],
     'components' => [

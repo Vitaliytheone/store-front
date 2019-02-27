@@ -679,12 +679,13 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Create nginx config
+     * @param bool $isSommerce
      * @return bool
      * @throws \Exception
      */
-    public function createNginxConfig()
+    public function createNginxConfig($isSommerce = false)
     {
-        return NginxHelper::create($this);
+        return NginxHelper::create($this, $isSommerce);
     }
 
     /**
