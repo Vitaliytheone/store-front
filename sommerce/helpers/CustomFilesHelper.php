@@ -2,12 +2,9 @@
 
 namespace sommerce\helpers;
 
-use common\models\store\CustomThemes;
-use common\models\stores\DefaultThemes;
 use DirectoryIterator;
-use yii\helpers\FileHelper;
-use sommerce\modules\admin\models\search\ThemesSearch;
 use yii\base\Exception;
+use yii\helpers\FileHelper;
 
 class CustomFilesHelper extends FileHelper
 {

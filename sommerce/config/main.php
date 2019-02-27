@@ -1,6 +1,7 @@
 <?php
-use yii\web\UrlNormalizer;
+
 use common\components\response\CustomResponse;
+use yii\web\UrlNormalizer;
 
 $db = array_merge(
     require_once(__DIR__ . '/db.php'),
@@ -66,7 +67,7 @@ $config = [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'page/error',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

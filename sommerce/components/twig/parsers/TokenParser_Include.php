@@ -2,14 +2,13 @@
 
 namespace sommerce\components\twig\parsers;
 
-use common\helpers\ThemesHelper;
 use common\models\store\PageFiles;
 use sommerce\helpers\PageFilesHelper;
-use Twig_TokenParser;
-use Twig_Token;
-use Twig_Node_Include;
-use Twig_Node_Expression_Constant;
 use Twig_Error_Syntax;
+use Twig_Node_Expression_Constant;
+use Twig_Node_Include;
+use Twig_Token;
+use Twig_TokenParser;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -45,23 +44,15 @@ class TokenParser_Include extends Twig_TokenParser
             throw new Twig_Error_Syntax('Unknown "include" tag');
         }
 
-        $view = $expression->getAttribute('value');
+        $view = ltrim($expression->getAttribute('value'), '/');
         $files = [];
 
         foreach((array)ArrayHelper::getValue(PageFilesHelper::getFilesGroupByType(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
-            $files['/snippets/' . $file['file_name']] = $file['content'];
+            $files['snippets/' . $file['file_name']] = $file['content'];
         }
 
-        if (empty($view) || empty($files[$view]) || !in_array($view, ThemesHelper::getAvailableIncludes())) {
+        if (empty($view) || empty($files[$view])) {
             throw new Twig_Error_Syntax($view . ' file is not supported');
-        }
-
-        if (!in_array($view, ThemesHelper::getEnabledIncludes())) {
-            return null;
-        }
-
-        if (!$view) {
-            return null;
         }
 
         $expression->setAttribute('value', $view);

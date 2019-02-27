@@ -2,17 +2,18 @@
 
 namespace common\models\store;
 
+use common\models\store\queries\PagesQuery;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\store\queries\PagesQuery;
 
 /**
  * This is the model class for table "{{%pages}}".
  *
  * @property int $id
+ * @property string $name
  * @property string $url
- * @property string $title
+ * @property string $seo_title
  * @property string $seo_description
  * @property string $seo_keywords
  * @property int $visibility
@@ -90,8 +91,8 @@ class Pages extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'url' => Yii::t('app', 'Url'),
             'name' => Yii::t('app', 'Name'),
+            'url' => Yii::t('app', 'Url'),
             'seo_title' => Yii::t('app', 'Seo Title'),
             'seo_description' => Yii::t('app', 'Seo Description'),
             'seo_keywords' => Yii::t('app', 'Seo Keywords'),

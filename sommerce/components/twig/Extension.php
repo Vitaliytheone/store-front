@@ -1,13 +1,14 @@
 <?php
+
 namespace sommerce\components\twig;
 
-use sommerce\components\twig\parsers\TokenParser_Include;
 use common\models\store\Pages;
+use sommerce\components\twig\parsers\TokenParser_Include;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;
-use Yii;
-use Twig_SimpleFunction;
 use Twig_SimpleFilter;
+use Twig_SimpleFunction;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -46,9 +47,6 @@ class Extension extends \Twig_Extension {
                 return Yii::t('app', $value, array_merge(static::getTemplateVariables(), $options));
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
-            new Twig_SimpleFunction('asset', function($value) {
-                return AssetsHelper::getAssetPath() . $value;
-            }),
             new Twig_SimpleFunction('assets', function($value) {
                 return AssetsHelper::getAssets($value);
             }),

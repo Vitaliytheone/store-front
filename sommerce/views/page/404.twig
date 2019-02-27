@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?= Yii::t('app', '404.title')?></title>
+    <title>{{ lang('404.title') }}</title>
 </head>
 <style>
     html,body{
@@ -40,6 +40,9 @@
         padding: 0px;
         margin: 0px;
     }
+    .page-link{
+        margin-top: 10px;
+    }
     @media(max-width: 768px){
         .page-title{
             font-size: 100px;
@@ -51,10 +54,13 @@
 <div class="page-row">
     <div class="page-content">
         <div class="page-title">
-            404
+            {{ lang('404.title') }}
         </div>
         <div class="page-description">
-            <p><?= Yii::t('app', '404.text')?></p>
+            <p>{{ lang('404.description') }}</p>
+        </div>
+        <div class="page-link">
+            <a href="/" >{{ lang('404.button.home_page') }}</a>
         </div>
     </div>
 </div>

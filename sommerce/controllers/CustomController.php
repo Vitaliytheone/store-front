@@ -2,20 +2,16 @@
 
 namespace sommerce\controllers;
 
-use common\helpers\ThemesHelper;
-use common\models\store\Pages;
 use sommerce\components\filters\IntegrationsFilter;
+use sommerce\components\View;
 use sommerce\helpers\AssetsHelper;
-use sommerce\helpers\PagesHelper;
 use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\helpers\LanguagesHelper;
-use yii\base\Exception;
-use yii\base\InvalidParamException;
 use Yii;
+use yii\base\Exception;
 use yii\bootstrap\Html;
-use sommerce\components\View;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -252,40 +248,5 @@ class CustomController extends CommonController
         return $renderer->renderContent($content, $params);
     }
 
-    /**
-     * Renders a static string by applying a layout.
-     * @param string $content the static string being rendered
-     * @param array $params
-     * @param boolean $layout
-     * @return string the rendering result of the layout with the given static string as the `$content` variable.
-     * If the layout is disabled, the string will be returned back.
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\NotFoundHttpException
-     * @since 2.0.1
-     */
-    public function renderTwigContent($content, $params = [], $layout = true)
-    {
-        $renderer = $this->getView();
 
-        if (!method_exists($renderer, 'renderContent')) {
-            return '';
-        }
-
-        $content = $renderer->renderContent($content, $params);
-
-        if (!$layout) {
-            return $content;
-        }
-
-
-        $layoutFile = PagesHelper::getLayout();
-
-        if ($layoutFile === false) {
-            return $content;
-        }
-
-        return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
-            'page_content' => $content,
-        ]));
-    }
 }

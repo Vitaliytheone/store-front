@@ -4,8 +4,6 @@ namespace sommerce\controllers;
 
 use common\models\panels\Params;
 use common\models\panels\SslValidation;
-use common\models\store\Pages;
-use sommerce\models\search\BlocksSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -16,27 +14,6 @@ use yii\web\Response;
  */
 class SiteController extends CustomController
 {
-    /**
-     * Error action
-     * @return string
-     * @throws NotFoundHttpException
-     * @throws \yii\base\Exception
-     */
-    public function actionError()
-    {
-        $this->view->title = Yii::t('app', '404.title');
-
-        $page = Pages::find()->active()->andWhere([
-            'url' => '404',
-        ])->one();
-
-        if (!$page) {
-            throw new NotFoundHttpException();
-        }
-
-        return $this->renderContentPartial($page->twig, ['title' => $this->view->title, 'code' => 404]);
-    }
-
     /**
      * Frozen action
      * @return string
@@ -49,30 +26,6 @@ class SiteController extends CustomController
         }
 
         return $this->renderPartial('frozen');
-    }
-
-    /**
-     * Displays index page.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $this->pageTitle = $this->store->seo_title;
-
-        return $this->render('index.twig', [
-            'block' => BlocksSearch::search($this->store)
-        ]);
-    }
-
-    /**
-     * Displays checkout page.
-     *
-     * @return string
-     */
-    public function actionCheckout()
-    {
-        return $this->renderPartial('checkout');
     }
 
 
