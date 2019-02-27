@@ -165,6 +165,5 @@
     </div>
 
 </div>
-<!-- Page Content End -->
 
 <?= $this->render('_modal_add_page'); ?>

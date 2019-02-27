@@ -94,5 +94,31 @@ customModule.adminPages = {
                 $('.link-' + val).fadeIn();
             });
         });
+
+        $('#modal-create-page').click(function(){
+            $('#addpaymentsform-username').val('');
+            $('#addpaymentsform-memo').val('');
+            $('#addpaymentsform-amount').val('');
+            $('#addpaymentsform-method').val('0');
+            $('#addPaymentsError').addClass('hidden');
+        });
+
+        $('#pageForm').submit(function (event){
+            event.preventDefault();
+            var btn = $('#page-submit');
+            var form = $(this);
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback: function() {
+                    $('#modal-create-page').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
     }
+
+
 };

@@ -209,6 +209,26 @@ return [
     'products.f_seo_description' => 'Seo Description',
     'products.f_seo_keywords' => 'Seo Keywords',
 
+
+    'pages.name' => 'Page name',
+    'pages.url' => 'URL',
+    'pages.title' => 'Page title',
+    'pages.description' => 'Meta description',
+    'pages.keywords' => 'Meta keywords',
+    'pages.chars' => 'of {count} characters used',
+    'pages.visibility' => 'Visibility',
+    'pages.cancel' => 'Cancel',
+    'pages.delete' => 'Delete',
+    'pages.add' => 'Add page',
+    'pages.edit' => 'Edit page',
+    'pages.new' => 'New page',
+    'pages.update' => 'Update page',
+    'pages.edit_seo' => 'Edit website SEO',
+    'pages.search_preview' => 'Search engine listing preview',
+
+    'pages.modal.are_you_sure' => 'Are you sure you want to<br><b>delete</b> this page?',
+
+
     'settings.page_title' => 'Settings',
     'settings.left_menu_general' => 'General',
     'settings.left_menu_payments' => 'Payments',
