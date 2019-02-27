@@ -3,7 +3,7 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\components\response\CustomResponse;
-use common\models\store\Files;
+use common\models\sommerce\Files;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -144,7 +144,7 @@ class SettingsController extends CustomController
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
         $storeForm->setUser(Yii::$app->user);
-        /** @var \common\models\stores\StoreAdminAuth $identity */
+        /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
         $storeForm->setUser($identity);
 

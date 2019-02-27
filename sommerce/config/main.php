@@ -46,7 +46,7 @@ $config = [
         ],
         'user' => [
             'class' => 'sommerce\modules\admin\components\CustomUser',
-            'identityClass' => 'common\models\stores\StoreAdminAuth',
+            'identityClass' => 'common\models\sommerces\StoreAdminAuth',
             'loginUrl' => '/admin',
             'enableSession' => true,
             'enableAutoLogin' => true,

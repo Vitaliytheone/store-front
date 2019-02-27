@@ -2,7 +2,7 @@
 
 use sommerce\modules\admin\components\Url;
 use yii\helpers\Html;
-use \common\models\store\PagesOld;
+use \common\models\sommerce\PagesOld;
 
 /* @var $page array */
 /* @var $this \yii\web\View */
