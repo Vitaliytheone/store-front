@@ -2,8 +2,8 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\Languages;
-use common\models\stores\Stores;
+use common\models\sommerce\Languages;
+use common\models\sommerces\Stores;
 use sommerce\modules\admin\helpers\LanguagesHelper;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

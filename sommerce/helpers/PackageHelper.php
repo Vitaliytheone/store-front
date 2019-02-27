@@ -2,7 +2,7 @@
 
 namespace sommerce\helpers;
 
-use common\models\store\Packages;
+use common\models\sommerce\Packages;
 use yii\helpers\Url;
 
 /**

@@ -98,7 +98,7 @@ class NavbarHelper {
     {
         $navbarItems = static::_NavbarItems();
 
-        /** @var \common\models\stores\StoreAdmins $user */
+        /** @var \common\models\sommerces\StoreAdmins $user */
         $authUser = Yii::$app->user;
         $user = $authUser->getIdentity();
 

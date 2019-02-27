@@ -2,13 +2,13 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
 use yii;
 use yii\web\User;
 use yii\behaviors\AttributeBehavior;
-use common\models\store\Products;
-use \common\models\store\Packages;
+use common\models\sommerce\Products;
+use \common\models\sommerce\Packages;
 
 /**
  * Class CreatePackageForm

@@ -2,10 +2,10 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\Orders;
-use common\models\store\Packages;
-use common\models\store\Products;
-use common\models\stores\Stores;
+use common\models\sommerce\Orders;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Products;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\base\Model;
 use yii\base\Exception;
@@ -14,7 +14,7 @@ use yii\validators\EmailValidator;
 use yii\helpers\ArrayHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
-use common\models\store\Suborders;
+use common\models\sommerce\Suborders;
 use yii\data\ActiveDataProvider;
 
 /**

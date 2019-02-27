@@ -2,7 +2,7 @@
 namespace sommerce\components;
 
 use common\helpers\CurrencyHelper;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use sommerce\helpers\RouteHelper;
 use Yii;
 use yii\base\InvalidConfigException;

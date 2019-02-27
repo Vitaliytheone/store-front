@@ -126,7 +126,7 @@ $config = [
             ],
         ],
         'store' => [
-            'class' => 'common\components\stores\StoreComponent'
+            'class' => 'common\components\sommerces\StoreComponent'
         ],
         'db' => $db['db'],
         'storeDb' => $db['storeDb'],

@@ -3,11 +3,11 @@
 namespace sommerce\modules\admin\models;
 
 use common\helpers\CustomHtmlHelper;
-use common\models\store\PaymentsLog;
+use common\models\sommerce\PaymentsLog;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use common\models\store\Payments;
+use common\models\sommerce\Payments;
 
 /**
  * Class Payment

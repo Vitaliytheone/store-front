@@ -2,7 +2,7 @@
 namespace sommerce\helpers;
 
 use Yii;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 
 /**
  * Class ThemesHelper

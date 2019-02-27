@@ -2,8 +2,8 @@
 namespace sommerce\modules\admin\models\forms;
 
 use common\components\cdn\BaseCdn;
-use common\models\store\Blocks;
-use common\models\store\Files;
+use common\models\sommerce\Blocks;
+use common\models\sommerce\Files;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

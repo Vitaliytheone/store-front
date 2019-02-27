@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use sommerce\modules\admin\components\Url;
 use common\components\ActiveForm;
-use common\models\store\Files;
+use common\models\sommerce\Files;
 
 /* @var $this \yii\web\View */
 /* @var $timezones array */

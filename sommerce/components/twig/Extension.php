@@ -2,7 +2,7 @@
 namespace sommerce\components\twig;
 
 use sommerce\components\twig\parsers\TokenParser_Include;
-use common\models\store\Pages;
+use common\models\sommerce\Pages;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;
 use Yii;

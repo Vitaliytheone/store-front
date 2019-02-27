@@ -1,8 +1,8 @@
 <?php
 namespace sommerce\modules\admin\components;
 
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreAdminsHash;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\StoreAdminsHash;
 use yii\web\User;
 
 /**

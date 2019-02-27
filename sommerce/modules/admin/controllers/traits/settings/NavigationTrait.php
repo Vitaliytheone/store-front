@@ -2,9 +2,9 @@
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
-use common\models\store\ActivityLog;
-use common\models\store\Navigation;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Navigation;
+use common\models\sommerces\StoreAdminAuth;
 use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
 use sommerce\models\search\NavigationSearch;

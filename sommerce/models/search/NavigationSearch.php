@@ -2,12 +2,12 @@
 
 namespace sommerce\models\search;
 
-use common\models\store\Navigation;
+use common\models\sommerce\Navigation;
 use Yii;
 use yii\base\Model;
 use yii\db\Connection;
 use yii\db\Query;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 
 /**
  * Class NavigationSearch

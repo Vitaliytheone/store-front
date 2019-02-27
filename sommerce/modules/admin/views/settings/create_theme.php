@@ -4,7 +4,7 @@ use common\components\ActiveForm;
 
 /* @var $this \yii\web\View */
 
-/* @var $theme \common\models\store\CustomThemes */
+/* @var $theme \common\models\sommerce\CustomThemes */
 
 use sommerce\modules\admin\components\Url;
 

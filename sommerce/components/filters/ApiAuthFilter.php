@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\components\filters;
 
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerces\StoreAdminAuth;
 use yii\base\ActionFilter;
 use Yii;
 
