@@ -18,6 +18,7 @@ return [
     'header.menu_settings_themes' => 'Themes',
     'header.menu_settings_blocks' => 'Blocks',
     'header.menu_settings_languages' => 'Languages',
+    'header.menu_pages' => 'Pages',
 
     'orders.page_title' => 'Orders',
     'orders.search_placeholder' => 'Search for...',

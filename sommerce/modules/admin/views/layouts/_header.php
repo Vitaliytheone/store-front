@@ -7,6 +7,7 @@
 
 $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
 
+
 ?>
 <!-- begin::Header -->
 <header class="m-grid__item	m-header"  data-minimize="minimize" data-minimize-offset="200" data-minimize-mobile-offset="200" >
