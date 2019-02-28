@@ -18,7 +18,6 @@ use common\models\sommerces\Stores;
 use console\components\crons\CronFreeSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminateSommerce;
-use console\components\terminate\TerminateStore;
 use control_panel\components\payments\Paypal;
 use control_panel\helpers\OrderHelper;
 use common\helpers\SuperTaskHelper;
@@ -29,7 +28,6 @@ use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
-use console\components\UpdateServicesCount;
 
 /**
  * Class CronController
@@ -376,16 +374,6 @@ class CronController extends CustomController
         Yii::$container->get(PaymentsFee::class, [
             Yii::$app->params['cron.check_payments_fee_days'], // days
         ])->run();
-    }
-
-    /**
-     * Update service_count & service_inuse_count in additional_services
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\di\NotInstantiableException
-     */
-    public function actionUpdateServicesCount()
-    {
-        Yii::$container->get(UpdateServicesCount::class)->run();
     }
 
     /**
