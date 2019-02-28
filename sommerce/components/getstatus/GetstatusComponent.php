@@ -1,5 +1,5 @@
 <?php
-namespace console\components\getstatus;
+namespace sommerce\components\getstatus;
 
 use common\events\Events;
 use Yii;
@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class GetstatusComponent
- * @package console\components\getstatus
+ * @package sommerce\components\getstatus
  */
 class GetstatusComponent extends Component
 {

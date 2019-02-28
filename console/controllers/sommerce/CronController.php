@@ -11,7 +11,7 @@ use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StoreAdminsHash;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
-use console\components\getstatus\GetstatusComponent;
+use sommerce\components\getstatus\GetstatusComponent;
 use console\components\sender\SenderComponent;
 use sommerce\components\payments\methods\Authorize;
 use sommerce\components\payments\methods\Paypal;
