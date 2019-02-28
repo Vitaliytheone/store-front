@@ -5,7 +5,7 @@ use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
-/* @var $store \common\models\stores\Stores */
+/* @var $store \common\models\sommerces\Stores */
 /** @var $products array Products with packages array */
 
 ?>

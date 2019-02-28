@@ -28,6 +28,7 @@ customModule.adminProducts = {
             errorBlock.html('');
 
             $('input[type="text"]', form).val('');
+            $('input[type="checkbox"]', form).prop('checked', false);
 
             modal.modal('show');
 

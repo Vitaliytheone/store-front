@@ -3,8 +3,8 @@
 namespace  admin\models\forms\package;
 
 use admin\models\forms\BaseForm;
-use common\models\store\ActivityLog;
-use common\models\store\Packages;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Packages;
 
 /**
  * Class MovePackageForm

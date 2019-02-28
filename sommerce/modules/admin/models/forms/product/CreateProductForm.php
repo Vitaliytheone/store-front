@@ -3,9 +3,9 @@
 namespace admin\models\forms\product;
 
 use admin\models\forms\BaseForm;
-use common\models\store\ActivityLog;
-use common\models\store\Pages;
-use common\models\store\Products;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Pages;
+use common\models\sommerce\Products;
 use Yii;
 use yii\db\Transaction;
 

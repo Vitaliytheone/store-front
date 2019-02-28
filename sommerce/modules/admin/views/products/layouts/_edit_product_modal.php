@@ -6,7 +6,7 @@ use admin\models\forms\product\EditProductForm;
 use common\components\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $store \common\models\stores\Stores */
+/* @var $store \common\models\sommerces\Stores */
 
 $model = new EditProductForm();
 $model->setStore($store);
