@@ -1,12 +1,12 @@
 <?php
 namespace sommerce\components\getstatus;
 
-use common\events\Events;
-use Yii;
+use sommerce\events\Events;
 use common\models\sommerce\Suborders;
 use common\models\sommerces\Providers;
 use common\models\sommerces\StoreProviders;
 use common\models\sommerces\Stores;
+use Yii;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\db\Connection;
@@ -228,7 +228,7 @@ class GetstatusComponent extends Component
                 Suborders::STATUS_IN_PROGRESS,
                 Suborders::STATUS_COMPLETED,
             ])) {
-                Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                Events::add(Events::EVENT_SOMMERCE_ORDER_CHANGED_STATUS, [
                     'suborderId' => $orderInfo['suborder_id'],
                     'storeId' => $orderInfo['store_id'],
                     'status' => $newStatus
@@ -423,7 +423,7 @@ class GetstatusComponent extends Component
             ];
 
             if (Suborders::STATUS_ERROR != ArrayHelper::getValue($orderInfo, 'status')) {
-                Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+                Events::add(Events::EVENT_SOMMERCE_ORDER_CHANGED_STATUS, [
                     'suborderId' => $orderInfo['suborder_id'],
                     'storeId' => $orderInfo['store_id'],
                     'status' => Suborders::STATUS_ERROR

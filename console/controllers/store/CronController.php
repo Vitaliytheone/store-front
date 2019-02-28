@@ -2,7 +2,7 @@
 
 namespace console\controllers\store;
 
-use common\events\Events;
+use store\events\Events;
 use common\helpers\CurrencyHelper;
 use common\models\store\Checkouts;
 use common\models\store\Payments;

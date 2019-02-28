@@ -1,7 +1,7 @@
 <?php
 namespace store\components\sender;
 
-use common\events\Events;
+use store\events\Events;
 use common\models\store\Packages;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;

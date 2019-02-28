@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\components\sender;
 
-use common\events\Events;
+use sommerce\events\Events;
 use common\models\sommerce\Packages;
 use common\models\sommerces\Providers;
 use common\models\sommerces\StoreProviders;
@@ -227,7 +227,7 @@ class SenderComponent extends Component
             ->execute();
 
         if (Suborders::STATUS_FAILED == $newStatus) {
-            Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+            Events::add(Events::EVENT_SOMMERCE_ORDER_CHANGED_STATUS, [
                 'suborderId' => $orderInfo['suborder_id'],
                 'storeId' => $orderInfo['store_id'],
                 'status' => $newStatus

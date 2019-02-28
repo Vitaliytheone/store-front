@@ -2,7 +2,7 @@
 
 namespace console\controllers\sommerce;
 
-use common\events\Events;
+use sommerce\events\Events;
 use common\helpers\CurrencyHelper;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
@@ -87,7 +87,7 @@ class CronController extends CustomController
                 Yii::$app->store->setInstance($store);
                 foreach ($checkoutQuery->all() as $checkout) {
                     // Send notify
-                    Events::add(Events::EVENT_STORE_ABANDONED_CHECKOUT, [
+                    Events::add(Events::EVENT_SOMMERCE_ABANDONED_CHECKOUT, [
                         'checkout' => $checkout,
                         'store' => $store
                     ]);

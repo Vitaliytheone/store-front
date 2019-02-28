@@ -2,7 +2,7 @@
 
 namespace store\modules\admin\controllers;
 
-use common\events\Events;
+use store\events\Events;
 use common\models\store\ActivityLog;
 use common\models\stores\StoreAdminAuth;
 use common\models\stores\Stores;

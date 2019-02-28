@@ -1,18 +1,17 @@
 <?php
-namespace common\events\store;
+namespace store\events\handlers;
 
 use common\mail\mailers\store\OrderMailer;
-use common\models\store\Orders;
 use common\models\store\Suborders;
 use common\models\stores\NotificationDefaultTemplates;
 use common\models\stores\Stores;
 use Yii;
 
 /**
- * Class OrderInProgressEvent
- * @package common\events\store
+ * Class OrderCompletedEvent
+ * @package store\events\handlers
  */
-class OrderInProgressEvent extends BaseOrderEvent {
+class OrderCompletedEvent extends BaseOrderEvent {
 
     /**
      * @var Suborders
@@ -20,7 +19,7 @@ class OrderInProgressEvent extends BaseOrderEvent {
     protected $_suborder;
 
     /**
-     * OrderInProgressEvent constructor.
+     * OrderCompletedEvent constructor.
      * @param integer $storeId
      * @param integer $suborderId
      */
@@ -29,32 +28,28 @@ class OrderInProgressEvent extends BaseOrderEvent {
         $this->_store = Stores::findOne($storeId);
 
         if (empty($this->_store)) {
-            Yii::info('Empty ' . static::class . ' store parameter.');
+            Yii::info('Empty ' . static::class . ' store parameter');
             return;
         }
 
         Yii::$app->store->setInstance($this->_store);
 
-        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_IN_PROGRESS)) {
+        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_COMPLETED)) {
             return;
         }
 
         $this->_suborder = Suborders::findOne([
             'id' => $suborderId,
-            'status' => Suborders::STATUS_IN_PROGRESS
+            'status' => Suborders::STATUS_COMPLETED
         ]);
 
         if (empty($this->_suborder)) {
-            Yii::info('Empty ' . static::class . ' suborder parameter.');
+            Yii::info('Empty ' . static::class . ' suborder parameter');
             return;
         }
 
         $this->_order = $this->_suborder->order;
 
-        if (empty($this->_order)) {
-            Yii::info('Empty ' . static::class . ' order parameter.');
-            return;
-        }
     }
 
     /**
@@ -63,14 +58,12 @@ class OrderInProgressEvent extends BaseOrderEvent {
      */
     public function run():void
     {
-        if (empty($this->_order) || Orders::IN_PROGRESS_ENABLED === $this->_order->in_progress) {
-            return;
-        }
-        
-        if (!$this->_suborder || Suborders::find()->andWhere([
-            'order_id' => $this->_suborder->order_id,
-            'status' => Suborders::STATUS_IN_PROGRESS
-        ])->exists()) {
+        if (!$this->_suborder
+            || Suborders::find()
+            ->andWhere('status <> ' . Suborders::STATUS_COMPLETED)
+            ->andWhere([
+                'order_id' => $this->_suborder->order_id,
+            ])->exists()) {
             return;
         }
 
@@ -82,7 +75,12 @@ class OrderInProgressEvent extends BaseOrderEvent {
      */
     protected function customerNotify()
     {
-        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_IN_PROGRESS))) {
+        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_COMPLETED))) {
+            return;
+        }
+
+        if (empty($this->_order)) {
+            Yii::info('Empty ' . static::class . ' order parameter');
             return;
         }
 
@@ -93,8 +91,5 @@ class OrderInProgressEvent extends BaseOrderEvent {
             'store' => $this->_store,
         ]);
         $mailer->send();
-
-        $this->_order->in_progress = Orders::IN_PROGRESS_ENABLED;
-        $this->_order->save(false);
     }
 }
