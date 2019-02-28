@@ -47,7 +47,8 @@ class PagesController extends CustomController
      */
     public function behaviors()
     {
-        return [
+        $parentBehaviors = parent::behaviors();
+        return $parentBehaviors + [
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => ['create-page'],
