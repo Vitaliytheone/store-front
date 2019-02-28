@@ -96,8 +96,4 @@ Object.keys(tasks).forEach(function(key) {
 });
 
 gulp.task('js', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'js-cp'));
-
-
-gulp.task('js', ['js-so', 'js-my']);
-
-gulp.task('default', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'sass-admin-sommerce'));
+gulp.task('default', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'js-cp', 'sass-admin-sommerce'));

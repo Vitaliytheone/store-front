@@ -27,7 +27,7 @@ customModule.adminProducts = {
             errorBlock.addClass('hidden');
             errorBlock.html('');
 
-            $('input', form).val('');
+            $('input[type="text"]', form).val('');
 
             modal.modal('show');
 

@@ -56,7 +56,9 @@ $model->setStore($store);
 
                         <span class="m-switch m-switch--primary m-switch--sm">
                             <label>
-                                <?= Html::activeCheckbox($model, 'create_page')?>
+                                <?= Html::checkbox(Html::getInputName($model, 'create_page'), $model->create_page, [
+                                    'id' => Html::getInputId($model, 'create_page'),
+                                ])?>
                                 <span></span>
                             </label>
                         </span>
