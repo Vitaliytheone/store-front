@@ -1,5 +1,5 @@
 <?php
-namespace common\events\store;
+namespace store\events\handlers;
 
 use common\mail\mailers\store\OrderAbandonedMailer;
 use common\models\store\Checkouts;
@@ -10,7 +10,7 @@ use Yii;
 
 /**
  * Class OrderAbandonedEvent
- * @package common\events\store
+ * @package store\events\handlers
  */
 class OrderAbandonedEvent extends BaseOrderEvent {
 

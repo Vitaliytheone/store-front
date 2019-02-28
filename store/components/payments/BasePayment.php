@@ -2,7 +2,7 @@
 
 namespace store\components\payments;
 
-use common\events\Events;
+use store\events\Events;
 use common\helpers\SiteHelper;
 use common\models\store\Carts;
 use common\models\store\Checkouts;

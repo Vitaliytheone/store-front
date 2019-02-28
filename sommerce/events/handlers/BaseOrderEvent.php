@@ -1,18 +1,18 @@
 <?php
-namespace common\events\store;
+namespace sommerce\events\handlers;
 
-use common\models\store\NotificationAdminEmails;
-use common\models\store\NotificationTemplates;
-use common\models\store\Orders;
-use common\models\store\Payments;
-use common\models\store\Suborders;
-use common\models\stores\NotificationDefaultTemplates;
-use common\models\stores\Stores;
+use common\models\sommerce\NotificationAdminEmails;
+use common\models\sommerce\NotificationTemplates;
+use common\models\sommerce\Orders;
+use common\models\sommerce\Payments;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\NotificationDefaultTemplates;
+use common\models\sommerces\Stores;
 use Yii;
 
 /**
  * Class BaseOrderEvent
- * @package common\events\store
+ * @package sommerce\events\handlers
  */
 abstract class BaseOrderEvent {
 

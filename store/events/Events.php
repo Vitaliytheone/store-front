@@ -1,12 +1,14 @@
 <?php
-namespace common\events;
+namespace store\events;
+
 use yii\base\Event;
 
 /**
  * Class Events
- * @package common\events
+ * @package store\events
  */
-class Events {
+class Events
+{
     const EVENT_STORE_ORDER_CHANGED_STATUS = 'store_order_changed_status';
 
     const EVENT_STORE_ORDER_CONFIRM = 'store_order_confirm';
