@@ -2,7 +2,7 @@
 
 namespace console\controllers\store;
 
-use common\events\Events;
+use store\events\Events;
 use common\helpers\CurrencyHelper;
 use common\models\store\Checkouts;
 use common\models\store\Payments;
@@ -11,8 +11,8 @@ use common\models\stores\PaymentMethodsCurrency;
 use common\models\stores\StoreAdminsHash;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
-use console\components\getstatus\GetstatusComponent;
-use console\components\sender\SenderComponent;
+use store\components\getstatus\GetstatusComponent;
+use store\components\sender\SenderComponent;
 use store\components\payments\methods\Authorize;
 use store\components\payments\methods\Paypal;
 use store\components\payments\Payment;

@@ -2,7 +2,7 @@
 
 namespace sommerce\components\payments;
 
-use common\events\Events;
+use sommerce\events\Events;
 use common\helpers\SiteHelper;
 use common\models\sommerce\Carts;
 use common\models\sommerce\Checkouts;
@@ -261,7 +261,7 @@ abstract class BasePayment extends Component
         $payment->save(false);
 
         // Event confirm
-        Events::add(Events::EVENT_STORE_ORDER_CONFIRM, [
+        Events::add(Events::EVENT_SOMMERCE_ORDER_CONFIRM, [
             'order' => $order,
             'store' => $store
         ]);

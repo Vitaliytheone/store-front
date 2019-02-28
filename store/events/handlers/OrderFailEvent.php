@@ -1,5 +1,5 @@
 <?php
-namespace common\events\store;
+namespace store\events\handlers;
 
 use common\mail\mailers\store\OrderAdminMailer;
 use common\models\store\Suborders;
@@ -9,7 +9,7 @@ use Yii;
 
 /**
  * Class OrderFailEvent
- * @package common\events\store
+ * @package store\events\handlers
  */
 class OrderFailEvent extends BaseOrderEvent {
 

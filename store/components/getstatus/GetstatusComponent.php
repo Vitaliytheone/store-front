@@ -1,12 +1,12 @@
 <?php
-namespace console\components\getstatus;
+namespace store\components\getstatus;
 
-use common\events\Events;
-use Yii;
+use store\events\Events;
 use common\models\store\Suborders;
 use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
+use Yii;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\db\Connection;
@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class GetstatusComponent
- * @package console\components\getstatus
+ * @package store\components\getstatus
  */
 class GetstatusComponent extends Component
 {
