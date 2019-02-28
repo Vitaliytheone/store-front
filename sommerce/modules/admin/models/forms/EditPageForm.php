@@ -202,4 +202,28 @@ class EditPageForm extends Model
         }
         return true;
     }
+
+    /**
+     * @param string $url
+     * @return bool|false|int
+     */
+    public function duplicate($url) {
+
+        $this->url = $url;
+        if (!$this->validate('url')) {
+            return false;
+        }
+
+        $page = $this->getPage();
+        $newPage = new Pages();
+
+        $newPage->attributes = $page->attributes;
+        $newPage->created_at = null;
+        $newPage->visibility = 0;
+        $newPage->publish_at = null;
+        $newPage->url = $url;
+        return $newPage->save(false);
+
+
+    }
 }

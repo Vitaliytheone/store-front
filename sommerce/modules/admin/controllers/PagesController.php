@@ -25,7 +25,8 @@ use yii\web\Response;
 class PagesController extends CustomController
 {
     protected $exceptCsrfValidation = [
-        'delete-page'
+        'delete-page',
+        'duplicate-page'
     ];
 
     /**
@@ -53,7 +54,7 @@ class PagesController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['create-page', 'edit-page', 'delete-page'],
+                'only' => ['create-page', 'edit-page', 'delete-page', 'duplicate-page'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -64,7 +65,8 @@ class PagesController extends CustomController
                     'index' => ['GET'],
                     'create-page' => ['POST'],
                     'edit-page' => ['POST'],
-                    'delete-page' => ['POST']
+                    'delete-page' => ['POST'],
+                    'duplicate-page' => ['POST']
                 ],
             ],
         ];
@@ -179,6 +181,36 @@ class PagesController extends CustomController
         $model->setUser($user);
 
         if ($model->delete()) {
+            return [
+                'status' => 'success',
+                'errors' => null
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => ActiveForm::firstError($model)
+        ];
+    }
+
+    /**
+     * Duplicate page
+     * @return array
+     */
+    public function actionDuplicatePage()
+    {
+        $request = Yii::$app->request;
+        $page = $this->findModel($request->post('id'));
+        $model = new EditPageForm();
+        $model->setPage($page);
+        /**x
+         * @var $user CustomUser
+         */
+        $user = Yii::$app->user;
+
+        $model->setUser($user);
+
+        if ($model->duplicate($request->post('url'))) {
             return [
                 'status' => 'success',
                 'errors' => null

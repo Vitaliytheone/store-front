@@ -62,14 +62,16 @@ use yii\helpers\Html;
                             <div class="divTableCell sommerce-page__row-body-td sommerce-page__td-data">
 
                                 <div class="sommerce-page__td-data-actions">
-                                    <a href="#" class="sommerce-page__actions-link"><span class="la la-clone"></span>
-                                        <?= Yii::t('admin', 'pages.duplicate')?>
+                                    <a href="#" class="sommerce-page__actions-link duplicate-page"
+                                       data-page="<?= htmlspecialchars(json_encode($page)) ?>"
+                                       data-action="<?=Url::toRoute(['/pages/duplicate-page', 'id' => $page['id']]) ?>">
+                                        <span class="la la-clone"></span>
+                                        <?= Yii::t('admin', 'pages.duplicate') ?>
                                     </a>
-                                    <a href="#" class="sommerce-page__actions-link"
+                                    <a href="#" class="sommerce-page__actions-link edit-page"
                                        data-page="<?= htmlspecialchars(json_encode($page)) ?>"
                                        data-action="<?= Url::toRoute(['/pages/edit-page', 'id' => $page['id']]) ?>"
-                                       data-modal-title="<?= Yii::t('admin', 'pages.update') ?>"
-                                    >
+                                       data-modal-title="<?= Yii::t('admin', 'pages.update') ?>">
                                         <span class="la la-cog"></span>
                                         <?= Yii::t('admin', 'pages.settings')?>
                                     </a>
@@ -100,3 +102,4 @@ use yii\helpers\Html;
 </div>
 
 <?= $this->render('_modal_add_page', ['host' => $host]); ?>
+<?= $this->render('_modal_duplicate_page'); ?>

@@ -137,7 +137,7 @@ customModule.adminPages = {
             return false;
         });
 
-        $('.sommerce-page__actions-link').click(function(e) {
+        $('.edit-page').click(function(e) {
             e.preventDefault();
             var $this =  $(this);
             var page = $this.data('page');
@@ -200,6 +200,34 @@ customModule.adminPages = {
             });
             e.preventDefault();
         });
+
+        $('.duplicate-page').click(function(e) {
+            e.preventDefault();
+            var $related = $(this);
+            var page = $related.data('page');
+            var $modal = $('#modal-duplicate');
+            $modal.data('page', page);
+            $('#feature-delete').attr('href', $related.data('action'));
+            $modal.modal('show');
+            return false;
+        });
+
+        $('#feature-delete').click(function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var page = $('#modal-duplicate').data('page');
+            var queryParams = {}
+            queryParams.id = page.id;
+            custom.sendBtn($this, {
+                data: queryParams,
+                type: 'POST',
+                callback: function () {
+                    location.reload();
+                }
+            });
+        });
+
+
     }
 
 };

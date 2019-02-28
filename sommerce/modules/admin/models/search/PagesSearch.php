@@ -46,8 +46,6 @@ class PagesSearch extends Pages
             $dtUpdated = ArrayHelper::getValue($page, 'updated_at', null);
             $page['can_delete'] = static::canDelete($page);
             $page['is_draft'] ?  $page['status'] = Yii::t('admin', 'pages.status.draft') : $page['status'] = '';
-
-            $page['is_draft'] ?  $page['status'] = Yii::t('admin', 'pages.status.draft') : $page['status'] = '';
             $page['updated_at_formatted'] = $dtUpdated ? Yii::$app->formatter->asDatetime($dtUpdated, 'yyyy-MM-dd HH:mm:ss') : Yii::t('admin', 'settings.pages_update_never');
         });
 

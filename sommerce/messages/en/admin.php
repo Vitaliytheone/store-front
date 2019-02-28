@@ -233,6 +233,7 @@ return [
     'pages.settings' => 'Settings',
     'pages.editor' => 'Editor',
     'pages.confirm_message' => 'Are you sure?',
+    'pages.duplicate_confirm' => '<p>Are your sure that your want to <br><strong>duplicate</strong> this page?</p>',
 
 
     'settings.page_title' => 'Settings',
