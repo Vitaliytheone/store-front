@@ -86,7 +86,7 @@ $config = [
                 ],
                 'yii\web\YiiAsset' => [
                     'depends' => [
-                        'sommerce\assets\JqueryAsset'
+                        'sommerce\assets\AdminCustomJsAsset'
                     ]
                 ],
             ],
