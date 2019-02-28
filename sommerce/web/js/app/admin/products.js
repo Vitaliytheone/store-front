@@ -144,6 +144,8 @@ customModule.adminProducts = {
             $('#editpackageform-quantity', modal).val(details.quantity);
             $('#editpackageform-link_type', modal).val(details.link_type);
             $('#editpackageform-visibility', modal).val(details.visibility);
+            $('#editpackageform-id', modal).val(details.id);
+            $('.delete-package', modal).attr('href', link.data('delete_link'));
             $('#editpackageform-mode', modal).val(details.mode).trigger('change');
 
             modal.modal('show');
@@ -178,49 +180,29 @@ customModule.adminProducts = {
             }
         });
 
-        /*$(".sortable").sortable({
-            containment: "parent",
-            items: "> div",
-            handle: ".move",
-            tolerance: "pointer",
-            cursor: "move",
-            opacity: 0.7,
-            revert: 300,
-            delay: 150,
-            dropOnEmpty: true,
-            placeholder: "movable-placeholder",
-            start: function(e, ui) {
-                ui.placeholder.height(50);
-                $(this).attr('data-previndex', ui.item.index());
-            },
-            update: function(e, ui) {
-                var newIndex = ui.item.index();
-                var oldIndex = $(this).attr('data-previndex');
+        $(document).on('click', '.delete-package', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#editPackageForm');
 
-                console.log(oldIndex, 'old index');
-                console.log(newIndex, 'new index');
+            custom.sendBtn(btn, {
+                data: self.getTokenParams(),
+                method: 'POST',
+                callback : function(response) {
+                    $('#editPackageModal').modal('hide');
+                    location.reload();
+                }
+            });
 
-                $(this).removeAttr('data-previndex');
-            }
+            return false;
         });
-
-        // Sort the children
-        $(".sortable-packages").sortable({
-            containment: "parent",
-            handle: ".sommerce-products-editor__packages-drag",
-            tolerance: "pointer"
-        });*/
 
         self.sortable();
     },
     sortable: function () {
         var productsSortable = $('.sortable'),
             packagesSortable = $(".sortable-packages"),
-            csrfToken = $('meta[name="csrf-token"]').attr("content"),
-            csrfParam = $('meta[name="csrf-param"]').attr("content");
-
-        var tokenParams = {};
-        tokenParams[csrfParam] = csrfToken;
+            self = this;
 
         // Init sortable
         if (productsSortable.length > 0) {
@@ -256,7 +238,7 @@ customModule.adminProducts = {
                 $.ajax({
                     url: actionUrl,
                     type: "POST",
-                    data: tokenParams,
+                    data: self.getTokenParams(),
                     success: function (data, textStatus, jqXHR){
                         if (data.error){
                             return;
@@ -279,7 +261,7 @@ customModule.adminProducts = {
                 $.ajax({
                     url: actionUrl,
                     type: "POST",
-                    data: tokenParams,
+                    data: self.getTokenParams(),
                     success: function (data, textStatus, jqXHR) {
                         if (data.error) {
                             return;
@@ -292,5 +274,14 @@ customModule.adminProducts = {
                 });
             }
         });
+    },
+    getTokenParams: function () {
+        var csrfToken = $('meta[name="csrf-token"]').attr("content"),
+            csrfParam = $('meta[name="csrf-param"]').attr("content");
+
+        var tokenParams = {};
+        tokenParams[csrfParam] = csrfToken;
+
+        return tokenParams;
     }
 };

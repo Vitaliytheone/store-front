@@ -39,7 +39,8 @@ use yii\helpers\ArrayHelper;
                         <?= Html::a('<span class="la la-edit"></span> ' . Yii::t('admin', 'products.edit_package'), Url::to(['products/update-package', 'id' => $package['id']]), [
                             'class' => 'sommerce-products-editor__packages-actions-link edit-package',
                             'data' => [
-                                'details' => $package
+                                'details' => $package,
+                                'delete_link' => Url::toRoute(['products/delete-package', 'id' => $package['id']]),
                             ]
                         ])?>
                     </div>
