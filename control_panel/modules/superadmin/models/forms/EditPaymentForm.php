@@ -4,7 +4,7 @@ namespace superadmin\models\forms;
 
 use Yii;
 use yii\base\Model;
-use common\models\panels\Params;
+use common\models\sommerces\Params;
 
 /**
  * EditPaymentForm is the model behind the Edit Payment form.

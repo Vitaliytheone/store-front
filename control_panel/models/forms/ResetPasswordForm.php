@@ -1,8 +1,9 @@
 <?php
+
 namespace control_panel\models\forms;
 
-use common\models\panels\Auth;
-use common\models\panels\Customers;
+use common\models\sommerces\Auth;
+use common\models\sommerces\Customers;
 use Yii;
 use yii\base\Model;
 

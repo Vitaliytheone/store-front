@@ -1,8 +1,8 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $invoice \common\models\panels\Invoices */
-    /* @var $customer \common\models\panels\Customers */
-    /* @var $pay2co \common\models\panels\Payments */
+    /* @var $invoice \common\models\sommerces\Invoices */
+    /* @var $customer \common\models\sommerces\Customers */
+    /* @var $pay2co \common\models\sommerces\Payments */
     /* @var $paymentsList array */
     /* @var $code integer */
     /* @var $payWait boolean */
@@ -10,7 +10,7 @@
     /* @var $disabled boolean */
 
 
-    use common\models\panels\Invoices;
+    use common\models\sommerces\Invoices;
 
     $colors = [
         Invoices::STATUS_UNPAID => 'text-danger',

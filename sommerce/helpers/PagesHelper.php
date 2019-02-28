@@ -25,12 +25,10 @@ class PagesHelper
         if (null === static::$pages) {
             static::$pages = ArrayHelper::index(Pages::find()->select([
                 'id',
-                'name',
                 'url',
                 'seo_title',
                 'seo_description',
                 'seo_keywords',
-                'is_draft',
                 'twig',
                 'created_at',
                 'updated_at',

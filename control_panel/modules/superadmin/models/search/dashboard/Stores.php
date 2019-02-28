@@ -2,7 +2,7 @@
 
 namespace superadmin\models\search\dashboard;
 
-use common\models\panels\Customers;
+use common\models\sommerces\Customers;
 use common\models\sommerces\Stores as StoresModel;
 use control_panel\helpers\DomainsHelper;
 use control_panel\helpers\SpecialCharsHelper;

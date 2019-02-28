@@ -2,8 +2,8 @@
 
 namespace superadmin\models\search\dashboard;
 
-use common\models\panels\Customers;
-use common\models\panels\SslCert;
+use common\models\sommerces\Customers;
+use common\models\sommerces\SslCert;
 use control_panel\helpers\SpecialCharsHelper;
 
 /*

@@ -2,7 +2,7 @@
 /* @var $this yii\web\View */
 /* @var $params \superadmin\models\search\ApplicationsSearch */
 
-/* @var $param \common\models\panels\Params */
+/* @var $param \common\models\sommerces\Params */
 
 use control_panel\helpers\Url;
 use yii\bootstrap\Html;

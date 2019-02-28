@@ -2,7 +2,7 @@
 namespace control_panel\mail\mailers;
 
 use Yii;
-use common\models\panels\Notifications;
+use common\models\sommerces\Notifications;
 use yii\helpers\ArrayHelper;
 
 /**
