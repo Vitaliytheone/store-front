@@ -91,6 +91,18 @@ $config = [
         'system-gateway' => [
             'class' => 'console\controllers\gateway\SystemController',
         ],
+
+        'system-control-panel' => [
+            'class' => 'console\controllers\control_panel\SystemController',
+        ],
+
+        'cron-control-panel' => [
+            'class' => 'console\controllers\control_panel\CronController',
+        ],
+
+        'template-control-panel' => [
+            'class' => 'console\controllers\control_panel\TemplateController',
+        ],
     ],
     'components' => [
         'log' => [

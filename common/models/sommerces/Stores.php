@@ -98,7 +98,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_STAFF_EDIT = 8;
     const CAN_STAFF_UPDATE_PASSWORD = 9;
 
-    const STORE_DB_NAME_PREFIX = 'store_';
+    const STORE_DB_NAME_PREFIX = 'sommerce_';
 
     use UnixTimeFormatTrait;
 
@@ -684,7 +684,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function createNginxConfig()
     {
-        return NginxHelper::create($this);
+        return NginxHelper::create($this, true);
     }
 
     /**
@@ -694,7 +694,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function deleteNginxConfig()
     {
-        return NginxHelper::delete($this);
+        return NginxHelper::delete($this, true);
     }
 
     /**
@@ -783,7 +783,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             $storeDomain->domain = $subDomain;
 
             if (!$storeDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
                 return false;
             }
         } else {
@@ -814,7 +814,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             $storeDomain->domain = $domain;
 
             if (!$storeDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
                 return false;
             }
 
@@ -930,7 +930,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             ])
             ->andWhere([
                 'status' => Invoices::STATUS_UNPAID,
-                'invoice_details.item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
+                'invoice_details.item' => InvoiceDetails::ITEM_PROLONGATION_SOMMERCE,
                 'invoice_details.item_id' => $this->id,
             ])
             ->one())) {
@@ -956,7 +956,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             $invoiceDetailsModel->invoice_id = $invoice->id;
             $invoiceDetailsModel->item_id = $this->id;
             $invoiceDetailsModel->amount = $invoice->total;
-            $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_STORE;
+            $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_SOMMERCE;
 
             if (!$invoiceDetailsModel->save()) {
                 $transaction->rollBack();
@@ -1024,7 +1024,7 @@ class Stores extends ActiveRecord implements ProjectInterface
         // Cancel unpaid invoices
         $invoices = Invoices::find()
             ->innerJoin('invoice_details', 'invoice_details.invoice_id = invoices.id AND invoice_details.item = :item', [
-                ':item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_SOMMERCE,
             ])
             ->andWhere([
                 'invoices.status' => Invoices::STATUS_UNPAID,
