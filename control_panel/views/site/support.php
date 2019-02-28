@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $tickets \common\models\panels\Tickets */
-    /* @var $ticket \common\models\panels\Tickets */
+    /* @var $tickets \common\models\sommerces\Tickets */
+    /* @var $ticket \common\models\sommerces\Tickets */
     /* @var $model \control_panel\models\forms\CreateTicketForm */
     /* @var $accesses */
 

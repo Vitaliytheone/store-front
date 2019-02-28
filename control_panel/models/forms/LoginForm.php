@@ -1,11 +1,12 @@
 <?php
+
 namespace control_panel\models\forms;
 
 use control_panel\helpers\UserHelper;
-use common\models\panels\MyActivityLog;
+use common\models\sommerces\MyActivityLog;
 use Yii;
 use yii\base\Model;
-use common\models\panels\Auth;
+use common\models\sommerces\Auth;
 use himiklab\yii2\recaptcha\ReCaptchaValidator;
 use yii\helpers\FileHelper;
 

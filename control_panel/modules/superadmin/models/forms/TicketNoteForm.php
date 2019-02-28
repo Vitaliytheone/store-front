@@ -3,7 +3,7 @@
 namespace superadmin\models\forms;
 
 
-use common\models\panels\CustomersNote;
+use common\models\sommerces\CustomersNote;
 use yii\base\Model;
 
 /**

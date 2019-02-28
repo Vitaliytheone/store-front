@@ -2,12 +2,11 @@
 
 namespace control_panel\helpers;
 
-use common\helpers\PaymentHelper;
-use common\models\panels\MyVerifiedPaypal;
-use common\models\panels\Params;
-use common\models\panels\Payments;
-use common\models\panels\PaymentsLog;
-use common\models\panels\ThirdPartyLog;
+use common\models\sommerces\MyVerifiedPaypal;
+use common\models\sommerces\Params;
+use common\models\sommerces\Payments;
+use common\models\sommerces\PaymentsLog;
+use common\models\sommerces\ThirdPartyLog;
 use control_panel\components\payments\Paypal;
 use yii\helpers\ArrayHelper;
 use Yii;
@@ -33,10 +32,6 @@ class PaymentsHelper {
 
         if (!$customer = $invoice->customer) {
             return false;
-        }
-
-        if ($customer->hasProlongedPanels()) {
-            return true;
         }
 
         if (!filter_var($payerEmail, FILTER_VALIDATE_EMAIL)) {

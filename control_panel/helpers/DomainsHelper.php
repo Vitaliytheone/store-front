@@ -4,10 +4,10 @@ namespace control_panel\helpers;
 
 use Yii;
 use common\components\domains\Domain;
-use common\models\panels\Domains;
-use common\models\panels\DomainZones;
-use common\models\panels\Orders;
-use common\models\panels\Params;
+use common\models\sommerces\Domains;
+use common\models\sommerces\DomainZones;
+use common\models\sommerces\Orders;
+use common\models\sommerces\Params;
 
 /**
  * Class DomainsHelper

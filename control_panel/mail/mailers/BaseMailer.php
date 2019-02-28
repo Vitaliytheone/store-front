@@ -1,8 +1,8 @@
 <?php
 namespace control_panel\mail\mailers;
 
-use common\models\panels\NotificationEmail;
-use common\models\panels\Notifications;
+use common\models\sommerces\NotificationEmail;
+use common\models\sommerces\Notifications;
 use Yii;
 use control_panel\tasks\Client;
 use yii\helpers\ArrayHelper;

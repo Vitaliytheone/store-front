@@ -1,11 +1,12 @@
 <?php
+
 namespace control_panel\models\forms;
 
 use common\models\sommerces\StoreAdminAuth;
 use common\models\sommerces\StoreAdmins;
 use common\models\sommerces\Stores;
 use control_panel\helpers\UserHelper;
-use common\models\panels\MyActivityLog;
+use common\models\sommerces\MyActivityLog;
 use Yii;
 use yii\base\Model;
 

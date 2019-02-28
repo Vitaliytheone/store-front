@@ -2,7 +2,7 @@
 namespace superadmin\models\search;
 
 use Yii;
-use common\models\panels\Domains;
+use common\models\sommerces\Domains;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

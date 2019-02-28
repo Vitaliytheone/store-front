@@ -3,9 +3,9 @@
 namespace superadmin\models\search;
 
 use control_panel\helpers\DomainsHelper;
-use common\models\panels\InvoiceDetails;
+use common\models\sommerces\InvoiceDetails;
 use Yii;
-use common\models\panels\Invoices;
+use common\models\sommerces\Invoices;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

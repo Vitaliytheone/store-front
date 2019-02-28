@@ -1,8 +1,8 @@
 <?php
 namespace superadmin\models\search;
 
-use common\models\panels\SuperAdmin;
-use common\models\panels\TicketMessages;
+use common\models\sommerces\SuperAdmin;
+use common\models\sommerces\TicketMessages;
 use Yii;
 
 /**

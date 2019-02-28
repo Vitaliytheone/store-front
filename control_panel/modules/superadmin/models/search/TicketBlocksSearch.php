@@ -2,9 +2,9 @@
 
 namespace superadmin\models\search;
 
-use common\models\panels\CustomersNote;
-use common\models\panels\Domains;
-use common\models\panels\SslCert;
+use common\models\sommerces\CustomersNote;
+use common\models\sommerces\Domains;
+use common\models\sommerces\SslCert;
 use common\models\sommerces\Stores;
 
 /**

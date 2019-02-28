@@ -2,7 +2,7 @@
 
 namespace control_panel\components\dictionaries;
 
-use common\models\panels\SslCert;
+use common\models\sommerces\SslCert;
 use yii\helpers\ArrayHelper;
 
 class SslCertAsGoGetSsl

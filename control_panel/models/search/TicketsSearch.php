@@ -2,7 +2,7 @@
 
 namespace control_panel\models\search;
 
-use common\models\panels\Tickets;
+use common\models\sommerces\Tickets;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;

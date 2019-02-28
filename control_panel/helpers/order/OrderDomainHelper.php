@@ -4,8 +4,8 @@ namespace control_panel\helpers\order;
 
 use control_panel\helpers\DomainsHelper;
 use Yii;
-use common\models\panels\Orders;
-use common\models\panels\ThirdPartyLog;
+use common\models\sommerces\Orders;
+use common\models\sommerces\ThirdPartyLog;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 

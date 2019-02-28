@@ -3,8 +3,8 @@ namespace control_panel\components\validators;
 
 use common\models\sommerces\Stores;
 use Yii;
-use common\models\panels\Orders;
-use common\models\panels\Project;
+use common\models\sommerces\Orders;
+use common\models\sommerces\Project;
 use yii\base\Model;
 
 /**

@@ -3,14 +3,14 @@
 namespace control_panel\controllers;
 
 use common\helpers\PaymentHelper;
-use common\models\panels\Params;
-use common\models\panels\services\GetGeneralPaymentMethodsService;
+use common\models\sommerces\Params;
+use common\models\sommerces\services\GetGeneralPaymentMethodsService;
 use control_panel\components\ActiveForm;
 use control_panel\components\bitcoin\Bitcoin;
 use common\components\filters\DisableCsrfToken;
 use control_panel\components\payments\Paypal;
 use common\helpers\CurlHelper;
-use common\models\panels\Content;
+use common\models\sommerces\Content;
 use control_panel\models\forms\ChangeEmailForm;
 use control_panel\models\forms\ChangePasswordForm;
 use control_panel\models\forms\CreateMessageForm;
@@ -22,14 +22,14 @@ use control_panel\models\forms\SignupForm;
 use control_panel\models\search\DomainsAvailableSearch;
 use control_panel\models\search\InvoicesSearch;
 use control_panel\models\search\TicketsSearch;
-use common\models\panels\TicketMessages;
-use common\models\panels\Tickets;
+use common\models\sommerces\TicketMessages;
+use common\models\sommerces\Tickets;
 use Yii;
 use yii\helpers\ArrayHelper;
-use common\models\panels\Customers;
+use common\models\sommerces\Customers;
 use control_panel\models\forms\LoginForm;
-use common\models\panels\Invoices;
-use common\models\panels\Payments;
+use common\models\sommerces\Invoices;
+use common\models\sommerces\Payments;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -126,14 +126,13 @@ class SiteController extends CustomController
 
     /**
      * Index
-     * @return \yii\web\Response
      */
     public function actionIndex()
     {
         if ($this->hasActiveInvoice()) {
             $this->redirect('/invoices');
         } else {
-            $this->redirect('/panels');
+            $this->redirect('/stores');
         }
     }
 
@@ -145,6 +144,7 @@ class SiteController extends CustomController
      */
     public function actionMessage($id)
     {
+        /** @var Tickets $ticket */
         $ticket = $this->findModel($id, 'Tickets');
         $customer = Customers::findOne(Yii::$app->user->identity->id);
 
@@ -388,7 +388,7 @@ class SiteController extends CustomController
             if ($this->hasActiveInvoice()) {
                 return $this->redirect('/invoices');
             } else {
-                return $this->redirect('/panels');
+                return $this->redirect('/stores');
             }
         }
 
@@ -755,7 +755,7 @@ class SiteController extends CustomController
      */
     private function findModel($id, $class)
     {
-        if (!($model = ('\common\models\panels\\' . $class)::findOne([
+        if (!($model = ('\common\models\sommerces\\' . $class)::findOne([
             'customer_id' => Yii::$app->user->identity->id,
             'id' => $id
         ]))) {
