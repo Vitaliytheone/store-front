@@ -4,15 +4,15 @@ namespace superadmin\models\search;
 
 
 use common\models\gateways\Sites;
-use common\models\panels\Params;
-use common\models\panels\Project;
-use common\models\panels\Orders;
-use common\models\panels\queries\PaymentsQuery;
-use common\models\panels\services\GetGeneralPaymentMethodsService;
+use common\models\sommerces\Params;
+use common\models\sommerces\Project;
+use common\models\sommerces\Orders;
+use common\models\sommerces\queries\PaymentsQuery;
+use common\models\sommerces\services\GetGeneralPaymentMethodsService;
 use common\models\sommerces\Stores;
 use control_panel\helpers\DomainsHelper;
-use common\models\panels\InvoiceDetails;
-use common\models\panels\Payments;
+use common\models\sommerces\InvoiceDetails;
+use common\models\sommerces\Payments;
 use Yii;
 use yii\data\Pagination;
 use yii\helpers\ArrayHelper;

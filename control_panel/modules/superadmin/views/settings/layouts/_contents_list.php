@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $contents \superadmin\models\search\ContentSearch */
-/* @var $content \common\models\panels\Content */
+/* @var $content \common\models\sommerces\Content */
 
 use control_panel\helpers\Url;
 use yii\bootstrap\Html;

@@ -2,8 +2,8 @@
 
 namespace superadmin\controllers;
 
-use common\models\panels\SslCert;
-use common\models\panels\ThirdPartyLog;
+use common\models\sommerces\SslCert;
+use common\models\sommerces\ThirdPartyLog;
 use superadmin\models\forms\DisableSslForm;
 use superadmin\models\search\SslSearch;
 use Yii;

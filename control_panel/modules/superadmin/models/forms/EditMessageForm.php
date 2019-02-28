@@ -1,11 +1,11 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\panels\AdminUsers;
-use common\models\panels\SuperAdmin;
+use common\models\sommerces\AdminUsers;
+use common\models\sommerces\SuperAdmin;
 use Yii;
-use common\models\panels\TicketMessages;
-use common\models\panels\Tickets;
+use common\models\sommerces\TicketMessages;
+use common\models\sommerces\Tickets;
 use yii\base\Model;
 
 /**

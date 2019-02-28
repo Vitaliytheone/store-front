@@ -2,10 +2,10 @@
 
 namespace control_panel\models\forms;
 
-use common\models\panels\InvoiceDetails;
-use common\models\panels\Invoices;
-use common\models\panels\MyActivityLog;
-use common\models\panels\Orders;
+use common\models\sommerces\InvoiceDetails;
+use common\models\sommerces\Invoices;
+use common\models\sommerces\MyActivityLog;
+use common\models\sommerces\Orders;
 use common\models\sommerces\StoreAdminAuth;
 use control_panel\helpers\UserHelper;
 use sommerce\helpers\ConfigHelper;
@@ -188,7 +188,7 @@ class OrderStoreForm extends DomainForm
 
         $model = new Orders();
         $model->cid = $this->_user->id;
-        $model->item = Orders::ITEM_BUY_SOMMERCE;
+        $model->item = Orders::ITEM_BUY_STORE;
         $model->domain = $this->preparedDomain;
         $model->ip = $this->_ip;
         $model->setDetails([
@@ -206,7 +206,7 @@ class OrderStoreForm extends DomainForm
             $invoiceDetailsModel->invoice_id = $invoiceModel->id;
             $invoiceDetailsModel->item_id = $model->id;
             $invoiceDetailsModel->amount = Yii::$app->params['storeDeployPrice'];
-            $invoiceDetailsModel->item = InvoiceDetails::ITEM_BUY_SOMMERCE;
+            $invoiceDetailsModel->item = InvoiceDetails::ITEM_BUY_STORE;
 
             if (!$invoiceDetailsModel->save()) {
                 $this->addError('domain', Yii::t('app', 'error.store.can_not_order_store'));

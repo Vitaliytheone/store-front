@@ -2,7 +2,7 @@
 
 namespace superadmin\models\forms;
 
-use common\models\panels\Customers;
+use common\models\sommerces\Customers;
 use yii\base\Model;
 use Yii;
 

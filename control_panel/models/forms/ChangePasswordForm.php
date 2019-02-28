@@ -1,10 +1,11 @@
 <?php
+
 namespace control_panel\models\forms;
 
 use control_panel\helpers\UserHelper;
 use control_panel\mail\mailers\PasswordChanged;
-use common\models\panels\Customers;
-use common\models\panels\MyActivityLog;
+use common\models\sommerces\Customers;
+use common\models\sommerces\MyActivityLog;
 use Yii;
 use yii\base\Model;
 

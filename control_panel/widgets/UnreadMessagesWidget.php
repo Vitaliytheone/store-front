@@ -2,7 +2,7 @@
 namespace control_panel\widgets;
 
 use Yii;
-use common\models\panels\Tickets;
+use common\models\sommerces\Tickets;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 

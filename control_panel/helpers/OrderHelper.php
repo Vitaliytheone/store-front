@@ -9,23 +9,23 @@ use common\helpers\IntegrationsHelper;
 use common\helpers\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\gateways\Sites;
-use common\models\panels\SslValidation;
-use common\models\panels\SuperAdmin;
-use common\models\panels\TicketMessages;
-use common\models\panels\Tickets;
+use common\models\sommerces\SslValidation;
+use common\models\sommerces\SuperAdmin;
+use common\models\sommerces\TicketMessages;
+use common\models\sommerces\Tickets;
 use common\models\sommerces\StoreAdmins;
 use common\models\sommerces\Stores;
 use control_panel\components\dictionaries\SslCertAsGoGetSsl;
 use control_panel\components\ssl\Ssl;
 use control_panel\helpers\order\OrderDomainHelper;
-use common\models\panels\Domains;
-use common\models\panels\ExpiredLog;
-use common\models\panels\Project;
+use common\models\sommerces\Domains;
+use common\models\sommerces\ExpiredLog;
+use common\models\sommerces\Project;
 use Yii;
-use common\models\panels\Orders;
-use common\models\panels\SslCert;
-use common\models\panels\SslCertItem;
-use common\models\panels\ThirdPartyLog;
+use common\models\sommerces\Orders;
+use common\models\sommerces\SslCert;
+use common\models\sommerces\SslCertItem;
+use common\models\sommerces\ThirdPartyLog;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use control_panel\helpers\order\OrderSslHelper;
@@ -544,14 +544,14 @@ class OrderHelper
         $store->dns_status = Stores::DNS_STATUS_ALIEN;
 
         if (!$store->save(false)) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $order->id, $store->getErrors(), 'cron.order.store');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
             return false;
         }
 
         $store->generateDbName();
 
         if (!$store->save(false)) {
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $order->id, $store->getErrors(), 'cron.order.store');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, $store->getErrors(), 'cron.order.store');
             return false;
         }
 
@@ -581,17 +581,17 @@ class OrderHelper
 
         if (!$storeAdmin->save(false)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_admin');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeAdmin->getErrors(), 'cron.order.store_admin');
         }
 
         if (!$store->enableDomain()) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $store->id, $store->getErrors(), 'cron.order.store_domain');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $store->getErrors(), 'cron.order.store_domain');
         }
 
         if (!IntegrationsHelper::addStoreIntegrations($store->id)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $order->id, 'Error adding store integration', 'cron.order.store_integrations');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $order->id, 'Error adding store integration', 'cron.order.store_integrations');
         }
 
         // Create nginx config
@@ -606,7 +606,7 @@ class OrderHelper
 
         if (!DbHelper::existDatabase($store->db_name)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $store->id, '', 'cron.order.store_db');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, '', 'cron.order.store_db');
         }
 
         $storeSqlPath = Yii::$app->params['sommerceSqlPath'];
@@ -614,13 +614,13 @@ class OrderHelper
         // Make Sql dump from store template db
         if (!DbHelper::makeSqlDump(Yii::$app->params['sommerceDefaultDatabase'], $storeSqlPath)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $store->id, $storeSqlPath, 'cron.order.make_sql_dump');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.make_sql_dump');
         }
 
         // Deploy Sql dump to store db
         if (!DbHelper::dumpSql($store->db_name, $storeSqlPath)) {
             $order->status = Orders::STATUS_ERROR;
-            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
+            ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $store->id, $storeSqlPath, 'cron.order.deploy_sql_dump');
         }
 
         // Change status

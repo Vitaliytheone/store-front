@@ -1,10 +1,11 @@
 <?php
+
 namespace control_panel\models\forms;
 
 use control_panel\helpers\UserHelper;
 use Yii;
 use yii\base\Model;
-use common\models\panels\Auth;
+use common\models\sommerces\Auth;
 
 /**
  * LoginFormSuper is the model behind the login form.
