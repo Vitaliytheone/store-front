@@ -2,13 +2,13 @@
 
 namespace console\controllers\sommerce;
 
-use common\models\stores\Integrations;
-use common\models\stores\PaymentMethods;
-use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StoreAdmins;
-use common\models\stores\StoreIntegrations;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerces\Integrations;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\PaymentMethodsCurrency;
+use common\models\sommerces\StoreAdmins;
+use common\models\sommerces\StoreIntegrations;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
 use my\components\ActiveForm;
 use sommerce\helpers\MessagesHelper;
 use Yii;
@@ -243,7 +243,7 @@ class SystemController extends CustomController
 
         $templates = (new Query())
             ->select('*')
-            ->from(Yii::$app->params['storeDefaultDatabase'] . '.pages')
+            ->from(Yii::$app->params['sommerceDefaultDatabase'] . '.pages')
             ->indexBy('url')
             ->all();
 
@@ -453,7 +453,7 @@ class SystemController extends CustomController
             ->andWhere('db_name != ""')
             ->all();
 
-        $templateDb = Yii::$app->params['storeDefaultDatabase'];
+        $templateDb = Yii::$app->params['sommerceDefaultDatabase'];
         $stores[] = ['db_name' => $templateDb];
 
         $count = 0;
@@ -816,12 +816,12 @@ class SystemController extends CustomController
     {
         $stores = (new Query())
             ->select('db_name')
-            ->from(DB_STORES . '.stores')
+            ->from(DB_SOMMERCES . '.stores')
             ->where('db_name is not null')
             ->andWhere('db_name != ""')
             ->all();
 
-        $templateDb = Yii::$app->params['storeDefaultDatabase'];
+        $templateDb = Yii::$app->params['sommerceDefaultDatabase'];
         $stores[] = ['db_name' => $templateDb];
 
         $count = 0;

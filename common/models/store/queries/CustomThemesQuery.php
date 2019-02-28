@@ -1,9 +1,9 @@
 <?php
 
-namespace common\models\sommerce\queries;
+namespace common\models\store\queries;
 
+use common\models\store\CustomThemes;
 use yii\db\ActiveQuery;
-use common\models\sommerce\CustomThemes;
 
 /**
  * This is the ActiveQuery class for [[CustomThemes]].

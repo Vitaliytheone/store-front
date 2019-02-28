@@ -2,7 +2,7 @@
 
 namespace sommerce\components\twig;
 
-use common\models\store\PageFiles;
+use common\models\sommerce\PageFiles;
 use sommerce\helpers\PageFilesHelper;
 use Twig_Loader_Array;
 use Twig_LoaderInterface;

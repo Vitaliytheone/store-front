@@ -1,9 +1,9 @@
 <?php
 
-namespace common\models\sommerces\queries;
+namespace common\models\stores\queries;
 
+use common\models\stores\DefaultThemes;
 use yii\db\ActiveQuery;
-use common\models\sommerces\DefaultThemes;
 
 /**
  * This is the ActiveQuery class for [[DefaultThemes]].

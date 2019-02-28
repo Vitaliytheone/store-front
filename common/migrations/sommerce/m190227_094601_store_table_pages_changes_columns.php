@@ -15,12 +15,12 @@ class m190227_094601_store_table_pages_changes_columns extends Migration
     {
         $stores = (new Query())
             ->select('db_name')
-            ->from(DB_STORES . '.stores')
+            ->from(DB_SOMMERCES . '.stores')
             ->where('db_name is not null')
             ->andWhere('db_name != ""')
             ->all();
 
-        $templateDb = Yii::$app->params['storeDefaultDatabase'];
+        $templateDb = Yii::$app->params['sommerceDefaultDatabase'];
         $stores[] = ['db_name' => $templateDb];
 
         foreach ($stores as $store) {
@@ -42,12 +42,12 @@ class m190227_094601_store_table_pages_changes_columns extends Migration
     {
         $stores = (new Query())
             ->select('db_name')
-            ->from(DB_STORES . '.stores')
+            ->from(DB_SOMMERCES . '.stores')
             ->where('db_name is not null')
             ->andWhere('db_name != ""')
             ->all();
 
-        $templateDb = Yii::$app->params['storeDefaultDatabase'];
+        $templateDb = Yii::$app->params['sommerceDefaultDatabase'];
         $stores[] = ['db_name' => $templateDb];
 
         foreach ($stores as $store) {

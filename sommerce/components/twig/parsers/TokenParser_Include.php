@@ -2,7 +2,7 @@
 
 namespace sommerce\components\twig\parsers;
 
-use common\models\store\PageFiles;
+use common\models\sommerce\PageFiles;
 use sommerce\helpers\PageFilesHelper;
 use Twig_Error_Syntax;
 use Twig_Node_Expression_Constant;
