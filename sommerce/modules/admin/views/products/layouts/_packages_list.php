@@ -19,7 +19,7 @@ use yii\helpers\ArrayHelper;
     </thead>
     <tbody class="sortable-packages">
         <?php foreach ($packages as $package) : ?>
-            <tr class="<?= ($package['visibility'] ? 'disabled-product' : '') ?>">
+            <tr class="package-item <?= ($package['visibility'] ? 'disabled-product' : '') ?>" data-action-url="<?= Url::to(['products/move-package', 'id' => $package['id'], 'position' => ""])?>">
                 <td>
                     <span class="sommerce-products-editor__packages-drag"></span>
                     <span class="sommerce-products-editor__packages-quantity"><?= $package['quantity']?></span>

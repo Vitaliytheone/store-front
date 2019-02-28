@@ -13,9 +13,9 @@ use yii\helpers\ArrayHelper;
 <?php if (!empty($products)) : ?>
     <div class="sortable">
         <?php foreach ($products as $product) : ?>
-            <div class="sommerce-products-editor__product">
+            <div class="sommerce-products-editor__product"  data-action-url="<?= Url::to(['products/move-product', 'id' => $product['id'], 'position' => ""]) ?>">
                 <div class="sommerce-products-editor__product-title">
-                    <div class="sommerce-products-editor__product-icon move" data-action-url="<?= Url::to(['products/move-product', 'id' => $product['id'], 'position' => ""]) ?>"></div>
+                    <div class="sommerce-products-editor__product-icon move"></div>
                     <div class="sommerce-products-editor__product-name <?= (!$product['visibility'] ? 'disabled-product-item' : '') ?>">
                         <?= Html::encode($product['name']) ?>
                         <?= Html::a(Yii::t('admin', 'products.edit_product'), Url::to(['products/update-product', 'id' => $product['id']]), [

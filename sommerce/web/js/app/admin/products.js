@@ -178,7 +178,7 @@ customModule.adminProducts = {
             }
         });
 
-        $(".sortable").sortable({
+        /*$(".sortable").sortable({
             containment: "parent",
             items: "> div",
             handle: ".move",
@@ -209,6 +209,88 @@ customModule.adminProducts = {
             containment: "parent",
             handle: ".sommerce-products-editor__packages-drag",
             tolerance: "pointer"
+        });*/
+
+        self.sortable();
+    },
+    sortable: function () {
+        var productsSortable = $('.sortable'),
+            packagesSortable = $(".sortable-packages"),
+            csrfToken = $('meta[name="csrf-token"]').attr("content"),
+            csrfParam = $('meta[name="csrf-param"]').attr("content");
+
+        var tokenParams = {};
+        tokenParams[csrfParam] = csrfToken;
+
+        // Init sortable
+        if (productsSortable.length > 0) {
+            // Sort the parents
+            productsSortable.sortable({
+                containment: "parent",
+                items: "> div",
+                handle: ".move",
+                tolerance: "pointer",
+                cursor: "move",
+                opacity: 0.7,
+                revert: 300,
+                delay: 150,
+                dropOnEmpty: true,
+                placeholder: "movable-placeholder",
+            });
+
+            // Sort the children
+            packagesSortable.sortable({
+                items: "> .package-item",
+                handle: ".sommerce-products-editor__packages-drag",
+                tolerance: "pointer",
+                containment: "parent"
+            });
+        }
+
+        productsSortable.sortable({
+            update: function(event, ui) {
+                var currentItem = ui.item,
+                    newPosition = currentItem.index(),
+                    actionUrl = currentItem.data('action-url') + newPosition;
+
+                $.ajax({
+                    url: actionUrl,
+                    type: "POST",
+                    data: tokenParams,
+                    success: function (data, textStatus, jqXHR){
+                        if (data.error){
+                            return;
+                        }
+                        //Success
+                    },
+                    error: function (jqXHR, textStatus, errorThrown){
+                        console.log('Error on save', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+
+        packagesSortable.sortable({
+            update: function (event, ui) {
+                var currentItem = ui.item,
+                    newPosition = currentItem.index(),
+                    actionUrl = currentItem.data('action-url') + newPosition;
+
+                $.ajax({
+                    url: actionUrl,
+                    type: "POST",
+                    data: tokenParams,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.error) {
+                            return;
+                        }
+                        //Success
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('Error on save', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
         });
     }
 };
