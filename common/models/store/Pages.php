@@ -27,11 +27,11 @@ use yii\db\ActiveRecord;
  */
 class Pages extends ActiveRecord
 {
-    const VISIBILITY_ON = 1;
-    const VISIBILITY_OFF = 0;
+    public const VISIBILITY_ON = 1;
+    public const VISIBILITY_OFF = 0;
 
-    const IS_DRAFT_ON = 1;
-    const IS_DRAFT_OFF = 0;
+    public const IS_DRAFT_ON = 1;
+    public const IS_DRAFT_OFF = 0;
 
     /**
      * @inheritdoc

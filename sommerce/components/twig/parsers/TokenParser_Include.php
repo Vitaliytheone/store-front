@@ -44,11 +44,11 @@ class TokenParser_Include extends Twig_TokenParser
             throw new Twig_Error_Syntax('Unknown "include" tag');
         }
 
-        $view = ltrim($expression->getAttribute('value'), '/');
+        $view = $expression->getAttribute('value');
         $files = [];
 
         foreach((array)ArrayHelper::getValue(PageFilesHelper::getFilesGroupByType(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
-            $files['snippets/' . $file['file_name']] = $file['content'];
+            $files['/snippets/' . $file['file_name']] = $file['content'];
         }
 
         if (empty($view) || empty($files[$view])) {

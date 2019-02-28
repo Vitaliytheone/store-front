@@ -24,7 +24,7 @@ class ViewRenderer extends \common\components\twig\ViewRenderer
             $files = [];
 
             foreach ((array)ArrayHelper::getValue(PageFilesHelper::getFilesGroupByType(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
-                $files['snippets/' . $file['file_name']] = $file['content'];
+                $files['/snippets/' . $file['file_name']] = $file['content'];
             }
 
             $this->loader = new Twig_Loader_Array($files);

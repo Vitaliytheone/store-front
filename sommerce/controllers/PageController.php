@@ -31,7 +31,7 @@ class PageController extends CustomController
      * @throws NotFoundHttpException
      * @throws \yii\base\Exception
      */
-    public function actionIndex($url = 'home')
+    public function actionIndex($url = 'index')
     {
         $page = PagesHelper::getPage($url);
 

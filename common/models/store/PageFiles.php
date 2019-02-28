@@ -2,10 +2,10 @@
 
 namespace common\models\store;
 
-use Yii;
-use yii\db\ActiveRecord;
-use yii\behaviors\TimestampBehavior;
 use common\models\store\queries\FilesQuery;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%files}}".
@@ -34,8 +34,8 @@ class PageFiles extends ActiveRecord
     public const FILE_TYPE_STYLE = 'css';
     public const FILE_TYPE_TWIG = 'twig';
 
-    const IS_DRAFT_ON = 1;
-    const IS_DRAFT_OFF = 0;
+    public const IS_DRAFT_ON = 1;
+    public const IS_DRAFT_OFF = 0;
 
     public static function getDb()
     {
