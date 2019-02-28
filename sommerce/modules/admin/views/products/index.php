@@ -43,3 +43,11 @@ use yii\helpers\Html;
 <?= $this->render('layouts/_edit_product_modal', [
     'store' => $store,
 ]) ?>
+
+<?= $this->render('layouts/_create_package_modal', [
+    'store' => $store,
+]) ?>
+
+<?= $this->render('layouts/_edit_package_modal', [
+    'store' => $store,
+]) ?>

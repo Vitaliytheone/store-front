@@ -1,125 +1,97 @@
+<?php
+
+use yii\helpers\Url;
+use yii\bootstrap\Html;
+use admin\models\forms\package\EditPackageForm;
+use common\components\ActiveForm;
+
+/* @var $this yii\web\View */
+/* @var $store \common\models\sommerces\Stores */
+
+$model = new EditPackageForm();
+$model->setStore($store);
+?>
 <!--Add package-->
-<div class="modal fade edit-package" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div class="modal fade edit-package" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="editPackageModal">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit package (ID: 5)</h5>
+                <h5 class="modal-title"><?= Yii::t('admin', 'products.create_package.header') ?> (ID: <span id="packageId"></span>)</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <?php $form = ActiveForm::begin([
+                'id' => 'editPackageForm',
+                'action' => Url::toRoute('/products/edit-package'),
+                'options' => [
+                    'class' => "form",
+                ],
+                'fieldClass' => 'yii\bootstrap\ActiveField',
+                'fieldConfig' => [
+                    'template' => "{label}\n{input}",
+                ],
+            ]); ?>
+
             <div class="modal-body">
-                <form action="">
-                    <!-- Alert Error -->
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        </button>
-                        <strong>Oh snap!</strong> Error message!
-                    </div>
-                    <!-- Alert Error END -->
-                    <div class="form-group">
-                        <label for="package-name">Package name *</label>
-                        <input type="email" class="form-control" id="package-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="package-price">Price *</label>
-                        <input type="email" class="form-control" id="package-price">
-                    </div>
-                    <div class="form-group">
-                        <label for="package-quantity">Quantity *</label>
-                        <input type="email" class="form-control" id="package-quantity">
-                    </div>
-                    <div class="form-group">
-                        <label for="package-best">Best package</label>
-                        <select id="package-best" class="form-control">
-                            <option value="1">Enabled</option>
-                            <option value="2">Disabled</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="package-link-type">Link Type</label>
-                        <select id="package-link-type" class="form-control" >
-                            <option value="">None</option>
-                            <option value="1">Instagram Profile</option>
-                            <option value="2">Instagram Post</option>
-                            <option value="3">Facebook Page</option>
-                            <option value="4">Facebook Profile</option>
-                            <option value="5">Facebook Post</option>
-                            <option value="6">Facebook Group</option>
-                            <option value="7">Facebook Event</option>
-                            <option value="8">Twitter Profile</option>
-                            <option value="9">Twitter Post</option>
-                            <option value="10">Youtube Channel</option>
-                            <option value="11">Youtube Video</option>
-                            <option value="12">VINE Picture</option>
-                            <option value="13">VINE Profile</option>
-                            <option value="14">Pinterest Profile</option>
-                            <option value="15">Pinterest Board</option>
-                            <option value="16">Pinterest Post</option>
-                            <option value="17">Soundcloud Track</option>
-                            <option value="18">Soundcloud Profile</option>
-                            <option value="19">Mixcloud Track</option>
-                            <option value="20">Mixcloud Profile</option>
-                            <option value="21">Periscope Profile</option>
-                            <option value="22">Periscope Video</option>
-                            <option value="25">Linkedin Profile</option>
-                            <option value="26">Linkedin Group</option>
-                            <option value="27">Linkedin Post</option>
-                            <option value="28">Radiojavan Video</option>
-                            <option value="29">Radiojavan Track</option>
-                            <option value="30">Radiojavan Podcast</option>
-                            <option value="31">Radiojavan Playlist</option>
-                            <option value="32">Shazam Profile</option>
-                            <option value="33">Shazam Track</option>
-                            <option value="34">Reverbnation Track</option>
-                            <option value="35">Reverbnation Video</option>
-                            <option value="36">Reverbnation Profile</option>
-                            <option value="37">Tumblr Profile</option>
-                            <option value="38">Tumblr Post</option>
-                            <option value="39">Vimeo Channel</option>
-                            <option value="40">Vimeo Video</option>
-                            <option value="41">Fyuse Profile</option>
-                            <option value="42">Fyuse Picture</option>
-                            <option value="43">Google+ Profile</option>
-                            <option value="44">Google+ Post</option>
-                            <option value="45">Twitch Channel</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="package-availability">Availability</label>
-                        <select id="package-availability" class="form-control">
-                            <option value="1">Enabled</option>
-                            <option value="2">Disabled</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="package-mode">Mode</label>
-                        <select id="package-mode" class="form-control">
-                            <option value="1">Manual</option>
-                            <option value="2">Auto</option>
-                        </select>
-                    </div>
-                </form>
+                <?= $form->errorSummary($model, [
+                    'id' => 'createPackageError'
+                ]); ?>
+
+                <?= $form->field($model, 'name') ?>
+
+                <?= $form->field($model, 'price') ?>
+
+                <?= $form->field($model, 'quantity') ?>
+
+                <?= $form->field($model, 'best')->dropDownList($model->getBestVariants()) ?>
+
+                <?= $form->field($model, 'link_type')->dropDownList($model->getLinkTypes()) ?>
+
+                <?= $form->field($model, 'visibility')->dropDownList($model->getVisibilityVariants()) ?>
+
+                <?= $form->field($model, 'mode')->dropDownList($model->getModeVariants()) ?>
+
+                <?= Html::activeHiddenInput($model, 'id') ?>
+
+                <div id="edit-package-auto" class="hidden">
+                    <hr>
+                    <?= $form->field($model, 'provider_id')->dropDownList($model->getStoreProviders()) ?>
+
+                    <?= $form->field($model, 'provider_service')->dropDownList($model->getProviderServices()) ?>
+                </div>
+
             </div>
             <div class="modal-footer justify-content-between">
                 <div>
                     <div class="btn btn-modal-delete">
                         <div class="sommerce-dropdown__delete">
                             <div class="sommerce-dropdown__delete-description">
-                                Are you sure you want to <br>
-                                <b>delete</b> this package?
+                                <?= Yii::t('admin', 'products.edit_package.delete_description') ?>
                             </div>
-                            <a href="#" class="btn btn-danger btn-sm mr-2 sommerce-dropdown__delete-cancel">Cancel</a>
-                            <a href="#" class="btn btn-secondary btn-sm">Delete</a>
+                            <?= Html::a(Yii::t('admin', 'products.edit_package.cancel_link'), '#', [
+                                'class' => 'btn btn-danger btn-sm mr-2 sommerce-dropdown__delete-cancel',
+                            ])?>
+                            <?= Html::a(Yii::t('admin', 'products.edit_package.delete_link'), Url::toRoute(['products/delete-package']), [
+                                'class' => 'btn btn-secondary btn-sm delete-package',
+                            ])?>
                         </div>
-                        Delete
+                        <?= Yii::t('admin', 'products.edit_package.delete_link') ?>
                     </div>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <?= Html::a(Yii::t('admin', 'products.edit_package.cancel_btn'), '#', [
+                        'class' => 'btn btn-secondary mr-3',
+                        'data-dismiss' => 'modal',
+                    ]) ?>
+                    <?= Html::submitButton(Yii::t('admin', 'products.edit_package.submit_btn'), [
+                        'class' => 'btn btn-primary',
+                        'id' => 'editPackageButton',
+                    ])?>
                 </div>
             </div>
+
+            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>

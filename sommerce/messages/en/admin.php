@@ -167,11 +167,36 @@ return [
     'products.edit_product.cancel_btn' => 'Cancel',
     'products.edit_product.submit_btn' => 'Save changes',
 
-    'products.product_properties_copy' => ' Copy properties',
-    'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',
-    'products.product_properties_create_new_1' => 'Create a new property or',
-    'products.product_properties_create_new_2' => ' copy properties',
-    'products.product_properties_create_new_3' => ' from another product',
+    'products.create_package.header' => 'Create package',
+    'products.create_package.name' => 'Package name *',
+    'products.create_package.price' => 'Price *',
+    'products.create_package.quantity' => 'Quantity *',
+    'products.create_package.best' => 'Best package',
+    'products.create_package.link' => 'Link Type',
+    'products.create_package.availability' => 'Availability',
+    'products.create_package.mode' => 'Mode',
+
+    'products.create_package.availability_enabled' => 'Enabled',
+    'products.create_package.availability_disabled' => 'Disabled',
+
+    'products.create_package.link_default' => 'None',
+
+    'products.create_package.best_enabled' => 'Enabled',
+    'products.create_package.best_disabled' => 'Disabled',
+
+    'products.create_package.mode_manual' => 'Manual',
+    'products.create_package.mode_auto' => 'Auto',
+
+    'products.create_package.cancel_btn' => 'Cancel',
+    'products.create_package.submit_btn' => 'Add package',
+
+    'products.edit_package.header' => 'Edit package',
+    'products.edit_package.cancel_btn' => 'Cancel',
+    'products.edit_package.submit_btn' => 'Save changes',
+    'products.edit_package.cancel_link' => 'Cancel',
+    'products.edit_package.delete_link' => 'Delete',
+    'products.edit_package.delete_description' => 'Are you sure you want to <br> <b>delete</b> this package?',
+
 
     'products.package_create' => 'Create package',
     'products.package_edit' => 'Edit package',
@@ -200,6 +225,13 @@ return [
     'products.package_delete_agree' => 'Are your sure that your want to delete this Package?',
     'products.package_delete_cancel' => 'Cancel',
     'products.package_delete_submit' => 'Yes, delete it!',
+
+    'products.product_properties_copy' => ' Copy properties',
+    'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',
+    'products.product_properties_create_new_1' => 'Create a new property or',
+    'products.product_properties_create_new_2' => ' copy properties',
+    'products.product_properties_create_new_3' => ' from another product',
+
     'products.message_product_created' => 'Product was successfully created!',
     'products.message_product_updated' => 'Product was successfully updated!',
     'products.message_package_created' => 'Package was successfully created!',

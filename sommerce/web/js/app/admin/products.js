@@ -87,6 +87,97 @@ customModule.adminProducts = {
             return false;
         });
 
+        $(document).on('click', '.create-package', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var modal = $('#createPackageModal');
+            var form = $('#createPackageForm', modal);
+            var errorBlock = $('#createPackageError', form);
+
+            form.attr('action', link.attr('href'));
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $('#create-package-auto', form).addClass('hidden');
+            $('input[type="text"]', form).val('');
+            $('input[type="checkbox"]', form).prop('checked', false);
+            $('input[type="checkbox"]', form).prop('checked', false);
+            $('select', form).prop('selectedIndex',0);
+
+            modal.modal('show');
+
+            return false;
+        });
+
+        $(document).on('click', '#createPackageButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#createPackageForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#createPackageModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
+        $(document).on('click', '.edit-package', function(e) {
+            e.preventDefault();
+
+            var link = $(this);
+            var modal = $('#editPackageModal');
+            var form = $('#editPackageForm', modal);
+            var errorBlock = $('#editPackageError', form);
+            var details = link.data('details');
+            form.attr('action', link.attr('href'));
+            errorBlock.addClass('hidden');
+            errorBlock.html('');
+
+            $('#packageId', modal).html(details.id);
+            $('#editpackageform-name', modal).val(details.name);
+            $('#editpackageform-price', modal).val(details.price);
+            $('#editpackageform-quantity', modal).val(details.quantity);
+            $('#editpackageform-link_type', modal).val(details.link_type);
+            $('#editpackageform-visibility', modal).val(details.visibility);
+            $('#editpackageform-mode', modal).val(details.mode).trigger('change');
+
+            modal.modal('show');
+
+            return false;
+        });
+
+        $(document).on('click', '#editPackageButton', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $('#editPackageForm');
+
+            custom.sendFrom(btn, form, {
+                data: form.serialize(),
+                callback : function(response) {
+                    $('#editPackageModal').modal('hide');
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
+        $('#createpackageform-mode, #editpackageform-mode').change(function () {
+            var value = $(this).val() * 1;
+            var form = $(this).parents('form');
+            var container = $('#create-package-auto, #edit-package-auto', form);
+
+            container.addClass('hidden');
+            if (value) {
+                container.removeClass('hidden');
+            }
+        });
+
         $(".sortable").sortable({
             containment: "parent",
             items: "> div",

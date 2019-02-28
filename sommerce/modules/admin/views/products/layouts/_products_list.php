@@ -33,6 +33,12 @@ use yii\helpers\ArrayHelper;
                     <?= $this->render('_packages_list', [
                         'packages' => (array)ArrayHelper::getValue($product, 'packages', [])
                     ])?>
+
+                    <div class="sommerce-products-editor__packages-add-page">
+                        <?= Html::a('+ ' . Yii::t('admin', 'products.add_package'), Url::to(['products/create-package', 'id' => $product['id']]), [
+                            'class' => 'sommerce-products-editor__packages-add-link create-package',
+                        ])?>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>

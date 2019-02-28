@@ -83,6 +83,7 @@ class ProductsController extends CustomController
                     'update-product',
                     'get-product',
                     'create-product-menu',
+                    'create-package',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_JSON,

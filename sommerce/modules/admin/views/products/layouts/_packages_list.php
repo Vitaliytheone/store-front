@@ -5,7 +5,7 @@ use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
-/** @var $packages array Packages */
+/* @var $packages array Packages */
 
 ?>
 <table class="sommerce-products-editor__packages-table">
@@ -36,8 +36,11 @@ use yii\helpers\ArrayHelper;
                         <?= Html::a('<span class="la la-clone"></span> ' . Yii::t('admin', 'products.duplicate_package'), Url::to(['products/duplicate-package']), [
                             'class' => 'sommerce-products-editor__packages-actions-link',
                         ])?>
-                        <?= Html::a('<span class="la la-edit"></span> ' . Yii::t('admin', 'products.edit_package'), Url::to(['products/edit-package']), [
-                            'class' => 'sommerce-products-editor__packages-actions-link',
+                        <?= Html::a('<span class="la la-edit"></span> ' . Yii::t('admin', 'products.edit_package'), Url::to(['products/update-package', 'id' => $package['id']]), [
+                            'class' => 'sommerce-products-editor__packages-actions-link edit-package',
+                            'data' => [
+                                'details' => $package
+                            ]
                         ])?>
                     </div>
                 </td>
@@ -45,9 +48,3 @@ use yii\helpers\ArrayHelper;
         <?php endforeach; ?>
     </tbody>
 </table>
-
-<div class="sommerce-products-editor__packages-add-page">
-    <?= Html::a('+ ' . Yii::t('admin', 'products.add_package'), Url::to(['products/create-package']), [
-        'class' => 'sommerce-products-editor__packages-add-link',
-    ])?>
-</div>
