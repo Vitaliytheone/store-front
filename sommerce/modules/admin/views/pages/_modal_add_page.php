@@ -2,11 +2,13 @@
 
 use common\components\ActiveForm;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\models\forms\PageForm;
+use sommerce\modules\admin\models\forms\EditPageForm;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
+/* @var $host string */
 
-$model = new PageForm();
+$model = new EditPageForm();
 ?>
 
 
@@ -51,7 +53,7 @@ $model = new PageForm();
                             <div class="seo-preview__title edit-seo__title">
                             </div>
                             <div class="seo-preview__url">
-                                <?= \yii\helpers\Url::base(true) . '/' ?> <span class="edit-seo__url"></span>
+                                <?= $host . '/' ?><span class="edit-seo__url"></span>
                             </div>
                             <div class="seo-preview__description edit-seo__meta">
 
@@ -73,7 +75,7 @@ $model = new PageForm();
 
                             <?= $form->field($model, 'description',
                                 [
-                                    'template' => "{label}\n{input}\n<small class='form-text text-muted'><span class='edit-seo__title-muted'></span>" .
+                                    'template' => "{label}\n{input}\n<small class='form-text text-muted'><span class='edit-seo__meta-muted'></span>" .
                                         Yii::t('admin', 'pages.chars', ['count' => '160']) .
                                         "</small>",
                                     'options' => [
@@ -97,8 +99,7 @@ $model = new PageForm();
                             <?= $form->field($model, 'url',
                                 [
                                     'template' => "{label}\n<div class='input-group'><span class='input-group-addon' id='basic-addon3'>" .
-                                        \yii\helpers\Url::base(true) . '/'.
-                                        "</span>{input}\n</div>",
+                                        $host . '/'. "</span>{input}\n</div>",
                                     'options' => [
                                         'class' => 'form-group'
                                     ]
@@ -116,7 +117,7 @@ $model = new PageForm();
                     <div class="m-switch-group">
                         <span class="m-switch m-switch--sm">
                             <label>
-                                <input type="checkbox" <?= $model->visibility ? 'checked="checked"' : '' ?> name="AddPageForm[visibility]">
+                                <input type="checkbox" value="1" checked="checked" name="EditPageForm[visibility]" id="check-visibility">
                                    <span></span>
                             </label>
                         </span>
@@ -133,7 +134,13 @@ $model = new PageForm();
                                <?= Yii::t('admin', 'pages.modal.are_you_sure') ?>
                             </div>
                             <a href="#" class="btn btn-danger btn-sm mr-2 sommerce-dropdown__delete-cancel"><?= Yii::t('admin', 'pages.cancel')?></a>
-                            <a href="#" class="btn btn-secondary btn-sm"><?= Yii::t('admin', 'pages.delete')?></a>
+
+                            <?= Html::a(Yii::t('admin', 'pages.delete'),
+                                [Url::toRoute(array_merge(['/pages/delete-page']))], [
+                                    'class' => 'delete-page btn btn-secondary btn-sm'
+                                ])
+                            ?>
+
                         </div>
                         <?= Yii::t('admin', 'pages.delete')?>
                     </div>

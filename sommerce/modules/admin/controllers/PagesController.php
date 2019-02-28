@@ -3,12 +3,18 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\components\ActiveForm;
+use common\helpers\SiteHelper;
+use common\models\store\Pages;
 use sommerce\modules\admin\components\CustomUser;
-use sommerce\modules\admin\models\forms\AddPageForm;
+use sommerce\modules\admin\models\forms\EditPageForm;
+use sommerce\modules\admin\models\search\PagesSearch;
+use sommerce\modules\admin\models\search\UrlsSearch;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 
@@ -18,6 +24,22 @@ use yii\web\Response;
  */
 class PagesController extends CustomController
 {
+    protected $exceptCsrfValidation = [
+        'delete-page'
+    ];
+
+    /**
+     * @param \yii\base\Action $action
+     * @return bool
+     */
+    public function beforeAction($action)
+    {
+        if (ArrayHelper::isIn($action->id, $this->exceptCsrfValidation)) {
+            $this->enableCsrfValidation = false;
+        }
+
+        return parent::beforeAction($action);
+    }
 
     /**
      * @inheritdoc
@@ -31,7 +53,7 @@ class PagesController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['create-page',],
+                'only' => ['create-page', 'edit-page', 'delete-page'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -40,11 +62,14 @@ class PagesController extends CustomController
                 'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
-                    'create-page' => ['POST']
+                    'create-page' => ['POST'],
+                    'edit-page' => ['POST'],
+                    'delete-page' => ['POST']
                 ],
             ],
         ];
     }
+
     /**
      * Default page
      * @return string
@@ -52,25 +77,24 @@ class PagesController extends CustomController
     public function actionIndex()
     {
        $this->view->title = Yii::t('admin', "settings.pages_page_title");
-       $this->addModule('adminPages');
-      //  $search = new PagesOldSearch();
-       // $search->setStore($this->store);
-       // $pages = $search->searchPages();
 
+        $urlsModel = new UrlsSearch();
+        $urlsModel->setStore($this->store);
+        $existingUrls = $urlsModel->searchUrls();
 
-        //return $this->render('pages', [
-           // 'pages' => $pages,
-       // ]);
-
-       /*return $this->render('index', [
-           // 'pages' => $pages,
-       ]);*/
-
-        return $this->render('index', [
-
+        $this->addModule('adminPages', [
+            'existingUrls' => $existingUrls,
+            'confirm_message' => Yii::t('admin', 'pages.confirm_message')
         ]);
 
+        $search = new PagesSearch();
+        $search->setStore($this->store);
+        $pages = $search->searchPages();
 
+        return $this->render('index', [
+            'host' => SiteHelper::hostUrl($this->store->ssl),
+            'pages' => $pages
+        ]);
     }
 
     /**
@@ -80,16 +104,16 @@ class PagesController extends CustomController
     public function actionCreatePage()
     {
         $request = Yii::$app->request;
-        $model = new AddPageForm();
+        $model = new EditPageForm();
 
         /**x
-         * @var $panel CustomUser
+         * @var $user CustomUser
          */
         $user = Yii::$app->user;
 
         $model->setUser($user);
 
-        if ($model->load($request->post()) && $model->save()) {
+        if ($model->load($request->post()) && $model->add()) {
             return [
                 'status' => 'success',
                 'errors' => null
@@ -102,5 +126,83 @@ class PagesController extends CustomController
         ];
 
 
+    }
+
+    /**
+     * Edit page
+     * @param int $id
+     * @return array
+     */
+    public function actionEditPage($id)
+    {
+
+        $request = Yii::$app->request;
+        $page = $this->findModel($id);
+        $model = new EditPageForm();
+        $model->setPage($page);
+
+        /**x
+         * @var $user CustomUser
+         */
+        $user = Yii::$app->user;
+
+        $model->setUser($user);
+
+        if ($model->load($request->post()) && $model->edit()) {
+            return [
+                'status' => 'success',
+                'errors' => null
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => ActiveForm::firstError($model)
+        ];
+    }
+
+    /**
+     * Delete page
+     * @return array
+     */
+    public function actionDeletePage()
+    {
+        $request = Yii::$app->request;
+        $page = $this->findModel($request->post('id'));
+        $model = new EditPageForm();
+        $model->setPage($page);
+        /**x
+         * @var $user CustomUser
+         */
+        $user = Yii::$app->user;
+
+        $model->setUser($user);
+
+        if ($model->delete()) {
+            return [
+                'status' => 'success',
+                'errors' => null
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => ActiveForm::firstError($model)
+        ];
+    }
+
+    /**
+     * @param int $id
+     * @return Pages
+     * @throws NotFoundHttpException
+     */
+    protected function findModel($id) {
+        $model = Pages::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        return $model;
     }
 }

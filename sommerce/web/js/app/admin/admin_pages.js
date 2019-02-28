@@ -1,9 +1,7 @@
-/**
- * /admin/settings/pages custom js module
- * @type {{run: customModule.settings.run}}
- */
 customModule.adminPages = {
     run: function (params) {
+        var existingUrls = params['existingUrls'];
+
         $('.dropdown-collapse').on('click', function (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -22,86 +20,106 @@ customModule.adminPages = {
             });
         });
 
-        $(document).ready(function () {
-            var inputs = document.querySelectorAll('.inputfile');
-            Array.prototype.forEach.call(inputs, function (input) {
-                var label = input.nextElementSibling,
-                    labelVal = label.innerHTML;
+        var inputs = document.querySelectorAll('.inputfile');
+        Array.prototype.forEach.call(inputs, function (input) {
+            var label = input.nextElementSibling,
+                labelVal = label.innerHTML;
 
-                input.addEventListener('change', function (e) {
-                    var fileName = '';
-                    if (this.files && this.files.length > 1) {
-                        fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
-                    } else {
-                        fileName = e.target.value.split('\\').pop();
+            input.addEventListener('change', function (e) {
+                var fileName = '';
+                if (this.files && this.files.length > 1) {
+                    fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+                } else {
+                    fileName = e.target.value.split('\\').pop();
+                }
+                if (fileName) {
+                    //label.querySelector('span').innerHTML = fileName;
+                    if (this.files && this.files[0]) {
+
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            var template = '<div class="sommerce-settings__theme-imagepreview">\n                              <a href="#" class="sommerce-settings__delete-image"><span class="fa fa-times-circle-o"></span></a>\n                              <img src="' + e.target.result + '" alt="...">\n                          </div>';
+                            $('#image-preview').html(template);
+                        };
+                        reader.readAsDataURL(this.files[0]);
                     }
-                    if (fileName) {
-                        //label.querySelector('span').innerHTML = fileName;
-                        if (this.files && this.files[0]) {
-
-                            var reader = new FileReader();
-
-                            reader.onload = function (e) {
-                                var template = '<div class="sommerce-settings__theme-imagepreview">\n                              <a href="#" class="sommerce-settings__delete-image"><span class="fa fa-times-circle-o"></span></a>\n                              <img src="' + e.target.result + '" alt="...">\n                          </div>';
-                                $('#image-preview').html(template);
-                            };
-                            reader.readAsDataURL(this.files[0]);
-                        }
-                    } else {
-                        //label.innerHTML = labelVal;
-                    }
-                });
-                $(document).on('click', '.sommerce_v1.0-settings__delete-image', function (e) {
-                    $('#image-preview').html('<span></span>');
-                    input.value = '';
-                });
+                } else {
+                    //label.innerHTML = labelVal;
+                }
+            });
+            $(document).on('click', '.sommerce_v1.0-settings__delete-image', function (e) {
+                $('#image-preview').html('<span></span>');
+                input.value = '';
             });
         });
 
-        /* Edit page */
-        $(document).ready(function () {
 
-            if ($('.edit-seo__title').length > 0) {
-                (function () {
+        if ($('.edit-seo__title').length > 0) {
+            (function () {
 
-                    var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
+                var seoEdit = ['edit-seo__title', 'edit-seo__meta', 'edit-seo__url'];
 
-                    var _loop = function _loop(i) {
-                        if ($("#" + seoEdit[i]).length) {
-                            $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
-                        }
-                        $("#" + seoEdit[i]).on('input', function (e) {
-                            if (i == 2) {
-                                $('.' + seoEdit[i]).text($(e.target).val().replace(/\s+/g, '-'));
-                            } else {
-                                $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
-                                $('.' + seoEdit[i]).text($(e.target).val());
-                            }
-                        });
-                    };
-
-                    for (var i = 0; i < seoEdit.length; i++) {
-                        _loop(i);
+                var _loop = function _loop(i) {
+                    if ($("#" + seoEdit[i]).length) {
+                        $("." + seoEdit[i] + '-muted').text($("#" + seoEdit[i]).val().length);
                     }
-                })();
-            }
+                    $("#" + seoEdit[i]).on('input', function (e) {
+                        if (i == 2) {
+                            $('.' + seoEdit[i]).text($(e.target).val().replace(/\s+/g, '-'));
+                        } else {
+                            $("." + seoEdit[i] + '-muted').text($(e.target).val().length);
+                            $('.' + seoEdit[i]).text($(e.target).val());
+                        }
+                    });
+                };
+
+                for (var i = 0; i < seoEdit.length; i++) {
+                    _loop(i);
+                }
+            })();
+        }
+
+
+        $('#editpageform-name').on('input', function(e) {
+            var generatedUrl = custom.generateUrlFromString($(this).val());
+            generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
+            var $url = $('#edit-seo__url');
+            $url.val(generatedUrl);
+            $url.trigger('input');
         });
 
-        $(document).ready(function () {
-            $('#select-menu-link').change(function () {
-                $('.hide-link').hide();
-                var val = $("#select-menu-link option:selected").val();
-                $('.link-' + val).fadeIn();
-            });
+
+        $('#select-menu-link').change(function () {
+            $('.hide-link').hide();
+            var val = $("#select-menu-link option:selected").val();
+            $('.link-' + val).fadeIn();
         });
 
-        $('#modal-create-page').click(function(){
-            $('#addpaymentsform-username').val('');
-            $('#addpaymentsform-memo').val('');
-            $('#addpaymentsform-amount').val('');
-            $('#addpaymentsform-method').val('0');
-            $('#addPaymentsError').addClass('hidden');
+
+        $('#btn-new-page').click(function(e){
+            var $this = $(this);
+            var $name = $('#editpageform-name');
+            $name.val('');
+            $name.trigger('input');
+            $('#check-visibility').prop('checked', 'checked');
+            $('.btn-modal-delete').hide();
+            var $keyword = $('#edit-seo__meta-keyword');
+            $keyword.val('');
+            $keyword.trigger('input');
+            var $meta = $('#edit-seo__meta');
+            $meta.val('');
+            $meta.trigger('input');
+            var  $title = $('#edit-seo__title')
+            $title.val('');
+            $title.trigger('input');
+            $('#seo-block').removeClass('show');
+
+            $('#pageForm').attr('action', $this.data('action'));
+            $('#exampleModalLabel').text($this.data('modal-title'));
+            $('#page-submit').text($this.data('modal-title'));
         });
+
 
         $('#pageForm').submit(function (event){
             event.preventDefault();
@@ -118,7 +136,70 @@ customModule.adminPages = {
 
             return false;
         });
-    }
 
+        $('.sommerce-page__actions-link').click(function(e) {
+            e.preventDefault();
+            var $this =  $(this);
+            var page = $this.data('page');
+            var $name = $('#editpageform-name');
+            $name.val(page.name);
+            $name.trigger('input');
+
+            if (parseInt(page.visibility)) {
+                $('#check-visibility').prop('checked', 'checked');
+
+            } else {
+                $('#check-visibility').prop('checked', false);
+            }
+
+            if (page['can_delete']) {
+                $('.btn-modal-delete').show();
+            }
+
+            var $keyword = $('#edit-seo__meta-keyword');
+            $keyword.val(page.seo_keywords);
+            $keyword.trigger('input');
+            var $meta = $('#edit-seo__meta');
+            $meta.val(page.seo_description);
+            $meta.trigger('input');
+            var  $title = $('#edit-seo__title')
+            $title.val(page.seo_title);
+            $title.trigger('input');
+            $('#seo-block').removeClass('show');
+
+            $('#pageForm').attr('action', $this.data('action'));
+            $('#exampleModalLabel').text($this.data('modal-title'));
+            $('#page-submit').text($this.data('modal-title'));
+            $('.delete-page').data('params', page);
+
+            $('#modal-create-page').modal('show');
+        });
+
+        $('.delete-page').click(function(e) {
+
+            var $related = $(this);
+            var data = $related.data('params');
+
+            if (!data['can_delete']) {
+                e.preventDefault();
+                return false;
+            }
+
+            var queryParams = {};
+            queryParams.id = data.id;
+
+            custom.confirm(params['confirm_message'], '', {}, function () {
+                custom.sendBtn($related, {
+                    data: queryParams,
+                    type: 'POST',
+                    callback: function () {
+                        location.reload();
+                    }
+                });
+                return false;
+            });
+            e.preventDefault();
+        });
+    }
 
 };

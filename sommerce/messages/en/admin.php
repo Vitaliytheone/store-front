@@ -209,7 +209,6 @@ return [
     'products.f_seo_description' => 'Seo Description',
     'products.f_seo_keywords' => 'Seo Keywords',
 
-
     'pages.name' => 'Page name',
     'pages.url' => 'URL',
     'pages.title' => 'Page title',
@@ -225,8 +224,15 @@ return [
     'pages.update' => 'Update page',
     'pages.edit_seo' => 'Edit website SEO',
     'pages.search_preview' => 'Search engine listing preview',
-
     'pages.modal.are_you_sure' => 'Are you sure you want to<br><b>delete</b> this page?',
+    'pages.create_page' => 'Create new page',
+    'pages.status.draft' => 'Changes not published',
+    'pages.status' => 'Status',
+    'pages.last_updated' => 'Last updated',
+    'pages.duplicate' => 'Duplicate',
+    'pages.settings' => 'Settings',
+    'pages.editor' => 'Editor',
+    'pages.confirm_message' => 'Are you sure?',
 
 
     'settings.page_title' => 'Settings',
