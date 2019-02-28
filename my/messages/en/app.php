@@ -653,6 +653,7 @@ return [
     'store_admin.rule_payments' => 'Payments',
     'store_admin.rule_products' => 'Products',
     'store_admin.rule_settings' => 'Settings',
+    'store_admin.rule_pages' => 'Pages',
 
     'error.stores.staff.can_not_change_password' => 'Can not set staff password',
     'error.stores.staff.can_not_edit' => 'Can not edit staff',

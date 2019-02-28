@@ -218,6 +218,10 @@ customModule.adminPages = {
             var page = $('#modal-duplicate').data('page');
             var queryParams = {}
             queryParams.id = page.id;
+
+            var generatedUrl = custom.generateUrlFromString(page.name);
+            generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
+            queryParams.url = generatedUrl;
             custom.sendBtn($this, {
                 data: queryParams,
                 type: 'POST',

@@ -103,6 +103,8 @@ class NavbarHelper {
         $navbarItems = static::_NavbarItems();
 
 
+
+
         /** @var \common\models\stores\StoreAdmins $user */
         $authUser = Yii::$app->user;
         $user = $authUser->getIdentity();
@@ -111,6 +113,7 @@ class NavbarHelper {
         if (!$authUser->isGuest) {
             $allowedControllers = $user->getAllowedControllersNames();
 
+
             foreach ($navbarItems as $controller => $menuItem) {
 
                 if (false === array_search($controller, $allowedControllers)) {
@@ -118,6 +121,7 @@ class NavbarHelper {
                 }
             }
         }
+
 
         /**
          * Populate $navbarItems by url and active class is menu item is active
@@ -143,6 +147,7 @@ class NavbarHelper {
                 });
             }
         });
+
 
         return $navbarItems;
     }

@@ -57,7 +57,6 @@ class StoreAdmins extends ActiveRecord
     static $defaultRules = [
         'orders' => 1,
         'products' => 1,
-        'pages' => 1,
         'payments' => 1,
         'settings' => 1,
     ];
@@ -235,6 +234,8 @@ class StoreAdmins extends ActiveRecord
         $rules = array_filter($this->getRules(), function($rule){
             return !!$rule;
         });
+
+
 
         $controllers = array_keys($rules);
         array_push($controllers, self::DEFAULT_CONTROLLER);

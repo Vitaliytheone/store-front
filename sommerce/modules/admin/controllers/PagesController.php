@@ -4,7 +4,7 @@ namespace sommerce\modules\admin\controllers;
 
 use common\components\ActiveForm;
 use common\helpers\SiteHelper;
-use common\models\store\Pages;
+use common\models\sommerce\Pages;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\forms\EditPageForm;
 use sommerce\modules\admin\models\search\PagesSearch;
