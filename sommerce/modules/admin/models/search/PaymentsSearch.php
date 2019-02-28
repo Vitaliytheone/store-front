@@ -2,10 +2,10 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\Checkouts;
-use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerce\Checkouts;
+use common\models\sommerces\PaymentMethodsCurrency;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\base\Model;
 use yii\db\Query;
@@ -15,8 +15,8 @@ use yii\data\ActiveDataProvider;
 use yii\base\Exception;
 use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
-use common\models\store\Payments;
-use common\models\stores\PaymentMethods;
+use common\models\sommerce\Payments;
+use common\models\sommerces\PaymentMethods;
 
 
 /**

@@ -3,8 +3,8 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\components\cdn\BaseCdn;
 use common\components\cdn\Cdn;
-use common\models\store\Images;
-use common\models\stores\Stores;
+use common\models\sommerce\Images;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;

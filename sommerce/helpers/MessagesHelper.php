@@ -1,11 +1,11 @@
 <?php
 namespace sommerce\helpers;
 
-use common\models\store\Languages;
-use common\models\store\Messages;
-use common\models\stores\StoreDefaultMessages;
+use common\models\sommerce\Languages;
+use common\models\sommerce\Messages;
+use common\models\sommerces\StoreDefaultMessages;
 use Yii;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 
 /**
  * Class MessagesHelper

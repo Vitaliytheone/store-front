@@ -2,13 +2,13 @@
 
 namespace sommerce\components\twig;
 
-use common\models\store\Pages;
 use sommerce\components\twig\parsers\TokenParser_Include;
+use common\models\sommerce\Pages;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
 use Yii;
+use Twig_SimpleFunction;
+use Twig_SimpleFilter;
 use yii\helpers\ArrayHelper;
 
 /**

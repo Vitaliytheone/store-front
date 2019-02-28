@@ -3,8 +3,8 @@
 namespace sommerce\helpers;
 
 use DirectoryIterator;
-use yii\base\Exception;
 use yii\helpers\FileHelper;
+use yii\base\Exception;
 
 class CustomFilesHelper extends FileHelper
 {

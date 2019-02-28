@@ -2,8 +2,8 @@
 
 namespace sommerce\helpers;
 
-use common\models\store\Carts;
-use common\models\stores\Stores;
+use common\models\sommerce\Carts;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\db\Query;
 

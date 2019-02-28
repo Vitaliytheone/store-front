@@ -2,9 +2,9 @@
 
 namespace sommerce\models\forms;
 
-use common\models\store\Carts;
-use common\models\store\Packages;
-use common\models\stores\Stores;
+use common\models\sommerce\Carts;
+use common\models\sommerce\Packages;
+use common\models\sommerces\Stores;
 use sommerce\components\validators\LinkValidator;
 use sommerce\helpers\UserHelper;
 use yii\base\Model;

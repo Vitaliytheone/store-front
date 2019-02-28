@@ -3,7 +3,7 @@
 use sommerce\modules\admin\components\Url;
 
 /* @var $this yii\web\View */
-/* @var $store \common\models\stores\Stores */
+/* @var $store \common\models\sommerces\Stores */
 
 $storeUrl = $store->getBaseSite();
 

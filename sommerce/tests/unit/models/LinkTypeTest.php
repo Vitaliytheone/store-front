@@ -1,8 +1,8 @@
 <?php
 namespace tests\models;
 
-use common\models\store\Packages;
-use common\models\stores\Stores;
+use common\models\sommerce\Packages;
+use common\models\sommerces\Stores;
 use sommerce\models\forms\AddToCartForm;
 use Yii;
 use Codeception\Test\Unit;

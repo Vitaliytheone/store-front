@@ -47,7 +47,7 @@ $config = [
         ],
         'user' => [
             'class' => 'sommerce\modules\admin\components\CustomUser',
-            'identityClass' => 'common\models\stores\StoreAdminAuth',
+            'identityClass' => 'common\models\sommerces\StoreAdminAuth',
             'loginUrl' => '/admin',
             'enableSession' => true,
             'enableAutoLogin' => true,
@@ -87,7 +87,7 @@ $config = [
                 ],
                 'yii\web\YiiAsset' => [
                     'depends' => [
-                        'sommerce\assets\JqueryAsset'
+                        'sommerce\assets\AdminCustomJsAsset'
                     ]
                 ],
             ],
@@ -127,7 +127,7 @@ $config = [
             ],
         ],
         'store' => [
-            'class' => 'common\components\stores\StoreComponent'
+            'class' => 'common\components\sommerces\StoreComponent'
         ],
         'db' => $db['db'],
         'storeDb' => $db['storeDb'],
@@ -171,7 +171,9 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        'allowedIPs' => $params['debugIps']
+        'allowedIPs' => $params['debugIps'],
+        'historySize' => 500,
+        'traceLine' => '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>',
     ];
 
     $config['bootstrap'][] = 'gii';

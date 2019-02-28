@@ -2,10 +2,11 @@
 
 namespace sommerce\controllers;
 
+use common\models\sommerce\Pages;
+use yii\web\NotFoundHttpException;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
 use Yii;
-use yii\web\NotFoundHttpException;
 
 /**
  * Page controller
@@ -31,7 +32,7 @@ class PageController extends CustomController
      * @throws NotFoundHttpException
      * @throws \yii\base\Exception
      */
-    public function actionIndex($url = 'home')
+    public function actionIndex($url = 'index')
     {
         $page = PagesHelper::getPage($url);
 

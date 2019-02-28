@@ -13,7 +13,7 @@ class UrlsSearch extends Model
     private $_storeDb;
     private $_productsTable;
     private $_pagesTable;
-    
+
     /**
      * @param Stores $store
      */

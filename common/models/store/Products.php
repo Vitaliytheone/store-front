@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property integer $position
  * @property string $url
+ * @property string $properties
  * @property string $description
  * @property integer $visibility
  * @property integer $color
@@ -42,6 +43,7 @@ class Products extends ActiveRecord
     {
         return '{{%products}}';
     }
+
 
     /**
      * @inheritdoc
@@ -100,6 +102,7 @@ class Products extends ActiveRecord
             [['id', 'position', 'visibility'], 'integer'],
             [['description'], 'string'],
             [['name', 'url', 'color'], 'string', 'max' => 255],
+            [['properties'], 'string', 'max' => 1000],
             [['seo_title',], 'string', 'max' => 300],
             [['seo_description'], 'string', 'max' => 1000],
             [['seo_keywords'], 'string', 'max' => 2000],
@@ -116,6 +119,7 @@ class Products extends ActiveRecord
             'name' => Yii::t('admin', 'products.f_name'),
             'position' => Yii::t('admin', 'products.f_position'),
             'url' => Yii::t('admin', 'products.f_url'),
+            'properties' => Yii::t('admin', 'products.f_properties'),
             'description' => Yii::t('admin', 'products.f_description'),
             'visibility' => Yii::t('admin', 'products.f_visibility'),
             'color' => Yii::t('admin', 'products.f_color'),

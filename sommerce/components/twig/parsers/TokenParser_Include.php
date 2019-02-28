@@ -2,7 +2,7 @@
 
 namespace sommerce\components\twig\parsers;
 
-use common\models\store\PageFiles;
+use common\models\sommerce\PageFiles;
 use sommerce\helpers\PageFilesHelper;
 use Twig_Error_Syntax;
 use Twig_Node_Expression_Constant;
@@ -44,11 +44,11 @@ class TokenParser_Include extends Twig_TokenParser
             throw new Twig_Error_Syntax('Unknown "include" tag');
         }
 
-        $view = ltrim($expression->getAttribute('value'), '/');
+        $view = $expression->getAttribute('value');
         $files = [];
 
         foreach((array)ArrayHelper::getValue(PageFilesHelper::getFilesGroupByType(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
-            $files['snippets/' . $file['file_name']] = $file['content'];
+            $files['/snippets/' . $file['file_name']] = $file['content'];
         }
 
         if (empty($view) || empty($files[$view])) {

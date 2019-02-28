@@ -2,10 +2,10 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
 use yii\web\User;
-use common\models\store\Packages;
+use common\models\sommerce\Packages;
 
 class MovePackageForm extends Packages
 {

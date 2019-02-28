@@ -2,18 +2,18 @@
 
 namespace sommerce\components\payments\methods;
 
-use common\models\stores\PaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\Stores;
 use Yii;
 use MP;
 use MercadoPagoException;
 use yii\helpers\ArrayHelper;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
-use common\models\store\Payments;
-use common\models\store\PaymentsLog;
-use common\models\store\Checkouts;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerce\Payments;
+use common\models\sommerce\PaymentsLog;
+use common\models\sommerce\Checkouts;
+use common\models\sommerces\StorePaymentMethods;
 
 /**
  * Class Mercadopago

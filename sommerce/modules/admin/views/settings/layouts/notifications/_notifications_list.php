@@ -2,9 +2,9 @@
     /* @var $this \yii\web\View */
     /* @var $notifications array */
 
-    use common\models\stores\NotificationDefaultTemplates;
+    use common\models\sommerces\NotificationDefaultTemplates;
     use sommerce\modules\admin\components\Url;
-    use common\models\store\NotificationTemplates;
+    use common\models\sommerce\NotificationTemplates;
     use yii\bootstrap\Html;
 ?>
 <div class="row">

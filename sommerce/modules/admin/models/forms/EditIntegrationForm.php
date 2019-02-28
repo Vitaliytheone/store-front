@@ -2,8 +2,8 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\stores\Integrations;
-use common\models\stores\StoreIntegrations;
+use common\models\sommerces\Integrations;
+use common\models\sommerces\StoreIntegrations;
 use yii\base\Model;
 
 /**

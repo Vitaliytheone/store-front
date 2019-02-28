@@ -2,10 +2,10 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\events\Events;
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
+use sommerce\events\Events;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\Stores;
 use sommerce\helpers\UiHelper;
 use Yii;
 use sommerce\modules\admin\components\Url;
@@ -112,7 +112,7 @@ class OrdersController extends CustomController
             $this->redirect(Url::toRoute(["/orders"]));
         }
 
-        Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+        Events::add(Events::EVENT_SOMMERCE_ORDER_CHANGED_STATUS, [
             'suborderId' => $id,
             'storeId' => $this->store->id,
             'status' => $status

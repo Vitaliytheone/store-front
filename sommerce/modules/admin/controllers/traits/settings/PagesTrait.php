@@ -3,11 +3,11 @@
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\exceptions\FirstValidationErrorHttpException;
-use common\models\store\Images;
-use common\models\store\Packages;
-use common\models\store\PageFiles;
-use common\models\store\Pages;
-use common\models\store\Products;
+use common\models\sommerce\Images;
+use common\models\sommerce\Packages;
+use common\models\sommerce\PageFiles;
+use common\models\sommerce\Pages;
+use common\models\sommerce\Products;
 use sommerce\controllers\CommonController;
 use sommerce\modules\admin\models\forms\ImageUploadForm;
 use sommerce\modules\admin\models\forms\SavePackageForm;

@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerces\StoreAdminAuth;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;

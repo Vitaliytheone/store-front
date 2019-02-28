@@ -2,7 +2,7 @@
 
 namespace sommerce\helpers;
 
-use common\models\store\PageFiles;
+use common\models\sommerce\PageFiles;
 use yii\helpers\ArrayHelper;
 
 /**
