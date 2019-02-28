@@ -2,7 +2,6 @@
 
 namespace superadmin\controllers;
 
-use common\models\sommerces\Invoices;
 use control_panel\helpers\Url;
 use common\models\sommerces\Orders;
 use common\models\sommerces\ThirdPartyLog;
@@ -54,6 +53,7 @@ class OrdersController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -77,6 +77,7 @@ class OrdersController extends CustomController
      * Change order status
      * @return Response
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionChangeStatus()
     {

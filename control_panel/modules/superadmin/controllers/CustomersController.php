@@ -2,7 +2,6 @@
 
 namespace superadmin\controllers;
 
-
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
 use common\models\sommerces\Customers;
@@ -182,22 +181,6 @@ class CustomersController extends CustomController
         $customer = $this->findModel($request->post('id'));
 
         $customer->activateStores();
-
-        return $this->redirect(Url::toRoute('/customers'));
-    }
-
-    /**
-     * Activate stores feature
-     * @return Response
-     * @throws NotFoundHttpException
-     */
-    public function actionActivateGateways()
-    {
-        $request = Yii::$app->request;
-
-        $customer = $this->findModel($request->post('id'));
-
-        $customer->activateGateways();
 
         return $this->redirect(Url::toRoute('/customers'));
     }

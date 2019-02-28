@@ -43,4 +43,3 @@
 <?= $this->render('layouts/_add_payment_modal')?>
 <?= $this->render('layouts/_edit_invoice_modal')?>
 <?= $this->render('layouts/_create_invoice_modal')?>
-<?= $this->render('layouts/_add_earnings_modal')?>
