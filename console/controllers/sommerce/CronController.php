@@ -12,7 +12,7 @@ use common\models\stores\StoreAdminsHash;
 use common\models\stores\StorePaymentMethods;
 use common\models\stores\Stores;
 use sommerce\components\getstatus\GetstatusComponent;
-use console\components\sender\SenderComponent;
+use sommerce\components\sender\SenderComponent;
 use sommerce\components\payments\methods\Authorize;
 use sommerce\components\payments\methods\Paypal;
 use sommerce\components\payments\Payment;

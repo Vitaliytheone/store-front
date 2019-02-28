@@ -1,5 +1,5 @@
 <?php
-namespace console\components\sender;
+namespace store\components\sender;
 
 use common\events\Events;
 use common\models\store\Packages;
@@ -7,8 +7,8 @@ use common\models\stores\Providers;
 use common\models\stores\StoreProviders;
 use common\models\stores\Stores;
 use common\models\stores\StoresSendOrders;
-use Yii;
 use common\models\store\Suborders;
+use Yii;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\db\Connection;
@@ -17,7 +17,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class SenderComponent
- * @package console\components\sender
+ * @package store\components\sender
  */
 class SenderComponent extends Component
 {
