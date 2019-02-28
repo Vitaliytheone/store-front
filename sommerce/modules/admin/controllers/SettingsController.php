@@ -7,31 +7,26 @@ use common\models\sommerce\Files;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
-use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
-use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
+use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
-use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\filters\ContentNegotiator;
-use yii\filters\AjaxFilter;
-use yii\filters\VerbFilter;
 
 /**
  * Settings controller for the `admin` module
  */
 class SettingsController extends CustomController
 {
-    use BlocksTrait;
     use ProvidersTrait;
-    use NavigationTrait;
     use PaymentsTrait;
     use PagesTrait;
     use LanguageTrait;
