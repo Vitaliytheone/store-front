@@ -1,14 +1,11 @@
 <?php
 
 use yii\helpers\Url;
-use sommerce\assets\ProductsAsset;
 
 /* @var $this yii\web\View */
 /* @var $store \common\models\sommerces\Stores */
 /* @var $storeProviders array */
 /** @var $products array  Products with packages array */
-
-ProductsAsset::register($this);
 ?>
 
 <div class="page-container">
