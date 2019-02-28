@@ -51,7 +51,7 @@
             <input type="hidden" name="sid" value="<?= $account_number ?>" >
             <input type="hidden" name="mode" value="2CO" >
             <input type="hidden" name="currency_code" value="USD" >
-              <?php /* @var \common\models\panels\InvoiceDetails[] $items */?>
+              <?php /* @var \common\models\sommerces\InvoiceDetails[] $items */?>
               <?php foreach ($items as $key => $item) : ?>
                   <input type="hidden" name="li_<?= $key ?>_product_id" value="<?= $paymentId ?>" >
                   <input type="hidden" name="li_<?= $key ?>_type" value="product" >

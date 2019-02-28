@@ -1,6 +1,6 @@
 <?php
 namespace control_panel\mail\mailers;
-use common\models\panels\Notifications;
+use common\models\sommerces\Notifications;
 use yii\helpers\ArrayHelper;
 
 /**

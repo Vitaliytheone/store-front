@@ -6,6 +6,7 @@ use common\models\sommerce\queries\PagesQuery;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Connection;
 
 /**
  * This is the model class for table "{{%pages}}".
@@ -64,7 +65,7 @@ class Pages extends ActiveRecord
     }
 
     /**
-     * @return mixed
+     * @return Connection
      */
     public static function getDb()
     {

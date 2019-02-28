@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $ticketMessages array */
-    /* @var $message \common\models\panels\TicketMessages */
+    /* @var $message \common\models\sommerces\TicketMessages */
     /* @var $admins array */
     /* @var $ticketMessagesSearch superadmin\models\search\TicketMessagesSearch */
 

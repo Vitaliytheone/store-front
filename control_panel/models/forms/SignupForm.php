@@ -1,8 +1,9 @@
 <?php
+
 namespace control_panel\models\forms;
 
-use common\models\panels\Customers;
-use common\models\panels\MyActivityLog;
+use common\models\sommerces\Customers;
+use common\models\sommerces\MyActivityLog;
 use Yii;
 use yii\base\Model;
 use himiklab\yii2\recaptcha\ReCaptchaValidator;

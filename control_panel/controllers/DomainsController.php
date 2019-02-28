@@ -2,10 +2,10 @@
 
 namespace control_panel\controllers;
 
-use common\models\panels\Customers;
+use common\models\sommerces\Customers;
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
-use common\models\panels\Auth;
+use common\models\sommerces\Auth;
 use control_panel\models\forms\OrderDomainForm;
 use control_panel\models\search\DomainsSearch;
 use Yii;
@@ -15,7 +15,6 @@ use yii\filters\VerbFilter;
 use control_panel\models\forms\OrderStoreForm;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
-use control_panel\models\forms\OrderPanelForm;
 
 /**
  * Class DomainsController
@@ -188,9 +187,6 @@ class DomainsController extends CustomController
             case 'store':
                 $model = new OrderStoreForm();
                 $model->setIp(Yii::$app->request->getUserIP());
-                break;
-            case 'panel':
-                $model = new OrderPanelForm();
                 break;
             default:
                 return [

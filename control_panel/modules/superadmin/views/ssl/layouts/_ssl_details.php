@@ -1,8 +1,8 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $ssl \common\models\panels\SslCert */
-    /* @var $logs \common\models\panels\ThirdPartyLog */
-    /* @var $log \common\models\panels\ThirdPartyLog */
+    /* @var $ssl \common\models\sommerces\SslCert */
+    /* @var $logs \common\models\sommerces\ThirdPartyLog */
+    /* @var $log \common\models\sommerces\ThirdPartyLog */
 ?>
 <strong><?= Yii::t('app/superadmin', 'ssl.list.details_modal_details_header')?></strong><br />
 <pre>

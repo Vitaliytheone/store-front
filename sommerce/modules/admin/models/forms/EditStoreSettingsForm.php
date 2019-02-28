@@ -134,7 +134,7 @@ class EditStoreSettingsForm extends Stores
      * Return current user
      * @return StoreAdminAuth
      */
-    public function getuser()
+    public function getUser()
     {
        return $this->_user;
     }
@@ -236,7 +236,7 @@ class EditStoreSettingsForm extends Stores
     private function _changeLog($changedAttributes)
     {
         /** @var StoreAdminAuth $identity */
-        $identity = $this->getuser();
+        $identity = $this->getUser();
 
         if (isset($changedAttributes['name'])) {
             ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_NAME_CHANGED);

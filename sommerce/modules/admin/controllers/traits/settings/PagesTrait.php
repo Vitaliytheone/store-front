@@ -14,6 +14,7 @@ use sommerce\modules\admin\models\forms\SavePackageForm;
 use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\forms\SaveProductForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
+use sommerce\modules\admin\models\search\PagesSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
@@ -36,7 +37,7 @@ trait PagesTrait {
     {
         $this->view->title = Yii::t('admin', "settings.pages_page_title");
         $this->addModule('adminPages');
-        $search = new PagesOldSearch();
+        $search = new PagesSearch();
         $search->setStore($this->store);
         $pages = $search->searchPages();
 
@@ -105,7 +106,7 @@ trait PagesTrait {
         $pages = Pages::find()
             ->select([
                 'id' => 'id',
-                'title' => 'title',
+                'title' => 'seo_title',
                 'url' => 'url',
             ])
             ->asArray()

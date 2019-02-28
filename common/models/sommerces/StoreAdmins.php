@@ -59,6 +59,7 @@ class StoreAdmins extends ActiveRecord
         'products' => 1,
         'payments' => 1,
         'settings' => 1,
+        'pages' => 1,
     ];
 
     use UnixTimeFormatTrait;
@@ -208,6 +209,7 @@ class StoreAdmins extends ActiveRecord
             'payments' => Yii::t('app', 'store_admin.rule_payments'),
             'products' => Yii::t('app', 'store_admin.rule_products'),
             'settings' => Yii::t('app', 'store_admin.rule_settings'),
+            'pages' => Yii::t('app', 'store_admin.rule_pages'),
         ];
     }
 

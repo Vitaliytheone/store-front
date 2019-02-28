@@ -2,7 +2,7 @@
 
 namespace superadmin\models\search;
 
-use common\models\panels\Params;
+use common\models\sommerces\Params;
 use yii\db\ActiveQuery;
 
 /**

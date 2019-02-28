@@ -5,7 +5,7 @@ namespace superadmin\controllers;
 
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
-use common\models\panels\Customers;
+use common\models\sommerces\Customers;
 use superadmin\models\forms\CustomerPasswordForm;
 use superadmin\models\forms\EditCustomerForm;
 use superadmin\models\search\CustomersSearch;

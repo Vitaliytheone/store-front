@@ -1,4 +1,5 @@
 <?php
+
 namespace control_panel\helpers;
 
 use Yii;
@@ -8,8 +9,8 @@ use yii\web\Cookie;
  * Class UserHelper
  * @package control_panel\helpers
  */
-class UserHelper {
-
+class UserHelper
+{
     const HASH_KEY = 'hash';
     const AUTH_DURATION = 3600 * 24 * 30;
 
