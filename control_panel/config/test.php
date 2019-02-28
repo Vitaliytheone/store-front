@@ -32,7 +32,7 @@ return [
             'showScriptName' => true,
         ],
         'user' => [
-            'identityClass' => 'common\models\panels\Users',
+            'identityClass' => 'common\models\sommerces\Users',
         ],
         'geoip' => ['class' => 'lysenkobv\GeoIP\GeoIP'],
         'request' => [

@@ -1,7 +1,7 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\panels\Invoices;
+use common\models\sommerces\Invoices;
 use Yii;
 use yii\base\Model;
 

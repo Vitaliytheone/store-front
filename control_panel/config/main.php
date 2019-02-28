@@ -42,12 +42,12 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'common\models\panels\Auth',
+            'identityClass' => 'common\models\sommerces\Auth',
             'enableAutoLogin' => true,
             'loginUrl' => ['/signin'],
             'on afterLogin' => function($event) {
                 /**
-                 * @var $user \common\models\panels\Auth
+                 * @var $user \common\models\sommerces\Auth
                  */
                 $user = Yii::$app->user->identity;
 
@@ -60,7 +60,7 @@ $config = [
             },
             'on beforeLogout' => function($event) {
                 /**
-                 * @var \common\models\panels\Auth $user;
+                 * @var \common\models\sommerces\Auth $user;
                  */
                 $user = Yii::$app->user->identity;
 
@@ -76,7 +76,7 @@ $config = [
         ],
         'superadmin' => [
             'class' => 'control_panel\components\User',
-            'identityClass' => 'common\models\panels\SuperAdmin',
+            'identityClass' => 'common\models\sommerces\SuperAdmin',
             'enableAutoLogin' => true,
             'loginUrl' => ['/' . $params['superadminUrl']],
             'idParam' => '__superadmin_id',

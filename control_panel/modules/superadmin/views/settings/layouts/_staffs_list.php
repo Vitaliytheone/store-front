@@ -1,11 +1,11 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $staffs \superadmin\models\search\StaffSearch */
-    /* @var $staff \common\models\panels\SuperAdmin */
+    /* @var $staff \common\models\sommerces\SuperAdmin */
 
     use control_panel\helpers\Url;
     use yii\bootstrap\Html;
-    use common\models\panels\SuperAdmin;
+    use common\models\sommerces\SuperAdmin;
 
     $rulesList = array_keys(SuperAdmin::getDefaultRules());
 ?>

@@ -2,10 +2,10 @@
 
 namespace control_panel\controllers;
 
-use common\models\panels\Auth;
-use common\models\panels\Content;
-use common\models\panels\Customers;
-use common\models\panels\Orders;
+use common\models\sommerces\Auth;
+use common\models\sommerces\Content;
+use common\models\sommerces\Customers;
+use common\models\sommerces\Orders;
 use common\models\sommerces\StoreAdminAuth;
 use common\models\sommerces\StoreAdmins;
 use common\models\sommerces\StoreDomains;

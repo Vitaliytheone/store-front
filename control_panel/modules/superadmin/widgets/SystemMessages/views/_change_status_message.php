@@ -4,7 +4,7 @@
 /* @var $admin  string */
 /* @var $date  string */
 
-use common\models\panels\Tickets;
+use common\models\sommerces\Tickets;
 
 ?>
 <div class="ticket-message__card ticket-message__status ticket-message__card-status">

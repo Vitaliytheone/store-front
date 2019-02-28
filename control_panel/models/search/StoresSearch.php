@@ -5,7 +5,7 @@ namespace control_panel\models\search;
 use common\models\sommerces\StoreDomains;
 use control_panel\helpers\DomainsHelper;
 use Yii;
-use common\models\panels\Orders;
+use common\models\sommerces\Orders;
 use common\models\sommerces\Stores;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -44,7 +44,7 @@ class StoresSearch
 
         $orderPending = (new Query())
             ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db', 'hide'])
-            ->from('orders')
+            ->from(DB_SOMMERCES . '.orders')
             ->andWhere([
                 'cid' => $customer,
                 'status' => [
@@ -59,7 +59,7 @@ class StoresSearch
 
         $orderCanceled = (new Query())
             ->select(['id', '("order") AS type', '("' . $customer . '") as customer_id', 'domain AS domain', 'status', 'date', '(NULL) AS plan', '(NULL) AS expired', '(NULL) AS db', 'hide'])
-            ->from('orders')
+            ->from(DB_SOMMERCES . '.orders')
             ->andWhere([
                 'cid' => $customer,
                 'status' => Orders::STATUS_CANCELED,

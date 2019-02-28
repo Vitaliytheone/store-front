@@ -3,8 +3,8 @@
 namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
-use common\models\panels\Params;
-use common\models\panels\Payments;
+use common\models\sommerces\Params;
+use common\models\sommerces\Payments;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

@@ -1,11 +1,11 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $emails \superadmin\models\search\NotificationEmailSearch */
-    /* @var $email \common\models\panels\NotificationEmail */
+    /* @var $email \common\models\sommerces\NotificationEmail */
 
     use control_panel\helpers\Url;
     use yii\bootstrap\Html;
-    use common\models\panels\NotificationEmail;
+    use common\models\sommerces\NotificationEmail;
     use yii\helpers\Json;
 ?>
 <table class="table table-sm table-custom">

@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $model \superadmin\models\forms\CreateMessageForm */
-    /* @var $ticket \common\models\panels\Tickets */
+    /* @var $ticket \common\models\sommerces\Tickets */
 
-    use common\models\panels\Tickets;
+    use common\models\sommerces\Tickets;
     use control_panel\helpers\Url;
     use control_panel\components\ActiveForm;
     use yii\bootstrap\Html;
