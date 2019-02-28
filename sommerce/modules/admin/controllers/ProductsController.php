@@ -2,6 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use admin\models\forms\package\DuplicatePackageForm;
 use admin\models\forms\package\EditPackageForm;
 use admin\models\forms\product\EditProductForm;
 use common\components\ActiveForm;
@@ -25,6 +26,7 @@ use common\helpers\ApiProviders;
 use admin\models\forms\product\MoveProductForm;
 use sommerce\modules\admin\models\search\ProductsSearch;
 use admin\models\forms\product\CreateProductForm;
+use sommerce\modules\admin\components\Url;
 
 /**
  * Class ProductsController
@@ -52,6 +54,7 @@ class ProductsController extends CustomController
                     'update-product',
                     'get-product',
                     'create-product-menu',
+                    'duplicate-package',
                 ],
             ],
             'verbs' => [
@@ -68,9 +71,10 @@ class ProductsController extends CustomController
                     'update-product' => ['POST'],
                     'get-product' => ['GET'],
                     'create-product-menu' => ['POST'],
+                    'duplicate-package' => ['POST'],
                 ],
             ],
-            'jqueryApi' => [
+            'json' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
                     'create-product',
@@ -84,6 +88,7 @@ class ProductsController extends CustomController
                     'get-product',
                     'create-product-menu',
                     'create-package',
+                    'duplicate-package',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_JSON,
@@ -103,7 +108,10 @@ class ProductsController extends CustomController
         $search = new ProductsSearch();
         $search->setStore($this->store);
 
-        $this->addModule('adminProducts');
+        $this->addModule('adminProducts', [
+            'servicesUrl' => Url::to(['products/get-provider-services']),
+            'exitingUrls' => $search->getExistingUrls(),
+        ]);
 
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),
@@ -357,6 +365,29 @@ class ProductsController extends CustomController
         return [
             'status' => 'success',
             'package' => $model->getAttributes(),
+        ];
+    }
+
+    public function actionDuplicatePackage($id)
+    {
+        /**
+         * @var Packages $model
+         */
+        $package = $this->findClassModel($id, Packages::class);
+
+        $model = new DuplicatePackageForm();
+        $model->setPackage($package);
+
+        if ($model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_package_duplicated'));
+            return [
+                'status' => 'success',
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('admin', 'products.duplicate_package.error'),
         ];
     }
 

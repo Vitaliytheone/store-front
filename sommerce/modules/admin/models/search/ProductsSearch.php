@@ -19,6 +19,11 @@ use yii\helpers\ArrayHelper;
  */
 class ProductsSearch extends Model
 {
+    /**
+     * @var Stores
+     */
+    private $_store;
+
     private $_db;
     private $_productsTable;
     private $_packagesTable;
@@ -37,6 +42,7 @@ class ProductsSearch extends Model
      */
     public function setStore(Stores $store)
     {
+        $this->_store = $store;
         $this->_db = $store->db_name;
         $this->_productsTable = $this->_db . "." . Products::tableName();
         $this->_packagesTable = $this->_db . "." . Packages::tableName();
@@ -129,5 +135,15 @@ class ProductsSearch extends Model
         }
 
         return $productsPackages;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExistingUrls()
+    {
+        $urlsModel = new UrlsSearch();
+        $urlsModel->setStore($this->_store);
+        return $urlsModel->searchUrls();
     }
 }

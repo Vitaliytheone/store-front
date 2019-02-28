@@ -33,8 +33,11 @@ use yii\helpers\ArrayHelper;
                 </td>
                 <td class="sommerce-products-editor__table-td-actions">
                     <div class="sommerce-products-editor__packages-actions">
-                        <?= Html::a('<span class="la la-clone"></span> ' . Yii::t('admin', 'products.duplicate_package'), Url::to(['products/duplicate-package']), [
-                            'class' => 'sommerce-products-editor__packages-actions-link',
+                        <?= Html::a('<span class="la la-clone"></span> ' . Yii::t('admin', 'products.duplicate_package'), Url::to(['products/duplicate-package', 'id' => $package['id']]), [
+                            'class' => 'sommerce-products-editor__packages-actions-link duplicate-package',
+                            'data' => [
+                                'confirm-title' => Yii::t('admin', 'products.duplicate_package.confirm'),
+                            ],
                         ])?>
                         <?= Html::a('<span class="la la-edit"></span> ' . Yii::t('admin', 'products.edit_package'), Url::to(['products/update-package', 'id' => $package['id']]), [
                             'class' => 'sommerce-products-editor__packages-actions-link edit-package',

@@ -3,13 +3,31 @@ customModule.adminProducts = {
         var self = this;
         var exitingUrls = params.exitingUrls;
 
+        $(document).on('click', '.duplicate-package', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var confirmBtn = $('#confirm_yes');
+
+            custom.confirm(btn.data('confirm-title'), undefined, {}, function () {
+                custom.sendBtn(btn, {
+                    data: self.getTokenParams(),
+                    method: 'POST',
+                    callback : function(response) {
+                        location.reload();
+                    }
+                });
+            });
+
+            return false;
+        });
+
         $('#createproductform-name').keyup(function(e) {
             var name = $(this).val();
             var createPageUrl = $('#createPageUrl');
             var urlInput = $('#createproductform-url');
             var generatedUrl;
             generatedUrl = custom.generateUrlFromString(name);
-            generatedUrl = custom.generateUniqueUrl(generatedUrl, []);
+            generatedUrl = custom.generateUniqueUrl(generatedUrl, exitingUrls);
 
             createPageUrl.text(generatedUrl);
             urlInput.val(generatedUrl);
@@ -198,6 +216,7 @@ customModule.adminProducts = {
         });
 
         self.sortable();
+        self.providerServices(params);
     },
     sortable: function () {
         var productsSortable = $('.sortable'),
@@ -283,5 +302,68 @@ customModule.adminProducts = {
         tokenParams[csrfParam] = csrfToken;
 
         return tokenParams;
+    },
+    providerServices: function (params) {
+        var self = this;
+        var modal = $('#editPackageModal');
+        var form = $('#editPackageForm', modal);
+        var apiErrorBlock = $('.api-error', form);
+        var providersSelect = $('#editpackageform-provider_id', form);
+        var servicesSelect = $('#editpackageform-provider_service', form);
+
+        // Change `provider_id` => fetch provider`s services
+        providersSelect.on('change', function(e, selectedServiceId){
+            var optionSelected = $("option:selected", this),
+                actionUrl = params;
+
+            clearProviderServisesList();
+            if (actionUrl === undefined) {
+                apiErrorBlock.addClass('hidden');
+                return;
+            }
+
+            $.ajax({
+                url: actionUrl,
+                data: {provider_id: optionSelected},
+                type: "GET",
+                timeout: 15000,
+                success: function(data, textStatus, jqXHR) {
+                    if (data.hasOwnProperty('error')) {
+                        apiErrorBlock.removeClass('hidden').text(data.message);
+                    } else {
+                        apiErrorBlock.addClass('hidden');
+                        renderProviderServices(data, selectedServiceId);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    var errorMessage = '';
+                    // Timeout error
+                    if (textStatus === "timeout") {
+                        errorMessage = jqXHR.responseJSON.message;
+                    }
+
+                    console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
+                    apiErrorBlock.removeClass('hidden').text(errorMessage);
+                }
+            });
+        });
+
+        function clearProviderServisesList() {
+            servicesSelect.find("option:not(:eq(0))").remove();
+            servicesSelect.find('option:eq(0)').prop('selected', true);
+        }
+
+        function renderProviderServices(services, selectedServiceId){
+            var selected,
+                $container = $('<div></div>');
+            _.each(services, function (s) {
+                if (selectedServiceId) {
+                    selected = s.service.toString() === selectedServiceId.toString() ? 'selected' : '';
+                }
+                $container.append('<option value="' + s.service + '"'+ selected + '>' + s.service + ' - ' + s.name + '</option>');
+            });
+            clearProviderServisesList();
+            servicesSelect.append($container.html());
+        }
     }
 };

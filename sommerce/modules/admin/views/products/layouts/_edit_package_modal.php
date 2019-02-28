@@ -59,6 +59,8 @@ $model->setStore($store);
                     <?= $form->field($model, 'provider_id')->dropDownList($model->getStoreProviders()) ?>
 
                     <?= $form->field($model, 'provider_service')->dropDownList($model->getProviderServices()) ?>
+
+                    <span class="api-error m--font-danger hidden"></span>
                 </div>
 
             </div>

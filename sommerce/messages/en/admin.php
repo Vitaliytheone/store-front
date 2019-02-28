@@ -197,6 +197,10 @@ return [
     'products.edit_package.delete_link' => 'Delete',
     'products.edit_package.delete_description' => 'Are you sure you want to <br> <b>delete</b> this package?',
 
+    'products.duplicate_package.confirm' => 'Are you sure you want to <br> <b>duplicate</b> this package?',
+    'products.duplicate_package.error' => 'Can not duplicate package',
+    'products.message_package_duplicated' => 'Package was successfully duplicated!',
+
 
     'products.package_create' => 'Create package',
     'products.package_edit' => 'Edit package',
