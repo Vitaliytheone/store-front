@@ -1,8 +1,8 @@
 <?php
 namespace admin\models\forms;
 
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\Stores;
 use yii\base\Model;
 
 /**
