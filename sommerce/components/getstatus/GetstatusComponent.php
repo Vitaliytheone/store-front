@@ -3,10 +3,10 @@ namespace sommerce\components\getstatus;
 
 use common\events\Events;
 use Yii;
-use common\models\store\Suborders;
-use common\models\stores\Providers;
-use common\models\stores\StoreProviders;
-use common\models\stores\Stores;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\Providers;
+use common\models\sommerces\StoreProviders;
+use common\models\sommerces\Stores;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\db\Connection;
