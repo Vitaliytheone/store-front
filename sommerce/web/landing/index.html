@@ -15,7 +15,36 @@
 
 <body>
     <header id="header">
-                    <nav class="nav navbar-toggleable-md">
+        <nav id="navbar-scrolling" class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">Sommerce</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <!-- <span class="icon"></span> -->
+                </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav footer-links color-disabled ">
+                            <li class="nav-item">
+                                <a href="#why">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#features">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#demo">Demo</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#pricing">Pricing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#faq">FAQ</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>  
+        </nav>
+                    <!-- <nav id="navbar-scrolling" class="nav navbar-toggleable-md">
                         <div class="container pt-4  d-flex">
                             <a class="navbar-brand">Sommerce</a>
                             <div class="d-flex align-items-end">
@@ -24,7 +53,7 @@
                                         <a  href="#">About</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a  href="#">Features</a>
+                                        <a  href="#features">Features</a>
                                     </li>
                                     <li class="nav-item">
                                         <a  href="#">Demo</a>
@@ -33,18 +62,18 @@
                                         <a href="#">Pricing</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a  href="#">FAQ</a>
+                                        <a  href="#faq">FAQ</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                    </nav>
+                    </nav> -->
                 <div class="container technology-driven">
                     <div class="row">
                         <div class="col">
                                 <div class="header-descr">
                                 <h1 class="sommerce-bolder">Technology driven platform for SMM store business</h1>
-                                <p class="footer-links"><span class="interested">Are you interested</span>? Be the first to know when we launch!</p>
+                                <p class="footer-links"><span class="interested">Are you interested?</span> Be the first to know when we launch!</p>
                                 <div class="d-flex flex-row">
                                     <div class="form-group mb-2">
                                         <input type="text" class="form-control header-input" id="email" placeholder="You email address">
@@ -165,7 +194,7 @@
                 </div>
             </div>
             <div class="line"></div>
-            <div class="container demo-container">
+            <div id="demo" class="container demo-container">
                 <div class="row sommerce-demo">
                     <div class="col">
                         <h1 class="h-bolder">Try sommerce demo</h1>
@@ -273,7 +302,9 @@
                             <a href="#faq-extra" data-toggle="collapse">
                                 <h3 class="feature-title">Do i need to pay something extra?</h3>
                             </a>
-                            <a class="plus" href="#faq-extra" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+                            <a class="collapsed" href="#faq-extra" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <i class="plus"></i>
+                            </a>
                         </div>
                         <div id="faq-extra" class="collapse footer-links">
                             <div class="collapse-container">
@@ -287,7 +318,9 @@
                             <a href="#faq-domain" data-toggle="collapse">
                                  <h3 class="feature-title">Where i can buy a domain?</h3>
                             </a>
-                            <a class="plus" href="#faq-domain" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+                            <a class="collapsed" href="#faq-domain" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <i class="plus"></i>
+                            </a>
                         </div>
                         <div id="faq-domain" class="collapse footer-links">
                             <div class="collapse-container">
@@ -301,7 +334,9 @@
                             <a href="#faq-html" data-toggle="collapse">
                                 <h3 class="feature-title">Do i need to know HTML?</h3>
                             </a>
-                            <a class="plus" href="#faq-html" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+                            <a class="collapsed" href="#faq-html" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <i class="plus"></i>
+                            </a>
                         </div>
                         <div id="faq-html" class="collapse footer-links">
                     <div class="collapse-container">
@@ -315,7 +350,9 @@
                             <a href="#faq-store" data-toggle="collapse">
                                 <h3 class="feature-title">I'm not a company. Can i order a store?</h3>
                             </a>
-                            <a class="plus" href="#faq-store" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+                            <a class="collapsed" href="#faq-store" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <i class="plus"></i>
+                            </a>
                         </div>
                         <div id="faq-store" class="collapse footer-links">
                             <div class="collapse-container">
@@ -328,7 +365,9 @@
                             <a href="#faq-order" data-toggle="collapse">
                                 <h3 class="feature-title">Should i proceed with all orders by myself?</h3>
                             </a>
-                            <a class="plus" href="#faq-order" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+                            <a class="collapsed" href="#faq-order" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <i class="plus"></i>
+                            </a>
                         </div>
                         <div id="faq-order" class="collapse footer-links">
                             <div class="collapse-container">
@@ -341,7 +380,9 @@
                             <a href="#faq-pay" data-toggle="collapse">
                                 <h3 class="feature-title">How will i know that i need to pay for the next month?</h3>
                             </a>
-                            <a class="plus" href="#faq-pay" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+                            <a class="collapsed" href="#faq-pay" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                 <i class="plus"></i>
+                            </a>
                         </div>
                       <div id="faq-pay" class="collapse footer-links">
                         <div class="collapse-container">
@@ -380,23 +421,23 @@
                         <h3 class="footer-logo">Sommerce</h3>
                         <p class="footer-links">©2019 &nbsp All right recerved.</p>
                     </div>
-                    <div class="col d-flex flex-column">
+                    <div id="footer-scrolling" class="col d-flex flex-column">
                         <p class="f-name">Product</p>
                         <ul class="nav flex-column footer-links color-disabled">
                             <li class="nav-item">
-                                <a href="#">About</a>
+                                <a href="#why">About</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Features</a>
+                                <a href="#features">Features</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Demo</a>
+                                <a href="#demo">Demo</a>
                             </li>
                             <li class="nav-item">
-                                <a  href="#">Pricing</a>
+                                <a  href="#pricing">Pricing</a>
                             </li>
                             <li class="nav-item">
-                                <a  href="#">FAQ</a>
+                                <a  href="#faq">FAQ</a>
                             </li>
                         </ul>
                     </div>
@@ -430,13 +471,25 @@
 
 
 
-
+<script>
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function () {
+        var currentScrollPos = window.pageYOffset;
+        if (prevScrollpos > currentScrollPos) {
+            document.getElementById("navbar-scrolling").style.top = "0";
+        } else {
+            document.getElementById("navbar-scrolling").style.top = "-50px";
+        }
+        prevScrollpos = currentScrollPos;
+    }
+</script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
+    <script src="assets/js/main.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </body>
 

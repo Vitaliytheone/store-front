@@ -7,6 +7,16 @@
 
     }
 
+    .navbar-toggler{
+         display: block;
+        background-image: url("../img/lp-sources/ic-other/burger-menu.svg");
+        width: 40px;
+        height: 40px;
+        text-decoration: none;
+        border: 0px;
+        background-color: white;
+    }
+
     #started p {
         text-align: center; 
         position: relative;
@@ -34,6 +44,10 @@
         background-position: top right
     }
 
+    .navbar {
+        padding-top: 30px;
+    }
+
     .header-input {
     width: 212px;
     height: 48px;
@@ -47,7 +61,7 @@
         padding-right: 30px;
     }
 
-    
+
     .navbar-brand {
         font-size: 24px;
         font-weight: bold;
@@ -254,8 +268,8 @@
     /* Started */
 
     #started {
-        margin-top: 50px;
-        margin-bottom: 100px;
+        margin-top: 70px;
+        margin-bottom: 120px;
     }
 
     .start-title {
@@ -272,7 +286,7 @@
     /* FAQ */
 
     #faq {
-        margin-bottom: 30px;
+        margin-bottom: 150px;
     }
 
     .faq-container {
@@ -300,7 +314,13 @@
         letter-spacing: normal;
         color: #7765d6;
     }
-
+.fa.fa-navicon {
+        display: block;
+        background-image: url("../img/lp-sources/ic-other/minus.svg");
+        width: 24px;
+        height: 24px;
+        text-decoration: none;
+}
     .hello-faq-button {
         border: 0px;
         outline: none;
@@ -321,12 +341,26 @@
 
     .toggle .plus {
         display: block;
-        background-image: url("../img/lp-sources/ic-other/plus.svg");
+        background-image: url("../img/lp-sources/ic-other/minus.svg");
         width: 24px;
         height: 24px;
         text-decoration: none;
     }
 
+    /* .collapsed {
+         display: block;
+        background-image: url("../img/lp-sources/ic-other/minus.svg");
+        width: 24px;
+        height: 24px;
+        text-decoration: none;
+    }  */
+    /* .toggle  {
+          display: block;
+        background-image: url("../img/lp-sources/ic-other/minus.svg");
+        width: 24px;
+        height: 24px;
+        text-decoration: none;
+    } */
     /* .collapse div{
         padding-top: 5px;
         padding-bottom: 5px;
@@ -416,6 +450,7 @@
     padding-left: 0px;
     cursor: pointer;
 }
+
     /* f-top {
         height: 316px;
     }
@@ -424,6 +459,10 @@
         height: 288px;
     } */
 
-    .new2 {
+    .d-flex .collapsed .plus{
+        display: block;
+        background-image: url("../img/lp-sources/ic-other/plus.svg");
+        width: 24px;
+        height: 24px;
         text-decoration: none;
     }
