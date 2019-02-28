@@ -1,0 +1,152 @@
+<!-- Page Header Section Start -->
+<div class="page-header--section bg--color-theme pd--80-0">
+    <div class="container">
+        <div class="title">
+            <h1 class="h1">{{ lang('cart.title') }}</h1>
+        </div>
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Cart Section Start -->
+<div class="cart--section pd--100-0 min-height">
+    <div class="container">
+        <!-- Cart Items Start -->
+        <div class="cart--items pbottom--30">
+
+            <table class="table table-bordered {% if site.rtl %} rtl-table {% endif %}">
+                <thead>
+                <tr>
+                    <th>{{ lang('cart.package') }}</th>
+                    <th>{{ lang('cart.details') }}</th>
+                    <th>{{ lang('cart.quantity') }}</th>
+                    <th>{{ lang('cart.price') }}</th>
+                    <th>{{ lang('cart.remove') }}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% if cart.orders is empty %}
+                    <tr>
+                        <td colspan="5">{{ lang('cart.no_orders') }}</td>
+                    </tr>
+                {% else %}
+                    {% for item in cart.orders %}
+                        <tr>
+                            <td data-title="{{ lang('cart.package') }}">{{ item.name }}</td>
+                            <td data-title="{{ lang('cart.details') }}">{{ item.link }}</td>
+                            <td data-title="{{ lang('cart.quantity') }}">{{ item.quantity }}</td>
+                            <td data-title="{{ lang('cart.price') }}">{{ item.price|money }}</td>
+                            <td data-title="{{ lang('cart.remove') }}"><a href="/delete/{{ item.key }}"><i class="far fa-times"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+
+        </div>
+        {% if cart.orders %}
+            <form id="orderForm" class="form" method="POST" action="/cart">
+                <!-- Cart Items End -->
+                <div class="row">
+                    <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
+                        <!-- Cart Total Start -->
+                        <div class="cart--total {% if site.rtl %} rtl-direction {% endif %}">
+                            <div class="title">
+                                <h2 class="h4">{{ lang('cart.total') }}</h2>
+                            </div>
+
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>{{ lang('cart.total_price') }}</td>
+                                    <td>{{ cart.total_price|money }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Cart Total End -->
+                    </div>
+                </div>
+
+                {% if cart.payments %}
+                    <div class="row">
+                        <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
+                            <!-- Cart Total Start -->
+                            <div class="cart--total {% if site.rtl %} rtl-direction {% endif %}">
+                                <div class="title">
+                                    <h2 class="h4">{{ lang('cart.payment_method') }}</h2>
+                                </div>
+
+                                <div class="checkout--order-info">
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="panel-group" id="checkoutA">
+
+                                                {% if error %}
+                                                    <div class="error-summary alert alert-danger">{{ error_message }}</div>
+                                                {% endif %}
+
+                                                {% for payment in cart.payments %}
+                                                    <div class="panel-title">
+                                                        {% if cart.form.selected_method %}
+                                                            <label>
+                                                                <input type="radio" name="OrderForm[method]" {% if cart.form.selected_method == payment.id %} checked {% endif %} value="{{ payment.id }}">
+                                                                <span>{{ payment.method }}</span>
+                                                            </label>
+                                                        {% else %}
+                                                            <label>
+                                                                <input type="radio" name="OrderForm[method]" {% if loop.first %} checked {% endif %} value="{{ payment.id }}">
+                                                                <span>{{ payment.method }}</span>
+                                                            </label>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Cart Total End -->
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-4 {% if site.rtl == '0' %} col-md-offset-8 {% endif %} col-sm-6 {% if site.rtl == '0' %} col-sm-offset-6 {% endif %}">
+                        <!-- Cart Total Start -->
+                        <div class="cart--total {% if site.rtl %} rtl-direction {% endif %}">
+                            <div class="title">
+                                <h2 class="h4">{{ lang('cart.email') }}</h2>
+                            </div>
+
+                            <div class="table">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="email" name="OrderForm[email]" class="form-control" value="{{ cart.form.email }}" required>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Cart Total End -->
+                    </div>
+                </div>
+
+                <div class="row {% if site.rtl %} rtl-col-md-6 {% endif %}">
+                    <div class="col-md-6 col-md-push-6 cart-button__checkout">
+                        <button type="submit" id="orderButton" class="btn btn-default">{{ lang('cart.button.checkout') }}</button>
+                        <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+                    </div>
+                  <div class="col-md-6 col-md-pull-6 ">
+                        <a href="/" class="btn btn-default">{{ lang('cart.button.continue') }}</a>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</div>
+<!-- Cart Section End -->

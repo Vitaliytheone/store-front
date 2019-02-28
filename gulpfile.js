@@ -78,6 +78,17 @@ gulp.task('js-my', function (done) {
         .on('end', done);
 });
 
+gulp.task('js-cp', function (done) {
+    gulp.src([
+        './control_panel/web/themes/js/app/*.js',
+        './control_panel/web/themes/js/app/**/*.js',
+    ])
+        .pipe(concat('script.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./control_panel/web/themes/js'))
+        .on('end', done);
+});
+
 gulp.task('js', ['js-so', 'js-my']);
 
 gulp.task('default', [

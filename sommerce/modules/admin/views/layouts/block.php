@@ -4,23 +4,6 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use sommerce\assets\AdminAsset;
-use sommerce\assets\MetronicAsset;
-use sommerce\assets\JqueryUiAsset;
-use sommerce\assets\DragsortAsset;
-use sommerce\assets\ToastrAsset;
-use sommerce\assets\TextareaAutosizeAsset;
-use sommerce\assets\SwiperAsset;
-use sommerce\assets\RatingAsset;
-
-TextareaAutosizeAsset::register($this);
-AdminAsset::register($this);
-MetronicAsset::register($this);
-JqueryUiAsset::register($this);
-RatingAsset::register($this);
-DragsortAsset::register($this);
-SwiperAsset::register($this);
-ToastrAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>

@@ -1,0 +1,78 @@
+{% if block.reviews %}
+    <!-- Reviews Section Start -->
+    <div class="testimonial--section pd--80-0 bg--overlay-50" data-bg-img="/img/themes/seocrack/bg_block.jpg">
+        <div class="container">
+            <!-- Section Title Start -->
+            <div class="section--title {% if site.rtl %} rtl-direction {% endif %}">
+                <h2 class="h2">{{ block.reviews.header.title }}</h2>
+            </div>
+            <!-- Section Title End -->
+            {% if block.reviews.header.description %}
+                <!--Description Block Start-->
+                <div class="section--description {% if site.rtl %} rtl-direction {% endif %}">
+                    <p>{{ block.reviews.header.description }}</p>
+                </div>
+                <!--Description Block End-->
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <!-- Reviews Feedbacks Start -->
+                    <div class="testimonial--feedbacks">
+                        <!-- Reviews Clients Start -->
+                        <div class="testimonial--clients owl-carousel" data-owl-margin="60" data-owl-dots="true" data-owl-responsive='{"0": {"items": "1"}, "768": {"items": "{{ block.reviews.settings.column }}"}}' data-increment="1">
+                            {% for review in block.reviews.data %}
+                                <div class="item" data-target="#testimonialInfoTab{{ review.id }}">
+                                    <img src="{{ review.image }}" alt="{{ review.name }}" class="img-responsive">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <!-- Reviews Clients End -->
+
+                        <!-- Reviews Info Start -->
+                        <div class="testimonial--info">
+                            <!-- Tab Content Start -->
+                            <div class="tab-content">
+                                {% for review in block.reviews.data %}
+                                    <!-- Tab Pane Start -->
+                                    <div class="tab-pane {% if loop.first %} active {% endif %}" id="testimonialInfoTab{{ review.id }}">
+                                        <div class="item">
+                                            <div class="header">
+                                                <div class="title">
+                                                    <h3 class="h4">{{ review.name }}</h3>
+                                                </div>
+
+                                                <div class="sub-title">
+                                                    {% for i in 0..4 %}
+                                                        {% if i < review.rating %}
+                                                            <span class="fas fa-star"></span>
+                                                        {% else %}
+                                                            <span class="fal fa-star"></span>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+
+                                            </div>
+
+                                            <div class="body {% if site.rtl %} rtl-direction {% endif %}">
+                                                <blockquote>
+                                                    <p>{{ review.description }}</p>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Tab Pane End -->
+                                {% endfor %}
+                            </div>
+                            <!-- Tab Content End -->
+                        </div>
+                        <!-- Reviews Info End -->
+                    </div>
+                    <!-- Reviews Feedbacks End -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Reviews Section End -->
+{% endif %}

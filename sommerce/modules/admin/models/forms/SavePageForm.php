@@ -2,11 +2,11 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\PageFiles;
+use common\models\sommerce\PageFiles;
 use console\helpers\ConsoleHelper;
 use Yii;
-use common\models\store\Pages;
-use common\models\stores\Stores;
+use common\models\sommerce\Pages;
+use common\models\sommerces\Stores;
 use yii\base\Model;
 use yii\db\Transaction;
 

@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\Suborders;
-use common\models\stores\Stores;
-use common\models\stores\StoresSendOrders;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\Stores;
+use common\models\sommerces\StoresSendOrders;
 
 /**
  * Class StatusForm

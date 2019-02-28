@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\widgets\CustomLinkPager;
-use common\models\store\Payments;
+use common\models\sommerce\Payments;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */

@@ -163,8 +163,28 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Get rules
+     * Set rules
      * @param array $rules
+     */
+    public function setSommerceAccessRules($rules = [])
+    {
+        $this->rules = Json::encode(array_merge([
+            static::CAN_WORK_WITH_ORDERS => 0,
+            static::CAN_WORK_WITH_DOMAINS => 0,
+            static::CAN_WORK_WITH_SSL => 0,
+            static::CAN_WORK_WITH_CUSTOMERS => 0,
+            static::CAN_WORK_WITH_INVOICES => 0,
+            static::CAN_WORK_WITH_PAYMENTS => 0,
+            static::CAN_WORK_WITH_TICKETS => 0,
+            static::CAN_WORK_WITH_REPORTS => 0,
+            static::CAN_WORK_WITH_STAFFS => 0,
+            static::CAN_WORK_WITH_SETTINGS => 0,
+        ], $rules));
+    }
+
+    /**
+     * Get rules
+     * @return array
      */
     public function getAccessRules()
     {
@@ -185,7 +205,7 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
      * Get default rules
      * @return array
      */
-    public static function getDefaultRules()
+    public static function getDefaultRules(): array
     {
         return [
             static::CAN_WORK_WITH_PANELS => 1,
@@ -210,10 +230,29 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return array
+     */
+    public static function getSommerceDefaultRules(): array
+    {
+        return [
+            static::CAN_WORK_WITH_ORDERS => 1,
+            static::CAN_WORK_WITH_DOMAINS => 1,
+            static::CAN_WORK_WITH_SSL => 1,
+            static::CAN_WORK_WITH_CUSTOMERS => 1,
+            static::CAN_WORK_WITH_INVOICES => 1,
+            static::CAN_WORK_WITH_PAYMENTS => 1,
+            static::CAN_WORK_WITH_TICKETS => 1,
+            static::CAN_WORK_WITH_REPORTS => 1,
+            static::CAN_WORK_WITH_STAFFS => 1,
+            static::CAN_WORK_WITH_SETTINGS => 1,
+        ];
+    }
+
+    /**
      * Get rules labels
      * @return array
      */
-    public static function getRulesLabels()
+    public static function getRulesLabels(): array
     {
         return [
             static::CAN_WORK_WITH_PANELS => Yii::t('app', 'super_admin.can_work_with.panels'),
@@ -235,6 +274,17 @@ class SuperAdmin extends ActiveRecord implements IdentityInterface
             static::CAN_WORK_WITH_FRAUD => Yii::t('app', 'super_admin.can_work_with.fraud'),
             static::CAN_WORK_WITH_GATEWAYS => Yii::t('app', 'super_admin.can_work_with.gateways'),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSommerceRulesLabels(): array
+    {
+        $defaultRulesLabels = static::getRulesLabels();
+        $sommerceAccessRules = static::getSommerceDefaultRules();
+
+        return array_intersect_key($defaultRulesLabels, $sommerceAccessRules);
     }
 
     /**

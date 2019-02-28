@@ -11,15 +11,15 @@ use Stripe\Webhook as StripeWebhook;
 use Stripe\Error\SignatureVerification as StripeSignatureVerification;
 use sommerce\components\payments\BasePayment;
 use sommerce\helpers\AssetsHelper;
-use common\models\stores\Stores;
-use common\models\stores\PaymentMethods;
-use common\models\store\Checkouts;
-use common\models\store\Payments;
-use common\models\store\PaymentsLog;
+use common\models\sommerces\Stores;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerce\Checkouts;
+use common\models\sommerce\Payments;
+use common\models\sommerce\PaymentsLog;
 use yii\helpers\ArrayHelper;
 use UnexpectedValueException;
-use common\models\store\Carts;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerce\Carts;
+use common\models\sommerces\StorePaymentMethods;
 
 /**
  * Class Stripe

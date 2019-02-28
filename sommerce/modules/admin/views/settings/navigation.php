@@ -1,13 +1,10 @@
 <?php
 
-use sommerce\assets\NavigationAsset;
 use sommerce\modules\admin\components\Url;
 
 /* @var $this \yii\web\View */
 /* @var $linkTypes array */
 /* @var $navTree array */
-
-NavigationAsset::register($this);
 
 ?>
 

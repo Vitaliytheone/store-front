@@ -4,8 +4,8 @@ namespace sommerce\controllers;
 
 use common\components\ActiveForm;
 use common\components\filters\DisableCsrfToken;
-use common\models\store\Carts;
-use common\models\store\Packages;
+use common\models\sommerce\Carts;
+use common\models\sommerce\Packages;
 use sommerce\helpers\UserHelper;
 use sommerce\models\forms\AddToCartForm;
 use sommerce\models\forms\OrderForm;

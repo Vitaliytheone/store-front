@@ -1,10 +1,10 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreProviders;
-use common\models\stores\Stores;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\StoreProviders;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

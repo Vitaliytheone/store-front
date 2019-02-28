@@ -2,10 +2,10 @@
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
-use common\models\store\NotificationAdminEmails;
-use common\models\store\NotificationTemplates;
-use common\models\stores\NotificationDefaultTemplates;
-use common\models\stores\Stores;
+use common\models\sommerce\NotificationAdminEmails;
+use common\models\sommerce\NotificationTemplates;
+use common\models\sommerces\NotificationDefaultTemplates;
+use common\models\sommerces\Stores;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditAdminEmailForm;

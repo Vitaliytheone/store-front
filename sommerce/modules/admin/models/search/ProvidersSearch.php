@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\Providers;
-use common\models\stores\StoreProviders;
-use common\models\stores\Stores;
+use common\models\sommerces\Providers;
+use common\models\sommerces\StoreProviders;
+use common\models\sommerces\Stores;
 use yii\db\Query;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-use common\models\stores\StoreIntegrations;
+use common\models\sommerces\StoreIntegrations;
 use sommerce\modules\admin\widgets\IntegrationSettingsForm;
 use yii\helpers\Html;
 use my\helpers\Url;

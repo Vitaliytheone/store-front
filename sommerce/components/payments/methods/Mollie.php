@@ -3,12 +3,12 @@
 namespace sommerce\components\payments\methods;
 
 use Yii;
-use common\models\stores\PaymentMethods;
+use common\models\sommerces\PaymentMethods;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
-use common\models\store\Payments;
-use common\models\store\PaymentsLog;
-use common\models\store\Checkouts;
+use common\models\sommerce\Payments;
+use common\models\sommerce\PaymentsLog;
+use common\models\sommerce\Checkouts;
 use yii\helpers\ArrayHelper;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Exceptions\ApiException;
@@ -28,7 +28,7 @@ class Mollie extends BasePayment
 
     /**
      * Create checkout and redirect to Mollie pay site
-     * @param \common\models\stores\StorePaymentMethods $details
+     * @param \common\models\sommerces\StorePaymentMethods $details
      * @inheritdoc
      */
     public function checkout($checkout, $store, $email, $details)

@@ -47,7 +47,7 @@ $config = [
         ],
         'user' => [
             'class' => 'sommerce\modules\admin\components\CustomUser',
-            'identityClass' => 'common\models\stores\StoreAdminAuth',
+            'identityClass' => 'common\models\sommerces\StoreAdminAuth',
             'loginUrl' => '/admin',
             'enableSession' => true,
             'enableAutoLogin' => true,
@@ -87,7 +87,7 @@ $config = [
                 ],
                 'yii\web\YiiAsset' => [
                     'depends' => [
-                        'sommerce\assets\JqueryAsset'
+                        'sommerce\assets\AdminCustomJsAsset'
                     ]
                 ],
             ],
@@ -127,7 +127,7 @@ $config = [
             ],
         ],
         'store' => [
-            'class' => 'common\components\stores\StoreComponent'
+            'class' => 'common\components\sommerces\StoreComponent'
         ],
         'db' => $db['db'],
         'storeDb' => $db['storeDb'],

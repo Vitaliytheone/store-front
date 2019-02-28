@@ -2,10 +2,10 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\Languages;
-use common\models\store\Messages;
-use common\models\stores\StoreDefaultMessages;
-use common\models\stores\Stores;
+use common\models\sommerce\Languages;
+use common\models\sommerce\Messages;
+use common\models\sommerces\StoreDefaultMessages;
+use common\models\sommerces\Stores;
 use sommerce\modules\admin\helpers\LanguagesHelper;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
