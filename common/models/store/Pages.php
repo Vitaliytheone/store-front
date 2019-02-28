@@ -10,25 +10,57 @@ use common\models\store\queries\PagesQuery;
 /**
  * This is the model class for table "{{%pages}}".
  *
- * @property int $id
- * @property string $url
+ * @property integer $id
  * @property string $title
- * @property int $visibility
- * @property int $is_draft
- * @property string $twig editor twig source
- * @property string $json editor published json
- * @property string $json_draft editor unpublished json
- * @property int $created_at
- * @property int $updated_at
- * @property int $publish_at
+ * @property string $template
+ * @property integer $visibility
+ * @property string $content
+ * @property string $seo_title
+ * @property string $seo_description
+ * @property string $seo_keywords
+ * @property string $url
+ * @property bool $deleted
+ * @property integer $created_at
+ * @property integer $updated_at
+ * @property integer $is_default
  */
 class Pages extends ActiveRecord
 {
-    const VISIBILITY_ON = 1;
-    const VISIBILITY_OFF = 0;
+    const VISIBILITY_YES = 1;
+    const VISIBILITY_NO = 0;
 
-    const IS_DRAFT_ON = 1;
-    const IS_DRAFT_OFF = 0;
+    const DELETED_YES = 1;
+    const DELETED_NO = 0;
+
+    const TEMPLATE_INDEX = 'index';
+    const TEMPLATE_PRODUCT = 'product';
+    const TEMPLATE_ORDER = 'order';
+    const TEMPLATE_PAGE = 'page';
+    const TEMPLATE_CART = 'cart';
+    const TEMPLATE_404 = '404';
+    const TEMPLATE_CONTACT = 'contact';
+    const TEMPLATE_FILE = 'file';
+
+    const NEW_PAGE_URL_PREFIX = 'page-';
+
+    const DEFAULT_PAGE = 1;
+    const NOT_DEFAULT_PAGE = 0;
+
+    /**
+     * @return mixed
+     */
+    public static function getDb()
+    {
+        return Yii::$app->storeDb;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%pages}}';
+    }
 
     /**
      * @inheritdoc
@@ -53,19 +85,64 @@ class Pages extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * @param array|static $page
+     * @return bool
      */
-    public static function tableName()
+    public static function canDelete($page)
     {
-        return '{{%pages}}';
+        if ($page['is_default'] != static::DEFAULT_PAGE) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
-    public static function getDb()
+    public function afterSave($insert, $changedAttributes)
     {
-        return Yii::$app->storeDb;
+        if (parent::afterSave($insert, $changedAttributes)) {
+            return true;
+        }
+
+        // Update Nav URL if Page URL updated
+        if (array_key_exists('url', $changedAttributes)) {
+
+            $navModels = Navigation::findAll([
+                'link' => Navigation::LINK_PAGE,
+                'link_id' => $this->id,
+                'deleted' => Navigation::DELETED_NO,
+            ]);
+
+            foreach ($navModels as $navModel) {
+                $navModel->setAttribute('url', $this->url);
+                $navModel->save(false);
+            }
+        }
+
+        // Update Nav URL if Page Deleted or set Invisible
+        $setInvisible = array_key_exists('visibility', $changedAttributes) && ($this->visibility == self::VISIBILITY_NO);
+        $setDeleted = array_key_exists('deleted', $changedAttributes) && ($this->deleted == self::DELETED_YES);
+        if ($setInvisible || $setDeleted) {
+
+            $navModels = Navigation::findAll([
+                'link' => Navigation::LINK_PAGE,
+                'link_id' => $this->id,
+                'deleted' => Navigation::DELETED_NO,
+            ]);
+
+            foreach ($navModels as $navModel) {
+                $navModel->setAttributes([
+                    'url' => $this->url,
+                    'link' => Navigation::LINK_WEB_ADDRESS,
+                    'link_id' => null,
+                ]);
+                $navModel->save();
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -74,9 +151,12 @@ class Pages extends ActiveRecord
     public function rules()
     {
         return [
-            [['twig', 'json', 'json_draft'], 'string'],
-            [['visibility', 'is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
-            [['url', 'title'], 'string', 'max' => 300],
+            [['visibility', 'deleted', 'created_at', 'updated_at'], 'integer'],
+            [['content', 'template'], 'string'],
+            ['is_default', 'integer', ],
+            ['is_default', 'in', 'range' => [static::NOT_DEFAULT_PAGE, static::DEFAULT_PAGE]],
+            [['title', 'seo_title', 'url'], 'string', 'max' => 255],
+            [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
         ];
     }
 
@@ -87,17 +167,16 @@ class Pages extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'url' => Yii::t('app', 'Url'),
             'title' => Yii::t('app', 'Title'),
+            'template' => Yii::t('app', 'Template'),
             'visibility' => Yii::t('app', 'Visibility'),
-            'is_draft' => Yii::t('app', 'Is Draft'),
-            'twig' => Yii::t('app', 'Editor twig source'),
-            'styles' => Yii::t('app', 'Editor styles source'),
-            'json' => Yii::t('app', 'Editor published json'),
-            'json_draft' => Yii::t('app', 'Editor draft json'),
-            'created_at' => Yii::t('app', 'Created'),
-            'updated_at' => Yii::t('app', 'Updated'),
-            'publish_at' => Yii::t('app', 'Publish'),
+            'content' => Yii::t('app', 'Content'),
+            'seo_title' => Yii::t('app', 'Seo Title'),
+            'seo_description' => Yii::t('app', 'Seo Description'),
+            'seo_keywords' => Yii::t('app', 'Seo Keywords'),
+            'url' => Yii::t('app', 'Url'),
+            'deleted' => Yii::t('app', 'Deleted'),
+            'is_default' => Yii::t('app', 'Is Default'),
         ];
     }
 
@@ -111,39 +190,39 @@ class Pages extends ActiveRecord
     }
 
     /**
-     * Set json_draft field
-     * @param array $json
+     * Get available templates
+     * @return array
      */
-    public function setJsonDraft($json)
+    public static function getTemplates()
     {
-        $this->json_draft = json_encode($json, JSON_PRETTY_PRINT);
+        return [
+            static::TEMPLATE_ORDER,
+            static::TEMPLATE_CONTACT,
+            static::TEMPLATE_404,
+            static::TEMPLATE_CART,
+            static::TEMPLATE_INDEX,
+            static::TEMPLATE_PAGE,
+            static::TEMPLATE_PRODUCT,
+        ];
     }
 
     /**
-     * Get json_draft field
-     * @return array|mixed
+     * Virtual deleting page
+     * @return bool
      */
-    public function getJsonDraft()
+    public function deleteVirtual()
     {
-        return json_decode($this->json_draft, true);
-    }
+        if ($this->deleted == self::DELETED_YES) {
+            return false;
+        }
 
-    /**
-     * Set json_draft field
-     * @param array $json
-     */
-    public function setJson($json)
-    {
-        $this->json = json_encode($json, JSON_PRETTY_PRINT);
-    }
+        if ($this->is_default == static::DEFAULT_PAGE) {
+            return false;
+        }
 
-    /**
-     * Get json_draft field
-     * @return array|mixed
-     */
-    public function getJson()
-    {
-        return json_decode($this->json, true);
+        $this->setAttribute('deleted', self::DELETED_YES);
+
+        return $this->save(false);
     }
 
 }

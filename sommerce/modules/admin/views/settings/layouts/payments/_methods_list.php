@@ -2,10 +2,10 @@
 
 use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerces\StorePaymentMethods;
 
-/* @var $paymentMethods[]|\common\models\stores\StorePaymentMethods */
-/* @var $method \common\models\stores\StorePaymentMethods */
+/* @var $paymentMethods[]|\common\models\sommerces\StorePaymentMethods */
+/* @var $method \common\models\sommerces\StorePaymentMethods */
 /* @var $availableMethods array */
 
 $icons = StorePaymentMethods::getMethodIcon();

@@ -24,8 +24,6 @@ use common\models\store\queries\PackagesQuery;
  * @property string $provider_service
  * @property integer $deleted
  * @property integer $position
- * @property string $icon
- * @property string $properties
  *
  * @property Products $product
  * @property Suborders[] $suborders
@@ -66,8 +64,6 @@ class Packages extends ActiveRecord
             [['name', 'provider_service'], 'string', 'max' => 255],
             ['overflow', 'integer', 'min' => -100, 'max' => 100],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::class, 'targetAttribute' => ['product_id' => 'id']],
-            [['icon'], 'string', 'max' => 180],
-            ['properties', 'string'],
         ];
     }
 
@@ -91,8 +87,6 @@ class Packages extends ActiveRecord
             'provider_service' => Yii::t('app', 'Provider Service'),
             'deleted' => Yii::t('app', 'Deleted'),
             'position' => Yii::t('app', 'Position'),
-            'icon' => Yii::t('app', 'Icon'),
-            'properties' => Yii::t('admin', 'Properties'),
         ];
     }
 
@@ -175,21 +169,4 @@ class Packages extends ActiveRecord
         return true;
     }
 
-    /**
-     * Get properties
-     * @return mixed
-     */
-    public function getProperties()
-    {
-        return json_decode($this->properties, true);
-    }
-
-    /**
-     * Set properties
-     * @param $properties
-     */
-    public function setProperties($properties)
-    {
-        $this->properties = json_encode($properties);
-    }
 }

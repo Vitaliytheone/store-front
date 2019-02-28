@@ -3,8 +3,8 @@
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\ActiveForm;
-use common\models\store\ActivityLog;
-use common\models\stores\Stores;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\Stores;
 use sommerce\controllers\CommonController;
 use sommerce\helpers\BlockHelper;
 use sommerce\modules\admin\models\forms\BlockUploadForm;
@@ -113,7 +113,7 @@ trait BlocksTrait {
             throw new BadRequestHttpException('Ajax request expected!');
         }
 
-        /** @var \common\models\stores\StoreAdminAuth $identity */
+        /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
         $form = new UpdateBlocksForm();
@@ -237,7 +237,7 @@ trait BlocksTrait {
             throw new NotFoundHttpException();
         }
 
-        /** @var \common\models\stores\StoreAdminAuth $identity */
+        /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
         ActivityLog::log($identity, ActivityLog::E_SETTINGS_BLOCKS_BLOCK_ACTIVE_STATUS_CHANGED, $block->id, $block->code);

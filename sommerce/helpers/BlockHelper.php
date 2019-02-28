@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\helpers;
 
-use common\models\store\Blocks;
+use common\models\sommerce\Blocks;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;

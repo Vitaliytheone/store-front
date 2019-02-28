@@ -78,6 +78,16 @@ var tasks = {
             .pipe(uglify())
             .pipe(gulp.dest('./my/web/themes/js'))
             .on('end', done);
+    },
+    'js-cp' : function (done) {
+        gulp.src([
+            './control_panel/web/themes/js/app/*.js',
+            './control_panel/web/themes/js/app/**/*.js',
+        ])
+            .pipe(concat('script.js'))
+            .pipe(uglify())
+            .pipe(gulp.dest('./control_panel/web/themes/js'))
+            .on('end', done);
     }
 };
 
@@ -85,6 +95,9 @@ Object.keys(tasks).forEach(function(key) {
     gulp.task(key, tasks[key]);
 });
 
-gulp.task('js', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store'));
+gulp.task('js', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'js-cp'));
+
+
+gulp.task('js', ['js-so', 'js-my']);
 
 gulp.task('default', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'sass-admin-sommerce'));

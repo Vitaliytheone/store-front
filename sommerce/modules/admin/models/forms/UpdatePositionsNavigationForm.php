@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\store\Navigation;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Navigation;
+use common\models\sommerces\StoreAdminAuth;
 use yii\helpers\ArrayHelper;
 use yii\web\User;
 

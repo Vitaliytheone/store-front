@@ -91,7 +91,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
      */
     public static function getThemesPath()
     {
-        return Yii::getAlias('@sommerce') .  '/views/themes/default';
+        return Yii::getAlias('@store') .  '/views/themes/default';
     }
 
     /**
@@ -155,7 +155,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
             return false;
         }
 
-        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
+        ConsoleHelper::execConsoleCommand('system-store/generate-assets');
 
         return unlink($pathToFile);
     }

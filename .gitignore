@@ -38,12 +38,14 @@ phpunit.phar
 
 # Templates src
 /sommerce/web/src
+/store/web/src
 
 # Test debug files
 /my_test.php
 
 # Custom Themes folder
 /sommerce/views/themes/custom
+/store/views/themes/custom
 
 # panel/stores ssl-certificates folder
 /ssl

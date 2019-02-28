@@ -14,13 +14,18 @@ return [
     'storeNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
     'gatewayNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf
 
+    'sommerceNginxConfigPath' => '', // Путь к дирректории где будут храниться конфиги sommerce
+    'sommerceNginxDefaultConfigPath' => '', // Путь к дирректории где лежит файл default_config.conf sommerce
+
     'panelSqlPath' => Yii::getAlias('@sommerce/runtime/sql/panel_template.sql'), // Путь к дампу базы данных соззданной панели
     'storeSqlPath' => Yii::getAlias('@sommerce/runtime/sql/store_template.sql'), // Путь к дампу базы данных созданного магазина
-    'gatewaySqlPath' => Yii::getAlias('@sommerce/runtime/sql/gateway_template.sql'),
+    'gatewaySqlPath' => Yii::getAlias('@sommerce/runtime/sql/gateway_template.sql'), // Путь к дампу базы данных созданного гейта
+    'sommerceSqlPath' => Yii::getAlias('@sommerce/runtime/sql/sommerce_template.sql'), // Путь к дампу базы данных созданного sommerce
 
     'storeDefaultDatabase' => 'store_template', // Шаблонная база данных создаваемых магазинов
     'panelDefaultDatabase' => 'panel_template', // Шаблонная база данных создаваемых панелей
-    'gatewayDefaultDatabase' => 'gateway_template',
+    'gatewayDefaultDatabase' => 'gateway_template', // Шаблонная база данных создаваемых gateways
+    'sommerceDefaultDatabase' => 'sommerce_template', // Шаблонная база данных создаваемых sommerce
 
     'myUrl' => 'http://sommerce.my/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
@@ -51,6 +56,8 @@ return [
 
     'sommerce.twig.cachePath' => '@sommerce/runtime/twig/cache',
     'sommerce.assets.cachePath' => '@sommerce/web/assets',
+    'store.twig.cachePath' => '@store/runtime/twig/cache',
+    'store.assets.cachePath' => '@store/web/assets',
     'gateway.assets.cachePath' => '@gateway/web/assets',
     'my.assets.cachePath' => '@my/web/assets',
 

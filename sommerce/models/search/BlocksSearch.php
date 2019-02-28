@@ -2,9 +2,9 @@
 
 namespace sommerce\models\search;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use sommerce\helpers\BlockHelper;
-use common\models\store\Blocks;
+use common\models\sommerce\Blocks;
 
 /**
  * Class BlocksSearch

@@ -3,7 +3,7 @@
 namespace sommerce\models\search;
 
 use sommerce\models\forms\ProductViewForm;
-use common\models\store\Products;
+use common\models\sommerce\Products;
 use yii\helpers\Html;
 use yii\helpers\Url;
 

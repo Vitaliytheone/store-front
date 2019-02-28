@@ -20,7 +20,7 @@ use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
 use common\helpers\DnsHelper;
-use sommerce\helpers\StoreHelper;
+use store\helpers\StoreHelper;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
@@ -679,6 +679,7 @@ class Stores extends ActiveRecord implements ProjectInterface
 
     /**
      * Create nginx config
+     * @param bool $isSommerce
      * @return bool
      * @throws \Exception
      */

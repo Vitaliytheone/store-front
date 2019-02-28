@@ -54,6 +54,7 @@ class Orders extends ActiveRecord
     const ITEM_FREE_SSL = 9;
     const ITEM_PROLONGATION_FREE_SSL = 10;
     const ITEM_BUY_GATEWAY = 11;
+    const ITEM_BUY_SOMMERCE = 12;
 
 
     use UnixTimeFormatTrait;
@@ -170,6 +171,7 @@ class Orders extends ActiveRecord
             static::ITEM_FREE_SSL => Yii::t('app', 'orders.item.free_ssl'),
             static::ITEM_PROLONGATION_FREE_SSL => Yii::t('app', 'orders.item.prolongation_free_ssl'),
             static::ITEM_BUY_GATEWAY => Yii::t('app', 'orders.item.buy_gateway'),
+            static::ITEM_BUY_SOMMERCE => Yii::t('app', 'orders.item.buy_sommerce'),
         ];
     }
 

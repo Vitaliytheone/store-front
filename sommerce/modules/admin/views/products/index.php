@@ -5,7 +5,7 @@ use sommerce\assets\ProductsAsset;
 use yii\bootstrap\Html;
 
 /* @var $this yii\web\View */
-/* @var $store \common\models\stores\Stores */
+/* @var $store \common\models\sommerces\Stores */
 /* @var $storeProviders array */
 /** @var $products array  Products with packages array */
 

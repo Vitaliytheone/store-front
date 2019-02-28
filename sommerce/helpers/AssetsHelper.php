@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\helpers;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\helpers\ArrayHelper;
 

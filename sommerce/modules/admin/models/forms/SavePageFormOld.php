@@ -1,7 +1,7 @@
 <?php
 
 namespace sommerce\modules\admin\models\forms;
-use common\models\store\PagesOld;
+use common\models\sommerce\PagesOld;
 
 class SavePageFormOld extends EditPageFormOld
 {

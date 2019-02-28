@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use common\models\store\PagesOld;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerce\PagesOld;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
 use yii\web\User;

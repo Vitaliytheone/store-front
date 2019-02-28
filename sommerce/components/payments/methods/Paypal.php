@@ -2,12 +2,12 @@
 
 namespace sommerce\components\payments\methods;
 
-use common\models\store\Checkouts;
-use common\models\store\Payments;
-use common\models\store\PaymentsLog;
-use common\models\stores\PaymentMethods;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerce\Checkouts;
+use common\models\sommerce\Payments;
+use common\models\sommerce\PaymentsLog;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
 use Yii;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;

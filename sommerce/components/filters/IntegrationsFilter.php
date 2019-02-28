@@ -2,9 +2,9 @@
 
 namespace sommerce\components\filters;
 
-use common\models\stores\Integrations;
-use common\models\stores\StoreIntegrations;
-use common\models\stores\Stores;
+use common\models\sommerces\Integrations;
+use common\models\sommerces\StoreIntegrations;
+use common\models\sommerces\Stores;
 use sommerce\components\integrations\IntegrationsFactory;
 use sommerce\widgets\AnalyticsWidget;
 use sommerce\widgets\ChatsWidget;

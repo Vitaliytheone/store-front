@@ -3,8 +3,8 @@
 namespace sommerce\models\forms;
 
 use yii\behaviors\AttributeBehavior;
-use common\models\store\Packages;
-use common\models\store\Products;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Products;
 
 /**
  * Class ProductViewForm

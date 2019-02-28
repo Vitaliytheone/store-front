@@ -2,9 +2,9 @@
 
 namespace sommerce\components\validators;
 
-use common\models\store\Packages;
-use common\models\stores\LinkValidations;
-use common\models\stores\Stores;
+use common\models\sommerce\Packages;
+use common\models\sommerces\LinkValidations;
+use common\models\sommerces\Stores;
 use sommerce\helpers\LinkTypeHelper;
 use yii\helpers\ArrayHelper;
 use yii\validators\Validator;

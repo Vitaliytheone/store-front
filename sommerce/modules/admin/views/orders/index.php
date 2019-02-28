@@ -6,7 +6,7 @@ use yii\helpers\ArrayHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\widgets\CustomLinkPager;
 use sommerce\assets\OrdersAsset;
-use common\models\store\Suborders;
+use common\models\sommerce\Suborders;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider yii\data\ActiveDataProvider */

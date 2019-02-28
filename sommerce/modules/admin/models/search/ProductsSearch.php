@@ -2,15 +2,15 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\StoreProviders;
-use common\models\stores\Stores;
+use common\models\sommerces\StoreProviders;
+use common\models\sommerces\Stores;
 use yii;
 use yii\db\Query;
 use common\helpers\DbHelper;
 use yii\base\Model;
-use common\models\store\Products;
-use common\models\store\Packages;
-use common\models\stores\Providers;
+use common\models\sommerce\Products;
+use common\models\sommerce\Packages;
+use common\models\sommerces\Providers;
 use yii\helpers\ArrayHelper;
 
 /**

@@ -4,7 +4,7 @@
 /* @var $integrations array */
 
 use my\helpers\SpecialCharsHelper;
-use common\models\stores\Integrations;
+use common\models\sommerces\Integrations;
 use my\helpers\Url;
 
 ?>

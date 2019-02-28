@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerces\StoreAdminAuth;
 use sommerce\components\filters\ApiAuthFilter;
 use Yii;
 use sommerce\controllers\CommonController;

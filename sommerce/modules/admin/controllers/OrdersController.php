@@ -3,9 +3,9 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\events\Events;
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\Stores;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\Stores;
 use sommerce\helpers\UiHelper;
 use Yii;
 use sommerce\modules\admin\components\Url;

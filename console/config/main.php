@@ -20,8 +20,14 @@ $config = [
 
         'migrate-sommerce' => [
             'class' => 'console\controllers\sommerce\CustomMigrateController',
-            'migrationTable' => DB_STORES . '.system_migrations',
+            'migrationTable' => DB_SOMMERCES . '.system_migrations',
             'migrationPath' => '@common/migrations/sommerce/',
+        ],
+
+        'migrate-store' => [
+            'class' => 'console\controllers\store\CustomMigrateController',
+            'migrationTable' => DB_STORES . '.system_migrations',
+            'migrationPath' => '@common/migrations/stores/',
         ],
 
         'migrate-gateway' => [
@@ -54,6 +60,18 @@ $config = [
             'class' => 'console\controllers\sommerce\BlocksController',
         ],
 
+        'cron-store' => [
+            'class' => 'console\controllers\store\CronController',
+        ],
+
+        'system-store' => [
+            'class' => 'console\controllers\store\SystemController',
+        ],
+
+        'blocks-store' => [
+            'class' => 'console\controllers\store\BlocksController',
+        ],
+
         'system-my' => [
             'class' => 'console\controllers\my\SystemController',
         ],
@@ -73,6 +91,18 @@ $config = [
         'system-gateway' => [
             'class' => 'console\controllers\gateway\SystemController',
         ],
+
+        'system-control-panel' => [
+            'class' => 'console\controllers\control_panel\SystemController',
+        ],
+
+        'cron-control-panel' => [
+            'class' => 'console\controllers\control_panel\CronController',
+        ],
+
+        'template-control-panel' => [
+            'class' => 'console\controllers\control_panel\TemplateController',
+        ],
     ],
     'components' => [
         'log' => [
@@ -84,9 +114,14 @@ $config = [
             ],
         ],
 
+        'sommerce' => [
+            'class' => 'common\components\sommerce\SommerceComponent'
+        ],
+
         'store' => [
             'class' => 'common\components\stores\StoreComponent'
         ],
+
         'gateway' => [
             'class' => 'common\components\gateways\GatewayComponent'
         ],
