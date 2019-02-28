@@ -6,7 +6,6 @@ use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
 use sommerce\helpers\AssetsHelper;
 use sommerce\models\search\CartSearch;
-use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\helpers\LanguagesHelper;
 use Yii;
@@ -150,15 +149,12 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
-        $search =  new NavigationSearch();
-        $search->setStore($this->store);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'page' => [
                 'title' => $this->pageTitle ?: $this->store->seo_title,
-                'menu' => $search->getSiteMenuTree(Yii::$app->request->url),
                 'cart' => [
                     'item_count' => (int)(new CartSearch())->setStore($this->store)->getCount(),
                 ],

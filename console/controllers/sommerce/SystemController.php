@@ -808,11 +808,11 @@ class SystemController extends CustomController
     }
 
     /**
-     * Update 'pages' table to new version
+     * Update Sommerce tables to new version
      * @return string
      * @throws Exception
      */
-    public function actionUpdatePages(): string
+    public function actionUpdateSommerceTable(): string
     {
         $stores = (new Query())
             ->select('db_name')
@@ -836,12 +836,15 @@ class SystemController extends CustomController
             ALTER TABLE `pages` ADD `seo_keywords` VARCHAR(2000) NULL DEFAULT NULL AFTER `seo_description`;
             ALTER TABLE `pages` ADD `name` VARCHAR(300) NOT NULL AFTER `id`;
             ALTER TABLE `pages` CHANGE `title` `seo_title` varchar(300) NULL;
+            ALTER TABLE `suborders` CHANGE `amount` `amount` DECIMAL(20,2) NULL DEFAULT NULL;
+            ALTER TABLE `payments` CHANGE `amount` `amount` DECIMAL(20,2) NULL DEFAULT NULL;
+            ALTER TABLE `payments` CHANGE `fee` `fee` DECIMAL(20,2) NULL DEFAULT \'0.00\';
         ')->execute();
-            $this->stdout("Apply changes to {$store['db_name']}.pages table\n");
+            $this->stdout("Apply changes to {$store['db_name']} tables\n");
             $count++;
         }
 
-        return $this->stdout("SUCCESS update pages in {$count} db\n", Console::FG_GREEN);
+        return $this->stdout("SUCCESS update tables in {$count} db\n", Console::FG_GREEN);
     }
 
 }

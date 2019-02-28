@@ -1,12 +1,11 @@
 <?php
 namespace sommerce\helpers;
 
-use common\models\sommerce\PagesOld;
+use common\helpers\CurrencyHelper;
 use common\models\sommerce\Pages;
 use common\models\sommerce\Products;
-use Yii;
-use common\helpers\CurrencyHelper;
 use common\models\sommerces\Stores;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**

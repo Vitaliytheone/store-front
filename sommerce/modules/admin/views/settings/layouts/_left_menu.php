@@ -2,7 +2,8 @@
     /* @var $this \yii\web\View */
     /* @var $active string */
 
-    use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\components\Url;
+
 ?>
 <!-- BEGIN: Aside Menu -->
 <div
@@ -51,14 +52,6 @@
                 <i class="m-nav__link-icon flaticon-list-1"></i>
                 <span class="m-nav__link-text">
                     <?= Yii::t('admin', 'settings.left_menu_navigation') ?>
-                </span>
-            </a>
-        </li>
-        <li class="m-nav__item <?=('pages' == $active ? 'm-nav__item--active' : '') ?>">
-            <a href="<?= Url::toRoute('/settings/pages')?>" class="m-nav__link">
-                <i class="m-nav__link-icon icon-docs"></i>
-                <span class="m-nav__link-text">
-                    <?= Yii::t('admin', 'settings.left_menu_pages') ?>
                 </span>
             </a>
         </li>
