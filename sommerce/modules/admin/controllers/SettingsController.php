@@ -134,7 +134,6 @@ class SettingsController extends CustomController
 
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
-        $storeForm->setUser(Yii::$app->user);
         /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
         $storeForm->setUser($identity);

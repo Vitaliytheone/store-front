@@ -1,6 +1,6 @@
 <?php
     /* @var $this \yii\web\View */
-    /* @var $user \common\models\panels\Customers */
+    /* @var $user \common\models\sommerces\Customers */
 
     use yii\bootstrap\Html;
     use control_panel\widgets\UnreadMessagesWidget;

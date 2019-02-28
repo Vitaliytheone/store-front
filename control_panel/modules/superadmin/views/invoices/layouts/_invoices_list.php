@@ -6,7 +6,7 @@
     use control_panel\helpers\Url;
     use yii\helpers\Html;
     use yii\widgets\LinkPager;
-    use common\models\panels\Invoices;
+    use common\models\sommerces\Invoices;
     use control_panel\helpers\PriceHelper;
     use control_panel\helpers\SpecialCharsHelper;
 ?>

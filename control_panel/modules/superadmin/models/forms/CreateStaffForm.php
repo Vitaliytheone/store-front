@@ -2,7 +2,7 @@
 namespace superadmin\models\forms;
 
 use Yii;
-use common\models\panels\SuperAdmin;
+use common\models\sommerces\SuperAdmin;
 use yii\base\Model;
 
 /**

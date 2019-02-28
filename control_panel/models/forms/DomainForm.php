@@ -6,14 +6,14 @@ use control_panel\components\validators\OrderDomainValidator;
 use yii\base\Model;
 use Yii;
 use control_panel\components\validators\OrderLimitValidator;
-use common\models\panels\Invoices;
-use common\models\panels\DomainZones;
+use common\models\sommerces\Invoices;
+use common\models\sommerces\DomainZones;
 use control_panel\helpers\DomainsHelper;
-use common\models\panels\Orders;
-use common\models\panels\InvoiceDetails;
-use common\models\panels\MyActivityLog;
+use common\models\sommerces\Orders;
+use common\models\sommerces\InvoiceDetails;
+use common\models\sommerces\MyActivityLog;
 use control_panel\helpers\UserHelper;
-use common\models\panels\Auth;
+use common\models\sommerces\Auth;
 use yii\helpers\ArrayHelper;
 
 /**

@@ -1,7 +1,7 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\panels\Content;
+use common\models\sommerces\Content;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

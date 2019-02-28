@@ -13,6 +13,8 @@ use sommerce\modules\admin\models\forms\ImageUploadForm;
 use sommerce\modules\admin\models\forms\SavePackageForm;
 use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\forms\SaveProductForm;
+use sommerce\modules\admin\models\search\PagesOldSearch;
+use sommerce\modules\admin\models\search\PagesSearch;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
@@ -28,10 +30,28 @@ use yii\web\NotFoundHttpException;
 trait PagesTrait {
 
     /**
+     * Settings pages
+     * @return string
+     */
+    public function actionPages()
+    {
+        $this->view->title = Yii::t('admin', "settings.pages_page_title");
+        $this->addModule('adminPages');
+        $search = new PagesSearch();
+        $search->setStore($this->store);
+        $pages = $search->searchPages();
+
+        return $this->render('pages', [
+            'pages' => $pages,
+        ]);
+    }
+
+    /**
      * Initialize Pages ReactJs app
      * /admin/settings/edit-page
      * @param int $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionEditPage($id)
     {
@@ -86,7 +106,7 @@ trait PagesTrait {
         $pages = Pages::find()
             ->select([
                 'id' => 'id',
-                'title' => 'title',
+                'title' => 'seo_title',
                 'url' => 'url',
             ])
             ->asArray()

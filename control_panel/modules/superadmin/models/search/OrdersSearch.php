@@ -2,8 +2,8 @@
 
 namespace superadmin\models\search;
 
-use common\models\panels\InvoiceDetails;
-use common\models\panels\Orders;
+use common\models\sommerces\InvoiceDetails;
+use common\models\sommerces\Orders;
 use control_panel\helpers\DomainsHelper;
 use yii\data\Pagination;
 use yii\db\Query;

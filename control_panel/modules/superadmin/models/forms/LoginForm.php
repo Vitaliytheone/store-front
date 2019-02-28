@@ -2,9 +2,9 @@
 
 namespace superadmin\models\forms;
 
-use common\models\panels\AuthFails;
-use common\models\panels\SuperAdmin;
-use common\models\panels\SuperLog;
+use common\models\sommerces\AuthFails;
+use common\models\sommerces\SuperAdmin;
+use common\models\sommerces\SuperLog;
 use Yii;
 use yii\base\Model;
 use himiklab\yii2\recaptcha\ReCaptchaValidator;

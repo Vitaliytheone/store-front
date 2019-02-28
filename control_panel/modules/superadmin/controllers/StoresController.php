@@ -2,8 +2,8 @@
 
 namespace superadmin\controllers;
 
-use common\models\panels\SuperAdmin;
-use common\models\panels\SuperAdminToken;
+use common\models\sommerces\SuperAdmin;
+use common\models\sommerces\SuperAdminToken;
 use control_panel\components\SuperAccessControl;
 use common\models\sommerces\Stores;
 use control_panel\components\ActiveForm;

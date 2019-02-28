@@ -1,12 +1,12 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\panels\Customers;
-use common\models\panels\Invoices;
-use common\models\panels\ReferralEarnings;
+use common\models\sommerces\Customers;
+use common\models\sommerces\Invoices;
+use common\models\sommerces\ReferralEarnings;
 use Yii;
 use yii\base\Model;
-use common\models\panels\SuperCreditsLog;
+use common\models\sommerces\SuperCreditsLog;
 
 /**
  * Class EditInvoiceCreditForm
