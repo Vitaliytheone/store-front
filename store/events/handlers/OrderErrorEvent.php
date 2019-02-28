@@ -1,17 +1,17 @@
 <?php
-namespace common\events\store;
+namespace store\events\handlers;
 
-use common\mail\mailers\store\OrderMailer;
+use common\mail\mailers\store\OrderAdminMailer;
 use common\models\store\Suborders;
 use common\models\stores\NotificationDefaultTemplates;
 use common\models\stores\Stores;
 use Yii;
 
 /**
- * Class OrderCompletedEvent
- * @package common\events\store
+ * Class OrderErrorEvent
+ * @package store\events\handlers
  */
-class OrderCompletedEvent extends BaseOrderEvent {
+class OrderErrorEvent extends BaseOrderEvent {
 
     /**
      * @var Suborders
@@ -19,7 +19,7 @@ class OrderCompletedEvent extends BaseOrderEvent {
     protected $_suborder;
 
     /**
-     * OrderCompletedEvent constructor.
+     * OrderErrorEvent constructor.
      * @param integer $storeId
      * @param integer $suborderId
      */
@@ -34,13 +34,13 @@ class OrderCompletedEvent extends BaseOrderEvent {
 
         Yii::$app->store->setInstance($this->_store);
 
-        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_COMPLETED)) {
+        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_ERROR)) {
             return;
         }
 
         $this->_suborder = Suborders::findOne([
             'id' => $suborderId,
-            'status' => Suborders::STATUS_COMPLETED
+            'status' => Suborders::STATUS_ERROR
         ]);
 
         if (empty($this->_suborder)) {
@@ -49,7 +49,6 @@ class OrderCompletedEvent extends BaseOrderEvent {
         }
 
         $this->_order = $this->_suborder->order;
-
     }
 
     /**
@@ -58,24 +57,22 @@ class OrderCompletedEvent extends BaseOrderEvent {
      */
     public function run():void
     {
-        if (!$this->_suborder
-            || Suborders::find()
-            ->andWhere('status <> ' . Suborders::STATUS_COMPLETED)
-            ->andWhere([
-                'order_id' => $this->_suborder->order_id,
-            ])->exists()) {
+        if (!$this->_suborder || Suborders::find()->andWhere([
+            'order_id' => $this->_suborder->order_id,
+            'status' => Suborders::STATUS_ERROR
+        ])->exists()) {
             return;
         }
 
-        $this->customerNotify();
+        $this->adminNotify();
     }
 
     /**
-     * Send notification to customer
+     * Send notification to store admins
      */
-    protected function customerNotify()
+    protected function adminNotify()
     {
-        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_COMPLETED))) {
+        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_ERROR))) {
             return;
         }
 
@@ -84,12 +81,21 @@ class OrderCompletedEvent extends BaseOrderEvent {
             return;
         }
 
-        $mailer = new OrderMailer([
-            'to' => $this->_order->customer,
-            'order' => $this->_order,
-            'template' => $template,
-            'store' => $this->_store,
-        ]);
-        $mailer->send();
+        // Берем активных админов
+        $adminEmails = $this->getAdmins();
+
+        if (empty($adminEmails)) {
+            return;
+        }
+
+        foreach ($adminEmails as $adminEmail) {
+            $mailer = new OrderAdminMailer([
+                'to' => $adminEmail->email,
+                'order' => $this->_order,
+                'template' => $template,
+                'store' => $this->_store,
+            ]);
+            $mailer->send();
+        }
     }
 }

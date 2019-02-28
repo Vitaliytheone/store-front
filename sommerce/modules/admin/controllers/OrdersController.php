@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\events\Events;
+use sommerce\events\Events;
 use common\models\sommerce\ActivityLog;
 use common\models\sommerces\StoreAdminAuth;
 use common\models\sommerces\Stores;
@@ -112,7 +112,7 @@ class OrdersController extends CustomController
             $this->redirect(Url::toRoute(["/orders"]));
         }
 
-        Events::add(Events::EVENT_STORE_ORDER_CHANGED_STATUS, [
+        Events::add(Events::EVENT_SOMMERCE_ORDER_CHANGED_STATUS, [
             'suborderId' => $id,
             'storeId' => $this->store->id,
             'status' => $status

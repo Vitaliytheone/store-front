@@ -1,13 +1,13 @@
 <?php
-namespace common\events\store;
+namespace sommerce\events\handlers;
 
-use common\events\Events;
-use common\models\store\Suborders;
+use sommerce\events\Events;
+use common\models\sommerce\Suborders;
 use Yii;
 
 /**
  * Class OrderChangedStatusEvent
- * @package common\events\store
+ * @package sommerce\events\handlers
  */
 class OrderChangedStatusEvent extends BaseOrderEvent {
 
@@ -53,22 +53,22 @@ class OrderChangedStatusEvent extends BaseOrderEvent {
         switch ($this->_status) {
             case Suborders::STATUS_IN_PROGRESS:
                 // Event in progress order
-                Events::add(Events::EVENT_STORE_ORDER_IN_PROGRESS, $data);
+                Events::add(Events::EVENT_SOMMERCE_ORDER_IN_PROGRESS, $data);
             break;
 
             case Suborders::STATUS_COMPLETED:
                 // Event completed order
-                Events::add(Events::EVENT_STORE_ORDER_COMPLETED, $data);
+                Events::add(Events::EVENT_SOMMERCE_ORDER_COMPLETED, $data);
             break;
 
             case Suborders::STATUS_ERROR:
                 // Event error order
-                Events::add(Events::EVENT_STORE_ORDER_ERROR, $data);
+                Events::add(Events::EVENT_SOMMERCE_ORDER_ERROR, $data);
             break;
 
             case Suborders::STATUS_FAILED:
                 // Event fail order
-                Events::add(Events::EVENT_STORE_ORDER_FAIL, $data);
+                Events::add(Events::EVENT_SOMMERCE_ORDER_FAIL, $data);
             break;
         }
     }

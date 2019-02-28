@@ -1,17 +1,17 @@
 <?php
-namespace common\events\store;
+namespace sommerce\events\handlers;
 
 use common\mail\mailers\store\OrderAdminMailer;
-use common\models\store\Suborders;
-use common\models\stores\NotificationDefaultTemplates;
-use common\models\stores\Stores;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\NotificationDefaultTemplates;
+use common\models\sommerces\Stores;
 use Yii;
 
 /**
- * Class OrderErrorEvent
- * @package common\events\store
+ * Class OrderFailEvent
+ * @package sommerce\events\handlers
  */
-class OrderErrorEvent extends BaseOrderEvent {
+class OrderFailEvent extends BaseOrderEvent {
 
     /**
      * @var Suborders
@@ -34,13 +34,13 @@ class OrderErrorEvent extends BaseOrderEvent {
 
         Yii::$app->store->setInstance($this->_store);
 
-        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_ERROR)) {
+        if (!static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_FAIL)) {
             return;
         }
 
         $this->_suborder = Suborders::findOne([
             'id' => $suborderId,
-            'status' => Suborders::STATUS_ERROR
+            'status' => Suborders::STATUS_FAILED
         ]);
 
         if (empty($this->_suborder)) {
@@ -49,6 +49,7 @@ class OrderErrorEvent extends BaseOrderEvent {
         }
 
         $this->_order = $this->_suborder->order;
+
     }
 
     /**
@@ -58,9 +59,9 @@ class OrderErrorEvent extends BaseOrderEvent {
     public function run():void
     {
         if (!$this->_suborder || Suborders::find()->andWhere([
-            'order_id' => $this->_suborder->order_id,
-            'status' => Suborders::STATUS_ERROR
-        ])->exists()) {
+                'order_id' => $this->_suborder->order_id,
+                'status' => Suborders::STATUS_FAILED
+            ])->andWhere('id <> ' . $this->_suborder->id)->exists()) {
             return;
         }
 
@@ -72,7 +73,7 @@ class OrderErrorEvent extends BaseOrderEvent {
      */
     protected function adminNotify()
     {
-        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_ERROR))) {
+        if (!($template = static::getTemplate(NotificationDefaultTemplates::CODE_ORDER_FAIL))) {
             return;
         }
 

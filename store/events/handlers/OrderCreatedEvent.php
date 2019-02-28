@@ -1,5 +1,5 @@
 <?php
-namespace common\events\store;
+namespace store\events\handlers;
 
 use common\mail\mailers\store\OrderAdminMailer;
 use common\mail\mailers\store\OrderWithItemsMailer;
@@ -13,7 +13,7 @@ use Yii;
 
 /**
  * Class OrderCreatedEvent
- * @package common\events\store
+ * @package store\events\handlers
  */
 class OrderCreatedEvent extends BaseOrderEvent {
 
