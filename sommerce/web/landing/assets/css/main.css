@@ -7,10 +7,6 @@
 
     }
 
-    .plus {
-        background-image: url("../img/lp-sources/ic-other/plus.svg");
-    }
-
     #started p {
         text-align: center; 
         position: relative;
@@ -46,10 +42,17 @@
     background-color: #ffffff;
     }
 
+
+    .nav li {
+        padding-right: 30px;
+    }
+
+    
     .navbar-brand {
         font-size: 24px;
         font-weight: bold;
         color:#312e55;
+        padding-right: 50px;
     }
 
     .notify-button {
@@ -99,6 +102,7 @@
     #pricing {
         margin-top: 200px;
         background-image: linear-gradient(245deg, #ada0f8, #7765d6), url("../img/lp-sources/illustrations/demo.svg");
+        position: relative;
     }
 
     .notify-me {
@@ -113,6 +117,7 @@
     font-weight: 600;
     line-height: 1.71;
     color: white !important;
+    cursor: pointer
     }
 
     .price div {
@@ -135,14 +140,18 @@
     color: #ffcedb;
     }
 
-    .demo-container {
+    /* .demo-container {
         position: relative;
-    }
+    } */
 
-    .corner-gradient {
+    /* .corner-gradient {
         position: absolute;
+        left: 420px;
+        right: 5;
+        bottom: 0;
+        top: 640px;
+    } */
 
-    }
 
     .sommerce-demo {
         padding-top: 80px;
@@ -202,6 +211,8 @@
     letter-spacing: normal;
     text-align: center;
     color: #ffffff;
+    text-decoration: none !important;
+    cursor: pointer;
     }
 
     .admin-button { 
@@ -216,20 +227,27 @@
     letter-spacing: normal;
     text-align: center;
     color: #7765d6;
+    cursor: pointer;
+    text-decoration: none !important;
     }
 
     .corner{
+        display: flex;
+        justify-content: space-between;
         position: absolute;
         /* width: 200px;
         height: 200px; */
-        top: 332px;
-        left: 300px;
-        right: 0;
+        left: 0;
         bottom: 0;
+        width: 100%;
+        height: 86px;
+ 
     }
 
     .corner-white {
         background-color: white;
+        /* height: 86px; */
+        width: 100%;
     }
 
 
@@ -252,18 +270,43 @@
     }
 
     /* FAQ */
+
     #faq {
-    margin-bottom: 30px;
+        margin-bottom: 30px;
     }
 
     .faq-container {
         width: 350px;
     }
 
+    .hello-sommerce {
+        position: relative;
+    }
+
+    .arrow-hello {
+        position: absolute;
+        left: 210px;
+    }
+
     .hello {
         padding-bottom: 3px;
         padding-right: 5px;
-        border-bottom: 1px solid lightgrey
+        border-bottom: 1px solid lightgrey !important;
+        font-size: 16px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: #7765d6;
+    }
+
+    .hello-faq-button {
+        border: 0px;
+        outline: none;
+        background-color: white;
+        padding-left: 0px;
+        cursor: pointer;
     }
 
     .faq-container h1 {
@@ -276,7 +319,7 @@
         padding-top: 20px;
     }
 
-    .toggle a {
+    .toggle .plus {
         display: block;
         background-image: url("../img/lp-sources/ic-other/plus.svg");
         width: 24px;
@@ -284,7 +327,16 @@
         text-decoration: none;
     }
 
-    /* Footer */
+    /* .collapse div{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    } */
+    .collapse-container {
+       padding-top: 10px;
+       padding-bottom: 5px;
+       width: 500px;
+    }
+  /* Footer */
 
     #footer {
         background-color: #312e55;
@@ -355,8 +407,15 @@
         background-image: url("../img/lp-sources/illustrations/mail.svg");  
         background-repeat: no-repeat;
         background-position: top right;
-        
     }
+
+.hello-button {
+    border: 0px;
+    outline: none;
+    background-color: #312e55;
+    padding-left: 0px;
+    cursor: pointer;
+}
     /* f-top {
         height: 316px;
     }
@@ -364,3 +423,7 @@
     f-bottom {
         height: 288px;
     } */
+
+    .new2 {
+        text-decoration: none;
+    }
