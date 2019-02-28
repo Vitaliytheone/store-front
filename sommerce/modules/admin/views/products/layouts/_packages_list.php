@@ -11,9 +11,9 @@ use yii\helpers\ArrayHelper;
 <table class="sommerce-products-editor__packages-table">
     <thead>
     <tr>
-        <th class="sommerce-products-editor__table-th-name">Name</th>
-        <th>Provider</th>
-        <th>Price</th>
+        <th class="sommerce-products-editor__table-th-name"><?= Yii::t('admin', 'products.packages.column.name') ?></th>
+        <th><?= Yii::t('admin', 'products.packages.column.provider') ?></th>
+        <th><?= Yii::t('admin', 'products.packages.column.price') ?></th>
         <th class="sommerce-products-editor__table-th-actions"></th>
     </tr>
     </thead>

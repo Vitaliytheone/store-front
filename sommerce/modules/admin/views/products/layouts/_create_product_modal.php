@@ -50,7 +50,7 @@ $model->setStore($store);
                             <?= $model->getAttributeLabel('create_page')?>
                         </div>
                         <div class="sommerce-create-product__url">
-                            <?= $model->getStore()->getSite() ?>/<span class="page-url"></span>
+                            <?= $model->getStore()->getSite() ?>/<span id="createPageUrl"></span>
                         </div>
                         <div class="sommerce-create-product__switch">
 

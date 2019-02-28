@@ -8191,7 +8191,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
-    background-image: url("../img/product/drag.svg");
+    background-image: url("/img/product/drag.svg");
     display: inline-block;
     vertical-align: middle;
     cursor: pointer; }
@@ -8219,7 +8219,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
-    background-image: url("../img/product/drag.svg");
+    background-image: url("/img/product/drag.svg");
     display: inline-block;
     cursor: pointer;
     vertical-align: -3px;

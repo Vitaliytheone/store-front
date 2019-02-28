@@ -42,3 +42,7 @@ ProductsAsset::register($this);
 <?= $this->render('layouts/_create_product_modal', [
     'store' => $store,
 ]) ?>
+
+<?= $this->render('layouts/_edit_product_modal', [
+    'store' => $store,
+]) ?>

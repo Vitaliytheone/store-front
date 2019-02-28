@@ -157,6 +157,14 @@ return [
     'products.create_product.create_page' => 'Create new product page',
     'products.create_product.url' => 'Url',
     'products.edit_product.name' => 'Product name',
+    'products.duplicate_package' => 'Duplicate',
+    'products.packages.column.name' => 'Name',
+    'products.packages.column.provider' => 'Provider',
+    'products.packages.column.price' => 'Price',
+
+    'products.edit_product.header' => 'Edit product',
+    'products.edit_product.cancel_btn' => 'Cancel',
+    'products.edit_product.submit_btn' => 'Save changes',
 
     'products.product_properties_copy' => ' Copy properties',
     'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',

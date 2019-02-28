@@ -19,10 +19,12 @@ use yii\helpers\ArrayHelper;
                     <div class="sommerce-products-editor__product-name <?= (!$product['visibility'] ? 'disabled-product-item' : '') ?>">
                         <?= Html::encode($product['name']) ?>
                         <?= Html::a(Yii::t('admin', 'products.edit_product'), Url::to(['products/update-product', 'id' => $product['id']]), [
-                            'class' => 'sommerce-products-editor__product-edit',
+                            'class' => 'sommerce-products-editor__product-edit edit-product',
                             'data' => [
-                                'id' => $product['id'],
-                                'name' => $product['name'],
+                                'details' => [
+                                    'id' => $product['id'],
+                                    'name' => $product['name'],
+                                ]
                             ],
                         ])?>
                     </div>
