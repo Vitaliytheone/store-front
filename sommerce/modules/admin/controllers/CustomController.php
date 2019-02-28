@@ -57,6 +57,7 @@ class CustomController extends AdminController
         $this->addModule('adminLayout');
 
         return parent::beforeAction($action);
+
     }
 
     /**
