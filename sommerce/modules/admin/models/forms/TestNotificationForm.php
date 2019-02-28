@@ -1,9 +1,9 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\mail\mailers\store\AbandonedCheckoutMailer;
-use common\mail\mailers\store\OrderAdminMailer;
-use common\mail\mailers\store\OrderWithItemsMailer;
+use sommerce\mail\mailers\AbandonedCheckoutMailer;
+use sommerce\mail\mailers\OrderAdminMailer;
+use sommerce\mail\mailers\OrderWithItemsMailer;
 use common\models\sommerce\Checkouts;
 use common\models\sommerce\Packages;
 use common\models\sommerce\Payments;
@@ -11,7 +11,7 @@ use common\models\sommerce\NotificationTemplates;
 use common\models\sommerce\Orders;
 use common\models\sommerce\Suborders;
 use common\models\sommerces\Stores;
-use common\mail\mailers\store\OrderMailer;
+use sommerce\mail\mailers\OrderMailer;
 use Yii;
 use yii\base\Model;
 use Faker\Factory;

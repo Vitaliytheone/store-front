@@ -14,8 +14,6 @@ use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
-use sommerce\modules\admin\controllers\traits\settings\ThemesTrait;
-use sommerce\modules\admin\controllers\traits\settings\ThemesCustomizerTrait;
 use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
 use sommerce\modules\admin\models\search\LinksSearch;
@@ -34,12 +32,10 @@ class SettingsController extends CustomController
     use BlocksTrait;
     use ProvidersTrait;
     use NavigationTrait;
-    use ThemesTrait;
     use PaymentsTrait;
     use PagesTrait;
     use LanguageTrait;
     use NotificationsTrait;
-    use ThemesCustomizerTrait;
 
     public function behaviors()
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\components\twig;
 
 use sommerce\components\twig\parsers\TokenParser_Include;
@@ -46,8 +47,8 @@ class Extension extends \Twig_Extension {
                 return Yii::t('app', $value, array_merge(static::getTemplateVariables(), $options));
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
-            new Twig_SimpleFunction('asset', function($value) {
-                return AssetsHelper::getAssetPath() . $value;
+            new Twig_SimpleFunction('assets', function($value) {
+                return AssetsHelper::getAssets($value);
             }),
             new Twig_SimpleFunction('page_url', function($pageId){
                 $page = Pages::find()->active()->andWhere([

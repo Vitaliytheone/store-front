@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\events\handlers;
 
-use common\mail\mailers\store\OrderAdminMailer;
+use sommerce\mail\mailers\OrderAdminMailer;
 use common\models\sommerce\Suborders;
 use common\models\sommerces\NotificationDefaultTemplates;
 use common\models\sommerces\Stores;

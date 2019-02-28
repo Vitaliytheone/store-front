@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>{{ page.title }}</title>
+    <meta name="keywords" content="{{ page.meta.keywords }}">
+    <meta name="description" content="{{ page.meta.description }}">
+    <link rel="stylesheet" href="{{ assets('css/styles.css') }}">
+</head>
+<body>
+{% include('/snippets/header.twig') %}
+
+{{ page_content }}
+
+{% include('/snippets/footer.twig') %}
+
+<script src="{{ assets('js/scripts.js') }}"></script>
+</body>
+</html>

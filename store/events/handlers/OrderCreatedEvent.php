@@ -1,8 +1,8 @@
 <?php
 namespace store\events\handlers;
 
-use common\mail\mailers\store\OrderAdminMailer;
-use common\mail\mailers\store\OrderWithItemsMailer;
+use store\mail\mailers\OrderAdminMailer;
+use store\mail\mailers\OrderWithItemsMailer;
 use common\models\store\NotificationAdminEmails;
 use common\models\store\Orders;
 use common\models\store\NotificationTemplates;

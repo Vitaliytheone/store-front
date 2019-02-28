@@ -1,7 +1,7 @@
 <?php
 namespace store\events\handlers;
 
-use common\mail\mailers\store\OrderAbandonedMailer;
+use store\mail\mailers\OrderAbandonedMailer;
 use common\models\store\Checkouts;
 use common\models\store\NotificationTemplates;
 use common\models\stores\NotificationDefaultTemplates;

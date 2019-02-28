@@ -1,12 +1,10 @@
 <?php
 
 return [
-    '/checkout' => 'site/checkout',
-    '/' => 'site/index',
-    '/index' => 'site/index',
+    '/checkout' => 'payments/checkout',
+    '/' => 'page/index',
+    '/index' => 'page/index',
     '/cart' => 'cart/index',
-    '/order/<id:\d+>' => 'cart/order',
-    '/vieworder/<code:[\d\w]+>' => 'order/view',
     '/delete/<key:[\w\d-]+>' => 'cart/delete',
     '/frozen' => 'site/frozen',
 
@@ -32,7 +30,8 @@ return [
         'route' => 'site/ssl',
     ],
 
-    '/<url:[\w*-]+>/css/style.css' => 'page/styles',
+    '/css/<name:[\w\d-]+.css>' => 'page/styles',
+    '/js/<name:[\w\d-]+.js>' => 'page/scripts',
 
     'admin/settings/pages/get-page' => 'admin/settings/get-page',
     'admin/settings/pages/get-pages' => 'admin/settings/get-pages',

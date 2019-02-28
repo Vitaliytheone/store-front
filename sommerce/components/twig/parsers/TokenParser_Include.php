@@ -1,12 +1,15 @@
 <?php
+
 namespace sommerce\components\twig\parsers;
 
-use common\helpers\ThemesHelper;
-use Twig_TokenParser;
-use Twig_Token;
-use Twig_Node_Include;
-use Twig_Node_Expression_Constant;
+use common\models\sommerce\PageFiles;
+use sommerce\helpers\PageFilesHelper;
 use Twig_Error_Syntax;
+use Twig_Node_Expression_Constant;
+use Twig_Node_Include;
+use Twig_Token;
+use Twig_TokenParser;
+use yii\helpers\ArrayHelper;
 
 /**
  * Includes a template.
@@ -42,19 +45,14 @@ class TokenParser_Include extends Twig_TokenParser
         }
 
         $view = $expression->getAttribute('value');
+        $files = [];
 
-        if (empty($view) || !in_array($view, ThemesHelper::getAvailableIncludes())) {
+        foreach((array)ArrayHelper::getValue(PageFilesHelper::getFilesGroupByType(), PageFiles::FILE_TYPE_TWIG, []) as $file) {
+            $files['/snippets/' . $file['file_name']] = $file['content'];
+        }
+
+        if (empty($view) || empty($files[$view])) {
             throw new Twig_Error_Syntax($view . ' file is not supported');
-        }
-
-        if (!in_array($view, ThemesHelper::getEnabledIncludes())) {
-            return null;
-        }
-
-        $view = ThemesHelper::getView($view);
-
-        if (!$view) {
-            return null;
         }
 
         $expression->setAttribute('value', $view);

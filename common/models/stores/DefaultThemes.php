@@ -4,11 +4,11 @@ namespace common\models\stores;
 
 use common\models\common\ThemesInterface;
 use common\models\store\CustomThemes;
+use common\models\stores\queries\DefaultThemesQuery;
 use console\helpers\ConsoleHelper;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
-use common\models\stores\queries\DefaultThemesQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -155,7 +155,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
             return false;
         }
 
-        ConsoleHelper::execConsoleCommand('system-store/generate-assets');
+        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
 
         return unlink($pathToFile);
     }

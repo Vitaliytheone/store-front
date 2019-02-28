@@ -57,6 +57,7 @@ class StoreAdmins extends ActiveRecord
     static $defaultRules = [
         'orders' => 1,
         'products' => 1,
+        'pages' => 1,
         'payments' => 1,
         'settings' => 1,
     ];

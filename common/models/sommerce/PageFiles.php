@@ -6,13 +6,12 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use common\models\sommerce\queries\FilesQuery;
-use common\models\sommerces\Stores;
 
 /**
  * This is the model class for table "{{%files}}".
  *
  * @property integer $id
- * @property string $filename
+ * @property string $file_name
  * @property string $name_react
  * @property string $content
  * @property string $json
@@ -23,21 +22,20 @@ use common\models\sommerces\Stores;
  * @property integer $created_at
  * @property integer $updated_at
  *
- * @property Stores $store
  */
 class PageFiles extends ActiveRecord
 {
-    const NAME_JS = 'js';
-    const NAME_HEADER = 'header';
-    const NAME_FOOTER = 'footer';
-    const NAME_STYLES = 'styles';
+    public const NAME_JS = 'js';
+    public const NAME_HEADER = 'header';
+    public const NAME_FOOTER = 'footer';
+    public const NAME_STYLES = 'styles';
 
-    const FILE_TYPE_JS = 'js';
-    const FILE_TYPE_STYLE = 'css';
-    const FILE_TYPE_TWIG = 'twig';
+    public const FILE_TYPE_JS = 'js';
+    public const FILE_TYPE_STYLE = 'css';
+    public const FILE_TYPE_TWIG = 'twig';
 
-    const IS_DRAFT_ON = 1;
-    const IS_DRAFT_OFF = 0;
+    public const IS_DRAFT_ON = 1;
+    public const IS_DRAFT_OFF = 0;
 
     public static function getDb()
     {
@@ -80,7 +78,7 @@ class PageFiles extends ActiveRecord
     public function rules()
     {
         return [
-            [['filename', 'name_react', 'content', 'json', 'json_draft', 'file_type'], 'string'],
+            [['file_name', 'name_react', 'content', 'json', 'json_draft', 'file_type'], 'string'],
             [['is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
         ];
     }
@@ -92,12 +90,13 @@ class PageFiles extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'filename' => Yii::t('app', 'File name'),
+            'file_name' => Yii::t('app', 'File Name'),
             'name_react' => Yii::t('app', 'Name react'),
             'content' => Yii::t('app', 'Content'),
             'json' => Yii::t('app', 'Json'),
             'json_draft' => Yii::t('app', 'Json draft'),
-            'file_type' => Yii::t('app', 'file_type'),
+            'file_type' => Yii::t('app', 'File Typetype'),
+            'is_draft' => Yii::t('app', 'Is Draft'),
             'created_at' => Yii::t('app', 'Created'),
             'updated_at' => Yii::t('app', 'Updated'),
             'publish_at' => Yii::t('app', 'Publish'),

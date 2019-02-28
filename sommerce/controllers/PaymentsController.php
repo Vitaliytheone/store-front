@@ -20,8 +20,8 @@ class PaymentsController extends CustomController
      * Process payment method
      * @param string $method
      * @return string|\yii\web\Response
-     * @throws \yii\base\UnknownClassException
      * @throws UnknownClassException
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionResult($method)
     {
@@ -55,5 +55,15 @@ class PaymentsController extends CustomController
         return $this->render('payment_result.twig', [
             'payment_result' => $paymentMethod::getPaymentResult($checkoutId),
         ]);
+    }
+
+    /**
+     * Displays checkout page.
+     *
+     * @return string
+     */
+    public function actionCheckout()
+    {
+        return $this->renderPartial('checkout');
     }
 }

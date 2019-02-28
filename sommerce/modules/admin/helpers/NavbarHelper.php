@@ -28,6 +28,10 @@ class NavbarHelper {
                 'url' => '/admin/products',
                 'label' => Yii::t('admin', 'header.menu_products'),
             ],
+            'pages' => [
+                'url' => '/admin/pages',
+                'label' => Yii::t('admin', 'header.menu_pages'),
+            ],
             'settings' => [
                 'url' => '/admin/settings',
                 'label' => 'Settings',
@@ -98,13 +102,15 @@ class NavbarHelper {
     {
         $navbarItems = static::_NavbarItems();
 
-        /** @var \common\models\sommerces\StoreAdmins $user */
+
+        /** @var \common\models\stores\StoreAdmins $user */
         $authUser = Yii::$app->user;
         $user = $authUser->getIdentity();
 
         // Show only allowed for current user items
         if (!$authUser->isGuest) {
             $allowedControllers = $user->getAllowedControllersNames();
+
             foreach ($navbarItems as $controller => $menuItem) {
 
                 if (false === array_search($controller, $allowedControllers)) {

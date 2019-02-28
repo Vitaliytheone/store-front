@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\modules\admin\controllers\traits\settings;
 
 use common\components\exceptions\FirstValidationErrorHttpException;
@@ -14,7 +15,6 @@ use sommerce\modules\admin\models\forms\SavePageForm;
 use sommerce\modules\admin\models\forms\SaveProductForm;
 use sommerce\modules\admin\models\search\PagesOldSearch;
 use Yii;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
 use yii\helpers\Html;

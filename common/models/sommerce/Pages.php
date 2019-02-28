@@ -2,17 +2,20 @@
 
 namespace common\models\sommerce;
 
+use common\models\sommerce\queries\PagesQuery;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\sommerce\queries\PagesQuery;
 
 /**
  * This is the model class for table "{{%pages}}".
  *
  * @property int $id
+ * @property string $name
  * @property string $url
- * @property string $title
+ * @property string $seo_title
+ * @property string $seo_description
+ * @property string $seo_keywords
  * @property int $visibility
  * @property int $is_draft
  * @property string $twig editor twig source
@@ -24,11 +27,11 @@ use common\models\sommerce\queries\PagesQuery;
  */
 class Pages extends ActiveRecord
 {
-    const VISIBILITY_ON = 1;
-    const VISIBILITY_OFF = 0;
+    public const VISIBILITY_ON = 1;
+    public const VISIBILITY_OFF = 0;
 
-    const IS_DRAFT_ON = 1;
-    const IS_DRAFT_OFF = 0;
+    public const IS_DRAFT_ON = 1;
+    public const IS_DRAFT_OFF = 0;
 
     /**
      * @inheritdoc
@@ -74,9 +77,10 @@ class Pages extends ActiveRecord
     public function rules()
     {
         return [
-            [['twig', 'json', 'json_draft'], 'string'],
+            [['twig', 'json', 'json_draft', ], 'string'],
             [['visibility', 'is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
-            [['url', 'title'], 'string', 'max' => 300],
+            [['url', 'seo_title', 'name'], 'string', 'max' => 300],
+            [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
         ];
     }
 
@@ -87,8 +91,11 @@ class Pages extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
             'url' => Yii::t('app', 'Url'),
-            'title' => Yii::t('app', 'Title'),
+            'seo_title' => Yii::t('app', 'Seo Title'),
+            'seo_description' => Yii::t('app', 'Seo Description'),
+            'seo_keywords' => Yii::t('app', 'Seo Keywords'),
             'visibility' => Yii::t('app', 'Visibility'),
             'is_draft' => Yii::t('app', 'Is Draft'),
             'twig' => Yii::t('app', 'Editor twig source'),

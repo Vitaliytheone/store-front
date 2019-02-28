@@ -1,6 +1,7 @@
 <?php
-use yii\web\UrlNormalizer;
+
 use common\components\response\CustomResponse;
+use yii\web\UrlNormalizer;
 
 $db = array_merge(
     require_once(__DIR__ . '/db.php'),
@@ -66,7 +67,7 @@ $config = [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'page/error',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -116,7 +117,7 @@ $config = [
             'class' => 'sommerce\components\View',
             'renderers' => [
                 'twig' => [
-                    'class' => 'common\components\twig\ViewRenderer',
+                    'class' => \sommerce\components\twig\ViewRenderer::class,
                     'cachePath' => null,
                     'extension' => \sommerce\components\twig\Extension::class,
                     'options' => [
@@ -170,7 +171,9 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        'allowedIPs' => $params['debugIps']
+        'allowedIPs' => $params['debugIps'],
+        'historySize' => 500,
+        'traceLine' => '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>',
     ];
 
     $config['bootstrap'][] = 'gii';
