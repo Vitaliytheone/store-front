@@ -1,20 +1,20 @@
 <?php
 
-namespace common\mail\mailers\store;
+namespace sommerce\mail\mailers;
 
-use common\models\store\Checkouts;
-use common\models\store\Orders;
-use common\models\store\Payments;
-use common\models\store\Suborders;
-use common\models\stores\PaymentMethods;
+use common\models\sommerce\Checkouts;
+use common\models\sommerce\Orders;
+use common\models\sommerce\Payments;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\PaymentMethods;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class OrderWithItemsMailer
- * @package common\mail\mailers\store
+ * Class OrderMailer
+ * @package sommerce\mail\mailers
  */
-class OrderWithItemsMailer extends BaseNotificationMailer
+class OrderMailer extends BaseNotificationMailer
 {
 
     /**
@@ -28,7 +28,6 @@ class OrderWithItemsMailer extends BaseNotificationMailer
     public function init()
     {
         parent::init();
-
 
         $this->_order = ArrayHelper::getValue($this->options, 'order');
 
@@ -61,12 +60,17 @@ class OrderWithItemsMailer extends BaseNotificationMailer
             $total += $suborder->amount;
         }
 
+        $url = null;
+        if (($this->_order instanceof Orders)) {
+            $url = $this->store->getSite() . '/vieworder/' . $this->_order->code;
+        }
+
         $options['order'] = [
             'id' => $this->_order->id,
             'data' => $data,
             'sub_total' => $total,
             'total' => $total,
-            'url' => $this->store->getSite() . '/vieworder/' . $this->_order->code,
+            'url' => $url,
             'payment_method' => $checkout ? PaymentMethods::getName($checkout->method_id) : null
         ];
 

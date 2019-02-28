@@ -1,5 +1,5 @@
 <?php
-namespace common\mail\mailers\store;
+namespace store\mail\mailers;
 
 use common\models\store\Checkouts;
 use common\models\store\Packages;
@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class AbandonedCheckoutMailer
- * @package common\mail\mailers\store
+ * @package store\mail\mailers
  */
 class AbandonedCheckoutMailer extends BaseNotificationMailer {
 

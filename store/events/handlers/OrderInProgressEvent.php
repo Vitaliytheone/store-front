@@ -1,7 +1,7 @@
 <?php
 namespace store\events\handlers;
 
-use common\mail\mailers\store\OrderMailer;
+use store\mail\mailers\OrderMailer;
 use common\models\store\Orders;
 use common\models\store\Suborders;
 use common\models\stores\NotificationDefaultTemplates;

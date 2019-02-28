@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\events\handlers;
 
-use common\mail\mailers\store\OrderAbandonedMailer;
+use sommerce\mail\mailers\OrderAbandonedMailer;
 use common\models\sommerce\Checkouts;
 use common\models\sommerce\NotificationTemplates;
 use common\models\sommerces\NotificationDefaultTemplates;

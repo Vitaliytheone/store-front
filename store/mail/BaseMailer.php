@@ -1,5 +1,5 @@
 <?php
-namespace common\mail\mailers;
+namespace store\mail;
 
 use common\models\panels\BackgroundTasks;
 use libs\premailer\HtmlString;
@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class BaseMailer
- * @package app\mail\mailers
+ * @package store\mail
  */
 abstract class BaseMailer {
 
