@@ -2,10 +2,10 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\store\Pages;
-use common\models\store\Products;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Pages;
+use common\models\sommerce\Products;
+use common\models\sommerces\StoreAdminAuth;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\search\PagesSearch;
 use Yii;
@@ -219,6 +219,7 @@ class EditPageForm extends Model
 
         $newPage->attributes = $page->attributes;
         $newPage->created_at = null;
+        $newPage->updated_at = null;
         $newPage->visibility = 0;
         $newPage->publish_at = null;
         $newPage->url = $url;

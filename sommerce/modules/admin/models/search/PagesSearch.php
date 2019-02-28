@@ -2,8 +2,8 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\Pages;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
+use common\models\sommerce\Pages;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
