@@ -1,12 +1,12 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $model superadmin\models\forms\EditPaymentForm */
-    /* @var $payment \common\models\sommerces\Params */
+    /* @var $payment \common\models\panels\Params */
     /* @var $form control_panel\components\ActiveForm */
 
     use control_panel\components\ActiveForm;
     use control_panel\helpers\Url;
-    use common\models\sommerces\Params;
+    use common\models\panels\Params;
     use yii\bootstrap\Html;
 ?>
 

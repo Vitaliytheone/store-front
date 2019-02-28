@@ -1,7 +1,7 @@
 <?php
 namespace superadmin\helpers;
 
-use common\models\sommerces\Params;
+use common\models\panels\Params;
 use superadmin\components\services\AHnamesService;
 use superadmin\components\services\BaseService;
 use superadmin\components\services\DNSLyticsService;

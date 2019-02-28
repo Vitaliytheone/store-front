@@ -2,7 +2,8 @@
 
 namespace control_panel\controllers;
 
-use common\models\sommerces\Params;
+use common\helpers\PaymentHelper;
+use common\models\panels\Params;
 use control_panel\components\bitcoin\Bitcoin;
 use common\components\filters\DisableCsrfToken;
 use control_panel\components\payments\BasePayment;
@@ -15,10 +16,10 @@ use control_panel\mail\mailers\TwoCheckoutFailed;
 use control_panel\mail\mailers\TwoCheckoutPass;
 use control_panel\mail\mailers\TwoCheckoutReview;
 use Yii;
-use common\models\sommerces\Invoices;
-use common\models\sommerces\Payments;
+use common\models\panels\Invoices;
+use common\models\panels\Payments;
 use common\models\panel\PaymentsLog;
-use common\models\sommerces\PaymentHash;
+use common\models\panels\PaymentHash;
 use control_panel\components\payments\Paypal;
 use yii\helpers\ArrayHelper;
 

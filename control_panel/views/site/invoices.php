@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $invoices \common\models\sommerces\Invoices */
-    /* @var $invoice \common\models\sommerces\Invoices */
+    /* @var $invoices \common\models\panels\Invoices */
+    /* @var $invoice \common\models\panels\Invoices */
 
-    use common\models\sommerces\Invoices;
+    use common\models\panels\Invoices;
     use yii\widgets\LinkPager;
 
     $colors = [

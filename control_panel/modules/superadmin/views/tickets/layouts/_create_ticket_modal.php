@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $model \superadmin\models\forms\CreateTicketForm */
-    /* @var $ticket \common\models\sommerces\Tickets */
+    /* @var $ticket \common\models\panels\Tickets */
 
     use superadmin\models\forms\CreateTicketForm;
     use control_panel\helpers\Url;

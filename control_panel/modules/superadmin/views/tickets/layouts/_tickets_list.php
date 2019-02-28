@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $tickets \superadmin\models\search\TicketsSearch */
-    /* @var $ticket \common\models\sommerces\Tickets */
+    /* @var $ticket \common\models\panels\Tickets */
     /* @var $superAdmins */
     /* @var $superAdminCount */
     /* @var $filters */

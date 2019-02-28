@@ -2,7 +2,7 @@
 
 namespace superadmin\models\search;
 
-use common\models\sommerces\NotificationEmail;
+use common\models\panels\NotificationEmail;
 use yii\db\ActiveQuery;
 
 /**

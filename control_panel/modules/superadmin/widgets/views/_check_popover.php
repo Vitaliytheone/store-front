@@ -1,5 +1,5 @@
 <?php
-/* @var $message \common\models\sommerces\TicketMessages */
+/* @var $message \common\models\panels\TicketMessages */
 
 use yii\helpers\Html;
 use control_panel\helpers\Url;

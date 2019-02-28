@@ -2,7 +2,7 @@
 
 namespace superadmin\widgets;
 
-use common\models\sommerces\Customers;
+use common\models\panels\Customers;
 use yii\base\Widget;
 
 class SelectCustomer extends Widget

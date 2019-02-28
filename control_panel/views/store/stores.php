@@ -6,7 +6,7 @@
 
     use control_panel\helpers\Url;
     use common\models\sommerces\Stores;
-    use common\models\sommerces\Orders;
+    use common\models\panels\Orders;
     use yii\bootstrap\Html;
 
     $storeColors = [

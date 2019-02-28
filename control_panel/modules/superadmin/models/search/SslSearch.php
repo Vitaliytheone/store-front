@@ -3,7 +3,7 @@ namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
 use Yii;
-use common\models\sommerces\SslCert;
+use common\models\panels\SslCert;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

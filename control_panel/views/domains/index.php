@@ -1,9 +1,9 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $domains[] \common\models\sommerces\Domains */
+    /* @var $domains[] \common\models\panels\Domains */
 
-    use common\models\sommerces\Domains;
-    use common\models\sommerces\Orders;
+    use common\models\panels\Domains;
+    use common\models\panels\Orders;
     use yii\bootstrap\Html;
 
     $domainColors = [

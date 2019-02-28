@@ -1,7 +1,7 @@
 <?php
 namespace superadmin\widgets;
 
-use common\models\sommerces\Orders;
+use common\models\panels\Orders;
 use Yii;
 use yii\base\Widget;
 use yii\bootstrap\Html;

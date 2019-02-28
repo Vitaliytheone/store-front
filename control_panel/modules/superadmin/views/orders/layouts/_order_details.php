@@ -1,8 +1,8 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $order \common\models\sommerces\Orders */
-    /* @var $logs \common\models\sommerces\ThirdPartyLog */
-    /* @var $log \common\models\sommerces\ThirdPartyLog */
+    /* @var $order \common\models\panels\Orders */
+    /* @var $logs \common\models\panels\ThirdPartyLog */
+    /* @var $log \common\models\panels\ThirdPartyLog */
 ?>
 <strong><?= Yii::t('app/superadmin', 'orders.modal.header_details') ?></strong><br />
 <pre>

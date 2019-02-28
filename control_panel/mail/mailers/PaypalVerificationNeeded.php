@@ -1,8 +1,8 @@
 <?php
 namespace control_panel\mail\mailers;
 
-use common\models\sommerces\Notifications;
-use common\models\sommerces\Payments;
+use common\models\panels\Notifications;
+use common\models\panels\Payments;
 use yii\helpers\ArrayHelper;
 use control_panel\helpers\Url;
 

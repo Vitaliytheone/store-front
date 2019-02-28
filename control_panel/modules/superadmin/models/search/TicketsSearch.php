@@ -2,8 +2,8 @@
 namespace superadmin\models\search;
 
 use Yii;
-use common\models\sommerces\Tickets;
-use common\models\sommerces\SuperAdmin;
+use common\models\panels\Tickets;
+use common\models\panels\SuperAdmin;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 use yii\db\Query;

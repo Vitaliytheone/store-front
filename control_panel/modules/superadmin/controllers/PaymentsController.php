@@ -3,8 +3,8 @@
 namespace superadmin\controllers;
 
 use control_panel\helpers\Url;
-use common\models\sommerces\Payments;
-use common\models\sommerces\PaymentsLog;
+use common\models\panels\Payments;
+use common\models\panels\PaymentsLog;
 use superadmin\models\search\PaymentsSearch;
 use Yii;
 use yii\web\NotFoundHttpException;

@@ -2,7 +2,7 @@
 
 namespace superadmin\models;
 
-use common\models\sommerces\TicketMessages;
+use common\models\panels\TicketMessages;
 use yii\base\Model;
 
 class SystemMessages extends Model

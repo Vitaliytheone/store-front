@@ -2,7 +2,7 @@
 namespace control_panel\components\validators;
 
 use Yii;
-use common\models\sommerces\Orders;
+use common\models\panels\Orders;
 use yii\base\Model;
 use yii\validators\Validator;
 

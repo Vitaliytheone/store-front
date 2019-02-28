@@ -2,7 +2,7 @@
 
 namespace control_panel\components\payments;
 
-use common\models\sommerces\Params;
+use common\models\panels\Params;
 use Yii;
 use yii\helpers\ArrayHelper;
 

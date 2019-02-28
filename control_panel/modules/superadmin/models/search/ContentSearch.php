@@ -2,7 +2,7 @@
 
 namespace superadmin\models\search;
 
-use common\models\sommerces\Content;
+use common\models\panels\Content;
 use yii\db\ActiveQuery;
 
 /**

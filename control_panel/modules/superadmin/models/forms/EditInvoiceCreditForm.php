@@ -1,8 +1,8 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\sommerces\Invoices;
-use common\models\sommerces\SuperCreditsLog;
+use common\models\panels\Invoices;
+use common\models\panels\SuperCreditsLog;
 use Yii;
 use yii\base\Model;
 

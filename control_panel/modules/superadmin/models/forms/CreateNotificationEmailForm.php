@@ -2,7 +2,7 @@
 namespace superadmin\models\forms;
 
 use Yii;
-use common\models\sommerces\NotificationEmail;
+use common\models\panels\NotificationEmail;
 use yii\base\Model;
 
 /**

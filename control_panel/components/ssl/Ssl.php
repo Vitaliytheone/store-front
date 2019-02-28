@@ -6,7 +6,7 @@ use Yii;
 
 use control_panel\libs\GoGetSSLApi;
 use GoGetSSLAuthException;
-use common\models\sommerces\ThirdPartyLog;
+use common\models\panels\ThirdPartyLog;
 
 /**
  * Class Ssl

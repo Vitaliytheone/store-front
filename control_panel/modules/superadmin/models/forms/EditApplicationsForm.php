@@ -2,7 +2,7 @@
 
 namespace superadmin\models\forms;
 
-use common\models\sommerces\Params;
+use common\models\panels\Params;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /**
  * EditApplicationsForm
  *
- * @property \common\models\sommerces\Params $params
+ * @property \common\models\panels\Params $params
  */
 class EditApplicationsForm extends Model
 {

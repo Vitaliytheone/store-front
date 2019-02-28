@@ -1,10 +1,10 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $payments \superadmin\models\search\PaymentMethodsSearch */
-    /* @var $payment \common\models\sommerces\Params */
+    /* @var $payment \common\models\panels\Params */
 
     use control_panel\helpers\Url;
-    use common\models\sommerces\Params;
+    use common\models\panels\Params;
     use yii\bootstrap\Html;
 ?>
 <table class="table table-sm table-custom">

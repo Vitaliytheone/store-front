@@ -2,12 +2,14 @@
 
 namespace control_panel\controllers;
 
-use common\models\sommerces\MyActivityLog;
+use common\models\panels\MyActivityLog;
 use common\components\filters\DisableCsrfToken;
 use control_panel\helpers\UserHelper;
+use control_panel\mail\mailers\PanelFrozen;
 use control_panel\models\forms\LoginFormSuper;
+use common\models\panels\Project;
 use Yii;
-use common\models\sommerces\Customers;
+use common\models\panels\Customers;
 use yii\web\HttpException;
 use yii\web\Response;
 
@@ -76,10 +78,7 @@ class SystemController extends CustomController
 
     /**
      * System customer auth
-     * @return Response
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
+    */
     public function actionSuperadminauth()
     {
         if ($_GET['key'] == Yii::$app->params['gypAuth']) {
@@ -95,7 +94,7 @@ class SystemController extends CustomController
 
                 MyActivityLog::log(MyActivityLog::E_SUPER_USER_AUTHORIZATION, $customer->id, $customer->id, UserHelper::getHash());
 
-                return $this->redirect('/stores');
+                return $this->redirect('/panels');
             }
         }
 
@@ -152,5 +151,33 @@ class SystemController extends CustomController
                 'id' => 2
             ],
         ];
+    }
+
+    /**
+     * @param $key
+     * @param $id
+     * @return string|void
+     */
+    public function actionPanelNotify($key, $id)
+    {
+        if (Yii::$app->params['gypAuth'] !== $key) {
+            return;
+        }
+
+        $project = Project::findOne([
+            'id' => $id,
+            'act' => Project::STATUS_FROZEN
+        ]);
+
+        if (!$project) {
+            return;
+        }
+
+        $mail = new PanelFrozen([
+            'project' => $project
+        ]);
+        $mail->send();
+
+        return 'OK';
     }
 }

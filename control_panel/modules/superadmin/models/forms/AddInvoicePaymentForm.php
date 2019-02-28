@@ -2,10 +2,10 @@
 namespace superadmin\models\forms;
 
 use common\helpers\PaymentHelper;
-use common\models\sommerces\Invoices;
-use common\models\sommerces\Params;
-use common\models\sommerces\Payments;
-use common\models\sommerces\services\GetGeneralPaymentMethodsService;
+use common\models\panels\Invoices;
+use common\models\panels\Params;
+use common\models\panels\Payments;
+use common\models\panels\services\GetGeneralPaymentMethodsService;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;

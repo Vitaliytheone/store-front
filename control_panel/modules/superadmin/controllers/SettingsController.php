@@ -2,20 +2,23 @@
 
 namespace superadmin\controllers;
 
-use common\models\sommerces\Params;
+use common\models\panels\Params;
 use control_panel\components\ActiveForm;
 use control_panel\components\SuperAccessControl;
 use control_panel\helpers\Url;
-use common\models\sommerces\Content;
-use common\models\sommerces\NotificationEmail;
-use common\models\sommerces\SuperAdmin;
+use common\models\panels\Content;
+use common\models\panels\NotificationEmail;
+use common\models\panels\SuperAdmin;
+use common\models\panels\Tariff;
 use superadmin\models\forms\ChangeStaffPasswordForm;
 use superadmin\models\forms\CreateNotificationEmailForm;
+use superadmin\models\forms\CreatePlanForm;
 use superadmin\models\forms\CreateStaffForm;
 use superadmin\models\forms\EditApplicationsForm;
 use superadmin\models\forms\EditContentForm;
 use superadmin\models\forms\EditNotificationEmailForm;
 use superadmin\models\forms\EditPaymentForm;
+use superadmin\models\forms\EditPlanForm;
 use superadmin\models\forms\EditStaffForm;
 use superadmin\models\search\ApplicationsSearch;
 use superadmin\models\search\ContentSearch;
@@ -58,6 +61,8 @@ class SettingsController extends CustomController
                     'create-staff',
                     'staff-password',
                     'edit-payment',
+                    'edit-plan',
+                    'create-plan',
                     'edit-content',
                     'edit-application',
                 ]
@@ -69,6 +74,8 @@ class SettingsController extends CustomController
                     'create-staff' => ['POST'],
                     'staff-password' => ['POST'],
                     'edit-payment' => ['POST', 'GET'],
+                    'edit-plan' => ['POST'],
+                    'create-plan' => ['POST'],
                     'edit-content' => ['POST'],
                     'edit-application' => ['POST', 'GET'],
                 ],
@@ -80,6 +87,8 @@ class SettingsController extends CustomController
                     'create-staff',
                     'staff-password',
                     'edit-payment',
+                    'edit-plan',
+                    'create-plan',
                     'edit-content',
                     'edit-application',
                 ],
@@ -338,6 +347,57 @@ class SettingsController extends CustomController
         $email->changeStatus($status);
 
         $this->redirect(Url::toRoute('/settings/email'));
+    }
+
+    /**
+     * Edit plan data.
+     *
+     * @access public
+     * @param int $id
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionEditPlan($id)
+    {
+        if (!($tariff = Tariff::findOne($id))) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new EditPlanForm();
+        $model->setTariff($tariff);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
+    }
+
+    /**
+     * Create plan.
+     *
+     * @access public
+     * @return mixed
+     */
+    public function actionCreatePlan()
+    {
+        $model = new CreatePlanForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return [
+                'status' => 'success',
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => ActiveForm::firstError($model)
+            ];
+        }
     }
 
     /**

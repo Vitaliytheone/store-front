@@ -2,10 +2,10 @@
 
 namespace superadmin\controllers;
 
-use common\models\sommerces\Invoices;
+use common\models\panels\Invoices;
 use control_panel\helpers\Url;
-use common\models\sommerces\Orders;
-use common\models\sommerces\ThirdPartyLog;
+use common\models\panels\Orders;
+use common\models\panels\ThirdPartyLog;
 use superadmin\models\search\OrdersSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -105,6 +105,17 @@ class OrdersController extends CustomController
         ]);
 
         switch ($order->item) {
+            case Orders::ITEM_BUY_PANEL:
+            case Orders::ITEM_BUY_CHILD_PANEL:
+                $logs->orWhere([
+                    'item_id' => $order->item_id,
+                    'item' => [
+                        ThirdPartyLog::ITEM_BUY_PANEL,
+                        ThirdPartyLog::ITEM_PROLONGATION_PANEL
+                    ]
+                ]);
+            break;
+
             case Orders::ITEM_BUY_SSL:
                 $logs->orWhere([
                     'item_id' => $order->item_id,

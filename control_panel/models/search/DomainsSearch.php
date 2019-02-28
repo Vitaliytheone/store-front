@@ -3,9 +3,9 @@
 namespace control_panel\models\search;
 
 use control_panel\helpers\DomainsHelper;
-use common\models\sommerces\Domains;
+use common\models\panels\Domains;
 use Yii;
-use common\models\sommerces\Orders;
+use common\models\panels\Orders;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
@@ -29,7 +29,7 @@ class DomainsSearch
 
     /**
      * Build sql query
-     * @return array
+     * @return $this
      */
     public function buildQuery()
     {
@@ -37,7 +37,7 @@ class DomainsSearch
 
         $orderPending = (new Query())
             ->select(['id', '("order") AS type', 'domain', 'status', 'date', '(NULL) AS expired'])
-            ->from(DB_SOMMERCES . '.orders')
+            ->from('orders')
             ->andWhere([
                 'cid' => $customer,
                 'status' => [
@@ -52,7 +52,7 @@ class DomainsSearch
 
         $orderCanceled = (new Query())
             ->select(['id', '("order") AS type', 'domain', 'status', 'date', '(NULL) AS expired'])
-            ->from(DB_SOMMERCES . '.orders')
+            ->from('orders')
             ->andWhere([
                 'cid' => $customer,
                 'status' => Orders::STATUS_CANCELED,
@@ -63,7 +63,7 @@ class DomainsSearch
 
         $domains = (new Query())
             ->select(['id', '("domain") AS type', 'domain', 'status', 'created_at AS date', 'expiry AS expired'])
-            ->from(DB_SOMMERCES . '.domains')
+            ->from('domains')
             ->andWhere([
                 'customer_id' => $customer,
                 'status' => [
@@ -129,4 +129,5 @@ class DomainsSearch
 
         return $return;
     }
+
 }

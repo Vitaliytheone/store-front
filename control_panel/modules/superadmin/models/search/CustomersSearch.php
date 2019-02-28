@@ -4,11 +4,11 @@ namespace superadmin\models\search;
 
 
 use common\models\gateways\Sites;
-use common\models\sommerces\CustomersCounters;
+use common\models\panels\CustomersCounters;
 use common\models\sommerces\Stores;
 use superadmin\widgets\CountPagination;
 use Yii;
-use common\models\sommerces\Customers;
+use common\models\panels\Customers;
 use yii\helpers\ArrayHelper;
 use yii\data\Pagination;
 

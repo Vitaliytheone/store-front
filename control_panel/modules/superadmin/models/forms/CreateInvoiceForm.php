@@ -1,10 +1,10 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\sommerces\Customers;
-use common\models\sommerces\InvoiceDetails;
-use common\models\sommerces\Invoices;
-use common\models\sommerces\Project;
+use common\models\panels\Customers;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
+use common\models\panels\Project;
 use control_panel\helpers\SpecialCharsHelper;
 use Yii;
 use yii\base\Model;

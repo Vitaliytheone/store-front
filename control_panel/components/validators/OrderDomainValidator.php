@@ -6,7 +6,7 @@ use common\models\sommerces\Stores;
 use control_panel\helpers\DomainsHelper;
 use control_panel\models\forms\OrderStoreForm;
 use Yii;
-use common\models\sommerces\Orders;
+use common\models\panels\Orders;
 use yii\base\Model;
 
 /**
@@ -112,7 +112,7 @@ class OrderDomainValidator extends BaseDomainValidator
 
         if (!empty($hasOrder)) {
             if (Orders::STATUS_PENDING == $hasOrder->status) {
-                $item = Orders::ITEM_BUY_STORE;
+                $item = Orders::ITEM_BUY_SOMMERCE;
 
                 // Для заказов с отличным item и статусом pending не проверяем, а после создания нового заказа - отменяем предыдущий заказ
                 if ($item != $hasOrder->item) {

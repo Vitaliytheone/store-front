@@ -4,7 +4,7 @@ namespace control_panel\controllers;
 
 use control_panel\components\MainController;
 use control_panel\helpers\UserHelper;
-use common\models\sommerces\Auth;
+use common\models\panels\Auth;
 use Yii;
 use yii\filters\AccessControl;
 

@@ -1,5 +1,5 @@
 <?php
-    /* @var $customer \common\models\sommerces\Customers */
+    /* @var $customer \common\models\panels\Customers */
 
     use yii\bootstrap\Html;
     use control_panel\helpers\Url;

@@ -1,7 +1,7 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $domains \superadmin\models\search\DomainsSearch */
-    /* @var $domain \common\models\sommerces\Domains */
+    /* @var $domain \common\models\panels\Domains */
 
     use control_panel\helpers\Url;
     use yii\helpers\Html;

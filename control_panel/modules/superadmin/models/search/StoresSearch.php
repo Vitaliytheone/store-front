@@ -1,7 +1,7 @@
 <?php
 namespace superadmin\models\search;
 
-use common\models\sommerces\Domains;
+use common\models\panels\Domains;
 use common\models\sommerces\StoreDomains;
 use common\models\sommerces\Stores;
 use control_panel\helpers\DomainsHelper;

@@ -6,7 +6,7 @@
 use control_panel\components\ActiveForm;
 use superadmin\models\forms\EditStaffForm;
 use control_panel\helpers\Url;
-use common\models\sommerces\SuperAdmin;
+use common\models\panels\SuperAdmin;
 use yii\bootstrap\Html;
 
 $model = new EditStaffForm();
@@ -47,7 +47,7 @@ $model = new EditStaffForm();
 
                 <div class="form-group">
                     <label for=""><?= $model->getAttributeLabel('access') ?></label><br>
-                    <?php foreach (SuperAdmin::getRulesLabels() as $code => $label) : ?>
+                    <?php foreach (SuperAdmin::getSommerceRulesLabels() as $code => $label) : ?>
                         <label class="checkbox-inline">
                             <?= Html::checkbox('EditStaffForm[access][' . $code . ']', true, ['class' => 'access'])?>
                             <?= $label ?>

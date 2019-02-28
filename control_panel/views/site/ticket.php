@@ -1,8 +1,8 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $ticketMessages \common\models\sommerces\TicketMessages */
-    /* @var $ticket \common\models\sommerces\Tickets */
-    /* @var $message \common\models\sommerces\TicketMessages */
+    /* @var $ticketMessages \common\models\panels\TicketMessages */
+    /* @var $ticket \common\models\panels\Tickets */
+    /* @var $message \common\models\panels\TicketMessages */
     /* @var $clear */
     /* @var $showForm */
 

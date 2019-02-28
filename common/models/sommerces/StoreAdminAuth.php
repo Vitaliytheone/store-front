@@ -1,7 +1,7 @@
 <?php
 namespace common\models\sommerces;
 
-use common\models\sommerces\SuperAdminToken;
+use common\models\panels\SuperAdminToken;
 use Yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;

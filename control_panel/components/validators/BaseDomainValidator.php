@@ -3,7 +3,7 @@ namespace control_panel\components\validators;
 
 use common\helpers\CurlHelper;
 use control_panel\helpers\DomainsHelper;
-use common\models\sommerces\OrderLogs;
+use common\models\panels\OrderLogs;
 use Yii;
 use yii\validators\Validator;
 

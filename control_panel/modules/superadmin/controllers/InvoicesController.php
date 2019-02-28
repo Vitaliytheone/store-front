@@ -2,10 +2,10 @@
 
 namespace superadmin\controllers;
 
-use common\models\sommerces\Customers;
+use common\models\panels\Customers;
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
-use common\models\sommerces\Invoices;
+use common\models\panels\Invoices;
 use superadmin\models\forms\AddInvoiceEarningsForm;
 use superadmin\models\forms\AddInvoicePaymentForm;
 use superadmin\models\forms\CreateInvoiceForm;

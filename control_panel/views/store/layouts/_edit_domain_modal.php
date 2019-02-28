@@ -3,7 +3,7 @@
     /* @var $model \control_panel\models\forms\EditStoreDomainForm */
 
     use control_panel\models\forms\EditStoreDomainForm;
-    use common\models\sommerces\Content;
+    use common\models\panels\Content;
     use control_panel\components\ActiveForm;
     use yii\bootstrap\Html;
 

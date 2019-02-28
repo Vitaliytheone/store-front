@@ -2,12 +2,12 @@
 
 namespace superadmin\models\forms;
 
-use common\models\sommerces\Domains;
-use common\models\sommerces\SslCert;
+use common\models\panels\Domains;
+use common\models\panels\SslCert;
 use Yii;
 use yii\base\Model;
 use common\models\sommerces\Stores;
-use common\models\sommerces\Customers;
+use common\models\panels\Customers;
 use sommerce\helpers\ConfigHelper;
 
 /**

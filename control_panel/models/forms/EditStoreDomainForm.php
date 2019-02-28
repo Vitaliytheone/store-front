@@ -1,12 +1,11 @@
 <?php
-
 namespace control_panel\models\forms;
 
 use common\helpers\SuperTaskHelper;
 use common\models\sommerces\StoreDomains;
 use common\models\sommerces\Stores;
 use control_panel\components\validators\StoreDomainValidator;
-use common\models\sommerces\Auth;
+use common\models\panels\Auth;
 use Yii;
 use yii\base\Model;
 

@@ -2,14 +2,14 @@
 
 namespace control_panel\models;
 
-use common\models\sommerces\MyCustomersHash;
+use common\models\panels\MyCustomersHash;
 use yii\web\IdentityInterface;
 use Yii;
-use common\models\sommerces\Customers;
+use common\models\panels\Customers;
 
 /**
  * Class Auth
- * @package common\models\sommerces
+ * @package common\models\panels
  */
 class Auth extends Customers implements IdentityInterface
 {

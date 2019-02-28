@@ -2,7 +2,7 @@
 namespace superadmin\widgets;
 
 use Yii;
-use common\models\sommerces\Tickets;
+use common\models\panels\Tickets;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 use yii\db\Query;

@@ -2,13 +2,13 @@
 
 namespace superadmin\controllers;
 
-use common\models\sommerces\CustomersNote;
-use common\models\sommerces\SuperAdmin;
-use common\models\sommerces\TicketMessages;
+use common\models\panels\CustomersNote;
+use common\models\panels\SuperAdmin;
+use common\models\panels\TicketMessages;
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
 use control_panel\components\SuperAccessControl;
-use common\models\sommerces\Tickets;
+use common\models\panels\Tickets;
 use superadmin\helpers\SystemMessages;
 use superadmin\models\forms\CreateMessageForm;
 use superadmin\models\forms\CreateTicketForm;

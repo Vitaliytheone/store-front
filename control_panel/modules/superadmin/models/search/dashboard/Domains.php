@@ -2,8 +2,8 @@
 
 namespace superadmin\models\search\dashboard;
 
-use common\models\sommerces\Customers;
-use common\models\sommerces\Domains as DomainsModel;
+use common\models\panels\Customers;
+use common\models\panels\Domains as DomainsModel;
 use control_panel\helpers\DomainsHelper;
 use control_panel\helpers\SpecialCharsHelper;
 

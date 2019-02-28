@@ -2,11 +2,17 @@
 
 namespace common\models\sommerces;
 
-use control_panel\components\behaviors\CustomersCountersBehavior;
+use common\components\behaviors\CustomersCountersBehavior;
 use common\helpers\DbHelper;
 use common\models\common\ProjectInterface;
+use common\models\panels\Customers;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\NginxHelper;
+use common\models\panels\Domains;
+use common\models\panels\InvoiceDetails;
+use common\models\panels\Invoices;
+use common\models\panels\Logs;
+use common\models\panels\ThirdPartyLog;
 use common\models\sommerce\Blocks;
 use common\models\sommerce\Languages;
 use common\models\sommerce\NotificationAdminEmails;
@@ -777,7 +783,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             $storeDomain->domain = $subDomain;
 
             if (!$storeDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
                 return false;
             }
         } else {
@@ -808,7 +814,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             $storeDomain->domain = $domain;
 
             if (!$storeDomain->save(false)) {
-                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_STORE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_SOMMERCE, $this->id, $storeDomain->getErrors(), 'store.restore.domain');
                 return false;
             }
 

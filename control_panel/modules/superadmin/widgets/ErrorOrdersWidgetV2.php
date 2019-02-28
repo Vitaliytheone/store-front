@@ -2,7 +2,7 @@
 
 namespace superadmin\widgets;
 
-use common\models\sommerces\Orders;
+use common\models\panels\Orders;
 
 use yii\bootstrap\Html;
 use yii\db\Query;

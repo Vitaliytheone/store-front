@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $logs \common\models\sommerces\PaymentsLog */
-/* @var $log \common\models\sommerces\PaymentsLog */
+/* @var $logs \common\models\panels\PaymentsLog */
+/* @var $log \common\models\panels\PaymentsLog */
 ?>
 <?php if (!empty($logs)) : ?>
 <Strong>IP: </Strong><?= $logs[0]->getIp() ?><br />

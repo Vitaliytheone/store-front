@@ -5,7 +5,7 @@
     /* @var $filters array */
 
     use yii\helpers\Html;
-    use common\models\sommerces\Customers;
+    use common\models\panels\Customers;
     use control_panel\helpers\Url;
     use yii\helpers\Json;
     use yii\widgets\LinkPager;

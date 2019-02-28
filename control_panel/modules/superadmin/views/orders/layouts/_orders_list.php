@@ -1,16 +1,16 @@
 <?php
     /* @var $this yii\web\View */
     /* @var $orders \superadmin\models\search\OrdersSearch */
-    /* @var $order \common\models\sommerces\Orders */
+    /* @var $order \common\models\panels\Orders */
     /* @var $filters */
     /* @var $items */
 
     use yii\helpers\Html;
-    use common\models\sommerces\Orders;
+    use common\models\panels\Orders;
     use control_panel\helpers\Url;
     use yii\widgets\LinkPager;
     use control_panel\helpers\SpecialCharsHelper;
-    use common\models\sommerces\Invoices;
+    use common\models\panels\Invoices;
 ?>
 <table class="table table-sm table-custom">
     <thead>

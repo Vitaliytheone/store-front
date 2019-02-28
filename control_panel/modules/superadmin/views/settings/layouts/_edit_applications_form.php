@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $model superadmin\models\forms\EditApplicationsForm */
-/* @var $params \common\models\sommerces\Params */
+/* @var $params \common\models\panels\Params */
 
 /* @var $form control_panel\components\ActiveForm */
 

@@ -1,8 +1,8 @@
 <?php
     /* @var $this yii\web\View */
-    /* @var $domain \common\models\sommerces\Domains */
-    /* @var $logs \common\models\sommerces\ThirdPartyLog */
-    /* @var $log \common\models\sommerces\ThirdPartyLog */
+    /* @var $domain \common\models\panels\Domains */
+    /* @var $logs \common\models\panels\ThirdPartyLog */
+    /* @var $log \common\models\panels\ThirdPartyLog */
 ?>
 <strong><?= Yii::t('app/superadmin', 'domains.list.details_modal_details_header')?></strong><br />
 <pre>

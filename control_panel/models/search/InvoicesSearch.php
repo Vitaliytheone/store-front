@@ -2,7 +2,7 @@
 
 namespace control_panel\models\search;
 
-use common\models\sommerces\Invoices;
+use common\models\panels\Invoices;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;

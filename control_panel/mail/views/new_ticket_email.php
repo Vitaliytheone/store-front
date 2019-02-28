@@ -1,5 +1,5 @@
 <?php
-/* @var $ticket \common\models\sommerces\Tickets */
+/* @var $ticket \common\models\panels\Tickets */
 /* @var $message */
 ?>
 

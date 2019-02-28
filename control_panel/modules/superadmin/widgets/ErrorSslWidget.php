@@ -1,7 +1,7 @@
 <?php
 namespace superadmin\widgets;
 
-use common\models\sommerces\SslCert;
+use common\models\panels\SslCert;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 

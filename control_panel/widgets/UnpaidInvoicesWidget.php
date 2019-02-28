@@ -1,7 +1,7 @@
 <?php
 namespace control_panel\widgets;
 
-use common\models\sommerces\Invoices;
+use common\models\panels\Invoices;
 use Yii;
 use yii\base\Widget;
 use yii\bootstrap\Html;

@@ -4,11 +4,12 @@ namespace control_panel\models\search;
 
 use common\components\domains\BaseDomain;
 use common\components\domains\Domain;
-use common\models\sommerces\DomainZones;
+use common\models\panels\DomainZones;
 use control_panel\helpers\DomainsHelper;
 use Yii;
-use common\models\sommerces\Orders;
+use common\models\panels\Orders;
 use yii\helpers\ArrayHelper;
+
 
 /**
  * Class DomainsAvailableSearch

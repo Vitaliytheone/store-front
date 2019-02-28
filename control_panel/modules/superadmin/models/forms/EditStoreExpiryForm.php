@@ -1,10 +1,10 @@
 <?php
 namespace superadmin\models\forms;
 
-use common\models\sommerces\ExpiredLog;
+use common\models\panels\ExpiredLog;
 use common\models\sommerces\Stores;
 use Yii;
-use common\models\sommerces\Project;
+use common\models\panels\Project;
 use yii\base\Model;
 
 /**

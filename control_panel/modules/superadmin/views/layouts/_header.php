@@ -7,7 +7,7 @@ use superadmin\widgets\SuperAdminNavBar;
 use superadmin\widgets\UnreadMessagesWidgetV2;
 use superadmin\widgets\ErrorOrdersWidgetV2;
 use superadmin\widgets\ErrorSslWidget;
-use common\models\sommerces\SuperAdmin;
+use common\models\panels\SuperAdmin;
 use control_panel\helpers\Url;
 use yii\helpers\ArrayHelper;
 
@@ -43,13 +43,15 @@ $optionsLeft[] = ['label' => Yii::t('app/superadmin',
     'active' => 'dashboard' == $activeTab
 ];
 
-$optionsLeft[] = [
-    'label' => Yii::t('app/superadmin', 'header.nav.stores'),
-    'url' => Url::toRoute('/stores'),
-    'options' => ['class' => 'nav-item'],
-    'linkOptions' => ['class' => 'nav-link'],
-    'active' => 'stores' == $activeTab
-];
+if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_PANELS)) {
+    $optionsLeft[] = [
+        'label' => Yii::t('app/superadmin', 'header.nav.stores'),
+        'url' => Url::toRoute('/stores'),
+        'options' => ['class' => 'nav-item'],
+        'linkOptions' => ['class' => 'nav-link'],
+        'active' => 'stores' == $activeTab
+    ];
+}
 
 if (Yii::$app->superadmin->can(SuperAdmin::CAN_WORK_WITH_DOMAINS)) {
     $optionsLeft[] = [
