@@ -1,6 +1,6 @@
 <?php
 
-namespace common\mail\mailers\store;
+namespace store\mail\mailers;
 
 use common\models\store\Checkouts;
 use common\models\store\Orders;
@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderMailer
- * @package common\mail\mailers\store
+ * @package store\mail\mailers
  */
 class OrderMailer extends BaseNotificationMailer
 {

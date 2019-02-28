@@ -1,5 +1,5 @@
 <?php
-namespace common\mail\mailers\store;
+namespace store\mail\mailers;
 
 use common\models\store\Packages;
 use common\models\store\Suborders;
@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderAbandonedMailer
- * @package common\mail\mailers\store
+ * @package store\mail\mailers
  */
 class OrderAbandonedMailer extends BaseNotificationMailer {
 

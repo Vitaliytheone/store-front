@@ -1,9 +1,9 @@
 <?php
 namespace store\modules\admin\models\forms;
 
-use common\mail\mailers\store\AbandonedCheckoutMailer;
-use common\mail\mailers\store\OrderAdminMailer;
-use common\mail\mailers\store\OrderWithItemsMailer;
+use store\mail\mailers\AbandonedCheckoutMailer;
+use store\mail\mailers\OrderAdminMailer;
+use store\mail\mailers\OrderWithItemsMailer;
 use common\models\store\Checkouts;
 use common\models\store\Packages;
 use common\models\store\Payments;
@@ -11,7 +11,7 @@ use common\models\store\NotificationTemplates;
 use common\models\store\Orders;
 use common\models\store\Suborders;
 use common\models\stores\Stores;
-use common\mail\mailers\store\OrderMailer;
+use store\mail\mailers\OrderMailer;
 use Yii;
 use yii\base\Model;
 use Faker\Factory;

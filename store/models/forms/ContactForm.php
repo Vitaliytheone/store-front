@@ -3,7 +3,7 @@
 namespace store\models\forms;
 
 use common\models\stores\Stores;
-use common\mail\mailers\store\ContactFormMailer;
+use store\mail\mailers\ContactFormMailer;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;

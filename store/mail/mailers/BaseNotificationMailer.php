@@ -1,5 +1,5 @@
 <?php
-namespace common\mail\mailers\store;
+namespace store\mail\mailers;
 
 use common\models\panels\BackgroundTasks;
 use common\models\store\NotificationTemplates;
@@ -7,11 +7,11 @@ use Yii;
 use common\models\stores\Stores;
 use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
-use common\mail\mailers\BaseMailer;
+use store\mail\BaseMailer;
 
 /**
  * Class BaseNotificationMailer
- * @package common\mail\mailers\store
+ * @package store\mail\mailers
  */
 class BaseNotificationMailer extends BaseMailer {
 
