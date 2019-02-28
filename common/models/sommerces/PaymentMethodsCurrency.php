@@ -31,7 +31,7 @@ class PaymentMethodsCurrency extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'payment_methods_currency';
+        return DB_SOMMERCES . '.payment_methods_currency';
     }
 
     /**

@@ -155,7 +155,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
             return false;
         }
 
-        ConsoleHelper::execConsoleCommand('system-sommerce/generate-assets');
+        ConsoleHelper::execConsoleCommand('system-store/generate-assets');
 
         return unlink($pathToFile);
     }

@@ -820,7 +820,7 @@ class Stores extends ActiveRecord implements ProjectInterface
 
             if (!$this->subdomain) {
                 if (!DnsHelper::addMainDns($this)) {
-                    //return false;
+                    return false;
                 }
             }
         }
