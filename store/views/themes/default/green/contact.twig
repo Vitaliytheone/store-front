@@ -1,0 +1,92 @@
+<!-- Page Header Section Start -->
+<div id="pageHeader" class="pd--80-0" data-bg-img="/img/themes/green/header-bg.jpg">
+    <div class="container">
+        <!-- Page Header Title Start -->
+        <div class="page-header--title pull-left {% if site.rtl %} page-header-rtl {% endif %}">
+            <h1 class="h1">{{ page.title }}</h1>
+        </div>
+        <!-- Page Header Title End -->
+    </div>
+</div>
+<!-- Page Header Section End -->
+
+<!-- Contact Section Start -->
+<div id="contact">
+
+    <!-- Contact Info Start -->
+    <div class="contact--info pd--100-0-40">
+	{% if page.content %}
+        <div class="container">
+            <div class="row">
+                <!-- Contact Info Item Start -->
+                <div class="contact--info-item {% if site.rtl %} rtl-content {% endif %}">
+                    {{ page.content }}
+                </div>
+                <!-- Contact Info Item End -->
+            </div>
+        </div>	
+	{% endif %}
+    </div>
+    <!-- Contact Info End -->
+
+
+    <!-- Contact Form Start -->
+    <div class="contact--form">
+        <div class="contact--form-wrapper">
+            <div class="container">
+                <form action="" method="post">
+                    {% if error %}
+                        <div class="error-summary alert alert-danger">{{ error_message }}</div>
+                    {% endif %}
+                    {% if success %}
+                        <div class="alert alert-success">{{ lang('contact.form.message.success') }}</div>
+                    {% endif %}
+                    <!-- Section Title Start -->
+                    <div class="section--title text-center">
+                        <h2 class="h2">{{ lang('contact.header') }}</h2>
+                    </div>
+                    <!-- Section Title End -->
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <!-- Contact Form Status Start -->
+                            <div class="contact--form-status"></div>
+                            <!-- Contact Form Status End -->
+
+                            <div class="row">
+                                <div class="col-sm-6 {% if site.rtl %} rtl-content {% endif %}">
+                                    <div class="form-group">
+                                        <label for="contactSubject">{{ lang('contact.subject') }} *</label>
+                                        <input type="text" name="subject" id="contactSubject" class="form-control" value="{{ contact.form.subject }}" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="contactName">{{ lang('contact.name') }} *</label>
+                                        <input type="text" name="name" id="contactName" class="form-control" value="{{ contact.form.name }}" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="contactEmail">{{ lang('contact.email') }} *</label>
+                                        <input type="email" name="email" id="contactEmail" class="form-control" value="{{ contact.form.email }}" required>
+                                    </div>
+									<div class="g-recaptcha" data-sitekey="{{ captcha_key }}"></div>
+                                </div>
+
+                                <div class="col-sm-6 {% if site.rtl %} rtl-content {% endif %}">
+                                    <div class="form-group">
+                                        <label for="contactMessage">{{ lang('contact.message') }} *</label>
+                                        <textarea name="message" id="contactMessage" class="form-control" required>{{ contact.form.message }}</textarea>
+                                    </div>
+                                    <input type="hidden" name="{{ csrfname }}" value="{{ csrftoken }}">
+                                    <button type="submit" class="btn btn-default">{{ lang('contact.button.submit') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Contact Form End -->
+</div>
+<!-- Contact Section End -->

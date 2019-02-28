@@ -2,7 +2,7 @@
 
 namespace sommerce\controllers;
 
-use common\models\store\Pages;
+use common\models\sommerce\Pages;
 use yii\web\NotFoundHttpException;
 use Yii;
 

@@ -3,7 +3,7 @@
 namespace sommerce\modules\admin\models;
 
 use Yii;
-use common\models\store\Suborders;
+use common\models\sommerce\Suborders;
 use common\helpers\CustomHtmlHelper;
 
 /**

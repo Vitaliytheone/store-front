@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use Yii;
 
 /**

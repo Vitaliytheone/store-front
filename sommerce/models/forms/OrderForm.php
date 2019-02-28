@@ -4,10 +4,10 @@ namespace sommerce\models\forms;
 
 use common\components\ActiveForm;
 use common\helpers\CurrencyHelper;
-use common\models\store\Checkouts;
-use common\models\stores\PaymentMethods;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerce\Checkouts;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
 use sommerce\components\payments\Payment;
 use sommerce\helpers\UserHelper;
 use sommerce\models\search\CartSearch;

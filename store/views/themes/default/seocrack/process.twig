@@ -1,0 +1,55 @@
+{% if block.process %}
+    <!-- Process Section Start -->
+    <div class="features--section pd--80-0">
+        <div class="container">
+            <!-- Section Title Start -->
+            <div class="section--title {% if site.rtl %} rtl-direction {% endif %}">
+                <h2 class="h2">{{ block.process.header.title }}</h2>
+            </div>
+            <!-- Section Title End -->
+            {% if block.process.header.description %}
+                <!--Description Block Start-->
+                <div class="section--description {% if site.rtl %} rtl-direction {% endif %}">
+                    <p>{{ block.process.header.description }}</p>
+                </div>
+                <!--Description Block End-->
+            {% endif %}
+            <div class="row">
+
+                {% for process in block.process.data %}
+                    <div class="{{ block.process.settings.bootstrap_column }} col-xs-6 col-xxs-12">
+                        <!-- Feature Item Start -->
+                        <div class="feature--item {% if block.process.settings.picture_type == 'image' %} feature--item__image {% endif %}">
+                            {% if block.process.settings.picture_type == 'image' %}
+                                <img src="{{ process.image }}" alt="" class="img-responsive">
+                            {% else %}
+                                <div class="icon">
+                                    <span class="{{ process.icon_class }}" style="font-size: {{ block.process.settings.icon_size }}px;"></span>
+                                </div>
+                            {% endif %}
+
+                            <div class="title">
+                                <h2 class="h4">{{ process.title }}</h2>
+                            </div>
+
+                            <div class="flipped">
+                                <div class="title">
+                                    <p class="h4">{{ process.title }}</p>
+                                </div>
+
+                                {% if block.process.settings.description %}
+                                    <div class="content">
+                                        <p>{{ process.description }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Feature Item End -->
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    <!-- Process Section End -->
+{% endif %}

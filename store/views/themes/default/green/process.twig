@@ -1,0 +1,54 @@
+{% if block.process %}
+<!-- Process Section Start -->
+  <div id="steps" class="pd--100-0-40">
+      <div class="container">
+          <!-- Section Title Start -->
+          <div class="section--title text-center {% if site.rtl %} rtl-content {% endif %}">
+              <h2 class="h2">{{ block.process.header.title }}</h2>
+              <!-- Section Title Start -->
+              <div class="section--description text-center">
+                  {{ block.process.header.description }}
+              </div>
+              <!-- Section Title End -->
+          </div>
+          <!-- Section Title End -->
+
+          <!-- Step Items Start -->
+          <div class="step--items row text-center">
+              <div class="step--line"></div>
+
+              {% for process in block.process.data %}
+                <!-- Step Item Start -->
+                <div class="step--item {{ block.process.settings.bootstrap_column }} {% if site.rtl %} rtl-content {% endif %}">
+                    <div class="icon">
+                    
+                        <div class="step--icon">
+                            <div class="vc--parent">
+                                <div class="vc--child">
+                                  {% if block.process.settings.picture_type == 'image' %}
+                                  	<img src="{{ process.image }}" alt="" class="img-responsive">
+                            	  {% else %}
+                                    <span class="fa {{ process.icon_class }}" style="font-size: {{ block.process.settings.icon_size }}"></span>
+ 								  {% endif %}
+                                </div>
+                            </div>
+                        </div>
+            
+                    </div>
+                    <div class="title">
+                        <h3 class="h3">{{ process.title }}</h3>
+                    </div>
+                    <div class="step--content">
+                        <p>{{ process.description }}</p>
+                    </div>
+                </div>
+                <!-- Step Item End -->
+              {% endfor %}
+
+
+          </div>
+          <!-- Step Items End -->
+      </div>
+  </div>
+<!-- Process Section End -->
+{% endif %}

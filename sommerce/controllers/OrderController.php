@@ -2,7 +2,7 @@
 
 namespace sommerce\controllers;
 
-use common\models\store\Orders;
+use common\models\sommerce\Orders;
 use sommerce\models\search\OrdersSearch;
 use Yii;
 use yii\helpers\ArrayHelper;

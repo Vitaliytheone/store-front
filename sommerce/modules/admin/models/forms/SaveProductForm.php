@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\Products;
+use common\models\sommerce\Products;
 use Yii;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use yii\base\Model;
 use yii\db\Transaction;
 

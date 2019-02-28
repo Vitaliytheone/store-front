@@ -1,10 +1,10 @@
 <?php
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\NotificationAdminEmails;
-use common\models\store\NotificationTemplates;
-use common\models\stores\NotificationDefaultTemplates;
-use common\models\stores\Stores;
+use common\models\sommerce\NotificationAdminEmails;
+use common\models\sommerce\NotificationTemplates;
+use common\models\sommerces\NotificationDefaultTemplates;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

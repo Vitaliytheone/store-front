@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\store\CustomThemes;
-use common\models\stores\DefaultThemes;
-use common\models\stores\Stores;
+use common\models\sommerce\CustomThemes;
+use common\models\sommerces\DefaultThemes;
+use common\models\sommerces\Stores;
 use yii\base\Model;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;

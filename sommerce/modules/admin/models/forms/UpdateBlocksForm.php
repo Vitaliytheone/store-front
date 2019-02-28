@@ -1,9 +1,9 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\store\Blocks;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Blocks;
+use common\models\sommerces\StoreAdminAuth;
 use sommerce\helpers\BlockHelper;
 use Yii;
 use yii\base\Model;

@@ -2,10 +2,10 @@
 
 namespace sommerce\models\search;
 
-use common\models\store\Orders;
-use common\models\store\Packages;
-use common\models\store\Suborders;
-use common\models\stores\Stores;
+use common\models\sommerce\Orders;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\Stores;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 

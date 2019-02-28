@@ -2,7 +2,7 @@
 
 namespace sommerce\controllers;
 
-use common\models\store\Products;
+use common\models\sommerce\Products;
 use sommerce\models\search\ProductSearch;
 use yii\helpers\Html;
 use yii\helpers\Url;

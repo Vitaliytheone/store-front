@@ -15,7 +15,8 @@ class PagesQuery extends ActiveQuery
     public function active()
     {
         return $this->andWhere([
-            'visibility' => Pages::VISIBILITY_ON,
+            'deleted' => Pages::DELETED_NO,
+            'visibility' => Pages::VISIBILITY_YES
         ]);
     }
 

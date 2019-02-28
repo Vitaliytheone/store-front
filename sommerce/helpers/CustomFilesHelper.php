@@ -2,8 +2,8 @@
 
 namespace sommerce\helpers;
 
-use common\models\store\CustomThemes;
-use common\models\stores\DefaultThemes;
+use common\models\sommerce\CustomThemes;
+use common\models\sommerces\DefaultThemes;
 use DirectoryIterator;
 use yii\helpers\FileHelper;
 use sommerce\modules\admin\models\search\ThemesSearch;

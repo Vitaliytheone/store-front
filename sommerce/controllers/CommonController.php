@@ -3,7 +3,7 @@
 namespace sommerce\controllers;
 
 use common\components\MainController;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use Yii;
 
 /**

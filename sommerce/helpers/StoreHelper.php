@@ -4,9 +4,9 @@ namespace sommerce\helpers;
 use common\models\common\ProjectInterface;
 use common\models\panels\Logs;
 use Yii;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use yii\helpers\FileHelper;
-use common\models\store\CustomThemes;
+use common\models\sommerce\CustomThemes;
 use yii\db\Exception as DbException;
 
 /**

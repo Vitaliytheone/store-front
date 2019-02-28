@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\controllers\traits\settings;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\models\forms\ActivateLanguageForm;
 use sommerce\modules\admin\models\forms\EditLanguageForm;

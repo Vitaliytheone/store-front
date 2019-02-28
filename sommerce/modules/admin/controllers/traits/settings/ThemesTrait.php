@@ -1,9 +1,9 @@
 <?php
 namespace sommerce\modules\admin\controllers\traits\settings;
 
-use common\models\store\ActivityLog;
-use common\models\stores\DefaultThemes;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\DefaultThemes;
+use common\models\sommerces\StoreAdminAuth;
 use sommerce\controllers\CommonController;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;

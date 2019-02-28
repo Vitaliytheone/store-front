@@ -3,10 +3,10 @@
 namespace sommerce\components\payments\methods;
 
 use common\helpers\SiteHelper;
-use common\models\store\Checkouts;
-use common\models\stores\Stores;
+use common\models\sommerce\Checkouts;
+use common\models\sommerces\Stores;
 use yii\helpers\ArrayHelper;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerces\StorePaymentMethods;
 
 /**
  * Class Yandexcards

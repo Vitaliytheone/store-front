@@ -7,7 +7,7 @@ use sommerce\modules\admin\components\Url;
 
 /* @var $this \yii\web\View */
 /* @var $filesTree array */
-/** @var $theme \common\models\stores\DefaultThemes | \common\models\store\CustomThemes */
+/** @var $theme \common\models\sommerces\DefaultThemes | \common\models\sommerce\CustomThemes */
 /** @var string $currentFile */
 /** @var string $editDate */
 /** @var string $currentFileContent */

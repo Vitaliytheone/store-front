@@ -2,12 +2,12 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
 use console\helpers\ConsoleHelper;
-use common\models\store\CustomThemes;
-use common\models\stores\DefaultThemes;
-use common\models\stores\Stores;
+use common\models\sommerce\CustomThemes;
+use common\models\sommerces\DefaultThemes;
+use common\models\sommerces\Stores;
 use sommerce\modules\admin\models\search\ThemesSearch;
 use Yii;
 use yii\base\Exception;

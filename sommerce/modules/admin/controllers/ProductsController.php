@@ -3,10 +3,10 @@
 namespace sommerce\modules\admin\controllers;
 
 use common\components\ActiveForm;
-use common\models\store\ActivityLog;
-use common\models\store\Packages;
-use common\models\store\Products;
-use common\models\stores\StoreAdminAuth;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Products;
+use common\models\sommerces\StoreAdminAuth;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditNavigationForm;
 use sommerce\modules\admin\models\forms\MovePackageForm;
@@ -17,8 +17,8 @@ use yii\web\NotAcceptableHttpException;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\models\forms\CreateProductForm;
 use sommerce\modules\admin\models\forms\CreatePackageForm;
-use common\models\stores\Stores;
-use common\models\stores\StoreProviders;
+use common\models\sommerces\Stores;
+use common\models\sommerces\StoreProviders;
 use common\helpers\ApiProviders;
 use sommerce\modules\admin\models\forms\MoveProductForm;
 use sommerce\modules\admin\models\search\ProductsSearch;
@@ -348,7 +348,7 @@ class ProductsController extends CustomController
             exit;
         }
         
-        /* @var $storeProviders \common\models\stores\StoreProviders[] */
+        /* @var $storeProviders \common\models\sommerces\StoreProviders[] */
         $storeProvider = StoreProviders::findOne([
             'provider_id' => $provider_id,
             'store_id' => $this->store->id

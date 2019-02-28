@@ -1,9 +1,9 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreAdminsHash;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\StoreAdminsHash;
 use Yii;
 use yii\base\Model;
 
