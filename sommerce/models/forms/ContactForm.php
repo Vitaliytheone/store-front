@@ -3,7 +3,7 @@
 namespace sommerce\models\forms;
 
 use common\models\sommerces\Stores;
-use common\mail\mailers\store\ContactFormMailer;
+use sommerce\mail\mailers\ContactFormMailer;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;

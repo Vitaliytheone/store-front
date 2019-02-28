@@ -1,13 +1,13 @@
 <?php
-namespace common\mail\mailers\store;
+namespace store\mail\mailers;
 
 use common\models\stores\Stores;
 use yii\helpers\ArrayHelper;
-use common\mail\mailers\BaseMailer;
+use store\mail\BaseMailer;
 
 /**
  * Class ContactFormMailer
- * @package common\mail\mailers\store
+ * @package store\mail\mailers
  */
 class ContactFormMailer extends BaseMailer {
 

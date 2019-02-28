@@ -1,12 +1,12 @@
 <?php
-namespace common\mail\mailers\store;
+namespace sommerce\mail\mailers;
 
-use common\models\store\Orders;
+use common\models\sommerce\Orders;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class OrderAdminMailer
- * @package common\mail\mailers\store
+ * @package sommerce\mail\mailers
  */
 class OrderAdminMailer extends BaseNotificationMailer
 {
