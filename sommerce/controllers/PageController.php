@@ -2,8 +2,11 @@
 
 namespace sommerce\controllers;
 
+use common\components\ActiveForm;
+use common\models\sommerce\Pages;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
+use sommerce\models\forms\ContactForm;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -45,7 +48,52 @@ class PageController extends CustomController
 
         $content = $page['twig'] ?? '';
 
+        if ($url = 'contacts') {
+            return $this->_actionContactUs($page);
+        }
+
         return $this->renderTwigContent($content);
+    }
+
+    /**
+     * Render `contact form` page
+     * @param Pages[] $page
+     * @return string|\yii\web\Response
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function _actionContactUs($page)
+    {
+        $this->enableCsrfValidation = false;
+
+        $this->addModule('contactsFrontend');
+
+        $request = Yii::$app->getRequest();
+        $contactForm = new ContactForm();
+
+        if ($contactForm->load($request->post()) && $contactForm->contact()) {
+            return $this->refresh();
+        }
+
+        return $this->renderTwigContent($page['twig'], [
+            'csrfname' => Yii::$app->getRequest()->csrfParam,
+            'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
+            'site' => [
+                'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
+            ],
+//            'contact' => [
+//                'form' => [
+//                    'subject' => $contactForm->subject,
+//                    'name' => $contactForm->name,
+//                    'email' => $contactForm->email,
+//                    'message' => $contactForm->message,
+//                ],
+//            ],
+
+            'error' => $contactForm->hasErrors(),
+            'error_message' => ActiveForm::firstError($contactForm),
+            'success' => $contactForm->getSentSuccess(),
+
+        ]);
     }
 
     /**

@@ -89,7 +89,8 @@ class ContactForm extends Model
             'email' => $this->email,
             'message' => $this->message,
         ]);
-        $sentResult = $mail->send();
+//        $sentResult = $mail->send();
+        $sentResult = true; // fixme
 
         if ($sentResult === true) {
             // Store sent result to session
