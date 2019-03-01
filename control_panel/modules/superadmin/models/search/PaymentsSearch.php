@@ -2,10 +2,7 @@
 
 namespace superadmin\models\search;
 
-
-use common\models\gateways\Sites;
 use common\models\sommerces\Params;
-use common\models\sommerces\Project;
 use common\models\sommerces\Orders;
 use common\models\sommerces\queries\PaymentsQuery;
 use common\models\sommerces\services\GetGeneralPaymentMethodsService;
@@ -23,7 +20,6 @@ use yii\helpers\ArrayHelper;
  */
 class PaymentsSearch extends Payments
 {
-
     const SEARCH_TYPE_PAYMENT_ID = 1;
     const SEARCH_TYPE_INVOICE_ID = 2;
     const SEARCH_TYPE_PAYMENT_COMMENT = 3;
@@ -37,7 +33,6 @@ class PaymentsSearch extends Payments
      * @var array - methods
      */
     protected static $_methods;
-
 
     use SearchTrait;
 
@@ -101,9 +96,7 @@ class PaymentsSearch extends Payments
                     $payments->andFilterWhere([
                         'or',
                         ['like', 'orders.domain', $searchQuery],
-                        ['like', 'project.site', $searchQuery],
                         ['like', 'store.domain', $searchQuery],
-                        ['like', 'sites.domain', $searchQuery],
                     ]);
                     break;
                 case static::SEARCH_TYPE_PAYMENT_COMMENT:
@@ -128,36 +121,23 @@ class PaymentsSearch extends Payments
     {
         $query->leftJoin(['invoice_details' => InvoiceDetails::tableName()], 'invoice_details.invoice_id = payments.iid');
         $query->leftJoin(['orders' => Orders::tableName()], 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", [
-                InvoiceDetails::ITEM_BUY_PANEL,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
                 InvoiceDetails::ITEM_BUY_SSL,
                 InvoiceDetails::ITEM_BUY_DOMAIN,
                 InvoiceDetails::ITEM_BUY_STORE,
                 InvoiceDetails::ITEM_BUY_TRIAL_STORE,
                 InvoiceDetails::ITEM_PROLONGATION_SSL,
                 InvoiceDetails::ITEM_PROLONGATION_DOMAIN,
-                InvoiceDetails::ITEM_BUY_GATEWAY,
-                InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
             ]) . ')'
         );
-        $query->leftJoin(['project' => Project::tableName()], 'project.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
-            InvoiceDetails::ITEM_PROLONGATION_PANEL,
-            InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-        ]) . ')');
-
         $query->leftJoin(['store' => Stores::tableName()], 'store.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
             InvoiceDetails::ITEM_PROLONGATION_STORE,
         ]) . ')');
-
-        $query->leftJoin(['sites' => Sites::tableName()], 'sites.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
-                InvoiceDetails::ITEM_PROLONGATION_GATEWAY,
-            ]) . ')');
 
         return $query;
     }
 
     /**
-     * Search panels
+     * Search payments
      * @return array
      */
     public function search()
@@ -180,7 +160,7 @@ class PaymentsSearch extends Payments
 
         $payments = $query->select([
                 'payments.*',
-                'COALESCE(orders.domain, project.site, store.domain, sites.domain) as domain'
+                'COALESCE(orders.domain, store.domain) as domain'
             ])
             ->offset($pages->offset)
             ->limit($pages->limit)
@@ -211,7 +191,7 @@ class PaymentsSearch extends Payments
     }
 
     /**
-     * Get count panels by type
+     * Get count payments by type
      * @param int $status
      * @param int $mode
      * @param string $method

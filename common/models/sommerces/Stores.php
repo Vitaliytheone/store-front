@@ -924,7 +924,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             ])
             ->andWhere([
                 'status' => Invoices::STATUS_UNPAID,
-                'invoice_details.item' => InvoiceDetails::ITEM_PROLONGATION_SOMMERCE,
+                'invoice_details.item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
                 'invoice_details.item_id' => $this->id,
             ])
             ->one())) {
@@ -950,7 +950,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             $invoiceDetailsModel->invoice_id = $invoice->id;
             $invoiceDetailsModel->item_id = $this->id;
             $invoiceDetailsModel->amount = $invoice->total;
-            $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_SOMMERCE;
+            $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_STORE;
 
             if (!$invoiceDetailsModel->save()) {
                 $transaction->rollBack();
@@ -1018,7 +1018,7 @@ class Stores extends ActiveRecord implements ProjectInterface
         // Cancel unpaid invoices
         $invoices = Invoices::find()
             ->innerJoin('invoice_details', 'invoice_details.invoice_id = invoices.id AND invoice_details.item = :item', [
-                ':item' => InvoiceDetails::ITEM_PROLONGATION_SOMMERCE,
+                ':item' => InvoiceDetails::ITEM_PROLONGATION_STORE,
             ])
             ->andWhere([
                 'invoices.status' => Invoices::STATUS_UNPAID,

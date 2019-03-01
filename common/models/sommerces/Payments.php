@@ -34,7 +34,6 @@ use yii\base\Security;
  * @property string $options
  * @property string $verification_code
  *
- * @property Project $project
  * @property Params $method
  * @property PaymentsLog[] $paymentLogs
  * @property Invoices $invoice
@@ -155,14 +154,6 @@ class Payments extends ActiveRecord
     public function getInvoiceDetails()
     {
         return $this->hasMany(InvoiceDetails::class, ['invoice_id' => 'id'])->via('invoice');
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProject()
-    {
-        return $this->hasOne(Project::class, ['id' => 'pid']);
     }
 
     /**

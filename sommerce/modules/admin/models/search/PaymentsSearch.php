@@ -3,20 +3,20 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\sommerce\Checkouts;
+use common\models\sommerce\Payments;
+use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\PaymentMethodsCurrency;
 use common\models\sommerces\StorePaymentMethods;
 use common\models\sommerces\Stores;
-use Yii;
-use yii\base\Model;
-use yii\db\Query;
-use yii\validators\EmailValidator;
-use yii\helpers\ArrayHelper;
-use yii\data\ActiveDataProvider;
-use yii\base\Exception;
-use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
-use common\models\sommerce\Payments;
-use common\models\sommerces\PaymentMethods;
+use sommerce\modules\admin\components\Url;
+use Yii;
+use yii\base\Exception;
+use yii\base\Model;
+use yii\data\ActiveDataProvider;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
+use yii\validators\EmailValidator;
 
 
 /**
@@ -113,8 +113,8 @@ class PaymentsSearch extends Model
         $query->leftJoin($this->_db . '.checkouts', 'checkouts.id = payments.checkout_id');
         $query->addSelect('checkouts.method_id');
 
-        $min = (new Query())->from($this->_paymentsTable)->min('payments.checkout_id');
-        $max = (new Query())->from($this->_paymentsTable)->max('payments.checkout_id');
+        $min = (new Query())->from($this->_paymentsTable)->min('payments.checkout_id') ?? 0;
+        $max = (new Query())->from($this->_paymentsTable)->max('payments.checkout_id') ?? 1;
         $query->andWhere(['between', 'checkouts.id', $min, $max]);
 
         $this->_dataProvider = new ActiveDataProvider([

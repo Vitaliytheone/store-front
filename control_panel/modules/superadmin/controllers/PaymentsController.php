@@ -20,6 +20,8 @@ class PaymentsController extends CustomController
     /**
      * Renders the index view for the module
      * @return string
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function actionIndex()
     {
