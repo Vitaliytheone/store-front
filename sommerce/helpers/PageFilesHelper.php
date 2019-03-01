@@ -3,6 +3,7 @@
 namespace sommerce\helpers;
 
 use common\models\sommerce\PageFiles;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -64,14 +65,22 @@ class PageFilesHelper
      */
     public static function generateFileVersionLink($value): string
     {
-        $value = ltrim($value, '/');
-        $valueTrim = explode('/', $value);
+        $valueTrim = ltrim($value, '/');
+        $valueTrim = explode('/', $valueTrim);
         $valueTrim = $valueTrim[1] ?? $valueTrim[0];
 
         /** @var array $files */
         $file = self::getFileByName($valueTrim);
+        $timestamp = $file['updated_at'];
 
-        return "/{$value}?v={$file['updated_at']}";
+        if (empty($timestamp)) {
+            $filePath = Yii::getAlias('@sommerce/web' . $value);
+            if (file_exists($filePath)) {
+                $timestamp = @filemtime($filePath);
+            }
+        }
+
+        return "{$value}?v={$timestamp}";
     }
 
 }
