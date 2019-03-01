@@ -3,7 +3,6 @@
 namespace sommerce\controllers;
 
 use common\components\ActiveForm;
-use common\models\sommerce\Pages;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
 use sommerce\models\forms\ContactForm;
@@ -48,20 +47,15 @@ class PageController extends CustomController
 
         $content = $page['twig'] ?? '';
 
-        if ($url = 'contacts') {
-            return $this->_actionContactUs($page);
-        }
-
         return $this->renderTwigContent($content);
     }
 
     /**
      * Render `contact form` page
-     * @param Pages[] $page
-     * @return string|\yii\web\Response
+     * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    protected function _actionContactUs($page)
+    public function actionContactUs()
     {
         $this->enableCsrfValidation = false;
 
@@ -71,29 +65,14 @@ class PageController extends CustomController
         $contactForm = new ContactForm();
 
         if ($contactForm->load($request->post()) && $contactForm->contact()) {
-            return $this->refresh();
+            return json_encode(['success' => $contactForm->getSentSuccess()]);
+        } else {
+            return json_encode([
+                'error' => $contactForm->hasErrors(),
+                'error_message' => ActiveForm::firstError($contactForm),
+                ]);
         }
 
-        return $this->renderTwigContent($page['twig'], [
-            'csrfname' => Yii::$app->getRequest()->csrfParam,
-            'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
-            'site' => [
-                'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-            ],
-//            'contact' => [
-//                'form' => [
-//                    'subject' => $contactForm->subject,
-//                    'name' => $contactForm->name,
-//                    'email' => $contactForm->email,
-//                    'message' => $contactForm->message,
-//                ],
-//            ],
-
-            'error' => $contactForm->hasErrors(),
-            'error_message' => ActiveForm::firstError($contactForm),
-            'success' => $contactForm->getSentSuccess(),
-
-        ]);
     }
 
     /**
@@ -156,7 +135,8 @@ class PageController extends CustomController
             return '';
         }
 
-        $content = $renderer->renderContent($content, $params);
+        $global = $this->_getGlobalParams();
+        $content = $renderer->renderContent($content, array_merge($global, $params));
 
         if (!$layout) {
             return $content;
@@ -168,7 +148,7 @@ class PageController extends CustomController
             return $content;
         }
 
-        return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
+        return $renderer->renderContent($layoutFile, array_merge($global, [
             'page_content' => $content,
         ]));
     }

@@ -13,11 +13,11 @@ customModule.contactsFrontend = {
                 callback: function (response) {
 
                     if ('success' == response.status) {
-                        $('#editCustomerModal').modal('hide');
-                        location.reload();
+                        errorBlock.addClass('alert-success');
                     }
 
                     if ('error' == response.status) {
+                        errorBlock.addClass('alert-danger');
                         errorBlock.removeClass('hidden');
                         errorBlock.html(response.error);
                     }
