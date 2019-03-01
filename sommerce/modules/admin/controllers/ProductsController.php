@@ -141,7 +141,7 @@ class ProductsController extends CustomController
 
         return [
             'status' => 'error',
-            'error' => ActiveForm::firstError($model),
+            'message' => ActiveForm::firstError($model),
         ];
     }
 
@@ -174,7 +174,7 @@ class ProductsController extends CustomController
 
         return [
             'status' => 'error',
-            'error' => ActiveForm::firstError($model),
+            'message' => ActiveForm::firstError($model),
         ];
     }
 
@@ -221,7 +221,7 @@ class ProductsController extends CustomController
         if ($newPosition === false) {
             return [
                 'status' => 'error',
-                'error' => ActiveForm::firstError($model),
+                'message' => ActiveForm::firstError($model),
             ];
         }
 
@@ -259,7 +259,7 @@ class ProductsController extends CustomController
 
         return [
             'status' => 'error',
-            'error' => ActiveForm::firstError($model),
+            'message' => ActiveForm::firstError($model),
         ];
     }
 
@@ -311,7 +311,7 @@ class ProductsController extends CustomController
 
         return [
             'status' => 'error',
-            'error' => ActiveForm::firstError($model),
+            'message' => ActiveForm::firstError($model),
         ];
     }
 
@@ -394,7 +394,7 @@ class ProductsController extends CustomController
 
         return [
             'status' => 'error',
-            'error' => Yii::t('admin', 'products.duplicate_package.error'),
+            'message' => Yii::t('admin', 'products.duplicate_package.error'),
         ];
     }
 
@@ -414,7 +414,7 @@ class ProductsController extends CustomController
         $package = $this->findClassModel($id, Packages::class);
 
         $model = new MovePackageForm();
-        $model->setProduct($package);
+        $model->setPackage($package);
         $model->setUser(Yii::$app->user->getIdentity());
 
         $newPosition = $model->changePosition($position);
@@ -422,7 +422,7 @@ class ProductsController extends CustomController
         if ($newPosition === false) {
             return [
                 'status' => 'error',
-                'error' => ActiveForm::firstError($model),
+                'message' => ActiveForm::firstError($model),
             ];
         }
 

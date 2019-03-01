@@ -48,7 +48,7 @@
                                     ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
                                 )?>
                             <?php else : ?>
-                                <?= Html::a($customer->countStores, Url::toRoute(['/stores', 'customer_id' => $customer->id])); ?>
+                                <?= Html::a(isset($customer->countStores) ? $customer->countStores : 0, Url::toRoute(['/stores', 'customer_id' => $customer->id])); ?>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -59,11 +59,11 @@
                                     ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
                                 )?>
                             <?php else : ?>
-                                <?= Html::a($customer->countDomains, Url::toRoute(['/domains', 'customer_id' => $customer->id])); ?>
+                                <?= Html::a(isset($customer->countDomains) ? $customer->countDomains : 0, Url::toRoute(['/domains', 'customer_id' => $customer->id])); ?>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <?= Html::a($customer->countSslCerts, Url::toRoute(['/ssl', 'customer_id' => $customer->id])); ?>
+                            <?= Html::a(isset($customer->countSslCerts) ? $customer->countSslCerts : 0, Url::toRoute(['/ssl', 'customer_id' => $customer->id])); ?>
                         </td>
                         <td><?= $customer->first_name ?></td>
                         <td><?= $customer->last_name ?></td>

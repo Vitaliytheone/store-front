@@ -36,7 +36,7 @@ class PagesSearch extends Pages
             ->select(['id', 'visibility', 'name', 'is_draft', 'seo_title', 'seo_description', 'seo_keywords', 'url', 'created_at', 'updated_at'])
             ->from($this->_pagesTable)
             ->indexBy('id')
-            ->orderBy(['id' => SORT_DESC])
+            ->orderBy(['id' => SORT_ASC])
             ->all();
 
 

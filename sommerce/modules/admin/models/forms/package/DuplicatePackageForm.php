@@ -33,6 +33,7 @@ class DuplicatePackageForm extends BaseForm
     {
         $duplicate = new Packages();
 
+        $transaction = Yii::$app->storeDb->beginTransaction();
         $duplicate->attributes = $this->_package->getAttributes([
             'name',
             'price',
@@ -45,13 +46,22 @@ class DuplicatePackageForm extends BaseForm
             'provider_id',
             'product_id',
         ]);
-
         if (!$duplicate->save()) {
+            $transaction->rollBack();
+            return false;
+        }
+
+        $moveModel = new MovePackageForm();
+        $moveModel->setPackage($duplicate);
+
+        if (!$moveModel->changePosition(($this->_package->position + 1))) {
+            $transaction->rollBack();
             return false;
         }
 
         ActivityLog::log($this->_user, ActivityLog::E_PACKAGES_PACKAGE_DUPLICATED, $duplicate->id, $duplicate->id);
 
+        $transaction->commit();
         return true;
     }
 }
