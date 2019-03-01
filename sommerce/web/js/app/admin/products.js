@@ -319,7 +319,7 @@ customModule.adminProducts = {
             var apiErrorBlock = $('.api-error', modal);
             var optionSelected = $("option:selected", this),
                 actionUrl = params.servicesUrl;
-console.log('triggered', selectedServiceId);
+
             clearProviderServisesList();
             if (actionUrl === undefined) {
                 apiErrorBlock.addClass('hidden');
