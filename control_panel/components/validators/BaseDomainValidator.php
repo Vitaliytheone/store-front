@@ -1,4 +1,5 @@
 <?php
+
 namespace control_panel\components\validators;
 
 use common\helpers\CurlHelper;

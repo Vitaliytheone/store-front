@@ -370,55 +370,6 @@ class InvoiceHelper
     }
 
     /**
-     * Create invoices to prolong stores
-     */
-    public static function prolongSommerce()
-    {
-        $date = time() + (Yii::$app->params['store.invoice_prolong'] * 24 * 60 * 60); // 7 дней; 24 часа; 60 минут; 60 секунд
-
-        $stores = Sommerce::find()
-            ->leftJoin('invoice_details', 'invoice_details.item_id = stores.id AND invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_SOMMERCE)
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id AND invoices.status = ' . Invoices::STATUS_UNPAID)
-            ->andWhere([
-                'stores.status' => Sommerce::STATUS_ACTIVE,
-            ])->andWhere('stores.expired < :expiry', [
-                ':expiry' => $date
-            ])
-            ->groupBy('stores.id')
-            ->having("COUNT(invoices.id) = 0")
-            ->all();
-
-        foreach ($stores as $store) {
-            $transaction = Yii::$app->db->beginTransaction();
-
-            $invoice = new Invoices();
-            $invoice->cid = $store->customer_id;
-            $invoice->total = Yii::$app->params['storeDeployPrice'];
-            $invoice->generateCode();
-            $invoice->daysExpired(7);
-
-            if ($invoice->save()) {
-                $invoiceDetailsModel = new InvoiceDetails();
-                $invoiceDetailsModel->invoice_id = $invoice->id;
-                $invoiceDetailsModel->item_id = $store->id;
-                $invoiceDetailsModel->amount = $invoice->total;
-                $invoiceDetailsModel->item = InvoiceDetails::ITEM_PROLONGATION_SOMMERCE;
-
-                if (!$invoiceDetailsModel->save()) {
-                    continue;
-                }
-
-                $transaction->commit();
-
-                $mail = new InvoiceCreated([
-                    'store' => $store
-                ]);
-                $mail->send();
-            }
-        }
-    }
-
-    /**
      * Create invoices to prolong gateways
      * @throws \yii\db\Exception
      */

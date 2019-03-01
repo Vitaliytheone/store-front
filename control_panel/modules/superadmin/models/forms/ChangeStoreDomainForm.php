@@ -5,7 +5,7 @@ namespace superadmin\models\forms;
 use Yii;
 use common\models\sommerces\Stores;
 use control_panel\helpers\DomainsHelper;
-use common\helpers\SuperTaskHelper;
+use control_panel\helpers\super_tasks\SuperTaskHelper;
 use yii\base\Model;
 
 /**

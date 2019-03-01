@@ -21,7 +21,7 @@ class UnreadMessagesWidget extends Widget {
     {
         $count = (new Query())
             ->select('COUNT(*)')
-            ->from('tickets')
+            ->from(DB_SOMMERCES . '.tickets')
             ->andWhere([
                 'is_user' => 1
             ])
