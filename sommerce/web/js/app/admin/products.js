@@ -166,12 +166,14 @@ customModule.adminProducts = {
             $('#editpackageform-quantity', modal).val(details.quantity);
             $('#editpackageform-link_type', modal).val(details.link_type);
             $('#editpackageform-visibility', modal).val(details.visibility);
-            $('#editpackageform-provider_id', modal).val(details.provider_id).trigger('change', [details.provider_service]);
+            $('#editpackageform-provider_id', modal).val(details.provider_id);
             $('#editpackageform-provider_service', modal).val(details.provider_service);
             $('#editpackageform-id', modal).val(details.id);
             $('.delete-package', modal).attr('href', link.data('delete_link'));
             $('#editpackageform-mode', modal).val(details.mode).trigger('change');
             modal.modal('show');
+
+            $('#editpackageform-provider_id', modal).trigger('change', [details.provider_service]);
 
             return false;
         });
@@ -221,7 +223,9 @@ customModule.adminProducts = {
         });
 
         self.sortable();
-        self.providerServices(params);
+
+        self.providerServices($('#editPackageModal'), params);
+        self.providerServices($('#createPackageModal'), params);
     },
     sortable: function () {
         var productsSortable = $('.sortable'),
@@ -308,11 +312,11 @@ customModule.adminProducts = {
 
         return tokenParams;
     },
-    providerServices: function (params) {
+    providerServices: function (modal, params) {
         var self = this;
 
-        $(document).on('change', '.modal.show .provider-id', function(e, selectedServiceId) {
-            var apiErrorBlock = $('.modal.show .api-error');
+        $(document).on('change', '#' + modal.attr('id') + ' .provider-id', function(e, selectedServiceId) {
+            var apiErrorBlock = $('.api-error', modal);
             var optionSelected = $("option:selected", this),
                 actionUrl = params.servicesUrl;
 
@@ -349,8 +353,8 @@ customModule.adminProducts = {
         });
 
         function clearProviderServisesList() {
-            $('.modal.show .provider-service').find("option:not(:eq(0))").remove();
-            $('.modal.show .provider-service').find('option:eq(0)').prop('selected', true);
+            $('.provider-service', modal).find("option:not(:eq(0))").remove();
+            $('.provider-service', modal).find('option:eq(0)').prop('selected', true);
         }
 
         function renderProviderServices(services, selectedServiceId){
@@ -363,7 +367,7 @@ customModule.adminProducts = {
                 $container.append('<option value="' + s.service + '"'+ selected + '>' + s.service + ' - ' + s.name + '</option>');
             });
             clearProviderServisesList();
-            $('.modal.show .provider-service').append($container.html());
+            $('.provider-service', modal).append($container.html());
         }
     }
 };

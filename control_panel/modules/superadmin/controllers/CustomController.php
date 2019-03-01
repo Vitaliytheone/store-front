@@ -18,6 +18,11 @@ class CustomController extends MainController
 
     public $layout = 'superadmin.php';
 
+    /**
+     * @param $action
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function beforeAction($action)
     {
         return Controller::beforeAction($action);

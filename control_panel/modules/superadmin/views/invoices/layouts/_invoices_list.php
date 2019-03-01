@@ -76,13 +76,6 @@
                                     ])?>
                                 <?php endif; ?>
 
-                                <?php if ($invoice->editTotal == 1) : ?>
-                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_edit'), Url::toRoute(['/invoices/edit', 'id' => $invoice->id]), [
-                                        'class' => 'dropdown-item edit-invoice',
-                                        'data-details' => $invoice->getAttributes(['total'])
-                                    ])?>
-                                <?php endif; ?>
-
                                 <?php if (Invoices::STATUS_UNPAID == $invoice->status) : ?>
 
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_credit'), Url::toRoute(['/invoices/edit-credit', 'id' => $invoice->id]), [
@@ -90,13 +83,6 @@
                                         'data-details' => [
                                             'credit' => PriceHelper::prepare($invoice->credit)
                                         ]
-                                    ])?>
-
-                                    <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_add_earnings'), Url::toRoute(['/invoices/add-earnings', 'invoice_id' => $invoice->id, 'customer_id' => $invoice->cid]), [
-                                        'class' => 'dropdown-item add-earnings',
-                                        'data-details' => [
-                                            'credit' => PriceHelper::prepare($invoice->total)
-                                        ],
                                     ])?>
 
                                     <?= Html::a(Yii::t('app/superadmin', 'invoices.list.action_cancel'), Url::toRoute(['/invoices/cancel', 'id' => $invoice->id]), [

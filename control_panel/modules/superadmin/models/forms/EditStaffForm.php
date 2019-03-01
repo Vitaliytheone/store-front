@@ -59,7 +59,7 @@ class EditStaffForm extends Model
         $this->_superAdmin->first_name = $this->first_name;
         $this->_superAdmin->last_name = $this->last_name;
         $this->_superAdmin->status = $this->status;
-        $this->_superAdmin->setSommerceAccessRules($this->access);
+        $this->_superAdmin->setAccessRules($this->access);
 
         if (!$this->_superAdmin->save()) {
             $this->addErrors($this->_superAdmin->getErrors());
