@@ -70,6 +70,7 @@ class SignupForm extends Model
         $model->setPassword($this->password);
         $model->password_confirm = hash_hmac('sha256', $this->password_confirm, Yii::$app->params['auth_key']);
         $model->generateToken();
+        $model->stores = Customers::STORES_ACTIVE;
 
         $model->buy_domain = Customers::BUY_DOMAIN_NOT_ACTIVE;
 
