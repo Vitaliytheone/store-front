@@ -56,7 +56,6 @@ class CreateProductForm extends BaseForm
 
         $product = new Products();
         $product->name = $this->name;
-        $product->url = $this->url;
         if (!$product->save(false)) {
             $this->addError('name', Yii::t('admin', 'product.error.can_not_save'));
             $transaction->rollBack();

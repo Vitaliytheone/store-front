@@ -414,7 +414,7 @@ class ProductsController extends CustomController
         $package = $this->findClassModel($id, Packages::class);
 
         $model = new MovePackageForm();
-        $model->setProduct($package);
+        $model->setPackage($package);
         $model->setUser(Yii::$app->user->getIdentity());
 
         $newPosition = $model->changePosition($position);
