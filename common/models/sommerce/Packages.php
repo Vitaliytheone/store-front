@@ -3,9 +3,11 @@
 namespace common\models\sommerce;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use common\models\sommerce\queries\PackagesQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%packages}}".
@@ -194,5 +196,26 @@ class Packages extends ActiveRecord
     public function setProperties($properties)
     {
         $this->properties = json_encode($properties);
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'position' => [
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'position',
+                ],
+                'value' => function ($event) {
+                    $position = static::find()->andWhere([
+                        'product_id' => $this->product_id,
+                    ])->max('position');
+                    return null === $position ? 0 : $position + 1;
+                },
+            ],
+        ]);
     }
 }
