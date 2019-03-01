@@ -21,7 +21,7 @@ class ErrorOrdersWidget extends Widget {
     {
         $count = (new Query())
             ->select('COUNT(*)')
-            ->from('orders')
+            ->from(DB_SOMMERCES . '.orders')
             ->andWhere([
                 'status' => Orders::STATUS_ERROR
             ])

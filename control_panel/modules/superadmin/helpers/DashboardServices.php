@@ -99,7 +99,8 @@ class DashboardServices
 
     /**
      * @param $serviceName
-     * @return DashboardService
+     * @return DashboardService|null
+     * @throws \ReflectionException
      */
     public static function getService($serviceName)
     {
@@ -117,6 +118,7 @@ class DashboardServices
     /**
      * Get services
      * @return array
+     * @throws \ReflectionException
      */
     public static function getServices() {
         $services = [];

@@ -2,10 +2,10 @@
 
 namespace common\super_tasks;
 
-use common\models\panels\Orders;
+use common\models\sommerces\Orders;
 use common\models\sommerces\Stores as Sommerce;
 use yii\base\Exception;
-use common\models\panels\SuperTasks;
+use common\models\sommerces\SuperTasks;
 use yii\helpers\ArrayHelper;
 
 /**

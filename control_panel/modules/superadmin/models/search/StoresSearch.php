@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\search;
 
 use common\models\sommerces\Domains;
@@ -15,8 +16,8 @@ use control_panel\helpers\SpecialCharsHelper;
  * Class StoresSearch
  * @package superadmin\models\search
  */
-class StoresSearch {
-
+class StoresSearch
+{
     use SearchTrait;
 
     /** Store trial mode key name */
@@ -92,7 +93,7 @@ class StoresSearch {
             }
         }
 
-        $stores->leftJoin(DB_PANELS . '.customers', 'customers.id = stores.customer_id');
+        $stores->leftJoin(DB_SOMMERCES . '.customers', 'customers.id = stores.customer_id');
 
         if (!empty($searchQuery)) {
             $stores->andFilterWhere([

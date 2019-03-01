@@ -57,7 +57,8 @@ class SiteController extends CustomController
 
     /**
      * Renders the index view for the module
-     * @return string
+     * @return string|\yii\web\Response
+     * @throws \yii\base\Exception
      */
     public function actionIndex()
     {

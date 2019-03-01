@@ -4,7 +4,7 @@ namespace console\components\terminate;
 
 use common\models\sommerces\Stores;
 use common\models\common\ProjectInterface;
-use common\models\panels\Logs;
+use common\models\sommerces\Logs;
 use yii\db\Exception as DbException;
 use Yii;
 
@@ -57,7 +57,7 @@ class TerminateSommerce
     private function getStore($date)
     {
         return Stores::find()
-            ->leftJoin(DB_PANELS . '.logs', '
+            ->leftJoin(DB_SOMMERCES . '.logs', '
             logs.panel_id = stores.id AND
             logs.project_type = :project_type AND
             logs.type = :type AND logs.created_at > :date', [

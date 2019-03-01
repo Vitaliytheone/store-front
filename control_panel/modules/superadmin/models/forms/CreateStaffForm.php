@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use Yii;
@@ -36,6 +37,7 @@ class CreateStaffForm extends Model
     /**
      * Save admin settings
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function save()
     {
@@ -49,7 +51,7 @@ class CreateStaffForm extends Model
         $model->first_name = $this->first_name;
         $model->last_name = $this->last_name;
         $model->status = $this->status;
-        $model->setSommerceAccessRules($this->access);
+        $model->setAccessRules($this->access);
         $model->generateAuthKey();
 
         if (!$model->save()) {

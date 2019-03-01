@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\widgets;
 
 use common\models\sommerces\SslCert;

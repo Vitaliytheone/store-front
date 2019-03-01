@@ -77,8 +77,8 @@ class SuperAdminNavBar extends NavBar
     }
 
     /**
-     *
      * @return string
+     * @throws \ReflectionException
      */
     private function _getGrandparentClass() {
         if (is_object($this)) {
