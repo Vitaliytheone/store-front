@@ -22,5 +22,27 @@ $(document).ready(function() {
     });
   });
 
+  // function slickify() {
+  //   $('.slick').slick({
+  //     autoplay: true,
+  //     autoplaySpeed: 4000,
+  //     delay: 5000,
+  //     speed: 700,
+  //     responsive: [
+  //       {
+  //         breakpoint: 500,
+  //         settings: "unslick",
+  //       }
+  //     ]
+  //   });
+  // }
+
+  // slickify();
+  // $(window).resize(function () {
+  //   var $windowWidth = $(window).width();
+  //   if ($windowWidth < 500) {
+  //     slickify();
+  //   }
+  // });
   
 });
