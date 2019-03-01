@@ -161,6 +161,19 @@ class StorePaymentMethods extends ActiveRecord
     }
 
     /**
+     * @param $storeId
+     * @return array|PaymentMethods[]
+     */
+    public static function getActiveMethods($storeId)
+    {
+        return static::find()
+            ->select('name, id')
+            ->where(['visibility' => 1, 'store_id' => $storeId])
+            ->asArray()
+            ->all();
+    }
+
+    /**
      * Get payment method options
      * @return array
      */
