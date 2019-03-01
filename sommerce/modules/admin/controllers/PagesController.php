@@ -30,8 +30,6 @@ class PagesController extends CustomController
     use PagesTrait;
 
     protected $exceptCsrfValidation = [
-        'delete-page',
-        'duplicate-page',
         'update-blocks',
         'block-upload',
         'update-theme',
@@ -86,26 +84,26 @@ class PagesController extends CustomController
                     'duplicate-page' => ['POST']
                 ],
             ],
-                'ajaxApi' => [
-                    'class' => ContentNegotiator::class,
-                    'only' => [
-                        // Pages trait
-                        'get-page',
-                        'get-pages',
-                        'draft',
-                        'publish',
-                        'get-products',
-                        'get-product',
-                        'set-product',
-                        'set-package',
-                        'set-image',
-                        'unset-image',
-                        'get-images',
-                    ],
-                    'formats' => [
-                        'application/json' => CustomResponse::FORMAT_AJAX_API,
-                    ],
+            'ajaxApi' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
+                    // Pages trait
+                    'get-page',
+                    'get-pages',
+                    'draft',
+                    'publish',
+                    'get-products',
+                    'get-product',
+                    'set-product',
+                    'set-package',
+                    'set-image',
+                    'unset-image',
+                    'get-images',
                 ],
+                'formats' => [
+                    'application/json' => CustomResponse::FORMAT_AJAX_API,
+                ],
+            ],
         ];
     }
 

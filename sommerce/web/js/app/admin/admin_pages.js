@@ -190,7 +190,7 @@ customModule.adminPages = {
 
             custom.confirm(params['confirm_message'], '', {}, function () {
                 custom.sendBtn($related, {
-                    data: self.addTokenParams(queryParams),
+                    data: addTokenParams(queryParams),
                     type: 'POST',
                     callback: function () {
                         location.reload();
@@ -207,7 +207,7 @@ customModule.adminPages = {
             var page = $related.data('page');
             var $modal = $('#modal-duplicate');
             $modal.data('page', page);
-            $('#feature-delete').attr('href', $related.data('action'));
+            $('#feature-duplicate').attr('href', $related.data('action'));
             $modal.modal('show');
             return false;
         });
@@ -223,7 +223,7 @@ customModule.adminPages = {
             generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
             queryParams.url = generatedUrl;
             custom.sendBtn($this, {
-                data: self.addTokenParams(queryParams),
+                data: addTokenParams(queryParams),
                 type: 'POST',
                 callback: function () {
                     location.reload();
@@ -233,18 +233,16 @@ customModule.adminPages = {
             return false;
         });
 
+        function addTokenParams($obj) {
+            var csrfToken = $('meta[name="csrf-token"]').attr("content"),
+                csrfParam = $('meta[name="csrf-param"]').attr("content");
 
+            $obj[csrfParam] = csrfToken;
 
-
-    },
-
-    addTokenParams: function ($obj) {
-        var csrfToken = $('meta[name="csrf-token"]').attr("content"),
-            csrfParam = $('meta[name="csrf-param"]').attr("content");
-
-        $obj[csrfParam] = csrfToken;
-
-        return $obj;
+            return $obj;
+        }
     }
+
+
 
 };
