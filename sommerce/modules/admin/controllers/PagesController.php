@@ -7,6 +7,7 @@ use common\components\ActiveForm;
 use common\components\response\CustomResponse;
 use common\helpers\SiteHelper;
 use common\models\sommerce\Pages;
+use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\forms\EditPageForm;
 use sommerce\modules\admin\models\search\PagesSearch;
@@ -247,6 +248,7 @@ class PagesController extends CustomController
         $model->setUser($user);
 
         if ($model->duplicate($request->post('url'))) {
+            UiHelper::message(Yii::t('admin', 'pages.is_duplicated'));
             return [
                 'status' => 'success',
                 'errors' => null

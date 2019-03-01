@@ -190,7 +190,7 @@ customModule.adminPages = {
 
             custom.confirm(params['confirm_message'], '', {}, function () {
                 custom.sendBtn($related, {
-                    data: queryParams,
+                    data: self.addTokenParams(queryParams),
                     type: 'POST',
                     callback: function () {
                         location.reload();
@@ -212,7 +212,7 @@ customModule.adminPages = {
             return false;
         });
 
-        $('#feature-delete').click(function(e){
+        $('#feature-duplicate').click(function(e){
             e.preventDefault();
             var $this = $(this);
             var page = $('#modal-duplicate').data('page');
@@ -223,15 +223,28 @@ customModule.adminPages = {
             generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
             queryParams.url = generatedUrl;
             custom.sendBtn($this, {
-                data: queryParams,
+                data: self.addTokenParams(queryParams),
                 type: 'POST',
                 callback: function () {
                     location.reload();
                 }
             });
+
+            return false;
         });
 
 
+
+
+    },
+
+    addTokenParams: function ($obj) {
+        var csrfToken = $('meta[name="csrf-token"]').attr("content"),
+            csrfParam = $('meta[name="csrf-param"]').attr("content");
+
+        $obj[csrfParam] = csrfToken;
+
+        return $obj;
     }
 
 };
