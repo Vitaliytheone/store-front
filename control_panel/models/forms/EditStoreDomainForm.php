@@ -2,7 +2,7 @@
 
 namespace control_panel\models\forms;
 
-use common\helpers\SuperTaskHelper;
+use control_panel\helpers\super_tasks\SuperTaskHelper;
 use common\models\sommerces\StoreDomains;
 use common\models\sommerces\Stores;
 use control_panel\components\validators\StoreDomainValidator;
@@ -79,6 +79,11 @@ class EditStoreDomainForm extends Model
 
     /**
      * Edit store domain method
+     * @return bool
+     * @throws \ReflectionException
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function save()
     {

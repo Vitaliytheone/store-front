@@ -2,10 +2,7 @@
 
 namespace superadmin\models\search;
 
-
-use common\models\gateways\Sites;
 use common\models\sommerces\CustomersCounters;
-use common\models\sommerces\Stores;
 use superadmin\widgets\CountPagination;
 use Yii;
 use common\models\sommerces\Customers;
@@ -144,6 +141,11 @@ class CustomersSearch extends Customers
         ];
     }
 
+    /**
+     * @param $email
+     * @param $status
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public static function ajaxSelectSearch($email, $status) {
         if ($status === 'all') {
             return Customers::find()

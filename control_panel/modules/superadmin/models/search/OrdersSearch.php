@@ -47,18 +47,8 @@ class OrdersSearch extends Orders {
         $searchQuery = $this->getQuery();
 
         $orders = new Query();
-        $orders->from('orders');
-        $orders->andWhere([
-            'orders.item' => [
-                Orders::ITEM_BUY_DOMAIN,
-                Orders::ITEM_BUY_SSL,
-                Orders::ITEM_PROLONGATION_SSL,
-                Orders::ITEM_PROLONGATION_DOMAIN,
-                Orders::ITEM_FREE_SSL,
-                Orders::ITEM_PROLONGATION_FREE_SSL ,
-                Orders::ITEM_BUY_SOMMERCE ,
-            ]
-        ]);
+        $orders->from(DB_SOMMERCES . '.orders');
+
         if (null === $status || '' === $status) {
             if (empty($searchQuery)) {
                 $orders->andWhere([
@@ -83,7 +73,7 @@ class OrdersSearch extends Orders {
             ]);
         }
 
-        $orders->leftJoin('customers', 'customers.id = orders.cid');
+        $orders->leftJoin(DB_SOMMERCES . '.customers', 'customers.id = orders.cid');
 
         $orders->select([
             'orders.*',
@@ -106,6 +96,7 @@ class OrdersSearch extends Orders {
     /**
      * Search orders
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function search()
     {
@@ -124,9 +115,9 @@ class OrdersSearch extends Orders {
 
         $orders = $query
             ->leftJoin(
-                'invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", InvoiceDetails::getSommerceOrderItems()) . ')'
+                DB_SOMMERCES . '.invoice_details', 'invoice_details.item_id = orders.id AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
             )
-            ->leftJoin('invoices', 'invoices.id = invoice_details.invoice_id')
+            ->leftJoin(DB_SOMMERCES . '.invoices', 'invoices.id = invoice_details.invoice_id')
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
@@ -143,8 +134,9 @@ class OrdersSearch extends Orders {
     }
 
     /**
-     * @param $data array
+     * @param $data
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     private function prepareData($data)
     {
@@ -264,8 +256,8 @@ class OrdersSearch extends Orders {
             Orders::ITEM_BUY_SSL => Yii::t('app/superadmin', 'orders.list.item_certificates', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SSL, 0)
             ]),
-            Orders::ITEM_BUY_SOMMERCE => Yii::t('app/superadmin', 'orders.list.item_sommerce', [
-                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_SOMMERCE, 0)
+            Orders::ITEM_BUY_STORE => Yii::t('app/superadmin', 'orders.list.item_stores', [
+                'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_BUY_STORE, 0)
             ]),
             Orders::ITEM_PROLONGATION_SSL => Yii::t('app/superadmin', 'orders.list.item_prolongation_ssl', [
                 'count' => ArrayHelper::getValue($itemCounters, Orders::ITEM_PROLONGATION_SSL, 0)

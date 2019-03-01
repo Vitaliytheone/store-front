@@ -210,6 +210,8 @@ class InvoiceDetails extends ActiveRecord
                     break;
 
                 case static::ITEM_CUSTOM_CUSTOMER:
+                    $this->description = !empty($this->description) ? $this->description : Yii::t('app', 'invoice_details.description.custom');
+                    break;
 
                 case static::ITEM_BUY_STORE:
                     $order = Orders::findOne($this->item_id);

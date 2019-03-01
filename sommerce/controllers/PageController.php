@@ -43,7 +43,9 @@ class PageController extends CustomController
         $this->seoKeywords = $page['seo_keywords'];
         $this->seoDescription = $page['seo_description'];
 
-        return $this->renderTwigContent($page['twig']);
+        $content = $page['twig'] ?? '';
+
+        return $this->renderTwigContent($content);
     }
 
     /**

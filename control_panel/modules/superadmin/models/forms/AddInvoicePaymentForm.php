@@ -1,9 +1,9 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use common\helpers\PaymentHelper;
 use common\models\sommerces\Invoices;
-use common\models\sommerces\Params;
 use common\models\sommerces\Payments;
 use common\models\sommerces\services\GetGeneralPaymentMethodsService;
 use Yii;
@@ -87,6 +87,8 @@ class AddInvoicePaymentForm extends Model {
     /**
      * Get payment methods
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public function getMethods()
     {

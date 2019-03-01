@@ -107,6 +107,7 @@ class TicketsController extends CustomController
      * @param $id
      * @return string
      * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionView($id)
     {
@@ -239,6 +240,9 @@ class TicketsController extends CustomController
 
     /**
      * Change ticket status
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
     public function actionChangeStatus()
     {
@@ -265,6 +269,9 @@ class TicketsController extends CustomController
 
     /**
      * Change ticket status
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
     public function actionChangeAssigned()
     {
@@ -294,6 +301,11 @@ class TicketsController extends CustomController
 
     /**
      * Delete ticket message
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDeleteMessage()
     {
@@ -313,6 +325,9 @@ class TicketsController extends CustomController
 
     /**
      * Edit ticket message
+     * @return array
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
     public function actionEditMessage()
     {

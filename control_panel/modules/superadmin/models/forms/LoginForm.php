@@ -2,7 +2,6 @@
 
 namespace superadmin\models\forms;
 
-use common\models\sommerces\AuthFails;
 use common\models\sommerces\SuperAdmin;
 use common\models\sommerces\SuperLog;
 use Yii;
@@ -96,6 +95,7 @@ class LoginForm extends Model
     /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
+     * @throws \yii\base\Exception
      */
     public function login()
     {
@@ -143,6 +143,7 @@ class LoginForm extends Model
 
     /**
      * Add fail auth
+     * @throws \yii\base\Exception
      */
     private static function addFail()
     {

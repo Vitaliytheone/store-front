@@ -4,7 +4,6 @@ namespace superadmin\models\forms;
 
 use common\models\common\ProjectInterface;
 use common\models\sommerces\Orders;
-use common\models\sommerces\Project;
 use common\models\sommerces\SslCert;
 use common\models\sommerces\Stores;
 use control_panel\helpers\order\OrderSslHelper;
@@ -49,11 +48,6 @@ class DisableSslForm extends Model
     public function disabled()
     {
         switch ($this->_ssl->project_type) {
-
-            case ProjectInterface::PROJECT_TYPE_PANEL:
-                $project = Project::findOne($this->_ssl->pid);
-                break;
-
             case ProjectInterface::PROJECT_TYPE_STORE:
                 $project = Stores::findOne($this->_ssl->pid);
                 break;
