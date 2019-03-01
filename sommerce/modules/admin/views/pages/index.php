@@ -75,7 +75,7 @@ use yii\helpers\Html;
                                         <span class="la la-cog"></span>
                                         <?= Yii::t('admin', 'pages.settings')?>
                                     </a>
-                                    <a href="<?= Url::toRoute('settings/edit-page/' . $page['id'])?>" class="sommerce-page__actions-btn m-btn--air ">
+                                    <a href="<?= Url::toRoute('/pages/edit-page/' . $page['id'])?>" class="sommerce-page__actions-btn m-btn--air ">
                                         <span class="la la-edit"></span>
                                         <?= Yii::t('admin', 'pages.editor')?>
                                     </a>
