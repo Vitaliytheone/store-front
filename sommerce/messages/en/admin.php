@@ -290,6 +290,7 @@ return [
     'pages.editor' => 'Editor',
     'pages.confirm_message' => 'Are you sure?',
     'pages.duplicate_confirm' => '<p>Are your sure that your want to <br><strong>duplicate</strong> this page?</p>',
+    'pages.is_duplicated' => 'Page success duplicated!',
 
 
     'settings.page_title' => 'Settings',
