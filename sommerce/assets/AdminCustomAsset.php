@@ -21,7 +21,7 @@ class AdminCustomAsset extends AssetBundle
     ];
 
     public $js = [
-        'js/main.js',
+        'js/admin.js',
     ];
 
     public $depends = [
