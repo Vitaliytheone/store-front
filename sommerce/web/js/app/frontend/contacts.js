@@ -1,30 +1,38 @@
-customModule.contactsFrontend = {
-    run: function (params) {
-        $('#contactForm').on('click', '.block-contactus__form-button', function (e) {
-            e.preventDefault();
-            var btn = $(this);
-            var form = $('#contactForm');
-            var errorBlock = $('#contactFormError', form);
+/******************************************************************
+ *            Contact form
+ ******************************************************************/
+$('#contactForm').on('click', '.block-contactus__form-button', function (e) {
+    e.preventDefault();
+    var btn = $(this);
+    var form = $('#contactForm');
+    var errorBlock = $('#contactFormError', form);
+    var actionUrl = '/page/contact-us';
 
-            errorBlock.addClass('hidden');
+    errorBlock.addClass('hidden');
 
-            custom.sendFrom(btn, form, {
-                data: form.serialize(),
-                callback: function (response) {
+    $.ajax({
+        url: actionUrl,
+        async: false,
+        type: "POST",
+        dataType: 'json',
+        data: form.serialize(),
+        success: function (data) {
+            errorBlock.removeClass('hidden');
+            if (data.error == false) {
+                errorBlock.removeClass('alert-danger');
+                errorBlock.addClass('alert-success');
+                errorBlock.html(data.success);
+                console.log('Success', data);
+            } else {
+                errorBlock.removeClass('alert-success');
+                errorBlock.addClass('alert-danger');
+                errorBlock.html(data.error_message);
+                console.log('Error', data);
+            }
 
-                    if ('success' == response.status) {
-                        errorBlock.addClass('alert-success');
-                    }
-
-                    if ('error' == response.status) {
-                        errorBlock.addClass('alert-danger');
-                        errorBlock.removeClass('hidden');
-                        errorBlock.html(response.error);
-                    }
-                }
-            });
-
-            return false;
-        });
-    }
-};
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Error on update', jqXHR, textStatus, errorThrown);
+        }
+    });
+});

@@ -90,11 +90,11 @@ class ContactForm extends Model
             'message' => $this->message,
         ]);
 //        $sentResult = $mail->send();
-        $sentResult = false; // fixme
+        $sentResult = true; // fixme todo del
 
         if ($sentResult === true) {
             // Store sent result to session
-            Yii::$app->session->setFlash('sent_success', $sentResult);
+            Yii::$app->session->setFlash('sent_success', Yii::t('app', 'contact.form.message.success'));
         }  else {
             // Set validation error
             $this->addError(null, Yii::t('app', 'contact.form.message.error'));

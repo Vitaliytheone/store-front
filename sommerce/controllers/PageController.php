@@ -59,13 +59,14 @@ class PageController extends CustomController
     {
         $this->enableCsrfValidation = false;
 
-        $this->addModule('contactsFrontend');
-
         $request = Yii::$app->getRequest();
         $contactForm = new ContactForm();
 
         if ($contactForm->load($request->post()) && $contactForm->contact()) {
-            return json_encode(['success' => $contactForm->getSentSuccess()]);
+            return json_encode([
+                'error' => $contactForm->hasErrors(),
+                'success' => $contactForm->getSentSuccess(),
+            ]);
         } else {
             return json_encode([
                 'error' => $contactForm->hasErrors(),
