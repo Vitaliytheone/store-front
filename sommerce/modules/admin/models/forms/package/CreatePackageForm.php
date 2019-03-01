@@ -78,6 +78,7 @@ class CreatePackageForm extends BaseForm
 
         $model = new Packages();
         $model->attributes = $this->attributes;
+        $model->product_id = $this->_product->id;
         /** @var Transaction $transaction */
         $transaction = Yii::$app->storeDb->beginTransaction();
 
