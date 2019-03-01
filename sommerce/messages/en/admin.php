@@ -109,7 +109,8 @@ return [
     'payments.payment_method_bitcoin' => 'Bitcoin',
     'payments.payment_method_coinpayments' => 'CoinPayments',
 
-    'payments.t_id' => 'ID',
+    'payments.t_id' => 'Payment ID',
+    'payments.t_order_id' => 'Order ID',
     'payments.t_customer' => 'Customer',
     'payments.t_amount' => 'Amount',
     'payments.t_method' => 'Method',
