@@ -9,6 +9,7 @@ use sommerce\modules\admin\components\Url;
 
 <tr>
     <td><?= $payment['id'] ?></td>
+    <td><?= $payment['order_id'] ?></td>
     <td><?= $payment['customer'] ?></td>
     <td><?= $payment['amount'] ?></td>
     <td><?= $payment['method_title'] ?></td>

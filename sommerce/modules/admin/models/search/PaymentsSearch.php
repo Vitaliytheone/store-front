@@ -104,7 +104,7 @@ class PaymentsSearch extends Model
     {
         $query = (new Query())
             ->select([
-                'payments.id', 'payments.customer', 'amount', 'method', 'fee', 'memo', 'payments.status', 'payments.updated_at', 'payments.checkout_id',
+                'payments.id', 'payments.order_id', 'payments.customer', 'amount', 'method', 'fee', 'memo', 'payments.status', 'payments.updated_at', 'payments.checkout_id',
             ])
             ->from($this->_paymentsTable)
             ->indexBy('id')

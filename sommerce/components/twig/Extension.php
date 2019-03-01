@@ -2,6 +2,7 @@
 
 namespace sommerce\components\twig;
 
+use common\models\sommerce\Packages;
 use sommerce\components\twig\parsers\TokenParser_Include;
 use common\models\sommerce\Pages;
 use sommerce\helpers\AssetsHelper;
@@ -58,6 +59,14 @@ class Extension extends \Twig_Extension {
             }),
             new Twig_SimpleFunction('package', function($value) {
                 return PackageHelper::getPackageBuyNow($value);
+            }),
+
+            new Twig_SimpleFunction('products', function($productId) {
+                return Packages::find()
+                    ->select('icon, quantity, name, price, properties, id')
+                    ->where(['product_id' => $productId])
+                    ->asArray()
+                    ->all();
             }),
         ];
 
