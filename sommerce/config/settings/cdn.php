@@ -8,7 +8,7 @@ return [
     'uploadcare' => [
         'active' => true,
         'class_name' => 'Uploadcare',
-        'public_key' => '2b57ca4e85ca588704a4',
-        'secret_key' => '15b9d150192983929861',
+        'public_key' => '46059dde8d0079a401b8',
+        'secret_key' => 'b397379a3349c44f3b3b',
     ],
 ];

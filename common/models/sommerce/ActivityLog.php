@@ -85,6 +85,7 @@ class ActivityLog extends ActiveRecord
     const E_PACKAGES_PACKAGE_MODE_CHANGED = 5014;
     const E_PACKAGES_PACKAGE_PROVIDER_CHANGED = 5015;
     const E_PACKAGES_PACKAGE_PROVIDER_SERVICE_CHANGED = 5016;
+    const E_PACKAGES_PACKAGE_DUPLICATED = 5017;
 
     /**
      * @return array

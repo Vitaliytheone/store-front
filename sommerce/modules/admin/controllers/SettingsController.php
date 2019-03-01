@@ -115,6 +115,13 @@ class SettingsController extends CustomController
             'block-upload',
             'update-theme',
             'theme-update-style',
+            // Page editor react post-requests
+            'draft',
+            'publish',
+            'set-product',
+            'set-package',
+            'set-image',
+            'unset-image',
         ])) {
             $this->enableCsrfValidation = false;
         }

@@ -3,9 +3,11 @@
 namespace common\models\sommerce;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\db\Query;
 use common\models\sommerce\queries\ProductsQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%products}}".
@@ -155,5 +157,24 @@ class Products extends ActiveRecord
             ->one();
 
         return $query['position'];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'position' => [
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'position',
+                ],
+                'value' => function ($event) {
+                    $position = static::find()->max('position');
+                    return null === $position ? 0 : $position + 1;
+                },
+            ],
+        ]);
     }
 }
