@@ -55,9 +55,13 @@ $model->setStore($store);
 
                 <div id="create-package-auto" class="hidden">
                     <hr>
-                    <?= $form->field($model, 'provider_id')->dropDownList($model->getStoreProviders()) ?>
+                    <?= $form->field($model, 'provider_id')->dropDownList($model->getStoreProviders(), [
+                        'class' => 'form-control provider-id',
+                    ]) ?>
 
-                    <?= $form->field($model, 'provider_service')->dropDownList($model->getProviderServices()) ?>
+                    <?= $form->field($model, 'provider_service')->dropDownList($model->getProviderServices(), [
+                        'class' => 'form-control provider-service',
+                    ]) ?>
 
                     <span class="api-error m--font-danger hidden"></span>
                 </div>

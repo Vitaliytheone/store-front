@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 use common\models\stores\StoreProviders;
+use common\models\stores\StoreProviders as SommerceProviders;
 use function GuzzleHttp\Psr7\build_query;
 use Yii;
 use yii\base\Exception;
@@ -25,9 +26,9 @@ class ApiProviders
 
     /**
      * ApiProviders constructor.
-     * @param StoreProviders $storeProvider
+     * @param StoreProviders|SommerceProviders $storeProvider
      */
-    public function __construct(StoreProviders $storeProvider)
+    public function __construct($storeProvider)
     {
         $provider = $storeProvider->provider;
         $this->api_url = str_replace('{{api_host}}', $provider->getSite(), self::COMMON_API_URL_TPL);

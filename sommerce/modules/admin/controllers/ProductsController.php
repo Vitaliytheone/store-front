@@ -317,17 +317,17 @@ class ProductsController extends CustomController
 
     /**
      * Get provider`s services list AJAX action
-     * @param $provider_id
+     * @param $id
      * @return array
      * @throws NotFoundHttpException
      */
-    public function actionGetProviderServices($provider_id)
+    public function actionGetProviderServices($id)
     {
         /**
          * @var StoreProviders $storeProvider
          */
         $storeProvider = $this->findClassModel([
-            'provider_id' => $provider_id,
+            'provider_id' => $id,
             'store_id' => $this->store->id
         ], StoreProviders::class);
 
@@ -368,6 +368,12 @@ class ProductsController extends CustomController
         ];
     }
 
+    /**
+     * @param integer $id
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     */
     public function actionDuplicatePackage($id)
     {
         /**
