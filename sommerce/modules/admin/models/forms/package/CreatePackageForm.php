@@ -107,6 +107,8 @@ class CreatePackageForm extends BaseForm
             'link_type' => Yii::t('admin', 'products.create_package.link'),
             'visibility' => Yii::t('admin', 'products.create_package.availability'),
             'mode' => Yii::t('admin', 'products.create_package.mode'),
+            'provider_id' => Yii::t('admin', 'products.create_package.provider'),
+            'provider_service' => Yii::t('admin', 'products.create_package.provider_service'),
         ];
     }
 

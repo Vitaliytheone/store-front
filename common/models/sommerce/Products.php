@@ -171,6 +171,9 @@ class Products extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'position',
                 ],
                 'value' => function ($event) {
+                    if (null !== $this->position) {
+                        return $this->position;
+                    }
                     $position = static::find()->max('position');
                     return null === $position ? 0 : $position + 1;
                 },

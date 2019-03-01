@@ -20,7 +20,7 @@ class MovePackageForm extends BaseForm
     /**
      * @param Packages $package
      */
-    public function setProduct(Packages $package)
+    public function setPackage(Packages $package)
     {
         $this->_package = $package;
     }
@@ -67,7 +67,7 @@ class MovePackageForm extends BaseForm
             $this->_package->setAttribute('position', $newPosition);
         }
 
-        ActivityLog::log($this->_user, ActivityLog::E_PACKAGES_PACKAGE_POSITION_CHANGED, $this->_package->id, $this->_package->id);
+        $this->_user && ActivityLog::log($this->_user, ActivityLog::E_PACKAGES_PACKAGE_POSITION_CHANGED, $this->_package->id, $this->_package->id);
 
         return $this->_package->getAttribute('position');
     }
