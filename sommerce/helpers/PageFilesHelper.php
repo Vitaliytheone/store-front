@@ -31,7 +31,6 @@ class PageFilesHelper
                 'publish_at',
                 'content',
             ])
-                ->where(['is_draft' => 0])
                 ->asArray()
                 ->all(), 'file_name');
         }
