@@ -19,6 +19,11 @@ use yii\helpers\ArrayHelper;
  */
 class ProductsSearch extends Model
 {
+    /**
+     * @var Stores
+     */
+    private $_store;
+
     private $_db;
     private $_productsTable;
     private $_packagesTable;
@@ -37,6 +42,7 @@ class ProductsSearch extends Model
      */
     public function setStore(Stores $store)
     {
+        $this->_store = $store;
         $this->_db = $store->db_name;
         $this->_productsTable = $this->_db . "." . Products::tableName();
         $this->_packagesTable = $this->_db . "." . Packages::tableName();
@@ -79,7 +85,7 @@ class ProductsSearch extends Model
             ->select([
                 'pr.id pr_id', 'pr.name pr_name', 'pr.position pr_position', 'pr.visibility pr_visibility',
                 'pk.id pk_id', 'pk.product_id pk_pr_id', 'pk.name pk_name', 'pk.position pk_position', 'pk.visibility pk_visibility', 'pk.mode pk_mode', 'pk.price pk_price', 'pk.quantity pk_quantity', 'pk.deleted pk_deleted',
-                'pk.provider_id'
+                'pk.provider_id', 'pk.provider_service',
             ])
             ->from("$this->_productsTable pr")
             ->leftJoin("$this->_packagesTable pk", 'pk.product_id = pr.id AND pk.deleted = :deleted', [':deleted' => Packages::DELETED_NO])
@@ -113,6 +119,8 @@ class ProductsSearch extends Model
                     'quantity' => $package['pk_quantity'],
                     'provider' => $provider,
                     'deleted' => $package['pk_deleted'],
+                    'provider_id' => $package['provider_id'],
+                    'provider_service' => $package['provider_service'],
                 ];
             });
 
@@ -132,24 +140,12 @@ class ProductsSearch extends Model
     }
 
     /**
-     * Return products-properties list
      * @return array
      */
-    public function getProductsProperties()
+    public function getExistingUrls()
     {
-        $products = (new Query())
-            ->select(['id', 'name', 'properties'])
-            ->from($this->_productsTable)
-            ->where([
-                'not',
-                ['properties' => null]
-            ])
-            ->all();
-
-        array_walk($products, function(&$product) {
-            $product['properties'] = json_decode($product['properties'], true);
-        });
-
-        return $products;
+        $urlsModel = new UrlsSearch();
+        $urlsModel->setStore($this->_store);
+        return $urlsModel->searchUrls();
     }
 }

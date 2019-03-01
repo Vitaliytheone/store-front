@@ -4,6 +4,9 @@
     <meta name="keywords" content="{{ page.meta.keywords }}">
     <meta name="description" content="{{ page.meta.description }}">
     <link rel="stylesheet" href="{{ assets('css/styles.css') }}">
+    {% if site.favicon %}
+        <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
+    {% endif %}
 </head>
 <body>
 {% include('/snippets/header.twig') %}

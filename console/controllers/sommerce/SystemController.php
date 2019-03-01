@@ -807,44 +807,4 @@ class SystemController extends CustomController
         }
     }
 
-    /**
-     * Update Sommerce tables to new version
-     * @return string
-     * @throws Exception
-     */
-    public function actionUpdateSommerceTable(): string
-    {
-        $stores = (new Query())
-            ->select('db_name')
-            ->from(DB_SOMMERCES . '.stores')
-            ->where('db_name is not null')
-            ->andWhere('db_name != ""')
-            ->all();
-
-        $templateDb = Yii::$app->params['sommerceDefaultDatabase'];
-        $stores[] = ['db_name' => $templateDb];
-
-        $count = 0;
-        foreach ($stores as $store) {
-            if (Yii::$app->db->getTableSchema($store['db_name'] . '.pages', true) === null) {
-                continue;
-            }
-
-            Yii::$app->db->createCommand('
-            USE `' . $store['db_name'] . '`;
-            ALTER TABLE `pages` ADD `seo_description` VARCHAR(2000) NULL DEFAULT NULL AFTER `title`;
-            ALTER TABLE `pages` ADD `seo_keywords` VARCHAR(2000) NULL DEFAULT NULL AFTER `seo_description`;
-            ALTER TABLE `pages` ADD `name` VARCHAR(300) NOT NULL AFTER `id`;
-            ALTER TABLE `pages` CHANGE `title` `seo_title` varchar(300) NULL;
-            ALTER TABLE `suborders` CHANGE `amount` `amount` DECIMAL(20,2) NULL DEFAULT NULL;
-            ALTER TABLE `payments` CHANGE `amount` `amount` DECIMAL(20,2) NULL DEFAULT NULL;
-            ALTER TABLE `payments` CHANGE `fee` `fee` DECIMAL(20,2) NULL DEFAULT \'0.00\';
-        ')->execute();
-            $this->stdout("Apply changes to {$store['db_name']} tables\n");
-            $count++;
-        }
-
-        return $this->stdout("SUCCESS update tables in {$count} db\n", Console::FG_GREEN);
-    }
-
 }

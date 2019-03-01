@@ -2,26 +2,31 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use admin\models\forms\package\DuplicatePackageForm;
+use admin\models\forms\package\EditPackageForm;
+use admin\models\forms\product\EditProductForm;
 use common\components\ActiveForm;
+use common\components\response\CustomResponse;
 use common\models\sommerce\ActivityLog;
 use common\models\sommerce\Packages;
 use common\models\sommerce\Products;
 use common\models\sommerces\StoreAdminAuth;
-use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\models\forms\EditNavigationForm;
-use sommerce\modules\admin\models\forms\MovePackageForm;
+use admin\models\forms\package\MovePackageForm;
 use Yii;
-use yii\web\Response;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\NotAcceptableHttpException;
 use sommerce\helpers\UiHelper;
-use sommerce\modules\admin\models\forms\CreateProductForm;
-use sommerce\modules\admin\models\forms\CreatePackageForm;
-use common\models\sommerces\Stores;
+use admin\models\forms\package\CreatePackageForm;
 use common\models\sommerces\StoreProviders;
 use common\helpers\ApiProviders;
-use sommerce\modules\admin\models\forms\MoveProductForm;
+use admin\models\forms\product\MoveProductForm;
 use sommerce\modules\admin\models\search\ProductsSearch;
+use admin\models\forms\product\CreateProductForm;
+use sommerce\modules\admin\components\Url;
 
 /**
  * Class ProductsController
@@ -29,12 +34,67 @@ use sommerce\modules\admin\models\search\ProductsSearch;
  */
 class ProductsController extends CustomController
 {
-    public function beforeAction($action)
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
     {
-        // Add custom JS modules
-        $this->addModule('ordersDetails');
-
-        return parent::beforeAction($action);
+        return ArrayHelper::merge(parent::behaviors(), [
+            'ajax' => [
+                'class' => AjaxFilter::class,
+                'only' => [
+                    'create-product',
+                    'move-package',
+                    'delete-package',
+                    'get-provider-services',
+                    'update-package',
+                    'get-package',
+                    'create-package',
+                    'move-product',
+                    'update-product',
+                    'get-product',
+                    'create-product-menu',
+                    'duplicate-package',
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'create-product' => ['POST'],
+                    'move-package' => ['POST'],
+                    'delete-package' => ['POST'],
+                    'get-provider-services' => ['GET'],
+                    'update-package' => ['POST'],
+                    'get-package' => ['GET'],
+                    'create-package' => ['POST'],
+                    'move-product' => ['POST'],
+                    'update-product' => ['POST'],
+                    'get-product' => ['GET'],
+                    'create-product-menu' => ['POST'],
+                    'duplicate-package' => ['POST'],
+                ],
+            ],
+            'json' => [
+                'class' => ContentNegotiator::class,
+                'only' => [
+                    'create-product',
+                    'move-package',
+                    'delete-package',
+                    'get-provider-services',
+                    'update-package',
+                    'get-package',
+                    'move-product',
+                    'update-product',
+                    'get-product',
+                    'create-product-menu',
+                    'create-package',
+                    'duplicate-package',
+                ],
+                'formats' => [
+                    'application/json' => CustomResponse::FORMAT_JSON,
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -48,20 +108,10 @@ class ProductsController extends CustomController
         $search = new ProductsSearch();
         $search->setStore($this->store);
 
-        $this->addModule('adminProductsList');
-        $this->addModule('adminProductEdit', [
-            'products' => $search->getProductsProperties(),
-            'confirmMenu' => [
-                'url' => Url::toRoute('/products/create-product-menu'),
-                'labels' => [
-                    'title' => Yii::t('admin', 'products.product_menu_header'),
-                    'message' => Yii::t('admin', 'products.product_menu_message'),
-                    'confirm_button' => Yii::t('admin', 'products.product_menu_success'),
-                    'cancel_button' => Yii::t('admin', 'products.product_menu_cancel'),
-                ]
-            ]
+        $this->addModule('adminProducts', [
+            'servicesUrl' => Url::to(['products/get-provider-services']),
+            'exitingUrls' => $search->getExistingUrls(),
         ]);
-        $this->addModule('adminPackageEdit');
 
         return $this->render('index', [
             'storeProviders' => $search->getStoreProviders(),
@@ -73,93 +123,25 @@ class ProductsController extends CustomController
     /**
      * Create new Product AJAX action
      * @return array
-     * @throws \yii\web\NotAcceptableHttpException
+     * @throws NotAcceptableHttpException
      */
     public function actionCreateProduct()
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
         $model = new CreateProductForm();
-        $model->setUser(Yii::$app->user);
+        $model->setUser(Yii::$app->user->getIdentity());
 
-        if (!$model->create($request->post())) {
-            return $response->data = ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
-        }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_product_created'));
 
-        UiHelper::message(Yii::t('admin', 'products.message_product_created'));
-
-        return [
-            'product' => $model->getAttributes(),
-        ];
-    }
-
-    /**
-     * Create product menu item
-     * @param integer $id
-     * @return array
-     * @throws NotFoundHttpException
-     */
-    public function actionCreateProductMenu($id)
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        if (!($product = Products::findOne($id))) {
-            throw new NotFoundHttpException();
-        }
-
-        $model = new EditNavigationForm();
-        $model->setUser(Yii::$app->user);
-
-        if ($model->create([$model->formName() => [
-            'name' => $product->name,
-            'link' => EditNavigationForm::LINK_PRODUCT,
-            'link_id' => $product->id
-        ]])) {
-            UiHelper::message(Yii::t('admin', 'settings.nav_message_created'));
             return [
                 'status' => 'success',
+                'product' => $model->getAttributes(),
             ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
-        }
-    }
-
-    /**
-     * Get Product AJAX action
-     * @param $id
-     * @return array
-     * @throws Yii\web\NotFoundHttpException
-     */
-    public function actionGetProduct($id)
-    {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $productModel = CreateProductForm::findOne($id);
-
-        if (!$productModel) {
-            throw new NotFoundHttpException();
         }
 
         return [
-            'product' => $productModel->getAttributes(),
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
         ];
     }
 
@@ -167,37 +149,51 @@ class ProductsController extends CustomController
      * Update Product AJAX action
      * @param $id
      * @return array
-     * @throws Yii\web\NotAcceptableHttpException
-     * @throws Yii\web\NotFoundHttpException
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
      */
     public function actionUpdateProduct($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
+        /**
+         * @var Products $model
+         */
+        $product = $this->findClassModel($id, Products::class);
 
-        if (!$request->isAjax) {
-            exit;
+        $model = new EditProductForm();
+        $model->setUser(Yii::$app->user->getIdentity());
+        $model->setProduct($product);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
+
+            return [
+                'status' => 'success',
+                'product' => $model->getAttributes(),
+            ];
         }
-
-        $model = CreateProductForm::findOne($id);
-        $model->setUser(Yii::$app->user);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!$model->edit($request->post())) {
-            return $response->data = ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
-        };
-
-        UiHelper::message(Yii::t('admin', 'products.message_product_updated'));
 
         return [
-            'product' => $model->getAttributes(),
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
+        ];
+    }
+
+    /**
+     * Get Product AJAX action
+     * @param $id
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionGetProduct($id)
+    {
+        /**
+         * @var Products $productModel
+         */
+        $productModel = $this->findClassModel($id, Products::class);
+
+        return [
+            'status' => 'success',
+            'product' => $productModel->getAttributes(),
         ];
     }
 
@@ -211,59 +207,59 @@ class ProductsController extends CustomController
      */
     public function actionMoveProduct($id, $position)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
+        /**
+         * @var Products $product
+         */
+        $product = $this->findClassModel($id, Products::class);
 
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $model = MoveProductForm::findOne($id);
-        $model->setUser(Yii::$app->user);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
+        $model = new MoveProductForm();
+        $model->setProduct($product);
+        $model->setUser(Yii::$app->user->getIdentity());
 
         $newPosition = $model->changePosition($position);
 
         if ($newPosition === false) {
-            throw new NotAcceptableHttpException();
+            return [
+                'status' => 'error',
+                'error' => ActiveForm::firstError($model),
+            ];
         }
 
-        return ['position' => $newPosition];
+        return [
+            'status' => 'success',
+            'position' => $newPosition,
+        ];
     }
 
     /**
      * Create new Package AJAX action
+     * @param integer $id
      * @return array
      * @throws NotAcceptableHttpException
      */
-    public function actionCreatePackage()
+    public function actionCreatePackage($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
+        /**
+         * @var Products $product
+         */
+        $product = $this->findClassModel($id, Products::class);
 
         $model = new CreatePackageForm();
-        $model->setUser(Yii::$app->getUser());
+        $model->setProduct($product);
+        $model->setUser(Yii::$app->user->getIdentity());
 
-        if (!$model->create($request->post())) {
-            return $response->data = ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_package_created'));
+
+            return [
+                'status' => 'success',
+                'product' => $model->getAttributes(),
+            ];
         }
 
-        UiHelper::message(Yii::t('admin', 'products.message_package_created'));
-
         return [
-            'package' => $model->getAttributes(),
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
         ];
     }
 
@@ -275,88 +271,65 @@ class ProductsController extends CustomController
      */
     public function actionGetPackage($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $model = CreatePackageForm::findOne($id);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
+        /**
+         * @var Packages $package
+         */
+        $package = $this->findClassModel($id, Packages::class);
 
         return [
-            'package' => $model->getAttributes(),
+            'status' => 'success',
+            'package' => $package->getAttributes(),
         ];
     }
 
     /**
      * Update Package AJAX action
-     * @param $id
+     * @param integer $id
      * @return array
-     * @throws Yii\web\NotAcceptableHttpException
-     * @throws Yii\web\NotFoundHttpException
+     * @throws NotAcceptableHttpException
+     * @throws NotFoundHttpException
      */
     public function actionUpdatePackage($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
+        /**
+         * @var Packages $package
+         */
+        $package = $this->findClassModel($id, Packages::class);
 
-        if (!$request->isAjax) {
-            exit;
+        $model = new EditPackageForm();
+        $model->setPackage($package);
+        $model->setUser(Yii::$app->user->getIdentity());
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_package_updated'));
+
+            return [
+                'status' => 'success',
+                'product' => $model->getAttributes(),
+            ];
         }
-
-        $model = CreatePackageForm::findOne($id);
-        $model->setUser(Yii::$app->user);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
-
-        if (!$model->edit($request->post())) {
-            return ['error' => [
-                'message' => 'Model validation error',
-                'html' => UiHelper::errorSummary($model, ['class' => 'alert-danger alert']),
-            ]];
-        }
-
-        UiHelper::message(Yii::t('admin', 'products.message_package_updated'));
 
         return [
-            'package' => $model,
+            'status' => 'error',
+            'error' => ActiveForm::firstError($model),
         ];
     }
 
     /**
      * Get provider`s services list AJAX action
-     * @param $provider_id
+     * @param $id
      * @return array
      * @throws NotFoundHttpException
      */
-    public function actionGetProviderServices($provider_id)
+    public function actionGetProviderServices($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-        
-        /* @var $storeProviders \common\models\sommerces\StoreProviders[] */
-        $storeProvider = StoreProviders::findOne([
-            'provider_id' => $provider_id,
+        /**
+         * @var StoreProviders $storeProvider
+         */
+        $storeProvider = $this->findClassModel([
+            'provider_id' => $id,
             'store_id' => $this->store->id
-        ]);
-
-        if (!$storeProvider) {
-            throw new NotFoundHttpException();
-        }
+        ], StoreProviders::class);
 
         $providerApi = new ApiProviders($storeProvider);
 
@@ -375,20 +348,10 @@ class ProductsController extends CustomController
      */
     public function actionDeletePackage($id)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $model = Packages::findOne($id);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
-
+        /**
+         * @var Packages $model
+         */
+        $model = $this->findClassModel($id, Packages::class);
         if (!$model->deleteVirtual()) {
             throw new NotAcceptableHttpException();
         }
@@ -400,7 +363,38 @@ class ProductsController extends CustomController
         UiHelper::message(Yii::t('admin', 'products.message_package_deleted'));
 
         return [
+            'status' => 'success',
             'package' => $model->getAttributes(),
+        ];
+    }
+
+    /**
+     * @param integer $id
+     * @return array
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     */
+    public function actionDuplicatePackage($id)
+    {
+        /**
+         * @var Packages $model
+         */
+        $package = $this->findClassModel($id, Packages::class);
+
+        $model = new DuplicatePackageForm();
+        $model->setPackage($package);
+        $model->setUser(Yii::$app->user->getIdentity());
+
+        if ($model->save()) {
+            UiHelper::message(Yii::t('admin', 'products.message_package_duplicated'));
+            return [
+                'status' => 'success',
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'error' => Yii::t('admin', 'products.duplicate_package.error'),
         ];
     }
 
@@ -414,28 +408,27 @@ class ProductsController extends CustomController
      */
     public function actionMovePackage($id, $position)
     {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
+        /**
+         * @var Packages $package
+         */
+        $package = $this->findClassModel($id, Packages::class);
 
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $model = MovePackageForm::findOne($id);
-        $model->setUser(Yii::$app->user);
-
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
+        $model = new MovePackageForm();
+        $model->setProduct($package);
+        $model->setUser(Yii::$app->user->getIdentity());
 
         $newPosition = $model->changePosition($position);
 
         if ($newPosition === false) {
-            throw new NotAcceptableHttpException();
+            return [
+                'status' => 'error',
+                'error' => ActiveForm::firstError($model),
+            ];
         }
 
-        return ['position' => $newPosition];
+        return [
+            'status' => 'success',
+            'position' => $newPosition,
+        ];
     }
-
 }

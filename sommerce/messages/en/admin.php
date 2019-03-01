@@ -119,7 +119,7 @@ return [
     'payments.t_date' => 'Date',
 
     'products.page_title' => 'Products',
-    'products.add_product' => 'Add product',
+    'products.create_product' => 'Create new product',
     'products.edit_product' => 'Edit',
     'products.add_package' => 'Add package',
     'products.edit_package' => 'Edit',
@@ -150,11 +150,57 @@ return [
     'settings.product_seo_meta_keywords' => 'Meta keywords',
     'products.product_seo_url' => 'URL',
 
-    'products.product_properties_copy' => ' Copy properties',
-    'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',
-    'products.product_properties_create_new_1' => 'Create a new property or',
-    'products.product_properties_create_new_2' => ' copy properties',
-    'products.product_properties_create_new_3' => ' from another product',
+    'product.error.can_not_save' => 'Can not save product',
+    'products.create_product.header' => 'Create new product',
+    'products.create_product.cancel_btn' => 'Cancel',
+    'products.create_product.submit_btn' => 'Create product',
+    'products.create_product.name' => 'Product name',
+    'products.create_product.create_page' => 'Create new product page',
+    'products.create_product.url' => 'Url',
+    'products.edit_product.name' => 'Product name',
+    'products.duplicate_package' => 'Duplicate',
+    'products.packages.column.name' => 'Name',
+    'products.packages.column.provider' => 'Provider',
+    'products.packages.column.price' => 'Price',
+
+    'products.edit_product.header' => 'Edit product',
+    'products.edit_product.cancel_btn' => 'Cancel',
+    'products.edit_product.submit_btn' => 'Save changes',
+
+    'products.create_package.header' => 'Create package',
+    'products.create_package.name' => 'Package name *',
+    'products.create_package.price' => 'Price *',
+    'products.create_package.quantity' => 'Quantity *',
+    'products.create_package.best' => 'Best package',
+    'products.create_package.link' => 'Link Type',
+    'products.create_package.availability' => 'Availability',
+    'products.create_package.mode' => 'Mode',
+
+    'products.create_package.availability_enabled' => 'Enabled',
+    'products.create_package.availability_disabled' => 'Disabled',
+
+    'products.create_package.link_default' => 'None',
+
+    'products.create_package.best_enabled' => 'Enabled',
+    'products.create_package.best_disabled' => 'Disabled',
+
+    'products.create_package.mode_manual' => 'Manual',
+    'products.create_package.mode_auto' => 'Auto',
+
+    'products.create_package.cancel_btn' => 'Cancel',
+    'products.create_package.submit_btn' => 'Add package',
+
+    'products.edit_package.header' => 'Edit package',
+    'products.edit_package.cancel_btn' => 'Cancel',
+    'products.edit_package.submit_btn' => 'Save changes',
+    'products.edit_package.cancel_link' => 'Cancel',
+    'products.edit_package.delete_link' => 'Delete',
+    'products.edit_package.delete_description' => 'Are you sure you want to <br> <b>delete</b> this package?',
+
+    'products.duplicate_package.confirm' => 'Are you sure you want to <br> <b>duplicate</b> this package?',
+    'products.duplicate_package.error' => 'Can not duplicate package',
+    'products.message_package_duplicated' => 'Package was successfully duplicated!',
+
 
     'products.package_create' => 'Create package',
     'products.package_edit' => 'Edit package',
@@ -183,6 +229,13 @@ return [
     'products.package_delete_agree' => 'Are your sure that your want to delete this Package?',
     'products.package_delete_cancel' => 'Cancel',
     'products.package_delete_submit' => 'Yes, delete it!',
+
+    'products.product_properties_copy' => ' Copy properties',
+    'products.product_properties_copy_text' => 'Select the product from which you want to copy properties',
+    'products.product_properties_create_new_1' => 'Create a new property or',
+    'products.product_properties_create_new_2' => ' copy properties',
+    'products.product_properties_create_new_3' => ' from another product',
+
     'products.message_product_created' => 'Product was successfully created!',
     'products.message_product_updated' => 'Product was successfully updated!',
     'products.message_package_created' => 'Package was successfully created!',

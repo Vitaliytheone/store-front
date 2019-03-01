@@ -35,6 +35,10 @@ class Packages extends ActiveRecord
     const VISIBILITY_YES = 1;
     const VISIBILITY_NO = 0;
 
+    const BEST_YES = 1;
+    const BEST_NO = 0;
+
+
     const MODE_MANUAL = 0;
     const MODE_AUTO = 1;
 
@@ -60,7 +64,6 @@ class Packages extends ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],

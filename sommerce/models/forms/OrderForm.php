@@ -3,7 +3,7 @@
 namespace sommerce\models\forms;
 
 use common\components\ActiveForm;
-use common\helpers\CurrencyHelper;
+use sommerce\helpers\CurrencyHelper;
 use common\models\sommerce\Checkouts;
 use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\StorePaymentMethods;
