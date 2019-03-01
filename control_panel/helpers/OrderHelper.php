@@ -6,9 +6,8 @@ use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\DbHelper;
 use common\helpers\IntegrationsHelper;
-use common\helpers\SuperTaskHelper;
+use control_panel\helpers\super_tasks\SuperTaskHelper;
 use common\models\common\ProjectInterface;
-use common\models\gateways\Sites;
 use common\models\sommerces\SslValidation;
 use common\models\sommerces\SuperAdmin;
 use common\models\sommerces\TicketMessages;
@@ -20,7 +19,6 @@ use control_panel\components\ssl\Ssl;
 use control_panel\helpers\order\OrderDomainHelper;
 use common\models\sommerces\Domains;
 use common\models\sommerces\ExpiredLog;
-use common\models\sommerces\Project;
 use Yii;
 use common\models\sommerces\Orders;
 use common\models\sommerces\SslCert;
@@ -807,16 +805,8 @@ class OrderHelper
         /** @var $project Stores|Project  */
 
         switch ($ssl->project_type) {
-            case ProjectInterface::PROJECT_TYPE_PANEL:
-                $project = Project::findOne($ssl->pid);
-                break;
-
             case ProjectInterface::PROJECT_TYPE_STORE:
                 $project = Stores::findOne($ssl->pid);
-                break;
-
-            case ProjectInterface::PROJECT_TYPE_GATEWAY:
-                $project = Sites::findOne($ssl->pid);
                 break;
 
             default:

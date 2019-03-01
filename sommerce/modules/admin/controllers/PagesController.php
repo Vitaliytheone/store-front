@@ -2,7 +2,9 @@
 
 namespace sommerce\modules\admin\controllers;
 
+use admin\controllers\traits\PagesTrait;
 use common\components\ActiveForm;
+use common\components\response\CustomResponse;
 use common\helpers\SiteHelper;
 use common\models\sommerce\Pages;
 use sommerce\modules\admin\components\CustomUser;
@@ -24,9 +26,22 @@ use yii\web\Response;
  */
 class PagesController extends CustomController
 {
+    use PagesTrait;
+
     protected $exceptCsrfValidation = [
         'delete-page',
-        'duplicate-page'
+        'duplicate-page',
+        'update-blocks',
+        'block-upload',
+        'update-theme',
+        'theme-update-style',
+        // Page editor react post-requests
+        'draft',
+        'publish',
+        'set-product',
+        'set-package',
+        'set-image',
+        'unset-image',
     ];
 
     /**
@@ -55,7 +70,7 @@ class PagesController extends CustomController
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['create-page', 'edit-page', 'delete-page', 'duplicate-page'],
+                'only' => ['create-page', 'update-page', 'delete-page', 'duplicate-page'],
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
                 ],
@@ -65,11 +80,31 @@ class PagesController extends CustomController
                 'actions' => [
                     'index' => ['GET'],
                     'create-page' => ['POST'],
-                    'edit-page' => ['POST'],
+                    'update-page' => ['POST'],
                     'delete-page' => ['POST'],
                     'duplicate-page' => ['POST']
                 ],
             ],
+                'ajaxApi' => [
+                    'class' => ContentNegotiator::class,
+                    'only' => [
+                        // Pages trait
+                        'get-page',
+                        'get-pages',
+                        'draft',
+                        'publish',
+                        'get-products',
+                        'get-product',
+                        'set-product',
+                        'set-package',
+                        'set-image',
+                        'unset-image',
+                        'get-images',
+                    ],
+                    'formats' => [
+                        'application/json' => CustomResponse::FORMAT_AJAX_API,
+                    ],
+                ],
         ];
     }
 
@@ -136,7 +171,7 @@ class PagesController extends CustomController
      * @param int $id
      * @return array
      */
-    public function actionEditPage($id)
+    public function actionUpdatePage($id)
     {
 
         $request = Yii::$app->request;

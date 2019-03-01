@@ -1,10 +1,10 @@
 <?php
+
 namespace superadmin\models\forms;
 
 use common\models\sommerces\Customers;
 use common\models\sommerces\InvoiceDetails;
 use common\models\sommerces\Invoices;
-use common\models\sommerces\Project;
 use control_panel\helpers\SpecialCharsHelper;
 use Yii;
 use yii\base\Model;
@@ -42,11 +42,6 @@ class CreateInvoiceForm extends Model {
     private $_customers;
 
     /**
-     * @var Project
-     */
-    private $_panel;
-
-    /**
      * @return array the validation rules.
      */
     public function rules()
@@ -61,16 +56,9 @@ class CreateInvoiceForm extends Model {
     }
 
     /**
-     * @param Project $panel
-     */
-    public function setPanel(Project $panel)
-    {
-        $this->_panel = $panel;
-    }
-
-    /**
      * Save invoice changes
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -97,11 +85,6 @@ class CreateInvoiceForm extends Model {
         $invoiceDetailsModel->item = InvoiceDetails::ITEM_CUSTOM_CUSTOMER;
         $invoiceDetailsModel->description = $this->description;
         $invoiceDetailsModel->item_id = $this->_customer->id;
-
-        if ($this->_panel) {
-            $invoiceDetailsModel->item_id = $this->_panel->id;
-            $invoiceDetailsModel->item = InvoiceDetails::ITEM_CUSTOM_PANEL;
-        }
 
         if (!$invoiceDetailsModel->save()) {
             $transaction->rollBack();

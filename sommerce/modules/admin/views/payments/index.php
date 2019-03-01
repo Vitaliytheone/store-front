@@ -81,6 +81,7 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
                                 <thead>
                                 <tr>
                                     <th><?= Yii::t('admin', 'payments.t_id') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_order_id') ?></th>
                                     <th><?= Yii::t('admin', 'payments.t_customer') ?></th>
                                     <th><?= Yii::t('admin', 'payments.t_amount') ?></th>
                                     <th class="sommerce-th__action">

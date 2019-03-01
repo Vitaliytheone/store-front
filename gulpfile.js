@@ -45,7 +45,7 @@ var tasks = {
             './sommerce/web/js/app/*.js',
             './sommerce/web/js/app/admin/*.js',
         ])
-            .pipe(concat('main.js'))
+            .pipe(concat('admin.js'))
             .pipe(uglify())
             .pipe(gulp.dest('./sommerce/web/js/'));
     },
@@ -62,6 +62,7 @@ var tasks = {
     },
     'js-sommerce-frontend' : function(done) {
         return gulp.src([
+            './sommerce/web/js/libs/underscore.js',
             './sommerce/web/js/app/*.js',
             './sommerce/web/js/app/frontend/*.js',
         ])

@@ -6,7 +6,6 @@ use common\models\sommerces\Customers;
 use control_panel\components\ActiveForm;
 use control_panel\helpers\Url;
 use common\models\sommerces\Invoices;
-use superadmin\models\forms\AddInvoiceEarningsForm;
 use superadmin\models\forms\AddInvoicePaymentForm;
 use superadmin\models\forms\CreateInvoiceForm;
 use superadmin\models\forms\EditInvoiceCreditForm;
@@ -122,10 +121,9 @@ class InvoicesController extends CustomController
     }
 
     /**
-     * Create invoice.
-     *
-     * @access public
-     * @return mixed
+     * Create invoice
+     * @return array
+     * @throws \yii\db\Exception
      */
     public function actionCreate()
     {
@@ -184,34 +182,6 @@ class InvoicesController extends CustomController
 
         $model = new EditInvoiceCreditForm();
         $model->setInvoice($invoice);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return [
-                'status' => 'success',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => ActiveForm::firstError($model)
-            ];
-        }
-    }
-
-    /**
-     * @param $invoice_id
-     * @param $customer_id
-     * @return array
-     * @throws NotFoundHttpException
-     * @throws \yii\db\Exception
-     */
-    public function actionAddEarnings($invoice_id, $customer_id)
-    {
-        $invoice = $this->findModel($invoice_id);
-        $customer = $this->findCustomer($customer_id);
-
-        $model = new AddInvoiceEarningsForm();
-        $model->setInvoice($invoice);
-        $model->setCustomer($customer);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return [

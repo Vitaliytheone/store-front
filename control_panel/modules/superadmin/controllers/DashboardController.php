@@ -83,9 +83,9 @@ class DashboardController extends CustomController
     /**
      * Get service balance
      * @param string $serviceName
-     * @return mixed|\yii\console\Response|Response
+     * @return array
      * @throws HttpException
-     * @internal param $service
+     * @throws \ReflectionException
      */
     public function actionBalance($serviceName)
     {

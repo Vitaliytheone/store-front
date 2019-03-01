@@ -3,7 +3,9 @@
     <title>{{ page.title }}</title>
     <meta name="keywords" content="{{ page.meta.keywords }}">
     <meta name="description" content="{{ page.meta.description }}">
-    <link rel="stylesheet" href="{{ assets('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ assets('/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ assets('/css/main.css') }}">
+    <link rel="stylesheet" href="{{ assets('/css/styles.css') }}">
     {% if site.favicon %}
         <link rel="shortcut icon" type="image/ico" href="{{ site.favicon }}" />
     {% endif %}
@@ -15,6 +17,7 @@
 
 {% include('/snippets/footer.twig') %}
 
-<script src="{{ assets('js/scripts.js') }}"></script>
+<script src="{{ assets('/js/main.js') }}"></script>
+<script src="{{ assets('/js/frontend.js') }}"></script>
 </body>
 </html>

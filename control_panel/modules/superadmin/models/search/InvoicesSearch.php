@@ -63,8 +63,7 @@ class InvoicesSearch extends Invoices {
             ]);
         }
 
-        $invoices->leftJoin(DB_PANELS . '.invoice_details', 'invoice_details.invoice_id = invoices.id');
-        $invoices->andWhere(['invoice_details.item' => InvoiceDetails::getSommerceOrderItems()]);
+        $invoices->leftJoin(DB_SOMMERCES . '.invoice_details', 'invoice_details.invoice_id = invoices.id');
 
         if ($searchQuery && !empty($searchType)) {
             switch ($searchType) {
@@ -106,19 +105,19 @@ class InvoicesSearch extends Invoices {
     protected function addDomainJoinQuery($query)
     {
         $query->leftJoin(
-            DB_PANELS . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", InvoiceDetails::getSommerceOrderItems()) . ')'
+            DB_SOMMERCES . '.orders', 'orders.id = invoice_details.item_id AND orders.domain IS NOT NULL AND invoice_details.item IN (' . implode(",", InvoiceDetails::getOrdersItem()) . ')'
         );
         $query->leftJoin(DB_SOMMERCES . '.stores', 'stores.id = invoice_details.item_id AND invoice_details.item IN (' . implode(",", [
                 InvoiceDetails::ITEM_PROLONGATION_STORE,
         ]) . ')');
-        $query->leftJoin(DB_PANELS . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
-        $query->leftJoin(DB_PANELS . '.customers as customer_email', 'customer_email.id = invoices.cid');
+        $query->leftJoin(DB_SOMMERCES . '.customers', 'customers.id = invoice_details.item_id AND invoice_details.item = ' . InvoiceDetails::ITEM_CUSTOM_CUSTOMER);
+        $query->leftJoin(DB_SOMMERCES . '.customers as customer_email', 'customer_email.id = invoices.cid');
 
         return $query;
     }
 
     /**
-     * Search panels
+     * Search invoices
      * @return array
      */
     public function search()
@@ -141,7 +140,6 @@ class InvoicesSearch extends Invoices {
                 'invoices.*',
                 'customer_email.email as email',
                 'COALESCE(orders.domain, stores.domain, customers.email) as domain',
-                'IF (invoice_details.item = ' . InvoiceDetails::ITEM_PROLONGATION_PANEL . ', 1, 0) as editTotal'
             ])->offset($pages->offset)
             ->limit($pages->limit)
             ->orderBy([
@@ -150,48 +148,13 @@ class InvoicesSearch extends Invoices {
             ->all();
 
         return [
-            'models' => $this->canEditTotal($invoices),
+            'models' => $invoices,
             'pages' => $pages,
         ];
     }
 
     /**
-     * @param $invoices
-     * @return array|object
-     */
-    private function canEditTotal($invoices)
-    {
-        // TODO delete this code block
-        $invoiceDetails = (new Query())
-            ->select([
-                'invoice_id',
-                'item'
-            ])
-            ->from('invoice_details')
-            ->indexBy('invoice_id')
-            ->all();
-
-        foreach ($invoices as $key => $invoice) {
-            if (!isset($invoiceDetails[$invoice->id])) {
-                $invoices[$key]->editTotal = 0;
-                continue;
-            }
-            if (!in_array($invoiceDetails[$invoice->id]['item'], [
-                InvoiceDetails::ITEM_PROLONGATION_PANEL,
-                InvoiceDetails::ITEM_BUY_CHILD_PANEL,
-                InvoiceDetails::ITEM_PROLONGATION_CHILD_PANEL,
-            ])) {
-                $invoices[$key]->editTotal = 0;
-                continue;
-            }
-            $invoices[$key]->editTotal = 1;
-        }
-
-        return $invoices;
-    }
-
-    /**
-     * Get count panels by type
+     * Get count invoices by type
      * @param int $status
      * @return int
      */

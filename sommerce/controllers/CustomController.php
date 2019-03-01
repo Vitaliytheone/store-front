@@ -2,6 +2,7 @@
 
 namespace sommerce\controllers;
 
+use common\models\sommerces\StorePaymentMethods;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
 use sommerce\helpers\AssetsHelper;
@@ -157,25 +158,12 @@ class CustomController extends CommonController
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'page' => [
-                'title' => $this->pageTitle ?: $this->store->seo_title,
-                'menu' => $search->getSiteMenuTree(Yii::$app->request->url),
-                'cart' => [
-                    'item_count' => (int)(new CartSearch())->setStore($this->store)->getCount(),
-                ],
-                'language' => Yii::$app->language,
-                'rtl' => LanguagesHelper::getLanguageRtl($this->store),
-                'store_name' => $this->store->name,
+                'site.captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
+                'site.paymentMethods' => StorePaymentMethods::getActiveMethods($this->store->id),
+                'site.url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
-                'meta' => [
-                    'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
-                    'description' => $this->seoDescription ?: $this->store->seo_description,
-                ],
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
-                'story_name' => Yii::$app->store->getInstance()->name,
-                'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => $this->store->custom_header,
-                'custom_footer' => $this->store->custom_footer,
             ]
         ];
 

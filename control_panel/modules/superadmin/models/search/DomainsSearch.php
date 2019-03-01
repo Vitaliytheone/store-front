@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\search;
 
 use Yii;

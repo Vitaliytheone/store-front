@@ -40,8 +40,9 @@ class SslController extends CustomController
 
     /**
      * Get ssl details
-     * @param int $id
+     * @param $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionDetails($id)
     {
@@ -70,6 +71,8 @@ class SslController extends CustomController
      * Disable SSL action
      * @param $id
      * @return array
+     * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionDisable($id)
     {
