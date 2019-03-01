@@ -64,7 +64,6 @@ class Packages extends ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'quantity', 'link_type', 'product_id', 'visibility', 'best', 'mode', 'provider_id', 'deleted', 'position'], 'integer'],
             [['price'], 'number'],
             [['name', 'provider_service'], 'string', 'max' => 255],

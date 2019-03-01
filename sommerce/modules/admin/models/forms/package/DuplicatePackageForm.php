@@ -43,6 +43,7 @@ class DuplicatePackageForm extends BaseForm
             'provider_service',
             'link_type',
             'provider_id',
+            'product_id',
         ]);
 
         if (!$duplicate->save()) {

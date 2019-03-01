@@ -377,6 +377,7 @@ class ProductsController extends CustomController
 
         $model = new DuplicatePackageForm();
         $model->setPackage($package);
+        $model->setUser(Yii::$app->user->getIdentity());
 
         if ($model->save()) {
             UiHelper::message(Yii::t('admin', 'products.message_package_duplicated'));
