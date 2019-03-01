@@ -70,7 +70,7 @@ use yii\helpers\Html;
                                     </a>
                                     <a href="#" class="sommerce-page__actions-link edit-page"
                                        data-page="<?= htmlspecialchars(json_encode($page)) ?>"
-                                       data-action="<?= Url::toRoute(['/pages/edit-page', 'id' => $page['id']]) ?>"
+                                       data-action="<?= Url::toRoute(['/pages/update-page', 'id' => $page['id']]) ?>"
                                        data-modal-title="<?= Yii::t('admin', 'pages.update') ?>">
                                         <span class="la la-cog"></span>
                                         <?= Yii::t('admin', 'pages.settings')?>
