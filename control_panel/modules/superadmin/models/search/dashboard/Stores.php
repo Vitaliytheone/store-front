@@ -7,8 +7,9 @@ use common\models\sommerces\Stores as StoresModel;
 use control_panel\helpers\DomainsHelper;
 use control_panel\helpers\SpecialCharsHelper;
 
-/*
+/**
  * Source class for dashboard services
+ * @package superadmin\models\search\dashboard
  */
 class Stores extends  BaseBlock
 {

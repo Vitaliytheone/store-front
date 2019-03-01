@@ -2,28 +2,28 @@
 
 namespace console\controllers\control_panel;
 
-use common\helpers\InvoiceHelper;
-use common\models\panel\PaymentsLog;
-use common\models\panels\Domains;
-use common\models\panels\InvoiceDetails;
-use common\models\panels\Invoices;
-use common\models\panels\MyCustomersHash;
-use common\models\panels\Orders;
-use common\models\panels\Params;
-use common\models\panels\PaymentHash;
-use common\models\panels\Payments;
-use common\models\panels\SslCert;
-use common\models\panels\ThirdPartyLog;
+use control_panel\helpers\InvoiceHelper;
+use common\models\sommerces\PaymentsLog;
+use common\models\sommerces\Domains;
+use common\models\sommerces\InvoiceDetails;
+use common\models\sommerces\Invoices;
+use common\models\sommerces\MyCustomersHash;
+use common\models\sommerces\Orders;
+use common\models\sommerces\Params;
+use common\models\sommerces\PaymentHash;
+use common\models\sommerces\Payments;
+use common\models\sommerces\SslCert;
+use common\models\sommerces\ThirdPartyLog;
 use common\models\sommerces\Stores;
-use console\components\crons\CronFreeSslOrder;
+use console\components\crons\sommerce\CronFreeSslOrder;
 use console\components\payments\PaymentsFee;
 use console\components\terminate\TerminateSommerce;
 use control_panel\components\payments\Paypal;
 use control_panel\helpers\OrderHelper;
-use common\helpers\SuperTaskHelper;
+use control_panel\helpers\super_tasks\SuperTaskHelper;
 use control_panel\helpers\PaymentsHelper;
 use control_panel\mail\mailers\PaypalVerificationNeeded;
-use console\components\terminate\CancelOrder;
+use control_panel\components\terminate\CancelOrder;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Exception;
@@ -57,7 +57,7 @@ class CronController extends CustomController
             'item' => [
                 Orders::ITEM_BUY_SSL,
                 Orders::ITEM_BUY_DOMAIN,
-                Orders::ITEM_BUY_SOMMERCE,
+                Orders::ITEM_BUY_STORE,
                 Orders::ITEM_PROLONGATION_SSL,
                 Orders::ITEM_PROLONGATION_DOMAIN,
                 Orders::ITEM_FREE_SSL,
@@ -81,7 +81,7 @@ class CronController extends CustomController
                         OrderHelper::domain($order);
                         break;
 
-                    case Orders::ITEM_BUY_SOMMERCE:
+                    case Orders::ITEM_BUY_STORE:
                         // Создаем триальный магазин сразу
                         $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
                         if ($isTrial) {
@@ -146,6 +146,7 @@ class CronController extends CustomController
      * Create prolongation invoices
      * @access public
      * @throws \console\components\crons\exceptions\CronException
+     * @throws \yii\db\Exception
      */
     public function actionCreateInvoice()
     {
@@ -154,7 +155,6 @@ class CronController extends CustomController
 
         if (Yii::$app->params['free_ssl.prolong']) {
             InvoiceHelper::prolongFreeSsl();
-            InvoiceHelper::prolongGogetSsl2LetsencryptSsl();
         }
     }
 
@@ -172,7 +172,7 @@ class CronController extends CustomController
             [
                 Orders::ITEM_BUY_DOMAIN,
                 Orders::ITEM_BUY_SSL,
-                Orders::ITEM_BUY_SOMMERCE,
+                Orders::ITEM_BUY_STORE,
                 Orders::ITEM_FREE_SSL,
                 Orders::ITEM_PROLONGATION_FREE_SSL,
             ]

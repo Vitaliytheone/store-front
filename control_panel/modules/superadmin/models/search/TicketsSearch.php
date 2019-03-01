@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\search;
 
 use Yii;
@@ -71,7 +72,7 @@ class TicketsSearch extends Tickets
             if (-1 !== strpos('@', $searchQuery)) {
                     $customerId = (new Query())
                     ->select('id')
-                    ->from('customers')
+                    ->from(DB_SOMMERCES . '.customers')
                     ->andWhere([
                         'email' => $searchQuery
                     ])
@@ -85,7 +86,7 @@ class TicketsSearch extends Tickets
             } else {
                 $ticketsIds = (new Query())
                     ->select(['ticket_id'])
-                    ->from('ticket_messages')
+                    ->from(DB_SOMMERCES . '.ticket_messages')
                     ->andWhere(['is_system' => 0])
                     ->andWhere([
                         'or',
@@ -287,7 +288,7 @@ class TicketsSearch extends Tickets
             'tickets.customer_id',
             'customers.email AS customer_email'
         ]);
-        $query->leftJoin('customers', 'tickets.customer_id = customers.id');
+        $query->leftJoin(DB_SOMMERCES . '.customers', 'tickets.customer_id = customers.id');
 
         $queryCount = clone $query;
         $pages = new Pagination(['totalCount' => $queryCount->count()]);

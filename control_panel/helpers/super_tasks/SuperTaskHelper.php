@@ -1,17 +1,13 @@
 <?php
-namespace common\helpers;
 
-use common\models\gateways\Sites;
-use common\super_tasks\CreateGatewayNginxConfigTask;
-use common\super_tasks\CreatePanelNginxConfigTask;
-use common\super_tasks\CreateStoreNginxConfigTask;
-use common\super_tasks\RestartNginxTask;
+namespace control_panel\helpers\super_tasks;
+
 use Yii;
 use ReflectionClass;
-use common\models\panels\Project;
-use common\models\stores\Stores;
-use common\models\panels\SuperTasks;
+use common\models\sommerces\Stores;
+use common\models\sommerces\SuperTasks;
 use yii\base\Exception;
+use common\super_tasks\CreateSommerceNginxConfigTask;
 
 /**
  * Class SuperTaskHelper
@@ -45,9 +41,7 @@ class SuperTaskHelper
      */
     public static function runTasks()
     {
-        Yii::$container->get(CreatePanelNginxConfigTask::class, [])->run();
-        Yii::$container->get(CreateStoreNginxConfigTask::class, [])->run();
-        Yii::$container->get(CreateGatewayNginxConfigTask::class, [])->run();
+        Yii::$container->get(CreateSommerceNginxConfigTask::class, [])->run();
         Yii::$container->get(RestartNginxTask::class, [])->run();
     }
 
@@ -61,28 +55,12 @@ class SuperTaskHelper
     public static function setTasksNginx($object, $data = [])
     {
         switch ((new ReflectionClass($object))->getShortName()) {
-            case 'Project':
-                /**
-                 * @var Project $object
-                 */
-                $domain = $object->site;
-                $item = SuperTasks::TASK_CREATE_PANEL_NGINX_CONFIG;
-                break;
-
             case 'Stores':
                 /**
                  * @var Stores $object
                  */
                 $domain = $object->domain;
                 $item = SuperTasks::TASK_CREATE_STORE_NGINX_CONFIG;
-                break;
-
-            case 'Sites':
-                /**
-                 * @var Sites $object
-                 */
-                $domain = $object->domain;
-                $item = SuperTasks::TASK_CREATE_GATEWAY_NGINX_CONFIG;
                 break;
 
             default:

@@ -1,4 +1,5 @@
 <?php
+
 namespace superadmin\models\search;
 
 use common\components\traits\UnixTimeFormatTrait;
@@ -12,8 +13,8 @@ use yii\helpers\ArrayHelper;
  * Class SslSearch
  * @package superadmin\models\search
  */
-class SslSearch extends SslCert {
-
+class SslSearch extends SslCert
+{
     public $email;
 
     protected $pageSize = 100;
@@ -52,7 +53,7 @@ class SslSearch extends SslCert {
             'ssl_cert.*',
             'customers.email as email'
         ]);
-        $sslList->leftJoin('customers', 'customers.id = ssl_cert.cid');
+        $sslList->leftJoin(DB_SOMMERCES . '.customers', 'customers.id = ssl_cert.cid');
 
 
         if (null !== $status && '' !== $status) {
