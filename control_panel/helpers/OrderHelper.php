@@ -5,7 +5,6 @@ namespace control_panel\helpers;
 use common\components\letsencrypt\Letsencrypt;
 use common\components\models\SslCertLetsencrypt;
 use common\helpers\DbHelper;
-use common\helpers\IntegrationsHelper;
 use control_panel\helpers\super_tasks\SuperTaskHelper;
 use common\models\common\ProjectInterface;
 use common\models\sommerces\SslValidation;
