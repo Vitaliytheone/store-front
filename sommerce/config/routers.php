@@ -30,8 +30,8 @@ return [
         'route' => 'site/ssl',
     ],
 
-    '/css/<name:[\w\d-.]+.css>' => 'page/styles',
-    '/js/<name:[\w\d-.]+.js>' => 'page/scripts',
+    '/css/<name:[\w\d\-.]+.css>' => 'page/styles',
+    '/js/<name:[\w\d\-.]+.js>' => 'page/scripts',
 
     'admin/settings/pages/get-page' => 'admin/settings/get-page',
     'admin/settings/pages/get-pages' => 'admin/settings/get-pages',
