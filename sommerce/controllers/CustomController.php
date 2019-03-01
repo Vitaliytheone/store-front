@@ -154,19 +154,16 @@ class CustomController extends CommonController
         $search =  new NavigationSearch();
         $search->setStore($this->store);
 
-        print_r(StorePaymentMethods::getActiveMethods($this->store->id));
-        exit;
-
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'page' => [
                 'site.captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
                 'site.paymentMethods' => StorePaymentMethods::getActiveMethods($this->store->id),
+                'site.url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
-
             ]
         ];
 
