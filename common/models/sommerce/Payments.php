@@ -12,6 +12,7 @@ use common\models\sommerce\queries\PaymentsQuery;
  * This is the model class for table "{{%payments}}".
  *
  * @property integer $id
+ * @property integer $order_id
  * @property integer $checkout_id
  * @property string $method
  * @property string $customer
@@ -57,7 +58,7 @@ class Payments extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'checkout_id', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'checkout_id', 'status', 'created_at', 'updated_at', 'order_id'], 'integer'],
             [['amount', 'fee'], 'number'],
             [['method', 'customer', 'transaction_id', 'memo', 'response_status', 'name', 'email', 'country'], 'string', 'max' => 255],
             [['currency'], 'string', 'max' => 10],
@@ -73,6 +74,7 @@ class Payments extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'order_id' => Yii::t('app', 'Order ID'),
             'checkout_id' => Yii::t('app', 'Checkout ID'),
             'method' => Yii::t('app', 'Payment method'),
             'customer' => Yii::t('app', 'Customer'),

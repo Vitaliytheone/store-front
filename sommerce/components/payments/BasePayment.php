@@ -245,6 +245,7 @@ abstract class BasePayment extends Component
 
         $payment->refresh();
         $payment->checkout_id = $checkout->id;
+        $payment->order_id = $order->id;
         $payment->amount = $checkout->price;
         $payment->customer = $checkout->customer;
         $payment->status = Payments::STATUS_COMPLETED;
