@@ -14,4 +14,4 @@ CREATE TABLE `page_files` (
   `updated_at` int(11) DEFAULT NULL,
   `publish_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;

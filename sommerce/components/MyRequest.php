@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\components;
 
-use common\helpers\CurrencyHelper;
+use sommerce\helpers\CurrencyHelper;
 use common\models\sommerces\Stores;
 use sommerce\helpers\RouteHelper;
 use Yii;

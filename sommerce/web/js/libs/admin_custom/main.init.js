@@ -12,6 +12,10 @@ $('.dropdown-collapse').on('click', function (event) {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
+
+    $('.sommerce-dropdown__delete-cancel').click(function () {
+        $(".sommerce-dropdown__delete").hide();
+    });
 });
 
 $(document).ready(function () {
