@@ -1,3 +1,0 @@
-# Creating new field `send`. For resend order indication
-USE `store`;
-ALTER TABLE `suborders` ADD `send` TINYINT(1)  NULL  DEFAULT '0'  AFTER `mode`;

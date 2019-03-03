@@ -1,3 +1,0 @@
-/* 11:49:38 root@localhost store */
-USE `store`;
-ALTER TABLE `pages` CHANGE `name` `title` VARCHAR(255)  CHARACTER SET utf8  COLLATE utf8_general_ci  NULL  DEFAULT NULL;

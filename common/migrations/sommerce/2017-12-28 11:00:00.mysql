@@ -1,3 +1,0 @@
-/* 10:07:19 root@localhost stores Language field added */
-USE `stores`;
-ALTER TABLE `stores` ADD `language` VARCHAR(10)  NULL  DEFAULT NULL  AFTER `timezone`;

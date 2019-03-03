@@ -1,4 +1,0 @@
-# `Template` field to `pages` table added
-
-USE `store`;
-ALTER TABLE `pages` ADD `template` ENUM('index', 'product', 'order', 'page', 'cart', '404', 'contact')  NOT NULL  DEFAULT 'page'  AFTER `url`;

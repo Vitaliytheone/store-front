@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
     rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" /> -->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
@@ -19,9 +19,9 @@
         <nav id="navbar-scrolling" class="navbar navbar-expand-lg navbar-light">
             <div class="container">
                 <a class="navbar-brand" href="#">Sommerce</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <!-- <span class="icon"></span> -->
+                    <span class="icon"></span>
                 </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav footer-links color-disabled ">
@@ -75,7 +75,7 @@
                                 <div class="header-descr">
                                 <h1 class="sommerce-bolder">Technology driven platform for SMM store business</h1>
                                 <p class="footer-links"><span class="interested">Are you interested?</span> Be the first to know when we launch!</p>
-                                <div class="d-flex flex-row">
+                                <div class="d-flex flex-column flex-md-row">
                                     <div class="form-group mb-2">
                                         <input type="text" class="form-control header-input" id="email" placeholder="Your email address">
                                     </div>
@@ -161,7 +161,7 @@
         <div class="container gradient">
             <div class="container provide-container">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-4 col-12">
                         <div class="row">
                             <div class="col-3">
                                 <img src="assets/img/lp-sources/ic-additionally/hosting.svg">
@@ -172,7 +172,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-md-4 col-12">
                         <div class="row">
                             <div class="col-3">
                                 <img src="assets/img/lp-sources/ic-additionally/ssl.svg">
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-md-4 col-12">
                         <div class="row">
                             <div class="col-3">
                                 <img src="assets/img/lp-sources/ic-additionally/domain.svg">
@@ -210,7 +210,7 @@
                 </div>
             </div>
         </div>
-        <div class="corner d-flex">
+        <div class="corner">
             <div class="corner-white"></div>
             <div class="corner-gradient"><img src="assets/img/lp-sources/corner@2x.png"></div> 
             <div class="corner-white"></div>
@@ -256,9 +256,6 @@
                     <div class='arrow-right'>
                         <img src="assets/img/lp-sources/ic-get-started/arrow-right.svg" alt="">
                     </div>
-                    <div class='arrow-right hidden'>
-                        <img src="assets/img/lp-sources/ic-get-started/arrow-right.svg" alt="">
-                    </div>
                     <div class="col">
                         <div class="d-flex flex-column">
                             <img src="assets/img/new/Four.svg" alt="">
@@ -275,7 +272,56 @@
                     </div>
                     </div>
                 </div>
+
+    <!-- SLIDER CAROUSEL -->
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="d-flex flex-column">
+                    <img src="assets/img/new/One.svg" alt="">
+                        <p class="feature-title">Start sell and <br> make money</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex flex-column">
+                    <img src="assets/img/new/Two.svg" alt="">
+                        <p class="feature-title">Start sell and <br> make money</p>
+                </div>
+            </div> 
+            <div class="carousel-item">
+                <div class="d-flex flex-column">
+                    <img src="assets/img/new/Three.svg" alt="">
+                        <p class="feature-title">Start sell and <br> make money</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex flex-column">
+                    <img src="assets/img/new/Four.svg" alt="">
+                        <p class="feature-title">Start sell and <br> make money</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex flex-column">
+                    <img src="assets/img/new/Five.svg" alt="">
+                        <p class="feature-title">Start sell and <br> make money</p>
+                </div>
+            </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <div class='arrow-right'>
+            <img src="assets/img/lp-sources/ic-get-started/arrow-left.svg" alt="">
         </div>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <div class='arrow-right'>
+            <img src="assets/img/lp-sources/ic-get-started/arrow-right.svg" alt="">
+        </div>
+    </a>
+    </div>
+    <!-- SLIDER CAROUSEL END -->
+
+
+    </div>
     </section>
 
 
@@ -477,7 +523,7 @@
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </body>

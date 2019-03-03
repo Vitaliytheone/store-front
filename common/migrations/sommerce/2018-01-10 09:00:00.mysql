@@ -1,3 +1,0 @@
-/* 9:19:28 root@localhost stores */
-USE `stores`;
-ALTER TABLE `stores` ADD `folder` VARCHAR(255) NULL AFTER `seo_description`, ADD `folder_content` VARCHAR(255) NULL AFTER `folder`;
