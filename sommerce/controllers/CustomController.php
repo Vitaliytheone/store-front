@@ -2,10 +2,8 @@
 
 namespace sommerce\controllers;
 
-use common\models\sommerces\StorePaymentMethods;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
-use sommerce\helpers\AssetsHelper;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use Yii;
@@ -135,6 +133,7 @@ class CustomController extends CommonController
         }
 
         $this->endContent = [];
+        $this->startHeadContent[] = Html::csrfMetaTags();
 
         if (!empty($this->customJs)) {
 
@@ -148,6 +147,7 @@ class CustomController extends CommonController
 
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
+        $this->endContent[] = Html::script('', ['src' => 'https://www.google.com/recaptcha/api.js?hl=en']);
 
         if (YII_ENV_DEV) {
             ob_start();
@@ -163,14 +163,17 @@ class CustomController extends CommonController
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
                 'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-            ],
-            'page' => [
-                'site.captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-                'site.paymentMethods' => StorePaymentMethods::getActiveMethods($this->store->id),
-                'site.url' => trim(Yii::$app->getRequest()->url, '/'),
+                'url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
+            ],
+            'page' => [
+                'title' => $this->pageTitle ?: $this->store->seo_title,
+                'meta' => [
+                    'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
+                    'description' => $this->seoDescription ?: $this->store->seo_description,
+                ],
             ]
         ];
 
