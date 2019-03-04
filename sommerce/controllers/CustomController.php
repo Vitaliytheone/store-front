@@ -6,10 +6,8 @@ use common\models\sommerces\StorePaymentMethods;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
 use sommerce\helpers\AssetsHelper;
-use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\helpers\LanguagesHelper;
 use Yii;
 use yii\base\Exception;
 use yii\bootstrap\Html;
@@ -139,9 +137,15 @@ class CustomController extends CommonController
         $this->endContent = [];
 
         if (!empty($this->customJs)) {
-            foreach (AssetsHelper::getStoreScripts() as $src) {
+
+            $appJs = [
+                '/js/frontend.js',
+            ];
+
+            foreach ($appJs as $src) {
                 $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
             }
+
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
 
@@ -157,6 +161,9 @@ class CustomController extends CommonController
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
+            'site' => [
+                'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
+            ],
             'page' => [
                 'site.captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
                 'site.paymentMethods' => StorePaymentMethods::getActiveMethods($this->store->id),

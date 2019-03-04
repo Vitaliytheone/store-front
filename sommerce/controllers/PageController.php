@@ -45,6 +45,8 @@ class PageController extends CustomController
 
         $content = $page['twig'] ?? '';
 
+        $this->addModule('orderFormFrontend', []);
+
         return $this->renderTwigContent($content);
     }
 
@@ -108,7 +110,8 @@ class PageController extends CustomController
             return '';
         }
 
-        $content = $renderer->renderContent($content, $params);
+        $global = $this->_getGlobalParams();
+        $content = $renderer->renderContent($content, array_merge($global, $params));
 
         if (!$layout) {
             return $content;
@@ -120,9 +123,15 @@ class PageController extends CustomController
             return $content;
         }
 
-        return $renderer->renderContent($layoutFile, array_merge($this->_getGlobalParams(), [
+        $renderedContent = $renderer->renderContent($layoutFile, array_merge($global, [
             'page_content' => $content,
         ]));
+
+        if ($this->endContent) {
+            $renderedContent = str_ireplace('</body>',  implode("\r\n", $this->endContent) . '</body>', $renderedContent);
+        }
+
+        return $renderedContent;
     }
 
     /**
