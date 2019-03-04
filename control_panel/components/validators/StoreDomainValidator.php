@@ -4,7 +4,7 @@ namespace control_panel\components\validators;
 use common\models\sommerces\Stores;
 use Yii;
 use common\models\sommerces\Orders;
-use common\models\sommerces\Project;
+use common\models\panels\Project;
 use yii\base\Model;
 
 /**

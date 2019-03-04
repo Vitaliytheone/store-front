@@ -9,7 +9,7 @@ use yii\db\Expression;
 
 /**
  * Class CustomerHelper
- * @package my\helpers
+ * @package control_panel\helpers
  */
 class CustomerHelper
 {
