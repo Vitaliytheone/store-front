@@ -5,7 +5,6 @@ namespace sommerce\controllers;
 use common\models\sommerces\StorePaymentMethods;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
-use sommerce\helpers\AssetsHelper;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use Yii;
@@ -135,6 +134,7 @@ class CustomController extends CommonController
         }
 
         $this->endContent = [];
+        $this->startHeadContent[] = Html::csrfMetaTags();
 
         if (!empty($this->customJs)) {
 
@@ -148,6 +148,7 @@ class CustomController extends CommonController
 
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
+        $this->endContent[] = Html::script('', ['src' => 'https://www.google.com/recaptcha/api.js?hl=en']);
 
         if (YII_ENV_DEV) {
             ob_start();
