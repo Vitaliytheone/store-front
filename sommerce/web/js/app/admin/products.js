@@ -246,6 +246,11 @@ customModule.adminProducts = {
                 delay: 150,
                 dropOnEmpty: true,
                 placeholder: "movable-placeholder",
+                helper: function() {
+                    var helper = $(this).clone();
+                    helper.css({'width': $(this).width(), 'height': $(this).height()});
+                    return helper;
+                }
             });
 
             // Sort the children
@@ -253,65 +258,60 @@ customModule.adminProducts = {
                 items: "> .package-item",
                 handle: ".sommerce-products-editor__packages-drag",
                 tolerance: "pointer",
-                containment: "parent"
+                containment: "parent",
+                helper: function() {
+                    var helper = $(this).clone();
+                    helper.css({'width': $(this).width(), 'height': $(this).height()});
+                    return helper;
+                }
+            });
+
+            productsSortable.sortable({
+                update: function(event, ui) {
+                    var currentItem = ui.item,
+                        newPosition = currentItem.index(),
+                        actionUrl = currentItem.data('action-url') + newPosition;
+
+                    $.ajax({
+                        url: actionUrl,
+                        type: "POST",
+                        data: self.getTokenParams(),
+                        success: function (data, textStatus, jqXHR){
+                            if (data.error){
+                                return;
+                            }
+                            //Success
+                        },
+                        error: function (jqXHR, textStatus, errorThrown){
+                            console.log('Error on save', jqXHR, textStatus, errorThrown);
+                        }
+                    });
+                }
+            });
+
+            packagesSortable.sortable({
+                update: function (event, ui) {
+                    var currentItem = ui.item,
+                        newPosition = currentItem.index(),
+                        actionUrl = currentItem.data('action-url') + newPosition;
+
+                    $.ajax({
+                        url: actionUrl,
+                        type: "POST",
+                        data: self.getTokenParams(),
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.error) {
+                                return;
+                            }
+                            //Success
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('Error on save', jqXHR, textStatus, errorThrown);
+                        }
+                    });
+                }
             });
         }
-
-        productsSortable.sortable({
-            update: function(event, ui) {
-                var currentItem = ui.item,
-                    newPosition = currentItem.index(),
-                    actionUrl = currentItem.data('action-url') + newPosition;
-
-                $.ajax({
-                    url: actionUrl,
-                    type: "POST",
-                    data: self.getTokenParams(),
-                    success: function (data, textStatus, jqXHR){
-                        if (data.error){
-                            return;
-                        }
-                        //Success
-                    },
-                    error: function (jqXHR, textStatus, errorThrown){
-                        console.log('Error on save', jqXHR, textStatus, errorThrown);
-                    }
-                });
-            },
-            helper: function() {
-                var helper = $(this).clone();
-                helper.css({'width': $(this).width(), 'height': $(this).height()});
-                return helper;
-            }
-        });
-
-        packagesSortable.sortable({
-            update: function (event, ui) {
-                var currentItem = ui.item,
-                    newPosition = currentItem.index(),
-                    actionUrl = currentItem.data('action-url') + newPosition;
-
-                $.ajax({
-                    url: actionUrl,
-                    type: "POST",
-                    data: self.getTokenParams(),
-                    success: function (data, textStatus, jqXHR) {
-                        if (data.error) {
-                            return;
-                        }
-                        //Success
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log('Error on save', jqXHR, textStatus, errorThrown);
-                    }
-                });
-            },
-            helper: function() {
-                var helper = $(this).clone();
-                helper.css({'width': $(this).width(), 'height': $(this).height()});
-                return helper;
-            }
-        });
     },
     getTokenParams: function () {
         var csrfToken = $('meta[name="csrf-token"]').attr("content"),
