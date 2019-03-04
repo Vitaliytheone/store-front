@@ -21,7 +21,7 @@ class ContactForm extends Model
     public $message;
     public $recaptcha;
 
-    public $_sentSuccess;
+    protected $_sentSuccess = '';
 
     /** @var  Stores */
     private $_store;
@@ -31,9 +31,6 @@ class ContactForm extends Model
         parent::init();
 
         $this->_store = Yii::$app->store->getInstance();
-
-        // Get sent result from session
-        $this->_sentSuccess = Yii::$app->session->getFlash('sent_success');
     }
 
     public function formName()
@@ -62,8 +59,8 @@ class ContactForm extends Model
     }
 
     /**
-     * Return true if message successfully sent
-     * @return mixed
+     * Return success text if message successfully sent
+     * @return string
      */
     public function getSentSuccess()
     {
@@ -92,8 +89,7 @@ class ContactForm extends Model
         $sentResult = $mail->send();
 
         if ($sentResult === true) {
-            // Store sent result to session
-            Yii::$app->session->setFlash('sent_success', $sentResult);
+            $this->_sentSuccess = Yii::t('app', 'contact.form.message.success');
         }  else {
             // Set validation error
             $this->addError(null, Yii::t('app', 'contact.form.message.error'));
@@ -186,9 +182,7 @@ class ContactForm extends Model
 
         curl_close($ch);
 
-        $jsonResponse = json_decode($response, true);
-
-        return $jsonResponse;
+        return json_decode($response, true);
     }
 
 }

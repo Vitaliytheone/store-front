@@ -8,6 +8,7 @@ use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
+use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
@@ -33,6 +34,7 @@ class SettingsController extends CustomController
     use PaymentsTrait;
     use LanguageTrait;
     use NotificationsTrait;
+    use IntegrationsTrait;
 
     public function behaviors()
     {
