@@ -277,6 +277,11 @@ customModule.adminProducts = {
                         console.log('Error on save', jqXHR, textStatus, errorThrown);
                     }
                 });
+            },
+            helper: function() {
+                var helper = $(this).clone();
+                helper.css({'width': $(this).width(), 'height': $(this).height()});
+                return helper;
             }
         });
 
@@ -300,6 +305,11 @@ customModule.adminProducts = {
                         console.log('Error on save', jqXHR, textStatus, errorThrown);
                     }
                 });
+            },
+            helper: function() {
+                var helper = $(this).clone();
+                helper.css({'width': $(this).width(), 'height': $(this).height()});
+                return helper;
             }
         });
     },
