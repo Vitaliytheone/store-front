@@ -63,11 +63,6 @@ class ChangeDomainForm extends Model {
 
         $oldSubdomain = $this->project->subdomain;
         $oldDomain = $this->project->site;
-        $isForeignDomain = PanelDomains::find()->where([
-            'panel_id' => $this->project,
-            'type' => PanelDomains::TYPE_FOREIGN_SUBDOMAIN
-        ])->exists();
-        $this->project->setForeignSubdomain($isForeignDomain);
 
         $domain = $this->prepareDomain();
 

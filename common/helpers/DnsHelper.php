@@ -2,7 +2,6 @@
 
 namespace common\helpers;
 
-
 use common\models\gateways\Sites;
 use my\helpers\DomainsHelper;
 use Yii;
