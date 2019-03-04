@@ -137,9 +137,15 @@ class CustomController extends CommonController
         $this->endContent = [];
 
         if (!empty($this->customJs)) {
-            foreach (AssetsHelper::getStoreScripts() as $src) {
+
+            $appJs = [
+                '/js/frontend.js',
+            ];
+
+            foreach ($appJs as $src) {
                 $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
             }
+
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
 
