@@ -7,6 +7,7 @@ use common\models\sommerce\Files;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
