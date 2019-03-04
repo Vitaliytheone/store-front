@@ -1,0 +1,54 @@
+<div class="modal fade" id="modal-payment-success" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content sommerce-modals__content">
+            <div class="modal-body sommerce-modals__body">
+                <div class="sommerce-modals__header">
+                    <div class="sommerce-modals__header-title"></div>
+                    <div class="sommerce-modals__header-close" data-dismiss="modal" aria-label="Close">
+                        <span class="sommerce-modals__order-icons-close"></span>
+                    </div>
+                </div>
+
+                <div class="sommerce-modals__order-header">
+                    <div class="sommerce-modals__order-header-icon">
+                        <div class="sommerce-modals__order-icons-success"></div>
+                    </div>
+                    <div class="sommerce-modals__order-header-title">
+                        Successfull payment
+                    </div>
+                    <div class="sommerce-modals__order-header-description">
+                        Thank you! Your payment was successful. Here is your order details.
+                    </div>
+                </div>
+
+                <div class="sommerce-modals__order-result">
+                    <table class="sommerce-modals__order-result-table">
+                        <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Package</th>
+                            <th>Details</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-label="Order ID"><%= order_id %></td>
+                            <td data-label="Package"><%= package %></td>
+                            <td data-label="Details"><%= details %></td>
+                            <td data-label="Price" nowrap=""><%= price %></td>
+                            <td data-label="Status">
+                                <span class="sommerce-status-text">%= status %></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="sommerce-modals__actions text-center">
+                    <button class="btn sommerce-modals__btn-default sommerce-modals__actions-btn-center" data-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,6 +2,7 @@
 
 namespace sommerce\controllers;
 
+use common\helpers\SiteHelper;
 use common\models\sommerce\Pages;
 use common\models\sommerce\Checkouts;
 use sommerce\components\payments\Payment;
@@ -11,7 +12,7 @@ use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
-use \yii\web\Cookie;
+use yii\web\Cookie;
 
 /**
  * Class PaymentsController
@@ -85,14 +86,16 @@ class PaymentsController extends CustomController
         $checkout = $this->findCheckout($checkoutId);
         $cookies = Yii::$app->response->cookies;
 
-        $cookies->add(new Cookie([
-            'payment_success_modal' => [
+        $paymentsHelper = new PaymentsModalHelper();
+        $paymentsHelper->setStore($this->store);
 
-            ]
+        $cookies->add(new Cookie([
+            'name' => 'payment_success_modal',
+            'value' => $paymentsHelper->getSuccessDetails($checkout)
         ]));
 
-        if (Pages::existUrl(trim($checkout->redirect_url, '/'))) {
-            return $this->redirect('/' . $checkout->redirect_url);
+        if (Pages::existUrl($checkout->redirect_url)) {
+            return $this->redirect($checkout->redirect_url);
         }
 
         return $this->redirect(Url::home());
@@ -110,11 +113,12 @@ class PaymentsController extends CustomController
         $cookies = Yii::$app->response->cookies;
 
         $cookies->add(new Cookie([
-            'payment_fail_modal' => PaymentsModalHelper::getSuccessDetails($checkout)
+            'name' => 'payment_fail_modal',
+            'value' => true
         ]));
 
-        if (Pages::existUrl(trim($checkout->redirect_url, '/'))) {
-            $this->redirect('/' . $checkout->redirect_url);
+        if (Pages::existUrl($checkout->redirect_url)) {
+            $this->redirect($checkout->redirect_url);
         }
 
         return $this->redirect(Url::home());

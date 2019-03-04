@@ -75,6 +75,7 @@ class Checkouts extends ActiveRecord
         ];
     }
 
+
     /**
      * @inheritdoc
      */

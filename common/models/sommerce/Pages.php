@@ -162,9 +162,9 @@ class Pages extends ActiveRecord
     {
         return static::find()
             ->where([
-                'url' => $url,
-                'visibility' => 1]
-            )
+                'url' => trim($url, '/'),
+                'visibility' => 1
+            ])
             ->exists();
     }
 

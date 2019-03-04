@@ -7,6 +7,7 @@ use sommerce\components\twig\parsers\TokenParser_Include;
 use common\models\sommerce\Pages;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;
+use sommerce\helpers\PagesHelper;
 use Yii;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
@@ -52,21 +53,14 @@ class Extension extends \Twig_Extension {
                 return AssetsHelper::getAssets($value);
             }),
             new Twig_SimpleFunction('page_url', function($pageId){
-                $page = Pages::find()->active()->andWhere([
-                    'id' => $pageId,
-                ])->one();
-                return '/' . ($page ? $page->url : '#');
+                $page = PagesHelper::getPageById($pageId);
+                return ($page ? '/' . $page['url'] : '#');
             }),
-            new Twig_SimpleFunction('package', function($value) {
-                return PackageHelper::getPackageBuyNow($value);
+            new Twig_SimpleFunction('package', function($packageId) {
+                return PackageHelper::getPackageById($packageId);
             }),
-
             new Twig_SimpleFunction('products', function($productId) {
-                return Packages::find()
-                    ->select('icon, quantity, name, price, properties, id')
-                    ->where(['product_id' => $productId])
-                    ->asArray()
-                    ->all();
+                return PackageHelper::getPackagesByProductId($productId);
             }),
         ];
 

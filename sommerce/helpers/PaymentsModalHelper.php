@@ -2,9 +2,12 @@
 
 namespace sommerce\helpers;
 
-use app\helpers\ArrayHelper;
+
 use common\models\sommerce\Checkouts;
 use common\models\sommerce\Packages;
+use common\models\sommerce\Payments;
+use common\models\sommerces\Stores;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class PaymentsModalHelper
@@ -13,12 +16,43 @@ use common\models\sommerce\Packages;
 class PaymentsModalHelper
 {
     /**
-     * @param Checkouts $checkout
-     * @return array
+     * @var Stores
      */
-    public static function getSuccessDetails(Checkouts $checkout)
+    protected $store;
+
+    /**
+     * @return Stores
+     */
+    public function getStore(): Stores
     {
-        $detail = reset($checkout->getUserDetails());
+        return $this->store;
+    }
+
+    /**
+     * @param Stores $store
+     */
+    public function setStore(Stores $store)
+    {
+        $this->store = $store;
+    }
+
+    /**
+     * @param Checkouts $checkout
+     * @return bool|array
+     */
+    public function getSuccessDetails(Checkouts $checkout)
+    {
+        $detail = ArrayHelper::getValue($checkout->getDetails(), 0);
+        $order = $checkout->order;
+
+        $paymentStatus = Payments::find()
+            ->select('status')
+            ->where(['checkout_id' => $checkout->id])
+            ->scalar();
+
+        if (!$paymentStatus || !$detail || !$order)  {
+            return false;
+        }
 
         $package = Packages::find()
             ->select('name')
@@ -27,11 +61,11 @@ class PaymentsModalHelper
             ])
             ->scalar();
 
-        $order = $checkout->order;
+
 
         return [
-            'status' => $checkout->status,
-            'price' => $checkout->price,
+            'status' => ArrayHelper::getValue(Payments::getStatuses(), $paymentStatus),
+            'price' => PriceHelper::getPrice($checkout->price, $this->getStore()->currency),
             'details' => ArrayHelper::getValue($detail, 'link'),
             'package' => $package,
             'order_id' => $order->id

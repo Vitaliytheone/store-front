@@ -138,6 +138,8 @@ class CustomController extends CommonController
         if (!empty($this->customJs)) {
 
             $appJs = [
+                '/js/libs/popper.js',
+                '/js/libs/bootstrap.js',
                 '/js/frontend.js',
             ];
 
