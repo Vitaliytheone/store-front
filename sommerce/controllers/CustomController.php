@@ -2,7 +2,6 @@
 
 namespace sommerce\controllers;
 
-use common\models\sommerces\StorePaymentMethods;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
 use sommerce\models\search\NavigationSearch;
@@ -164,14 +163,16 @@ class CustomController extends CommonController
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
                 'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-            ],
-            'page' => [
-                'site.captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-                'site.paymentMethods' => StorePaymentMethods::getActiveMethods($this->store->id),
-                'site.url' => trim(Yii::$app->getRequest()->url, '/'),
+                'url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
+            ],
+            'page' => [
+                'meta' => [
+                    'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
+                    'description' => $this->seoDescription ?: $this->store->seo_description,
+                ],
             ]
         ];
 
