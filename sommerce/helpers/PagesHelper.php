@@ -11,7 +11,6 @@ use yii\helpers\ArrayHelper;
  */
 class PagesHelper
 {
-
     /**
      * @var array
      */
@@ -40,13 +39,23 @@ class PagesHelper
     }
 
     /**
-     * Find page or return "Not found" exception
+     * Find page by url
      * @param string $url
      * @return array
      */
     public static function getPage($url)
     {
         return ArrayHelper::getValue(static::getPages(), $url);
+    }
+
+    /**
+     * Find page by id
+     * @param integer $id
+     * @return array
+     */
+    public static function getPageById($id)
+    {
+        return ArrayHelper::getValue(ArrayHelper::index(static::getPages(), 'id'), $id);
     }
 
 }
