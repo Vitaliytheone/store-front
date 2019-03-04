@@ -259,6 +259,7 @@ class OrderForm extends Model
         $checkout->method_id = $storePayMethod->method_id;
         $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
+        $checkout->redirect_url = null;
         $checkout->currency_id = $storePayMethod->currency_id;
         $checkout->setDetails($this->getItems());
         $checkout->setUserDetails($this->_userData);
