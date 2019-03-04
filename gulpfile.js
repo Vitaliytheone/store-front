@@ -57,7 +57,7 @@ var tasks = {
             './sommerce/web/js/app/admin/*.js',
         ])
             .pipe(concat('admin.js'))
-            .pipe(uglify())
+            //.pipe(uglify())
             .pipe(gulp.dest('./sommerce/web/js/'));
     },
     'js-sommerce-frontend' : function(done) {

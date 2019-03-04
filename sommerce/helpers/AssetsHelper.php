@@ -42,7 +42,6 @@ class AssetsHelper
      */
     public static function getAssets($value)
     {
-
         return PageFilesHelper::generateFileVersionLink($value);
     }
 
