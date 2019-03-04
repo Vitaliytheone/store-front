@@ -2,10 +2,8 @@
 
 namespace sommerce\controllers;
 
-use common\components\ActiveForm;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
-use sommerce\models\forms\ContactForm;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -48,32 +46,6 @@ class PageController extends CustomController
         $content = $page['twig'] ?? '';
 
         return $this->renderTwigContent($content);
-    }
-
-    /**
-     * Render `contact form` page
-     * @return string
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function actionContactUs()
-    {
-        $this->enableCsrfValidation = false;
-
-        $request = Yii::$app->getRequest();
-        $contactForm = new ContactForm();
-
-        if ($contactForm->load($request->post()) && $contactForm->contact()) {
-            return json_encode([
-                'error' => $contactForm->hasErrors(),
-                'success' => $contactForm->getSentSuccess(),
-            ]);
-        } else {
-            return json_encode([
-                'error' => $contactForm->hasErrors(),
-                'error_message' => ActiveForm::firstError($contactForm),
-                ]);
-        }
-
     }
 
     /**
