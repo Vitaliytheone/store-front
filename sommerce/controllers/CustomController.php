@@ -4,10 +4,8 @@ namespace sommerce\controllers;
 
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
-use sommerce\helpers\AssetsHelper;
-use sommerce\models\search\CartSearch;
+use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\helpers\LanguagesHelper;
 use Yii;
 use yii\base\Exception;
 use yii\bootstrap\Html;
@@ -135,13 +133,21 @@ class CustomController extends CommonController
         }
 
         $this->endContent = [];
+        $this->startHeadContent[] = Html::csrfMetaTags();
 
         if (!empty($this->customJs)) {
-            foreach (AssetsHelper::getStoreScripts() as $src) {
+
+            $appJs = [
+                '/js/frontend.js',
+            ];
+
+            foreach ($appJs as $src) {
                 $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
             }
+
             $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
+        $this->endContent[] = Html::script('', ['src' => 'https://www.google.com/recaptcha/api.js?hl=en']);
 
         if (YII_ENV_DEV) {
             ob_start();
@@ -149,29 +155,25 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
+        $search =  new NavigationSearch();
+        $search->setStore($this->store);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
-            'page' => [
-                'title' => $this->pageTitle ?: $this->store->seo_title,
-                'cart' => [
-                    'item_count' => (int)(new CartSearch())->setStore($this->store)->getCount(),
-                ],
-                'language' => Yii::$app->language,
-                'rtl' => LanguagesHelper::getLanguageRtl($this->store),
-                'store_name' => $this->store->name,
+            'site' => [
+                'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
+                'url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
+                'story_domain' => Yii::$app->getRequest()->getHostName(),
+            ],
+            'page' => [
+                'title' => $this->pageTitle ?: $this->store->seo_title,
                 'meta' => [
                     'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
                     'description' => $this->seoDescription ?: $this->store->seo_description,
                 ],
-                'story_domain' => Yii::$app->getRequest()->getHostName(),
-                'story_name' => Yii::$app->store->getInstance()->name,
-                'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => $this->store->custom_header,
-                'custom_footer' => $this->store->custom_footer,
             ]
         ];
 

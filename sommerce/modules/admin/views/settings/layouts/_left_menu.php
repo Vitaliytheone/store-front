@@ -37,7 +37,6 @@ use sommerce\modules\admin\components\Url;
                 </span>
             </a>
         </li>
-        <?php /*
         <li class="m-nav__item <?=('integrations' == $active ? 'm-nav__item--active' : '') ?>">
             <a href="<?= Url::toRoute('/settings/integrations')?>" class="m-nav__link">
                 <i class="m-nav__link-icon flaticon-app"></i>
@@ -46,7 +45,6 @@ use sommerce\modules\admin\components\Url;
                 </span>
             </a>
         </li>
- */ ?>
         <li class="m-nav__item <?=('notifications' == $active ? 'm-nav__item--active' : '') ?>">
             <a href="<?= Url::toRoute('/settings/notifications')?>" class="m-nav__link">
                 <i class="flaticon-alert-2 m-nav__link-icon"></i>

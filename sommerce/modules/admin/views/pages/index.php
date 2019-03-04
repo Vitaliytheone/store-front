@@ -62,20 +62,20 @@ use yii\helpers\Html;
                             <div class="divTableCell sommerce-page__row-body-td sommerce-page__td-data">
 
                                 <div class="sommerce-page__td-data-actions">
-                                    <a href="#" class="sommerce-page__actions-link duplicate-page"
+                                    <!--<a href="#" class="sommerce-page__actions-link duplicate-page"
                                        data-page="<?= htmlspecialchars(json_encode($page)) ?>"
                                        data-action="<?=Url::toRoute(['/pages/duplicate-page', 'id' => $page['id']]) ?>">
                                         <span class="la la-clone"></span>
                                         <?= Yii::t('admin', 'pages.duplicate') ?>
-                                    </a>
+                                    </a>-->
                                     <a href="#" class="sommerce-page__actions-link edit-page"
                                        data-page="<?= htmlspecialchars(json_encode($page)) ?>"
-                                       data-action="<?= Url::toRoute(['/pages/edit-page', 'id' => $page['id']]) ?>"
+                                       data-action="<?= Url::toRoute(['/pages/update-page', 'id' => $page['id']]) ?>"
                                        data-modal-title="<?= Yii::t('admin', 'pages.update') ?>">
                                         <span class="la la-cog"></span>
                                         <?= Yii::t('admin', 'pages.settings')?>
                                     </a>
-                                    <a href="<?= Url::toRoute('settings/edit-page/' . $page['id'])?>" class="sommerce-page__actions-btn m-btn--air ">
+                                    <a href="<?= Url::toRoute('/pages/edit-page/' . $page['id'])?>" class="sommerce-page__actions-btn m-btn--air ">
                                         <span class="la la-edit"></span>
                                         <?= Yii::t('admin', 'pages.editor')?>
                                     </a>

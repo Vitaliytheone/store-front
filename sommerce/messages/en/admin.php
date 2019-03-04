@@ -109,7 +109,8 @@ return [
     'payments.payment_method_bitcoin' => 'Bitcoin',
     'payments.payment_method_coinpayments' => 'CoinPayments',
 
-    'payments.t_id' => 'ID',
+    'payments.t_id' => 'Payment ID',
+    'payments.t_order_id' => 'Order ID',
     'payments.t_customer' => 'Customer',
     'payments.t_amount' => 'Amount',
     'payments.t_method' => 'Method',
@@ -175,6 +176,8 @@ return [
     'products.create_package.link' => 'Link Type',
     'products.create_package.availability' => 'Availability',
     'products.create_package.mode' => 'Mode',
+    'products.create_package.provider_service' => 'Provider service',
+    'products.create_package.provider' => 'Provider',
 
     'products.create_package.availability_enabled' => 'Enabled',
     'products.create_package.availability_disabled' => 'Disabled',
@@ -287,6 +290,7 @@ return [
     'pages.editor' => 'Editor',
     'pages.confirm_message' => 'Are you sure?',
     'pages.duplicate_confirm' => '<p>Are your sure that your want to <br><strong>duplicate</strong> this page?</p>',
+    'pages.is_duplicated' => 'Page success duplicated!',
 
 
     'settings.page_title' => 'Settings',

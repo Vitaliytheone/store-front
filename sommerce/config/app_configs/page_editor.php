@@ -10,7 +10,7 @@ return [
          *      id (int) — ID страницы.
          * Необязательные параметы:
          */
-        'get_page' => '/admin/settings/pages/get-page',
+        'get_page' => '/admin/pages/get-page',
 
         /**
          * Получение списка страниц
@@ -19,7 +19,7 @@ return [
          * Обязательные параметры:
          * Необязательные параметы:
          */
-        'get_pages' => '/admin/settings/pages/get-pages',
+        'get_pages' => '/admin/pages/get-pages',
 
         /**
          * Сохранение draft-версии страницы
@@ -31,7 +31,7 @@ return [
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        'save_draft_page' => '/admin/settings/pages/draft/{{id}}',
+        'save_draft_page' => '/admin/pages/draft/{{id}}',
 
         /**
          * Сохранение страницы
@@ -43,7 +43,7 @@ return [
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        'save_publish_page' => '/admin/settings/pages/publish/{{id}}',
+        'save_publish_page' => '/admin/pages/publish/{{id}}',
 
         /**
          * Получение списка продуктов
@@ -52,7 +52,7 @@ return [
          * Обязательные параметры:
          * Необязательные параметы:
          */
-        'get_products' => '/admin/settings/pages/get-products',
+        'get_products' => '/admin/pages/get-products',
 
         /**
          * Получение данных о продукте и его пакатах
@@ -62,7 +62,7 @@ return [
          *      id (int) — ID продукта.
          * Необязательные параметы:
          */
-        'get_product' => '/admin/settings/pages/get-product',
+        'get_product' => '/admin/pages/get-product',
 
         /**
          * Сохранение продукта
@@ -74,7 +74,7 @@ return [
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        'save_product' => '/admin/settings/pages/set-product/{{id}}',
+        'save_product' => '/admin/pages/set-product/{{id}}',
 
         /**
          * Сохранение пакета
@@ -86,7 +86,7 @@ return [
          * Данные формы:
          *      JSON SERIALIZE DATA {}
          */
-        'save_package' => '/admin/settings/pages/set-package/{{id}}',
+        'save_package' => '/admin/pages/set-package/{{id}}',
 
         /**
          * Загрузка картинки
@@ -97,7 +97,7 @@ return [
          * Данные формы:
          *      MULTIPART/FORM-DATA
          */
-        'upload_image' => '/admin/settings/pages/set-image',
+        'upload_image' => '/admin/pages/set-image',
 
         /**
          * Удаление картинки
@@ -109,7 +109,7 @@ return [
          * Данные формы:
          *     NULL
          */
-        'delete_image' => '/admin/settings/pages/unset-image/{{id}}',
+        'delete_image' => '/admin/pages/unset-image/{{id}}',
 
         /**
          * Получение списка картинок
@@ -118,6 +118,6 @@ return [
          * Обязательные параметры:
          * Необязательные параметы:
          */
-        'get_images' => '/admin/settings/pages/get-images',
+        'get_images' => '/admin/pages/get-images',
     ],
 ];

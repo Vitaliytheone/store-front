@@ -9,7 +9,6 @@ use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
-use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
@@ -28,9 +27,9 @@ class SettingsController extends CustomController
 {
     use ProvidersTrait;
     use PaymentsTrait;
-    use PagesTrait;
     use LanguageTrait;
     use NotificationsTrait;
+    use IntegrationsTrait;
 
     public function behaviors()
     {
@@ -76,53 +75,7 @@ class SettingsController extends CustomController
                     'application/json' => CustomResponse::FORMAT_JSON,
                 ],
             ],
-            'ajaxApi' => [
-                'class' => ContentNegotiator::class,
-                'only' => [
-                    // Pages trait
-                    'get-page',
-                    'get-pages',
-                    'draft',
-                    'publish',
-                    'get-products',
-                    'get-product',
-                    'set-product',
-                    'set-package',
-                    'set-image',
-                    'unset-image',
-                    'get-images',
-                ],
-                'formats' => [
-                    'application/json' => CustomResponse::FORMAT_AJAX_API,
-                ],
-            ],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        // Disabled csrf validation for some ajax actions
-        if (in_array($action->id, [
-            'update-blocks',
-            'block-upload',
-            'update-theme',
-            'theme-update-style',
-            // Page editor react post-requests
-            'draft',
-            'publish',
-            'set-product',
-            'set-package',
-            'set-image',
-            'unset-image',
-        ])) {
-            $this->enableCsrfValidation = false;
-        }
-        // Add custom JS modules
-        // $this->addModule('settings');
-        return parent::beforeAction($action);
     }
 
     /**

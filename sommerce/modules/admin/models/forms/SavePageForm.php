@@ -169,12 +169,10 @@ class SavePageForm extends Model
 
         if ($this->getIsDraft()) {
             $page->is_draft = Pages::IS_DRAFT_ON;
-            $page->visibility = Pages::VISIBILITY_OFF;
         } else {
             // Publish
             $page->is_draft = Pages::IS_DRAFT_OFF;
             $page->publish_at = time();
-            $page->visibility = Pages::VISIBILITY_ON;
             $page->twig = $this->page['content'];
             $page->setJson($this->page['json']);
         }

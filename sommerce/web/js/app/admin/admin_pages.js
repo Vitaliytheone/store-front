@@ -81,14 +81,6 @@ customModule.adminPages = {
         }
 
 
-        $('#editpageform-name').on('input', function(e) {
-            var generatedUrl = custom.generateUrlFromString($(this).val());
-            generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
-            var $url = $('#edit-seo__url');
-            $url.val(generatedUrl);
-            $url.trigger('input');
-        });
-
 
         $('#select-menu-link').change(function () {
             $('.hide-link').hide();
@@ -114,6 +106,14 @@ customModule.adminPages = {
             $title.val('');
             $title.trigger('input');
             $('#seo-block').removeClass('show');
+
+            $name.on('input', function(e) {
+                var generatedUrl = custom.generateUrlFromString($(this).val());
+                generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
+                var $url = $('#edit-seo__url');
+                $url.val(generatedUrl);
+                $url.trigger('input');
+            });
 
             $('#pageForm').attr('action', $this.data('action'));
             $('#exampleModalLabel').text($this.data('modal-title'));
@@ -142,8 +142,8 @@ customModule.adminPages = {
             var $this =  $(this);
             var page = $this.data('page');
             var $name = $('#editpageform-name');
+            $name.off('input');
             $name.val(page.name);
-            $name.trigger('input');
 
             if (parseInt(page.visibility)) {
                 $('#check-visibility').prop('checked', 'checked');
@@ -166,6 +166,10 @@ customModule.adminPages = {
             $title.val(page.seo_title);
             $title.trigger('input');
             $('#seo-block').removeClass('show');
+
+            var $url = $('#edit-seo__url');
+            $url.val(page.url);
+            $url.trigger('input');
 
             $('#pageForm').attr('action', $this.data('action'));
             $('#exampleModalLabel').text($this.data('modal-title'));
@@ -190,7 +194,7 @@ customModule.adminPages = {
 
             custom.confirm(params['confirm_message'], '', {}, function () {
                 custom.sendBtn($related, {
-                    data: queryParams,
+                    data: addTokenParams(queryParams),
                     type: 'POST',
                     callback: function () {
                         location.reload();
@@ -207,12 +211,12 @@ customModule.adminPages = {
             var page = $related.data('page');
             var $modal = $('#modal-duplicate');
             $modal.data('page', page);
-            $('#feature-delete').attr('href', $related.data('action'));
+            $('#feature-duplicate').attr('href', $related.data('action'));
             $modal.modal('show');
             return false;
         });
 
-        $('#feature-delete').click(function(e){
+        $('#feature-duplicate').click(function(e){
             e.preventDefault();
             var $this = $(this);
             var page = $('#modal-duplicate').data('page');
@@ -223,15 +227,26 @@ customModule.adminPages = {
             generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
             queryParams.url = generatedUrl;
             custom.sendBtn($this, {
-                data: queryParams,
+                data: addTokenParams(queryParams),
                 type: 'POST',
                 callback: function () {
                     location.reload();
                 }
             });
+
+            return false;
         });
 
+        function addTokenParams($obj) {
+            var csrfToken = $('meta[name="csrf-token"]').attr("content"),
+                csrfParam = $('meta[name="csrf-param"]').attr("content");
 
+            $obj[csrfParam] = csrfToken;
+
+            return $obj;
+        }
     }
+
+
 
 };

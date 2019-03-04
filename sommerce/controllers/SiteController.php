@@ -2,8 +2,10 @@
 
 namespace sommerce\controllers;
 
+use common\components\ActiveForm;
 use common\models\panels\Params;
 use common\models\panels\SslValidation;
+use sommerce\models\forms\ContactForm;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -76,4 +78,27 @@ class SiteController extends CustomController
 
         return $content;
     }
+
+    /**
+     * Send `contact form` email
+     * @return string
+     */
+    public function actionContactUs()
+    {
+        $request = Yii::$app->getRequest();
+        $contactForm = new ContactForm();
+
+        if ($contactForm->load($request->post()) && $contactForm->contact()) {
+            return json_encode([
+                'error' => $contactForm->hasErrors(),
+                'success' => $contactForm->getSentSuccess(),
+            ]);
+        } else {
+            return json_encode([
+                'error' => $contactForm->hasErrors(),
+                'error_message' => ActiveForm::firstError($contactForm),
+            ]);
+        }
+    }
+
 }

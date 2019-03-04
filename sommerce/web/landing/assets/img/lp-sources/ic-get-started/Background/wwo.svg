@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="112px" height="115px" viewBox="0 0 112 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.1 (72631) - https://sketchapp.com -->
+    <title>Component / Get started / Background / Two</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="90.7204183%" y1="71.1961917%" x2="17.4637555%" y2="22.6973768%" id="linearGradient-1">
+            <stop stop-color="#F1EFFA" offset="0%"></stop>
+            <stop stop-color="#F1EFFA" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Component-/-Get-started-/-Background-/-Two" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M8.4933653,2.22699392 C15.92577,-5.93906476 24.2148432,10.9833695 38.1909354,10.9433378 C41.4692012,10.9339478 47.7767701,9.9485183 57.1136421,7.98704914 L57.1136421,7.98704906 C76.5058954,3.91316792 95.9579347,14.6513594 102.844186,33.2318745 C112.476483,59.221782 114.508597,77.6886557 108.94053,88.6324957 C97.4345559,111.24708 77.6725408,128.855493 38.1909354,99.8078923 C-1.29067004,70.7602921 13.3637915,68.7843894 13.3637915,46.5874431 C13.3637915,24.3904969 -13.1329805,25.9880802 8.4933653,2.22699392 Z" id="Rectangle-Copy-11" fill="url(#linearGradient-1)"></path>
+    </g>
+</svg>

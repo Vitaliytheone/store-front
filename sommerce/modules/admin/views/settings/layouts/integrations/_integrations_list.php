@@ -23,7 +23,7 @@ use my\helpers\Url;
     <div class="m-content">
         <div class="settings-integrations__block">
             <div class="settings-integrations__block-title"><?= Yii::t('admin', 'settings.integrations_chats_title') ?></div>
-            <?php foreach (SpecialCharsHelper::multiPurifier($integrations['chats']) as $chatKey => $chat): ?>
+            <?php foreach ((array)SpecialCharsHelper::multiPurifier($integrations['chats']) as $chatKey => $chat): ?>
             <div class="sommerce-settings__payment-cart m-portlet">
                 <div class="row align-items-center">
                     <div class="col-12">
@@ -60,7 +60,7 @@ use my\helpers\Url;
         </div>
         <div class="settings-integrations__block">
             <div class="settings-integrations__block-title"><?=Yii::t('admin', 'settings.integrations_analytics_title') ?></div>
-            <?php foreach (SpecialCharsHelper::multiPurifier($integrations['analytics']) as $key => $analytics): ?>
+            <?php foreach ((array)SpecialCharsHelper::multiPurifier($integrations['analytics']) as $key => $analytics): ?>
             <div class="sommerce-settings__payment-cart m-portlet">
                 <div class="row align-items-center">
                     <div class="col-12">
