@@ -13,7 +13,7 @@
     <tr>
         <th><?= Yii::t('app/superadmin', 'ssl.list.column_id')?></th>
         <th><?= Yii::t('app/superadmin', 'ssl.list.column_customer')?></th>
-        <th><?= Yii::t('app/superadmin', 'ssl.list.column_panel')?></th>
+        <th><?= Yii::t('app/superadmin', 'ssl.list.column_domain')?></th>
         <th><?= Yii::t('app/superadmin', 'ssl.list.column_status')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'ssl.list.column_created')?></th>
         <th class="text-nowrap"><?= Yii::t('app/superadmin', 'ssl.list.column_expiry')?></th>

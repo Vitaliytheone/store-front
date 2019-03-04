@@ -187,9 +187,6 @@ $config = [
                 ],
             ],
         ],
-        'panel' => [
-            'class' => \common\components\panels\PanelComponent::class,
-        ],
     ],
     'params' => $params,
     'aliases' => [
