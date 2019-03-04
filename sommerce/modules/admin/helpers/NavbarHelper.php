@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\modules\admin\helpers;
 
 use sommerce\modules\admin\components\Url;
@@ -57,26 +58,6 @@ class NavbarHelper {
                         'icon' => 'flaticon-app',
                         'label' => Yii::t('admin', 'header.menu_settings_integrations'),
                     ],
-                    'settings-navigation' => [
-                        'url' => '/admin/settings/navigation',
-                        'icon' => 'flaticon-list-1',
-                        'label' => Yii::t('admin', 'header.menu_settings_navigation'),
-                    ],
-                    'settings-pages' => [
-                        'url' => '/admin/settings/pages',
-                        'icon' => 'icon-docs',
-                        'label' => Yii::t('admin', 'header.menu_settings_pages'),
-                    ],
-                    'settings-themes' => [
-                        'url' => '/admin/settings/themes',
-                        'icon' => 'icon-puzzle',
-                        'label' => Yii::t('admin', 'header.menu_settings_themes'),
-                    ],
-                    'settings-blocks' => [
-                        'url' => '/admin/settings/blocks',
-                        'icon' => 'icon-layers',
-                        'label' => Yii::t('admin', 'header.menu_settings_blocks'),
-                    ],
                 ],
             ],
         ];
@@ -97,6 +78,7 @@ class NavbarHelper {
      * Return formatted top navigation menu items
      * @param $currentRoute
      * @return array
+     * @throws \Throwable
      */
     public static function getNavbarItems($currentRoute)
     {
